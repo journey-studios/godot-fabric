@@ -1,0 +1,1488 @@
+{
+ "format": "godot-fabric.accessibility-announcements-execution/v1",
+ "executedAt": "2026-10-08",
+ "implementationCommit": "030ebcf3c2787e9cb58db0a3f3196b4c55e23b2f",
+ "executedTreeSha": "d5bd1aa9f1553e3fdbe0382cf39a9cc38004f13b",
+ "implementationCommits": {
+  "announcements": "493d8f707bdad5a82ea0adda60ea7f6171d8122b",
+  "onePerUpdateAndSeparateCore": "030ebcf3c2787e9cb58db0a3f3196b4c55e23b2f"
+ },
+ "sourceState": "working tree clean and equal to the implementation commit's tree when every command below ran: every source in sourcePins was hashed and equals the blob of the implementation commit (checked file by file), and the bundle receipt of the run pins the same hashes; the evidence files, which are added afterwards, are not inputs of any command. Every number below is from runs made on this tree, not carried over from the runs that preceded the commit.",
+ "baseCommit": "bf1e9e98434e6f0e12a68b5488f19f37f184f77a",
+ "environment": {
+  "platform": "macOS arm64 (26.6.2), Apple M3 Pro",
+  "godot": "4.7.2-stable (official, ed1daf0bf)",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "node": "v22.23.3",
+  "displayServer": "headless (suite); macOS native renderer and a window session with --accessibility always (graphical lane, example captures)"
+ },
+ "hostedCi": {
+  "status": "pending",
+  "pages": "pending",
+  "note": "The accessibility-info step of .github/workflows/contracts.yml (npm run test:accessibility-info) has not run on hosted CI for this slice yet, and nothing is published to Pages yet; both are recorded after the merge. The graphical lane (npm run test:accessibility-info:bridge) needs a macOS window session and runs locally only: it is not part of hosted CI, which is headless. Everything below is local macOS arm64 evidence."
+ },
+ "sourceReceipt": {
+  "doesNotCertifyNativeBuild": true,
+  "note": "The bundle receipt (build/accessibility-info-probe-bundle.json, sha256 of the bundle 04b1f2da64358006e6520d09c223559532ffbb4e018c05b27ae8a5690e04ed55) pins the sources of the run; it does not certify the native build that a hosted runner makes from them. The hosts below are the local ones.",
+  "bundleSha256": "04b1f2da64358006e6520d09c223559532ffbb4e018c05b27ae8a5690e04ed55"
+ },
+ "hosts": {
+  "previousSha256": "bd0c6f719927432d5d5f9719465d8608129c22b5a6fb1501d873acf28ab7c33c",
+  "previousSourceCommit": "bf1e9e98434e6f0e12a68b5488f19f37f184f77a",
+  "previousPath": "build/accessibility-announcements-previous-host/fabric_godot.dylib (local, outside the repository; the runner only accepts the control if addons/fabric_godot.dylib has this SHA-256)",
+  "currentSha256": "62867d91f795d606662bd680cb3f16addd2ec228298d8cd1dd7d2dd61743d5da",
+  "restoredSha256": "62867d91f795d606662bd680cb3f16addd2ec228298d8cd1dd7d2dd61743d5da",
+  "restoredEqualsCurrent": true,
+  "sabotagedSha256": {
+   "unknown-as-false": "93bc7d4df90b32a9127d060d6c4e760bc47ea8f33998046556806f8ba824d2c7",
+   "emit-every-poll": "984d13783c3899a7bdb617f36e893f300c53756dbb1b99483da18b3380b5680b",
+   "swapped-settings": "a078f2b7d9403b3307fa40c1bd7ce754d631db7ac9a5abac1b19e86c8a2feb3b",
+   "display-name": "d195d4aaf46e37d962ea6708e1edcfa3ab172d40358dc08d6b5d9371eae455ff",
+   "announce-name": "509ece64d60bb743d98911cb82f2790f2f4b76bd38868e8da18fc81df92db8fa",
+   "swapped-priorities": "1dcef0ca61a66d8770048d808b7e6a4a924aeec62e7f5798dd2770ac0ff518aa",
+   "ungated-announce": "d58de09d904d4b7192e446a37149b56e4c2fc030c65e4be3b99677543f92046c",
+   "reused-element": "859cbfe25d520702c317ba26c15f2eea3c3a41d0fdaaa4d266df255d012e55b5"
+  }
+ },
+ "nativeCores": {
+  "settings": {
+   "command": ".deps/build/accessibility_info_core_test",
+   "source": "native/accessibility_info_core_test.cpp",
+   "binarySha256": "d53fb89f59cc55a2422ee868f6c7f8b7d135f3084c35ac47704f461ab61570e2",
+   "result": "ACCESSIBILITY_INFO_CORE_PASSED",
+   "logSha256": "57d091753b665e90bd3a950736639d172178cf4515e68f669384ed63bb3f6f89",
+   "functions": 14,
+   "note": "The settings' core, with the announcements taken out (slice 2a's tests plus the focus reason): the three-valued reading, the descriptor tables, the change rule, stop, the UIManager event counts and the multiplier rule."
+  },
+  "announcements": {
+   "command": ".deps/build/accessibility_announcement_core_test",
+   "source": "native/accessibility_announcement_core_test.cpp",
+   "binarySha256": "d25d989d18eb6c639ed07f0f102e93a39078f405fa6f8443aba8c62f23816abd",
+   "result": "ACCESSIBILITY_ANNOUNCEMENT_CORE_PASSED",
+   "logSha256": "27823c2317452966747d84f302175f754a8c85ebbeac3f0a62ea840206fb60c8",
+   "functions": 15,
+   "alsoRunBy": "npm run test:accessibility-info (not in the sabotage and previous-host lanes)",
+   "tests": [
+    "the_refusals_say_why",
+    "priorities_map_to_live_modes",
+    "an_announcement_is_a_new_element_with_a_value_and_a_live_mode",
+    "announcements_of_a_frame_are_published_one_per_update_in_order",
+    "a_long_batch_keeps_its_order_and_each_announcement_expires_on_its_own",
+    "the_same_text_twice_is_two_elements",
+    "the_same_text_twice_in_a_frame_is_two_elements",
+    "the_options_that_cannot_be_honored_are_refused",
+    "without_a_screen_reader_the_announcement_is_dropped_and_never_kept",
+    "the_screen_reader_is_asked_for_each_announcement_of_a_batch",
+    "an_empty_text_has_nothing_to_speak",
+    "an_update_that_never_comes_expires_the_announcement",
+    "an_element_that_cannot_be_made_is_dropped_without_taking_the_update",
+    "stop_ends_the_announcer_without_freeing_inside_an_update",
+    "stop_inside_an_update_frees_nothing"
+   ],
+   "note": "The exact calls of one announcement with a recording fake platform and no engine; the order of a batch, one element per update; the expiry of the tail of a batch longer than 120 frames; the gate asked again for each announcement; stop from inside an update."
+  }
+ },
+ "productProbe": {
+  "command": "npm run test:accessibility-info",
+  "runs": 3,
+  "suite": "1/1 subtests passed in each of the three runs",
+  "applications": {
+   "A": "validation metas (validation_accessibility_settings and validation_accessibility_announcer, the recorder that replaces the AccessibilityServer): two roots, 36 steps",
+   "R": "Godot's real backend (headless: every setting reads -1, no screen reader): one root, 6 steps, created first and running while A changes and stops"
+  },
+  "checks": 69,
+  "normativeChecks": 15,
+  "allCurrentAssertionsPassed": true,
+  "reportIdenticalInThreeRuns": true,
+  "oracle": {
+   "stepsReplayed": {
+    "A": 36,
+    "R": 6
+   },
+   "settingChangeFrames": 9,
+   "eventsByName": {
+    "screenReaderChanged": 3,
+    "reduceMotionChanged": 4,
+    "reduceTransparencyChanged": 2,
+    "darkerSystemColorsChanged": 3,
+    "boldTextChanged": 0,
+    "grayscaleChanged": 0,
+    "invertColorsChanged": 0,
+    "announcementFinished": 0
+   },
+   "checkedWithEveryProbeCheckMarkedPassed": true,
+   "holdsTheFourDisplayServerMethodNamesToItsOwnList": true,
+   "holdsTheAnnouncementApiNamesToItsOwnList": true,
+   "replaysTheAnnouncerAsAStateMachine": "pending, held and dropped announcements, the update the recorder runs, one announcement per update, and every call recorded"
+  },
+  "declaredDiagnostics": {
+   "current": {
+    "FABRIC_ERROR: E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the keyboard focus and blur the focused control, which iOS does not do": 1
+   },
+   "original": {
+    "FABRIC_ERROR: focus is not implemented yet (GF-20 slice 2b)": 1
+   }
+  },
+  "hostSha256": "62867d91f795d606662bd680cb3f16addd2ec228298d8cd1dd7d2dd61743d5da",
+  "bundleSha256": "04b1f2da64358006e6520d09c223559532ffbb4e018c05b27ae8a5690e04ed55",
+  "runs3": [
+   {
+    "run": 1,
+    "reportSha256": "1411117f27cbce2167bd5cb2e5c0cbf6673e1b24cdec54e1a0b2bbc86a024972",
+    "logSha256": "5e2de0dd3a3155b2155812832bead996c4b7c2a0bd63719c67a37a7dea82881e",
+    "comparisonSha256": "26624299479897150f50f760f46572f961225fe5fd4e3dfdea64a041021221fe"
+   },
+   {
+    "run": 2,
+    "reportSha256": "1411117f27cbce2167bd5cb2e5c0cbf6673e1b24cdec54e1a0b2bbc86a024972",
+    "logSha256": "cc2dddc190f34a8f276c59c546e50fc77ba551ff39c8503abe523c29cb1f174b",
+    "comparisonSha256": "26624299479897150f50f760f46572f961225fe5fd4e3dfdea64a041021221fe"
+   },
+   {
+    "run": 3,
+    "reportSha256": "1411117f27cbce2167bd5cb2e5c0cbf6673e1b24cdec54e1a0b2bbc86a024972",
+    "logSha256": "825c5cb4d1f4348d81f918d9b9ed4e7b50b5e902d6c203a5691293cd3aca3ced",
+    "comparisonSha256": "26624299479897150f50f760f46572f961225fe5fd4e3dfdea64a041021221fe"
+   }
+  ],
+  "announceFacts": {
+   "constants": {
+    "LIVE_ASSERTIVE": true,
+    "LIVE_POLITE": true,
+    "ROLE_STATIC_TEXT": true
+   },
+   "methods": {
+    "create_sub_element": true,
+    "free_element": true,
+    "is_supported": true,
+    "update_set_live": true,
+    "update_set_value": true
+   },
+   "nodeMethods": {
+    "get_accessibility_element": true,
+    "queue_accessibility_update": true
+   },
+   "serverRegistered": true,
+   "serverSupported": false,
+   "treeEnabled": false,
+   "treeMethod": true,
+   "treeSupported": false
+  },
+  "announceApi": {
+   "constants": [
+    "ROLE_STATIC_TEXT",
+    "LIVE_POLITE",
+    "LIVE_ASSERTIVE"
+   ],
+   "methods": [
+    "is_supported",
+    "create_sub_element",
+    "update_set_value",
+    "update_set_live",
+    "free_element"
+   ],
+   "node": [
+    "get_accessibility_element",
+    "queue_accessibility_update"
+   ],
+   "server": "AccessibilityServer",
+   "tree": "is_accessibility_enabled"
+  },
+  "scope": {
+   "accessKitPostCertifiedHere": false,
+   "actualGodotBackendInHeadless": true,
+   "announcementsRecorded": true,
+   "mobileExportsCertified": false,
+   "publicReactNativeImport": true,
+   "realContrastCertified": false,
+   "realReduceMotionCertified": false,
+   "realScreenReaderCertified": false,
+   "realTransparencyCertified": false,
+   "screenReaderSpeechCertified": false,
+   "twoRootsOneApplication": true,
+   "validationMetaReplacesReadings": true
+  }
+ },
+ "negativeControls": {
+  "previousHost": {
+   "command": "node tests/accessibility-info-native.test.mjs --allow-original-negative (the host preserved from main installed in addons/)",
+   "sourceCommit": "bf1e9e98434e6f0e12a68b5488f19f37f184f77a",
+   "hostSha256": "bd0c6f719927432d5d5f9719465d8608129c22b5a6fb1501d873acf28ab7c33c",
+   "checks": 69,
+   "passed": 54,
+   "failed": 15,
+   "failedEqualsNormative": true,
+   "failedChecks": [
+    "announce-api/The host reports the engine API it calls for announcements, by name, and none of it is missing",
+    "announce/An announcement is a new element with the text as its value and a polite live mode, published in one update and freed outside the next one",
+    "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one announcement per update, in the order asked",
+    "again/The same text said twice is two elements, never a value set again on the first one (a value equal to the one before does not speak)",
+    "batch/Announcements of one frame, public or direct, are published one per update, in the order they were made",
+    "odd/An empty text is dropped (AccessKit clears an empty value) and a text with accents and CJK reaches the element intact",
+    "refuse/queue: true is refused with the reason (the macOS API has no queue), priority 'low' with its own, and an option of the wrong type is E_ARGUMENT; nothing is taken or published",
+    "focus/setAccessibilityFocus is refused with the reason: Godot has one focus, and moving the screen reader's would move the keyboard's",
+    "no-reader/With no screen reader the call returns without error, the announcement is dropped and counted, and it is not spoken when one turns on",
+    "reader-leaves/An announcement waiting for the update is dropped when the screen reader goes away, and is not published when it comes back",
+    "expires/An update that never comes (a screen reader not looking at this window) expires the announcement after 120 pumps: asked for 120 times, never published",
+    "element/When the application has no element to put it in, the update finds nothing to create and the announcement is dropped",
+    "stop/Stop drops the announcement that was waiting for an update, counts it, and nothing is made, set or freed after it",
+    "real/With the real, headless server there is no screen reader: the call returns, the announcement is dropped and counted, nothing is published and no OS tree stands behind the application",
+    "focus/A focus event fails out loud with the reason: Godot has a single focus, and moving the screen reader's would blur the focused control"
+   ],
+   "exitCode": 0,
+   "expectedFailureObserved": true,
+   "announcementCalls": "announceForAccessibility, announceForAccessibilityWithOptions and setAccessibilityFocus throw E_UNSUPPORTED naming GF-20 slice 2b; the settings and events (the other 54 checks) hold",
+   "declaredDiagnostics": {
+    "FABRIC_ERROR: focus is not implemented yet (GF-20 slice 2b)": 1
+   },
+   "oracleRejected": true,
+   "rawReportSha256": "1f89aa82ed7a3cb26db6fbb0930804e284533a2bd337337339bd664b5a33a803",
+   "logSha256": "0f0d1cca1bf4b1752eccd4ea0784cc71bcad2564119f57c8fea01ce719f10b9e"
+  },
+  "sabotages": {
+   "unknown-as-false": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=unknown-as-false",
+    "what": "reads a setting the platform does not report (-1) as off: a getter resolves false where RN must be told it is unknown, and a setting that becomes unknown emits an event for false",
+    "file": "native/accessibility_info_core.h",
+    "find": "  if (raw == 0) {\n    return Reading::Off;\n  }\n  return Reading::Unknown;\n",
+    "replace": "  return Reading::Off;\n",
+    "checks": 69,
+    "failed": 12,
+    "failedChecks": [
+     "real/With the real backend the headless DisplayServer reports -1, so all four getters reject E_ACCESSIBILITY_UNKNOWN",
+     "real/What the DisplayServer answers to each of those methods is what the host last read for that setting",
+     "lazy/The first read creates the module, which takes the baseline from the platform and reports nothing for it",
+     "getters/An unknown setting (-1) rejects E_ACCESSIBILITY_UNKNOWN and never resolves false",
+     "events/A setting that was unknown and is now known is a change",
+     "unknown/A setting that becomes unknown (-1) emits nothing and its getter rejects, frame after frame (-1 to -1 emits nothing)",
+     "unknown/Coming back to the last known value is not a change, and the getter resolves again",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "callbacks/A getter hands its setting to the success callback, and a refusal to the error callback as an Error",
+     "stop/The never-removed library listener heard exactly the screen reader events of the run and none after stop",
+     "independence/R keeps its own state and hears nothing while A changes four settings and then stops"
+    ],
+    "oracleRejection": "A/lazy-read: increaseContrast",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "93bc7d4df90b32a9127d060d6c4e760bc47ea8f33998046556806f8ba824d2c7",
+    "sabotagedSourceSha256": "9597b3505c82ae4f47c898f682e6e7680395ad54c1f5e7b467fd540c7146c6f2",
+    "runStatus": 0,
+    "rawReportSha256": "4513dd66ab06fe9c1e86900eaa4bf7f0e231fa2eeb7234df0fb6d43fab135dd3",
+    "logSha256": "2c3a7a7e2ca5ddfcd1ead8d3b09cea9f122c0343e65b273bfba62d19dff9253a"
+   },
+   "emit-every-poll": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=emit-every-poll",
+    "what": "reports the known value of every setting on every poll, whether or not it changed: each listener hears the same value over and over",
+    "file": "native/accessibility_info_core.h",
+    "find": "      if (state.known && *state.known == *value) {\n",
+    "replace": "      if (false && state.known && *state.known == *value) {\n",
+    "checks": 69,
+    "failed": 17,
+    "failedChecks": [
+     "lazy/The first read creates the module, which takes the baseline from the platform and reports nothing for it",
+     "events/An unchanged platform emits nothing, frame after frame",
+     "events/Reduce motion turning on is one reduceMotionChanged(true) to the listeners of both roots, once each, and nothing else",
+     "events/'change' and 'screenReaderChanged' hear the same one event, in subscription order",
+     "events/Reduce transparency turning on is one reduceTransparencyChanged(true)",
+     "events/A setting that was unknown and is now known is a change",
+     "events/Increase contrast turning on is one darkerSystemColorsChanged(true)",
+     "events/Four settings that change in one frame are four events, once each, in the order of the settings",
+     "unknown/A setting that becomes unknown (-1) emits nothing and its getter rejects, frame after frame (-1 to -1 emits nothing)",
+     "unknown/Coming back to the last known value is not a change, and the getter resolves again",
+     "unknown/A known value that differs from the last known one is a change after an unknown reading",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "seam/Settings that come back from unknown to the value they last had report nothing, and every getter resolves again",
+     "lifetime/A removed subscription hears nothing, even removed twice, and the other root still does",
+     "lifetime/An unmounted root's subscriptions go with it: the event still happens in the host and no one hears it",
+     "stop/The never-removed library listener heard exactly the screen reader events of the run and none after stop"
+    ],
+    "oracleRejection": "A/lazy-read: screenReader",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "984d13783c3899a7bdb617f36e893f300c53756dbb1b99483da18b3380b5680b",
+    "sabotagedSourceSha256": "545ea692e85397765f0d814a43c3486808a323ce7877978107cbf580e99c1435",
+    "runStatus": 0,
+    "rawReportSha256": "89b7a8848823b33e931de3bcb9d74f9b5636f933465807735c7152c5a1da637e",
+    "logSha256": "201a0662756c0dd06c84be923a9209951a14ac7156f5f4487a00f12ee33ff743"
+   },
+   "swapped-settings": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=swapped-settings",
+    "what": "swaps the validation-meta keys of reduce motion and reduce transparency in the descriptor table: a change of one is reported as the other",
+    "file": "native/accessibility_info_core.h",
+    "find": "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n        \"reduce_transparency\", \"accessibility_should_reduce_transparency\"},\n",
+    "replace": "        \"reduce_transparency\", \"accessibility_should_reduce_animation\"},\n    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n        \"reduce_animation\", \"accessibility_should_reduce_transparency\"},\n",
+    "checks": 69,
+    "failed": 8,
+    "failedChecks": [
+     "events/Reduce motion turning on is one reduceMotionChanged(true) to the listeners of both roots, once each, and nothing else",
+     "events/The getter answers the new value",
+     "events/Reduce transparency turning on is one reduceTransparencyChanged(true)",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "callbacks/A getter hands its setting to the success callback, and a refusal to the error callback as an Error",
+     "lifetime/A removed subscription hears nothing, even removed twice, and the other root still does",
+     "lifetime/An unmounted root's subscriptions go with it: the event still happens in the host and no one hears it"
+    ],
+    "oracleRejection": "A/motion-on/motion/get",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "a078f2b7d9403b3307fa40c1bd7ce754d631db7ac9a5abac1b19e86c8a2feb3b",
+    "sabotagedSourceSha256": "29e83f2699f88db4b59e9b2da8d9a5f3eb06115148b988879905eade3cd669e5",
+    "runStatus": 0,
+    "rawReportSha256": "59407b717af5d794decca45bde7e3d0e19de8fed4552bc9a34b3c989c42dbccf",
+    "logSha256": "9821b752531af4319b45ce06cdcb168094d62a36974dc2d354ce6484b7cce10c"
+   },
+   "display-name": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=display-name",
+    "what": "names a DisplayServer method that does not exist for reduce motion: the host reads -1 (never off) and the getter still rejects, but the name is not the engine's",
+    "file": "native/accessibility_info_core.h",
+    "find": "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n",
+    "replace": "        \"reduce_animation\", \"accessibility_should_reduce_animations\"},\n",
+    "checks": 69,
+    "failed": 2,
+    "failedChecks": [
+     "real/The method the host reads for each of the four settings exists in the DisplayServer of this engine",
+     "real/What the DisplayServer answers to each of those methods is what the host last read for that setting"
+    ],
+    "oracleRejection": "A/early: reduceMotion",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "d195d4aaf46e37d962ea6708e1edcfa3ab172d40358dc08d6b5d9371eae455ff",
+    "sabotagedSourceSha256": "67cadb699fb7d86d4a167b803b75bbcf2fdab7b90d5a4728001c79bdd1ebaf3b",
+    "runStatus": 0,
+    "rawReportSha256": "98402486509ffadb13c75a2cb0963d518fcd4ad63a3acd12f9740282b81e0102",
+    "logSha256": "b7a7da69dbd3009e5d7acb934cfb22e2fab7ca89866dc618cf7c9dac17186944"
+   },
+   "announce-name": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=announce-name",
+    "what": "puts the announcement's text in the element's name and not its value: AccessKit's macOS adapter speaks the value of a live node and nothing for a name alone",
+    "file": "native/accessibility_announcement_core.h",
+    "find": "inline constexpr TextProperty announcement_text = TextProperty::Value;\n",
+    "replace": "inline constexpr TextProperty announcement_text = TextProperty::Name;\n",
+    "checks": 69,
+    "failed": 5,
+    "failedChecks": [
+     "announce/An announcement is a new element with the text as its value and a polite live mode, published in one update and freed outside the next one",
+     "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one announcement per update, in the order asked",
+     "again/The same text said twice is two elements, never a value set again on the first one (a value equal to the one before does not speak)",
+     "batch/Announcements of one frame, public or direct, are published one per update, in the order they were made",
+     "odd/An empty text is dropped (AccessKit clears an empty value) and a text with accents and CJK reaches the element intact"
+    ],
+    "oracleRejection": "A/announce-basic: announcements",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "509ece64d60bb743d98911cb82f2790f2f4b76bd38868e8da18fc81df92db8fa",
+    "sabotagedSourceSha256": "16f43d9d0e5153e7f47ac00495e52657eddffe50987b5268df555066eb720d90",
+    "runStatus": 0,
+    "rawReportSha256": "c2375575dfdc6df8787d46e3faf2b7ef6265ef0e225f487c8d03b7e86c925046",
+    "logSha256": "7533f9517bd65b2a3499295c48268ac8500cad17ac4e09632467eff01e124123"
+   },
+   "swapped-priorities": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=swapped-priorities",
+    "what": "makes priority high polite and every other priority assertive: the recorded live modes are the wrong way round",
+    "file": "native/accessibility_announcement_core.h",
+    "find": "  if (priority == \"high\") {\n    return Live::Assertive;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Polite;\n",
+    "replace": "  if (priority == \"high\") {\n    return Live::Polite;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Assertive;\n",
+    "checks": 69,
+    "failed": 7,
+    "failedChecks": [
+     "announce/An announcement is a new element with the text as its value and a polite live mode, published in one update and freed outside the next one",
+     "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one announcement per update, in the order asked",
+     "again/The same text said twice is two elements, never a value set again on the first one (a value equal to the one before does not speak)",
+     "batch/Announcements of one frame, public or direct, are published one per update, in the order they were made",
+     "odd/An empty text is dropped (AccessKit clears an empty value) and a text with accents and CJK reaches the element intact",
+     "no-reader/With no screen reader the call returns without error, the announcement is dropped and counted, and it is not spoken when one turns on",
+     "real/With the real, headless server there is no screen reader: the call returns, the announcement is dropped and counted, nothing is published and no OS tree stands behind the application"
+    ],
+    "oracleRejection": "A/announce-basic: announcements",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "1dcef0ca61a66d8770048d808b7e6a4a924aeec62e7f5798dd2770ac0ff518aa",
+    "sabotagedSourceSha256": "d2677328ccc57f014b913e5f83c14121fca5a76c6ef11752aa07b854598c571c",
+    "runStatus": 0,
+    "rawReportSha256": "88ae0042667bcf535ff6e6556ad7e0bc3d5b167dcb51c8273d55947c8517789e",
+    "logSha256": "7383acee3f0e6f83c185e2cc18871330c3031e9eb641efa2e76b9c1b2f3271f6"
+   },
+   "ungated-announce": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=ungated-announce",
+    "what": "answers that a screen reader is always there: the announcement is kept with none, and the headless real server no longer drops and counts it",
+    "file": "native/accessibility_announcement_core.h",
+    "find": "  bool available() const { return port_.available && port_.available(); }\n",
+    "replace": "  bool available() const { return true; }\n",
+    "checks": 69,
+    "failed": 6,
+    "failedChecks": [
+     "no-reader/With no screen reader the call returns without error, the announcement is dropped and counted, and it is not spoken when one turns on",
+     "reader-leaves/An announcement waiting for the update is dropped when the screen reader goes away, and is not published when it comes back",
+     "expires/An update that never comes (a screen reader not looking at this window) expires the announcement after 120 pumps: asked for 120 times, never published",
+     "element/When the application has no element to put it in, the update finds nothing to create and the announcement is dropped",
+     "stop/Stop drops the announcement that was waiting for an update, counts it, and nothing is made, set or freed after it",
+     "real/With the real, headless server there is no screen reader: the call returns, the announcement is dropped and counted, nothing is published and no OS tree stands behind the application"
+    ],
+    "oracleRejection": "A/announce-no-reader: announcements",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "d58de09d904d4b7192e446a37149b56e4c2fc030c65e4be3b99677543f92046c",
+    "sabotagedSourceSha256": "58dcb15417b73324423daf1093a6931b2f743d5ec771c8ed4994f64eb4b8836a",
+    "runStatus": 0,
+    "rawReportSha256": "9745b7702d7d0cad762b03792a76f24e259ad16b6dabf426f5e2f00116f866fb",
+    "logSha256": "3de48e2623cbd36a40888b40d1b8ef49205573093330a143da1e4621a7b24bde"
+   },
+   "reused-element": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=reused-element",
+    "what": "makes the first element and puts every later announcement in it: the same text said twice does not speak again",
+    "file": "native/accessibility_announcement_core.h",
+    "find": "      const uint64_t handle = port_.create ? port_.create() : 0;\n      if (handle == 0) {\n",
+    "replace": "      static uint64_t reused = 0;\n      if (reused == 0) {\n        reused = port_.create ? port_.create() : 0;\n      }\n      const uint64_t handle = reused;\n      if (handle == 0) {\n",
+    "checks": 69,
+    "failed": 6,
+    "failedChecks": [
+     "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one announcement per update, in the order asked",
+     "again/The same text said twice is two elements, never a value set again on the first one (a value equal to the one before does not speak)",
+     "batch/Announcements of one frame, public or direct, are published one per update, in the order they were made",
+     "odd/An empty text is dropped (AccessKit clears an empty value) and a text with accents and CJK reaches the element intact",
+     "element/When the application has no element to put it in, the update finds nothing to create and the announcement is dropped",
+     "stop/Stop drops the announcement that was waiting for an update, counts it, and nothing is made, set or freed after it"
+    ],
+    "oracleRejection": "A/announce-priorities: announcements",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "859cbfe25d520702c317ba26c15f2eea3c3a41d0fdaaa4d266df255d012e55b5",
+    "sabotagedSourceSha256": "3556aeffdceeeb6842a0deeabbb04f5f4c4870e4d46fa2aed13d7aa0847e55cc",
+    "runStatus": 0,
+    "rawReportSha256": "1906bbe270a23cb8123ccf4b402b54cc16c2a3ce4f12df87f51d870b9cf93370",
+    "logSha256": "6a83213af28d78b7b3e3185ad556d657a9a0749d0a2f8fc079354b41c60ca391"
+   }
+  },
+  "sabotageRun": {
+   "command": "node scripts/accessibility-info-sabotage.mjs",
+   "exitCode": 0,
+   "sourcesRestoredByteForByte": true,
+   "sourceSha256": {
+    "genuine": {
+     "native/accessibility_info_core.h": "7d78e20d6314781ce77b1dac8a63f73475addf96bbcffa7bdb9924b95a1efb3b",
+     "native/accessibility_announcement_core.h": "36f2c59e3b672e1e8c3def6539bd011232cdb7934b42b9b9a1b08ef80fd29947"
+    },
+    "restored": {
+     "native/accessibility_info_core.h": "7d78e20d6314781ce77b1dac8a63f73475addf96bbcffa7bdb9924b95a1efb3b",
+     "native/accessibility_announcement_core.h": "36f2c59e3b672e1e8c3def6539bd011232cdb7934b42b9b9a1b08ef80fd29947"
+    }
+   },
+   "receiptSha256": "966f1c6b3cccb5c3312bd70cb506c35a0430821c878db8cf6bc035c64c3d2aa9"
+  },
+  "missingAlias": {
+   "command": "node --test tests/platform-seams.test.mjs",
+   "what": "bundles RN's legacySendAccessibilityEvent without the platform-plugin alias: the bundle has the self-importing .js and no .ios.js, and its default is not a function",
+   "result": "17/17 subtests"
+  }
+ },
+ "bridgeLane": {
+  "command": "npm run test:accessibility-info:bridge",
+  "scope": "local only: a macOS window session (launchctl managername Aqua) is required, no permission (TCC) is; it does not run on hosted CI, which is headless. It proves what AccessKit asks AppKit to post for each announcement, not that VoiceOver spoke.",
+  "technique": "an inspector (tests/accessibility-bridge-probe.m) is inserted into the Godot process with DYLD_INSERT_LIBRARIES and interposes NSAccessibilityPostNotificationWithUserInfo (the __DATA,__interpose section); every call is recorded and forwarded to AppKit unchanged",
+  "checks": 12,
+  "allCurrentAssertionsPassed": true,
+  "accessibilityEnabled": true,
+  "accessibilitySupported": true,
+  "postsByStep": {
+   "again": [
+    [
+     "Saved",
+     50,
+     "GodotWindow"
+    ]
+   ],
+   "batch": [
+    [
+     "First",
+     50,
+     "GodotWindow"
+    ],
+    [
+     "Second",
+     50,
+     "GodotWindow"
+    ],
+    [
+     "Third",
+     90,
+     "GodotWindow"
+    ]
+   ],
+   "high": [
+    [
+     "Alert",
+     90,
+     "GodotWindow"
+    ]
+   ],
+   "odd": [
+    [
+     "Odd",
+     50,
+     "GodotWindow"
+    ]
+   ],
+   "plain": [
+    [
+     "Plain",
+     50,
+     "GodotWindow"
+    ]
+   ],
+   "saved": [
+    [
+     "Saved",
+     50,
+     "GodotWindow"
+    ]
+   ],
+   "silent": []
+  },
+  "batchOrder": [
+   "First",
+   "Second",
+   "Third"
+  ],
+  "notes": {
+   "priorityLevels": "NSAccessibilityPriorityLevel: 50 (medium) for a polite announcement, 90 (high) for an assertive one",
+   "element": "every post is on the GodotWindow",
+   "batch": "three announcements of one frame (First, Second, Third with Third high) were posted First, Second, Third: one per update, in the order asked",
+   "afterTree": {
+    "valuesInTree": []
+   },
+   "afterStop": {
+    "late": []
+   }
+  },
+  "host": {
+   "requested": 9,
+   "published": 8,
+   "released": 8,
+   "held": 0,
+   "pending": 0,
+   "dropped": {
+    "empty": 1,
+    "expired": 0,
+    "noScreenReader": 0,
+    "stopped": 0
+   },
+   "refused": {
+    "priority": 1,
+    "queue": 1
+   },
+   "updates": 15,
+   "updatesRequested": 155,
+   "osTree": true
+  },
+  "waits": [
+   {
+    "attempts": 2,
+    "label": "saved",
+    "met": true
+   },
+   {
+    "attempts": 2,
+    "label": "saved-again",
+    "met": true
+   },
+   {
+    "attempts": 1,
+    "label": "high",
+    "met": true
+   },
+   {
+    "attempts": 2,
+    "label": "default",
+    "met": true
+   },
+   {
+    "attempts": 3,
+    "label": "unknown",
+    "met": true
+   },
+   {
+    "attempts": 9,
+    "label": "batch",
+    "met": true
+   },
+   {
+    "attempts": 40,
+    "label": "silent",
+    "met": true
+   },
+   {
+    "attempts": 40,
+    "label": "after-stop",
+    "met": true
+   }
+  ],
+  "inspectorSha256": "4233e54aa592b4ffbef3435c879dfacb8a05481fd82d910ae9c625f3fd329f91",
+  "hostSha256": "62867d91f795d606662bd680cb3f16addd2ec228298d8cd1dd7d2dd61743d5da",
+  "bundleSha256": "04b1f2da64358006e6520d09c223559532ffbb4e018c05b27ae8a5690e04ed55",
+  "rawReportSha256": "cfe71fee1040147464056896c1ec39bb57c0a83e7a27ea06578a619e0f3e52e2",
+  "logSha256": "a3390df62e31dff7f3dbae9912f65524f1698d7e587c01e38477a4c0a04e0b6d",
+  "comparisonSha256": "0b288765a3cd8676a0a7c54afdedeee865cc04ee645dac3bfb540495fca97783",
+  "previousHost": {
+   "command": "node tests/accessibility-announcements-bridge.test.mjs --allow-original-negative (the previous host installed in addons/)",
+   "hostSha256": "bd0c6f719927432d5d5f9719465d8608129c22b5a6fb1501d873acf28ab7c33c",
+   "checks": 12,
+   "failed": 8,
+   "failedEqualsNormative": true,
+   "failedChecks": [
+    "post/An announcement is posted on the window as AXAnnouncementRequested with its text and the medium priority level",
+    "post/The same text said a second time is posted a second time: every announcement is an element of its own",
+    "post/Priority high is posted with the high priority level",
+    "post/Priority default, a priority iOS ignores and queue: false are posted with the medium priority level",
+    "post/Three announcements of one frame are three posts in the order they were made, each with its own priority level: one per update",
+    "post/An empty text, queue: true and priority low post nothing: the empty one is dropped and the other two are refused with their reason",
+    "post/The elements the announcements were made of are gone from the OS tree once published (all eight were posted first)",
+    "post/The host published exactly the eight announcements AccessKit posted, freed them all, and used the real server (nothing recorded)"
+   ],
+   "postsByStep": {
+    "again": [],
+    "batch": [],
+    "high": [],
+    "odd": [],
+    "plain": [],
+    "saved": [],
+    "silent": []
+   },
+   "oracleRejected": true,
+   "rawReportSha256": "c9343e0d9f010dc74ec43584293af30ce2800e8663a3c2eb361e49f7cf4f06fa",
+   "logSha256": "5cb682c2c1fc70bfc69d83aeb5df7f8fd2d12d6d295da7585ecc6c8ef4648a96"
+  },
+  "sabotages": {
+   "announce-name": {
+    "command": "node tests/accessibility-announcements-bridge.test.mjs --sabotage=announce-name",
+    "hostSha256": "509ece64d60bb743d98911cb82f2790f2f4b76bd38868e8da18fc81df92db8fa",
+    "checks": 12,
+    "failed": 6,
+    "failedChecks": [
+     "post/An announcement is posted on the window as AXAnnouncementRequested with its text and the medium priority level",
+     "post/The same text said a second time is posted a second time: every announcement is an element of its own",
+     "post/Priority high is posted with the high priority level",
+     "post/Priority default, a priority iOS ignores and queue: false are posted with the medium priority level",
+     "post/Three announcements of one frame are three posts in the order they were made, each with its own priority level: one per update",
+     "post/The elements the announcements were made of are gone from the OS tree once published (all eight were posted first)"
+    ],
+    "postsByStep": {
+     "again": [],
+     "batch": [],
+     "high": [],
+     "odd": [],
+     "plain": [],
+     "saved": [],
+     "silent": []
+    },
+    "oracleRejected": true,
+    "rawReportSha256": "67f2846fb593a30ea2e4acc76dbaa243dce352ac556831503087f62c03c0f4c3",
+    "logSha256": "bc05ae70f4c4648cdb9fbc7585ddb97fabb3d83a5da84d78b9b02aa40188a254"
+   },
+   "swapped-priorities": {
+    "command": "node tests/accessibility-announcements-bridge.test.mjs --sabotage=swapped-priorities",
+    "hostSha256": "1dcef0ca61a66d8770048d808b7e6a4a924aeec62e7f5798dd2770ac0ff518aa",
+    "checks": 12,
+    "failed": 5,
+    "failedChecks": [
+     "post/An announcement is posted on the window as AXAnnouncementRequested with its text and the medium priority level",
+     "post/The same text said a second time is posted a second time: every announcement is an element of its own",
+     "post/Priority high is posted with the high priority level",
+     "post/Priority default, a priority iOS ignores and queue: false are posted with the medium priority level",
+     "post/Three announcements of one frame are three posts in the order they were made, each with its own priority level: one per update"
+    ],
+    "postsByStep": {
+     "again": [
+      [
+       "Saved",
+       90,
+       "GodotWindow"
+      ]
+     ],
+     "batch": [
+      [
+       "First",
+       90,
+       "GodotWindow"
+      ],
+      [
+       "Second",
+       90,
+       "GodotWindow"
+      ],
+      [
+       "Third",
+       50,
+       "GodotWindow"
+      ]
+     ],
+     "high": [
+      [
+       "Alert",
+       50,
+       "GodotWindow"
+      ]
+     ],
+     "odd": [
+      [
+       "Odd",
+       90,
+       "GodotWindow"
+      ]
+     ],
+     "plain": [
+      [
+       "Plain",
+       90,
+       "GodotWindow"
+      ]
+     ],
+     "saved": [
+      [
+       "Saved",
+       90,
+       "GodotWindow"
+      ]
+     ],
+     "silent": []
+    },
+    "oracleRejected": true,
+    "rawReportSha256": "c8f60dc07d3af6d8f78958539383e7ade83ae306dc0110ba8572b2308eba4e96",
+    "logSha256": "9469127cdb1e7f7e2333ce15bd1a70af2547331a720cb712c1e68780d5a9eb98"
+   },
+   "reused-element": {
+    "command": "node tests/accessibility-announcements-bridge.test.mjs --sabotage=reused-element",
+    "hostSha256": "859cbfe25d520702c317ba26c15f2eea3c3a41d0fdaaa4d266df255d012e55b5",
+    "checks": 12,
+    "failed": 5,
+    "failedChecks": [
+     "post/The same text said a second time is posted a second time: every announcement is an element of its own",
+     "post/Priority high is posted with the high priority level",
+     "post/Priority default, a priority iOS ignores and queue: false are posted with the medium priority level",
+     "post/Three announcements of one frame are three posts in the order they were made, each with its own priority level: one per update",
+     "post/The elements the announcements were made of are gone from the OS tree once published (all eight were posted first)"
+    ],
+    "postsByStep": {
+     "again": [],
+     "batch": [],
+     "high": [],
+     "odd": [],
+     "plain": [],
+     "saved": [
+      [
+       "Saved",
+       50,
+       "GodotWindow"
+      ]
+     ],
+     "silent": []
+    },
+    "oracleRejected": true,
+    "rawReportSha256": "19b5a6bfa6f126d1fc5510cdd879e2183b1dde30c09dfe4ed630e1593fba8da0",
+    "logSha256": "4d79c46f064e4bb9c0c1c670e75f65012d258a53b4ec1ece9c62b120eb6674d2"
+   }
+  },
+  "comparisonOriginalControlPresent": true
+ },
+ "recordedSequences": {
+  "note": "From the report of the headless probe (application A, the recorder replacing the AccessibilityServer, and R, the real headless server); #n is the handle the announcer holds for an element.",
+  "published": {
+   "step": "announce-basic",
+   "calls": [
+    "update.begin",
+    "create #1",
+    "value #1 \"Saved\"",
+    "live #1 \"polite\"",
+    "update.end",
+    "free #1",
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 1,
+    "published": 1,
+    "released": 1,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 0,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 0,
+     "queue": 0
+    },
+    "updatesRequested": 2,
+    "updates": 2
+   }
+  },
+  "priorities": {
+   "step": "announce-priorities",
+   "calls": [
+    "update.begin",
+    "create #2",
+    "value #2 \"Alert\"",
+    "live #2 \"assertive\"",
+    "update.end",
+    "free #2",
+    "update.begin",
+    "create #3",
+    "value #3 \"Plain\"",
+    "live #3 \"polite\"",
+    "update.end",
+    "free #3",
+    "update.begin",
+    "create #4",
+    "value #4 \"Odd\"",
+    "live #4 \"polite\"",
+    "update.end",
+    "free #4",
+    "update.begin",
+    "create #5",
+    "value #5 \"Null\"",
+    "live #5 \"polite\"",
+    "update.end",
+    "free #5",
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 5,
+    "published": 5,
+    "released": 5,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 0,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 0,
+     "queue": 0
+    },
+    "updatesRequested": 7,
+    "updates": 7
+   }
+  },
+  "sameTextTwice": {
+   "step": "announce-twice",
+   "calls": [
+    "update.begin",
+    "create #6",
+    "value #6 \"Saved\"",
+    "live #6 \"polite\"",
+    "update.end",
+    "free #6",
+    "update.begin",
+    "update.end",
+    "update.begin",
+    "create #7",
+    "value #7 \"Saved\"",
+    "live #7 \"polite\"",
+    "update.end",
+    "free #7",
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 7,
+    "published": 7,
+    "released": 7,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 0,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 0,
+     "queue": 0
+    },
+    "updatesRequested": 11,
+    "updates": 11
+   }
+  },
+  "batchOfThreeOneFramePerUpdate": {
+   "step": "announce-batch",
+   "calls": [
+    "update.begin",
+    "create #8",
+    "value #8 \"One\"",
+    "live #8 \"polite\"",
+    "update.end",
+    "free #8",
+    "update.begin",
+    "create #9",
+    "value #9 \"Two\"",
+    "live #9 \"polite\"",
+    "update.end",
+    "free #9",
+    "update.begin",
+    "create #10",
+    "value #10 \"Three\"",
+    "live #10 \"polite\"",
+    "update.end",
+    "free #10",
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 10,
+    "published": 10,
+    "released": 10,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 0,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 0,
+     "queue": 0
+    },
+    "updatesRequested": 15,
+    "updates": 15
+   }
+  },
+  "emptyAndUnicode": {
+   "step": "announce-empty",
+   "calls": [
+    "update.begin",
+    "create #11",
+    "value #11 \"Salvo ✓ ação 日本\"",
+    "live #11 \"polite\"",
+    "update.end",
+    "free #11",
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 12,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 0,
+     "queue": 0
+    },
+    "updatesRequested": 17,
+    "updates": 17
+   }
+  },
+  "refused": {
+   "step": "announce-refused",
+   "calls": [],
+   "counters": {
+    "requested": 12,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 0,
+     "noScreenReader": 0,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 17,
+    "updates": 17
+   }
+  },
+  "noScreenReader": {
+   "step": "announce-no-reader",
+   "calls": [],
+   "counters": {
+    "requested": 14,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 0,
+     "noScreenReader": 2,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 17,
+    "updates": 17
+   }
+  },
+  "screenReaderLeaves": {
+   "step": "announce-reader-leaves",
+   "calls": [],
+   "counters": {
+    "requested": 15,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 0,
+     "noScreenReader": 3,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 17,
+    "updates": 17
+   }
+  },
+  "updateNeverComes": {
+   "step": "announce-expires",
+   "calls": [],
+   "counters": {
+    "requested": 16,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 1,
+     "noScreenReader": 3,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 137,
+    "updates": 17
+   },
+   "note": "120 updates asked for, none delivered, the announcement dropped as expired"
+  },
+  "noElement": {
+   "step": "announce-no-element",
+   "calls": [
+    "update.begin",
+    "update.end"
+   ],
+   "counters": {
+    "requested": 17,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 1,
+     "noScreenReader": 4,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 138,
+    "updates": 18
+   }
+  },
+  "stopWithOneWaiting": {
+   "step": "stop",
+   "calls": [],
+   "counters": {
+    "requested": 18,
+    "published": 11,
+    "released": 11,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 1,
+     "expired": 1,
+     "noScreenReader": 4,
+     "stopped": 1
+    },
+    "refused": {
+     "priority": 2,
+     "queue": 3
+    },
+    "updatesRequested": 138,
+    "updates": 18
+   }
+  },
+  "realHeadlessServer": {
+   "step": "real-announce",
+   "calls": [],
+   "counters": {
+    "requested": 2,
+    "published": 0,
+    "released": 0,
+    "pending": 0,
+    "held": 0,
+    "dropped": {
+     "empty": 0,
+     "expired": 0,
+     "noScreenReader": 2,
+     "stopped": 0
+    },
+    "refused": {
+     "priority": 1,
+     "queue": 1
+    },
+    "updatesRequested": 0,
+    "updates": 0
+   },
+   "osTree": false
+  }
+ },
+ "spike": {
+  "what": "Before anything was built: a Node that wrote a static text element with a value and a live mode inside NOTIFICATION_ACCESSIBILITY_UPDATE of a real window (--accessibility always), watched through the interposition of NSAccessibilityPostNotificationWithUserInfo. The script is a local experiment (build/spike/spike-announce.gd, not versioned); it was run again on the implementation tree for this record.",
+  "scriptSha256": "777942118e528ca5e69ccfc26a5293db80e215407001554140196c50ef017b00",
+  "inspectorSha256": "ab83c17b01746db8f1e80c6af05dc356c0a22c9fc860e439df7d0922afd891e3",
+  "reportSha256": "ea09d20864fd1bac06ed4ba6108627895a7ca5bdbc69fc87a0609fe48876f410",
+  "adapterActiveAfterFirstTreeQuery": true,
+  "serverSupported": true,
+  "treeAccessibilityEnabled": true,
+  "measured": {
+   "valueAndLiveAssertive": [
+    {
+     "announcement": "Saved",
+     "element": "GodotWindow",
+     "notification": "AXAnnouncementRequested",
+     "priority": 90
+    }
+   ],
+   "sameTextInANewElementPolite": [
+    {
+     "announcement": "Saved",
+     "element": "GodotWindow",
+     "notification": "AXAnnouncementRequested",
+     "priority": 50
+    }
+   ],
+   "nameOnlyAssertive": [],
+   "threeElementsInOneUpdate": [
+    [
+     "Third",
+     50
+    ],
+    [
+     "First",
+     50
+    ],
+    [
+     "Second",
+     90
+    ]
+   ]
+  },
+  "conclusion": "A node with a value and a live mode posts AXAnnouncementRequested on the window with the text and the priority level (90 assertive, 50 polite); a new element with the same text posts again; a name alone posts nothing; the interposition works with the official binary."
+ },
+ "orderFinding": {
+  "question": "In what order does AccessKit post the announcements of one update?",
+  "measurements": [
+   {
+    "where": "spike, three elements in one update (First, Second, Third), first run (before the implementation was written)",
+    "observed": [
+     "First",
+     "Second",
+     "Third"
+    ],
+    "source": "recorded when it was run; its report was overwritten by the run below"
+   },
+   {
+    "where": "graphical lane on 493d8f7 (the announcements of one frame in one update), three announcements First, Second, Third with Third high",
+    "observed": [
+     "Second",
+     "First",
+     "Third"
+    ],
+    "source": "recorded in the round that found it; the code of that design is no longer in the tree, so it is not re-run on 030ebcf"
+   },
+   {
+    "where": "spike on 030ebcf's inspector, three elements in one update (First, Second, Third), re-run for this record",
+    "observed": [
+     "Third",
+     "First",
+     "Second"
+    ],
+    "source": "build/evidence-2b/spike/spike-report.json, reportSha256 above"
+   }
+  ],
+  "conclusion": "The order inside one update is AccessKit's and is not stable: three runs gave three different orders for the same three elements. On iOS, with no queue, each announcement interrupts the one before, so the user hears the last one asked for; an order that changes with the update would change which announcement is heard.",
+  "decision": "One announcement per update, in the order asked for, a frame apart (commit 030ebcf).",
+  "fixMeasured": {
+   "where": "graphical lane on 030ebcf",
+   "observed": [
+    "First",
+    "Second",
+    "Third"
+   ],
+   "posts": [
+    [
+     "First",
+     50,
+     "GodotWindow"
+    ],
+    [
+     "Second",
+     50,
+     "GodotWindow"
+    ],
+    [
+     "Third",
+     90,
+     "GodotWindow"
+    ]
+   ]
+  }
+ },
+ "exampleValidation": {
+  "headless": {
+   "command": "node scripts/check.mjs --accessibility-info --headless",
+   "checks": 12,
+   "passed": 12,
+   "displayServer": "headless",
+   "reportSha256": "8e59dcd2d24f7aa0d52398e64ed4ddc2b73062b2c84c20dc3b4cf59c18e7de53"
+  },
+  "native": {
+   "command": "node scripts/check.mjs --accessibility-info",
+   "checks": 12,
+   "passed": 12,
+   "displayServer": "macOS",
+   "reportSha256": "e5824f4a6d33f0747661f74199a597219d16d3a81a614ae915c7ef0659c1acb1"
+  },
+  "graphical": {
+   "command": "node scripts/check.mjs --accessibility-info --capture",
+   "checks": 15,
+   "passed": 15,
+   "displayServer": "macOS",
+   "reportSha256": "5029c783d28c975a3fa2e4728a428d3820b72aebc059dc16f4d95f2e335ce60c",
+   "captureCount": 3,
+   "captures": [
+    {
+     "file": "accessibility-info-initial.png",
+     "stage": "initial",
+     "shows": "Antes de qualquer mudança: três settings desligados, \"Increase contrast\" desconhecido, os quatro sem backing indisponíveis, \"Events heard\" em \"none yet\", \"Announcements sent\" em 0 e, no rótulo nativo, \"requested 0 · published 0 · dropped 0\"; o rótulo do stand-in lista o que a plataforma reporta e \"announcements: reader\".",
+     "sha256": "206b478bd1b5c419cc76aaaf7a5a3d9735a69282caa17fb9cdc5360ef20387cc",
+     "bytes": 103811,
+     "width": 900,
+     "height": 680,
+     "stableAcrossRuns": true
+    },
+    {
+     "file": "accessibility-info-changed.png",
+     "stage": "changed",
+     "shows": "Depois de pressionar os botões nativos Screen reader, Reduce motion e Increase contrast: leitor de tela e movimento reduzido ligados, contraste aumentado desligado (era desconhecido) e \"Events heard\" em \"3 · darkerSystemColorsChanged=false\"; ainda nenhum anúncio enviado.",
+     "sha256": "25732abbbd42d5fba5789918c46b0d07c71d98a2ae0e1a4dd77b5d22894a3ba7",
+     "bytes": 105480,
+     "width": 900,
+     "height": 680,
+     "stableAcrossRuns": true
+    },
+    {
+     "file": "accessibility-info-announced.png",
+     "stage": "announced",
+     "shows": "Depois de pressionar Announce duas vezes, a segunda com o stand-in \"Announcement reader\" em none: \"Announcements sent\" em 2 e, no rótulo nativo do host, \"requested 2 · published 1 · dropped 1\"; \"announcements: none\" no stand-in e reduce motion desconhecido, como a validação o deixou.",
+     "sha256": "5e7868a423c74abec573e91e917261b522a1ec2b8083db5ea294d0b517d07df1",
+     "bytes": 105986,
+     "width": 900,
+     "height": 680,
+     "stableAcrossRuns": true
+    }
+   ],
+   "capturesIdenticalToTheStoredFrames": true,
+   "capturesIdenticalInTwoRuns": true
+  },
+  "pins": {
+   "examples/accessibility-info/App.jsx": "d90de85b80b4180715cf9801b6e4ce287177f14cf2860802b30bb36fe357b626",
+   "examples/accessibility-info/scene.tscn": "bf0087321117b544d0d332c011d72a36b79be6fb36064f8b82ed669072b3cd0d",
+   "examples/accessibility-info/validation.gd": "f619a40f55283ea61987f73877bf2347ea55612b7af213bc074d0d8a4a54381a",
+   "examples/catalog.json": "838b391c78918a39e8b4085802c0918525992726ea3c758c5dffce56ca066176"
+  }
+ },
+ "regressions": {
+  "accessibility": {
+   "command": "npm run test:accessibility",
+   "result": "1/1 subtests passed"
+  },
+  "accessibilityBridge": {
+   "command": "npm run test:accessibility:bridge",
+   "result": "1/1 subtests passed: ACCESSIBILITY_BRIDGE_PASSED: 22 (the first slice's graphical lane, with the inspector that now also interposes the announcement call)"
+  },
+  "appearance": {
+   "command": "npm run test:appearance",
+   "result": "1/1 subtests passed"
+  },
+  "platformSeams": {
+   "command": "node --test tests/platform-seams.test.mjs",
+   "result": "17/17 subtests passed"
+  },
+  "examples": {
+   "command": "npm run test:examples",
+   "result": "exit 0: 35 examples passed (headless), accessibility-info with 12 checks"
+  },
+  "contracts": {
+   "command": "npm run test:contracts",
+   "result": "exit 0: 302 Node tests, 13 Python tests, with test:parity (7) and test:dashboard (43) inside"
+  },
+  "typeCheck": {
+   "command": "npm run type-check",
+   "result": "exit 0"
+  },
+  "static": {
+   "command": "npm run check:static",
+   "result": "No issues found"
+  },
+  "publication": {
+   "command": "npm run check:publication",
+   "result": "passed (1448 files, no failure) before the evidence files were added, and passed again (1450 files, no failure) with README.md and execution.json of this record and the links to it in the docs"
+  },
+  "note": "run on the tree of the implementation commit before the evidence files were added"
+ },
+ "sourcePins": {
+  "tests/accessibility-info-fixture.jsx": "282d544c81fae1f87c226e95ac02aa7b322fabe131cfaaa9f7750fc35330391a",
+  "tests/accessibility-info-probe.gd": "9c7b8344ee42c991d498bc80edc5cbbd78bcf6a767f22cbf93ec31c263ba6069",
+  "tests/accessibility-info-native.test.mjs": "9c2548d5047f926bc7062d7d6f1b9b142306178b7808c1f84eb22ca3911780c8",
+  "tests/accessibility-info-oracle.mjs": "fbb789c5fa41ee5ad8d163a141a4abc6a391515d5bb1c062c0073d13d33f7e21",
+  "scripts/accessibility-info-bundle.mjs": "d098d49e6e65307f67673b4d9dc0fe8d5ad9302f7657e8dda104155fd90a387f",
+  "scripts/accessibility-info-sabotage.mjs": "554112d151146b145164e4e3c1ce1ea70d899af8f5df25b0b541ce8ad51b52fe",
+  "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+  "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+  "src/accessibility-info.js": "8fab7a7c3804e1535c203dd1c2119ed70636bc804d97ba988c25191ce9d121d3",
+  "src/platform-environment.js": "29b494105084bdf2996893f85a0513cacbccf144d0f1a3550e32450ecac78f18",
+  "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+  "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+  "native/accessibility_info.h": "c14c8988f09cfa2094635d1a09db387284852804f3f1fb3d7b8f2897467a32ed",
+  "native/accessibility_info.cpp": "4c1c8dcd7afc523a462f72ce8f6b2d3348d9ea1fd84a8991d718a928d5cc3bf3",
+  "native/accessibility_info_core.h": "7d78e20d6314781ce77b1dac8a63f73475addf96bbcffa7bdb9924b95a1efb3b",
+  "native/accessibility_info_core_test.cpp": "59068c7ed7a9bcf22713b71ad9758463c83db1ce93a725daa5f6fe01222e2d1f",
+  "native/accessibility_announcement_core.h": "36f2c59e3b672e1e8c3def6539bd011232cdb7934b42b9b9a1b08ef80fd29947",
+  "native/accessibility_announcement_core_test.cpp": "241593c9a3a69bbe390cfaf0f621d818f6cc08e5130ff097f4b0c1b3fb7b554e",
+  "native/accessibility_announcer.h": "343ab7a8e2d5ac8098063d4fb8e32e1d9ffb27450563a37c6ff33f67377ce963",
+  "native/accessibility_announcer.cpp": "62b602183beea27f2786aa0b97cd8d70549f6a7a19364d794fd5a9e86bb881da",
+  "native/stoppable_invoker.h": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+  "native/fabric_application.cpp": "73def9bf38c3bf67a6711264100c150ed406c465744b617b0c08ff83bc73b97b",
+  "native/fabric_application.h": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
+  "native/application_runtime.cpp": "82098a48813f993528639de655ecd9c8b141a3cc3cb1cec2e76d9751acdc1c0f",
+  "native/application_runtime.h": "8ceb53af9f4265ea1fe01f6945615e74dd01ccbf9580d8cd2799bb576ca70f68",
+  "native/CMakeLists.txt": "484d1837ddde87ce8d66d36521960ff57606a6b2bc6f95a895775ad586ede8b7",
+  "tests/accessibility-announcements-bridge.test.mjs": "bcb09bb08262e56c90ebbfd42ca7e5ad63c9caabbc5e611641c1b630ad4b62f7",
+  "tests/accessibility-announcements-bridge-probe.gd": "7c811d42e479c4c0384eaa548eb041e256597187194efe2077107b5b842bf0c2",
+  "tests/accessibility-bridge-probe.m": "e22e501904e75508d20d4465771d0599d3ddfc11e5767e08260727c1ca356cd6",
+  "examples/accessibility-info/App.jsx": "d90de85b80b4180715cf9801b6e4ce287177f14cf2860802b30bb36fe357b626",
+  "examples/accessibility-info/scene.tscn": "bf0087321117b544d0d332c011d72a36b79be6fb36064f8b82ed669072b3cd0d",
+  "examples/accessibility-info/validation.gd": "f619a40f55283ea61987f73877bf2347ea55612b7af213bc074d0d8a4a54381a",
+  "examples/catalog.json": "838b391c78918a39e8b4085802c0918525992726ea3c758c5dffce56ca066176",
+  "package.json": "13d362fdee07319473f045202936fac7b30823d597003a3455e6a09bf87561b3"
+ },
+ "observedBehavior": [
+  {
+   "api": "announceForAccessibility('Saved'), a screen reader behind the recorder",
+   "observed": "returned; one new element, value 'Saved', polite, made in an update and freed outside the next"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions('Alert', {priority: 'high'})",
+   "observed": "returned; one new element, assertive"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions with priority 'default', 'urgent', {queue: false} or null options",
+   "observed": "returned; polite (a priority iOS ignores is a default one)"
+  },
+  {
+   "api": "announceForAccessibility('') (empty text)",
+   "observed": "returned; nothing is made: counted as dropped.empty (AccessKit clears an empty value)"
+  },
+  {
+   "api": "announceForAccessibility('Salvo ✓ ação 日本')",
+   "observed": "returned; the element's value is the text, intact"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions(text, {queue: true})",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: announceForAccessibilityWithOptions queue: the macOS accessibility API has no announcement queue"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions(text, {priority: 'low'})",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: announceForAccessibilityWithOptions priority \"low\": AccessKit has only polite and assertive"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions(text, {queue: 'yes'}) and {priority: 3}",
+   "observed": "threw: Exception in HostFunction: E_ARGUMENT: announceForAccessibilityWithOptions requires queue to be a boolean (or priority to be a string)"
+  },
+  {
+   "api": "announceForAccessibility with no screen reader (recorder available:false, or the real headless server)",
+   "observed": "returned; counted as dropped.noScreenReader and not kept for a screen reader that turns on later"
+  },
+  {
+   "api": "announcements of one frame",
+   "observed": "published one per update, in the order asked, a frame apart"
+  },
+  {
+   "api": "an announcement for an update that never comes",
+   "observed": "dropped as expired after 120 pumps"
+  },
+  {
+   "api": "setAccessibilityFocus(1), public and on the module",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the keyboard focus and blur the focused control, which iOS does not do"
+  },
+  {
+   "api": "sendAccessibilityEvent(focus), application R",
+   "observed": "returned; application errors = [\"E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the keyboard focus and blur the focused control, which iOS does not do\"]"
+  },
+  {
+   "api": "announceForAccessibility, announceForAccessibilityWithOptions and setAccessibilityFocus after stop",
+   "observed": "threw: Exception in HostFunction: E_MODULE_DISPOSED: AccessibilityManager; an announcement waiting at stop is dropped (dropped.stopped) and nothing more is recorded"
+  },
+  {
+   "api": "announcementFinished",
+   "observed": "never fires"
+  }
+ ],
+ "decisions": [
+  "An announcement is a new static text element under the FabricApplication's own element with the text as its value and a live mode, because AccessKit's macOS adapter speaks the value of a live node when it is added; a name alone is silent (measured), and Godot's own Window::accessibility_announcement uses the name.",
+  "Every announcement is an element of its own: a value equal to the one before does not speak again.",
+  "The element is made inside the accessibility update (NOTIFICATION_ACCESSIBILITY_UPDATE of the FabricApplication) and freed outside the update after it, because free_element is refused inside one; the free is followed by an update that takes the node out of the OS tree.",
+  "Priority 'high' is assertive; 'default', an absent or null priority and a string iOS ignores are polite. queue: true and priority 'low' are refused with the reason, as is the screen reader's focus.",
+  "With no screen reader (SceneTree.is_accessibility_enabled(), AccessibilityServer.is_supported() and an element for the application) the call returns and the announcement is counted and dropped; it is never kept for a screen reader that turns on later, and an announcement that waits more than 120 pumps for an update that does not come is dropped.",
+  "One announcement per update, in the order asked (commit 030ebcf): AccessKit posts the elements of one update in an order of its own, and on iOS the last announcement asked for is the one heard.",
+  "The announcements have a pure core of their own (native/accessibility_announcement_core.h, with its own test), independent of the settings' core, which includes it only because its Backend carries the announcements' port.",
+  "The validation seam is the application's validation_accessibility_announcer meta (available, element, delivers): a recorder replaces the AccessibilityServer, runs the update the engine would and records every call; the probe never sends the notification.",
+  "Every name the port calls is asked of the ClassDB once and reported in the snapshot (announcements.api); the oracle holds the names to its own list of Godot 4.7.2's.",
+  "announcementFinished stays silent: macOS, AccessKit and Godot have no end-of-speech signal, and Godot's text to speech is not the screen reader (it speaks without one), so it would invent the event.",
+  "The screen reader's focus is refused: Godot has one focus, and moving it is grab_focus(), which blurs a focused TextInput; iOS's UIAccessibilityLayoutChangedNotification does not."
+ ],
+ "limitations": [
+  "Local macOS arm64 evidence; hosted CI and Pages are pending and recorded after the merge; other export targets are separate. The graphical lane needs a macOS window session and is not part of hosted CI.",
+  "That VoiceOver spoke an announcement is not proven by anything here: the lane proves what AccessKit asks AppKit to post (text, priority level, order, once each); the speech of a real VoiceOver is a manual check.",
+  "announcementFinished never fires (no end-of-speech signal anywhere in the stack).",
+  "queue: true and priority 'low' are refused: AppKit's announcement has no queue and AccessKit has only polite and assertive.",
+  "The screen reader's programmatic focus is refused (Godot has one focus); investigated: grab_focus() with FOCUS_ACCESSIBILITY and the virtual _get_focused_accessibility_element.",
+  "A View's accessibilityLiveRegion (the first slice) sets accessibility_live on a node with a name, not a value: by the adapter's code it is probably silent on macOS. Not measured on VoiceOver and not changed by this slice.",
+  "The order measured for the first design (three announcements of one frame in one update) is recorded from the round that found it; the code of that design is no longer in the tree.",
+  "The spike script is a local experiment, not versioned; its report and hashes are in this record.",
+  "Announcements hang from the FabricApplication's own element: two applications in one window announce to the same window, and a node with no element (window not visible) drops.",
+  "An announcement that waits for more pumps than 120 (a queue longer than that asked in one frame, or an update that never comes) is dropped.",
+  "Godot's mobile servers report no accessibility today; the iOS and Android bridges are GF-34 and GF-35. Windows and Linux AccessKit adapters were not measured.",
+  "In headless no real screen reader exists: the recorder stands in for the AccessibilityServer, and the real, headless server proves the drop path only."
+ ]
+}

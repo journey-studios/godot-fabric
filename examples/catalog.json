@@ -239,7 +239,7 @@
   },
   {
     "id": "accessibility-info",
-    "title": "Original RN AccessibilityInfo: the screen reader, reduce motion, reduce transparency and increase contrast Godot reports, their events, and what it cannot read",
+    "title": "Original RN AccessibilityInfo: the screen reader, reduce motion, reduce transparency and increase contrast Godot reports, their events, what it cannot read, and an announcement the host publishes or drops",
     "api": "public",
     "source": "examples/accessibility-info/App.jsx",
     "scene": "examples/accessibility-info/scene.tscn"
