@@ -221,7 +221,8 @@ O hover público no Pressable continua fora do 0.5.
 prop recusada: é a regra do default em ação, e a lane `previous` a mede (4 checks).
 
 **O que muda no ScrollView em relação ao #58.** Os valores que o `unsupportedProps` do #58 aceitava seguem aceitos (o
-mesmo valor neutro, comparado com `Object.is`, de modo que as flags aceitam só `false`) e os que ele recusava seguem
+mesmo valor neutro, comparado com `Object.is`, de modo que as flags aceitam só `false`, salvo `canCancelContentTouches` e
+`persistentScrollbar`, que aceitam só `true`, e `overScrollMode`, que aceita só `"never"`) e os que ele recusava seguem
 recusados. Mudam as mensagens, que passam à forma uniforme (`Godot ScrollView does not implement <prop>`; o
 `... refreshControl is not implemented` de `onRefresh` e `refreshing` passa a nomear a prop), e as props que o #58 deixava
 passar mas que o iOS trata (`accessibilityIgnoresInvertColors`, `accessibilityShowsLargeContentViewer`,

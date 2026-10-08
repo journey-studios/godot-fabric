@@ -585,7 +585,7 @@
     "fontFamily accepts NotoSans and JetBrainsMono only, and the preset's default stacks were not exercised",
     "SVG: no transform, group opacity, font weights 700 and 800, Polygon, Polyline or v1 root API; no native/svg_node change",
     "The laboratory compiles the web variant of the NativeWind preset and the SDK the native one; unifying them would change the laboratory's evidence",
-    "macOS arm64 only; hosted CI and the Pages publication pending",
+    "macOS arm64 only: only the renderer lane (--capture) and the control on main's SDK (--control-ref) remain local evidence; the hosted CI run and the Pages publication are recorded in this receipt and in publication.json",
     "The duplicated version strings across manifests and docs are not cleaned up"
   ],
   "findings": [
