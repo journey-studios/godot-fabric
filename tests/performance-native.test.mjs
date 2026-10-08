@@ -207,7 +207,11 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   const stale = await mutated(report, "stale-notification", stages => {
     stages.workloads.idle.cycles[4].retiredSurface.liveRoots = 1;
   });
-  for (const [name, change] of Object.entries({frozen, twice, leaked, grew, stale})) {
+  // A stopped application whose second reading differs from the first, as one that read Hermes' heap afresh would give.
+  const drifting = await mutated(report, "stopped-drift", stages => {
+    stages.stopped.plain[1] = "0".repeat(64);
+  });
+  for (const [name, change] of Object.entries({frozen, twice, leaked, grew, stale, drifting})) {
     const judged = replayChecks(binary, change.file);
     assert.equal(judged.status, 1, judged.log);
     assert.equal(judged.checks.length, replayed.checks.length, `${name}: the replay loses no check`);
@@ -230,6 +234,9 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   assert.deepEqual(negatives.stale.failedChecks, [
     "unmount/The notification of a root's unmount agrees with the application on its live and retired roots"],
   "A notification that still counts the retired root as alive fails the unmount check");
+  assert.deepEqual(negatives.drifting.failedChecks, [
+    "stop/Two readings of the stopped application's snapshot are identical, with and without the validation metas"],
+  "A stopped application whose snapshot changes between two readings fails the stop check");
   // The limit is inclusive: 2048 bytes above the first steady cycle passes the probe's check and the oracle's.
   const allowed = replayChecks(binary, atLimit.file);
   assert.equal(allowed.status, 0, allowed.log);

@@ -3,9 +3,10 @@
 Status: executed isolated macOS validation (arm64, headless) against pinned RN 0.87.1, Hermes
 250829098.0.17 and official Godot 4.7.2. This is the first slice of GF-30. It measures and does
 not budget: it adds a `performance` section to the application snapshot, a harness that mounts and
-unmounts four workloads in a soak, and 42 headless checks (14 that hold on every host and 28 that
+unmounts four workloads in a soak, and 43 headless checks (15 that hold on every host and 28 that
 need the new section; the [evidence record](../evidence/performance/README.md) pins the run of the
-implementation commit, which had 41, before the review added the unmount notification's check). Nothing in it judges a duration, the resident memory or Godot's static
+implementation commit, which had 41, before the review added the unmount notification's check and the stopped
+application's check). Nothing in it judges a duration, the resident memory or Godot's static
 memory, and nothing in it decides what a device may spend (see [Open](#open)). **The growth of the
 live Hermes heap in the steady state is bounded by a normative check of 2,048 bytes**
 ([below](#the-live-heap-in-the-steady-state-and-the-limit)).
@@ -93,6 +94,22 @@ meta, of which the `performance` section is about 1,944, and 18,398 bytes with i
 13,433: the samples are about 12 KB that the default snapshot does not carry (they were always on in the
 first version of this slice).
 
+## A stopped application
+
+A runtime that has stopped has one state, and a game may read its snapshot as often as it likes: `examples/services`
+stops the application twice and requires the second snapshot to equal the first. The counters and series of the section
+already hold still then (no pump runs and nothing is created or deleted), but the Hermes reading does not:
+**each `getHeapInfo` call adds 40 bytes to `hermes_allocatedBytes` and `hermes_totalAllocatedBytes`**, measured by
+reading a stopped application's snapshot twice. A host that read the heap afresh after the stop reported a different
+snapshot every time, and the hosted `native-cold-start` job failed on it (`Repeated application stop preserves
+finalized service lifetime`). So the runtime reads the heap one last time as it stops, in the same step that
+marks it stopped, and a stopped runtime reports that reading in `performance.hermes` (with its `collectedBeforeReading`
+as it was then) and reads nothing afresh. The probe stops its application twice and compares the text of four
+snapshots, two without the validation metas and two with them: the check fails on the version that read the heap
+afresh and passes on the preceding host, which has no section. While the application runs, the heap is not held
+still: a reading without the collection meta is of a heap that the previous reading changed, and a reading with the
+collection meta is of the live bytes.
+
 ## Method
 
 Four workloads, each a root of its own mounted through `FabricSurface` and unmounted by removing it
@@ -142,6 +159,8 @@ Normative, exact, and independent of how fast the machine is:
   root ended with the performance section's `liveRoots` and `retiredRoots` brought up to the retirement: it agrees
   with its own `rootCount` and with the application's reading taken afterwards (the first version read the section
   with the root still alive and updated only `rootCount`);
+- a stopped application has one snapshot: read again and again after `stop()`, with or without the validation metas,
+  it is the same text (see [A stopped application](#a-stopped-application));
 - a busy JS turn is accounted to the JS phase (at least as long as the turn was busy by the host's own
   clock, at most the pumps that ran it);
 - the report names the Godot and Hermes versions, the architecture, the operating system and the driver;

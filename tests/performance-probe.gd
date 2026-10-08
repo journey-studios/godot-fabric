@@ -227,6 +227,22 @@ func run_control() -> void:
     rows.append({"index": index, "before": sample(), "mounted": sample(), "after": sample()})
   stages["control"] = {"cycles": rows}
 
+# A game ends its application and may read its snapshot any number of times: a stopped runtime has one state. Stops it (twice,
+# as examples/services does) and reads the snapshot again and again, without the validation metas and with them. Hermes' heap
+# reading is not idempotent (each getHeapInfo call adds 40 bytes to the live heap), so a host that read it afresh after the
+# stop would give a different snapshot every time.
+func run_stopped() -> void:
+  application.call("stop")
+  await settle(4)
+  var first := snapshot_text()
+  application.call("stop")
+  var second := snapshot_text()
+  var third := snapshot_text(true, true)
+  var fourth := snapshot_text(true, true)
+  var state := parsed(first)
+  stages["stopped"] = {"stopped": state.get("stopped", false) == true, "rootCount": number(state.get("rootCount")), "bytes": first.length(),
+    "plain": [first.sha256_text(), second.sha256_text()], "withMetas": [third.sha256_text(), fourth.sha256_text()]}
+
 func run_load() -> void:
   var node := add_surface("idle")
   var frames: int = await wait_mounted(node)
@@ -470,6 +486,13 @@ func check_unmount_notification() -> void:
         and retired.retiredRoots == counter(cycle.after, "retiredRoots")
   section_check(agree and seen == WORKLOADS.size() * CYCLES, "unmount/The notification of a root's unmount agrees with the application on its live and retired roots")
 
+func check_stopped() -> void:
+  var stopped: Dictionary = stages.stopped
+  var plain: Array = stopped.plain
+  var with_metas: Array = stopped.withMetas
+  check(stopped.stopped and number(stopped.rootCount) == 0.0 and plain[0] == plain[1] and with_metas[0] == with_metas[1],
+    "stop/Two readings of the stopped application's snapshot are identical, with and without the validation metas")
+
 func check_soak(workload: String) -> void:
   var soak: Dictionary = stages.workloads[workload]
   var cycles: Array = soak.cycles
@@ -559,6 +582,7 @@ func evaluate() -> void:
   check_burn()
   check_invariants()
   check_unmount_notification()
+  check_stopped()
   for workload: String in WORKLOADS:
     check_soak(workload)
 
@@ -586,7 +610,7 @@ func replay_probe(path: String) -> void:
     return
   var report: Dictionary = parsed
   var recorded: Dictionary = report.get("stages", {})
-  for key: String in ["provenance", "baseline", "heapSource", "burn", "workloads", "windows"]:
+  for key: String in ["provenance", "baseline", "heapSource", "burn", "workloads", "windows", "stopped"]:
     if not recorded.has(key):
       push_error("PERFORMANCE_REPLAY_INCOMPLETE: " + path)
       quit(2)
@@ -621,6 +645,7 @@ func run_probe() -> void:
   # After the soaks, so that the windows are full: the weight of the section is what a long-running application pays.
   run_windows()
   await run_control()
+  await run_stopped()
   await finish_probe()
 
 func finish_probe() -> void:

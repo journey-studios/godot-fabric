@@ -3108,10 +3108,12 @@ GF-30 becomes **In progress**; only its first-slice checkpoint becomes done, and
 the parity and the targets remain open. The [performance evidence](docs/evidence/performance/README.md)
 adds a `performance` section to the application snapshot and a harness that mounts and unmounts four workloads
 (a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a 120-row `FlatList`) 20 times each,
-headless: **42 checks**, 14 that hold on every host and 28 that need the section. The evidence record pins
+headless: **43 checks**, 15 that hold on every host and 28 that need the section. The evidence record pins
 `ad87234`, which had 41 and 27, before the review of #59 added the check that the notification of a root's unmount
 (the snapshot the surface keeps as its last report) reports the counts of live and retired roots at that moment and not
-those of the snapshot read just before it. No checkpoint of any other item changes.
+those of the snapshot read just before it, and the check that a stopped application's snapshot is the same on every
+reading (a `getHeapInfo` call adds 40 bytes to the live heap, so a stopped runtime reports the Hermes reading it took as it
+stopped; reading it afresh made `examples/services` fail on hosted CI). No checkpoint of any other item changes.
 
 The section (`native/performance_metrics.h`, fed from `native/application_runtime.cpp`) reports exact counters of
 the native tree (commits, creates, deletes, updates and the views alive, which survive a root's unmount), Hermes'
@@ -3133,7 +3135,7 @@ An independent oracle recomputes the invariants and the nearest-rank percentiles
 The preceding host (built from `585ca1b` in the evidence record, from main afterwards) fails exactly the 28 section checks
 (27 in the record), and three retained sabotages (a host
 that never frees the Controls of a retired root, one that repeats a single heap reading, one that counts each phase
-twice) fail 4, 3 and 2 checks; the oracle rejects each, and five breakages made in the recorded report are
+twice) fail 4, 3 and 2 checks; the oracle rejects each, and six breakages made in the recorded report are
 rejected too (four in the record). A C++ test covers the accounting over synthetic times. One run measured, for idle, forms, chart and
 list, 2, 5, 71 and 124 native views, a live heap at rest of 1,790,616, 1,803,896, 1,820,872 and 1,933,112 bytes and
 a mount of 0.52, 1.44, 6.65 and 18.12 ms at the median pump.

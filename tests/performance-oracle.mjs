@@ -155,6 +155,15 @@ function verifyWindows(windows) {
     snapshotBytes: {withoutMeta: plain.snapshotBytes, withMeta: sampled.snapshotBytes}};
 }
 
+// A stopped application has one state: its snapshot is the same text however often it is read, with the validation metas or without.
+function verifyStopped(stopped) {
+  assert.ok(stopped.stopped === true && stopped.rootCount === 0, "The application is stopped and holds no root");
+  assert.match(stopped.plain[0], /^[0-9a-f]{64}$/, "and its snapshot was read");
+  assert.equal(stopped.plain[1], stopped.plain[0], "A stopped application's snapshot is the same on a second reading");
+  assert.equal(stopped.withMetas[1], stopped.withMetas[0], "and with the validation metas set");
+  return {snapshotBytes: stopped.bytes};
+}
+
 function verifyBurns(burns) {
   assert.equal(burns.length, BURNS, "The probe asked for the busy turns the oracle expects");
   return burns.map(({label, requestedMs, ranMs, before, after}) => {
@@ -291,7 +300,7 @@ export function verifyPerformanceReport(report) {
   });
   assert.equal(baseline.host.rootCount, 0, "Nothing is mounted at the baseline");
   assert.equal(baseline.performance.counters.nativeViews, 0, "and the host holds no native view");
-  const snapshot = verifyWindows(stages.windows);
+  const snapshot = {...verifyWindows(stages.windows), stoppedSnapshotBytes: verifyStopped(stages.stopped).snapshotBytes};
   const heap = verifyHeapSource(source);
   const burns = verifyBurns(stages.burn);
   const workloads = {};

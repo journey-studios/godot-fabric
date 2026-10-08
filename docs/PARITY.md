@@ -115,8 +115,8 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
 - **Performance baselines:** a `performance` section in the application snapshot (exact counters of
   the native views, Hermes' live heap after a forced collection, and the host's pump split into JS,
   mount and layout phases) and a soak of 20 mounts and unmounts of four workloads (idle, forms, chart,
-  a 120-row `FlatList`), headless (GF-30's first slice; 42 checks, 41 in the evidence record pinned at `ad87234`, which predates the check of the
-  unmount notification; the preceding host as the control,
+  a 120-row `FlatList`), headless (GF-30's first slice; 43 checks, 41 in the evidence record pinned at `ad87234`, which predates the checks of the
+  unmount notification and of the stopped application's snapshot; the preceding host as the control,
   three retained sabotages and an independent oracle; see the [evidence](evidence/performance/README.md) and the
   [research note](research/performance.md); its hosted CI run is pending).
   The nodes, orphans and views return to the baseline after every cycle and the live heap at rest may rise at

@@ -459,10 +459,10 @@ the application snapshot: exact counters of the native views, Hermes' live heap 
 host's pump split into JS, mount and layout phases. A soak mounts and unmounts four workloads 20 times each,
 headless (a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a 120-row `FlatList`):
 after every cycle the SceneTree, Godot's orphan count and the host's native views are back to the baseline of the
-run, and the live heap at rest rises at most 2,048 bytes in the steady state (0 to 312 measured). 42 checks, recomputed
+run, and the live heap at rest rises at most 2,048 bytes in the steady state (0 to 312 measured). 43 checks, recomputed
 by an independent oracle from the samples the host reports; the preceding host fails exactly 28 and three retained sabotages (a Control never freed,
 a frozen heap reading, a phase counted twice) are rejected. The evidence record is pinned at `ad87234`, which had 41 checks and 27 failures of the preceding host,
-before the check of the unmount notification. Durations, the resident memory and Godot's static
+before the checks of the unmount notification and of the stopped application's snapshot. Durations, the resident memory and Godot's static
 memory are recorded with their provenance and never judged; target-device budgets, text shaping, 10,000 rows,
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).

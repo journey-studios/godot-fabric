@@ -572,7 +572,9 @@ pump (`pump`) attributed to JS turns, Fabric's mounting callback and layout (`ph
 its `count`, `totalMs`, `maxMs` and the nearest-rank `p50Ms`, `p95Ms` and `p99Ms` over its last 128 samples. The
 samples themselves (`windowMs`) are reported only where a `validation_performance_samples` meta is set on the
 application, since they are most of the section's weight (about 12 KB of an 18 KB application snapshot) and every
-`status()` pays for them. The phases are exclusive and never add up to more than the pumps. Where a
+`status()` pays for them. The phases are exclusive and never add up to more than the pumps. A stopped application has one snapshot: the Hermes reading
+(`hermes`) is the one taken as it stopped, since a `getHeapInfo` call adds 40 bytes to the live heap and a second
+reading would differ. Where a
 `validation_collect_garbage_on_status` meta is set a full Hermes collection runs before each heap reading
 (`hermes.collectedBeforeReading`); a product sets neither meta, and without the collection the heap depends
 on when Hermes' concurrent collector last ran. The section measures and sets no budget, there is no

@@ -275,6 +275,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   // percentiles come from are about 12 KB on every status(), so only a validation run that asks
   // for them (validation_performance_samples) gets them.
   std::function<bool()> performance_samples;
+  // Hermes' heap as it was when the runtime stopped, which a stopped runtime reports from then on.
+  std::optional<folly::dynamic> final_hermes;
   struct Mounted {
     Control *control;
     rn::ShadowView shadow;
@@ -1375,6 +1377,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     last_pointer_event = 0;
     pointer_event_delivered = false;
     stopped = true;
+    final_hermes = hermes_snapshot();
     // Cache the finalized application state for surfaces whose owner may be
     // destroyed before them. Object IDs avoid retaining the scene objects.
     for (auto [host_id, id] : host_ids)
@@ -2452,6 +2455,26 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     return result;
   }
+  // Hermes' heap as the section reports it. A reading is not idempotent: each getHeapInfo call adds 40 bytes to the
+  // live heap (measured), and a stopped runtime has one state, which a game may read as often as it likes. So the
+  // runtime reads the heap once more as it stops, and reports that reading ever after, without reading anything afresh.
+  folly::dynamic hermes_snapshot() {
+    if (final_hermes) {
+      return *final_hermes;
+    }
+    bool collected = false;
+    if (collect_garbage_on_status && collect_garbage_on_status()) {
+      runtime->instrumentation().collectGarbage("godot-fabric performance status");
+      collected = true;
+    }
+    const auto info = runtime->instrumentation().getHeapInfo(false);
+    folly::dynamic heap = folly::dynamic::object();
+    for (const auto &entry : std::map<std::string, int64_t>(info.begin(), info.end())) {
+      heap[entry.first] = entry.second;
+    }
+    return folly::dynamic::object("source", "jsi::Instrumentation::getHeapInfo")
+        ("collectedBeforeReading", collected)("heap", std::move(heap));
+  }
   folly::dynamic performance_snapshot() {
     const auto &retired = performance.retired();
     int64_t commits = static_cast<int64_t>(retired.commits), creates = static_cast<int64_t>(retired.creates),
@@ -2462,17 +2485,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       deletes += root->deletes;
       updates += root->updates;
     }
-    bool collected = false;
-    if (collect_garbage_on_status && collect_garbage_on_status()) {
-      runtime->instrumentation().collectGarbage("godot-fabric performance status");
-      collected = true;
-    }
-    const auto info = runtime->instrumentation().getHeapInfo(false);
     const bool samples = performance_samples && performance_samples();
-    folly::dynamic heap = folly::dynamic::object();
-    for (const auto &entry : std::map<std::string, int64_t>(info.begin(), info.end())) {
-      heap[entry.first] = entry.second;
-    }
     folly::dynamic phases = folly::dynamic::object();
     for (size_t index = 0; index < fabric_godot::phase_count; ++index) {
       const auto phase = static_cast<fabric_godot::Phase>(index);
@@ -2482,8 +2495,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("counters", folly::dynamic::object("commits", commits)("creates", creates)("deletes", deletes)
             ("updates", updates)("nativeViews", static_cast<int64_t>(views.size()))
             ("liveRoots", static_cast<int64_t>(roots.size()))("retiredRoots", static_cast<int64_t>(retired.roots)))
-        ("hermes", folly::dynamic::object("source", "jsi::Instrumentation::getHeapInfo")
-            ("collectedBeforeReading", collected)("heap", std::move(heap)))
+        ("hermes", hermes_snapshot())
         ("pump", durations_snapshot(performance.pump(), samples))("phases", std::move(phases))
         ("surfaces", folly::dynamic::object("start", durations_snapshot(performance.surface_start(), samples))
             ("retire", durations_snapshot(performance.surface_retire(), samples)))

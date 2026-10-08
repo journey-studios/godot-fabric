@@ -20,9 +20,9 @@ Todo link de código abaixo está fixado no commit de implementação
 (árvore `0b4523e7`). Cada fonte executada, listada em `sourcePins` do recibo, tem o mesmo SHA-256
 que o blob desse commit: os documentos que o commit também traz não são entrada de nenhum comando.
 Os números desta página e do recibo são os de `ad87234`: 41 checks, 27 falhas normativas do host anterior e
-quatro quebras no relatório gravado. A suíte atual tem 42, 28 e cinco, porque o check de que a notificação de
-unmount de uma raiz informa as contagens de raízes vivas e aposentadas naquele momento entrou na revisão do PR #59; esta
-página e o recibo continuam descrevendo `ad87234`.
+quatro quebras no relatório gravado. A suíte atual tem 43, 28 e seis, porque dois checks entraram na revisão do PR #59: o de que a
+notificação de unmount de uma raiz informa as contagens de raízes vivas e aposentadas naquele momento e o de que o
+snapshot de uma aplicação parada é o mesmo em toda leitura; esta página e o recibo continuam descrevendo `ad87234`.
 
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
