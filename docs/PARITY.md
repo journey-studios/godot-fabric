@@ -128,8 +128,8 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   reaches the map, and with a tree overlay or a `Modal` open nothing does (the first slice of the pointer
   spike, go/no-go no. 1 of the 0.5 Frontier milestone; [research](research/world-input.md)). `FabricSurface`
   now takes `MOUSE_FILTER_IGNORE` by default and the Views are the Controls that stop the pointer; a headless
-  probe in two topologies (one full-screen Surface, and one per panel) with an independent oracle and a local
-  windowed lane, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
+  probe in two topologies (one full-screen Surface, and one per panel; the overlay checks on the full-screen one
+  only) with an independent oracle and a local windowed lane on the full-screen Surface only, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
   its [evidence record](evidence/world-input/README.md) pins the execution, and its hosted CI run is pending. It is a host behavior and not an RN name: it moves no
   count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD still reach
   the map too (the second slice), and hardware pointers, a real touch screen and mobile exports stay open.

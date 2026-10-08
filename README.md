@@ -480,7 +480,8 @@ Controls that stop a pointer: a click on the empty area of the `pointerEvents="b
 map's `_unhandled_input` exactly once (and picks the tile the camera gives), a click or tap on a `Pressable`
 presses it once and never reaches the map, and with a `View` overlay or a `Modal` open nothing does. The
 headless probe counts bursts of 100 events delivered by one flush, so no count depends on frame pacing, in
-two topologies (one full-screen Surface, and one Surface per panel) with an independent oracle; the host that
+two topologies (one full-screen Surface, and one Surface per panel; the overlay checks and a local windowed
+lane with captures on a real macOS window use the full-screen one only) with an independent oracle; the host that
 predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
 a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the map as well
 as React Native: they are recorded and left to the second slice of the spike. Hardware pointers, a real touch

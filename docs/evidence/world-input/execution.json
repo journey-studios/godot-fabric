@@ -1136,7 +1136,7 @@
     "The probe's two sabotages are applied by the probe, so no host is rebuilt; the previous-host control swaps the preserved dylib and restores it byte for byte."
   ],
   "goNoGo": {
-    "reading": "Slice 1 of 3: GO for the minimal policy (a1). A click on the HUD's empty area reaches the map exactly once, a Pressable is pressed once and never reaches the map, and with a tree overlay or a Modal open nothing does, in both topologies, under load, on a real window with the native renderer. The go/no-go itself is decided in slice 3, on the numbers of slices 1 and 2.",
+    "reading": "Slice 1 of 3: GO for the minimal policy (a1). A click on the HUD's empty area reaches the map exactly once, a Pressable is pressed once and never reaches the map in both topologies, and with a tree overlay or a Modal open nothing does in topology (a), the only one with overlays; the exact counts, under load too, are the headless suite's, in both topologies, and the real window with the native renderer ran topology (a) only. The go/no-go itself is decided in slice 3, on the numbers of slices 1 and 2.",
     "timeBox": "3 slices: 1 = this one (minimal policy and the measurement of what it leaves open); 2 = variant a2 for the open cases, after PR #58; 3 = the decision."
   },
   "limitations": [

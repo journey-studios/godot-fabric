@@ -546,7 +546,8 @@ time-boxed to. With `FabricSurface` taking `MOUSE_FILTER_IGNORE` by default, a c
 on the empty area of the HUD's `pointerEvents="box-none"` root reached the Godot map
 100 times out of 100 and no HUD handler, a click or a tap on a `Pressable` pressed it
 100 times and never reached the map, and with a tree overlay or a `Modal` open nothing
-did, in one full-screen Surface and in one Surface per panel, headless and on a real
+did. Both layouts, one full-screen Surface and one Surface per panel, ran headless (the
+overlays only in the full-screen one), and only the full-screen layout ran on a real
 macOS window with captures. The red test came first (the preceding host fails exactly
 the 31 checks that need the policy) and two retained sabotages are rejected by an
 independent oracle; the

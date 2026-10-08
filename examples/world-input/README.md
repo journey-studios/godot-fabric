@@ -10,7 +10,7 @@ reach the map, and with an overlay open (a `View` in the React tree, or a `Modal
 ```sh
 npm run test:world-input                # headless: the probe, with N = 100 per burst, and the oracle
 node scripts/world-input-sabotage.mjs   # the two sabotages and the preceding host (needs the preserved host)
-node scripts/world-input-graphics.mjs   # the same scene in a real window, with N = 100 and captures in build/world-input-graphics/
+node scripts/world-input-graphics.mjs   # the full-screen scene (a) in a real window, with N = 100 and captures in build/world-input-graphics/
 ```
 
 The first command bundles the HUD (`tests/world-input-fixture.jsx`, written to `build/world-input-probe.js`, which the
@@ -50,7 +50,7 @@ from the HUD's geometry and the rules. The 66 checks say:
   no `ScreenTouch`), a bar with a handler hears it, and a plain panel swallows the pointer;
 - the tree overlay and the `Modal` take the left click, the right click and the tap (and the `Modal` the wheel) while
   open, with 100 of 100 reaching the world before and after: the positive control;
-- the same for two Surfaces, one per panel.
+- the empty-area and `Pressable` checks again for two Surfaces, one per panel (that scene has no overlay).
 
 The world selects tiles on the **mouse stream**: a tap reaches an unhandled map as `InputEventScreenTouch` and as the
 `InputEventMouseButton` Godot emulates from it, and the world acts on the second only. A game that needs multi-touch

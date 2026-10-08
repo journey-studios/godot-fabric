@@ -1,9 +1,10 @@
 # A React Native HUD over a Godot world: who gets the pointer
 
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official Godot
-4.7.2, headless, plus a local windowed lane on the native renderer, for the first of three
-slices of the pointer spike (the 0.5 Frontier milestone's V05-02, go/no-go no. 1). The probe
-drives a React Native HUD drawn over a Godot world in two topologies; the host that predates
+4.7.2, headless, plus a local windowed lane on the native renderer (the full-screen Surface
+layout only), for the first of three slices of the pointer spike (the 0.5 Frontier milestone's
+V05-02, go/no-go no. 1). The probe drives a React Native HUD drawn over a Godot world in two
+topologies, the overlays in the full-screen one only; the host that predates
 the policy fails exactly the 31 checks that need it; two retained sabotages are rejected by
 the probe and by an independent oracle. The [evidence record](../evidence/world-input/README.md) pins the
 execution and has the captures; its hosted CI run is pending. Real hardware pointers, a real touch screen and mobile exports are not certified;
@@ -230,7 +231,8 @@ node scripts/world-input-sabotage.mjs     # the two sabotages and the previous-h
 node scripts/world-input-graphics.mjs     # the windowed lane and its captures (local)
 ```
 
-The windowed lane runs the same scene on the native renderer with a real display server (macOS, with the
-Compatibility renderer), repeats the counts of topology (a) with N = 100, checks that the frame shows the HUD over the map
+The windowed lane runs the scene of topology (a), the full-screen Surface, on the native renderer with a real
+display server (macOS, with the Compatibility renderer); topology (b) is not run in a window. It repeats the counts of
+topology (a) with N = 100, checks that the frame shows the HUD over the map
 and saves four captures under `build/world-input-graphics/`: the map with the HUD, the selected tile and the
 two overlays open.

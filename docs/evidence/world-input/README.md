@@ -51,9 +51,10 @@ node scripts/world-input-graphics.mjs
 
 ## Leitura do go/no-go
 
-**Fatia 1 de 3: GO para a política mínima.** Nos dois arranjos medidos, o vazio chega ao mapa uma vez, o
-`Pressable` não, e o overlay aberto fecha o mapa, com contagens exatas, sob carga e numa janela real. O go/no-go
-em si é decidido na fatia 3, sobre os números das fatias 1 e 2: a fatia 2 é a variante (a2), para as lacunas
+**Fatia 1 de 3: GO para a política mínima.** Nos dois arranjos medidos, o vazio chega ao mapa uma vez e o
+`Pressable` não; com o overlay aberto, o mapa fica fechado no arranjo (a), o único que tem overlay. As contagens
+exatas, inclusive sob carga, vêm da suíte headless, nos dois arranjos (com os overlays só em (a)); a janela real
+rodou só o arranjo (a). O go/no-go em si é decidido na fatia 3, sobre os números das fatias 1 e 2: a fatia 2 é a variante (a2), para as lacunas
 abaixo, depois do merge do PR #58 (as mesmas hunks de `native/application_runtime.cpp`), e a 3 é a decisão. Esta
 fatia não fecha o spike: o critério `iphone` do V05-02 segue aberto (pacote P7), porque nada aqui roda num iPhone.
 

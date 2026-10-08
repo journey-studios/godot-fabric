@@ -791,8 +791,8 @@ overlays, which are the same click with the overlay closed), while the wheel alr
 GUI passes it through a STOP Control, `force_pass_scroll_events`); two retained sabotages made by the probe (the
 Surfaces back to STOP, every View IGNORE) fail 31 and 21 and the oracle rejects each. The world listens to the mouse
 stream, emulated mouse included, and a tap is blocked in both streams by a Pressable. A local windowed lane (18
-checks, N = 100, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) repeats the counts on a real
-window and keeps four captures, linked from the record. A hit slop, a `Text` with `onPress`, the gaps of a
+checks, N = 100, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) repeats the counts of the full-screen
+layout on a real window (the per-panel layout runs headless only) and keeps four captures, linked from the record. A hit slop, a `Text` with `onPress`, the gaps of a
 ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
 recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
