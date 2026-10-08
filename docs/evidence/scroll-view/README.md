@@ -75,6 +75,11 @@ independently verifies the current list oracle, forced-green sabotage rejection
 and all four graphical artifacts. This closes the local review; hosted CI and
 CodeRabbit acceptance remain open.
 
+The [committed producer proof](committed-source.json) compares every one of the
+108 native build input files and 18 bundle producer files against committed
+Git blobs. It separately verifies the installed pinned RN inputs. Receipt-only
+commits after the recorded producer commit do not change the tested sources.
+
 ## Windowed graphical capture
 
 A separate Godot macOS windowed probe executed the same host and unchanged

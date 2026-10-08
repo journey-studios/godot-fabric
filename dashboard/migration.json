@@ -8,10 +8,10 @@
     "focusSequence": "5",
     "focusTitle": "GF-14: revisão local concluída; PR e CI/CodeRabbit em preparação"
   },
-  "updatedAt": "2026-10-08T03:29:22.784832+00:00",
+  "updatedAt": "2026-10-08T03:31:42.759Z",
   "source": {
-    "commit": "a6cc5b94531d162214574d3a4a382b9edf32320c",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/a6cc5b94531d162214574d3a4a382b9edf32320c",
+    "commit": "96a2e6ede82db4f1d5b0771a838400fdcfb44a3f",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/96a2e6ede82db4f1d5b0771a838400fdcfb44a3f",
     "scope": "Main integrada com GF-11, GF-18 e GF-23 preservados: 26/156 checkpoints, 0/39 itens. GF-14 passou a repetição independente integrada e revisão thermo-nuclear; publicação e aceite hospedado ainda pendentes."
   },
   "phases": [

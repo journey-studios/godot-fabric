@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-committed-producers",
+  "sourceCommit": "96a2e6ede82db4f1d5b0771a838400fdcfb44a3f",
+  "verifiedAt": "2026-10-08T03:31:42.759Z",
+  "hostSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
+  "buildReceiptSha256": "76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c",
+  "bundleSha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec",
+  "groups": {
+    "native": {
+      "count": 108,
+      "pinsSha256": "da1196cc8b4c02b8c97aa02d718f29a6750430993d145c8b9126c33df9578c16",
+      "allMatchCommittedBlobs": true
+    },
+    "bundle": {
+      "count": 18,
+      "pinsSha256": "736466b52ab07d2248cdaea3cd19354f48332c7b1e5e711a013d89402c162bde",
+      "allMatchCommittedBlobs": true
+    },
+    "reactNative": {
+      "count": 6,
+      "pinsSha256": "8092ccd6a41cf150f98a885cc00620731be9ec5f523e80e5beb1b63e1b5ad11c",
+      "allMatchPinnedInstalledSources": true
+    }
+  },
+  "note": "The source commit contains every repository producer recorded by the final build and mounted bundle. Later receipt-only commits do not change those producers. Source identity does not certify the external SDK adapter ABI."
+}
