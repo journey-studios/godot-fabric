@@ -5,11 +5,14 @@ import { AppRegistry, Pressable, StyleSheet, Text, View } from "react-native";
 // visible line of the paragraph it measures and paints. Each paragraph here draws what it was
 // told: a translucent box at the line's x, y, width and height, and a thin rule at its baseline
 // (y + ascender). The row of three texts uses alignItems: "baseline", which Yoga resolves from
-// the same lines.
-const observations = { events: {}, lines: {}, frames: {}, narrow: false };
+// the same lines. The last line of the right column is a paragraph with onPress, onPressIn and onPressOut,
+// which RN's original Text presses.
+const observations = { events: {}, lines: {}, frames: {}, narrow: false, presses: 0, pressLog: [] };
 globalThis.TextLayoutExample = {
   state: () => ({
     narrow: observations.narrow,
+    presses: observations.presses,
+    pressLog: [...observations.pressLog],
     events: { ...observations.events },
     lines: Object.fromEntries(Object.entries(observations.lines).map(([id, rows]) => [id, rows.map((row) => ({ ...row }))])),
     frames: { ...observations.frames },
@@ -71,6 +74,21 @@ function BaselineRow() {
   );
 }
 
+// A paragraph presses through RN's original Text: onPressIn, onPress and onPressOut reach React from a click on it.
+function PressLine() {
+  const [presses, setPresses] = useState(0);
+  const [held, setHeld] = useState(false);
+  const note = (type) => observations.pressLog.push(type);
+  return (
+    <Text testID="press-line" style={[styles.pressLine, held ? styles.pressLineHeld : null]}
+      onPressIn={() => { note("in"); setHeld(true); }}
+      onPressOut={() => { note("out"); setHeld(false); }}
+      onPress={() => { note("press"); observations.presses += 1; setPresses((count) => count + 1); }}>
+      Press this paragraph: pressed {presses} times
+    </Text>
+  );
+}
+
 function TextLayoutExample() {
   const [narrow, setNarrow] = useState(false);
   const [wrap, setWrap] = useState(null);
@@ -107,6 +125,7 @@ function TextLayoutExample() {
           <Text style={styles.buttonLabel}>{narrow ? "Widen the column" : "Narrow the column"}</Text>
         </Pressable>
         <Text testID="summary" style={styles.summary}>{summary}</Text>
+        <PressLine />
       </View>
     </View>
   );
@@ -128,4 +147,6 @@ const styles = StyleSheet.create({
   button: { alignSelf: "flex-start", paddingVertical: 10, paddingHorizontal: 16, backgroundColor: "#0f766e", borderRadius: 12 },
   buttonLabel: { color: "#f8fafc", fontFamily: "NotoSans", fontSize: 14, fontWeight: "700" },
   summary: { color: "#94a3b8", fontFamily: "NotoSans", fontSize: 13, lineHeight: 19 },
+  pressLine: { alignSelf: "flex-start", paddingVertical: 8, paddingHorizontal: 12, color: "#f8fafc", backgroundColor: "#1d4ed8", fontFamily: "NotoSans", fontSize: 14 },
+  pressLineHeld: { backgroundColor: "#1e3a8a" },
 });

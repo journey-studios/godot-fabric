@@ -57,11 +57,12 @@ class Guard extends Component {
   }
 }
 
-// What an application passes that this Text does not implement or accept.
+// What an application passes that this Text does not implement or accept. An outer Text with onPress is one that
+// RN's original Text (tests/text-original-fixture.jsx) accepts, so it is the one entry that mounts.
 const attempts = {
   string: {onTextLayout: "not a function"},
   object: {onTextLayout: {}},
-  press: {onPress: () => {}},
+  "outer-press": {onPress: () => {}},
   selectable: {selectable: true},
   fit: {adjustsFontSizeToFit: true},
 };

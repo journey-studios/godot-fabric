@@ -3248,6 +3248,68 @@ implementation tree the contracts gate (302 Node/13 Python), the type check, sta
 accessibility, appearance, device services, typography and NativeWind suites pass. No checkpoint, whole GF, weight or
 denominator closes.
 
+### Text renders RN's original Text.js, and its paragraph presses (2026-10-08)
+
+GF-11 stays **In progress**: this is its second slice, and its first-slice checkpoint was already closed by the
+first. The [text original evidence](docs/evidence/text-original/README.md) makes the public `Text` render React
+Native's own `Libraries/Text/Text.js` instead of a wrapper that registered `RCTText` and `RCTVirtualText` itself
+(RN's `NativeText` would collide with it, `Tried to register two views with the same name RCTText`): **119 headless
+checks** in one Hermes application, every press gesture with a real mouse and a real touch. No checkpoint of any
+other item changes.
+
+The original owns the props, the style processing and the Pressability of a pressable paragraph, and registers the
+two names once. `src/text.jsx` keeps only the host's contract and the default size; `useTextAncestor()` reads the
+`TextAncestorContext` that `Text.js` and `View.js` share, so the inline-Control guards still fire at render. The base
+view config (`src/base-view-config.js`) declares the text styles from one list, `textStyleAttributes`, which the facade's
+style checks read too; without them the attribute payload dropped `fontFamily`, `fontWeight`, `lineHeight`,
+`letterSpacing` and `textAlign` in silence, and the Controls' own style map is unchanged. The outer paragraph presses
+through RN's Pressability: a tap reports press in, press and, 130 ms after the press in, press out (`Text.js` does not
+pass `minPressDuration: 0`, so the order is not a touchable's); a press held past 130 ms reports in, out, press; a long
+press reports `onLongPress` after 500 ms and no press; leaving and re-entering the region (the default offsets, or
+`pressRetentionOffset`) toggles the press; nothing outside, on a `disabled` paragraph or with no handler reaches JS;
+a press over a nested span's text is the outer paragraph's. `allowFontScaling`, `maxFontSizeMultiplier`,
+`dynamicTypeRamp` and `suppressHighlighting` are accepted and change nothing (the host's font scale is 1 and nothing
+highlights outside iOS).
+
+Thirty-three props fail where the `Text` renders, word for word: any press or responder prop on a nested `Text`
+(the four press props and every prop that starts with `onResponder`, `onStartShouldSetResponder` or
+`onMoveShouldSetResponder`, the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included), `selectable`, `adjustsFontSizeToFit`, `ellipsizeMode` head, middle or invalid (`tail or clip`),
+`selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS`, `android_hyphenationFrequency`, the
+wrapper-only `text=` and `fontSize=`, `fontStyle` and `textDecoration*`, a bad `numberOfLines`, a non-function
+`onTextLayout` and inline Controls. A native guard in `ParagraphLayout::prepare` repeats the refusal of head, middle and
+`adjustsFontSizeToFit` for a `NativeText` imported around the facade, which used to be drawn as a plain character trim or
+ignored: `measure` and the paint report it and the Yoga callback survives. The default size of an outer paragraph stays
+**18**, not RN's 14: the host already falls back to 18, and 14 would change about 37 examples and every capture, so the
+divergence is kept, documented and open.
+
+An independent oracle replays Pressability from the raw samples and timestamps, checks the runs of 19 paragraphs
+and the 33 rejected props word for word, and sees the host refuse the bypass. The SDK and host of main `6d02746` fail
+exactly 68 of the 119 checks (the original `Text.js` is not in its bundle either); the same bundle on that host alone fails
+the 3 that need the native guard (and the oracle rejects only `bypass`); six retained sabotages (the wrapper registering
+`RCTText` again, no text styles in the base config, a private ancestor context, a nested press allowed, no native guard,
+RN's default size of 14) fail 107 of 110, 5, 18, 12, 3 and 2, and the oracle rejects each; the host without the guard is
+byte-identical to the previous host. The previous SDK is bundled by the canonical `bundleNativeProbe` with `platformRoot`.
+The example passes 22 headless and 36 renderer checks and ends with a pressable paragraph; four captures show it at rest,
+held, after the click and with the column narrowed, taken by a capture driver that is not project code.
+
+Open: press on a span (hit testing by text fragment and a dispatch in the pointer adapter), accessibility of `Text`
+(`Text.js` gives a pressable paragraph `accessibilityRole: 'link'`, which the host does not apply, with GF-20),
+`fontStyle` and decoration (the next slice), head and middle ellipsizing, selection and `adjustsFontSizeToFit`, font
+scaling, the default size of 14, font loading and fallback, bidi, emoji and grapheme clusters, and a reference
+measurement on an iOS simulator and an Android emulator. The hosted CI run of the new `native-text-original` step and the
+Pages publication are **pending**.
+
+The record pinned at `ba5ff00` ran 114 checks (63 failures on the previous SDK and host; sabotages 102 of 105, 5, 13, 7, 3
+and 2; 28 rejected props): the review of PR #62 added five nested-span responder cases afterwards.
+
+Executed on macOS arm64 with official Godot 4.7.2 at implementation
+[`ba5ff00`](https://github.com/journey-studios/godot-fabric/commit/ba5ff00fe1b22c6d5ba30925e57e8df6687a8261) and
+recorded at [`1221e6c`](https://github.com/journey-studios/godot-fabric/commit/1221e6c151feca02e873ae746c28118aaa719986):
+the text layout (76), touchables (93 and 7), typography laboratory (50 headless, 63 renderer), the 34 examples, the
+type check, the contracts gate (301 Node/13 Python, static analysis, publication scan) and the platform seams (16) pass
+on that tree. Only the first-slice checkpoint was closed, earlier, by the first slice; no whole GF, other checkpoint,
+weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
