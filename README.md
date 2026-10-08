@@ -550,6 +550,16 @@ memory are recorded with their provenance and never judged; target-device budget
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
 
+The [Frontier HUD baseline](examples/frontier-baseline/README.md) (V05-06, criterion `baseline`) extends that harness to
+the pointer spike's scene: a React Native HUD over the Godot map whose panel, a tree of 50, 75 or 100 native nodes, is
+replaced by a real click on a button of the bar. Headless, in two processes, every swap leaves the SceneTree and the host
+with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
+reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
+independent oracle recomputes it all. A local windowed lane (`node scripts/frontier-baseline-graphics.mjs`) records the
+frame time in five processes, with the vsync mode read back. The numbers are a baseline and a proposed budget, not a
+frozen one; the lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
+[Research](docs/research/frontier-baseline.md).
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -877,6 +887,7 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:frontier-baseline           # the Frontier HUD's panel swaps by a real click over the pointer spike's scene: exact node counts, oracle; sabotages: node scripts/frontier-baseline-sabotage.mjs
 npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs

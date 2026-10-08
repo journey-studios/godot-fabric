@@ -8,7 +8,7 @@ export const performanceNativeProducers = ["native/performance_metrics.h", "nati
 
 export function bundlePerformanceProbe() {
   return bundleNativeProbe({name: "performance", entryPoint: "tests/performance-fixture.jsx",
-    sources: ["tests/performance-fixture.jsx", "tests/performance-cases.mjs", "tests/performance-probe.gd",
+    sources: ["tests/performance-fixture.jsx", "tests/performance-cases.mjs", "tests/performance-probe.gd", "tests/performance-sampler.gd",
       "tests/performance-native.test.mjs", "tests/performance-oracle.mjs", "scripts/performance-bundle.mjs",
       "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx", "src/svg.jsx", "sdk/toolchain/platform-plugin.mjs",
       ".deps/hermes/destroot/include/jsi/instrumentation.h", ...performanceNativeProducers],
