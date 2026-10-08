@@ -682,6 +682,33 @@ sabotages 107, 5, 18, 12, 3 and 2, and 33 props are rejected) because the review
 cases (`onStartShouldSetResponderCapture`, `onMoveShouldSetResponderCapture`, `onResponderReject`, `onResponderStart` and
 `onResponderEnd`) to the 114 that it ran. The hosted CI run and the Pages publication are **pending**.
 
+The [text style record](text-style/README.md) makes the paragraph paint `fontStyle: 'italic'` and
+`textDecorationLine` (underline, line-through and both) with `textDecorationColor` and a solid
+`textDecorationStyle`: GF-11's third slice. The facade used to reject all four; now the base view config declares them
+(the color through the same processor as `color`), the facade validates their values from one table, and the host
+slants the run's font by 0.25 (a synthetic italic: the bundled fonts have no italic face) and draws the lines from
+Godot's font metrics, one segment per run and per visual row, over the glyphs that are painted. One `painted_glyphs`
+decides what a row paints and feeds the drawing, the decorations and the snapshot, and the same pass fixes the glyphs
+of the ellipsis, which used to take the color of the FIRST run: they now take the run of the last visible glyph, for the
+color and the line. 61 headless checks run in one Hermes application; an independent oracle reads `head`, `hhea`,
+`post` and `OS/2` of the bundled TTFs in Node and recomputes the center and thickness of every underline and
+strike-through (within 0.005 px of the host), that segments touch, that a run covering its row runs from the row's x
+to its x plus its width, that decoration never changes a measure, the inheritance (a child's `none` cancels the
+parent's underline, `line-through` replaces it, a color alone recolors), the opacity, the ellipsis and clipped text,
+18 rejected styles word for word and the host's refusal of `oblique` and the non-solid line styles for a `NativeText`
+that skips the facade. The skew is read on the outline of "I" (the top moves right by 0.25 of its height, 3 px at 16 px,
+in NotoSans, JetBrainsMono and bold, and the bottom and the advance stay). The control on the SDK and host of main
+(`0f2cc7e`) fails exactly 47 checks; the same bundle on that host alone fails the 27 that need the new native code;
+eight retained sabotages (an underline above the baseline, the line color ignored, a child's `none` dropped, a line over
+the whole row, the skew inverted, the facade letting `dotted` through, the ellipsis on the first run again, no native
+guard) fail 1, 5, 1, 3, 2, 4, 2 and 5, and the oracle rejects each in its own section. The measured divergence of RN's
+formulas is recorded: the underline sits 0.2 px (NotoSans) to 1.1 px (JetBrainsMono) lower than Android's formula
+would put it and the strike-through 1.3 and 1.2 px higher; iOS was not measured. The typography laboratory passes 55
+headless and 72 renderer checks, four of them reading pixels, with three captures of the new line (at rest, enlarged
+four times, and with the window narrowed). Real italic faces, the double, dotted, dashed and wavy lines, `overline`,
+bidirectional text and line geometry that matches either platform are open. The hosted CI run and the Pages publication
+are **pending**.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,
