@@ -1963,7 +1963,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "Accessibility",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early",
       "dependencies": [
         "GF-04",
@@ -1974,14 +1974,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Primeira fatia: View, Pressable e TouchableOpacity levam as props de acessibilidade do RN (label e hint como nome e descrição do elemento, papel, estados, região live, aria-hidden e onAccessibilityTap) à árvore de acessibilidade do Godot (AccessKit), e o press do SO chega aos callbacks do RN. Todas as 105 grafias de accessibilityRole e role do RN 0.87.1 são mapeadas (61 grafias, 44 nomes distintos) para um papel do Godot ou rejeitadas com o motivo (44 grafias, 39 nomes distintos), sem cair num papel genérico. A prova tem dois tipos: 80 checks headless que provam só metadado (descritor, propriedades dos Controls e o caminho do host do press) e 22 checks que leem a árvore NSAccessibility real do Godot gráfico no macOS e pressionam elementos com AXPress; o host anterior falha exatamente 10 e 5, e quatro sabotagens são rejeitadas. O bridge só roda localmente (sessão gráfica) e o passo headless ainda não rodou na CI hospedada. Seguem abertos AccessibilityInfo (fatia 2), foco e teclado, anúncios, grupos, ações customizadas, text scale e o mobile: o Godot 4.7.2 não tem bridge de acessibilidade em iOS nem Android, o que bloqueia GF-34 e GF-35.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Acessibilidade: 80 checks headless (só metadado), 22 na árvore NSAccessibility real, controle do host anterior e sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
+            },
+            {
+              "label": "Recibo de execução do commit 42615f4: hashes, contagens, controles e sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3531,6 +3540,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "accessibility-first-slice-20261008",
+      "at": "2026-10-08T02:23:27.221171+00:00",
+      "taskIds": [
+        "GF-20"
+      ],
+      "message": "Primeira fatia do GF-20: as props de acessibilidade do RN em View, Pressable e TouchableOpacity chegam à árvore do AccessKit no Godot (nome, descrição, papel, estados, live, hidden e o press do SO). Prova de metadado: 80 checks headless em duas roots, com um oráculo independente e as 105 grafias de papel varridas (61 mapeadas e 44 rejeitadas com o motivo). Prova real: 22 checks leem a árvore NSAccessibility do Godot gráfico no macOS e pressionam elementos com AXPress; núcleo C++ com 594 asserções. O host anterior falha exatamente 10 e 5 checks e quatro sabotagens (nome, press, tabela de papéis e hidden) falham 6, 17, 3 e 5, todas rejeitadas pelo oráculo. Pendentes: o bridge é só local e o passo headless não rodou na CI hospedada; o Godot 4.7.2 não tem bridge em iOS e Android (bloqueia GF-34 e GF-35); AccessibilityInfo, foco e teclado, anúncios, grupos, ações customizadas e text scale seguem abertos. Só o checkpoint da primeira fatia fecha; nenhum item, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
+    },
     {
       "id": "device-services-first-slice-f3571fd",
       "at": "2026-10-08T02:06:52.660442+00:00",

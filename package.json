@@ -71,6 +71,8 @@
     "test:app-state": "node --test tests/app-state-native.test.mjs",
     "test:lists": "node --test tests/virtualized-list-native.test.mjs",
     "test:switch": "node --test tests/switch-native.test.mjs",
+    "test:accessibility": "node --test tests/accessibility-native.test.mjs",
+    "test:accessibility:bridge": "node --test tests/accessibility-bridge.test.mjs",
     "test:responders:shared-touches": "node --test tests/shared-touches-native.test.mjs",
     "test:touchables": "node --test tests/touchables-native.test.mjs",
     "test:activity-indicator": "node --test tests/activity-indicator-native.test.mjs",

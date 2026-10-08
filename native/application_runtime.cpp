@@ -25,6 +25,7 @@
 #include "image_loader.h"
 #include "image_loader_module.h"
 #include "godot_image_manager.h"
+#include "accessible_view.h"
 #include "timer_registry.h"
 #include "frame_clock.h"
 #include "turbo_module_registry.h"
@@ -138,7 +139,7 @@ class GodotHostPhaseCallback final : public CallableCustom {
  private:
   std::function<void()> callback;
 };
-enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key, Toggle, ModalWindowInput };
+enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key, Toggle, ModalWindowInput, AccessibilityTap };
 // A Control's connection belongs to its original runtime and mount. Binding a
 // mutable FabricSurface would reroute an old queued signal after an owner switch.
 class GodotCoreControlCallback final : public CallableCustom {
@@ -1366,6 +1367,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (kind == "view" || mounted.external)
       control->set_clip_contents(props->yogaStyle.overflow() != facebook::yoga::Overflow::Visible);
     if (!control->is_visible()) cancel_subtree(control);
+    if (auto *accessible = Object::cast_to<GodotAccessibleView>(control))
+      for (const auto &error : accessible->apply(*props)) fail(error);
     if (mounted.external) {
       mounted.external->update(previous, shadow);
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
@@ -1590,6 +1593,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             if (std::static_pointer_cast<const rn::SwitchProps>(shadow.props)->value == on) return;
             ++guard->roots.at(surface_id)->events;
             std::static_pointer_cast<const rn::SwitchEventEmitter>(shadow.eventEmitter)->onChange({.value = on});
+          } else if (signal == CoreControlSignal::AccessibilityTap) {
+            // iOS accessibilityActivate: only a View with an onAccessibilityTap handler answers the OS's press.
+            const auto &shadow = mounted->shadow;
+            if (!shadow.eventEmitter || !std::static_pointer_cast<const rn::ViewProps>(shadow.props)->onAccessibilityTap) return;
+            ++guard->roots.at(surface_id)->events;
+            std::static_pointer_cast<const rn::ViewEventEmitter>(shadow.eventEmitter)->onAccessibilityTap();
           } else if (auto *input = mounted->input.get()) {
             if (signal == CoreControlSignal::Change) input->changed(static_cast<String>(*args[0]));
             else if (signal == CoreControlSignal::FocusEntered) input->focus(true);
@@ -2149,7 +2158,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           } else if (kind == "svg") {
             control = memnew(GodotSvgNode);
           } else if (kind == "view") {
-            control = memnew(Panel);
+            auto *view = memnew(GodotAccessibleView);
+            view->connect("accessibility_tap", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::AccessibilityTap));
+            control = view;
             control->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
           } else throw std::runtime_error("Unsupported GodotControl kind: " + kind);
           native_tags.emplace(control, next.tag);
@@ -2482,6 +2493,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (auto *toggle = Object::cast_to<GodotSwitch>(control)) node["switch"] = toggle->snapshot();
       if (auto *indicator = Object::cast_to<GodotActivityIndicator>(control)) node["activity"] = indicator->snapshot();
       if (auto *picture = Object::cast_to<GodotImage>(control)) node["image"] = picture->snapshot();
+      if (auto *accessible = Object::cast_to<GodotAccessibleView>(control)) node["accessibility"] = accessible->snapshot();
       if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
         auto measured = paragraph->snapshot();
         for (const auto &item : measured.items()) node[item.first] = item.second;
