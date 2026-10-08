@@ -11,7 +11,7 @@ import {build} from "esbuild";
 import {parseSync, transformFromAstSync} from "@babel/core";
 import platformBaseViewConfig, {controlViewConfig} from "../src/base-view-config.js";
 import {validateImageProps} from "../src/image-contract.mjs";
-import {checkProps, declaredProps, legacyProps, probeValue, propTable, refusalMessage, refuses, scope, scopedComponents}
+import {checkProps, declaredProps, legacyProps, probeValue, propTable, refusalMessage, refusalTable, refuses, scope, scopedComponents}
   from "../src/prop-scope.mjs";
 import {describeComponents, renderManifest} from "../scripts/scope-manifest.mjs";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
@@ -59,11 +59,8 @@ test("the manifest decides exactly twelve names, each with its audit row as reco
   }
   // The audit's rows that are stale in the way the brief records.
   assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppState", "Image", "Modal"]);
-  // ScrollView belongs to PR #58: it is in the manifest, out of the runtime tables.
-  const scrollView = manifest.names.find(row => row.name === "ScrollView");
-  assert.equal(scrollView.pendingOn, "PR #58");
-  assert.equal(scrollView.props, null);
-  assert.deepEqual(manifest.names.filter(row => row.pendingOn !== undefined).map(row => row.name), ["ScrollView"]);
+  // PR #58 landed: the ScrollView is classified like the other six, and nothing in the manifest waits on another change.
+  assert.deepEqual(manifest.names.filter(row => row.pendingOn !== undefined).map(row => row.name), []);
   assert.deepEqual(Object.keys(manifest.notInTheManifest).sort(), ["FlatList", "PixelRatio"]);
   assert.ok(manifest.outOfScope.some(text => /TextInput/.test(text)) && manifest.outOfScope.some(text => /hover/.test(text)));
   assert.match(manifest.rule, /neither/);
@@ -72,10 +69,11 @@ test("the manifest decides exactly twelve names, each with its audit row as reco
     assert.ok(scopedComponents.includes(row.name) && row.props === `components.${row.name}`, row.name);
   }
   assert.deepEqual(manifest.names.filter(entry => entry.props !== null).map(entry => entry.name).sort(), [...scopedComponents].sort());
+  assert.equal(scopedComponents.length, 7);
 });
 
-test("every prop that RN declares for the six components is classified exactly once", () => {
-  assert.deepEqual(scopedComponents, ["View", "Text", "Pressable", "Image", "Modal", "ActivityIndicator"]);
+test("every prop that RN declares for the seven components is classified exactly once", () => {
+  assert.deepEqual(scopedComponents, ["View", "Text", "Pressable", "Image", "Modal", "ActivityIndicator", "ScrollView"]);
   for (const component of scopedComponents) {
     const declared = declaredNames(scope[component].owner);
     assert.ok(declared.size > 50, `${component}: the inventory has the owner rows of ${scope[component].owner}`);
@@ -92,6 +90,14 @@ test("every prop that RN declares for the six components is classified exactly o
       [...propTable(component).values()].filter(entry => entry.decision === decision).length]));
     assert.equal(counts.supported + counts.ignored + counts.refused, declared.size, component);
   }
+  // The props a list hands to the ScrollView and RN does not declare for it are not part of that classification: the lists declare
+  // them, the ScrollView does not, and the table of the component does not hold them.
+  const listed = scope.ScrollView.listRules.flatMap(rule => rule.names);
+  assert.deepEqual(listed.sort(), ["onRefresh", "refreshing"]);
+  for (const name of listed) {
+    assert.ok(!declaredNames("ScrollViewProps").has(name) && !propTable("ScrollView").has(name), `ScrollView does not declare ${name}`);
+    assert.ok(declaredNames("FlatListProps").has(name) && refusalTable("ScrollView").has(name), `FlatList declares ${name} and the ScrollView refuses it`);
+  }
 });
 
 test("every ignored and refused prop has a reason, a basis and sources that exist and say what they are cited for", () => {
@@ -100,7 +106,7 @@ test("every ignored and refused prop has a reason, a basis and sources that exis
   const iosView = wordsOf("react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm");
   const ignoredBases = ["ios-drops", "ios-noop", "android-native", "not-forwarded", "overwritten", "dependent", "decision"];
   for (const component of scopedComponents) {
-    for (const rule of scope[component].rules) {
+    for (const rule of [...scope[component].rules, ...(scope[component].listRules ?? [])]) {
       if (rule.decision === "supported") {
         assert.ok(rule.how === "host" || rule.how === "js", `${component}.${rule.names[0]} says how it has behavior`);
         continue;
@@ -185,13 +191,17 @@ const controlNames = hostNames(controlViewConfig);
 test("the supported props agree with the view configs the host is given, in both directions", async t => {
   const result = await bundleEntry(t, [
     'import "react-native/Libraries/Components/View/ViewNativeComponent";',
+    'import "react-native/Libraries/Components/ScrollView/ScrollViewNativeComponent";',
     'import "react-native/Libraries/Text/TextNativeComponent";',
     'import "react-native/Libraries/Image/ImageViewNativeComponent";',
     'import "react-native/Libraries/Components/ActivityIndicator/ActivityIndicatorViewNativeComponent";',
     'import "react-native/Libraries/Modal/RCTModalHostViewNativeComponent";',
+    // the platform's own addition to the registered config (horizontal), which the ScrollView's host depends on
+    `import ${JSON.stringify(path.join(root, "src/scroll-view-native-config.js"))};`,
     'export {get as viewConfig} from "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry";'].join("\n"));
   const {viewConfig} = run(result, {global: hostHandle, ...hostHandle});
-  const classes = {View: "RCTView", Text: "RCTText", Image: "RCTImageView", ActivityIndicator: "RCTActivityIndicatorView", Modal: "RCTModalHostView"};
+  const classes = {View: "RCTView", Text: "RCTText", Image: "RCTImageView", ActivityIndicator: "RCTActivityIndicatorView", Modal: "RCTModalHostView",
+    ScrollView: "RCTScrollView"};
   const configs = {Pressable: controlViewConfig, ...Object.fromEntries(Object.entries(classes).map(([component, name]) => [component, viewConfig(name)]))};
   // The RN configs are built over the platform's base config: its names are in every one of them.
   for (const [component, config] of Object.entries(configs)) {
@@ -212,7 +222,7 @@ test("the supported props agree with the view configs the host is given, in both
   // The Pressable renders the host's Control, whose config also lists the events of the Control's inputs: onFocus and onBlur
   // are ignored for a Pressable (nothing emits them, because no View of this host takes focus), not supported.
   const allowed = {Pressable: ["onFocus", "onBlur"]};
-  for (const component of ["View", "Text", "Pressable", "Image", "ActivityIndicator"]) {
+  for (const component of ["View", "Text", "Pressable", "Image", "ActivityIndicator", "ScrollView"]) {
     const names = component === "Pressable" ? controlNames : baseNames;
     for (const [name, entry] of propTable(component)) {
       if (names.has(effective(entry, name)) && !allowed[component]?.includes(name)) {
@@ -282,7 +292,9 @@ test("the manifest carries the tables of the module and nothing else of them", (
 
 test("the checker refuses by the table, on any value that is not null, and lets everything else through", () => {
   for (const component of scopedComponents) {
-    for (const [name, entry] of propTable(component)) {
+    // the declared props, then the refused ones that only the lists declare
+    const entries = [...propTable(component), ...[...refusalTable(component)].filter(([name]) => !propTable(component).has(name))];
+    for (const [name, entry] of entries) {
       const props = {[name]: probeValue(component, name)};
       if (entry.decision === "refused") {
         assert.throws(() => checkProps(component, props), new Error(refusalMessage(component, name)), `${component}.${name}`);
@@ -321,17 +333,24 @@ test("the checker refuses by the table, on any value that is not null, and lets 
   assert.throws(() => checkProps("Text", {selectable: true}), /^Error: Godot Text does not implement selectable$/);
   assert.throws(() => checkProps("Pressable", {onHoverIn() {}}), /^Error: Godot Pressable does not implement onHoverIn$/);
   assert.throws(() => checkProps("Image", {children: "x"}), /^Error: The <Image> component cannot contain children\./);
+  // The ScrollView: the request that asks for nothing passes, every other fails, and the message is the uniform one.
+  assert.doesNotThrow(() => checkProps("ScrollView", {bounces: false, pagingEnabled: false, keyboardDismissMode: "none", overScrollMode: "never",
+    snapToOffsets: [], stickyHeaderIndices: [], canCancelContentTouches: true, persistentScrollbar: true, refreshing: false, onRefresh: null}));
+  assert.throws(() => checkProps("ScrollView", {bounces: true}), /^Error: Godot ScrollView does not implement bounces$/);
+  assert.throws(() => checkProps("ScrollView", {snapToOffsets: [20]}), /^Error: Godot ScrollView does not implement snapToOffsets$/);
+  assert.throws(() => checkProps("ScrollView", {decelerationRate: "normal"}), /^Error: Godot ScrollView does not implement decelerationRate$/);
+  assert.throws(() => checkProps("ScrollView", {onRefresh() {}}), /^Error: Godot ScrollView does not implement onRefresh$/);
+  assert.throws(() => checkProps("ScrollView", {refreshing: true}), /^Error: Godot ScrollView does not implement refreshing$/);
+  assert.doesNotThrow(() => checkProps("ScrollView", {horizontal: true, scrollEnabled: false, contentOffset: {x: 1, y: 2}, onScroll() {}}));
 });
 
 test("the value RN gives every refused prop by default passes, with the source of the default cited and read", () => {
   for (const component of scopedComponents) {
-    for (const [name, entry] of propTable(component)) {
-      if (entry.decision !== "refused") {
-        continue;
-      }
+    for (const [name, entry] of refusalTable(component)) {
       if (entry.accepts === undefined) {
-        // A handler has no default, and the two props that are not handlers and have none say so in their reason.
-        assert.ok(/^on[A-Z]/.test(name) || /no default/.test(entry.reason), `${component}.${name} has no default and says so`);
+        // A handler has no default; a prop that is not a handler and accepts nothing says in its reason that it has none, or that
+        // its default is refused too.
+        assert.ok(/^on[A-Z]/.test(name) || /no default|default included/.test(entry.reason), `${component}.${name} has no default and says so`);
         assert.throws(() => checkProps(component, {[name]: probeValue(component, name)}), `${component}.${name}`);
         continue;
       }
@@ -397,7 +416,7 @@ test("the Pressable drops the keys RN does not declare before the host's Control
 
 test("every component facade runs the check, and only the one module owns the tables", () => {
   const callers = {View: "src/react-native-platform.jsx", ActivityIndicator: "src/react-native-platform.jsx", Modal: "src/react-native-platform.jsx",
-    Pressable: "src/components.jsx", Text: "src/text.jsx", Image: "src/image-contract.mjs"};
+    Pressable: "src/components.jsx", Text: "src/text.jsx", Image: "src/image-contract.mjs", ScrollView: "src/scroll-view-contract.mjs"};
   assert.match(read("src/components.jsx"), /declaredProps\("Pressable"/, "the Pressable drops the undeclared keys");
   for (const [component, file] of Object.entries(callers)) {
     assert.match(read(file), new RegExp(`checkProps\\("${component}"`), `${file} checks the ${component}`);
@@ -406,6 +425,11 @@ test("every component facade runs the check, and only the one module owns the ta
   const text = read("src/text.jsx");
   for (const gone of ["unsupportedFlags", "unsupportedProps", "wrapperOnlyProps", "dataDetectorType"]) {
     assert.ok(!text.includes(gone), `text.jsx no longer lists ${gone}`);
+  }
+  // ... and the table of the ScrollView's contract is gone from it: what stays are the checks of values and the removal of list props.
+  const contract = read("src/scroll-view-contract.mjs");
+  for (const gone of ["unsupportedProps", "rejectAny", "emptyArray", "isRequested", "is not implemented"]) {
+    assert.ok(!contract.includes(gone), `scroll-view-contract.mjs no longer holds ${gone}`);
   }
   assert.ok(!read("src/components.jsx").includes("onHoverIn || onHoverOut"));
   const facade = read("src/react-native-platform.jsx");
@@ -436,7 +460,7 @@ test("the types and the tables agree: a supported prop type-checks and a refused
     sum + [...propTable(component).values()].filter(entry => entry.decision === "supported").length, 0);
   assert.equal(counts.positive, supported);
   const refused = scopedComponents.reduce((sum, component) =>
-    sum + [...propTable(component).values()].filter(entry => entry.decision === "refused" && entry.typed !== true).length, 0);
+    sum + [...refusalTable(component).values()].filter(entry => entry.typed !== true).length, 0);
   assert.equal(counts.negative, refused);
   const result = spawnSync(path.join(root, "node_modules/.bin/tsc-rs"), ["-p", path.join(directory, "tsconfig.json")], {encoding: "utf8", cwd: root});
   assert.equal(result.error, undefined);

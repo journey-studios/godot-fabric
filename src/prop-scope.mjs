@@ -18,13 +18,15 @@
 //                decision        an earlier, documented decision of this platform.
 //   refused    iOS has behavior that Godot does not implement (`basis: "ios"`), or an earlier decision refuses it
 //              (`basis: "decision"`): the facade throws `Godot <Component> does not implement <prop>` when the value is
-//              not null or undefined, unless `accepts` lists it. `accepts` is the list of the values that work, with the
-//              value RN gives the prop by default first, and `defaultSource` names the RN source of that default: the
-//              default does nothing on iOS either (the view only acts when a value leaves it), so it passes. A flag that is
-//              off by default accepts [false]. A prop without `accepts` fails with any value that is not null: a function
-//              (on*) has no default, and the two refused props that are not functions say in their `reason` that they have
-//              none. `typed` marks a prop that types/react-native.ts keeps, with the values it accepts. `message` replaces
-//              the text where an earlier decision published another one, `probe` is a value that fails.
+//              not null or undefined, unless `accepts` lists it. `accepts` is the list of the values that work, the value
+//              that leaves the host as it is first: RN's default, which does nothing on iOS either (the view only acts when
+//              a value leaves it), and `defaultSource` names the RN source that gives or describes it. A flag that is off by
+//              default accepts [false]. The ScrollView's behavior props list instead the request its host can honor, which
+//              is not always RN's default (bounces: false, where iOS bounces). A prop without `accepts` fails with any value
+//              that is not null: a function (on*) has no default, and a prop that is not a function says in its `reason` that
+//              it has no default or that its default is included. `typed` marks a prop that types/react-native.ts keeps,
+//              with the values it accepts. `message` replaces the text where an earlier decision published another one,
+//              `probe` is a value that fails.
 //
 // One class of props has behavior on iOS and is nevertheless ignored here, and says so: the ones that RN's own components hand
 // to every View they render (RN's touchables clone their child with a computed `focusable`, and TouchableNativeFeedback with an
@@ -60,6 +62,10 @@ const accessibilityDecisions = "docs/research/accessibility.md";
 const textDecisions = "docs/research/text-original.md";
 const imageDecisions = "src/image-contract.mjs";
 const modalHost = "native/modal_presentation.cpp";
+const scrollViewJs = "react-native/Libraries/Components/ScrollView/ScrollView.js";
+const scrollViewConfig = "react-native/Libraries/Components/ScrollView/ScrollViewNativeComponent.js";
+const scrollViewDecisions = "tests/scroll-view-contract.test.mjs";
+const virtualizedListJs = "@react-native/virtualized-lists/Lists/VirtualizedList.js";
 const modalSpec = "react-native/src/private/components/modal/specs/RCTModalHostViewNativeComponent.js";
 const accessibilityPropsH = "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h";
 const baseViewPropsH = "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h";
@@ -281,6 +287,59 @@ const indicator = [
   desktopIgnored(desktopOnly),
 ];
 
+// ScrollView: RN's original ScrollView.js behind the public wrapper (src/scroll-view.jsx; src/scroll-view-contract.mjs keeps the
+// checks of values and takes the list props off). ScrollView.js hands the native RCTScrollView every prop it does not read, as it
+// is, so the View props follow the rules of the components that forward theirs (no aria-* is mapped). Of its own props the host
+// honors the scroll position, the enabling, the indicators and the five scroll events, RN's JS reads the content and its size,
+// and the rest has behavior on RN's platforms and none here: the request that asks for nothing passes (`accepts`) and any other
+// fails, as the contract of the ScrollView decided before this table existed (tests/scroll-view-contract.test.mjs).
+const scrollRequest = (names, value, extra) => refused("decision", names,
+  "the Godot ScrollView honors none of it, so only the request that asks for nothing passes", [scrollViewJs, scrollViewDecisions],
+  accepting([value], [scrollViewJs], extra));
+const scrollRefusedAny = names => refused("decision", names,
+  "the Godot ScrollView honors none of it, so it refuses every value that is not null, RN's default included",
+  [scrollViewJs, scrollViewDecisions]);
+const scrollView = [
+  supportedHost(["testID", "nativeID", "pointerEvents", "hitSlop", "collapsable", "collapsableChildren", ...mappedAccessibility, ...inputEvents,
+    "scrollEnabled", "showsVerticalScrollIndicator", "showsHorizontalScrollIndicator", "horizontal", "contentOffset", "scrollEventThrottle",
+    "onScroll", "onScrollBeginDrag", "onScrollEndDrag", "onMomentumScrollBegin", "onMomentumScrollEnd"]),
+  supportedJs(["children", "style", "onLayout", "contentContainerStyle", "onContentSizeChange", "innerViewRef", "scrollViewRef"]),
+  ...iosAccessibilityRules(),
+  unmappedIgnored(documentedUnmapped),
+  focusIgnored(),
+  // experimental_accessibilityOrder is the one member of ViewProps that ScrollViewProps leaves out.
+  ...iosViewRules().filter(rule => !rule.names.includes("experimental_accessibilityOrder")),
+  ignored("ios-noop", ["id", "tabIndex", ...ariaValue, "aria-label", "aria-live", "aria-hidden", "aria-labelledby", "aria-modal", ...ariaStates],
+    "RN's ScrollView.js forwards the name as it is and no iOS component reads it", [scrollViewJs]),
+  androidIgnored(androidViewOnly),
+  androidNativeIgnored(["needsOffscreenAlphaCompositing", "hasTVPreferredFocus"]),
+  desktopIgnored(desktopOnly),
+  ignored("dependent", ["StickyHeaderComponent", "invertStickyHeaders", "stickyHeaderHiddenOnScroll"],
+    "they only matter for the sticky headers that stickyHeaderIndices names, and it accepts the empty list only", [scrollViewJs]),
+  scrollRequest(["alwaysBounceHorizontal", "alwaysBounceVertical", "automaticallyAdjustContentInsets", "automaticallyAdjustKeyboardInsets",
+    "automaticallyAdjustsScrollIndicatorInsets", "bounces", "bouncesZoom", "centerContent", "disableIntervalMomentum",
+    "disableScrollViewPanResponder", "nestedScrollEnabled", "pagingEnabled", "pinchGestureEnabled", "scrollToOverflowEnabled",
+    "scrollsToTop"], false),
+  scrollRequest(["canCancelContentTouches", "persistentScrollbar"], true, { probe: false }),
+  scrollRequest(["keyboardDismissMode"], "none", { probe: "on-drag" }),
+  scrollRequest(["overScrollMode"], "never", { probe: "always" }),
+  scrollRequest(["snapToOffsets"], [], { probe: [20] }),
+  scrollRequest(["stickyHeaderIndices"], [], { probe: [0] }),
+  scrollRefusedAny(["contentInset", "contentInsetAdjustmentBehavior", "decelerationRate", "directionalLockEnabled", "endFillColor",
+    "experimental_endDraggingSensitivityMultiplier", "fadingEdgeLength", "indicatorStyle", "keyboardShouldPersistTaps",
+    "maintainVisibleContentPosition", "maximumZoomScale", "minimumZoomScale", "onScrollToTop", "onKeyboardDidShow", "onKeyboardDidHide",
+    "onKeyboardWillShow", "onKeyboardWillHide", "refreshControl", "scrollIndicatorInsets", "scrollPerfTag", "scrollsChildToFocus",
+    "snapToAlignment", "snapToInterval", "snapToStart", "snapToEnd", "zoomScale"]),
+];
+// What the lists hand to the ScrollView they render and ScrollViewProps does not declare, which the ScrollView refuses all the same:
+// pull to refresh. They are checked with the declared props and are not part of the classification of what RN declares.
+const scrollViewListRules = [
+  refused("decision", ["onRefresh"], "pull to refresh is not implemented; a list hands onRefresh to its ScrollView, which does not declare it",
+    [virtualizedListJs, scrollViewDecisions]),
+  refused("decision", ["refreshing"], "pull to refresh is not implemented; a list hands refreshing to its ScrollView, which does not declare it",
+    [virtualizedListJs, scrollViewDecisions], accepting([false], [virtualizedListJs])),
+];
+
 export const scope = Object.freeze({
   View: { owner: "ViewProps", rules: view },
   Text: { owner: "TextProps", rules: text },
@@ -288,6 +347,7 @@ export const scope = Object.freeze({
   Image: { owner: "ImageProps", rules: image },
   Modal: { owner: "ModalProps", rules: modal },
   ActivityIndicator: { owner: "ActivityIndicatorProps", rules: indicator },
+  ScrollView: { owner: "ScrollViewProps", rules: scrollView, listRules: scrollViewListRules },
 });
 export const scopedComponents = Object.freeze(Object.keys(scope));
 
@@ -315,8 +375,26 @@ function tableOf(component) {
   return table;
 }
 const tables = new Map(scopedComponents.map(component => [component, tableOf(component)]));
-const refusals = new Map(scopedComponents.map(component => [component,
-  new Map([...tables.get(component)].filter(([, entry]) => entry.decision === "refused"))]));
+// Every refused prop of a component: the declared ones, and the ones a list hands to it that RN does not declare for it.
+function refusalsOf(component) {
+  const refused = new Map([...tables.get(component)].filter(([, entry]) => entry.decision === "refused"));
+  for (const rule of scope[component].listRules ?? []) {
+    for (const name of rule.names) {
+      if (tables.get(component).has(name) || refused.has(name)) {
+        throw new Error(`${component}.${name} is classified twice`);
+      }
+      const { names: _names, ...entry } = rule;
+      refused.set(name, entry);
+    }
+  }
+  return refused;
+}
+const refusals = new Map(scopedComponents.map(component => [component, refusalsOf(component)]));
+
+// The refused props of a component, the list props included.
+export function refusalTable(component) {
+  return refusals.get(component);
+}
 
 export function propTable(component) {
   const table = tables.get(component);
@@ -345,13 +423,13 @@ function messageOf(component, name, entry) {
 }
 
 export function refusalMessage(component, name) {
-  return messageOf(component, name, propTable(component).get(name));
+  return messageOf(component, name, refusalTable(component).get(name));
 }
 
 // A value that makes the prop fail, for the tests that drive every refused prop.
 export function probeValue(component, name) {
-  const entry = propTable(component).get(name);
-  if (entry.probe !== undefined) {
+  const entry = refusalTable(component).get(name);
+  if (entry?.probe !== undefined) {
     return entry.probe;
   }
   return /^on[A-Z]/.test(name) ? () => {} : true;

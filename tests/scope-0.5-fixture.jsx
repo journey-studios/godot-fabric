@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useLayoutEffect, useState} from "react";
-import {ActivityIndicator, AppRegistry, Image, Modal, Pressable, Text, View} from "react-native";
-import {legacyProps, probeValue, propTable, refusalMessage, scopedComponents} from "../src/prop-scope.mjs";
+import {ActivityIndicator, AppRegistry, Image, Modal, Pressable, ScrollView, Text, View} from "react-native";
+import {legacyProps, probeValue, propTable, refusalMessage, refusalTable, scopedComponents} from "../src/prop-scope.mjs";
 
 // The six components of the 0.5 scope through the public facade, with every prop RN declares for them driven from the
 // tables of src/prop-scope.mjs. A "case" is one prop of one component, rendered alone in its own boundary beside a baseline
@@ -8,7 +8,7 @@ import {legacyProps, probeValue, propTable, refusalMessage, scopedComponents} fr
 // update in place), the ignored ones must change nothing the host shows, and the controls prove that a supported prop does.
 // What the host made of each case is read natively by the probe; nothing here asserts. The oracle (tests/scope-0.5-oracle.mjs)
 // recomputes the expected outcomes from the inventory and the manifest, not from these tables.
-const components = {View, Text, Pressable, Image, Modal, ActivityIndicator};
+const components = {View, Text, Pressable, Image, Modal, ActivityIndicator, ScrollView};
 const image = {uri: "res://tests/fixtures/images/formats/format.png", width: 24, height: 24};
 const errors = [], mounts = {}, cleanups = {};
 let generation = 0, requested = 0, committed = 0, current = {group: null, mode: "off"};
@@ -47,6 +47,8 @@ function render(component, id, props) {
       return <Image testID={`${id}-el`} source={image} style={{width: 24, height: 24}} {...props} />;
     case "Modal":
       return <Modal testID={`${id}-el`} visible transparent presentationStyle="overFullScreen" {...props}>{child}</Modal>;
+    case "ScrollView":
+      return <ScrollView testID={`${id}-el`} style={{width: 56, height: 28}} {...props}>{child}</ScrollView>;
     default:
       return <ActivityIndicator testID={`${id}-el`} style={{margin: 2}} {...props} />;
   }
@@ -67,6 +69,7 @@ const controls = [
   {component: "Image", prop: "blurRadius", value: 3},
   {component: "Modal", prop: "visible", value: false},
   {component: "ActivityIndicator", prop: "animating", value: false},
+  {component: "ScrollView", prop: "scrollEnabled", value: false},
 ];
 let groups = [], skipped = [];
 function buildGroups(lane) {
@@ -81,19 +84,21 @@ function buildGroups(lane) {
   };
   for (const component of scopedComponents) {
     const refusedCases = [], ignoredCases = [], allowedCases = [], defaultCases = [];
+    // Every refused prop, the ones that only the lists declare included, and every ignored one.
+    for (const [prop, entry] of refusalTable(component)) {
+      if (lane === "previous" && hostFatalOnPrevious[component]?.includes(prop)) {
+        skipped.push({component, prop});
+        continue;
+      }
+      refusedCases.push({prop, value: probeValue(component, prop)});
+      // The first value a refused prop accepts is RN's default: it leaves the host as the baseline has it. The others only
+      // have to be accepted.
+      for (const [index, value] of (entry.accepts ?? []).entries()) {
+        (index === 0 ? defaultCases : allowedCases).push({prop, value});
+      }
+    }
     for (const [prop, entry] of propTable(component)) {
-      if (entry.decision === "refused") {
-        if (lane === "previous" && hostFatalOnPrevious[component]?.includes(prop)) {
-          skipped.push({component, prop});
-          continue;
-        }
-        refusedCases.push({prop, value: probeValue(component, prop)});
-        // The first value a refused prop accepts is RN's default: it leaves the host as the baseline has it. The others only
-        // have to be accepted.
-        for (const [index, value] of (entry.accepts ?? []).entries()) {
-          (index === 0 ? defaultCases : allowedCases).push({prop, value});
-        }
-      } else if (entry.decision === "ignored") {
+      if (entry.decision === "ignored") {
         ignoredCases.push({prop, value: sample(prop)});
       }
     }

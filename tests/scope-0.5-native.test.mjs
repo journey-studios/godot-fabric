@@ -12,14 +12,14 @@ import {oracleRejection, verifyScopeReport} from "./scope-0.5-oracle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 // --previous (or --allow-original-negative, the flag the other suites use) runs the same fixture over the SDK of main before this
-// slice, taken from `previousCommit` into build/frontier-scope-previous/src: the host is the same, because the slice changes no
-// native code, so the failures are the ones the SDK causes. --sabotage=<name> runs it over an SDK that was broken on purpose
+// slice (the commit that has the ScrollView of PR #58), taken from `previousCommit` into build/frontier-scope-previous/src: the host
+// is the same, because the slice changes no native code, so the failures are the ones the SDK causes. --sabotage=<name> runs it over an SDK that was broken on purpose
 // (scripts/scope-sabotage.mjs swaps the source and restores it); the probe and the oracle have to reject it.
-const previousCommit = "57e41f2";
+const previousCommit = "e1c7a39";
 const previous = process.argv.includes("--previous") || process.argv.includes("--allow-original-negative");
 const sabotageArgument = process.argv.find(argument => argument.startsWith("--sabotage="));
 const sabotage = sabotageArgument === undefined ? null : sabotageArgument.split("=")[1];
-const probeSabotages = ["updates", "undeclared", "modal", "defaults"];
+const probeSabotages = ["updates", "undeclared", "modal", "scroll", "defaults"];
 assert.ok([null, ...probeSabotages, "reason"].includes(sabotage), "Unknown sabotage: " + sabotage);
 const lane = previous ? "original" : sabotage === null ? "current" : `sabotage-${sabotage}`;
 const digest = value => createHash("sha256").update(value).digest("hex");
@@ -75,6 +75,12 @@ test("the prop policy holds through the real host: refused props fail on mount a
   // Artifacts are saved before any assertion. The previous-SDK lane accepts only the failures of the refused props that main
   // did not already refuse; a sabotaged lane is expected to fail.
   assert.equal(result.error, undefined, log);
+  if (sabotage !== null && report == null) {
+    // A sabotaged SDK that lets a refused prop reach the host can crash it before any report is written (the ScrollView handed
+    // RN's own JS a request it never meant to take): that is a rejection by the host itself.
+    assert.match(log, /Program crashed|SCRIPT ERROR/, log);
+    return;
+  }
   assert.equal(result.signal, null, log);
   assert.ok(report != null, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);

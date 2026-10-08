@@ -16,7 +16,8 @@ export function describeComponents() {
       counts[rule.decision] += rule.names.length;
     }
     return [component, {owner: scope[component].owner, counts: {declared: counts.supported + counts.ignored + counts.refused, ...counts},
-      rules: scope[component].rules.map(rule => ({...rule}))}];
+      rules: scope[component].rules.map(rule => ({...rule})),
+      ...(scope[component].listRules === undefined ? {} : {listRules: scope[component].listRules.map(rule => ({...rule}))})}];
   }));
 }
 

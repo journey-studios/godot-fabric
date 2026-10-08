@@ -4,11 +4,11 @@ import assert from "node:assert/strict";
 // recomputes what every case must have done from two documents only: the inventory of the props RN declares
 // (docs/compatibility/contracts-0.87.1.json) and the manifest's classification (docs/compatibility/scope-0.5.json), then judges
 // the raw errors and the raw nodes of the report, not the verdicts of the probe.
-const components = ["View", "Text", "Pressable", "Image", "Modal", "ActivityIndicator"];
+const components = ["View", "Text", "Pressable", "Image", "Modal", "ActivityIndicator", "ScrollView"];
 const owners = {View: "ViewProps", Text: "TextProps", Pressable: "PressableProps", Image: "ImageProps", Modal: "ModalProps",
-  ActivityIndicator: "ActivityIndicatorProps"};
+  ActivityIndicator: "ActivityIndicatorProps", ScrollView: "ScrollViewProps"};
 // What the host makes of each component's element.
-const kinds = {View: "view", Text: "paragraph", Pressable: "view", Image: "image", Modal: "modal", ActivityIndicator: "activity"};
+const kinds = {View: "view", Text: "paragraph", Pressable: "view", Image: "image", Modal: "modal", ActivityIndicator: "activity", ScrollView: "scroll"};
 // What the SDK of main before this slice already refused, and with which text: the causal control on that SDK passes these
 // cases and fails the others. The Pressable threw for a truthy hover handler with its own text.
 const mainRefused = {
@@ -21,6 +21,16 @@ const mainRefused = {
 const mainRefusedAtDefault = {Text: ["dataDetectorType", "textBreakStrategy", "lineBreakStrategyIOS", "android_hyphenationFrequency"]};
 const mainOtherText = {Pressable: {onHoverIn: "Godot Pressable hover events are not implemented yet",
   onHoverOut: "Godot Pressable hover events are not implemented yet"}};
+// The SDK of main has the ScrollView of PR #58, whose contract refused its own table of props with other words: the props that the
+// manifest decides for the ScrollView by the decision of that contract (and removeClippedSubviews, which was in its table too), and
+// the two props the lists hand it. The manifest says which: its rules cite the test of that contract.
+const scrollContract = "tests/scroll-view-contract.test.mjs";
+function mainMessage(component, name, rule) {
+  if (component === "ScrollView" && (rule.source?.includes(scrollContract) || name === "removeClippedSubviews")) {
+    return name === "onRefresh" || name === "refreshing" ? "Godot ScrollView refreshControl is not implemented" : `Godot ScrollView ${name} is not implemented`;
+  }
+  return mainOtherText[component]?.[name];
+}
 // The refused Modal props that the host of main refuses itself from inside the mount, which stops the application: the
 // control cannot drive them.
 const hostFatalOnMain = {Modal: ["animationType", "presentationStyle", "statusBarTranslucent", "navigationBarTranslucent",
@@ -74,31 +84,43 @@ function expectations(manifest, inventory) {
     const entry = manifest.components[component];
     assert.equal(entry.owner, owners[component], component);
     const table = {};
+    const classify = (rule, name, listed) => {
+      if (rule.decision !== "supported") {
+        // A prop that is not supported says why and where from.
+        assert.ok(typeof rule.reason === "string" && rule.reason.length > 10, `${component}.${name} has a reason`);
+        assert.ok(Array.isArray(rule.source) && rule.source.length > 0 && rule.source.every(source => typeof source === "string" && source.length > 0),
+          `${component}.${name} cites a source`);
+      }
+      if (rule.decision === "refused") {
+        // The value that leaves the host as it is passes: it comes first in `accepts`, with the source that gives it. A function has
+        // no default, and a prop that accepts nothing says in its reason that it has none or that its default is refused too.
+        if (rule.accepts === undefined) {
+          assert.ok(isEvent(name) || /no default|default included/.test(rule.reason), `${component}.${name} has no default and says so`);
+        } else {
+          assert.ok(Array.isArray(rule.accepts) && rule.accepts.length > 0, `${component}.${name} accepts its default`);
+          assert.ok(Array.isArray(rule.defaultSource) && rule.defaultSource.length > 0, `${component}.${name} cites its default`);
+          assert.ok(!rule.accepts.some(value => sameJson(value, probeOf(name, rule))), `${component}.${name}: the probe is refused`);
+        }
+      }
+      table[name] = {decision: rule.decision, accepts: rule.accepts, message: rule.message, probe: rule.probe, source: rule.source,
+        ...(listed ? {listed: true} : {})};
+    };
     for (const rule of entry.rules) {
       for (const name of rule.names) {
         assert.ok(declared.has(name), `${component}.${name} is declared by RN`);
         assert.ok(!(name in table), `${component}.${name} is classified once`);
-        if (rule.decision !== "supported") {
-          // A prop that is not supported says why and where from.
-          assert.ok(typeof rule.reason === "string" && rule.reason.length > 10, `${component}.${name} has a reason`);
-          assert.ok(Array.isArray(rule.source) && rule.source.length > 0 && rule.source.every(source => typeof source === "string" && source.length > 0),
-            `${component}.${name} cites a source`);
-        }
-        if (rule.decision === "refused") {
-          // The value RN gives a refused prop by default does nothing on iOS either, so it passes: it comes first in `accepts`,
-          // with the source of the default. A function has no default, and so does a prop whose reason says it has none.
-          if (rule.accepts === undefined) {
-            assert.ok(isEvent(name) || /no default/.test(rule.reason), `${component}.${name} has no default and says so`);
-          } else {
-            assert.ok(Array.isArray(rule.accepts) && rule.accepts.length > 0, `${component}.${name} accepts its default`);
-            assert.ok(Array.isArray(rule.defaultSource) && rule.defaultSource.length > 0, `${component}.${name} cites its default`);
-            assert.ok(!rule.accepts.some(value => sameJson(value, probeOf(name, rule))), `${component}.${name}: the probe is refused`);
-          }
-        }
-        table[name] = {decision: rule.decision, accepts: rule.accepts, message: rule.message, probe: rule.probe};
+        classify(rule, name, false);
       }
     }
     assert.deepEqual(Object.keys(table).sort(), [...declared].sort(), `${component}: every declared prop is classified`);
+    // The refused props that RN does not declare for the component and the lists hand to it: the ScrollView's pull to refresh.
+    for (const rule of entry.listRules ?? []) {
+      for (const name of rule.names) {
+        assert.ok(!declared.has(name) && !(name in table), `${component}.${name} is not declared by RN for the component`);
+        assert.equal(rule.decision, "refused", `${component}.${name}`);
+        classify(rule, name, true);
+      }
+    }
     expected[component] = table;
   }
   return expected;
@@ -119,6 +141,7 @@ const controlEffects = {
   Image: (made, base) => made.el.image.props.blurRadius === 3 && base.el.image.props.blurRadius === 0,
   Modal: (made, base) => made.el === undefined && base.el.modalWindow.visible === true,
   ActivityIndicator: (made, base) => made.el.activity.animating === false && base.el.activity.animating === true,
+  ScrollView: (made, base) => made.el.scroll.enabled === false && base.el.scroll.enabled === true,
 };
 
 export function verifyScopeReport(report, {manifest, inventory, original = false}) {
@@ -227,7 +250,7 @@ export function verifyScopeReport(report, {manifest, inventory, original = false
           const text = rule.message ?? `Godot ${group.component} does not implement ${entry.prop}`;
           if (original && !accepted) {
             // The SDK of main drops it silently (or, for the hover handlers, says something else).
-            const other = mainOtherText[group.component]?.[entry.prop];
+            const other = mainMessage(group.component, entry.prop, rule);
             if (other === undefined) {
               assert.deepEqual(errors, [], `${label}: main drops it without a word`);
               assert.ok(element !== undefined && element.kind === kinds[group.component], `${label}: and mounts the element`);

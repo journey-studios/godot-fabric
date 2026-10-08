@@ -6,6 +6,7 @@ import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 export const scopeSources = ["tests/scope-0.5-fixture.jsx", "tests/scope-0.5-probe.gd", "tests/scope-0.5-native.test.mjs",
   "tests/scope-0.5-oracle.mjs", "scripts/scope-bundle.mjs", "scripts/native-probe-bundle.mjs", "src/prop-scope.mjs",
   "src/react-native-platform.jsx", "src/components.jsx", "src/text.jsx", "src/image.jsx", "src/image-contract.mjs",
+  "src/scroll-view.jsx", "src/scroll-view-contract.mjs", "src/scroll-view-native-config.js",
   "src/base-view-config.js", "docs/compatibility/scope-0.5.json", "docs/compatibility/contracts-0.87.1.json",
   "sdk/toolchain/platform-plugin.mjs"];
 
@@ -13,12 +14,13 @@ export function bundleScopeProbe({platformRoot, plugins} = {}) {
   return bundleNativeProbe({name: "scope-0.5", entryPoint: "tests/scope-0.5-fixture.jsx", sources: scopeSources,
     seams: ["src/prop-scope.mjs"],
     bundled: ["Libraries/Components/View/View.js", "Libraries/Text/Text.js", "Libraries/Pressability/usePressability.js",
-      "Libraries/Image/Image.ios.js", "Libraries/Modal/Modal.js", "Libraries/Components/ActivityIndicator/ActivityIndicator.js"],
+      "Libraries/Image/Image.ios.js", "Libraries/Modal/Modal.js", "Libraries/Components/ActivityIndicator/ActivityIndicator.js",
+      "Libraries/Components/ScrollView/ScrollView.js"],
     // The sources the classification cites (the Pressable.js whose props the Godot port follows is a reference, not a module).
     references: ["Libraries/Components/Pressable/Pressable.js", "Libraries/NativeComponent/BaseViewConfig.ios.js", "Libraries/Components/View/ViewPropTypes.js",
       "Libraries/Text/TextNativeComponent.js", "Libraries/Image/ImageViewNativeComponent.js",
       "src/private/components/activityindicator/specs/ActivityIndicatorViewNativeComponent.js",
       "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js",
-      "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"],
+      "Libraries/Components/ScrollView/ScrollViewNativeComponent.js", "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"],
     ...(platformRoot === undefined ? {} : {platformRoot}), ...(plugins === undefined ? {} : {plugins})});
 }

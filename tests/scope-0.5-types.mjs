@@ -1,7 +1,7 @@
 import {mkdirSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
-import {propTable, scopedComponents} from "../src/prop-scope.mjs";
+import {propTable, refusalTable, scopedComponents} from "../src/prop-scope.mjs";
 
 // The type fixture of the 0.5 scope: types/react-native.ts and the tables of src/prop-scope.mjs must agree. For each component
 // it writes one positive use per supported prop (an object literal typed with the component's props), one @ts-expect-error per
@@ -11,7 +11,7 @@ import {propTable, scopedComponents} from "../src/prop-scope.mjs";
 // is generated into build/ and never committed; tests/scope-0.5.test.mjs runs tsc-rs over it.
 const root = fileURLToPath(new URL("..", import.meta.url));
 const propsTypes = {View: "ViewProps", Text: "TextProps", Pressable: "PressableProps", Image: "ImageProps", Modal: "ModalProps",
-  ActivityIndicator: "ActivityIndicatorProps"};
+  ActivityIndicator: "ActivityIndicatorProps", ScrollView: "ScrollViewProps"};
 const key = name => (/^[A-Za-z_$][\w$]*$/.test(name) ? name : JSON.stringify(name));
 
 export function renderTypeFixture() {
@@ -22,7 +22,9 @@ export function renderTypeFixture() {
     const type = propsTypes[component];
     const statement = (index, body) => `const ${component.toLowerCase()}${index}: ${type} = { ${body} };`;
     let index = 0;
-    for (const [name, entry] of propTable(component)) {
+    // The declared props, then the refused ones that RN does not declare for the component (the lists' pull to refresh).
+    const entries = [...propTable(component), ...[...refusalTable(component)].filter(([name]) => !propTable(component).has(name))];
+    for (const [name, entry] of entries) {
       if (entry.decision === "supported") {
         lines.push(statement(index++, `${key(name)}: placeholder`));
         counts.positive += 1;

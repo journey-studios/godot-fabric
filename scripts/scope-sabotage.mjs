@@ -14,6 +14,8 @@ import {guardSources} from "./sabotage-sources.mjs";
 //   undeclared  the Pressable hands every key to the host's Control again, so a name only the Control has reaches it;
 //   modal       the Modal wrapper does not check, so a refused prop reaches RN's Modal and the host (which refuses some of them
 //               from inside the mount and stops the application: the probe aborts at that group);
+//   scroll      the ScrollView's contract does not run the check, so its table is not enforced (the ScrollView of PR #58 enforced it
+//               itself before the table moved to src/prop-scope.mjs);
 //   defaults    the checker does not accept the first value of `accepts`, so the value RN gives a prop by default fails;
 //   reason      a refused prop of the manifest has no reason.
 //
@@ -25,6 +27,7 @@ const variants = [
     replace: '  React.useState(() => checkProps("View", props));\n', lane: false},
   {name: "undeclared", file: "src/components.jsx", find: '} = declaredProps("Pressable", allProps);', replace: "} = allProps;", lane: true},
   {name: "modal", file: "src/react-native-platform.jsx", find: '  checkProps("Modal", props);\n', replace: "", lane: true},
+  {name: "scroll", file: "src/scroll-view-contract.mjs", find: '  checkProps("ScrollView", props);\n', replace: "", lane: true},
   {name: "defaults", file: "src/prop-scope.mjs", find: "!(entry.accepts ?? []).some(works", replace: "!(entry.accepts ?? []).slice(1).some(works", lane: true},
   {name: "reason", file: "docs/compatibility/scope-0.5.json", find: '"reason": "iOS calls it after the modal is dismissed and Modal.js calls it on iOS only"',
     replace: '"reason": ""', lane: true},

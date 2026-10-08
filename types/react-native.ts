@@ -266,12 +266,34 @@ export declare const Modal: React.ComponentType<ModalProps>;
  * insets are not supplied by this desktop host. */
 export declare const SafeAreaView: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
-/** RN's original ScrollView component, imperative methods, props and Context.
- * Native behavior outside the Godot subset is rejected at runtime by the
- * public wrapper; see docs/API.md for supported props and commands. */
-export declare const ScrollView: typeof RN.ScrollView;
-export type ScrollViewProps = RN.ScrollViewProps;
-export type ScrollViewInstance = RN.ScrollViewInstance;
+/** The instance of a ScrollView: the host instance with the methods of RN's ScrollView.js that the Godot host carries out. scrollTo,
+ * scrollToEnd and flashScrollIndicators are commands the host runs; scrollResponderZoomTo and
+ * scrollResponderScrollNativeHandleToKeyboard are not declared, because the host has no zoom and no keyboard to scroll to. */
+export interface ScrollViewInstance extends NativeInstance {
+  readonly getScrollResponder: () => ScrollViewInstance;
+  readonly getScrollableNode: RN.ScrollViewInstance["getScrollableNode"];
+  readonly getInnerViewNode: RN.ScrollViewInstance["getInnerViewNode"];
+  readonly getInnerViewRef: () => ViewInstance | null;
+  readonly getNativeScrollRef: () => ScrollViewInstance | null;
+  readonly scrollTo: RN.ScrollViewInstance["scrollTo"];
+  readonly scrollToEnd: RN.ScrollViewInstance["scrollToEnd"];
+  readonly flashScrollIndicators: RN.ScrollViewInstance["flashScrollIndicators"];
+}
+/** RN's original ScrollView.js over the host's scroll adapter. These are the props that src/prop-scope.mjs classifies as supported
+ * for the ScrollView: the scroll position, the enabling, the indicators, the five scroll events, the content container and its size,
+ * and the Views' own props. The ones the host cannot honor (bounces, paging, snapping, insets, zoom, sticky headers, pull to
+ * refresh and the rest) are not declared, and fail where the ScrollView renders when they are passed anyway; tests/scope-0.5.test.mjs
+ * keeps the types and the tables in step. */
+export interface ScrollViewProps extends HostViewProps, Pick<RN.ScrollViewProps, "children" | "scrollEnabled" | "showsVerticalScrollIndicator" |
+  "showsHorizontalScrollIndicator" | "horizontal" | "contentOffset" | "scrollEventThrottle" | "onScroll" | "onScrollBeginDrag" |
+  "onScrollEndDrag" | "onMomentumScrollBegin" | "onMomentumScrollEnd" | "onContentSizeChange">,
+  Omit<AccessibilityProps, Extract<keyof AccessibilityProps, `aria-${string}`>> {
+  style?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  innerViewRef?: React.Ref<ViewInstance>;
+  scrollViewRef?: React.Ref<ScrollViewInstance>;
+}
+export declare const ScrollView: React.ComponentType<ScrollViewProps & React.RefAttributes<ScrollViewInstance>> & Pick<typeof RN.ScrollView, "Context">;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {
   State: {

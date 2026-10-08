@@ -156,7 +156,6 @@
     {
       "name": "ScrollView",
       "decision": "supported",
-      "pendingOn": "PR #58",
       "audit": {
         "file": "docs/compatibility/react-native-0.87.1.json",
         "auditDate": "2026-10-01",
@@ -175,13 +174,43 @@
       },
       "facade": [
         "src/react-native-platform.jsx",
-        "src/scroll-view.jsx"
+        "src/scroll-view.jsx",
+        "src/scroll-view-contract.mjs"
       ],
-      "runtime": "owned by PR #58, which replaces the platform ScrollView with RN's original and adds its types; the entry, its types and its probe coverage are added when that PR merges",
-      "props": null,
-      "subset": null,
+      "runtime": "RN's original ScrollView.js behind the public wrapper (src/scroll-view.jsx) over the host's scroll adapter (native/scroll_adapter.cpp); src/prop-scope.mjs decides every prop RN declares for it, and src/scroll-view-contract.mjs checks the values of the ones the host honors and takes the lists' own props off",
+      "props": "components.ScrollView",
+      "subset": {
+        "honored": [
+          "horizontal",
+          "scrollEnabled",
+          "contentOffset",
+          "scrollEventThrottle",
+          "showsVerticalScrollIndicator",
+          "showsHorizontalScrollIndicator",
+          "onScroll",
+          "onScrollBeginDrag",
+          "onScrollEndDrag",
+          "onMomentumScrollBegin",
+          "onMomentumScrollEnd",
+          "onContentSizeChange",
+          "contentContainerStyle",
+          "innerViewRef",
+          "scrollViewRef"
+        ],
+        "refused": "bounce, paging, snapping, insets, zoom, sticky headers, keyboard handling and pull to refresh: the request that asks for nothing (bounces false, pagingEnabled false, an empty stickyHeaderIndices...) passes and any other fails with `Godot ScrollView does not implement <prop>`; onRefresh and refreshing, which the lists hand to the ScrollView, follow the same rule",
+        "ref": "scrollTo, scrollToEnd and flashScrollIndicators run on the host; scrollResponderZoomTo and scrollResponderScrollNativeHandleToKeyboard are not declared (the host has no zoom and no keyboard)",
+        "context": "ScrollView.Context is RN's"
+      },
       "evidence": [
-        "src/scroll-view.jsx"
+        "src/scroll-view.jsx",
+        "src/scroll-view-contract.mjs",
+        "src/prop-scope.mjs",
+        "native/scroll_adapter.cpp",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/scroll-view-contract.test.mjs",
+        "tests/scroll-view-native.test.mjs",
+        "tests/scroll-view-modal-native.test.mjs",
+        "tests/virtualized-list-native.test.mjs"
       ]
     },
     {
@@ -2903,6 +2932,546 @@
           "reason": "RN's iOS view config does not list it (desktop React Native only)",
           "source": [
             "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        }
+      ]
+    },
+    "ScrollView": {
+      "owner": "ScrollViewProps",
+      "counts": {
+        "declared": 178,
+        "supported": 77,
+        "ignored": 45,
+        "refused": 56
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "collapsable",
+            "collapsableChildren",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest",
+            "scrollEnabled",
+            "showsVerticalScrollIndicator",
+            "showsHorizontalScrollIndicator",
+            "horizontal",
+            "contentOffset",
+            "scrollEventThrottle",
+            "onScroll",
+            "onScrollBeginDrag",
+            "onScrollEndDrag",
+            "onMomentumScrollBegin",
+            "onMomentumScrollEnd"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children",
+            "style",
+            "onLayout",
+            "contentContainerStyle",
+            "onContentSizeChange",
+            "innerViewRef",
+            "scrollViewRef"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-noop",
+          "names": [
+            "id",
+            "tabIndex",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext",
+            "aria-label",
+            "aria-live",
+            "aria-hidden",
+            "aria-labelledby",
+            "aria-modal",
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "reason": "RN's ScrollView.js forwards the name as it is and no iOS component reads it",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "dependent",
+          "names": [
+            "StickyHeaderComponent",
+            "invertStickyHeaders",
+            "stickyHeaderHiddenOnScroll"
+          ],
+          "reason": "they only matter for the sticky headers that stickyHeaderIndices names, and it accepts the empty list only",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "alwaysBounceHorizontal",
+            "alwaysBounceVertical",
+            "automaticallyAdjustContentInsets",
+            "automaticallyAdjustKeyboardInsets",
+            "automaticallyAdjustsScrollIndicatorInsets",
+            "bounces",
+            "bouncesZoom",
+            "centerContent",
+            "disableIntervalMomentum",
+            "disableScrollViewPanResponder",
+            "nestedScrollEnabled",
+            "pagingEnabled",
+            "pinchGestureEnabled",
+            "scrollToOverflowEnabled",
+            "scrollsToTop"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "canCancelContentTouches",
+            "persistentScrollbar"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "keyboardDismissMode"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": "on-drag"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "overScrollMode"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            "never"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": "always"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "snapToOffsets"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": [
+            20
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "stickyHeaderIndices"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": [
+            0
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "contentInset",
+            "contentInsetAdjustmentBehavior",
+            "decelerationRate",
+            "directionalLockEnabled",
+            "endFillColor",
+            "experimental_endDraggingSensitivityMultiplier",
+            "fadingEdgeLength",
+            "indicatorStyle",
+            "keyboardShouldPersistTaps",
+            "maintainVisibleContentPosition",
+            "maximumZoomScale",
+            "minimumZoomScale",
+            "onScrollToTop",
+            "onKeyboardDidShow",
+            "onKeyboardDidHide",
+            "onKeyboardWillShow",
+            "onKeyboardWillHide",
+            "refreshControl",
+            "scrollIndicatorInsets",
+            "scrollPerfTag",
+            "scrollsChildToFocus",
+            "snapToAlignment",
+            "snapToInterval",
+            "snapToStart",
+            "snapToEnd",
+            "zoomScale"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so it refuses every value that is not null, RN's default included",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ]
+        }
+      ],
+      "listRules": [
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "onRefresh"
+          ],
+          "reason": "pull to refresh is not implemented; a list hands onRefresh to its ScrollView, which does not declare it",
+          "source": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js",
+            "tests/scroll-view-contract.test.mjs"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "refreshing"
+          ],
+          "reason": "pull to refresh is not implemented; a list hands refreshing to its ScrollView, which does not declare it",
+          "source": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js"
           ]
         }
       ]
