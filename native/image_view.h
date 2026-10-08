@@ -38,7 +38,6 @@ class GodotImage final : public godot::Panel {
   class Observer;
   void resubscribe(const std::shared_ptr<const facebook::react::ImageShadowNode::ConcreteState> &state);
   void detach();
-  void refresh_texture();
   void received_progress(float progress, int64_t loaded, int64_t total);
   void received_image(const facebook::react::ImageResponse &response);
   void received_failure(const facebook::react::ImageLoadError &error);

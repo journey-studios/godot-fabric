@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace fabric_godot {
 // The Godot application lifecycle as React Native's AppState reports it. One
@@ -44,8 +45,12 @@ class AppLifecycle {
   }
   void memory_warning() {
     ++received_memory_warnings_;
+    // The host's own caches give their memory back whether or not JS listens, and before it is told.
+    for (const auto &listener : memory_listeners_) listener();
     publish(Event::MemoryWarning);
   }
+  // A host component that frees memory on the OS memory warning, with no module of JS needed to be alive (the image caches).
+  void on_memory_warning(std::function<void()> listener) { memory_listeners_.push_back(std::move(listener)); }
   void observe(Observer observer) {
     observer_ = std::move(observer);
     ++observers_;
@@ -64,6 +69,7 @@ class AppLifecycle {
  private:
   bool focused_{true}, paused_{false};
   Observer observer_;
+  std::vector<std::function<void()>> memory_listeners_;
   uint64_t observers_{};
   uint64_t received_focus_in_{}, received_focus_out_{}, received_paused_{}, received_resumed_{};
   uint64_t received_memory_warnings_{};

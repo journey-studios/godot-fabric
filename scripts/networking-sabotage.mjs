@@ -24,7 +24,7 @@ const cmake = path.join(root, ".deps/python/bin/cmake");
 const variants = [
   {name: "redirects", argument: "--sabotage=redirects", hostDirectory: "build/networking-sabotage-redirects-host",
     file: "native/godot_http_transport.cpp",
-    find: "if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers)) {",
+    find: "if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers, x.request.drop_headers_on_redirect)) {",
     replace: "if (auto redirect = std::optional<http::Redirect>()) {"},
   {name: "headers", argument: "--sabotage=headers", hostDirectory: "build/networking-sabotage-headers-host",
     file: "native/http_core.h", find: '    else existing->second += ", " + value;', replace: "    else joined.emplace_back(name, value);"},

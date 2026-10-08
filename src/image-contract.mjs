@@ -1,7 +1,8 @@
 // What the Godot Image takes of RN's ImageProps. RN's own Image.ios.js renders the host component; this contract
 // decides, before it does, which of its props this host has no native implementation for yet. Those fail where the
-// Image renders, with the next slice named, instead of being dropped. A source's uri is runtime data, so an http(s) or
-// unreadable one is no mistake here: it fails as a load, through onError.
+// Image renders, with the next slice named, instead of being dropped. A source's uri is runtime data, so an unreadable
+// one is no mistake here: it fails as a load, through onError. The request a source makes (headers, method, body and cache,
+// which crossOrigin and referrerPolicy turn into headers) belongs to the network, and reaches it as RN's ImageSource gives it.
 const resizeModes = ["cover", "contain", "stretch", "center", "repeat", "none"];
 const objectFits = ["contain", "cover", "fill", "scale-down", "none"];
 // Props whose native half is a later slice of the Images work (tint needs a shader on the image's own canvas item,
@@ -17,18 +18,10 @@ const laterProps = {
   resizeMethod: "the decode method is chosen by the host",
   resizeMultiplier: "the decode size is chosen by the host",
   overlayColor: "rounded-corner overlays follow rounded image clipping",
-  crossOrigin: "it sets request headers, and network images are a later slice",
-  referrerPolicy: "it sets request headers, and network images are a later slice",
 };
 const laterStyles = {
   tintColor: laterProps.tintColor,
   overlayColor: laterProps.overlayColor,
-};
-const laterSourceKeys = {
-  headers: "request headers belong to network images, a later slice",
-  method: "request methods belong to network images, a later slice",
-  body: "request bodies belong to network images, a later slice",
-  cache: "the image cache is a later slice",
 };
 const handlers = ["onLoadStart", "onLoad", "onLoadEnd", "onError", "onProgress", "onPartialLoad", "onLayout"];
 
@@ -50,9 +43,6 @@ function validateImageSource(source, registered) {
     return;
   }
   if (typeof source !== "object") throw new Error("Godot Image source must be an asset, a {uri} object or a list of them");
-  for (const [name, reason] of Object.entries(laterSourceKeys)) {
-    if (present(source[name])) throw later(`source.${name}`, reason);
-  }
   if (present(source.uri) && typeof source.uri !== "string") throw new Error("Godot Image source.uri must be a string");
   for (const name of ["width", "height", "scale"]) {
     if (present(source[name]) && !Number.isFinite(source[name])) throw new Error(`Godot Image source.${name} must be a finite number`);
