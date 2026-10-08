@@ -58,6 +58,7 @@
     "tests/frame-clock-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",
+    "tests/text-style-fixture.jsx",
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/accessibility-info-fixture.jsx",

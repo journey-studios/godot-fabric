@@ -3,7 +3,9 @@
 [Application](App.jsx) · [Godot scene](scene.tscn) · [Examples index](../README.md)
 
 Increment child state, change fonts, reset it and resize the window. Compare
-nested colored spans, regular/bold text, wrapping, clipped text and scrolling.
+nested colored spans, regular/bold text, upright and italic text, a line of italic,
+underline, line-through and colored decoration with a span that cancels its parent's
+underline, wrapping, clipped text and scrolling.
 
 ## Run
 
@@ -28,6 +30,19 @@ bidi/accessibility behavior are not certified.
 
 Distinct rendered colors/variable-font weight, wrapping/truncation, empty and
 trailing lines, line heights, retained child state and balanced native cleanup.
+
+The text style ([research](../../docs/research/text-style.md)) is written with NativeWind
+classes (`italic`, `underline`, `line-through`, `decoration-*`) and one style prop
+(`textDecorationLine: "none"` on the span that cancels). Headless, it checks that the italic
+run says italic and synthetic, measures exactly like the upright one, that each decorated run
+has one line, in the text color or in the color of `textDecorationColor`, and that the
+cancelling span leaves a gap in its parent's underline. With the renderer, it reads pixels: the
+ink of the italic paragraph leans to the right of the upright one's, the orange underline is on
+the row the host reported and on no other, the rose strike-through is in the middle of its
+span's box, and the sky underline stops under the cancelling span and starts again after it.
+A `textDecorationStyle` of `dotted` is one of the four cases the example rejects before the
+native layout (the font, an inline view, a middle ellipsis and the dotted line). The italic is
+synthetic, and the lines follow Godot's font metrics, not either platform's.
 The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.

@@ -43,7 +43,15 @@ paragraph presses through RN's own Pressability (`onPress`, `onPressIn`, `onPres
 paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 119 headless checks (114 in the record pinned at `ba5ff00`, before the review of PR #62 added five nested-span
 responder cases) with a real
 mouse and touch, the controls of the previous SDK and host (68 and 3 failures; 63 and 3 in the record) and six retained
-sabotages, and four captures of the pressable line (hosted CI pending). Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
+sabotages, and four captures of the pressable line (hosted CI pending). The text style is the
+third slice: `fontStyle: 'italic'` (a synthetic slant of 0.25, the bundled fonts have no italic
+face), `textDecorationLine` (underline, line-through, both, `none`), `textDecorationColor` and a
+solid `textDecorationStyle`, a child replacing its parent field by field, with the ellipsis now
+taking the color of the run before it instead of the first run's. The
+[research](docs/research/text-style.md) records 61 headless checks with an independent oracle that
+recomputes every line from the fonts' tables, the controls of the previous SDK and host (47 and 27
+failures), eight retained sabotages and the typography example's pixel checks (evidence record and
+hosted CI pending); `oblique`, the other line styles and the real italic faces stay open. Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
 paragraph's press), selection,
 `adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 
@@ -790,6 +798,7 @@ npm run test:transforms:guards           # rejected styles, invalid embedding in
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
+npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

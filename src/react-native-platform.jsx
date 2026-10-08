@@ -139,6 +139,20 @@ function nativeStyle(style, kind) {
       ].includes(String(value))
     )
       throw new Error("Godot Text fontWeight must be normal, bold or 100..900");
+    // The host paints a synthetic italic and solid lines under or through the text. Oblique, the aliases of the
+    // native parser ("strikethrough", "underline-strikethrough"), another order, overline and the other line styles
+    // would be drawn as something else, so they fail instead.
+    if (name === "fontStyle" && !["normal", "italic"].includes(value))
+      throw new Error(`Godot Text does not implement style fontStyle ${String(value)}: use normal or italic`);
+    if (
+      name === "textDecorationLine" &&
+      !["none", "underline", "line-through", "underline line-through"].includes(value)
+    )
+      throw new Error(
+        `Godot Text does not implement style textDecorationLine ${String(value)}: use none, underline, line-through or underline line-through`,
+      );
+    if (name === "textDecorationStyle" && value !== "solid")
+      throw new Error(`Godot Text does not implement style textDecorationStyle ${String(value)}: only solid`);
   }
   return flat;
 }

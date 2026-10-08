@@ -156,6 +156,36 @@ export function TypographyApp() {
       </View>
       <View className="flex-row items-start gap-4">
         <Text
+          testID="ty-upright"
+          className="font-sans text-xl text-white leading-8"
+        >
+          Hamburgefonts
+        </Text>
+        <Text
+          testID="ty-italic"
+          className="font-sans text-xl italic text-white leading-8"
+        >
+          Hamburgefonts
+        </Text>
+      </View>
+      <Text testID="ty-lines" className="font-sans text-base text-white leading-6">
+        <Text className="italic">itálico</Text>
+        {" · "}
+        <Text className="underline">sublinhado</Text>
+        {" · "}
+        <Text className="line-through decoration-rose-400">tachado</Text>
+        {" · "}
+        <Text className="underline decoration-orange-500">colorido</Text>
+      </Text>
+      <Text
+        testID="ty-cancel"
+        className="font-sans text-base text-white leading-6 underline decoration-sky-400"
+      >
+        Sublinhado <Text style={{ textDecorationLine: "none" }}>cancelado</Text>
+        {" e de novo"}
+      </Text>
+      <View className="flex-row items-start gap-4">
+        <Text
           testID="ty-spacing"
           className="font-sans text-xl text-white leading-8"
           style={{ letterSpacing: 2 }}
@@ -232,6 +262,10 @@ export function TypographyApp() {
           ) : failure === "inline" ? (
             <Text>
               <View />
+            </Text>
+          ) : failure === "dotted" ? (
+            <Text style={{ textDecorationLine: "underline", textDecorationStyle: "dotted" }}>
+              Inválido
             </Text>
           ) : (
             <Text ellipsizeMode="middle">Inválido</Text>

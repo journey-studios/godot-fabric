@@ -8,12 +8,25 @@
 
 namespace fabric_godot {
 namespace rn = facebook::react;
+// What one fragment of the attributed string paints: its font and color, whether it is slanted (synthetic: the bundled
+// fonts have no italic face), and the lines drawn over its glyphs. decoration_color is the color of both lines, the
+// text color when the style sets none, and opacity is applied to it as it is to the text.
 struct TextRun {
   int start{}, end{}, size{}, weight{};
   std::string family;
   godot::Color color;
   float line_height{};
   godot::Ref<godot::Font> font;
+  bool italic{}, underline{}, strikethrough{};
+  godot::Color decoration_color;
+};
+// One line drawn over the glyphs of a run on a visual row: x0..x1 and the center y of its stroke, in the paragraph's
+// coordinates (the same ones as ParagraphLine). line indexes the visible rows and run the paragraph's runs.
+struct DecorationSegment {
+  int line{}, run{};
+  bool strikethrough{};
+  float x0{}, x1{}, y{}, thickness{};
+  godot::Color color;
 };
 // y is the baseline inside the paragraph and top is where the row's line box
 // starts (the box holds the ascender above the baseline, whatever lineHeight
@@ -34,6 +47,9 @@ struct PreparedParagraph {
   int total_lines{}, ellipses{};
   folly::dynamic snapshot() const;
   void draw(const godot::RID &canvas, godot::Vector2 origin) const;
+  // The one place the decorations are decided: draw paints these and snapshot reports these. Computed from the
+  // glyphs that are actually painted (the truncated text has none) and never during measure.
+  std::vector<DecorationSegment> decoration_segments() const;
 };
 // Fabric supplies immutable attributed strings, including inheritance and
 // composite children. One shaper supplies both Yoga measurement and drawing.
