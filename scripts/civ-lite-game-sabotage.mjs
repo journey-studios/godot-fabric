@@ -21,15 +21,17 @@ import {guardSources} from "./sabotage-sources.mjs";
 //         adds is wrong from its first turn of production: the golden hash is lost and the oracle, which recomputes the
 //         end of every turn from the serialization before it, finds the first one that does not add up.
 //  ai-ignores-block  the faction's Warrior no longer waits for a unit of the player or the player's city on its next
-//         tile. The roteiro never puts the player on the faction's route, so its states and the golden hash stay the
-//         genuine ones: the states the probe builds for the wait (a city on the route that finishes a Warrior that
+//         tile. The roteiro never puts the player on the faction's route, so the roteiro's states and its golden hash
+//         are unchanged: the states the probe builds for the wait (a city on the route that finishes a Warrior that
 //         turn, and a unit of the player on the route) fail the probe's checks, and the oracle finds the faction on the
 //         player's tile.
 //  ai-city  the defect the review of PR #70 found: only a unit of the player blocks the faction, not the city. The
 //         faction walks into the city and the Warrior the city finishes that turn is born on top of it.
-//  ai-wrong-event  the faction waits as it should but says it moved: ai_moved in place of ai_blocked. The state is the
-//         genuine one, so the state alone cannot tell; the probe's check of the wait's event fails, and the oracle,
-//         which judges the log entries a turn appended against the events the rules give the faction's phases, rejects it.
+//  ai-wrong-event  the faction waits as it should but says it moved: ai_moved in place of ai_blocked. The wait's game
+//         fields other than the log are the genuine ones, and so are the replay's golden and trace hashes, because the
+//         roteiro never reaches a wait; but the wait case's log is not, and the log is part of the serialized state. The
+//         probe's check of the wait's event fails, and the oracle, which judges the log entries a turn appended against
+//         the events the rules give the faction's phases, rejects it.
 //
 // There is no host here and nothing to rebuild: the game is plain GDScript. Run with:
 //   node scripts/civ-lite-game-sabotage.mjs

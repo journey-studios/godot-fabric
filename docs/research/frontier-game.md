@@ -396,14 +396,15 @@ is reported as a move, or not reported, cannot pass: the state alone does not sh
 - **economy**: the city centre yields 2 production instead of 1. The oracle, which recomputes the end of every turn from the
   serialization before it, finds the first turn in which the city produced.
 - **ai-ignores-block**: the faction no longer waits for a unit of the player or the city. The roteiro never reaches the wait, so
-  its states and the golden hash stay the genuine ones; the three built turns fail five probe checks and the oracle finds the
+  the roteiro's states and the golden and trace hashes are unchanged; the three built turns fail five probe checks and the oracle finds the
   faction on the player's tile.
 - **ai-city**: only a unit of the player blocks the faction, not the city: the defect found in the review of PR #70, where the
   faction walked into the city and the Warrior the city finished that turn was born on top of it. Four probe checks fail and the
   oracle rejects `city-on-route`.
-- **ai-wrong-event**: the faction waits as it should but emits `ai_moved` in place of `ai_blocked`. The state, the hashes and the
-  golden hash are the genuine ones, so the state cannot tell; one probe check fails (the wait is an `ai_blocked` event) and the
-  oracle rejects `city-on-route` through its judgment of the log entries the turn appended.
+- **ai-wrong-event**: the faction waits as it should but emits `ai_moved` in place of `ai_blocked`. The wait's game fields other
+  than the log are unchanged, and so are the replay's golden and trace hashes, because the roteiro never reaches a wait; the
+  wait case's log is not, and the log is part of the serialized state. One probe check fails (the wait is an `ai_blocked`
+  event) and the oracle rejects `city-on-route` through its judgment of the log entries the turn appended.
 
 The control with a previous host **does not apply**: this slice has no native code and no host to compare with. The restored
 sources are proven by hash and must pass the plain test.

@@ -9,9 +9,10 @@
 > exigir que nenhum tile tenha unidades dos dois lados nem a facção na cidade. Uma segunda rodada de revisão fez o oráculo julgar também
 > o log: as entradas que cada turno acrescentou, com o turno de cada fase, e os eventos da facção (`ai_planned`, depois `ai_moved`
 > ao andar ou `ai_blocked` ao esperar), de modo que uma espera relatada como movimento, ou não relatada, não passa; a sabotagem
-> `ai-wrong-event` (a IA espera, mas emite `ai_moved`) só o oráculo e um check do probe rejeitam, porque o estado é o genuíno. Os hashes
-> dourado e de trilha e o roteiro (73 passos) não mudaram, e por isso as três sabotagens novas não perdem o hash dourado: só os turnos
-> montados as rejeitam. O recibo e os links continuam descrevendo `4b86a7b`.
+> `ai-wrong-event` (a IA espera, mas emite `ai_moved`) só o oráculo e um check do probe rejeitam: os campos de jogo da espera, fora o
+> log, e os hashes dourado e de trilha do replay não mudam (o roteiro não chega a uma espera), mas o log do turno montado muda, e o log
+> faz parte do estado serializado. O roteiro (73 passos) e seus hashes dourado e de trilha não mudaram, e por isso as três sabotagens
+> novas não perdem o hash dourado: só os turnos montados as rejeitam. O recibo e os links continuam descrevendo `4b86a7b`.
 
 Esta fatia é o pacote P3 do marco 0.5 (V05-03, critério `replay`), ligada ao GF-28. O jogo de referência **Frontier**,
 um jogo de estratégia por turnos no estilo de interação do Civilization 2, tem agora as suas regras e o seu cenário

@@ -161,14 +161,15 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
       sabotage, hashes, goldenHash: GOLDEN_HASH, rejections, failedChecks: [...new Set(failed)], oracle, scan, sourceSha256: pinned}, null, 2) + "\n");
     assert.ok(rejections.oracleRejects, "The oracle rejects the sabotaged game in every execution");
     if (sabotage.startsWith("ai-")) {
-      // The roteiro never puts the player on the faction's route, so its states and the golden hash are the genuine
-      // ones: only the states built for the faction's wait can tell, to the probe's checks and to the oracle.
+      // The roteiro never puts the player on the faction's route, so the roteiro's states and its golden hash are
+      // unchanged: only the states built for the faction's wait can tell, to the probe's checks and to the oracle.
       assert.ok(!rejections.goldenHashDiffers && !rejections.executionsDiffer, "The roteiro does not reach the faction's wait");
       assert.ok(failed.some(name => /^ai wait: /.test(name)), failed.join("\n"));
       assert.ok(oracle.every(message => /^case (city-on-route|unit-on-route)/.test(message)), oracle.join("\n"));
       if (sabotage === "ai-wrong-event") {
-        // The faction waits as it should, so the state is the genuine one: only the events it emits tell, and only the
-        // oracle's judgment of the log entries a turn appended sees them.
+        // The faction waits as it should, so the wait's game fields other than the log are the genuine ones, as are the
+        // replay's golden and trace hashes (the roteiro never reaches a wait); the wait case's log is not. Only the events
+        // the faction emits tell, and only the oracle's judgment of the log entries a turn appended sees them.
         assert.ok(oracle.every(message => /the faction's phases emit the events the rules give them/.test(message)), oracle.join("\n"));
       }
       if (sabotage === "ai-city") {
