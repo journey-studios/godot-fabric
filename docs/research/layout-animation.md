@@ -102,9 +102,15 @@ not supported`.
   one-line calls: `attach` after the registry is created, `register_surface(tree)` where
   `start_root` creates the `ShadowTree` (so `startSurface` and `startEmptySurface` are both covered),
   `clock(frame_time)` and `active()` in the pump where the frame clock's consumer is decided,
-  `tick(frame_time)` next to the Native Animated frame, `pulled(transaction)` where
-  `uiManagerDidFinishTransaction` pulls, `surface_stopped(id)` after `ui->stopSurface(id)`, `stop()`
-  next to Native Animated's, and `snapshot()` in `status()`.
+  `tick(frame_time)` next to the Native Animated frame, `surface_stopped(id)` after
+  `ui->stopSurface(id)`, `stop()` next to Native Animated's, and `snapshot()` in `status()`.
+- **What the surfaces point to.** The `UIManager`'s animation delegate is the driver, but a surface's
+  mounting coordinator is given a delegate of the module's own (`RecordingDriver`, in the `.cpp`) that
+  forwards `shouldOverridePullTransaction` and `pullTransaction` to the driver and reports the transaction
+  the driver returns. A transaction is then recorded exactly when the driver served it, because the
+  coordinator calls `pullTransaction` only for a delegate that asked to override; nothing is inferred
+  from how often the driver reads the clock, and the runtime has no hook for it. Coordinators hold the
+  delegate weakly, so `stop()` releasing it (and the driver) detaches every surface.
 - **The frame clock is the display link.** `LayoutAnimation::active()` is a consumer of the host's
   [frame clock](frame-clock.md) exactly as a Native Animated backend with work is, so a frame is a
   tick only while an animation is in flight; the tick runs `UIManager::animationTick()` at the tick's
@@ -136,16 +142,17 @@ not supported`.
 ### The status contract
 
 `status().layoutAnimation` (also in every surface snapshot) is `{enabled, active, stopped, started,
-completed, callbacksQueued, ticks, clockReads, lastClockMs, pullsTotal, pullsDropped, pulls}`:
+completed, callbacksQueued, ticks, clockReads, frameMs, lastReadMs, pullsTotal, pullsDropped, pulls}`:
 `started` and `completed` are the status delegate's edges; `callbacksQueued` counts what the driver put
 on the `RuntimeExecutor` (the success callback of each completed animation, and the failure callback of a
 config it rejected); `ticks` counts `animationTick()` calls; `clockReads` how often RN read the clock;
-`lastClockMs` is the frame time last handed over (monotonic). `pulls` is a ring of the last 64
-transactions the driver served: `{sequence, godotFrame, clockMs, frameMs, callbacks, active, creates,
-inserts, updates, removes, deletes}`, where `clockMs` is what RN read, `frameMs` the frame time it
-came from, `callbacks` the cumulative callbacks queued when the transaction returned and `active` the
+`frameMs` is the frame time last handed over to the driver (monotonic, in milliseconds with a fraction) and
+`lastReadMs` what RN last read, which is `floor(frameMs)` as of that reading. `pulls` is a ring of the last 64
+transactions the driver served: `{sequence, godotFrame, readMs, frameMs, callbacks, active, creates,
+inserts, updates, removes, deletes}`, where `readMs` is what RN read for the transaction, `frameMs` the frame
+time it came from, `callbacks` the cumulative callbacks queued when the transaction returned and `active` the
 in-flight flag then; `pullsTotal` counts them all and `pullsDropped` those the ring has dropped. A
-transaction the driver did not serve (no animation, so no clock read) is not recorded. A host
+transaction the driver did not serve (no animation armed or in flight) is not recorded. A host
 without the module has no `layoutAnimation` key.
 
 ## What the checks establish
@@ -178,7 +185,7 @@ RN's JS timer, and compares them with the report.
 
 Because the clock is the frame time of the pump, the oracle's expected values do not depend on the
 pace of the host: the report of a run under CPU load is checked against the same formulas. The largest
-distance from the oracle in the run that wrote this note (354 transactions) is 1.8e-5 in position, 3.5e-8 in opacity and 4.5e-8 in scale,
+distance from the oracle in the run that wrote this note (377 transactions) is 2.4e-5 in position, 3.3e-8 in opacity and 4.5e-8 in scale,
 against tolerances of 5e-4 in position and 1e-5 in opacity and scale (the Controls and RN's interpolation both hold single-precision floats).
 
 **Facts the runs showed.** The first transaction of an animation is the commit's: it applies the

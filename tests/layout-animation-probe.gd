@@ -99,7 +99,8 @@ func sample() -> Dictionary:
   var row := {"n": Engine.get_process_frames(), "enabled": state.get("enabled", false) == true, "active": state.get("active", false) == true,
     "stopped": state.get("stopped", false) == true, "started": int(number(state.get("started"))), "completed": int(number(state.get("completed"))),
     "callbacks": int(number(state.get("callbacksQueued"))), "ticks": int(number(state.get("ticks"))),
-    "clockReads": int(number(state.get("clockReads"))), "lastClockMs": number(state.get("lastClockMs")),
+    "clockReads": int(number(state.get("clockReads"))), "frameMs": number(state.get("frameMs")),
+    "lastReadMs": number(state.get("lastReadMs")),
     "pullsTotal": int(number(state.get("pullsTotal"))), "pullsDropped": int(number(state.get("pullsDropped"))),
     "frameTicks": int(number(clock.get("ticks"))), "frameLastTickMs": number(clock.get("lastTickMs")), "controls": {}}
   for id: String in IDS:
@@ -328,12 +329,12 @@ func idle_case(name: String) -> void:
   var first: Dictionary = run.request
   var last: Dictionary = run.rows.back()
   var forward := true
-  var previous := number(first.lastClockMs)
+  var previous := number(first.frameMs)
   for row: Dictionary in run.rows:
-    forward = forward and number(row.lastClockMs) >= previous
-    previous = number(row.lastClockMs)
+    forward = forward and number(row.frameMs) >= previous
+    previous = number(row.frameMs)
   driver_check((last.ticks == first.ticks and last.frameTicks == first.frameTicks and last.pullsTotal == first.pullsTotal and not last.active
-    and forward and number(last.lastClockMs) > number(first.lastClockMs)),
+    and forward and number(last.frameMs) > number(first.frameMs)),
     name + "/Idle, neither the driver nor the frame clock ticks, no transaction is pulled and the driver's clock only moves forward")
 
 # The checks every animated run shares. wanted_callbacks: how many of RN's success callbacks the driver queued.
@@ -352,9 +353,9 @@ func animated_run(name: String, run: Dictionary, wanted_callbacks: int = 1) -> v
   var previous_ms := 0.0
   var previous_clock := 0
   for pull: Dictionary in pulls:
-    monotone = monotone and int(pull.clockMs) >= previous_clock
-    forward = forward and number(pull.frameMs) >= previous_ms and int(pull.clockMs) == int(floor(number(pull.frameMs)))
-    previous_clock = int(pull.clockMs)
+    monotone = monotone and int(pull.readMs) >= previous_clock
+    forward = forward and number(pull.frameMs) >= previous_ms and int(pull.readMs) == int(floor(number(pull.frameMs)))
+    previous_clock = int(pull.readMs)
     previous_ms = number(pull.frameMs)
   driver_check(not pulls.is_empty() and monotone and forward,
     name + "/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back")
@@ -364,8 +365,8 @@ func animated_run(name: String, run: Dictionary, wanted_callbacks: int = 1) -> v
     var ticked := int(row.ticks) - int(previous_row.ticks)
     var frame_ticked := int(row.frameTicks) - int(previous_row.frameTicks)
     # A tick needs an animation in flight when the frame began, and each one is a tick of the frame clock, with its timestamp.
-    ticks_ok = ticks_ok and (ticked == 0 or (ticked == 1 and previous_row.active and frame_ticked >= 1 and number(row.lastClockMs) == number(row.frameLastTickMs)))
-    ticks_ok = ticks_ok and row.lastClockMs >= previous_row.lastClockMs
+    ticks_ok = ticks_ok and (ticked == 0 or (ticked == 1 and previous_row.active and frame_ticked >= 1 and number(row.frameMs) == number(row.frameLastTickMs)))
+    ticks_ok = ticks_ok and row.frameMs >= previous_row.frameMs
     previous_row = row
   driver_check(ticks_ok and delta(run, "ticks") >= 1,
     name + "/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp")

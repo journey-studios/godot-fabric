@@ -200,9 +200,9 @@ function verifyPulls(report) {
   let clock = 0;
   let frame = 0;
   for (const pull of ordered) {
-    assert.equal(pull.clockMs, Math.floor(pull.frameMs), `Transaction ${pull.sequence}: RN reads the frame time in whole milliseconds`);
-    assert.ok(pull.clockMs >= clock && pull.frameMs >= frame, `Transaction ${pull.sequence}: the clock never goes back`);
-    clock = pull.clockMs;
+    assert.equal(pull.readMs, Math.floor(pull.frameMs), `Transaction ${pull.sequence}: RN reads the frame time in whole milliseconds`);
+    assert.ok(pull.readMs >= clock && pull.frameMs >= frame, `Transaction ${pull.sequence}: the clock never goes back`);
+    clock = pull.readMs;
     frame = pull.frameMs;
   }
 }
@@ -219,11 +219,14 @@ function verifyRows(report, stage, label, simulate) {
     if (ticked === 1) {
       assert.ok(previous.active, `${label}: a tick needs an animation in flight when the frame began`);
       assert.ok(row.frameTicks - previous.frameTicks >= 1, `${label}: each tick of the driver is a tick of the frame clock`);
-      assert.equal(row.lastClockMs, row.frameLastTickMs, `${label}: the driver's clock is the frame clock's tick timestamp`);
+      assert.equal(row.frameMs, row.frameLastTickMs, `${label}: the driver's clock is the frame clock's tick timestamp`);
     }
-    assert.ok(row.lastClockMs >= previous.lastClockMs, `${label}: the driver's clock never goes back`);
+    assert.ok(row.frameMs >= previous.frameMs, `${label}: the driver's clock never goes back`);
     if (row.pullsTotal === previous.pullsTotal) {
       assert.deepEqual(row.controls, previous.controls, `${label}: the Controls change only in a frame that applied a transaction`);
+      assert.equal(row.lastReadMs, previous.lastReadMs, `${label}: RN reads the clock only for a transaction it serves`);
+    } else {
+      assert.equal(row.lastReadMs, report.pullBySequence.get(row.pullsTotal).readMs, `${label}: the last reading is the last transaction's`);
     }
     for (let sequence = previous.pullsTotal + 1; sequence <= row.pullsTotal; sequence += 1) {
       const pull = report.pullBySequence.get(sequence);
@@ -285,14 +288,14 @@ function verifyAnimated(report, name, errors) {
   const pulls = pullsOf(report, stage.request, stage.final);
   assert.ok(pulls.length >= 3, `${name}: the driver served the start, at least one frame between, and the end`);
   // The first transaction is the commit's: it starts the animation, so the time it reads is the one the animation counts from.
-  const animation = {start: pulls[0].clockMs, entities, config: eff, from, to, base: {box: rested(POSES[from.box]), child: absent, doomed: rested(DOOMED)}};
+  const animation = {start: pulls[0].readMs, entities, config: eff, from, to, base: {box: rested(POSES[from.box]), child: absent, doomed: rested(DOOMED)}};
   const created = entities.includes("child") ? 1 : 0;
   const deleted = entities.includes("doomed") ? 1 : 0;
   const finalUpdates = (entities.includes("box") ? 1 : 0) + created;
   let last = null;
   verifyRows(report, stage, name, (pull, row) => {
     assert.equal(last, null, `${name}: no transaction after the animation's last`);
-    const expected = animationAt(animation, pull.clockMs);
+    const expected = animationAt(animation, pull.readMs);
     // LayoutAnimationDriver.cpp:17-115: one update per key frame in every transaction; the commit's creates and inserts at once; with
     // the last, the removes and deletes of the delete key frames and a final update for the update key frames (their final mutation)
     // and the create ones (the synthetic one for a key frame that has none: LayoutAnimationKeyFrameManager.cpp:1207-1250).
@@ -393,7 +396,7 @@ function verifyInterrupt(report, errors) {
   const pulls = pullsOf(report, stage.request, stage.final);
   const secondStart = pulls.find(pull => pull.sequence > stage.second.pullsTotal && pull.callbacks > stage.second.callbacks);
   assert.ok(secondStart, "interrupt: the driver served the second commit and queued the first animation's callback");
-  const firstStart = pulls[0].clockMs;
+  const firstStart = pulls[0].readMs;
   const others = {child: absent, doomed: rested(DOOMED)};
   let shown = null;
   let begin = null;
@@ -402,16 +405,16 @@ function verifyInterrupt(report, errors) {
   verifyRows(report, stage, "interrupt", (pull, row) => {
     assert.ok(!ended, "interrupt: no transaction after the end");
     if (pull.sequence === secondStart.sequence) {
-      secondClock = pull.clockMs;
+      secondClock = pull.readMs;
       begin = shown;
     }
     let expected;
     if (secondClock === null) {
-      const [linear, factor] = animationProgress(pull.clockMs, firstStart, firstConfig);
+      const [linear, factor] = animationProgress(pull.readMs, firstStart, firstConfig);
       assert.ok(linear < 1, "interrupt: the second commit came before the first animation ended");
       expected = box(POSES.a, POSES.b, factor);
     } else {
-      const [linear, factor] = animationProgress(pull.clockMs, secondClock, secondConfig);
+      const [linear, factor] = animationProgress(pull.readMs, secondClock, secondConfig);
       expected = linear >= 1 ? rested(POSES.c) : box(begin, POSES.c, factor);
       ended = linear >= 1;
     }
@@ -445,11 +448,12 @@ function verifyIdle(stage, label) {
     assert.equal(row.ticks, stage.request.ticks, `${label}: the driver never ticks idle`);
     assert.equal(row.frameTicks, stage.request.frameTicks, `${label}: the frame clock never ticks idle`);
     assert.equal(row.pullsTotal, stage.request.pullsTotal, `${label}: the driver pulls nothing idle`);
+    assert.equal(row.lastReadMs, stage.request.lastReadMs, `${label}: RN reads no clock idle`);
     assert.equal(row.active, false);
-    assert.ok(row.lastClockMs >= previous.lastClockMs, `${label}: the driver's clock never goes back`);
+    assert.ok(row.frameMs >= previous.frameMs, `${label}: the driver's clock never goes back`);
     previous = row;
   }
-  assert.ok(stage.rows.at(-1).lastClockMs > stage.request.lastClockMs, `${label}: the driver's clock moves with the host's frames`);
+  assert.ok(stage.rows.at(-1).frameMs > stage.request.frameMs, `${label}: the driver's clock moves with the host's frames`);
 }
 
 function verifyStop(report) {

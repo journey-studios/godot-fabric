@@ -156,7 +156,7 @@ test("RN's own LayoutAnimation runs on RN's LayoutAnimationDriver, on the Godot 
     }
     if (sabotage === "seconds-clock") {
       const pulls = report.pulls.filter(pull => pull.sequence > ran.request.pullsTotal);
-      assert.ok(pulls.length > 0 && pulls.every(pull => pull.clockMs !== Math.floor(pull.frameMs)), "RN read seconds where the host's frames are in milliseconds");
+      assert.ok(pulls.length > 0 && pulls.every(pull => pull.readMs !== Math.floor(pull.frameMs)), "RN read seconds where the host's frames are in milliseconds");
     }
     if (sabotage === "drop-callback") {
       assert.equal(report.stages["native-end"].events.find(event => event.kind === "end").race, "fired", "Only RN's timer ended the call");

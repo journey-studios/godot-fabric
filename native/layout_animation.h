@@ -9,7 +9,6 @@
 #include <memory>
 
 namespace facebook::react {
-class MountingTransaction;
 class ShadowTree;
 class UIManager;
 }
@@ -21,8 +20,8 @@ namespace fabric_godot {
 // mounting override delegate of every ShadowTree, and the application's frame clock tick
 // (frame_clock.h) is its display link: animationTick() is what RCTScheduler.mm's
 // CADisplayLink observer and Android's choreographer call. The driver's own logic is not
-// subclassed or reimplemented. The runtime hands each transaction it pulls to pulled(),
-// which records the ones the driver served.
+// subclassed or reimplemented. Each surface hands its coordinator a delegate that forwards to
+// the driver and records every transaction the driver serves.
 //
 // The driver reads time through setClockNow. The clock here is the host's frame time in
 // milliseconds, the timestamp the frame callbacks and RN's Native Animated receive, so
@@ -42,7 +41,8 @@ class LayoutAnimation {
       const std::shared_ptr<facebook::react::ContextContainer> &context);
   ~LayoutAnimation();
   // As RCTScheduler.mm and FabricUIManagerBinding.cpp do for every surface they start:
-  // the surface's mounting coordinator lets the driver override the transactions it pulls.
+  // the surface's mounting coordinator lets the driver override the transactions it pulls
+  // (through a delegate that forwards to the driver and records what it served).
   void register_surface(const facebook::react::ShadowTree &tree);
   // The surface is gone. The driver is told to drop its animations by the UIManager; this
   // ends the host's own interest (the frame ticks) when no surface is left, because
@@ -59,8 +59,6 @@ class LayoutAnimation {
   // One animation frame at the frame clock's tick: the clock, then RN's animationTick()
   // (the transactions it pulls reach the runtime's uiManagerDidFinishTransaction).
   void tick(double frame_ms);
-  // Records a transaction the runtime pulled, if the driver served it.
-  void pulled(const facebook::react::MountingTransaction &transaction);
   // No more frames or callbacks: the driver is detached from the UIManager and destroyed,
   // which drops the JS callbacks it holds. The runtime calls it while the JS runtime lives.
   void stop();

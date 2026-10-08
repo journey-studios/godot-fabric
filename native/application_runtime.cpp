@@ -2064,7 +2064,6 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     auto transaction = coordinator->pullTransaction();
     if (!transaction) return;
-    if (layout_animation) layout_animation->pulled(*transaction);
     auto root_entry = roots.find(transaction->getSurfaceId());
     if (root_entry == roots.end() || root_entry->second->stopping) return;
     auto &surface = *root_entry->second;

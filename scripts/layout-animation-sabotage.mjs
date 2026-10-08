@@ -37,7 +37,7 @@ const variants = [
     find: "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms);",
     replace: "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms / 1000.0);"},
   {name: "no-register-surface", argument: "--sabotage=no-register-surface", hostDirectory: "build/layout-animation-sabotage-no-register-surface-host", file: module,
-    find: "  tree.getMountingCoordinator()->setMountingOverrideDelegate(state_->driver);\n",
+    find: "  tree.getMountingCoordinator()->setMountingOverrideDelegate(state_->recorder);\n",
     replace: ""},
   {name: "no-consumer", argument: "--sabotage=no-consumer", hostDirectory: "build/layout-animation-sabotage-no-consumer-host", file: runtime,
     find: " || (layout_animation && layout_animation->active());",
