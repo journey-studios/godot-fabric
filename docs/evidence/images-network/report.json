@@ -912,7 +912,12 @@
     "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86"
   },
   "hostedCI": {
-    "status": "pending-images-network-slice"
+    "status": "verified",
+    "run": 37750455295,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37750455287,
+    "publication": "publication.json"
   },
   "postReview": {
     "at": "2026-10-08T08:13:19Z",

@@ -1,0 +1,1102 @@
+{
+  "schemaVersion": 1,
+  "scenario": "images-visual",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
+  "at": "2026-10-08T10:17:15Z",
+  "executionBaseCommit": "fb50a325fe0e4961f434b21382d2c4a5885ee14e",
+  "executedTreeSha": "bb58ca333cf0ee27b99bcea4f9881360955880e5",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "none during the lanes; docs/evidence/images-visual, docs/research/images.md, ROADMAP.md, README.md, docs/API.md, docs/evidence/README.md, examples/README.md and the example README were written after them, and the gates that read documents ran again on the tree that holds them",
+  "implementationCommit": "6c221e8500e159ba9322d9b7a6b5adace4f8aff2",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/6c221e8500e159ba9322d9b7a6b5adace4f8aff2",
+  "implementationPr": null,
+  "dependsOn": "The first two Images slices (docs/evidence/images and docs/evidence/images-network: RN's C++ image pipeline, the GodotImageManager, the worker-pool loader, the GodotImage view, the decoded and byte caches), the network images suite's loopback server (tests/images-network-server.mjs) and the host's validation seams",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+    "precedingHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9"
+  },
+  "commands": [
+    "npm run test:images-visual",
+    "node tests/images-visual-native.test.mjs --allow-original-negative (the preceding host installed in addons/ by scripts/images-visual-control.mjs, the genuine one restored byte for byte)",
+    "node scripts/images-visual-sabotage.mjs",
+    "npm run test:images",
+    "npm run test:images-network",
+    "npm run example -- images --headless",
+    "npm run example -- images --capture",
+    ".deps/build/image_effects_test",
+    ".deps/build/image_core_test",
+    ".deps/build/image_cache_test",
+    ".deps/build/image_network_test",
+    ".deps/build/http_core_test"
+  ],
+  "headlessChecks": 53,
+  "normativeChecks": 40,
+  "structuralChecks": 13,
+  "exampleChecks": {
+    "headless": 26,
+    "capture": 39
+  },
+  "unitTests": [
+    {
+      "file": "native/image_effects_test.cpp",
+      "target": "image_effects_test",
+      "groups": 10,
+      "groupNames": [
+        "the_kernel_is_the_box_of_a_gaussian_made_odd",
+        "premultiplying_rounds_to_the_nearest",
+        "a_uniform_picture_stays_uniform_and_a_kernel_of_one_changes_nothing",
+        "the_running_sums_are_the_window_sums",
+        "one_opaque_pixel_spreads_as_two_boxes",
+        "corners_follow_the_border_drawing",
+        "a_clip_is_the_border_box_and_the_content_frame",
+        "cap_insets_become_margins_in_pixels",
+        "a_draw_is_one_description",
+        "a_draw_clips_only_a_view_that_clips_and_has_a_radius"
+      ],
+      "assertions": 46,
+      "marker": "IMAGE_EFFECTS_PASSED",
+      "coverage": "The box of the blur (radius and scale to the odd box, a box of one pixel, epsilon, a negative, NaN and an absurd radius), the rounding of premultiplying and straightening, the fixed point of a uniform picture, the running sums against a naive window sum over 7 sizes and 5 boxes (including a box wider than the picture), the spread of one pixel over two boxes, the corner insets and the rounded rectangle's clamp, the clip of a border box and a content frame, cap insets as margins in pixels, and paint(): which of tint, caps, tiling and clip a draw keeps for a plain (blurred) picture, a stretch, a repeat and a cover"
+    }
+  ],
+  "scope": {
+    "originalRNJavaScript": true,
+    "publicReactNativeImport": true,
+    "rnCppImagePipeline": true,
+    "effectsOnAnItemOfTheViewsOwn": true,
+    "oneSharedShader": true,
+    "blurOnTheWorkerThread": true,
+    "workerThreadIdentityRecorded": true,
+    "blurredPicturesOutOfTheDecodedCache": true,
+    "blurExactAgainstAnIndependentImplementation": true,
+    "requestedRendererParametersCertified": true,
+    "ridLifecycleCertified": true,
+    "actualSceneTreeFrames": true,
+    "networkCasesOverALoopbackServer": true,
+    "pixelsSampledInTheCaptureLane": true,
+    "headlessRendererDrawsNoPixels": true,
+    "independentPixelOracle": false,
+    "uikitDifferentialCertified": false,
+    "exportedAppCertified": false,
+    "hostedCI": false
+  },
+  "checkIdDigest": "SHA-256 of the check ids joined by newlines, in the order the probe ran them",
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: 52 declared Images (blur, tint, caps, mask and ignored props), 13 live changes, the network stage over the loopback Node server (6 steps over the two caches), the RID lifecycle and the stop, then the independent oracle over the report.",
+      "nativeHostSha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 53,
+      "failed": 0,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "ed912897f37293f6f350ebe617ebf7578011e13161c7b1758789d108da92b1d4",
+      "logSha256": "a9b1cd502e3419b39ab8a2537db5d9f695052c610b42775f6b0c723996dfca2f"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host built from main fb50a32 (no effects); expected negative control (--allow-original-negative). The probe runs every stage: the 13 checks that hold on every host pass and the 40 normative ones fail.",
+      "nativeHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 13,
+      "failed": 40,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "11ddb19b83e9818563dd9c462fd1fd8922e548e211536b3a3871eaa37c5d0c67",
+      "logSha256": "cc4864dc0d845dd69e920ab8f1843fd03fe0da53312d0f567a14281df17c2787",
+      "failedIds": [
+        "ignored/defaultSource reaches the view and is read by nothing: the view holds it and draws nothing of it",
+        "ignored/loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and overlayColor never reach the view: it holds their defaults",
+        "blur/The box is floor((radius x scale x 3 sqrt(2 pi) / 4 + 0.5) / 2) made odd, in the pixels of the bitmap: 5, 3, 5, 7, 11, 11 and 85 for the radii and scales declared",
+        "blur/Two box passes reach the picture, which keeps the size of its bitmap and its own texture",
+        "blur/A box of one pixel, a radius at epsilon and no radius leave every pixel of the bitmap: the pixels are those of the fixture file",
+        "blur/Each box changes the pixels in its own way, and the same box makes the same pixels whatever else the Image has",
+        "blur/Every blurred bitmap is, byte for byte, the one the manifest holds for its picture and its box: two passes, in premultiplied alpha, the edge extended",
+        "blur/A picture a blur left alone is still a template and still a nine-patch: iOS returns the image it was given",
+        "blur/A blurred picture is plain: it takes no tint and no cap insets, and repeat fills the view with it instead of tiling",
+        "blur/Every blur ran on a worker thread as part of its job, and the loader counted exactly the ten blurred pictures",
+        "live/Setting blurRadius asks for the same source again: onLoad and onLoadEnd come again, with no onLoadStart, and the picture is the blurred one",
+        "live/Clearing blurRadius loads the plain picture again, and each change is exactly one request",
+        "tint/tintColor draws the picture in that color, from the prop and from the style, with the prop first, and a fully transparent one is declared as it is",
+        "tint/The shader is told to tint with the color and not to clip, on an item and a material of the view's own",
+        "tint/An Image with no tint and no rounded clip has an item and no material: the shader is not used",
+        "tint/and the picture lies in the content frame inside the border and the padding",
+        "tint/Setting, changing and clearing tintColor redraws at once: the picture is tinted, tinted again and plain again",
+        "tint/The material is made once and kept, and a tint loads nothing: the picture is the one the request gave",
+        "caps/capInsets as a number or an object of top, left, bottom and right become a nine-patch of the whole picture over the content frame, with margins in the pixels of the picture and the modes of the resize mode",
+        "caps/Repeat with no insets tiles the whole picture, and cover or zero insets draw as they do without them",
+        "caps/A nine-patch needs no shader: the item draws it with no material",
+        "caps/Setting, changing and clearing capInsets redraws at once with no request: a nine-patch, another and the plain picture",
+        "mask/A view that clips and has radii clips its picture to the border box with the radii, and to the content frame with each radius less the border beside it, limited as RCTPathCreateWithRoundedRect limits them",
+        "mask/The shader's coordinates are the pixels of the picture: at scale 3 every point is three",
+        "mask/overflow visible keeps only the rectangle of the content frame, and a clipping view with no radius needs no mask",
+        "mask/The mask belongs to the view, not to the picture: every resize mode keeps its drawing under the same shape",
+        "mask/Giving the view a radius, letting it overflow and clipping it again redraws at once with no request",
+        "combined/A tinted nine-patch in a rounded view is one item: the tint, the mask and the nine-patch are declared together",
+        "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+        "network/The plain request after it is answered from the byte cache and decodes the pixels of the file: no blurred pixel went into the decoded cache",
+        "network/A blurred request does not read the decoded cache, though it holds the picture: it takes the bytes and blurs them, and the cache is as it was",
+        "network/Each view draws what it was given, tinted, masked or blurred, over the same picture; the live textures are the cached one and the two blurred, no more",
+        "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache",
+        "network/Clearing the blur finds the cached picture again, without the network",
+        "lifecycle/Every Image that has a picture has one item of its own, and every Image that tints or clips has one material: the RIDs made and freed are the live ones",
+        "lifecycle/One shader serves every view, made the first time one needed it, and it is freed with the extension, not with a view",
+        "lifecycle/Unmounting a tinted Image frees its item and its material, and unmounting a plain one frees its item alone",
+        "lifecycle/Mounting it again makes an item and a material of its own and does not make the shader again",
+        "lifecycle/Unmounting a root frees the items and materials of its Images, and only theirs",
+        "lifecycle/When the application stops and its views are gone, no item and no material is left, no texture outlives it, and the shader still waits for the extension to end"
+      ]
+    },
+    {
+      "lane": "sabotage-mask-borders",
+      "meaning": "The content frame is clipped with the view's radii whole, as if the border had no width (native/image_effects_core.h).",
+      "nativeHostSha256": "f8f87d75a161b2d37c9b73b9fecc401282afe264da355a5aa8282d26093cfa83",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 51,
+      "failed": 2,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "40cb10e308c269a47158277136a0309b6fe7d91f0b60bd19ad32cb2cc44ad9c0",
+      "logSha256": "e4f7e4a0aa57a072d78d724646476e30f589316c9521964e20ba3ba81c593095",
+      "failedIds": [
+        "mask/A view that clips and has radii clips its picture to the border box with the radii, and to the content frame with each radius less the border beside it, limited as RCTPathCreateWithRoundedRect limits them",
+        "mask/The shader's coordinates are the pixels of the picture: at scale 3 every point is three"
+      ]
+    },
+    {
+      "lane": "sabotage-blur-passes",
+      "meaning": "The blur makes a third box pass; RN iOS's picture is the result of the second of its three convolutions (native/image_effects_core.h).",
+      "nativeHostSha256": "a17cfe753951ff9725bf8abf93af70b4ef10c987557d3489981622c2c151753d",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 50,
+      "failed": 3,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "a1a26e6e504feafaf8b4107432642547f1d986aa34590904e46c627d5d1d0694",
+      "logSha256": "529702e1aa51c3f41051873b521b49e987eccf6774e32bd005c9d1e5c036d13b",
+      "failedIds": [
+        "blur/Every blurred bitmap is, byte for byte, the one the manifest holds for its picture and its box: two passes, in premultiplied alpha, the edge extended",
+        "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+        "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache"
+      ]
+    },
+    {
+      "lane": "sabotage-blur-cache",
+      "meaning": "A blurred request reads and writes the decoded cache like a plain one (native/image_loader.cpp).",
+      "nativeHostSha256": "b6afebb69b94e88bfa2e2c498654099377cb6c1c36ad3e00ecf1be7a16ca51c4",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 45,
+      "failed": 8,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "ffec896cfa41fb405f6858af209e165067f2aaf46aed360ca7938195bf93921f",
+      "logSha256": "c662a753f1a43a1b67cc154847af2d37142339ab80af38a854bd9c60c08fdef8",
+      "failedIds": [
+        "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+        "network/The plain request after it is answered from the byte cache and decodes the pixels of the file: no blurred pixel went into the decoded cache",
+        "network/A blurred request does not read the decoded cache, though it holds the picture: it takes the bytes and blurs them, and the cache is as it was",
+        "network/A tinted view and a masked view of the cached picture are answered by the decoded cache: they share its picture, and no texture is made",
+        "network/Each view draws what it was given, tinted, masked or blurred, over the same picture; the live textures are the cached one and the two blurred, no more",
+        "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache",
+        "network/and the cached picture, shown by two other views, is as it was",
+        "network/Clearing the blur finds the cached picture again, without the network"
+      ]
+    },
+    {
+      "lane": "sabotage-nine-patch-scale",
+      "meaning": "capInsets are taken as pixels of the picture, not points: the margins ignore the scale (native/image_effects_core.h).",
+      "nativeHostSha256": "30ef34795f4aa69a734650e5252c03bfab075ea8640c1f8fa607706e92816f6a",
+      "bundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "checks": 53,
+      "passed": 51,
+      "failed": 2,
+      "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+      "reportSha256": "db483b1cbe4aaeade6df0cdbab9b5a9c5dfef5ec4f61edff39cec32b6bce21e5",
+      "logSha256": "f996a8377c843858ce257eb50fa33cb8f404e42d28a7fc00ac35ded1571e54cd",
+      "failedIds": [
+        "caps/capInsets as a number or an object of top, left, bottom and right become a nine-patch of the whole picture over the content frame, with margins in the pixels of the picture and the modes of the resize mode",
+        "caps/Setting, changing and clearing capInsets redraws at once with no request: a nine-patch, another and the plain picture"
+      ]
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "bytes": 6505312,
+      "builtFrom": "the native/ and src/ trees of origin/main fb50a32 (the squash of #64), before any native source of this slice changed",
+      "kept": "build/images-visual-previous-host/fabric_godot.dylib (local, not in Git)"
+    },
+    "current": {
+      "sha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+      "bytes": 6539488,
+      "rebuiltFromCommittedSources": true,
+      "note": "The sabotage script's genuine build recompiled the guarded sources from the committed tree and reproduced this hash, and its rebuild after the last variant did too"
+    },
+    "sabotage-mask-borders": {
+      "sha256": "f8f87d75a161b2d37c9b73b9fecc401282afe264da355a5aa8282d26093cfa83"
+    },
+    "sabotage-blur-passes": {
+      "sha256": "a17cfe753951ff9725bf8abf93af70b4ef10c987557d3489981622c2c151753d"
+    },
+    "sabotage-blur-cache": {
+      "sha256": "b6afebb69b94e88bfa2e2c498654099377cb6c1c36ad3e00ecf1be7a16ca51c4"
+    },
+    "sabotage-nine-patch-scale": {
+      "sha256": "30ef34795f4aa69a734650e5252c03bfab075ea8640c1f8fa607706e92816f6a"
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+    "provenance": {
+      "builtFrom": "origin/main fb50a32, before any native source of this slice changed",
+      "kept": "build/images-visual-previous-host/fabric_godot.dylib"
+    },
+    "receipt": {
+      "format": "godot-fabric.images-visual-control/v1",
+      "genuineHostSha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+      "previousHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "restoredHostSha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+      "runStatus": 0
+    },
+    "checks": 53,
+    "normativeFailures": 40,
+    "structuralChecksPassed": 13,
+    "normativeChecksNotExecuted": 0,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "ignored/defaultSource reaches the view and is read by nothing: the view holds it and draws nothing of it",
+      "ignored/loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and overlayColor never reach the view: it holds their defaults",
+      "blur/The box is floor((radius x scale x 3 sqrt(2 pi) / 4 + 0.5) / 2) made odd, in the pixels of the bitmap: 5, 3, 5, 7, 11, 11 and 85 for the radii and scales declared",
+      "blur/Two box passes reach the picture, which keeps the size of its bitmap and its own texture",
+      "blur/A box of one pixel, a radius at epsilon and no radius leave every pixel of the bitmap: the pixels are those of the fixture file",
+      "blur/Each box changes the pixels in its own way, and the same box makes the same pixels whatever else the Image has",
+      "blur/Every blurred bitmap is, byte for byte, the one the manifest holds for its picture and its box: two passes, in premultiplied alpha, the edge extended",
+      "blur/A picture a blur left alone is still a template and still a nine-patch: iOS returns the image it was given",
+      "blur/A blurred picture is plain: it takes no tint and no cap insets, and repeat fills the view with it instead of tiling",
+      "blur/Every blur ran on a worker thread as part of its job, and the loader counted exactly the ten blurred pictures",
+      "live/Setting blurRadius asks for the same source again: onLoad and onLoadEnd come again, with no onLoadStart, and the picture is the blurred one",
+      "live/Clearing blurRadius loads the plain picture again, and each change is exactly one request",
+      "tint/tintColor draws the picture in that color, from the prop and from the style, with the prop first, and a fully transparent one is declared as it is",
+      "tint/The shader is told to tint with the color and not to clip, on an item and a material of the view's own",
+      "tint/An Image with no tint and no rounded clip has an item and no material: the shader is not used",
+      "tint/and the picture lies in the content frame inside the border and the padding",
+      "tint/Setting, changing and clearing tintColor redraws at once: the picture is tinted, tinted again and plain again",
+      "tint/The material is made once and kept, and a tint loads nothing: the picture is the one the request gave",
+      "caps/capInsets as a number or an object of top, left, bottom and right become a nine-patch of the whole picture over the content frame, with margins in the pixels of the picture and the modes of the resize mode",
+      "caps/Repeat with no insets tiles the whole picture, and cover or zero insets draw as they do without them",
+      "caps/A nine-patch needs no shader: the item draws it with no material",
+      "caps/Setting, changing and clearing capInsets redraws at once with no request: a nine-patch, another and the plain picture",
+      "mask/A view that clips and has radii clips its picture to the border box with the radii, and to the content frame with each radius less the border beside it, limited as RCTPathCreateWithRoundedRect limits them",
+      "mask/The shader's coordinates are the pixels of the picture: at scale 3 every point is three",
+      "mask/overflow visible keeps only the rectangle of the content frame, and a clipping view with no radius needs no mask",
+      "mask/The mask belongs to the view, not to the picture: every resize mode keeps its drawing under the same shape",
+      "mask/Giving the view a radius, letting it overflow and clipping it again redraws at once with no request",
+      "combined/A tinted nine-patch in a rounded view is one item: the tint, the mask and the nine-patch are declared together",
+      "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+      "network/The plain request after it is answered from the byte cache and decodes the pixels of the file: no blurred pixel went into the decoded cache",
+      "network/A blurred request does not read the decoded cache, though it holds the picture: it takes the bytes and blurs them, and the cache is as it was",
+      "network/Each view draws what it was given, tinted, masked or blurred, over the same picture; the live textures are the cached one and the two blurred, no more",
+      "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache",
+      "network/Clearing the blur finds the cached picture again, without the network",
+      "lifecycle/Every Image that has a picture has one item of its own, and every Image that tints or clips has one material: the RIDs made and freed are the live ones",
+      "lifecycle/One shader serves every view, made the first time one needed it, and it is freed with the extension, not with a view",
+      "lifecycle/Unmounting a tinted Image frees its item and its material, and unmounting a plain one frees its item alone",
+      "lifecycle/Mounting it again makes an item and a material of its own and does not make the shader again",
+      "lifecycle/Unmounting a root frees the items and materials of its Images, and only theirs",
+      "lifecycle/When the application stops and its views are gone, no item and no material is left, no texture outlives it, and the shader still waits for the extension to end"
+    ]
+  },
+  "retainedSabotages": {
+    "receiptFormat": "godot-fabric.images-visual-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "native/image_effects_core.h": "b5fb239ba3147470866faed0ca4a76dac974b5d65c94be36cf098409a000a282",
+        "native/image_loader.cpp": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969"
+      },
+      "restored": {
+        "native/image_effects_core.h": "b5fb239ba3147470866faed0ca4a76dac974b5d65c94be36cf098409a000a282",
+        "native/image_loader.cpp": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969"
+      }
+    },
+    "hostSha256": {
+      "genuine": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+      "restored": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299"
+    },
+    "variants": [
+      {
+        "name": "mask-borders",
+        "file": "native/image_effects_core.h",
+        "find": "  clip.inner = {content, fit_corners({content.width, content.height}, corner_insets(radii, widths))};",
+        "replace": "  clip.inner = {content, fit_corners({content.width, content.height}, corner_insets(radii, {}))};",
+        "sourceSha256": "855ae3dd31e16ba41fd76413a3b01a79a0a1ffec945db2744699dd35bab01eff",
+        "hostSha256": "f8f87d75a161b2d37c9b73b9fecc401282afe264da355a5aa8282d26093cfa83",
+        "runStatus": 0,
+        "failedChecks": 2,
+        "oracleRejection": "mask-border: the clip.inner.radii.horizontal[0]: 10 is not 8"
+      },
+      {
+        "name": "blur-passes",
+        "file": "native/image_effects_core.h",
+        "find": "  box_pass(scratch.data(), pixels, width, height, kernel);\n  for (std::size_t i = 0; i < count; ++i) {\n    for (std::size_t channel = 0; channel < 3; ++channel) pixels[i * 4 + channel] = straightened(",
+        "replace": "  box_pass(scratch.data(), pixels, width, height, kernel);\n  box_pass(pixels, scratch.data(), width, height, kernel);\n  std::copy(scratch.begin(), scratch.end(), pixels);\n  for (std::size_t i = 0; i < count; ++i) {\n    for (std::size_t channel = 0; channel < 3; ++channel) pixels[i * 4 + channel] = straightened(",
+        "sourceSha256": "cfe83a29073a7cee617683533739723e91a3671a7711f1d5e2b0628279d8fdc6",
+        "hostSha256": "a17cfe753951ff9725bf8abf93af70b4ef10c987557d3489981622c2c151753d",
+        "runStatus": 0,
+        "failedChecks": 3,
+        "oracleRejection": "blur-1x-r4: the pixels of the bitmap are those the blur must make"
+      },
+      {
+        "name": "blur-cache",
+        "file": "native/image_loader.cpp",
+        "find": "!job.measure_only && !job.prefetch && !job.blurs()); }",
+        "replace": "!job.measure_only && !job.prefetch); }",
+        "sourceSha256": "117a2fee661593a580ead2ab807294763603bea98a69edbbe899ad7b052315e8",
+        "hostSha256": "b6afebb69b94e88bfa2e2c498654099377cb6c1c36ad3e00ecf1be7a16ca51c4",
+        "runStatus": 0,
+        "failedChecks": 8,
+        "oracleRejection": "N-plain-a after {\"props\":{\"blurRadius\":2}}: the blur.radius: 1 is not 2"
+      },
+      {
+        "name": "nine-patch-scale",
+        "file": "native/image_effects_core.h",
+        "find": "  margins.left = std::min(positive(insets.left * scale), pixels.width);",
+        "replace": "  margins.left = std::min(positive(insets.left), pixels.width);",
+        "sourceSha256": "4a68e27c9b45960e27bd0ffeef7be0789b504686f17af58df387711e2ac694c7",
+        "hostSha256": "30ef34795f4aa69a734650e5252c03bfab075ea8640c1f8fa607706e92816f6a",
+        "runStatus": 0,
+        "failedChecks": 2,
+        "oracleRejection": "blur-kernel-1: the commands[0].margins.left: 2 is not 4"
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/images-visual-oracle.mjs",
+    "independence": "Written apart from the probe and from the C++. It recomputes the blurred bitmap of every blurred Image pixel by pixel (premultiply with rounding, two square box passes with the edge extended and one rounding of the exact window mean, straighten) and compares its fingerprint with the worker's; it derives the layout, the radii (percentages, the CSS overlap rule, the corner insets and the rounded rectangle's clamp), the tint, the cap-inset margins, the draw rectangles and the parameters of the material for each declared case from the declared style and props and compares them to what the view asked the renderer for within a thousandth; it replays the 13 live changes over the declared state; and it models what each of the six network steps must do to the two caches, reading the server's own log. It reuses the independent content-mode helper of tests/images-oracle.mjs",
+    "expectedCheckCount": 53,
+    "model": {
+      "declaredCases": 52,
+      "liveChanges": 13,
+      "jobsJudged": 62,
+      "networkSteps": 6,
+      "blurredBitmapsCompared": 14
+    },
+    "mutationsOfTheGenuineReport": [
+      "the blurred pixels are exactly those of the blur",
+      "a box wider than the picture extends its edge",
+      "the box is the formula's",
+      "two passes reach the picture",
+      "the box is measured in the picture's pixels per point",
+      "a box of one pixel changes nothing",
+      "a blurred picture takes no tint",
+      "a blurred picture is not tiled",
+      "the shader gets the tint",
+      "the shader is told to tint",
+      "the tint keeps its alpha",
+      "the prop wins over the style",
+      "a fully transparent tint is a tint",
+      "margins are scale times the insets",
+      "margins are limited to what the picture holds",
+      "repeat tiles its nine-patch",
+      "cover ignores the caps",
+      "the nine-patch lies in the content frame",
+      "the inner radii lose the border",
+      "the inner shape is the content frame",
+      "radii overlap no more than the side allows",
+      "a percentage is of the height along the vertical radius",
+      "overflow visible clips nothing",
+      "the shader's coordinates are pixels of the picture",
+      "the shader is told to clip",
+      "a rounded view needs the shader",
+      "a square view does not",
+      "an ignored prop never reaches the view",
+      "defaultSource reaches it and is read by nothing",
+      "a live blur makes the blurred pixels",
+      "a live tint is in the view",
+      "a clipping view is clipped again",
+      "a blur change has no onLoadStart",
+      "a blurred request does not read the decoded cache",
+      "a blurred request writes nothing to the decoded cache",
+      "no blurred pixel went into the decoded cache",
+      "two views of the cached picture hold one picture",
+      "the live textures are the cached picture and the blurred ones",
+      "everything but the first request came from the byte cache",
+      "unmounting a tinted Image frees its material",
+      "one shader serves every view",
+      "a material for each Image that tints or clips",
+      "no item outlives the application",
+      "the shader is freed with the extension",
+      "every blur ran on a worker",
+      "no blur ran on the main thread",
+      "the loader counts what it blurred",
+      "a list of cap insets is refused with the host's words"
+    ]
+  },
+  "executedObservations": {
+    "note": "Observations of the recorded run, not assertions: the probe and the oracle never fix a count that depends on pace",
+    "jobsRecorded": 62,
+    "jobsOnWorkerThreads": 59,
+    "workerThreadIdentities": 11,
+    "blurredPictures": 14,
+    "boxesOfTheBlurredPictures": [
+      3,
+      5,
+      7,
+      11,
+      85
+    ],
+    "serverRequests": 1,
+    "rendererRids": {
+      "itemsCreated": 58,
+      "itemsFreed": 58,
+      "materialsCreated": 28,
+      "materialsFreed": 28,
+      "shadersCreated": 1,
+      "shadersFreed": 0
+    },
+    "viewsWithAnItem": 57,
+    "viewsWithAMaterial": 27,
+    "loaderAtStop": {
+      "blurred": 14,
+      "byteHits": 3,
+      "cacheClears": 0,
+      "cancelled": 0,
+      "decodedHits": 3,
+      "deferredUploads": 0,
+      "downloads": 1,
+      "dropped": 0,
+      "failed": 0,
+      "loaded": 62,
+      "measured": 0,
+      "measures": 0,
+      "peakInFlight": 4,
+      "peakUploadsPerPoll": 4,
+      "prefetched": 0,
+      "prefetches": 0,
+      "requested": 62,
+      "tasksAwaited": 59,
+      "tasksStarted": 59,
+      "uploadBytes": 188928,
+      "uploads": 59
+    }
+  },
+  "refreshedControlsOfOtherSlices": {
+    "reason": "src/image.jsx, src/image-contract.mjs, tests/images-fixture.jsx, tests/images-probe.gd and tests/images-oracle.mjs sit in the bundles of the first two slices and native/image_view.cpp, native/image_loader.cpp and native/godot_image_manager.cpp in their producers, so the local controls and sabotages of those suites (build/, never committed and absent in CI) compared against stale bundles. The retained texture-mutation sabotage of the network suite named the tiling code that moved into native/image_effects.cpp; its find string now names the call in GodotImage::_draw that hands the texture to the layer (scripts/images-network-sabotage.mjs)",
+    "suites": [
+      "test:images (control on build/images-previous-host, sabotages main-thread and stale-request)",
+      "test:images-network (control and the three sabotages)"
+    ],
+    "procedure": "each control lane rerun on its preserved preceding host and each retained sabotage script rerun; every one restored its sources and rebuilt the genuine host. The first slice has no committed control script: the control was run with a script kept outside the repository that is scripts/images-network-control.mjs with the first slice's host and test file",
+    "hostedCi": "not affected: hosted CI runs no controls"
+  },
+  "contractUpdates": {
+    "imageContract": "src/image-contract.mjs stops refusing tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier, overlayColor and the radii of the Image's style; it refuses a blurRadius that is not a finite number and capInsets that are not a number or an object of top, left, bottom and right numbers (a list is refused: RN's C++ reads it as a map with the keys 0 to 3)",
+    "firstSliceSuite": "tests/images-fixture.jsx, tests/images-probe.gd and tests/images-oracle.mjs: the 13 refusals of props that are now taken left the fixture (22 refusals became 9) and the check that named them went (73 checks became 72)",
+    "contractTest": "tests/image-contract.test.mjs: the props that draw and the props iOS ignores are taken, and a blur radius and cap insets that are not numbers are mistakes",
+    "types": "types/react-native.ts: ImageProps and ImageStyle carry blurRadius, capInsets, tintColor, overlayColor, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and the radii; tests/types/consumer.tsx"
+  },
+  "exploratoryObservationsOutsideTheReceipt": [],
+  "captures": {
+    "command": "npm run example -- images --capture",
+    "exampleChecks": {
+      "headless": 26,
+      "capture": 39
+    },
+    "files": [
+      {
+        "path": "docs/evidence/images-visual/images-visual-all-modes.png",
+        "sha256": "a1b31feef1f2b8d602c9b36ea4900a1525c6ffdc24417019c809dd6227aa2383",
+        "bytes": 352438,
+        "width": 1800,
+        "height": 1676,
+        "shows": "the launcher example at content scale 2 after every picture settled: the six resize modes, the @2x logo, the data: PNG and SVG, the ImageBackground, the missing file and, new in this slice, tintColor (the icon with its own colors beside the same icon painted entirely in orange, with its transparent corners left bare), blurRadius (the landscape blurred by a box of 7 pixels, soft at the sun's edge), capInsets (the card stretched to 96x38 points with its 2 point border and round corners kept, above the same card stretched without insets, whose border is four times as wide) and borderRadius (a circular avatar with an anti-aliased edge, and a second one with a 3 point border whose round corner is whole); the network row, with the Remount tile reading 'not mounted'; the preview is in cover with 'loaded 240x120 px'",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      },
+      {
+        "path": "docs/evidence/images-visual/images-visual-interaction.png",
+        "sha256": "7f92a89ab965ce81279cb56bb1a1c290a3c40d3390b36425710994f9fdf70171",
+        "bytes": 342324,
+        "width": 1800,
+        "height": 1676,
+        "shows": "the same screen after the real clicks (nine on Next mode, one on Swap the picture and one on Mount again): the Remount tile shows the sunrise again, answered by the decoded cache; the preview shows the logo in center mode ('resizeMode=\"center\"', 'picture: logo', 'loaded 64x64 px'); the four tiles of the effects are unchanged",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      }
+    ]
+  },
+  "regressions": {
+    "note": "Ran on the committed tree of the implementation commit. Controls and sabotages live only in build/ and were refreshed on the preserved preceding hosts where they pin a bundle or a producer",
+    "firstPassFailures": {
+      "test:images-network": "the first run after the change compared against stale local controls and sabotages; the retained texture-mutation sabotage could not find the tiling code it patched, which moved into native/image_effects.cpp, and its find string was ported",
+      "probe and oracle": "the first run of the probe stopped at a GDScript type-inference error (typed bool declarations fixed it); the host aborted at load because a static RID was constructed before the extension initialized (it is made on first use now); the first oracle runs rejected three expectations of the oracle itself (a blurred picture's tint belongs to the view's props and not to what is drawn, the picture's blur radius is 0 below epsilon, the patches Godot's JSON writes have sorted keys), and the control run found four checks that hold on the preceding host and were made structural",
+      "type-check, check:static": "tests/types/consumer.tsx still expected the four refusals as type errors, and the oracle exported names that collide with the first slice's oracle and one function nothing else used"
+    },
+    "passed": {
+      "image_effects_test": "IMAGE_EFFECTS_PASSED (10 groups, 46 assertions)",
+      "image_core_test": "IMAGE_CORE_PASSED",
+      "image_cache_test": "IMAGE_CACHE_PASSED",
+      "image_network_test": "IMAGE_NETWORK_PASSED",
+      "http_core_test": "HTTP_CORE_PASSED",
+      "test:images-visual": "53 checks on the current lane, 53 run and 40 failing on the control, 2, 3, 8, 2 on the sabotages",
+      "test:images": "72 checks on the current lane, with the control and the sabotages refreshed",
+      "test:images-network": "74 checks on the current lane, with the control and the sabotages refreshed",
+      "example images": "26 checks headless and 39 with the renderer"
+    },
+    "gatesOfTheCode": "test:contracts, test:examples, type-check, check:static and check:publication passed on the implementation commit's tree; the stage's own gates are in gates"
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "3ddf4725d7ad30047b6d5e4c59452e86c271c918a4d1363221e80910d00a7299",
+    "inputsMatchCommit": true,
+    "inputs": 134,
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "fixtures": {
+    "manifest": "tests/fixtures/images-visual/manifest.json",
+    "files": 4,
+    "generator": "scripts/images-visual-fixtures.mjs",
+    "pinsVerifiedAgainstTheCommit": 11,
+    "blurredFingerprints": "the manifest holds, for each picture and box the suite asks for, the fingerprint of the bitmap the oracle's blur makes; the probe compares the worker's bitmaps with it"
+  },
+  "sourcePins": {
+    "tests/images-visual-fixture.jsx": "29809a0b88efd944b020cb5ab03e7b09865e20dc1c1d1cd4024625396498fd51",
+    "tests/images-visual-probe.gd": "127b6559db8daf06780e89b4354e5e259c401b06f9e85c3f85d3a55e841d0d48",
+    "tests/images-visual-native.test.mjs": "732ef9edc049b413b45d4e08971a3f92d4103b901ae9fe9ec8388a75400cbfac",
+    "tests/images-visual-oracle.mjs": "bf2a2b069364058052452b5f07209f0373630820f3a3b9e241a3d5cacfa34a86",
+    "tests/images-visual-pattern.mjs": "5b718b5b0279c2d17f2494f9e8af78344cdae6dd3f44a474c6ae9cb449af41b4",
+    "tests/images-pattern.mjs": "d664768094c8fb3246003d5ea3546612a58891dc798c01ba2638e5d808170ac6",
+    "tests/images-network-server.mjs": "10fc73dc59d6bd1d6f6aa9a204ea6d6af7eadf9a19db33b4e85cafae367b4c18",
+    "tests/fixtures/images-visual/manifest.json": "02d83d9da4212e1f18e7b7626b65aee2db2cb3f6b6ae194d20c0d8697da137d0",
+    "scripts/images-visual-bundle.mjs": "b8d57eb6f2999d1afbc613a0812180cac89ea15b95f3ede4ce065cdc51bc9548",
+    "scripts/images-visual-fixtures.mjs": "15af79c3f9ee43d2695779c15ddf57ef560b2a84096edbc5389d79252a1f61d9",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "src/image.jsx": "5d1c9e23d7b47fc7b478dcb3824f2e3415736ae96232e442f67308381982a548",
+    "src/image-contract.mjs": "22cfd6bceb9b731f29efa34ca5386b029a8ce07d3bf351c9f7ec5cb12352ab4b",
+    "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+    "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f"
+  },
+  "verificationSourcePins": {
+    "package.json": "09419c5dc61260f15b6c8e8b5b00a3e756596979cc2bd558ca596e1f40610841",
+    ".fallowrc.json": "d7d9c59a274cb661a929ba184491fa0dc7905064781e15677f858d03b4a7e89c",
+    ".github/workflows/contracts.yml": "6dbfb167ebf829bb68540388a92a5d5f34c4478a262c3408f09380fe95bca4dc",
+    "examples/catalog.json": "b5661f68ee0af28965c6eb3bafe9ce111ff4bb758af41c43bbdf87cd453b820b",
+    "examples/images/App.jsx": "46be2cc4752fb49e7c6e1d9ec48b0876d4ecfa07ffa9c23c757926d0c4ab278f",
+    "examples/images/scene.tscn": "8755489dec98d7c4b8809d24d26a1ccc5f08253fc19a6a9af73e5f94a42a333e",
+    "examples/images/validation.gd": "9f48a753af52f2590ca05bb77d21a1d36311ce7c7680e0946458b70e8ec9ac02",
+    "examples/images/local_server.gd": "c3a4ba1742d8bdd9b77b6d2a42025123c791e3abe35ee6686c34d20e7ab1fa9e",
+    "scripts/images-example-assets.mjs": "ae0dfb3bcab35205c6ee573ef2d16f7b00dc5bbf9273b5452e6c32b15f85273b",
+    "scripts/images-visual-control.mjs": "600abb4808bd2bf80e0c8202e7feaa3f41c0ff9dece8fec3df55246611a5235b",
+    "scripts/images-visual-sabotage.mjs": "6ce8d6bbb4e7d455d26aa5e581c346542c23f5e5ad7daba1205e5586c281c706",
+    "scripts/images-network-sabotage.mjs": "8d4fb9d443a328f5fffa5b690fc4bd975d700fa80436728153bb3bb106848a2a",
+    "scripts/images-sabotage.mjs": "3985f7001c21f730e89173190f713fec57e65f736346435882827e56224193c9",
+    "scripts/images-network-control.mjs": "bf3ebbf41051eab8661662fb708548c1270537c8f94e4f951bdef5afbfc639ea",
+    "tests/image-contract.test.mjs": "e3c8ba31b4f1c4d406d61099647c047b05ad827d23d71747c3af2b53917652ad",
+    "tests/types/consumer.tsx": "58b53d8d0cf4787b810d76756aba3bb4aa002f7d2f9a5376194b7a7009c78b1e",
+    "types/react-native.ts": "50035820a017fd17d7de1d37b641046388c27642300ada382135708158a914ed",
+    "tests/images-fixture.jsx": "2210201436ac2db7c63d1bd3f47344f9ddcc82111810b20b75e1aa350f2cbcad",
+    "tests/images-probe.gd": "8291e5ad8e3c955993476e8a13f6775a7d86b8bdf70b32c703417ae0035e534c",
+    "tests/images-oracle.mjs": "6efdd148153ca26b3f4e36a9452410922c089d9d1cca2de54a241ab6d5f4b379",
+    "native/image_effects_test.cpp": "b24c66d1a20f9bb87641866cff65b2c9fd03636eccca8c372155640bf728a692"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+    "native/CMakeLists.txt": "3e7995cd69436862f551b457c1dddfd6f325f0ff632255ecf5d9b2ca5a0760a3",
+    "native/accessibility_core.h": "3ea9b42a852a186da46db9b7c265dbec29d84359867e65fcbb5e962766ad0821",
+    "native/accessibility_core_test.cpp": "626965f3e41c9043dea9e819900ee44480b17d86badf5d9b805f8af7b01fa674",
+    "native/accessibility_info.cpp": "f394ce90d226aba9965c14042d50fb9aed10926f7afd894f729ec2596b90b07d",
+    "native/accessibility_info.h": "ba48f4e86f35a4519eca3904d1240a3bfd40ae63f85ce62c16e64ac435aff85e",
+    "native/accessibility_info_core.h": "914afbdc01ecc8697bbdca03945b10e2590d711b0f2a3cd07c38fc44ae009057",
+    "native/accessibility_info_core_test.cpp": "adef9c4718314712e2bb550d5fe2cd8881d4e152ff78e22c6773a55a8a241b67",
+    "native/accessible_view.cpp": "cc67fcfd9f9b7f9fffdceb9c7f98d5ab78bffed7ce027e6ef5f0a3e7c3dc3cf4",
+    "native/accessible_view.h": "e9c9bb8ad6e05ba349cb4ce42b059731b23a7bd19e71636966665c07ccbbea7f",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "52caf77bc818b0d5c3456ff47836871c81e56395579efd83251cac2b6f466fe8",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "749cbe3c048f690ecbaac4e9b7d6c33d134f8ee3875810a3a491bff5bb9b6c92",
+    "native/application_runtime.h": "f57714d514fdfbf7b62b033ebde9e0c5493b8261102e1f13ffde600dda531e46",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/device_services.cpp": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b",
+    "native/device_services.h": "01e5ac09983f821602fc828e6aec11e374cfa6635e2828c061c50be4a0b3bd40",
+    "native/device_services_core.h": "e78e359827d67d8436e4c86476fb342ea6c4d1fc622e8ec0b1358f8b0288b0d9",
+    "native/device_services_core_test.cpp": "3410d829e4d899b81c915b878effba6cea5cc0aab153c60938f0d2e9fbfa700f",
+    "native/fabric_application.cpp": "9294813e8ff0fec1798031fe929483df3ba5fb518b43aff5723240d40f21e9da",
+    "native/fabric_application.h": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
+    "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+    "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_device_backend.cpp": "a2562eecd247fd04e841ea4b9ddce78d1dd0e094e81ecc689f4386f100985f06",
+    "native/godot_device_backend.h": "3a57b370eb9bc1d47b36c615a1c9c90b265351b8801cb131b314a50884d0d109",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/godot_http_transport.cpp": "f734bf964ce9bd73b9096a6574e5b1efb2b95be62270f24a44e36cb9d5dd3a92",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/godot_image_manager.cpp": "55fcddd8048389ed6b9b7cade3e1c2721e7da751bdd87e5b7afe4a219498e315",
+    "native/godot_image_manager.h": "c30443fc43e044df41ee18c8e7bbc00b636600343f2344027ab29c63c537166e",
+    "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+    "native/godot_websocket_connection.cpp": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+    "native/godot_websocket_connection.h": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+    "native/godot_websocket_transport.cpp": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+    "native/godot_websocket_transport.h": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+    "native/http_core.h": "b74f06fc71706c517796ec1d78d931b3c93fe478ee8b2da3c95a97bfbf76ed0e",
+    "native/http_core_test.cpp": "0f39053aaae91104c03bdcd0cee13a395f52e1047f12fc7a997a416d7ac4e177",
+    "native/http_transport.h": "04caf1a8a8bc098f9620d6959257296ae4c8d212fc5b5add7a840289a837925e",
+    "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+    "native/image_cache_test.cpp": "98ce48fdc5bf6525a060a5192aa54f2c4daad108a63a3474cce95e5f72704d94",
+    "native/image_core.h": "50badde2b8aabfaf3716f5ffff63b238ed8a00f78a8e6ba44af781b539e6ef75",
+    "native/image_core_test.cpp": "8b90b75733fcb4d411f0d945c2df5bdc6e3901b889d8c0933e5bbe9e7e4eab4d",
+    "native/image_effects.cpp": "1ef32651bbb9bccc455dc470bddbc753721b10a8a782e96fedd6e93d3e6d4677",
+    "native/image_effects.h": "d55bbae551d4328ad471515d4a3de353294a081229b270ed4e5a3d39abf18a17",
+    "native/image_effects_core.h": "b5fb239ba3147470866faed0ca4a76dac974b5d65c94be36cf098409a000a282",
+    "native/image_effects_test.cpp": "b24c66d1a20f9bb87641866cff65b2c9fd03636eccca8c372155640bf728a692",
+    "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+    "native/image_loader.cpp": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969",
+    "native/image_loader.h": "8368ebf3657fbff12a921a3c91df9c8bbdb41b4052f9fd5f065f6d7cb48793ca",
+    "native/image_loader_module.cpp": "4ef62cbfb773af9a8b7db4bffa560c733b260d1ef8ebed8439f563106bcc37f2",
+    "native/image_loader_module.h": "301c602a7a92b878b2d632faaa2acb093ea1f3e0d8b9b21a08a2ac95a005e68f",
+    "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
+    "native/image_network.h": "76ce61479cb577d81c96fdfd38830decb4476ed8a507da6714bd75153668b61e",
+    "native/image_network_test.cpp": "c837bc010fc5f8c695c1e61f5e987e3675dfc58f2b121718b4c009c7570df821",
+    "native/image_sources.cpp": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
+    "native/image_sources.h": "2f44ceb4a27a5284828dd0ab2fdeb23e0cbdae5cb9bf50f216da987f173c4619",
+    "native/image_view.cpp": "b726fc61b2a009fc72dbbab2626ca71c6e9d5e5d2b80d864e7905239d57dda97",
+    "native/image_view.h": "01aba3c46d83f58954a852faaa3a44e68ec39b3d5a884e58ae574f9b2d78b767",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/networking_modules.cpp": "07874740c7a5d979dbeed459de956d9b2e25cd21469b8ebb0ba33267f7c8d809",
+    "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+    "native/networking_state.h": "a3bfd49fa52fab4100b5981fab9921650ae5444f93c1b34765f968ce1f67653c",
+    "native/paragraph_layout.cpp": "6f0b2a678c43603fd57be96421455a5b9b79536179e95ef29cfd7b904a9544f3",
+    "native/paragraph_layout.h": "2560d18658f9919d7ebd6a44d9b6f80d8658fa923de89a5467937954fbbb4a36",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "81685ff042b3129f5b8c9fd7e4c53159a2c8264578f81b0c9e2963455f84e8b6",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/stoppable_invoker.h": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp": "3a2622449236244167511078388db81ee2d760740c94696ce1e241ed92daea69",
+    "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h": "53734eedcf8e3a415894b907b341318235b447f263cfd9b2d390e1a010e1ec7c",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "native/websocket_core.h": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+    "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+    "native/websocket_handshake.h": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+    "native/websocket_handshake_test.cpp": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+    "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+    "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+    "native/websocket_transport.h": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+    "native/websocket_transport_test_fixture.cpp": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ba9d89558d3ec887bc863eb061f31186513edc11e7efca3a502909489465c862",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "fixtureFilePins": {
+    "tests/fixtures/images-visual/frame@2x.png": "5a30cc4252b42b59cb666d190b640077c10e03643931980f336449cb5ef93769",
+    "tests/fixtures/images-visual/glyph.png": "7c13002e0463de7f38bff5d56f567299c6c1a26883edd5a5d54ed8d0fe036380",
+    "tests/fixtures/images-visual/glyph@2x.png": "8022e7933ed1173b37bd2c3dca4906ac33b5c3d0ed6678edda909d3070043b84",
+    "tests/fixtures/images-visual/glyph@3x.png": "8789326078c36f3a10f4f10117513aa854d9ed0322aee663f225010006d9e11e",
+    "tests/fixtures/images-visual/manifest.json": "02d83d9da4212e1f18e7b7626b65aee2db2cb3f6b6ae194d20c0d8697da137d0",
+    "examples/images/assets/avatar.png": "70ec5b8d20356cb65cd2beb8288bb59abbb9fd8e72a0bee2e032c76fa84de617",
+    "examples/images/assets/avatar@2x.png": "ebb68f9ef2b209fc71d82bbfcc1575d10d539116062d34fa60b832812512d1f9",
+    "examples/images/assets/icon.png": "dbccb4632f459127617d05f734a1b2eaf24a3d94bcf59850dae1c98ddf75bcdc",
+    "examples/images/assets/icon@2x.png": "2a3f5eb037b30f618215497e0ece59d372a1b27132a89abdee239cb30ccae077",
+    "examples/images/assets/panel.png": "2665dd1ba2deffe8e35f2eeda1b819fa14337557cd9a212453f3bc18ffb420d2",
+    "examples/images/assets/panel@2x.png": "5cd18aaab39e866df0beaafdd22d13caee3b6b136742a085abd78731cced82e5"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Image/Image.ios.js": "a23f5593958646ac0d61168219723f60987018c1696d481afa56bc2dc9330d26",
+    "Libraries/Image/ImageViewNativeComponent.js": "f7b4eeac6d29ae75d731f2bc5897bf71cd68ca8bc77c54085937c740706f2514",
+    "Libraries/Image/ImageSourceUtils.js": "bf6ddbc3551e496406a0abf5afd100f5c7246fcb3da3907fa0759e0370d811cd",
+    "Libraries/Image/ImageUtils.js": "1ffb1644140f811bd45347a2e4a14cc182414b3fd2e0ec6ec14d6951e04fc76f",
+    "Libraries/Image/ImageInjection.js": "b354405cd1669e08500c293e288b866e277161946c1afe4ac18fe283e749f0a8",
+    "Libraries/Image/NativeImageLoaderIOS.js": "eff5c353f6b442e295bb5e5aef1b2d678f69e9d4bc4d3256d54810e5fa97b7bd",
+    "Libraries/Image/resolveAssetSource.js": "b5c1b27fb9a5b1e9915c8495f8b3235462bcffe745cfe7afaad5fcaa1f3d5930",
+    "Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+    "Libraries/Image/ImageProps.js": "551a2aad425d9a7f2ca67c9486789ef62f379d1bfa023ca692e796bd7c319770",
+    "Libraries/Image/RCTImageBlurUtils.mm": "3ca928dc8cacc3d1e269f75dc9671a4c80606417bb781c53a8af559ee314cda0",
+    "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm": "a3c70cd2cd412239238fd73584362f9626f1579ab0296e4c4327a784012e8203",
+    "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "React/Views/RCTBorderDrawing.m": "9f2ee813a3c0fbb7bf8e5d3d45601933f935ee59128c748460bc1291a6cc01d0",
+    "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h": "d94b105fcc155625194bed540ca5d1d2d500c19fe7b4b9e91afa237162eb70e0",
+    "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/ImageRequestParams.h": "e83032286648ed6f3e757ec8b1888b6902115c2b541e85f18ad794c6c75380bd",
+    "ReactCommon/react/renderer/components/image/ImageProps.cpp": "e14a645b004304206248aef0a04e0a2ca053f03d075fc572252fa881de4d74b7",
+    "ReactCommon/react/renderer/components/image/ImageShadowNode.cpp": "2059767f5d2678b0d406798ee004cb68d725ac744b8d5d31da50381f9b6de525",
+    "ReactCommon/react/renderer/components/view/BaseViewProps.cpp": "62ebc4eca1d47cfa4bea5e91e121e1e87a5b0a7d43498567edcb4d446fe046d6",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/graphicsConversions.h": "d34e8e4099eecdf1dd0423bab762181d92a8128ae3f9fabaff90cb4827048a29",
+    "ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29"
+  },
+  "hostedCI": {
+    "status": "pending-images-visual-slice"
+  },
+  "postReview": {
+    "at": "2026-10-08T11:37:39.735Z",
+    "base": {
+      "commit": "6c221e8500e159ba9322d9b7a6b5adace4f8aff2",
+      "note": "The receipt above is what 6c221e8 executed, with the counts and the hashes of that run (host 3ddf4725, bundle 814ca94d). Every pin above is unchanged and still equals git show 6c221e8:<path>. This section describes the tree after the review of PR #66: the one commit listed in implementation changes three files, and pins names the SHA-256 each has at that commit, equal to git show <commit>:<path>, with previousPins at 6c221e8. The merges of main after 6c221e8 (#62 Text and #59 performance) carry other slices' files and no change of this slice's behavior; the bundle SHA-256 differs from the recorded one only because #62 changed src/text.jsx and src/base-view-config.js, which the bundle contains (bundleChangedBy), and the review did not change it"
+    },
+    "implementation": [
+      {
+        "changeSet": "A",
+        "commit": "b5471d9a36a36e5aabd9469652b9b9b9e6113248",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/b5471d9a36a36e5aabd9469652b9b9b9e6113248",
+        "subject": "fix(images): Guard the blur buffer size and share the asset sampler",
+        "files": [
+          "native/image_effects_core.h",
+          "native/image_effects_test.cpp",
+          "scripts/images-example-assets.mjs"
+        ]
+      }
+    ],
+    "executedTree": {
+      "commit": "b5471d9a36a36e5aabd9469652b9b9b9e6113248",
+      "treeSha": "7e9f93ea2a831b189cb70366aa30b008a16faf3f",
+      "hostSha256": "a231884fcdcde5d8f0b31510bb0e35165923931ccd8cc27b2648cf8e76fcfc4f",
+      "note": "The tree of the review commit, which holds the merges of main after 6c221e8; every lane below ran on it, with no uncommitted change (git status was empty before the runs)"
+    },
+    "bundleChangedBy": {
+      "recordedBundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+      "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+      "files": [
+        "src/base-view-config.js",
+        "src/text.jsx"
+      ],
+      "source": "origin/main 0f2cc7e (#62), merged in f021e30"
+    },
+    "causes": [
+      {
+        "source": "CodeRabbit on PR #66, native/image_effects_core.h, box_blur_rgba8",
+        "finding": "width * height and count * 4 were computed without a size_t overflow check, so dimensions no bitmap has made a count that wraps (to zero, or to a small buffer size) and the function could read and write past the buffer it was given"
+      },
+      {
+        "source": "CodeRabbit on PR #66, scripts/images-example-assets.mjs, logoAt",
+        "finding": "logoAt repeated the supersampling loop that drawn runs for every other asset, so two loops had to be kept equal; logoAt now delegates to drawn"
+      }
+    ],
+    "changes": {
+      "blurGuard": "box_blur_rgba8 returns without touching the buffer when width > SIZE_MAX / height or when width * height > SIZE_MAX / 4, after the early return for a zero side or a kernel of one pixel; every real size (and the 7 sizes x 5 boxes the test compares with the naive blur) is blurred as before",
+      "unitTest": "native/image_effects_test.cpp gains the group dimensions_that_overflow_leave_the_buffer, called after the group of the uniform picture: 2^63 x 2 (a pixel count that wraps to zero), SIZE_MAX x 3 (a count that overflows) and SIZE_MAX / 4 + 1 x 1 (a pixel count that fits and a byte count that does not) must leave the buffer as it was. The test has 11 groups and 49 assertions (it had 10 and 46)",
+      "assetSampler": "drawn moved above logoAt, and logoAt(size) is drawn(size, shade) with the logo's shade (null outside the rounded square); the one loop serves the logo, the icon, the avatar and the panel"
+    },
+    "unchanged": {
+      "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+      "examplePngs": {
+        "note": "node scripts/images-example-assets.mjs drew the 12 pictures of examples/images/assets again after the change; each has the SHA-256 it has at 6c221e8 and at the review commit",
+        "sha256": {
+          "avatar.png": "70ec5b8d20356cb65cd2beb8288bb59abbb9fd8e72a0bee2e032c76fa84de617",
+          "avatar@2x.png": "ebb68f9ef2b209fc71d82bbfcc1575d10d539116062d34fa60b832812512d1f9",
+          "icon.png": "dbccb4632f459127617d05f734a1b2eaf24a3d94bcf59850dae1c98ddf75bcdc",
+          "icon@2x.png": "2a3f5eb037b30f618215497e0ece59d372a1b27132a89abdee239cb30ccae077",
+          "landscape.png": "f1d79a65a1528501d2ae745572bb6818e7723c9ed3b7cb6da9f21ea21c2a1450",
+          "logo.png": "ca6976f236a755c44a45081c2baa8be11f54f34466112de4be8643e4d0de8366",
+          "logo@2x.png": "522c7ce864a7ee713b8d9baf82feb88a98674dbd0a4f9c20139404cc072bf6ac",
+          "logo@3x.png": "0fe52743f1c7c174e2c3b80118200332809a8198dd6be814d9e00e239b875dda",
+          "panel.png": "2665dd1ba2deffe8e35f2eeda1b819fa14337557cd9a212453f3bc18ffb420d2",
+          "panel@2x.png": "5cd18aaab39e866df0beaafdd22d13caee3b6b136742a085abd78731cced82e5",
+          "sprite.png": "4522ab860d5a662231c1b61d904ad0d889bf467d782480ddf02b130d1e0ee07f",
+          "tile.png": "010a72fc6d1936044476fc1337c114ced2e21e361b7ca23169916c34c1f58b04"
+        }
+      },
+      "captures": {
+        "note": "npm run example -- images --capture (39 checks with the native renderer) wrote both frames again from the review tree; they have the SHA-256 of the committed captures",
+        "images-visual-all-modes.png": "a1b31feef1f2b8d602c9b36ea4900a1525c6ffdc24417019c809dd6227aa2383",
+        "images-visual-interaction.png": "7f92a89ab965ce81279cb56bb1a1c290a3c40d3390b36425710994f9fdf70171"
+      }
+    },
+    "countsAfterTheReview": {
+      "imageEffectsTest": {
+        "groups": 11,
+        "assertions": 49,
+        "marker": "IMAGE_EFFECTS_PASSED"
+      },
+      "imagesVisualCurrent": 53,
+      "imagesVisualCurrentAgain": 53,
+      "imagesVisualControl": {
+        "checks": 53,
+        "normativeFailures": 40,
+        "structuralChecksPassed": 13
+      },
+      "sabotages": {
+        "mask-borders": 2,
+        "blur-passes": 3,
+        "blur-cache": 8,
+        "nine-patch-scale": 2
+      },
+      "oracleRejectsEverySabotage": true,
+      "imagesCurrent": 72,
+      "imagesNetworkCurrent": 74,
+      "examples": {
+        "count": 35,
+        "imagesHeadless": 26,
+        "imagesCapture": 39
+      },
+      "typeCheck": "passed",
+      "staticAnalysis": "passed",
+      "publicationScan": "passed",
+      "dashboardTests": 43
+    },
+    "note": "Lanes run in the order current, control, sabotages, current, because the runner pins its own source; the lanes block below holds the artifacts of the last run of each lane (the first current run, before the control, had the same 53 checks, ids, host and bundle). The preceding-host control is the host built from main fb50a32, kept in build/images-visual-previous-host (local, not in Git), so its hash is the one of the receipt above",
+    "lanes": [
+      {
+        "lane": "current",
+        "meaning": "Current host, headless: 52 declared Images (blur, tint, caps, mask and ignored props), 13 live changes, the network stage over the loopback Node server (6 steps over the two caches), the RID lifecycle and the stop, then the independent oracle over the report.",
+        "nativeHostSha256": "a231884fcdcde5d8f0b31510bb0e35165923931ccd8cc27b2648cf8e76fcfc4f",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 53,
+        "failed": 0,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "511c835b83e759b741ef8b174b22807a4cdcceb7b7db6586c68b82a0a27c8fb2",
+        "logSha256": "8b93aef4160f914caa1519ddad0bb94e26d71394c1b424f46e128ab628560f78"
+      },
+      {
+        "lane": "preceding-host",
+        "meaning": "The same bundle on the host built from main fb50a32 (no effects); expected negative control (--allow-original-negative). The probe runs every stage: the 13 checks that hold on every host pass and the 40 normative ones fail.",
+        "nativeHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 13,
+        "failed": 40,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "fa13476a6122040572d968f32751bfd455b0892ed686aa6fa513b4c0fef4f985",
+        "logSha256": "94ecaccba71de20ca8d9acfb0276704d8d3735ce62ecb61229e8d887de050c29",
+        "failedIds": [
+          "ignored/defaultSource reaches the view and is read by nothing: the view holds it and draws nothing of it",
+          "ignored/loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and overlayColor never reach the view: it holds their defaults",
+          "blur/The box is floor((radius x scale x 3 sqrt(2 pi) / 4 + 0.5) / 2) made odd, in the pixels of the bitmap: 5, 3, 5, 7, 11, 11 and 85 for the radii and scales declared",
+          "blur/Two box passes reach the picture, which keeps the size of its bitmap and its own texture",
+          "blur/A box of one pixel, a radius at epsilon and no radius leave every pixel of the bitmap: the pixels are those of the fixture file",
+          "blur/Each box changes the pixels in its own way, and the same box makes the same pixels whatever else the Image has",
+          "blur/Every blurred bitmap is, byte for byte, the one the manifest holds for its picture and its box: two passes, in premultiplied alpha, the edge extended",
+          "blur/A picture a blur left alone is still a template and still a nine-patch: iOS returns the image it was given",
+          "blur/A blurred picture is plain: it takes no tint and no cap insets, and repeat fills the view with it instead of tiling",
+          "blur/Every blur ran on a worker thread as part of its job, and the loader counted exactly the ten blurred pictures",
+          "live/Setting blurRadius asks for the same source again: onLoad and onLoadEnd come again, with no onLoadStart, and the picture is the blurred one",
+          "live/Clearing blurRadius loads the plain picture again, and each change is exactly one request",
+          "tint/tintColor draws the picture in that color, from the prop and from the style, with the prop first, and a fully transparent one is declared as it is",
+          "tint/The shader is told to tint with the color and not to clip, on an item and a material of the view's own",
+          "tint/An Image with no tint and no rounded clip has an item and no material: the shader is not used",
+          "tint/and the picture lies in the content frame inside the border and the padding",
+          "tint/Setting, changing and clearing tintColor redraws at once: the picture is tinted, tinted again and plain again",
+          "tint/The material is made once and kept, and a tint loads nothing: the picture is the one the request gave",
+          "caps/capInsets as a number or an object of top, left, bottom and right become a nine-patch of the whole picture over the content frame, with margins in the pixels of the picture and the modes of the resize mode",
+          "caps/Repeat with no insets tiles the whole picture, and cover or zero insets draw as they do without them",
+          "caps/A nine-patch needs no shader: the item draws it with no material",
+          "caps/Setting, changing and clearing capInsets redraws at once with no request: a nine-patch, another and the plain picture",
+          "mask/A view that clips and has radii clips its picture to the border box with the radii, and to the content frame with each radius less the border beside it, limited as RCTPathCreateWithRoundedRect limits them",
+          "mask/The shader's coordinates are the pixels of the picture: at scale 3 every point is three",
+          "mask/overflow visible keeps only the rectangle of the content frame, and a clipping view with no radius needs no mask",
+          "mask/The mask belongs to the view, not to the picture: every resize mode keeps its drawing under the same shape",
+          "mask/Giving the view a radius, letting it overflow and clipping it again redraws at once with no request",
+          "combined/A tinted nine-patch in a rounded view is one item: the tint, the mask and the nine-patch are declared together",
+          "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+          "network/The plain request after it is answered from the byte cache and decodes the pixels of the file: no blurred pixel went into the decoded cache",
+          "network/A blurred request does not read the decoded cache, though it holds the picture: it takes the bytes and blurs them, and the cache is as it was",
+          "network/Each view draws what it was given, tinted, masked or blurred, over the same picture; the live textures are the cached one and the two blurred, no more",
+          "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache",
+          "network/Clearing the blur finds the cached picture again, without the network",
+          "lifecycle/Every Image that has a picture has one item of its own, and every Image that tints or clips has one material: the RIDs made and freed are the live ones",
+          "lifecycle/One shader serves every view, made the first time one needed it, and it is freed with the extension, not with a view",
+          "lifecycle/Unmounting a tinted Image frees its item and its material, and unmounting a plain one frees its item alone",
+          "lifecycle/Mounting it again makes an item and a material of its own and does not make the shader again",
+          "lifecycle/Unmounting a root frees the items and materials of its Images, and only theirs",
+          "lifecycle/When the application stops and its views are gone, no item and no material is left, no texture outlives it, and the shader still waits for the extension to end"
+        ]
+      },
+      {
+        "lane": "sabotage-mask-borders",
+        "meaning": "The content frame is clipped with the view's radii whole, as if the border had no width (native/image_effects_core.h).",
+        "nativeHostSha256": "c15ee3fa80577da1bca8e89a0253850320894c18cb0db41a0477974beb7a7cdb",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 51,
+        "failed": 2,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "563c398e55c19aa80198d7c0da144a0e81c7281948da2bae6f04e1e7f041776b",
+        "logSha256": "ba8e66e8288e5c8b70c8c6fa78bbb79370bb15bb7e2ad2f70a3951911ddc6e33",
+        "failedIds": [
+          "mask/A view that clips and has radii clips its picture to the border box with the radii, and to the content frame with each radius less the border beside it, limited as RCTPathCreateWithRoundedRect limits them",
+          "mask/The shader's coordinates are the pixels of the picture: at scale 3 every point is three"
+        ]
+      },
+      {
+        "lane": "sabotage-blur-passes",
+        "meaning": "The blur makes a third box pass; RN iOS's picture is the result of the second of its three convolutions (native/image_effects_core.h).",
+        "nativeHostSha256": "26c0f10807f29c12815fd4916b6481c8ed967a828bc54a28ef090691b0b3881d",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 50,
+        "failed": 3,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "68e942f31f2b8c6f3c231a07fc74dc7045c8139904f00f937fab75da36970146",
+        "logSha256": "b9545bed14a4c01c713c903f98c6e0c615a3b8a98f6e205f4f52a310fb43a9c7",
+        "failedIds": [
+          "blur/Every blurred bitmap is, byte for byte, the one the manifest holds for its picture and its box: two passes, in premultiplied alpha, the edge extended",
+          "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+          "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache"
+        ]
+      },
+      {
+        "lane": "sabotage-blur-cache",
+        "meaning": "A blurred request reads and writes the decoded cache like a plain one (native/image_loader.cpp).",
+        "nativeHostSha256": "7753361abd491122cf4af2ac79cd09a742b2bdc460d7366f023e2b3455253c70",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 45,
+        "failed": 8,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "098e5d362caec3eefea391ca66de3e5249d9d9361888d618324527e9dfb70d7d",
+        "logSha256": "0005d00ccffd83efd8babb481d3b396074dea89648231f657d0f7cd92f3ee51d",
+        "failedIds": [
+          "network/A blurred request downloads, decodes, blurs and keeps its picture to itself: the decoded cache holds nothing, and the byte cache holds the response",
+          "network/The plain request after it is answered from the byte cache and decodes the pixels of the file: no blurred pixel went into the decoded cache",
+          "network/A blurred request does not read the decoded cache, though it holds the picture: it takes the bytes and blurs them, and the cache is as it was",
+          "network/A tinted view and a masked view of the cached picture are answered by the decoded cache: they share its picture, and no texture is made",
+          "network/Each view draws what it was given, tinted, masked or blurred, over the same picture; the live textures are the cached one and the two blurred, no more",
+          "network/Blurring an Image that showed the cached picture asks again, with no onLoadStart, and reads nothing from the decoded cache",
+          "network/and the cached picture, shown by two other views, is as it was",
+          "network/Clearing the blur finds the cached picture again, without the network"
+        ]
+      },
+      {
+        "lane": "sabotage-nine-patch-scale",
+        "meaning": "capInsets are taken as pixels of the picture, not points: the margins ignore the scale (native/image_effects_core.h).",
+        "nativeHostSha256": "7843495099fa2db0495e4fc5d9db131ca5b17266ae2050e4ad4e19b8ae9c8355",
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "checks": 53,
+        "passed": 51,
+        "failed": 2,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "reportSha256": "f1716120b4a13faf7f0862a6a427ca701ed37ec84a5921cff8b931a82fd3032c",
+        "logSha256": "3c6622f87c6d68a20e06d8b803a709c5270e3a61091b6173e2af8672c137024c",
+        "failedIds": [
+          "caps/capInsets as a number or an object of top, left, bottom and right become a nine-patch of the whole picture over the content frame, with margins in the pixels of the picture and the modes of the resize mode",
+          "caps/Setting, changing and clearing capInsets redraws at once with no request: a nine-patch, another and the plain picture"
+        ]
+      }
+    ],
+    "pins": {
+      "native/image_effects_core.h": "20877a745567c0e2d02b5871dc7c4c87114dea63055f0117724e6b0deb87814e",
+      "native/image_effects_test.cpp": "5d8ecbbea22eca3ae4708715c18291e940187846b87f61a031e29abf3156b464",
+      "scripts/images-example-assets.mjs": "0401ef5f41d0ba0ff7f391e174d1cc56b328e46dc8f9803cf36a5f4c4c388420"
+    },
+    "previousPins": {
+      "native/image_effects_core.h": "b5fb239ba3147470866faed0ca4a76dac974b5d65c94be36cf098409a000a282",
+      "native/image_effects_test.cpp": "b24c66d1a20f9bb87641866cff65b2c9fd03636eccca8c372155640bf728a692",
+      "scripts/images-example-assets.mjs": "ae0dfb3bcab35205c6ee573ef2d16f7b00dc5bbf9273b5452e6c32b15f85273b"
+    }
+  },
+  "notDepartures": [
+    "A picture that RCTBlurredImageWithRadius rebuilds from its bitmap has none of the template mode, the caps and the tiling of the image it was given, so a blurred Image takes no tint and no capInsets and repeat fills the view with it (RCTImageComponentView.mm:144-168, RCTImageBlurUtils.mm:85-96); a box of one pixel returns the input image untouched, so that one keeps all three",
+    "The props that the iOS view config drops never reach the native side and defaultSource is parsed and read by no component (ImageViewNativeComponent.js:133-153, ReactNativeAttributePayload.js:73-74 and 246-247, ImageProps.cpp:22-27 and 82-87); accepting them without effect is what iOS does",
+    "A view that clips clips its picture to the border box with the radii and to the content frame with each radius less the border beside it (RCTViewComponentView.mm:1300-1337 with enableIOSViewClipToPaddingBox false, RCTBorderDrawing.m:43-61 and 104-130); ViewProps has already applied the CSS overlap rule to the radii it resolves (BaseViewProps.cpp:415-468 and 506-524), so a radius of 999 on a 40-point view is 20"
+  ],
+  "departuresFromRN": [
+    "The blur is not bit-identical to vImage's: vImageBoxConvolve_ARGB8888 is closed, so the host states its own arithmetic. Premultiply round(c a / 255), two square box passes whose window mean is rounded to the nearest once (an odd divisor leaves no tie), straighten round(p 255 / a) capped at 255, black where a is 0; a box wider than 2^20 pixels is limited to it",
+    "tintColor, capInsets and borderRadius take effect on the next draw. On iOS the template mode and the caps are applied when an image response arrives (RCTImageComponentView.mm:144-155), so a change of tintColor waits for the next response, and clearing it leaves a template image tinted by the window",
+    "onLoad comes after the blur: the worker blurs before the texture exists and the view is told then. On iOS onLoad and onLoadEnd are sent before the blur is made (RCTImageComponentView.mm:139-140, 157-168), with the same payload",
+    "capInsets as a list [left, top, right, bottom] is refused. graphicsConversions.h:147-180 reads a list, but it tries the object form first (155) and a list passes for an object with the keys 0 to 3, so RN logs 'Unsupported EdgeInsets map key' for each and keeps no inset; the wrapper says so instead of dropping it",
+    "capInsets apply to the stretch and repeat modes only; cover, contain, center and none draw as they do without them. What UIKit does with a resizable image under those content modes was not verified, nor how it tiles the edges of a tiled nine-patch, nor what it does when the view is smaller than the caps (Godot does not limit the margins to the destination; the host limits them to the picture)",
+    "A fully transparent black tintColor (0x00000000, what 'transparent' is) is not a tint: RN's C++ color for this host is one integer in which zero is 'no color' (Color.h:56-59, HostPlatformColor.h:19), where iOS has a defined clear UIColor and the template image disappears. Any other fully transparent color is a tint",
+    "The border of a view is painted below the picture here (the view's own item draws it, the picture's item comes after) and above it on iOS (the border layer's zPosition); with the clip rules above the picture never reaches the border, so nothing differs in what is seen",
+    "The picture's clip, tint and caps are one shader on an item of its own, scaled by 1/scale; a blurred picture has a texture of its own that no cache holds, and every other picture's texture is the cache's and is never written"
+  ],
+  "limits": [
+    "The renderer of a headless run is Godot's dummy, which draws no pixel and ignores the parameters of a material: the probe and the oracle certify what the view asked the renderer for (rectangles, radii, margins, tint, the item and the material it made) and the exact pixels of the blur by the bitmap the worker made; only the example's capture lane saw the shader draw",
+    "The capture lane samples a few points of the saved frame (the icon's dot, ring, body and corner, the soft and the sharp landscape at the sun's edge and in the sky, the card's border at two places of both cards, the avatars' corner, edge and centre, and the second avatar's border and round corner); there is no independent pixel oracle of the whole frame",
+    "No comparison with UIKit was made: the blur's box and rounding, the tiling of a nine-patch, the resizable image under the other content modes and the template rendering were not compared on an iOS device",
+    "A blur at the content scale of a picture whose box is wider than the picture (radius 30 at scale 3 on a 36x27 pixel picture) was checked against the oracle's own blur; the blur of very large pictures and its time were not measured on a device",
+    "Animated GIF and WebP, nativeImageSource, defaultSource's placeholder, loadingIndicatorSource and fadeDuration's transition (which iOS does not have), resizeMethod and resizeMultiplier (Android's) are not delivered, and an Image inside Text is a failure by design",
+    "Assets and network pictures were loaded in the project's own run, against a loopback server; no exported app, desktop export or Android export ran",
+    "Hosted macOS CI has not run this slice; the oracle and the probe state values from what the host delivered or from model states, never from frame pace or from how bytes were segmented, and every wait is bounded by time and ends on a state",
+    "Only macOS arm64 was executed; Windows, Linux, Android, iOS and Web runtimes are not covered",
+    "GF-16 is open: this third slice closes no checkpoint, and no whole GF, contract, parity, target, weight or denominator closes."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the SHA-256 of the file in the tree the lanes ran from",
+    "sourcePins": 17,
+    "nativeSourcePins": 134,
+    "verificationSourcePins": 21,
+    "fixtureFilePins": 11,
+    "mismatches": [],
+    "originalReactNativeSources": 21,
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-08T10:27:23Z",
+    "meaning": "Gates that read documents, on the tree that holds this record (the implementation commit 6c221e8 plus the record's documents and captures; no executed source differs from it). The lanes ran on the code tree of 6c221e8 and are in regressions",
+    "steps": {
+      "test:contracts": "passed",
+      "check:static": "passed",
+      "check:publication": "passed",
+      "test:dashboard": "passed"
+    },
+    "counts": {
+      "contractsNodeTests": [
+        7,
+        43,
+        303
+      ],
+      "dashboardTests": 43,
+      "staticAnalysis": "fallow: no issues",
+      "publicationScan": "1440 files, no failures"
+    }
+  }
+}

@@ -218,7 +218,7 @@
   },
   {
     "id": "images",
-    "title": "Original RN Image over worker-thread decoding: resize modes, bundled @2x assets, data URIs and failures",
+    "title": "Original RN Image over worker-thread decoding: resize modes, bundled @2x assets, data URIs, failures, tint, blur, cap insets and rounded clipping",
     "api": "public",
     "source": "examples/images/App.jsx",
     "scene": "examples/images/scene.tscn"

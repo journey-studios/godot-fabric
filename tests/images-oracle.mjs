@@ -24,14 +24,13 @@ const escape = text => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export const jsOnlyChecks = [
   "mount/The application reports no host or runtime error",
   "contract/Every unsupported Image prop fails where the Image renders",
-  "contract/Each refusal names the prop and why the host does not implement it yet",
   "contract/Invalid values, unregistered assets and Images inside Text are refused with the host's messages",
   "assets/The bundled asset registers the descriptor Metro writes, with the first scale's size in points",
   "assets/RN's resolver turns the descriptor into the file beside the bundle",
   "cleanup/Stop releases every root and queued work",
   "report/The Images report is saved",
 ];
-export const expectedCheckCount = 73;
+export const expectedCheckCount = 72;
 
 // ---- RN's formulas ----
 
@@ -577,9 +576,6 @@ export function verifyImagesReport(report, {original = false} = {}) {
   same(resolved.object, {uri: "res://x.png", width: 3, height: 4});
   // The contract: the messages, from the declared props.
   const messages = stages.contract.messages;
-  const later = ["tintColor", "style.tintColor", "blurRadius", "capInsets", "defaultSource", "loadingIndicatorSource", "fadeDuration", "progressiveRenderingEnabled",
-    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius"];
-  for (const id of later) assert.match(messages[`A-refusal-${id}`], new RegExp(`^Godot Image does not implement ${escape(id)} yet: `), id);
   assert.equal(messages["A-refusal-resizeMode"], "Godot Image resizeMode must be cover, contain, stretch, center, repeat, none");
   assert.equal(messages["A-refusal-style.resizeMode"], messages["A-refusal-resizeMode"]);
   assert.equal(messages["A-refusal-style.objectFit"], "Godot Image objectFit must be contain, cover, fill, scale-down, none");
@@ -590,7 +586,7 @@ export function verifyImagesReport(report, {original = false} = {}) {
   assert.match(messages["A-refusal-children"], /^The <Image> component cannot contain children/);
   assert.equal(messages["A-refusal-inline"], "Inline Controls are not implemented in Godot Text");
   same(Object.keys(messages).filter(key => !key.includes("refusal")), []);
-  assert.equal(stages.contract.refusals.length, 22);
+  assert.equal(stages.contract.refusals.length, 9);
   // The descriptor Metro writes: recomputed from the three variant files.
   const descriptor = stages.contract.assets.badge.descriptor;
   const md5 = createHash("md5");
