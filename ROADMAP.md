@@ -547,6 +547,18 @@ not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
 item in the title. Record 0.5 progress only in `milestones`; when rewriting
 `migration.json`, keep unknown top-level keys.
 
+**Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
+GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
+73 intents reaches the same golden hash in 3 of 3 processes (9 executions, with a trace hash
+that fixes the state after every step), using only integers, a PCG32 of the game's own, a
+canonical serialization and SHA-256. The seven contexts are covered, an independent oracle in
+Node recomputes the rules, the map and the generator, and four retained sabotages are
+rejected. The [record](https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. The
+snapshot the HUD will project is written down field by field but is not yet a service, so
+the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
+checkpoint, weight or denominator moves.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)

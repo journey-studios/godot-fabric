@@ -554,6 +554,16 @@ checks, and three retained sabotages are rejected. A package that imports a gene
 Android and iOS implementations, the OS-specific props and OS-version comparisons are open. Hosted
 CI is pending. [Evidence](docs/evidence/os-contracts/README.md); [research](docs/research/os-contracts.md).
 
+The 0.5 milestone's reference app is **Frontier**, a small turn-based strategy game in the interaction style of
+Civilization 2 whose map, rules, scripted faction and turns live in plain GDScript
+([`consumers/civ-lite/game/`](consumers/civ-lite/game/)), with the HUD to be React Native over Godot. This first package has
+the rules and the state and snapshot the HUD will project, with no React and no native code: a 12-turn replay reaches one
+golden hash in three processes (integers only, its own PCG32, canonical serialization, SHA-256), covers the game's seven
+contexts and refuses invalid intents with a reason, judged by an independent oracle, with seven retained sabotages
+(`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The services that publish the snapshot, the HUD, the
+export and the devices are open, and so is hosted CI. [Evidence](docs/evidence/frontier-game/README.md);
+[research](docs/research/frontier-game.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -855,6 +865,7 @@ npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driv
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
+npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
