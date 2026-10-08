@@ -46,6 +46,8 @@ jobs:
       - run: npm run setup
       - name: Reconstruct affine matrices, collapse singular ones and reject unsupported transforms
         run: .deps/build/affine_transform_test
+      - name: Account durations, percentiles and the phases of a pump
+        run: .deps/build/performance_metrics_test
       - run: npm run test:codegen:native -- --node "$(command -v node)"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -173,6 +175,18 @@ jobs:
             build/frame-clock-comparison.json
             build/frame-clock-current.log
             build/frame-clock-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:performance
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-performance
+          path: |
+            build/performance-report.json
+            build/performance-current-report.json
+            build/performance-comparison.json
+            build/performance-current.log
+            build/performance-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:text-layout
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

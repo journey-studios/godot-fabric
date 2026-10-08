@@ -3177,6 +3177,57 @@ every digit and the example's server answers 400 and 431 instead of reading a ba
 with 74 checks (66 normative), the control failing the same 30 of 37, sabotages failing 1, 34 and 2, 33 oracle
 mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`.
 
+### Node, heap and pump-phase baselines in a soak (2026-10-08)
+
+GF-30 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item, the budgets,
+the parity and the targets remain open. The [performance evidence](docs/evidence/performance/README.md)
+adds a `performance` section to the application snapshot and a harness that mounts and unmounts four workloads
+(a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a 120-row `FlatList`) 20 times each,
+headless: **43 checks**, 15 that hold on every host and 28 that need the section. The evidence record pins
+`ad87234`, which had 41 and 27, before the review of #59 added the check that the notification of a root's unmount
+(the snapshot the surface keeps as its last report) reports the counts of live and retired roots at that moment and not
+those of the snapshot read just before it, and the check that a stopped application's snapshot is the same on every
+reading (a `getHeapInfo` call adds 40 bytes to the live heap, so a stopped runtime reports the Hermes reading it took as it
+stopped; reading it afresh made `examples/services` fail on hosted CI). No checkpoint of any other item changes.
+
+The section (`native/performance_metrics.h`, fed from `native/application_runtime.cpp`) reports exact counters of
+the native tree (commits, creates, deletes, updates and the views alive, which survive a root's unmount), Hermes'
+live heap as `jsi::Instrumentation::getHeapInfo` reports it (after a full collection where the
+`validation_collect_garbage_on_status` meta is set, since the pinned Hermes collects concurrently), and the pump
+split into JS, mount and layout phases. The phases are exclusive and never add up to more than the pumps; the
+layout is RN's own `TransactionTelemetry` timing of the commit, moved out of the JS turn it ran in. Each duration
+series reports its count, rejected count, total and maximum, which cover every accepted measurement, and its nearest-rank
+p50, p95 and p99, which use only its last 128 samples; the samples
+themselves are published only where `validation_performance_samples` is set, so the default application snapshot
+weighs 5,997 bytes and 18,398 with them. After every cycle the SceneTree's nodes, Godot's orphan count and the
+host's native views are back to the baseline of the run, `creates - deletes` is the views alive, counters only
+grow and no phase has more samples than there are pumps. The live heap at rest, after a full collection, rises
+at most **2,048 bytes** above its first steady value: eight kept soaks measured 0 for idle, forms and chart and
+at worst one 312-byte step for the list, so the limit is 6.6 times the worst case and fails any leak of 129 bytes
+or more per cycle. Durations, the resident memory and Godot's static memory are recorded with their provenance and
+never judged, and the headless numbers do not represent a display.
+
+An independent oracle recomputes the invariants and the nearest-rank percentiles from the samples the host reports.
+The preceding host (built from `585ca1b` in the evidence record, from main afterwards) fails exactly the 28 section checks
+(27 in the record), and three retained sabotages (a host
+that never frees the Controls of a retired root, one that repeats a single heap reading, one that counts each phase
+twice) fail 4, 3 and 2 checks; the oracle rejects each, and six breakages made in the recorded report are
+rejected too (four in the record). A C++ test covers the accounting over synthetic times. One run measured, for idle, forms, chart and
+list, 2, 5, 71 and 124 native views, a live heap at rest of 1,790,616, 1,803,896, 1,820,872 and 1,933,112 bytes and
+a mount of 0.52, 1.44, 6.65 and 18.12 ms at the median pump.
+
+Open: budgets by target device ([V2-D28](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d28), decided after measuring on the
+device), text shaping (after GF-11), the 10,000-row acceptance (GF-15), graphic frame time, iOS and Android, and a
+hosted CI baseline. The step and artifact of `contracts.yml` have not run on hosted CI yet.
+
+On the implementation tree (`ad87234`) the contracts gate (283 Node/13 Python), the frame-clock, runtime and
+application suites, static analysis and the publication scan pass. After merging main (`9ea7811`: GF-11, the agent
+board and GF-20) the performance suite passes again with its controls rebuilt on the host of main: the live heap at
+rest is 11.5 to 16.8 KB higher in every workload (1,802,128, 1,816,104, 1,832,944 and 1,949,872 bytes) because the
+bundle carries main's SDK additions, nodes and orphans do not change, the 2,048-byte limit holds (the same 312-byte
+worst step), and the accessibility, text-layout and device-services suites pass. Only GF-30's first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+
 ### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
 
 GF-24 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
@@ -3387,7 +3438,7 @@ consumer project can write TSX, add native functionality, debug and export.
 | GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
 | GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
 | GF-29 · P1 · Development experience | In progress | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |
-| GF-30 · P1 · Frame, heap and threading budgets | Planned | Profile mount/layout/shaping/JS and retain reproducible frame-time, Hermes heap/RSS and native-node measurements for idle/forms/charts/10,000 rows. Define target-device budgets before accepting optimization. Implement caching or JS/worker/Rust paths only for measured bottlenecks, preserving JSI ownership, Godot main-thread calls and event/commit ordering. Soak and unmount cycles show bounded steady-state memory. The 48/480-row ScrollView benchmark from the pre-publication prototype was not ported; this item starts without a scroll benchmark | GF-11, GF-15, GF-19, GF-28 |
+| GF-30 · P1 · Frame, heap and threading budgets | In progress | Profile mount/layout/shaping/JS and retain reproducible frame-time, Hermes heap/RSS and native-node measurements for idle/forms/charts/10,000 rows. Define target-device budgets before accepting optimization. Implement caching or JS/worker/Rust paths only for measured bottlenecks, preserving JSI ownership, Godot main-thread calls and event/commit ordering. Soak and unmount cycles show bounded steady-state memory. The 48/480-row ScrollView benchmark from the pre-publication prototype was not ported; this item starts without a scroll benchmark | GF-11, GF-15, GF-19, GF-28 |
 
 ## M4 — Port, export and certify each supported OS
 

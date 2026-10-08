@@ -599,6 +599,28 @@ protection remain uncertified, and so does the full contract of `URL`, `URLSearc
 [networking record](evidence/networking/README.md) (see [Networking and web-standard
 globals](#networking-and-web-standard-globals)). No worker thread is used.
 
+### Performance diagnostics
+
+`FabricApplication.snapshot()` carries a `performance` object (after `frameClock`), a diagnostic of
+the host and not part of the `react-native` API: the exact counters of the native tree (`commits`, `creates`,
+`deletes`, `updates`, the `nativeViews` alive and the roots alive and retired), Hermes' heap as
+`jsi::Instrumentation::getHeapInfo` reports it (`hermes.heap`, every key), and the time of the host's
+pump (`pump`) attributed to JS turns, Fabric's mounting callback and layout (`phases.js`, `.mount`,
+`.layout`) and to a surface's start and retirement (`surfaces`). Each duration series reports
+`count`, `rejected`, `totalMs` and `maxMs`, which cover every accepted measurement since the application started (`rejected` counts the
+durations that were negative or not finite and entered nothing else), and the nearest-rank `p50Ms`, `p95Ms` and `p99Ms`, which use only
+its last 128 samples (`windowSize`). The
+samples themselves (`windowMs`) are reported only where a `validation_performance_samples` meta is set on the
+application, since they are most of the section's weight (about 12 KB of an 18 KB application snapshot) and every
+`status()` pays for them. The phases are exclusive and never add up to more than the pumps. A stopped application has one snapshot: the Hermes reading
+(`hermes`) is the one taken as it stopped, since a `getHeapInfo` call adds 40 bytes to the live heap and a second
+reading would differ. Where a
+`validation_collect_garbage_on_status` meta is set a full Hermes collection runs before each heap reading
+(`hermes.collectedBeforeReading`); a product sets neither meta, and without the collection the heap depends
+on when Hermes' concurrent collector last ran. The section measures and sets no budget, there is no
+`performance.mark`, `measure` or `memory` in JS, and the headless numbers do not stand for a device
+([evidence](evidence/performance/README.md); [research](research/performance.md)).
+
 ### Networking and web-standard globals
 
 The host's initialization imports RN's own `Libraries/Core/setUpXHR`, so these globals
