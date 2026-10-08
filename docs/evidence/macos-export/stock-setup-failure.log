@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialização do Projeto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando estrutura de arquivos...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Carregando nomes de classe globais...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Criando scripts autoload...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneamento de arquivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando ações... (3 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | consumer-initial.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | consumer-resized.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | consumer-updated.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importando Recursos (3 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparando arquivos para reimportação...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executando operações pré-reimportação...[39m[0m
+[   0% ] [90m[1mreimport[22m | consumer-initial.png[39m[0m
+[  25% ] [90m[1mreimport[22m | consumer-resized.png[39m[0m
+[  50% ] [90m[1mreimport[22m | consumer-updated.png[39m[0m
+[  75% ] [90m[1mreimport[22m | Finalizando Importação de Recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importando Recursos (3 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executando operações pós-reimportação...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+ERROR: Cannot export project with preset "macOS Arm64" due to configuration errors:
+Não é possível exportar para universal ou arm64 se o formato da textura ETC2 ASTC estiver desabilitado. Habilite-o nas Configurações do Projeto (Renderização > Texturas > Compressão VRAM > Importar ETC2 ASTC).
+
+   at: _fs_changed (editor/editor_node.cpp:1401)
+ERROR: Project export for preset "macOS Arm64" failed.
+   at: _fs_changed (editor/editor_node.cpp:1417)

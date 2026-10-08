@@ -20,14 +20,22 @@ export async function createHarness({ template, name }) {
   const project = path.join(temporary, "project");
   const outside = await mkdtemp(path.join(tmpdir(), `godot-fabric-${name}-output-control-`));
   const env = { ...process.env, PATH: "/usr/bin:/bin", NODE_PATH: "" };
+  const removedDyldEnvironmentKeys = [];
+  for (const key of Object.keys(env)) {
+    if (key.startsWith("DYLD_")) {
+      delete env[key];
+      removedDyldEnvironmentKeys.push(key);
+    }
+  }
   const godot = await ensureGodotBinary();
   const checks = [];
   const harness = {
-    root, directory, project, outside, env, godot, checks,
+    root, directory, project, outside, env, godot, checks, removedDyldEnvironmentKeys,
     sdk: path.join(project, "addons", "godot_fabric"),
     verify(condition, name) { checks.push({ name, passed: !!condition }); assert.ok(condition, name); },
-    async run(label, command, args, expected = 0, environment = env) {
-      const result = spawnSync(command, args, { cwd: label === "provision" ? root : project, env: environment, encoding: "utf8", timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
+    async run(label, command, args, expected = 0, environment = env, options = {}) {
+      const result = spawnSync(command, args, { cwd: options.cwd ?? (label === "provision" ? root : project), env: environment, encoding: "utf8",
+        timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
       const log = (result.stdout ?? "") + (result.stderr ?? "");
       await writeFile(path.join(directory, label + ".log"), log);
       assert.equal(result.error, undefined, log);
