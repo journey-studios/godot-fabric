@@ -8,6 +8,7 @@ import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
+import {createAssetPipeline, publishAssets} from "../sdk/toolchain/asset-plugin.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
@@ -21,11 +22,12 @@ export async function bundleNativeProbe({name, entryPoint, sources, seams, bundl
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundlePath = path.join(output, name + "-probe.js");
+  const assets = createAssetPipeline({root});
   const result = await build({absWorkingDir: root, entryPoints: [entryPoint],
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
     mainFields: ["main"], resolveExtensions: godotExtensions,
-    plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id))]});
+    plugins: [assets.plugin, platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id))]});
   const inputs = Object.keys(result.metafile.inputs);
   for (const file of bundled) {
     assert.ok(inputs.includes("node_modules/react-native/" + file), "Probe must bundle the original RN module: " + file);
@@ -38,11 +40,14 @@ export async function bundleNativeProbe({name, entryPoint, sources, seams, bundl
     presets: [["@react-native/babel-preset", {disableImportExportTransform: true, enableBabelRuntime: false}]],
   });
   await writeFile(bundlePath, transformed.code + "\n");
+  // The image assets the bundle requires go beside it, with the manifest that names them.
+  const manifest = await publishAssets(assets, bundlePath, transformed.code + "\n");
   const rnRoot = path.dirname(requireSdk.resolve("react-native/package.json"));
   const pin = async (base, files) => Object.fromEntries(await Promise.all(
     files.map(async file => [file, digest(await readFile(path.join(base, file)))])));
   const receipt = {format: "godot-fabric.native-probe-bundle/v1", name,
     bundle: {path: "build/" + name + "-probe.js", sha256: digest(await readFile(bundlePath)), inputs},
+    assets: manifest ? {path: "build/" + name + "-probe.js.assets.json", files: manifest.files} : null,
     sources: await pin(root, sources), originalReactNativeSources: await pin(rnRoot, [...bundled, ...references])};
   await writeFile(path.join(output, name + "-probe-bundle.json"), JSON.stringify(receipt, null, 2) + "\n");
   return receipt;

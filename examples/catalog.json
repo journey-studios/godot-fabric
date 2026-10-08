@@ -217,6 +217,13 @@
     "scene": "examples/networking/scene.tscn"
   },
   {
+    "id": "images",
+    "title": "Original RN Image over worker-thread decoding: resize modes, bundled @2x assets, data URIs and failures",
+    "api": "public",
+    "source": "examples/images/App.jsx",
+    "scene": "examples/images/scene.tscn"
+  },
+  {
     "id": "text-layout",
     "title": "Text onTextLayout lines and Yoga baseline alignment, drawn over the paragraphs",
     "api": "public",

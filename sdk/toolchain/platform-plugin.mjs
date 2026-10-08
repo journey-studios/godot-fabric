@@ -76,6 +76,16 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
           return { path: path.join(rnRoot, "Libraries/Network/RCTNetworking.android.js") };
         }
       });
+      builder.onResolve({ filter: /(?:^|\/)Image$/ }, args => {
+        // RN ships Image only as .ios.js and .android.js (Image.js merely imports itself for deep imports), and
+        // this host resolves neither extension. The public export, ImageBackground and AnimatedImage all import the
+        // same module, which renders RN's Image.ios.js (the host's non-Android path) behind a validating wrapper.
+        const imageModule = path.join(rnRoot, "Libraries/Image/Image");
+        if (args.path === "react-native/Libraries/Image/Image" ||
+            (args.path.startsWith(".") && args.importer.startsWith(rnRoot + path.sep) &&
+              path.resolve(path.dirname(args.importer), args.path) === imageModule))
+          return { path: path.join(platformRoot, "image.jsx") };
+      });
       builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
           return { path: path.join(platformRoot, "render-application.jsx") };

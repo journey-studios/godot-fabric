@@ -16,6 +16,7 @@
     <div class="sidebar-caption">WORKSPACE / 01</div>
     <nav aria-label="Navegação principal">
       <a href="#overview" class="nav-link active" data-nav="overview"><span>◉</span>Visão geral</a>
+      <a href="#milestones" id="milestones-nav" class="nav-link" data-nav="milestones" hidden><span>◈</span>Marco 0.5</a>
       <a href="#agents" class="nav-link" data-nav="agents"><span>⎇</span>Agentes<span class="nav-count" id="agent-count">—</span></a>
       <a href="#roadmap" class="nav-link" data-nav="roadmap"><span>▤</span>Roadmap<span class="nav-count" id="nav-count">—</span></a>
       <a href="#sequence" class="nav-link" data-nav="sequence"><span>⇢</span>Sequência de migração</a>
@@ -34,6 +35,10 @@
         <div id="error" class="error" role="alert" hidden></div>
         <div id="summary" class="loading-panel">Carregando o roadmap…</div>
         <div id="phase-map" class="phase-map" aria-label="Progresso por fase"></div>
+      </section>
+      <section id="milestones" class="section" aria-labelledby="milestones-title" hidden>
+        <div class="section-heading"><div><span class="eyebrow">RECORTE DE PRIORIDADE</span><h2 id="milestones-title">Marco 0.5</h2></div><span class="section-hint">Não altera prioridades nem o percentual da 1.0</span></div>
+        <div id="milestone-list"></div>
       </section>
       <section id="agents" class="section" aria-labelledby="agents-title">
         <div class="section-heading"><div><span class="eyebrow">TRABALHO EM PARALELO</span><h2 id="agents-title">Agentes</h2></div><span class="section-hint">Até 5 worktrees ao mesmo tempo</span></div>

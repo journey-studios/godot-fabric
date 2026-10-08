@@ -102,11 +102,12 @@ function TouchableBox({root}) {
     </TouchableOpacity>
   </Case>;
 }
-// RN's Animated.Text, Image, ScrollView, FlatList and SectionList wrap RN's own
-// components, not the Godot ones; each fails where it renders.
+// RN's Animated.Text, ScrollView, FlatList and SectionList wrap RN's own
+// components, not the Godot ones; each fails where it renders. Animated.Image wraps
+// the Godot Image and is certified with it (tests/images-fixture.jsx).
 function Unsupported({root}) {
   return <>
-    {["Text", "Image", "ScrollView", "FlatList", "SectionList"].map(kind => {
+    {["Text", "ScrollView", "FlatList", "SectionList"].map(kind => {
       const Wrapper = Animated[kind];
       return <Case key={kind} root={root} name={`animated-${kind}`}><Wrapper /></Case>;
     })}

@@ -61,6 +61,7 @@
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx",
+    "tests/images-fixture.jsx",
     "tests/modal-host-fixture.jsx"
   ],
   "ignorePatterns": [
@@ -185,6 +186,7 @@
         "VirtualizedSectionList",
         "RefreshControl",
         "ImageBackground",
+        "AssetRegistry",
         "KeyboardAvoidingView",
         "VirtualizedList",
         "TextInput",
@@ -298,7 +300,19 @@
             "useAnimatedValue",
             "useAnimatedValueXY",
             "TouchableOpacity",
-            "TouchableOpacityProps"
+            "TouchableOpacityProps",
+            "Image",
+            "ImageBackground",
+            "AssetRegistry",
+            "ImageProps",
+            "ImageBackgroundProps",
+            "ImageStyle",
+            "ImageStatics",
+            "ImageResizeMode",
+            "ImageSourcePropType",
+            "ImageLoadEvent",
+            "ImageErrorEvent",
+            "ImageProgressEventIOS"
           ]
         },
         {

@@ -521,6 +521,23 @@ handlers are installed, a vibration cannot be cancelled in Godot, a deep link re
 only through `FabricApplication.deliver_url`, and Alert, Share, Settings, BackHandler, mobile deep-link plugins
 and real-device behavior are open. Hosted CI is pending; this does not complete GF-23: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
 
+The [images record](images/README.md) runs React Native's own `Image.ios.js`, `ImageBackground`,
+`AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline (`ImageShadowNode`,
+`ImageRequest` and its observer coordinator) with a host `ImageManager`: every picture is read,
+bounded and decoded on Godot's `WorkerThreadPool` and never on the main thread, a native
+`GodotImage` draws the six resize modes UIKit maps, and `require()`d assets are Metro's modules
+with Metro's descriptor and every `@Nx` variant. Two roots of one application run 74 headless
+checks over bundled assets at three scales, every format, `user://`, `file://` and `data:` sources,
+failures, `getSize` and the upload budget, and over decodes held in flight while their request is
+swapped away or unmounted; an independent oracle recomputes sources, pixel sizes, events and
+rectangles from RN's formulas and the fixture's own pixels. The preceding host reaches 11 checks and
+fails the 3 normative ones among them; decoding on the main thread fails 12 checks and a view that
+keeps listening to a request it swapped away from fails 2, and the oracle rejects each, as it does
+15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
+(68 assertions) and the research note with RN's file and line references. Network images, the
+decoded-image cache, tint, blur, capInsets, rounded image clipping, animated formats and every
+target but macOS are open. Hosted CI pending.
+
 The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
 section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into
 JS, mount and layout phases, the last timed by RN's own layout telemetry), and a soak mounts and unmounts four
