@@ -5429,6 +5429,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
     },
     {
+      "id": "agent-board-parallel-20261008",
+      "at": "2026-10-08T00:43:16.000Z",
+      "taskIds": [],
+      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
+    },
+    {
       "id": "device-services-first-slice-f3571fd",
       "at": "2026-10-08T02:06:52.660442+00:00",
       "taskIds": [

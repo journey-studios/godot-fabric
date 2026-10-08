@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#151b19">
   <title>Godot Fabric · Migração</title>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./agents.css">
   <script type="module" src="./app.mjs"></script>
 </head>
 <body>
@@ -15,6 +16,7 @@
     <div class="sidebar-caption">WORKSPACE / 01</div>
     <nav aria-label="Navegação principal">
       <a href="#overview" class="nav-link active" data-nav="overview"><span>◉</span>Visão geral</a>
+      <a href="#agents" class="nav-link" data-nav="agents"><span>⎇</span>Agentes<span class="nav-count" id="agent-count">—</span></a>
       <a href="#roadmap" class="nav-link" data-nav="roadmap"><span>▤</span>Roadmap<span class="nav-count" id="nav-count">—</span></a>
       <a href="#sequence" class="nav-link" data-nav="sequence"><span>⇢</span>Sequência de migração</a>
       <a href="#acceptance" class="nav-link" data-nav="acceptance"><span>◇</span>Critérios de aceite</a>
@@ -32,6 +34,10 @@
         <div id="error" class="error" role="alert" hidden></div>
         <div id="summary" class="loading-panel">Carregando o roadmap…</div>
         <div id="phase-map" class="phase-map" aria-label="Progresso por fase"></div>
+      </section>
+      <section id="agents" class="section" aria-labelledby="agents-title">
+        <div class="section-heading"><div><span class="eyebrow">TRABALHO EM PARALELO</span><h2 id="agents-title">Agentes</h2></div><span class="section-hint">Até 5 worktrees ao mesmo tempo</span></div>
+        <div id="agents-board"></div>
       </section>
       <section id="roadmap" class="section" aria-labelledby="roadmap-title">
         <div class="section-heading"><div><span class="eyebrow">O CAMINHO COMPLETO</span><h2 id="roadmap-title">Roadmap <span id="roadmap-count" class="heading-count"></span></h2></div><span class="section-hint">Abra um item para ver aceite e evidências</span></div>
