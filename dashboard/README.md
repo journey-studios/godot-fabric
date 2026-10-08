@@ -112,6 +112,41 @@ observado e valide antes de publicar sua atualização.
 
 [Prompt para a thread de implementação](AGENT_PROMPT.md).
 
+## Marco 0.5 (`milestones`)
+
+Chave top-level **opcional** `milestones`: marcos de recorte com itens, critérios
+e critérios de saída próprios, calculados à parte do percentual da 1.0
+(`summarize()` não a lê). Hoje contém o `0.5 · Frontier`, descrito na seção
+`## 0.5 — Frontier` do `ROADMAP.md`. A seção do painel só aparece se a chave existe.
+
+```json
+"milestones": [{
+  "id": "0.5", "title": "…", "summary": "…",
+  "scope": ["…"], "outOfScope": ["…"], "goNoGo": "…",
+  "items": [{
+    "id": "V05-02", "title": "…", "effort": "L",
+    "gf": ["GF-13"], "dependsOn": [], "acceptance": "…",
+    "criteria": [{ "id": "vermelho", "label": "…", "done": false, "evidence": [] }]
+  }],
+  "exit": [{ "id": "X1", "label": "…", "done": false, "evidence": [] }]
+}]
+```
+
+- O percentual do marco é critérios concluídos sobre critérios dos itens. O status
+  do item e do marco é derivado (planejado, em andamento, concluído ou, com
+  `blocker`, bloqueado): não existe campo de status para manter coerente.
+- `done: true` exige `evidence` com URL http(s), como nos checkpoints dos GF. `gf`
+  só referencia GF existentes e `dependsOn` só itens do mesmo marco.
+- Fica fora do `sync` de propósito: o `ROADMAP.md` não o define, e uma chave
+  desconhecida sobrevive ao `sync`. Já uma tag nos GF, uma fase ou tasks `V05-xx`
+  seriam descartadas ou rejeitadas, e mudariam o denominador da 1.0.
+- Não use no `ROADMAP.md` o heading `## M<n> — `, linhas de tabela que começam por
+  número ou `GF-`, a frase de aceite do primeiro marco integrado nem itens
+  `- [ ]` no checklist da 1.0 para falar do 0.5: o parser os leria como
+  fase, sequência, task ou critério da 1.0.
+- A mensagem de direcionamento está em `activity`, mas ela afunda quando entram
+  entradas mais novas: o canal durável é `AGENT_PROMPT.md` e este arquivo.
+
 ## Agentes em paralelo (até 5)
 
 O painel local mostra até cinco agentes trabalhando ao mesmo tempo, cada um em

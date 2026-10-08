@@ -7,6 +7,7 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
+import {createAssetPipeline, publishAssets} from "../sdk/toolchain/asset-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {renderEventTargetParentOverlay} from "../sdk/toolchain/rn-event-target-overlay.mjs";
 import {renderRendererTagOverlay} from "../sdk/toolchain/rn-renderer-tag-overlay.mjs";
@@ -42,11 +43,12 @@ export async function bundleProbe({entryPoint, modes, prefix, parentMode, render
   const bundles = {};
   for (const mode of modes) {
     const bundlePath = path.join(output, prefix + "-" + mode + ".js");
+    const assets = createAssetPipeline({root});
     const bundled = await build({absWorkingDir: root, entryPoints: [entryPoint],
       outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
       define: {"process.env.NODE_ENV": '"production"', __DEV__: "false", __EVENT_TARGET_PROBE_MODE__: JSON.stringify(mode), ...defines},
       mainFields: ["main"], resolveExtensions: godotExtensions,
-      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode, nativeDispatchMode, pointerInterestMode})]});
+      plugins: [assets.plugin, platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode, nativeDispatchMode, pointerInterestMode})]});
     const inputs = Object.keys(bundled.metafile.inputs);
     for (const file of ["Libraries/Renderer/implementations/ReactFabric-prod.js", "src/private/webapis/dom/events/EventTarget.js",
       "src/private/webapis/dom/nodes/ReactNativeElement.js"])
@@ -56,6 +58,7 @@ export async function bundleProbe({entryPoint, modes, prefix, parentMode, render
       presets: [["@react-native/babel-preset", {disableImportExportTransform: true, enableBabelRuntime: false}]],
     });
     await writeFile(bundlePath, transformed.code + "\n");
+    await publishAssets(assets, bundlePath, transformed.code + "\n");
     bundles[mode] = {sha256: digest(await readFile(bundlePath)), inputs};
   }
   const rnRoot = path.dirname(requireSdk.resolve("react-native/package.json"));

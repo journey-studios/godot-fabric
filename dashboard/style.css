@@ -1545,3 +1545,68 @@ main {
     transition:none!important;
   }
 }
+
+/* Optional milestone scopes (dashboard `milestones`). Reuses the task-row/panel/pill styles. */
+.milestone {
+  margin-bottom:18px;
+}
+
+.milestone-title {
+  font-size:17px;
+  margin:6px 0 8px;
+}
+
+.panel>.milestone-summary {
+  font-size:12px;
+  line-height:1.65;
+  color:#5f6a56;
+  max-width:78ch;
+}
+
+.milestone-columns {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:16px;
+}
+
+.milestone-columns summary {
+  font:10px var(--mono);
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:#688345;
+  cursor:pointer;
+  padding:6px 0;
+}
+
+.milestone-list {
+  margin:6px 0 0;
+  padding-left:18px;
+  font-size:11px;
+  line-height:1.6;
+}
+
+.milestone-list li {
+  margin-bottom:6px;
+}
+
+.milestone-validations,.milestone-gate {
+  margin-top:14px;
+  font-size:11px;
+  line-height:1.6;
+}
+
+.milestone-validations p {
+  margin:6px 0;
+}
+
+@media(max-width:850px) {
+  .milestone-columns {
+    grid-template-columns:1fr;
+    gap:6px;
+  }
+  .sidebar nav {
+    min-width:0;
+    overflow-x:auto;
+  }
+}

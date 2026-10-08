@@ -442,6 +442,111 @@ that support matrix. A release cannot claim “current” while ignoring a newer
 stable baseline; an explicitly older baseline must be named and approved as a
 scope change. RC/nightly APIs are not automatically added to the 1.0 gate.
 
+## 0.5 — Frontier: a priority cut, not a separate release
+
+This section is prose only. It adds no GF item, phase, sequence or checklist, and
+it changes no ID, priority, weight, dependency or acceptance text of the 1.0 above
+or below. The 1.0 contract and its percentage are unchanged. The 0.5 says what to
+pick first. Its progress lives in the dashboard's optional `milestones` key
+(`milestones[0]`, id `0.5`), never in `tasks`, and the dashboard reports it apart
+from the 1.0 percentage.
+
+**Goal.** Show that a real app is usable on this platform. The reference app is
+**Frontier**, a small turn-based strategy game in the interaction style of
+Civilization 2 (rules, names and art are original; only the interaction pattern is
+borrowed). Godot owns the map, rules, AI and turns. The whole HUD is React Native
+over Godot, in one Hermes. The game state chooses which panels exist: selecting a
+Settler, a Warrior, a stack, a tile, the city or a pending event shows different
+panels. React only projects state and sends intents. Rules never live in JS.
+
+**Two validations.** *app-driven-hud* is the existing HUD and inventory milestone
+(HUD-1 to HUD-7 in the first integrated milestone below): the TSX app decides what
+to mount. It stays in `consumers/minimal` as a regression and is not edited.
+*game-driven-hud* is this cut: the game decides the context.
+
+**Ceiling of the game** (a cut enters only if it removes a distinct context):
+24x16 map from a fixed seed; two unit types (Settler, Warrior); one city with three
+to five production items; research as a list; one blocking event or dialog; a
+minimal scripted AI; a 12-turn replay with a golden state hash, plus a 100-turn
+soak. Seven contexts: none, tile, Settler, Warrior, stack of two units, city,
+dialog. Six HUD panels: turn and resources bar, unit actions, tile card, city
+screen, research and event dialog.
+
+| Item | Size | What it settles |
+| --- | --- | --- |
+| V05-01 | S | The 0.5 in the dashboard and this file, additive; agent guidance |
+| V05-02 | L | Pointer spike: a click in an empty HUD area reaches the Godot map exactly once (go/no-go 1) |
+| V05-03 | M | The game in GDScript and typed context/order services with a persistent owner node and an epoch |
+| V05-04 | M | Component, type and SDK gaps for the ~12 names the game uses |
+| V05-05 | L | Context-driven RN HUD suite and blocking overlays |
+| V05-06 | M | Lifecycle, pause, frame budget and soak, extending the GF-30 harness |
+| V05-07 | XL | macOS arm64 `.app` export, relocatable, clean-profile run |
+| V05-08 | M | iOS preparation in the simulator: density, landscape, safe area, touch |
+| V05-09 | XL | Physical iPhone arm64 device gate (go/no-go) |
+| V05-10 | L | Final comparison: game without HUD, with a native Godot HUD, with the RN HUD |
+
+Order: V05-02 first, because nothing in the repo exercises world input today
+(`FabricSurface` sets no `mouse_filter` and no scene uses `Camera2D`, `CanvasLayer`
+or `_unhandled_input`). Its test must fail before the policy is applied. V05-07
+(starting from `consumers/minimal`) and the signing stage of V05-09 (the existing iOS
+smoke fixture, not the game) can start on day 0. The macOS build is closed before
+the single iPhone proof. Effort sizes are relative, not a
+calendar: the export, the pointer policy and the device are the unknowns.
+
+**Out of the 0.5.** Typed text, virtual keyboard and IME; network images; scroll
+inertia; public hover and right-click on Pressable (tooltips and context menus stay
+in Godot or use long-press); graphical tech tree, boats, diplomacy, fog of war and
+full save/load; Android, Linux and Windows; the arm64 iOS simulator and Debug iOS.
+The tail of GF-13 pointer work (new `pointer-*`, EventTarget, Document or hover
+slices) is frozen for the duration: existing suites stay as regression, and only
+what V05-02 needs is allowed.
+
+**Go/no-go.** A failed V05-02 returns the game-driven-hud decision to the user
+before any later item. On the phone, a no-go closes the 0.5 as macOS-complete and
+hands mobile back to GF-35 without moving any 1.0 number. Performance thresholds
+are proposals: they are recorded, then frozen once after the macOS baseline of
+V05-06 and before the first device session.
+
+**Final comparison (V05-10).** Run only after the rest of the 0.5 is closed. The
+same game runs in three arms with the same seed, replay and scripted input, in a
+Release export on the same machine: A has no HUD, B has a native Godot HUD written
+idiomatically in GDScript with the same panels, contexts and test IDs, C has the RN
+HUD from V05-05. Arm B is held to functional parity by the same context matrix and
+gets the same time-box and one optimization pass, so the baseline is not a straw
+man. The report measures, per arm:
+
+- frame time (p50, p95, p99, frames above 2x and above 100 ms) and FPS with vsync
+  off, plus missed frames with vsync on. FPS without a limit counts only if the vsync
+  mode read back is disabled; otherwise that band is not applicable and CPU time per
+  frame is the outcome. The active windows (AI phase, event burst, context switches,
+  and a stress case with a 200-row log and a 100-item production list) are measured
+  apart from the whole run, so idle frames do not dilute the difference;
+- click-to-panel latency in frames, resident memory (plus Hermes heap and native
+  nodes in arm C), time to the interactive HUD, and package size;
+- change cost: the same change request (a new Settler action) in B and C, counted
+  in files, lines, time and tests;
+- the same measurements on the iPhone when V05-09 is a go.
+
+Hypotheses are written before any run and fixed once, together with the primary
+outcome (p95 CPU time per frame in the active windows), the non-inferiority margin
+and the decision rule. The RN HUD is tested for costing no more than that margin
+over arm B; it is *not* expected to raise FPS, because Hermes, Yoga and the Control
+mount share the main thread with the game. Arm A is the cost control: B minus A and
+C minus A are the price of each HUD, and the gain question is C against B. The
+change-request cost is where a gain, if any, would appear. At least 10 runs per arm
+in alternating order, medians with IQR and a 95% bootstrap confidence interval, raw
+data kept under `docs/evidence/`. A gain in FPS is claimed only if the interval
+excludes zero. "No gain" is a valid and recorded result. Each axis gets a verdict:
+gain, neutral, cost, or inconclusive when the interval is too wide to decide, plus a
+decision on keeping the RN HUD for games. If arm B is not ready in its time-box, the
+report is a partial A against C comparison and claims no gain.
+
+**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
+the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
+not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
+item in the title. Record 0.5 progress only in `milestones`; when rewriting
+`migration.json`, keep unknown top-level keys.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)
@@ -2949,6 +3054,85 @@ contracts gate (283 Node/13 Python), `test:modal`, the device services suite wit
 preserved preceding host, static analysis and the publication scan pass again. Only GF-23's first-slice
 checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
+### Images and the asset pipeline (2026-10-07)
+
+GF-16 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
+contract, parity and targets remain open. The [images evidence](docs/evidence/images/README.md)
+makes the public `Image`, `ImageBackground`, `AssetRegistry` and `Animated.Image` React Native's
+own modules and runs RN's own C++ image pipeline under them: **74 headless checks** in two roots of
+one Hermes application, in which no read or decode ran on the main thread. No other GF's checkpoint
+changes: network images need GF-22's transport and stay open.
+
+RN's `Image.ios.js` renders behind a validating wrapper (`src/image.jsx`,
+`src/image-contract.mjs`) that makes each prop the host cannot show yet fail where the Image
+renders, naming the prop and why; the SDK's platform plugin points every importer of RN's `Image`,
+`ImageBackground` and `AnimatedImage` at it, and the module loads on first use so a bundle without
+images, or on a host without the module, still evaluates. The host registers RN's generated
+`ImageComponentDescriptor` and an `ImageManager` under `ImageManagerKey`, so `ImageShadowNode`
+requests the picture from inside layout, picks the source and the content frame and scale, and
+`ImageRequest` and its observer coordinator keep the protocol (cancel when the last observer
+leaves, resume when one returns); `GodotImageManager` only builds the request and
+`ImageLoader` serves it. `ImageLoader` (`native/image_loader.{h,cpp}`) reads, sniffs, bounds,
+decodes and shrinks on Godot's `WorkerThreadPool` (up to four jobs in the pool, every task awaited,
+a cancelled job finishes and is dropped without a texture) and the main thread only creates the
+texture, within an upload budget per pump, and tells the observers. Headers are read and bounded
+before any decoder runs (Godot's JPEG loader multiplies dimensions in `unsigned int`, its PNG loader
+allocates before checking `Image::MAX_PIXELS`), non-bundled pictures shrink to cover the request in
+pixels and are never upscaled as `RCTTargetSize` does, a bundled asset is decoded whole at the scale
+of its file name, and an SVG is rasterized at the request's scale. `GodotImage` observes its
+state's request as `RCTImageComponentView` does (observer swap, `onLoadStart` only when the source
+changes, `onLoad` then `onLoadEnd` with the size in pixels, `onError` then `onLoadEnd`) and draws the
+six resize modes with the rectangles `UIViewContentMode` gives, `repeat` tiling at the picture's size
+in points. The `ImageLoader` TurboModule answers `getSize` and `getSizeWithHeaders` from the header
+and rejects `prefetch`, saying the host has no cache. Sources are `require()`d assets, `res://`,
+`user://`, `file://` and `data:` URIs; PNG, JPEG, WebP, BMP, TGA and SVG decode, and GIF fails
+through `onError`.
+
+`sdk/toolchain/asset-plugin.mjs` is the one esbuild plugin for every build: `require()` of an image
+is Metro's module with Metro's descriptor (the unit tests compare it, hash included, with Metro's
+own `getAssetData`), every `@Nx` variant joins one descriptor, and the files land beside the bundle
+with a `<bundle>.assets.json` manifest of each file's SHA-256 and the bundle's, which the iOS export
+hook copies. RN's `pickScale` then chooses by the window's content scale.
+
+An independent oracle recomputes the sources, the pixel sizes, the event sequences, the chosen
+scales and the six rectangles from RN's formulas and the fixture files' own pixels; stages that
+hold a decode in flight at a gate, limit the pool to one job and cap the upload budget at one byte
+make every assertion a state or a bound, never a count of frames. A request swapped away while its
+decode is in flight reports nothing and creates no texture; unmounting an Image or a root drops what
+is in flight and cancels what waited; stopping awaits every task and leaves no texture. The same
+bundle on the preceding host (built from `ebcb292`) reaches 11 checks, holds the 8 that need no
+pipeline and fails the 3 normative ones it can reach (`'ImageLoader' could not be found`); two
+retained sabotages (decoding on the main thread, a view that keeps listening to the request it
+swapped away from) fail 12 and 2 checks and the oracle rejects each, and 15 mutations of the genuine
+report are refused. A C++ test covers the pure parts (URI classes, formats, headers, decode targets
+and the six rectangles; 7 groups, 68 assertions). An interactive example (`examples/images`) shows
+the six modes, a bundled `@2x` asset, `data:` PNG and SVG, an `ImageBackground`, a failure and a
+preview that two buttons change (17 headless and 25 graphical checks), and its two captures are in
+the evidence.
+
+Open: network images (`http(s)`, headers, method, body and cache), the decoded-image cache,
+`prefetch` and `queryCache`, `tintColor`, `blurRadius`, `capInsets`, `defaultSource`,
+`loadingIndicatorSource`, `fadeDuration`, `progressiveRenderingEnabled`, `resizeMethod`,
+`resizeMultiplier` and `overlayColor` (each fails where the Image renders), rounded image clipping
+(a border radius on the Image's own style fails; the host clips rectangles only), animated GIF and
+WebP, `nativeImageSource`, assets in desktop and Android exports (the iOS hook copies the manifest's
+files, but no exported app ran), an independent pixel oracle, a comparison of ImageIO's thumbnail
+rounding and UIKit's tiling with iOS, and every target but macOS. The host departs from RN in the
+research note: the `ImageLoader` module's error codes are message prefixes, `repeat` tiles at an
+integer size in points, `res://` is decoded whole, and `getSize` believes the header.
+
+On the committed tree the contracts gates (7, 8 and 291 Node tests, 13 Python tests, static analysis,
+publication scan), the type check, the images, Animated, Switch, Touchables, focus commands, shared
+touches, click and module suites and the 31 examples pass. The facade, the Animated exports and the
+SDK platform plugin changed, so the local controls and sabotages of the Animated, frame clock,
+networking, WebSocket and transform guard suites, which only live in `build/`, were rebuilt on
+their preserved preceding hosts; hosted CI has no controls and is not affected. The Animated check
+that listed `Image` among the components that fail where they render no longer does, since
+`Animated.Image` renders now. All 159 executed code and configuration inputs match implementation
+`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted
+CI for this slice is pending. Only GF-16's first-slice checkpoint closes; no whole GF, other
+checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -2963,7 +3147,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | In progress | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
 | GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
-| GF-16 · P1 · Images and asset pipeline | Planned | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
+| GF-16 · P1 · Images and asset pipeline | In progress | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |
 | GF-18 · P1 · Modals and safe areas | In progress | Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation | GF-07, GF-09, GF-13, GF-20, GF-23 |
 

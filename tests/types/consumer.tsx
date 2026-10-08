@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
+import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
@@ -322,6 +323,45 @@ const valueProp = <View accessibilityValue={{now: 5}} />;
 void accessibleView; void accessibleTouchable; void touchableRole; void ariaSwitch; void upstreamAccessibility; void unknownRole; void rejectedRole;
 void rejectedAriaRole; void wrongVocabulary; void mixedState; void customActions; void hideOnly; void numericLabel;
 void stateNotBoolean; void assertiveOff; void valueProp;
+
+// Public Image: RN's original Image.ios.js over the Godot pipeline. Sources are assets, res://, user://, file:// and data: URIs.
+const mode: ImageResizeMode = "repeat";
+const asset: ImageSourcePropType = { uri: "res://pictures/logo.png", width: 40, height: 20 };
+const imageStyle: ImageStyle = { width: 60, height: 60, resizeMode: "cover", opacity: 0.9, borderWidth: 2 };
+const imageProps: ImageProps = {
+  source: asset, resizeMode: mode, style: imageStyle, testID: "logo",
+  onLoadStart: () => {},
+  onProgress: (event: ImageProgressEventIOS) => { const loaded: number = event.nativeEvent.loaded; const total: number = event.nativeEvent.total; void loaded; void total; },
+  onLoad: (event: ImageLoadEvent) => { const uri: string = event.nativeEvent.source.uri; const width: number = event.nativeEvent.source.width; void uri; void width; },
+  onError: (event: ImageErrorEvent) => { const message: string = event.nativeEvent.error; void message; },
+  onLoadEnd: () => {},
+};
+const originalImageStyle: import("../../node_modules/react-native/types_generated/index").ImageStyle = imageStyle;
+const publicImage = <Image {...imageProps} ref={instance => { if (instance) instance.measure(() => {}); }} />;
+const background = <ImageBackground source={asset} imageStyle={{ opacity: 0.5 }} style={{ borderRadius: 8, width: 80, height: 40 }}><View /></ImageBackground>;
+const backgroundProps: ImageBackgroundProps = { source: asset, resizeMode: "contain" };
+async function imageApis() {
+  const size: { width: number; height: number } = await Image.getSize("res://pictures/logo.png");
+  Image.getSize("res://pictures/logo.png", (width, height) => { void width; void height; });
+  const sized = await Image.getSizeWithHeaders("res://pictures/logo.png", { Accept: "image/png" });
+  const resolved = Image.resolveAssetSource(asset);
+  const registered: unknown = AssetRegistry.getAssetByID(1);
+  void Image.prefetch("res://pictures/logo.png"); void Image.queryCache(["res://pictures/logo.png"]);
+  return { size, sized, resolved, registered };
+}
+const animatedImage = <Animated.Image source={asset} style={{ opacity: 0.5 }} />;
+// Props the host has no native implementation for fail at type-check time as they do at render time.
+// @ts-expect-error tinting needs a shader on the image's own canvas item (a later slice)
+const tinted = <Image source={asset} tintColor="#ff0000" />;
+// @ts-expect-error blurring is a later image effect
+const blurred = <Image source={asset} blurRadius={4} />;
+// @ts-expect-error placeholders are a later image state
+const placeholder = <Image source={asset} defaultSource={asset} />;
+// @ts-expect-error the host clips rectangles only; rounded image clipping is a later slice
+const rounded = <Image source={asset} style={{ borderRadius: 8 }} />;
+// @ts-expect-error resize modes are cover, contain, stretch, center, repeat and none
+const invalidMode = <Image source={asset} resizeMode="fill" />;
+void originalImageStyle; void publicImage; void background; void backgroundProps; void imageApis; void animatedImage; void tinted; void blurred; void placeholder; void rounded; void invalidMode;
 
 // Text: onTextLayout is RN's original event, with one entry per visible line.
 const layoutHandler = (event: TextLayoutEvent) => {

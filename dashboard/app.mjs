@@ -1,4 +1,4 @@
-import { validate, summarize, progress, taskProgress, pendingDependencies, STATUSES } from "./model.mjs";
+import { validate, summarize, progress, taskProgress, pendingDependencies, criteriaProgress, criteriaStatus, milestoneCriteria, STATUSES } from "./model.mjs";
 import { AGENT_SLOTS, coordinate } from "./agents.mjs";
 import { renderAgents, agentChips } from "./agents-view.mjs";
 import { escape, percent, date, clock, url } from "./format.mjs";
@@ -95,7 +95,30 @@ function renderTasks() {
   document.querySelectorAll("[data-phase]").forEach(button => button.classList.toggle("active", button.dataset.phase === phase));
 }
 
+// Optional milestone scopes (e.g. 0.5). Defensive on purpose: the key is absent in older JSON and must never break the page.
+const blockerHtml = milestone => milestone.blocker ? `<p class="error">Bloqueio: ${escape(milestone.blocker)}</p>` : "";
+const list = items => (items ?? []).length ? `<ul class="milestone-list">${items.map(item => `<li>${escape(item)}</li>`).join("")}</ul>` : "";
+const milestoneItem = (item, milestone) => {
+  const steps = item.criteria ?? [], value = criteriaProgress(steps), state = { status: criteriaStatus(steps, item.blocker) };
+  return `<details id="m-${escape(milestone.id)}-${escape(item.id)}" class="task-row"><summary><span class="task-code">${escape(item.id)}</span><span class="task-title">${escape(item.title)}</span><span class="priority">${escape(item.effort || "")}</span>${status(state)}<span class="mini-progress"><span class="mini-track"><i style="width:${value}%"></i></span><b>${percent(value)}</b></span><span class="chevron" aria-hidden="true">›</span></summary><div class="task-detail"><div class="detail-grid"><div><div class="detail-label">RESULTADO E ACEITE</div><p class="acceptance-text">${escape(item.acceptance || "")}</p>${item.blocker ? `<p class="error">Bloqueio: ${escape(item.blocker)}</p>` : ""}<div class="detail-label">ITENS GF DO ROADMAP DA 1.0</div><div class="dependencies">${(item.gf ?? []).length ? item.gf.map(id => `<button class="dep-button" data-task="${escape(id)}">${escape(id)}</button>`).join("") : '<span class="muted">Nenhum: item do próprio marco.</span>'}</div><div class="detail-label">DEPENDE DE</div><div class="dependencies">${(item.dependsOn ?? []).length ? item.dependsOn.map(id => `<span class="task-code">${escape(id)}</span>`).join(" ") : '<span class="muted">Pode começar já.</span>'}</div></div><div><div class="detail-label">CRITÉRIOS · ${percent(value)}</div>${steps.map(checkpoint).join("")}</div></div></div></details>`;
+};
+
+function renderMilestones() {
+  const milestones = data.milestones ?? [];
+  $("milestones").hidden = !milestones.length;
+  $("milestones-nav").hidden = !milestones.length;
+  // The JSON is re-read every few seconds: keep what the reader opened, as renderTasks does for the roadmap.
+  const open = new Set([...document.querySelectorAll("#milestone-list details[open]")].map(item => item.id)), seen = new Set([...document.querySelectorAll("#milestone-list details")].map(item => item.id));
+  $("milestone-list").innerHTML = milestones.map(milestone => {
+    const criteria = milestoneCriteria(milestone), value = criteriaProgress(criteria), state = criteriaStatus(criteria, milestone.blocker);
+    const exit = milestone.exit ?? [], items = milestone.items ?? [];
+    return `<article class="panel milestone"><div class="panel-top"><span class="eyebrow">MARCO ${escape(milestone.id)} · RECORTE DA 1.0</span>${status({ status: state })}</div><h3 class="milestone-title">${escape(milestone.title)}</h3><p class="milestone-summary">${escape(milestone.summary || "")}</p><div class="big-progress"><strong>${percent(value).replace("%", "<small>%</small>")}</strong><span>dos critérios do marco concluídos · não altera o percentual da 1.0</span></div>${progressBar(value)}<div class="progress-meta"><span>${criteria.filter(step => step.done).length} / ${criteria.length} critérios</span><span>${items.filter(item => criteriaStatus(item.criteria ?? [], item.blocker) === "complete").length} / ${items.length} itens</span><span>${exit.filter(step => step.done).length} / ${exit.length} critérios de saída</span></div>${blockerHtml(milestone)}<div class="milestone-columns"><details id="m-${escape(milestone.id)}-in" open><summary>Dentro do marco</summary>${list(milestone.scope)}</details><details id="m-${escape(milestone.id)}-out"><summary>Fora do marco</summary>${list(milestone.outOfScope)}</details></div>${(milestone.validations ?? []).length ? `<div class="milestone-validations">${milestone.validations.map(item => `<p><span class="pill">${escape(item.id)}</span> ${escape(item.title)}${item.note ? `<span class="muted"> — ${escape(item.note)}</span>` : ""}</p>`).join("")}</div>` : ""}${milestone.goNoGo ? `<p class="milestone-gate"><b>GO / NO-GO.</b> ${escape(milestone.goNoGo)}</p>` : ""}</article><article class="phase-group"><header class="group-heading"><span class="phase-id">${escape(milestone.id)}</span><h3>Itens do marco</h3><span>${items.length} ${items.length === 1 ? "item" : "itens"}</span></header>${items.map(item => milestoneItem(item, milestone)).join("")}</article>${exit.length ? `<article class="panel"><div class="panel-heading"><h3>Critérios de saída do ${escape(milestone.id)}</h3><span class="pill">${exit.filter(step => step.done).length} / ${exit.length}</span></div>${exit.map(checkpoint).join("")}</article>` : ""}`;
+  }).join("");
+  document.querySelectorAll("#milestone-list details").forEach(item => { item.open = seen.has(item.id) ? open.has(item.id) : item.open; });
+}
+
 function renderRest() {
+  renderMilestones();
   $("sequences").innerHTML = data.sequences.map(sequence => {
     const tasks = data.tasks.filter(task => sequence.taskIds.includes(task.id)), value = progress(tasks);
     return `<article class="sequence-card"><div class="sequence-top"><span class="sequence-number">${escape(sequence.id)}</span><span class="pill">${percent(value)}</span></div><h3>${escape(sequence.title)}</h3>${progressBar(value)}<div class="dependencies">${sequence.taskIds.map(id => `<button class="dep-button" data-task="${escape(id)}">${escape(id)}</button>`).join("")}</div><details><summary>Pré-requisito e resultado</summary><p lang="en">${escape(sequence.acceptance)}</p></details></article>`;
