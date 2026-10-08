@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 PR #58: 28 checks integrados verificados; revisão final, CI e aceite pendentes"
+    "focusTitle": "GF-14 PR #58: provas integradas completas; CI/CodeRabbit e aceite pendentes"
   },
-  "updatedAt": "2026-10-08T04:08:45.792200+00:00",
+  "updatedAt": "2026-10-08T04:18:31.994Z",
   "source": {
-    "commit": "0273dc38cab2b2aaf9fb5a7accf4904d3f820ca7",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/0273dc38cab2b2aaf9fb5a7accf4904d3f820ca7",
-    "scope": "Main Images #56 e milestone Frontier #60 integrados; produtores anteriores verificados no commit 0273dc3. GF-14 com 28 checks locais; repetição do novo host integrado, CI/CodeRabbit e aceite pendentes.",
+    "commit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6b2833e493e957d208f34e38a94c8fedc7c682b3",
+    "scope": "Main Images #56, Accessibility #57 e milestone Frontier #60 integrados: 28/156 checkpoints, 0/39 itens. GF-14 local verificado no commit 6b2833e: 28 checks, listas44, Images74, Accessibility80 e quatro capturas; 123 produtores do host,18bundle,seisRN conferidos. CI/CodeRabbit e aceite pendentes.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fatia desktop revisada no host integrado com Text, Device Services e Accessibility: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. O mesmo bundle no host anterior reproduz exatamente duas falhas de interrupção por roda/contentOffset; controles históricos de diagonal/orientação ficam preservados. Props neutras válidas renderizam e scrollam; recursos ativos fora da fatia falham explicitamente. Listas 44/44 e quatro capturas finais verificadas no mesmo host; CI/CodeRabbit finais e aceite pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos.",
+      "note": "Fatia desktop local revisada no host integrado com Text, Device Services, Accessibility e Images: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. Props neutras montam e scrollam; roda/contentOffset encerram drag antes de substituir offset, sem EndDrag duplicado no Up. Listas44/44, Images74/74, Accessibility80/80 e quatro capturas verificadas no mesmo host. Controle histórico com mesmo bundle pré-Images reproduz exatamente duas falhas de interrupção. Produtores123host/18bundle/seisRN conferidos no commit6b2833e. CI/CodeRabbit finais e aceite pendentes; contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4080,6 +4080,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf14-images-integrated-local-20261008",
+      "at": "2026-10-08T04:18:31.991Z",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Fatia desktop local revisada no host integrado com Text, Device Services, Accessibility e Images: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. Props neutras montam e scrollam; roda/contentOffset encerram drag antes de substituir offset, sem EndDrag duplicado no Up. Listas44/44, Images74/74, Accessibility80/80 e quatro capturas verificadas no mesmo host. Controle histórico com mesmo bundle pré-Images reproduz exatamente duas falhas de interrupção. Produtores123host/18bundle/seisRN conferidos no commit6b2833e. CI/CodeRabbit finais e aceite pendentes; contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
     {
       "id": "modal-final-109e6fd-desktop-slice",
       "at": "2026-10-08T01:25:22.138062+00:00",

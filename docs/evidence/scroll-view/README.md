@@ -53,12 +53,12 @@ The following identities bind the result to its inputs:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| Loaded `addons/fabric_godot.dylib` | `bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe` |
-| `.deps/build/native-sdk-build.json` | `a3bd2e88322cc60e748096f6740c9e017671a9b733836e82b83c1545f4c12af5` |
-| Mounted probe bundle | `29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b` |
+| Loaded `addons/fabric_godot.dylib` | `840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2` |
+| `.deps/build/native-sdk-build.json` | `10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45` |
+| Mounted probe bundle | `7944e7ca42e5fbf46718d0524f3a934adf92a45990438b582d6443f36d66a9ec` |
 | GDScript probe source | `3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915` |
-| Mounted report | `a7a104a84243e573738ebec66e124660d3e5f1a43c1bd47ce4a100343e098adc` |
-| Mounted log | `70bbf5fbe24d1edf4bd76f5be39eda6f5f285fb87b65eab2c2451165cf110865` |
+| Mounted report | `b7bea9dd69a5dd8853d7782db926a05cd6a6b27115e5f649a36260cd3e130ab4` |
+| Mounted log | `2804d2f8bf6f3818251125b47027708b40e5296fe823bdf898c89305775de648` |
 
 The build record's host digest matches the loaded library and remained stable
 during the probe. All eight compiled native source pins in the receipt match
@@ -80,22 +80,29 @@ The root-owned [integrated independent receipt](root-integrated.json) preserves
 the earlier 25-check comparison: host `4f28ed0f` passes; host `60fa18ed` fails
 exactly the two diagonal controls and orientation cancellation.
 
-The [interruption receipt](root-interruption.json) binds an independent isolated
-28-check repeat to the current host. The frozen `4f28ed0f` host executes the same
+The [interruption receipt](root-interruption.json) preserves the independent
+28-check comparison on Accessibility-integrated host `bbb683e2`. The frozen `4f28ed0f` host executes the same
 bundle and probe and fails exactly the wheel and `contentOffset` interruption
 controls, without unrelated errors or cleanup failures. Report derivation checks
 the EndDrag ordering, logical/Fabric/paint offsets and retirement before later
 Move and Up, rather than trusting check flags alone. Original pre-fix artifacts
 remain under ignored `build/scroll-view-pre-wheel-cancel-4f28/`.
 
+The final [Images-integrated independent receipt](root-images-integration.json)
+records a new isolated 28-check run on host `840d7f3e`, built from `6b2833e` after
+main Images #56 and Frontier #60. It independently derives the interruption,
+diagonal, neutral-option and cleanup invariants, list/sabotage oracles, 80-check
+Accessibility oracle, 74-check Image oracle and four capture identities. The
+older negative pair remains separate: its original bundle is preserved and is
+not relabeled as this final bundle.
+
 The [committed producer proof](committed-source.json) compares every one of the
-112 native build input files and 18 bundle producer files against committed
+123 native build input files and 18 bundle producer files against committed
 Git blobs. It separately verifies six installed pinned RN inputs. Receipt-only
 commits after the recorded producer commit do not change the tested sources.
 
 Affected integrated regressions also pass: Accessibility metadata 80/80 and
-594 core assertions in 11 groups, Text layout 76/76, native modules 76/76 and
-Device Services 65/65. These are local desktop checks; the headless accessibility
+594 core assertions in 11 groups, Text layout 76/76, native modules 76/76 Device Services 65/65 and Images 74/74. These are local desktop checks; the headless accessibility
 lane does not certify an OS tree or assistive technology hardware.
 
 ## Windowed graphical capture

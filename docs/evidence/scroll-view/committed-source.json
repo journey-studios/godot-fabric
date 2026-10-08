@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
   "status": "verified-committed-producers",
-  "sourceCommit": "0273dc38cab2b2aaf9fb5a7accf4904d3f820ca7",
-  "verifiedAt": "2026-10-08T03:58:34.594Z",
-  "hostSha256": "bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe",
-  "buildReceiptSha256": "a3bd2e88322cc60e748096f6740c9e017671a9b733836e82b83c1545f4c12af5",
-  "bundleSha256": "29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b",
+  "sourceCommit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
+  "verifiedAt": "2026-10-08T04:14:12.715Z",
+  "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+  "buildReceiptSha256": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
+  "bundleSha256": "7944e7ca42e5fbf46718d0524f3a934adf92a45990438b582d6443f36d66a9ec",
   "groups": {
     "native": {
-      "count": 112,
-      "pinsSha256": "18f75f8947dff48a097bed3845e797746752a92bc2dc6ad57eda8a2f1aa6510a",
+      "count": 123,
+      "pinsSha256": "b639cf5f0aba1988a248f89ef2014c7f906e28aea3d9309a3071a0de314dda30",
       "allMatchCommittedBlobs": true
     },
     "bundle": {
       "count": 18,
-      "pinsSha256": "fbca179da15d3e028df564f5d54c0ebcc273f876e36d80bd652a4b4029079ea2",
+      "pinsSha256": "4afcee92d7cdc0bbe5b3bb39620f77dd3b145b87cbbd16d17e85bd8cf201ba03",
       "allMatchCommittedBlobs": true
     },
     "reactNative": {

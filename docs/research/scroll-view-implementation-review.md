@@ -295,3 +295,33 @@ remains pending; no GF-14 checkpoint is accepted by this local review.
 
 See [the independent interruption proof](../evidence/scroll-view/root-interruption.json)
 and [committed producers](../evidence/scroll-view/committed-source.json).
+
+## Final Images integration repeat
+
+Main #56 introduces Image providers, worker decoding and lifecycle in the shared
+host, while #60 adds the Frontier milestone to the dashboard. Integration at
+`6b2833e` preserves both the Image branch and the plain Control scroll owner,
+both native core test targets, every other agent's task and the entire additive
+milestone. Board-reported Image paths during the merge were verified byte for
+byte as inherited main inputs; after the merge our slot has no conflict.
+
+The root repeats the final frozen bundle `7944e7ca` independently on rebuilt
+host `840d7f3e`: all 28 controls pass with full runtime and pointer cleanup.
+Report derivation reconfirms the interruption ordering, diagonal active-axis
+momentum, orientation retirement and mounted neutral options. The 44-check list
+oracle and three-failure sabotage remain effective. The root independently
+verifies the 80-check Accessibility and 74-check Image oracles, every final
+capture hash and the clipping pixels from the new horizontal frame. Other
+affected regressions and the four graphical checks pass on the same frozen host.
+
+All 123 native producers, 18 bundle producers and six installed RN inputs match
+the committed sources. Updated contracts pass 351 Node and 13 Python tests;
+static, type, publication and dashboard gates pass. No new source file crosses
+the thousand-line boundary. No additional scroll flag, owner or compatibility
+protocol was introduced by integration. The prior 28-check negative pair is
+preserved with its own bundle and identity, without mixing it into this run.
+
+See [the final independent integration receipt](../evidence/scroll-view/root-images-integration.json).
+Local thermo-nuclear review is satisfied for this first desktop slice. Hosted
+CI, CodeRabbit and acceptance remain separate pending steps; the full GF-14
+contract remains open.
