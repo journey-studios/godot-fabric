@@ -650,5 +650,199 @@
       "dashboardTests": 8,
       "nodeFailures": 0
     }
+  },
+  "postReview": {
+    "at": "2026-10-08T03:32:55.640Z",
+    "base": {
+      "commit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+      "note": "The receipt above is what 552fb56 executed, with the counts of that run: 74 headless checks, 15 mutations of the genuine report, 17 headless and 25 capture checks of the example, the control with 3 normative failures and the sabotages with 12 and 2. Every pin above is unchanged and still equals git show 552fb56:<path>. This section describes the tree after the review of PR #56: the one commit listed in implementation changes six files, and pins names the SHA-256 each has at that commit, equal to git show <commit>:<path>. The merges of main after 552fb56 (#51, #55, #53 and #54) carry other slices' files and no change of this slice's behavior"
+    },
+    "implementation": [
+      {
+        "changeSet": "A",
+        "commit": "257b0bdd988a3148b879d62104148266e26b3d74",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74",
+        "subject": "fix(images): Start loads before observing and publish assets after the bundle",
+        "files": [
+          "native/image_view.cpp",
+          "sdk/toolchain/asset-plugin.mjs",
+          "sdk/toolchain/build.mjs",
+          "tests/asset-plugin.test.mjs",
+          "tests/images-native.test.mjs",
+          "tests/images-oracle.mjs"
+        ]
+      }
+    ],
+    "mergedTree": {
+      "commit": "37929dac3127a44e07c805308e740b93237ec1be",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/37929dac3127a44e07c805308e740b93237ec1be",
+      "note": "The merge of main (#53 agents board, #54 Text) on top of the review commit; the lanes below ran again on it. Earlier merges (#51 Modal and #55 device services) did the same on their own trees with the same counts",
+      "hostSha256": "4d7bd92cb4155878c783ca040fc3feb28831aa2a41fbeb1cb92adfc84ec2cc73"
+    },
+    "causes": [
+      {
+        "source": "CodeRabbit on PR #56, native/image_view.cpp, resubscribe",
+        "finding": "addObserver answers inside the call when the request already holds a response (Completed or Failed), so onLoad or onError and onLoadEnd could reach JS before the onLoadStart that the view emitted after swapping observers"
+      },
+      {
+        "source": "CodeRabbit on PR #56, sdk/toolchain/asset-plugin.mjs, the assets cache",
+        "finding": "A pipeline reused across builds (watch rebuilds) kept the hashes and sizes of the first build and the assets the entry no longer asked for"
+      },
+      {
+        "source": "CodeRabbit on PR #56, sdk/toolchain/build.mjs and the asset plugin's stage commit",
+        "finding": "The commit placed the asset files, replaced the manifest and retired the files only the previous manifest named before the builder renamed the bundle, so the bundle still in place lost files if its own rename failed"
+      }
+    ],
+    "changes": {
+      "loadStart": "GodotImage::resubscribe emits onLoadStart (its counter, its recorded event and the JS event) before it removes the old observer, assigns the state and adds the new observer; the removal, the assignment and the addition are as they were, and so is the status set before the emission",
+      "orderRule": "tests/images-oracle.mjs finds every list of events in the report by its shape (214 lists in the current report: 165 logs of JS and 49 of the views' own) and requires RN's order in each: nothing before the first loadStart, progress, one result (load or error), then loadEnd, with a loadStart allowed after a loadStart or a progress because a swapped-away request starts the next one",
+      "assetsCache": "the asset plugin clears its assets in onStart, so every build of a reused pipeline describes the files as they are and stages only what it asked for",
+      "assetPublish": "stage's commit became place (the new files go in place; it only adds or replaces a file of the same path) and finish (the manifest goes in place and the files only the previous manifest named are retired); build.mjs runs place before the bundle's rename and finish after it, and publishAssets runs both in a row"
+    },
+    "unchanged": {
+      "mountGuard": {
+        "note": "The shared mount-liveness guard that the first review round extracted from core_control_signal (Impl::live_mount, 11 lines in native/application_runtime.cpp) is the same bytes at 552fb56, at the review commit and in the merged tree; the Modal input branch that #51 added to core_control_signal reads the mount through it",
+        "sha256OfTheHelperText": "35554e55ca346a7a11227dbaf44c5e1bc3499f86f2fd18a1b7b8d8158102f9c7"
+      },
+      "implementationCommit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9"
+    },
+    "oracle": {
+      "mutationsBefore": 15,
+      "mutationsAfterTheReview": 18,
+      "added": [
+        "no event reaches JS before the loadStart of its request",
+        "no event leaves the view before the loadStart of its request",
+        "a request reports nothing after its loadEnd"
+      ],
+      "limit": "The order rule judges what was reported; no lane drives the path the fix is about. A response the request kept reaches a view only through addObserver of a request that completed or failed before any observer, and no flow reachable from JS puts a view on such a request: RN creates one ImageRequest per ImageState, an Image always forms its own view (ConcreteViewShadowNode::BaseTraits sets FormsView, so it is never flattened and recreated), React never recreates the view of an existing state and the host never recycles views. The probe therefore has no case that mounts an Image on a stored response, and a regression that restored the old order would pass every lane; a seam on GodotImage that replayed a state would be needed to execute it, and none was added to a class the product ships"
+    },
+    "countsAfterTheReview": {
+      "reviewCommitTree": {
+        "hostSha256": "ea3536432fa203619af7331868466fd6f752424ad17414e0adbed0d8958ebc62",
+        "imagesCurrent": 74,
+        "imagesControl": {
+          "checks": 11,
+          "normativeFailures": 3,
+          "structuralChecksPassed": 8
+        },
+        "sabotageMainThread": 12,
+        "sabotageStaleRequest": 2,
+        "imagesCurrentAgain": 74,
+        "assetPluginTests": 10,
+        "assetPluginTestsAdded": 4,
+        "contracts": {
+          "nodeTests": [
+            7,
+            8,
+            297
+          ],
+          "pythonTests": 13
+        },
+        "examples": {
+          "count": 32,
+          "imagesHeadless": 17
+        },
+        "dashboardTests": 8,
+        "staticAnalysis": "passed",
+        "typeCheck": "passed",
+        "publicationScan": "passed"
+      },
+      "mergedTree": {
+        "commit": "37929dac3127a44e07c805308e740b93237ec1be",
+        "hostSha256": "4d7bd92cb4155878c783ca040fc3feb28831aa2a41fbeb1cb92adfc84ec2cc73",
+        "imagesCurrent": 74,
+        "imagesControl": {
+          "checks": 11,
+          "normativeFailures": 3,
+          "structuralChecksPassed": 8
+        },
+        "sabotageMainThread": 12,
+        "sabotageStaleRequest": 2,
+        "imagesCurrentAgain": 74,
+        "textLayout": "1 of 1",
+        "contracts": {
+          "nodeTests": [
+            7,
+            37,
+            301
+          ],
+          "pythonTests": 13
+        },
+        "examples": {
+          "count": 33,
+          "imagesHeadless": 17,
+          "textLayoutHeadless": 18
+        },
+        "dashboardTests": 37,
+        "agentsBoardTests": 29,
+        "staticAnalysis": "passed",
+        "typeCheck": "passed",
+        "publicationScan": "passed",
+        "captureLane": "25 checks with the native renderer; both frames have the SHA-256 of the committed captures (52c7b512 and 3ee69e2b)"
+      },
+      "note": "Lanes of the merged tree run in the order current, control, sabotages, current, because the runner pins its own source; the lanes block below holds the artifacts of that run",
+      "lanesOfTheMergedTree": [
+        {
+          "lane": "current",
+          "nativeHostSha256": "4d7bd92cb4155878c783ca040fc3feb28831aa2a41fbeb1cb92adfc84ec2cc73",
+          "bundleSha256": "2ee6d7f430cc1c5e8bff329ed90d681c2309eadd629dc8c3afef467eefa1e94c",
+          "checks": 74,
+          "passed": 74,
+          "failed": 0,
+          "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+          "reportSha256": "667deae68ea0e64fb0076f5ff6b4854957bdbf30bb135a1e7cc5cf2f4f4d2ed6",
+          "logSha256": "45c3aaf73f90e2bb742daf228322f1af8922f0624f24c84bd96158b7abc9edab"
+        },
+        {
+          "lane": "preceding-host",
+          "nativeHostSha256": "6716da5a18e5a914cb8e3301db1d88402391a32520ebe77ed3d13fc2f8448dd4",
+          "bundleSha256": "2ee6d7f430cc1c5e8bff329ed90d681c2309eadd629dc8c3afef467eefa1e94c",
+          "checks": 11,
+          "passed": 8,
+          "failed": 3,
+          "checkIdDigestSha256": "d28202520cd551772741b54bf1c5c1a1e1102bf292969fad5dbfec6415e48aca",
+          "reportSha256": "6d00c0cd81fdcd7b7d83f84e35ad7eb35d4f52fda153a5f13d61fecc05ce9112",
+          "logSha256": "9a4f7209b5612b214a25ec2bbd0bd2d5658d3cf7fc1e41f73e548665640e4f41"
+        },
+        {
+          "lane": "sabotage-main-thread",
+          "nativeHostSha256": "d135cc096d81a8582085853b4576a71a798ed221bfd566a522ffc33adbb61d50",
+          "bundleSha256": "2ee6d7f430cc1c5e8bff329ed90d681c2309eadd629dc8c3afef467eefa1e94c",
+          "checks": 74,
+          "passed": 62,
+          "failed": 12,
+          "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+          "reportSha256": "24d9d28eb15353ae57c0abe7cdfbaae8eeb9f26d03bd45461cc1caa401d275ed",
+          "logSha256": "4f3d2e43a81a7462a296755642197159f627325afe4504c425489461c6a2504a"
+        },
+        {
+          "lane": "sabotage-stale-request",
+          "nativeHostSha256": "a3dfb9ed7d4ef52288386e0a5c434357ac17f7092ec414d6ccc97769c06ac9f0",
+          "bundleSha256": "2ee6d7f430cc1c5e8bff329ed90d681c2309eadd629dc8c3afef467eefa1e94c",
+          "checks": 74,
+          "passed": 72,
+          "failed": 2,
+          "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+          "reportSha256": "7f647a09b1837c9029b212fe4caf82f4ad0cfd954045561a1913512300d64ed1",
+          "logSha256": "f8acccd60f3d62a56cae931636b858f414728b7ed4191eccd19ae628d81b40a6"
+        }
+      ]
+    },
+    "pins": {
+      "native/image_view.cpp": "c9362d227e4459a4afaee6c5da2e5ada0e1d5aac5b19f19b7da7b4489cbffc62",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "sdk/toolchain/build.mjs": "d07d9c852fbc4a5e710b680c6150f55cf65df7aad276bd947d9f1e2f20c4d5e7",
+      "tests/asset-plugin.test.mjs": "090d51d36677e8382774e253f4bf5b568ec288b1f6c2d3472527518a2890bf99",
+      "tests/images-native.test.mjs": "6fe89c05cf564699acdfc812186132d2f96806afcb86ec7e7bdf92a3d28cd9cc",
+      "tests/images-oracle.mjs": "3c2b75eaf47d007fac965234aaad7796a54f9090cce0b3428277a23d1a2f3214"
+    },
+    "previousPins": {
+      "native/image_view.cpp": "0d9e7789dde054d46c04db5cde2858bd98d5e6f4b032f5fa7b59ece555fa8227",
+      "sdk/toolchain/asset-plugin.mjs": "e64b6f8d63978d86a5c20fd8fdffc7ef5e429b53039e669dbc7eaaaf5420f801",
+      "sdk/toolchain/build.mjs": "3c7fafa8b4292b46d26a84b9a5a75d1021075d95ba9d09d38c23817fe8c13a27",
+      "tests/asset-plugin.test.mjs": "09cd07de369ae1cbcce772797790093bf1a07dff067455e6e255260752ac66d9",
+      "tests/images-native.test.mjs": "85e73a6f74423107df2b4e4440a1b30a6c9978bf5ba0a82ebc3cb12b713ebf32",
+      "tests/images-oracle.mjs": "d48d20e00673dc102a948532ca5a61e8877ec0db24e7084d826002a05e7b6d99"
+    }
   }
 }

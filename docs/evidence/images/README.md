@@ -21,6 +21,47 @@ pipeline C++ do próprio RN: o `ImageShadowNode` pede a imagem de dentro do layo
 npm run test:images
 ```
 
+> Nota posterior (2026-10-08): depois da revisão do PR #56, o commit
+> [`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74) mudou seis arquivos e
+> manteve as contagens da execução em `552fb56`, exceto a das mutações do oráculo. O guarda de vida do mount que a primeira
+> rodada de revisão extraiu do `core_control_signal` (`Impl::live_mount`) continua o mesmo, byte a
+> byte, em `552fb56`, em `257b0bd` e na árvore mesclada; o ramo de entrada do Modal que o #51
+> acrescentou ao `core_control_signal` lê o mount por ele. O que o CodeRabbit pediu e foi aceito:
+>
+> - o `GodotImage::resubscribe` agora avisa o JS com o `onLoadStart` antes de trocar o
+>   observador, porque o `addObserver` responde dentro da chamada quando o pedido já guarda uma
+>   resposta (concluída ou falha), e o `onLoad` ou o `onError` e o `onLoadEnd` podiam chegar antes
+>   do `onLoadStart`;
+> - o oráculo passou a julgar a ordem de todas as listas de eventos do relatório (214 no relatório
+>   atual, 165 logs do JS e 49 das próprias views), com três mutações novas do relatório genuíno,
+>   todas recusadas: o oráculo recusa agora 18, e não 15. **Limite:** essa regra julga o que foi
+>   informado, e nenhuma lane percorre o caminho que a correção protege: nenhum fluxo alcançável
+>   pelo JS põe uma view num pedido que já guarda uma resposta (o RN cria um `ImageRequest` por
+>   `ImageState`, uma Image sempre forma a própria view e nunca é achatada e recriada, o React não
+>   recria a view de um state existente e o host não recicla views), então a sonda não tem um caso que
+>   monta uma Image sobre uma resposta guardada, e uma regressão que devolvesse a ordem antiga passaria
+>   por todas as lanes; executá-la exigiria uma seam na `GodotImage` que reaplicasse um state, e
+>   nenhuma foi acrescentada a uma classe que o produto distribui;
+> - o plugin de assets limpa o cache `assets` no `onStart`, de modo que cada build de um pipeline
+>   reaproveitado (rebuilds do modo watch) descreve os arquivos como estão e prepara só o que pediu;
+> - a publicação dos assets passou a ter duas etapas: `place` põe os arquivos novos no lugar antes
+>   do bundle (só acrescenta, ou troca um arquivo do mesmo caminho) e `finish` põe o manifesto no
+>   lugar e retira os arquivos que só o manifesto anterior nomeava, depois do `rename` do bundle no
+>   `build.mjs`; o bundle antigo nunca perde um arquivo antes de o novo ser publicado.
+>
+> Arquivos mudados depois de `552fb56`, com o SHA-256 em `257b0bd` (o `postReview` do
+> [recibo](report.json) guarda os dois lados): `native/image_view.cpp` (`c9362d22…`),
+> `sdk/toolchain/asset-plugin.mjs` (`c995c9cd…`), `sdk/toolchain/build.mjs` (`d07d9c85…`),
+> `tests/asset-plugin.test.mjs` (`090d51d3…`, 10 testes, 4 novos), `tests/images-native.test.mjs`
+> (`6fe89c05…`) e `tests/images-oracle.mjs` (`3c2b75ea…`). Reexecutado na árvore de `257b0bd`
+> (host `ea353643`) e de novo na árvore mesclada `37929da` (host `4d7bd92c`, depois de #53 e #54): a
+> lane atual passa 74/74, o controle falha os mesmos 3 normativos entre 11 checks, as sabotagens
+> falham 12 e 2 e a lane atual passa 74/74 outra vez; o `test:contracts` passa (7, 8 e 297 testes
+> Node em `257b0bd`; 7, 37 e 301 na árvore mesclada; 13 Python), os exemplos passam (32, depois 33,
+> com o `images` em 17 checks), a captura com o renderizador passa os 25 checks e os dois quadros têm
+> os mesmos SHA-256 dos commitados. Esta página, as contagens e o restante do recibo descrevem a execução
+> em `552fb56`, e cada pin anterior continua igual a `git show 552fb56:<arquivo>`.
+
 ## O que o RN faz
 
 O `ImageShadowNode` pede a imagem dentro do `layout`: o `updateStateIfNeeded` escolhe a fonte
