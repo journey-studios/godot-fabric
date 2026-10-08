@@ -50,7 +50,7 @@ func step_name(index: int, step: Dictionary) -> String:
 func intents_agree_with_snapshot(game: RefCounted, snapshot: Dictionary) -> bool:
   var agree := true
   for action: Dictionary in snapshot.actions:
-    var result: Dictionary = game.duplicate_game().callv(action.id, action.args.values())
+    var result: Dictionary = game.duplicate_game().callv(action.id, action.args)
     agree = agree and result.ok == action.enabled and (result.ok == 1 or result.code == action.reason)
   var slot := mini(snapshot.city.queue.size(), snapshot.city.queue_max - 1)
   for item: Dictionary in snapshot.city.items:
