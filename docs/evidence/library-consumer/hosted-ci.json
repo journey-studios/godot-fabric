@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "scenario": "library-consumer",
+  "status": "verified-completed-hosted-workflow-and-headless-libraries-consumer-artifact",
+  "at": "2026-10-08T19:47:52.110919+00:00",
+  "run": {
+    "id": 37797780642,
+    "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/69",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-08T15:04:56Z",
+    "updatedAt": "2026-10-08T16:03:06Z",
+    "jobs": [
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113381636154,
+        "runAttempt": 1,
+        "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "startedAt": "2026-10-08T15:04:59Z",
+        "completedAt": "2026-10-08T15:11:31Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642/job/113381636154"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113381636200,
+        "runAttempt": 1,
+        "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "startedAt": "2026-10-08T15:04:59Z",
+        "completedAt": "2026-10-08T15:08:08Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642/job/113381636200"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113381635875,
+        "runAttempt": 1,
+        "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "startedAt": "2026-10-08T15:06:07Z",
+        "completedAt": "2026-10-08T15:13:46Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642/job/113381635875"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113381636304,
+        "runAttempt": 1,
+        "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "startedAt": "2026-10-08T15:10:04Z",
+        "completedAt": "2026-10-08T16:02:37Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642/job/113381636304"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113409137010,
+        "runAttempt": 1,
+        "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "startedAt": "2026-10-08T16:02:40Z",
+        "completedAt": "2026-10-08T16:03:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780642/job/113409137010"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "native-cold-start": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "parity-comparison": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "reference-android": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "reference-ios": "57e41f2e89a774eb79752cc87cd5e2096d2f3041"
+    },
+    "contractsJob": {
+      "nodeContractTests": [
+        {
+          "tests": 7,
+          "pass": 7,
+          "fail": 0
+        },
+        {
+          "tests": 43,
+          "pass": 43,
+          "fail": 0
+        },
+        {
+          "tests": 321,
+          "pass": 321,
+          "fail": 0
+        }
+      ],
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "libraryConsumerLane": {
+        "file": "tests/library-consumer.test.mjs",
+        "tests": 15,
+        "passed": 15,
+        "topLevel": [
+          "godotFabric.tailwind is closed JSON, and adapters stay the only selection",
+          "the SDK owns the content scan: braces expand inside the project and nothing outside it is read",
+          "the libraries consumer builds, type-checks and bundles through the relocated SDK alone"
+        ],
+        "subtests": [
+          "the bundle holds the original native interop and the SDK's SVG facade, and nothing of the laboratory",
+          "the build report records the style step and the exact releases",
+          "the compiled styles register with the one interop runtime and answer every class the consumer uses",
+          "the same inputs build the same bundle",
+          "a missing optional peer does not fail the build, and the SDK's facade is the control that proves it",
+          "a tailwind.config.js is refused and names the declarative field",
+          "CSS other than the Tailwind entry is still refused",
+          "the Tailwind declaration must exist, stay inside its fields and name only project globs",
+          "the content scan stays inside the project: braces cannot leave it, a link cannot lead out, and valid braces still build",
+          "the installed interop must be the release the SDK compiles with",
+          "className is a type error until the project opts in, and only for the four certified components",
+          "the consumer builds again after every rejected request"
+        ],
+        "committedTests": 15,
+        "namesEqualTheTestFileAtTheRunHead": true,
+        "meaning": "the three top-level tests and the twelve subtests of the libraries consumer test, in the one `npm run test:contracts` step"
+      },
+      "parityInventory": "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values",
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 52.55,
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:charts": {
+        "step": "Run npm run test:charts",
+        "number": 16,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T15:23:33Z",
+        "completedAt": "2026-10-08T15:23:36Z"
+      },
+      "test:consumer": {
+        "step": "Run npm run test:consumer",
+        "number": 112,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T15:55:37Z",
+        "completedAt": "2026-10-08T15:58:34Z"
+      },
+      "test:consumer:libraries": {
+        "step": "Run npm run test:consumer:libraries",
+        "number": 113,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T15:58:34Z",
+        "completedAt": "2026-10-08T16:00:06Z"
+      }
+    }
+  },
+  "implementationCommit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+  "committedStateExercised": {
+    "source": "postReview",
+    "commit": "91c545d765e570809c7fbf3211ce9988574ff9d4",
+    "reviewCommits": [
+      "91c545d765e570809c7fbf3211ce9988574ff9d4"
+    ],
+    "libraryConsumerTests": 15,
+    "nativeChecks": 46,
+    "bundleSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+    "note": "the report's top level describes the implementation commit fc0f428 (13 JS tests, bundle 7bd32171); the hosted run exercises the tree after review, which the report records in postReview (15 JS tests, bundle 10ec3baa)"
+  },
+  "pullRequest": {
+    "number": 69,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/69",
+    "title": "feat(sdk): Build NativeWind and Chart Kit consumers through the public SDK",
+    "headSha": "8436a450f37b4aae81d54986120face8dd40e5fb",
+    "baseSha": "41fbe22bc49e21fb10aa61620e59c3d0d1da96d2",
+    "squashMergeCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "mergedAt": "2026-10-08T15:04:52Z",
+    "headTreeSha": "ff97359414d0364ca6282a96d534e50b65f89fbd",
+    "mainTreeSha": "ff97359414d0364ca6282a96d534e50b65f89fbd",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "commits": [
+      {
+        "sha": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+        "subject": "feat(sdk): Build NativeWind and Chart Kit consumers through the public SDK"
+      },
+      {
+        "sha": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+        "subject": "docs(sdk): Pin executed library consumer evidence and captures"
+      },
+      {
+        "sha": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+        "subject": "docs(images): Record the visual image slice's hosted receipts"
+      },
+      {
+        "sha": "8ffc6eacd2c64c31a2d12cbc9e3b5ad32b6c6e42",
+        "subject": "docs(dashboard): Record the library consumer slice and #66 receipts"
+      },
+      {
+        "sha": "7703cc765df09785cac19bd051e333907b648a83",
+        "subject": "Merge origin/main into feat/library-consumer"
+      },
+      {
+        "sha": "e235ade127117781c70a92a46efe64af7f79d673",
+        "subject": "Merge origin/main into feat/library-consumer"
+      },
+      {
+        "sha": "91c545d765e570809c7fbf3211ce9988574ff9d4",
+        "subject": "fix(sdk): Keep the Tailwind content scan inside the project"
+      },
+      {
+        "sha": "8436a450f37b4aae81d54986120face8dd40e5fb",
+        "subject": "docs(sdk): Record the library consumer's post-review change"
+      }
+    ],
+    "changedFiles": 54,
+    "additions": 6469,
+    "deletions": 116
+  },
+  "actualCheckout": {
+    "sha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "parents": [
+      "41fbe22bc49e21fb10aa61620e59c3d0d1da96d2"
+    ],
+    "treeSha": "ff97359414d0364ca6282a96d534e50b65f89fbd",
+    "treeEntries": 1700,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree of that commit is compared with the local tree and with every blob of the local run head"
+  },
+  "artifacts": {
+    "slice": {
+      "id": 11562547148,
+      "name": "independent-libraries-consumer",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 340299,
+      "zipSha256": "c266c46f5967b6577b55d6e0e408df8846303f2f665ed3e5d523bc3cdbc81f24",
+      "zipSha256EqualsUploadLogDigest": true,
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadedAt": "2026-10-08T16:01:33Z",
+      "expiresAt": "2027-01-06T15:04:56Z",
+      "fileCount": 15,
+      "uploadPaths": [
+        "build/consumer-libraries/*.json",
+        "build/consumer-libraries/*.log",
+        "build/consumer-libraries/*-bundle.js"
+      ],
+      "filesMatchTheWorkflowUploadPaths": true,
+      "files": {
+        "baseline-bundle.js": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+        "bundle-report.json": "46a0c956e937e25d358a45b9583dcbc39a7f8faa1452eacf83e4ef25382a379a",
+        "editor-cold.log": "cf4c86a3c8e5f0fd4bb0778f995d785359accad9ad2600a17de6e5e8b12461df",
+        "headless.json": "49907ac337a812b45e0dfffa5105267f6e1085c73bffe83a5e4d57d014bc1118",
+        "headless.log": "ab7d83ee9e8cb764a496702201e36347ef7d9d1a37ced3a793db00d41127a74c",
+        "install.log": "d28ab8fe49ae48b3163338631d9cee1122a4789f9acd49b920c677400d12f180",
+        "installed.json": "5d29d6d0aa33ceca298114040c598b067911af70473419c233282126cfbd6359",
+        "nativewind-root.log": "62640d12402a90e7df7c8bb3b27784929427b033bbe4ec029371d210a1e9b733",
+        "offline.log": "8d91431ca5de0b7a558778b2c62c576716638f142b537180a18325024887c4c1",
+        "provision.log": "2008a14fceadf131493ef60596a7bbe5705330633c998be3b9c96e0e9425054f",
+        "recovery.log": "2fe49c7fa8fcc4979134eb185dc3f2fb4d26dffd3083e289e2ae9b9bce9b3b74",
+        "report.json": "3d8dae9cfc23962b40d9d5cd8a90121cc490d44fa9028dd755419006b3c5a9bb",
+        "sabotage-optional-peer.log": "14f25bb96fae67177a8d51158f948546d3b59354b14f529ef1bcfc222a43b2d6",
+        "sdk-manifest.json": "aa19f447338dc4ba8f76673fa6f9bb8bc0b16d9a7f2efd6091b43946496d6eed",
+        "tailwind-config.log": "926bca78114c20a260cb2e931a87efd6ac64e47c75b0826accb29dc7e49708eb"
+      }
+    },
+    "minimalConsumer": {
+      "id": 11562791811,
+      "name": "independent-consumer",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 551760,
+      "zipSha256": "48c5bbe80764eaf9306f5bb9a6b91884e0c978121e4cea5cbc0363b09aefa377",
+      "zipSha256EqualsUploadLogDigest": true,
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadedAt": "2026-10-08T16:01:31Z",
+      "expiresAt": "2027-01-06T15:04:56Z",
+      "fileCount": 37,
+      "uploadPaths": [
+        "build/consumer/*.json",
+        "build/consumer/*.log",
+        "build/consumer/*-bundle.js"
+      ],
+      "filesMatchTheWorkflowUploadPaths": true,
+      "files": {
+        "alias-outside.log": "8031826090610804f0aa48fb9856633448601989937c4598881d094a5aaa44bd",
+        "alias-package-coexistence.log": "c1d6d899daa50e8e0fc46120dac2535e56e860d5288712795199bcb3c05eea23",
+        "alias-package-native.json": "491bc851098268360032e76bd44c41e7606b6c8f80a2dab08670303956278c79",
+        "alias-package-native.log": "4ff0f5f83777c164e6a2d0a14e06779f323d677c594cabb1f7271c65947b22ef",
+        "alias-package-wrong-type.log": "498896cf5808ce071166486160b87876950ef10433c1a3648dd12445dc36cb6e",
+        "alias-symlink.log": "8031826090610804f0aa48fb9856633448601989937c4598881d094a5aaa44bd",
+        "baseline-bundle.js": "1f51ad030118a011f26bb766c38ae77de9296efabc780a976596a7f88b140ba4",
+        "bundle-report.json": "2f001ec7b43a91fe6b042e8c8c8ef891c7af17f4564dca3ee20d0ab55169e8fb",
+        "editor-cold.log": "a8ac61aefb6efdc7d109b1634c1f8edc280a4c8d60cb1fb3a0873b4743c7b7af",
+        "escaped-output.log": "c639b7ef84482e51a184028629425f454c49ab931325352fec9efe356a084c8f",
+        "headless.json": "df2264a3290daeb23f26714b5bf0ab725aff994d944471e7cda1936f99f0d562",
+        "headless.log": "bf45d975b74c6a26aec28a6f19f6721d766029976dbfaaaaae707bd667f378c0",
+        "invalid-resource.log": "10ea2b8ea97d40c9bbb668a09dc91d53c0f37bb1d80e0cdc64a4a1d4ce8db5c9",
+        "local-alias-native.json": "b72edc629ae1e9c669ab433e1be816ef6fdf023c1fef40e8cb93378f665dac78",
+        "local-alias-native.log": "649489a2083036b8fd7da7b06bebcbbc04935d540eadfd20f3f0707e70b46a6b",
+        "local-alias.log": "4f0352837755ce34641f54583aee2ccf5fb9ee2ddfb9362063d7426430219be7",
+        "missing-dependency.log": "814ce31698a401c8d35440fb3e4fa869ac164c607e895493b01e896dcfc71aa0",
+        "missing-toolchain.log": "b7773257c759f50d0f79e2a9e6237eeafe97907d237a00e741d7190f60c7a752",
+        "nested-dependency-native.json": "e460ae830bf9ca0161bff4aa8fb77797ab181c34d8183aa4d72e30a3fe08cb5f",
+        "nested-dependency-native.log": "bf0ec9f6d9e27179157ffc265d01460359a90a4b9b4657aa1f8584dc41213393",
+        "nested-dependency.log": "5337e6effe8f70e324e9e24c5eacf899467373ead437466d0a7980ccadd24edb",
+        "offline.log": "cfd424126cf039031b7e55d55d5e2d3c28b418b609b2ab411d3f4f0b04409279",
+        "project-library-native.json": "3d4fc43291e38d4132ef389978a419be4308b16689184af4cf9732b4e34e9fe4",
+        "project-library-native.log": "422c2d621f359d7afb18398cbe1bfc3234f06c8f45a9e241be9ea2cf110f86a5",
+        "project-library.log": "1e29b3615b5df00f80598fe26cfb14e602d4b1044118af5d1bf84327dca672e1",
+        "provision.log": "80fcef21b5680a8d62bd10cda73e14624ce9e176cdf49a62018fa6f8aba6984a",
+        "recovered-bundle.js": "1f51ad030118a011f26bb766c38ae77de9296efabc780a976596a7f88b140ba4",
+        "recovery.log": "3e5bcf877a49133c2df2d897806c432411f03db3d7cb4d48e7288fad7695fbbb",
+        "report.json": "422fba39e04fbea95c14cf8501ddce662f4490796fdb64dc2eb752c8bf6c55fc",
+        "sdk-manifest.json": "aa19f447338dc4ba8f76673fa6f9bb8bc0b16d9a7f2efd6091b43946496d6eed",
+        "sdk-type-spoof.log": "fd56150fd11ac620ee0c1174bdab4e887afb8df04c379b60a9393d3b92195a31",
+        "suffix-divergence.log": "97580cc8833cfd0456372f5d5441b6ff69590dce484cf3e0793c60e7062e18a3",
+        "syntax.log": "39f0911d9b3916e3c83c7a3271e32c2fa00e2abe3fd92d220d07d27d26eab6ef",
+        "undeclared-direct-dependency.log": "782570645d3c9dbec065601e17cb957aad2c0805850126a35a87326a3bba143c",
+        "unsupported-babel.log": "945dc56527539aa6d7d585f8237f1682705dac722d0fc24335eed782f3d5478c",
+        "unsupported-type.log": "65973b5200b2dc11070ef7b8fe845ee823a430e16a3f5673e8eb9ef3f1f93c3e",
+        "version.log": "cdd773955373219149f10e06f79c1a0b784952f7dfb49589e3c8dfc308223079"
+      }
+    },
+    "charts": {
+      "id": 11559953711,
+      "name": "native-charts",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 12556,
+      "zipSha256": "211ac8f08f2bf465e347d594adc29dae2b4b35b1d8721a998a30221e0b85df49",
+      "zipSha256EqualsUploadLogDigest": true,
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadedAt": "2026-10-08T15:23:38Z",
+      "expiresAt": "2027-01-06T15:04:56Z",
+      "fileCount": 3,
+      "uploadPaths": [
+        "build/chart-unsupported.log",
+        "build/svg-mount-recovery.log",
+        "build/svg-mount-recovery-report.json"
+      ],
+      "filesMatchTheWorkflowUploadPaths": true,
+      "files": {
+        "chart-unsupported.log": "a33b37f72547e30809fa97d113f47b7e77adfa2461a287f94157667e7b3ee12e",
+        "svg-mount-recovery-report.json": "3a23500979de8edd25a9ac78905adaab5a5a6dfec6eca9c304945cfe627c386a",
+        "svg-mount-recovery.log": "562d64b1d0522b37fd4b304c3d8bbdb9eb675174ea446c9c8a117e103b6bc32f"
+      }
+    }
+  },
+  "verification": {
+    "libraries": {
+      "command": "npm run test:consumer:libraries",
+      "harness": {
+        "checks": 16,
+        "passed": 16,
+        "uniqueIds": true,
+        "checkIdDigestSha256": "86eed1935601ad278c06b7f667bbe497ac33bece39411545bc178608757da256",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline",
+        "committedChecks": 19,
+        "committedCheckIdDigestSha256": "e54d6d7617bf53fa6b248901dddeef9575effeb49baf4e317181d6ee5d41f86b",
+        "hostedPlusTheThreeFlagOnlyChecksEqualsCommitted": true,
+        "flagOnlyChecks": [
+          "The headed run sampled one card pixel per capture",
+          "The reduced consumer that only imports NativeWind fails on the SDK of 9c5d0eb at react-native-safe-area-context",
+          "The full consumer is rejected by the SDK of 9c5d0eb"
+        ],
+        "flagOnlyBecause": "the first needs --capture and the other two --control-ref, which a CI checkout cannot honor (it holds no other ref)"
+      },
+      "native": {
+        "checks": 46,
+        "passed": 46,
+        "uniqueIds": true,
+        "checkIdDigestSha256": "3cfe2419b458c53e92f64c33e78cb0a0a6759bf6d6caffa8d8e6b1ef7815314b",
+        "committedChecks": 46,
+        "committedCheckIdDigestSha256": "3cfe2419b458c53e92f64c33e78cb0a0a6759bf6d6caffa8d8e6b1ef7815314b",
+        "checkIdsEqualCommitted": true,
+        "displayServer": "headless",
+        "marker": "CONSUMER_LIBRARIES_CHECK_PASSED: 16 build/install checks; 46 native checks",
+        "headlessLogPassLines": 46,
+        "validationMarkerInLog": true
+      },
+      "releases": {
+        "libraries": {
+          "nativewind": "4.2.7",
+          "react-native-css-interop": "0.2.7",
+          "tailwindcss": "3.4.17",
+          "react-native-chart-kit": "7.0.4",
+          "react-native-svg": "15.15.5"
+        },
+        "equalCommitted": true,
+        "installedPackages": 112,
+        "committedInstalledPackages": 112,
+        "lockfileSha256": "3aea116dc76f6b841dc720333d850708a5cb6ca97ac0c34aeb7506f2d1d06ebf",
+        "committedLockfileSha256": "3aea116dc76f6b841dc720333d850708a5cb6ca97ac0c34aeb7506f2d1d06ebf"
+      },
+      "bundle": {
+        "sha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+        "recordedInPostReview": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+        "equalsPostReview": true,
+        "reportSha256Equals": true,
+        "inputs": 562,
+        "committedInputs": 562,
+        "sdkSourceCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "bundleBytes": 1424473,
+        "committedBytes": 1424473,
+        "bundleFileSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2"
+      },
+      "styles": {
+        "hosted": {
+          "entry": "global.css",
+          "content": [
+            "./ui/**/*.{ts,tsx}"
+          ],
+          "contentFiles": 4,
+          "darkMode": "media",
+          "rules": 55,
+          "compiledSha256": "212765e09a93dfe6354ebbdc794d0154fe7ca72c0398c1718c9b295e94e62ae4",
+          "nativewindOs": "godot",
+          "inlineRem": 14,
+          "tailwind": "3.4.17",
+          "nativewind": "4.2.7",
+          "reactNativeCssInterop": "0.2.7"
+        },
+        "compiledSha256EqualsCommitted": true,
+        "rules": 55,
+        "contentFiles": 4
+      },
+      "sdkManifest": {
+        "sourceCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "sourceDirty": false,
+        "node": "22.23.3",
+        "godot": "4.7.2",
+        "nativeSha256": "64d61664376a612b4886e9a1b2c4793278d1610357a66a8d21423e36afbe9e91",
+        "typeChecker": "tsc-rs"
+      },
+      "logsOfTheRefusals": {
+        "tailwindConfigNamesTheDeclarativeField": true,
+        "optionalPeerSabotageFailsAtSafeAreaContext": true
+      }
+    },
+    "minimalConsumer": {
+      "command": "npm run test:consumer",
+      "marker": "CONSUMER_CHECK_PASSED: 30 build/ownership checks; 40 native checks",
+      "buildAndOwnershipChecks": 30,
+      "nativeChecks": 40,
+      "allPassed": true,
+      "committed": {
+        "buildAndOwnershipChecks": 30,
+        "nativeHeadlessChecks": 40
+      }
+    },
+    "charts": {
+      "command": "npm run test:charts",
+      "tap": {
+        "ok": [
+          "Unmodified chart rotated labels fail the native CLI with an explicit unsupported contract",
+          "A native SVG refresh failure finalizes Fabric mounting and keeps later SVGs live",
+          "SVG subset preserves path syntax, SVG casing, zero and text baseline",
+          "Unsupported native contracts fail instead of disappearing from a chart"
+        ],
+        "tests": 4,
+        "pass": 4,
+        "fail": 0
+      },
+      "committedTests": 4,
+      "artifactFiles": [
+        "chart-unsupported.log",
+        "svg-mount-recovery-report.json",
+        "svg-mount-recovery.log"
+      ]
+    }
+  },
+  "pins": {
+    "sourcePinsRecordedAtFc0f428": 32,
+    "equalAtTheRunHead": 25,
+    "differAtTheRunHead": 7,
+    "differing": {
+      "sdk/toolchain/tailwind-plugin.mjs": {
+        "pinAtFc0f428": "d587a8082bbd55f02a81dc1872c9365b64f172beccdac13c3298d0874c136e63",
+        "sha256AtRunHead": "d6a399285d4bff0a7877ae7f41e6085d381f5b22ef57270bf74e7be957318fe1",
+        "equalsPostReviewPin": true,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "91c545d fix(sdk): Keep the Tailwind content scan inside the project"
+        ]
+      },
+      "types/react-native.ts": {
+        "pinAtFc0f428": "f52ecd926942e1f6e6f0523d63f3120baf31f14a2f52f0dd7c6571a2b834ba7f",
+        "sha256AtRunHead": "154106a6c4f4a77f0682316cc0a81588694739499b7da93a7795afefb7a4ebb9",
+        "equalsPostReviewPin": false,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "7703cc7 Merge origin/main into feat/library-consumer",
+          "b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+        ]
+      },
+      "tests/library-consumer.test.mjs": {
+        "pinAtFc0f428": "5404f800e4ca065ad979b34e621b225f346e985cc78dfa4530faa129ca5eb547",
+        "sha256AtRunHead": "e240a8c5f3d1de66be71a7383bc79c27024d0927babd83526c500c03f822e944",
+        "equalsPostReviewPin": true,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "91c545d fix(sdk): Keep the Tailwind content scan inside the project"
+        ]
+      },
+      "tests/types/consumer.tsx": {
+        "pinAtFc0f428": "3adac0668049dc392d5a44c70366f049df4ba7b9a199ebf2a116210733a5dc7b",
+        "sha256AtRunHead": "8ec86f4224e983dc0d2cfb44967d8927115cb345e2c6b393eb33fd3d4b2efb66",
+        "equalsPostReviewPin": false,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "7703cc7 Merge origin/main into feat/library-consumer",
+          "b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+        ]
+      },
+      "package.json": {
+        "pinAtFc0f428": "f371baf2cf65cea0b9dc890cb9e5ef181e186f5854653b42f223e701074755e4",
+        "sha256AtRunHead": "bf95d98bccaed3e760df81404dcf2cfbb91228ef5cca6c6a222497458958e166",
+        "equalsPostReviewPin": false,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "e235ade Merge origin/main into feat/library-consumer",
+          "41fbe22 feat(accessibility): Announce to the screen reader through AccessKit (#68)",
+          "7703cc7 Merge origin/main into feat/library-consumer",
+          "b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+        ]
+      },
+      ".github/workflows/contracts.yml": {
+        "pinAtFc0f428": "71295bc7442981b663190c9ffa3c576e461d9f8894bee4a9e03e2bbd1d6b9e16",
+        "sha256AtRunHead": "c58adc29862440952e9560bfa84faef2b2d7bd52fe3f490fd2165421c16ab311",
+        "equalsPostReviewPin": false,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "7703cc7 Merge origin/main into feat/library-consumer",
+          "b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+        ]
+      },
+      ".fallowrc.json": {
+        "pinAtFc0f428": "d9f8aacd6f2ce73beca349e187833b5562ec289cf14944ec5ecc6aeded226671",
+        "sha256AtRunHead": "29208edd7927144c342748f37d171fb9adc988a7e796059bfcc95b4d5632dcd9",
+        "equalsPostReviewPin": false,
+        "commitsThatTouchedItAfterFc0f428UpToTheReview": [
+          "7703cc7 Merge origin/main into feat/library-consumer",
+          "b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+        ]
+      }
+    },
+    "postReviewPins": {
+      "sdk/toolchain/tailwind-plugin.mjs": {
+        "postReviewPin": "d6a399285d4bff0a7877ae7f41e6085d381f5b22ef57270bf74e7be957318fe1",
+        "sha256AtRunHead": "d6a399285d4bff0a7877ae7f41e6085d381f5b22ef57270bf74e7be957318fe1",
+        "equal": true
+      },
+      "tests/library-consumer.test.mjs": {
+        "postReviewPin": "e240a8c5f3d1de66be71a7383bc79c27024d0927babd83526c500c03f822e944",
+        "sha256AtRunHead": "e240a8c5f3d1de66be71a7383bc79c27024d0927babd83526c500c03f822e944",
+        "equal": true
+      },
+      "sdk/README.md": {
+        "postReviewPin": "927769d9a8bd6bcf8469099db04da4acf14e27dcce6a421821610faadd4ef009",
+        "sha256AtRunHead": "927769d9a8bd6bcf8469099db04da4acf14e27dcce6a421821610faadd4ef009",
+        "equal": true
+      },
+      "consumers/libraries/README.md": {
+        "postReviewPin": "f8b60aaf952e8d768e354a44ba46c1c59f25770a7e559b143109bce46df7603b",
+        "sha256AtRunHead": "f8b60aaf952e8d768e354a44ba46c1c59f25770a7e559b143109bce46df7603b",
+        "equal": true
+      }
+    },
+    "filesThatDifferBetweenTheExecutedReviewTreeAndThePullRequestHead": [
+      "ROADMAP.md",
+      "docs/evidence/library-consumer/README.md",
+      "docs/evidence/library-consumer/report.json"
+    ],
+    "meaning": "The hosted run executes main 57e41f2, whose tree equals the PR head 8436a45. The record executed the review commit 91c545d; 8436a45 differs from it in documents only. Of the 32 sources the first record pinned at fc0f428, the ones that differ at the run head were changed by the review commit (the content scan) and by the merges of main #67 and #68; the postReview pins equal the run head."
+  },
+  "limits": [
+    "All five jobs completed successfully in attempt 1; this audit certifies the headless libraries lane (46 native checks and the 16 build and install checks), the JS lane of the contracts job (15 tests) and the unchanged minimal consumer and charts steps of the hosted run.",
+    "The hosted job runs `npm run test:consumer:libraries` without `--capture` and without `--control-ref`: the renderer lane (58 checks, 12 of them over captured frames) and the four captures remain local evidence, and so does the control on main's SDK (9c5d0eb). The retained optional-peer sabotage is one of the 16 hosted harness checks and passed.",
+    "The 16 hosted harness checks are the committed 19 without the three that need those flags; the hosted native checks are the committed 46, with the same ids in the same order.",
+    "The hosted SDK was built by the runner: its native host hash and Node archive are the runner's, not the local host's (a231884f in the first record, 0d011e05 in the review record). The bundle is identical to the one the postReview records: the toolchain is JavaScript and the native host is not an input of the bundle.",
+    "The raw logs and the artifact files are not copied into the repository: the receipt pins the artifact zip's SHA-256 and every file's SHA-256 (the artifact expires on the date above).",
+    "GF-27 is still open apart from its first-slice checkpoint: className on TextInput, following the system theme, font scaling, the rest of the SVG contract, the other Chart Kit charts, the P2 ports and other platforms are not covered by this run.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "className exists on View, Text, Image and Pressable only; TextInput, Switch, lists and the rest are type errors",
+    "darkMode is media; the manual override is certified, the OS theme is not (the headed host feeds Appearance with it, so the scene pins light first)",
+    "NativeWind's rem is 14; fontScale, rem scaling and PixelRatio are not exercised",
+    "Reanimated animations fail at the facade (animate-spin is the executed negative); safe-area and screens have no port",
+    "fontFamily accepts NotoSans and JetBrainsMono only, and the preset's default stacks were not exercised",
+    "SVG: no transform, group opacity, font weights 700 and 800, Polygon, Polyline or v1 root API; no native/svg_node change",
+    "The laboratory compiles the web variant of the NativeWind preset and the SDK the native one; unifying them would change the laboratory's evidence",
+    "macOS arm64 only: only the renderer lane (--capture) and the control on main's SDK (--control-ref) remain local evidence; the hosted CI run and the Pages publication are recorded in this receipt and in publication.json",
+    "The duplicated version strings across manifests and docs are not cleaned up"
+  ],
+  "findings": [
+    "explained, non-blocking: sdk/toolchain/tailwind-plugin.mjs: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 91c545d fix(sdk): Keep the Tailwind content scan inside the project",
+    "explained, non-blocking: types/react-native.ts: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 7703cc7 Merge origin/main into feat/library-consumer; b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)",
+    "explained, non-blocking: tests/library-consumer.test.mjs: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 91c545d fix(sdk): Keep the Tailwind content scan inside the project",
+    "explained, non-blocking: tests/types/consumer.tsx: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 7703cc7 Merge origin/main into feat/library-consumer; b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)",
+    "explained, non-blocking: package.json: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: e235ade Merge origin/main into feat/library-consumer; 41fbe22 feat(accessibility): Announce to the screen reader through AccessKit (#68); 7703cc7 Merge origin/main into feat/library-consumer; b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)",
+    "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 7703cc7 Merge origin/main into feat/library-consumer; b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)",
+    "explained, non-blocking: .fallowrc.json: the run-head bytes differ from the fc0f428 pin; commits after fc0f428 that touch this path: 7703cc7 Merge origin/main into feat/library-consumer; b82fbdd feat(text): Paint italic and decorated text in the native paragraph (#67)"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 113381636304,
+    "sha256": "835411f02f0c7ad4a688a729dddc098d975cfa56fe5bee1baafacd63dd2932d3",
+    "checkoutVerified": true,
+    "steps": [
+      "npm run test:charts",
+      "npm run test:consumer",
+      "npm run test:consumer:libraries"
+    ],
+    "fullRawLogIncludedInReceipt": false
+  }
+}

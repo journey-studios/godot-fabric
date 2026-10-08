@@ -1,8 +1,12 @@
+import { checkProps } from "./prop-scope.mjs";
+
 // What the Godot Image takes of RN's ImageProps. RN's own Image.ios.js renders the host component; this contract
 // decides, before it does, which of its props are mistakes. A source's uri is runtime data, so an unreadable
 // one is no mistake here: it fails as a load, through onError. The request a source makes (headers, method, body and cache,
 // which crossOrigin and referrerPolicy turn into headers) belongs to the network, and reaches it as RN's ImageSource gives it.
 //
+// Each of RN's ImageProps is classified once, as supported, ignored or refused, in src/prop-scope.mjs (the Image rules), which
+// the check below runs first. The paragraph that follows is the reasoning behind the ignored ones, which that table cites.
 // Every other prop of RN's ImageProps is taken, as the reference platform takes it. tintColor, blurRadius and capInsets are drawn
 // (image_effects.h), and so are the radii of the style. loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled,
 // resizeMethod, resizeMultiplier and overlayColor are Android's: the view config of the iOS component (ImageViewNativeComponent.js,
@@ -62,6 +66,7 @@ function validateImageStyle(flat, validStyle) {
 }
 
 export function validateImageProps(props, flatStyle, validStyle, registered) {
+  checkProps("Image", props);
   if (present(props.blurRadius) && !Number.isFinite(props.blurRadius)) throw new Error("Godot Image blurRadius must be a finite number");
   validateCapInsets(props.capInsets);
   if (present(props.resizeMode) && !resizeModes.includes(props.resizeMode)) {

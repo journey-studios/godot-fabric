@@ -5,6 +5,7 @@
 import React, { useContext } from "react";
 import OriginalText from "react-native/Libraries/Text/Text";
 import TextAncestorContext from "react-native/Libraries/Text/TextAncestorContext";
+import { checkProps } from "./prop-scope.mjs";
 
 // The context RN's own View and Text read, so that a Text, a View and the facade's Controls agree on what is
 // inside a paragraph.
@@ -17,19 +18,6 @@ export { textStyleAttributes } from "./base-view-config.js";
 // The size of an outer paragraph that sets none. RN's is 14; this platform kept its own 18 (see
 // docs/research/text-original.md), and the spans inherit whichever size their paragraph has.
 const DEFAULT_FONT_SIZE = 18;
-// Props that exist in RN's Text and that this platform's paragraph cannot honor yet. The host would otherwise
-// drop them without a word, so they fail where the Text renders: the two flags when they are on, the rest when
-// they are set at all.
-const unsupportedFlags = ["selectable", "adjustsFontSizeToFit"];
-const unsupportedProps = [
-  "selectionColor",
-  "dataDetectorType",
-  "textBreakStrategy",
-  "lineBreakStrategyIOS",
-  "android_hyphenationFrequency",
-];
-// The props of this platform's earlier wrapper that RN's Text does not have, and what to do instead.
-const wrapperOnlyProps = { text: "pass the text as children", fontSize: "set it in style" };
 // A nested Text is a span of its paragraph. A press on a span needs hit testing by fragment and its own dispatch,
 // which the host does not have: only the outer paragraph is pressable. Text.js hands every responder prop it does
 // not know to the span's host component, so the whole family is refused by its shape and not by a list that would
@@ -39,24 +27,13 @@ const pressProps = ["onPress", "onPressIn", "onPressOut", "onLongPress"];
 const responderProp = /^on(Responder|StartShouldSetResponder|MoveShouldSetResponder)/;
 const isSpanPressProp = name => pressProps.includes(name) || responderProp.test(name);
 
-export function ParagraphText({ style, numberOfLines, ellipsizeMode, onTextLayout, ...props }) {
+// The props RN's Text declares and the paragraph cannot honor (selectable, adjustsFontSizeToFit, selectionColor, the platform
+// text options, head and middle ellipsis), and the two props of this platform's earlier wrapper that RN's Text never had,
+// fail in src/prop-scope.mjs, on the mount and on every update, because the check runs in the render.
+export function ParagraphText(allProps) {
+  checkProps("Text", allProps);
+  const { style, numberOfLines, ellipsizeMode, onTextLayout, ...props } = allProps;
   const nested = useTextAncestor();
-  // The wrapper of this platform used to accept these two; RN's Text has neither.
-  for (const [name, hint] of Object.entries(wrapperOnlyProps)) {
-    if (props[name] !== undefined) {
-      throw new Error(`Godot Text does not implement ${name}: it is not a prop of RN's Text, ${hint}`);
-    }
-  }
-  for (const name of unsupportedFlags) {
-    if (props[name]) {
-      throw new Error(`Godot Text does not implement ${name}`);
-    }
-  }
-  for (const name of unsupportedProps) {
-    if (props[name] != null) {
-      throw new Error(`Godot Text does not implement ${name}`);
-    }
-  }
   if (nested) {
     for (const name of Object.keys(props)) {
       if (isSpanPressProp(name) && props[name] != null) {
@@ -69,9 +46,6 @@ export function ParagraphText({ style, numberOfLines, ellipsizeMode, onTextLayou
   }
   if (numberOfLines != null && (!Number.isInteger(numberOfLines) || numberOfLines < 0)) {
     throw new Error("Text numberOfLines must be a nonnegative integer");
-  }
-  if (ellipsizeMode != null && !["tail", "clip"].includes(ellipsizeMode)) {
-    throw new Error("Godot Text supports tail or clip ellipsizeMode");
   }
   if (onTextLayout != null && typeof onTextLayout !== "function") {
     throw new Error("Godot Text onTextLayout must be a function");

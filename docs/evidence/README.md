@@ -798,8 +798,11 @@ minimal consumer still passes its 30 and 40, and four renderer captures show the
 and a remounted subtree with a repainted chart. The same consumer fails on main's SDK (`9c5d0eb`) at
 `react-native-safe-area-context` and at `E_ADAPTER_SELECTION`, and a retained sabotage of the optional-peer rule fails
 there too. `className` on TextInput, following the system theme, font scaling, the rest of the SVG contract, the other
-charts, the P2 ports, other platforms, and the laboratory's web preset against the SDK's native one are open. The hosted
-CI run and the Pages publication are **pending**.
+charts, the P2 ports, other platforms, and the laboratory's web preset against the SDK's native one are open. Hosted
+run 37797780642 (the push of main 57e41f2, five jobs in the first attempt) repeated the 15 library tests and the 46
+headless native checks with the committed ids on the bundle the review record names, and Pages published main's data
+([hosted receipt](library-consumer/hosted-ci.json), [publication](library-consumer/publication.json)); the renderer lane
+and the control on main's SDK are not part of hosted CI.
 
 The [LayoutAnimation record](layout-animation/README.md) runs React Native's original `LayoutAnimation` (and the
 legacy `UIManager.configureNextLayoutAnimation`) from the public import on RN's own C++ `LayoutAnimationDriver`,

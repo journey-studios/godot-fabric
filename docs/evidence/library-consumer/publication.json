@@ -1,0 +1,458 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-08T19:53:51.204163+00:00",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/69",
+  "mainCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+  "mainHeadAtCheck": "ec831ac1c124c4f49c66c870d1f3ec133115fc3a",
+  "run": 37797780563,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37797780563",
+  "event": "push",
+  "branch": "main",
+  "startedAt": "2026-10-08T15:04:56Z",
+  "completedAt": "2026-10-08T15:05:43Z",
+  "triggeredBy": "wallynm",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "attempts": 1,
+  "buildCheckout": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+  "dashboardTestsTap": {
+    "pass": 43,
+    "fail": 0
+  },
+  "dataCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+  "rendererCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+  "dataRef": null,
+  "dataCommitIsReachableFromMainNow": true,
+  "deployment": {
+    "id": 6939126797,
+    "sha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "state": "success",
+    "at": "2026-10-08T15:05:43Z",
+    "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+  },
+  "deployedArtifact": {
+    "name": "github-pages",
+    "id": 11559072362,
+    "zipSha256": "17ff596b7931deda68ddc4112b3bd2a983561991b7b9520dfd6ba89067040527",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "files": [
+      ".nojekyll",
+      "AGENT_PROMPT.md",
+      "agents-view.mjs",
+      "agents.css",
+      "agents.mjs",
+      "app.mjs",
+      "fonts/JetBrainsMono.ttf",
+      "fonts/NotoSans.ttf",
+      "fonts/OFL-JetBrainsMono.txt",
+      "fonts/OFL-NotoSans.txt",
+      "format.mjs",
+      "index.html",
+      "migration.json",
+      "model.mjs",
+      "style.css"
+    ],
+    "migrationJsonSha256": "c4fbb9a205dcdd09c4875331db1d981d57e7c2124dee575ee57618335de3ea1c",
+    "publicationMetadataPresent": false
+  },
+  "deployedJSONEqualsCommittedData": true,
+  "committedMigrationJsonSha256": "c4fbb9a205dcdd09c4875331db1d981d57e7c2124dee575ee57618335de3ea1c",
+  "deployedRendererEqualsCommittedDashboard": true,
+  "deployedRendererFiles": [
+    "index.html",
+    "style.css",
+    "agents.css",
+    "app.mjs",
+    "model.mjs",
+    "agents.mjs",
+    "agents-view.mjs",
+    "format.mjs",
+    "AGENT_PROMPT.md"
+  ],
+  "deployedFontsEqualCommittedAssets": true,
+  "delivery": {
+    "gf27": {
+      "status": "in_progress",
+      "weight": 1,
+      "releaseRequired": true,
+      "checkpoints": {
+        "slice": true,
+        "contract": false,
+        "parity": false,
+        "targets": false
+      },
+      "sliceCheckpointEvidence": [
+        {
+          "label": "Consumer de bibliotecas: 13 testes JS e 46 checks nativos (58 com o renderizador), versões exatas instaladas do lock, co",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/README.md",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: recibo de execução, pins SHA-256, lanes, versões, bundle e limites",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/report.json",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: captura do tema claro (SHA-256 b141eafe)",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/libraries-light.png",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: captura da troca de classe (SHA-256 8f7ebd64)",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/libraries-accent.png",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: captura do tema escuro (SHA-256 0413e074)",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/libraries-dark.png",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: captura do subtree remontado e do gráfico atualizado (SHA-256 00ce02e4)",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/libraries-chart.png",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Consumer de bibliotecas: nota de pesquisa com os pontos em que o consumer falhava na main, as referências de linha e as ",
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/research/library-consumer.md",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        }
+      ]
+    },
+    "gf16ReceiptsRecordedByTheSamePullRequest": [
+      {
+        "label": "CI hospedada dos efeitos de imagem 37773373567: 5 jobs, 53 checks com IDs idênticos e o oráculo aceitando o relatório ba",
+        "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+        "path": "docs/evidence/images-visual/hosted-ci.json",
+        "commitIsAPullRequest69Commit": true,
+        "existsAtThePin": true,
+        "githubServesThePin": true,
+        "githubBlobEqualsLocalBlob": true
+      },
+      {
+        "label": "Pages dos efeitos de imagem 37773373621: dados da main em 9c5d0eb implantados",
+        "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+        "path": "docs/evidence/images-visual/publication.json",
+        "commitIsAPullRequest69Commit": true,
+        "existsAtThePin": true,
+        "githubServesThePin": true,
+        "githubBlobEqualsLocalBlob": true
+      }
+    ],
+    "activityEntries": [
+      {
+        "id": "library-consumer-first-slice-fc0f428",
+        "taskIds": [
+          "GF-27"
+        ],
+        "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+        "path": "docs/evidence/library-consumer/README.md",
+        "commitIsAPullRequest69Commit": true,
+        "existsAtThePin": true,
+        "githubServesThePin": true,
+        "githubBlobEqualsLocalBlob": true
+      },
+      {
+        "id": "images-visual-main-hosted-ci-and-pages-20261008",
+        "taskIds": [
+          "GF-16"
+        ],
+        "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+        "path": "docs/evidence/images-visual/hosted-ci.json",
+        "commitIsAPullRequest69Commit": true,
+        "existsAtThePin": true,
+        "githubServesThePin": true,
+        "githubBlobEqualsLocalBlob": true
+      }
+    ],
+    "sourceCommit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+    "focusTitle": "Bibliotecas: NativeWind e Chart Kit num consumer independente.",
+    "updatedAt": "2026-10-08T14:00:05.627Z"
+  },
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "state": "superseded",
+    "compared": false,
+    "supersededBy": {
+      "run": 37799702595,
+      "event": "workflow_dispatch",
+      "deploymentId": 6939460878,
+      "sha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "deployedAt": "2026-10-08T15:19:47Z",
+      "state": "success",
+      "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/69"
+    },
+    "note": "Pages run 37799702595 (workflow_dispatch of main 57e41f2) replaced this deployment 14 minutes later; the public site was not fetched or compared, because it now serves that later deployment's data."
+  },
+  "dispatchRun": {
+    "run": 37799702595,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37799702595",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "startedAt": "2026-10-08T15:18:51Z",
+    "completedAt": "2026-10-08T15:19:47Z",
+    "triggeredBy": "wallynm",
+    "jobs": {
+      "build": "success",
+      "deploy": "success"
+    },
+    "buildAndDeployPassed": true,
+    "attempts": 1,
+    "buildCheckout": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "dashboardTestsTap": {
+      "pass": 43,
+      "fail": 0
+    },
+    "dataCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+    "rendererCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "dataRef": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+    "dataCommitIsReachableFromMainNow": false,
+    "deployment": {
+      "id": 6939460878,
+      "sha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "state": "success",
+      "at": "2026-10-08T15:19:47Z",
+      "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+    },
+    "deployedArtifact": {
+      "name": "github-pages",
+      "id": 11559384148,
+      "zipSha256": "cbc1a00b9f85f8c016a5e7773182eac08e9a34e356c518da4c6b60210b81fd90",
+      "zipSha256EqualsUploadLogDigest": true,
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "files": [
+        ".nojekyll",
+        "AGENT_PROMPT.md",
+        "agents-view.mjs",
+        "agents.css",
+        "agents.mjs",
+        "app.mjs",
+        "fonts/JetBrainsMono.ttf",
+        "fonts/NotoSans.ttf",
+        "fonts/OFL-JetBrainsMono.txt",
+        "fonts/OFL-NotoSans.txt",
+        "format.mjs",
+        "index.html",
+        "migration.json",
+        "model.mjs",
+        "style.css"
+      ],
+      "migrationJsonSha256": "905e5ae89963099b153cc09feb1f9d13b6d53abd72510fdc0358f2ad6dc11e5d",
+      "publicationMetadataPresent": true
+    },
+    "deployedJSONEqualsCommittedData": true,
+    "committedMigrationJsonSha256": "e5c2342479d30aa0f1674be8f161e0a7045b6c1963a418141f3a587a4b61becb",
+    "deployedRendererEqualsCommittedDashboard": true,
+    "deployedRendererFiles": [
+      "index.html",
+      "style.css",
+      "agents.css",
+      "app.mjs",
+      "model.mjs",
+      "agents.mjs",
+      "agents-view.mjs",
+      "format.mjs",
+      "AGENT_PROMPT.md"
+    ],
+    "deployedFontsEqualCommittedAssets": true,
+    "delivery": {
+      "gf27": {
+        "status": "in_progress",
+        "weight": 1,
+        "releaseRequired": true,
+        "checkpoints": {
+          "slice": true,
+          "contract": false,
+          "parity": false,
+          "targets": false
+        },
+        "sliceCheckpointEvidence": [
+          {
+            "label": "Consumer de bibliotecas: 13 testes JS e 46 checks nativos (58 com o renderizador), versões exatas instaladas do lock, co",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/README.md",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: recibo de execução, pins SHA-256, lanes, versões, bundle e limites",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/report.json",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: captura do tema claro (SHA-256 b141eafe)",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/libraries-light.png",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: captura da troca de classe (SHA-256 8f7ebd64)",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/libraries-accent.png",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: captura do tema escuro (SHA-256 0413e074)",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/libraries-dark.png",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: captura do subtree remontado e do gráfico atualizado (SHA-256 00ce02e4)",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/evidence/library-consumer/libraries-chart.png",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          },
+          {
+            "label": "Consumer de bibliotecas: nota de pesquisa com os pontos em que o consumer falhava na main, as referências de linha e as ",
+            "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+            "path": "docs/research/library-consumer.md",
+            "commitIsAPullRequest69Commit": true,
+            "existsAtThePin": true,
+            "githubServesThePin": true,
+            "githubBlobEqualsLocalBlob": true
+          }
+        ]
+      },
+      "gf16ReceiptsRecordedByTheSamePullRequest": [
+        {
+          "label": "CI hospedada dos efeitos de imagem 37773373567: 5 jobs, 53 checks com IDs idênticos e o oráculo aceitando o relatório ba",
+          "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+          "path": "docs/evidence/images-visual/hosted-ci.json",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "label": "Pages dos efeitos de imagem 37773373621: dados da main em 9c5d0eb implantados",
+          "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+          "path": "docs/evidence/images-visual/publication.json",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        }
+      ],
+      "activityEntries": [
+        {
+          "id": "library-consumer-first-slice-fc0f428",
+          "taskIds": [
+            "GF-27"
+          ],
+          "commit": "c4dc8548e48f7e73837a224ff0a7c2ca8947d425",
+          "path": "docs/evidence/library-consumer/README.md",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        },
+        {
+          "id": "images-visual-main-hosted-ci-and-pages-20261008",
+          "taskIds": [
+            "GF-16"
+          ],
+          "commit": "984d64127ee3dfde7de9ed0f32a2cc494c7f4a70",
+          "path": "docs/evidence/images-visual/hosted-ci.json",
+          "commitIsAPullRequest69Commit": true,
+          "existsAtThePin": true,
+          "githubServesThePin": true,
+          "githubBlobEqualsLocalBlob": true
+        }
+      ],
+      "sourceCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "focusTitle": "GF-14 #58: #69 Library consumer integrado à árvore local; validação combinada aguarda CI e revisão.",
+      "updatedAt": "2026-10-08T15:10:30Z"
+    },
+    "dataRefMeaning": "The manual dispatch published the dashboard data of a branch, not of main: DATA_REF is the head of codex/scroll-original (PR #58), a merge of main 57e41f2 into that branch. scripts/fetch-dashboard-data.mjs validates the data of that commit, appends a `publication` block (ref, commit, inMain, at) and the build serves it with the renderer of the checkout, which is main 57e41f2.",
+    "publicationBlock": {
+      "ref": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+      "commit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+      "inMain": false,
+      "at": "2026-10-08T15:19:10.647Z"
+    },
+    "deployedDataEqualsCommittedDataPlusPublicationBlock": true,
+    "dataCommitBelongsTo": [
+      {
+        "pullRequest": "https://github.com/journey-studios/godot-fabric/pull/58",
+        "state": "closed",
+        "headRef": "codex/scroll-original"
+      }
+    ],
+    "topLevelKeysThatDifferFromThePushDeployment": [
+      "activity",
+      "project",
+      "publication",
+      "source",
+      "tasks",
+      "updatedAt"
+    ],
+    "livePublicSite": {
+      "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+      "state": "superseded",
+      "compared": false,
+      "supersededBy": {
+        "run": 37806912013,
+        "event": "push",
+        "deploymentId": 6940691187,
+        "sha": "66c948bc21fd88c2bb279f198849a5843519f741",
+        "deployedAt": "2026-10-08T16:12:48Z",
+        "state": "success",
+        "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/58"
+      },
+      "note": "Pages run 37806912013 (push of main 66c948b) replaced this deployment 53 minutes later; the public site was not fetched or compared, because it now serves that later deployment's data."
+    }
+  },
+  "findings": []
+}

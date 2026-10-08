@@ -164,6 +164,10 @@ the [dashboard](../dashboard/README.md), and each record keeps its own open
 boundaries (hardware, mobile exports, complete contracts). The audit-date tables
 below preserve the findings of 2026-10-01.
 
+The props of View, Text, Pressable, Image, Modal, ActivityIndicator and ScrollView that the 0.5 Frontier HUD uses are
+decided one by one in [the 0.5 scope manifest](compatibility/scope-0.5.json) (supported, ignored with a reason, or
+refused), with its [record](evidence/frontier-scope/README.md); the audit-date tables here are not edited for it.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

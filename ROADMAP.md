@@ -588,6 +588,17 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-04: the twelve names the HUD imports are decided in
+[`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
+props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
+`Godot <Component> does not implement <prop>`, checked on every mount and every update. A native lane drives every
+case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
+fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
+[record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
+visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
+that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
+No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
@@ -3684,7 +3695,12 @@ with it; only the manual override is certified), `fontScale`, `rem` and `PixelRa
 SVG adapter's transform, group opacity, font weights 700 and 800, Polygon, Polyline and the v1 root API (and any
 `native/svg_node.*` change), the other Chart Kit charts and the written chart contract, the Reanimated, Gesture Handler,
 safe-area and screens ports (P2), other platforms, the laboratory's web preset against the SDK's native one, and the
-duplicated version strings. The hosted CI run of the new steps and the Pages publication are **pending**.
+duplicated version strings. The hosted CI run of the new steps (the push of main `57e41f2`, run 37797780642, five jobs in
+the first attempt) and the Pages publication (runs 37797780563 and 37799702595) are recorded in
+[`hosted-ci.json`](docs/evidence/library-consumer/hosted-ci.json) and
+[`publication.json`](docs/evidence/library-consumer/publication.json): the 15 library tests, the 46 headless native checks
+with the committed ids and the 16 build and install checks passed on the bundle the review record names, while the renderer
+lane and the control on main's SDK stay local.
 
 Executed on macOS arm64 with official Godot 4.7.2 at implementation
 [`fc0f428`](https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e): the JS lane

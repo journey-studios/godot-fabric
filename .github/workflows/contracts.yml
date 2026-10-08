@@ -701,6 +701,17 @@ jobs:
             build/activity-indicator-comparison.json
             build/activity-indicator-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:scope-0.5
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-scope-0.5
+          path: |
+            build/scope-0.5-report.json
+            build/scope-0.5-current-report.json
+            build/scope-0.5-comparison.json
+            build/scope-0.5-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:pointers:capture
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

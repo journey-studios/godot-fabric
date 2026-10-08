@@ -242,7 +242,7 @@ func unsupported_prop_checks() -> void:
   var before := offset()
   await run_action("unsupportedProp", "true")
   await wait_native("unsupported-scroll-error")
-  verify(react().unsupportedProp.contains("disableScrollViewPanResponder is not implemented") and node("unsupported-scroll").is_empty(), "Unsupported pan control throws through a real React ErrorBoundary before native allocation")
+  verify(react().unsupportedProp.contains("Godot ScrollView does not implement disableScrollViewPanResponder") and node("unsupported-scroll").is_empty(), "Unsupported pan control throws through a real React ErrorBoundary before native allocation")
   await run_action("unsupportedProp", "false")
   verify(node("unsupported-scroll-error").is_empty() and node("inventory").id == scroll_id and offset() == before, "Removing the rejected ScrollView preserves the working inventory and its offset")
 

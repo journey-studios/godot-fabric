@@ -20,8 +20,7 @@ test("the public ScrollView rejects native features the host cannot honor", () =
     ["scrollToOverflowEnabled", true], ["disableIntervalMomentum", true],
   ];
   for (const [name, value] of unsupported) {
-    assert.throws(() => prepareScrollViewProps({[name]: value}),
-      new RegExp(`Godot ScrollView ${name} is not implemented`));
+    assert.throws(() => prepareScrollViewProps({[name]: value}), new Error(`Godot ScrollView does not implement ${name}`));
   }
   const unsupportedValues = [
     ["scrollPerfTag", "probe-perf"],
@@ -30,10 +29,9 @@ test("the public ScrollView rejects native features the host cannot honor", () =
       .map(name => [name, () => {}]),
   ];
   for (const [name, value] of unsupportedValues)
-    assert.throws(() => prepareScrollViewProps({[name]: value}),
-      new RegExp(`Godot ScrollView ${name} is not implemented`));
+    assert.throws(() => prepareScrollViewProps({[name]: value}), new Error(`Godot ScrollView does not implement ${name}`));
   assert.throws(() => prepareScrollViewProps({removeClippedSubviews: true}),
-    /Godot ScrollView removeClippedSubviews is not implemented/);
+    new Error("Godot ScrollView does not implement removeClippedSubviews"));
   assert.equal(prepareScrollViewProps({removeClippedSubviews: false}).removeClippedSubviews, false);
 
   const neutralOptions = [
@@ -51,8 +49,11 @@ test("the public ScrollView rejects native features the host cannot honor", () =
     assert.equal(prepareScrollViewProps({[name]: value})[name], value,
       `${name} neutral value should pass through`);
   }
-  assert.throws(() => prepareScrollViewProps({onRefresh() {}}), /refreshControl is not implemented/);
-  assert.throws(() => prepareScrollViewProps({refreshing: true}), /refreshControl is not implemented/);
+  // Pull to refresh: the lists hand onRefresh and refreshing to the ScrollView they render. Both fail, uniformly with the rest,
+  // and the idle values (refreshing false, no handler) pass and are taken off.
+  assert.throws(() => prepareScrollViewProps({onRefresh() {}}), new Error("Godot ScrollView does not implement onRefresh"));
+  assert.throws(() => prepareScrollViewProps({refreshing: true}), new Error("Godot ScrollView does not implement refreshing"));
+  assert.deepEqual(prepareScrollViewProps({refreshing: false, onRefresh: null, testID: "idle"}), {testID: "idle"});
   assert.throws(() => prepareScrollViewProps({contentOffset: {x: 0, y: Infinity}}), /finite x\/y coordinates/);
   assert.throws(() => prepareScrollViewProps({contentOffset: {x: NaN, y: 1}}), /finite x\/y coordinates/);
   for (const contentOffset of ["12", [0, 12], 12, {x: "0", y: 12}])
