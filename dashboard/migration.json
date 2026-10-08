@@ -6,14 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: CI 5/5; integração da main em validação. Próximo: Modal."
+    "focusTitle": "Imagens: Image do RN sobre decodificação em threads do Godot. Em paralelo: Modal (#51)."
   },
-  "updatedAt": "2026-10-07T16:57:03.264Z",
+  "updatedAt": "2026-10-08T02:03:11.000Z",
   "source": {
-    "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Implementação local fixada em 73a27b0c467884a9bf51dc7b6cb70e4cb198ac78: backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay, prova local 95/60/53, limite global de 1 MiB wire por poll entre sockets WebSocket e capacidade canônica de 256 eventos após HTTP. Recibos CI históricos cobrem 422c2ee e a correção HTTP e8dd7b0; integração com main em 51ad758 aguarda CI própria. GF-22 segue parcial.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
+    "commit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+    "scope": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN sobre o pipeline C++ de imagens do próprio RN e um ImageManager do host: leitura e decodificação no WorkerThreadPool do Godot, nunca na main thread; GodotImage com os seis modos do UIKit e os eventos do iOS; plugin esbuild de assets com o descritor do Metro. Implementação local fixada em 552fb56a098f35beb41a0a333f99f0f35b4b3ec9: 74 checks headless em duas roots, host anterior com as 3 falhas normativas que alcança, sabotagens retidas com 12 e 2 falhas rejeitadas pelo oráculo, exemplo com 17 checks headless e 25 gráficos. Evidência fixada em 7da93542b057f0e0d25b0a0984ff9b2329ba35bb. CI hospedada pendente. GF-16 segue parcial: só o checkpoint de fatia fecha."
   },
   "phases": [
     {
@@ -1713,7 +1712,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Images and asset pipeline",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22",
       "dependencies": [
         "GF-03",
@@ -1724,14 +1723,35 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN (Image.ios.js atrás de um wrapper validador) sobre o pipeline C++ de imagens do próprio RN (ImageShadowNode, ImageRequest e o coordenador de observadores) com um ImageManager do host: leitura, detecção do formato, limites e decodificação no WorkerThreadPool do Godot, nunca na main thread, com a textura criada na main thread dentro de um orçamento de upload por pump, cancelamento por troca e por desmontagem e parada que aguarda cada tarefa. GodotImage com os seis modos de redimensionamento do UIKit e os eventos onLoadStart, onProgress, onLoad, onError e onLoadEnd na ordem e com os payloads do iOS; módulo ImageLoader (getSize, getSizeWithHeaders, prefetch rejeitado, queryCache vazio). Fontes: require() de assets (plugin esbuild com o descritor do Metro, variantes @Nx escolhidas pelo pickScale e manifesto com SHA-256), res://, user://, file:// e data:; PNG, JPEG, WebP, BMP, TGA e SVG. 74 checks headless em duas roots, com um oráculo independente; o host anterior alcança 11 checks e falha os 3 normativos que alcança; as sabotagens retidas (decodificação na main thread e view que mantém o pedido trocado) falham 12 e 2, rejeitadas pelo oráculo, que também recusa 15 mutações do relatório genuíno. Exemplo: 17 checks headless, 25 gráficos e 2 capturas macOS. Abertos: imagens de rede (dependem do GF-22), cache de imagem decodificada e prefetch, tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier e overlayColor (falham onde a Image renderiza), recorte arredondado (o raio de borda no estilo da Image falha), GIF e WebP animados, nativeImageSource, export de assets para desktop e Android (o hook iOS copia o manifesto, sem app exportado executado), oráculo independente de pixels, comparação com o iOS e alvos além do macOS arm64. CI hospedada pendente. O aceite total do GF-16 continua em andamento; esta fatia fecha só o checkpoint de fatia e não altera peso nem denominador.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Images: 74 checks headless, host anterior com as 3 falhas normativas que alcança e duas sabotagens retidas rejeitadas pelo oráculo (implementação 552fb56)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/README.md"
+            },
+            {
+              "label": "Images: recibo de execução, pins SHA-256, lanes e limites",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/report.json"
+            },
+            {
+              "label": "Images: captura dos seis modos e das fontes (SHA-256 52c7b512)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/images-all-modes.png"
+            },
+            {
+              "label": "Images: captura depois dos cliques (SHA-256 3ee69e2b)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/images-interaction.png"
+            },
+            {
+              "label": "Images: nota de pesquisa com o contrato do RN e os desvios do host",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/research/images.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3473,6 +3493,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "images-local-verified-20261007",
+      "at": "2026-10-08T02:03:11.000Z",
+      "taskIds": [
+        "GF-16"
+      ],
+      "message": "Image, ImageBackground, AssetRegistry e Animated.Image do RN sobre o pipeline C++ de imagens do próprio RN e um ImageManager do host: 74 checks headless em duas roots, nenhuma leitura nem decodificação na main thread, pedidos cancelados na troca e na desmontagem sem criar textura, os seis modos do UIKit e o plugin de assets com o descritor do Metro. O host anterior alcança 11 checks e falha os 3 normativos que alcança; decodificar na main thread falha 12 checks e a view que mantém o pedido trocado falha 2, ambas rejeitadas pelo oráculo independente, que também recusa 15 mutações do relatório genuíno. Primeira fatia do GF-16: fecha só o checkpoint de fatia; imagens de rede, cache, tint, blur, capInsets, recorte arredondado e formatos animados seguem abertos; CI pendente. Checkpoints e itens concluídos: 24/156 e 0/39; pesos e denominadores preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/README.md"
+    },
     {
       "id": "websocket-e8-ci-green-main-integration-20261007",
       "at": "2026-10-07T16:57:03.264Z",
