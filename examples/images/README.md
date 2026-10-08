@@ -45,6 +45,30 @@ left-edge mark in stretch, contain and repeat and crops it out in cover and cent
 at the top-left corner with the bottom of the frame bare, and the six tiles have six different
 digests. The headless run passes 17 checks and the capture run 25.
 
+## Captures
+
+`npm run example -- images --capture` saves two frames of the native renderer at the example's
+content scale of 2 (1800 x 1360 pixels for the 900 x 680 point window). The
+[evidence](../../docs/evidence/images/README.md) keeps their SHA-256 in `report.json`.
+
+![The eleven pictures of the example and the preview in cover](../../docs/evidence/images/images-all-modes.png)
+
+**The six modes and the sources.** One 120x60 point landscape in 84x84 point frames: `cover` crops
+the red and green marks off the edges, `contain` shows all of it between two bars, `stretch`
+distorts it, `center` shows its middle at natural size, `repeat` tiles it at its size in points and
+`none` draws it at the top-left corner with the bottom of the frame bare. Below them: the logo from
+its `@2x` file (64x64 pixels for a 32 point layout), the 32x32 pixel PNG sprite centered, the SVG
+rasterized at 128x128 pixels, the `ImageBackground` with its `over` text on the picture, and the
+missing file as a dark red box with its error. The preview is in `cover` and reads
+`loaded 240x120 px`.
+
+![The preview after nine clicks on Next mode and one on Swap the picture](../../docs/evidence/images/images-interaction.png)
+
+**After the clicks.** Nine real clicks on `Next mode` took the preview through every mode and on to
+`center`, and a click on `Swap the picture` loaded the logo: the preview shows it in `center`, with
+`resizeMode="center"`, `picture: logo` and `loaded 64x64 px`, while the eleven pictures above stay
+as they were.
+
 ## Evidence suite
 
 ```sh

@@ -460,6 +460,23 @@ parity cases are not WebSocket differential or Godot mobile runtime proof. This 
 GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
 and 51/51 graphical checks, with all 11 current captures linked from the record.
 
+The [images record](images/README.md) runs React Native's own `Image.ios.js`, `ImageBackground`,
+`AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline (`ImageShadowNode`,
+`ImageRequest` and its observer coordinator) with a host `ImageManager`: every picture is read,
+bounded and decoded on Godot's `WorkerThreadPool` and never on the main thread, a native
+`GodotImage` draws the six resize modes UIKit maps, and `require()`d assets are Metro's modules
+with Metro's descriptor and every `@Nx` variant. Two roots of one application run 74 headless
+checks over bundled assets at three scales, every format, `user://`, `file://` and `data:` sources,
+failures, `getSize` and the upload budget, and over decodes held in flight while their request is
+swapped away or unmounted; an independent oracle recomputes sources, pixel sizes, events and
+rectangles from RN's formulas and the fixture's own pixels. The preceding host reaches 11 checks and
+fails the 3 normative ones among them; decoding on the main thread fails 12 checks and a view that
+keeps listening to a request it swapped away from fails 2, and the oracle rejects each, as it does
+15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
+(68 assertions) and the research note with RN's file and line references. Network images, the
+decoded-image cache, tint, blur, capInsets, rounded image clipping, animated formats and every
+target but macOS are open. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

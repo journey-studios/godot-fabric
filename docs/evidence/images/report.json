@@ -1,0 +1,654 @@
+{
+  "schemaVersion": 1,
+  "scenario": "images",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
+  "at": "2026-10-08T01:44:48Z",
+  "executionBaseCommit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+  "executedTreeSha": "8d6b41e00d9d499f7106fb3fbffb56320ecc434a",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "none during the lanes; docs/evidence/images, docs/research/images.md, ROADMAP.md, README.md, docs/API.md, docs/evidence/README.md and the example READMEs were written after them, and the gates ran again on the tree that holds them",
+  "implementationCommit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+  "implementationPr": null,
+  "dependsOn": "The shared-application runtime and its native module registry (docs/evidence/shared-roots, docs/evidence/runtime), the DeviceInfo-backed PixelRatio of the native foundation (docs/evidence/native-foundation), the frame pump the loader is polled from (docs/evidence/frame-clock) and the SDK's esbuild platform plugin (docs/evidence/native-sdk), which the asset plugin joins",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15",
+    "precedingHostSha256": "6716da5a18e5a914cb8e3301db1d88402391a32520ebe77ed3d13fc2f8448dd4"
+  },
+  "commands": [
+    "npm run test:images",
+    "node tests/images-native.test.mjs --allow-original-negative (the preceding host installed in addons/)",
+    "node scripts/images-sabotage.mjs",
+    "npm run example -- images --headless",
+    "npm run example -- images --capture",
+    ".deps/build/image_core_test"
+  ],
+  "headlessChecks": 74,
+  "normativeChecks": 63,
+  "structuralChecks": 11,
+  "exampleChecks": {
+    "headless": 17,
+    "capture": 25
+  },
+  "unitTest": {
+    "file": "native/image_core_test.cpp",
+    "target": "image_core_test",
+    "groups": 7,
+    "groupNames": [
+      "sources_are_classified_by_scheme",
+      "bundled_files_carry_their_scale_in_the_name",
+      "formats_are_sniffed_from_magic_bytes",
+      "headers_give_dimensions",
+      "absurd_headers_are_refused_before_decoding",
+      "decoding_shrinks_to_cover_the_request_and_never_upscales",
+      "resize_modes_draw_like_uiimageview"
+    ],
+    "assertions": 68,
+    "marker": "IMAGE_CORE_PASSED",
+    "coverage": "URI classification (res://, user://, file://, data:, http(s), bare paths), the @Nx scale in a bundled file name, magic-byte sniffing, header dimensions of PNG, JPEG, WebP (VP8, VP8L, VP8X), BMP, TGA and SVG, the refusal of absurd headers before any decoder runs, the decode target of RCTTargetSize (cover, never upscaling) and the rectangles of the six UIViewContentModes"
+  },
+  "scope": {
+    "originalRNJavaScript": true,
+    "publicReactNativeImport": true,
+    "rnCppImagePipeline": true,
+    "decodeOffTheMainThread": true,
+    "workerThreadIdentityRecorded": true,
+    "twoSurfacesOneApplication": true,
+    "actualSceneTreeFrames": true,
+    "networkImagesCertified": false,
+    "decodedImageCacheCertified": false,
+    "tintCertified": false,
+    "animatedFormatsCertified": false,
+    "exportedAppCertified": false,
+    "independentPixelOracle": false,
+    "pixelsSampledInTheCaptureLane": true
+  },
+  "checkIdDigest": "SHA-256 of the check ids joined by newlines, in the order the probe ran them",
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: the declared Images in two surfaces of one application, the stages that hold, swap, remove, unmount and stop decodes in flight, and the independent oracle over the report.",
+      "nativeHostSha256": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15",
+      "bundleSha256": "46c9bec083a6bb6c0fff9304087254632b19a46a53f1ce9fe430e0f2d8c7edfd",
+      "checks": 74,
+      "passed": 74,
+      "failed": 0,
+      "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+      "reportSha256": "fc93f1a7b649f9113fb37af8a243aeedbf46629e70373f8e5892843c2532f7d0",
+      "logSha256": "31fa295bcfbe69b5bd136a232eeab6a6089d573258ec59a97b0026bca14f074e"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host built from main ebcb292 (no image pipeline); expected negative control (--allow-original-negative). The probe runs only the stages that need nothing of the native pipeline there: 11 checks, of which the 8 that need none hold and the 3 that need it fail; the other 60 normative checks are not executed.",
+      "nativeHostSha256": "6716da5a18e5a914cb8e3301db1d88402391a32520ebe77ed3d13fc2f8448dd4",
+      "bundleSha256": "46c9bec083a6bb6c0fff9304087254632b19a46a53f1ce9fe430e0f2d8c7edfd",
+      "checks": 11,
+      "passed": 8,
+      "failed": 3,
+      "checkIdDigestSha256": "d28202520cd551772741b54bf1c5c1a1e1102bf292969fad5dbfec6415e48aca",
+      "reportSha256": "ecce2b4b0425b02ab4f63f5a2dc67c660b14bb6695ea12acf9e55e5af71cc83a",
+      "logSha256": "b31730b16a04cede0a04edf0fe7a12e293b9ab391410aaeb5c5a04f1e55ced3c",
+      "failedIds": [
+        "mount/Every Image of the fixture mounts one native GodotImage: the declared cases, the scale probe, the ImageBackground and the Animated.Image",
+        "mount/Every Image asked the loader for exactly one request and none failed to render",
+        "contract/RN's own refusal of children reaches the host"
+      ]
+    },
+    {
+      "lane": "sabotage-main-thread",
+      "meaning": "The same bundle on a host whose loader reads and decodes in the call that queues the job instead of on the worker pool (scripts/images-sabotage.mjs).",
+      "nativeHostSha256": "c754a0eaab213bd3276906f1efbd1aae94da9b8dd8990896844e426640a003ec",
+      "bundleSha256": "46c9bec083a6bb6c0fff9304087254632b19a46a53f1ce9fe430e0f2d8c7edfd",
+      "checks": 74,
+      "passed": 62,
+      "failed": 12,
+      "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+      "reportSha256": "87b7f592904625bb7a95f629962a6e292784734b8c674361169eebabb675c247",
+      "logSha256": "0e882b847d962467accc2cfedc33f11deb50d9f880ba833e1a326f77a740f505",
+      "failedIds": [
+        "threads/Every read and decode ran on a worker thread: the recorded identity of each job differs from the main thread's",
+        "threads/Every task the pool handed out was awaited and nothing is left in flight",
+        "inflight/One decode is in flight, done and held, while the request that replaced it waits",
+        "inflight/A request swapped away while its decode is in flight never reports: only the request that replaced it does",
+        "inflight/The decode that finished after its request was cancelled is dropped and creates no texture",
+        "removal/Unmounting an Image while its decode is in flight delivers no event beyond the loadStart it had",
+        "removal/The result of the unmounted Image's decode is dropped and creates no texture",
+        "root unmount/Six requests: one decode in flight, done and held, and five waiting behind it",
+        "root unmount/Unmounting the root drops the decode in flight, cancels the five requests that waited, creates no texture and leaks none",
+        "root unmount/The unmounted root's Images saw a loadStart and nothing after it",
+        "stop/Decodes are in flight when the application stops",
+        "stop/The application's stop waited for every decode: the loader's tasks started equal the tasks awaited and nothing is left"
+      ]
+    },
+    {
+      "lane": "sabotage-stale-request",
+      "meaning": "The same bundle on a host whose view does not take itself off the request it swaps away from, so a cancelled request still reports its picture.",
+      "nativeHostSha256": "f4fa2d811c97951b194b823c0afeda1ca00fc1ebad5e0e25097eb3e3d11fdeec",
+      "bundleSha256": "46c9bec083a6bb6c0fff9304087254632b19a46a53f1ce9fe430e0f2d8c7edfd",
+      "checks": 74,
+      "passed": 72,
+      "failed": 2,
+      "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+      "reportSha256": "2b4f07d97b637f05cfeafa8fe543848f8a0b09b6dea43ee92847e0965b228b72",
+      "logSha256": "d37b3c3f9860eb0d94eec2a1bb618b35ef0c5b16d1e17d454a49bf6371133a37",
+      "failedIds": [
+        "inflight/A request swapped away while its decode is in flight never reports: only the request that replaced it does",
+        "inflight/The decode that finished after its request was cancelled is dropped and creates no texture"
+      ]
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "6716da5a18e5a914cb8e3301db1d88402391a32520ebe77ed3d13fc2f8448dd4",
+      "bytes": 5862432
+    },
+    "current": {
+      "sha256": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15",
+      "bytes": 6129984,
+      "rebuiltFromCommittedSources": true,
+      "note": "The sabotage script's genuine build recompiled application_runtime.cpp, fabric_application.cpp and fabric_surface.cpp from the committed tree and reproduced the same hash, and its rebuild after each sabotage did too"
+    },
+    "sabotage-main-thread": {
+      "sha256": "c754a0eaab213bd3276906f1efbd1aae94da9b8dd8990896844e426640a003ec"
+    },
+    "sabotage-stale-request": {
+      "sha256": "f4fa2d811c97951b194b823c0afeda1ca00fc1ebad5e0e25097eb3e3d11fdeec"
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "6716da5a18e5a914cb8e3301db1d88402391a32520ebe77ed3d13fc2f8448dd4",
+    "provenance": {
+      "builtFrom": "origin/main ebcb292, before any native source of this slice changed",
+      "kept": "build/images-previous-host/fabric_godot.dylib"
+    },
+    "checks": 11,
+    "normativeFailures": 3,
+    "structuralChecksPassed": 8,
+    "normativeChecksNotExecuted": 60,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "mount/Every Image of the fixture mounts one native GodotImage: the declared cases, the scale probe, the ImageBackground and the Animated.Image",
+      "mount/Every Image asked the loader for exactly one request and none failed to render",
+      "contract/RN's own refusal of children reaches the host"
+    ],
+    "firstError": "TurboModuleRegistry.getEnforcing(...): 'ImageLoader' could not be found. Verify that a module by this name is registered in the native binary.",
+    "nodesMounted": 0,
+    "oracleAccepts": "tests/images-oracle.mjs verifies the control report in its original mode (the failures are exactly the declared normative ones, no Image reaches the host, and each declared case fails where RN's Image asks for the ImageLoader module)"
+  },
+  "retainedSabotages": {
+    "receiptFormat": "godot-fabric.images-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "native/image_loader.cpp": "7826938a24f7c30d3581d1360c3f9f2b08530ddbc82ec5e211aad2aedbc4ab83",
+        "native/image_view.cpp": "0d9e7789dde054d46c04db5cde2858bd98d5e6f4b032f5fa7b59ece555fa8227"
+      },
+      "restored": {
+        "native/image_loader.cpp": "7826938a24f7c30d3581d1360c3f9f2b08530ddbc82ec5e211aad2aedbc4ab83",
+        "native/image_view.cpp": "0d9e7789dde054d46c04db5cde2858bd98d5e6f4b032f5fa7b59ece555fa8227"
+      }
+    },
+    "hostSha256": {
+      "genuine": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15",
+      "restored": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15"
+    },
+    "variants": [
+      {
+        "name": "main-thread",
+        "file": "native/image_loader.cpp",
+        "find": "      job->task = WorkerThreadPool::get_singleton()->add_native_task(&State::run_task, arguments, false, \"Godot Fabric image load\");",
+        "replace": "      State::run_task(arguments);",
+        "sourceSha256": "ab3dc32b0980ab23b75eb0c928534f63638c5430211e5446b0edad190b314afa",
+        "hostSha256": "c754a0eaab213bd3276906f1efbd1aae94da9b8dd8990896844e426640a003ec",
+        "runStatus": 0,
+        "failedChecks": 12
+      },
+      {
+        "name": "stale-request",
+        "file": "native/image_view.cpp",
+        "find": "  if (state_) state_->getData().getImageRequest().getObserverCoordinator().removeObserver(observer_);\n  state_ = state;",
+        "replace": "  state_ = state;",
+        "sourceSha256": "577c22e167d63bca084c7e943881674ebd3e5de9aa680ae40338b18ebb1b1b70",
+        "hostSha256": "f4fa2d811c97951b194b823c0afeda1ca00fc1ebad5e0e25097eb3e3d11fdeec",
+        "runStatus": 0,
+        "failedChecks": 2
+      }
+    ],
+    "oracleRejections": {
+      "main-thread": "tests/images-oracle.mjs:476, the in-flight stage's event sequence: the swapped-away request's progress, load and loadEnd arrive straight after its loadStart, because the decode finished in the call that queued it instead of being held in the pool",
+      "stale-request": "tests/images-oracle.mjs:476, the in-flight stage's event sequence: a second progress, load and loadEnd arrive after the replacement's, from the request the view was meant to have left"
+    }
+  },
+  "oracle": {
+    "file": "tests/images-oracle.mjs",
+    "independence": "Written apart from the probe and from the C++. Recomputes what a correct host reports from RN's formulas (pickScale and AssetSourceResolver, the source ImageShadowNode picks, RCTImageUtils.mm's decode sizes, RCTImageComponentView's event order and payloads, UIViewContentMode's rectangles), from the fixture files themselves (their SHA-256 and FNV-1a pixel fingerprints, regenerated by tests/images-pattern.mjs) and from the inputs the fixture declared; its image header sizes come from the asset pipeline's JavaScript parsers",
+    "expectedCheckCount": 74,
+    "mutationsOfTheGenuineReport": [
+      "a file's progress is its size over its size",
+      "every job ran on a worker",
+      "no job ran on the main thread",
+      "the texture has the pixels of the chosen variant",
+      "cover crops the picture",
+      "repeat tiles",
+      "a cancelled decode is dropped",
+      "a cancelled decode creates no texture",
+      "a poll creates one texture at a budget of one byte",
+      "every task is awaited",
+      "a missing file says so",
+      "http(s) fails through onError",
+      "the descriptor is Metro's",
+      "prefetch says why it fails",
+      "pickScale chooses by pixel ratio"
+    ],
+    "runnerAsserts": [
+      "the failing checks equal the probe's normative list on the preceding host, and the oracle accepts that report in its original mode",
+      "every ERROR line of the log is a declared check failure or one of the three lines Godot's PNG decoder prints for each corrupt picture the fixture offers it (nine in the current run), so no native, script or engine error hides",
+      "the bundle and the pins of the reproducer and SDK producers are the same on every host; only the compiled native producers differ",
+      "every executed producer and every original RN source has a SHA-256 in the bundle receipt"
+    ]
+  },
+  "executedObservations": {
+    "loaderAtTheEnd": {
+      "cancelled": 5,
+      "deferredUploads": 5,
+      "dropped": 3,
+      "failed": 14,
+      "loaded": 43,
+      "measured": 13,
+      "measures": 13,
+      "peakInFlight": 4,
+      "peakUploadsPerPoll": 1,
+      "requested": 71,
+      "tasksAwaited": 74,
+      "tasksStarted": 74,
+      "uploadBytes": 133024,
+      "uploads": 43
+    },
+    "jobsRecorded": 78,
+    "jobsThatRan": 73,
+    "jobsOnWorkerThreads": 73,
+    "distinctWorkerThreadIdentities": 11,
+    "mainThreadRan": 0,
+    "byOutcome": {
+      "cancelled": 5,
+      "dropped": 3,
+      "failed": 18,
+      "loaded": 43,
+      "measured": 9
+    },
+    "liveTexturesAtTheEnd": 0,
+    "scale": 2,
+    "nodesMounted": 44,
+    "declaredCases": 41,
+    "uploadBudgetStage": {
+      "peakUploadsPerPoll": 1,
+      "picturesLoaded": 6
+    }
+  },
+  "refreshedControlsOfOtherSlices": {
+    "reason": "The facade, the Animated exports, the SDK platform plugin and the producers pinned by the bundle receipts of other slices changed, so their local controls and sabotages (build/, never committed and absent in CI) compared against stale bundles; the WebSocket ones also predated #48",
+    "suites": [
+      "test:animated",
+      "test:frame-clock",
+      "test:networking",
+      "test:websocket",
+      "test:transforms:guards (uniform scale and singular lanes)"
+    ],
+    "procedure": "each control lane rerun on its preserved preceding host, and the retained sabotage scripts of the animated, frame clock, networking, WebSocket and singular transform suites rerun; every one restored its sources and rebuilt the genuine host",
+    "staleReceiptsKept": "build/*-original-report.pre-images.json (6 reports)",
+    "hostedCi": "not affected: the job has no controls, and the current lanes ran on the committed tree"
+  },
+  "contractUpdates": {
+    "animated": "tests/native-animated-fixture.jsx and tests/native-animated-probe.gd: Animated.Image now renders RN's AnimatedImage over the Godot Image, so the check 'mount/Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render, each with its reason' became 'mount/Animated.Text, ScrollView, FlatList and SectionList fail where they render, each with its reason' and the fixture no longer renders Animated.Image as a failing case; the suite still passes its 75 checks"
+  },
+  "exploratoryObservationsOutsideTheReceipt": [],
+  "captures": {
+    "command": "npm run example -- images --capture",
+    "exampleChecks": {
+      "headless": 17,
+      "capture": 25
+    },
+    "files": [
+      {
+        "path": "docs/evidence/images/images-all-modes.png",
+        "sha256": "52c7b512172750a81ca2c2e74ce4700be39a30c6bfe7707a69e3ed2ccf035197",
+        "bytes": 228415,
+        "width": 1800,
+        "height": 1360,
+        "shows": "the launcher example at content scale 2 after every picture settled: the six resize modes of one 120x60 point landscape in 84x84 point frames (cover and center crop out the red and green edge marks, contain letterboxes it between two bars, stretch distorts it, repeat tiles it at its size in points, none draws it at the top-left corner), the 32 point logo from its @2x file loaded as 64x64 pixels, the 32x32 PNG sprite centered, the SVG badge rasterized at 128x128 pixels, the ImageBackground with its child over the picture, the missing file as a dark red box with the error text, and the preview in cover with 'loaded 240x120 px'",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      },
+      {
+        "path": "docs/evidence/images/images-interaction.png",
+        "sha256": "3ee69e2b036c68501354bf7bb76e1d930793771617c7361e23ceb246b26d2675",
+        "bytes": 224309,
+        "width": 1800,
+        "height": 1360,
+        "shows": "the same screen after nine real clicks on Next mode (the preview went round the six modes and back to cover, then to contain, stretch and center) and one on Swap the picture: the preview now shows the logo in center mode, 'resizeMode=\"center\"', 'picture: logo' and 'loaded 64x64 px', while the twelve tiles are unchanged",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      }
+    ]
+  },
+  "regressions": {
+    "note": "Every native-cold-start suite step, test:examples, test:contracts, check:static, check:publication and type-check ran once on the working tree of the implementation before the review round. Eight steps failed that first pass for reasons outside the behavior under test and were fixed and rerun green; the review round then changed application_runtime.cpp (the shared mount-liveness guard of the core controls) and the loader's fingerprint seam, and the suites that those changes can reach ran again on the committed tree.",
+    "firstPassFailures": {
+      "check:static": "fallow reported items of the new files that nothing used or listed (unused exports and an unlisted @babel/generator import); the exports were removed or covered by the consumers' type tests and usedExports entries, and the import was replaced by a structural check",
+      "test:animated": "its local control and sabotage receipts pinned a bundle without Animated.Image; its fixture and probe were updated and the receipts rebuilt",
+      "test:frame-clock": "its local sabotage receipts pinned the previous bundle; rebuilt",
+      "test:networking": "its local sabotage receipts pinned the previous bundle; rebuilt",
+      "test:websocket": "its local control and sabotage receipts predated #48 and the host build lacked the websocket handshake target; rebuilt after a full build",
+      "test:transforms:guards": "the uniform scale and singular controls and the singular sabotage pinned the previous bundle; rebuilt",
+      "test:codegen:native": "reused an output directory of an earlier run; passed with a fresh --out (6 translation units)",
+      "test:images": "compared against a stale local control; rerun in the order current, control, sabotages, current"
+    },
+    "afterTheFixes": {
+      "test:animated": "passed",
+      "test:frame-clock": "passed",
+      "test:networking": "passed",
+      "test:websocket": "passed (4 tests)",
+      "test:transforms:guards": "passed (61 guard checks, 25 input checks, 29 uniform scale, 49 singular)",
+      "test:codegen:native": "passed (6 translation units)",
+      "test:contracts": "passed (7, 8 and 291 Node tests, 13 Python tests)"
+    },
+    "afterTheReviewRound": {
+      "image_core_test": "IMAGE_CORE_PASSED",
+      "test:images": "74 current, 3 normative failures of the control, 12 and 2 failures of the sabotages",
+      "test:animated": "passed",
+      "test:switch": "passed",
+      "test:touchables": "passed",
+      "test:focus:commands": "passed",
+      "test:responders:shared-touches": "passed",
+      "test:pointers:click": "passed",
+      "test:modules": "passed",
+      "test:examples": "passed, 31 examples (images: 17 headless checks)",
+      "type-check": "passed",
+      "check:static": "passed",
+      "check:publication": "passed",
+      "test:contracts": "passed (7, 8 and 291 Node tests, 13 Python tests)"
+    }
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "2e7eab76954eaab6702784f5bf4e5ccd33ef0dfb3c91bc6f456718c0e55ccd15",
+    "inputsMatchCommit": true,
+    "inputs": 95,
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "fixtures": {
+    "manifest": "tests/fixtures/images/manifest.json",
+    "files": 18,
+    "generator": "scripts/images-fixtures.mjs",
+    "pinsVerifiedAgainstTheCommit": 18
+  },
+  "sourcePins": {
+    "tests/images-fixture.jsx": "02f5aa947959485348357bb5fe5ea71fae406d0c2dc46935e09c58f185185327",
+    "tests/images-probe.gd": "b538bd493195664f5799905520274ad420795364d6f6242ad1d6e7eb0ab4074f",
+    "tests/images-native.test.mjs": "85e73a6f74423107df2b4e4440a1b30a6c9978bf5ba0a82ebc3cb12b713ebf32",
+    "tests/images-oracle.mjs": "d48d20e00673dc102a948532ca5a61e8877ec0db24e7084d826002a05e7b6d99",
+    "tests/images-pattern.mjs": "df313dbcbb90402122b5a44f8c192f716f30cf94827834069675edbe895e1f17",
+    "tests/fixtures/images/manifest.json": "f5aa4f1e69366bb73ce7f2313bdaec172c540709c8299699fc424a64fc7402c7",
+    "scripts/images-bundle.mjs": "c47607f6a57547d70a9dbad664e8cbed55070a846c7adcefab567b28d69f09b2",
+    "scripts/images-fixtures.mjs": "25af9c1be35958206883189774e17a4cb47453fd286d6ac9449366803770aa1e",
+    "scripts/images-fixtures.gd": "34d26171f783c24d1f7e691b9f2925f198bf6e360f2786672df53bf42fa2b079",
+    "scripts/native-probe-bundle.mjs": "92cb02dbedbab70bd0437abaecb5fb0ef6ffb7be40d7558d4a47bcc6cc6e6d19",
+    "src/image.jsx": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
+    "src/image-contract.mjs": "bfeeed482b79f20f3544d2df1cf9b464744438e026921e529e0e3a70ae830ca1",
+    "src/react-native-platform.jsx": "b3d0652fa9a7d8c83e5607bc4c54e8b286a8dcbf65d65b700ba63cef8f5fe4ff",
+    "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+    "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+    "sdk/toolchain/asset-plugin.mjs": "e64b6f8d63978d86a5c20fd8fdffc7ef5e429b53039e669dbc7eaaaf5420f801"
+  },
+  "verificationSourcePins": {
+    "package.json": "1e9f2c89bde1a4ac2e1be54180c4ad9d103ced967a7d1446f52397ec26e0a6de",
+    ".fallowrc.json": "f087251426106faaeba8dfadda8787dfe786d9abd414737223ba5fb3b438fb90",
+    ".github/workflows/contracts.yml": "165c8494c3202cb82175b69380b5c9b3159d64670200520d6c57baa393678875",
+    "examples/catalog.json": "e370ff6f0ec1c3f849578e16048a866865781ef519b6ba989c0675207dc5b78a",
+    "examples/entry.jsx": "7606f5cbbce1e29547a7383983fa57912a91d2633af79fb5d8f146230dc46ec1",
+    "examples/images/App.jsx": "00136a9b7e70d063e21fdc53b9025850f778da1d6204cce0096adb43588a7f3f",
+    "examples/images/scene.tscn": "ec93131969d7d497c1d1a7dba236ff6b4ca54835c163a4cf56472ee7f96147be",
+    "examples/images/validation.gd": "1e7acf482effefd78e37b877fc5db50e763c71a90e2cbf14e549253a17b0ca75",
+    "examples/images/assets/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "examples/images/assets/landscape.png": "f1d79a65a1528501d2ae745572bb6818e7723c9ed3b7cb6da9f21ea21c2a1450",
+    "examples/images/assets/logo.png": "ca6976f236a755c44a45081c2baa8be11f54f34466112de4be8643e4d0de8366",
+    "examples/images/assets/logo@2x.png": "522c7ce864a7ee713b8d9baf82feb88a98674dbd0a4f9c20139404cc072bf6ac",
+    "examples/images/assets/logo@3x.png": "0fe52743f1c7c174e2c3b80118200332809a8198dd6be814d9e00e239b875dda",
+    "examples/images/assets/sprite.png": "4522ab860d5a662231c1b61d904ad0d889bf467d782480ddf02b130d1e0ee07f",
+    "examples/images/assets/tile.png": "010a72fc6d1936044476fc1337c114ced2e21e361b7ca23169916c34c1f58b04",
+    "scripts/images-sabotage.mjs": "3985f7001c21f730e89173190f713fec57e65f736346435882827e56224193c9",
+    "scripts/images-example-assets.mjs": "4ad118c17b36c747e2f600a576f701bbb471582f59f3329e67beb5450cff3acd",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/bundle.mjs": "134178ebf8e2ba529b0343517b559a8dab1da2e60bd22790d6e36486cf9aef48",
+    "scripts/event-target-bundle.mjs": "c7867ebf7bf92145ce45920ec9c353ba3997f8afe82917b4e75959c9324ed6de",
+    "scripts/adapter-runtime-check.mjs": "35d4b9df39d4b38f45043a26d33630c453055407310a249914b6134bfe9b8bf2",
+    "sdk/toolchain/build.mjs": "3c7fafa8b4292b46d26a84b9a5a75d1021075d95ba9d09d38c23817fe8c13a27",
+    "sdk/addon/ios_export.gd": "684d57e6884c2670e06221064c5a2d1e502893b3903fd12cc2e2972fd6e9c7cf",
+    "tests/asset-plugin.test.mjs": "09cd07de369ae1cbcce772797790093bf1a07dff067455e6e255260752ac66d9",
+    "tests/image-contract.test.mjs": "f7902c4db9a31f78700999733376d1e1a9661f3d3e147e3921ec45e9f2180b5f",
+    "tests/platform-seams.test.mjs": "2e5fd5002dc640a70bcd07f9390fac7455636c23e17d1a30989a764d866b7801",
+    "tests/types/consumer.tsx": "4193ee686a9decd17d077a55cfcaa00f16e0c2462d9782e646d76d27c74980af",
+    "types/react-native.ts": "8cc65f9294c585f5a643097ed5500620c0943d7e4776c0432e5cf865f0ec5389",
+    "tests/native-animated-fixture.jsx": "38508ac108385b4e74402583c02cfca80287c05c1d28e6e16ef622f6c1c05497",
+    "tests/native-animated-probe.gd": "92441f28b2912f2bd783da8bf345f7f4657eb578b3fb59c670fc745ba51f1c13"
+  },
+  "nativeSourcePins": {
+    "native/CMakeLists.txt": "835920462e6477fde22246c7ee4e5d610212a889b897f6040cb6ff3e70719c94",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "62239b1fc56ff65eba840d61a8ade430db5a5a944a354338539d88144e8d9101",
+    "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+    "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/godot_http_transport.cpp": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/godot_image_manager.cpp": "e11aec4600b5932f5de309230648d565808cb53f1c1e6ee74549a7c29a0d9baa",
+    "native/godot_image_manager.h": "ecd7e9ef99451e0a0d1b1fb2c6de6dbc70ef39accf38859b4f77186f524dbb63",
+    "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+    "native/godot_websocket_connection.cpp": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+    "native/godot_websocket_connection.h": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+    "native/godot_websocket_transport.cpp": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+    "native/godot_websocket_transport.h": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+    "native/image_core.h": "3a66103cdf71a536aa72de214cded183e686141e8a1bba0e568794849bff6935",
+    "native/image_core_test.cpp": "f2c5454b7d80dc720a4ac342b7d9deed6dc07fc21a8c15f4ae11948cca425ec0",
+    "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+    "native/image_loader.cpp": "7826938a24f7c30d3581d1360c3f9f2b08530ddbc82ec5e211aad2aedbc4ab83",
+    "native/image_loader.h": "00f59a1552d782a190e968ee1d69f92965b1c147b15e4d337578c45ea3e7bbb0",
+    "native/image_loader_module.cpp": "2450de24dc4559b3eada1c0d3badbd8bddc6762505f8d579b6b7ef1fdea063b4",
+    "native/image_loader_module.h": "1d5031eaf042c74b53e57fa8b7b5d276b672ad152ca3a26ba902496a586a57d7",
+    "native/image_view.cpp": "0d9e7789dde054d46c04db5cde2858bd98d5e6f4b032f5fa7b59ece555fa8227",
+    "native/image_view.h": "8185ff0d33f262f261c562229afaae41e1ca439849f8be5b76a0ccf6e0ba285e",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/networking_modules.cpp": "788a6169d959e2c161aaa295b8f280e03c11ca64a8906321f4a54e67a50471fa",
+    "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+    "native/networking_state.h": "0fb96f61422c6a88e85c76091bf83cdf215708a36e4ff47b5d6125e92107d415",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "415cb431d0a632aed16bffcb200ffd1dd151a699e4c2ab098895a6995bf8b93a",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "native/websocket_core.h": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+    "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+    "native/websocket_handshake.h": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+    "native/websocket_handshake_test.cpp": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+    "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+    "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+    "native/websocket_transport.h": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+    "native/websocket_transport_test_fixture.cpp": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+    "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a"
+  },
+  "fixtureFilePins": {
+    "tests/fixtures/images/assets/badge.png": "3e66a63204c1245775d7af2e08dc899097e7a3f12aef45948396dd776a7664f6",
+    "tests/fixtures/images/assets/badge@2x.png": "a6e07b350240cfd8b902dc67f420eb8cc6c32e574398256c0b0289f58445bccb",
+    "tests/fixtures/images/assets/badge@3x.png": "4ee5e4c946f2edf111b85768e38bc0d63de78015dd4d42dbf9c98098c2e59794",
+    "tests/fixtures/images/assets/tile.png": "2301e079bfa06c792c42503b567fe41282bd2b4652206ffd3c4b4ce0849e6af1",
+    "tests/fixtures/images/assets/wide.png": "9950ba2a0eef6917b41aab657355f9f991b0f3835afc409a1fba1b6243cc246a",
+    "tests/fixtures/images/broken/corrupt.png": "d0b1a90ca34f7684aa0c4b97e3bbd1b856c8d4ea63fcd37f6ae2298419b5bc30",
+    "tests/fixtures/images/broken/empty.png": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/images/broken/notimage.png": "0131ca5e7cf03aa0f4534b8c9756af7b51059353b246584715dba4773f559dac",
+    "tests/fixtures/images/broken/oversize.jpg": "b6f6e74600bd60283ed35c7ce2afd178732ad92eb6faf172f0c701ef5957e408",
+    "tests/fixtures/images/broken/oversize.png": "4cc359e84437f359656cc6f336cdf7cb671f52bbcc0f4bcfa367fe03b87ef761",
+    "tests/fixtures/images/broken/truncated.png": "c2e74ba45467222b5546e4f29cf75dbe42c55a6ab412969f24f0ec5ece655a43",
+    "tests/fixtures/images/formats/format.bmp": "40ac0452ff702984d1d4cd2a8380f8f35e168b177faa0e0a20642be2ffa9700a",
+    "tests/fixtures/images/formats/format.gif": "b1442e85b03bdcaf66dc58c7abb98745dd2687d86350be9a298a1d9382ac849b",
+    "tests/fixtures/images/formats/format.jpg": "e8c7734160164a5be8931fbe772c75bebef40a3e89041938acb44983f5a5c578",
+    "tests/fixtures/images/formats/format.png": "aceaf14451f98ebd22d11072e56b93869803fe8f4ee4470aa9d7c8434a2f60f4",
+    "tests/fixtures/images/formats/format.svg": "df31b43d1878e3f2ac9bcb2d06c9b0cf9e16a085a1a50b48fe8c9aed1c84125b",
+    "tests/fixtures/images/formats/format.tga": "bcb78ab165ac800b87ae027c70fa55094bf2506838883f6268f08da1dcfcedbd",
+    "tests/fixtures/images/formats/format.webp": "7e6928bdc86ac9cec3090a98b5c04fa584223f8f5f95e25b51a84af29430dd1e"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Image/Image.ios.js": "a23f5593958646ac0d61168219723f60987018c1696d481afa56bc2dc9330d26",
+    "Libraries/Image/ImageViewNativeComponent.js": "f7b4eeac6d29ae75d731f2bc5897bf71cd68ca8bc77c54085937c740706f2514",
+    "Libraries/Image/ImageSourceUtils.js": "bf6ddbc3551e496406a0abf5afd100f5c7246fcb3da3907fa0759e0370d811cd",
+    "Libraries/Image/ImageUtils.js": "1ffb1644140f811bd45347a2e4a14cc182414b3fd2e0ec6ec14d6951e04fc76f",
+    "Libraries/Image/ImageInjection.js": "b354405cd1669e08500c293e288b866e277161946c1afe4ac18fe283e749f0a8",
+    "Libraries/Image/NativeImageLoaderIOS.js": "eff5c353f6b442e295bb5e5aef1b2d678f69e9d4bc4d3256d54810e5fa97b7bd",
+    "src/private/specs_DEPRECATED/modules/NativeImageLoaderIOS.js": "a041f39db8aed07a6a7f3fbaccc852bf9c211de5134b35ca18b9d192d3f721d0",
+    "Libraries/Image/resolveAssetSource.js": "b5c1b27fb9a5b1e9915c8495f8b3235462bcffe745cfe7afaad5fcaa1f3d5930",
+    "Libraries/Image/AssetSourceResolver.js": "d84e7ad92b4be3c3d4748e3356aea293021957c9e7aa1a0d95193a848961a811",
+    "Libraries/Image/AssetUtils.js": "ebebdaa0d7385d18cf583923a5103e4f79a3fe861b764f48251823f780c1dbc9",
+    "src/private/assets/AssetRegistry.js": "f73e092fa608b2dad8cc26b70f7fb309c4627b0432d970bbd0b85a33648c969b",
+    "src/asset-registry.js": "19371c8bda20c2fe65cff1ae016fdd1002730d065d71df76337543a40bec7905",
+    "Libraries/Image/ImageBackground.js": "0c9f6ae42f290c8271c169590597cea854383fc7eb94866043c78c9fe6f6d964",
+    "Libraries/Animated/components/AnimatedImage.js": "2fa39fffd855a7d87e296a5bc2ab1e8d029254035d97f2d8725ef925b4f53292",
+    "Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+    "Libraries/Image/Image.js": "ee3a6c518734bfc8dd594050f886131bb280e6f45a2c5bb6bb3f8f0dc5de19a2",
+    "Libraries/Image/Image.android.js": "5b864da4d8495bfc8c2e7f1c4ccd739452efa1cc8105097dc2c38e3f8b38c320",
+    "Libraries/Image/RCTImageLoader.mm": "b82090ce325a980dbdc1439b703f483c92c9aa4b64ca307c256a299fe244265a",
+    "Libraries/Image/RCTImageUtils.mm": "1b22ecc192372c2de0639d2b759f03da4381eed3c055a414fd92b16dfeff85fa",
+    "Libraries/Image/RCTBundleAssetImageLoader.mm": "e259fad2351bf5b67b707554862f426ef4f429bd839320240fdfe7c028d7d186",
+    "Libraries/Network/RCTFileRequestHandler.mm": "2a8cf767e9ebdcc6c01c0d80f2467e8156ce0b10d43c18086f2a483ebebb9a1f",
+    "Libraries/Network/RCTDataRequestHandler.mm": "a9a7d97d330d6e0b0927ddbf2348e017aa825b282f3cd53a155b7e09c2e11156",
+    "Libraries/Network/RCTNetworkTask.mm": "d3f751a626f63f01894cd93b6c11ecad27fcce7c61cf3b9a27b47047b90e4eff",
+    "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm": "a3c70cd2cd412239238fd73584362f9626f1579ab0296e4c4327a784012e8203",
+    "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImageManager.mm": "567dec441c1edc6b3f0b5af8f72c9bc509624b3e76d162a263c53ac26b22fcf7",
+    "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h": "d94b105fcc155625194bed540ca5d1d2d500c19fe7b4b9e91afa237162eb70e0",
+    "ReactCommon/react/renderer/imagemanager/ImageResponseObserverCoordinator.cpp": "53c185617b4a27b696cdfe5123b29b20a5c35dd0bf16e8c4c9fd09b9f27ab883",
+    "ReactCommon/react/renderer/imagemanager/ImageRequest.h": "370acd1eb4b87d4deeb3d296333c7f34f525a0f79801cb2bb5fc7d39f0cba7b7",
+    "ReactCommon/react/renderer/components/image/ImageShadowNode.cpp": "2059767f5d2678b0d406798ee004cb68d725ac744b8d5d31da50381f9b6de525",
+    "ReactCommon/react/renderer/components/image/ImageEventEmitter.cpp": "d0ebb067d02a0f2447e530ee31c31fb557f8ef246c0b8509841bfb55c245a685",
+    "ReactCommon/react/renderer/components/image/ImageComponentDescriptor.cpp": "9c80dade3dea86cc3336cde97e5c0db6bd9d2ca9fed18d9c0ab9bfa8ebaffd4a",
+    "ReactCommon/react/renderer/components/image/conversions.h": "faa08fb20e4eed218fb471990d2f158ee51424dec078e440e767032c4987bdd3",
+    "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86"
+  },
+  "hostedCI": {
+    "status": "pending-images-slice"
+  },
+  "departuresFromRN": [
+    "Rejections of the ImageLoader TurboModule carry their code as a message prefix ('E_GET_SIZE_FAILURE: ...', 'E_PREFETCH_FAILURE: ...'); RN's reject(code, message) sets Error.code",
+    "repeat tiles at an integer size in points (the texture's size override), where UIKit tiles a resizable image at its point size with float geometry",
+    "an SVG is rasterized at the request's scale (size in points times the content scale), where iOS has no SVG decoder in RCTImageUtils",
+    "a res:// source is the exported project's bundle: decoded whole at the scale its file name states, like a bundled asset, never shrunk",
+    "getSize and getSizeWithHeaders read the header and believe it; the headers argument is accepted and ignored because only local sources load",
+    "prefetch and prefetchWithMetadata reject (no image cache) and queryCache answers {}",
+    "GIF is refused through onError (Godot has no GIF decoder); formats are PNG, JPEG, WebP, BMP, TGA and SVG",
+    "the decode shrinks with Image::resize (Lanczos) to RCTTargetSize's size; ImageIO's thumbnail rounding is assumed to be round-to-nearest and was not compared with an iOS device",
+    "the host bounds what it decodes (16,384 pixels a side, 64 Mi pixels, 128 MiB of source bytes); RN's iOS loader bounds only concurrency (4 loads, 2 decodes, 30 MB of decodes)",
+    "an Image outside the declared props fails where it renders with a host-style message for each prop the later slices implement, where RN would drop it silently on this platform"
+  ],
+  "limits": [
+    "Network images (http and https sources, headers, method, body and cache) fail through onError naming the later slice; they need GF-22 and a request layer for images.",
+    "No decoded-image cache, prefetch or real queryCache: every Image reads and decodes its file again.",
+    "tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and overlayColor fail where the Image renders; a border radius on the Image's own style fails too (the host clips rectangles only).",
+    "Animated GIF and WebP, nativeImageSource, and an Image inside Text (a failure by design, as for every Control) are not delivered.",
+    "Assets were loaded from the project directory (res://build/...) and from user://; the iOS export hook copies the manifest's files, but no exported app, desktop export or Android export ran.",
+    "The captures were taken by the macOS native renderer at content scale 2; the pixel checks sample a few points and there is no independent pixel oracle of the whole frame.",
+    "ImageIO's rounding of a thumbnail's size, UIKit's exact tiling geometry and decode memory on a device were not compared with iOS.",
+    "Hosted macOS CI has not run this slice; the oracle and the probe state values from what the host delivered or from bounds (peak in flight at most 4, peak uploads per poll 1 at a budget of one byte), never from frame pace.",
+    "Only macOS arm64 was executed; Windows, Linux, Android, iOS and Web runtimes are not covered.",
+    "GF-16 is open: only its first-slice checkpoint can close, and no whole GF, other checkpoint, dependency, weight or denominator closes."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the SHA-256 of the file in the tree the lanes ran from",
+    "sourcePins": 16,
+    "nativeSourcePins": 95,
+    "verificationSourcePins": 30,
+    "fixtureFilePins": 18,
+    "uniqueCodeAndConfigurationInputs": 159,
+    "mismatches": [],
+    "originalReactNativeSources": 33,
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-08T01:59:06Z",
+    "meaning": "Contracts-job gates, the dashboard test and the type check on the tree that holds this record's documents (the implementation commit 552fb56 plus the stage's documentation and captures; no executed source differs from it)",
+    "steps": {
+      "test:contracts": "passed",
+      "check:static": "passed",
+      "check:publication": "passed",
+      "test:dashboard": "passed",
+      "type-check": "passed"
+    },
+    "counts": {
+      "nodeContractRuns": 3,
+      "nodeContractChecks": 306,
+      "nodeContractBreakdown": "7 + 8 + 291",
+      "pythonContractChecks": 13,
+      "dashboardTests": 8,
+      "nodeFailures": 0
+    }
+  }
+}
