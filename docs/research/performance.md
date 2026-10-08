@@ -9,7 +9,8 @@ memory, and nothing in it decides what a device may spend (see [Open](#open)). *
 live Hermes heap in the steady state is bounded by a normative check of 2,048 bytes**
 ([below](#the-live-heap-in-the-steady-state-and-the-limit)).
 
-The suite is `npm run test:performance`. It runs the probe in Godot, replays the recorded report
+The [evidence record](../evidence/performance/README.md) pins the run, the hosts and the receipt of this
+slice; its hosted CI run is pending. The suite is `npm run test:performance`. It runs the probe in Godot, replays the recorded report
 through the probe's own checks, and passes the report through an independent oracle
 (`tests/performance-oracle.mjs`) that recomputes the invariants and the percentiles from the raw
 samples. The preceding host fails exactly the 27 checks that read the section, three retained
@@ -86,9 +87,9 @@ React's first render of a root and its unmount run outside a pump; their commits
 counters, and the pump phases see only what ran inside a pump.
 
 The weight of the section is measured by the probe after the soaks, when every window is full. The
-application snapshot (without any surface's nodes) weighs 6,009 bytes without the `validation_performance_samples`
-meta, of which the `performance` section is about 1,945, and 18,433 bytes with it, the section being about
-13,401: the samples are 11.5 KB that the default snapshot no longer carries (they were always on in the
+application snapshot (without any surface's nodes) weighs 5,997 bytes without the `validation_performance_samples`
+meta, of which the `performance` section is about 1,944, and 18,398 bytes with it, the section being about
+13,433: the samples are about 12 KB that the default snapshot does not carry (they were always on in the
 first version of this slice).
 
 ## Method
@@ -149,7 +150,7 @@ time, and judges the frames it was delivered, never their pace.
 
 ## Measured on this machine
 
-One run (the last of eight) on an Apple M3 Pro (11 cores), macOS, arm64, headless, Godot 4.7.2, Hermes 250829098.0.17,
+One run, the one the [evidence record](../evidence/performance/README.md) pins, on an Apple M3 Pro (11 cores), macOS, arm64, headless, Godot 4.7.2, Hermes 250829098.0.17,
 `opengl3` named as the driver. Durations are milliseconds and vary from run to run by tens of percent;
 the table is a baseline of what the harness records, not a promise. The mount columns are the sum of the
 pumps from the cycle's start to the settled surface, the unmount columns from the settled surface to the
@@ -165,20 +166,20 @@ freed one; "p50 / p95" are the nearest ranks over the 20 cycles of the soak.
 With nothing mounted and the bundle loaded, the live heap was 1,790,472 bytes, the SceneTree held 2 nodes with
 no orphan, and Hermes' external bytes were 0 (1,100 once a workload had run). Retaining 100,000 two-property
 JS objects raised the collected heap by 13,840,984 bytes (138 per object) and releasing them took it back to
-within 40 bytes of where it was; three JS turns busy for 30 ms were accounted 30.02 ms of JS phase
-inside 30.07 ms of pumps.
+within 40 bytes of where it was; three JS turns busy for 30 ms were accounted 30.02 to 30.06 ms of JS phase
+inside 30.07 to 30.13 ms of pumps.
 
 | Workload | Mount: pump p50 / p95 | JS p50 | Mount p50 | Layout p50 | Unmount: pump p50 / p95 | `surfaces.retire` p50 / p95 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| idle | 0.54 / 1.05 | 0.31 | 0.08 | 0.01 | 0.19 / 0.33 | 0.52 / 1.21 |
-| forms | 1.56 / 7.73 | 0.91 | 0.36 | 0.08 | 0.28 / 0.58 | 0.80 / 1.56 |
-| chart | 8.06 / 44.49 | 4.13 | 3.66 | 0.06 | 0.43 / 1.21 | 0.98 / 2.52 |
-| list | 19.02 / 35.88 | 12.83 | 4.37 | 1.42 | 1.74 / 2.58 | 2.66 / 3.83 |
+| idle | 0.52 / 1.08 | 0.35 | 0.09 | 0.01 | 0.20 / 0.27 | 0.59 / 0.80 |
+| forms | 1.44 / 24.01 | 0.83 | 0.33 | 0.09 | 0.23 / 0.59 | 0.67 / 1.28 |
+| chart | 6.65 / 31.79 | 3.18 | 3.23 | 0.06 | 0.40 / 0.52 | 0.91 / 1.23 |
+| list | 18.12 / 49.94 | 12.01 | 4.05 | 1.43 | 1.69 / 2.19 | 2.57 / 4.03 |
 
 The phase columns are the median of each phase over the cycles, so they do not add up to the pump's median.
 Between a root's removal and its retirement the host runs idle pumps of its own, so the unmount pump holds
 them too. Wall time per mount is left out: it is the number of frames the probe waited (six stable ones at
-about 6.9 ms each), which is the loop and not the mount. The resident set size stayed within 125 to 156 MB
+about 6.9 ms each), which is the loop and not the mount. The resident set size stayed within 90 to 188 MB
 across the soaks (it moves by tens of megabytes in either direction within a run), and Godot's static memory
 grew 62.9, 63.0, 65.7 and 66.6 KB per cycle against 60.5 KB for the control that mounts nothing.
 
@@ -186,21 +187,21 @@ grew 62.9, 63.0, 65.7 and 66.6 KB per cycle against 60.5 KB for the control that
 
 The live Hermes heap at rest (after a full collection, nothing mounted) was read after every cycle.
 
-Eight soaks (seven of 20 cycles and one of 100, so 216 steady cycles per workload) gave, after the first three
-cycles of each workload:
+Eight soaks whose reports were kept (seven of 20 cycles and one of 100, so 216 steady cycles per workload) gave,
+after the first three cycles of each workload:
 
 | Workload | Warm-up | Growth over the steady cycles | Largest step between cycles |
 | --- | --- | ---: | ---: |
 | idle | none: 1,790,616 from the first cycle | 0 | 0 |
 | forms | none: 1,803,896 from the first cycle | 0 | 0 |
 | chart | 1,819,368 to 1,820,872 in the first four cycles (+1,504 bytes) | 0 | 0 |
-| list | 1,933,112 or 1,933,424 from the first cycle | 0 in six soaks, +312 in two (the 100-cycle one and the last) | 312 |
+| list | 1,933,112 or 1,933,424 from the first cycle | 0 in seven soaks, +312 in one (the 100-cycle one) | 312 |
 
-An exploratory soak of 20 cycles that was not kept showed the same 312-byte step in the list workload, at its
-thirteenth cycle; it is not in the counts above. The live heap at rest is the same to the byte from one cycle
+Two other soaks of 20 cycles whose reports were not kept (one showed the same 312-byte step in the list
+workload) and an exploratory one, which showed it at its thirteenth cycle, are not in the counts above. The live heap at rest is the same to the byte from one cycle
 to the next once a workload is warm, because a full collection runs before every reading and the same code
 allocates the same objects. The single exception is a one-off 312-byte step in the list workload, at a point
-of the run that varies: before the first list cycle in three soaks, inside the steady cycles of two, and in
+of the run that varies: before the first list cycle in four soaks, inside the steady cycles of one, and in
 none of the other three. Read in the middle of a cycle, with the root mounted, the heap moves around its fixed
 point by 128 bytes (idle, forms, chart) to 4,528 bytes (list) over a soak.
 

@@ -422,7 +422,8 @@ run, and the live heap at rest rises at most 2,048 bytes in the steady state (0 
 by an independent oracle from the samples the host reports; the preceding host fails exactly 27 and three retained sabotages (a Control never freed,
 a frozen heap reading, a phase counted twice) are rejected. Durations, the resident memory and Godot's static
 memory are recorded with their provenance and never judged; target-device budgets, text shaping, 10,000 rows,
-graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot.
+graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
+[Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

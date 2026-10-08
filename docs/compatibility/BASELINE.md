@@ -81,7 +81,7 @@ slice's own suite, not a coverage percentage.
 | Runtime globals | none: `fetch`, `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are globals, not names of the root (`Networking` stays missing) | [Networking](../evidence/networking/README.md) | 100 against a local server over HTTP and HTTPS, with an independent oracle; the preceding host fails exactly 84, two retained sabotages 8 and 2 | pending |
 | Runtime globals | none: `WebSocket` is a global, not a name of the root | [WebSocket](../evidence/websocket/README.md) | 93 against a local RFC 6455 server over ws and wss, with an independent oracle that checks the server's frame log; the preceding host fails exactly 81, two retained sabotages 4 and 2 | pending |
 | Device services | `Linking`, `Clipboard`, `Vibration` | [Device services](../evidence/device-services/README.md) | 65 in two applications (the validation backend and Godot's real one) and 2 in a launch without `--uri=`, with an independent oracle; the preceding host fails exactly 52 and 1, two retained sabotages are rejected by the probe and the oracle | pending |
-| Performance diagnostics | none: the `performance` section of the application snapshot is a diagnostic and not a name of the root | [Performance baselines](../research/performance.md) | 41 in a soak of four workloads, with an independent oracle that recomputes the percentiles from the host's samples; the preceding host fails exactly 27, three retained sabotages fail 4, 3 and 2 and are rejected by the oracle | pending |
+| Performance diagnostics | none: the `performance` section of the application snapshot is a diagnostic and not a name of the root | [Performance baselines](../evidence/performance/README.md) | 41 in a soak of four workloads, with an independent oracle that recomputes the percentiles from the host's samples; the preceding host fails exactly 27, three retained sabotages fail 4, 3 and 2 and are rejected by the oracle | pending |
 
 The Performance row measures and sets no budget (see the next section). The two Runtime globals rows are not facade areas: RN installs those names as globals, so
 they do not move the counts above, and the root's `Networking` export is still missing. The
@@ -101,14 +101,14 @@ bytes above its first steady value ([why that number](../research/performance.md
 
 | Workload | Native views | Live heap at rest (bytes) | Heap over rest while mounted (bytes) | Mount: pump p50 / p95 (ms) | Root retirement p50 / p95 (ms) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| idle: a `View` | 2 | 1,790,616 | +21,840 | 0.54 / 1.05 | 0.52 / 1.21 |
-| forms: `Button`, `TextInput`, `Switch` | 5 | 1,803,896 | +63,832 | 1.56 / 7.73 | 0.80 / 1.56 |
-| chart: react-native-chart-kit `LineChart` | 71 | 1,820,872 | +263,520 | 8.06 / 44.49 | 0.98 / 2.52 |
-| list: `FlatList`, 120 rows | 124 | 1,933,112 | +1,448,784 | 19.02 / 35.88 | 2.66 / 3.83 |
+| idle: a `View` | 2 | 1,790,616 | +21,840 | 0.52 / 1.08 | 0.59 / 0.80 |
+| forms: `Button`, `TextInput`, `Switch` | 5 | 1,803,896 | +63,832 | 1.44 / 24.01 | 0.67 / 1.28 |
+| chart: react-native-chart-kit `LineChart` | 71 | 1,820,872 | +263,520 | 6.65 / 31.79 | 0.91 / 1.23 |
+| list: `FlatList`, 120 rows | 124 | 1,933,112 | +1,448,784 | 18.12 / 49.94 | 2.57 / 4.03 |
 
 Provenance of this table: Godot 4.7.2-stable (official), Hermes 250829098.0.17 (Hades, concurrent), React
 Native 0.87.1, macOS 26.6.2 on arm64 (Apple M3 Pro, 11 cores), headless display server (the `opengl3`
-rendering driver is named, nothing is drawn), one run of `npm run test:performance`, 20 cycles per workload
+rendering driver is named, nothing is drawn), one run of `npm run test:performance` (the [recorded one](../evidence/performance/README.md)), 20 cycles per workload
 of which the first 3 are warm-up. Heap figures are after a full Hermes collection. Durations are the pumps
 between the cycle's start and its settled root, and the host's own timing of the root's retirement; they vary
 by tens of percent between runs. The [research note](../research/performance.md) has the other columns, the

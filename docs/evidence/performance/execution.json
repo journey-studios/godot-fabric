@@ -1,0 +1,531 @@
+{
+  "format": "godot-fabric.performance-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "ad8723449abcab24fa5b38e41f3deac5c5a162fe",
+  "executedTreeSha": "0b4523e726fc50c004276ac9ab7e77fcdfd77663",
+  "sourceState": "every source below was hashed by the bundle receipt of the run and equals the blob of the implementation commit (checked file by file); the documentation files, which the commit also adds, are not inputs of any command",
+  "baseCommit": "585ca1b789528daf3ed87a7bebec40db3efa52fd",
+  "environment": {
+    "platform": "macOS arm64 (26.6.2), Apple M3 Pro, 11 cores",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17 (Hades, concurrent)",
+    "node": "v22.23.3",
+    "displayServer": "headless",
+    "renderingDriver": "opengl3 (named by the engine; nothing is drawn)",
+    "renderingMethod": "gl_compatibility"
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The performance step and the native-performance artifact of .github/workflows/contracts.yml have not run on hosted CI yet. Everything below is local macOS arm64 evidence."
+  },
+  "hosts": {
+    "previousSha256": "ad0ecf734aef28804acb1a5b2bc99a7b1b68629808a5641ade2e49d11c4f992e",
+    "previousSourceCommit": "585ca1b789528daf3ed87a7bebec40db3efa52fd",
+    "currentSha256": "866ab18dfa348c20967d525e7903b218420edd01c6ed650c6d3dd0f98522f6bd",
+    "restoredSha256": "866ab18dfa348c20967d525e7903b218420edd01c6ed650c6d3dd0f98522f6bd",
+    "restoredEqualsCurrent": true,
+    "sabotagedSha256": {
+      "leak": "530ea5b9ccf7f631ba8bca31306eafb21b62e375c99df79c9d66bdc8ea5716d6",
+      "heap": "ceb7c3c2d21e925666afb2cb9305b301898c7f6746e2c7fc6fed45657e707dfd",
+      "phase": "4ad58f482eeb70164a763ecfaa10400b089f6f85a78389ec4238a4d3a8c9af57"
+    }
+  },
+  "nativeCore": {
+    "command": ".deps/build/performance_metrics_test",
+    "source": "native/performance_metrics_test.cpp",
+    "binarySha256": "bdae22403500784b8d90ff6952bd2284ebf27abcf1d6874d04b50f935001249b",
+    "result": "PERFORMANCE_METRICS_PASSED",
+    "logSha256": "2a55af2a7406c54cd0e3e2f615d41fa01601e339c02f316e33d2fb49effaaa24",
+    "tests": [
+      "series_totals_and_window",
+      "durations_that_are_not_durations",
+      "percentiles_are_nearest_rank",
+      "nested_phases_exclude_each_other",
+      "layout_comes_out_of_the_phase_around_it",
+      "layout_is_never_more_than_the_donor_has",
+      "layout_without_a_phase_around_it",
+      "nothing_is_attributed_outside_a_pump",
+      "a_pump_inside_a_pump_is_one_sample",
+      "a_scope_an_exception_skipped_is_closed_with_the_pump",
+      "surfaces_and_counters",
+      "properties_hold_for_arbitrary_sequences"
+    ],
+    "note": "Synthetic times through one PerformanceMetrics, with nearest-rank percentiles on exact sets and 40 seeded random sequences of phases, charges and nested pumps."
+  },
+  "productProbe": {
+    "command": "npm run test:performance",
+    "suite": "1/1 subtests passed",
+    "checks": 41,
+    "baseChecks": 14,
+    "sectionChecks": 27,
+    "allCurrentAssertionsPassed": true,
+    "workloads": [
+      "idle",
+      "forms",
+      "chart",
+      "list (120 rows, initialNumToRender 120)"
+    ],
+    "cyclesPerWorkload": 20,
+    "warmupCycles": 3,
+    "readings": 254,
+    "windowSize": 128,
+    "oracle": {
+      "checkedWithEveryProbeCheckMarkedPassed": true,
+      "recomputes": "nearest-rank percentiles from the host samples, the phase and counter invariants, the heap source, the busy turns and the soak"
+    },
+    "replay": "the recorded report passes the probe's own checks again in Godot (--replay) with the verdicts of the run",
+    "hostSha256": "866ab18dfa348c20967d525e7903b218420edd01c6ed650c6d3dd0f98522f6bd",
+    "bundleSha256": "a7bccf24d5be29cee5be2ab6c9c7be3b09e20c2be3e9ec9dcef91a23c88765d0",
+    "rawReportSha256": "3664a1c98d64f32379a9b635b8e2200c65b363e4107f1322094579e6d8eddb72",
+    "comparisonSha256": "abb96182563eb230c6bf4b81a1b2edfee390235f58333fb97e6b97481f28576a",
+    "bundleReceiptSha256": "defe27874210026ae884756e20e985bc6c5b820bf2b5135bed5a85bd0d56f1b4"
+  },
+  "negativeControls": {
+    "previousHost": {
+      "command": "node tests/performance-native.test.mjs --allow-original-negative (the host preserved from main installed in addons/)",
+      "sourceCommit": "585ca1b789528daf3ed87a7bebec40db3efa52fd",
+      "hostSha256": "ad0ecf734aef28804acb1a5b2bc99a7b1b68629808a5641ade2e49d11c4f992e",
+      "checks": 41,
+      "passed": 14,
+      "failed": 27,
+      "failedEqualsNormative": true,
+      "exitCode": 0,
+      "expectedFailureObserved": true,
+      "failedChecks": [
+        "section/The application reports a performance section with counters, Hermes' heap, the pump, its phases and the surfaces",
+        "section/Hermes' heap is read through the instrumentation after a collection and counts live bytes",
+        "section/Every number of every reading is finite and not negative",
+        "section/Without the validation_performance_samples meta the section reports aggregates and no samples, and with it the samples too",
+        "heap/Retaining JS objects raises the collected heap by at least what they hold",
+        "heap/Releasing them lowers it again by at least that much",
+        "heap/Every reading ran a collection: Hermes' collection count rises from one reading to the next",
+        "pump/A JS turn busy for a while is accounted to the JS phase, inside the pump that ran it, and the phases add up to no more than the pumps",
+        "invariants/At every reading the phases add up to no more than the pump, and none has more samples than the pump",
+        "invariants/At every reading the views created minus the views deleted are the native views alive",
+        "invariants/The counters, the sample counts and the totals never go down from one reading to the next",
+        "idle/Every cycle ends with the host holding no native view and no root, and created and deleted views equal",
+        "idle/Every cycle creates, and then deletes, the same number of native views, with at least one commit",
+        "idle/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's",
+        "idle/The mount and layout phases saw its commits, and the host timed each surface's retirement",
+        "forms/Every cycle ends with the host holding no native view and no root, and created and deleted views equal",
+        "forms/Every cycle creates, and then deletes, the same number of native views, with at least one commit",
+        "forms/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's",
+        "forms/The mount and layout phases saw its commits, and the host timed each surface's retirement",
+        "chart/Every cycle ends with the host holding no native view and no root, and created and deleted views equal",
+        "chart/Every cycle creates, and then deletes, the same number of native views, with at least one commit",
+        "chart/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's",
+        "chart/The mount and layout phases saw its commits, and the host timed each surface's retirement",
+        "list/Every cycle ends with the host holding no native view and no root, and created and deleted views equal",
+        "list/Every cycle creates, and then deletes, the same number of native views, with at least one commit",
+        "list/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's",
+        "list/The mount and layout phases saw its commits, and the host timed each surface's retirement"
+      ],
+      "rawReportSha256": "a762778102969fb63412d56880263c6e13e2e5cb3fa862cdee5c8bba40a9de11"
+    },
+    "sabotages": {
+      "leak": {
+        "command": "node tests/performance-native.test.mjs --sabotage=leak",
+        "what": "never frees the Control of a view when its root is retired: the Controls leave the SceneTree and stay in memory",
+        "file": "native/application_runtime.cpp",
+        "find": "      memdelete(it->second.control);\n",
+        "replace": "      (void)it->second.control;\n",
+        "checks": 41,
+        "failed": 4,
+        "failedChecks": [
+          "idle/Every cycle ends with Godot counting no orphan node beyond the baseline's",
+          "forms/Every cycle ends with Godot counting no orphan node beyond the baseline's",
+          "chart/Every cycle ends with Godot counting no orphan node beyond the baseline's",
+          "list/Every cycle ends with Godot counting no orphan node beyond the baseline's"
+        ],
+        "oracleRejection": "idle cycle 0: Godot counts no orphan beyond the baseline's",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "530ea5b9ccf7f631ba8bca31306eafb21b62e375c99df79c9d66bdc8ea5716d6",
+        "sabotagedSourceSha256": "47875ef16b4037ec66b4f73bead447767ce1dc7d402c39a89058b0fc734b1e57",
+        "runStatus": 0,
+        "rawReportSha256": "b39635e880fcc1e20bf1d6d69d9d48d84cc705c6f759073d7df59f68571e8a5d"
+      },
+      "heap": {
+        "command": "node tests/performance-native.test.mjs --sabotage=heap",
+        "what": "reads the Hermes heap once and reports that reading forever",
+        "file": "native/application_runtime.cpp",
+        "find": "    const auto info = runtime->instrumentation().getHeapInfo(false);\n",
+        "replace": "    static const auto info = runtime->instrumentation().getHeapInfo(false);\n",
+        "checks": 41,
+        "failed": 3,
+        "failedChecks": [
+          "heap/Retaining JS objects raises the collected heap by at least what they hold",
+          "heap/Releasing them lowers it again by at least that much",
+          "heap/Every reading ran a collection: Hermes' collection count rises from one reading to the next"
+        ],
+        "oracleRejection": "baseline: the heap counts live bytes and collections",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "ceb7c3c2d21e925666afb2cb9305b301898c7f6746e2c7fc6fed45657e707dfd",
+        "sabotagedSourceSha256": "bc2dd8e8260fe514acb3186dc9a16cfbfceb6feabde0ffbb0579c0ec3cd0d729",
+        "runStatus": 0,
+        "rawReportSha256": "160895224c5cef26e788d1211409784a9fb414dbcb7ababdc8dd46c91431ee68"
+      },
+      "phase": {
+        "command": "node tests/performance-native.test.mjs --sabotage=phase",
+        "what": "adds each phase sample of a pump twice",
+        "file": "native/performance_metrics.h",
+        "find": "        phases_[index].add(local_[index]);\n",
+        "replace": "        phases_[index].add(local_[index]);\n        phases_[index].add(local_[index]);\n",
+        "checks": 41,
+        "failed": 2,
+        "failedChecks": [
+          "pump/A JS turn busy for a while is accounted to the JS phase, inside the pump that ran it, and the phases add up to no more than the pumps",
+          "invariants/At every reading the phases add up to no more than the pump, and none has more samples than the pump"
+        ],
+        "oracleRejection": "baseline: phase js has at most one sample per pump (90 > 45)",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "4ad58f482eeb70164a763ecfaa10400b089f6f85a78389ec4238a4d3a8c9af57",
+        "sabotagedSourceSha256": "679377d8522e2fa45fb37dbe24d2dce9055c6d9ccb5cfa49dbb3c2fef14a4ded",
+        "runStatus": 0,
+        "rawReportSha256": "1fdc890bdeae6b9d9b64b77f71ed1a45ba59e8d79d06132d1551f64ed3876b50"
+      },
+      "command": "node scripts/performance-sabotage.mjs",
+      "genuineSourcesRestored": true,
+      "genuineHostRestored": true,
+      "genuineHostSha256": "866ab18dfa348c20967d525e7903b218420edd01c6ed650c6d3dd0f98522f6bd",
+      "genuineSourceSha256": {
+        "native/application_runtime.cpp": "d24c6dfdefbd003c518cefe0859adeb0c65d5c70d18dc7d003aa0aea72e3c1b9",
+        "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77"
+      },
+      "restoredSourceSha256": {
+        "native/application_runtime.cpp": "d24c6dfdefbd003c518cefe0859adeb0c65d5c70d18dc7d003aa0aea72e3c1b9",
+        "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77"
+      },
+      "rawReceiptSha256": "5a51a1d36cd17dbe85340e01408fc2bb8010bcdd4f01eeb61cfa110d169afcac"
+    },
+    "reportLevelNegatives": {
+      "frozen": {
+        "failedChecks": [
+          "heap/Every reading ran a collection: Hermes' collection count rises from one reading to the next",
+          "heap/Releasing them lowers it again by at least that much",
+          "heap/Retaining JS objects raises the collected heap by at least what they hold"
+        ],
+        "oracleRejection": "Retaining 100000 objects raised the heap by 0 bytes, under 3200000"
+      },
+      "twice": {
+        "failedChecks": [
+          "invariants/At every reading the phases add up to no more than the pump, and none has more samples than the pump"
+        ],
+        "oracleRejection": "list final: phase js has at most one sample per pump (7068 > 3534)"
+      },
+      "leaked": {
+        "failedChecks": [
+          "chart/Every cycle ends with the SceneTree's nodes back to the baseline of this run"
+        ],
+        "oracleRejection": "chart cycle 7: the SceneTree holds the nodes the baseline holds"
+      },
+      "grew": {
+        "failedChecks": [
+          "chart/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's"
+        ],
+        "oracleRejection": "chart: the live heap at rest rose 3000 bytes above its first steady value, over the limit of 2048"
+      }
+    },
+    "reportLevelBoundary": "a rise of exactly 2048 bytes at one steady cycle passes the probe's check in a replay and the oracle"
+  },
+  "measured": {
+    "note": "One run, the one this record pins. Durations are recorded, never judged, and vary by tens of percent between runs and with the load of the machine.",
+    "baselineBeforeAnyWorkload": {
+      "nodes": 2,
+      "orphans": 0,
+      "liveHeapBytes": 1790472
+    },
+    "workloads": {
+      "idle": {
+        "nativeViews": 2,
+        "commitsPerCycle": 1,
+        "liveHeapAtRestBytes": 1790616,
+        "heapGrowthOverSteadyCyclesBytes": 0,
+        "heapLargestStepBytes": 0,
+        "heapMountedOverRestBytes": 21840,
+        "heapMountedSpreadBytes": 128,
+        "mountPumpMs": {
+          "p50": 0.5228,
+          "p95": 1.082
+        },
+        "mountPhasesMsP50": {
+          "js": 0.345,
+          "mount": 0.0894,
+          "layout": 0.0134
+        },
+        "unmountPumpMs": {
+          "p50": 0.1995,
+          "p95": 0.2708
+        },
+        "retireMs": {
+          "p50": 0.5855,
+          "p95": 0.7952
+        },
+        "rssKb": {
+          "min": 148048,
+          "max": 188288
+        },
+        "staticMemoryBytesPerCycle": 62892.5
+      },
+      "forms": {
+        "nativeViews": 5,
+        "commitsPerCycle": 1,
+        "liveHeapAtRestBytes": 1803896,
+        "heapGrowthOverSteadyCyclesBytes": 0,
+        "heapLargestStepBytes": 0,
+        "heapMountedOverRestBytes": 63832,
+        "heapMountedSpreadBytes": 128,
+        "mountPumpMs": {
+          "p50": 1.4447,
+          "p95": 24.01
+        },
+        "mountPhasesMsP50": {
+          "js": 0.8278,
+          "mount": 0.3258,
+          "layout": 0.0858
+        },
+        "unmountPumpMs": {
+          "p50": 0.233,
+          "p95": 0.5879
+        },
+        "retireMs": {
+          "p50": 0.674,
+          "p95": 1.2825
+        },
+        "rssKb": {
+          "min": 117952,
+          "max": 154640
+        },
+        "staticMemoryBytesPerCycle": 63045
+      },
+      "chart": {
+        "nativeViews": 71,
+        "commitsPerCycle": 1,
+        "liveHeapAtRestBytes": 1820872,
+        "heapGrowthOverSteadyCyclesBytes": 0,
+        "heapLargestStepBytes": 0,
+        "heapMountedOverRestBytes": 263520,
+        "heapMountedSpreadBytes": 0,
+        "mountPumpMs": {
+          "p50": 6.6522,
+          "p95": 31.7857
+        },
+        "mountPhasesMsP50": {
+          "js": 3.1766,
+          "mount": 3.2349,
+          "layout": 0.0596
+        },
+        "unmountPumpMs": {
+          "p50": 0.4047,
+          "p95": 0.5243
+        },
+        "retireMs": {
+          "p50": 0.9128,
+          "p95": 1.2284
+        },
+        "rssKb": {
+          "min": 123968,
+          "max": 130064
+        },
+        "staticMemoryBytesPerCycle": 65687.5
+      },
+      "list": {
+        "nativeViews": 124,
+        "commitsPerCycle": 1,
+        "liveHeapAtRestBytes": 1933112,
+        "heapGrowthOverSteadyCyclesBytes": 0,
+        "heapLargestStepBytes": 0,
+        "heapMountedOverRestBytes": 1448784,
+        "heapMountedSpreadBytes": 128,
+        "mountPumpMs": {
+          "p50": 18.118,
+          "p95": 49.9362
+        },
+        "mountPhasesMsP50": {
+          "js": 12.012,
+          "mount": 4.0465,
+          "layout": 1.4323
+        },
+        "unmountPumpMs": {
+          "p50": 1.6868,
+          "p95": 2.1867
+        },
+        "retireMs": {
+          "p50": 2.5702,
+          "p95": 4.0292
+        },
+        "rssKb": {
+          "min": 89552,
+          "max": 144704
+        },
+        "staticMemoryBytesPerCycle": 66640
+      }
+    },
+    "heapSource": {
+      "restBytes": 1790472,
+      "retainedBytes": 15631456,
+      "releasedBytes": 1790512,
+      "bytesPerObject": 138.41
+    },
+    "busyJsTurns": [
+      {
+        "label": "burn-0",
+        "ranMs": 30.013,
+        "jsPhaseMs": 30.046,
+        "pumpsMs": 30.105
+      },
+      {
+        "label": "burn-1",
+        "ranMs": 30.039,
+        "jsPhaseMs": 30.057,
+        "pumpsMs": 30.127
+      },
+      {
+        "label": "burn-2",
+        "ranMs": 30.007,
+        "jsPhaseMs": 30.02,
+        "pumpsMs": 30.069
+      }
+    ],
+    "controlStaticMemoryBytesPerCycle": 60456,
+    "snapshot": {
+      "note": "The application snapshot (no surface nodes) after the soaks, with every window full. performanceBytes is the section as the probe re-serializes it.",
+      "performanceBytes": {
+        "withoutMeta": 1944,
+        "withMeta": 13433
+      },
+      "snapshotBytes": {
+        "withoutMeta": 5997,
+        "withMeta": 18398
+      }
+    }
+  },
+  "heapSteadyState": {
+    "limitBytes": 2048,
+    "rule": "for each workload, after the first 3 cycles, the live heap at rest never rises more than 2048 bytes above its value after the first steady cycle",
+    "keptSoaks": 8,
+    "soakShapes": "7 of 20 cycles and 1 of 100",
+    "perWorkload": {
+      "chart": {
+        "soaks": 8,
+        "steadyCycles": 216,
+        "worstGrowthBytes": 0,
+        "worstStepBytes": 0,
+        "soaksWithGrowth": 0
+      },
+      "forms": {
+        "soaks": 8,
+        "steadyCycles": 216,
+        "worstGrowthBytes": 0,
+        "worstStepBytes": 0,
+        "soaksWithGrowth": 0
+      },
+      "idle": {
+        "soaks": 8,
+        "steadyCycles": 216,
+        "worstGrowthBytes": 0,
+        "worstStepBytes": 0,
+        "soaksWithGrowth": 0
+      },
+      "list": {
+        "soaks": 8,
+        "steadyCycles": 216,
+        "worstGrowthBytes": 312,
+        "worstStepBytes": 312,
+        "soaksWithGrowth": 1
+      }
+    },
+    "worstMeasuredBytes": 312,
+    "limitOverWorst": 6.6,
+    "notKept": "two further soaks of 20 cycles run while the slice was developed, whose reports were not kept (one showed the same 312-byte step in the list workload), and an exploratory one are not counted"
+  },
+  "regressions": {
+    "contracts": {
+      "command": "npm run test:contracts",
+      "result": "exit 0: 283 Node tests, 13 Python tests, test:parity and test:dashboard inside"
+    },
+    "frameClock": {
+      "command": "npm run test:frame-clock",
+      "result": "1/1 subtests"
+    },
+    "runtime": {
+      "command": "npm run test:runtime",
+      "result": "3/3 subtests"
+    },
+    "application": {
+      "command": "npm run test:application",
+      "result": "4/4 subtests"
+    },
+    "parity": {
+      "command": "npm run test:parity",
+      "result": "7/7 subtests, inventory check passed"
+    },
+    "typeCheck": {
+      "command": "npm run type-check",
+      "result": "exit 0"
+    },
+    "static": {
+      "command": "npm run check:static",
+      "result": "No issues found"
+    },
+    "publication": {
+      "command": "npm run check:publication",
+      "result": "passed"
+    },
+    "note": "run on the tree of the implementation commit before the evidence files were added"
+  },
+  "sourcePins": {
+    "tests/performance-fixture.jsx": "14e3ee859a5582c4c25f6ab7fdb76b6ef4508b1e4d19e88ce5616ccca173d864",
+    "tests/performance-cases.mjs": "05a3f24b9e295bc9cbb24a34a08901e2bb3a97949b3dbd4128533d76bc654105",
+    "tests/performance-probe.gd": "664349afd039c0f4151ff4bd0faf51ae014a3ed6fe92d23ed472d8bbd19eac82",
+    "tests/performance-native.test.mjs": "7bf809b0084170347fffe9b27323cc02d4bc2afb42f5beda851a22b8c6843efe",
+    "tests/performance-oracle.mjs": "6eb7eed6df2b8d8aa6533bfdbf5dd4a2866a11c65d548f393321ea96b9e24b97",
+    "scripts/performance-bundle.mjs": "4c81ba6877f2691b0f7b7a945a4486c6f8121d728f6f8db58d6a12fbba585c46",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "8157ff1ab0a00093524d325b19b69683905deb84b4e7aa373de5f857b55d9d05",
+    "src/svg.jsx": "02cce209d3cf7d1b120173dfd62eab2d231e2f39628ce57d70552616cfb99f3b",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    ".deps/hermes/destroot/include/jsi/instrumentation.h": "1395779ad53ec372518b977d077e65a876215bc31a94cf049ed55d0a3d2426f4",
+    "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77",
+    "native/performance_metrics_test.cpp": "2e7dd0cc2a5ae0e4f152f79e72f027dec1250913b9eb3e9a94e724d4c6a4e670",
+    "native/application_runtime.cpp": "d24c6dfdefbd003c518cefe0859adeb0c65d5c70d18dc7d003aa0aea72e3c1b9",
+    "native/application_runtime.h": "9fe07cb42b81ef5562efd5720965b2d6882c0daab8e168ec9f8d14d432bb8357",
+    "native/fabric_application.cpp": "89a15a256d5ebe49dfc54fd532d80405048420a97b6563e2713377dcbcb90292",
+    "native/CMakeLists.txt": "0963df0e7a132b2086fbbdfaacca54794d633883ee1beb4106f5cd9f0bc48f45"
+  },
+  "referencedSources": {
+    "originalReactNative": {
+      "Libraries/Lists/FlatList.js": "4bbfb89ff60f9d82808bc8bb48dd22f6c6e98fc58a3cac4010b8e62a8a74f4a9",
+      "ReactCommon/react/nativemodule/webperformance/NativePerformance.cpp": "ec191f7d8960be06c6d011d8ee5f0ed03719659b2129ef70036bb14ee5830c6b",
+      "ReactCommon/react/renderer/mounting/ShadowTree.cpp": "3eab5654687d9c7932b746170fd1c91464613c33e40bf9faf641a9b2c83c8029",
+      "ReactCommon/react/renderer/mounting/MountingCoordinator.cpp": "650b1f53b85676244bf26c4611447fc1e0fa69d9bbef9de1924f9dddde477e0a",
+      "ReactCommon/react/renderer/telemetry/TransactionTelemetry.cpp": "0870fc5a210050313f7be96eb5176646e73428b4e31b72de78f2eeb88994acfa"
+    },
+    "note": "RN 0.87.1 sources pinned for citation; the Hermes header .deps/hermes/destroot/include/jsi/instrumentation.h is the one in sourcePins, from the pinned Hermes archive and not part of the repository."
+  },
+  "decisions": [
+    "The section is a diagnostic of the application snapshot after frameClock, not a name of the react-native root and not a JS API.",
+    "Counters are exact totals: the live roots plus the roots that ended, which add their counters when they are retired.",
+    "Phases are exclusive; RN's own layout telemetry is moved out of the JS turn the commit ran in, so the phases of a pump never add up to more than the pump.",
+    "Hermes' heap is read through jsi::Instrumentation::getHeapInfo, after a full collection only where the validation_collect_garbage_on_status meta is set.",
+    "The samples the percentiles come from are published only where the validation_performance_samples meta is set; the default snapshot carries aggregates.",
+    "Durations, the resident memory and Godot's static memory are recorded with provenance and never judged; the heap growth in the steady state is bounded at 2048 bytes.",
+    "The soak mounts and unmounts a root; the first render and the unmount commit run outside a pump, and the surfaces series time the retirement.",
+    "The leak sabotage is rejected by Godot's orphan count, not its node count: a Control that is removed and not freed is an orphan."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI is pending and other targets are separate.",
+    "Headless only: no display, no GPU, no frame time of a presented frame; the headless loop paces its own frames (about 6.9 ms), so no duration here stands for a device.",
+    "No target-device budget is set (V2-D28) and no optimization is accepted or rejected by these numbers.",
+    "Text shaping (after GF-11), 10,000 rows (GF-15) and graphic frame time are not measured.",
+    "The mount and layout phases see only the commits that run inside a pump; React's first render and a root's unmount commit run outside one.",
+    "Percentiles are over the last 128 samples of a series; the total and the maximum are over its life.",
+    "The 2048-byte limit is a measurement of this host on this machine; a different Hermes, workload or runner needs it measured again.",
+    "Godot's static memory grows in steps that a plain Godot tree also shows (measured once by hand, not part of the harness) and the resident memory moves by tens of megabytes: both are recorded and cannot be limits.",
+    "This slice is the first of GF-30; it does not complete GF-30. Only GF-30's first-slice checkpoint (slice) closes: no whole GF, other checkpoint, weight or denominator closes."
+  ]
+}

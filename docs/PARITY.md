@@ -114,7 +114,8 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   the native views, Hermes' live heap after a forced collection, and the host's pump split into JS,
   mount and layout phases) and a soak of 20 mounts and unmounts of four workloads (idle, forms, chart,
   a 120-row `FlatList`), headless (GF-30's first slice; 41 checks, the preceding host as the control,
-  three retained sabotages and an independent oracle; see the [research note](research/performance.md)).
+  three retained sabotages and an independent oracle; see the [evidence](evidence/performance/README.md) and the
+  [research note](research/performance.md); its hosted CI run is pending).
   The nodes, orphans and views return to the baseline after every cycle and the live heap at rest may rise at
   most 2,048 bytes in the steady state (a measured 0 to 312). Durations, the resident
   memory and Godot's static memory are recorded and never judged. Target-device budgets, text shaping,
