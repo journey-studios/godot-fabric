@@ -20,6 +20,8 @@ import {guardSources} from "./sabotage-sources.mjs";
 //   drop-callback         the success callback the driver queues is counted and dropped: only RN's JS timer ends the call.
 //   unguarded-tick        the driver is ticked on every tick of the frame clock, whatever caused it: a requestAnimationFrame loop with
 //                         no animation configured ticks the driver and its counter.
+//   no-rearm              a new surface does not hand the interest back when the last one stopped with an animation RN still holds: the
+//                         pull that finds the old animation in flight signals no start for the new one, and nothing ticks it.
 //
 // Each sabotage breaks a source on purpose and rebuilds the host from it; the probe's checks and the oracle (which derives
 // every number from RN's formulas) must both reject it. The sources come back whatever ends the run, a signal included
@@ -50,6 +52,9 @@ const variants = [
   {name: "unguarded-tick", argument: "--sabotage=unguarded-tick", hostDirectory: "build/layout-animation-sabotage-unguarded-tick-host", file: module,
     find: "  if (!active()) {\n    return;\n  }\n  clock(frame_ms);\n",
     replace: "  if (state_->stopped) {\n    return;\n  }\n  clock(frame_ms);\n"},
+  {name: "no-rearm", argument: "--sabotage=no-rearm", hostDirectory: "build/layout-animation-sabotage-no-rearm-host", file: module,
+    find: "    if (state_->stale && state_->driver->shouldOverridePullTransaction()) {\n      state_->animating = true;\n    }\n",
+    replace: ""},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));

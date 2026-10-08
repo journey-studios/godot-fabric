@@ -46,7 +46,8 @@ class LayoutAnimation {
   void register_surface(const facebook::react::ShadowTree &tree);
   // The surface is gone. The driver is told to drop its animations by the UIManager; this
   // ends the host's own interest (the frame ticks) when no surface is left, because
-  // RN does not signal the animations it drops for a stopped surface.
+  // RN does not signal the animations it drops for a stopped surface. The interest comes
+  // back with the next surface (register_surface) when RN still holds what the stopped one left.
   void surface_stopped(int surface_id);
   // Whether RN's driver has an animation in flight, by the driver's own signals
   // (LayoutAnimationStatusDelegate, as the observer of the iOS run loop is switched), and

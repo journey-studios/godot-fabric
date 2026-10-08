@@ -1,15 +1,15 @@
 # LayoutAnimation over RN's LayoutAnimationDriver
 
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official Godot 4.7.2,
-headless, for the layout animation slice of GF-19 (animated and layout animation). The probe's 123 checks run
+headless, for the layout animation slice of GF-19 (animated and layout animation). The probe's 128 checks run
 RN's original `LayoutAnimation` (and the legacy `UIManager.configureNextLayoutAnimation`) through
 the public `react-native` import on one real root: the host installs RN's own C++
 `LayoutAnimationDriver`, the host's frame clock is its display link, and an independent oracle
 recomputes every frame of every animation from RN's formulas. The host that main built before
-this slice fails exactly the checks that need the driver, and five retained host sabotages are
+this slice fails exactly the checks that need the driver, and six retained host sabotages are
 rejected by the probe and by the oracle. The [evidence record](../evidence/layout-animation/README.md)
 pins the executions to the implementation commit `ee8f5bd`, when the suite had 121 checks and four sabotages; the review
-of PR #65 added two checks and a fifth sabotage (the frame-clock bullet under "Decisions"). Reduced motion,
+of PR #65 added seven checks and two sabotages (the frame-clock and the teardown bullets under "Decisions"). Reduced motion,
 several roots animating at once, the interpolation of Text and Image state, background and resume,
 behavior under JS load, the mobile exports and a performance budget are not certified; see
 "Remaining scope".
@@ -136,8 +136,20 @@ not supported`.
   destroys it while the Hermes runtime is alive, because its callbacks hold `jsi::Function`s; the
   module is declared after the runtime so a destroyed application destroys it first. An unmounted
   surface ends the host's interest in ticks when none is left, because
-  `deleteAnimationsForStoppedSurfaces` (`:1580`) drops animations without a status signal (the unmount's
-  own empty commit has already completed the animation of every node it deletes).
+  `deleteAnimationsForStoppedSurfaces` (`:1580`) drops animations without a status signal. An animation that
+  was in flight when the root unmounted is completed by the unmount's own commit (it conflicts with every node
+  it deletes, and the animation is completed, called back and erased in that pull); one that the unmount itself
+  starts, because a `configureNext` was armed when the root unmounts, outlives the root: the host does not tick
+  while it retires a root, and the empty commit after the unmount has nothing to diff. RN drops it at the next
+  pull of any surface, after it has read whether anything is in flight (`:172-173`) and before it creates the
+  animation of that pull, so it signals no start for that animation (`:1038-1043`). **The next root's
+  registration hands the interest back** (`register_surface`): when the last surface stopped with
+  `animating` set (`stale`) and the driver still answers `shouldOverridePullTransaction()`, `animating` is set
+  again, and the next tick pulls, RN removes what is left and signals the end (`:1033-1037`), which clears it, or
+  the pull that creates the new animation keeps it set until that animation ends. Rearming from the driver's
+  answer alone would tick for nothing when only a `configureNext` is armed and no surface stopped with an
+  animation, because a pull without mutations does not consume it (`:243-247`); the flag is why the module
+  does not.
 - **JS surface.** `src/react-native-platform.jsx` exports RN's `Libraries/LayoutAnimation/LayoutAnimation.js`
   unchanged; `src/private-interface.js` gives `UIManager` the two methods RN's
   `BridgelessUIManager.js` has (184-190, 385-396): `setLayoutAnimationEnabledExperimental` is a no-op
@@ -187,12 +199,13 @@ RN's JS timer, and compares them with the report.
 | 5 | `onAnimationDidFail` for a config the driver rejects: one failure callback, no animation, the Controls take the layout in one step; RN's timer still ends the call | `fail` |
 | 6 | The frame clock ticks only with an animation in flight; idle it does not move; the driver's clock never goes back | `idle-start`, `idle-end` and every row of every run |
 | 9 | Another consumer of the frame clock (a continuous `requestAnimationFrame` loop) ticks it with no animation configured: the loop runs, and the driver is not ticked, reads no clock and pulls nothing | `raf-idle` |
+| 10 | The last root stops with the animation of its own removal in flight (`configureNext` armed before it unmounts), and the root that mounts next has its first commit animated (armed before it mounts): the new animation runs to its end with the driver's callback, RN's timer cleared and the final layout, from the clock RN read for the first commit, with no commit but the first | `restart-first`, `restart` |
 | 7 | A second `configureNext` with its commit mid-animation continues from the view on screen and ends exactly at its own final layout | `interrupt` |
 | 8 | `UIManager.setLayoutAnimationEnabledExperimental(true)` does not throw and changes nothing; `UIManager.configureNextLayoutAnimation` animates like `LayoutAnimation` | `flag`, `legacy` |
 
 Because the clock is the frame time of the pump, the oracle's expected values do not depend on the
 pace of the host: the report of a run under CPU load is checked against the same formulas. The largest
-distance from the oracle in the run that wrote this note (337 transactions) is 2.0e-5 in position, 3.7e-8 in opacity and 4.0e-8 in scale,
+distance from the oracle in the run that wrote this note (347 transactions) is 2.0e-5 in position, 4.4e-8 in opacity and 4.5e-8 in scale,
 against tolerances of 5e-4 in position and 1e-5 in opacity and scale (the Controls and RN's interpolation both hold single-precision floats).
 
 **Facts the runs showed.** The first transaction of an animation is the commit's: it applies the
@@ -211,20 +224,21 @@ holds the log to them).
 ## The preceding host and the retained sabotages
 
 `tests/layout-animation-native.test.mjs --previous-host` runs the same bundle on the host that main built
-before this slice, preserved in `build/layout-animation-previous-host/`. It fails exactly the 84
+before this slice, preserved in `build/layout-animation-previous-host/`. It fails exactly the 87
 checks that need the driver (its counters, its transactions, an animation applied to a Control) and passes
 the ones about RN's JavaScript: every call is ended by RN's timer, once (`race: "fired"`), and the Controls take
 the committed layout in one step. The oracle rejects its report. `node scripts/layout-animation-sabotage.mjs`
-rebuilds the host five more ways and runs the suite on each, restoring the sources byte for byte
+rebuilds the host six more ways and runs the suite on each, restoring the sources byte for byte
 afterwards:
 
 | Sabotage | What it breaks | Checks it fails |
 | --- | --- | --- |
-| `seconds-clock` | the driver reads the frame time in seconds | 75 checks; the progress never moves, and the oracle rejects the clocks RN read |
-| `no-register-surface` | no surface hands its mounting coordinator to the driver | 87 checks; the driver never overrides a transaction, so there is no intermediate frame |
-| `no-consumer` | the driver is not a consumer of the frame clock | 86 checks; the animation stalls at its first frame and the probe waits for the completion with its limit |
-| `drop-callback` | the executor counts the success callback and drops it | 6 checks; only RN's timer ends the call, which the `separated` cases show |
+| `seconds-clock` | the driver reads the frame time in seconds | 80 checks; the progress never moves, and the oracle rejects the clocks RN read |
+| `no-register-surface` | no surface hands its mounting coordinator to the driver | 90 checks; the driver never overrides a transaction, so there is no intermediate frame |
+| `no-consumer` | the driver is not a consumer of the frame clock | 91 checks; the animation stalls at its first frame and the probe waits for the completion with its limit |
+| `drop-callback` | the executor counts the success callback and drops it | 7 checks; only RN's timer ends the call, which the `separated` cases show |
 | `unguarded-tick` | the driver is ticked by every tick of the frame clock, whatever caused it | 1 check (`raf-idle`, the normative one); a `requestAnimationFrame` loop with no animation configured makes `ticks` grow, which the oracle rejects |
+| `no-rearm` | a root that mounts after the last one stopped with an animation RN still holds does not get the interest back | 4 checks (three of `restart` and the stage reset after it); the new root's first pull removes the old animation and creates its own, RN signals no start, nothing ticks it, and the probe waits for its completion with the limit |
 
 ## Cost per tick
 

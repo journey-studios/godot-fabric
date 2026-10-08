@@ -71,6 +71,9 @@ struct LayoutAnimation::State final : rn::LayoutAnimationStatusDelegate {
   std::shared_ptr<RecordingDriver> recorder;
   std::set<int> surfaces;
   bool animating{}, stopped{};
+  // The last surface stopped with an animation in flight: RN still holds it (and `animating` was cleared with the surface), until the next
+  // surface's first pull removes it.
+  bool stale{};
   uint64_t started{}, completed{}, callbacks_queued{}, ticks{}, clock_reads{};
   double frame_ms{};
   uint64_t last_read_ms{};
@@ -171,12 +174,27 @@ void LayoutAnimation::register_surface(const rn::ShadowTree &tree) {
     return;
   }
   tree.getMountingCoordinator()->setMountingOverrideDelegate(state_->recorder);
+  if (state_->surfaces.empty()) {
+    // RN drops a stopped surface's animations at a later pull, and that pull reads whether any animation is in flight before it drops them
+    // and before it creates the next one (LayoutAnimationKeyFrameManager.cpp:172-173): it signals "started" only for a pull that found none
+    // (:1038-1043). The first pull of this surface can be that pull, and if it creates this surface's animation too, RN never signals the
+    // start. So when the last surface stopped with an animation still held, the interest comes back with the surface, from RN's own answer:
+    // the first tick pulls, RN removes what is left and signals the end (:1033-1037), which clears it again, or the pull that creates the
+    // new animation leaves it set until that animation ends.
+    if (state_->stale && state_->driver->shouldOverridePullTransaction()) {
+      state_->animating = true;
+    }
+    state_->stale = false;
+  }
   state_->surfaces.insert(tree.getSurfaceId());
 }
 
 void LayoutAnimation::surface_stopped(int surface_id) {
   state_->surfaces.erase(surface_id);
   if (state_->surfaces.empty()) {
+    // With no surface left nothing pulls, so no signal would clear the flag, and the frame clock would tick for nothing. RN keeps
+    // the animations it has until its next pull (deleteAnimationsForStoppedSurfaces, :1580-1614).
+    state_->stale = state_->stale || state_->animating;
     state_->animating = false;
   }
 }

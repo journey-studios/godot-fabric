@@ -181,6 +181,14 @@ globalThis.LayoutAnimationProbe = {
     setScene({...current, ...spec.to});
     return {name, config: given};
   },
+  // Arms the animation exactly as `run` does and changes no scene: the next commit, wherever it comes from, is the one RN animates.
+  arm(name) {
+    const spec = CASES[name];
+    note({kind: "run", label: name});
+    const given = configure(name, spec);
+    note({kind: "configure", label: name, via: spec.via, config: given});
+    return {name, config: given};
+  },
   // What RN's public node APIs report for the box now: measure, getBoundingClientRect.
   measureBox() {
     const node = boxRef.current;

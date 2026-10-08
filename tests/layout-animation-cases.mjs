@@ -67,6 +67,15 @@ export const CASES = {
   "interrupt-second": {via: "configureNext", how: "literal", config: {duration: 5000, create: {type: "linear", property: "opacity"},
     update: {type: "easeInEaseOut", duration: 400}, delete: {type: "linear", property: "opacity"}}, to: {box: "c"}, entities: ["box"],
   separated: true},
+  // Armed before the root that is about to stop unmounts: the removal of its views is what RN animates, and the animation outlives the
+  // root (the host's stop does not tick, and RN drops a stopped surface's animations at its next pull).
+  "restart-first": {via: "configureNext", how: "literal", config: {duration: 5000, create: {type: "linear", property: "opacity"},
+    update: {type: "linear", duration: 3000}, delete: {type: "linear", property: "opacity", duration: 3000}}, to: {}, entities: ["stage", "box", "doomed"],
+  separated: true},
+  // Armed before the next root mounts: that root's first commit, the creates of its stage, is the one RN animates.
+  restart: {via: "configureNext", how: "literal", config: {duration: 1500, create: {type: "linear", property: "opacity", duration: 400},
+    update: {type: "linear", duration: 400}, delete: {type: "linear", property: "opacity"}}, to: {}, entities: ["stage", "box", "doomed"],
+  separated: true},
   legacy: {via: "legacy", how: "create", args: [600, "linear", "opacity"], config: create(600, "linear", "opacity"), to: {box: "b"},
     entities: ["box"]},
   // The legacy flag, then a plain commit: no animation was armed.

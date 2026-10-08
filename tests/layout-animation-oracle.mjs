@@ -210,14 +210,16 @@ function verifyPulls(report) {
 // The rows of a run, frame by frame: a tick needs an animation in flight when the frame began, is a tick of the frame clock and carries
 // its timestamp; the Controls change only in a frame that applied a transaction, and the transactions belong to the Godot frames
 // between the two samples. simulate(pull, row) is called for every transaction in order, with the row that shows it (the one in
-// which it is the last) or null when a later transaction of the same frame replaced it.
-function verifyRows(report, stage, label, simulate) {
+// which it is the last) or null when a later transaction of the same frame replaced it. rearmed: the run begins before a root mounts after
+// the last one stopped holding an animation RN still has, and the frame that registers the root hands the interest back and ticks in the
+// same frame (LayoutAnimation::register_surface), so the first row may tick without an animation in flight at the frame's start.
+function verifyRows(report, stage, label, simulate, rearmed = false) {
   let previous = stage.request;
   for (const row of stage.rows) {
     const ticked = row.ticks - previous.ticks;
     assert.ok(ticked === 0 || ticked === 1, `${label}: the driver ticks at most once per frame`);
     if (ticked === 1) {
-      assert.ok(previous.active, `${label}: a tick needs an animation in flight when the frame began`);
+      assert.ok(previous.active || (rearmed && previous === stage.request), `${label}: a tick needs an animation in flight when the frame began`);
       assert.ok(row.frameTicks - previous.frameTicks >= 1, `${label}: each tick of the driver is a tick of the frame clock`);
       assert.equal(row.frameMs, row.frameLastTickMs, `${label}: the driver's clock is the frame clock's tick timestamp`);
     }
@@ -471,6 +473,69 @@ function verifyFrames(stage) {
   }
 }
 
+// The last root stops with the animation of its own removal in flight, and the next root's first commit is animated. RN reads whether an
+// animation is in flight before it drops the stopped surface's and before it creates the next one (LayoutAnimationKeyFrameManager.cpp:172-173),
+// so it signals no start for that pull (:1038-1043): the animation has to run to its end all the same, on the ticks the host gives it, with
+// RN's linear curve from the time RN read for the first commit, its callback queued once and RN's timer cleared.
+function verifyRestart(report, errors) {
+  const first = report.stages["restart-first"];
+  assert.equal(first.gone, true, "restart: the first root went away");
+  assert.equal(first.final.started - first.request.started, 1, "restart: the removal of the stopped root was animated");
+  assert.equal(first.final.completed, first.request.completed, "restart: that animation did not complete with its root");
+  assert.equal(first.final.active, false, "restart: nothing is in flight once the last root stopped");
+  const second = report.stages.restart;
+  const spec = CASES.restart;
+  const eff = parseLayoutAnimationConfig(spec.config);
+  assert.ok(eff, "restart: RN's driver accepts the config");
+  assert.equal(second.timedOut, false, "restart: the next root's animation reached its end before the limit");
+  const configures = second.events.filter(event => event.kind === "configure");
+  assert.equal(configures.length, 1, "restart: one configureNext");
+  assert.deepEqual(configures[0].config, spec.config, "restart: the config RN's helpers built");
+  const pulls = pullsOf(report, second.request, second.final);
+  const commit = pulls.find(pull => pull.creates > 0);
+  assert.ok(commit, "restart: the driver served the next root's first commit");
+  assert.ok(pulls.filter(pull => pull.sequence >= commit.sequence).length >= 3, "restart: the start, at least one frame between, and the end");
+  const stateAt = clock => {
+    const [linear, factor] = animationProgress(clock, commit.readMs, eff.create);
+    return {finished: linear >= 1, box: {...rested(POSES[BASE.box]), opacity: factor}, doomed: {...rested(DOOMED), opacity: factor}};
+  };
+  let last = null;
+  verifyRows(report, second, "restart", (pull, row) => {
+    if (pull.sequence < commit.sequence) {
+      return;
+    }
+    assert.equal(last, null, "restart: no transaction after the animation's last");
+    const expected = stateAt(pull.readMs);
+    assert.equal(pull.active, !expected.finished, "restart: the driver is in flight until the last transaction");
+    if (row !== null) {
+      compare(row.controls.box, expected.box, `restart: transaction ${pull.sequence} box`, errors);
+      compare(row.controls.doomed, expected.doomed, `restart: transaction ${pull.sequence} doomed`, errors);
+      compare(row.controls.child, absent, `restart: transaction ${pull.sequence} child`, errors);
+    }
+    if (expected.finished) {
+      assert.equal(pull.sequence, pulls.at(-1).sequence, "restart: the animation's last transaction is the last the driver served");
+      last = pull;
+    }
+  }, true);
+  assert.equal(last?.sequence, pulls.at(-1).sequence, "restart: the animation reached its end");
+  compare(second.final.controls.box, rested(POSES[BASE.box]), "restart: at rest box", errors);
+  compare(second.final.controls.doomed, rested(DOOMED), "restart: at rest doomed", errors);
+  assert.ok(second.final.completed - second.request.completed >= 1, "restart: the animation completed");
+  assert.equal(second.final.callbacks - second.request.callbacks, 1, "restart: one success callback queued");
+  assert.equal(last.callbacks - second.request.callbacks, 1, "restart: the last transaction queued it");
+  assert.equal(second.final.active, false);
+  const ends = second.events.filter(event => event.kind === "end" && event.label === "restart");
+  assert.equal(ends.length, 1, "restart: onAnimationDidEnd exactly once");
+  const races = second.races.filter(race => race.label === "restart");
+  assert.equal(races.length, 1, "restart: configureNext arms one JS timer");
+  assert.equal(races[0].delay, spec.config.duration + RACE_MS, "restart: the timer is armed at duration + 17 ms");
+  assert.ok(eff.duration >= eff.create.delay + eff.create.duration + 1000, "restart: the timer is far behind the animation");
+  assert.equal(races[0].state, "cleared", "restart: only the driver can have ended the call, and it cleared RN's timer");
+  assert.equal(ends[0].race, "cleared");
+  const lastRow = second.rows.find(row => row.pullsTotal >= last.sequence);
+  assert.ok(ends[0].n >= lastRow.n, "restart: the callback follows the animation's last transaction");
+}
+
 function verifyStop(report) {
   const stage = report.stages.stop;
   assert.equal(stage.stopped, true, "stop: the application stopped");
@@ -503,6 +568,7 @@ export function verifyLayoutAnimationReport(report) {
   verifyFail(indexed);
   verifyFlag(indexed);
   verifyInterrupt(indexed, errors);
+  verifyRestart(indexed, errors);
   verifyIdle(report.stages["idle-end"], "idle-end");
   verifyStop(indexed);
   // The spring overshoots: some frame is beyond the final layout, which only the oracle's curve (and not the probe) says should be.

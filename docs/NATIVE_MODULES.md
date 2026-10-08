@@ -119,6 +119,7 @@ pump (`clock`), and the frame clock treats an animation in flight (the driver's 
 observer) as a frame consumer, so `tick` runs `UIManager::animationTick()` on the same ticks and timestamps as `requestAnimationFrame` and Native
 Animated, and only with an animation in flight (a tick that another consumer causes does nothing and is not counted); the transactions it pulls reach `uiManagerDidFinishTransaction`, so a tick's mount is the pump's Mount phase in `status().performance` (the tick
 runs between the JS brackets, never inside one).
+When the last surface stops while RN still holds an animation (an unmount that was itself animated), the next surface's registration hands the interest back.
 `stop()` detaches the driver and destroys it, with the JS callbacks it holds, before the Hermes runtime; a retained `configureNext` then does nothing.
 `status().layoutAnimation`, which follows the `performance` section, is the contract: `enabled`, `active`, `stopped`, `started`, `completed`, `callbacksQueued`, `ticks`, `clockReads`,
 `frameMs` (the frame time last handed to the driver), `lastReadMs` (what RN last read, in whole milliseconds), `pullsTotal`, `pullsDropped` and

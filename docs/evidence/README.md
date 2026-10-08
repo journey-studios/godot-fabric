@@ -727,10 +727,11 @@ reading seconds, no surface registered, the animation not a frame-clock consumer
 renderer and 23 with five captures, linked from the record; the temporary-instrumentation cost per tick (121 to 135 us
 for one view, 3.7 to 3.8 ms for 400) is recorded and is not a gate. Reduced motion, several roots, Text and Image
 state interpolation, background and resume, JS load, the mobile exports and a per-tick budget are open. The record is
-pinned at `092dd14`: the current suite has 123 checks (the preceding host fails exactly 84, and five retained sabotages
-fail 75, 87, 86, 6 and 1) because the review of PR #65 made the driver ignore the ticks that another consumer of the
-frame clock causes, and added a `requestAnimationFrame` stage that proves it. Hosted CI and Pages are pending; this
-record does not complete GF-19.
+pinned at `092dd14`: the current suite has 128 checks (the preceding host fails exactly 87, and six retained sabotages
+fail 80, 90, 91, 7, 1 and 4) because the review of PR #65 made the driver ignore the ticks that another consumer of the
+frame clock causes and hand the interest in ticks back to a root that mounts after the last one stopped with an
+animation RN still held, and added a `requestAnimationFrame` stage and a root-restart stage that prove it. Hosted CI and
+Pages are pending; this record does not complete GF-19.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

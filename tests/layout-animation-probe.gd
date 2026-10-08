@@ -260,19 +260,23 @@ func _initialize() -> void:
   sabotage = OS.get_cmdline_user_args().has("--sabotage")
   call_deferred("run_probe")
 
+# A root of the stage in the scene, named after its first prop. It becomes the surface the probe reads.
+func mount_root(name: String) -> void:
+  surface = ClassDB.instantiate("FabricSurface")
+  surface.name = name
+  surface.size = SIZE
+  surface.set("application_path", NodePath("../LayoutAnimationApplication"))
+  surface.set("component_name", "LayoutAnimationProbe")
+  surface.set("initial_props", {"name": name})
+  root.add_child(surface)
+
 func run_probe() -> void:
   root.size = Vector2i(440, 580)
   application = ClassDB.instantiate("FabricApplication")
   application.name = "LayoutAnimationApplication"
   application.set("bundle_path", "res://build/layout-animation-probe.js")
   root.add_child(application)
-  surface = ClassDB.instantiate("FabricSurface")
-  surface.name = "A"
-  surface.size = SIZE
-  surface.set("application_path", NodePath("../LayoutAnimationApplication"))
-  surface.set("component_name", "LayoutAnimationProbe")
-  surface.set("initial_props", {"name": "A"})
-  root.add_child(surface)
+  mount_root("A")
   await settle(12)
   mount_case()
   api_case()
@@ -290,6 +294,7 @@ func run_probe() -> void:
   await interrupt_case()
   await update_case("legacy")
   await flag_case()
+  await restart_case()
   await idle_case("idle-end")
   await stop_case()
   await finish_probe()
@@ -600,6 +605,55 @@ func interrupt_case() -> void:
   var step := absf(number(controls_of(after_rows, 0, "box").get("x"), 1e9) - number(before.get("x")))
   driver_check(not after_rows.is_empty() and step < 0.25 * absf(POSES.b.x - POSES.a.x),
     "interrupt/The box continues from where the first animation had put it, with no jump to either end")
+
+# The last root stops with an animation of its own removal in flight, and the root that replaces it has its first commit animated.
+# RN drops a stopped surface's animations at the next pull (LayoutAnimationKeyFrameManager.cpp:173), after it has read whether any is
+# in flight (:172), and tells the status delegate that animations started only for a pull that found none (:1038-1043). The new root's
+# first pull is that pull: it removes the old animation and creates its own, so RN signals nothing, and a host that took "no signal"
+# for "no animation" would wait for a tick that never comes. The new animation has to run to its end with its native callback and its
+# final layout, with no commit but the first.
+func restart_case() -> void:
+  await reset_stage("restart-first")
+  var first := begin()
+  var first_request: Dictionary = first.request
+  # The unmount of the root is the commit that RN animates: its views fade out, and the host does not tick while it retires the root.
+  act("arm('restart-first')")
+  surface.queue_free()
+  var gone := await advance_until(first, func() -> bool: return int(app_state().get("rootCount", 1)) == 0, 4000)
+  await advance(first, SETTLE)
+  first["gone"] = gone
+  first["final"] = first.rows.back()
+  stages["restart-first"] = first
+  # The next root: its configureNext is armed before it mounts, so that its first commit (the creates of the stage) is the animated one.
+  var second := begin()
+  var request: Dictionary = second.request
+  act("arm('restart')")
+  mount_root("B")
+  var config: Dictionary = cases["restart"].config
+  var finished := func() -> bool:
+    var row: Dictionary = second.rows.back()
+    var committed := not events_of(second, "commit").is_empty()
+    var ended: bool = events_of(second, "end", "restart").size() >= 1
+    var native: bool = not request.enabled or (int(row.completed) > int(request.completed) and not row.active and int(row.callbacks) > int(request.callbacks))
+    return committed and ended and native
+  var reached := await advance_until(second, finished, int(config.duration) + 4000)
+  second["timedOut"] = not reached
+  await advance(second, SETTLE)
+  second["final"] = second.rows.back()
+  second["races"] = js("races()")
+  second["nodes"] = fabric_nodes()
+  stages["restart"] = second
+  var ends: Array = events_of(second, "end", "restart")
+  var pulls: Array = run_pulls(second)
+  driver_check(gone and delta(first, "started") == 1 and delta(first, "completed") == 0 and not first.final.active,
+    "restart/The last root stops with the animation of its own removal in flight: the driver started it, it did not complete, and no root is left")
+  driver_check(reached and not second.final.active and delta(second, "completed") >= 1 and delta(second, "callbacks") == 1 and pulls.size() >= 3,
+    "restart/The next root's first commit, animated, runs to its end without another commit: several transactions, a completion, one callback and the driver idle")
+  driver_check(ends.size() == 1 and ends[0].race == "cleared" and not second.timedOut,
+    "restart/The driver ends the next root's call before RN's timer could, and RN calls onAnimationDidEnd once")
+  check(pose_matches(second.final.controls.box, POSES.a) and pose_matches(second.final.controls.doomed, DOOMED) and second.final.controls.box.get("opacity") == 1.0
+    and second.final.controls.doomed.get("opacity") == 1.0 and second.final.controls.child.get("present") == false,
+    "restart/The next root rests where its style puts it, at full opacity")
 
 # Stopping the application with an animation in flight: no further tick, transaction or error.
 func stop_case() -> void:

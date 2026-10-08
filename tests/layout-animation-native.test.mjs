@@ -17,7 +17,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 // must both reject it.
 const previousHost = process.argv.includes("--previous-host");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
-const sabotageNames = ["seconds-clock", "no-register-surface", "no-consumer", "drop-callback", "unguarded-tick"];
+const sabotageNames = ["seconds-clock", "no-register-surface", "no-consumer", "drop-callback", "unguarded-tick", "no-rearm"];
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? sabotageNames[0]);
 assert.ok(sabotage === null || sabotageNames.includes(sabotage), "Unknown sabotage: " + sabotage);
 assert.ok(!(previousHost && sabotage !== null), "A run is the current host, the previous one, or one sabotage");
@@ -165,6 +165,13 @@ test("RN's own LayoutAnimation runs on RN's LayoutAnimationDriver, on the Godot 
       assert.equal(loop.rows.at(-1).pullsTotal, loop.request.pullsTotal, "...and had nothing to pull");
       assert.equal(failures.length, 1);
       assert.match(failures[0], /^raf-idle\//);
+    }
+    if (sabotage === "no-rearm") {
+      // The next root's animation is created by the pull that finds the old one in flight, RN signals no start, and nothing ticks it.
+      const next = report.stages.restart;
+      assert.equal(next.timedOut, true, "The next root's animation never reached its end");
+      assert.equal(next.final.ticks, next.request.ticks, "...because the driver was never ticked");
+      assert.equal(next.final.active, false);
     }
     if (sabotage === "drop-callback") {
       assert.equal(report.stages["native-end"].events.find(event => event.kind === "end").race, "fired", "Only RN's timer ended the call");
