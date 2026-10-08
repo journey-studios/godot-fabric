@@ -359,8 +359,8 @@ The [LayoutAnimation example](examples/layout-animation/README.md) runs React Na
 clock: the next commit's updates animate layout, its creates fade or scale in and its deletes fade
 or scale out, with the linear, easeInEaseOut and spring curves, and the driver calls
 `onAnimationDidEnd` (RN's JS timer stays the fallback) and `onAnimationDidFail`. The headless
-suite (121 checks) recomputes every frame from the clocks RN read with RN's formulas; the preceding host fails
-exactly its 83 driver checks and four retained host sabotages are rejected (75, 87, 86 and 6 checks). One root at a time;
+suite (123 checks) recomputes every frame from the clocks RN read with RN's formulas; the preceding host fails
+exactly its 84 driver checks and five retained host sabotages are rejected (75, 87, 86, 6 and 1 checks). One root at a time;
 reduced motion, Text and Image state interpolation, background and resume, JS load and a
 performance budget are open. Hosted CI is pending. [Evidence](docs/evidence/layout-animation/README.md)
 and [research](docs/research/layout-animation.md).

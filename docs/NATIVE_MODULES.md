@@ -117,7 +117,7 @@ hands every `ShadowTree` the host starts a mounting override that forwards to th
 cannot parse; both reach JS through the scheduler's work queue). The driver reads the host's frame time in whole milliseconds, handed over once per
 pump (`clock`), and the frame clock treats an animation in flight (the driver's `LayoutAnimationStatusDelegate` edges, as iOS switches its run loop
 observer) as a frame consumer, so `tick` runs `UIManager::animationTick()` on the same ticks and timestamps as `requestAnimationFrame` and Native
-Animated; the transactions it pulls reach `uiManagerDidFinishTransaction`, so a tick's mount is the pump's Mount phase in `status().performance` (the tick
+Animated, and only with an animation in flight (a tick that another consumer causes does nothing and is not counted); the transactions it pulls reach `uiManagerDidFinishTransaction`, so a tick's mount is the pump's Mount phase in `status().performance` (the tick
 runs between the JS brackets, never inside one).
 `stop()` detaches the driver and destroys it, with the JS callbacks it holds, before the Hermes runtime; a retained `configureNext` then does nothing.
 `status().layoutAnimation`, which follows the `performance` section, is the contract: `enabled`, `active`, `stopped`, `started`, `completed`, `callbacksQueued`, `ticks`, `clockReads`,

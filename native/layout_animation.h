@@ -57,7 +57,9 @@ class LayoutAnimation {
   // there starts at the time of its own pump.
   void clock(double frame_ms);
   // One animation frame at the frame clock's tick: the clock, then RN's animationTick()
-  // (the transactions it pulls reach the runtime's uiManagerDidFinishTransaction).
+  // (the transactions it pulls reach the runtime's uiManagerDidFinishTransaction). A tick that
+  // another consumer of the frame clock caused while no animation is in flight does nothing and
+  // is not counted.
   void tick(double frame_ms);
   // No more frames or callbacks: the driver is detached from the UIManager and destroyed,
   // which drops the JS callbacks it holds. The runtime calls it while the JS runtime lives.

@@ -127,8 +127,31 @@ function configure(label, spec) {
   return given;
 }
 
+// A consumer of the frame clock that is not an animation: a requestAnimationFrame loop that keeps asking for the next frame. It
+// configures no layout animation, so the driver has nothing to do on the ticks it causes.
+let frames = 0;
+let frameRequest = null;
+function frameLoop() {
+  frames += 1;
+  frameRequest = requestAnimationFrame(frameLoop);
+}
+
 globalThis.LayoutAnimationProbe = {
   cases() { return {cases: CASES, base: BASE}; },
+  startFrames() {
+    frames = 0;
+    if (frameRequest === null) {
+      frameRequest = requestAnimationFrame(frameLoop);
+    }
+  },
+  // Stops the loop and returns how many frames it ran.
+  stopFrames() {
+    if (frameRequest !== null) {
+      cancelAnimationFrame(frameRequest);
+      frameRequest = null;
+    }
+    return frames;
+  },
   mounted() { return {...mounted}; },
   // Everything recorded since the last call.
   take() { return log.splice(0); },

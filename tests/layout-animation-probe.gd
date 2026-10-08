@@ -277,6 +277,7 @@ func run_probe() -> void:
   mount_case()
   api_case()
   await idle_case("idle-start")
+  await frames_case()
   cases = js("cases()").cases
   for name: String in ["native-end", "update-linear", "update-ease", "update-spring"]:
     await update_case(name)
@@ -336,6 +337,29 @@ func idle_case(name: String) -> void:
   driver_check((last.ticks == first.ticks and last.frameTicks == first.frameTicks and last.pullsTotal == first.pullsTotal and not last.active
     and forward and number(last.frameMs) > number(first.frameMs)),
     name + "/Idle, neither the driver nor the frame clock ticks, no transaction is pulled and the driver's clock only moves forward")
+
+# Another consumer of the frame clock, with no layout animation configured: a requestAnimationFrame loop makes the frame clock tick, and
+# those ticks are not the driver's. It waits for the frame clock to tick (with the limit that only turns a hang into a failure), stops the
+# loop, and lets the host settle so that the idle checks that follow see a frame clock nobody consumes.
+func frames_case() -> void:
+  var run := begin()
+  act("startFrames()")
+  var reached := await advance_until(run, func() -> bool: return delta(run, "frameTicks") >= 20)
+  var frames: int = int(number(js("stopFrames()")))
+  await advance(run, SETTLE)
+  run["frames"] = frames
+  run["timedOut"] = not reached
+  stages["raf-idle"] = run
+  var first: Dictionary = run.request
+  var last: Dictionary = run.rows.back()
+  check(reached and frames >= 20 and int(last.frameTicks) - int(first.frameTicks) >= 20,
+    "raf-idle/A requestAnimationFrame loop alone ticks the frame clock and runs its callbacks")
+  var still: bool = first.enabled == true
+  for row: Dictionary in run.rows:
+    still = (still and row.ticks == first.ticks and row.pullsTotal == first.pullsTotal and row.clockReads == first.clockReads
+      and row.started == first.started and row.completed == first.completed and row.callbacks == first.callbacks and not row.active)
+  driver_check(still and int(first.ticks) == 0,
+    "raf-idle/While another consumer ticks the frame clock and no animation is in flight, the driver is not ticked, reads no clock and pulls nothing")
 
 # The checks every animated run shares. wanted_callbacks: how many of RN's success callbacks the driver queued.
 func animated_run(name: String, run: Dictionary, wanted_callbacks: int = 1) -> void:

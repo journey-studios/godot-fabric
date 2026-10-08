@@ -190,7 +190,9 @@ void LayoutAnimation::clock(double frame_ms) {
 }
 
 void LayoutAnimation::tick(double frame_ms) {
-  if (state_->stopped) {
+  // The frame clock also ticks for other consumers (a requestAnimationFrame loop, Native Animated). A tick with no animation in
+  // flight has nothing to pull, so it is neither counted nor handed to RN: `ticks` counts the frames the driver animated.
+  if (!active()) {
     return;
   }
   clock(frame_ms);

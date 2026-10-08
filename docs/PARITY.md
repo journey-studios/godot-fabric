@@ -100,7 +100,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   (29) and [singular transforms](evidence/singular-transforms/README.md) (49) on
   planar Controls, and the [frame clock](evidence/frame-clock/README.md) (37) that
   paces `requestAnimationFrame` and the native animation like a display link. The original
-  [LayoutAnimation](evidence/layout-animation/README.md) (121) runs on RN's C++ `LayoutAnimationDriver` on the same
+  [LayoutAnimation](evidence/layout-animation/README.md) (123) runs on RN's C++ `LayoutAnimationDriver` on the same
   ticks: updates, creates and deletes with the linear, easeInEaseOut and spring curves, recomputed frame by frame
   by an independent oracle, on one root.
 - **Runtime globals:** RN's own web-standard globals, installed by the host's

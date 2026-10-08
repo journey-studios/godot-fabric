@@ -3417,7 +3417,7 @@ GF-19 stays **In progress**; this is its second slice and it closes no checkpoin
 `slice`, and the full item, contract, parity and targets remain open. The
 [LayoutAnimation evidence](docs/evidence/layout-animation/README.md) makes the public `react-native` export React Native's
 own `LayoutAnimation` (and the legacy `UIManager.configureNextLayoutAnimation`) run on RN's own C++
-`LayoutAnimationDriver`: **121 headless checks** (83 normative) on one root. Until now the host bound
+`LayoutAnimationDriver`: **123 headless checks** (84 normative) on one root. Until now the host bound
 `configureNextLayoutAnimation` but never installed an animation delegate, so the call did nothing: only the JS timer that
 `LayoutAnimation.js` arms against the native end (`duration + 17` ms) ended a `configureNext`, and the commit was mounted
 at once.
@@ -3431,7 +3431,9 @@ driver but a `RecordingDriver`, a `MountingOverrideDelegate` that forwards to th
 returns, so a transaction is attributed to the driver exactly (the coordinators hold it weakly, and `stop()` releases it
 with the driver, before the Hermes runtime). The host's frame clock is the display link: an animation in flight is a frame
 consumer by the status delegate's flag, as iOS switches its run loop observer, the tick runs `UIManager::animationTick()` at
-the tick's timestamp, and idle neither the frame clock nor the driver ticks. The clock RN reads is the pump's frame time in
+the tick's timestamp, and idle neither the frame clock nor the driver ticks. A tick that another consumer of the frame clock
+causes (a `requestAnimationFrame` loop) with no animation in flight leaves the driver untouched and uncounted: the module
+returns from `tick` before `animationTick()`. The clock RN reads is the pump's frame time in
 whole milliseconds, handed over at every pump (a commit that animates or interrupts pulls between ticks) and never going
 back; there is no offset seam. `status().layoutAnimation` reports `active`, `started`, `completed`, `callbacksQueued`,
 `ticks`, `clockReads`, `frameMs`, `lastReadMs` and a ring of the last 64 transactions served (the time RN read, the frame
@@ -3448,9 +3450,10 @@ The probe waits for the driver's completion or a callback with a limit, never fo
 independent oracle, written from the RN sources, recomputes every frame of every animation from the time RN read for each
 transaction the driver served (the factor of the curve, the layout, opacity and scale of every node, the mutation counts
 and the state of RN's JS timer), to within 1.8e-5 in position and 4.2e-8 in opacity over 359 transactions. The preceding
-host (main `c858263`) fails exactly the **83 normative checks of 121**: every `configureNext` ends by RN's JS timer, once.
-**Four retained host sabotages** (the driver reading seconds, no surface registered, the animation not a frame-clock
-consumer, the success callback dropped) fail 75, 87, 86 and 6 checks and the oracle rejects each. The suite ran three
+host (main `c858263`) fails exactly the **84 normative checks of 123**: every `configureNext` ends by RN's JS timer, once.
+**Five retained host sabotages** (the driver reading seconds, no surface registered, the animation not a frame-clock
+consumer, the success callback dropped, the driver ticked by any tick of the frame clock) fail 75, 87, 86, 6 and 1 checks
+and the oracle rejects each. The suite ran three
 times in a row and once under CPU load, and the example passes 12 headless checks, 12 with the native renderer and 23 with
 five captures. The cost of a tick, measured once with temporary instrumentation (121 to 135 us for one view, 3.7 to 3.8 ms
 for 400), is recorded and is not a gate.
@@ -3461,6 +3464,11 @@ in RN); `keyboard`, easeIn and easeOut without a certificate; background and res
 exports; hit-testing of a deleted view that stays mounted until its animation ends; the per-tick budget (GF-30); native
 `Animated.event` on the SDK ScrollView and the rest of what the Animated slice lists; and the hosted CI run of the new step
 and the Pages publication are pending.
+
+The record pinned at `092dd14` ran 121 checks (83 normative; sabotages 75, 87, 86 and 6; 359 transactions): the review of
+PR #65 then made `LayoutAnimation::tick` return when no animation is in flight, so that a `requestAnimationFrame` loop
+that ticks the frame clock neither counts nor ticks the driver, and added a stage with two checks, one of them normative,
+and a fifth retained sabotage that fails it alone.
 
 Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
 [`ee8f5bd`](https://github.com/journey-studios/godot-fabric/commit/ee8f5bd55e60556bd3fb4408eed11734399ae378) (after `2648ab0`) and recorded at

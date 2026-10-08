@@ -18,6 +18,8 @@ import {guardSources} from "./sabotage-sources.mjs";
 //   no-consumer           the driver's animation is not a consumer of the frame clock: it never ticks and the animation stalls
 //                         at its first frame (the probe waits on the driver's completion, with a limit).
 //   drop-callback         the success callback the driver queues is counted and dropped: only RN's JS timer ends the call.
+//   unguarded-tick        the driver is ticked on every tick of the frame clock, whatever caused it: a requestAnimationFrame loop with
+//                         no animation configured ticks the driver and its counter.
 //
 // Each sabotage breaks a source on purpose and rebuilds the host from it; the probe's checks and the oracle (which derives
 // every number from RN's formulas) must both reject it. The sources come back whatever ends the run, a signal included
@@ -45,6 +47,9 @@ const variants = [
   {name: "drop-callback", argument: "--sabotage=drop-callback", hostDirectory: "build/layout-animation-sabotage-drop-callback-host", file: module,
     find: "    executor(std::move(callback));\n",
     replace: "    static_cast<void>(callback);\n"},
+  {name: "unguarded-tick", argument: "--sabotage=unguarded-tick", hostDirectory: "build/layout-animation-sabotage-unguarded-tick-host", file: module,
+    find: "  if (!active()) {\n    return;\n  }\n  clock(frame_ms);\n",
+    replace: "  if (state_->stopped) {\n    return;\n  }\n  clock(frame_ms);\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));

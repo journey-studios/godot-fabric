@@ -456,6 +456,21 @@ function verifyIdle(stage, label) {
   assert.ok(stage.rows.at(-1).frameMs > stage.request.frameMs, `${label}: the driver's clock moves with the host's frames`);
 }
 
+// Another consumer ticks the frame clock (a requestAnimationFrame loop) and no animation is configured: the frame clock ticks and the loop runs,
+// but the driver has nothing in flight, so it is not ticked, reads no clock and pulls nothing.
+function verifyFrames(stage) {
+  assert.equal(stage.timedOut, false, "raf-idle: the frame clock ticked before the limit");
+  assert.ok(stage.frames >= 20 && stage.rows.at(-1).frameTicks - stage.request.frameTicks >= 20, "raf-idle: the loop alone ticks the frame clock");
+  for (const row of stage.rows) {
+    assert.equal(row.ticks, stage.request.ticks, "raf-idle: the driver is not ticked for another consumer");
+    assert.equal(row.pullsTotal, stage.request.pullsTotal, "raf-idle: the driver pulls nothing for another consumer");
+    assert.equal(row.clockReads, stage.request.clockReads, "raf-idle: RN reads no clock for another consumer");
+    assert.equal(row.lastReadMs, stage.request.lastReadMs);
+    assert.equal(row.started, stage.request.started);
+    assert.equal(row.active, false);
+  }
+}
+
 function verifyStop(report) {
   const stage = report.stages.stop;
   assert.equal(stage.stopped, true, "stop: the application stopped");
@@ -480,6 +495,7 @@ export function verifyLayoutAnimationReport(report) {
     [0, 0, 0, 0, 0, 0], "The driver idles before any animation");
   verifyPulls(indexed);
   verifyIdle(report.stages["idle-start"], "idle-start");
+  verifyFrames(report.stages["raf-idle"]);
   for (const name of ["native-end", "update-linear", "update-ease", "update-spring", "create-opacity", "create-scale", "delete-opacity",
     "delete-scale", "mixed", "legacy"]) {
     verifyAnimated(indexed, name, errors);
