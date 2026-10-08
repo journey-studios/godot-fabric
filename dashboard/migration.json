@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 #58: #69 Library consumer integrado à árvore local; validação combinada aguarda CI e revisão."
+    "focusTitle": "GF-14 #58: fatia desktop aceita; prioridade Frontier 0.5."
   },
   "updatedAt": "2026-10-08T18:31:18.000Z",
   "source": {
-    "commit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/57e41f2e89a774eb79752cc87cd5e2096d2f3041",
-    "scope": "Main #69 (Library consumer) integrada localmente à branch da PR #58. A fatia GF-27 e as evidências de CI/Pages de GF-16 vêm da main; as evidências GF-14/Modal/Images locais continuam ligadas aos produtores e hosts históricos registrados, sem validação combinada neste merge. A CI de c5 foi cancelada e seus inputs congelados permanecem sem inspeção de artifacts. GF-14 segue aberto com os quatro checkpoints false; a validação da árvore combinada, CI e revisão ainda estão pendentes.",
+    "commit": "66c948bc21fd88c2bb279f198849a5843519f741",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/66c948bc21fd88c2bb279f198849a5843519f741",
+    "scope": "PR #58 was merged at 66c948b. The hosted producer tree a3fe519 matches the audited merge tree; run 37799420834 succeeded and its frozen artifact audit passed 17/17. The principal accepted the first desktop GF-14 slice; contract, parity and targets remain open. The three V05-01 criteria were accepted independently and are recorded in this dashboard update. The 3bf, 0bf and canceled c5 evidence remains scoped to its historical producer state; the immutable c6e5 receipts preserve their pre-sync metadata. This documentation update does not change the producer identity.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,14 +1633,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "The local ScrollView/Modal + Images #66 evidence in docs/evidence/scroll-view/integration-3bf129c.json was produced from source 3bf129c with host fa9bcca before Text #67 (main b82fbdd) was integrated. Treat those results as pre-Text historical evidence, not validation of the combined tree. No combined-tree rebuild/replay or hosted CI has run yet. Dashboard remains 30/156; all four GF-14 checkpoints stay false. Physical mobile, refresh-rate behavior, complete RN parity and the full ScrollView contract remain open.",
+      "note": "The principal accepted the first desktop ScrollView slice from hosted run 37799420834 and its 17/17 artifact audit; only the slice checkpoint is recorded here. The hosted producer tree is a3fe519, merged source 66c948b, and the receipt is immutable at this evidence commit. The full contract, positive/negative RN parity, and target acceptance remain open, as do physical mobile behavior and refresh-rate coverage. The hosted receipt does not include native library bytes, so it does not certify binary-byte equivalence or ABI behavior. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Hosted macOS producer and principal-reviewed first desktop slice (17/17 audit checks)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/hosted-ci.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3418,20 +3423,35 @@
             {
               "id": "insercao",
               "label": "Chave opcional milestones, seção do painel, aviso em activity e seção 0.5 no ROADMAP.md entregues por PR aditiva; summarize() e o parse do ROADMAP da 1.0 idênticos com e sem a chave",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 insertion criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L10"
+                }
+              ]
             },
             {
               "id": "agentes",
               "label": "AGENT_PROMPT.md e README orientam os agentes: progresso do 0.5 em milestones, preservar chaves desconhecidas ao reescrever o JSON, HUD-* e GF-* seguem o fluxo normal",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 agent-guidance criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L66"
+                }
+              ]
             },
             {
               "id": "publicacao",
               "label": "Testes do dashboard cobrem milestones válido e inválido e a preservação pelo sync; Pages publicado com o marco visível (workflow Migration dashboard Pages confirmado)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 publication criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L84"
+                }
+              ]
             }
           ]
         },
@@ -4205,12 +4225,21 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
     },
     {
+      "id": "gf14-desktop-slice-v05-01-accepted-c6e5a81",
+      "at": "2026-10-08T16:34:51Z",
+      "taskIds": [
+        "GF-14"
+      ],
+      "message": "O principal aceitou a primeira fatia desktop do ScrollView: run hospedado 37799420834, árvore produtora a3fe519, auditoria independente 17/17. Só GF-14 slice é registrado; contrato completo, paridade e alvos continuam abertos. Os três critérios V05-01 também foram aceitos e registrados nesta branch. Naquele registro, a publicação do dashboard/Pages aguardava a revisão e o merge desta atualização; o recibo imutável preserva seu estado anterior à sincronização.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/hosted-ci.json"
+      },
+      {
       "id": "milestone-0-5-v05-03-replay-c2e4501",
       "at": "2026-10-08T15:25:04.000Z",
       "taskIds": [],
       "message": "V05-03 do marco 0.5, critério replay, com evidência local: as regras e o cenário do Frontier, o jogo de referência, rodam em GDScript puro com o Godot como autoridade (mapa 24x16 de semente fixa, Settler e Warrior com movimento por pontos, uma cidade com fila de produção, pesquisa em lista, um evento bloqueante e uma facção roteirizada), só com inteiros, PRNG próprio (PCG32 conferido contra as saídas publicadas), serialização canônica e SHA-256. O roteiro de 12 turnos e 73 intenções (43 aceitas e 30 recusadas com código e texto, sem mudar o estado) termina no mesmo hash dourado, e o hash de trilha fixa o estado de cada passo, em 9 execuções de 629 checks (3 rodadas de 3 processos, relatórios byte-idênticos). Os 7 contextos são cobertos, um oráculo independente em Node recalcula as regras, o mapa e o PCG32, e 4 sabotagens retidas são rejeitadas. O snapshot que a HUD vai projetar está documentado campo a campo, mas ainda não é um serviço: os critérios servicos, consumidor e autoridade do V05-03 seguem abertos. CI hospedada (native-civ-lite-game) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
-    },
+      },
     {
       "id": "accessibility-announcements-slice-2b-1491f34",
       "at": "2026-10-08T13:09:27.440+00:00",
