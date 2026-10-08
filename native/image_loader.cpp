@@ -83,6 +83,10 @@ struct ImageLoader::Job {
   std::string error, format, fingerprint;
   uint64_t source_width{}, source_height{}, width{}, height{};
   double scale{1};
+  // ImageRequestParams.blurRadius, and what the worker made of it.
+  double blur_radius{};
+  image::BlurPlan blur;
+  bool blurs() const { return blur_radius > image::flt_epsilon; }
   Ref<Image> pixels;
   bool progress{};
   double progress_fraction{};
@@ -117,7 +121,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
   std::vector<std::shared_ptr<Job>> finished;
   std::deque<folly::dynamic> records;
   uint64_t next_id{1};
-  uint64_t requested{}, measures{}, loaded{}, failed{}, cancelled{}, dropped{}, measured{}, uploads{}, upload_bytes{},
+  uint64_t requested{}, measures{}, loaded{}, blurred{}, failed{}, cancelled{}, dropped{}, measured{}, uploads{}, upload_bytes{},
       tasks_started{}, tasks_awaited{}, peak_in_flight{}, deferred_uploads{}, peak_uploads_per_poll{};
   std::atomic<bool> stopped{};
   std::atomic<std::size_t> max_in_flight{default_in_flight};
@@ -349,6 +353,17 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     job.width = static_cast<uint64_t>(pixels->get_width());
     job.height = static_cast<uint64_t>(pixels->get_height());
     job.scale = source.kind == image::SourceKind::Bundle && format != image::Format::Svg ? image::bundle_scale(source.path) : request_scale;
+    if (job.blurs()) {
+      // RCTImageComponentView blurs on a background queue after the image arrives; here it is part of the job, before the pixels become a
+      // texture, so that a blurred picture is never one that a cache or another view holds.
+      if (abandon(job)) return;
+      job.blur = image::blur_plan(job.blur_radius, job.scale);
+      if (job.blur.applies) {
+        PackedByteArray data = pixels->get_data();
+        image::box_blur_rgba8(data.ptrw(), job.width, job.height, job.blur.kernel);
+        pixels->set_data(static_cast<int32_t>(job.width), static_cast<int32_t>(job.height), false, Image::FORMAT_RGBA8, data);
+      }
+    }
     if (fingerprints.load()) {
       const PackedByteArray data = pixels->get_data();
       uint64_t hash = 0xcbf29ce484222325ull;
@@ -376,6 +391,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
         ("format", job.format)("sourceWidth", job.source_width)("sourceHeight", job.source_height)
         ("width", job.width)("height", job.height)("scale", job.scale)("fingerprint", job.fingerprint)("uploaded", uploaded)
         ("error", job.error)("request", folly::dynamic::object("width", job.source.size.width)("height", job.source.size.height)("scale", job.source.scale))
+        ("blur", folly::dynamic::object("radius", job.blur_radius)("kernel", job.blur.kernel)("passes", job.blur.passes)("applies", job.blur.applies))
         ("progress", std::move(progress));
     if (job.network) {
       const auto &found = job.net.found;
@@ -458,7 +474,8 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
   // ---- network jobs ----
 
   // What the sources are asked for a job's picture.
-  static SourceRequest request_of(const Job &job) { return SourceRequest::from(job.source, !job.measure_only && !job.prefetch); }
+  // A blurred picture is made for its request alone, so it is not a picture the decoded cache may hold or answer with.
+  static SourceRequest request_of(const Job &job) { return SourceRequest::from(job.source, !job.measure_only && !job.prefetch && !job.blurs()); }
 
   void begin_network_jobs() {
     while (!stopped.load()) {
@@ -603,11 +620,12 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       ++uploads;
       upload_bytes += job->width * job->height * 4;
       ++loaded;
+      if (job->blur.applies) ++blurred;
     }
     record(*job, "loaded", true);
     auto live = live_textures;
     ++*live;
-    auto *picture = new LoadedImage{std::move(texture), job->width, job->height, job->source_width, job->source_height, job->scale, job->format, job->fingerprint};
+    auto *picture = new LoadedImage{std::move(texture), job->width, job->height, job->source_width, job->source_height, job->scale, job->format, job->fingerprint, job->blur};
     const std::shared_ptr<LoadedImage> shared(picture, [live](LoadedImage *value) {
       delete value;
       --*live;
@@ -706,7 +724,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       is_held = held;
     }
     folly::dynamic counters = folly::dynamic::object("requested", requested)("measures", measures)("prefetches", prefetches)("prefetched", prefetched)
-        ("cacheClears", cache_clears)("loaded", loaded)("failed", failed)("cancelled", cancelled)("dropped", dropped)("measured", measured)
+        ("cacheClears", cache_clears)("loaded", loaded)("blurred", blurred)("failed", failed)("cancelled", cancelled)("dropped", dropped)("measured", measured)
         ("uploads", uploads)("uploadBytes", upload_bytes)("deferredUploads", deferred_uploads)("peakUploadsPerPoll", peak_uploads_per_poll)
         ("tasksStarted", tasks_started)("tasksAwaited", tasks_awaited)("peakInFlight", peak_in_flight);
     counters.update(sources.counters());
@@ -724,10 +742,11 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
 ImageLoader::ImageLoader(std::thread::id host_thread) : state_(std::make_shared<State>(host_thread)) {}
 ImageLoader::~ImageLoader() { state_->stop(); }
 
-std::function<void()> ImageLoader::load(const rn::ImageSource &source, std::weak_ptr<const Coordinator> coordinator) {
+std::function<void()> ImageLoader::load(const rn::ImageSource &source, std::weak_ptr<const Coordinator> coordinator, double blur_radius) {
   if (state_->stopped.load()) return [] {};
   auto job = std::make_shared<Job>();
   job->source = source;
+  job->blur_radius = blur_radius;
   job->uri = source.uri;
   job->parsed = image::classify(source.uri);
   job->network = job->parsed.kind == image::SourceKind::Network;

@@ -204,18 +204,18 @@ export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating"
   "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
 /** RN's original Image.ios.js behind a validating wrapper, with RN's own native image pipeline (ImageShadowNode, its
  * ImageRequest and the observers) over a host ImageManager that reads and decodes on worker threads. Sources are
- * require()d assets, res://, user://, file:// and data: URIs. tintColor, blurRadius, capInsets, defaultSource,
- * loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier, overlayColor,
- * source headers, method, body and cache, and a border radius on the style fail where the Image renders. */
+ * require()d assets, res://, user://, file:// and data: URIs, and http(s) addresses. tintColor, blurRadius, capInsets and the
+ * border radius of the style are drawn as on iOS. loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled,
+ * resizeMethod, resizeMultiplier, defaultSource and overlayColor are taken and have no effect, as on iOS. */
 export type ImageResizeMode = RN.ImageResizeMode;
 export type ImageSourcePropType = RN.ImageSourcePropType;
 export type ImageLoadEvent = RN.ImageLoadEvent;
 export type ImageErrorEvent = RN.ImageErrorEvent;
 export type ImageProgressEventIOS = RN.ImageProgressEventIOS;
-export type ImageStyle = Omit<ViewStyle, "borderRadius" | "borderTopLeftRadius" | "borderTopRightRadius" | "borderBottomLeftRadius" | "borderBottomRightRadius" | "overflow"> &
-  Pick<RN.ImageStyle, "resizeMode" | "objectFit" | "overflow">;
+export type ImageStyle = Omit<ViewStyle, "overflow"> & Pick<RN.ImageStyle, "resizeMode" | "objectFit" | "overflow" | "tintColor" | "overlayColor">;
 export type ImageProps = Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" | "testID" | "nativeID" |
-  "onLayout" | "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad"> & { style?: StyleProp<ImageStyle> };
+  "onLayout" | "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad" | "blurRadius" | "capInsets" | "tintColor" |
+  "defaultSource" | "loadingIndicatorSource" | "fadeDuration" | "progressiveRenderingEnabled" | "resizeMethod" | "resizeMultiplier"> & { style?: StyleProp<ImageStyle> };
 export type ImageBackgroundProps = ImageProps & { children?: React.ReactNode; style?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ImageStyle>; imageRef?: React.Ref<NativeInstance> };
 export interface ImageStatics {

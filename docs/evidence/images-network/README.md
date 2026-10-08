@@ -96,6 +96,16 @@ estruturais. O mesmo bundle, de SHA-256 `38e6eceb…`, rodou em todas as lanes.
 > controles e as sabotagens locais deles (o transporte que eles fixam mudou); o `test:contracts` passa (302 testes
 > Node, 43 do painel e 13 Python).
 
+> Nota posterior (2026-10-08): a terceira fatia do GF-16, a dos
+> [efeitos de imagem](../images-visual/README.md) (implementação
+> [`6c221e8`](https://github.com/journey-studios/godot-fabric/commit/6c221e8500e159ba9322d9b7a6b5adace4f8aff2)), substituiu o que o
+> item "Props visuais" de Limites diz: `tintColor`, `blurRadius`, `capInsets` e o raio de borda do estilo são
+> desenhados, e os outros sete props da lista são aceitos sem efeito, como no iOS. O exemplo ganhou quatro cartões
+> (26 checks headless e 39 com o renderizador, onde esta página conta 22 e 30), e os dois quadros desta página
+> mostram o exemplo antes deles. A sabotagem `texture-mutation` passou a remendar a chamada de `GodotImage::_draw`
+> que entrega a textura ao item de desenho, porque o código de ladrilho que ela remendava foi para
+> `native/image_effects.cpp`; os controles e as sabotagens desta suíte foram refeitos e ela segue com 74 checks.
+
 ## O que o RN faz
 
 Do lado C++, o `ImageShadowNode` e o `ImageRequest` já decidem quando uma imagem é pedida; o que
@@ -420,7 +430,7 @@ imagem que falhou não deixa pixels de imagem. Não há oráculo independente de
 comparação com o UIKit segue aberta em Limites. Os dois quadros da primeira fatia continuam em
 [`docs/evidence/images`](../images/README.md), mostrando o exemplo antes da linha de rede.
 
-Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
+A lane com o renderizador roda só localmente; a CI hospedada rodou a lane headless da suíte (veja Limites).
 
 ## Regressões
 
@@ -475,9 +485,22 @@ gates que os leem rodaram de novo na árvore final.
   sob um aviso de memória real não foram comparados com o iOS.
 - **Plataformas.** Só macOS arm64 foi executado; Windows, Linux, Android, iOS e Web não foram exercitados,
   nem hardware real.
-- **CI.** A CI hospedada desta fatia está pendente: o oráculo e a sonda afirmam valores que o host entregou
-  ou limites (quatro downloads ao mesmo tempo, margem de 20 s em torno de cada tempo de validade), nunca o
-  ritmo de quadros nem a segmentação dos bytes.
+- **CI.** A CI hospedada do push da `main` em `fb50a32` (o squash do #64, run 37750455295) passou nos
+  cinco jobs na primeira tentativa, sem reexecução. O job `native-cold-start` rodou `npm run
+  test:images-network` (1 de 1 teste ok), e o artefato `native-images-network` repete os **74 checks
+  headless** com os IDs do relatório commitado (o mesmo digest, `d01c6a74…`); o mesmo job rodou o exemplo
+  `images` no `test:examples` (22 checks headless). O oráculo independente aceita o relatório baixado (24
+  Images declaradas, 146 jobs, 115 operações), e os 30, 1, 34 e 2 checks que o controle e as sabotagens
+  locais falham existem e passam todos no run. Os 194 pins de código e configuração têm em `fb50a32` os
+  bytes de `910cffb` (a árvore do head do PR é a da `main`): nenhum produtor do bundle mudou desde
+  `910cffb`, e o SHA-256 do bundle do run (`38e6eceb…`) é o que o relatório registra. O hash do host
+  nativo (`52683f95…`) é declarado pelo runner, que usou o Node v22.23.2 onde o estado commitado rodou o
+  v22.23.3. O [Pages](publication.json) (run 37750455287) implantou exatamente os dados commitados de
+  `fb50a32`; o site público já foi substituído por um deploy posterior do mesmo commit (run 37756845373,
+  `workflow_dispatch`). O oráculo e a sonda afirmam valores que o host entregou ou limites (quatro
+  downloads ao mesmo tempo, margem de 20 s em torno de cada tempo de validade), nunca o ritmo de quadros
+  nem a segmentação dos bytes. A CI hospedada não roda o controle no host anterior, as sabotagens nem a
+  captura com o renderizador. [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, contrato, paridade, alvo, outro checkpoint, peso ou denominador fecha: o GF-16
 continua aberto, e esta segunda fatia não fecha nenhum checkpoint.
