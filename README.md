@@ -470,13 +470,21 @@ two roots of one application and 74 of the network slice over a loopback server,
 independent oracle; the preceding host fails the 3 and 30 normative checks it can reach, and
 retained sabotages (decoding on the main thread, a view that keeps listening to a swapped-away
 request, a reload that consults the decoded cache, a download whose transport request stays open, a
-repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. A disk cache,
-revalidation, cookies, compression, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping
-and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI passed
-the first slice's 74 checks on main (run 37724902858,
-[receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network slice.
+repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. The same Image draws `tintColor`
+(the picture's pixels take the color, never the view's background or border), `blurRadius` (RN iOS's two-pass
+premultiplied box blur, run on the worker, on a texture no cache holds), `capInsets` (a stretched or tiled
+nine-patch) and the clip of `borderRadius` (the border box with the radii, and the content frame with each radius
+less the border beside it), on a canvas item of its own with one shared shader, and takes the props iOS ignores
+without effect. 53 headless checks of those effects, with an independent oracle that recomputes the pixels of 14
+blurred bitmaps exactly and every rectangle, radius and margin the view asked the renderer for; the preceding host
+fails the 40 normative checks, four retained sabotages (a clip that ignores the border width, a third blur pass, a
+blurred request that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 2, and the
+example's capture sampled the shader's pixels. A disk cache, revalidation, cookies, compression, animated formats
+and a comparison of the effects with iOS are open. Hosted CI passed the first slice's 74 checks on main (run
+37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network and visual slices.
 [Evidence](docs/evidence/images/README.md);
-[network evidence](docs/evidence/images-network/README.md).
+[network evidence](docs/evidence/images-network/README.md);
+[visual evidence](docs/evidence/images-visual/README.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
@@ -644,12 +652,12 @@ public `react-native` import, each driven by real mouse input in its validation.
 Every example README shows all the states it captures, and each evidence record
 keeps the SHA-256 of its frames in a `captures.json`.
 
-| Image: modes, sources and network pictures | Image: after the clicks and a remount |
+| Image: modes, sources, network pictures and effects | Image: after the clicks and a remount |
 | --- | --- |
-| [![The six resize modes, an @2x asset, data URIs, an ImageBackground, a failed picture and a row of a network PNG, a remount tile and an HTTP 404](docs/evidence/images-network/images-network-all-modes.png)](examples/images/README.md) | [![The remounted network PNG answered by the decoded cache and the preview in center mode showing the logo after a swap](docs/evidence/images-network/images-network-remount.png)](examples/images/README.md) |
+| [![The six resize modes, an @2x asset, data URIs, an ImageBackground, a failed picture, a tinted icon, a network PNG, a remount tile, an HTTP 404, a blurred landscape, a card stretched by cap insets and two clipped avatars](docs/evidence/images-visual/images-visual-all-modes.png)](examples/images/README.md) | [![The remounted network PNG answered by the decoded cache and the preview in center mode showing the logo after a swap, with the four effect tiles unchanged](docs/evidence/images-visual/images-visual-interaction.png)](examples/images/README.md) |
 
-The Image example's frames are taken at content scale 2; the network evidence keeps their SHA-256 in
-`report.json`.
+The Image example's frames are taken at content scale 2; the visual evidence keeps their SHA-256 in
+`report.json`, and the network and first slices keep their earlier frames of the same example.
 
 | Pointerdown interest: initial | Pointerdown interest: after React updates |
 | --- | --- |

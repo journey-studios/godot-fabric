@@ -96,6 +96,16 @@ estruturais. O mesmo bundle, de SHA-256 `38e6eceb…`, rodou em todas as lanes.
 > controles e as sabotagens locais deles (o transporte que eles fixam mudou); o `test:contracts` passa (302 testes
 > Node, 43 do painel e 13 Python).
 
+> Nota posterior (2026-10-08): a terceira fatia do GF-16, a dos
+> [efeitos de imagem](../images-visual/README.md) (implementação
+> [`6c221e8`](https://github.com/journey-studios/godot-fabric/commit/6c221e8500e159ba9322d9b7a6b5adace4f8aff2)), substituiu o que o
+> item "Props visuais" de Limites diz: `tintColor`, `blurRadius`, `capInsets` e o raio de borda do estilo são
+> desenhados, e os outros sete props da lista são aceitos sem efeito, como no iOS. O exemplo ganhou quatro cartões
+> (26 checks headless e 39 com o renderizador, onde esta página conta 22 e 30), e os dois quadros desta página
+> mostram o exemplo antes deles. A sabotagem `texture-mutation` passou a remendar a chamada de `GodotImage::_draw`
+> que entrega a textura ao item de desenho, porque o código de ladrilho que ela remendava foi para
+> `native/image_effects.cpp`; os controles e as sabotagens desta suíte foram refeitos e ela segue com 74 checks.
+
 ## O que o RN faz
 
 Do lado C++, o `ImageShadowNode` e o `ImageRequest` já decidem quando uma imagem é pedida; o que

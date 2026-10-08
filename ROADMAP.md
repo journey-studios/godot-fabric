@@ -3080,14 +3080,11 @@ the six modes, a bundled `@2x` asset, `data:` PNG and SVG, an `ImageBackground`,
 preview that two buttons change (17 headless and 25 graphical checks), and its two captures are in
 the evidence.
 
-Open: network images (`http(s)`, headers, method, body and cache), the decoded-image cache,
-`prefetch` and `queryCache`, `tintColor`, `blurRadius`, `capInsets`, `defaultSource`,
-`loadingIndicatorSource`, `fadeDuration`, `progressiveRenderingEnabled`, `resizeMethod`,
-`resizeMultiplier` and `overlayColor` (each fails where the Image renders), rounded image clipping
-(a border radius on the Image's own style fails; the host clips rectangles only), animated GIF and
-WebP, `nativeImageSource`, assets in desktop and Android exports (the iOS hook copies the manifest's
-files, but no exported app ran), an independent pixel oracle, a comparison of ImageIO's thumbnail
-rounding and UIKit's tiling with iOS, and every target but macOS. The host departs from RN in the
+Open at that slice (the second slice below delivers network images, the decoded-image cache, `prefetch`
+and `queryCache`, and the third delivers `tintColor`, `blurRadius`, `capInsets`, rounded image clipping and the
+props iOS ignores): animated GIF and WebP, `nativeImageSource`, assets in desktop and Android exports (the iOS
+hook copies the manifest's files, but no exported app ran), an independent pixel oracle, a comparison of
+ImageIO's thumbnail rounding and UIKit's tiling with iOS, and every target but macOS. The host departs from RN in the
 research note: the `ImageLoader` module's error codes are message prefixes, `repeat` tiles at an
 integer size in points, `res://` is decoded whole, and `getSize` believes the header.
 
@@ -3145,6 +3142,43 @@ redirects drop the source's headers as `RCTHTTPRequestHandler` does (the old dev
 every digit and the example's server answers 400 and 431 instead of reading a bad request line; the lanes ran again
 with 74 checks (66 normative), the control failing the same 30 of 37, sabotages failing 1, 34 and 2, 33 oracle
 mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`.
+
+**Tint, blur, cap insets and rounded clipping (2026-10-08).** The third slice of GF-16 makes the public `Image`
+draw what the first two slices refused: `tintColor`, `blurRadius`, `capInsets` and the radii of the Image's own
+style, and accepts without effect the seven props that RN iOS drops or ignores (`defaultSource`,
+`loadingIndicatorSource`, `fadeDuration`, `progressiveRenderingEnabled`, `resizeMethod`, `resizeMultiplier` and
+`overlayColor`; the iOS view config does not list the last six, and no iOS component reads `defaultSource`). The
+[visual evidence](docs/evidence/images-visual/README.md) records **53 headless checks** (40 normative). `GodotImage`
+draws its picture on a canvas item of its own, a child of the view's and scaled by 1/scale, so the background and
+border it paints are never tinted or clipped; one shader shared by every view tints (`COLOR.rgb = tint.rgb`,
+`COLOR.a *= tint.a`, as template rendering does) and clips to two rounded rectangles with anti-aliased edges (the
+border box with the radii, and the content frame with each radius less the border beside it, limited as
+`RCTPathCreateWithRoundedRect` limits them), and `capInsets` become a stretch (or, for `repeat`, a tile)
+nine-patch of the same item; the item and the view's material are freed in order, and the snapshot counts the RIDs
+made and freed. `blurRadius` is `RCTBlurredImageWithRadius`: a square box of
+`floor((radius x scale x 3 sqrt(2 pi) / 4 + 0.5) / 2) | 1` pixels, in premultiplied alpha, two passes with the edge
+extended, run on the worker after the decode; a blurred picture has a texture of its own, a request that blurs
+neither reads nor writes the decoded cache, a blurred picture takes no tint or caps and `repeat` fills the view with
+it, and a box of one pixel leaves the picture untouched. The pure parts (`native/image_effects_core.h`) have a C++
+test of their own (10 groups, 46 assertions). The headless renderer draws no pixel, so the probe certifies what the
+view asked the renderer for (every rectangle, radius, margin, tint and shader parameter of 52 declared Images and 13
+live changes) and the exact pixels of the blur by the bitmap the worker made, which an independent oracle recomputes
+for 14 blurred pictures (boxes 3, 5, 7, 11 and 85) and the fixture manifest holds; the oracle also models six steps
+over the two caches with a loopback server and replays the live changes. The same bundle on the preceding host (main
+`fb50a32`) runs all 53 checks and fails exactly the 40 normative ones; four retained sabotages (a clip that ignores the
+border width, a third blur pass, a blurred request that uses the decoded cache, cap insets that ignore the scale)
+fail 2, 3, 8 and 2 checks and the oracle rejects each, and 48 mutations of the genuine report are refused. The
+example now shows a tinted icon, a blurred landscape, a card stretched by cap insets beside the same card without
+them, and two avatars, one with a border (26 headless and 39 graphical checks, whose pixel checks saw the shader
+draw; two new captures). Departures from RN iOS are listed in the evidence and the
+[research note](docs/research/images.md): the blur's rounding is the host's own (vImage is closed), a tint, a cap
+inset and a radius take effect on the next draw (iOS applies the first two when a response arrives), `onLoad` comes
+after the blur, `capInsets` apply to `stretch` and `repeat` only with UIKit's behavior for the other modes
+unverified, a list of `capInsets` is refused (RN's parser reads it as a map and keeps nothing), a fully transparent
+black tint is not a tint (RN's C++ color has no value for it), and the border is painted below the picture where iOS
+paints it above (nothing differs in what is seen). The first slice's suite changed with the contract (72 checks, 13
+refusals fewer). Open: a comparison of the effects with iOS, hosted CI for this slice, and everything the earlier
+slices left open. This slice closes no checkpoint: GF-16 stays in progress.
 
 ### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
 

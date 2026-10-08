@@ -13,8 +13,13 @@ probe and the oracle both reject, 33 mutations of the genuine report that the or
 push of main 6d02746, the squash of #56) passed all five jobs in its first attempt; its native job
 ran `npm run test:images` (1 of 1 TAP test passing) and its artifact repeated the first slice's 74
 checks, and the independent oracle accepts its report
-([receipt](../evidence/images/hosted-ci.json)); hosted CI has not run the network slice. GF-16 stays
-open; the network slice closes no checkpoint.
+([receipt](../evidence/images/hosted-ci.json)); hosted CI has not run the network slice. The
+[visual slice's evidence](../evidence/images-visual/README.md) owns the 53 headless checks of what is done to a
+picture (tint, blur, cap insets and the rounded clip, and the props iOS ignores), the control on the preceding
+host (all 53 run, the 40 normative fail), four retained sabotages that the probe and the oracle both reject, 48
+mutations of the genuine report that the oracle refuses, the exact pixels of 14 blurred bitmaps and the 26
+headless and 39 graphical checks of the example with its two captures; hosted CI has not run it either. GF-16
+stays open; neither the network slice nor the visual slice closes a checkpoint.
 
 All paths below are under `node_modules/react-native/` unless they start with `native/`, `src/`,
 `sdk/` or `tests/`.
@@ -161,6 +166,58 @@ error: `addResponseHeadersToError` (`RCTImageLoader.mm:37-46`) copies `response.
 error that arrives with an `NSHTTPURLResponse` unless the completion runs on the main queue with data
 (567-574), a path a download does not take, since its completion runs on the network handler's queue.
 
+## What RN does for tint, blur, cap insets and rounded corners
+
+**Which props reach the native side.** On iOS the generated component's `validAttributes`
+(`Libraries/Image/ImageViewNativeComponent.js:133-153`) are `blurRadius`, `capInsets`, `defaultSource`,
+`internal_analyticTag`, `resizeMode`, `source` and `tintColor`;
+`Libraries/ReactNative/ReactFabricPublicInstance/ReactNativeAttributePayload.js:73-74` (creation) and `246-247`
+(update) skip every prop without an entry. `loadingIndicatorSource`, `fadeDuration`,
+`progressiveRenderingEnabled`, `resizeMethod`, `resizeMultiplier` and `overlayColor` are listed only in the Android
+branch (81-109, the first as `loadingIndicatorSrc`), so they never reach an iOS view. `defaultSource` does, and
+`ReactCommon/react/renderer/components/image/ImageProps.cpp:22-27` parses it (as `overlayColor` is at 82-87), but
+nothing in `RCTImageComponentView` reads it. `Image.ios.js:141-146` flattens the style and passes `tintColor` as
+`props.tintColor ?? flattenedStyle?.tintColor`; the base style (261-265) has `overflow: 'hidden'`.
+`Libraries/Image/ImageProps.js:310-313` documents the tint as changing "the color of all non-transparent pixels".
+
+**What a new image does to the view.** `ImageShadowNode::updateStateIfNeeded`
+(`ReactCommon/react/renderer/components/image/ImageShadowNode.cpp:45-108`) builds the request params, which are the
+blur radius alone on iOS (`ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/ImageRequestParams.h:17`),
+and commits a new `ImageState` with a new request unless both the source and the params equal the saved ones
+(77-80): a changed `blurRadius` asks for the same source again, and
+`React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm:89-99` sends `onLoadStart` only when the source
+changed. `updateProps` sets the `tintColor` on the `UIImageView` (64-67). `didReceiveImage` (127-169) sends `onLoad`
+and `onLoadEnd` first (139-140), then makes the image a template when `tintColor` is set (144-146), makes it
+resizable with the `capInsets` (a tiling resize for `repeat`, 148-150; a stretching one when the insets are not all
+zero, 151-155) and, when `blurRadius > __FLT_EPSILON__`, blurs that image on a global queue and sets the result
+(157-166).
+
+**The blur.** `Libraries/Image/RCTImageBlurUtils.mm` reads only the `CGImage` and the scale of the image it gets
+(12-14), converts anything that is not 32-bit with alpha to ARGB (22-31), takes a box of
+`floor((radius × scale × 3·√(2π)/4 + 0.5) / 2) | 1` pixels (52-53) and runs `vImageBoxConvolve_ARGB8888` with
+`kvImageEdgeExtend`. A box of one pixel has no temporary buffer and the function returns its input (56-62). The
+three convolutions (76-78) write `buffer2`, `buffer1` and `buffer2`; the function frees `buffer2` and builds its
+result from `buffer1` (81-96), so two passes reach the picture, and the new `UIImage` carries nothing of the
+template, the caps or the tiling of the one it was given.
+
+**The clip.** `React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm:371-374` sets `clipsToBounds` from
+`getClipsContentToBounds()` (`ReactCommon/react/renderer/components/view/BaseViewProps.cpp:563-565`: `overflow` is
+not `visible`), and the block at 1300-1337, with `enableIOSViewClipToPaddingBox` false
+(`ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h:138-140`), clips the view to its border box with
+the radii (a `cornerRadius` when the radii are uniform and circular, `components/view/primitives.h:251-254`; a path
+mask otherwise) and, because a `UIImageView` is the content view, masks that image view with the radii less the
+widths of the borders beside each corner (`RCTGetCornerInsets`, `React/Views/RCTBorderDrawing.m:43-61`) in a
+rectangle the size of the content frame (`RCTViewComponentView.mm:1315-1324`, the content view's frame being
+`getContentFrame()` at 86-96). `RCTPathCreateWithRoundedRect` (`RCTBorderDrawing.m:104-130`) limits each radius to
+what the neighbouring corner leaves of the side. The radii that reach it have been through `BaseViewProps.cpp`'s CSS
+overlap rule (415-468) and its percentage resolution (470-487, `resolveBorderMetrics` at 506-524), where a
+percentage is of the width along a corner's horizontal radius and of the height along its vertical one.
+
+**How `capInsets` are read.** `ReactCommon/react/renderer/core/graphicsConversions.h:147-180` reads a number as all
+four insets, an object by its keys (155-172) and a list as left, top, right and bottom (174-180); but a raw list is
+also a `std::unordered_map<std::string, Float>` of the keys `"0"` to `"3"`, which is tried first, so a list reaches
+the object branch, logs `Unsupported EdgeInsets map key` for each entry and leaves every inset at zero.
+
 ## What this host did
 
 `src/react-native-platform.jsx` exported `Image` and `ImageBackground` as `unavailable`
@@ -173,7 +230,7 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
 ## The implementation
 
 - **RN's own Image, behind a validating wrapper.** `src/image.jsx` renders RN's `Image.ios.js`
-  after `src/image-contract.mjs` has refused what the host cannot show yet (below), and exposes
+  after `src/image-contract.mjs` has refused what is a mistake (below), and exposes
   RN's statics. `Image.ios.js` is loaded on first use: it asks for the `ImageLoader` module as it
   evaluates, so an application that never renders an Image, or a bundle that runs on a host
   without the module, still evaluates; the failure of a module that threw while evaluating is
@@ -257,6 +314,32 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
   `AppLifecycle::on_memory_warning` (`native/app_lifecycle.h:46-53`) runs the caches' clearing before JS is
   told of a memory warning.
 
+- **What is done to a picture (the third slice).** `native/image_effects_core.h` is pure: `blur_plan` (the
+  box and whether it changes anything, 47-56), `premultiplied` and `straightened` (59-67), `row_window_sums` and
+  `box_pass` (71-109, the exact sum of the square window with the edge extended, divided once),
+  `box_blur_rgba8` (113-125: premultiply, two passes, straighten), `corner_insets` and `fit_corners` (155-179, the
+  two functions of `RCTBorderDrawing.m`), `clip_geometry` (181-186: the border box with the radii, and the
+  content frame with each radius less the border beside it, clamped in the content frame's own size),
+  `patch_margins` (211-219: points of the picture times its scale, no more than the picture holds) and `paint()`
+  (278-312: the effective mode, the rectangles in pixels of the picture, the nine-patch, the tint and the clip of
+  one draw, for a blurred ("plain") picture or not). `native/image_effects.cpp` is `PictureLayer`: a canvas item
+  that is a child of the view's, scaled by 1/scale so that the shader's coordinates and the nine-patch margins are
+  texels (`draw`, 168-203; `ensure_item`, 124-134), one shader for every view (the code at 25-76, made on first
+  use by `shader()` at 83 and freed by `release_shader()` at 223 when the extension terminates,
+  `native/register.cpp:39`) and one material per view (`set_material`, 135-167, which keeps what it passed to
+  `material_set_param`). The shader tints with `COLOR = vec4(tint.rgb, COLOR.a * tint.a)` and masks with the
+  coverage of two rounded rectangles, each corner a quarter ellipse with the first-order distance
+  `k0 (k0 - 1) / k1` (exact for a circle), over a one-pixel ramp of the screen from `fwidth`. RIDs are not
+  reference counted: the view frees the item and then the material, and `PictureLayer::counters()` (217) is in
+  the application snapshot (`native/application_runtime.cpp:2440`). `GodotImage::apply`
+  (`native/image_view.cpp:100-128`) reads the tint, the cap insets, the blur radius, the radii and widths of
+  `resolveBorderMetrics` and the `overflow`; `painting()` (213) and `_draw()` (231) hand `paint()`'s result to the
+  layer, and the texture they draw is the cache's and is never written. `ImageLoader`
+  (`native/image_loader.cpp:356-366`) blurs on the worker after the decode and before the fingerprint and the
+  texture, `request_of` (478) leaves a blurring request out of the decoded cache, the job's record carries the
+  radius, box, passes and outcome (394), and the `blurred` counter (623) counts the pictures the blur changed;
+  `GodotImageManager` (`native/godot_image_manager.cpp:26-27`) passes the params' radius to the load.
+
 ## Where the host departs from RN
 
 - **Error codes are message prefixes.** The `ImageLoader` module rejects with a message that starts
@@ -281,12 +364,10 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
 - **Host bounds on what is decoded:** 16,384 pixels a side, 64 Mi pixels and 128 MiB of source
   bytes, where RN's loader bounds only concurrency. Every refusal is an `onError` with iOS's
   decode-error text.
-- **A wrapper refuses what the host does not implement.** RN's `Image` accepts `tintColor`,
-  `blurRadius`, `capInsets`, `defaultSource`, `loadingIndicatorSource`, `fadeDuration`,
-  `progressiveRenderingEnabled`, `resizeMethod`, `resizeMultiplier` and `overlayColor`, and a border
-  radius on the style. The wrapper makes each fail where the Image renders, with a message that names the prop and why, and invalid
-  values, unregistered asset ids and an Image inside `Text` fail with the host's messages, instead
-  of dropping them silently.
+- **A wrapper refuses what is a mistake.** Invalid values, unregistered asset ids and an Image inside `Text` fail
+  where the Image renders, with the host's messages, instead of being dropped silently; since the visual slice
+  that includes a `blurRadius` that is not a finite number and `capInsets` that are not a number or an object of
+  `top`, `left`, `bottom` and `right` numbers. Every prop of RN's `ImageProps` is taken.
 
 ### Where the network slice departs from RN iOS
 
@@ -338,6 +419,36 @@ documentation and RN's code and were not compared on an iOS device.
 - **`crossOrigin` and `referrerPolicy`** become request headers as `ImageSourceUtils.js` makes them, and
   the source's own headers are used as given.
 
+### Where the visual slice departs from RN iOS
+
+Each of these is recorded in the [evidence](../evidence/images-visual/README.md) and in its `report.json`. None was
+compared with an iOS device.
+
+- **The blur is not bit-identical to vImage's.** `vImageBoxConvolve_ARGB8888` is closed, so the host states its own
+  arithmetic (`native/image_effects_core.h:59-67` and `71-125`): premultiply by `round(c a / 255)`, two square box
+  passes whose window mean is rounded to the nearest once (an odd divisor leaves no tie), straighten by
+  `round(p 255 / a)` capped at 255 with black where `a` is 0. A box over 2^20 pixels is limited to it. The box, the
+  two passes, the premultiplied alpha and the extended edge are RN's (`RCTImageBlurUtils.mm:52-53`, `76-96`).
+- **`tintColor`, `capInsets` and the clip take effect on the next draw.** On iOS the template and the caps are
+  applied when an image response arrives (`RCTImageComponentView.mm:144-155`): a changed `tintColor` waits for the
+  next response, and clearing it leaves a template image tinted by the window.
+- **`onLoad` comes after the blur.** The worker blurs before the texture exists. On iOS `onLoad` and `onLoadEnd`
+  are sent first (139-140), with the same payload, and the blurred image replaces the view's later (157-166).
+- **`capInsets` apply to `stretch` and `repeat` only.** UIKit's behavior for a resizable image under the other
+  content modes, the tiling of its edges in `repeat` and a view smaller than the caps were not verified; Godot's
+  nine-patch does not limit the margins to the destination, and the host limits them to the picture
+  (`patch_margins`, 211-219).
+- **A list of `capInsets` is refused.** `graphicsConversions.h:147-180` reads one, but the object form is tried
+  first and a list passes for it (155), so RN keeps no inset and logs; the wrapper says so instead.
+- **A fully transparent black `tintColor` is not a tint.** RN's C++ color for this host is one integer in which zero
+  is "no color" (`graphics/Color.h:56-59`, `graphics/platform/cxx/.../HostPlatformColor.h:19`), and `"transparent"` is
+  zero; on iOS it is a defined `UIColor` and the template image disappears.
+- **The border is painted below the picture**, by the view's own item; on iOS the border layer is above the image.
+  With the clip rules above the picture never reaches the border, so nothing differs in what is seen.
+- **A blurred picture has a texture of its own** that no cache holds (RN's blurred `UIImage` is not in
+  `RCTImageCache` either, since the blur happens in the view); a box of one pixel leaves the picture as it was,
+  with its tint, caps and tiling, as `RCTBlurredImageWithRadius` returns its input (56-62).
+
 ## Why the probe is discriminating
 
 The [driver](../../tests/images-probe.gd) mounts a fixture whose declared cases (bundled
@@ -375,6 +486,20 @@ rejects where `c1-reload` came from), a download whose transport request is neve
 rejects the first Image that does not end in `loadEnd`) and a repeating Image that resizes the shared texture
 fails 2 (the oracle rejects the shared texture's pixels).
 
+The visual suite ([driver](../../tests/images-visual-probe.gd), [oracle](../../tests/images-visual-oracle.mjs))
+runs in the headless dummy renderer, which draws no pixel and ignores a material's parameters, so it certifies
+what the view asked the renderer for: every rectangle, radius, margin and tint of 52 declared Images and 13
+live changes (the view's snapshot records the values it passed to `material_set_param` and the commands it added),
+and the pixels of the blur by the fingerprint of the bitmap the worker made, which the oracle recomputes pixel by
+pixel and the manifest holds for each picture and box. The network stage mounts one picture in six Images in turn
+(blurred, plain, blurred, tinted, masked, blurred again) and checks the counters of both caches and the server's log
+after each. The control on the preceding host runs all 53 checks and fails exactly the 40 normative ones. Four
+retained sabotages break one behavior each: a clip that ignores the border width fails 2 checks, a third blur pass
+fails 3, a blurred request that uses the decoded cache fails 8 and cap insets that ignore the scale fail 2, and the
+oracle rejects each. Only the example's capture lane, in the native renderer, saw the shader draw: it samples the
+tinted icon's pixels, the soft edge of the blurred landscape, the border of the stretched card and the avatars'
+corners and borders.
+
 ## What stays open for GF-16
 
 - **A disk cache, revalidation, `Vary`, cookies, compression and HTTP/2** for network images, and a pass
@@ -382,12 +507,13 @@ fails 2 (the oracle rejects the shared texture's pixels).
   server.
 - **Hosted CI** for the network slice, and a differential comparison of the caches and the failure texts with
   iOS.
-- **`tintColor`** (a shader on the Image's own canvas item), **`blurRadius`**, **`capInsets`**,
-  **`defaultSource`**, **`loadingIndicatorSource`**, **`fadeDuration`**,
-  **`progressiveRenderingEnabled`**, **`resizeMethod`**, **`resizeMultiplier`** and
-  **`overlayColor`**.
-- **Rounded image clipping**: the host clips rectangles only, so a border radius on the Image's own
-  style fails; it comes with the next slice.
+- **A differential comparison of the visual effects with iOS**: the blur's box and rounding, the template
+  rendering, the nine-patch's tiling and its behavior under the other content modes, and a view smaller than its
+  caps.
+- **A placeholder for `defaultSource` and `loadingIndicatorSource`**, which iOS does not draw either; and
+  **`fadeDuration`**, **`progressiveRenderingEnabled`**, **`resizeMethod`**, **`resizeMultiplier`** and
+  **`overlayColor`**, which are Android's and are accepted without effect.
+- **Hosted CI** for the visual slice.
 - **Animated GIF and WebP**, **`nativeImageSource`**, and Image inside Text.
 - **Export of assets** for desktop and Android (the iOS hook exists but no exported app ran),
   and a hardware pass of decode memory and the upload budget.
