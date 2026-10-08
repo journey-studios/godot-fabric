@@ -325,3 +325,43 @@ See [the final independent integration receipt](../evidence/scroll-view/root-ima
 Local thermo-nuclear review is satisfied for this first desktop slice. Hosted
 CI, CodeRabbit and acceptance remain separate pending steps; the full GF-14
 contract remains open.
+
+
+## OS-specific integration review
+
+Main #61 adds original RN OS-specific APIs to the shared facade and optional
+platform-root/plugin inputs to the common probe bundler. Merge `43d0375`
+preserves both facade export sets and both typed consumer imports. The bundler
+keeps the existing default path, with the new inputs used by the OS negative
+controls. It does not duplicate the bundle pipeline. Native sources and all 123
+recorded native producer hashes remain unchanged, so the same verified host
+`840d7f3e` is reused without a rebuild.
+
+The GF-14 bundle changes to `f2af26ef`; evidence for `7944e7ca` remains
+historical. The root executes the new bundle in a fresh isolated project and
+independently derives all 28 controls, with full runtime and pointer cleanup.
+The 44-check list oracle, exact three-failure sabotage and forced-green oracle
+rejection pass. OS contracts pass 37 checks and all four sabotage controls are
+rejected. Accessibility, Images, Text and Device/launch oracles are independently
+rechecked on the frozen host. NativeModules and Metrics/Errors also pass their
+native assertions. Four new graphical executions pass; the captured PNG bytes
+are identical to the earlier Images-integrated images.
+
+The producer proof now binds 123 native inputs, 18 recorded GF-14 bundle inputs,
+six installed RN inputs and 40 supplemental repository bundle inputs to
+`43d0375`. The supplemental map includes the new OS facade and common bundler.
+The groups overlap and do not certify the external SDK adapter ABI. Contracts
+pass 351 Node and 13 Python tests; static, type, publication and dashboard gates
+pass after integration.
+
+This merge introduces no additional ScrollView state, offset authority, private
+command protocol, compatibility mode or cast. The separate wrappers preserve
+the original RN component contract and the facade's inline-Text boundary. No
+source file crosses the thousand-line threshold. The earlier structural
+simplifications remain intact, satisfying local thermo-nuclear review for this
+desktop slice. CodeRabbit's approval of `3fe88da` is historical; hosted CI,
+review and acceptance for the new published head remain required. GF-14's full
+contract and all four checkpoints remain open.
+
+See [the current independent receipt](../evidence/scroll-view/root-os-integration.json)
+and [the facade regression receipt](../evidence/scroll-view/facade-regressions-43d0375.json).

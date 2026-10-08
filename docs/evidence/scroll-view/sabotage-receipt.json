@@ -9,7 +9,7 @@
   },
   "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
   "bundle": {
-    "sha256": "ae1aebce7a5523303a084c0cc03c1b3aab4d71919ae60102a3c4c731f482aad9",
+    "sha256": "90a3a562f456ae28cd150ff08196513f83e8448f98f98b8ee07fc7468b01e471",
     "sabotage": "remove onLayout forwarding to the original RN ScrollView",
     "copiedSourceSha256": "cd8e58c59144e9d6a68663282fe90ad6fae0a937db5f653b8b32e299a3aa2f7b"
   },
@@ -31,9 +31,9 @@
     "reason": "mount: feed window"
   },
   "artifacts": {
-    "reportSha256": "6565a5257d9dc947d690c9e12b0e37bb8b331366fd1c2bd7fc1ab7f5ac388342",
-    "logSha256": "82985a9fa962b8dc4e7cb73beb0aa83329c491181c2e8796ce68be3299e9b24b",
-    "bundleReceiptSha256": "995098c0a3dbe1ee2f8ffe4b85b5e4ea607bc57be3b1c7004fd32966d9c4c437",
+    "reportSha256": "a4cde09e451a5de056d67544073ce456840276d1292437a4611cd24e4d114faa",
+    "logSha256": "cb81aba2d3b0d09ec21814807c4236773c9d7ac2f3a8462216e136a5633dc638",
+    "bundleReceiptSha256": "7b33ceee37018faf74575e52dfa36fd5e1593d6f034a9045b84fac52c78a7bb5",
     "launcherSha256": "b360a13814e8386fc6a1a549d82d2e1e86af184014c4fe3cdf66f6a05e687034"
   },
   "note": "The retained sabotage is generated only in an isolated build/ copy. The preserved positive 44-check report remains separate."

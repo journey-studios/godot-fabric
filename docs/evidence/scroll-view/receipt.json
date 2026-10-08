@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "local-review-pending",
+  "status": "local-review-verified-hosted-pending",
   "scenario": "gf14-scroll-view-original-mounted",
   "runtime": {
     "reactNative": "0.87.1",
@@ -11,7 +11,9 @@
   "commands": [
     "npm run test:scroll-view",
     "npm run test:lists",
-    "node scripts/scroll-view-list-sabotage.mjs",
+    "node --test scripts/scroll-view-list-sabotage.mjs",
+    "npm run test:os-contracts",
+    "node scripts/os-contracts-sabotage.mjs",
     ".deps/build/scroll_motion_test",
     "npm run test:accessibility",
     ".deps/build/accessibility_core_test",
@@ -67,7 +69,7 @@
       },
       "bundle": {
         "path": "build/scroll-view-gf14-probe.js",
-        "sha256": "7944e7ca42e5fbf46718d0524f3a934adf92a45990438b582d6443f36d66a9ec"
+        "sha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910"
       },
       "probe": {
         "path": "tests/scroll-view-probe.gd",
@@ -75,15 +77,15 @@
       },
       "report": {
         "path": "build/scroll-view-gf14-report.json",
-        "sha256": "b7bea9dd69a5dd8853d7782db926a05cd6a6b27115e5f649a36260cd3e130ab4"
+        "sha256": "55dec9749c2a85139654e3d023709d9512997bf5b761439829b3dfb82fab006c"
       },
       "log": {
         "path": "build/scroll-view-gf14.log",
-        "sha256": "2804d2f8bf6f3818251125b47027708b40e5296fe823bdf898c89305775de648"
+        "sha256": "1d0191864f8cff7ddaccd5a7159459139614b89a3b3185911e2dc3af5fc4a8ed"
       },
       "bundleReceipt": {
         "path": "build/scroll-view-gf14-probe-bundle.json",
-        "sha256": "149eef78ef7e98e12825a593b623793b4f83a6fe5e0e09cc6df301acba2107a4"
+        "sha256": "f3a9e58ec1e232d40aae27a5427a440deee7ff5bcd0839ce884a6e615f197624"
       }
     },
     "hostStableDuringProbe": true,
@@ -131,9 +133,9 @@
       "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
       "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
       "src/scroll-view-contract.mjs": "a0644efdb267baf478add4192dda509c3c12c8f8825b2bae6ccfea0c5547ad25",
-      "src/react-native-platform.jsx": "1bb168e7294ff8357f3433ece9649f523c4f5e514ae3f38d642281709327922d",
-      "types/react-native.ts": "9277fd99ba9d55ef0c58179954e3060566476679d6fe0e6be41843645c1ae694",
-      "tests/types/consumer.tsx": "f8aa308939da8cb3b76035443d4da416011f41262a65d01782087e92852adab3",
+      "src/react-native-platform.jsx": "bbe66833de2841ded30988e24724741e63aa7b2ca108a24572c2215a24eb2259",
+      "types/react-native.ts": "15609010d74164c00b0f23978dbe8970c95692c6c893714367f33244dca4b8ae",
+      "tests/types/consumer.tsx": "96a93b8b6191c1318c0ac69349589fa423d27504c1cd75edbec26a974bba5173",
       "native/application_runtime.cpp": "84f1bd89aba4bcb6b3bb7ce8e4a9b44997c0989a4ae16233507989a555b6d746",
       "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
       "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
@@ -209,7 +211,9 @@
     },
     "compiledSourcePinCount": 8,
     "buildInputs": {
-      "commit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
+      "nativeBuildCommit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
+      "testedHead": "3fe88daffa2af8bc45832d12af9795bb41838d94",
+      "stagedIntegration": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
       "nativeBuildInputPinCount": 123,
       "experimentalExternalAbiCertified": false
     }
@@ -222,25 +226,25 @@
     "shelfPaintedContentX": -180,
     "files": {
       "virtualized-list-current-report.json": {
-        "sha256": "91f64518f46e164c8f342e45662ceb08643a30ef8726df399e0658b7ace407cd"
+        "sha256": "6837c18661fb2128d9892ef2a7c7089af9ff3d0f8a54c0d36be31c04f56ac559"
       },
       "virtualized-list-current-bundle.json": {
-        "sha256": "523f906a5351a97e9736dd6fdd2afb92a8f020d92c0985215b6a3cd8648132ac"
+        "sha256": "403e5bce97b0d723f1ae0c370e7975741c6161aca1c058fc4ce330270ef10d04"
       },
       "virtualized-list-current.js": {
-        "sha256": "4c1d229cf41256b2d6130043a3fe215525702bc59fe7d4e68244a81806ad16c4"
+        "sha256": "6f82260abb14981ab55eac74cdab4166d9863cdc1336937f62e05e88d5319899"
       },
       "virtualized-list-current.log": {
-        "sha256": "88982aa8b3ff6d3cf1370140308faf8fb42403f3888041abd0e5dd9aed3b47e5"
+        "sha256": "6eda707796eed8a7c96709dfafec97a0f0cc61fb26c698f42905f8b5512c299f"
       }
     },
     "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
-    "bundleSha256": "4c1d229cf41256b2d6130043a3fe215525702bc59fe7d4e68244a81806ad16c4"
+    "bundleSha256": "6f82260abb14981ab55eac74cdab4166d9863cdc1336937f62e05e88d5319899"
   },
   "otherGates": {
-    "scrollViewContractAndNativeTests": "4/4 top-level tests passed; 28 mounted assertions passed",
-    "virtualizedListRegression": "44/44 passed; historical offsets retained",
-    "virtualizedListSabotage": "44 executed; exactly 3 derived feed/viewability failures rejected by oracle",
+    "scrollViewContractAndNativeTests": "4/4 top-level tests passed; 28 mounted assertions passed on OS-integrated bundle",
+    "virtualizedListRegression": "44/44 passed on OS-integrated bundle; historical offsets retained",
+    "virtualizedListSabotage": "44 executed; exactly 3 derived feed/viewability failures rejected by independent oracle",
     "typeCheck": "passed on integrated tree",
     "scrollMotionNativeChecks": "44 passed",
     "accessibilityHeadless": "80/80 passed",
@@ -248,9 +252,10 @@
     "textLayout": "76 checks passed",
     "nativeModules": "76 checks passed",
     "deviceServices": "65 checks passed; core test passed",
-    "windowedCapture": "4/4 passed; final integrated host and GF14 bundle; separate macOS windowed pixel/clipping proof",
+    "windowedCapture": "4/4 passed on frozen host and OS-integrated GF14 bundle; macOS windowed pixel/clipping proof",
     "imagesRuntime": "74/74 passed; bundled, file and data image sources loaded and released",
-    "imagesCore": "passed"
+    "imagesCore": "passed",
+    "osSpecificContracts": "37/37 passed; all four previous-SDK/platform/silent-shim/self-import sabotage controls rejected"
   },
   "limits": [
     "Mounted functional probe is headless; the separate capture is Godot macOS windowed rendering.",

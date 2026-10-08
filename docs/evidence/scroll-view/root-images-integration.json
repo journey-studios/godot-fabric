@@ -229,5 +229,11 @@
     "Headless Accessibility verifies metadata and host actions, not an OS tree",
     "Full GF-14 contract and RN differential parity remain open",
     "Source identities do not certify the external SDK adapter ABI"
-  ]
+  ],
+  "historicalSnapshot": {
+    "publicationCommit": "24bc971133ba3a88c2f9151de4c247091ddb5d89",
+    "graphicsReceiptUrl": "https://github.com/journey-studios/godot-fabric/blob/24bc971133ba3a88c2f9151de4c247091ddb5d89/docs/evidence/scroll-view/graphics-receipt.json",
+    "producerReceiptUrl": "https://github.com/journey-studios/godot-fabric/blob/24bc971133ba3a88c2f9151de4c247091ddb5d89/docs/evidence/scroll-view/committed-source.json",
+    "scope": "This historical 6b2833e/7944e7ca execution retains its original receipt identities; current live receipts advance after OS-specific integration."
+  }
 }

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "status": "verified-committed-producers",
-  "sourceCommit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
-  "verifiedAt": "2026-10-08T04:14:12.715Z",
+  "sourceCommit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
+  "verifiedAt": "2026-10-08T04:58:57.199Z",
   "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
   "buildReceiptSha256": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
-  "bundleSha256": "7944e7ca42e5fbf46718d0524f3a934adf92a45990438b582d6443f36d66a9ec",
+  "bundleSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
   "groups": {
     "native": {
       "count": 123,
@@ -14,7 +14,7 @@
     },
     "bundle": {
       "count": 18,
-      "pinsSha256": "4afcee92d7cdc0bbe5b3bb39620f77dd3b145b87cbbd16d17e85bd8cf201ba03",
+      "pinsSha256": "877f5777c2099bd9e07f55f3bc97002f15f3fd82b6a0bd0097f30efb65b993fe",
       "allMatchCommittedBlobs": true
     },
     "reactNative": {
@@ -23,5 +23,52 @@
       "allMatchPinnedInstalledSources": true
     }
   },
-  "note": "The source commit contains every repository producer recorded by the final build and mounted bundle. Later receipt-only commits do not change those producers. Source identity does not certify the external SDK adapter ABI."
+  "note": "The source commit contains every repository producer recorded by the final build and mounted bundle. Later receipt-only commits do not change those producers. Source identity does not certify the external SDK adapter ABI.",
+  "supplementalRepositoryBundleInputs": {
+    "count": 40,
+    "allMatchCommittedBlobs": true,
+    "pins": {
+      "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+      "package-lock.json": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5",
+      "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+      "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+      "src/accessibility-view-config.js": "440348f775f67fef2ca042f97a30c993b1da629d85a78758f9a50c43c3f2d854",
+      "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+      "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+      "src/app-state.js": "4a630422e09310dd3bdb9cad8428dc816af1edb0097c08ed6513528e60d2efa8",
+      "src/base-view-config.js": "8ca29c87bf2ccccbccf961e279d45ce9f3c963fbfc33e95018637beb4f7664d7",
+      "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+      "src/control-contracts.mjs": "777e4a764a65265b478631c5d5c53c8dd5750a770eaf8427c99c509e6dd7244b",
+      "src/device-services.js": "c8c77c2877d947b4b5a901b9eee4d403ff364d30e63c7c164ccf2494cea2caa6",
+      "src/image-contract.mjs": "bfeeed482b79f20f3544d2df1cf9b464744438e026921e529e0e3a70ae830ca1",
+      "src/image.jsx": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
+      "src/initialize.js": "9f375e74c5e76853ed32a0b3a4d1238c132ff79e9a2caff3a9c84012a0785e80",
+      "src/list-props.mjs": "1f18f3ab95a2ec2313c2b0a1d4e72caed64916d461fecdd1557d7be762a56255",
+      "src/lists.js": "380a2e3590431db354441740e5e9d8c5b9f476d093dfbc3e9e39bd99e9cc418f",
+      "src/native-module-runtime.js": "2af346160e265ee65892d05fb051d20b8cc06de2a79b655d4f38ac78ad6907f3",
+      "src/native-modules.js": "21f658161bea9c98e95c9f5e0e0ef455cbca9a44c03de560eb5f421ae291d393",
+      "src/os-specific.js": "866c898c84bc7810614a8ae1257e1fcd87dbde7e145c31697cfd929491540aa5",
+      "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+      "src/platform-environment.js": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+      "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "src/private-interface.js": "6fa21336dce92068ceab2e9127bec6ae7a4d2e7596da33aed3c17eee4d8bce63",
+      "src/public-input.jsx": "051dc0be7bdf80eb5464cfd189171f4c7adf65eeb62b349318adac0c07ebebb5",
+      "src/react-native-platform.jsx": "bbe66833de2841ded30988e24724741e63aa7b2ca108a24572c2215a24eb2259",
+      "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+      "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+      "src/runtime.js": "3da190a8f7e39baa1b97ea31774ac8db87b914c4167e759c2b85141b8fa1864c",
+      "src/scroll-view-contract.mjs": "a0644efdb267baf478add4192dda509c3c12c8f8825b2bae6ccfea0c5547ad25",
+      "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
+      "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
+      "src/text-input-state.js": "7fc27f7ea5f103750a11a8c0a935238f32c4d29875e2f655917a162c1c513a52",
+      "src/text.jsx": "2edcafb828946a908abef4afffd9adccdf03a6d874da62e33afb54a6b2168f3a",
+      "src/ui-manager.js": "74e917cabdd6c61d2255dcd17f744d55a2b85c4dcd69ccdeff812f2b6e53704d",
+      "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a",
+      "tests/scroll-view-fixture.jsx": "166c1a2badbdf64a14336808351b80af60ee9dd1fda20ecad4f02c1a4b2df0ce"
+    },
+    "scope": "Repository files named by bundle metafile, plus common bundler, resolver, asset tool, dependency lock and dependency manifest. Recorded bundle.sources remain the separate 18-entry map."
+  }
 }

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 PR #58: integração da main OS-specific #61 em validação"
+    "focusTitle": "GF-14 PR #58: integração OS validada localmente; CI/review pendentes"
   },
-  "updatedAt": "2026-10-08T04:52:06.981947+00:00",
+  "updatedAt": "2026-10-08T05:08:34.242Z",
   "source": {
-    "commit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/6b2833e493e957d208f34e38a94c8fedc7c682b3",
-    "scope": "Main OS-specific #61 integrada, preservando todos os dados da main, GF-18 aceito e milestones. 29/156 checkpoints, 0/39 itens; GF-14 sem aceite. Prova anterior 6b2833e preservada; repetir bundle/produtores e runtime integrados antes de novo CI/CodeRabbit.",
+    "commit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/43d0375ed4e39c248162f03efd4919c00a9bb999",
+    "scope": "Main OS #61 integrada com todos os dados, GF-18 e milestones preservados. Prova local independente do novo bundle em 43d0375; 29/156 checkpoints, 0/39 itens completos. GF-14 sem aceite; CI e CodeRabbit do novo head pendentes.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fatia desktop local revisada no host integrado com Text, Device Services, Accessibility e Images: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. Props neutras montam e scrollam; roda/contentOffset encerram drag antes de substituir offset, sem EndDrag duplicado no Up. Listas44/44, Images74/74, Accessibility80/80 e quatro capturas verificadas no mesmo host. Controle histórico com mesmo bundle pré-Images reproduz exatamente duas falhas de interrupção. Produtores123host/18bundle/seisRN conferidos no commit6b2833e. CI/CodeRabbit finais e aceite pendentes; contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile abertos.",
+      "note": "Main OS #61 integrada em 43d0375; host preservado e novo bundle f2af26ef validado. Principal repetiu ScrollView 28/28, listas 44, sabotagem rejeitada e quatro capturas; oráculos Accessibility 80, Images 74, OS 37, Text 76 e Device 65+2 conferidos. Produtores 123 nativos/18 bundle/seis RN e 40 inputs suplementares verificados. CI e CodeRabbit do novo head pendentes; GF-14 e contrato completo continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4089,6 +4089,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf14-os-integrated-local-20261008",
+      "at": "2026-10-08T05:08:34.242Z",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Main OS #61 integrada em 43d0375; host preservado e novo bundle f2af26ef validado. Principal repetiu ScrollView 28/28, listas 44, sabotagem rejeitada e quatro capturas; oráculos Accessibility 80, Images 74, OS 37, Text 76 e Device 65+2 conferidos. Produtores 123 nativos/18 bundle/seis RN e 40 inputs suplementares verificados. CI e CodeRabbit do novo head pendentes; GF-14 e contrato completo continuam abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
     {
       "id": "gf14-os-integration-start-20261008",
       "at": "2026-10-08T04:52:06.981947+00:00",

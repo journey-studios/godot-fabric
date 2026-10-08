@@ -55,10 +55,10 @@ The following identities bind the result to its inputs:
 | --- | --- |
 | Loaded `addons/fabric_godot.dylib` | `840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2` |
 | `.deps/build/native-sdk-build.json` | `10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45` |
-| Mounted probe bundle | `7944e7ca42e5fbf46718d0524f3a934adf92a45990438b582d6443f36d66a9ec` |
+| Mounted probe bundle | `f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910` |
 | GDScript probe source | `3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915` |
-| Mounted report | `b7bea9dd69a5dd8853d7782db926a05cd6a6b27115e5f649a36260cd3e130ab4` |
-| Mounted log | `2804d2f8bf6f3818251125b47027708b40e5296fe823bdf898c89305775de648` |
+| Mounted report | `55dec9749c2a85139654e3d023709d9512997bf5b761439829b3dfb82fab006c` |
+| Mounted log | `1d0191864f8cff7ddaccd5a7159459139614b89a3b3185911e2dc3af5fc4a8ed` |
 
 The build record's host digest matches the loaded library and remained stable
 during the probe. All eight compiled native source pins in the receipt match
@@ -88,22 +88,37 @@ the EndDrag ordering, logical/Fabric/paint offsets and retirement before later
 Move and Up, rather than trusting check flags alone. Original pre-fix artifacts
 remain under ignored `build/scroll-view-pre-wheel-cancel-4f28/`.
 
-The final [Images-integrated independent receipt](root-images-integration.json)
-records a new isolated 28-check run on host `840d7f3e`, built from `6b2833e` after
-main Images #56 and Frontier #60. It independently derives the interruption,
-diagonal, neutral-option and cleanup invariants, list/sabotage oracles, 80-check
-Accessibility oracle, 74-check Image oracle and four capture identities. The
-older negative pair remains separate: its original bundle is preserved and is
-not relabeled as this final bundle.
+The historical [Images-integrated receipt](root-images-integration.json)
+records the 28-check run from `6b2833e` after main Images #56 and Frontier #60,
+using bundle `7944e7ca` on host `840d7f3e`. Its original identities remain
+preserved, with immutable links to its then-current receipts in `24bc971`.
+
+The current [OS-integrated independent receipt](root-os-integration.json)
+records a new isolated 28-check run after main OS-specific #61 at `43d0375`.
+The host is unchanged, but the facade changes produce bundle `f2af26ef`.
+The root independently derives the interruption, diagonal, neutral-option and
+cleanup invariants, the 44-check list and sabotage oracles, Accessibility 80,
+Images 74, OS contracts 37 and all four graphical artifact identities. All four
+new captures match the historical PNG bytes; their current execution receipts
+bind them to the new bundle. The older negative controls retain their original
+bundles and scopes.
 
 The [committed producer proof](committed-source.json) compares every one of the
-123 native build input files and 18 bundle producer files against committed
-Git blobs. It separately verifies six installed pinned RN inputs. Receipt-only
-commits after the recorded producer commit do not change the tested sources.
+123 recorded native input files and 18 recorded GF-14 bundle producer files
+against committed Git blobs at `43d0375`. It separately verifies six installed
+pinned RN inputs and 40 supplemental repository inputs from the bundle metafile,
+common bundler, resolver, asset tool and dependency manifests. These groups
+overlap; they are not a count of distinct compiled files. Later receipt-only
+commits do not change the tested producer sources.
 
-Affected integrated regressions also pass: Accessibility metadata 80/80 and
-594 core assertions in 11 groups, Text layout 76/76, native modules 76/76 Device Services 65/65 and Images 74/74. These are local desktop checks; the headless accessibility
-lane does not certify an OS tree or assistive technology hardware.
+The [current facade regression receipt](facade-regressions-43d0375.json)
+records Accessibility 80/80, Images 74/74, Text layout 76/76, Device Services
+65/65 plus two launch checks, native modules 76/76 and Metrics/Errors 58/58.
+The root reruns the first four lanes' behavioral oracles and the launch oracle,
+checks the recorded hashes and source pins, and checks report counts/results for
+the remaining native-test lanes. Their native assertions are not relabeled as
+a new independent behavioral oracle. These are local desktop checks; the
+headless accessibility lane does not certify an OS tree or assistive hardware.
 
 ## Windowed graphical capture
 
@@ -156,8 +171,9 @@ The [publication receipt](publication-24bc971.json) records the dashboard data
 from committed PR head `24bc971`, rendered and deployed by the workflow on main.
 The uploaded artifact, public JSON and committed data match, allowing only the
 publication metadata added by the workflow. This snapshot shows 28/156
-checkpoints and 0/39 complete items; all GF-14 checkpoints remain open while CI
-and CodeRabbit acceptance are pending. Receipt-only documentation updates retain
-this dataset and the tested producer sources.
+checkpoints and 0/39 complete items. This is a historical publication snapshot.
+After OS #61 integration the branch has 29/156 checkpoints; all GF-14 checkpoints
+remain open until the new head passes hosted CI and CodeRabbit acceptance. The
+current branch data needs its own publication receipt.
 
 ![Published review progress for PR #58](dashboard-public-24bc971.jpg)
