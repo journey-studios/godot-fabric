@@ -7,9 +7,10 @@ before this slice ran the same fixture and failed exactly its **63 normative
 checks**; the same bundle on that host alone (the guard missing) failed exactly
 **3**; six retained sabotages each fail the probe and the independent oracle
 rejects every one of them. The example ran 22 checks headless and 36 with the
-renderer. The evidence record (commit pin, host hashes, receipt, captures) and
-the hosted CI run of the new step are **pending**: this slice has not been
-committed or run on a hosted runner.
+renderer. The [evidence record](../evidence/text-original/README.md) pins the
+implementation commit `ba5ff00`, the host and bundle hashes of every lane, the
+receipts and four captures of the pressable line. The hosted CI run of the new
+step and the Pages publication are **pending**.
 
 ## What RN does
 
@@ -217,4 +218,4 @@ Each of these runs with a real mouse and a real touch.
   accepted and change nothing.
 - `src/animated-exports.js:18` (the Image slice's area) still says that Text is
   not RN's: a stale sentence to correct there.
-- The hosted run of the new CI step and the evidence record are pending.
+- The hosted run of the new CI step and the Pages publication are pending.

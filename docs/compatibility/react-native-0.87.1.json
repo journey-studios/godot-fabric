@@ -625,6 +625,7 @@
         "tests/text-original-native.test.mjs",
         "docs/research/text-layout.md",
         "docs/research/text-original.md",
+        "docs/evidence/text-original/README.md",
         "docs/evidence/text-layout/README.md",
         "examples/text-layout/App.jsx"
       ],

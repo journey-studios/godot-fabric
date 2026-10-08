@@ -559,6 +559,31 @@ stays `undefined` until `platform-plugin` has an alias, `StatusBar` stays a plac
 implementations, OS-specific props and OS-version comparison are open. Hosted CI is pending; this does not
 complete GF-24: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
 
+The [text original record](text-original/README.md) makes the public `Text` render React Native's original
+`Libraries/Text/Text.js` instead of a wrapper that registered `RCTText` and `RCTVirtualText` itself (RN's own
+`NativeText` would collide with it: `Tried to register two views with the same name RCTText`): GF-11's second
+slice. The original owns the props, the style processing and the Pressability of a pressable paragraph, and
+registers the two names once; the wrapper keeps only the host's contract and the default size of 18, and the
+base view config declares the text styles that the attribute payload used to drop. 114 headless checks run in one
+Hermes application with actual Godot input, every press gesture with a real mouse and a real touch: a tap reports
+press in, press and, 130 ms after the press in, press out (Text does not pass `minPressDuration: 0`, so the order
+is not a touchable's); a press held past 130 ms reports in, out, press; a long press reports `onLongPress` after
+500 ms and no press; leaving and re-entering the region (the default offsets, or `pressRetentionOffset`) toggles
+the press; and nothing outside, on a `disabled` paragraph or with no handler reaches JS. A press over a nested span's
+text is the outer paragraph's. An independent oracle replays Pressability from the raw samples and timestamps,
+checks the runs of 19 paragraphs and 28 rejected props word for word (a nested press or responder prop,
+`selectable`, `adjustsFontSizeToFit`, head and middle ellipsizing, the platform text options, `text=` and `fontSize=`,
+`fontStyle` and decoration, inline Controls), and sees the host refuse a `NativeText` that skips the facade. The
+control on the previous SDK and host (main `6d02746`) fails exactly 63 checks; the same bundle on that host alone fails
+the 3 that need the new native guard in `ParagraphLayout::prepare`; six retained sabotages (the wrapper registering
+`RCTText` again, no text styles in the base config, a private ancestor context, a nested press allowed, no native guard,
+RN's default size of 14) fail 102, 5, 13, 7, 3 and 2, and the oracle rejects each (the guard's host is byte-identical to the
+previous host). The example passes 22 headless and 36 renderer checks, with four captures of the pressable line
+(at rest, held, after the click, and with the column narrowed), and a capture driver that is not project code.
+Press on a span, Text accessibility (the `link` role is not applied), selection, `adjustsFontSizeToFit`, font
+scaling (accepted and inert), italics and decoration and head and middle ellipsizing are open, and the default size
+stays 18, not RN's 14. The hosted CI run and the Pages publication are **pending**.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

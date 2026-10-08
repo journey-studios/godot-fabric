@@ -249,7 +249,7 @@ records 76 headless checks, the preceding host's 5 failures and three retained
 sabotages, with the [evidence record](../docs/evidence/text-layout/README.md) and two captures.
 The same example ends with a paragraph that presses through RN's original `Text.js`
 (`onPressIn`, `onPress`, `onPressOut`: `npm run test:text-original`, with its
-[research](../docs/research/text-original.md)).
+[research](../docs/research/text-original.md) and [evidence record](../docs/evidence/text-original/README.md), with four captures).
 
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag

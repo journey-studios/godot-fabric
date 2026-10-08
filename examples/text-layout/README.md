@@ -64,24 +64,35 @@ every reported line has painted ink; the box drawn at each line's event frame
 contains that line's ink, in both states; the ink of `HEH` ends on the baseline
 `y + ascender` (±1 pixel) and is as tall as the reported `capHeight`, and the ink
 of `xxx` is as tall as `xHeight`. The captures are saved as
-`build/text-layout-initial.png` and `build/text-layout-narrow.png`; the
-[evidence record](../../docs/evidence/text-layout/README.md) keeps both frames and their SHA-256.
+`build/text-layout-initial.png` and `build/text-layout-narrow.png`. The
+[evidence record](../../docs/evidence/text-original/README.md) keeps both frames, with the pressable
+line, and their SHA-256; its [capture driver](../../docs/evidence/text-original/capture-press.gd.txt) clicks the
+paragraph with real mouse input and saves it during the click and after it.
 
-![Four paragraphs with the box and baseline of every reported line, a row of three texts sharing one baseline, HEH and xxx on the rule, and the Narrow the column button](../../docs/evidence/text-layout/text-layout-initial.png)
+![The example at rest: four paragraphs with the box and baseline of every reported line, a row of three texts sharing one baseline, HEH and xxx on the rule, the Narrow the column button and, at the end of the right column, the blue paragraph Press this paragraph: pressed 0 times](../../docs/evidence/text-original/text-original-initial.png)
 
 **Initial.** The wrapped paragraph has three lines, the centred one starts where its line
 does, the one limited to two lines shows only those, and the `lineHeight` 28 boxes are taller
 with the rule inside them. The row of three texts shares one baseline rule, and `HEH` and
-`xxx` stand on theirs.
+`xxx` stand on theirs. The last line of the right column is the pressable paragraph, in its
+resting blue, saying `pressed 0 times`.
 
-![The narrowed column: the wrapped paragraph has four lines, the boxes and rules follow the new lines and the button now reads Widen the column](../../docs/evidence/text-layout/text-layout-narrow.png)
+![The mouse is down on the pressable paragraph: it is painted in a darker blue and still says pressed 0 times](../../docs/evidence/text-original/text-original-press-held.png)
 
-**After the click.** The column is narrower, the paragraphs wrap again and RN delivers the new
+**While the mouse is down.** `onPressIn` has run: React kept the held state and the paragraph is
+painted in a darker blue. It still says `pressed 0 times`, because `onPress` runs on the release.
+
+![After the release: the pressable paragraph is back in its resting blue and says pressed 1 times](../../docs/evidence/text-original/text-original-press-after.png)
+
+**After the click.** The release ran `onPress` and, once Pressability's 130 ms minimum press
+duration had passed since the press in, `onPressOut`: the paragraph says `pressed 1 times` and is back
+in its resting blue.
+
+![The narrowed column: the wrapped paragraph has four lines, the boxes and rules follow the new lines, the button now reads Widen the column and the pressable paragraph still says pressed 0 times](../../docs/evidence/text-original/text-original-narrow.png)
+
+**After the click on the button.** The column is narrower, the paragraphs wrap again and RN delivers the new
 lines: the wrapped paragraph has four, the summary says `wrap: 4 lines`, and the boxes and rules
-follow. `HEH`, whose lines did not change, received no new event.
-
-Both frames are the first slice's: they predate the pressable line at the end of the right
-column, whose captures come with the evidence record of the second slice.
+follow. `HEH`, whose lines did not change, received no new event. The pressable paragraph was not pressed.
 
 ## Evidence suite
 
@@ -124,7 +135,9 @@ on that host alone fails the 3 bypass checks (`--previous-host`), and six sabota
 (the wrapper registering `RCTText` again, no text styles in the base config, a private
 ancestor context, a nested press allowed, no native guard, RN's default size of 14) fail
 the probe and are rejected by the oracle. See the
-[research](../../docs/research/text-original.md).
+[research](../../docs/research/text-original.md) and the
+[evidence record](../../docs/evidence/text-original/README.md) (the commit it pins, the host and bundle
+hashes of every lane, and the captures).
 
 ## Original syntax
 
