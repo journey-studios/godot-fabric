@@ -546,7 +546,7 @@ workloads 20 times each, headless: a `View`, `Button`/`TextInput`/`Switch`, a re
 back to the baseline of the run; counters, phases and the heap source keep their invariants at every reading, and
 the live heap at rest rises at most 2,048 bytes above its first steady value (worst measured: one 312-byte step in
 eight soaks). 41 checks at the pinned `ad87234` (42 in the current suite, which the review of #59 extended with the
-check that the notification of a root's unmount carries the live and retired roots of the retirement), recomputed by an
+check that the notification of a root's unmount reports the counts of live and retired roots at that moment), recomputed by an
 independent oracle, which also recomputes the nearest-rank percentiles from the samples the host reports. The preceding
 host fails exactly the 27 that read the section (28 in the current suite); three retained
 sabotages (a Control never freed, a frozen heap reading, a phase counted twice) fail 4, 3 and 2 and the oracle
