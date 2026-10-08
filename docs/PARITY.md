@@ -130,7 +130,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   now takes `MOUSE_FILTER_IGNORE` by default and the Views are the Controls that stop the pointer; a headless
   probe in two topologies (one full-screen Surface, and one per panel) with an independent oracle and a local
   windowed lane, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
-  its evidence record and hosted CI run are pending. It is a host behavior and not an RN name: it moves no
+  its [evidence record](evidence/world-input/README.md) pins the execution, and its hosted CI run is pending. It is a host behavior and not an RN name: it moves no
   count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD still reach
   the map too (the second slice), and hardware pointers, a real touch screen and mobile exports stay open.
 - **Performance baselines:** a `performance` section in the application snapshot (exact counters of

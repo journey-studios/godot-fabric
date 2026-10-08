@@ -484,7 +484,7 @@ two topologies (one full-screen Surface, and one Surface per panel) with an inde
 predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
 a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the map as well
 as React Native: they are recorded and left to the second slice of the spike. Hardware pointers, a real touch
-screen and mobile exports are open, and so are the evidence record and hosted CI. [Research](docs/research/world-input.md).
+screen and mobile exports are open, and so is hosted CI. [Evidence](docs/evidence/world-input/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline

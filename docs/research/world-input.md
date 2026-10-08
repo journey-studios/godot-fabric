@@ -5,8 +5,8 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 slices of the pointer spike (the 0.5 Frontier milestone's V05-02, go/no-go no. 1). The probe
 drives a React Native HUD drawn over a Godot world in two topologies; the host that predates
 the policy fails exactly the 31 checks that need it; two retained sabotages are rejected by
-the probe and by an independent oracle. The evidence record and the hosted CI run are
-pending. Real hardware pointers, a real touch screen and mobile exports are not certified;
+the probe and by an independent oracle. The [evidence record](../evidence/world-input/README.md) pins the
+execution and has the captures; its hosted CI run is pending. Real hardware pointers, a real touch screen and mobile exports are not certified;
 see "Not certified".
 
 ## The question

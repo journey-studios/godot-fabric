@@ -732,6 +732,28 @@ four times, and with the window narrowed). Real italic faces, the double, dotted
 bidirectional text and line geometry that matches either platform are open. The hosted CI run and the Pages publication
 are **pending**.
 
+The [world input record](world-input/README.md) is the first slice of the pointer spike (V05-02, go/no-go no. 1
+of the 0.5 Frontier milestone): a React Native HUD drawn over a Godot map, in which a click on the HUD's empty
+area reaches the map exactly once, a click on a `Pressable` presses it once and never reaches the map, and with a
+`View` overlay or a `Modal` open nothing does. The policy is the minimal one: `FabricSurface` takes
+`MOUSE_FILTER_IGNORE` by default (its constructor), so the Views React Native mounts are the only Controls that stop
+a pointer. 66 headless checks run in two topologies (one full-screen Surface with N = 100 per burst, and one Surface
+per panel with N = 20), every count exact because each burst is queued with `Input.parse_input_event` and delivered
+by one `Input.flush_buffered_events()`, never read after waiting frames; an independent oracle re-derives each
+burst from the HUD's geometry and the camera's math (the tile clicked at zoom 2 is the one the formula gives). The
+control is the host of main before the policy (hosts `79f68b1d` and `ab332c33`): it fails exactly the 31 normative
+checks (the empty area's click, right click and tap, the hover, the camera, and the positive controls of the two
+overlays, which are the same click with the overlay closed), while the wheel already reaches the world there (the
+GUI passes it through a STOP Control, `force_pass_scroll_events`); two retained sabotages made by the probe (the
+Surfaces back to STOP, every View IGNORE) fail 31 and 21 and the oracle rejects each. The world listens to the mouse
+stream, emulated mouse included, and a tap is blocked in both streams by a Pressable. A local windowed lane (18
+checks, N = 100, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) repeats the counts on a real
+window and keeps four captures, linked from the record. A hit slop, a `Text` with `onPress`, the gaps of a
+ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
+recorded, not judged, and left to slice 2 (variant a2, after PR #58). Slice 1 of 3 reads GO for the minimal policy;
+the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
+mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

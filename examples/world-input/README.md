@@ -64,4 +64,5 @@ the Surfaces STOP again, or gives every View IGNORE) are rejected by the probe a
 A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD or over a tree overlay
 still reach the map as well as React Native: they are measured and recorded, not judged, and left to the next slice.
 Hardware pointers, a real touch screen, multi-touch and mobile exports are not certified. See the
+[evidence record](../../docs/evidence/world-input/README.md) (the counts, the controls and four captures) and the
 [research](../../docs/research/world-input.md).
