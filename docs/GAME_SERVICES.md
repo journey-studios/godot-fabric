@@ -160,6 +160,10 @@ owners, queue budgets, copied Unicode and rejected values. A separate lifetime
 fixture synchronously frees a live application from its registered method and
 checks the surviving surface's retired nodes, queues and canceled request.
 
+Frontier, the 0.5 reference game, is the reference consumer with a nested object schema: its persistent `GameServices` node
+registers a state, a signal and eleven methods from one GDScript schema source, and hand-written TypeScript types are
+compared with them in both directions (see [Frontier's services](research/frontier-services.md)).
+
 Full generated service/component specs, thread handoff, activation/reload
 generations, dev diagnostics and per-target exported consumer certification
 remain open. A correct transport does not supply game-state persistence,

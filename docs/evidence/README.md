@@ -762,6 +762,29 @@ for that wait, which the roteiro never reaches, and made the oracle require that
 log entries each turn appended, the faction's events included (the third new sabotage reports a wait as a move and is rejected by
 the oracle and one probe check); the golden hash, the trace hash and the roteiro are unchanged.
 
+The [Frontier services record](frontier-services/README.md) is the second package of the 0.5 milestone (V05-03, criterion
+`servicos`, tied to GF-25 (services), on the game of GF-28): the persistent `GameServices` node publishes the game to a React Native HUD through the typed game
+services, with an epoch, and no C++. The node registers one state (`frontier.snapshot`), one signal (`frontier.turn_ended`) and
+eleven methods from `Application.runtime_available`, before any bundle or mount, all from one GDScript schema source; every
+method answers `{ok, code, text}`, an accepted intent publishes one snapshot and a refused one nothing, and the epoch is 1, rises
+by 1 on every `new_game` and stays outside the state and the hash. A bundle standing in for the HUD plays the whole 12-turn
+roteiro through the services in a real `FabricApplication`: 73 steps (43 accepted, 30 refused with 24 codes), 12 `turn_ended`, the
+P3 golden and trace hashes, and at every step the snapshot JavaScript holds is the node's, byte for byte, and a second session of
+the game's. 146 actions of the snapshots, sent back as `frontier.<id>(args)` on a copy of the game, were accepted exactly when
+enabled (`Action.args` is the intent's positional arguments, so an action is a call). Ten schema violations (wrong type, wrong
+arity, an extra field) are rejected with `E_SERVICE_SCHEMA` before GDScript runs, and a missing service answers
+`E_SERVICE_MISSING`; three `new_game` give epochs 2, 3 and 4 with the same initial hash; unmounting and remounting the surface
+keeps the 13 bindings, the registration generation, the game and the epoch, and the remounted root receives the current snapshot.
+The largest snapshot has 173 nodes and depth 4. The hand-written TypeScript types are compared with the schemas Godot registered
+in both directions (13 registrations, 13 synthetic mutations on each side, nine refusals of what the schema language cannot
+say), the type tests pass in `type-check`, and an independent oracle validates every snapshot against the schema derived from the
+TypeScript types. 965 checks in each of two executions; seven retained sabotages (schema drift, late registration, a silent
+intent, a frozen epoch, a refusal that publishes, an action without its arguments, `turn_ended` after the snapshot) fail 2, 2, 9,
+4, 29, 7 and 12 probe checks and the oracle rejects each. The previous-host control does not apply: there is no native code.
+Headless only, with no HUD and no capture; the probe uses an application stand-in instead of the provisioned node, the facade is
+reached by `preload`, `consumidor` and `autoridade` are open, and the **hosted CI run (`native-frontier-services`) and the Pages
+publication are pending**. The record is pinned at `75c4c0f`.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,

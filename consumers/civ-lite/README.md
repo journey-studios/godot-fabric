@@ -13,7 +13,15 @@ project of its own yet: the root project loads it as `res://consumers/civ-lite/g
 - The state, the snapshot fields, the seven contexts, the refusal codes and the determinism rules are in
   [docs/research/frontier-game.md](../../docs/research/frontier-game.md).
 
+`services/` is the persistent `GameServices` node (`game_services.gd`) that owns a session of the game and its `epoch` and
+publishes the snapshot and the intents as typed services; `schema.gd` is the one GDScript source of every schema it registers.
+`ui/frontier-types.ts` is the hand-written TypeScript mirror, which a parity test compares with the registered schemas in both
+directions. See [docs/research/frontier-services.md](../../docs/research/frontier-services.md); the runs are recorded in
+[docs/evidence/frontier-services/](../../docs/evidence/frontier-services/README.md).
+
 ```sh
 npm run test:civ-lite-game          # three processes, one golden hash, an independent oracle
 node scripts/civ-lite-game-sabotage.mjs   # the retained sabotages
+npm run test:frontier-services      # the roteiro played through the typed services, and the TS/Godot parity
+node scripts/frontier-services-sabotage.mjs   # the services' retained sabotages
 ```
