@@ -442,6 +442,111 @@ that support matrix. A release cannot claim “current” while ignoring a newer
 stable baseline; an explicitly older baseline must be named and approved as a
 scope change. RC/nightly APIs are not automatically added to the 1.0 gate.
 
+## 0.5 — Frontier: a priority cut, not a separate release
+
+This section is prose only. It adds no GF item, phase, sequence or checklist, and
+it changes no ID, priority, weight, dependency or acceptance text of the 1.0 above
+or below. The 1.0 contract and its percentage are unchanged. The 0.5 says what to
+pick first. Its progress lives in the dashboard's optional `milestones` key
+(`milestones[0]`, id `0.5`), never in `tasks`, and the dashboard reports it apart
+from the 1.0 percentage.
+
+**Goal.** Show that a real app is usable on this platform. The reference app is
+**Frontier**, a small turn-based strategy game in the interaction style of
+Civilization 2 (rules, names and art are original; only the interaction pattern is
+borrowed). Godot owns the map, rules, AI and turns. The whole HUD is React Native
+over Godot, in one Hermes. The game state chooses which panels exist: selecting a
+Settler, a Warrior, a stack, a tile, the city or a pending event shows different
+panels. React only projects state and sends intents. Rules never live in JS.
+
+**Two validations.** *app-driven-hud* is the existing HUD and inventory milestone
+(HUD-1 to HUD-7 in the first integrated milestone below): the TSX app decides what
+to mount. It stays in `consumers/minimal` as a regression and is not edited.
+*game-driven-hud* is this cut: the game decides the context.
+
+**Ceiling of the game** (a cut enters only if it removes a distinct context):
+24x16 map from a fixed seed; two unit types (Settler, Warrior); one city with three
+to five production items; research as a list; one blocking event or dialog; a
+minimal scripted AI; a 12-turn replay with a golden state hash, plus a 100-turn
+soak. Seven contexts: none, tile, Settler, Warrior, stack of two units, city,
+dialog. Six HUD panels: turn and resources bar, unit actions, tile card, city
+screen, research and event dialog.
+
+| Item | Size | What it settles |
+| --- | --- | --- |
+| V05-01 | S | The 0.5 in the dashboard and this file, additive; agent guidance |
+| V05-02 | L | Pointer spike: a click in an empty HUD area reaches the Godot map exactly once (go/no-go 1) |
+| V05-03 | M | The game in GDScript and typed context/order services with a persistent owner node and an epoch |
+| V05-04 | M | Component, type and SDK gaps for the ~12 names the game uses |
+| V05-05 | L | Context-driven RN HUD suite and blocking overlays |
+| V05-06 | M | Lifecycle, pause, frame budget and soak, extending the GF-30 harness |
+| V05-07 | XL | macOS arm64 `.app` export, relocatable, clean-profile run |
+| V05-08 | M | iOS preparation in the simulator: density, landscape, safe area, touch |
+| V05-09 | XL | Physical iPhone arm64 device gate (go/no-go) |
+| V05-10 | L | Final comparison: game without HUD, with a native Godot HUD, with the RN HUD |
+
+Order: V05-02 first, because nothing in the repo exercises world input today
+(`FabricSurface` sets no `mouse_filter` and no scene uses `Camera2D`, `CanvasLayer`
+or `_unhandled_input`). Its test must fail before the policy is applied. V05-07
+(starting from `consumers/minimal`) and the signing stage of V05-09 (the existing iOS
+smoke fixture, not the game) can start on day 0. The macOS build is closed before
+the single iPhone proof. Effort sizes are relative, not a
+calendar: the export, the pointer policy and the device are the unknowns.
+
+**Out of the 0.5.** Typed text, virtual keyboard and IME; network images; scroll
+inertia; public hover and right-click on Pressable (tooltips and context menus stay
+in Godot or use long-press); graphical tech tree, boats, diplomacy, fog of war and
+full save/load; Android, Linux and Windows; the arm64 iOS simulator and Debug iOS.
+The tail of GF-13 pointer work (new `pointer-*`, EventTarget, Document or hover
+slices) is frozen for the duration: existing suites stay as regression, and only
+what V05-02 needs is allowed.
+
+**Go/no-go.** A failed V05-02 returns the game-driven-hud decision to the user
+before any later item. On the phone, a no-go closes the 0.5 as macOS-complete and
+hands mobile back to GF-35 without moving any 1.0 number. Performance thresholds
+are proposals: they are recorded, then frozen once after the macOS baseline of
+V05-06 and before the first device session.
+
+**Final comparison (V05-10).** Run only after the rest of the 0.5 is closed. The
+same game runs in three arms with the same seed, replay and scripted input, in a
+Release export on the same machine: A has no HUD, B has a native Godot HUD written
+idiomatically in GDScript with the same panels, contexts and test IDs, C has the RN
+HUD from V05-05. Arm B is held to functional parity by the same context matrix and
+gets the same time-box and one optimization pass, so the baseline is not a straw
+man. The report measures, per arm:
+
+- frame time (p50, p95, p99, frames above 2x and above 100 ms) and FPS with vsync
+  off, plus missed frames with vsync on. FPS without a limit counts only if the vsync
+  mode read back is disabled; otherwise that band is not applicable and CPU time per
+  frame is the outcome. The active windows (AI phase, event burst, context switches,
+  and a stress case with a 200-row log and a 100-item production list) are measured
+  apart from the whole run, so idle frames do not dilute the difference;
+- click-to-panel latency in frames, resident memory (plus Hermes heap and native
+  nodes in arm C), time to the interactive HUD, and package size;
+- change cost: the same change request (a new Settler action) in B and C, counted
+  in files, lines, time and tests;
+- the same measurements on the iPhone when V05-09 is a go.
+
+Hypotheses are written before any run and fixed once, together with the primary
+outcome (p95 CPU time per frame in the active windows), the non-inferiority margin
+and the decision rule. The RN HUD is tested for costing no more than that margin
+over arm B; it is *not* expected to raise FPS, because Hermes, Yoga and the Control
+mount share the main thread with the game. Arm A is the cost control: B minus A and
+C minus A are the price of each HUD, and the gain question is C against B. The
+change-request cost is where a gain, if any, would appear. At least 10 runs per arm
+in alternating order, medians with IQR and a 95% bootstrap confidence interval, raw
+data kept under `docs/evidence/`. A gain in FPS is claimed only if the interval
+excludes zero. "No gain" is a valid and recorded result. Each axis gets a verdict:
+gain, neutral, cost, or inconclusive when the interval is too wide to decide, plus a
+decision on keeping the RN HUD for games. If arm B is not ready in its time-box, the
+report is a partial A against C comparison and claims no gain.
+
+**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
+the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
+not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
+item in the title. Record 0.5 progress only in `milestones`; when rewriting
+`migration.json`, keep unknown top-level keys.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)
