@@ -559,6 +559,17 @@ snapshot the HUD will project is written down field by field but is not yet a se
 the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
 checkpoint, weight or denominator moves.
 
+**Progress.** V05-04: the twelve names the HUD imports are decided in
+[`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
+props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
+`Godot <Component> does not implement <prop>`, checked on every mount and every update. A native lane drives every
+case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
+fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
+[record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
+visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
+that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
+No 1.0 checkpoint, weight or denominator moves.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)
