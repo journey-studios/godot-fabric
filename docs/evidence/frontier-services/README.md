@@ -1,6 +1,6 @@
 # Frontier: os serviços tipados, o nó GameServices e o epoch
 
-Esta fatia é o pacote P4 do marco 0.5 (V05-03, critério `servicos`), ligada ao GF-28. O jogo **Frontier** (P3, regras em
+Esta fatia é o pacote P4 do marco 0.5 (V05-03, critério `servicos`), ligada ao GF-25 (serviços), sobre o jogo do GF-28. O jogo **Frontier** (P3, regras em
 GDScript puro, [registro](../frontier-game/README.md)) ganha o nó persistente `GameServices`
 ([`game_services.gd`](https://github.com/journey-studios/godot-fabric/blob/75c4c0f2b5e68119a3af3da4d1f7f9a2190d5ffa/consumers/civ-lite/services/game_services.gd)):
 ele é dono de uma sessão do jogo e de um `epoch` inteiro, registra no `Application.runtime_available`, antes de qualquer bundle

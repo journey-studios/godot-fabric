@@ -761,7 +761,7 @@ log entries each turn appended, the faction's events included (the third new sab
 the oracle and one probe check); the golden hash, the trace hash and the roteiro are unchanged.
 
 The [Frontier services record](frontier-services/README.md) is the second package of the 0.5 milestone (V05-03, criterion
-`servicos`, tied to GF-28): the persistent `GameServices` node publishes the game to a React Native HUD through the typed game
+`servicos`, tied to GF-25 (services), on the game of GF-28): the persistent `GameServices` node publishes the game to a React Native HUD through the typed game
 services, with an epoch, and no C++. The node registers one state (`frontier.snapshot`), one signal (`frontier.turn_ended`) and
 eleven methods from `Application.runtime_available`, before any bundle or mount, all from one GDScript schema source; every
 method answers `{ok, code, text}`, an accepted intent publishes one snapshot and a refused one nothing, and the epoch is 1, rises

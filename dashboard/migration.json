@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "GF-14 #58: #69 Library consumer integrado à árvore local; validação combinada aguarda CI e revisão."
   },
-  "updatedAt": "2026-10-08T15:25:04.000Z",
+  "updatedAt": "2026-10-08T18:31:18.000Z",
   "source": {
     "commit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
     "url": "https://github.com/journey-studios/godot-fabric/commit/57e41f2e89a774eb79752cc87cd5e2096d2f3041",
@@ -3502,8 +3502,13 @@
             {
               "id": "servicos",
               "label": "Node persistente GameServices com epoch: estados, sinais e métodos registrados antes da montagem; schemas e tipos TS com testes positivos e negativos de paridade Godot e TS",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
+                }
+              ]
             },
             {
               "id": "consumidor",
@@ -4192,6 +4197,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-03-servicos-f199dd0",
+      "at": "2026-10-08T18:31:18.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério servicos, com evidência local: o node persistente GameServices do Frontier publica o jogo para uma HUD React Native pelos serviços tipados do repositório, com epoch. Ele registra no Application.runtime_available, antes de qualquer bundle ou montagem, um estado (frontier.snapshot), um sinal (frontier.turn_ended) e 11 métodos (um por intenção, mais new_game), todos a partir de uma única fonte de schema em GDScript, e os tipos TypeScript escritos à mão são comparados com o que o Godot registrou nos dois sentidos (13 registros, 13 mutações sintéticas em cada lado, recusas do extrator). Todo método responde o mesmo {ok, code, text}: uma intenção aceita publica um snapshot e uma recusada nenhum, o resultado do end_turn não leva turn nem phases (eles saem no sinal turn_ended, antes do snapshot do turno que começa) e o epoch começa em 1, sobe 1 a cada new_game e fica fora do estado e do hash. Um bundle que faz o papel da HUD joga o roteiro de 12 turnos inteiro pelos serviços numa FabricApplication de verdade: 73 passos (43 aceitos e 30 recusados, com 24 códigos), 12 turn_ended, o mesmo hash dourado e o mesmo hash de trilha do replay, e em todos os passos o snapshot que o JavaScript guarda é o do node, byte a byte. O Action.args do snapshot passou a ser a lista dos argumentos posicionais da intenção (um array de inteiros, [unit_id] ou []), em vez de um objeto de chaves variáveis, de modo que uma ação vira uma chamada sem a HUD saber nada sobre as intenções: as 146 ações dos snapshots do roteiro, mandadas de volta ao método de mesmo nome numa cópia do jogo, foram aceitas exatamente quando habilitadas; o hash dourado e o de trilha não mudaram. Dez violações de schema são rejeitadas com E_SERVICE_SCHEMA antes de o GDScript rodar, três new_game dão os epochs 2, 3 e 4 com o mesmo hash inicial, desmontar e remontar a superfície mantém os 13 vínculos, a geração, o jogo e o epoch, e o maior snapshot tem 173 nós e profundidade 4. Um oráculo independente valida cada snapshot contra o schema derivado dos tipos TS: 965 checks em cada uma de 2 execuções, 8 subtestes e 7 sabotagens retidas rejeitadas. Só headless e sem HUD; o probe usa um substituto do node de aplicação, no lugar do provisionado, e a fachada vem por preload. Os critérios consumidor e autoridade do V05-03 seguem abertos. CI hospedada (native-frontier-services) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
+    },
     {
       "id": "milestone-0-5-v05-03-replay-c2e4501",
       "at": "2026-10-08T15:25:04.000Z",
