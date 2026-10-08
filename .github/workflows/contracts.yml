@@ -79,6 +79,16 @@ jobs:
             build/adapter-loader/logs/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
+      - run: npm run test:charts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-charts
+          path: |
+            build/chart-unsupported.log
+            build/svg-mount-recovery.log
+            build/svg-mount-recovery-report.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:transforms:guards
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -645,6 +655,7 @@ jobs:
             build/services-lifetime.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
+      - run: npm run test:consumer:libraries
       - name: Original Codegen adapter in a provisioned independent consumer
         run: |
           ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
@@ -671,6 +682,15 @@ jobs:
             build/consumer/*.json
             build/consumer/*.log
             build/consumer/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-libraries-consumer
+          path: |
+            build/consumer-libraries/*.json
+            build/consumer-libraries/*.log
+            build/consumer-libraries/*-bundle.js
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

@@ -163,6 +163,42 @@ test("a transitive import cannot borrow an undeclared sibling package", async t 
   await assert.rejects(() => bundle(f), /Declare borrowed|undeclared.*borrowed|borrowed.*dependencies/i);
 });
 
+// react-native-css-interop names react-native-safe-area-context only in peerDependenciesMeta, as an optional peer.
+function optionalPeerLibrary(f, {peer, meta}) {
+  f.write("node_modules/library/package.json", {name: "library", version: "1.0.0", main: "index.js",
+    ...(meta ? {peerDependenciesMeta: {[peer]: {optional: true}}} : {})});
+  f.write("node_modules/library/index.js",
+    `try { exports.answer = require(${JSON.stringify(peer)}).answer; } catch { exports.answer = 7; }`);
+  f.write("ui/index.ts", "import {answer} from 'library'; globalThis.result = answer;");
+}
+
+test("an optional peer that only peerDependenciesMeta names is declared, and resolves to a facade when absent", async t => {
+  const f = fixture(t, {dependencies: {library: "1.0.0"}});
+  optionalPeerLibrary(f, {peer: "react-native-safe-area-context", meta: true});
+  // The SDK's facade fails where the peer is used, which the library's own try/catch handles.
+  f.write("addons/godot_fabric/src/unsupported-safe-area.js", "throw new Error('Godot platform does not implement native safe-area context');");
+  const result = await bundle(f);
+  assert.equal(result.context.result, 7);
+  assert.ok(result.inputs.includes(path.join(f.sdk, "src/unsupported-safe-area.js")));
+});
+
+test("an installed optional peer without a facade is used, and an absent one fails at resolution", async t => {
+  const f = fixture(t, {dependencies: {library: "1.0.0"}});
+  optionalPeerLibrary(f, {peer: "optional-peer", meta: true});
+  await assert.rejects(() => bundle(f), /Could not resolve "optional-peer"/);
+  installed(f, "optional-peer", "exports.answer = 42;");
+  const present = await bundle(f);
+  assert.equal(present.context.result, 42);
+  assert.ok(present.inputs.includes(path.join(f.project, "node_modules/optional-peer/index.js")));
+});
+
+test("a peer that neither the manifest nor peerDependenciesMeta declares is still rejected", async t => {
+  const f = fixture(t, {dependencies: {library: "1.0.0"}});
+  optionalPeerLibrary(f, {peer: "optional-peer", meta: false});
+  installed(f, "optional-peer", "exports.answer = 42;");
+  await assert.rejects(() => bundle(f), diagnostic("E_PROJECT_DEPENDENCY"));
+});
+
 test("an alias targeting a physical file outside the project is rejected before publication", async t => {
   const outside = fixture(t);
   const target = outside.write("external.ts", "export const answer = 42;");

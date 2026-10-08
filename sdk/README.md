@@ -26,6 +26,9 @@ existing directories by rejecting them. Open the resulting `project.godot`
 with the official engine, edit `ui/index.tsx`, then press Play.
 Its copied README links guides and captures to the provisioned source commit,
 so they remain usable outside this checkout after that commit is published.
+`--template libraries` creates the [libraries consumer](../consumers/libraries/README.md)
+instead (NativeWind and Chart Kit, with its own lockfile to install; see
+[below](#libraries-nativewind-and-chart-kit)).
 
 To provision only an addon into a **new** directory:
 
@@ -133,18 +136,98 @@ or implement their native backends.
 
 The consumer builder is production-only, with `.godot`/`.native` source
 resolution, no watch/cache/Fast Refresh, no project Babel configuration and no
-general asset/CSS output. The standalone laboratory retains its separate
-NativeWind compiler; the consumer does not yet run that compiler. A project
-Babel configuration is rejected explicitly. Startup Resource version 1 and
+general asset/CSS output: the one CSS it compiles is a project's Tailwind entry
+([below](#libraries-nativewind-and-chart-kit)). A project Babel configuration is
+rejected explicitly. Startup Resource version 1 and
 the scene wrapper are experimental, not the complete SDK activation contract.
 The menu/Play build blocks the editor while it runs; asynchronous progress and
 cancellation require D19/D26 design work.
+
+## Libraries: NativeWind and Chart Kit
+
+An independent project can use the original NativeWind and Chart Kit v2 through
+this builder alone. The [libraries consumer](../consumers/libraries/README.md) is
+the executed template: its own `package.json`, its own committed lockfile
+(installed with the provisioned private Node and `npm ci --ignore-scripts`) and TSX
+that imports only packages. The builder never runs project JavaScript for this.
+
+| Release | Version |
+| --- | --- |
+| `nativewind` | 4.2.7 |
+| `react-native-css-interop` | 0.2.7 |
+| `tailwindcss` | 3.4.17 |
+| `react-native-chart-kit` | 7.0.4 (`react-native-chart-kit/v2`) |
+| `react-native-svg` | 15.15.5, declared and installed; replaced by the SDK's SVG facade in the bundle |
+
+**Declarative Tailwind.** The project declares its Tailwind configuration as JSON in
+`package.json`:
+
+```json
+"godotFabric": {
+  "tailwind": {
+    "content": ["./ui/**/*.{ts,tsx}"],
+    "darkMode": "media",
+    "theme": {"extend": {"colors": {"brand": {"600": "#059669"}}}}
+  }
+}
+```
+
+`content` globs are relative to the project and cannot leave it; `darkMode` is
+`"media"`, which NativeWind follows through `Appearance`; `theme` is a JSON object.
+Any other field fails with `E_PROJECT_TAILWIND`. The builder builds Tailwind's
+configuration in process with `nativewind/preset`, with NativeWind's native pipeline
+(`NATIVEWIND_OS=godot`) and rem of 14, and never executes a `tailwind.config.*`: one in
+the project fails with `E_PROJECT_TAILWIND_CONFIG`, naming this field. `godotFabric`
+keeps `adapters` beside it.
+
+**The CSS entry.** A project CSS import that holds the three `@tailwind` directives
+(`import "../global.css"`) is compiled by the SDK's own Tailwind and
+`react-native-css-interop`'s compiler into a module that registers the styles with the
+one interop runtime of the bundle, the project's. Any other CSS (an `@import`, plain
+CSS, or CSS from a package) fails with `E_PROJECT_CSS`, and esbuild still refuses every
+other asset or CSS output. The project must declare `nativewind`, and the installed
+`nativewind` and `react-native-css-interop` must be exactly the releases the SDK
+compiles with (`E_PROJECT_NATIVEWIND_VERSION`). The build report records the entry,
+the declaration and the releases under `styles`.
+
+**JSX.** Set `"jsxImportSource": "nativewind"` in the project's `tsconfig.json`: the
+`className` transform then needs no Babel. `react-native-css-interop` ships one file
+with JSX in a `.js` file, `dist/doctor.native.js`; the builder compiles exactly that
+file with esbuild's JSX loader and the package's own `jsx-runtime`. JSX in any other
+`.js` file is still refused.
+
+**Optional peers.** A peer that a package names only in `peerDependenciesMeta` with
+`optional: true` counts as declared. If the project does not install it, the import
+resolves to the SDK's facade where one exists (`react-native-svg`, and facades that
+throw where used for `react-native-reanimated` and `react-native-safe-area-context`),
+so `animate-spin` fails explicitly at the Reanimated facade. Without a facade, an
+absent optional peer is a build-time resolution error.
+
+**`className` types.** `className` is a type error until the project opts in by
+listing `addons/godot_fabric/types/nativewind.ts` in its tsconfig `include`. It then
+exists on `View`, `Text`, `Image` and `Pressable` only (`TextInput`, `Switch`, lists and
+every other component stay without it). The SDK declares `ViewProps`, `TextProps` and
+`ImageProps` as interfaces so that this file can merge into them, and declares
+`Pressable` and `useWindowDimensions`. `nativewind/types` is not the opt-in: it names
+many interfaces the SDK narrows or does not declare.
+
+**Exercised, with executed evidence:** `className` on `View`, `Text`, `Image` and
+`Pressable` (colours, spacing, borders, radius, typography, `active:`), manual dark
+mode through `Appearance.setColorScheme` with `dark:` variants, retained state across a
+`className` swap, a theme switch and a styled-subtree unmount and remount, and Chart
+Kit v2's `LineChart` over the SVG adapter. **Not supported, and failing explicitly or
+out of scope:** `TextInput` `className`, following the operating system's theme,
+`fontScale`, `rem` and `PixelRatio` scaling, `darkMode` other than `"media"`,
+Reanimated animations, safe-area and screens ports, Chart Kit's v1 root API, the other
+Chart Kit charts and the SVG features the adapter lacks. GF-27 stays in progress.
 
 ## Validate
 
 ```sh
 npm run test:consumer
 npm run test:consumer -- --capture
+npm run test:consumer:libraries
+npm run test:consumer:libraries -- --capture
 ```
 
 The harness invokes `consumer:create` for a fresh project outside the SDK
