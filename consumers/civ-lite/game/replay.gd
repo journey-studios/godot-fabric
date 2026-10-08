@@ -9,7 +9,8 @@ extends RefCounted
 
 const STEPS := [
   # Turn 1: a stack on the start tile, the Settler walks into the forest and cannot found a city with no movement left.
-  {"label": "cover-none", "intent": "select_tile", "args": [30, 5], "code": "out_of_bounds", "context": "none"},
+  {"label": "", "intent": "clear_selection", "args": [], "code": "nothing_selected", "context": "none"},
+  {"label": "", "intent": "select_tile", "args": [30, 5], "code": "out_of_bounds", "context": "none"},
   {"label": "cover-stack", "intent": "select_tile", "args": [6, 8], "code": "ok", "context": "stack"},
   {"label": "cover-settler", "intent": "select_unit", "args": [1], "code": "ok", "context": "settler"},
   {"label": "", "intent": "move_unit", "args": [1, 7, 8], "code": "ok", "context": "settler"},
@@ -41,8 +42,9 @@ const STEPS := [
   {"label": "", "intent": "select_unit", "args": [2], "code": "ok", "context": "warrior"},
   {"label": "", "intent": "move_unit", "args": [2, 7, 8], "code": "ok", "context": "warrior"},
   {"label": "", "intent": "end_turn", "args": [], "code": "ok", "context": "none"},
-  # Turn 3: an empty tile.
+  # Turn 3: an empty tile, closed again.
   {"label": "cover-tile", "intent": "select_tile", "args": [9, 8], "code": "ok", "context": "tile"},
+  {"label": "cover-none", "intent": "clear_selection", "args": [], "code": "ok", "context": "none"},
   {"label": "", "intent": "end_turn", "args": [], "code": "ok", "context": "none"},
   # Turn 4: the city built a second Warrior; both walk out, stack up and run out of movement points.
   {"label": "", "intent": "select_tile", "args": [7, 8], "code": "ok", "context": "city"},
@@ -57,6 +59,7 @@ const STEPS := [
   {"label": "", "intent": "end_turn", "args": [], "code": "ok", "context": "dialog"},
   # Turn 5: the event blocks everything until it is resolved.
   {"label": "cover-dialog", "intent": "select_tile", "args": [7, 8], "code": "event_pending", "context": "dialog"},
+  {"label": "", "intent": "clear_selection", "args": [], "code": "event_pending", "context": "dialog"},
   {"label": "", "intent": "end_turn", "args": [], "code": "event_pending", "context": "dialog"},
   {"label": "", "intent": "resolve_event", "args": ["bogus"], "code": "unknown_choice", "context": "dialog"},
   {"label": "", "intent": "resolve_event", "args": ["welcome"], "code": "ok", "context": "none"},
@@ -67,6 +70,7 @@ const STEPS := [
   {"label": "", "intent": "set_production", "args": ["granary", 2], "code": "already_queued", "context": "none"},
   {"label": "", "intent": "set_production", "args": ["workshop", 2], "code": "tech_required", "context": "none"},
   {"label": "", "intent": "select_tile", "args": [7, 8], "code": "ok", "context": "city"},
+  {"label": "", "intent": "clear_selection", "args": [], "code": "ok", "context": "none"},
   {"label": "", "intent": "end_turn", "args": [], "code": "ok", "context": "none"},
   # Turns 6 to 12: the city builds, grows and researches; the player keeps the queue and the research busy.
   {"label": "", "intent": "set_production", "args": ["workshop", 1], "code": "tech_required", "context": "none"},

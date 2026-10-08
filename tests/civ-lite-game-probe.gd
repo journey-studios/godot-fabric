@@ -152,7 +152,7 @@ func check_turn_slicing() -> void:
   var before: String = game.serialize()
   check(game.begin_end_turn().ok == 1 and game.state.phase == Rules.PHASES[0], "turn: begin_end_turn stops at the first phase")
   var refused := true
-  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]],
+  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["clear_selection", []], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]],
     ["set_production", ["warrior", 0]], ["set_research", ["alphabet"]], ["resolve_event", ["welcome"]], ["end_turn", []], ["begin_end_turn", []]]
   var mid: String = game.serialize()
   for call: Array in calls:

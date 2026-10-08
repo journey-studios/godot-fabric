@@ -82,6 +82,9 @@ static func _actions(state: Dictionary, context: String) -> Array:
     for unit: Dictionary in World.units_at(state, int(state.sel.x), int(state.sel.y), Rules.OWNER_PLAYER):
       var name: String = Rules.UNITS[unit.kind].name
       actions.append(action("select_unit", "Select " + name, {"unit_id": unit.id}, Intents.check_select_unit(state, int(unit.id))))
+  # Every context with something selected can close it. `none` has nothing to close, and `dialog` blocks the rest.
+  if context != "none" and context != "dialog":
+    actions.append(action("clear_selection", "Clear selection", {}, Intents.check_clear_selection(state)))
   actions.append(action("end_turn", "End turn", {}, Intents.check_end_turn(state)))
   return actions
 

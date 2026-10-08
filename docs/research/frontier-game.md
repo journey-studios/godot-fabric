@@ -137,8 +137,9 @@ Derived from the state by one pure function (`context.gd`), in this precedence. 
 The turn and resources bar is always there; the panels column above is the mapping for the HUD slice to confirm, not a
 rule of this slice. Selecting a tile with the city selects the city even when units stand in it (the city screen lists
 its garrison); selecting a tile with exactly one of the player's units selects that unit; a stack or an empty tile
-selects the tile alone, and `select_unit` picks a unit out of a stack or out of the city. A turn ends with the selection
-cleared, so a new turn starts in `none`.
+selects the tile alone, and `select_unit` picks a unit out of a stack or out of the city. `clear_selection` closes whatever is
+selected (the tile card, the city screen, a unit's actions) and returns to `none` at any moment of the turn; a turn also ends
+with the selection cleared, so a new turn starts in `none`.
 
 ## The intents
 
@@ -150,6 +151,7 @@ returns `{"ok": 1, "code": "ok", "text": ""}` plus the fields noted. All argumen
 | --- | --- | --- |
 | `select_tile` | `x`, `y` | Selects the tile (and the city, or the lone unit, as above). |
 | `select_unit` | `unit_id` | Selects a unit of the player and its tile. |
+| `clear_selection` | none | Clears the selection, whatever it was: the context becomes `none`. Refused with `nothing_selected` when there is no selection, and with `event_pending` while the dialog is open. |
 | `move_unit` | `unit_id`, `x`, `y` | Moves one step to an adjacent tile, paying its cost. |
 | `found_city` | `unit_id` | The Settler becomes the city on its tile; the city is selected. |
 | `fortify` | `unit_id` | Fortifies a Warrior and ends its movement for the turn. |
@@ -173,6 +175,7 @@ it), then its own checks as listed.
 | `event_pending` | A decision is waiting. Resolve the event first. | any intent but `resolve_event` while the event is pending |
 | `no_turn_job` | No turn is being processed. | `advance_phase` with `phase` idle |
 | `out_of_bounds` | That tile is outside the map. | `select_tile`, `move_unit` outside 24x16 |
+| `nothing_selected` | Nothing is selected. | `clear_selection` with no tile selected |
 | `unknown_unit` | No such unit. | the id is not a unit |
 | `not_your_unit` | That unit belongs to another faction. | the unit is not the player's |
 | `not_adjacent` | The destination is not an adjacent tile. | `move_unit` not exactly one tile away |
@@ -251,11 +254,15 @@ from the same check the intent runs. Actions by context:
 
 | Context | Actions |
 | --- | --- |
-| `none`, `tile`, `city` | `end_turn` |
-| `settler` | `found_city`, `fortify`, `end_turn` |
-| `warrior` | `fortify`, `end_turn` |
-| `stack` | one `select_unit` per unit of the player on the tile, `end_turn` |
+| `none` | `end_turn` |
+| `tile`, `city` | `clear_selection`, `end_turn` |
+| `settler` | `found_city`, `fortify`, `clear_selection`, `end_turn` |
+| `warrior` | `fortify`, `clear_selection`, `end_turn` |
+| `stack` | one `select_unit` per unit of the player on the tile, `clear_selection`, `end_turn` |
 | `dialog` | `end_turn`, disabled with `event_pending` (the choices are in `dialog`) |
+
+`none` has nothing to close, so it offers no `clear_selection`; every other context but `dialog` does, and it is always
+enabled there (the dialog blocks it).
 
 **TileCard**: `present` (0 or 1), `x`, `y`, `terrain` (int id, `-1` if absent), `terrain_name`, `food`, `production`,
 `science`, `move_cost` (0: cannot be entered), `city` (0 or 1) and `units` (UnitCard[], every faction, in id order).
@@ -276,7 +283,7 @@ next one, or `"locked"`), and `enabled`/`reason`/`reason_text`. The stock being 
 
 ## The replay
 
-`replay.gd` is the roteiro: 12 turns and 69 intents (41 accepted, 28 refused on purpose), each with the code and the context
+`replay.gd` is the roteiro: 12 turns and 73 intents (43 accepted, 30 refused on purpose), each with the code and the context
 it must produce. A refused step also proves it changed nothing. The state after the twelfth `end_turn` (turn 13 begins) has
 the **golden hash**, fixed in `tests/civ-lite-game-native.test.mjs`:
 
@@ -284,32 +291,44 @@ the **golden hash**, fixed in `tests/civ-lite-game-native.test.mjs`:
 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29
 ```
 
-It changes only when a rule, the map or the roteiro changes; the new value is then reviewed, not accepted. The generator
-draws 384 times for the map and once for the wanderers' gift (385 draws in all).
+It changes only when a rule, the map or the roteiro changes the state the replay ends in; the new value is then reviewed, not
+accepted. The generator draws 384 times for the map and once for the wanderers' gift (385 draws in all).
+
+Adding `clear_selection` and four steps that use it (two accepted, `nothing_selected`, and `event_pending` while the dialog is
+open) **did not change the golden hash**: the intent only changes the selection and emits no event, and every `end_turn`
+clears the selection, so the state the twelfth turn ends in is the same. What did change is the state after each of those
+steps. The test therefore fixes a second hash, the **trace hash**, the SHA-256 of the state hashes after every step, one per
+line, which pins how the replay got there:
+
+```
+fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8
+```
+
+The oracle judges every one of those states regardless.
 
 | Turn | Script |
 | --- | --- |
-| 1 | the stack on the start tile; the Settler walks into the forest and cannot found a city with no points left; refusals for water, adjacency, Settlers fortifying, a Warrior founding, foreign or missing units and a city that does not exist yet; the Warrior fortifies |
+| 1 | a selection is cleared with nothing selected (refused); the stack on the start tile; the Settler walks into the forest and cannot found a city with no points left; refusals for water, adjacency, Settlers fortifying, a Warrior founding, foreign or missing units and a city that does not exist yet; the Warrior fortifies |
 | 2 | the Settler founds the city; production and research are set; refusals for the technology, the item, the slot and the order of the list; the Warrior walks into the city |
-| 3 | an empty tile is selected |
+| 3 | an empty tile is selected, then cleared |
 | 4 | the second Warrior walks out; one runs out of points before a hill; two units stack up; turn 5 raises the event |
-| 5 | the event blocks every intent; a wrong choice is refused; welcoming the wanderers; a known technology is refused; research and the queue resume |
+| 5 | the event blocks every intent, `clear_selection` included; a wrong choice is refused; welcoming the wanderers; a known technology is refused; research and the queue resume; the city screen is opened and closed |
 | 6 to 12 | the city builds a Granary, a Warrior and a Workshop, grows to size 3, learns the whole list, and the Library is queued once Writing is known |
 
-The roteiro refuses with 23 of the codes above. The other four (`city_exists`, `too_close_to_edge`, `tile_occupied`,
+The roteiro refuses with 24 of the codes above. The other four (`city_exists`, `too_close_to_edge`, `tile_occupied`,
 `queue_full`) cannot happen in this scenario, because it has one Settler, a faction that never walks next to the player and
 a queue that never fills; the probe builds a state for each and requires the same untouched-state guarantee. `turn_in_progress`
 and `no_turn_job` are exercised by slicing a turn by hand.
 
 | Context | Step of the roteiro that covers it |
 | --- | --- |
-| `none` | 0: `select_tile(30, 5)`, refused as outside the map, with nothing selected |
-| `stack` | 1: `select_tile(6, 8)`, the Settler and the Warrior on the start tile |
-| `settler` | 2: `select_unit(1)` |
-| `warrior` | 8: `select_unit(2)` |
-| `city` | 17: `found_city(1)`, which selects the new city |
-| `tile` | 31: `select_tile(9, 8)`, an empty plain |
-| `dialog` | 43: `select_tile(7, 8)`, refused with `event_pending` while the event is open |
+| `none` | 33: `clear_selection()`, accepted, after the empty tile of turn 3 was selected |
+| `stack` | 2: `select_tile(6, 8)`, the Settler and the Warrior on the start tile |
+| `settler` | 3: `select_unit(1)` |
+| `warrior` | 9: `select_unit(2)` |
+| `city` | 18: `found_city(1)`, which selects the new city |
+| `tile` | 32: `select_tile(9, 8)`, an empty plain |
+| `dialog` | 45: `select_tile(7, 8)`, refused with `event_pending` while the event is open |
 
 ## Tests
 
@@ -323,7 +342,8 @@ at every step, that every enabled action, item and technology of every snapshot 
 and every disabled one is refused with its `reason`, that a snapshot is immutable and reads without changing the state, and
 that the session's epoch reaches the snapshot and not the hash. The Node test then:
 
-- runs the probe **three times in three processes** and requires byte-identical reports and the **same golden hash**;
+- runs the probe **three times in three processes** and requires byte-identical reports, the **same golden hash** and the
+  trace hash of every step;
 - requires the 12 turns, the coverage of the seven contexts (a step labelled for each), every refusal code the roteiro
   lists and the four the probe builds a state for, each refusal leaving the state as it found it;
 - requires every snapshot of the labelled steps to have exactly the fields and types of the tables above, and the actions
@@ -374,9 +394,6 @@ capture. Hosted CI for `npm run test:civ-lite-game` is pending.
 - **Intent arguments are typed, and a wrong type is the caller's error.** The methods declare `int` and `String` parameters,
   so GDScript raises its own error for another type instead of a refusal. The services slice must convert and check what React
   sends before it calls the game.
-- **No way back to `none` mid-turn.** The roteiro's intents cannot clear a selection (`none` is the start of a turn and
-  the result of `end_turn`). A HUD that wants an Escape key needs a `clear_selection` intent; it is not added because the
-  ceiling lists nine.
 - **A `project.godot` in `consumers/civ-lite/` would hide the game from the root project.** Godot treats a folder with its
   own `project.godot` as a separate project, as `consumers/minimal` is. The test loads `res://consumers/civ-lite/game/`
   from the root project; the scripts use relative `preload` paths, so they also work as `res://game/` in a consumer

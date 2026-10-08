@@ -211,6 +211,8 @@ function refusal(state, intent, args) {
       return inBounds(args[0], args[1]) ? "" : "out_of_bounds";
     case "select_unit":
       return unitReason(args[0]);
+    case "clear_selection":
+      return state.sel.x < 0 ? "nothing_selected" : "";
     case "move_unit": {
       const [id, x, y] = args;
       if (unitReason(id) !== "") {
@@ -325,10 +327,13 @@ function accept(state, intent, args) {
       next.sel = {x: unit.x, y: unit.y, unit: unit.id};
       break;
     }
+    case "clear_selection":
+      next.sel = {x: -1, y: -1, unit: 0};
+      break;
     case "move_unit": {
       const [id, x, y] = args;
       const unit = unitById(next, id);
-      unit.moves -= TERRAIN[terrainAt(next, x, y)].move;
+      unit.moves -=TERRAIN[terrainAt(next, x, y)].move;
       unit.fortified = 0;
       unit.x = x;
       unit.y = y;
@@ -628,8 +633,8 @@ export function verifyFrontierReport(report) {
         assert.deepEqual(step.phases.map(phase => phase.name), PHASES);
         assert.ok(step.phases.every(phase => phase.tasks <= TASK_LIMIT && phase.events <= EVENT_LIMIT), `${where}: no phase passes 64 tasks or 128 events`);
         assert.equal(emitted, phases.reduce((sum, phase) => sum + phase.events, 0), `${where}: the log grows by the events the phases reported`);
-      } else if (step.intent === "select_tile" || step.intent === "select_unit") {
-        assert.equal(emitted, 0, `${where}: a selection emits no event`);
+      } else if (["select_tile", "select_unit", "clear_selection"].includes(step.intent)) {
+        assert.equal(emitted, 0, `${where}: a selection change emits no event`);
       } else {
         assert.equal(emitted, 1, `${where}: an accepted intent emits one event`);
       }

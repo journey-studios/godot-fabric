@@ -37,6 +37,10 @@ func select_unit(unit_id: int) -> Dictionary:
   return _decide(Intents.check_select_unit(state, unit_id), func() -> void: Intents.apply_select_unit(state, unit_id))
 
 
+func clear_selection() -> Dictionary:
+  return _decide(Intents.check_clear_selection(state), func() -> void: Intents.apply_clear_selection(state))
+
+
 func move_unit(unit_id: int, x: int, y: int) -> Dictionary:
   return _decide(Intents.check_move_unit(state, unit_id, x, y), func() -> void: Intents.apply_move_unit(state, unit_id, x, y))
 

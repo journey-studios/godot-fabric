@@ -20,11 +20,14 @@ const EXECUTIONS = 3;
 // The state after the 12th end_turn of replay.gd. It changes when a rule, the map or the roteiro changes, and then
 // the new value is reviewed, not accepted.
 const GOLDEN_HASH = "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29";
+// SHA-256 of the state hashes after every step of the roteiro, one per line. The golden hash pins where the replay ends;
+// this one pins how it got there, selection included, which every end_turn resets and the final state does not show.
+const TRACE_HASH = "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8";
 const CONTEXTS = ["none", "tile", "settler", "warrior", "stack", "city", "dialog"];
 // The refusal codes the roteiro plays, and those the probe builds a state for because the scenario cannot reach them.
 const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot", "unknown_tech",
-  "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event"];
+  "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"];
 const BUILT_REFUSALS = ["city_exists", "too_close_to_edge", "tile_occupied", "queue_full"];
 const GAME_DIRECTORY = "consumers/civ-lite/game";
 // Nothing in the game may draw from the engine's generators: the game's own PRNG is the only source of randomness.
@@ -166,8 +169,8 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
       assert.ok(oracle.every(message => /canonical serialization/.test(message)), oracle.join("\n"));
     } else if (sabotage === "rule") {
       // The Settler keeps a movement point the roteiro says it has spent.
-      assert.ok(failed.includes("step 04 found_city[1] answers no_moves_left"), failed.join("\n"));
-      assert.ok(oracle.every(message => /step 3 move_unit/.test(message)), oracle.join("\n"));
+      assert.ok(failed.some(name => /^step \d+ found_city\[1\] answers no_moves_left$/.test(name)), failed.join("\n"));
+      assert.ok(oracle.every(message => /^step \d+ move_unit\(1, 7, 8\)/.test(message)), oracle.join("\n"));
     } else if (sabotage === "economy") {
       // A city that yields one production too many: the oracle that recomputes the economy finds the first end of turn
       // in which the city produced.
@@ -201,6 +204,8 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   const verified = verifyFrontierReport(report);
   assert.equal(verified.turns, 12);
   assert.equal(verified.finalHash, GOLDEN_HASH);
+  const traceHash = digest(report.steps.map(step => step.hash).join("\n"));
+  assert.equal(traceHash, TRACE_HASH, "The state after every step of the roteiro is the one the trace hash pins");
 
   // The seven contexts, each at a step of the roteiro labelled for it, and the DTO documented for the services slice.
   const coverage = CONTEXTS.map(context => {
@@ -217,9 +222,11 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   }
   const actions = context => report.snapshots[`cover-${context}`].actions.map(action => [action.id, action.enabled, action.reason]);
   assert.deepEqual(actions("none"), [["end_turn", 1, ""]]);
-  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["fortify", 0, "cannot_fortify"], ["end_turn", 1, ""]]);
-  assert.deepEqual(actions("warrior"), [["fortify", 1, ""], ["end_turn", 1, ""]]);
-  assert.deepEqual(actions("stack"), [["select_unit", 1, ""], ["select_unit", 1, ""], ["end_turn", 1, ""]]);
+  assert.deepEqual(actions("tile"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["fortify", 0, "cannot_fortify"], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+  assert.deepEqual(actions("warrior"), [["fortify", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+  assert.deepEqual(actions("stack"), [["select_unit", 1, ""], ["select_unit", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+  assert.deepEqual(actions("city"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("dialog"), [["end_turn", 0, "event_pending"]]);
   assert.equal(report.snapshots["cover-dialog"].dialog.open, 1);
   assert.deepEqual(report.snapshots["cover-dialog"].dialog.choices.map(choice => choice.id), ["welcome", "turn_away"]);
@@ -232,7 +239,7 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   assert.deepEqual(report.unreachableRefusals.map(entry => entry.code).sort(), [...BUILT_REFUSALS].sort());
 
   await writeFile(path.join(root, "build/civ-lite-game-report.json"), JSON.stringify({format: "godot-fabric.civ-lite-game/v1", godot: report.godot,
-    goldenHash: GOLDEN_HASH, executions: runs.map((run, position) => ({execution: position + 1, status: run.result.status, finalHash: run.report.finalHash,
+    goldenHash: GOLDEN_HASH, traceHash, executions: runs.map((run, position) => ({execution: position + 1, status: run.result.status, finalHash: run.report.finalHash,
       checks: run.report.checks.length, reportSha256: digest(run.text)})),
     byteIdentical: true, steps: report.steps.length, turns: verified.turns, rngDraws: verified.draws, coverage, refusals: verified.refusals,
     unreachableRefusals: report.unreachableRefusals, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");

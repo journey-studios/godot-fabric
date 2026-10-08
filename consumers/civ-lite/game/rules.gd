@@ -106,6 +106,7 @@ const REASONS := {
   "unknown_unit": "No such unit.",
   "not_your_unit": "That unit belongs to another faction.",
   "out_of_bounds": "That tile is outside the map.",
+  "nothing_selected": "Nothing is selected.",
   "not_adjacent": "The destination is not an adjacent tile.",
   "impassable_terrain": "Land units cannot enter water.",
   "tile_occupied": "A foreign unit blocks that tile.",

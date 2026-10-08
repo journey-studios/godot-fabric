@@ -53,6 +53,20 @@ static func apply_select_unit(state: Dictionary, unit_id: int) -> void:
   state.sel = {"x": unit.x, "y": unit.y, "unit": unit_id}
 
 
+static func check_clear_selection(state: Dictionary) -> String:
+  var guard := check_guard(state)
+  if guard != "":
+    return guard
+  if int(state.sel.x) < 0:
+    return "nothing_selected"
+  return ""
+
+
+# Closing the tile card, the city screen or a unit's actions: nothing is selected, and the context is none.
+static func apply_clear_selection(state: Dictionary) -> void:
+  state.sel = {"x": -1, "y": -1, "unit": 0}
+
+
 static func check_move_unit(state: Dictionary, unit_id: int, x: int, y: int) -> String:
   var guard := check_guard(state)
   if guard != "":
