@@ -250,6 +250,18 @@ jobs:
             build/images-probe-bundle.json
             build/images-probe.js.assets.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:images-network
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-images-network
+          path: |
+            build/images-network-report.json
+            build/images-network-current-report.json
+            build/images-network-comparison.json
+            build/images-network-current.log
+            build/images-network-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:modal
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

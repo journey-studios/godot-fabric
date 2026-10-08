@@ -70,9 +70,9 @@ function assertOracleMutations(report) {
   mutate(candidate => { candidate.stages.afterStop.loader.counters.tasksAwaited -= 1; }, /tasksStarted|expected/, "every task is awaited");
   mutate(candidate => { candidate.stages.mount.react.logs["A-neg-missing"].find(event => event.type === "error").error = "boom"; }, /neg-missing/,
     "a missing file says so");
-  mutate(candidate => { candidate.stages.mount.react.logs["A-neg-http"].splice(1, 1); }, /events|has no result of its request/, "http(s) fails through onError");
+  mutate(candidate => { candidate.stages.mount.react.logs["A-neg-scheme"].splice(1, 1); }, /events|has no result of its request/, "an unknown scheme fails through onError");
   mutate(candidate => { candidate.stages.contract.assets.badge.descriptor.hash = "0".repeat(32); }, /hash|expected/, "the descriptor is Metro's");
-  mutate(candidate => { candidate.stages.api.results.prefetch.message = "E_PREFETCH_FAILURE: nothing"; }, /E_PREFETCH_FAILURE/, "prefetch says why it fails");
+  mutate(candidate => { candidate.stages.api.results["prefetch-missing"].message = "E_PREFETCH_FAILURE: nothing"; }, /E_PREFETCH_FAILURE/, "prefetch says why it fails");
   mutate(candidate => { candidate.stages.scales.results[0].uri = candidate.stages.scales.results[0].uri.replace("@3x", "@2x"); }, /badge@3x|expected/,
     "pickScale chooses by pixel ratio");
 }

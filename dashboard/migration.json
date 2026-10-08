@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 PR #58: clique corrigido e AccessibilityInfo integrada; provas locais passam, nova CI pendente"
+    "focusTitle": "GF-14 #58: captura e retirement corrigidos; integração Images #64 em validação"
   },
-  "updatedAt": "2026-10-08T07:49:09.628742+00:00",
+  "updatedAt": "2026-10-08T08:56:15.079938+00:00",
   "source": {
-    "commit": "cae0d2e41b7d80e2f70afbbcd9a4634be42ceecc",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/cae0d2e41b7d80e2f70afbbcd9a4634be42ceecc",
-    "scope": "Correção b097fb3 do teste de clique após a migração do ScrollView original e main c858263 (AccessibilityInfo) integrada em cae0d2e. Novo host b4dfdbda: oito combinações de clique com 91 checks cada, ScrollView 28, listas 44, OS 37, AccessibilityInfo 54, exemplo 73 e quatro capturas gráficas; 352 Node / 13 Python. O principal rejeita 16 relatórios adulterados e confere 127 inputs nativos / 181 produtores distintos. CI d785 falhou em pointer-click após passes parciais; nova CI/review pendentes. GF-14 mantém quatro checkpoints abertos, 29/156 e 0/39; milestones e dados de outros agentes preservados.",
+    "commit": "465ae7690f64773f8d97f7ed802301603f360f75",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/465ae7690f64773f8d97f7ed802301603f360f75",
+    "scope": "Correção local 465ae76 dos dois achados CodeRabbit: host b2a8 passa ScrollView33, clique8×91, listas44/OS37, AccessibilityInfo54, Animated75, exemplos35/2467, gráfica4 e contratos352Node/13Python. Esta prova antecede main fb50a32 (#64 Images de rede/cache), agora integrada para validação combinada; sem aceite antecipado. CI antiga3e cancelada por substituição. Checkpoints, milestones e dados dos demais agentes preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1733,7 +1733,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN (Image.ios.js atrás de um wrapper validador) sobre o pipeline C++ de imagens do próprio RN (ImageShadowNode, ImageRequest e o coordenador de observadores) com um ImageManager do host: leitura, detecção do formato, limites e decodificação no WorkerThreadPool do Godot, nunca na main thread, com a textura criada na main thread dentro de um orçamento de upload por pump, cancelamento por troca e por desmontagem e parada que aguarda cada tarefa. GodotImage com os seis modos de redimensionamento do UIKit e os eventos onLoadStart, onProgress, onLoad, onError e onLoadEnd na ordem e com os payloads do iOS; módulo ImageLoader (getSize, getSizeWithHeaders, prefetch rejeitado, queryCache vazio). Fontes: require() de assets (plugin esbuild com o descritor do Metro, variantes @Nx escolhidas pelo pickScale e manifesto com SHA-256), res://, user://, file:// e data:; PNG, JPEG, WebP, BMP, TGA e SVG. 74 checks headless em duas roots, com um oráculo independente; o host anterior alcança 11 checks e falha os 3 normativos que alcança; as sabotagens retidas (decodificação na main thread e view que mantém o pedido trocado) falham 12 e 2, rejeitadas pelo oráculo, que também recusa 15 mutações do relatório genuíno. Exemplo: 17 checks headless, 25 gráficos e 2 capturas macOS. Abertos: imagens de rede (dependem do GF-22), cache de imagem decodificada e prefetch, tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier e overlayColor (falham onde a Image renderiza), recorte arredondado (o raio de borda no estilo da Image falha), GIF e WebP animados, nativeImageSource, export de assets para desktop e Android (o hook iOS copia o manifesto, sem app exportado executado), oráculo independente de pixels, comparação com o iOS e alvos além do macOS arm64. CI hospedada pendente. O aceite total do GF-16 continua em andamento; esta fatia fecha só o checkpoint de fatia e não altera peso nem denominador.",
+      "note": "Primeira fatia: Image, ImageBackground, AssetRegistry e Animated.Image originais do RN (Image.ios.js atrás de um wrapper validador) sobre o pipeline C++ de imagens do próprio RN (ImageShadowNode, ImageRequest e o coordenador de observadores) com um ImageManager do host: leitura, detecção do formato, limites e decodificação no WorkerThreadPool do Godot, nunca na main thread, com a textura criada na main thread dentro de um orçamento de upload por pump, cancelamento por troca e por desmontagem e parada que aguarda cada tarefa. GodotImage com os seis modos de redimensionamento do UIKit e os eventos onLoadStart, onProgress, onLoad, onError e onLoadEnd na ordem e com os payloads do iOS; módulo ImageLoader (getSize e getSizeWithHeaders; na primeira fatia o prefetch rejeitava e o queryCache respondia vazio, o que a segunda fatia, abaixo, substituiu). Fontes: require() de assets (plugin esbuild com o descritor do Metro, variantes @Nx escolhidas pelo pickScale e manifesto com SHA-256), res://, user://, file:// e data:; PNG, JPEG, WebP, BMP, TGA e SVG. 74 checks headless em duas roots, com um oráculo independente; o host anterior alcança 11 checks e falha os 3 normativos que alcança; as sabotagens retidas (decodificação na main thread e view que mantém o pedido trocado) falham 12 e 2, rejeitadas pelo oráculo, que também recusa 15 mutações do relatório genuíno. Exemplo: 17 checks headless, 25 gráficos e 2 capturas macOS. Segunda fatia, imagens de rede (implementação 6bbd036, revista em 910cffb depois das observações do PR #64): fontes http e https com headers, method, body e cache (reload, force-cache, only-if-cached) e crossOrigin e referrerPolicy, baixadas pelo HttpTransport próprio do loader (no máximo quatro ao mesmo tempo, resposta limitada a 128 MiB e 60 s de ociosidade) com o pedido montado como o NSURLRequestFromImageSource, os textos de falha, o status e os cabeçalhos da resposta e o progresso do RCTImageLoader, e os bytes decodificados no mesmo pipeline de worker threads, nunca na main thread. Um cache de imagem decodificada no papel do RCTImageCache (2 MiB por imagem, 20 MiB, LRU, validade por Cache-Control, Expires e Last-Modified) e um cache de bytes em memória no papel do NSURLCache (20 MiB, 1 MiB por entrada) decidem de onde sai cada imagem; prefetch, prefetchWithMetadata, queryCache (memory) e getSize e getSizeWithHeaders valem para fontes de rede, o aviso de memória do SO esvazia os dois caches, cancelar um download fecha o pedido no transporte e o repeat ladrilha no tamanho exato em pontos sem redimensionar a textura que o cache compartilha. Um pedido com Authorization, Proxy-Authorization ou Cookie não lê nem grava nenhum dos dois caches (regra mais estrita que a do iOS, cujos caches são chaveados pela URL) e é recusado por http (o que o App Transport Security faz no iOS); os redirecionamentos largam os cabeçalhos da fonte, como o RCTHTTPRequestHandler; um número em cabeçalho mantém todos os dígitos. 74 checks headless (66 normativos) contra um servidor Node em loopback (HTTP e HTTPS), com um oráculo independente que repete 115 operações de cache e de credenciais contra um modelo dos dois caches e o log do servidor; o host anterior executa 37 desses checks e falha exatamente os 30 normativos; três sabotagens retidas (reload que consulta o cache decodificado, download cujo pedido não é fechado, repeat que redimensiona a textura compartilhada) falham 1, 34 e 2 checks, rejeitadas pelo oráculo, que também recusa 33 mutações; testes C++ com 76, 64 e 77 asserções; exemplo com 22 checks headless, 30 gráficos e 2 capturas macOS. A suíte da primeira fatia passou a ter 73 checks (62 normativos). Esta fatia não fecha checkpoint nem altera peso ou denominador. Abertos: cache em disco, revalidação, Vary, cookies, compressão e HTTP/2 para imagens de rede, servidor remoto e condições reais de rede, tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier e overlayColor (falham onde a Image renderiza), recorte arredondado (o raio de borda no estilo da Image falha), GIF e WebP animados, nativeImageSource, export de assets para desktop e Android (o hook iOS copia o manifesto, sem app exportado executado), oráculo independente de pixels, comparação com o iOS e alvos além do macOS arm64. CI hospedada: a da primeira fatia passou na main (push em 6d02746, o squash de #56, run 37724902858: cinco jobs, 74 checks com IDs idênticos aos commitados e Pages 37724902853); a da segunda fatia está pendente. O aceite total do GF-16 continua em andamento; só a primeira fatia fechou o checkpoint de fatia, e nenhuma das duas altera peso ou denominador.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1760,6 +1760,34 @@
             {
               "label": "Images: nota de pesquisa com o contrato do RN e os desvios do host",
               "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/research/images.md"
+            },
+            {
+              "label": "CI hospedada das Images 37724902858: 5 jobs, 74 checks e 159 entradas auditadas (push da main em 6d02746, squash de #56)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d16aa27e83bf4c736c54029580a2a21460d8ed86/docs/evidence/images/hosted-ci.json"
+            },
+            {
+              "label": "Pages das Images 37724902853: dados da main em 6d02746 implantados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d16aa27e83bf4c736c54029580a2a21460d8ed86/docs/evidence/images/publication.json"
+            },
+            {
+              "label": "Imagens de rede: 74 checks headless sobre um servidor de loopback, host anterior com as 30 falhas normativas que executa e três sabotagens retidas rejeitadas pelo oráculo (implementação 910cffb)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/evidence/images-network/README.md"
+            },
+            {
+              "label": "Imagens de rede: recibo de execução, pins SHA-256, lanes, desvios do iOS e limites",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/evidence/images-network/report.json"
+            },
+            {
+              "label": "Imagens de rede: captura das fontes e da linha de rede (SHA-256 6b246d81)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/evidence/images-network/images-network-all-modes.png"
+            },
+            {
+              "label": "Imagens de rede: captura depois dos cliques e do remontar (SHA-256 23906e9b)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/evidence/images-network/images-network-remount.png"
+            },
+            {
+              "label": "Imagens de rede: nota de pesquisa com o contrato do RN, as referências de linha e os desvios do host",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/research/images.md"
             }
           ]
         },
@@ -4098,6 +4126,24 @@
       ],
       "message": "#58: CI d785 falhou no clique; corrigidas expectativas antigas por identidade RN e cancelamento nativo, com RED preservado e 16 cópias danificadas rejeitadas. Main AccessibilityInfo integrada em cae0d2e e novo host validado; oito lanes 91, ScrollView 28/listas 44/OS 37/AccessibilityInfo 54/exemplo 73 e quatro capturas. CI/review do próximo head pendentes. 29/156 e milestone 0.5 preservados; nenhum checkpoint GF-14 fechado.",
       "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
+    {
+      "id": "images-network-slice-6bbd036",
+      "at": "2026-10-08T06:54:59.427Z",
+      "taskIds": [
+        "GF-16"
+      ],
+      "message": "Segunda fatia do GF-16 com evidência local, revista depois das observações do PR #64: o Image do RN carrega fontes http e https (headers, method, body e cache) pelo HttpTransport do loader, com os pedidos, as falhas e o progresso do RCTImageLoader, um cache de imagem decodificada e um cache de bytes em memória, prefetch, queryCache e getSize reais e repeat sem redimensionar a textura compartilhada. Um pedido com Authorization, Proxy-Authorization ou Cookie não lê nem grava nenhum dos dois caches (mais estrito que o iOS, cujos caches são chaveados pela URL) e é recusado por http (o que o App Transport Security faz no iOS); os redirecionamentos largam os cabeçalhos da fonte como no iOS. 74 checks headless (66 normativos) sobre um servidor de loopback, com oráculo independente; o host anterior executa 37 e falha exatamente os 30 normativos, as sabotagens (reload no cache decodificado, download que não fecha o pedido, textura compartilhada redimensionada) falham 1, 34 e 2, todas rejeitadas pelo oráculo, que recusa também 33 mutações; o exemplo passa 22 checks headless e 30 gráficos. Diferenças do iOS registradas (progresso agrupado, sem revalidação, só a resposta 200 final no cache de bytes, sem cookies, compressão ou HTTP/2, e as credenciais fora dos caches). CI hospedada pendente; nenhum checkpoint, item, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b0a60b67199e39a7c924d760fabf6028e6ea8180/docs/evidence/images-network/README.md"
+    },
+    {
+      "id": "images-main-hosted-ci-and-pages-20261008",
+      "at": "2026-10-08T06:54:59.427Z",
+      "taskIds": [
+        "GF-16"
+      ],
+      "message": "CI hospedada das Images: o push da main em 6d02746 (squash de #56, run 37724902858) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:images (1 de 1 ok) e o artefato repete os 74 checks headless com IDs idênticos aos do relatório commitado; o oráculo independente aceita o relatório baixado. Os seis arquivos da revisão têm os SHA-256 que o postReview registra e os outros 28 pins que diferem de 552fb56 vieram de commits da main, por isso o bundle do run (f141ed27…) não é um dos registrados. Pages 37724902853 implantou exatamente os dados de 6d02746.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d16aa27e83bf4c736c54029580a2a21460d8ed86/docs/evidence/images/hosted-ci.json"
     },
     {
       "id": "gf14-legacy-example-corrected-20261008",

@@ -2,12 +2,15 @@ extends Node
 
 # The public Image example under real mouse input. Every picture is read from the native GodotImage that shows it (its source,
 # its texture, the rectangles it drew) and from what JS observed, across actual SceneTree frames; the loader's own record says
-# which thread read and decoded each one. With --capture the renderer's frame is saved and sampled too.
+# which thread read and decoded each one. The scene also starts a small HTTP server on loopback (local_server.gd) and hands its address
+# to the screen, whose network row downloads a picture, mounts it again and asks for one that is not there; the server counts what
+# it is asked. With --capture the renderer's frame is saved and sampled too.
+const LocalServer := preload("res://examples/images/local_server.gd")
 const DEVICE := 1001
 const SCALE := 2.0
 const MODES := ["cover", "contain", "stretch", "center", "repeat", "none"]
 const IMAGE_IDS := ["images-mode-cover", "images-mode-contain", "images-mode-stretch", "images-mode-center", "images-mode-repeat", "images-mode-none",
-  "images-logo", "images-data-png", "images-data-svg", "images-background", "images-missing", "images-preview"]
+  "images-logo", "images-data-png", "images-data-svg", "images-background", "images-missing", "images-net-photo", "images-net-missing", "images-preview"]
 const BACKGROUND := Color8(30, 41, 59)
 const RED := Color8(239, 68, 68)
 const WHITE := Color8(255, 255, 255)
@@ -26,6 +29,7 @@ var stages: Dictionary = {}
 var samples: Dictionary = {}
 var capturing := false
 var validating := false
+var server := LocalServer.new()
 @onready var application: Node = $Application
 @onready var surface: Control = $Surface
 
@@ -37,8 +41,18 @@ func _enter_tree() -> void:
   var window := get_window()
   window.content_scale_size = Vector2i.ZERO
   window.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
-  window.size = Vector2i(roundi(900 * scale), roundi(680 * scale))
+  window.size = Vector2i(roundi(900 * scale), roundi(840 * scale))
   window.content_scale_factor = scale
+  # The address is a prop of the root, so the server listens before the screen renders.
+  if server.start() != OK:
+    push_error("FABRIC_ERROR: The example's local server could not listen on loopback")
+  get_node("Surface").set("initial_props", {"baseUrl": "http://127.0.0.1:%d" % server.port})
+
+func _process(_delta: float) -> void:
+  server.poll()
+
+func _exit_tree() -> void:
+  server.stop()
 
 func verify(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -116,8 +130,9 @@ func at(id: String) -> Vector2:
 func settled() -> bool:
   var state := loader()
   var found := nodes().filter(func(entry: Dictionary) -> bool: return entry.get("kind") == "image")
-  return (found.size() == IMAGE_IDS.size() and found.all(func(entry: Dictionary) -> bool: return entry.image.status != "loading" and entry.image.status != "idle")
-    and int(state.get("pending", 1)) == 0 and int(state.get("inFlight", 1)) == 0 and int(state.get("ready", 1)) == 0)
+  return (found.size() >= IMAGE_IDS.size() and found.all(func(entry: Dictionary) -> bool: return entry.image.status != "loading" and entry.image.status != "idle")
+    and int(state.get("pending", 1)) == 0 and int(state.get("inFlight", 1)) == 0 and int(state.get("ready", 1)) == 0
+    and int(state.get("fresh", 1)) == 0 and int(state.get("downloading", 1)) == 0)
 
 func mouse(phase: String, point: Vector2) -> void:
   if phase == "down":
@@ -173,7 +188,10 @@ func capture(stage: String) -> Image:
   var frame := Rect2i(Vector2i.ZERO, image.get_size())
   var digests := {}
   var inside := true
-  for id: String in IMAGE_IDS:
+  var ids := IMAGE_IDS.duplicate()
+  if control("images-net-again") != null:
+    ids.append("images-net-again")
+  for id: String in ids:
     var area := region(control(id))
     inside = inside and area.has_area() and frame.encloses(area)
     digests[id] = digest(image, area) if area.has_area() and frame.encloses(area) else ""
@@ -188,9 +206,32 @@ func _ready() -> void:
   surface.set_meta("validation_input_device", DEVICE)
   await run()
 
+# The network row: a PNG downloaded from the scene's server, and an address it answers 404 for.
+func verify_network(state: Dictionary, jobs: Array) -> void:
+  var photo := view("images-net-photo")
+  var made := picture("images-net-photo")
+  var events: Dictionary = state.events
+  var progress: Dictionary = state.progress.get("net-photo", {})
+  verify(photo.get("status") == "loaded" and made.get("format") == "png" and int(made.get("width", 0)) == 192 and int(made.get("height", 0)) == 128 and float(made.get("scale", 0)) == 2.0
+    and close(drawn("images-net-photo", "dst"), [0.0, 0.0, 96.0, 64.0]) and close(drawn("images-net-photo", "src"), [0.0, 0.0, 96.0, 64.0]),
+    "The PNG the server drew is downloaded and decoded: 192x128 pixels at scale 2 fill the 96x64 point frame")
+  verify(events["net-photo"].size() >= 4 and events["net-photo"][0] == "loadStart" and events["net-photo"][1] == "progress"
+    and events["net-photo"][events["net-photo"].size() - 2] == "load" and events["net-photo"][events["net-photo"].size() - 1] == "loadEnd"
+    and int(progress.get("loaded", 0)) > 0 and int(progress.get("loaded", 0)) == int(progress.get("total", -1)) and server.count(LocalServer.SUNRISE) == 1,
+    "JS saw loadStart, progress up to the whole body, load and loadEnd for the download, and the server was asked once")
+  var net_jobs: Array = jobs.filter(func(job: Dictionary) -> bool: return String(job.uri).ends_with(LocalServer.SUNRISE))
+  verify(net_jobs.size() == 1 and net_jobs[0].served == "network" and net_jobs[0].thread.worker == true and String(net_jobs[0].thread.id) != String(loader().hostThread),
+    "The downloaded bytes were sniffed, measured and decoded on a worker thread, not on the main thread")
+  var missing := view("images-net-missing")
+  var failure: Dictionary = state.errors.get("net-missing", {})
+  verify(missing.status == "failed" and missing.image == null and failure.get("responseCode") == 404.0 and failure.get("error") == "Failed to load http://127.0.0.1:%d%s" % [server.port, LocalServer.MISSING]
+    and failure.get("httpResponseHeaders", {}).get("X-Reason") == "the example has two pictures" and events["net-missing"].has("error") and server.count(LocalServer.MISSING) == 1
+    and String(node_of("net-missing-status").get("nativeText", "")) == "HTTP 404",
+    "A 404 fails through onError with Failed to load <URL>, the status and the response headers, leaves no texture, and the tile shows the status")
+
 func run() -> void:
   var mounted := await wait_for(func() -> bool: return IMAGE_IDS.all(func(id: String) -> bool: return control(id) != null) and control("images-next-mode") != null)
-  verify(mounted, "The public example mounts its twelve Images and its two buttons")
+  verify(mounted, "The public example mounts its fourteen Images and its two buttons, and the third button waits for the click that mounts a fifteenth")
   var ready := await wait_for(settled)
   await frames(6)
   verify(ready and nodes().filter(func(entry: Dictionary) -> bool: return entry.get("kind") == "image").size() == IMAGE_IDS.size(),
@@ -202,7 +243,7 @@ func run() -> void:
   verify(int(logo.get("width", 0)) == 64 and int(logo.get("height", 0)) == 64 and float(logo.get("scale", 0)) == 2.0
     and float(node_of("images-logo").get("fabricWidth", 0)) == 32.0 and float(node_of("images-logo").get("fabricHeight", 0)) == 32.0,
     "The logo's texture has the @2x file's 64x64 pixels while its layout is the asset's 32x32 points")
-  var all_loaded := IMAGE_IDS.all(func(id: String) -> bool: return id == "images-missing" or view(id).get("status") == "loaded")
+  var all_loaded := IMAGE_IDS.all(func(id: String) -> bool: return id == "images-missing" or id == "images-net-missing" or view(id).get("status") == "loaded")
   verify(all_loaded, "Every picture that exists is loaded")
 
   var rects_match := true
@@ -231,10 +272,13 @@ func run() -> void:
   verify(sequences and events.missing == ["loadStart", "error", "loadEnd"], "JS saw loadStart, load and loadEnd for each picture, and loadStart, error and loadEnd for the missing one")
   var state_of_loader := loader()
   var jobs: Array = state_of_loader.jobs
-  var workers := jobs.all(func(job: Dictionary) -> bool: return job.thread.worker == true and String(job.thread.id) != String(state_of_loader.hostThread))
-  verify(jobs.size() == IMAGE_IDS.size() and workers and int(state_of_loader.counters.failed) == 1 and int(state_of_loader.counters.loaded) == 11,
-    "All twelve pictures were read and decoded on worker threads, eleven loaded and one failed")
+  # A download that fails before its body is a picture (the 404) has nothing to decode and never reaches a worker.
+  var workers := jobs.all(func(job: Dictionary) -> bool: return String(job.format) == "" or (job.thread.worker == true and String(job.thread.id) != String(state_of_loader.hostThread)))
+  verify(jobs.size() == IMAGE_IDS.size() and workers and jobs.filter(func(job: Dictionary) -> bool: return String(job.format) != "").size() == IMAGE_IDS.size() - 2
+    and int(state_of_loader.counters.failed) == 2 and int(state_of_loader.counters.loaded) == 12,
+    "All fourteen pictures were asked for, the twelve that exist were read and decoded on worker threads, twelve loaded and two failed")
   stages.mounted = {"example": state, "loader": state_of_loader, "nodes": nodes()}
+  verify_network(state, jobs)
   var image := await capture("all-modes")
   if image != null:
     var tile_samples := {}
@@ -286,6 +330,24 @@ func run() -> void:
     and after.events.preview == ["loadStart", "load", "loadEnd", "loadStart", "load", "loadEnd"],
     "A click on the second button swaps the picture: a new request, one loadStart and one load, and the logo's @2x file")
   stages.swap = {"example": after, "view": view("images-preview")}
+  # The same address and size mounted again is answered from memory: no second request, no progress, and the picture is shared.
+  var textures := int(loader().liveTextures)
+  var asked := server.count(LocalServer.SUNRISE)
+  # The button is replaced by the Image it mounts, so there is no pressed style to wait out.
+  var point := get_window().get_final_transform() * at("images-net-mount")
+  await mouse("down", point)
+  await frames(3)
+  await mouse("up", point)
+  var again := await wait_for(func() -> bool: return control("images-net-again") != null and view("images-net-again").get("status") == "loaded")
+  await frames(4)
+  var remounted := example()
+  var newest: Array = loader().jobs.filter(func(job: Dictionary) -> bool: return String(job.uri).ends_with(LocalServer.SUNRISE))
+  verify(again and server.count(LocalServer.SUNRISE) == asked and newest.size() == 2 and newest[1].served == "decoded" and newest[1].thread.worker == false
+    and remounted.events["net-again"] == ["loadStart", "load", "loadEnd"] and int(loader().liveTextures) == textures
+    and picture("images-net-again").get("fingerprint") == picture("images-net-photo").get("fingerprint")
+    and String(node_of("net-again-status").get("nativeText", "")) == "loaded 192x128 px",
+    "Mounting the same address and size again is answered by the decoded cache: the server is not asked again, no progress is reported and the two Images share one picture")
+  stages.remount = {"example": remounted, "jobs": newest, "textures": [textures, int(loader().liveTextures)]}
   await capture("interaction")
   await finish()
 
@@ -296,8 +358,9 @@ func finish() -> void:
   var last: Dictionary = finished.get("images", {})
   verify(finished.get("stopped", false) and finished.get("rootCount", -1) == 0 and finished.get("errors", []).is_empty(),
     "Stop releases the root and every picture without a host error")
-  verify(int(last.counters.tasksStarted) == int(last.counters.tasksAwaited) and int(last.inFlight) == 0 and int(last.liveTextures) == 0,
-    "Every worker task was awaited and no texture outlives the application")
+  verify(int(last.counters.tasksStarted) == int(last.counters.tasksAwaited) and int(last.inFlight) == 0 and int(last.liveTextures) == 0
+    and int(last.downloading) == 0 and int(last.network.active) == 0 and int(last.network.queued) == 0,
+    "Every worker task was awaited, no download is left and no texture outlives the application")
   var report := {"scenario": "images", "godot": Engine.get_version_info().string, "react": "19.2.3", "reactNative": "0.87.1",
     "engine": "hermes", "renderer": "fabric", "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages,
     "samples": samples, "scale": SCALE, "applicationStopped": finished}

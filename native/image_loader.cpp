@@ -1,5 +1,6 @@
 #include "image_loader.h"
 #include "image_core.h"
+#include "image_sources.h"
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/classes/worker_thread_pool.hpp>
@@ -64,6 +65,8 @@ struct ImageLoader::Job {
   enum class Outcome { Pending, Loaded, Failed, Cancelled };
   uint64_t id{};
   bool measure_only{};
+  // Image.prefetch: a picture read and decoded only to see that it is one.
+  bool prefetch{};
   rn::ImageSource source;
   image::Source parsed;
   std::string uri;
@@ -84,6 +87,22 @@ struct ImageLoader::Job {
   bool progress{};
   double progress_fraction{};
   int64_t progress_loaded{}, progress_total{};
+  // ---- an http(s) source ----
+  struct Network {
+    // The picture or the bytes the sources found, or why they found none, and what came with them.
+    Resolution found;
+    uint64_t progress_events{};
+  };
+  bool network{};
+  Network net;
+  bool creates_texture() const { return outcome == Outcome::Loaded && !measure_only && !prefetch && !net.found.picture; }
+  // The request's cancel closure keeps the job alive as long as the request lives, which is far longer than the job needs its bytes
+  // and its picture: they are let go as soon as the job is over (delivered, cancelled or stopped).
+  void release() {
+    net.found.bytes.reset();
+    net.found.picture.reset();
+    pixels.unref();
+  }
 };
 
 struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
@@ -111,6 +130,12 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
   std::atomic<int> waiting{};
   std::shared_ptr<std::atomic<int>> live_textures = std::make_shared<std::atomic<int>>(0);
   std::deque<std::shared_ptr<Job>> ready;
+
+  // The sources of http(s) pictures (host thread only): the downloads and the two caches. A network job waits in `fresh` (guarded by
+  // the mutex) until the host thread asks the sources for its picture.
+  ImageSources sources;
+  std::deque<std::shared_ptr<Job>> fresh;
+  uint64_t prefetches{}, prefetched{}, cache_clears{};
 
   bool on_host() const { return std::this_thread::get_id() == host; }
 
@@ -149,7 +174,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     const std::lock_guard<std::mutex> lock(mutex);
     finished.push_back(job);
   }
-  static bool gone(const Job &job) { return job.cancelled.load() || (!job.measure_only && job.coordinator.expired()); }
+  static bool gone(const Job &job) { return job.cancelled.load() || (!job.measure_only && !job.prefetch && job.coordinator.expired()); }
   // True, with the job cancelled, once nothing wants its picture any more.
   static bool abandon(Job &job) {
     if (!gone(job)) return false;
@@ -194,6 +219,21 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       if (!decoded->empty()) std::memcpy(bytes.ptrw(), decoded->data(), decoded->size());
       return true;
     }
+    if (source.kind == image::SourceKind::Network) {
+      // Downloaded (or kept) whole before the job got here.
+      const auto &body = job.net.found.bytes;
+      if (!body) {
+        fail(job, "No image data");
+        return false;
+      }
+      if (body->size() > image::max_source_bytes) {
+        fail(job, "The image is " + std::to_string(body->size()) + " bytes, over the host limit of " + std::to_string(image::max_source_bytes));
+        return false;
+      }
+      bytes.resize(static_cast<int64_t>(body->size()));
+      if (!body->empty()) std::memcpy(bytes.ptrw(), body->data(), body->size());
+      return true;
+    }
     const String path = String::utf8(source.path.c_str());
     Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
     if (file.is_null()) {
@@ -218,7 +258,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
   void run(Job &job) {
     const auto &source = job.parsed;
     if (abandon(job)) return;
-    if (source.kind == image::SourceKind::Network || source.kind == image::SourceKind::Unsupported) {
+    if (source.kind == image::SourceKind::Unsupported) {
       fail(job, source.reason);
       return;
     }
@@ -292,6 +332,11 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       return;
     }
     if (abandon(job)) return;
+    // A prefetch only needed to see that the bytes are a picture.
+    if (job.prefetch) {
+      job.outcome = Job::Outcome::Loaded;
+      return;
+    }
     // A bundled asset is decoded whole (UIImage imageNamed), at the scale its file name states. The loader shrinks the others
     // to the request, and vectors are rasterized at the request's scale to start with.
     if (source.kind != image::SourceKind::Bundle && format != image::Format::Svg) {
@@ -325,13 +370,21 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
   void record(const Job &job, const char *outcome, bool uploaded = false) {
     folly::dynamic progress = nullptr;
     if (job.progress) progress = folly::dynamic::object("progress", job.progress_fraction)("loaded", job.progress_loaded)("total", job.progress_total);
-    folly::dynamic entry = folly::dynamic::object("id", job.id)("kind", job.measure_only ? "measure" : kind_name(job.parsed.kind))
+    folly::dynamic entry = folly::dynamic::object("id", job.id)("kind", job.measure_only ? "measure" : job.prefetch ? "prefetch" : kind_name(job.parsed.kind))
         ("source", kind_name(job.parsed.kind))("uri", display_uri(job.parsed, job.uri))("outcome", outcome)
         ("thread", folly::dynamic::object("worker", job.worker_thread)("id", job.thread_id))
         ("format", job.format)("sourceWidth", job.source_width)("sourceHeight", job.source_height)
         ("width", job.width)("height", job.height)("scale", job.scale)("fingerprint", job.fingerprint)("uploaded", uploaded)
         ("error", job.error)("request", folly::dynamic::object("width", job.source.size.width)("height", job.source.size.height)("scale", job.source.scale))
         ("progress", std::move(progress));
+    if (job.network) {
+      const auto &found = job.net.found;
+      entry["served"] = found.served;
+      entry["policy"] = image::policy_name(cache_policy(job.source.cache));
+      entry["prefetch"] = job.prefetch;
+      entry["response"] = folly::dynamic::object("has", found.has_response)("status", found.status)("url", found.final_url)("bytes", found.downloaded)
+          ("code", found.failure_code)("progressEvents", job.net.progress_events);
+    }
     const std::lock_guard<std::mutex> lock(mutex);
     records.push_back(std::move(entry));
     if (records.size() > max_records) records.pop_front();
@@ -345,16 +398,18 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     {
       const std::lock_guard<std::mutex> lock(mutex);
       job->id = next_id++;
-      ++(job->measure_only ? measures : requested);
-      pending.push_back(job);
+      ++(job->measure_only ? measures : job->prefetch ? prefetches : requested);
+      // A network job downloads before it can be decoded: the host thread begins it.
+      (job->network ? fresh : pending).push_back(job);
     }
     // Only the host thread starts tasks; any other thread's work is picked up by the next poll.
     if (on_host()) dispatch();
     return job;
   }
 
-  // Starts the pending jobs the pool may hold, in order.
+  // Starts the network jobs that have not begun, then the pending jobs the pool may hold, in order.
   void dispatch() {
+    begin_network_jobs();
     while (!stopped.load()) {
       std::shared_ptr<Job> job;
       bool skip;
@@ -372,6 +427,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       }
       if (skip) {
         // Cancelled before it started: it never reaches the pool.
+        job->release();
         job->outcome = Job::Outcome::Cancelled;
         record(*job, "cancelled");
         count(cancelled);
@@ -399,7 +455,95 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     }
   }
 
+  // ---- network jobs ----
+
+  // What the sources are asked for a job's picture.
+  static SourceRequest request_of(const Job &job) { return SourceRequest::from(job.source, !job.measure_only && !job.prefetch); }
+
+  void begin_network_jobs() {
+    while (!stopped.load()) {
+      std::shared_ptr<Job> job;
+      {
+        const std::lock_guard<std::mutex> lock(mutex);
+        if (fresh.empty()) return;
+        job = fresh.front();
+        fresh.pop_front();
+      }
+      begin_network_job(job);
+    }
+  }
+
+  // Asks the sources where the job's picture comes from. A picture in the decoded cache, a response in the byte cache and a refusal
+  // come back at once, and a download from a later poll.
+  void begin_network_job(const std::shared_ptr<Job> &job) {
+    if (gone(*job)) {
+      job->outcome = Job::Outcome::Cancelled;
+      record(*job, "cancelled");
+      count(cancelled);
+      return;
+    }
+    SourceHooks hooks;
+    hooks.abandoned = [job] { return gone(*job); };
+    hooks.progress = [this, job](int64_t loaded, int64_t total) { on_progress(*job, loaded, total); };
+    hooks.done = [this, job](Resolution found) { on_resolved(job, std::move(found)); };
+    sources.resolve(request_of(*job), std::move(hooks));
+  }
+
+  // RCTImageManager's progress block: (float)progress / (float)total, which is negative while the length is unknown.
+  void on_progress(Job &job, int64_t loaded, int64_t total) {
+    if (job.measure_only || job.prefetch || gone(job)) return;
+    const auto coordinator = job.coordinator.lock();
+    if (!coordinator) return;
+    ++job.net.progress_events;
+    job.progress_loaded = loaded;
+    job.progress_total = total;
+    coordinator->nativeImageResponseProgress(total != 0 ? static_cast<float>(loaded) / static_cast<float>(total) : 0.0f, loaded, total);
+  }
+
+  // What the sources found: a picture that needs no decode goes to be delivered, bytes go to the pool to be decoded.
+  void on_resolved(const std::shared_ptr<Job> &job, Resolution found) {
+    job->net.found = std::move(found);
+    const auto &net = job->net.found;
+    switch (net.kind) {
+      case Resolution::Kind::Picture: {
+        const auto &picture = *net.picture;
+        job->width = picture.width;
+        job->height = picture.height;
+        job->source_width = picture.source_width;
+        job->source_height = picture.source_height;
+        job->scale = picture.scale;
+        job->format = picture.format;
+        job->fingerprint = picture.fingerprint;
+        job->outcome = Job::Outcome::Loaded;
+        ready.push_back(job);
+        return;
+      }
+      case Resolution::Kind::Bytes: {
+        job->parsed.path = net.path;
+        job->parsed.media_type = net.media_type;
+        const std::lock_guard<std::mutex> lock(mutex);
+        pending.push_back(job);
+        return;
+      }
+      case Resolution::Kind::Failed:
+        job->error = net.error;
+        job->outcome = Job::Outcome::Failed;
+        break;
+      case Resolution::Kind::Cancelled:
+        job->outcome = Job::Outcome::Cancelled;
+        break;
+    }
+    ready.push_back(job);
+  }
+
+  void clear_caches() {
+    sources.clear_caches();
+    ++cache_clears;
+  }
+
   void deliver(const std::shared_ptr<Job> &job, uint64_t &uploaded) {
+    // The bytes were for the decode, which is over. A picture from the decoded cache is handed over below, and then let go.
+    job->net.found.bytes.reset();
     if (job->outcome == Job::Outcome::Cancelled) {
       record(*job, "cancelled");
       count(cancelled);
@@ -412,14 +556,12 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       count(dropped);
       return;
     }
-    if (job->measure_only) {
-      MeasuredImage result;
-      result.ok = job->outcome == Job::Outcome::Loaded;
-      result.width = job->source_width;
-      result.height = job->source_height;
-      result.error = job->error;
-      record(*job, result.ok ? "measured" : "failed");
-      count(measured);
+    if (job->measure_only || job->prefetch) {
+      // A size and a prefetch tell their caller, not a view: the size the header gives, or whether the bytes are a picture.
+      MeasuredImage result{job->outcome == Job::Outcome::Loaded, job->source_width, job->source_height, job->error};
+      job->pixels.unref();
+      record(*job, !result.ok ? "failed" : job->measure_only ? "measured" : "prefetched");
+      count(job->measure_only ? measured : prefetched);
       if (job->measured) job->measured(std::move(result));
       return;
     }
@@ -434,7 +576,16 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     if (job->outcome == Job::Outcome::Failed) {
       record(*job, "failed");
       count(failed);
-      coordinator->nativeImageResponseFailed(rn::ImageLoadError(std::make_shared<LoadFailure>(LoadFailure{job->error})));
+      coordinator->nativeImageResponseFailed(
+          rn::ImageLoadError(std::make_shared<LoadFailure>(LoadFailure{job->error, job->net.found.failure_code, job->net.found.failure_headers})));
+      return;
+    }
+    if (job->net.found.picture) {
+      // The decoded cache already holds this picture: no download, no decode and no texture. Views share it.
+      record(*job, "loaded");
+      count(loaded);
+      const auto picture = std::move(job->net.found.picture);
+      coordinator->nativeImageResponseComplete(rn::ImageResponse(picture, nullptr));
       return;
     }
     auto texture = ImageTexture::create_from_image(job->pixels);
@@ -443,7 +594,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       job->error = "Could not create a texture for the image";
       record(*job, "failed");
       count(failed);
-      coordinator->nativeImageResponseFailed(rn::ImageLoadError(std::make_shared<LoadFailure>(LoadFailure{job->error})));
+      coordinator->nativeImageResponseFailed(rn::ImageLoadError(std::make_shared<LoadFailure>(LoadFailure{job->error, 0, {}})));
       return;
     }
     uploaded += job->width * job->height * 4;
@@ -457,13 +608,19 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     auto live = live_textures;
     ++*live;
     auto *picture = new LoadedImage{std::move(texture), job->width, job->height, job->source_width, job->source_height, job->scale, job->format, job->fingerprint};
-    coordinator->nativeImageResponseComplete(rn::ImageResponse(std::shared_ptr<LoadedImage>(picture, [live](LoadedImage *value) {
+    const std::shared_ptr<LoadedImage> shared(picture, [live](LoadedImage *value) {
       delete value;
       --*live;
-    }), nullptr));
+    });
+    if (job->network) sources.keep_picture(request_of(*job), job->net.found.freshness, shared, static_cast<std::size_t>(job->width * job->height * 4));
+    coordinator->nativeImageResponseComplete(rn::ImageResponse(shared, nullptr));
   }
 
   void poll(std::size_t budget) {
+    if (stopped.load()) return;
+    // The network first: what it finishes is decoded by the tasks that dispatch() starts below.
+    begin_network_jobs();
+    sources.poll(ImageLoader::default_download_budget);
     if (stopped.load()) return;
     reap();
     dispatch();
@@ -475,7 +632,7 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     }
     while (!ready.empty() && !stopped.load()) {
       const auto job = ready.front();
-      const bool uploads_now = job->outcome == Job::Outcome::Loaded && !job->measure_only && !gone(*job);
+      const bool uploads_now = job->creates_texture() && !gone(*job);
       const uint64_t bytes = job->width * job->height * 4;
       if (uploads_now && uploaded > 0 && uploaded + bytes > budget) {
         count(deferred_uploads);
@@ -493,6 +650,9 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
 
   void stop() {
     if (stopped.exchange(true)) return;
+    // The network first, so that no transport listener runs from here on. The downloads it held are cancelled, and so are the
+    // jobs that had not begun.
+    sources.stop();
     {
       const std::lock_guard<std::mutex> lock(gate_mutex);
       held = false;
@@ -501,8 +661,13 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
     std::vector<std::shared_ptr<Job>> waiting;
     {
       const std::lock_guard<std::mutex> lock(mutex);
-      for (const auto &job : pending) job->cancelled = true;
+      for (const auto &job : pending) {
+        job->cancelled = true;
+        job->release();
+      }
       pending.clear();
+      for (const auto &job : fresh) job->cancelled = true;
+      fresh.clear();
       for (const auto &entry : in_flight) {
         entry.second->cancelled = true;
         waiting.push_back(entry.second);
@@ -515,9 +680,15 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       if (job->task.load() < 0) continue;
       WorkerThreadPool::get_singleton()->wait_for_task_completion(job->task.load());
       count(tasks_awaited);
+      job->release();
     }
-    for (const auto &job : ready) job->cancelled = true;
+    for (const auto &job : ready) {
+      job->cancelled = true;
+      job->release();
+    }
     ready.clear();
+    // The pictures the decoded cache holds are textures: none outlives the loader.
+    sources.clear_caches();
     // A task that posted after the first clear.
     const std::lock_guard<std::mutex> lock(mutex);
     finished.clear();
@@ -534,14 +705,18 @@ struct ImageLoader::State : std::enable_shared_from_this<ImageLoader::State> {
       const std::lock_guard<std::mutex> gate_lock(gate_mutex);
       is_held = held;
     }
+    folly::dynamic counters = folly::dynamic::object("requested", requested)("measures", measures)("prefetches", prefetches)("prefetched", prefetched)
+        ("cacheClears", cache_clears)("loaded", loaded)("failed", failed)("cancelled", cancelled)("dropped", dropped)("measured", measured)
+        ("uploads", uploads)("uploadBytes", upload_bytes)("deferredUploads", deferred_uploads)("peakUploadsPerPoll", peak_uploads_per_poll)
+        ("tasksStarted", tasks_started)("tasksAwaited", tasks_awaited)("peakInFlight", peak_in_flight);
+    counters.update(sources.counters());
     return folly::dynamic::object("stopped", stopped.load())("held", is_held)("atGate", waiting.load())("hostThread", thread_name(host))
         ("limits", folly::dynamic::object("maxInFlight", max_in_flight.load())("maxDimension", image::max_dimension)("maxPixels", image::max_pixels)
             ("maxSourceBytes", image::max_source_bytes))
-        ("counters", folly::dynamic::object("requested", requested)("measures", measures)("loaded", loaded)("failed", failed)
-            ("cancelled", cancelled)("dropped", dropped)("measured", measured)("uploads", uploads)("uploadBytes", upload_bytes)
-            ("deferredUploads", deferred_uploads)("peakUploadsPerPoll", peak_uploads_per_poll)("tasksStarted", tasks_started)("tasksAwaited", tasks_awaited)
-            ("peakInFlight", peak_in_flight))
+        ("counters", std::move(counters))
         ("pending", pending.size())("inFlight", in_flight.size())("finished", finished.size())("ready", ready.size())
+        ("fresh", fresh.size())("downloading", sources.downloading())
+        ("network", sources.network_snapshot())("caches", sources.caches_snapshot())
         ("liveTextures", live_textures->load())("flight", std::move(flight))("jobs", std::move(jobs));
   }
 };
@@ -555,22 +730,45 @@ std::function<void()> ImageLoader::load(const rn::ImageSource &source, std::weak
   job->source = source;
   job->uri = source.uri;
   job->parsed = image::classify(source.uri);
+  job->network = job->parsed.kind == image::SourceKind::Network;
   job->coordinator = std::move(coordinator);
   state_->enqueue(job);
   return [job] { job->cancelled = true; };
 }
 
-void ImageLoader::measure(const std::string &uri, std::function<void(MeasuredImage)> done) {
+void ImageLoader::measure(const std::string &uri, std::vector<std::pair<std::string, std::string>> headers, std::function<void(MeasuredImage)> done) {
   if (state_->stopped.load()) return;
   auto job = std::make_shared<Job>();
   job->measure_only = true;
-  job->uri = uri;
+  job->uri = job->source.uri = uri;
   // A vector is measured at its own size.
   job->source.scale = 1;
+  job->source.headers = std::move(headers);
   job->parsed = image::classify(uri);
+  job->network = job->parsed.kind == image::SourceKind::Network;
   job->measured = std::move(done);
   state_->enqueue(job);
 }
+
+void ImageLoader::prefetch(const std::string &uri, std::function<void(MeasuredImage)> done) {
+  if (state_->stopped.load()) return;
+  auto job = std::make_shared<Job>();
+  job->prefetch = true;
+  job->uri = job->source.uri = uri;
+  job->source.scale = 1;
+  job->parsed = image::classify(uri);
+  job->network = job->parsed.kind == image::SourceKind::Network;
+  job->measured = std::move(done);
+  state_->enqueue(job);
+}
+
+void ImageLoader::enable_network(std::unique_ptr<HttpTransport> transport, std::function<double()> monotonic_ms, std::function<double()> wall_ms) {
+  if (state_->stopped.load()) return;
+  state_->sources.enable_network(std::move(transport), std::move(monotonic_ms), std::move(wall_ms));
+}
+std::string ImageLoader::cache_status(const std::string &uri) const { return state_->sources.cache_status(uri); }
+void ImageLoader::clear_caches() { state_->clear_caches(); }
+void ImageLoader::response_limit(uint64_t bytes) { state_->sources.response_limit(bytes); }
 
 void ImageLoader::poll(std::size_t upload_budget) { state_->poll(upload_budget); }
 void ImageLoader::stop() { state_->stop(); }

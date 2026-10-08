@@ -283,9 +283,10 @@ struct Redirect {
 // OkHttp's follow-up request for a redirect response. 301/302/303 turn a method
 // that carries a body into a GET without one (GET and HEAD stay as they are),
 // 307/308 keep the method and the body. A cross-origin hop drops Authorization,
-// and the Host header is always recomputed for the new URL.
+// and the Host header is always recomputed for the new URL. `drop_headers` is the rule of NSURLSession's redirect delegate in RN iOS
+// (RCTHTTPRequestHandler.mm willPerformHTTPRedirection): the follow-up request carries none of the request's headers.
 inline std::optional<Redirect> plan_redirect(const std::string &method, int status, const Url &from,
-    const Headers &request_headers, const Headers &response_headers) {
+    const Headers &request_headers, const Headers &response_headers, bool drop_headers = false) {
   if (!is_redirect_status(status)) return std::nullopt;
   const auto *location = find_header(response_headers, "location");
   if (!location || trim(*location).empty()) return std::nullopt;
@@ -304,6 +305,7 @@ inline std::optional<Redirect> plan_redirect(const std::string &method, int stat
   }
   if (!from.same_origin(*target)) remove_headers(redirect.headers, "authorization");
   remove_headers(redirect.headers, "host");
+  if (drop_headers) redirect.headers.clear();
   return redirect;
 }
 

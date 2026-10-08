@@ -84,7 +84,6 @@ void GodotImage::apply(const rn::ShadowView &shadow) {
   content_ = shadow.layoutMetrics.getContentFrame();
   const auto state = std::static_pointer_cast<const rn::ImageShadowNode::ConcreteState>(shadow.state);
   if (state != state_) resubscribe(state);
-  refresh_texture();
   queue_redraw();
 }
 
@@ -129,7 +128,6 @@ void GodotImage::received_image(const rn::ImageResponse &response) {
   image_ = std::static_pointer_cast<fabric_godot::LoadedImage>(response.getImage());
   status_ = "loaded";
   error_.clear();
-  refresh_texture();
   queue_redraw();
   // onLoad reports the picture's size in points times the state's scale: the pixels it decoded to when it has the request's
   // scale, as every picture but a bundled asset does (RCTImageComponentView.mm didReceiveImage).
@@ -149,11 +147,19 @@ void GodotImage::received_failure(const rn::ImageLoadError &error) {
   const auto failure = std::static_pointer_cast<fabric_godot::LoadFailure>(error.getError());
   error_ = failure ? failure->message : std::string();
   queue_redraw();
+  // RCTImageComponentView didReceiveFailure: the message, and the status and headers of the HTTP response the failure came with.
+  // The emitter leaves out what is empty.
   rn::ImageErrorInfo info;
   info.error = error_;
+  folly::dynamic headers = folly::dynamic::object();
+  if (failure) {
+    info.responseCode = failure->response_code;
+    info.httpResponseHeaders = failure->response_headers;
+    for (const auto &[name, value] : failure->response_headers) headers[name] = value;
+  }
   ++errors_;
   ++load_ends_;
-  emitted(folly::dynamic::object("type", "error")("error", error_));
+  emitted(folly::dynamic::object("type", "error")("error", error_)("responseCode", info.responseCode)("httpResponseHeaders", std::move(headers)));
   emit([info](const rn::ImageEventEmitter &events) { events.onError(info); });
   emitted(folly::dynamic::object("type", "loadEnd"));
   emit([](const rn::ImageEventEmitter &events) { events.onLoadEnd(); });
@@ -162,19 +168,6 @@ void GodotImage::received_failure(const rn::ImageLoadError &error) {
 img::Size GodotImage::natural_size() const {
   if (!image_ || !(image_->scale > 0)) return {};
   return {static_cast<double>(image_->width) / image_->scale, static_cast<double>(image_->height) / image_->scale};
-}
-
-// Repeat tiles at the texture's size; the size override makes that the picture's size in points, as UIImage.size is for a
-// resizable image. Every other mode addresses the texture in pixels.
-void GodotImage::refresh_texture() {
-  if (!image_ || image_->texture.is_null()) return;
-  Vector2i size(static_cast<int32_t>(image_->width), static_cast<int32_t>(image_->height));
-  if (mode_ == img::ResizeMode::Repeat) {
-    const auto natural = natural_size();
-    size = Vector2i(std::max(1, static_cast<int>(std::lround(natural.width))), std::max(1, static_cast<int>(std::lround(natural.height))));
-  }
-  if (image_->texture->get_width() == size.x && image_->texture->get_height() == size.y) return;
-  image_->texture->set_size_override(size);
 }
 
 void GodotImage::_draw() {
@@ -186,10 +179,15 @@ void GodotImage::_draw() {
   if (!plan) return;
   const Vector2 origin(content_.origin.x, content_.origin.y);
   const Rect2 destination(origin + Vector2(plan->dst.x, plan->dst.y), Vector2(plan->dst.width, plan->dst.height));
+  const auto scale = static_cast<float>(image_->scale);
   if (plan->tiled) {
-    draw_texture_rect(image_->texture, destination, true);
+    // Repeat tiles the picture at its size in points, as UIImage.size is for a resizable image. The texture is the cache's and
+    // every view of the picture shares it, so it is never resized: the tiles are laid in pixels under a transform that maps a
+    // pixel back to 1/scale of a point.
+    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));
+    draw_texture_rect(image_->texture, Rect2(destination.position * scale, destination.size * scale), true);
+    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f, 1.0f));
   } else {
-    const auto scale = static_cast<float>(image_->scale);
     draw_texture_rect_region(image_->texture, destination, Rect2(plan->src.x * scale, plan->src.y * scale, plan->src.width * scale, plan->src.height * scale));
   }
   drawn_ = folly::dynamic::object("mode", img::mode_name(mode_))("dst", rect_json({content_.origin.x + plan->dst.x, content_.origin.y + plan->dst.y, plan->dst.width, plan->dst.height}))
