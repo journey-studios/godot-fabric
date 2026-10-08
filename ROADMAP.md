@@ -3102,6 +3102,35 @@ that listed `Image` among the components that fail where they render no longer d
 CI for this slice is pending. Only GF-16's first-slice checkpoint closes; no whole GF, other
 checkpoint, weight or denominator closes.
 
+**Network images and the image caches (2026-10-08).** The second slice of GF-16 replaces what the paragraphs above
+leave open or refused: `http(s)` sources with `headers`, `method`, `body` and `cache`, the decoded-image cache,
+`prefetch`, `queryCache` and `getSize` of a network URL, and `repeat` at an exact fractional size. The
+[network evidence](docs/evidence/images-network/README.md) records **72 headless checks** (64 normative) over a
+loopback Node server in HTTP and HTTPS, which the independent oracle rechecks against the server's own log and a
+model of both caches. The `ImageLoader` owns a second `HttpTransport` (Networking's factory, trust and clock), runs
+at most four downloads at once as `RCTImageLoader` does, builds the request as `NSURLRequestFromImageSource`, judges
+the result as it does (`Failed to load <URL>`, `Unknown image download error`, the decode error alone, the transport's
+text, each with the response that came), keeps a 128 MiB response limit and a 60 s idle timeout of its own and
+sends the bytes through the first slice's worker-pool decode, so no read, sniff, measure or decode of network
+bytes ran on the main thread. An `RCTImageCache`-like decoded cache (2 MiB a picture, 20 MiB, LRU, stale times from
+`Cache-Control`, `Expires` and `Last-Modified`) and an `NSURLCache`-like memory byte cache (20 MiB, 1 MiB an entry)
+decide, by `native/image_cache.h`'s `route()`, whether a picture comes from memory, from cached bytes or from the
+server, under the cache policies `reload`, `force-cache` and `only-if-cached`; the OS memory warning empties both,
+cancelling an Image mid-download closes the transport request, and a view never resizes the texture the cache
+shares among Images. Time moves through the validation clock, so no check sleeps. The same bundle on the preceding
+host (main `6d02746`) runs 37 checks and fails exactly the 30 normative ones among them; three retained sabotages
+(a reload that consults the decoded cache, a download whose transport request is never closed, a repeating Image
+that resizes the shared texture) fail 1, 32 and 2 checks and the oracle rejects each, and 27 mutations of the
+genuine report are refused. The example now shows a network PNG, a remount answered by the decoded cache without a
+second request and a 404 (22 headless and 30 graphical checks; two new captures). Departures from RN iOS are
+listed in the evidence and the [research note](docs/research/images.md): coalesced progress with none for a cache
+hit, redirects that keep the source's headers, only the final 200 kept in the byte cache, no revalidation or `Vary`,
+a `prefetch` that keeps bytes only, host failure texts, no cookies, compression or HTTP/2 and cleartext allowed; a
+failure's `responseCode` and response headers reach `onError` as they do on iOS. The first slice's
+suite changed with the contract (73 checks, 62 normative). Open: a disk cache, revalidation, remote servers and
+real network conditions, hosted CI for this slice, and everything the first slice left open apart from network
+images, the decoded cache, `prefetch` and `queryCache`. This slice closes no checkpoint: GF-16 stays in progress.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

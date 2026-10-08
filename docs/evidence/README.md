@@ -534,9 +534,31 @@ rectangles from RN's formulas and the fixture's own pixels. The preceding host r
 fails the 3 normative ones among them; decoding on the main thread fails 12 checks and a view that
 keeps listening to a request it swapped away from fails 2, and the oracle rejects each, as it does
 15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
-(68 assertions) and the research note with RN's file and line references. Network images, the
-decoded-image cache, tint, blur, capInsets, rounded image clipping, animated formats and every
+(68 assertions) and the research note with RN's file and line references. The second slice
+(below) later replaced the record's refusal of network images, `prefetch` and `queryCache`, so
+the suite now has 73 checks. Tint, blur, capInsets, rounded image clipping, animated formats and every
 target but macOS are open. Hosted CI pending.
+
+The [network images record](images-network/README.md) makes the same `Image` load `http` and `https`
+sources, with `headers`, `method`, `body` and `cache`, over the image loader's own `HttpTransport`: at
+most four downloads at once, the request built as `NSURLRequestFromImageSource`, each failure judged as
+`RCTImageLoader` judges it (a status other than 200, an empty body, a transport error, each with the
+response that came), cumulative progress, a 128 MiB response limit and a 60 s idle timeout, and the
+bytes decoded on the first slice's worker pool, never on the main thread. An `RCTImageCache`-like decoded
+cache (2 MiB a picture, 20 MiB, stale times from `Cache-Control`, `Expires` and `Last-Modified`) and an
+`NSURLCache`-like memory byte cache (20 MiB, 1 MiB an entry) decide where each picture comes from under
+`reload`, `force-cache` and `only-if-cached`; `Image.prefetch`, `queryCache` and `getSize` work for network
+sources, the OS memory warning empties both caches, a cancelled download closes its transport request and
+a view never resizes the texture the cache shares. A Node server on loopback (HTTP and HTTPS) holds
+responses so that every stage waits on state, the clock moves through the validation offset, and 72 headless
+checks run in actual SceneTree frames with an independent oracle that replays 100 cache operations against
+a model of both caches and the server's own log. The preceding host runs 37 of them and fails exactly the
+30 normative ones among those; three retained sabotages (a reload that consults the decoded cache, a
+download whose transport request stays open, a repeating Image that resizes the shared texture) fail 1, 32
+and 2 checks and the oracle rejects each, as it does 27 mutations of the genuine report. Two captures of
+the example, three C++ tests (cache 66, network 60 and core 70 assertions), and a list of every departure
+from RN iOS. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
+target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -62,6 +62,25 @@ npm run test:images
 > os mesmos SHA-256 dos commitados. Esta página, as contagens e o restante do recibo descrevem a execução
 > em `552fb56`, e cada pin anterior continua igual a `git show 552fb56:<arquivo>`.
 
+> Nota posterior (2026-10-08): a segunda fatia do GF-16, a das
+> [imagens de rede](../images-network/README.md) (implementação
+> [`6bbd036`](https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee)), substituiu o que esta página
+> descreve como recusado ou ausente: fontes `http` e `https` carregam (com `headers`, `method`, `body` e
+> `cache` na fonte e `crossOrigin` e `referrerPolicy` na Image) em vez de falhar por `onError` com o nome
+> da fatia futura; `Image.prefetch` e `prefetchWithMetadata` baixam e resolvem verdadeiro em vez de
+> rejeitar; `queryCache` informa as URLs do cache de bytes em vez de `{}`; `getSize` e
+> `getSizeWithHeaders` de uma URL de rede baixam e leem o cabeçalho; as seis chaves de fonte que o
+> wrapper recusava deixaram de ser recusadas; e `repeat` ladrilha no tamanho exato da imagem em pontos,
+> sem redimensionar a textura, em vez de num tamanho inteiro. Por isso a suíte `test:images` mudou
+> com o contrato: o caso `neg-http`, os casos de `getSize` por `http` e as seis recusas de chave saíram do
+> fixture, o `prefetch` de um arquivo carregável resolve verdadeiro e o de um ausente rejeita com
+> `E_PREFETCH_FAILURE`, e a suíte tem agora 73 checks (62 normativos), onde esta página conta 74 (63); o
+> controle no host anterior tem 11 checks e as mesmas 3 falhas normativas, e as sabotagens falham 12 e 2.
+> O que esta página e o [recibo](report.json) afirmam sobre o pipeline local (as lanes, as contagens, os
+> pins) descreve a execução em `552fb56`, e cada pin continua igual a `git show 552fb56:<arquivo>`; os
+> arquivos que a segunda fatia mudou têm os pins novos no recibo dela. As seções "O que este host fazia",
+> "A implementação", "Padrões e desvios" e "Limites" abaixo falam do estado de `552fb56`.
+
 ## O que o RN faz
 
 O `ImageShadowNode` pede a imagem dentro do `layout`: o `updateStateIfNeeded` escolhe a fonte
