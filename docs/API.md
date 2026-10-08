@@ -28,7 +28,8 @@ TouchableOpacity); Switch and ActivityIndicator; RN's original lists (FlatList,
 SectionList, VirtualizedList and VirtualizedSectionList); Animated, Easing,
 useAnimatedValue and useAnimatedValueXY; PanResponder; the environment modules
 (AppState, Appearance, useColorScheme, Dimensions, PixelRatio, useWindowDimensions,
-Platform, StyleSheet, AccessibilityInfo and I18nManager); and the native-module
+Platform, StyleSheet, AccessibilityInfo and I18nManager); the device services (Linking,
+Clipboard and Vibration); and the native-module
 entrypoints (AppRegistry, RootTagContext, NativeModules, NativeEventEmitter,
 TurboModuleRegistry, UIManager, findNodeHandle and the codegen helpers). Image,
 ImageBackground, KeyboardAvoidingView, RefreshControl and StatusBar are exported
@@ -49,7 +50,7 @@ from planned RN compatibility.
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
 | View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and planar 2D affine styles, a singular one collapsing its View as RN does | RTL, 3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
-| Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
+| Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip, `onTextLayout` on the outer paragraph (one entry per visible line) and the Yoga baseline for `alignItems`/`alignSelf: 'baseline'`, both from the lines the host measures and paints ([record](evidence/text-layout/README.md), [research](research/text-layout.md)) | Two bundled families plus initial Theme default; no selection, span press, inline Controls, italic/decoration/shadow, head/middle ellipsis, font scaling; `onTextLayout` is not emitted on a nested span, as in RN |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | Switch | RN's original Switch.js over RN's shared iOS/macOS Switch descriptor: value, onValueChange/onChange, disabled, trackColor/thumbColor/ios_backgroundColor, setValue restore of an unchanged value, testID/ref; mouse click and touch tap | 63×28 default frame (RN's iOS 26 size); custom-drawn, without animation, thumb dragging, keyboard activation or accessibility; Android-only props are unused |
 | ActivityIndicator | RN's original ActivityIndicator.js over the generated ActivityIndicatorView descriptor: animating, hidesWhenStopped, color, small/large/numeric size, testID/ref; the spinner advances with real frame time only while animating | Custom-drawn eight-spoke spinner filling the frame (UIKit keeps its own size); RN's iOS gray without a color; no accessibility or reduced-motion handling |
@@ -62,6 +63,7 @@ from planned RN compatibility.
 | ScrollView | RN 0.87.1's original ScrollView and command codegen; vertical/horizontal scroll, fractional contentOffset, animated `scrollTo`/`scrollToEnd` (upstream default is animated), native pan with measured drag velocity and momentum, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated cancellation in the ScrollView's own coordinates; native indicators | Desktop `scrollToEnd` follows Android's axis policy (vertical preserves x; horizontal preserves y); this does not claim iOS parity. Bounce, paging, zoom, sticky headers, refresh, unsupported indicator customization, nested/multitouch scrolling and mobile/hardware parity remain unsupported |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | AppState and Appearance | [RN's original AppState](evidence/app-state/README.md), fed by the Godot application lifecycle: focus loss is `inactive`, a pause is `background`, `change`, `focus`, `blur` and `memoryWarning` are sent, the roots of an application share one state and stop sends nothing. [RN's original Appearance and useColorScheme](evidence/appearance/README.md), fed by Godot's system theme: `getColorScheme`, `addChangeListener`, `setColorScheme` overrides that win over the system and `unspecified` following it again, a change event only when the effective scheme changes, one theme callback shared by every application | Minimizing or hiding a desktop window sends no Godot notification; real OS focus and theme changes on each system, resume with pending timers or network, accent colors, `PlatformColor`/`DynamicColorIOS`, per-window themes and Godot mobile exports remain open |
+| Device services | [RN's original Linking, Clipboard (legacy) and Vibration](../examples/device-services/README.md) over three C++ TurboModules (`LinkingManager` with iOS's contract, `Clipboard`, `Vibration`) and Godot's `OS.shell_open`, `DisplayServer` clipboard and `Input.vibrate_handheld`: `openURL`, `canOpenURL`, `getInitialURL`, the `url` event that `FabricApplication.deliver_url` delivers once to every listener of every root, `getString` and `setString`, `vibrate` and the patterns RN's own JavaScript schedules; every platform call can be replaced by a validation backend ([record](evidence/device-services/README.md), [research](research/device-services.md)) | Godot cannot ask which handlers are installed, so `canOpenURL` resolves `true` for any URL with a scheme; `openURL` is synchronous and cannot be cancelled; `openSettings` and `sendIntent` reject; a clipboard-less display server (headless) rejects `getString` and throws from `setString` with `E_CLIPBOARD_UNAVAILABLE`; a vibration cannot be cancelled in Godot, `vibrateByPattern` throws if called directly and RN's repeating pattern is not cancelled by `cancel()`, as in RN; Alert, Share, Settings and BackHandler, mobile deep-link plugins, Windows/Linux and real-device behavior remain open |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
 
@@ -76,8 +78,8 @@ project source with strict TypeScript. Third-party declaration bodies use
 `skipLibCheck`; the upstream contract inventory still checks their source hashes
 and signatures. Positive consumer assignments and negative unsupported-prop
 fixtures run in CI. AppRegistry's registration subset and RootTagContext are
-also typed, and so are the exports declared from RN's own types: AppState,
-Appearance and useColorScheme, the four lists, Animated, Easing and the two
+also typed, and so are the exports declared from RN's own types: AppState, Linking,
+Clipboard, Vibration, Appearance and useColorScheme, the four lists, Animated, Easing and the two
 animated-value hooks, NativeModules, NativeEventEmitter, TurboModuleRegistry, the
 codegen helpers, findNodeHandle and a UIManager measurement subset. Pressable,
 ScrollView, TouchableWithoutFeedback, TouchableHighlight, PanResponder, Platform,
@@ -451,9 +453,28 @@ tooling and exports remain pending.
   accept text attributes; layout/background styles and inline Controls fail.
 - Latin accents are exercised. Bidi, emoji/fallback and colored truncation
   need dedicated tests before claiming parity.
+- `onTextLayout` receives RN's event, `{lines}`, where each line has `text`, `x`,
+  `y`, `width`, `height`, `ascender`, `descender`, `capHeight` and `xHeight`: the
+  line box with the baseline inside it as on iOS (an explicit `lineHeight`
+  centres the baseline), `capHeight` and `xHeight` as the ink height of "T" and
+  "x" as on Android, and `text` without the host's internal sentinel. It is
+  emitted after the layout, once per change of the lines (a change of color, or
+  a width that wraps the same lines, emits nothing), with one line per visible
+  line under `numberOfLines`. The same lines give Yoga the baseline of a Text in
+  a baseline-aligned row. Measured against the bundled fonts' tables the
+  host is within one pixel
+  ([tolerance](research/text-layout.md#tolerance-measured)).
+- `onTextLayout` must be a function (or `undefined`/`null`): any other value
+  throws `Godot Text onTextLayout must be a function`. A nested `Text` ignores it, as RN's
+  virtual text does. `onPress`, `onPressIn`, `onPressOut`, `onLongPress`,
+  `selectable` and `adjustsFontSizeToFit` still throw
+  `Godot Text does not implement <name>`.
+- The text of a truncated last line, empty text, a `lineHeight` smaller than the
+  font and lines beyond a fixed node height differ between RN's platforms and
+  are not part of the contract ([divergences](research/text-layout.md#documented-divergences-not-normative)).
 - The initial Theme font is captured from the application's first surface.
-  Per-root Theme fonts, dynamic Theme/font loading, system font scaling and
-  React Native baseline semantics are pending.
+  Per-root Theme fonts, dynamic Theme/font loading and system font scaling
+  are pending.
 
 ## Platform and performance
 
@@ -619,6 +640,42 @@ Closing while CONNECTING fails the attempt, unlike Android's module no-op; failu
 from OkHttp. Cancellation sends 1001 best-effort, with an immediate TCP drop possible when
 input remains unread. Godot Android WebSocket runtime is untested. A Web export needs a
 browser-specific WebSocket transport; browser WebSocket behavior is outside this proof.
+
+### Device services
+
+`Linking`, `Clipboard` and `Vibration` are RN's original modules, exported from `react-native`
+through lazy getters (`src/device-services.js`): importing `react-native` constructs none of
+them, and a host without the native modules fails only where an API is first read. One
+`DeviceServices` per `FabricApplication` (`native/device_services.{h,cpp}`) installs three C++
+TurboModules in the application's registry: `LinkingManager` (the iOS contract, which is what
+`Linking.js` uses when `Platform.OS` is `"godot"`), `Clipboard` and `Vibration`. The platform calls
+sit behind a backend struct (`native/device_services_core.h`); the default is Godot's
+(`native/godot_device_backend.cpp`) and a validation run replaces any of it through the
+application's `validation_device_services` meta, a Dictionary of Callables. The modules are created
+by the first read of their API; a stop makes retained methods throw `E_MODULE_DISPOSED`
+synchronously and drops every queued event and settlement. The [research
+note](research/device-services.md) has the contract and its sources.
+
+| API | Supported | Rejected, and how |
+| --- | --- | --- |
+| `Linking.openURL(url)` | Resolves `true` after `OS.shell_open` returns `OK` for an absolute URL with an RFC 3986 scheme | A non-string or `''` throws RN's own invariant (`Invalid URL: ...`) before any native call; a string without a scheme, or a backend that refuses, rejects `Unable to open URL: <url>`; the scheme-less string never reaches the backend |
+| `Linking.canOpenURL(url)` | `true` for a URL with a scheme and at least one character after the colon, `false` otherwise, never asking the platform | The same invariant for a non-string or `''` |
+| `Linking.getInitialURL()` | The first valid `--uri=<url>` of `OS.get_cmdline_user_args()`, then of `OS.get_cmdline_args()`, one pair of quotes removed; `null` without one; stable for the application | Throws `E_MODULE_DISPOSED` after a stop |
+| `Linking.addEventListener('url', listener)` | `{url}` once per link, to every listener of every root, in subscription order, from `FabricApplication.deliver_url(url)` | `deliver_url` returns `false` and emits nothing for a string without a scheme and after a stop |
+| `Linking.openSettings()` | none | Rejects `Unable to open app settings: unavailable on Godot` |
+| `Linking.sendIntent(...)` | none | Rejects `Unsupported` in RN's JavaScript outside Android |
+| `Clipboard.getString()` | The text, `''` for an empty clipboard, read from the platform on every call | Rejects `E_CLIPBOARD_UNAVAILABLE` where the DisplayServer has no clipboard (headless) |
+| `Clipboard.setString(text)` | Returns nothing; multibyte text and line breaks survive | `setString(undefined)` or a non-string fails at the bridge; throws `E_CLIPBOARD_UNAVAILABLE` without a clipboard. RN prints its deprecation notice once on the first read of `Clipboard` |
+| `Vibration.vibrate(ms)` | `vibrate()` is 400 ms; a finite, non-negative number goes to `Input.vibrate_handheld` (a silent no-op on desktop); an array is scheduled by RN's JavaScript, one `vibrate(400)` per step | A pattern that is neither number nor array throws RN's own error; a negative or non-finite number throws `E_ARGUMENT` |
+| `Vibration.cancel()` | Reaches the native module; Godot has nothing to cancel, so it is a no-op | RN's repeating pattern is not stopped by it, and a later `vibrate()` is ignored while it runs: RN's own behavior |
+| `vibrateByPattern` on the native module | none: RN's JavaScript never calls it with this platform | Throws `E_UNSUPPORTED` |
+
+`FabricApplication.deliver_url(url: String) -> bool` is the entry point of a deep link that reaches
+the running application; a mobile plugin or a launcher script would call it. A link delivered before
+JavaScript has read `Linking` is accepted and reaches no listener. The headless engine has no
+clipboard, so the real backend rejects there; every test and example application replaces the
+backend, so nothing opens a real URL or touches the real pasteboard. Alert, Share, Settings and
+BackHandler are not implemented, and `canOpenURL` cannot know which handlers are installed.
 
 Native runtime acceptance currently targets macOS arm64. The experimental
 [iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;

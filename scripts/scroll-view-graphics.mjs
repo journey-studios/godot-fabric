@@ -86,7 +86,7 @@ const checkSummaries = report.checks.map(row => {
 });
 const receipt = {
   schemaVersion: 1,
-  status: "pending", 
+  status: "pending",
   scenario: report.scenario,
   engine: report.godot,
   displayServer: report.displayServer,

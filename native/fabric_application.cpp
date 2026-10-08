@@ -2,6 +2,8 @@
 #include "application_runtime.h"
 #include "adapter_loader.h"
 #include "app_lifecycle.h"
+#include "device_services.h"
+#include "godot_device_backend.h"
 #include "system_appearance.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include "fabric_surface.h"
@@ -98,12 +100,17 @@ FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_g
   appearance = std::make_shared<fabric_godot::SystemAppearance>(
       [id] { return read_system_appearance(id); }, [id] { return system_theme_owner().join(id); },
       [id] { system_theme_owner().leave(id); });
+  // The backend finds this application by its id on every call (the services may outlive the Node
+  // until the VM is released), and replaces what the validation_device_services meta names.
+  device_services = std::make_shared<fabric_godot::DeviceServices>(
+      fabric_godot::make_godot_device_backend(id), fabric_godot::godot_launch_url());
 }
 FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("evaluate", "source"), &FabricApplication::evaluate);
   ClassDB::bind_method(D_METHOD("snapshot"), &FabricApplication::snapshot);
   ClassDB::bind_method(D_METHOD("stop"), &FabricApplication::stop);
+  ClassDB::bind_method(D_METHOD("deliver_url", "url"), &FabricApplication::deliver_url);
   ClassDB::bind_method(D_METHOD("validation_system_theme_callback"), &FabricApplication::validation_system_theme_callback);
   ClassDB::bind_method(D_METHOD("invoke_callable", "name", "method", "args"), &FabricApplication::invoke_callable);
   ClassDB::bind_method(D_METHOD("bind_signal", "name", "signal", "arg_schema", "options"), &FabricApplication::bind_signal, DEFVAL(Dictionary()));
@@ -205,7 +212,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
           utf8(scenario), get_instance_id(), game_services, app_state, appearance,
           [id = get_instance_id()] { return read_validation_tls_authorities(id); },
           [id = get_instance_id()] { return read_validation_clock_offset(id); },
-          adapter_loader ? adapter_loader->registry() : nullptr);
+          adapter_loader ? adapter_loader->registry() : nullptr, device_services);
     }
     int legacy_id = 0;
     if (!bundle_loaded) {
@@ -249,18 +256,23 @@ void FabricApplication::stop() {
   if (terminal_stopped) return;
   terminal_stopped = true;
   if (runtime) runtime->stop();
-  else game_services->stop();
+  else {
+    game_services->stop();
+    device_services->stop();
+  }
   if (adapter_loader) {
     try { adapter_loader->registry()->dispose_modules(); }
     catch (const std::exception &error) { report_error(error.what()); }
   }
 }
+bool FabricApplication::deliver_url(const String &url) { return device_services->deliver_url(utf8(url)); }
 bool FabricApplication::is_stopped() const { return terminal_stopped || (runtime && runtime->is_stopped()); }
 String FabricApplication::evaluate(const String &source) { return runtime ? gd(runtime->evaluate(utf8(source))) : String("null"); }
 String FabricApplication::snapshot() {
   folly::dynamic result = runtime ? folly::parseJson(runtime->status()) :
       folly::dynamic::object("stopped", terminal_stopped)("rootCount", 0)("bundleEvaluations", 0)
-          ("gameServices", game_services->snapshot())("errors", folly::dynamic::array());
+          ("gameServices", game_services->snapshot())("deviceServices", device_services->snapshot())
+          ("errors", folly::dynamic::array());
   result["runtimeInitialized"] = static_cast<bool>(runtime);
   result["initializationAttempted"] = initialization_attempted;
   result["appState"] = app_state->snapshot();

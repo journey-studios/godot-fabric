@@ -53,6 +53,8 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
 | [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
 | [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
+| [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
+| [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -234,6 +236,15 @@ not follow is restored by Switch.js's `setValue`, disabled input is ignored and
 colors reach the native switch. Its [receipt](../docs/evidence/switch/README.md)
 records 108/108 headless checks, the preceding host's 2 mount failures, a retained
 sabotage and two captures of the example.
+
+The [text layout example](text-layout/README.md) draws the lines that Text's
+`onTextLayout` reports as boxes and baseline rules over the paragraphs, and
+aligns a row by `alignItems: 'baseline'`: `npm run test:text-layout`, next to the
+launcher entry (`npm run example -- text-layout`; add `--headless` or `--capture`).
+Every number is checked against the bundled fonts' tables read in Node, and a
+click re-wraps the paragraphs. Its [research](../docs/research/text-layout.md)
+records 76 headless checks, the preceding host's 5 failures and three retained
+sabotages, with the [evidence record](../docs/evidence/text-layout/README.md) and two captures.
 
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag

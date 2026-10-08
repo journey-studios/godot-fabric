@@ -4,14 +4,17 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validate, summarize } from "../dashboard/model.mjs";
 import { syncRoadmap } from "../dashboard/import-roadmap.mjs";
+import { readBoard, resolveAgentsDirectory } from "./agents.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 
-export function createDashboardServer({ dataFile = path.join(root, "dashboard/migration.json") } = {}) {
+export function createDashboardServer({ dataFile = path.join(root, "dashboard/migration.json"), agentsDirectory } = {}) {
   const files = new Map([
     ["/", ["dashboard/index.html", "text/html"]], ["/index.html", ["dashboard/index.html", "text/html"]],
     ["/style.css", ["dashboard/style.css", "text/css"]], ["/app.mjs", ["dashboard/app.mjs", "text/javascript"]],
     ["/model.mjs", ["dashboard/model.mjs", "text/javascript"]],
+    ["/agents.mjs", ["dashboard/agents.mjs", "text/javascript"]], ["/agents-view.mjs", ["dashboard/agents-view.mjs", "text/javascript"]],
+    ["/format.mjs", ["dashboard/format.mjs", "text/javascript"]], ["/agents.css", ["dashboard/agents.css", "text/css"]],
     ["/AGENT_PROMPT.md", ["dashboard/AGENT_PROMPT.md", "text/plain"]],
     ["/fonts/NotoSans.ttf", ["assets/fonts/NotoSans.ttf", "font/ttf"]],
     ["/fonts/JetBrainsMono.ttf", ["assets/fonts/JetBrainsMono.ttf", "font/ttf"]],
@@ -28,6 +31,11 @@ export function createDashboardServer({ dataFile = path.join(root, "dashboard/mi
         response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
         response.end(request.method === "HEAD" ? undefined : JSON.stringify(data)); return;
       }
+      if (pathname === "/agents.json") {
+        const board = await readBoard(agentsDirectory ?? resolveAgentsDirectory(root));
+        response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+        response.end(request.method === "HEAD" ? undefined : JSON.stringify(board)); return;
+      }
       if (!files.has(pathname)) { response.writeHead(404); response.end("Não encontrado"); return; }
       const [relative, mime] = files.get(pathname);
       const filename = await realpath(path.join(root, relative));
@@ -37,7 +45,8 @@ export function createDashboardServer({ dataFile = path.join(root, "dashboard/mi
       response.end(request.method === "HEAD" ? undefined : content);
     } catch (error) {
       response.writeHead(503, { "Content-Type": "application/json; charset=utf-8" });
-      response.end(JSON.stringify({ error: pathname === "/api/data" || pathname === "/migration.json" ? `JSON indisponível: ${error.message}` : "Arquivo indisponível" }));
+      const source = { "/api/data": "JSON", "/migration.json": "JSON", "/agents.json": "Quadro de agentes" }[pathname];
+      response.end(JSON.stringify({ error: source ? `${source} indisponível: ${error.message}` : "Arquivo indisponível" }));
     }
   });
 }
@@ -47,7 +56,7 @@ async function main() {
   const options = {};
   while (args.length) {
     const key = args.shift();
-    if (!["--data", "--roadmap", "--decisions", "--port", "--source-ref"].includes(key) || !args.length) throw new Error(`Opção inválida: ${key}`);
+    if (!["--data", "--roadmap", "--decisions", "--port", "--source-ref", "--agents"].includes(key) || !args.length) throw new Error(`Opção inválida: ${key}`);
     options[key.slice(2)] = args.shift();
   }
   const dataFile = path.resolve(options.data || path.join(root, "dashboard/migration.json"));
@@ -71,9 +80,10 @@ async function main() {
   if (command !== "serve") throw new Error(`Comando inválido: ${command}`);
   const port = Number(options.port || 4317);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Porta inválida");
-  const server = createDashboardServer({ dataFile });
+  const agentsDirectory = options.agents ? path.resolve(options.agents) : resolveAgentsDirectory(root);
+  const server = createDashboardServer({ dataFile, agentsDirectory });
   server.on("error", error => { console.error(error.message); process.exitCode = 1; });
-  server.listen(port, "127.0.0.1", () => console.log(`Dashboard: http://127.0.0.1:${port}\nJSON: ${dataFile}`));
+  server.listen(port, "127.0.0.1", () => console.log(`Dashboard: http://127.0.0.1:${port}\nJSON: ${dataFile}\nAgentes: ${agentsDirectory}`));
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

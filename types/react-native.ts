@@ -12,6 +12,15 @@ export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
 export declare const AppState: typeof RN.AppState;
 export type AppStateStatus = RN.AppStateStatus;
 export type AppStateEvent = RN.AppStateEvent;
+/** RN's original Linking over the host's LinkingManager module (iOS contract):
+ * openURL, canOpenURL, getInitialURL and the "url" event. openSettings and
+ * sendIntent reject. */
+export declare const Linking: typeof RN.Linking;
+/** RN's original, deprecated Clipboard. Both calls fail with
+ * E_CLIPBOARD_UNAVAILABLE where the display server has no clipboard. */
+export declare const Clipboard: typeof RN.Clipboard;
+/** RN's original Vibration over Godot's Input.vibrate_handheld. */
+export declare const Vibration: typeof RN.Vibration;
 /** RN's original Appearance and useColorScheme, fed by Godot's system theme. */
 export declare const Appearance: typeof RN.Appearance;
 export declare const useColorScheme: typeof RN.useColorScheme;
@@ -94,9 +103,12 @@ export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | 
   "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
   "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> & { style?: StyleProp<ViewStyle> };
-export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID"> & {
+/** Text: onTextLayout is RN's original event, one entry per visible line (see docs/research/text-layout.md).
+ * Only the outer Text emits it; a nested Text ignores it, as in RN. */
+export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };
+export type TextLayoutEvent = RN.TextLayoutEvent;
 export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "onChangeText" | "onSelectionChange" |
   "onFocus" | "onBlur" | "onEndEditing" | "onSubmitEditing" | "onKeyPress" | "onLayout"> {
   value?: string; defaultValue?: string; placeholder?: string; editable?: boolean;

@@ -7,7 +7,7 @@ import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 // Godot class profile and build that bring HTTPClient in.
 export const networkingNativeProducers = ["native/http_core.h", "native/http_core_test.cpp", "native/http_transport.h",
   "native/godot_http_transport.h", "native/godot_http_transport.cpp", "native/godot_tls.h", "native/blob_store.h", "native/networking_modules.h",
-  "native/networking_modules.cpp", "native/networking_state.h", "native/websocket_module.h", "native/websocket_module.cpp",
+  "native/networking_modules.cpp", "native/networking_state.h", "native/stoppable_invoker.h", "native/websocket_module.h", "native/websocket_module.cpp",
   "native/application_runtime.cpp", "native/application_runtime.h", "native/fabric_application.cpp", "native/godot-profile.json",
   "native/CMakeLists.txt"];
 

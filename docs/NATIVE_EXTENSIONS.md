@@ -36,6 +36,13 @@ the shell uses another Node. Nothing in these commands installs dependencies,
 recompiles the Godot engine or chooses packages from a project's dependency
 manager. The existing addon remains the intended authoring/activation entry.
 
+The host compiles its own platform `TextLayoutManager` (`native/text_platform/`)
+in place of RN's portable one, so that `ParagraphShadowNode` finds `measureLines`
+for `onTextLayout` and the Yoga baseline ([record](research/text-layout.md)). Its
+header is published as `include/sdk/text_platform/...`, on the include path where
+RN's `textlayoutmanager/platform/cxx` directory used to be, and its sources belong
+to the SDK revision.
+
 The package contains public SPI headers, original RN/JSI and Godot headers,
 one shared `fabric_godot.dylib`, Hermes/RN dependency frameworks, licenses,
 an imported CMake target, file hashes and a native-combination declaration.

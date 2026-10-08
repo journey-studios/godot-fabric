@@ -2791,6 +2791,104 @@ Only the first-slice checkpoint closes, moving the dashboard to 24/156;
 Orientation/insets, hardware, mobile/export, full contract and complete pinned
 RN parity keep the other three GF-18 checkpoints open.
 
+### Text line geometry: onTextLayout and the Yoga baseline (2026-10-07)
+
+GF-11 moves to **In progress** with only its first-slice checkpoint done. The
+[text layout evidence](docs/evidence/text-layout/README.md) gives the public `Text`
+the lines the host measures and paints: React Native's `onTextLayout` event and the
+Yoga baseline of a `Text` in an `alignItems`/`alignSelf: 'baseline'` row. RN asks the
+platform's `TextLayoutManager` for those lines through `measureLines`, behind
+`TextLayoutManagerExtended::supportsLineMeasurement()`; the host used RN's portable
+`cxx` manager, which has none, so the event was never emitted and every baseline was
+zero. A Godot platform `TextLayoutManager` (`native/text_platform/`, compiled in
+place of the `cxx` one) adds the virtual `measureLines`, `ParagraphLayout` overrides
+it over the same shaped paragraph that measures and paints, with no second line
+breaker, and a static guard compares the copy with the pinned RN file and its call
+sites. **76 headless checks** run in one Hermes application.
+
+The payload is RN's `{lines}`, each line with exactly the nine fields: the line box
+and the baseline inside it as on iOS (an explicit `lineHeight` centres the baseline),
+`capHeight` and `xHeight` as the ink height of "T" and "x" as on Android, and `text`
+without the host's sentinel. The `src/text.jsx` wrapper accepts a function
+`onTextLayout` on the outer paragraph, drops it on a nested span as RN does, rejects
+any other value, and keeps rejecting span presses, `selectable` and
+`adjustsFontSizeToFit`. Each paragraph with the prop receives exactly one event for
+its first layout; a change of color, or a width that wraps the same lines, asks
+`measureLines` again and emits nothing; a paragraph the host cannot lay out reports
+and the Yoga callback survives. An independent oracle reads the TrueType tables of
+the two bundled fonts in Node. The host is within 0.576 px of them (0 for ascender,
+descender and height) once FreeType's documented rounding of the scaled ascent and
+descent is modelled, while the plain table scale is off by up to 1.484 px and does
+not hold the proposed ±1 px; the normative tolerance stays ±1 px. The preceding host
+runs the same bundle and fails exactly the 5 normative checks (no event, zero
+baselines); three retained sabotages (every line reported despite `numberOfLines`, an
+ascender without the centred `lineHeight` offset, the sentinel left in a line's
+text) fail 4, 3 and 9 checks and the oracle rejects each. The example passes 18
+headless and 32 renderer checks, the painted ink agreeing with the reported baseline,
+`capHeight` and `xHeight` to a pixel, with two captures. The contracts gates (285
+Node/13 Python, static analysis, publication scan), the typography laboratory (50
+headless, 63 renderer) and the native SDK and adapter batches pass on the
+implementation host; after merging main (Modal, #51) the rebuilt host repeated the
+76 checks with refreshed controls and `test:modal` (7 of 7) passed.
+
+The original `Text.js` in place of the repository's wrapper, pressable and
+selectable spans, font loading and fallback, bidi, emoji and grapheme clusters,
+`textDecoration` and `fontStyle`, head and middle ellipsis, font scaling,
+`adjustsFontSizeToFit`, inline views and a reference measurement on an iOS simulator
+and an Android emulator remain open. The platforms differ on the text of a truncated
+last line, empty text, when `lineHeight` centres the baseline, lines beyond a fixed
+height and Android's extra `baseline` field; these are documented divergences, not
+checks. The hosted CI run of the new `native-text-layout` step is **pending**. Only
+GF-11's first-slice checkpoint closes, with the slice itself; no whole GF, other
+checkpoint, weight or denominator closes.
+
+### Linking, Clipboard and Vibration over Godot's device services (2026-10-07)
+
+GF-23 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
+contract, parity and targets remain open. The [device services evidence](docs/evidence/device-services/README.md)
+runs React Native's original `Linking`, `Clipboard` (the legacy module) and `Vibration` from the public
+`react-native` import over three C++ TurboModules, `LinkingManager` (the iOS contract, which `Linking.js`
+takes when `Platform.OS` is `"godot"`), `Clipboard` and `Vibration`: **65 headless checks** in two
+applications of one bundle plus 2 in a second process without `--uri=`. No checkpoint of any other item changes.
+
+One `DeviceServices` per `FabricApplication` (`native/device_services.{h,cpp}`) registers the modules in the
+application's registry, creates each on the first read of its public API and ends all of them at stop:
+retained methods then throw `E_MODULE_DISPOSED` synchronously, `FabricApplication.deliver_url` returns
+`false` and nothing queued reaches JS (the shared `StoppableInvoker` of `native/stoppable_invoker.h`, which the
+networking modules use too). The platform calls (`OS.shell_open`, the `DisplayServer` clipboard,
+`Input.vibrate_handheld`) sit behind a backend struct that the application's `validation_device_services` meta
+replaces function by function; a pure core (`native/device_services_core.h`: the RFC 3986 scheme rule, the
+`--uri=` arguments, the counters) has its own C++ test. `canOpenURL` answers by scheme, because Godot cannot ask
+which handlers are installed; `openURL` rejects `Unable to open URL: <url>` without calling the backend for a
+string without a scheme, and the same message when the backend refuses; `openSettings` always rejects;
+`getInitialURL` reads the process's `--uri=`; `deliver_url(url)` is how a platform hands a deep link to the
+running application, once to every listener of every root, in order. Where the display server has no clipboard
+(the headless engine) `getString` rejects and `setString` throws `E_CLIPBOARD_UNAVAILABLE`. `vibrate` takes a
+finite, non-negative duration, `cancel()` reaches the backend (Godot has nothing to cancel) and
+`vibrateByPattern`, which RN's JavaScript never calls with this platform, throws `E_UNSUPPORTED`; RN's own
+repeating pattern is not stopped by `cancel()`, and the host leaves that as RN has it.
+
+Two applications run the same bundle: one with the validation backend (every function replaced by a Callable that
+records the call, two roots) and one with Godot's real backend (only `open_url` replaced by a failing stand-in, so
+nothing opens a URL). An independent oracle replays every step against RN's rules and compares calls, backend log,
+events and the host's counters. The preceding host (built from `e88b5bb`) fails exactly the 52 normative checks
+of 65 and 1 of 2, and two retained sabotages (a host that emits `url` twice and a `getString` with a stale cache)
+fail 5 and 9 checks; the oracle rejects each. An interactive example (`examples/device-services`) clicks its
+buttons with real mouse events, delivers deep links through a native Godot button and passes 16 headless checks,
+16 with the native renderer and 23 with seven captures, with every backend replaced.
+
+Open: Alert, Share, Settings and BackHandler (they depend on the pending V2-D30 decision and on GF-18's Modal),
+mobile deep-link plugins (GF-34 and GF-35), Windows and Linux (GF-32 and GF-33), a cancellable `openURL`,
+a capability-aware `canOpenURL`, vibration patterns and cancellation through a platform plugin, and real-device
+behavior (a real browser, the real pasteboard and real vibration are never exercised). Hosted CI for the new step
+is pending.
+
+On the implementation tree (`71d708c`) the contracts gate (281 Node/13 Python, static analysis, publication scan)
+and the networking (100) and WebSocket (95) suites pass; after merging main (`7e2df46`, the Modal slice) the
+contracts gate (283 Node/13 Python), `test:modal`, the device services suite with the controls rebuilt on the
+preserved preceding host, static analysis and the publication scan pass again. Only GF-23's first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -2800,7 +2898,7 @@ work through public RN imports with applicable upstream behavior.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-10 · P1 · View, styles and RTL | In progress | Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema | GF-04, GF-08, GF-09, GF-25 |
-| GF-11 · P1 · Text and fonts | Planned | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
+| GF-11 · P1 · Text and fonts | In progress | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | In progress | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
@@ -2821,7 +2919,7 @@ observe the real system and retain the original event/callback contracts.
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
-| GF-23 · P1 · Shared device services | Planned | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
+| GF-23 · P1 · Shared device services | In progress | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
 | GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
 
 ## M3 — Make the platform extensible and usable outside the demos

@@ -90,7 +90,10 @@ file(GLOB MOUNT_INTERNAL CONFIGURE_DEPENDS "${RN}/react/renderer/mounting/intern
 file(GLOB_RECURSE YOGA CONFIGURE_DEPENDS "${RN}/yoga/yoga/*.cpp")
 list(FILTER YOGA EXCLUDE REGEX "/tests/")
 list(APPEND SOURCES ${MOUNT_INTERNAL} ${YOGA})
-list(APPEND SOURCES "${RN}/react/renderer/textlayoutmanager/platform/cxx/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
+# Godot's own platform TextLayoutManager replaces RN's portable `cxx` one, header
+# and source together: it adds the virtual measureLines behind onTextLayout and
+# the Yoga baseline (see text_platform/).
+list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
 list(APPEND SOURCES
   "${RN}/react/renderer/components/modal/ModalHostViewShadowNode.cpp"
   "${RN}/react/renderer/components/modal/platform/cxx/ModalHostViewUtils.cpp")
@@ -123,7 +126,7 @@ target_include_directories(fabric_core PUBLIC
   "${RN}/react/renderer/components/text/platform/cxx"
   "${RN}/react/renderer/components/modal/platform/cxx"
   "${RN}/react/renderer/components/switch/iosswitch"
-  "${RN}/react/renderer/textlayoutmanager/platform/cxx"
+  "${CMAKE_CURRENT_SOURCE_DIR}/text_platform"
   "${RN}/react/renderer/graphics/platform/cxx"
   "${RN}/react/utils/platform/cxx"
   "${RN}/runtimeexecutor/platform/cxx"
@@ -165,6 +168,8 @@ add_executable(http_core_test http_core_test.cpp)
 # The pure WebSocket core (the URL, origin, protocols, headers and close parameters OkHttp accepts) needs neither Godot nor RN.
 add_executable(websocket_core_test websocket_core_test.cpp)
 add_executable(websocket_handshake_test websocket_handshake_test.cpp)
+# The pure device-services core (URL rules, launch arguments, backend seam) needs neither Godot nor RN.
+add_executable(device_services_core_test device_services_core_test.cpp)
 target_include_directories(timer_registry_test PRIVATE "${RN}")
 
 # Pin the same upstream wslay implementation used by Godot, without building or
@@ -187,7 +192,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp device_services.cpp godot_device_backend.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
@@ -217,7 +222,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test device_services_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

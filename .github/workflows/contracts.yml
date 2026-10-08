@@ -170,6 +170,18 @@ jobs:
             build/frame-clock-current.log
             build/frame-clock-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:text-layout
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-text-layout
+          path: |
+            build/text-layout-report.json
+            build/text-layout-current-report.json
+            build/text-layout-comparison.json
+            build/text-layout-current.log
+            build/text-layout-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:networking
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -181,6 +193,21 @@ jobs:
             build/networking-comparison.json
             build/networking-current.log
             build/networking-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:device-services
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-device-services
+          path: |
+            build/device-services-report.json
+            build/device-services-launch-report.json
+            build/device-services-probe-current-report.json
+            build/device-services-launch-current-report.json
+            build/device-services-comparison.json
+            build/device-services-probe-current.log
+            build/device-services-launch-current.log
+            build/device-services-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:websocket
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

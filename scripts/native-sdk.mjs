@@ -15,6 +15,13 @@ const headerPattern = /\.(?:h|hh|hpp|hxx|inc|inl|ipp|tcc|def)$/i;
 const sourcePattern = /\.(?:cpp|cc|cxx|c)$/i;
 const claims = {adapterLinked: false, adapterLoaded: false, runtimeExecuted: false,
   runtimeIdentityVerified: false, abiCertified: false};
+// The host compiles its own platform TextLayoutManager (native/text_platform/) in place of RN's portable
+// one, and puts that directory on the include path: an adapter that includes RN's TextLayoutManager.h
+// gets this header, so it is published next to the SPI headers (include/sdk/text_platform/...) and the
+// platform sources belong to the SDK revision.
+const textPlatformFiles = ['TextLayoutManager.h', 'TextLayoutManager.cpp']
+  .map(name => 'text_platform/react/renderer/textlayoutmanager/' + name);
+const sdkPublicFiles = ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h', textPlatformFiles[0]];
 
 function fail(code, message) {
   const error = new Error(code + ': ' + message);
@@ -137,7 +144,7 @@ function headerTrees(root, buildDir, lock) {
   const godot = path.join(root, '.deps', lock['godot-cpp'].directory);
   return [
     {name: 'sdk', source: path.join(root, 'native'), destination: 'include/sdk',
-      publicFiles: ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h']},
+      publicFiles: sdkPublicFiles},
     {name: 'react-native-pointer-overlay', source: path.join(buildDir, 'rn-pointer-overlay'), destination: 'include/rn-pointer-overlay'},
     {name: 'react-native', source: path.join(rn, 'ReactCommon'), destination: 'include/react-native/ReactCommon'},
     {name: 'react-native-specs', source: path.join(rn, 'React/FBReactNativeSpec'), destination: 'include/react-native/React/FBReactNativeSpec'},
@@ -170,7 +177,7 @@ function snapshot(options) {
     {name: 'wslay-internal-headers', source: path.join(root, '.deps', lock.wslay.directory, 'lib')},
     {name: 'wslay-generated-config', source: path.join(buildDir, 'wslay')},
   ];
-  for (const name of ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h'])
+  for (const name of [...sdkPublicFiles, ...textPlatformFiles])
     if (!exists(path.join(root, 'native', name))) fail('SDK_SPI_MISSING', name);
   const treeInputs = trees.map(tree => ({name: tree.name, destination: tree.destination,
     source: path.relative(root, tree.source).split(path.sep).join('/'),
@@ -180,6 +187,7 @@ function snapshot(options) {
     source: path.relative(root, tree.source).split(path.sep).join('/'), files: treeRecords(tree.source, true)}));
   const sourceFiles = fs.readdirSync(path.join(root, 'native')).filter(name => /\.(?:cpp|h)$/.test(name)
     || ['CMakeLists.txt', 'godot-profile.json'].includes(name)).map(name => 'native/' + name);
+  sourceFiles.push(...textPlatformFiles.map(name => 'native/' + name));
   sourceFiles.push('dependencies.json', 'scripts/native-sdk.mjs', 'scripts/codegen-contract.mjs', 'scripts/rn-pointer-overlay.mjs');
   const sourceSha256 = Object.fromEntries(sourceFiles.sort().map(name => [name, fileHash(path.join(root, name))]));
   // The host also compiles RN's generated core-component Props/EventEmitters.
@@ -324,7 +332,10 @@ export function packageNativeSdk(options) {
       const destination = path.join(out, tree.destination);
       if (tree.publicFiles) {
         fs.mkdirSync(destination, {recursive: true});
-        for (const name of tree.publicFiles) fs.copyFileSync(path.join(tree.source, name), path.join(destination, name));
+        for (const name of tree.publicFiles) {
+          fs.mkdirSync(path.dirname(path.join(destination, name)), {recursive: true});
+          fs.copyFileSync(path.join(tree.source, name), path.join(destination, name));
+        }
       } else fs.cpSync(tree.source, destination, {recursive: true, verbatimSymlinks: true,
         filter: filename => fs.lstatSync(filename).isDirectory() || fs.lstatSync(filename).isSymbolicLink()
           || headerPattern.test(filename)});

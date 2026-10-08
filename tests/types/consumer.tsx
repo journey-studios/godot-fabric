@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, SwitchChangeEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -138,6 +138,29 @@ AppState.addEventListener("change", (state: number) => { void state; });
 // @ts-expect-error unknown AppState events are rejected
 AppState.addEventListener("suspend", () => {});
 
+// Linking, Clipboard and Vibration are the original pinned modules.
+const initialURL: Promise<string | null | undefined> = Linking.getInitialURL();
+const canOpen: Promise<boolean> = Linking.canOpenURL("https://example.com");
+const opened: Promise<void> = Linking.openURL("https://example.com");
+const urlSubscription = Linking.addEventListener("url", (event: { url: string }) => { void event.url; });
+urlSubscription.remove();
+void initialURL; void canOpen; void opened;
+// @ts-expect-error openURL takes a string
+Linking.openURL(42);
+// @ts-expect-error Linking only emits url events
+Linking.addEventListener("focus", () => {});
+const clipboardText: Promise<string> = Clipboard.getString();
+Clipboard.setString("copied");
+void clipboardText;
+// @ts-expect-error setString takes a string
+Clipboard.setString(1);
+Vibration.vibrate();
+Vibration.vibrate(250);
+Vibration.vibrate([0, 100, 50, 100], false);
+Vibration.cancel();
+// @ts-expect-error a vibration pattern is a number or an array of numbers
+Vibration.vibrate("long");
+
 // Appearance and useColorScheme are the original pinned modules.
 const scheme: ColorSchemeName | null = Appearance.getColorScheme();
 Appearance.setColorScheme("unspecified");
@@ -260,3 +283,19 @@ const touchableShadow = <TouchableOpacity style={{shadowColor: "#000000"}} />;
 // @ts-expect-error accessibility props are not verified on this platform
 const touchableAccessibility = <TouchableOpacity accessibilityLabel="Save" />;
 void originalTouchableProps; void publicTouchable; void touchableShadow; void touchableAccessibility;
+
+// Text: onTextLayout is RN's original event, with one entry per visible line.
+const layoutHandler = (event: TextLayoutEvent) => {
+  const [first] = event.nativeEvent.lines;
+  const baseline: number = first.ascender;
+  const letters: string = first.text;
+  const ink: number = first.capHeight + first.xHeight + first.descender + first.x + first.y + first.width + first.height;
+  void baseline; void letters; void ink;
+};
+const measuredText = <Text numberOfLines={2} onTextLayout={layoutHandler} ref={instance => { if (instance) instance.measure(() => {}); }}>Lines</Text>;
+const originalTextProps: import("../../node_modules/react-native/types_generated/index").TextProps = { onTextLayout: layoutHandler };
+// @ts-expect-error the handler receives the layout event, not a press
+const wrongTextLayout = <Text onTextLayout={(event: PointerEvent) => { void event; }}>Lines</Text>;
+// @ts-expect-error span presses are not implemented
+const spanPress = <Text onPress={() => {}}>Lines</Text>;
+void measuredText; void originalTextProps; void wrongTextLayout; void spanPress;
