@@ -6,9 +6,46 @@ plan and from the implementer's test report. It applies the user-supplied
 thermo-nuclear review criteria: simpler ownership, original RN behavior,
 explicit boundaries and independent executed evidence.
 
-## Current integrated evidence: source `18d3478`
+## Current independent review: source `3bf129c`
 
-The latest local integration is source commit
+The implementation passes the local structural review at
+`3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba`. The public wrapper replaces 259
+lines of custom responder, ref and command handling with 16 lines that retain
+the original RN component. ScrollMotion owns movement; the existing physical
+route owns contacts, capture, surface identity and retirement. Modal wheel
+handling now uses that same route and hit path, removing the separate Control
+parent walk. The new motion model and runtime probes stay below 1,000 lines.
+ApplicationRuntime was already above that threshold on main; this change
+extends its existing route rather than introducing another input owner.
+
+Root independently checked the combined Images #66 host `fa9bcca6…`, all 140
+native input pins against Git and working bytes, and the 2,713-file SDK package.
+The [current receipt](../evidence/scroll-view/integration-3bf129c.json) records
+ScrollView 33, Modal wheel 13, pointer click 8 × 91, lists 44, OS 37,
+Performance 43, and Images 72/74/53 checks, plus the headed Images example's
+39 checks and eight inspected captures. Canonical measured-state oracles were
+replayed independently; altered reports and same-bundle preceding hosts were
+rejected. The complete contracts run passes 353 Node and 13 Python checks.
+The earlier three native Performance sabotage builds remain historical;
+they were not rerun against this Images-integrated host.
+
+The deduplicated inventory contains 889 path hashes: 360 producer-recorded
+and 529 calculated after execution. Root recomputed membership and verified
+all bytes, including every producer's complete input list. One supplemental
+input, `build/nativewind-compiled.js`, is generated and has no Git source pin.
+A graphical wrapper receipt had named the invoked copy but hashed its
+canonical source; the actual executed copy was preserved and the correction
+is explicitly recorded after execution, without recapturing images. The
+earlier `18d3478` wrapper-label discrepancy remains documented rather than
+rewriting its receipt.
+
+Final published-head CI and CodeRabbit remain pending. This local review
+does not accept GF-14's full contract, physical mobile or refresh-rate parity.
+The dashboard remains 30/156 with all four GF-14 checkpoints false.
+
+## Historical Performance integration: source `18d3478`
+
+This pre-Images local integration is source commit
 `18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c`, with host SHA-256
 `fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9` and build
 receipt SHA-256
@@ -34,8 +71,10 @@ three sabotage controls (4, 3 and 2 failed checks), and confirms 28 expected
 failures on the retained preceding host with the same bundle. ScrollMotion's
 44 core assertions and PerformanceMetrics also pass. The complete local
 contract run passes 352 Node and 13 Python checks; static and publication
-checks pass. Root inspected the four ScrollView and two Modal captures; the
-graphics receipts bind their pixel files to the host and bundle.
+checks pass. Root inspected the four ScrollView and two Modal captures.
+Their host and bundle links were checked, but a later audit found that the
+graphics receipt stored the canonical runner hash beside the copied runner
+path; that historical runner identity is not verified.
 
 These are local macOS results. CI and CodeRabbit for the integrated `18d3478`
 source remain pending; success and approval from published `4aba7f5` are

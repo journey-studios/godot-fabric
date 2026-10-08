@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 #58: integração da Images #66 pendente de validação no host integrado."
+    "focusTitle": "GF-14 #58: validação local da integração Images #66 concluída; revisão e CI hospedada pendentes."
   },
-  "updatedAt": "2026-10-08T12:03:28Z",
+  "updatedAt": "2026-10-08T12:42:15Z",
   "source": {
-    "commit": "fe932f10982d433f79306e89c9323d456ead718f",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/fe932f10982d433f79306e89c9323d456ead718f",
-    "scope": "Baseline publicada fe932f1; main #66 (9c5d0eb) está integrada localmente em um merge ainda sem commit. O host fa4605bb, recibos e provas de 18d3478 são históricos anteriores à integração Images e não verificam o produtor combinado. Host/build e provas integradas pendentes; nenhum novo resultado de CI ou CodeRabbit é reivindicado. GF-14 permanece em revisão e sem checkpoints aceitos.",
+    "commit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+    "scope": "Local integrated ScrollView/Modal + Images #66 evidence at source 3bf129c; hosted CI and review pending. GF-14 remains open with zero accepted checkpoints.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "ScrollView original RN 0.87.1 em revisão na PR #58. A evidência integrada 18d3478 (host fa4605bb e receipt d9e833f9) antecede a integração da Images #66 e é apenas histórica para esta árvore combinada. A integração #66 está local e sem commit; rebuild do host e replay das provas de ScrollView/Modal, listas, OS, Performance e gráficos ainda pendentes. CI e revisão do produtor combinado não reivindicadas. GF-14 permanece aberto em 30/156; os quatro checkpoints seguem false. Evidência atual disponível é macOS local, sem hardware móvel, matriz de refresh ou paridade RN completa.",
+      "note": "Original RN 0.87.1 ScrollView and Modal wheel were replayed locally with Images #66 at source 3bf129c. The macOS host, 140 native input pins, SDK package, mounted ScrollView/Modal, click, lists, OS, Performance, Images, graphics and local gates are recorded in docs/evidence/scroll-view/integration-3bf129c.json. Dashboard remains 30/156; all four GF-14 checkpoints stay false. Hosted CI and CodeRabbit review for this combined source are pending. Desktop evidence does not cover physical mobile, refresh-rate behavior, complete RN parity, or the full ScrollView contract.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4150,6 +4150,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf14-images-integrated-3bf129c",
+      "at": "2026-10-08T12:42:15Z",
+      "taskIds": [
+        "GF-14",
+        "GF-16"
+      ],
+      "message": "Local ScrollView/Modal validation used producer source commit 3bf129c. The evidence receipt is being published in a separate documentation batch from branch codex/scroll-original; hosted CI/review remain pending and GF-14 checkpoints remain open.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/scroll-original/docs/evidence/scroll-view/integration-3bf129c.json"
+    },
     {
       "id": "scrollview-images-main-integration-pending-20261008",
       "at": "2026-10-08T12:03:28Z",

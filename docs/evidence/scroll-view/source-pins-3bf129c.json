@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+  "nativeBuild": {
+    "inputsPath": "build/scroll-view-root/images-integration-3bf129c/native-sdk-inputs.json",
+    "inputsSha256": "c23567219b7c4c54132bf516b4de55ed1f6e78af7f32e223975db081a288e0b8",
+    "recordedNativeSourceCount": 140
+  },
+  "producerGroups": {
+    "scrollView": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-gf14-probe-bundle.json",
+      "receiptSha256": "511c84288188d9f3b0ad26b72967fd22cf860b15158a4ae87a9fcb8ca35edf87",
+      "bundleSha256": "d602ae817b148d52df824be5c96adbedbfd6a78ee47c59d58ff54d264a0a8b25",
+      "metafilePath": "metafiles-3bf129c/scrollView.json",
+      "metafileSha256": "250cf85943d2b2667e53f58c6199724d2d3503d3e0e09609ec72e8f80a6536f9",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "modalWheel": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-modal-probe-bundle.json",
+      "receiptSha256": "381a901eb97866a5f61aba9245db07b8cd70bba890c418c7d8d5afab85b10665",
+      "bundleSha256": "31e15a0efc45fab2e60d37683c92d8cff350d349f633647c2f589e39fdfdff7d",
+      "metafilePath": "metafiles-3bf129c/modalWheel.json",
+      "metafileSha256": "657d82254a30ac6d94f5ed3ba24d95395b7db3aa34c80748b7af0f679042a26b",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "pointerClick": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/pointer-click/pointer-click-bundles.json",
+      "receiptSha256": "555c98f406a7a4e8200bdd4d930ac932f3f7b833d6c7a2332d9beee52c47646a",
+      "bundleSha256": {
+        "disabled": "d9797055650d2786de657e48415fbefa9fd945eab85be1af190ba7dc74a7f785",
+        "imperative-only": "4f4728918bd10d7ed51d1a6f914ccc308b730495edd6d67b9470b6debce8304e",
+        "internal-only": "8b271b5c51f92f75d417c100c18d73414a07070ad8d11a3910f3ccdf2a80276f",
+        "enabled": "eb8a3db886e70489f28a42425532a9b6564cf35edfeff3dc08333412fbaca45a"
+      },
+      "metafiles": {
+        "disabled": {
+          "path": "metafiles-3bf129c/pointerClick-disabled.json",
+          "sha256": "d36504aa3c113685b557faf2687c34e18b22e03b6594512f732b60644da8148f"
+        },
+        "imperative-only": {
+          "path": "metafiles-3bf129c/pointerClick-imperative-only.json",
+          "sha256": "ac1f068eaabb6aeb3020895b20b6a5fa25a921fefbd87577f38d6d8ec4e1e4c1"
+        },
+        "internal-only": {
+          "path": "metafiles-3bf129c/pointerClick-internal-only.json",
+          "sha256": "6088957828c6326de37baedb0e32e61801fcf48b1cf3df04ca8b72bfc24bbb9b"
+        },
+        "enabled": {
+          "path": "metafiles-3bf129c/pointerClick-enabled.json",
+          "sha256": "a2e2742ddfcb477473b8009045b6230c5f2cc5ba434f24321caa0e15031cfb5d"
+        }
+      },
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "virtualizedList": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/virtualized-list/virtualized-list-current-bundle.json",
+      "receiptSha256": "aca18a7528d22c451210676fcdaa8b19257a8d3f2319bc4714e7799643789f9f",
+      "bundleSha256": "88bdf293b8418b99aceb73df9f0003ed847849cfb4b1bdc49e5d5ac6dc5ec277",
+      "metafilePath": "metafiles-3bf129c/virtualizedList.json",
+      "metafileSha256": "026eb8626245a80c5bde2eb1f15e427bfcff6e8b62e9d3b9773a9918ab7a501c",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "osContracts": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/os-contracts/os-contracts-probe-bundle.json",
+      "receiptSha256": "00a5b764a68c7bc531896790c1c1a7f3bda01b42d2890e81848b40defaae3810",
+      "bundleSha256": "99c4929d39c4b02eec4d86bc544ed9e8a2e4271cfc49ec2047ac472aa0be924b",
+      "metafilePath": "metafiles-3bf129c/osContracts.json",
+      "metafileSha256": "54e434eb7236dd93d34a7c54eef52868510c0d2aefc689102918dea9f02a930a",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "performance": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/performance/performance-probe-bundle.json",
+      "receiptSha256": "3f1026f116840446d23c22f74045da47c478c1ef7b31a55238c4d270aa94066f",
+      "bundleSha256": "61b72c9b43c68c68c4671f838931b7cc6d90500476edf9677f81d4f42ed7fcf1",
+      "metafilePath": "metafiles-3bf129c/performance.json",
+      "metafileSha256": "b6355cbbf8fe2d31b0574c4f62cec293657c229f94864577cc2b0c3cf3273748",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "imagesBase": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/images-probe-bundle.json",
+      "receiptSha256": "478a2537b7a9d117447d40a69b8761740b6b2985c97cd9812aa1e1ee311dec21",
+      "bundleSha256": "186501de86a957fa326315c369b36046186bb6cd915858dd570bc0c1b1dfbe02",
+      "metafilePath": "metafiles-3bf129c/imagesBase.json",
+      "metafileSha256": "4d23fcf98256b8be22fa6111ada2f5ebf0bc5546b29e6a0d9cad2fb2e31d7ae6",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "imagesNetwork": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/images-network-probe-bundle.json",
+      "receiptSha256": "da809235ee6e0bce0eaa36d749dc5bbfef1cadca9bccb56e865fbdc87d699f1a",
+      "bundleSha256": "79b7691ed3577a8bd5c9a5536cfd8ee5fca056cfcebc6d6ee15ed195de082087",
+      "metafilePath": "metafiles-3bf129c/imagesNetwork.json",
+      "metafileSha256": "811e82ce2deddac1c5ee734623d57ac5cab24f89459125db9a949f78dedbd4ad",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "imagesVisual": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/images-visual-probe-bundle.json",
+      "receiptSha256": "ed8758e66e56bcb9e2c007e5c2e1f44723e3766726449df6a3ecc4a38ab4ccef",
+      "bundleSha256": "779e0fab59609dd594b065687aa32688a90bdb293a7bae4c48a4b94a93e43465",
+      "metafilePath": "metafiles-3bf129c/imagesVisual.json",
+      "metafileSha256": "03b431c261193afe6a4df3a25e2fe70fa81b3a487346e229f1a1ee18dde6068f",
+      "recordedSourceMembership": "See exact producer receipt; its source keys reference canonical maps."
+    },
+    "imagesExample": {
+      "receiptPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/example-capture/capture-receipt.json",
+      "receiptSha256": "46523e43f5b369097eaea75e2d620b97555fd19c48ec2ce009e01a8e872e5d9a",
+      "bundleSha256": "1263ea4a67912a54fd9f7542b68c2d8ac215120c40602684aa38ad8091c8b4c8",
+      "metafilePath": "metafiles-3bf129c/imagesExample.json",
+      "metafileSha256": "aa9961bc2d02568bebac15aeea7466dfd75e87a9de6fb937d1f2453851e9137d",
+      "checks": 39,
+      "displayServer": "macOS",
+      "publishedAssetMappingCount": 10,
+      "assetManifestPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/example-capture/app.js.assets.json",
+      "assetManifestSha256": "f04a005759abcbf48c3f699ccc81db4dda619e1132d71367aabc78c5315bca5b"
+    }
+  },
+  "sourceMaps": {
+    "recorded:repository": {
+      "path": "source-pins-3bf129c-recorded-repository.json",
+      "sha256": "bbbb971c0f69a10db81b7c2784457df5845ff61a93b9645a5477a2f6ee8b04ae",
+      "pathCount": 222
+    },
+    "computed-after-execution:repository": {
+      "path": "source-pins-3bf129c-computed-after-execution-repository.json",
+      "sha256": "bb1ff5cbe6003855079125c3441b1ec4f3fe65dfa8bb99c63ba94f32481edb2b",
+      "pathCount": 77
+    },
+    "recorded:react-native": {
+      "path": "source-pins-3bf129c-recorded-react-native.json",
+      "sha256": "a1a6052d741c23a7c8498203a3a90c1f815d8ce1d0e0cb16b0a70d9cf1222664",
+      "pathCount": 124
+    },
+    "computed-after-execution:react-native": {
+      "path": "source-pins-3bf129c-computed-after-execution-react-native.json",
+      "sha256": "f9706b8a2d7d418cdd3db7043da3b486c7bd1c7ed78379b474d2817787f870b5",
+      "pathCount": 260
+    },
+    "recorded:virtualized-lists": {
+      "path": "source-pins-3bf129c-recorded-virtualized-lists.json",
+      "sha256": "e9575131b7698079c252e340d7354ccb7da18448bb2ee68d4292177b9966aeaf",
+      "pathCount": 13
+    },
+    "computed-after-execution:virtualized-lists": {
+      "path": "source-pins-3bf129c-computed-after-execution-virtualized-lists.json",
+      "sha256": "04e6b6283da249a39733a6aeb24ff962ec9670854f5378e13b6caf819e584cb8",
+      "pathCount": 2
+    },
+    "recorded:third-party": {
+      "path": "source-pins-3bf129c-recorded-third-party.json",
+      "sha256": "45a0802fc6ec9d3200de7c2a2fa168e5a3b48ac24abda9d33f45ae981e69c588",
+      "pathCount": 1
+    },
+    "computed-after-execution:third-party": {
+      "path": "source-pins-3bf129c-computed-after-execution-third-party.json",
+      "sha256": "b9fbfca60361b6a75f5f7d11bc8c112d5d5b6942632e0b0127485b6f87ba1d93",
+      "pathCount": 190
+    }
+  },
+  "counts": {
+    "recordedRepository": 222,
+    "recordedReactNative": 124,
+    "recordedVirtualizedLists": 13,
+    "recordedThirdParty": 1,
+    "computedRepository": 77,
+    "computedReactNative": 260,
+    "computedVirtualizedLists": 2,
+    "computedThirdParty": 190,
+    "recordedUniquePaths": 360,
+    "computedUniquePaths": 529
+  },
+  "semantics": "Source maps store each path/hash once per source origin. Producer receipts preserve the pins they recorded; metafiles preserve the full input lists. The 299 repository-origin paths comprise 222 producer-recorded paths and 77 computed-after-execution paths. Of these, 298 are Git-backed at the producer snapshot; build/nativewind-compiled.js is one workspace-generated input and carries no Git claim. The Images example records 10 published asset paths under assets/examples/... mapped by SHA-256 to their source paths under examples/...; source-map keys use source paths.",
+  "verification": {
+    "recordedRepositoryPinsMatchWorkingTreeAndGit": true,
+    "recordedReactNativePinsMatchInstalledReactNative0871": true,
+    "recordedVirtualizedListPinsMatchInstalledPackage": true,
+    "computedAfterExecutionPinsMatchCurrentInputBytes": true,
+    "computedPinsAreNotProducerRecordedClaims": true,
+    "computedRepositoryGitTrackedPathCount": 298,
+    "computedRepositoryWorkspaceGeneratedInputs": [
+      {
+        "path": "build/nativewind-compiled.js",
+        "sha256": "97a2d791d60c83227d82182a918a2cc67b51d0431a1da758cb7e397b5e81c4b7",
+        "basis": "workspace-generated post-run input; no Git blob/commit claim"
+      }
+    ],
+    "imagesExamplePublishedAssetMappingsMatchManifestAndSourceBytes": true
+  }
+}

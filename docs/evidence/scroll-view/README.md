@@ -1,9 +1,63 @@
 # ScrollView desktop probe
 
-## Integrated local evidence: source `18d3478`
+## Integrated local evidence: source `3bf129c`
 
-The current local validation integrates main's Performance work (#59) with the
-ScrollView and Modal wheel changes. It is bound to source commit
+The current local replay combines original React Native 0.87.1 ScrollView and
+Modal wheel handling with Images #66. It is pinned to source commit
+[`3bf129c`](https://github.com/journey-studios/godot-fabric/commit/3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba),
+the macOS host SHA-256 `fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce`,
+and build receipt SHA-256 `ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8`.
+The [integrated receipt](integration-3bf129c.json) links the [deduplicated
+source inventory](source-pins-3bf129c.json), complete per-producer input lists,
+reports and root's independent local reviews. Source maps keep one hash per
+path and source origin. They separate producer-recorded pins from byte hashes
+computed after execution for additional metafile imports and example assets.
+The run recorded 140 native source pins, each verified against the checkout and
+Git, and locally verified the 2,713-file SDK package. Its external adapter,
+runtime and ABI certification claims remain false.
+
+| Local integrated lane | Result | Independent verification |
+| --- | ---: | --- |
+| Original RN ScrollView | 33/33 | Fractional 13.25 px offset, paint/Fabric/DOM agreement, diagonal pan, interruptions, pointer retirement and two-surface cleanup |
+| Original RN Modal wheel | 13/13 | Four actual Window wheel events; vertical +72 px and horizontal +48 px; 14 damaged reports rejected |
+| Pointer click | 8 × 91 | All eight configurations replayed with 26 required measured cases and full cleanup |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | Current reports pass; preceding-SDK and sabotage controls rejected by their oracles |
+| Performance | 43/43 | Same-bundle prior-host control has 28 expected failures; six current-report mutation controls rejected |
+| Images | 72/72, 74/74, 53/53 | Base, network and visual reports; a same-bundle prior-host visual control has 40 failures |
+| Images example | 39/39 | Headed macOS capture; two pixels-identical images are reused from the Images evidence folder |
+| Native core | ScrollMotion 44; PerformanceMetrics and ImageEffects pass | Separate native-core checks |
+| Local gates | 353 Node + 13 Python | Dashboard 43/43, static scan and publication scan pass |
+| Headed captures | 4 ScrollView + 2 Modal + 2 Images | Actual pixels viewed by root; clipping, fractional offset, pan, Modal wheel and cleanup shown |
+
+The six current ScrollView and Modal captures are the [initial view](scroll-view-3bf129c-initial.png),
+[13.25 px offset](scroll-view-3bf129c-fractional-13_25.png),
+[horizontal clipped pan](scroll-view-3bf129c-horizontal-pan-clipped.png),
+[cleanup](scroll-view-3bf129c-cleanup.png),
+[Modal vertical wheel](modal-wheel-3bf129c-down.png) and
+[Modal horizontal wheel](modal-wheel-3bf129c-horizontal.png). Their image hashes,
+receipts and Modal probe diff are in the integrated receipt. The two Images
+example captures reuse byte-identical files from [Images visual evidence](../images-visual/).
+The [board snapshot](agents-3bf129c-testing.jpg) shows the work in testing; it is
+not an acceptance status.
+
+The ScrollView graphics receipt records an honest runner-provenance correction
+after execution: the preserved executed copy hashes `e9fc8c9e…`, while the
+canonical source hashes `b92a862e…`. The captures were not rerun for that label
+correction. The earlier `18d3478` receipt has a separate historical runner-path
+and hash discrepancy, documented in its section below; neither old receipt is
+used to bind this run.
+
+The run is local desktop evidence only. Hosted CI and CodeRabbit review for
+this combined source are pending; GF-14 remains open at 30/156 with zero of its
+four checkpoints accepted. There is no physical mobile, refresh-rate, complete
+RN parity, or full GF-14 acceptance claim. Unsupported ScrollView behavior such
+as refresh controls, paging/snap and bounce remains open.
+
+## Historical Performance integration: source `18d3478`
+
+This local validation integrated main's Performance work (#59) with the
+ScrollView and Modal wheel changes. It is now historical because Images #66 was
+subsequently integrated. It is bound to source commit
 `18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c`, the macOS host SHA-256
 `fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9`, and
 build receipt `d9e833f98f5ffa26b28a1d8c0d539bdb8d73515d03ec00c188559bce258a6b4c`.
@@ -51,7 +105,10 @@ testing state and open coordination warning; it is not a green-board claim.
 This is macOS Godot evidence, not physical iOS/Android, refresh-rate coverage,
 full React Native parity or complete GF-14 acceptance.
 
-The six root-inspected images are the
+A later provenance audit found that this historical receipt names the copied
+runner path but stores the canonical runner hash `b92a862e…`; the preserved
+18d copied runner bytes hash `e6a1b75bc1642b2958a08fda98063c5bcca45df2a74a696ea682ae231cf800e3`. Keep this receipt as historical and
+do not treat its runner identity as verified. The six root-inspected images are the
 [initial view](scroll-view-18d3478-initial.png),
 [13.25 px fractional offset](scroll-view-18d3478-fractional-13_25.png),
 [horizontal clipped pan](scroll-view-18d3478-horizontal-pan-clipped.png),
@@ -61,7 +118,7 @@ The six root-inspected images are the
 hashes and source paths are recorded in the integrated and graphics receipts.
 The raw capture filenames in the local archive contain `0203145`; the curated
 copies above use `18d3478`. The receipts identify both paths and the same bytes
-from the current integrated execution. The bounded graphics probe copy and its exact diff are
+from the 18d3478 execution. The bounded graphics probe copy and its exact diff are
 recorded in [the Modal graphics receipt](modal-wheel-18d3478-graphics.json)
 and [capture diff](modal-wheel-18d3478-capture.diff).
 
