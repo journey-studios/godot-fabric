@@ -494,6 +494,19 @@ and a comparison of the effects with iOS are open. Hosted CI passed the first sl
 [network evidence](docs/evidence/images-network/README.md);
 [visual evidence](docs/evidence/images-visual/README.md).
 
+The [performance baselines](docs/research/performance.md) (GF-30's first slice) add a `performance` section to
+the application snapshot: exact counters of the native views, Hermes' live heap after a forced collection, and the
+host's pump split into JS, mount and layout phases. A soak mounts and unmounts four workloads 20 times each,
+headless (a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a 120-row `FlatList`):
+after every cycle the SceneTree, Godot's orphan count and the host's native views are back to the baseline of the
+run, and the live heap at rest rises at most 2,048 bytes in the steady state (0 to 312 measured). 43 checks, recomputed
+by an independent oracle from the samples the host reports; the preceding host fails exactly 28 and three retained sabotages (a Control never freed,
+a frozen heap reading, a phase counted twice) are rejected. The evidence record is pinned at `ad87234`, which had 41 checks and 27 failures of the preceding host,
+before the checks of the unmount notification and of the stopped application's snapshot. Durations, the resident memory and Godot's static
+memory are recorded with their provenance and never judged; target-device budgets, text shaping, 10,000 rows,
+graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
+[Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -797,6 +810,7 @@ npm run test:pointers:interest          # original Map query and native View poi
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
+npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run check:static

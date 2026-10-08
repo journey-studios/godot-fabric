@@ -81,6 +81,7 @@
     "test:appearance": "node --test tests/appearance-native.test.mjs",
     "test:animated": "node --test tests/native-animated-native.test.mjs",
     "test:frame-clock": "node --test tests/frame-clock-native.test.mjs",
+    "test:performance": "node --test tests/performance-native.test.mjs",
     "test:text-layout": "node --test tests/text-layout-native.test.mjs",
     "test:text-original": "node --test tests/text-original-native.test.mjs",
     "test:networking": "node --test tests/networking-native.test.mjs",

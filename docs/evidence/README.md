@@ -586,6 +586,26 @@ every departure from RN iOS (the blur's rounding, effects on the next draw, `onL
 `stretch` and `repeat` only, a refused list of insets, a transparent black tint). A comparison of the effects with
 iOS, every target but macOS and hosted CI are open; this slice closes no checkpoint.
 
+The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
+section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into
+JS, mount and layout phases, the last timed by RN's own layout telemetry), and a soak mounts and unmounts four
+workloads 20 times each, headless: a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a
+120-row `FlatList`. After every cycle the SceneTree's nodes, Godot's orphan count and the host's native views are
+back to the baseline of the run; counters, phases and the heap source keep their invariants at every reading, and
+the live heap at rest rises at most 2,048 bytes above its first steady value (worst measured: one 312-byte step in
+eight soaks). 41 checks at the pinned `ad87234` (43 in the current suite, which the review of #59 extended with the
+check that the notification of a root's unmount reports the counts of live and retired roots at that moment and the check
+that a stopped application's snapshot is the same on every reading), recomputed by an
+independent oracle, which also recomputes the nearest-rank percentiles from the samples the host reports. The preceding
+host fails exactly the 27 that read the section (28 in the current suite); three retained
+sabotages (a Control never freed, a frozen heap reading, a phase counted twice) fail 4, 3 and 2 and the oracle
+rejects each; four breakages made in the recorded report are rejected too (six in the current suite). The samples the percentiles come from
+are published only to a validation run (`validation_performance_samples`): the application snapshot weighs 5,997
+bytes by default and 18,398 with them. Durations, the resident memory and Godot's static memory are recorded and
+never judged, and the headless numbers do not represent a display. Per-device budgets (V2-D28), text shaping,
+10,000 rows, graphic frame time and iOS and Android are open. Hosted CI is pending; this does not complete GF-30:
+only its first-slice checkpoint (`slice`) closes, and no whole GF, other checkpoint, weight or denominator does.
+
 The [OS-specific contracts record](os-contracts/README.md) makes the public `react-native` export React
 Native's own `ToastAndroid` (its fallback), `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid` (its fallback), `InputAccessoryView`, `PushNotificationIOS`
