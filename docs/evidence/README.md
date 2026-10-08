@@ -462,6 +462,24 @@ parity cases are not WebSocket differential or Godot mobile runtime proof. This 
 GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
 and 51/51 graphical checks, with all 11 current captures linked from the record.
 
+The [device services record](device-services/README.md) runs React Native's original `Linking`,
+`Clipboard` (the legacy module) and `Vibration` from the public import over three C++ TurboModules
+(`LinkingManager` with iOS's contract, `Clipboard` and `Vibration`) that call Godot's `OS.shell_open`,
+`DisplayServer` clipboard and `Input.vibrate_handheld` through a replaceable backend: GF-23's first slice.
+Two applications of the same bundle run 65 headless checks (a recording validation backend with two roots,
+and Godot's real backend, where the headless clipboard rejects with `E_CLIPBOARD_UNAVAILABLE`) and a second
+process without `--uri=` runs 2 more, with an independent oracle that replays every step against RN's rules.
+Order and counts are judged, never time: a pattern vibrates four times in order, a deep link reaches the
+listeners of both roots once each, `openURL` rejects what has no scheme before the backend sees it, and RN's
+own repeating-pattern hazard (`cancel()` does not stop it) is demonstrated, not fixed. The preceding host fails
+exactly the 52 normative checks and 1 of 2 (hosts `aebbddcd` and `147df0b3`); a host that emits `url` twice
+fails 5 and one that caches `getString` fails 9, and the oracle rejects both. The example passes 16 headless
+checks, 16 with the native renderer and 23 with seven captures, all linked from the record, with every backend
+replaced so that nothing opens a real URL or touches the real pasteboard. `canOpenURL` cannot ask which
+handlers are installed, a vibration cannot be cancelled in Godot, a deep link reaches a running application
+only through `FabricApplication.deliver_url`, and Alert, Share, Settings, BackHandler, mobile deep-link plugins
+and real-device behavior are open. Hosted CI is pending; this does not complete GF-23 or add a checkpoint.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

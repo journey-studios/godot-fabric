@@ -5,8 +5,8 @@ Godot 4.7.2, headless, for the first slice of GF-23 (shared device services). Th
 probe runs the three original modules through the public `react-native` import in two
 actual `FabricApplication`s; the preceding host (the one built from `main` before this
 slice) fails exactly the checks that need the native services, and two retained
-sabotages are rejected by the probe and by an independent oracle. The hosted CI record
-and the captures are not part of this note. Real OS behavior (a real browser opening a
+sabotages are rejected by the probe and by an independent oracle. The [evidence record](../evidence/device-services/README.md) pins the execution
+and has the captures; its hosted CI run is pending. Real OS behavior (a real browser opening a
 URL, the real pasteboard, real vibration hardware, a launcher passing a real `--uri=`)
 and mobile exports are not certified; see "Remaining scope".
 

@@ -79,13 +79,12 @@ slice's own suite, not a coverage percentage.
 | Frame pacing | `requestAnimationFrame` and RN's Native Animated frames | [Frame clock](../evidence/frame-clock/README.md) | 37 over eight loop paces; the preceding host fails exactly 29, three retained sabotages each fail at least one | run 37538167415 ([receipt](../evidence/frame-clock/hosted-ci.json)) |
 | Runtime globals | none: `fetch`, `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are globals, not names of the root (`Networking` stays missing) | [Networking](../evidence/networking/README.md) | 100 against a local server over HTTP and HTTPS, with an independent oracle; the preceding host fails exactly 84, two retained sabotages 8 and 2 | pending |
 | Runtime globals | none: `WebSocket` is a global, not a name of the root | [WebSocket](../evidence/websocket/README.md) | 93 against a local RFC 6455 server over ws and wss, with an independent oracle that checks the server's frame log; the preceding host fails exactly 81, two retained sabotages 4 and 2 | pending |
-| Device services | `Linking`, `Clipboard`, `Vibration` | [Device services](../research/device-services.md) | 65 in two applications (the validation backend and Godot's real one) and 2 in a launch without `--uri=`, with an independent oracle; the preceding host fails exactly 52 and 1, two retained sabotages are rejected by the probe and the oracle | pending |
+| Device services | `Linking`, `Clipboard`, `Vibration` | [Device services](../evidence/device-services/README.md) | 65 in two applications (the validation backend and Godot's real one) and 2 in a launch without `--uri=`, with an independent oracle; the preceding host fails exactly 52 and 1, two retained sabotages are rejected by the probe and the oracle | pending |
 
 The two Runtime globals rows are not facade areas: RN installs those names as globals, so
 they do not move the counts above, and the root's `Networking` export is still missing. The
 Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
-counts from 39 and 53 to 42 and 50. Their hosted CI runs are pending, and its record is the
-research note until the evidence record is pinned.
+counts from 39 and 53 to 42 and 50. Their hosted CI runs are pending.
 
 ## Original native oracle
 

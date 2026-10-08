@@ -104,7 +104,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   later PR-head changes require new green CI).
   They are globals, not names of the `react-native` root: they do not move the facade's counts,
   and RN's `Networking` export stays among the missing 50.
-- **Device services:** the original [Linking, Clipboard and Vibration](research/device-services.md)
+- **Device services:** the original [Linking, Clipboard and Vibration](evidence/device-services/README.md)
   over three native TurboModules and Godot's `OS.shell_open`, clipboard and `Input.vibrate_handheld`
   (GF-23's first slice; a headless probe in two applications with an independent oracle, the
   preceding host as the control and two retained sabotages; its hosted CI run is pending). Alert,

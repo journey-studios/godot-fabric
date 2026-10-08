@@ -411,7 +411,7 @@ Godot's real one) with an independent oracle; the preceding host fails exactly i
 checks and two retained sabotages are rejected. The suite and the example never open a real URL or
 touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-link plugins,
 cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
-[Research](docs/research/device-services.md).
+[Evidence](docs/evidence/device-services/README.md); [research](docs/research/device-services.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

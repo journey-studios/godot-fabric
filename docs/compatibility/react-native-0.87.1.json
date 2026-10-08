@@ -141,7 +141,8 @@
         "src/react-native-platform.jsx",
         "src/device-services.js",
         "native/device_services.cpp",
-        "tests/device-services-native.test.mjs"
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
       ],
       "note": "RN's original deprecated Clipboard over the host's Clipboard TurboModule; getString and setString fail with E_CLIPBOARD_UNAVAILABLE where the display server has no clipboard (headless). The real pasteboard is not exercised by the suite."
     },
@@ -312,7 +313,8 @@
         "src/react-native-platform.jsx",
         "src/device-services.js",
         "native/device_services.cpp",
-        "tests/device-services-native.test.mjs"
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
       ],
       "note": "RN's original Linking over the iOS LinkingManager contract: openURL, canOpenURL (the scheme rule, not installed handlers), getInitialURL from --uri= and the url event from FabricApplication.deliver_url. openSettings and sendIntent reject; no mobile deep-link plugin."
     },
@@ -671,7 +673,8 @@
         "src/react-native-platform.jsx",
         "src/device-services.js",
         "native/device_services.cpp",
-        "tests/device-services-native.test.mjs"
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
       ],
       "note": "RN's original Vibration over Input.vibrate_handheld: vibrate and patterns scheduled by RN's JavaScript. Godot cannot cancel a vibration and vibrateByPattern throws if called directly; real hardware is not exercised."
     },

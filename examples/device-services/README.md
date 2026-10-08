@@ -62,7 +62,8 @@ own counters:
 - the native button's links arrive once each, in order; Vibrate passes 150 to the backend; the host's
   counters match the clicks; a stop releases the root and makes `deliver_url` return `false`.
 
-The same checks run headless and with the native renderer. `npm run test:device-services` is the
+The same checks run headless and with the native renderer; the [evidence record](../../docs/evidence/device-services/README.md)
+has the seven frames that `--capture` saves. `npm run test:device-services` is the
 evidence suite, outside the catalog: the original modules in two applications (a recording
 validation backend, and Godot's real one in headless Godot) with the preceding host as the control,
 two retained sabotages and an independent oracle; the [research note](../../docs/research/device-services.md)
