@@ -493,6 +493,8 @@ smoke fixture, not the game) can start on day 0. The macOS build is closed befor
 the single iPhone proof. Effort sizes are relative, not a
 calendar: the export, the pointer policy and the device are the unknowns.
 
+**Recorded progress (2026-10-08).** The principal accepted the first desktop ScrollView slice against hosted run 37799420834 and its 17/17 artifact audit; only the GF-14 `slice` checkpoint is recorded. The full contract, parity and target checkpoints remain open. The three V05-01 documentation criteria are also recorded in the branch dashboard. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical.
+
 **Out of the 0.5.** Typed text, virtual keyboard and IME; network images; scroll
 inertia; public hover and right-click on Pressable (tooltips and context menus stay
 in Godot or use long-press); graphical tech tree, boats, diplomacy, fog of war and

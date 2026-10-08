@@ -1,14 +1,12 @@
 # Listas virtualizadas no ScrollView do SDK
 
-A integração mais recente do ScrollView é `2a01ec6`, com a main de Images
-#64. Nesse host, `78707871`, a regressão de listas passa os 44 checks e o
-oráculo independente confere os estados medidos. Os controles foram refeitos:
-o SDK anterior falha os 11 checks previstos entre 16 executados; a sabotagem
-falha exatamente três checks e é rejeitada pelo oráculo. Controles de um host
-anterior são preservados à parte e não entram como prova desta execução.
-Os [recibos atuais](../scroll-view/pointer-route-capture-retirement.json) e o
-[mapa de produtores](../scroll-view/committed-source-2a01ec6.json) registram a
-identidade. CI, revisão final e aceite do ScrollView permanecem pendentes.
+A validação hospedada atual do ScrollView e das listas usa o produtor `a3fe519`,
+merged em `66c948b`. O [recibo atual](../scroll-view/hosted-ci.json) registra
+44/44 checks de listas com oráculo independente e a prova atual do comando
+animado padrão do ScrollView. As descrições de host e controles abaixo são
+históricas da execução local `2a01ec6`; não as apresente como identidade do
+host hospedado atual. O GF-15 completo e a aceitação geral do ScrollView
+continuam abertos.
 
 Esta fatia troca os placeholders `FlatList` e `VirtualizedList` do SDK pelos
 módulos originais do RN 0.87.1 — `FlatList`, `SectionList`, `VirtualizedList` e
@@ -237,10 +235,15 @@ refeitos nele e o click passou de novo; o recibo registra isso em `reviewReruns`
 
 ## Limites
 
-Scroll animado não existe: um comando sem `animated` salta onde o RN anima,
-`animated: true` lança, e `scrollToEnd()` sem argumentos também. Eventos de
-momentum nunca são enviados. Sticky headers, `RefreshControl`/`onRefresh`,
-`maintainVisibleContentPosition` e indicadores lançam quando pedidos. A roda numa
+No host histórico deste relatório, comandos animados ainda não estavam
+implementados: omitir `animated` saltava, `animated: true` lançava, e
+`scrollToEnd()` sem argumentos também. Esse limite não descreve a fatia atual:
+a [prova hospedada de ScrollView](../scroll-view/hosted-ci.json) verifica o
+componente original do RN, o `scrollToEnd` com animação padrão e os eventos de
+momentum; a regressão atual de listas passa 44 checks com oráculo independente.
+Isso não fecha o GF-15 completo. Sticky headers, `RefreshControl`/`onRefresh`,
+`maintainVisibleContentPosition` e indicadores com fade continuam fora do
+contrato suportado e falham claramente quando pedidos. A roda numa
 lista invertida move o conteúdo no sentido oposto ao de uma lista comum, como
 os scroll views nativos do Android. Listas aninhadas na mesma orientação
 (`measureLayout`), `initialScrollIndex`, `numColumns`, RTL horizontal,

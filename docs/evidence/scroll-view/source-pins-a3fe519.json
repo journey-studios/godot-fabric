@@ -1,0 +1,237 @@
+{
+  "format": "godot-fabric.scroll-view-source-index/v1",
+  "sourceCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+  "verifiedAgainstGitAndWorkspace": true,
+  "sourceMapFiles": [
+    {
+      "path": "source-pins-a3fe519-repository.json",
+      "sha256": "884e160c787d43f6b53a79a830bd1de3b23e9705497a2a3f2cd5d1ce9a580a18",
+      "paths": 235,
+      "basis": "repository bytes verified at producer commit"
+    },
+    {
+      "path": "source-pins-a3fe519-node-modules.json",
+      "sha256": "64da680970804ce73597f6add5ff5690871e0c582585690dc4341afa31346555",
+      "paths": 544,
+      "basis": "installed module bytes computed after bundling"
+    },
+    {
+      "path": "source-pins-a3fe519-external.json",
+      "sha256": "acadaac9f69c109b710883a40acbbd61482cc6824e4ade5ad58eb6a8ff584619",
+      "paths": 1,
+      "basis": "producer-recorded external dependency"
+    },
+    {
+      "path": "source-pins-a3fe519-groups.json",
+      "sha256": "daca29b4a8f4fa6227cb90fc41bfeb0fafcbef0bd6b787f7eb81af3006b85c13",
+      "paths": null,
+      "basis": "membership-only index; hashes live in maps"
+    }
+  ],
+  "sourceCounts": {
+    "repositoryUniquePaths": 235,
+    "producerRecordedPaths": 109,
+    "nativeSdkCollectorPaths": 144,
+    "supplementalRepositoryMetafilePaths": 19,
+    "installedNodeModulePaths": 544,
+    "externalProducerPaths": 1,
+    "generatedWorkspacePaths": 0
+  },
+  "originalReactNativeReconciliation": {
+    "producerDeclared": 109,
+    "metafilePaths": 322,
+    "intersection": 60,
+    "declaredOnly": 49,
+    "metafileOnly": 262,
+    "uniqueUnion": 371
+  },
+  "originalVirtualizedListDeclaredPaths": 13,
+  "canonicalProducerReceipts": [
+    {
+      "name": "scrollView",
+      "receiptPath": "build/scroll-view-gf14-probe-bundle.json",
+      "bundlePath": "build/scroll-view-gf14-probe.js",
+      "bundleSha256": "264adad3ff29b2a6e3b33695034cc53ecf1227be2f3da8fa78f4a6e75ebfcfe5",
+      "bundleBytes": 1115104,
+      "inputCount": 397,
+      "sourceCount": 18,
+      "originalReactNativeSourceCount": 6,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "scrollModal",
+      "receiptPath": "build/scroll-view-modal-probe-bundle.json",
+      "bundlePath": "build/scroll-view-modal-probe.js",
+      "bundleSha256": "3de5962e518ad0c8fc1b7208b30b004248df2d0691c1c91d37c71e5ad6874ce8",
+      "bundleBytes": 1104875,
+      "inputCount": 397,
+      "sourceCount": 17,
+      "originalReactNativeSourceCount": 10,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "virtualizedList",
+      "receiptPath": "build/virtualized-list-current-bundle.json",
+      "bundlePath": "build/virtualized-list-current.js",
+      "bundleSha256": "4da729893526d5b3fcda9cce57098a1c3e75c5cf4b2c93f7cc09a77d0dc6fdd8",
+      "bundleBytes": 1137658,
+      "inputCount": 397,
+      "sourceCount": 21,
+      "originalReactNativeSourceCount": 17,
+      "originalVirtualizedListSourceCount": 13
+    },
+    {
+      "name": "osContracts",
+      "receiptPath": "build/os-contracts-probe-bundle.json",
+      "bundlePath": "build/os-contracts-probe.js",
+      "bundleSha256": "eb5e1e4f613785b1def2e8080cf5428287481cc32a7f7fb3fad315b823b14862",
+      "bundleBytes": 1143448,
+      "inputCount": 398,
+      "sourceCount": 11,
+      "originalReactNativeSourceCount": 34,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "performance",
+      "receiptPath": "build/performance-probe-bundle.json",
+      "bundlePath": "build/performance-probe.js",
+      "bundleSha256": "8da0749c46917d72fe229fcc75e43c8ef2189265e3961cbe9a08af125e4364ad",
+      "bundleBytes": 1286413,
+      "inputCount": 532,
+      "sourceCount": 17,
+      "originalReactNativeSourceCount": 5,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "imagesVisual",
+      "receiptPath": "build/images-visual-probe-bundle.json",
+      "bundlePath": "build/images-visual-probe.js",
+      "bundleSha256": "695d5aefd431557b718e968cdc7bd60d86b95d4ba18484f69ae929decc0b9c3f",
+      "bundleBytes": 1112084,
+      "inputCount": 397,
+      "sourceCount": 34,
+      "originalReactNativeSourceCount": 21,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "textStyle",
+      "receiptPath": "build/text-style-probe-bundle.json",
+      "bundlePath": "build/text-style-probe.js",
+      "bundleSha256": "428265e1ee2c672695fcca1403f56c89bf06c111c6cecae868d271cab8cdb01a",
+      "bundleBytes": 1111727,
+      "inputCount": 397,
+      "sourceCount": 14,
+      "originalReactNativeSourceCount": 12,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_original_disabled",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-bundles.json",
+      "bundlePath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-disabled.js",
+      "bundleSha256": "7e4a352ca4d116b75dd9bd9d4234052705d3f1b4c4732b8e053c6d29b6d11eec",
+      "bundleBytes": 1114984,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_original_imperative-only",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-bundles.json",
+      "bundlePath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-imperative-only.js",
+      "bundleSha256": "4c824cd4d6b7e2b7545982e7aeece0da4f24ffa5a9a15859a2eeefe92e053205",
+      "bundleBytes": 1114991,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_original_internal-only",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-bundles.json",
+      "bundlePath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-internal-only.js",
+      "bundleSha256": "767c852c311d5ddb27239965350c6f1de578f877ff2285f158a511c4affb1f54",
+      "bundleBytes": 1114989,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_original_enabled",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-bundles.json",
+      "bundlePath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-original-enabled.js",
+      "bundleSha256": "d8a4e9cb86754d46d05e0fd6c02fd2b23f70bf453b5bb60f77aa7a9a9db02293",
+      "bundleBytes": 1114983,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_current_disabled",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-current-bundles.json",
+      "bundlePath": "build/pointer-click-disabled.js",
+      "bundleSha256": "95bb758a381f9169ba2f8c659b0b0228f476a2b041fc2eb8040d8b618a9e0d21",
+      "bundleBytes": 1118277,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_current_imperative-only",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-current-bundles.json",
+      "bundlePath": "build/pointer-click-imperative-only.js",
+      "bundleSha256": "54c394607fd6879de4a4ede2a19a16abcae33b9ea2f2a2c05a71af7972c3452f",
+      "bundleBytes": 1118284,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_current_internal-only",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-current-bundles.json",
+      "bundlePath": "build/pointer-click-internal-only.js",
+      "bundleSha256": "025054f260677fd7b014070d37c4a65e86f1b2069e515020202607eb30cc3e05",
+      "bundleBytes": 1118282,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    },
+    {
+      "name": "pointerClick_current_enabled",
+      "receiptPath": "build/scroll-view-root/text-integration-a3fe519-current/pointer-receipts/pointer-click-current-bundles.json",
+      "bundlePath": "build/pointer-click-enabled.js",
+      "bundleSha256": "ffa24ef865b3ad75ea510d3e0b3103708e8c590b9c7675dc11c7a2f39ec9ce66",
+      "bundleBytes": 1118276,
+      "inputCount": 399,
+      "sourceCount": 23,
+      "originalReactNativeSourceCount": 23,
+      "originalVirtualizedListSourceCount": 0
+    }
+  ],
+  "sourceReceiptHashes": {
+    "scrollView": "48017e4c217d87fd91a6c8cd1fadea2cd3cafc36a7e04eb9461b3d12cd55d252",
+    "modal": "485ac62d58da0f1f9cf458dde2e76ed1b971058a00fbbd17b4c4aa751b2e9b41",
+    "lists": "b88d2eaa86f2df4fbe46e9d4fd4645e87ad631dee0935b1dde522900c9323bef",
+    "os": "0851410df267f6a0b488773a1d94590499e94949e62348258a8898b97452a3cf",
+    "performance": "8f7e8e8fa819e90bec472da03eabf638b2e686eb560e21af7e908f410d1c9e4c",
+    "imagesVisual": "ec2ad68a1c6f08aaeee7887366596cbe70074d758e52fd351c3262bdc00ab5b4",
+    "textStyle": "580aa90d93a23330c3c59d2dcb682538ffd0c849c823fd2255fc6cf1239b84d1",
+    "pointerClick_original": "bf7c27f1f3000a93b1b87ffcbe96caf09a8b8657dd4382f1c2870e2db02cdc0c",
+    "pointerClick_current": "ebe4c4ef89c550aec19598a3bea821062f49abb415fa4c7ee46c3ade108c1ef1"
+  },
+  "canonicalBundleReceipt": "build/scroll-view-root/current-bundle-inputs-a3fe519.json",
+  "canonicalBundleReceiptSha256": "0d040533578b089112a7facb9462c70bdb51348d39a27f6159fd479d6db05d50",
+  "fullFrozenInputs": {
+    "path": "build/scroll-view-root/hosted-text-integrated-audit-inputs-a3fe519.json",
+    "sha256": "b4f7ac0d6b837d5482a2794cf389cf156e91cf144cdef2ac601e8553a3677579"
+  },
+  "limitations": [
+    "Bundle receipts bind exact output hashes, input counts and frozen inputs; this compact published index does not reproduce every raw metafile path.",
+    "The hosted SDK host digest is recorded metadata; the hosted library bytes were not uploaded for direct inspection."
+  ]
+}

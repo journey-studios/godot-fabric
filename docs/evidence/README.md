@@ -31,6 +31,8 @@ native build/package hashes, an unsigned arm64 device export/link and an
 x86_64/Rosetta simulator consumer. Its narrow runtime proof and disclosed
 official-template limitations do not certify the complete iOS port.
 
+The [ScrollView desktop record](scroll-view/README.md) contains the merged #58 hosted artifact audit, source maps, desktop captures, and a separate V05-01 evidence receipt. This branch records principal acceptance of the first supported desktop slice and all three V05-01 criteria; the other three GF-14 checkpoints remain open. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical.
+
 The [original Codegen record](codegen/README.md) adds upstream TS/Flow generation,
 20 contract tests and six compiled C++ translation units. That first record did
 not load/render the external adapter; later native-adapter records below add
