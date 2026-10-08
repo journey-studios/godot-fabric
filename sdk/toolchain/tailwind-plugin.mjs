@@ -12,6 +12,8 @@ import { compileNativeWindStyles, inlineRem, nativewindTailwindConfig, registrat
 // of the bundle. The Tailwind configuration is data in package.json
 // (godotFabric.tailwind), never a tailwind.config.* the SDK would have to run.
 const requireToolchain = createRequire(import.meta.url);
+// The packages Tailwind itself depends on (fast-glob, micromatch, postcss), as the SDK's copy of Tailwind resolves them.
+const tailwindRequire = () => createRequire(requireToolchain.resolve("tailwindcss/package.json"));
 // NativeWind picks its native pipeline for any NATIVEWIND_OS but "web".
 const nativewindOs = "godot";
 const configFiles = ["js", "cjs", "mjs", "ts", "cts", "mts"].map(extension => "tailwind.config." + extension);
@@ -29,9 +31,14 @@ function plainObject(value) {
 }
 const version = filename => JSON.parse(fs.readFileSync(filename, "utf8")).version;
 
+// A glob (or any alternative inside its braces, extglobs or groups) that is absolute, starts at ~ or names a parent
+// directory. micromatch's brace expansion leaves some of these unexpanded ({..,ui}), so the pattern text is judged as
+// well as each expansion; the scan below still holds every file to the project by its real path.
+const leavesProject = /(?:^|[{,(|])\s*(?:\/|~|[A-Za-z]:[\\/])|(?:^|[/\\{,(|])\.\.(?=$|[/\\},)|])/;
+
 // godotFabric.tailwind is JSON with a closed set of fields. Content globs stay
 // inside the project; plugins, presets and functions have no place in JSON.
-export function parseTailwindDeclaration(project, value) {
+export function parseTailwindDeclaration(value) {
   if (value === undefined) {
     return undefined;
   }
@@ -39,9 +46,24 @@ export function parseTailwindDeclaration(project, value) {
     fail("E_PROJECT_TAILWIND", "godotFabric.tailwind accepts only content, darkMode and theme");
   }
   if (!Array.isArray(value.content) || !value.content.length
-      || value.content.some(glob => typeof glob !== "string" || !glob || path.isAbsolute(glob)
-        || glob.split(/[\\/]/).includes(".."))) {
-    fail("E_PROJECT_TAILWIND", "godotFabric.tailwind.content must list project-relative globs without ..");
+      || value.content.some(glob => typeof glob !== "string" || !glob || glob.includes("\0"))) {
+    fail("E_PROJECT_TAILWIND", "godotFabric.tailwind.content must list project-relative globs");
+  }
+  const micromatch = tailwindRequire()("micromatch");
+  for (const glob of value.content) {
+    let alternatives;
+    try {
+      alternatives = [glob, ...micromatch.braces(glob, {expand: true})];
+    } catch (error) {
+      fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content "${glob}" cannot be expanded: ${error.message}`);
+    }
+    if (glob.startsWith("!")) {
+      fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content "${glob}": negated globs are not supported`);
+    }
+    const escaping = alternatives.find(alternative => leavesProject.test(alternative));
+    if (escaping !== undefined) {
+      fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content "${glob}" must stay inside the project: no .., absolute path or ~ in any alternative (${escaping})`);
+    }
   }
   if (value.darkMode !== undefined && value.darkMode !== "media") {
     fail("E_PROJECT_TAILWIND", 'godotFabric.tailwind.darkMode supports only "media": NativeWind follows Appearance.setColorScheme');
@@ -50,7 +72,48 @@ export function parseTailwindDeclaration(project, value) {
     fail("E_PROJECT_TAILWIND", "godotFabric.tailwind.theme must be a JSON object");
   }
   return {content: value.content, darkMode: value.darkMode ?? "media", theme: value.theme,
-    absoluteContent: value.content.map(glob => path.resolve(project, glob))};
+    patterns: value.content.map(glob => glob.replace(/^(?:\.\/)+/, ""))};
+}
+
+// The SDK owns the content scan: it expands the declared globs inside the project with the fast-glob Tailwind depends
+// on, holds every file to the project by its real path (a symbolic link, to a file or to a directory, that leaves it
+// fails the build and is named), and hands Tailwind the files' text. Tailwind therefore reads nothing from disk, and
+// nothing outside the project is ever read.
+export function scanTailwindContent(project, patterns) {
+  project = fs.realpathSync(project);
+  const fastGlob = tailwindRequire()("fast-glob");
+  let found;
+  try {
+    found = fastGlob.sync(patterns, {cwd: project, absolute: true, onlyFiles: true, unique: true,
+      followSymbolicLinks: true, suppressErrors: false});
+  } catch (error) {
+    fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content could not be scanned: ${error.message}`);
+  }
+  const real = new Map();
+  const realOf = filename => {
+    if (!real.has(filename)) {
+      real.set(filename, fs.realpathSync(filename));
+    }
+    return real.get(filename);
+  };
+  const files = new Map();
+  for (const file of found.sort()) {
+    let current = project;
+    for (const part of path.relative(project, file).split(path.sep)) {
+      current = path.join(current, part);
+      if (!inside(project, realOf(current)) && realOf(current) !== project) {
+        fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content reaches ${path.relative(project, current).split(path.sep).join("/")}, a symbolic link that leaves the project; the SDK reads nothing outside it`);
+      }
+    }
+    if (!files.has(realOf(file))) {
+      files.set(realOf(file), file);
+    }
+  }
+  if (!files.size) {
+    fail("E_PROJECT_TAILWIND", `godotFabric.tailwind.content matched no file inside the project: ${patterns.join(", ")}`);
+  }
+  return [...files].map(([filename, file]) => ({file: path.relative(project, file).split(path.sep).join("/"),
+    raw: fs.readFileSync(filename, "utf8"), extension: path.extname(filename).slice(1)}));
 }
 
 // A tailwind.config.* file is JavaScript the SDK would have to run, which it never does.
@@ -64,7 +127,7 @@ export function assertNoTailwindConfigFile(project) {
 
 export function createTailwindStep({project, dependencies}) {
   project = fs.realpathSync(project);
-  const declaration = parseTailwindDeclaration(project, dependencies.godotFabric?.tailwind);
+  const declaration = parseTailwindDeclaration(dependencies.godotFabric?.tailwind);
   // The SDK's own releases, read when a build first needs them: a project that uses none of this never touches them.
   let releases;
   const toolchain = () => releases ??= {
@@ -135,11 +198,13 @@ export function createTailwindStep({project, dependencies}) {
           fail("E_PROJECT_TAILWIND", `${relative}: declare the Tailwind configuration in package.json under godotFabric.tailwind`);
         }
         assertRuntimeVersions(nativewindRoot());
+        const content = scanTailwindContent(project, declaration.patterns);
         const {compiled} = await compileNativeWindStyles({
           css, from: file, os: nativewindOs,
-          config: nativewindTailwindConfig({content: declaration.absoluteContent, darkMode: declaration.darkMode, theme: declaration.theme}),
+          config: nativewindTailwindConfig({content: content.map(({raw, extension}) => ({raw, extension})),
+            darkMode: declaration.darkMode, theme: declaration.theme}),
         });
-        entry = {file, relative, ruleCount: Object.keys(compiled.rules ?? {}).length,
+        entry = {file, relative, contentFiles: content.length, ruleCount: Object.keys(compiled.rules ?? {}).length,
           compiledSha256: crypto.createHash("sha256").update(JSON.stringify(compiled)).digest("hex")};
         return {contents: registrationModule(compiled, runtime), loader: "js", resolveDir: path.dirname(file)};
       });
@@ -165,7 +230,7 @@ export function createTailwindStep({project, dependencies}) {
     plugin,
     // What the build report says about the style step; null when no CSS was compiled.
     report() {
-      return entry && {entry: entry.relative, content: declaration.content, darkMode: declaration.darkMode,
+      return entry && {entry: entry.relative, content: declaration.content, contentFiles: entry.contentFiles, darkMode: declaration.darkMode,
         rules: entry.ruleCount, compiledSha256: entry.compiledSha256, nativewindOs, inlineRem,
         tailwind: toolchain().tailwind, nativewind: toolchain().nativewind, reactNativeCssInterop: toolchain().cssInterop};
     },

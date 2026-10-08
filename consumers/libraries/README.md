@@ -46,8 +46,10 @@ releases (`E_PROJECT_NATIVEWIND_VERSION` otherwise).
 ## What the project declares
 
 - `package.json` → `godotFabric.tailwind`: the Tailwind configuration as JSON
-  (`content` globs relative to the project, `darkMode` and `theme`). The SDK builds
-  Tailwind's configuration from it in process, with `nativewind/preset`. It never
+  (`content` globs relative to the project, `darkMode` and `theme`). The SDK expands
+  the globs inside the project (braces allowed; no `..`, absolute path or link that
+  leaves it) and builds Tailwind's configuration from it in process, with
+  `nativewind/preset`. It never
   runs a `tailwind.config.js`; one in the project fails the build with
   `E_PROJECT_TAILWIND_CONFIG`.
 - `global.css` holds the three `@tailwind` directives. `import "../global.css"`

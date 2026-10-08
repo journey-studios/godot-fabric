@@ -172,7 +172,14 @@ that imports only packages. The builder never runs project JavaScript for this.
 }
 ```
 
-`content` globs are relative to the project and cannot leave it; `darkMode` is
+`content` globs are relative to the project, and braces are allowed
+(`./ui/**/*.{ts,tsx}`). The SDK, not Tailwind, expands them: with the fast-glob
+Tailwind depends on, inside the project, and then hands Tailwind the text of the files
+it found, so Tailwind reads nothing from disk. No alternative of a glob may be absolute,
+start at `~` or name `..` (`{..,ui}/**` fails), a negated glob fails, and every file
+must have its real path inside the project: a symbolic link to a file or a directory
+that leaves it fails the build, naming the link, before any file behind it is read. A
+glob that matches no file fails too. `darkMode` is
 `"media"`, which NativeWind follows through `Appearance`; `theme` is a JSON object.
 Any other field fails with `E_PROJECT_TAILWIND`. The builder builds Tailwind's
 configuration in process with `nativewind/preset`, with NativeWind's native pipeline
