@@ -489,7 +489,8 @@ blurred request that uses the decoded cache, cap insets that ignore the scale) f
 example's capture sampled the shader's pixels. A disk cache, revalidation, cookies, compression, animated formats
 and a comparison of the effects with iOS are open. Hosted CI passed the first slice's 74 checks on main (run
 37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and the network slice's 74 checks (run 37750455295,
-[receipt](docs/evidence/images-network/hosted-ci.json)), and is pending for the visual slice.
+[receipt](docs/evidence/images-network/hosted-ci.json)), and the visual slice's 53 checks (run 37773373567,
+[receipt](docs/evidence/images-visual/hosted-ci.json)).
 [Evidence](docs/evidence/images/README.md);
 [network evidence](docs/evidence/images-network/README.md);
 [visual evidence](docs/evidence/images-visual/README.md).

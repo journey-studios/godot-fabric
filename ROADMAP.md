@@ -3186,14 +3186,22 @@ after the blur, `capInsets` apply to `stretch` and `repeat` only with UIKit's be
 unverified, a list of `capInsets` is refused (RN's parser reads it as a map and keeps nothing), a fully transparent
 black tint is not a tint (RN's C++ color has no value for it), and the border is painted below the picture where iOS
 paints it above (nothing differs in what is seen). The first slice's suite changed with the contract (72 checks, 13
-refusals fewer). Open: a comparison of the effects with iOS, hosted CI for this slice, and everything the earlier
+refusals fewer). Open: a comparison of the effects with iOS and everything the earlier
 slices left open. This slice closes no checkpoint: GF-16 stays in progress. After the review of #66
 ([`b5471d9`](https://github.com/journey-studios/godot-fabric/commit/b5471d9a36a36e5aabd9469652b9b9b9e6113248)),
 `box_blur_rgba8` returns without touching the buffer when `width x height` or the byte count would overflow `size_t`
 (the C++ test has 11 groups and 49 assertions), the example's `logoAt` shares the supersampling loop of every other
 drawn asset (the 12 PNGs are byte-identical), and the lanes ran again with the same counts (53, 40, and 2, 3, 8 and
 2); the `postReview` section of the [visual `report.json`](docs/evidence/images-visual/report.json) pins the three
-changed files.
+changed files. Hosted Contracts run 37773373567 (the push of main
+[`9c5d0eb`](https://github.com/journey-studios/godot-fabric/commit/9c5d0eba274df1ad47376946270b044209a9243d), the
+squash of #66) passed all five jobs in its first attempt; its audited artifact
+([receipt](docs/evidence/images-visual/hosted-ci.json)) repeats the 53 headless checks with identical IDs and the
+bundle SHA-256 that `postReview` records, the independent oracle accepts the downloaded report, and the 40, 2, 3, 8
+and 2 checks that the local control and sabotages fail exist and pass; of the 181 tracked pins, 168 have the bytes of
+`6c221e8`, 3 are the review commit's files with the SHA-256 that `postReview` pins and 10 came with the merges of main
+(#59 and #62), and none of them differs between the review commit `b5471d9` and the run head. [Pages
+37773373621](docs/evidence/images-visual/publication.json) deployed this record from main `9c5d0eb`.
 
 ### Node, heap and pump-phase baselines in a soak (2026-10-08)
 

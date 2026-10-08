@@ -584,7 +584,9 @@ that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 
 Two captures of the example, whose pixel checks saw the shader draw, a C++ test of the pure parts (46 assertions) and
 every departure from RN iOS (the blur's rounding, effects on the next draw, `onLoad` after the blur, `capInsets` in
 `stretch` and `repeat` only, a refused list of insets, a transparent black tint). A comparison of the effects with
-iOS, every target but macOS and hosted CI are open; this slice closes no checkpoint.
+iOS and every target but macOS are open. Hosted run 37773373567 (the push of main 9c5d0eb) repeated the 53 checks with
+identical IDs and the bundle the `postReview` records, and the oracle accepts its report
+([receipt](images-visual/hosted-ci.json)). This slice closes no checkpoint.
 
 The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
 section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into
