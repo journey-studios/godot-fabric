@@ -11,7 +11,7 @@ export const websocketNativeProducers = ["native/websocket_core.h", "native/webs
   "tests/websocket-transport-smoke.test.mjs",
   "native/godot_tls.h", "native/http_core.h", "dependencies.json", "scripts/setup.py", "scripts/native-sdk.mjs",
   "scripts/pack-addon.mjs", "scripts/ios-build.py", "THIRD_PARTY_NOTICES.md",
-  "native/blob_store.h", "native/networking_modules.h", "native/networking_modules.cpp", "native/networking_state.h",
+  "native/blob_store.h", "native/networking_modules.h", "native/networking_modules.cpp", "native/networking_state.h", "native/stoppable_invoker.h",
   "native/websocket_module.h", "native/websocket_module.cpp", "native/application_runtime.cpp", "native/application_runtime.h",
   "native/fabric_application.cpp", "native/godot-profile.json", "native/CMakeLists.txt"];
 

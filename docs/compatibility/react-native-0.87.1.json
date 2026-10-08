@@ -134,13 +134,17 @@
     },
     {
       "name": "Clipboard",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-23",
       "evidence": [
-        "src/react-native-platform.jsx"
+        "src/react-native-platform.jsx",
+        "src/device-services.js",
+        "native/device_services.cpp",
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
       ],
-      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+      "note": "RN's original deprecated Clipboard over the host's Clipboard TurboModule; getString and setString fail with E_CLIPBOARD_UNAVAILABLE where the display server has no clipboard (headless). The real pasteboard is not exercised by the suite."
     },
     {
       "name": "DevMenu",
@@ -302,12 +306,17 @@
     },
     {
       "name": "Linking",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-23",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/device-services.js",
+        "native/device_services.cpp",
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
+      ],
+      "note": "RN's original Linking over the iOS LinkingManager contract: openURL, canOpenURL (the scheme rule, not installed handlers), getInitialURL from --uri= and the url event from FabricApplication.deliver_url. openSettings and sendIntent reject; no mobile deep-link plugin."
     },
     {
       "name": "LogBox",
@@ -657,12 +666,17 @@
     },
     {
       "name": "Vibration",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-23",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/device-services.js",
+        "native/device_services.cpp",
+        "tests/device-services-native.test.mjs",
+        "docs/evidence/device-services/README.md"
+      ],
+      "note": "RN's original Vibration over Input.vibrate_handheld: vibrate and patterns scheduled by RN's JavaScript. Godot cannot cancel a vibration and vibrateByPattern throws if called directly; real hardware is not exercised."
     },
     {
       "name": "View",
