@@ -1,12 +1,80 @@
 # ScrollView desktop probe
 
-The latest reviewed local source is `0203145`: Modal wheel correction
-`412eba2` integrated with main's original RN Text PR #62. The loaded macOS host
-is `7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3`.
-Final published-head CI and CodeRabbit review remain pending. No GF-14
-checkpoint is accepted by these local results; the dashboard stays 29/156.
+## Integrated local evidence: source `18d3478`
 
-| Current local run | Result | Evidence scope |
+The current local validation integrates main's Performance work (#59) with the
+ScrollView and Modal wheel changes. It is bound to source commit
+`18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c`, the macOS host SHA-256
+`fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9`, and
+build receipt `d9e833f98f5ffa26b28a1d8c0d539bdb8d73515d03ec00c188559bce258a6b4c`.
+The [integrated receipt](integration-18d3478.json) and
+[source-pin inventory](source-pins-18d3478.json) bind the probes, bundles,
+native inputs and results. All 136 tracked native inputs match the source
+commit and build receipt. The packaged SDK has 2,713 recorded files and was
+locally verified; its adapter and ABI certification claims remain false.
+The inventory points to four canonical maps for
+[repository sources](source-pins-18d3478-repository.json),
+[React Native](source-pins-18d3478-react-native.json),
+[@react-native/virtualized-lists](source-pins-18d3478-virtualized-lists.json)
+and [other bundled dependencies](source-pins-18d3478-third-party.json). They
+contain 738 path entries across their source roots: 211, 353, 15 and 159.
+The six compact group inventories keep declared producer paths and supplemental
+metafile paths separate. Each group points to a bundle receipt by path and
+SHA-256; those receipts preserve the exact bundle-input memberships. The maps
+store each path hash once. Of the 738 hashes, 283 were recorded in native build
+or bundle source maps; 455 were computed from bytes after execution. Metafile
+paths are not treated as producer-recorded byte hashes. The full earlier inventory is preserved with its
+original hash in the ignored `build/` tree.
+The index links the [hash-basis summary](source-pins-18d3478-hash-basis.json)
+and the six producer groups for [ScrollView](source-pins-18d3478-scroll-view-group.json),
+[Modal](source-pins-18d3478-modal-wheel-group.json),
+[pointer click](source-pins-18d3478-pointer-click-group.json),
+[VirtualizedList](source-pins-18d3478-virtualized-list-group.json),
+[OS contracts](source-pins-18d3478-os-contracts-group.json) and
+[Performance](source-pins-18d3478-performance-group.json).
+
+| Local integrated lane | Result | Evidence |
+| --- | ---: | --- |
+| Original RN ScrollView and Modal wheel | 33/33 + 13/13 | Headless two-root behavior; headed Modal window input and independent owner cleanup |
+| Pointer click | 8 × 91 | All eight lanes pass the required case inventory and terminal cleanup |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | Same-host positive reports, preceding-SDK controls and three OS sabotage controls |
+| Performance | 43/43 | Independent report derivation; preceding host has 28 expected failures; three sabotages rejected with 4, 3 and 2 failures |
+| Native core | ScrollMotion 44; PerformanceMetrics passed | Core tests are separate from mounted Godot evidence |
+| Local gates | 352 Node + 13 Python | Static and publication checks pass |
+| Windowed captures | 4 ScrollView + 2 Modal | Actual pixels inspected by root; clipping, fractional offset, pan, wheel and cleanup shown |
+
+The local desktop run does not complete GF-14. Hosted CI and CodeRabbit review
+for source `18d3478` are pending; the earlier 4aba CI success and approval apply
+to that earlier head only. The dashboard is 30/156 and every GF-14 checkpoint
+remains open. The [board snapshot](agents-18d3478-testing.jpg) records the
+testing state and open coordination warning; it is not a green-board claim.
+This is macOS Godot evidence, not physical iOS/Android, refresh-rate coverage,
+full React Native parity or complete GF-14 acceptance.
+
+The six root-inspected images are the
+[initial view](scroll-view-18d3478-initial.png),
+[13.25 px fractional offset](scroll-view-18d3478-fractional-13_25.png),
+[horizontal clipped pan](scroll-view-18d3478-horizontal-pan-clipped.png),
+[post-cleanup view](scroll-view-18d3478-cleanup.png),
+[Modal down-wheel result](modal-wheel-18d3478-down.png) and
+[Modal horizontal-wheel result](modal-wheel-18d3478-horizontal.png). Their
+hashes and source paths are recorded in the integrated and graphics receipts.
+The raw capture filenames in the local archive contain `0203145`; the curated
+copies above use `18d3478`. The receipts identify both paths and the same bytes
+from the current integrated execution. The bounded graphics probe copy and its exact diff are
+recorded in [the Modal graphics receipt](modal-wheel-18d3478-graphics.json)
+and [capture diff](modal-wheel-18d3478-capture.diff).
+
+## Historical pre-Performance execution: source `0203145`
+
+The following run predates main's Performance integration. It remains useful
+as historical evidence, but its host and 134-input map are not the inputs for
+the current integrated run. The loaded macOS host was
+`7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3`.
+The earlier `4aba7f5` hosted CI and CodeRabbit approval likewise apply only to
+that published head.
+
+| Historical local run | Result | Evidence scope |
 | --- | ---: | --- |
 | Original RN ScrollView | 33/33 | Independently measured offsets, lifecycle, route/capture and two-root cleanup |
 | ScrollView inside original RN Modal | 13/13 | Headed Godot; four actual Window.window_input events, fractional factors, independent owners |
@@ -87,7 +155,7 @@ Final-head hosted CI, CodeRabbit review and checkpoint acceptance are pending.
 | Integrated run | Result | Evidence scope |
 | --- | ---: | --- |
 | Original RN ScrollView | 33/33 | Exact inventory, measured offsets/lifecycles and complete two-root cleanup |
-| VirtualizedList / OS contracts | 44/44 / 37/37 | Current reports and host-bound negative controls |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | Reports from that source snapshot and host-bound negative controls |
 | Pointer click | 8 × 91 | All 26 required cases replayed in every lane; 17 damaged reports rejected |
 | Images base / network | 73/73 / 74/74 | Independent oracles and five native sabotages; genuine sources/host restored |
 | Graphical ScrollView | 4/4 | All four captures viewed; actual executed probe copy identified |
@@ -245,11 +313,11 @@ headless accessibility lane does not certify an OS tree or assistive hardware.
 
 ## Windowed graphical capture
 
-The captures are unchanged in the latest integrated execution. The
-[current receipt](graphics-receipt.json) hashes the actual executed probe copy
-and separately hashes its original source; their only difference is the output
-directory. The [preceding graphical receipt](graphics-receipt-pre-465ae76.json)
-is preserved for the `b4dfdbda` execution.
+The four historical captures below come from source `2a01ec6`, with the
+Images-integrated `7870787` host. Its
+[receipt](graphics-receipt.json) hashes the actual executed probe copy and
+separately hashes its original source. The later output-directory and capture
+instrumentation changes are recorded in the 18d graphics receipts above.
 
 A separate Godot macOS windowed probe executed the same host and unchanged
 GF-14 bundle. It saved the initial two-root view, the 13.25 px fractional

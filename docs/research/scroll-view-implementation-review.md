@@ -6,6 +6,45 @@ plan and from the implementer's test report. It applies the user-supplied
 thermo-nuclear review criteria: simpler ownership, original RN behavior,
 explicit boundaries and independent executed evidence.
 
+## Current integrated evidence: source `18d3478`
+
+The latest local integration is source commit
+`18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c`, with host SHA-256
+`fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9` and build
+receipt SHA-256
+`d9e833f98f5ffa26b28a1d8c0d539bdb8d73515d03ec00c188559bce258a6b4c`. The
+[integrated evidence receipt](../evidence/scroll-view/integration-18d3478.json)
+and [source-pin inventory](../evidence/scroll-view/source-pins-18d3478.json)
+record 136 native input pins matching Git and working bytes, plus each local
+probe and bundle identity. The inventory references canonical repository,
+React Native, VirtualizedList and third-party maps with 738 path entries across
+those source roots. The six group files list declared producers and supplemental
+metafile imports separately, then reference hash-pinned bundle receipts for the
+exact input memberships. Each path hash is stored once in its origin map. The
+inventory separates 283 producer-recorded hashes from 455 computed after
+execution; supplemental metafile paths do not imply esbuild recorded hashes.
+The 2,713-file SDK package was locally verified;
+adapter linking/loading, runtime identity and ABI certification are not
+claimed.
+
+The integrated local results are ScrollView 33/33, Modal wheel 13/13, pointer
+click 8 × 91, VirtualizedList 44/44, OS contracts 37/37, and Performance
+43/43. The Performance oracle independently derives the report, rejects its
+three sabotage controls (4, 3 and 2 failed checks), and confirms 28 expected
+failures on the retained preceding host with the same bundle. ScrollMotion's
+44 core assertions and PerformanceMetrics also pass. The complete local
+contract run passes 352 Node and 13 Python checks; static and publication
+checks pass. Root inspected the four ScrollView and two Modal captures; the
+graphics receipts bind their pixel files to the host and bundle.
+
+These are local macOS results. CI and CodeRabbit for the integrated `18d3478`
+source remain pending; success and approval from published `4aba7f5` are
+historical only. GF-14 remains open at dashboard 30/156, with all four
+checkpoints false. No mobile hardware, refresh-rate matrix, complete RN parity
+or full GF-14 acceptance is established. Earlier host-specific reviews below
+are retained as historical diagnoses, not as evidence against or in place of
+this integrated run.
+
 ## Ownership and structural changes
 
 The direction under review removes the custom JS scroll/responder implementation

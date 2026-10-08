@@ -8,11 +8,11 @@
     "focusSequence": "5",
     "focusTitle": "GF-14 #58: wheel em Modal e Text integrados; GF-30 Performance integrado. CI hospedada e revisão pendentes."
   },
-  "updatedAt": "2026-10-08T11:05:31.918Z",
+  "updatedAt": "2026-10-08T11:42:41.000Z",
   "source": {
-    "commit": "4aba7f572e2b3d06e1a8e4a6ed65c71e3530c3b0",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/4aba7f572e2b3d06e1a8e4a6ed65c71e3530c3b0",
-    "scope": "Publicado em 4aba7f5, antes da integração da main bf1e9e9 (#59 Performance). As provas locais do host 7fc, 134 pins e SDK com 2.713 arquivos pertencem ao produtor 0203145/4aba e são históricas até novo replay após a integração. GF-14 continua em revisão; validação do merge pendente e seus quatro checkpoints permanecem abertos. A primeira fatia GF-30 herdada da main tem CI hospedada pendente.",
+    "commit": "18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c",
+    "scope": "Source 18d3478: host e SDK locais verificados, producers e capturas locais integrados; evidência local não representa CI hospedada ou revisão CodeRabbit deste head. O CI SUCCESS e a aprovação CodeRabbit de 4aba7f5 são históricos e não aceitam este source. GF-14 permanece em revisão, sem checkpoints aceitos.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "ScrollView original RN0.87.1 em revisão na #58. Capture/retirement465ae76 preservados; terceiro achado CodeRabbit reproduzido com9/13PASS e quatro falhas wheel no Window Modal real. Correção412eba2 reutiliza rota física canônica e remove dispatch separado. Text#62 integrado020; host7fc:33ScrollView,13Modal,193regressãoModal,clique8×91/listas44/OS37 com controles recentes,duas capturas vistas. Principal verificou estados,cleanup,14adulterações e134pinsGit/SDK2713.352Node/13Python/static/publication passaram. CI/review final e aceite pendentes; contratoGF14 completo aberto. Integração da main bf1e9e9 (#59 Performance) registrada; as provas 7fc/134 pins/SDK 2.713 são pré-integração, do produtor 0203145/4aba, e exigem novo replay antes de serem atribuídas ao merge. CI/review e validação integrada pendentes.",
+      "note": "ScrollView original RN 0.87.1 em revisão na PR #58. Integração source 18d3478: host macOS fa4605bb, receipt d9e833f9 e 136 inputs nativos conferidos contra Git. Validação local: ScrollView 33, Modal wheel 13, pointer click 8×91, listas 44, OS 37, Performance 43 (host anterior: 28 falhas normativas; três sabotagens rejeitadas com 4/3/2 falhas), ScrollMotion 44 e PerformanceMetrics; contratos 352 Node/13 Python, static/publication verdes. Seis capturas locais inspecionadas. SDK com 2.713 arquivos verificado; certificação externa de adapter/ABI não alegada. CI e CodeRabbit desta integração pendentes; o CI/approval 4aba7f5 é histórico. GF-14 continua aberto em 30/156; nenhum checkpoint aceito. A evidência é macOS local, sem hardware móvel, matriz de refresh ou paridade RN completa.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4126,6 +4126,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "scrollview-performance-integration-18d3478",
+      "at": "2026-10-08T11:33:52Z",
+      "taskIds": [
+        "GF-14",
+        "GF-30"
+      ],
+      "message": "Integração local 18d3478 validada no host macOS: ScrollView 33, Modal wheel 13, clique 8×91, listas 44, OS 37, Performance 43 e controles; 352 Node/13 Python e gates static/publication verdes. Provas anteriores 7fc/134 pins/SDK pertencem a 020/4aba. CI e CodeRabbit do head integrado pendentes; GF-14 sem aceite."
+    },
     {
       "id": "scroll-modal-wheel-text-0203145",
       "at": "2026-10-08T10:34:52.022Z",
