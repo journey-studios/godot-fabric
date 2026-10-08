@@ -104,10 +104,19 @@ and leaves as a device event (`screenReaderChanged`, `reduceMotionChanged`, `red
 `darkerSystemColorsChanged`) through RN's scheduler on the same stoppable call invoker as the device services, so a stop drops
 what was queued; retained methods then throw `E_MODULE_DISPOSED` synchronously, for all twelve. The readings are a backend
 struct that the validation meta `validation_accessibility_settings` can replace per setting.
-`setAccessibilityContentSizeMultipliers` validates its argument (`E_ARGUMENT`) and throws `E_UNSUPPORTED`; `setAccessibilityFocus`,
-`announceForAccessibility` and `announceForAccessibilityWithOptions` throw `E_UNSUPPORTED` naming GF-20 slice 2b; the
-`UIManager`'s accessibility events other than `focus` are ignored and counted by type. See the [research
-note](research/accessibility-info.md).
+`setAccessibilityContentSizeMultipliers` validates its argument (`E_ARGUMENT`) and throws `E_UNSUPPORTED`; `setAccessibilityFocus`
+throws `E_UNSUPPORTED` with the reason (Godot has one focus, so moving the screen reader's would blur the keyboard's), and so does a
+`focus` event of the `UIManager`; its accessibility events of any other type are ignored and counted by type.
+`announceForAccessibility` and `announceForAccessibilityWithOptions` are announced through AccessKit (the post to AppKit is proven, the audible speech is not verified): the `Announcer`
+(`native/accessibility_announcement_core.h`, pure, with a core test of its own) keeps each announcement until the accessibility update
+that `FabricApplication` receives as `NOTIFICATION_ACCESSIBILITY_UPDATE` and publishes it there as a new static text element under the
+application's own element, with the text as its value and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`), then frees it
+outside the update after it, one announcement per update in the order they were asked for; `queue: true` and `priority: 'low'` throw `E_UNSUPPORTED`, an option of the wrong type `E_ARGUMENT`, and
+with no screen reader (or an application with no element) the call returns and the announcement is dropped and counted, never kept
+for a screen reader that turns on later. The engine's `AccessibilityServer` is called by name through
+`native/accessibility_announcer.{h,cpp}`, whose names are asked of the ClassDB, and a validation run replaces it by a recorder with the
+`validation_accessibility_announcer` meta. `announcementFinished` never fires. See the [research
+note](research/accessibility-info.md) and the [announcements note](research/accessibility-announcements.md).
 
 LayoutAnimation adds **no TurboModule**: `LayoutAnimation.configureNext` reaches RN's compiled `nativeFabricUIManager.configureNextLayoutAnimation`,
 which only acts on a `UIManagerAnimationDelegate`. One `LayoutAnimation` (`native/layout_animation.{h,cpp}`) per application installs RN's
@@ -182,8 +191,8 @@ press), with the pure, Godot-free semantic core in
 `native/accessibility_core.h` that a mobile bridge can consume. Its contract is
 in the [research note](research/accessibility.md). `AccessibilityInfo`, the settings and
 events of iOS's `AccessibilityManager`, is the first half of the second slice and is a
-TurboModule (`AccessibilityManager`, above); announcements and programmatic focus are
-its second half. Godot's `AccessibilityServer` is reached by name through the engine's
+TurboModule (`AccessibilityManager`, above); announcements (and the reason programmatic focus stays refused)
+are its second half. Godot's `AccessibilityServer` is reached by name through the engine's
 singleton registry, since the binding profile does not include it.
 
 ## Validation and remaining work

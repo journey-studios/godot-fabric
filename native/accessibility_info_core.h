@@ -1,5 +1,6 @@
 #pragma once
 
+#include "accessibility_announcement_core.h"
 #include <array>
 #include <cmath>
 #include <cstddef>
@@ -17,7 +18,8 @@
 // contract (RCTAccessibilityManager, which is what AccessibilityInfo.js takes
 // when Platform.OS is "godot") and the counters. It needs neither Godot nor
 // React Native, so accessibility_info_core_test exercises every rule without an
-// engine.
+// engine. The announcements have a core of their own (accessibility_announcement_core.h);
+// this one includes it because the Backend carries the announcements' port.
 namespace fabric_godot::accessibility {
 
 // What DisplayServer reports for a setting: -1 when the platform does not know
@@ -86,7 +88,9 @@ inline constexpr std::array<UnbackedInfo, unbacked_count> unbacked_info{{
 inline constexpr const UnbackedInfo &info(Unbacked setting) { return unbacked_info[index_of(setting)]; }
 
 // The device events AccessibilityInfo.js lets JS subscribe to that Godot can never send: three of the unbacked
-// settings, and the end of an announcement (Godot has no announce method and no end-of-speech callback).
+// settings, and the end of an announcement. announcementFinished is iOS's (RCTAccessibilityManager.mm:55-56, 111-123);
+// macOS, AccessKit and Godot have no signal that speech ended, and Godot's text to speech is not the screen reader (it speaks
+// without one), so using it would invent the event.
 inline constexpr std::array<const char *, 4> silent_events{
     "boldTextChanged", "grayscaleChanged", "invertColorsChanged", "announcementFinished"};
 
@@ -97,6 +101,15 @@ inline constexpr const char *code_unsupported = "E_UNSUPPORTED";
 inline constexpr const char *code_argument = "E_ARGUMENT";
 inline constexpr const char *code_disposed = "E_MODULE_DISPOSED";
 
+// Why the screen reader's focus is refused. It is the whole message of the error, from the code on.
+// Godot has one focus, the keyboard's: the AccessKit focus of a window is that focus (SceneTree::_process_accessibility_changes
+// reads gui_get_focus_owner() and overwrites any other), so moving the screen reader's focus is grab_focus(), which releases the
+// focus of every viewport and sends FOCUS_EXIT to a focused TextInput. iOS's UIAccessibilityLayoutChangedNotification moves
+// VoiceOver's focus and nothing else (RCTMountingManager.mm:342-348).
+inline constexpr const char *focus_refusal =
+    "E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the keyboard focus and blur the "
+    "focused control, which iOS does not do";
+
 // The content size categories setAccessibilityContentSizeMultipliers takes (NativeAccessibilityManager.js).
 inline constexpr std::array<std::string_view, 12> content_size_categories{"extraSmall", "small", "medium", "large", "extraLarge",
     "extraExtraLarge", "extraExtraExtraLarge", "accessibilityMedium", "accessibilityLarge", "accessibilityExtraLarge",
@@ -104,10 +117,12 @@ inline constexpr std::array<std::string_view, 12> content_size_categories{"extra
 // A multiplier scales text: it is finite and above zero.
 inline bool valid_multiplier(double value) { return std::isfinite(value) && value > 0; }
 
-// What the platform provides: the reading of one setting. The default is Godot's DisplayServer; validation
-// replaces any subset (accessibility_info.h).
+// What the platform provides: the reading of one setting, and the way announcements reach the screen reader. The default is
+// Godot's; validation replaces any subset (accessibility_info.h). announce is given what runs the update in which
+// announcements are published, for a platform whose update the host drives itself (the validation recorder does).
 struct Backend {
   std::function<int64_t(Setting)> read;
+  std::function<AnnouncePort(std::function<void()>)> announce;
 };
 
 // A change to deliver: a setting whose known value differs from the last known one.
@@ -124,9 +139,9 @@ struct Counters {
   std::size_t polls{};
   std::array<SettingCounters, setting_count> settings{};
   std::array<std::size_t, unbacked_count> unbacked_rejected{};
-  std::size_t content_size_refused{}, content_size_invalid{}, announce_refused{}, announce_options_refused{}, focus_refused{};
+  std::size_t content_size_refused{}, content_size_invalid{}, announce_invalid{}, focus_refused{};
   // The accessibility events Fabric's UIManager sends (UIManager.sendAccessibilityEvent): the ones iOS ignores, and
-  // the ones that need the focus the next slice implements.
+  // focus, which is refused (focus_refusal).
   std::size_t ui_events_ignored{}, ui_events_ignored_other{}, ui_events_unsupported{};
 };
 
@@ -196,17 +211,17 @@ class Settings {
   Reading last(Setting setting) const { return states_[index_of(setting)].last; }
   std::optional<bool> known(Setting setting) const { return states_[index_of(setting)].known; }
 
-  // The settings with no backing, and the calls whose work belongs to the next slice, are counted and refused.
+  // The settings with no backing, and the calls Godot cannot honor (content size, the screen reader's focus, options of an
+  // announcement that are not the right type), are counted and refused.
   void note_unavailable(Unbacked setting) { ++counters_.unbacked_rejected[index_of(setting)]; }
   void note_content_size_refused() { ++counters_.content_size_refused; }
   void note_content_size_invalid() { ++counters_.content_size_invalid; }
-  void note_announce_refused() { ++counters_.announce_refused; }
-  void note_announce_options_refused() { ++counters_.announce_options_refused; }
+  void note_announce_invalid() { ++counters_.announce_invalid; }
   void note_focus_refused() { ++counters_.focus_refused; }
 
   // An event of Fabric's UIManager.sendAccessibilityEvent. iOS acts on "focus" alone (RCTMountingManager.mm:
-  // 342-348) and ignores the other types, which are counted here by type, up to a bound; focus is the work of the
-  // next slice and is refused out loud.
+  // 342-348) and ignores the other types, which are counted here by type, up to a bound; focus is refused out loud
+  // (focus_refusal).
   UiEvent note_ui_event(const std::string &type) {
     if (type == "focus") {
       ++counters_.ui_events_unsupported;

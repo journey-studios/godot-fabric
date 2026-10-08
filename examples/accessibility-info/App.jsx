@@ -4,7 +4,10 @@ import { AccessibilityInfo, AppRegistry, Pressable, StyleSheet, Text, View } fro
 // RN's original AccessibilityInfo through the public react-native import. The screen asks each getter and listens to
 // each event RN's iOS branch has: Godot backs the screen reader, reduce motion, reduce transparency and increase
 // contrast (RN calls the last one "darker system colors"); a setting the platform does not report rejects as unknown, and
-// bold text, grayscale, inverted colors and the cross-fade preference reject as unavailable, never as off.
+// bold text, grayscale, inverted colors and the cross-fade preference reject as unavailable, never as off. The Announce
+// button calls announceForAccessibility: Godot speaks it through AccessKit when a screen reader is on (macOS: VoiceOver)
+// and counts it as dropped when none is, as iOS and Android do. The screen counts what was sent; what the host did with
+// each one (published or dropped) is the native line beside it.
 const settings = [
   { id: "screen-reader", label: "Screen reader", read: () => AccessibilityInfo.isScreenReaderEnabled(), event: "screenReaderChanged" },
   { id: "reduce-motion", label: "Reduce motion", read: () => AccessibilityInfo.isReduceMotionEnabled(), event: "reduceMotionChanged" },
@@ -15,7 +18,7 @@ const settings = [
   { id: "invert-colors", label: "Inverted colors", read: () => AccessibilityInfo.isInvertColorsEnabled(), event: "invertColorsChanged" },
   { id: "cross-fade", label: "Cross-fade transitions", read: () => AccessibilityInfo.prefersCrossFadeTransitions(), event: null },
 ];
-const observations = { renders: 0, refreshes: 0, values: {}, heard: [], errors: [] };
+const observations = { renders: 0, refreshes: 0, announced: 0, values: {}, heard: [], errors: [] };
 globalThis.AccessibilityInfoExample = {
   state: () => ({ ...observations, values: { ...observations.values }, heard: [...observations.heard], errors: [...observations.errors] }),
 };
@@ -42,6 +45,17 @@ function AccessibilityInfoExample() {
   const [values, setValues] = useState({});
   const [heard, setHeard] = useState([]);
   const [refreshes, setRefreshes] = useState(0);
+  const [sent, setSent] = useState(0);
+  const announce = useCallback(() => {
+    const next = observations.announced + 1;
+    observations.announced = next;
+    setSent(next);
+    try {
+      AccessibilityInfo.announceForAccessibility(`Announcement ${next}`);
+    } catch (error) {
+      observations.errors.push(String(error?.message ?? error));
+    }
+  }, []);
   const refresh = useCallback(() => {
     for (const setting of settings) {
       setting.read().then(
@@ -77,9 +91,16 @@ function AccessibilityInfoExample() {
         </Text>
         {settings.map((setting) => <Row key={setting.id} id={setting.id} label={setting.label} value={values[setting.id]} />)}
         <Row id="heard" label="Events heard" value={heard.length ? `${heard.length} · ${heard[heard.length - 1]}` : "none yet"} />
-        <Pressable testID="a11y-refresh" style={styles.button} onPress={() => { setRefreshes((count) => count + 1); refresh(); }}>
-          <Text style={styles.buttonText}>Ask again</Text>
-        </Pressable>
+        <Row id="announced" label="Announcements sent" value={String(sent)} />
+        <View style={styles.buttons}>
+          <Pressable testID="a11y-refresh" accessibilityRole="button" accessibilityLabel="Ask again" style={styles.button}
+            onPress={() => { setRefreshes((count) => count + 1); refresh(); }}>
+            <Text style={styles.buttonText}>Ask again</Text>
+          </Pressable>
+          <Pressable testID="a11y-announce" accessibilityRole="button" accessibilityLabel="Announce" style={styles.button} onPress={announce}>
+            <Text style={styles.buttonText}>Announce</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -88,13 +109,14 @@ AppRegistry.registerComponent("AccessibilityInfoExample", () => AccessibilityInf
 
 const styles = StyleSheet.create({
   screen: { width: "100%", height: "100%", padding: 12, alignItems: "center", justifyContent: "center", backgroundColor: "#e2e8f0" },
-  card: { width: "100%", padding: 20, gap: 8, borderWidth: 1, borderRadius: 20, backgroundColor: "#ffffff", borderColor: "#cbd5e1" },
+  card: { width: "100%", padding: 20, gap: 6, borderWidth: 1, borderRadius: 20, backgroundColor: "#ffffff", borderColor: "#cbd5e1" },
   eyebrow: { fontFamily: "NotoSans", fontSize: 12, fontWeight: "700", color: "#0f766e" },
   title: { fontFamily: "NotoSans", fontSize: 22, fontWeight: "700", lineHeight: 30, color: "#0f172a" },
   description: { fontFamily: "NotoSans", fontSize: 13, lineHeight: 19, color: "#475569" },
-  row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 7, paddingHorizontal: 14, borderWidth: 1, borderRadius: 10, backgroundColor: "#f1f5f9", borderColor: "#cbd5e1" },
+  row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 5, paddingHorizontal: 14, borderWidth: 1, borderRadius: 10, backgroundColor: "#f1f5f9", borderColor: "#cbd5e1" },
   rowLabel: { fontFamily: "NotoSans", fontSize: 14, lineHeight: 20, color: "#475569" },
   rowValue: { fontFamily: "NotoSans", fontSize: 14, fontWeight: "700", lineHeight: 20, color: "#0f172a" },
-  button: { marginTop: 4, paddingVertical: 10, alignItems: "center", borderRadius: 10, backgroundColor: "#2563eb" },
+  buttons: { flexDirection: "row", gap: 8, marginTop: 4 },
+  button: { flex: 1, paddingVertical: 10, alignItems: "center", borderRadius: 10, backgroundColor: "#2563eb" },
   buttonText: { fontFamily: "NotoSans", fontSize: 15, fontWeight: "700", lineHeight: 22, color: "#ffffff" },
 });
