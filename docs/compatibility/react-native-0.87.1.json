@@ -38,6 +38,7 @@
         "src/accessibility-info.js",
         "native/accessibility_info.cpp",
         "tests/accessibility-info-native.test.mjs",
+        "docs/evidence/accessibility-info/README.md",
         "docs/research/accessibility-info.md"
       ],
       "note": "RN's original AccessibilityInfo over the iOS AccessibilityManager contract: the screen reader, reduce motion, reduce transparency and increase contrast read from Godot's DisplayServer once per frame, with their events and the alias change; an unreported setting rejects E_ACCESSIBILITY_UNKNOWN, bold text, grayscale, inverted colors and cross-fade reject E_ACCESSIBILITY_UNAVAILABLE. Announcements and programmatic focus (GF-20 slice 2b) throw E_UNSUPPORTED; no mobile bridge; real operating-system settings are not certified."

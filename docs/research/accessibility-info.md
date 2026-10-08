@@ -7,7 +7,7 @@ their events. The probe runs RN's original `AccessibilityInfo` through the publi
 from `main` before this slice) fails exactly the checks that need the native module, and
 four retained host sabotages are rejected by the probe and by an independent oracle (a
 fifth, the missing resolver alias, is rejected by the platform-seams test). The
-[evidence record](../evidence/accessibility-info/README.md) is written after the
+[evidence record](../evidence/accessibility-info/README.md) pins the executions to the
 implementation commit. Real operating-system settings (a user turning VoiceOver, Reduce
 Motion, Reduce Transparency or Increase Contrast on), the mobile servers and a graphical CI
 run are not certified; see "Remaining scope". Announcements and programmatic focus are part

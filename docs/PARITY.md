@@ -79,7 +79,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
 - **Environment:** the original [AppState](evidence/app-state/README.md) (75 checks),
   fed by Godot's application lifecycle, and [Appearance and
   useColorScheme](evidence/appearance/README.md) (79), fed by its system theme.
-- **Accessibility settings:** the original [AccessibilityInfo](research/accessibility-info.md) (GF-20's
+- **Accessibility settings:** the original [AccessibilityInfo](evidence/accessibility-info/README.md) (54 checks; GF-20's
   second slice, part a), over a C++ TurboModule and Godot's `DisplayServer`: the screen reader, reduce motion,
   reduce transparency and increase contrast, read once per frame, with the events of their changes; bold text,
   grayscale, inverted colors and cross-fade reject as unavailable, and announcements and programmatic focus wait

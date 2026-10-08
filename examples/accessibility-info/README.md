@@ -24,12 +24,27 @@ operating system, so the screen can be driven without touching System Settings: 
 setting through *system* (the real reading), *unknown*, *off* and *on* by changing the application's
 `validation_accessibility_settings` meta, which replaces only the keys it names.
 
-`npm run test:accessibility-info` is the [evidence](../../docs/research/accessibility-info.md) suite,
+`npm run test:accessibility-info` is the [evidence](../../docs/evidence/accessibility-info/README.md) suite,
 outside the catalog: a headless probe in two applications, one with the validation meta and two roots and
 one with the real backend, replayed by an independent oracle. The preceding host, with the same bundle,
 fails exactly its normative checks, and four retained host sabotages are rejected.
 
 ## Use the example
+
+![The screen before any change: three settings off, increase contrast unknown, four unavailable, no event heard](../../docs/evidence/accessibility-info/accessibility-info-initial.png)
+
+**Initial** is the screen the validation starts from: the screen reader, reduce motion and reduce transparency
+report off, increase contrast reports nothing (`unknown`), bold text, grayscale, inverted colors and cross-fade
+are `unavailable`, and **Events heard** says `none yet`. The native label on the right is what the stand-in
+platform reports.
+
+![The screen after three changes: the screen reader and reduce motion on, increase contrast off, three events heard](../../docs/evidence/accessibility-info/accessibility-info-changed.png)
+
+**Changed** is the screen after the native buttons turned the screen reader and reduce motion on and made increase
+contrast known (off): the rows change with the events, and **Events heard** reads
+`3 · darkerSystemColorsChanged=false` (the three events, in order, are `screenReaderChanged=true`,
+`reduceMotionChanged=true` and `darkerSystemColorsChanged=false`). Reduce transparency did not change and has no
+event.
 
 - **Ask again** calls every getter again; the answer is the last reading the host took, so a setting that
   changed shows as soon as the next frame has been polled.
@@ -45,7 +60,7 @@ fails exactly its normative checks, and four retained host sabotages are rejecte
   the row.
 
 With `--capture` the renderer's frames are saved to `build/accessibility-info-initial.png` and
-`build/accessibility-info-changed.png`.
+`build/accessibility-info-changed.png`; the two above are those frames, checked one by one.
 
 ## What the validation establishes
 

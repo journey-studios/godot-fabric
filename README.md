@@ -304,7 +304,7 @@ programmatic focus throw until the next slice. The headless probe runs two appli
 that stands in for the system and one with Godot's real backend, which reports nothing there: 54 checks replayed by an
 independent oracle. The preceding host fails exactly its 40 normative checks, and four host sabotages are rejected.
 Real operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
-[Research](docs/research/accessibility-info.md).
+[Evidence](docs/evidence/accessibility-info/README.md) and [research](docs/research/accessibility-info.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
