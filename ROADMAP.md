@@ -557,8 +557,20 @@ touch screen and no iPhone run, which waits for the device package. What remains
 V05-02 is slice 2, variant (a2), for what the minimal policy leaves open (a hit slop, a
 `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD or a tree
 overlay, which still reach the map as well as React Native), which the merge of PR #58
-has unblocked, and the go/no-go decision of slice 3. Hosted CI for the slice is pending. No 1.0 number
-moves.
+has unblocked, and the go/no-go decision of slice 3. Hosted CI for the slice is pending. No 1.0
+number moves.
+
+**Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
+GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
+73 intents reaches the same golden hash in 3 of 3 processes (9 executions, with a trace hash
+that fixes the state after every step), using only integers, a PCG32 of the game's own, a
+canonical serialization and SHA-256. The seven contexts are covered, an independent oracle in
+Node recomputes the rules, the map and the generator, and four retained sabotages are
+rejected. The [record](https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. The
+snapshot the HUD will project is written down field by field but is not yet a service, so
+the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
+checkpoint, weight or denominator moves.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does

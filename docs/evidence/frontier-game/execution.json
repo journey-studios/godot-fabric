@@ -1,0 +1,582 @@
+{
+  "format": "godot-fabric.frontier-game-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "4b86a7bd0c9f4880a2241369e944380a4ef7b32c",
+  "executedTreeSha": "eee5aaba393797dcddcc521699ea24d0c3b4a264",
+  "implementationCommits": [
+    "b14ea13cbe85f43393d7d9e977a010dd17a7bb8b",
+    "4b86a7bd0c9f4880a2241369e944380a4ef7b32c"
+  ],
+  "baseMainCommit": "41fbe22bc49e21fb10aa61620e59c3d0d1da96d2",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file outside the ignored build/, addons/, .deps/ and node_modules/, when every command below ran (git status --porcelain empty before the first and after the last); the evidence files were added afterwards and are not inputs",
+  "environment": {
+    "platform": "macOS 26.6.2 arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "node": "v22.23.3",
+    "npm": "10.9.9",
+    "modes": [
+      "headless"
+    ],
+    "note": "React Native, React and Hermes are not used by this slice: the rules are plain GDScript that the root project loads as res://consumers/civ-lite/game/"
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:civ-lite-game step and the native-civ-lite-game artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below equal the blobs of the implementation commit. They certify the GDScript, the test and the oracle that ran, not a native binary: the host the root project loads is the one built on this machine from main's native sources, and no check exercises it."
+  },
+  "nativeCode": {
+    "changed": false,
+    "note": "This slice adds no C++ and touches neither native/, src/ nor sdk/. The root project loads the extension at startup, as it does for every suite; the previous-host control of other slices does not apply because there is no native code to compare.",
+    "hostSha256": "486b3bf63229338385139459f1c9428165661fe1a75e21742f63573580219208"
+  },
+  "productProbe": {
+    "command": "npm run test:civ-lite-game",
+    "suite": "1/1 subtests passed",
+    "rounds": [
+      {
+        "round": 1,
+        "exit": 0,
+        "elapsedMs": 2175,
+        "printed": [
+          "# tests 1",
+          "# pass 1",
+          "# fail 0"
+        ]
+      },
+      {
+        "round": 2,
+        "exit": 0,
+        "elapsedMs": 1851,
+        "printed": [
+          "# tests 1",
+          "# pass 1",
+          "# fail 0"
+        ]
+      },
+      {
+        "round": 3,
+        "exit": 0,
+        "elapsedMs": 1865,
+        "printed": [
+          "# tests 1",
+          "# pass 1",
+          "# fail 0"
+        ]
+      }
+    ],
+    "executionsPerRound": 3,
+    "probeCommand": "Godot --path . --headless --script res://tests/civ-lite-game-probe.gd -- --out=build/civ-lite-game-run-<n>-report.json",
+    "checksPerExecution": 629,
+    "marker": "CIV_LITE_GAME_PASSED: 629",
+    "allCurrentAssertionsPassed": true,
+    "goldenHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "traceHash": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+    "finalHashes": [
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+      "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+    ],
+    "reportSha256": "24cf4c1b43305c3e2ac84884d5b74c41378ddeaeb3b7c2d0d163cb68df7724c3",
+    "reportBytes": 338700,
+    "reportsByteIdentical": true,
+    "reportsCompared": 9,
+    "steps": 73,
+    "stepsAccepted": 43,
+    "stepsRefused": 30,
+    "turns": 12,
+    "finalTurn": 13,
+    "rngDraws": 385,
+    "oracle": {
+      "accepted": true,
+      "contexts": [
+        "city",
+        "dialog",
+        "none",
+        "settler",
+        "stack",
+        "tile",
+        "warrior"
+      ],
+      "readsProbeVerdicts": false,
+      "checks": "canonical form and SHA-256 of every serialization; PCG32 in BigInt (published outputs and the state after the counted draws); the map regenerated from the seed; every refusal justified by the state before it; every accepted intent leaves the state the oracle computes; the end of each turn recomputed phase by phase; invariants of map, units, city, resources, research, event, faction route, selection and log"
+    },
+    "gdscriptCheckFamilies": [
+      "the PRNG against PCG's published outputs and its own determinism",
+      "the serializer: sorted keys, floats, bools, nulls and non-ASCII refused, SHA-256 against the FIPS vector",
+      "every roteiro step: code, context, untouched state on refusal, the code's text",
+      "every snapshot: immutable, integers and strings only, reads without changing the state, every enabled action, item and technology an accepted intent on a copy",
+      "a second play in the same process and a play sliced into phases reach the same state at every step",
+      "four refusals on states built for them, the turn in slices, the epoch outside the hash"
+    ],
+    "elapsedMs": [
+      2175,
+      1851,
+      1865
+    ]
+  },
+  "coverage": [
+    {
+      "context": "none",
+      "step": 33,
+      "intent": "clear_selection",
+      "args": [],
+      "code": "ok"
+    },
+    {
+      "context": "tile",
+      "step": 32,
+      "intent": "select_tile",
+      "args": [
+        9,
+        8
+      ],
+      "code": "ok"
+    },
+    {
+      "context": "settler",
+      "step": 3,
+      "intent": "select_unit",
+      "args": [
+        1
+      ],
+      "code": "ok"
+    },
+    {
+      "context": "warrior",
+      "step": 9,
+      "intent": "select_unit",
+      "args": [
+        2
+      ],
+      "code": "ok"
+    },
+    {
+      "context": "stack",
+      "step": 2,
+      "intent": "select_tile",
+      "args": [
+        6,
+        8
+      ],
+      "code": "ok"
+    },
+    {
+      "context": "city",
+      "step": 18,
+      "intent": "found_city",
+      "args": [
+        1
+      ],
+      "code": "ok"
+    },
+    {
+      "context": "dialog",
+      "step": 45,
+      "intent": "select_tile",
+      "args": [
+        7,
+        8
+      ],
+      "code": "event_pending"
+    }
+  ],
+  "refusals": {
+    "roteiro": {
+      "nothing_selected": 1,
+      "out_of_bounds": 1,
+      "no_moves_left": 1,
+      "not_adjacent": 1,
+      "cannot_fortify": 1,
+      "not_a_settler": 1,
+      "impassable_terrain": 1,
+      "not_your_unit": 1,
+      "unknown_unit": 2,
+      "already_fortified": 1,
+      "no_city": 1,
+      "tech_required": 4,
+      "unknown_item": 1,
+      "bad_slot": 1,
+      "research_out_of_order": 1,
+      "already_researching": 1,
+      "unknown_tech": 1,
+      "not_enough_moves": 1,
+      "event_pending": 3,
+      "unknown_choice": 1,
+      "no_event": 1,
+      "tech_known": 1,
+      "already_queued": 1,
+      "already_built": 1
+    },
+    "roteiroCodes": 24,
+    "builtByTheProbe": [
+      {
+        "code": "city_exists",
+        "name": "a second city"
+      },
+      {
+        "code": "too_close_to_edge",
+        "name": "a city on the outer ring"
+      },
+      {
+        "code": "tile_occupied",
+        "name": "a move onto the faction's Warrior"
+      },
+      {
+        "code": "queue_full",
+        "name": "a fourth queue entry"
+      }
+    ],
+    "slicedByHand": [
+      "turn_in_progress",
+      "no_turn_job"
+    ],
+    "documentedCodes": 30
+  },
+  "controls": {
+    "previousHost": {
+      "applicable": false,
+      "reason": "The slice has no native code and no host: the rules are GDScript run by the official Godot. There is no previous binary to compare, and the previous SDK does not apply either, because the slice exports nothing from src/."
+    },
+    "sabotages": [
+      {
+        "name": "prng",
+        "command": "node tests/civ-lite-game-native.test.mjs --sabotage=prng",
+        "file": "consumers/civ-lite/game/prng.gd",
+        "find": "  return ((shifted >> rotation) | (shifted << ((32 - rotation) & 31))) & MASK32\n",
+        "replace": "  return randi() & MASK32\n",
+        "brokenSourceSha256": "c4e969d6ebcaa6a8826616fa49eb0abc4a9cbfb452fbb7c2bff1b3f8c2c2c536",
+        "checksPerExecution": [
+          629,
+          629,
+          629
+        ],
+        "failedChecksPerExecution": [
+          6,
+          6,
+          6
+        ],
+        "failedChecks": [
+          "prng: PCG32 matches its published reference outputs",
+          "prng: the same seed gives the same stream",
+          "prng: every output is counted",
+          "epoch: it is not part of the state's hash",
+          "replay: a second play in the same process reaches the same state at every step",
+          "replay: slicing every end_turn into phases reaches the same state at every step"
+        ],
+        "finalHashes": [
+          "3f7c58d9062b0076de2bd9ac833f5e4a6aad0337fdb582471f2775503f56c769",
+          "9987680dff0f26d550ced9262d0e227bf70ffd00e876747ec254b45631f3865f",
+          "a7d603f67851c2476ded80839d24d5d663549f2953f7cd338efb1a0d8840342a"
+        ],
+        "executionsDiffer": true,
+        "goldenHashDiffers": true,
+        "oracleRejection": "the game's PRNG must produce PCG32's published reference outputs",
+        "oracleRejectsEveryExecution": true,
+        "sourceScanFinds": [
+          "consumers/civ-lite/game/prng.gd:34"
+        ],
+        "runStatus": 0
+      },
+      {
+        "name": "canon",
+        "command": "node tests/civ-lite-game-native.test.mjs --sabotage=canon",
+        "file": "consumers/civ-lite/game/canon.gd",
+        "find": "      keys.sort()\n",
+        "replace": "",
+        "brokenSourceSha256": "b1493c7086053f52000adebca94a877ece75a866ac9d8b7e188250a0691d9f69",
+        "checksPerExecution": [
+          629,
+          629,
+          629
+        ],
+        "failedChecksPerExecution": [
+          1,
+          1,
+          1
+        ],
+        "failedChecks": [
+          "canon: keys are sorted and nothing else is spaced"
+        ],
+        "finalHashes": [
+          "a9795430ed77ba66a69bf01bb2faf9015e7faed95a855e128429a959ba156c33",
+          "a9795430ed77ba66a69bf01bb2faf9015e7faed95a855e128429a959ba156c33",
+          "a9795430ed77ba66a69bf01bb2faf9015e7faed95a855e128429a959ba156c33"
+        ],
+        "executionsDiffer": false,
+        "goldenHashDiffers": true,
+        "oracleRejection": "the initial state must be the canonical serialization (sorted keys, integers and ASCII only)",
+        "oracleRejectsEveryExecution": true,
+        "sourceScanFinds": [],
+        "runStatus": 0
+      },
+      {
+        "name": "rule",
+        "command": "node tests/civ-lite-game-native.test.mjs --sabotage=rule",
+        "file": "consumers/civ-lite/game/rules.gd",
+        "find": "  {\"name\": \"Forest\", \"food\": 1, \"production\": 2, \"science\": 0, \"move\": 2},\n",
+        "replace": "  {\"name\": \"Forest\", \"food\": 1, \"production\": 2, \"science\": 0, \"move\": 1},\n",
+        "brokenSourceSha256": "673aeebce86b2e969ebdec45bca00f2384d56d905f6d3cd6493c4fd41f8a6b3a",
+        "checksPerExecution": [
+          627,
+          627,
+          627
+        ],
+        "failedChecksPerExecution": [
+          13,
+          13,
+          13
+        ],
+        "failedChecks": [
+          "step 05 found_city[1] answers no_moves_left",
+          "step 05 found_city[1] leaves the context settler",
+          "step 06 move_unit[1,9,8] answers not_adjacent",
+          "step 06 move_unit[1,9,8] leaves the context settler",
+          "step 07 fortify[1] answers cannot_fortify",
+          "step 07 fortify[1] leaves the context settler",
+          "step 08 found_city[2] leaves the context settler",
+          "step 15 set_production[\"warrior\",0] answers no_city",
+          "step 17 select_tile[7,8] leaves the context settler",
+          "step 18 found_city[1] answers ok",
+          "step 53 set_production[\"granary\",1] answers ok",
+          "step 54 set_production[\"granary\",2] answers already_queued",
+          "step 61 set_production[\"granary\",0] answers already_built"
+        ],
+        "finalHashes": [
+          "73a60430a4869926b136bc1e4699289b04a1c0bff3cbda02699b64bb1ffe9910",
+          "73a60430a4869926b136bc1e4699289b04a1c0bff3cbda02699b64bb1ffe9910",
+          "73a60430a4869926b136bc1e4699289b04a1c0bff3cbda02699b64bb1ffe9910"
+        ],
+        "executionsDiffer": false,
+        "goldenHashDiffers": true,
+        "oracleRejection": "step 4 move_unit(1, 7, 8) must leave the state the rules compute from the state before it",
+        "oracleRejectsEveryExecution": true,
+        "sourceScanFinds": [],
+        "runStatus": 0
+      },
+      {
+        "name": "economy",
+        "command": "node tests/civ-lite-game-native.test.mjs --sabotage=economy",
+        "file": "consumers/civ-lite/game/rules.gd",
+        "find": "const CENTER_PRODUCTION := 1\n",
+        "replace": "const CENTER_PRODUCTION := 2\n",
+        "brokenSourceSha256": "8372913b6bf03bdc35552b183f8d91a8f1ee23970bd925f8d892760eb3e580d9",
+        "checksPerExecution": [
+          629,
+          629,
+          629
+        ],
+        "failedChecksPerExecution": [
+          3,
+          3,
+          3
+        ],
+        "failedChecks": [
+          "step 53 set_production[\"granary\",1] answers ok",
+          "step 54 set_production[\"granary\",2] answers already_queued",
+          "step 61 set_production[\"granary\",0] answers already_built"
+        ],
+        "finalHashes": [
+          "559d73d4e4ce1899f127f8b3b42c1d4fb51c0c1fb8b9d9829905147a2538042c",
+          "559d73d4e4ce1899f127f8b3b42c1d4fb51c0c1fb8b9d9829905147a2538042c",
+          "559d73d4e4ce1899f127f8b3b42c1d4fb51c0c1fb8b9d9829905147a2538042c"
+        ],
+        "executionsDiffer": false,
+        "goldenHashDiffers": true,
+        "oracleRejection": "step 31 end_turn() must leave the state the rules compute from the state before it",
+        "oracleRejectsEveryExecution": true,
+        "sourceScanFinds": [],
+        "runStatus": 0
+      }
+    ],
+    "script": "node scripts/civ-lite-game-sabotage.mjs",
+    "scriptExit": 0,
+    "scriptElapsedMs": 8697,
+    "controlStatus": 0,
+    "sourcesRestoredByteForByte": true,
+    "sabotagedSourceSha256": {
+      "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+      "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+      "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040"
+    }
+  },
+  "regressions": [
+    {
+      "command": "npm run type-check",
+      "exit": 0,
+      "elapsedMs": 597,
+      "printed": [],
+      "note": "tsc-rs prints nothing but its command line; exit 0 means no diagnostic"
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "elapsedMs": 473,
+      "printed": [
+        "✓ No issues found (0.13s)"
+      ]
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "elapsedMs": 681,
+      "printed": [
+        "\"passed\": true,",
+        "\"files\": 1512,"
+      ]
+    },
+    {
+      "command": "npm run test:contracts",
+      "exit": 0,
+      "elapsedMs": 78884,
+      "printed": [
+        "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values",
+        "# tests 7",
+        "# pass 7",
+        "# fail 0",
+        "# tests 43",
+        "# pass 43",
+        "# fail 0",
+        "# tests 303",
+        "# pass 303",
+        "# fail 0",
+        "Ran 13 tests in 0.081s",
+        "OK"
+      ]
+    },
+    {
+      "command": "npm run test:examples",
+      "exit": 0,
+      "elapsedMs": 216997,
+      "printed": [
+        "35 examples, every one: Fabric/Godot: <n> acceptance checks passed (headless)."
+      ]
+    }
+  ],
+  "regressionMarkers": {
+    "check:publication": {
+      "files": 1512,
+      "failures": 0
+    },
+    "check:static": "No issues found",
+    "test:contracts": {
+      "parity": {
+        "inventory": "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values",
+        "tests": 7,
+        "passed": 7,
+        "failed": 0
+      },
+      "dashboard": {
+        "tests": 43,
+        "passed": 43,
+        "failed": 0
+      },
+      "node": {
+        "tests": 303,
+        "passed": 303,
+        "failed": 0
+      },
+      "python": {
+        "ran": 13,
+        "result": "OK"
+      }
+    },
+    "test:examples": {
+      "examples": 35,
+      "checks": {
+        "shared": 35,
+        "counter": 19,
+        "runtime": 23,
+        "refs": 23,
+        "tree": 89,
+        "focus": 175,
+        "pointers": 132,
+        "pointer-geometry": 631,
+        "view": 67,
+        "coordinates": 238,
+        "transforms": 309,
+        "metrics": 64,
+        "services": 36,
+        "form": 39,
+        "react": 36,
+        "layout": 47,
+        "input": 45,
+        "pressable": 47,
+        "scroll": 62,
+        "chart": 34,
+        "nativewind": 49,
+        "typography": 55,
+        "animated": 12,
+        "switch": 20,
+        "activity-indicator": 14,
+        "accessibility": 18,
+        "touchables": 13,
+        "virtualized-list": 14,
+        "appearance": 14,
+        "pan-responder": 11,
+        "networking": 29,
+        "images": 26,
+        "text-layout": 22,
+        "device-services": 16,
+        "accessibility-info": 12
+      }
+    }
+  },
+  "executedSourceSha256": {
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+    "consumers/civ-lite/game/game.gd": "39c866648510f47090b5b9b0268c756cb230510bc92cc938c59c67869c004c44",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/snapshot.gd": "c3c65fab8a26767db6a4e20ae6fedb1d462192fab23d3cd91842f24819b269c1",
+    "consumers/civ-lite/game/turn.gd": "5da4493e48f042730e02438cc56256a61dd16f2a7613b5e2359cc1449bde1e0a",
+    "consumers/civ-lite/game/world.gd": "d2be82b34262bfe3f6c6b257037163ce0e5e2937639fd6a1ba1c2bdf21b0a3d6",
+    "tests/civ-lite-game-probe.gd": "4231ee081b42071e518d7e67727de28e8ac2dd6e796b65ac2cd67651bd0bccc5",
+    "tests/civ-lite-game-native.test.mjs": "e2c41119919c7a46c611ac2f786bb66962a4a7cfde6776149473499c8fdb676f",
+    "tests/civ-lite-game-oracle.mjs": "1a3e4a3683aadc0e56715940fc7afc5b43a889a21769902d8b57d72cea33509a",
+    "scripts/civ-lite-game-sabotage.mjs": "acf1cfb4a152011cccad6a5dfb56a1f87a2c7c368d539719ba1e96bc71f0842d",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "package.json": "449ebabd02c3a4916044cb8eba68d197105e71332e96c0bc45d91a8d6fda4151"
+  },
+  "committedBlobs": {
+    "consumers/civ-lite/game/canon.gd": "e98ed6db581d0fac90ba09c03f79b7f52f959475",
+    "consumers/civ-lite/game/context.gd": "2652ecfef3bfbab3bb74ed321a7771288d21f46d",
+    "consumers/civ-lite/game/economy.gd": "eb2f16ed3502c85c70eac63af412bca2aa5356b5",
+    "consumers/civ-lite/game/game.gd": "ebe797989178a19c3e4e31867a2d933aee4c7e18",
+    "consumers/civ-lite/game/intents.gd": "71c06a3309b0106b91cbbcb3541dcb3359290e36",
+    "consumers/civ-lite/game/prng.gd": "9d188b41d61c7826e468f60c423a00d3d0a106d5",
+    "consumers/civ-lite/game/replay.gd": "13331aa690ad94750c35f575c2dd2ef7c2e46c06",
+    "consumers/civ-lite/game/rules.gd": "bd50021bccc1c94ac6f2199a3acbb7825b2bff19",
+    "consumers/civ-lite/game/snapshot.gd": "0642744808510f7ea824b1ffe0fa1c1bcafe9dcd",
+    "consumers/civ-lite/game/turn.gd": "bfd40c8a8eca74be562de776c9a44ff5e90fbaa5",
+    "consumers/civ-lite/game/world.gd": "7089136040394f08e7bbbdda55aa118c99dd0ab4",
+    "tests/civ-lite-game-probe.gd": "cc8f20b57e5df1228dec97520f623d5cba5867aa",
+    "tests/civ-lite-game-native.test.mjs": "91224f3277a643100352ced163e1ea1c4ef62509",
+    "tests/civ-lite-game-oracle.mjs": "d6c7acb842647f7fe02adec9f4780602584b94af",
+    "scripts/civ-lite-game-sabotage.mjs": "9433ed9623003f84f4b7d22eec41c8f395d8ec83",
+    "scripts/sabotage-sources.mjs": "0186a4bdd4f624be5e403834688cacb8ed9355d4",
+    "scripts/godot-binary.mjs": "602d0992e7edd31d3ed3b050bf764d6a3602c581",
+    "package.json": "6c8809ce198deba95b72f39b148da3c0cb63c564"
+  },
+  "sourcesEqualCommittedBlobs": true,
+  "limits": [
+    "The golden hash pins the state the 12th end_turn ends in; the trace hash pins the state after each of the 73 steps. Both change with any rule, the map or the roteiro, and then the new value is reviewed, not accepted.",
+    "The numbers (costs, yields, thresholds) are chosen so a 12-turn replay exercises every rule; the game is not balanced.",
+    "No service, signal, HUD, TypeScript mirror, export or device exists yet: the snapshot is a contract written down and checked in GDScript, not yet consumed.",
+    "Timing is not measured: the phases report tasks and events, and the frame-budget measurement is a later package.",
+    "A project.godot in consumers/civ-lite/ would hide the game from the root project; the test then has to move with it.",
+    "Hosted CI (native-civ-lite-game) and Pages are pending."
+  ]
+}

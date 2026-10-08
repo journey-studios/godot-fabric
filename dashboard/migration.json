@@ -3510,8 +3510,13 @@
             {
               "id": "replay",
               "label": "Regras e cenário em GDScript com testes headless: replay de 12 turnos com hash dourado idêntico em 3 de 3 execuções (só inteiros, PRNG próprio, serialização canônica) e cobertura dos 7 contextos",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
+                }
+              ]
             },
             {
               "id": "servicos",
@@ -4212,6 +4217,13 @@
       "taskIds": [],
       "message": "Primeira fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5) com evidência local: um HUD React Native sobre um mapa Godot (Node2D de 24x16 tiles sob uma Camera2D com zoom 2). A política mínima é a FabricSurface com MOUSE_FILTER_IGNORE por padrão, definido no construtor, e só os Controls das Views do RN barram o ponteiro. Na área vazia do HUD, 100/100 cliques esquerdos, 100/100 direitos, 100/100 rodas e 100/100 toques chegam ao mundo e 0 aos handlers, e o tile selecionado é o que a câmera dá; no Pressable, 100 onPress e 0 no mundo (um toque no HUD dá 0 ScreenTouch e 0 mouse emulado ao mundo); com overlay na árvore ou Modal aberto, 0/100, e 100/100 com ele fechado antes e depois. 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20), em rajadas entregues por um único flush, sem depender do ritmo dos quadros, com um oráculo independente que refaz cada contagem pela geometria do HUD e pela conta da câmera. O host anterior falha exatamente os 31 checks normativos (a roda no vazio já passa na main, porque o GUI a deixa atravessar um Control STOP, e por isso não é normativa) e as sabotagens surface-stop e views-ignore falham 31 e 21 checks e são rejeitadas pelo oráculo. Faixa gráfica local no macOS (janela real, gl_compatibility, N=100): 18 checks e 4 capturas. É a fatia 1 de 3 do spike: GO para a política mínima; a decisão go/no-go é da fatia 3. Lacunas para a fatia 2 (variante a2, liberada agora que o #58 foi integrado): o hitSlop, o Text com onPress, os vãos de ScrollView e a roda sobre o HUD ou sobre um overlay na árvore ainda chegam ao mundo além do RN. O critério iphone segue aberto (P7): os eventos são sintéticos, sem ponteiro de hardware, tela de toque real nem export móvel. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-03-replay-c2e4501",
+      "at": "2026-10-08T15:25:04.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério replay, com evidência local: as regras e o cenário do Frontier, o jogo de referência, rodam em GDScript puro com o Godot como autoridade (mapa 24x16 de semente fixa, Settler e Warrior com movimento por pontos, uma cidade com fila de produção, pesquisa em lista, um evento bloqueante e uma facção roteirizada), só com inteiros, PRNG próprio (PCG32 conferido contra as saídas publicadas), serialização canônica e SHA-256. O roteiro de 12 turnos e 73 intenções (43 aceitas e 30 recusadas com código e texto, sem mudar o estado) termina no mesmo hash dourado, e o hash de trilha fixa o estado de cada passo, em 9 execuções de 629 checks (3 rodadas de 3 processos, relatórios byte-idênticos). Os 7 contextos são cobertos, um oráculo independente em Node recalcula as regras, o mapa e o PCG32, e 4 sabotagens retidas são rejeitadas. O snapshot que a HUD vai projetar está documentado campo a campo, mas ainda não é um serviço: os critérios servicos, consumidor e autoridade do V05-03 seguem abertos. CI hospedada (native-civ-lite-game) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
     },
     {
       "id": "accessibility-announcements-slice-2b-1491f34",
