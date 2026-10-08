@@ -5,9 +5,15 @@ import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const output = process.argv[2] && path.resolve(process.argv[2]);
+// consumer:create [--template minimal|libraries] <new directory>
+const args = process.argv.slice(2);
+const flag = args.indexOf("--template");
+const template = flag < 0 ? "minimal" : args.splice(flag, 2)[1];
+const output = args.length === 1 && path.resolve(args[0]);
+if (!/^[a-z][a-z-]*$/.test(template ?? "") || !existsSync(path.join(root, "consumers", template)))
+  throw new Error("Unknown consumer template: " + template);
 if (!output || existsSync(output)) throw new Error("Provide a new consumer directory; existing project files are preserved");
-await cp(path.join(root, "consumers", "minimal"), output, {
+await cp(path.join(root, "consumers", template), output, {
   recursive: true, filter: (file) => !/\.(?:uid|import)$/.test(file),
 });
 const result = spawnSync(process.execPath, [path.join(root, "scripts", "pack-addon.mjs"), path.join(output, "addons", "godot_fabric")], { stdio: "inherit" });

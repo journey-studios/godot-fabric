@@ -177,8 +177,10 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
     if (!isSdkOwnedSpecifier(name)) requireDirect(name);
   function requireOwned(name, owner) {
     if (!owner) return requireDirect(name);
+    // peerDependenciesMeta may name an optional peer that peerDependencies does not list; such a peer is declared.
     const declared = [owner.manifest.dependencies, owner.manifest.optionalDependencies, owner.manifest.peerDependencies]
-      .some(map => Object.hasOwn(map ?? {}, name));
+      .some(map => Object.hasOwn(map ?? {}, name))
+      || owner.manifest.peerDependenciesMeta?.[name]?.optional === true;
     if (!declared && owner.manifest.name !== name)
       fail("E_PROJECT_DEPENDENCY", `${name}: undeclared import in ${owner.manifest.name ?? "installed package"} dependencies`);
   }

@@ -504,7 +504,8 @@ blurred request that uses the decoded cache, cap insets that ignore the scale) f
 example's capture sampled the shader's pixels. A disk cache, revalidation, cookies, compression, animated formats
 and a comparison of the effects with iOS are open. Hosted CI passed the first slice's 74 checks on main (run
 37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and the network slice's 74 checks (run 37750455295,
-[receipt](docs/evidence/images-network/hosted-ci.json)), and is pending for the visual slice.
+[receipt](docs/evidence/images-network/hosted-ci.json)), and the visual slice's 53 checks (run 37773373567,
+[receipt](docs/evidence/images-visual/hosted-ci.json)).
 [Evidence](docs/evidence/images/README.md);
 [network evidence](docs/evidence/images-network/README.md);
 [visual evidence](docs/evidence/images-visual/README.md).
@@ -592,6 +593,15 @@ records the original 2B checkpoint. The later
 offline builds, typed Godot operations, inventory-only resize and explicit errors. Provisioning is
 currently from source on macOS arm64; public prebuilt artifacts, complete
 exports and development tools remain open.
+
+A second consumer, [`consumers/libraries`](consumers/libraries/README.md), brings its own lockfile and uses the original
+NativeWind 4.2.7 (`className` on View, Text, Image and Pressable, `active:`, manual dark mode, retained state) and Chart Kit
+7.0.4's v2 `LineChart`, built by the public SDK alone: a project's Tailwind entry is compiled from a declarative
+`godotFabric.tailwind`, and `className` types are an opt-in. The [evidence](docs/evidence/library-consumer/README.md)
+records 13 JS tests and 46 native checks (58 with the renderer), the exact releases and the control on the previous SDK
+(hosted CI pending).
+
+![Libraries consumer: NativeWind dark theme and a Chart Kit LineChart](docs/evidence/library-consumer/libraries-dark.png)
 
 ## Run the SDK laboratory
 
@@ -806,8 +816,9 @@ function Counter() {
 Complete class strings must appear in `tailwind.config.cjs` content paths.
 This repository is a runnable platform prototype with an independently
 provisioned consumer. It is not yet a published npm package or a drop-in addon
-release with prebuilt binaries. The consumer builder does not yet run the
-laboratory's NativeWind compilation path.
+release with prebuilt binaries. The consumer builder compiles a project's own Tailwind entry from
+`godotFabric.tailwind` (the [libraries consumer](consumers/libraries/README.md)); it never runs a project's
+`tailwind.config.*`, so a project declares its content globs, dark mode and theme as JSON.
 
 ## Verify
 
@@ -816,6 +827,7 @@ npm run test:examples                    # all interactive demos, headless and s
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
+npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
 npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer

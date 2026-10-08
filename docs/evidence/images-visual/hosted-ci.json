@@ -1,0 +1,1697 @@
+{
+  "schemaVersion": 1,
+  "scenario": "images-visual",
+  "status": "verified-completed-hosted-workflow-and-headless-images-visual-artifact",
+  "run": {
+    "id": 37773373567,
+    "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/66",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T11:56:12Z",
+        "jobs": [
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113298139777,
+            "runAttempt": 1,
+            "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+            "startedAt": "2026-10-08T11:56:21Z",
+            "completedAt": "2026-10-08T12:06:12Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298139777"
+          },
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113298140064,
+            "runAttempt": 1,
+            "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+            "startedAt": "2026-10-08T11:56:15Z",
+            "completedAt": "2026-10-08T11:57:57Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140064"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113298140117,
+            "runAttempt": 1,
+            "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+            "startedAt": "2026-10-08T11:56:15Z",
+            "completedAt": "2026-10-08T12:03:04Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140117"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113298140174,
+            "runAttempt": 1,
+            "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+            "startedAt": "2026-10-08T12:04:52Z",
+            "completedAt": "2026-10-08T12:54:41Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140174"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113321373496,
+            "runAttempt": 1,
+            "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+            "startedAt": "2026-10-08T12:54:44Z",
+            "completedAt": "2026-10-08T12:55:07Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113321373496"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113298139777,
+        "runAttempt": 1,
+        "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "startedAt": "2026-10-08T11:56:21Z",
+        "completedAt": "2026-10-08T12:06:12Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298139777"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113298140064,
+        "runAttempt": 1,
+        "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "startedAt": "2026-10-08T11:56:15Z",
+        "completedAt": "2026-10-08T11:57:57Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140064"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113298140117,
+        "runAttempt": 1,
+        "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "startedAt": "2026-10-08T11:56:15Z",
+        "completedAt": "2026-10-08T12:03:04Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140117"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113298140174,
+        "runAttempt": 1,
+        "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "startedAt": "2026-10-08T12:04:52Z",
+        "completedAt": "2026-10-08T12:54:41Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113298140174"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113321373496,
+        "runAttempt": 1,
+        "headSha": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "startedAt": "2026-10-08T12:54:44Z",
+        "completedAt": "2026-10-08T12:55:07Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37773373567/job/113321373496"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "native-cold-start": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "parity-comparison": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "reference-android": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "reference-ios": "9c5d0eba274df1ad47376946270b044209a9243d"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 303,
+        "pass": 303,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 49.82
+  },
+  "implementationCommit": "6c221e8500e159ba9322d9b7a6b5adace4f8aff2",
+  "committedStateExercised": {
+    "source": "postReview",
+    "commit": "b5471d9a36a36e5aabd9469652b9b9b9e6113248",
+    "headlessChecks": 53,
+    "reviewCommits": [
+      "b5471d9a36a36e5aabd9469652b9b9b9e6113248"
+    ],
+    "note": "the report's top level describes the implementation commit; the hosted run exercises the tree after review, which the report records in postReview"
+  },
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 66,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/66",
+    "title": "feat(images): Tint, blur, cap insets and rounded clipping for Image",
+    "headSha": "051facef803840346652aa3bcb166b81412ed8e4",
+    "squashMergeCommit": "9c5d0eba274df1ad47376946270b044209a9243d",
+    "mergedAt": "2026-10-08T11:56:09Z",
+    "headTreeSha": "0f6caf831cd4d14e25f3adf2e23305e1d3bbff07",
+    "mainTreeSha": "0f6caf831cd4d14e25f3adf2e23305e1d3bbff07",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "stackedBranchCommitsBeforeImplementation": [],
+    "commitsAfterImplementation": [
+      {
+        "commit": "7f05adf",
+        "subject": "docs(images): Pin executed visual effects evidence and captures"
+      },
+      {
+        "commit": "a84c7e9",
+        "subject": "docs(images): Record the network image slice's hosted receipts"
+      },
+      {
+        "commit": "c273ef9",
+        "subject": "docs(dashboard): Record the visual image slice and #64 receipts"
+      },
+      {
+        "commit": "f021e30",
+        "subject": "Merge origin/main into feat/images-visual",
+        "merge": [
+          "c273ef9",
+          "0f2cc7e"
+        ]
+      },
+      {
+        "commit": "b742d8f",
+        "subject": "Merge origin/main into feat/images-visual",
+        "merge": [
+          "f021e30",
+          "bf1e9e9"
+        ]
+      },
+      {
+        "commit": "b5471d9",
+        "subject": "fix(images): Guard the blur buffer size and share the asset sampler"
+      },
+      {
+        "commit": "051face",
+        "subject": "docs(images): Record the visual slice's post-review changes"
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 13
+  },
+  "actualCheckout": {
+    "sha": "9c5d0eba274df1ad47376946270b044209a9243d",
+    "parents": [
+      "bf1e9e98434e6f0e12a68b5488f19f37f184f77a"
+    ],
+    "treeSha": "0f6caf831cd4d14e25f3adf2e23305e1d3bbff07",
+    "treeEntries": 1638,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 17,
+      "nativeSourcePins": 134,
+      "verificationSourcePins": 21,
+      "fixtureFilePins": 11
+    },
+    "allCuratedTrackedPathsVerified": 181,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 168,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "native/CMakeLists.txt",
+      "native/application_runtime.cpp",
+      "native/application_runtime.h",
+      "native/fabric_application.cpp",
+      "native/image_effects_core.h",
+      "native/image_effects_test.cpp",
+      "native/paragraph_layout.cpp",
+      "package.json",
+      "scripts/images-example-assets.mjs",
+      "tests/types/consumer.tsx",
+      "types/react-native.ts"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11550376119,
+    "name": "native-images-visual",
+    "zipSizeBytes": 97032,
+    "zipSha256": "6b1725dc062aa496bde5405d698060f9e727bbe2c1751c0ced021ea9b50a4cdc",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-08T12:26:21Z",
+    "expiresAt": "2027-01-06T11:56:12Z",
+    "fileCount": 5,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "images-visual-comparison.json": "3e3aeff55d8f212e279dfc3e197f53fc0ade291011993b115634bff49266b12c",
+      "images-visual-current-report.json": "6c4b7dbeb68f19c3eb9a8b53f657df3631180efee6b71286e89f480162bdb61b",
+      "images-visual-current.log": "9ab11efa75a8b49c384c3807e08363f0823410794a98f9d99b7fdaad32c74fa2",
+      "images-visual-probe-bundle.json": "233d301ce820a69da13f041b496c5931907bdea5c98601be41997233a1e33663",
+      "images-visual-report.json": "6cccd44cb32d3936ff3e6b69d5ef05af6f59b580ac5a05459328525aa1f9a7c6"
+    }
+  },
+  "verification": {
+    "headlessChecks": 53,
+    "committedHeadlessChecks": 53,
+    "lanes": [
+      {
+        "lane": "current",
+        "reportFile": "images-visual-current-report.json",
+        "logFile": "images-visual-current.log",
+        "checks": 53,
+        "passed": 53,
+        "uniqueCheckIds": true,
+        "committedChecks": 53,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline",
+        "committedCheckIdDigestSha256": "cc900508d36904af3811bfdd5fb27cd3abb1c362a3ac83b26285dcd6a7f4d3d6",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "9e2b7e034af5b78a2e198383a212396042426f40dea1027722564360ae0053bd",
+        "bundleInputCount": 395,
+        "bundleEqualsHashRecordedInCommittedReportAt": [
+          "postReview.bundleChangedBy.bundleSha256",
+          "postReview.unchanged.bundleSha256",
+          "postReview.lanes[0].bundleSha256",
+          "postReview.lanes[1].bundleSha256",
+          "postReview.lanes[2].bundleSha256",
+          "postReview.lanes[3].bundleSha256",
+          "postReview.lanes[4].bundleSha256",
+          "postReview.lanes[5].bundleSha256"
+        ],
+        "pinnedBundleSha256": "814ca94dc5bc0724f0ca4deab06d512b4717a14e81240234fbca1f5a9aea121d",
+        "bundleEqualsPinnedBundle": false,
+        "nativeHostSha256": "964c61dd99465dec05e690d65b033607ecef0f94568f6039d6d65012181a686c",
+        "node": "v22.23.2",
+        "reportSha256": "6c4b7dbeb68f19c3eb9a8b53f657df3631180efee6b71286e89f480162bdb61b",
+        "logSha256": "9ab11efa75a8b49c384c3807e08363f0823410794a98f9d99b7fdaad32c74fa2",
+        "passedMarker": "IMAGES_VISUAL_PASSED: 53",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "pointerRegistryWarningLines": 0,
+        "pinnedProducersChangedSinceTheCommittedState": []
+      }
+    ],
+    "producersRecordedByContent": {},
+    "independentOracle": [
+      {
+        "module": "tests/images-visual-oracle.mjs",
+        "atCommit": "9c5d0eba274df1ad47376946270b044209a9243d",
+        "export": "verifyImagesVisualReport",
+        "lane": "current",
+        "acceptsDownloadedReport": true,
+        "modulesLoaded": [
+          "sdk/toolchain/asset-plugin.mjs",
+          "tests/images-oracle.mjs",
+          "tests/images-pattern.mjs",
+          "tests/images-visual-oracle.mjs",
+          "tests/images-visual-pattern.mjs",
+          "tests/fixtures/images-visual/.gdignore",
+          "tests/fixtures/images-visual/frame@2x.png",
+          "tests/fixtures/images-visual/glyph.png",
+          "tests/fixtures/images-visual/glyph@2x.png",
+          "tests/fixtures/images-visual/glyph@3x.png",
+          "tests/fixtures/images-visual/manifest.json",
+          "tests/fixtures/images/.gdignore",
+          "tests/fixtures/images/assets/badge.png",
+          "tests/fixtures/images/assets/badge@2x.png",
+          "tests/fixtures/images/assets/badge@3x.png",
+          "tests/fixtures/images/assets/tile.png",
+          "tests/fixtures/images/assets/wide.png",
+          "tests/fixtures/images/broken/corrupt.png",
+          "tests/fixtures/images/broken/empty.png",
+          "tests/fixtures/images/broken/notimage.png",
+          "tests/fixtures/images/broken/oversize.jpg",
+          "tests/fixtures/images/broken/oversize.png",
+          "tests/fixtures/images/broken/truncated.png",
+          "tests/fixtures/images/formats/format.bmp",
+          "tests/fixtures/images/formats/format.gif",
+          "tests/fixtures/images/formats/format.jpg",
+          "tests/fixtures/images/formats/format.png",
+          "tests/fixtures/images/formats/format.svg",
+          "tests/fixtures/images/formats/format.tga",
+          "tests/fixtures/images/formats/format.webp",
+          "tests/fixtures/images/manifest.json"
+        ],
+        "result": {
+          "cases": 52,
+          "changes": 13,
+          "jobs": 62
+        }
+      }
+    ],
+    "rawReportEqualsLaneReportWithoutExcludedKeys": {
+      "current": true
+    },
+    "normativeChecks": {
+      "hosted": 40,
+      "committed": 40,
+      "committedPrecedingHostFailuresAreNormative": true
+    },
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "comparison": {
+      "originalControlPresent": false,
+      "sabotagesPresent": [],
+      "oracleCases": 52,
+      "oracleChanges": 13,
+      "oracleJobs": 62,
+      "committedDeclaredCases": 52,
+      "committedLiveChanges": 13,
+      "committedJobsJudged": 62,
+      "intentionalNativeProducerDifferences": [
+        "native/image_effects_core.h",
+        "native/image_effects.h",
+        "native/image_effects.cpp",
+        "native/image_effects_test.cpp",
+        "native/image_geometry.h",
+        "native/image_view.h",
+        "native/image_view.cpp",
+        "native/image_loader.h",
+        "native/image_loader.cpp",
+        "native/godot_image_manager.cpp",
+        "native/image_sources.h",
+        "native/image_sources.cpp",
+        "native/image_cache.h",
+        "native/application_runtime.cpp",
+        "native/register.cpp",
+        "native/godot-profile.json",
+        "native/CMakeLists.txt"
+      ],
+      "currentRecordEqualsTheLane": true
+    },
+    "hostedObservations": {
+      "loaderCountersAtStop": {
+        "blurred": 14,
+        "byteHits": 3,
+        "cacheClears": 0,
+        "cancelled": 0,
+        "decodedHits": 3,
+        "deferredUploads": 0,
+        "downloads": 1,
+        "dropped": 0,
+        "failed": 0,
+        "loaded": 62,
+        "measured": 0,
+        "measures": 0,
+        "peakInFlight": 4,
+        "peakUploadsPerPoll": 4,
+        "prefetched": 0,
+        "prefetches": 0,
+        "requested": 62,
+        "tasksAwaited": 59,
+        "tasksStarted": 59,
+        "uploadBytes": 188928,
+        "uploads": 59
+      },
+      "committedLoaderCountersAtStop": {
+        "blurred": 14,
+        "byteHits": 3,
+        "cacheClears": 0,
+        "cancelled": 0,
+        "decodedHits": 3,
+        "deferredUploads": 0,
+        "downloads": 1,
+        "dropped": 0,
+        "failed": 0,
+        "loaded": 62,
+        "measured": 0,
+        "measures": 0,
+        "peakInFlight": 4,
+        "peakUploadsPerPoll": 4,
+        "prefetched": 0,
+        "prefetches": 0,
+        "requested": 62,
+        "tasksAwaited": 59,
+        "tasksStarted": 59,
+        "uploadBytes": 188928,
+        "uploads": 59
+      },
+      "loaderCountersEqualCommitted": true,
+      "rendererRids": {
+        "itemsCreated": 58,
+        "itemsFreed": 58,
+        "materialsCreated": 28,
+        "materialsFreed": 28,
+        "shadersCreated": 1,
+        "shadersFreed": 0
+      },
+      "committedRendererRids": {
+        "itemsCreated": 58,
+        "itemsFreed": 58,
+        "materialsCreated": 28,
+        "materialsFreed": 28,
+        "shadersCreated": 1,
+        "shadersFreed": 0
+      },
+      "rendererRidsEqualCommitted": true,
+      "serverRequests": 1,
+      "committedServerRequests": 1,
+      "jobsRecorded": 62,
+      "committedJobsRecorded": 62,
+      "jobsOnWorkerThreads": 59,
+      "committedJobsOnWorkerThreads": 59,
+      "distinctWorkerThreadIdentities": 3,
+      "committedWorkerThreadIdentities": 11,
+      "jobsOnTheMainThread": 0,
+      "blurredPictures": 14,
+      "committedBlurredPictures": 14,
+      "note": "observations of the hosted run; the probe and the oracle assert none of these counts"
+    },
+    "exampleHeadless": {
+      "step": "npm run test:examples",
+      "example": "images",
+      "checks": 26,
+      "committedChecks": 26,
+      "stepPresentInTheNativeJob": true
+    },
+    "controlsAgainstTheHostedLanes": {
+      "preceding-host": {
+        "checksFailingInTheCommittedControl": 40,
+        "presentInHostedLane": 40,
+        "passingInHostedLane": 40
+      },
+      "sabotage-mask-borders": {
+        "checksFailingInTheCommittedControl": 2,
+        "presentInHostedLane": 2,
+        "passingInHostedLane": 2
+      },
+      "sabotage-blur-passes": {
+        "checksFailingInTheCommittedControl": 3,
+        "presentInHostedLane": 3,
+        "passingInHostedLane": 3
+      },
+      "sabotage-blur-cache": {
+        "checksFailingInTheCommittedControl": 8,
+        "presentInHostedLane": 8,
+        "passingInHostedLane": 8
+      },
+      "sabotage-nine-patch-scale": {
+        "checksFailingInTheCommittedControl": 2,
+        "presentInHostedLane": 2,
+        "passingInHostedLane": 2
+      }
+    },
+    "declaredNativeHostSha256": "964c61dd99465dec05e690d65b033607ecef0f94568f6039d6d65012181a686c",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/images-visual-fixture.jsx": "29809a0b88efd944b020cb5ab03e7b09865e20dc1c1d1cd4024625396498fd51",
+      "tests/images-visual-probe.gd": "127b6559db8daf06780e89b4354e5e259c401b06f9e85c3f85d3a55e841d0d48",
+      "tests/images-visual-native.test.mjs": "732ef9edc049b413b45d4e08971a3f92d4103b901ae9fe9ec8388a75400cbfac",
+      "tests/images-visual-oracle.mjs": "bf2a2b069364058052452b5f07209f0373630820f3a3b9e241a3d5cacfa34a86",
+      "tests/images-visual-pattern.mjs": "5b718b5b0279c2d17f2494f9e8af78344cdae6dd3f44a474c6ae9cb449af41b4",
+      "tests/images-pattern.mjs": "d664768094c8fb3246003d5ea3546612a58891dc798c01ba2638e5d808170ac6",
+      "tests/images-network-server.mjs": "10fc73dc59d6bd1d6f6aa9a204ea6d6af7eadf9a19db33b4e85cafae367b4c18",
+      "tests/fixtures/images-visual/manifest.json": "02d83d9da4212e1f18e7b7626b65aee2db2cb3f6b6ae194d20c0d8697da137d0",
+      "scripts/images-visual-bundle.mjs": "b8d57eb6f2999d1afbc613a0812180cac89ea15b95f3ede4ce065cdc51bc9548",
+      "scripts/images-visual-fixtures.mjs": "15af79c3f9ee43d2695779c15ddf57ef560b2a84096edbc5389d79252a1f61d9",
+      "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+      "src/image.jsx": "5d1c9e23d7b47fc7b478dcb3824f2e3415736ae96232e442f67308381982a548",
+      "src/image-contract.mjs": "22cfd6bceb9b731f29efa34ca5386b029a8ce07d3bf351c9f7ec5cb12352ab4b",
+      "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+      "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+      "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "native/image_effects_core.h": "20877a745567c0e2d02b5871dc7c4c87114dea63055f0117724e6b0deb87814e",
+      "native/image_effects.h": "d55bbae551d4328ad471515d4a3de353294a081229b270ed4e5a3d39abf18a17",
+      "native/image_effects.cpp": "1ef32651bbb9bccc455dc470bddbc753721b10a8a782e96fedd6e93d3e6d4677",
+      "native/image_effects_test.cpp": "5d8ecbbea22eca3ae4708715c18291e940187846b87f61a031e29abf3156b464",
+      "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+      "native/image_view.h": "01aba3c46d83f58954a852faaa3a44e68ec39b3d5a884e58ae574f9b2d78b767",
+      "native/image_view.cpp": "b726fc61b2a009fc72dbbab2626ca71c6e9d5e5d2b80d864e7905239d57dda97",
+      "native/image_loader.h": "8368ebf3657fbff12a921a3c91df9c8bbdb41b4052f9fd5f065f6d7cb48793ca",
+      "native/image_loader.cpp": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969",
+      "native/godot_image_manager.cpp": "55fcddd8048389ed6b9b7cade3e1c2721e7da751bdd87e5b7afe4a219498e315",
+      "native/image_sources.h": "2f44ceb4a27a5284828dd0ab2fdeb23e0cbdae5cb9bf50f216da987f173c4619",
+      "native/image_sources.cpp": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
+      "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+      "native/application_runtime.cpp": "33b71dd8f97f74c2949010844c504a7ba9277faffad9c9bb635ba2b85c4ddba3",
+      "native/register.cpp": "81685ff042b3129f5b8c9fd7e4c53159a2c8264578f81b0c9e2963455f84e8b6",
+      "native/godot-profile.json": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+      "native/CMakeLists.txt": "d64f98a40d37918e0c91da9b78b6a05746fcdc03921c03b2a4ee6bb56744ef06"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [],
+    "producerPinsDifferingFromTheCommittedState": [],
+    "producerPinsOutsideTheReportsSourcePins": [
+      "native/CMakeLists.txt",
+      "native/application_runtime.cpp",
+      "native/godot-profile.json",
+      "native/godot_image_manager.cpp",
+      "native/image_cache.h",
+      "native/image_effects.cpp",
+      "native/image_effects.h",
+      "native/image_effects_core.h",
+      "native/image_effects_test.cpp",
+      "native/image_geometry.h",
+      "native/image_loader.cpp",
+      "native/image_loader.h",
+      "native/image_sources.cpp",
+      "native/image_sources.h",
+      "native/image_view.cpp",
+      "native/image_view.h",
+      "native/register.cpp"
+    ],
+    "producerPinsNotInAnyCommittedPinSet": [],
+    "producerPinsAddedBy": {},
+    "originalReactNativeSources": {
+      "Libraries/Image/Image.ios.js": "a23f5593958646ac0d61168219723f60987018c1696d481afa56bc2dc9330d26",
+      "Libraries/Image/ImageViewNativeComponent.js": "f7b4eeac6d29ae75d731f2bc5897bf71cd68ca8bc77c54085937c740706f2514",
+      "Libraries/Image/ImageSourceUtils.js": "bf6ddbc3551e496406a0abf5afd100f5c7246fcb3da3907fa0759e0370d811cd",
+      "Libraries/Image/ImageUtils.js": "1ffb1644140f811bd45347a2e4a14cc182414b3fd2e0ec6ec14d6951e04fc76f",
+      "Libraries/Image/ImageInjection.js": "b354405cd1669e08500c293e288b866e277161946c1afe4ac18fe283e749f0a8",
+      "Libraries/Image/NativeImageLoaderIOS.js": "eff5c353f6b442e295bb5e5aef1b2d678f69e9d4bc4d3256d54810e5fa97b7bd",
+      "Libraries/Image/resolveAssetSource.js": "b5c1b27fb9a5b1e9915c8495f8b3235462bcffe745cfe7afaad5fcaa1f3d5930",
+      "Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+      "Libraries/Image/ImageProps.js": "551a2aad425d9a7f2ca67c9486789ef62f379d1bfa023ca692e796bd7c319770",
+      "Libraries/Image/RCTImageBlurUtils.mm": "3ca928dc8cacc3d1e269f75dc9671a4c80606417bb781c53a8af559ee314cda0",
+      "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm": "a3c70cd2cd412239238fd73584362f9626f1579ab0296e4c4327a784012e8203",
+      "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+      "React/Views/RCTBorderDrawing.m": "9f2ee813a3c0fbb7bf8e5d3d45601933f935ee59128c748460bc1291a6cc01d0",
+      "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h": "d94b105fcc155625194bed540ca5d1d2d500c19fe7b4b9e91afa237162eb70e0",
+      "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/ImageRequestParams.h": "e83032286648ed6f3e757ec8b1888b6902115c2b541e85f18ad794c6c75380bd",
+      "ReactCommon/react/renderer/components/image/ImageProps.cpp": "e14a645b004304206248aef0a04e0a2ca053f03d075fc572252fa881de4d74b7",
+      "ReactCommon/react/renderer/components/image/ImageShadowNode.cpp": "2059767f5d2678b0d406798ee004cb68d725ac744b8d5d31da50381f9b6de525",
+      "ReactCommon/react/renderer/components/view/BaseViewProps.cpp": "62ebc4eca1d47cfa4bea5e91e121e1e87a5b0a7d43498567edcb4d446fe046d6",
+      "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+      "ReactCommon/react/renderer/core/graphicsConversions.h": "d34e8e4099eecdf1dd0423bab762181d92a8128ae3f9fabaff90cb4827048a29",
+      "ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29"
+    },
+    "originalReactNativeInputCount": 21,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "a58091292f47e1f37e6bae776ae1461689a1dca69b0e5210ce507bc8f1d24c11",
+        "gitBlobSha1": "cae268023d49fb4d9417a0a0939900e4a3503444",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "d7d9c59a274cb661a929ba184491fa0dc7905064781e15677f858d03b4a7e89c",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          },
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "1e63ffa3880fd87ae5dd755825f963684490a34985102c5eba789adc39ce7db3",
+        "gitBlobSha1": "bcdd6ec5b0e5987327069471e77f89bd34a77e0a",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "6dbfb167ebf829bb68540388a92a5d5f34c4478a262c3408f09380fe95bca4dc",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          },
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "dependencies.json": {
+        "sha256": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+        "gitBlobSha1": "321855aac90f17a27393f853a3444b040b0b1249",
+        "pinSet": "nativeSourcePins"
+      },
+      "examples/catalog.json": {
+        "sha256": "b5661f68ee0af28965c6eb3bafe9ce111ff4bb758af41c43bbdf87cd453b820b",
+        "gitBlobSha1": "1febefa86a94788c9a670c61fa2488a87c20ab60",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/App.jsx": {
+        "sha256": "46be2cc4752fb49e7c6e1d9ec48b0876d4ecfa07ffa9c23c757926d0c4ab278f",
+        "gitBlobSha1": "68553d333bb55b5b60618105e3d3a3c5cdad6566",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/avatar.png": {
+        "sha256": "70ec5b8d20356cb65cd2beb8288bb59abbb9fd8e72a0bee2e032c76fa84de617",
+        "gitBlobSha1": "a00d5f641a616dda58ab70fa0fe6d69fbfc5797d",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/assets/avatar@2x.png": {
+        "sha256": "ebb68f9ef2b209fc71d82bbfcc1575d10d539116062d34fa60b832812512d1f9",
+        "gitBlobSha1": "c140a96654ef49c05de99cf8597f1aa741d37548",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/assets/icon.png": {
+        "sha256": "dbccb4632f459127617d05f734a1b2eaf24a3d94bcf59850dae1c98ddf75bcdc",
+        "gitBlobSha1": "3177e565e053cbd1e0be8a4de4c9e625c7836128",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/assets/icon@2x.png": {
+        "sha256": "2a3f5eb037b30f618215497e0ece59d372a1b27132a89abdee239cb30ccae077",
+        "gitBlobSha1": "293488cd27c747c3f8a393ca76fbbd6b8281a467",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/assets/panel.png": {
+        "sha256": "2665dd1ba2deffe8e35f2eeda1b819fa14337557cd9a212453f3bc18ffb420d2",
+        "gitBlobSha1": "abf5698c26a04bd9df6e86a86ceec18947f0d332",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/assets/panel@2x.png": {
+        "sha256": "5cd18aaab39e866df0beaafdd22d13caee3b6b136742a085abd78731cced82e5",
+        "gitBlobSha1": "028ec7e07471a45c36095054031d258c41af6323",
+        "pinSet": "fixtureFilePins"
+      },
+      "examples/images/local_server.gd": {
+        "sha256": "c3a4ba1742d8bdd9b77b6d2a42025123c791e3abe35ee6686c34d20e7ab1fa9e",
+        "gitBlobSha1": "faf85bfc41d140ed75e0eb40d98a2fca11c0bda0",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/scene.tscn": {
+        "sha256": "8755489dec98d7c4b8809d24d26a1ccc5f08253fc19a6a9af73e5f94a42a333e",
+        "gitBlobSha1": "54f5d23391731f3f2cb3b23e0615ec20f9a04743",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/validation.gd": {
+        "sha256": "9f48a753af52f2590ca05bb77d21a1d36311ce7c7680e0946458b70e8ec9ac02",
+        "gitBlobSha1": "c95c45e5a5d0fc69ed33f9e42c1d7e1e1e0c359a",
+        "pinSet": "verificationSourcePins"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "d64f98a40d37918e0c91da9b78b6a05746fcdc03921c03b2a4ee6bb56744ef06",
+        "gitBlobSha1": "8366ee54a9c6ecc334b81720f575fff40aec54d5",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "3e7995cd69436862f551b457c1dddfd6f325f0ff632255ecf5d9b2ca5a0760a3",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/accessibility_core.h": {
+        "sha256": "3ea9b42a852a186da46db9b7c265dbec29d84359867e65fcbb5e962766ad0821",
+        "gitBlobSha1": "7afeffde3ac84dbae7712d1a863411e2f63ac6d4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessibility_core_test.cpp": {
+        "sha256": "626965f3e41c9043dea9e819900ee44480b17d86badf5d9b805f8af7b01fa674",
+        "gitBlobSha1": "62d0b482536fc1c0f0666797c1cbbf8482d46419",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessibility_info.cpp": {
+        "sha256": "f394ce90d226aba9965c14042d50fb9aed10926f7afd894f729ec2596b90b07d",
+        "gitBlobSha1": "dcb0c2dd2df5a1ba1a107e8627fd471d3fa4f3e0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessibility_info.h": {
+        "sha256": "ba48f4e86f35a4519eca3904d1240a3bfd40ae63f85ce62c16e64ac435aff85e",
+        "gitBlobSha1": "a11ca166f66689c04402da93921303fef9b9c0ba",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessibility_info_core.h": {
+        "sha256": "914afbdc01ecc8697bbdca03945b10e2590d711b0f2a3cd07c38fc44ae009057",
+        "gitBlobSha1": "7b68900450e60a08e94d9fa39964b161a402b7f2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessibility_info_core_test.cpp": {
+        "sha256": "adef9c4718314712e2bb550d5fe2cd8881d4e152ff78e22c6773a55a8a241b67",
+        "gitBlobSha1": "04f23d5514b174af0377b0b0826ae365eb382a68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessible_view.cpp": {
+        "sha256": "cc67fcfd9f9b7f9fffdceb9c7f98d5ab78bffed7ce027e6ef5f0a3e7c3dc3cf4",
+        "gitBlobSha1": "ac9fc5c3647d10e924fc0bb8ae7891faec881433",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/accessible_view.h": {
+        "sha256": "e9c9bb8ad6e05ba349cb4ce42b059731b23a7bd19e71636966665c07ccbbea7f",
+        "gitBlobSha1": "288656168f267307a0cb0f734f81b72a01011af1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/activity_indicator_view.cpp": {
+        "sha256": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+        "gitBlobSha1": "f75c30df1a893444883f70624c25274f4b05ab20",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/activity_indicator_view.h": {
+        "sha256": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+        "gitBlobSha1": "8fe602f1e6cbc4cd90d8262a213744caf94376cd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+        "gitBlobSha1": "cb4f85cf0d341a648ade0c875cbf088d7fb57f67",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform.h": {
+        "sha256": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+        "gitBlobSha1": "add1aedcb90ef3e44432875e248b8e2b1d7d8755",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+        "gitBlobSha1": "e4023fd8ad7b8bf6baf7a14dc320b295a2ebb167",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "52caf77bc818b0d5c3456ff47836871c81e56395579efd83251cac2b6f466fe8",
+        "gitBlobSha1": "a3649789dc373a2ce3a1a6a1c2662bc92536908f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "33b71dd8f97f74c2949010844c504a7ba9277faffad9c9bb635ba2b85c4ddba3",
+        "gitBlobSha1": "e30986be58831514e0053abec59bc3c20f385e41",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "749cbe3c048f690ecbaac4e9b7d6c33d134f8ee3875810a3a491bff5bb9b6c92",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/application_runtime.h": {
+        "sha256": "8ceb53af9f4265ea1fe01f6945615e74dd01ccbf9580d8cd2799bb576ca70f68",
+        "gitBlobSha1": "5845aeecf452ca2c59392e6012f029c6c741e478",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "f57714d514fdfbf7b62b033ebde9e0c5493b8261102e1f13ffde600dda531e46",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/blob_store.h": {
+        "sha256": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+        "gitBlobSha1": "d6dd2fc72a9a90914624aed31b872a3b3561b9c9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/device_services.cpp": {
+        "sha256": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b",
+        "gitBlobSha1": "cf04ddf2f930283cbdf0e78a000032ed134a8d22",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/device_services.h": {
+        "sha256": "01e5ac09983f821602fc828e6aec11e374cfa6635e2828c061c50be4a0b3bd40",
+        "gitBlobSha1": "18135d14d982d42a5e46a32a0d239a19d21d653b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/device_services_core.h": {
+        "sha256": "e78e359827d67d8436e4c86476fb342ea6c4d1fc622e8ec0b1358f8b0288b0d9",
+        "gitBlobSha1": "ef163b3b5b27acdcfe37a297a0152969643482ee",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/device_services_core_test.cpp": {
+        "sha256": "3410d829e4d899b81c915b878effba6cea5cc0aab153c60938f0d2e9fbfa700f",
+        "gitBlobSha1": "74ccbc1683576415188d374e66e3fcf0627f8e27",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "fde13f29cc65efb7dd6fae52257e8b4fe825afd01a30c10cd811ca8a4e39a300",
+        "gitBlobSha1": "f4dc36d0fbcf3d87ccbb31a3c10c6a05aade9664",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "9294813e8ff0fec1798031fe929483df3ba5fb518b43aff5723240d40f21e9da",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/fabric_application.h": {
+        "sha256": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
+        "gitBlobSha1": "d25e63239341c98cb778d1df6a2c00b1ae63dc50",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+        "gitBlobSha1": "330f0a4810806cbb3682e08b9fb177a36a8416e6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock.h": {
+        "sha256": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+        "gitBlobSha1": "807a10fd3ea0eb8245590575aab4962cc727a9b0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock_test.cpp": {
+        "sha256": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+        "gitBlobSha1": "67d4bd6a612db9d952ed1daf74418937d9b22ae6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot-profile.json": {
+        "sha256": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+        "gitBlobSha1": "61c48ae948729cfee0a7f1ebafc5379569400894",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_device_backend.cpp": {
+        "sha256": "a2562eecd247fd04e841ea4b9ddce78d1dd0e094e81ecc689f4386f100985f06",
+        "gitBlobSha1": "8424d8085f0978239359b044f08e1f5891a91299",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_device_backend.h": {
+        "sha256": "3a57b370eb9bc1d47b36c615a1c9c90b265351b8801cb131b314a50884d0d109",
+        "gitBlobSha1": "d263e4ead6cfb35609b4bf226c64134c02d4cae3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+        "gitBlobSha1": "ea4ad8107d8caa563cc65b06000fc0129c14915d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.h": {
+        "sha256": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+        "gitBlobSha1": "3ac0fd7d19d1a044f796b624fe67cd4d78fe2fa6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_http_transport.cpp": {
+        "sha256": "f734bf964ce9bd73b9096a6574e5b1efb2b95be62270f24a44e36cb9d5dd3a92",
+        "gitBlobSha1": "66528a5e3f17dafc26d430b899c8e901cca9bedc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_http_transport.h": {
+        "sha256": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+        "gitBlobSha1": "afcdc0fc8078417a6ef18409ba133e8e92948c6a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_image_manager.cpp": {
+        "sha256": "55fcddd8048389ed6b9b7cade3e1c2721e7da751bdd87e5b7afe4a219498e315",
+        "gitBlobSha1": "afe5a59f390b20096705f6777d5b7868d049c14f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_image_manager.h": {
+        "sha256": "c30443fc43e044df41ee18c8e7bbc00b636600343f2344027ab29c63c537166e",
+        "gitBlobSha1": "9b49c9f6f8026d3ff84b96b18106e09cb150f7d8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_tls.h": {
+        "sha256": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+        "gitBlobSha1": "09f11b77859e0679ba37c26d1c41d3297632ca4b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_connection.cpp": {
+        "sha256": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+        "gitBlobSha1": "9e53bd0e44353d0f3a1465e0ce6520d8350bdeb2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_connection.h": {
+        "sha256": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+        "gitBlobSha1": "ee39128c03ea43ac1dd88c4707e7545822ea8a06",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_transport.cpp": {
+        "sha256": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+        "gitBlobSha1": "ad68d88fb6de34443cab5f0a72cdf8f889b6d46e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_transport.h": {
+        "sha256": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+        "gitBlobSha1": "ed8967ba9478dbde7b4bc5a88f124f5d0976ccae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_core.h": {
+        "sha256": "b74f06fc71706c517796ec1d78d931b3c93fe478ee8b2da3c95a97bfbf76ed0e",
+        "gitBlobSha1": "c874e809a5a7beb9e367bfbd9b21928473ffe1ae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_core_test.cpp": {
+        "sha256": "0f39053aaae91104c03bdcd0cee13a395f52e1047f12fc7a997a416d7ac4e177",
+        "gitBlobSha1": "fb4ba09193690bc1b06cda634b05777ca4fcab2f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_transport.h": {
+        "sha256": "04caf1a8a8bc098f9620d6959257296ae4c8d212fc5b5add7a840289a837925e",
+        "gitBlobSha1": "3c529a1a9734940386c0cbae3230975f6da29748",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_cache.h": {
+        "sha256": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+        "gitBlobSha1": "20b342265880ae798222a8fd231aa14e02415618",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_cache_test.cpp": {
+        "sha256": "98ce48fdc5bf6525a060a5192aa54f2c4daad108a63a3474cce95e5f72704d94",
+        "gitBlobSha1": "8c31f692db16ca3e24ae68c27182197d4e69cb20",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_core.h": {
+        "sha256": "50badde2b8aabfaf3716f5ffff63b238ed8a00f78a8e6ba44af781b539e6ef75",
+        "gitBlobSha1": "7306957833d62818f84c6209f0779e1b7acedb25",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_core_test.cpp": {
+        "sha256": "8b90b75733fcb4d411f0d945c2df5bdc6e3901b889d8c0933e5bbe9e7e4eab4d",
+        "gitBlobSha1": "7fb319c15d11109aa85812aad70cfef4d7c26636",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_effects.cpp": {
+        "sha256": "1ef32651bbb9bccc455dc470bddbc753721b10a8a782e96fedd6e93d3e6d4677",
+        "gitBlobSha1": "6a702a76d2eee6994e1efe81bba6e7f3e4c33807",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_effects.h": {
+        "sha256": "d55bbae551d4328ad471515d4a3de353294a081229b270ed4e5a3d39abf18a17",
+        "gitBlobSha1": "2e1acedc4fc9467881c14c1c175d341c8845f813",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_effects_core.h": {
+        "sha256": "20877a745567c0e2d02b5871dc7c4c87114dea63055f0117724e6b0deb87814e",
+        "gitBlobSha1": "a91f014403b568cde69c18952ec7ba433aacc9f4",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "b5fb239ba3147470866faed0ca4a76dac974b5d65c94be36cf098409a000a282",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b5471d9",
+            "subject": "fix(images): Guard the blur buffer size and share the asset sampler"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/image_effects_core.h"
+      },
+      "native/image_effects_test.cpp": {
+        "sha256": "5d8ecbbea22eca3ae4708715c18291e940187846b87f61a031e29abf3156b464",
+        "gitBlobSha1": "5405681047ff5749a947e5b62bf2ecfc81a8324d",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "b24c66d1a20f9bb87641866cff65b2c9fd03636eccca8c372155640bf728a692",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b5471d9",
+            "subject": "fix(images): Guard the blur buffer size and share the asset sampler"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/image_effects_test.cpp"
+      },
+      "native/image_geometry.h": {
+        "sha256": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+        "gitBlobSha1": "abd8c746d57ea16a18a5c8ce067dc9238c4175ef",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader.cpp": {
+        "sha256": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969",
+        "gitBlobSha1": "a220c4f54bc0449759fec11b576cee440c8bed80",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader.h": {
+        "sha256": "8368ebf3657fbff12a921a3c91df9c8bbdb41b4052f9fd5f065f6d7cb48793ca",
+        "gitBlobSha1": "dd7d19e849e694daf04eddd2d9f9b2e9ffa819f6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader_module.cpp": {
+        "sha256": "4ef62cbfb773af9a8b7db4bffa560c733b260d1ef8ebed8439f563106bcc37f2",
+        "gitBlobSha1": "e7f266508df8b582d508fe0f3cdb6179081a3fc3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader_module.h": {
+        "sha256": "301c602a7a92b878b2d632faaa2acb093ea1f3e0d8b9b21a08a2ac95a005e68f",
+        "gitBlobSha1": "7c7231b38cdab29b9d318d59f5d29316e3b94e82",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_network.cpp": {
+        "sha256": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
+        "gitBlobSha1": "8563212683b184c866ea08dece2154e4e14b121e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_network.h": {
+        "sha256": "76ce61479cb577d81c96fdfd38830decb4476ed8a507da6714bd75153668b61e",
+        "gitBlobSha1": "32a62ee4ac5cf8639d0c3df44d179c3fbcb7ab7b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_network_test.cpp": {
+        "sha256": "c837bc010fc5f8c695c1e61f5e987e3675dfc58f2b121718b4c009c7570df821",
+        "gitBlobSha1": "bbefbfc8c7413e567209ca80fbe9760293b0fc9e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_sources.cpp": {
+        "sha256": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
+        "gitBlobSha1": "1ea261a57eaa689fa942387737ff8cb63393dd7d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_sources.h": {
+        "sha256": "2f44ceb4a27a5284828dd0ab2fdeb23e0cbdae5cb9bf50f216da987f173c4619",
+        "gitBlobSha1": "cb57e87f9d44561c1ae9df46c6a4d0591cd9af4f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_view.cpp": {
+        "sha256": "b726fc61b2a009fc72dbbab2626ca71c6e9d5e5d2b80d864e7905239d57dda97",
+        "gitBlobSha1": "0cb9aea6f21f13366d798e0eed73b1b85a27da9e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_view.h": {
+        "sha256": "01aba3c46d83f58954a852faaa3a44e68ec39b3d5a884e58ae574f9b2d78b767",
+        "gitBlobSha1": "ee5a5c83746ff2e393a22caf98a8edce091ac0e7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/modal_host_view_component_descriptor.h": {
+        "sha256": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+        "gitBlobSha1": "1db522052daa7960f37ba2b2cc73e56dd32806a2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/modal_presentation.cpp": {
+        "sha256": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+        "gitBlobSha1": "ee244bdc37b3cdbeca6fbbd9b7de76d56623f0c8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/modal_presentation.h": {
+        "sha256": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+        "gitBlobSha1": "b9c2f2a35e428ca349583c8efc6c726e02c08f98",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/modal_window_stack.cpp": {
+        "sha256": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+        "gitBlobSha1": "57e803004b6d5e4a508a9e11419f74eed7f0d592",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/modal_window_stack.h": {
+        "sha256": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+        "gitBlobSha1": "d492f1d3244bb6f9cd41eaa3b12615e47c9f2c68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.cpp": {
+        "sha256": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+        "gitBlobSha1": "5e65cf77bc7198992464b1b5dbd18c23e2745364",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.h": {
+        "sha256": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+        "gitBlobSha1": "a17ec1f16c053666803e19235f76e93dd9efdc4a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_modules.cpp": {
+        "sha256": "07874740c7a5d979dbeed459de956d9b2e25cd21469b8ebb0ba33267f7c8d809",
+        "gitBlobSha1": "94dd8ab8aab640da9105910e37b7576218d43771",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_modules.h": {
+        "sha256": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+        "gitBlobSha1": "c42ebe99ec06f19e7aa3ff85b14449379f91e78c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_state.h": {
+        "sha256": "a3bfd49fa52fab4100b5981fab9921650ae5444f93c1b34765f968ce1f67653c",
+        "gitBlobSha1": "c3280a5514bb3492995aaff2d18e7227a76eda96",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "f8dd2eb1ab2769dd18213976a005f87b462e9cb0411649a8d5de6a9b6d7db984",
+        "gitBlobSha1": "53f6811d0d1bf4f3530174d4c1aab0d70a574529",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "6f0b2a678c43603fd57be96421455a5b9b79536179e95ef29cfd7b904a9544f3",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "2560d18658f9919d7ebd6a44d9b6f80d8658fa923de89a5467937954fbbb4a36",
+        "gitBlobSha1": "cf551d1ef6731d3e39029b92af0bec54f8647c7e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/physical_embedding.cpp": {
+        "sha256": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+        "gitBlobSha1": "5f3113d30414364ab78450e69a503389c8f9c5f4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/physical_embedding.h": {
+        "sha256": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+        "gitBlobSha1": "3b41aac5ba3e4f0cf395450f5363a21c38c4626b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+        "gitBlobSha1": "7dd6b7d2b756ad15ff8688a512feb4fce57d0f43",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+        "gitBlobSha1": "5bbf57ef6a392e72d0bfbec66c42fe1d8899ea80",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_event.h": {
+        "sha256": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+        "gitBlobSha1": "ac46f1dc707eece700dd5fbc02d34fb4c5e0bba0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+        "gitBlobSha1": "91aa123c53c73ee62f6bfaf7069470c303380bfe",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+        "gitBlobSha1": "79bc68bab08030cddd6a82df97deb707de0d86cb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/register.cpp": {
+        "sha256": "81685ff042b3129f5b8c9fd7e4c53159a2c8264578f81b0c9e2963455f84e8b6",
+        "gitBlobSha1": "1fe38dd42f1b6c9591b13e4d51ef2c82d0c3cde6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+        "gitBlobSha1": "bf147a008d79af29178bd9fce09bed9eb0bb749b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+        "gitBlobSha1": "9bf853c26868c0327ceb4b5bbc6953be114bbdc9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/stoppable_invoker.h": {
+        "sha256": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+        "gitBlobSha1": "b948b1323c5e8cfa25de60c4b978c29c2eab8fb3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.cpp": {
+        "sha256": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+        "gitBlobSha1": "fa5aa5b5dc27d43be4f9c3f71cfd3706b2b5dfa5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.h": {
+        "sha256": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+        "gitBlobSha1": "5a9bee39b55c89037601afdddcd6d0fb0a797225",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/system_appearance.h": {
+        "sha256": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "gitBlobSha1": "f8faf4cf5e0ec942dfeff10bbeb2e1c3040f3656",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp": {
+        "sha256": "3a2622449236244167511078388db81ee2d760740c94696ce1e241ed92daea69",
+        "gitBlobSha1": "cb88a07c89cf2f5546822a8f0d112e5d748e59bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h": {
+        "sha256": "53734eedcf8e3a415894b907b341318235b447f263cfd9b2d390e1a010e1ec7c",
+        "gitBlobSha1": "ee156469c79210f2e7d45b94868c95953fd20bb1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+        "gitBlobSha1": "2af57be4b8b9c05d370b13668d8c5f317c797f62",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+        "gitBlobSha1": "00a19be080a8a6f7c1dd8e80bec6e2dab3db6ee3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+        "gitBlobSha1": "f8cd7a960417ac96fd9ddcad9aff02920cc46c1c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+        "gitBlobSha1": "ba1b7885dc5064776a5d77a5423499c83f68d87b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_core.h": {
+        "sha256": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+        "gitBlobSha1": "3eab16dee65b47b7dfaa3e6f164421bbbb03d63f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_core_test.cpp": {
+        "sha256": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+        "gitBlobSha1": "e7a65bf5c517fc25e7227b16456d9f33521ca488",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_handshake.h": {
+        "sha256": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+        "gitBlobSha1": "af6684240768000fa7ee640fa9d326234ef3f7d6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_handshake_test.cpp": {
+        "sha256": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+        "gitBlobSha1": "54a814bd50befc67eecced5aeaf1fb0a5de4b8b3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_module.cpp": {
+        "sha256": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+        "gitBlobSha1": "8aa56f23e13a467064052f62f54580baa6df885a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_module.h": {
+        "sha256": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+        "gitBlobSha1": "0c61b16b0d1670722cfd00e009911eaebd6b6c31",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_transport.h": {
+        "sha256": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+        "gitBlobSha1": "f36283313f4053ddefcc0c8b98f072d34174a327",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_transport_test_fixture.cpp": {
+        "sha256": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+        "gitBlobSha1": "f63960d4154f27bfd8098ec8fbc8c02db8dbf7bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/window_metrics.h": {
+        "sha256": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+        "gitBlobSha1": "77a549bb92faa5c7c4bd671dc4ce86d6a1d02575",
+        "pinSet": "nativeSourcePins"
+      },
+      "package.json": {
+        "sha256": "5ede126b99d5bcedadcb9721932a473d8dced8047b87b1c4f6f5eb10d2d45f2a",
+        "gitBlobSha1": "1055716969a0f606d1ed37268c8e10a15020ff92",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "09419c5dc61260f15b6c8e8b5b00a3e756596979cc2bd558ca596e1f40610841",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "bf1e9e9",
+            "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)"
+          },
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/images-example-assets.mjs": {
+        "sha256": "0401ef5f41d0ba0ff7f391e174d1cc56b328e46dc8f9803cf36a5f4c4c388420",
+        "gitBlobSha1": "54aa9355fa481eda34f13e06d1193ac74b1f697d",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "ae0dfb3bcab35205c6ee573ef2d16f7b00dc5bbf9273b5452e6c32b15f85273b",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b5471d9",
+            "subject": "fix(images): Guard the blur buffer size and share the asset sampler"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.scripts/images-example-assets.mjs"
+      },
+      "scripts/images-network-control.mjs": {
+        "sha256": "bf3ebbf41051eab8661662fb708548c1270537c8f94e4f951bdef5afbfc639ea",
+        "gitBlobSha1": "696e0870fb4e8a6b1cefcf0bab28de0b0b589371",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-network-sabotage.mjs": {
+        "sha256": "8d4fb9d443a328f5fffa5b690fc4bd975d700fa80436728153bb3bb106848a2a",
+        "gitBlobSha1": "2c7896c69b91a408c328c8ccae9331cfc46ccafd",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-sabotage.mjs": {
+        "sha256": "3985f7001c21f730e89173190f713fec57e65f736346435882827e56224193c9",
+        "gitBlobSha1": "24fc033dc85f5b943523ff2ca953657db8ab5683",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-visual-bundle.mjs": {
+        "sha256": "b8d57eb6f2999d1afbc613a0812180cac89ea15b95f3ede4ce065cdc51bc9548",
+        "gitBlobSha1": "bcab274b0f64fcf7ea2dba5a55e44fd1ca2ca374",
+        "pinSet": "sourcePins"
+      },
+      "scripts/images-visual-control.mjs": {
+        "sha256": "600abb4808bd2bf80e0c8202e7feaa3f41c0ff9dece8fec3df55246611a5235b",
+        "gitBlobSha1": "1ba9d0169aaa7fd86d34ead13e03f1fc29e0c1d1",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-visual-fixtures.mjs": {
+        "sha256": "15af79c3f9ee43d2695779c15ddf57ef560b2a84096edbc5389d79252a1f61d9",
+        "gitBlobSha1": "c44a67b18b8ce267a6a45b673b05c456d071105b",
+        "pinSet": "sourcePins"
+      },
+      "scripts/images-visual-sabotage.mjs": {
+        "sha256": "6ce8d6bbb4e7d455d26aa5e581c346542c23f5e5ad7daba1205e5586c281c706",
+        "gitBlobSha1": "7eed54070f9864634ab5dad7cf64b25d3d5c9682",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-probe-bundle.mjs": {
+        "sha256": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+        "gitBlobSha1": "5ca13d88791a06db6adfb6f661d42c3291f858da",
+        "pinSet": "sourcePins"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "ba9d89558d3ec887bc863eb061f31186513edc11e7efca3a502909489465c862",
+        "gitBlobSha1": "03f350f685e2644292ad701df10597dfde92ea3a",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f",
+        "pinSet": "nativeSourcePins"
+      },
+      "sdk/toolchain/asset-plugin.mjs": {
+        "sha256": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+        "gitBlobSha1": "91665135ee50992cf7591ef2124f344c3f1c794c",
+        "pinSet": "sourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+        "gitBlobSha1": "c529790df1e6d5390ea6028d7d423662b162c6cf",
+        "pinSet": "sourcePins"
+      },
+      "src/animated-exports.js": {
+        "sha256": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+        "gitBlobSha1": "0b9f24ea6e9f1ec4c02e056bef7236e94ab09dba",
+        "pinSet": "sourcePins"
+      },
+      "src/image-contract.mjs": {
+        "sha256": "22cfd6bceb9b731f29efa34ca5386b029a8ce07d3bf351c9f7ec5cb12352ab4b",
+        "gitBlobSha1": "390624e48ed06aac731f714dfbbd2401252daec1",
+        "pinSet": "sourcePins"
+      },
+      "src/image.jsx": {
+        "sha256": "5d1c9e23d7b47fc7b478dcb3824f2e3415736ae96232e442f67308381982a548",
+        "gitBlobSha1": "7b2d07b31d43e2e0838bdcc0b36545161cc935bb",
+        "pinSet": "sourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+        "gitBlobSha1": "22dcd5cf19115fa81af98625f59af10c898c356f",
+        "pinSet": "sourcePins"
+      },
+      "tests/fixtures/images-visual/frame@2x.png": {
+        "sha256": "5a30cc4252b42b59cb666d190b640077c10e03643931980f336449cb5ef93769",
+        "gitBlobSha1": "df86210caa9f984d1df2169998427af329eb3f41",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images-visual/glyph.png": {
+        "sha256": "7c13002e0463de7f38bff5d56f567299c6c1a26883edd5a5d54ed8d0fe036380",
+        "gitBlobSha1": "6321126d597cbdcfb73aba85238f2e36cf8c5da3",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images-visual/glyph@2x.png": {
+        "sha256": "8022e7933ed1173b37bd2c3dca4906ac33b5c3d0ed6678edda909d3070043b84",
+        "gitBlobSha1": "d40d3852f28809609f60afce0d94d5ae53ee268a",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images-visual/glyph@3x.png": {
+        "sha256": "8789326078c36f3a10f4f10117513aa854d9ed0322aee663f225010006d9e11e",
+        "gitBlobSha1": "fd8941859b29f84064e89e84ebcfd3e5f67099e1",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images-visual/manifest.json": {
+        "sha256": "02d83d9da4212e1f18e7b7626b65aee2db2cb3f6b6ae194d20c0d8697da137d0",
+        "gitBlobSha1": "5a5965ce327b4557c56b56a462f614039841e32a",
+        "pinSet": "sourcePins"
+      },
+      "tests/image-contract.test.mjs": {
+        "sha256": "e3c8ba31b4f1c4d406d61099647c047b05ad827d23d71747c3af2b53917652ad",
+        "gitBlobSha1": "9b02869995d561c03843d60a3d1b7070eb6e1cce",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/images-fixture.jsx": {
+        "sha256": "2210201436ac2db7c63d1bd3f47344f9ddcc82111810b20b75e1aa350f2cbcad",
+        "gitBlobSha1": "6b93694a8868dd7b9a1adda632298ef9e9de6936",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/images-network-server.mjs": {
+        "sha256": "10fc73dc59d6bd1d6f6aa9a204ea6d6af7eadf9a19db33b4e85cafae367b4c18",
+        "gitBlobSha1": "1d7b00ed411bf0cc82d21eec3b54eabe7f6e9b84",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-oracle.mjs": {
+        "sha256": "6efdd148153ca26b3f4e36a9452410922c089d9d1cca2de54a241ab6d5f4b379",
+        "gitBlobSha1": "9b7f68271aa966f9a0633020408499dfd1674c32",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/images-pattern.mjs": {
+        "sha256": "d664768094c8fb3246003d5ea3546612a58891dc798c01ba2638e5d808170ac6",
+        "gitBlobSha1": "f96bfd261e00e3956405d14195f82ac267794013",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-probe.gd": {
+        "sha256": "8291e5ad8e3c955993476e8a13f6775a7d86b8bdf70b32c703417ae0035e534c",
+        "gitBlobSha1": "2d38fbfa32d0a945f844c42c41afc377efd97572",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/images-visual-fixture.jsx": {
+        "sha256": "29809a0b88efd944b020cb5ab03e7b09865e20dc1c1d1cd4024625396498fd51",
+        "gitBlobSha1": "a9257630152bec7840f03a3ce2799aedaef8dc3f",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-visual-native.test.mjs": {
+        "sha256": "732ef9edc049b413b45d4e08971a3f92d4103b901ae9fe9ec8388a75400cbfac",
+        "gitBlobSha1": "7e3d30909fee3383c1224f8eeeabdd093b14f25f",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-visual-oracle.mjs": {
+        "sha256": "bf2a2b069364058052452b5f07209f0373630820f3a3b9e241a3d5cacfa34a86",
+        "gitBlobSha1": "855a7c1eeb76ff67ebd96dd7c496f9146860e831",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-visual-pattern.mjs": {
+        "sha256": "5b718b5b0279c2d17f2494f9e8af78344cdae6dd3f44a474c6ae9cb449af41b4",
+        "gitBlobSha1": "3ca28dc57c1eac0909149d064be26aafc8318f46",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-visual-probe.gd": {
+        "sha256": "127b6559db8daf06780e89b4354e5e259c401b06f9e85c3f85d3a55e841d0d48",
+        "gitBlobSha1": "cc6c73ebd546ed6a513e87b88f9d0132dea5f518",
+        "pinSet": "sourcePins"
+      },
+      "tests/types/consumer.tsx": {
+        "sha256": "0851c9ce83320e0e5ea98548b4285e532a9cb0d962051c87724ace9749a6e5a4",
+        "gitBlobSha1": "2126571c3fb2cdd6c37b11955944a7a6b00573e9",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "58b53d8d0cf4787b810d76756aba3bb4aa002f7d2f9a5376194b7a7009c78b1e",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "types/react-native.ts": {
+        "sha256": "03488a09ed9bfe677565520dfa16eb70007cb22345e85849ff0c69f5943fcebf",
+        "gitBlobSha1": "ebf8fb550db88fb5b64fb071b037c3e6eee03ccd",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "50035820a017fd17d7de1d37b641046388c27642300ada382135708158a914ed",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "0f2cc7e",
+            "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the final attempt; this artifact audit certifies only the headless current visual images lane (53 checks, the state after the review of PR #66).",
+    "The preceding-host control (all 53 checks run, the 40 normative ones fail) and the four retained sabotages (2, 3, 8 and 2 failures) remain local evidence; this audit only shows that every check they fail and still exist passes in the hosted run. The hosted job runs the images example headless (test:examples) but not its capture lane with the native renderer (39 checks, whose pixel samples saw the shader draw). The headless renderer draws no pixel, so the hosted run certifies, like the local one, what the view asked the renderer for and the exact pixels of the blur by the bitmap the worker made.",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply, except the one that says hosted CI had not run the slice, which this receipt supersedes (the rest of that limit still applies):",
+    "The renderer of a headless run is Godot's dummy, which draws no pixel and ignores the parameters of a material: the probe and the oracle certify what the view asked the renderer for (rectangles, radii, margins, tint, the item and the material it made) and the exact pixels of the blur by the bitmap the worker made; only the example's capture lane saw the shader draw",
+    "The capture lane samples a few points of the saved frame (the icon's dot, ring, body and corner, the soft and the sharp landscape at the sun's edge and in the sky, the card's border at two places of both cards, the avatars' corner, edge and centre, and the second avatar's border and round corner); there is no independent pixel oracle of the whole frame",
+    "No comparison with UIKit was made: the blur's box and rounding, the tiling of a nine-patch, the resizable image under the other content modes and the template rendering were not compared on an iOS device",
+    "A blur at the content scale of a picture whose box is wider than the picture (radius 30 at scale 3 on a 36x27 pixel picture) was checked against the oracle's own blur; the blur of very large pictures and its time were not measured on a device",
+    "Animated GIF and WebP, nativeImageSource, defaultSource's placeholder, loadingIndicatorSource and fadeDuration's transition (which iOS does not have), resizeMethod and resizeMultiplier (Android's) are not delivered, and an Image inside Text is a failure by design",
+    "Assets and network pictures were loaded in the project's own run, against a loopback server; no exported app, desktop export or Android export ran",
+    "The oracle and the probe state values from what the host delivered or from model states, never from frame pace or from how bytes were segmented, and every wait is bounded by time and ends on a state",
+    "Only macOS arm64 was executed; Windows, Linux, Android, iOS and Web runtimes are not covered",
+    "GF-16 is open: this third slice closes no checkpoint, and no whole GF, contract, parity, target, weight or denominator closes."
+  ],
+  "findings": [
+    "explained, non-blocking: .fallowrc.json: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59), 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59), 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/CMakeLists.txt: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/application_runtime.cpp: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/application_runtime.h: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/fabric_application.cpp: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/image_effects_core.h: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: b5471d9 (fix(images): Guard the blur buffer size and share the asset sampler); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/image_effects_core.h",
+    "explained, non-blocking: native/image_effects_test.cpp: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: b5471d9 (fix(images): Guard the blur buffer size and share the asset sampler); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/image_effects_test.cpp",
+    "explained, non-blocking: native/paragraph_layout.cpp: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: package.json: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: bf1e9e9 (#59), 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: scripts/images-example-assets.mjs: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: b5471d9 (fix(images): Guard the blur buffer size and share the asset sampler); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.scripts/images-example-assets.mjs",
+    "explained, non-blocking: tests/types/consumer.tsx: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: types/react-native.ts: the run-head bytes differ from the 6c221e8 pin; the PR branch gained commits that touch this path after the pinned run: 0f2cc7e (#62); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: the runner's Node is v22.23.2 where the committed state ran v22.23.3; recorded as a fact, no comparison of a result depends on it here"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 113298140174,
+    "sha256": "4e573419efcbe699cae79526b3736a6839cd20e5fd2511f4981581a0bc07d314",
+    "checkoutVerified": true,
+    "step": "npm run test:images-visual",
+    "stepTap": {
+      "ok": [
+        "RN's own Image tints, blurs, stretches by cap insets and clips to rounded corners, and takes the props iOS ignores"
+      ],
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 163,
+    "fullRawLogIncludedInReceipt": false
+  }
+}
