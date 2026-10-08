@@ -54,7 +54,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
 | [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
 | [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
-| [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
+| [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from, and a paragraph that presses through RN's original `Text.js` | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
 | [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
 | [accessibility-info](accessibility-info/README.md) | Original RN AccessibilityInfo over Godot's accessibility settings: the screen reader, reduce motion, reduce transparency and increase contrast with their events, the settings Godot cannot read rejected, and four native buttons that stand in for the system | Public | [App](accessibility-info/App.jsx) · [scene](accessibility-info/scene.tscn) |
 | [layout-animation](layout-animation/README.md) | Original RN LayoutAnimation on RN's C++ LayoutAnimationDriver, advanced by the host's frame clock: a spring between a row and a column, and one tile that enters while another leaves | Public | [App](layout-animation/App.jsx) · [scene](layout-animation/scene.tscn) |
@@ -249,6 +249,9 @@ Every number is checked against the bundled fonts' tables read in Node, and a
 click re-wraps the paragraphs. Its [research](../docs/research/text-layout.md)
 records 76 headless checks, the preceding host's 5 failures and three retained
 sabotages, with the [evidence record](../docs/evidence/text-layout/README.md) and two captures.
+The same example ends with a paragraph that presses through RN's original `Text.js`
+(`onPressIn`, `onPress`, `onPressOut`: `npm run test:text-original`, with its
+[research](../docs/research/text-original.md) and [evidence record](../docs/evidence/text-original/README.md), with four captures).
 
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag

@@ -197,12 +197,23 @@ export const coreEventConfigs = {
   },
 };
 
+// The text styles of the platform, the one list the facade's style checks and this base config share. RN's Text
+// builds its view config over the base config below, and a style the config does not declare never reaches the
+// paragraph: the base style map is the Controls' map plus the names of this list that it lacks, with the entries
+// that exist (color and fontSize, whose processors stay) as they are. The Controls' own map above is untouched.
+export const textStyleAttributes = ["fontSize", "fontFamily", "fontWeight", "lineHeight", "letterSpacing", "textAlign", "color"];
+const platformStyle = Object.fromEntries([...Object.entries(style),
+  ...textStyleAttributes.filter(name => !(name in style)).map(name => [name, true])]);
+
 // Generated components extend ViewProps, not the GodotControl-specific props.
 export default {
-  validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
-    /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
-    ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren",
-      ...Object.keys(accessibilityAttributes)].includes(name))),
+  validAttributes: {
+    ...Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
+      /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
+      ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren",
+        ...Object.keys(accessibilityAttributes)].includes(name))),
+    style: platformStyle,
+  },
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
     .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer|topClick)/.test(name))),
   directEventTypes: { topLayout: { registrationName: "onLayout" }, ...accessibilityEventTypes },

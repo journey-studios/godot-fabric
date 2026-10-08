@@ -37,8 +37,15 @@ come from the lines of that one shaped paragraph. Its
 [evidence](docs/evidence/text-layout/README.md) records 76 headless checks against the
 bundled fonts' tables, the preceding host's 5 failures, three retained sabotages and two
 captures (hosted CI pending); the [research](docs/research/text-layout.md) has the oracle,
-the measured tolerance and the controls. Span press and selection, font scaling,
-bidi/emoji and font fallback remain open.
+the measured tolerance and the controls. `Text` now renders RN's original `Text.js`, and a
+paragraph presses through RN's own Pressability (`onPress`, `onPressIn`, `onPressOut`,
+`onLongPress`, `pressRetentionOffset`, `disabled`); the example's last line is a pressable
+paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 119 headless checks (114 in the record pinned at `ba5ff00`, before the review of PR #62 added five nested-span
+responder cases) with a real
+mouse and touch, the controls of the previous SDK and host (68 and 3 failures; 63 and 3 in the record) and six retained
+sabotages, and four captures of the pressable line (hosted CI pending). Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
+paragraph's press), selection,
+`adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 
 The [View geometry example](examples/view/README.md) exercises original public
 View/Fabric ordering, rectangular overflow and four solid border colors through
@@ -796,6 +803,7 @@ npm run test:transforms:guards           # rejected styles, invalid embedding in
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
+npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
