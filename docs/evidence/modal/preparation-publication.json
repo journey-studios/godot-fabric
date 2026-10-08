@@ -1,0 +1,24 @@
+{
+  "pagesRun": 37669592729,
+  "rendererCommit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+  "dataCommit": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+  "publication": {
+    "ref": "codex/modal-host",
+    "commit": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+    "inMain": false,
+    "at": "2026-10-07T18:48:21.886Z"
+  },
+  "fullCommittedJsonMatched": true,
+  "publicJsonSha256": "794062190f79112c6ddfa7ceba88b3396e15e9b9ca15ccdb37edcf684b387be4",
+  "summary": {
+    "percent": 14.743589743589743,
+    "total": 40,
+    "required": 39,
+    "complete": 0,
+    "active": 23,
+    "blocked": 0,
+    "checkpoints": 23,
+    "checkpointTotal": 156
+  },
+  "scope": "Dashboard publication of preparatory documentation only; no RN Modal product or checkpoint acceptance."
+}

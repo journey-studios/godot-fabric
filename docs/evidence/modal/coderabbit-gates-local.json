@@ -1,0 +1,40 @@
+{
+  "format": "godot-fabric.modal-coderabbit-gates/v1",
+  "checkedAt": "2026-10-07T22:50:14.372130+00:00",
+  "scope": "Final local native45 correction tree; docs/source pin commit and hosted review remain separate",
+  "hostSha256": "45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d",
+  "commands": [
+    {
+      "command": "npm run test:contracts",
+      "exitCode": 0,
+      "nodeTests": 283,
+      "pythonTests": 13,
+      "logSha256": "988c5b2c46bb50fa0139ae34cd13f067b41066e940c8457d5481d7848c6d2fb7"
+    },
+    {
+      "command": "npm run test:modal",
+      "exitCode": 0,
+      "nodeTests": 7,
+      "nativeAssertionsReceipt": "coderabbit-final-local.json",
+      "executedBy": "Luna; every native scenario independently repeated by root in isolation"
+    },
+    {
+      "command": "npm run check:static",
+      "exitCode": 0,
+      "logSha256": "c873859219c77613883a2ea10f88022c30577af87f4891a91da8106848c4b68a"
+    },
+    {
+      "command": "npm run check:publication",
+      "exitCode": 0,
+      "logSha256": "68cb70aadf27d500b71a95c3b2c60ecd6bc874a8065307f772f62a20e4c627fd"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "limits": {
+    "hostedFinalHeadCI": false,
+    "fullGF18Acceptance": false
+  }
+}

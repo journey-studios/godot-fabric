@@ -1,0 +1,111 @@
+{
+  "format": "godot-fabric.modal-membership-review/v1",
+  "reviewer": "root",
+  "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+  "freezeReceiptSha256": "571a5fb30ad9d83a1b2ab114d62e2a8e21b5a3c50f460fdf3a9dc68488ff1439",
+  "producerInputsVerified": 33,
+  "sourcePins": {
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/application_runtime.cpp": "28e0323228804763ce5e74e0dfa06a188ad6ec745162a572cda26d5d8ef3126b",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "scripts/modal-host-bundle.mjs": "da152102a43ae45df1bc1188496cbe38100a20db8638979b40cbebd6a0a5df98",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+    "tests/modal-capture-lifetime-probe.gd": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26",
+    "tests/modal-discriminators-native.test.mjs": "9a23477cfcbee53b2f6dea1a563a050a492ed87b475d47051a3f8c90f57a494e",
+    "tests/modal-host-fixture.jsx": "f1b24bed4a3bcf9f34101392e7e10e8314e9d5aef0d3041dda58b7b4aef52bb3",
+    "tests/modal-host-native.test.mjs": "e41fdf1b4af1e98f750eb37f7c73b36d6ce27acdffffc44f1fe89088369112d3",
+    "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+    "tests/modal-owner-windows-probe.gd": "7ea24688e67120edc61fe5c406c681a9f0a46681c1aa79a5a037b04b7ba72e30",
+    "tests/modal-sibling-order-probe.gd": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4",
+    "tests/modal-stack-membership-native.test.mjs": "8e4a8e43f0f504765c1c15c2ac144692d23ba5a1b1688843bb45339419c5ecd1",
+    "tests/modal-stack-membership-probe.gd": "294c49bfbc093098a5d29a2fc9f14a8367904ed6e117540cde076ba6374bc3d1"
+  },
+  "bundleSha256": "47c69ec9bea820281d5f6c54953aa4083aaa3859ce54a5367af483dae869cd95",
+  "checks": 31,
+  "passed": 31,
+  "observerChurn": [
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      1
+    ]
+  ],
+  "liveSurfaceMembership": [
+    2,
+    2,
+    1,
+    2,
+    3,
+    2
+  ],
+  "topTakeoverCancelDelta": 1,
+  "topTakeoverLostDelta": 1,
+  "sourceFinding": "The earlier registration/pruning paths lacked unregister at the last unmount. A counted churn execution was not certified on that earlier host.",
+  "simplification": "Runtime membership holds direct callbacks; its former revision wrapper is deleted. The remaining revision only arbiters physical Window presentations.",
+  "outputs": {
+    "reportSha256": "63049e0a8e47f3fb905433b2e410100d847846d8a68f3a6ab79d0b7a4a1ac7c9",
+    "logSha256": "4f1f840015b414212654aa1fe450f6a1f8900b4a48118c6c5753fea76046799c"
+  },
+  "limits": {
+    "graphicalOwnerIsolation": false,
+    "consumer": false,
+    "hostedCI": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  }
+}

@@ -1,0 +1,522 @@
+{
+  "format": "godot-fabric.hosted-modal-control/v1",
+  "verifiedAt": "2026-10-07T23:43:09.140651+00:00",
+  "head": "bee7b40061319e25d002fc86808dc9c1140c5424",
+  "runId": 37701896839,
+  "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37701896839",
+  "artifactId": 11518252821,
+  "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+  "compiledSourcePinsVerifiedAgainstGit": 95,
+  "applicationRuntimeSha256": "7e328fd5a5aa483b27c2b8bf09297d439fac60bbdf74bfbf971eb5c2a7688874",
+  "producerReceipts": {
+    "modal-host": {
+      "receiptSha256": "37d906469c31b02a3463b8e07e2de57a7a0c0571ddd74a492f5a9779d2927c7b",
+      "producerPinsVerifiedAgainstGit": 35,
+      "compiledSourcePinsMatchedToBuild": 21,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "bundleBytesIncludedAndVerified": false
+    },
+    "modal-discriminators": {
+      "receiptSha256": "1a565662f015bf8298ac1dca4e9b282d57a832655998afd07ef91f947b81040b",
+      "producerPinsVerifiedAgainstGit": 35,
+      "compiledSourcePinsMatchedToBuild": 21,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "bundleBytesIncludedAndVerified": true
+    },
+    "modal-stack-membership": {
+      "receiptSha256": "1a17f1e0ce9a9e34327892ec76a659fe5f9034b1ed25215f732530f52f547f97",
+      "producerPinsVerifiedAgainstGit": 35,
+      "compiledSourcePinsMatchedToBuild": 21,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "bundleBytesIncludedAndVerified": true
+    }
+  },
+  "reports": {
+    "modal-host-current": {
+      "checks": 68,
+      "passed": 68,
+      "displayServer": "headless",
+      "reportSha256": "477289ee35b78efcfc849ed16d5fe40855e577d17b5266cdcde034b03aa038ad",
+      "logSha256": "2e5f8fe3ac10c7c81b1d8a8ae7bde07d271b279889ab72885a55847f2bba3743",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    },
+    "modal-capture-lifetime": {
+      "checks": 65,
+      "passed": 65,
+      "displayServer": "headless; command declared in test oracle",
+      "reportSha256": "a649b3a64fdf54a9bb8a7c9e4d0d7805db5bb325dbe65592a02cf9a765078bdf",
+      "logSha256": "1bfdcd8bdde92db85b80ce7e501e2307af86a23ded1ad61641744be98ba2d5ea",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    },
+    "modal-stack-membership": {
+      "checks": 31,
+      "passed": 31,
+      "displayServer": "headless; command declared in test oracle",
+      "reportSha256": "c96486d928651c4736a3f4d6b83903a4f5850468a089de9184d5e270272a1ac8",
+      "logSha256": "d401e3250133c11aeb67648ba988416e9530cb77e94f5c219739015bea430cd0",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    },
+    "modal-sibling-order": {
+      "checks": 9,
+      "passed": 9,
+      "displayServer": "headless; command declared in test oracle",
+      "reportSha256": "e711f1d8337d55bdbc3091226ec34d8f6198f348eb396723b63b122ca3590dba",
+      "logSha256": "5be238352b76b75d7d17b54394ea27b63e0e1197873def9bf791abf8c871f6b6",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    },
+    "modal-surface-lifetime": {
+      "checks": 9,
+      "passed": 9,
+      "displayServer": "headless",
+      "reportSha256": "e57976bc1e54e892698894cfd567ce0c892619a6bb07e82dbbb00207385f8b0c",
+      "logSha256": "899b95378e04b0a5100c4acfae5b0ce669ab9beab0b621f199603cac79ad4832",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    },
+    "modal-owner-windows": {
+      "checks": 11,
+      "passed": 11,
+      "displayServer": "macOS",
+      "reportSha256": "e0efa663539d6971ad254d18270b152dd5b9a6ca244d7dc80a9289e02f3cc000",
+      "logSha256": "f75f69bd167301be6dc7da22cfb03caf21698ec22215e17ce0d2ed378756f606",
+      "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+      "unexpectedErrors": 0
+    }
+  },
+  "nativePositiveAssertions": 193,
+  "headedMacOSAssertions": 11,
+  "requiredHeadedProbeExecuted": true,
+  "headlessDisplayFallbackOrSkip": false,
+  "missingTargetNegative": {
+    "reportSha256": "12d9e73084d363daee5f37fcd77c58e1f309335a0e4c441d105c62ff0609d90f",
+    "logSha256": "3b7445ca624a3ce5e8d18f64d671b6515923dc79f4cd8146aadd666da9b0f1a0",
+    "exactFailedCheck": "owners/targets-are-present-before-native-input",
+    "expectedErrorOnly": true,
+    "bothApplicationsCleanedUp": true,
+    "cleanup": [
+      {
+        "stopped": true,
+        "rootCount": 0.0,
+        "modalRuntimeMembers": 0.0,
+        "pendingRootRetirements": 0.0,
+        "windowListener": false,
+        "pointerListenerQueryInstalled": false,
+        "errors": []
+      },
+      {
+        "stopped": true,
+        "rootCount": 0.0,
+        "modalRuntimeMembers": 0.0,
+        "pendingRootRetirements": 0.0,
+        "windowListener": false,
+        "pointerListenerQueryInstalled": false,
+        "errors": []
+      }
+    ],
+    "zeroRootsAndRuntimeMembershipsVerified": true
+  },
+  "scope": "Completed Modal, transform, capture and SDK stages audited at exact bee7b40 head. Overall workflow cancelled by its 45-minute global native job deadline; parity was skipped. Desktop slice only.",
+  "fullGf18Complete": false,
+  "orientationInsetsMobileExportHardwareParityComplete": false,
+  "abiCertified": false,
+  "transformAndSdkControl": {
+    "format": "godot-fabric.hosted-transform-input-control/v1",
+    "verifiedAt": "2026-10-07T23:41:45.154028+00:00",
+    "head": "bee7b40061319e25d002fc86808dc9c1140c5424",
+    "runId": 37701896839,
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37701896839",
+    "scope": "Completed transform guards and SDK stages only; full native pipeline and Modal proof independently pending audit.",
+    "artifactIds": {
+      "native-transform-guards": 11518527070,
+      "adapter-registry-sdk": 11517369953
+    },
+    "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+    "applicationRuntimeSha256": "7e328fd5a5aa483b27c2b8bf09297d439fac60bbdf74bfbf971eb5c2a7688874",
+    "compiledSourcePinsVerifiedAgainstGit": 95,
+    "sdkBuildReceiptSha256": "027c34731bfd5aa9ab4245cfbc79a2162dbf79b1d4ebcf2e1bd06ef0bfb73aeb",
+    "sdkReceiptSha256": "870cd4fafa7f709611a16399674c2036f14c454402d79a7df07d0902bdd7546c",
+    "sdkManifestSha256": "39f3e7add112c33de955aa36b9c28a96626b2e101487df5d99204d8a823a4ed6",
+    "sdkManifestRecords": 2712,
+    "sdkPayloadFilesNotIncludedInArtifact": true,
+    "sdkWitnesses": {
+      "adapter-registry": {
+        "reportSha256": "dc80c10b97f8316575cec98265887e6f0dfd840e58cf6b040ded2a22c23e894e",
+        "witness": {
+          "format": "godot-fabric.experimental-adapter-registry-test/v1",
+          "marker": "ADAPTER_REGISTRY_OK",
+          "cases": 11,
+          "checks": 213,
+          "initializers": 28,
+          "viewFactoryCalls": 0,
+          "moduleFactoryCalls": 0,
+          "vmCreated": false,
+          "godotEngineStarted": false
+        },
+        "sourcePinsVerified": 8,
+        "stageLogHashesVerified": true
+      },
+      "adapter-loader": {
+        "reportSha256": "2386d8f8b83c97675b9240cd406d436f5151eaa67f496581752d7d2dcad6c0cd",
+        "witness": {
+          "abiCertified": false,
+          "viewFactoryCalls": 0,
+          "moduleFactoryCalls": 0,
+          "godotEngineStarted": false,
+          "vmCreated": false,
+          "checks": 89,
+          "cases": 21,
+          "marker": "ADAPTER_LOADER_OK",
+          "format": "godot-fabric.experimental-adapter-loader-test/v1"
+        },
+        "sourcePinsVerified": 4,
+        "stageLogHashesVerified": true
+      }
+    },
+    "reports": {
+      "transforms-guards": {
+        "checks": 61,
+        "passed": 61,
+        "displayServer": "headless",
+        "reportSha256": "012075a377030636b1241b8661c1c01dad7b7744dda328fba0b91aa009b03746",
+        "logSha256": "92addd495ec2cb70d42549170cd0e31a3a347aaaf3262d9d6f27ea2876a72887",
+        "expectedNegativeErrors": 6,
+        "unexpectedErrors": 0,
+        "provenance": null
+      },
+      "transforms-input-guards": {
+        "checks": 25,
+        "passed": 25,
+        "displayServer": "headless",
+        "reportSha256": "37c4afb5471479d3afbb43c47a82e71e2fe4faef70b0257db82a7c1b0f1390d1",
+        "logSha256": "a433da748e8db37e09eb74fe1d678331693574b59c31e74d851bbc7820e6f2ae",
+        "expectedNegativeErrors": 0,
+        "unexpectedErrors": 0,
+        "provenance": null
+      },
+      "transforms-uniform-scale-current-report": {
+        "checks": 29,
+        "passed": 29,
+        "displayServer": "headless",
+        "reportSha256": "bdfd788d961de145731e36d2ef7a493c83746be3c3891687aaac7d9d8c0cfd7c",
+        "logSha256": "0c6dd283e81c4e210a7808c1d0bc89cc0c048acbfded7f2ecb76dbeb896ff1e3",
+        "expectedNegativeErrors": 0,
+        "unexpectedErrors": 0,
+        "provenance": {
+          "node": "v22.23.2",
+          "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+          "bundleSha256": "894009f10f349af578601e86d35631f286c6c519622c858a3b49507c6fda371b",
+          "sourceReceiptDoesNotCertifyNativeBuild": true
+        }
+      },
+      "transforms-singular-current-report": {
+        "checks": 49,
+        "passed": 49,
+        "displayServer": "headless",
+        "reportSha256": "7ac45fa4b7bf95a14606b11b94e2e901532217ca17e058062790075c802b36d6",
+        "logSha256": "5c054db98f1dfb0a2619e390912a7f752bab0c338efdaaf9b760e939568a8f6e",
+        "expectedNegativeErrors": 0,
+        "unexpectedErrors": 0,
+        "provenance": {
+          "node": "v22.23.2",
+          "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+          "bundleSha256": "894009f10f349af578601e86d35631f286c6c519622c858a3b49507c6fda371b",
+          "sourceReceiptDoesNotCertifyNativeBuild": true
+        }
+      }
+    },
+    "totalNativeTransformChecks": 164,
+    "fullRoadmapComplete": false,
+    "fullGf18Complete": false,
+    "abiCertified": false
+  },
+  "workflowConclusion": "cancelled",
+  "reviewThreadReply": "https://github.com/journey-studios/godot-fabric/pull/51#discussion_r4213149093",
+  "reviewThreadResolved": true,
+  "pullRequestReviewDecision": "APPROVED",
+  "producerSourceSha256": {
+    "tests/modal-host-fixture.jsx": "44a27037ad2be368fd9e8795272087f392e363bd2a4d973721414246220f47d2",
+    "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+    "tests/modal-host-native.test.mjs": "ee0a2d4c869ebf6fbd7234eed867a3db7e6f645d4695412c63be09b84afca2a7",
+    "tests/modal-capture-lifetime-probe.gd": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26",
+    "tests/modal-sibling-order-probe.gd": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4",
+    "tests/modal-owner-windows-probe.gd": "7dc77bf722712f4c2ae243dc9d8870cd2e4a7bfd12ad70fb90760233d77b8806",
+    "tests/modal-stack-membership-probe.gd": "294c49bfbc093098a5d29a2fc9f14a8367904ed6e117540cde076ba6374bc3d1",
+    "tests/modal-surface-lifetime-probe.gd": "31b6407b9f8de2c35b28e0d7f3fbdea7fdf8b58b477ef509f5c00f229e1f02f2",
+    "tests/modal-stack-membership-native.test.mjs": "8e4a8e43f0f504765c1c15c2ac144692d23ba5a1b1688843bb45339419c5ecd1",
+    "tests/modal-discriminators-native.test.mjs": "e62ffd916b4862e318271422edab9b6182c75c8c2bef59dbc3a40f00f91c401a",
+    "scripts/modal-host-bundle.mjs": "c09fd2b851f6b7219bc6dcdcb51b4201a5dc9ff186f23fba94a92d0ae43608cf",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/application_runtime.cpp": "7e328fd5a5aa483b27c2b8bf09297d439fac60bbdf74bfbf971eb5c2a7688874",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535"
+  },
+  "originalReactNativeSourceSha256": {
+    "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+    "Libraries/Modal/RCTModalHostViewNativeComponent.js": "737ad639e5c189d0e01bbe31b30cf0f9691a901928529fbcbccfc6f190be4bdd",
+    "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js": "d8458e8b7a9036589f4633f8289d58bdcb6bfdba9716b7fcb8b03101e1b064cd",
+    "Libraries/Components/SafeAreaView/SafeAreaView.js": "4e673548079b02e4806c3e8ee8ea153da5abda17850b0dd498d25d925c7174dd",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.h": "0855c0f8ae339ac0d61f2601698ef65e3da37845ff83b7a4f1dec95aa646f65d",
+    "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm": "9b84a7d80d9b7afd58cec6827a4c5afbf4feb8dc29df0e19a7138eb5bf3bd96d",
+    "ReactAndroid/src/main/java/com/facebook/react/views/modal/ReactModalHostView.kt": "8c767b176b070a4034570fc94cda5e8898a87270b472fa56e0869ede241902e8",
+    "ReactCommon/react/renderer/components/modal/ModalHostViewShadowNode.cpp": "8be230fc06bfd55e95352a0bc03c347a7aa60bcbfc886830499b25c710981610",
+    "ReactCommon/react/renderer/components/modal/ModalHostViewComponentDescriptor.h": "257eb658668d0c4f6d4036df47cb22de18392183c315c5aa39a823fac4bd26be"
+  },
+  "originalReactNativeSourcePinsVerified": 10,
+  "pointerCaptureNotifications": {
+    "artifactId": 11519351455,
+    "positiveAssertions": 672,
+    "lanes": 8,
+    "reports": {
+      "pointer-capture-notifications-current-disabled-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "fa11943d3e53d6653bd3eccb543036933aae2c2e5cd02af0b36136e9cbe5a367",
+        "logSha256": "e3b4c4ecc3c5f1aa77986f62bba8e9560363ac974aff28f6ba8ce528227ade2e",
+        "flagMode": "disabled",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-current-enabled-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "314bd4b3546d05b182a680262d5b51d26607a2b56f0aa6460a7f5f1a66437307",
+        "logSha256": "0074fa91d3e3d1374479d4f136673011a967b19b973abd80c11a3a92426bf6ec",
+        "flagMode": "enabled",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-current-imperative-only-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "0b0393a6176569545738b0578319a98174ade1183e124b88c85747609c51828c",
+        "logSha256": "3a5445ded4e1edf324bb0b26559becfb398061a4ffb0f53e659fd38d2c4f5aff",
+        "flagMode": "imperative-only",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-current-internal-only-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "85750d48f04a60ec2d2e643b2ee1bc9cf0d82e6b07ff7de324ec675edd572c35",
+        "logSha256": "42cadbac598944f6e85d6a73c798173093de986695335ae5a407f9a1603f66b8",
+        "flagMode": "internal-only",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-original-disabled-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "9c4943116f73ab8ad3496ccb2e2fec6082d41ca9740e6d0a588d083f63f5792f",
+        "logSha256": "6d32ccc24a450649977a9d4b63331aea1f0e2c0e92ab3105b209d00c315843e4",
+        "flagMode": "disabled",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-original-enabled-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "47d2b536dad3e871d06559dc8c7b98cb264c07ce47ebea3587f64aa3957617ae",
+        "logSha256": "41dfffdc33a8b2a9d8d58519823b2af69ac0e558a0c1b3675cb03cb305e7b624",
+        "flagMode": "enabled",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-original-imperative-only-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "06c12f43168cbede6f19201113a3208f95500136663615fa3ae84949ba0ed35a",
+        "logSha256": "c19d6086bca16f77c29a02ea93b1d114571d18ab3c91a7c99af34ec67cde9f10",
+        "flagMode": "imperative-only",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      },
+      "pointer-capture-notifications-original-internal-only-report.json": {
+        "checks": 84,
+        "passed": 84,
+        "nativeHostSha256": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+        "displayServer": "headless",
+        "reportSha256": "6d07dfe17a5acc51c9a5372f10717c1c9ca60d8f0d1cba04c699d857e26aa6a6",
+        "logSha256": "bc3deebc4d6f316d09147867827f4bde6c815f6b133adeb70640657b21c1fe64",
+        "flagMode": "internal-only",
+        "provenance": {
+          "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current"
+        }
+      }
+    },
+    "unexpectedErrors": 0
+  },
+  "finalWorkflowObservedAt": "2026-10-08T00:17:03.204253+00:00",
+  "workflowJobs": {
+    "reference-android": "success",
+    "contracts": "success",
+    "native-cold-start": "cancelled",
+    "reference-ios": "success",
+    "parity-comparison": "skipped"
+  },
+  "globalTimeout": {
+    "checkRunId": 113067055228,
+    "annotation": "The job has exceeded the maximum execution time of 45m0s",
+    "startedAt": "2026-10-07T23:22:35Z",
+    "completedAt": "2026-10-08T00:08:29Z",
+    "elapsedSeconds": 2754,
+    "failedStep": {
+      "completedAt": "2026-10-08T00:08:20Z",
+      "conclusion": "cancelled",
+      "name": "Run npm run test:cold",
+      "number": 94,
+      "startedAt": "2026-10-08T00:07:38Z",
+      "status": "completed"
+    },
+    "godotParityStep": "skipped",
+    "annotationsSha256": "e322bd0c23a35ffe7fdb6588f885951a0e4233d58ad3b37c8713fe6be1e80fe0",
+    "fullWorkflowLogSha256": "042d4bd9f5ef40764e301dd57223ea46f896c3e1d6ce60939a65408c7eab0c9f",
+    "coldSuccessLine": "2026-10-08T00:08:20.5250840Z COLD_START_PASSED: 2 fresh imports, runtime checks and warm imports",
+    "correction": {
+      "file": ".github/workflows/contracts.yml",
+      "job": "native-cold-start",
+      "oldTotalBudgetMinutes": 45,
+      "newTotalBudgetMinutes": 60,
+      "individualProbeDeadlinesChanged": false,
+      "assertionsOrErrorCriteriaChanged": false,
+      "skipsOrRetriesAdded": false
+    },
+    "mergeGate": "All five workflow jobs on the new PR head must succeed before merge."
+  },
+  "coldStartArtifact": {
+    "artifactId": 11519083464,
+    "report": {
+      "schemaVersion": 1,
+      "godot": "4.7.2",
+      "platform": "darwin",
+      "architecture": "arm64",
+      "status": "passed",
+      "runs": [
+        {
+          "freshResources": true,
+          "startupFiles": [
+            "extension_list.cfg"
+          ],
+          "cases": [
+            {
+              "scenario": "react",
+              "checks": 36
+            },
+            {
+              "scenario": "typography",
+              "checks": 50
+            }
+          ],
+          "warmImport": "passed"
+        },
+        {
+          "freshResources": true,
+          "startupFiles": [
+            "extension_list.cfg"
+          ],
+          "cases": [
+            {
+              "scenario": "react",
+              "checks": 36
+            },
+            {
+              "scenario": "typography",
+              "checks": 50
+            }
+          ],
+          "warmImport": "passed"
+        }
+      ]
+    },
+    "fileSha256": {
+      "cold-1-typography.log": "452c2b6ca3b34654ffa0d41b71610d6d3451ef4564490cd4309eeb5bfc85c9f6",
+      "cold-1-react.log": "d2eb6cfc5e45cd609235b6c2989aa7318e9e651cafb4b8bed9698cd72b6e3380",
+      "cold-1-import.log": "c0c411f2fbfa7635bdf3a33e7fccf693d64dfde038c034486ad20e284092982e",
+      "cold-2-typography.log": "2194b34395733be2e03d20a15093d17eaf2c3acf9c4a494e4f437cc6370fe64c",
+      "cold-1-warm-import.log": "f15ffd4c558b01611d562c8c257508942bdc2dc542124f423ae2a592a46edfa6",
+      "cold-2-import.log": "c0c411f2fbfa7635bdf3a33e7fccf693d64dfde038c034486ad20e284092982e",
+      "cold-start.json": "7ead60a56a3d8c5a3ce192e8e2a1124b1f5c18b6c78ab274bab40b230853a39f",
+      "cold-2-react.log": "6dd4e8779520e4ab33acafcb3f2613812bee18f5f99f82d96fa39f9a014183c7",
+      "cold-2-warm-import.log": "f15ffd4c558b01611d562c8c257508942bdc2dc542124f423ae2a592a46edfa6"
+    },
+    "unexpectedEngineErrors": 0,
+    "scope": "Artifact reports passed, but the workflow step was cancelled at global timeout and remains cancelled."
+  },
+  "codeRabbitVerification": "https://github.com/journey-studios/godot-fabric/pull/51#discussion_r4213152528",
+  "dashboardCompleteness": {
+    "doneCheckpoints": 23,
+    "totalCheckpoints": 156,
+    "completedGfItems": 0,
+    "totalGfItems": 39,
+    "gf18Checkpoints": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "dashboardCapture": {
+    "path": "docs/evidence/modal/dashboard-hosted-timeout.jpg",
+    "sha256": "5b434d78080f3d25db8930e0c468e7d48b195426818855d037404c72b0b164d1",
+    "scope": "Local dashboard with exact-head partial hosted proof, CodeRabbit approval and global timeout; completeness unchanged."
+  }
+}

@@ -8,6 +8,8 @@ import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/
 import OriginalTouchableOpacity from "react-native/Libraries/Components/Touchable/TouchableOpacity";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
+import OriginalModal from "react-native/Libraries/Modal/Modal";
+import OriginalSafeAreaView from "react-native/Libraries/Components/SafeAreaView/SafeAreaView";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -48,6 +50,8 @@ export {
 } from "./platform-environment";
 export { useWindowDimensions } from "./window-dimensions";
 export { default as useColorScheme } from "react-native/Libraries/Utilities/useColorScheme";
+export const Modal = OriginalModal;
+export const SafeAreaView = OriginalSafeAreaView;
 export {
   FlatList,
   SectionList,

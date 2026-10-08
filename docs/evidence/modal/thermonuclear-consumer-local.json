@@ -1,0 +1,88 @@
+{
+  "format": "godot-fabric.modal-external-consumer/v1",
+  "completedAtUtc": "2026-10-07T21:46:48+00:00",
+  "consumerProject": "external installed-addon consumer",
+  "scope": "External installed-addon consumer; RN Modal/SafeAreaView fixture, package type witness, provisioned SDK CLI, headless runtime.",
+  "source": {
+    "commit": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+    "dirty": true,
+    "manifestSourceFiles": 153,
+    "manifestSourceMismatches": [],
+    "sdkReceiptSourceFiles": 95,
+    "sdkReceiptSourceMismatches": [],
+    "sdkReceiptSha256": "4ac2a06405d5829b8628da23eb498fe7e0f15c7577857953056de72186c04671",
+    "registryReportSha256": "cdf37f4d453f19260050a1a1ff9d1be98628ece66ddb2a787bc3d51fb826b93e",
+    "registryPassed": true,
+    "registryChecks": 213,
+    "registryFixtures": 11
+  },
+  "installedAddon": {
+    "manifestSha256": "08c5a8149554525a3a4fbc0db21455d7899d5bc4d6971750efca67d102597da9",
+    "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+    "hostMatchesSdkArchive": true,
+    "abiCertified": false
+  },
+  "toolchain": {
+    "nodeVersion": "22.23.3",
+    "typeChecker": {
+      "name": "tsc-rs",
+      "version": "0.1.0",
+      "typescriptVersion": "7.1.0-dev",
+      "platformPackage": "@tsc-rs/darwin-arm64",
+      "executableSha256": "3a2736e002cdeaa7a7514adb9c5b2f367021fd8253d1fdfb4058f135ead04b49"
+    },
+    "buildScriptSha256": "c05f0a23b6400dba387f9528a42f7c4bd7cd3d870cf2931b90e1371788570d76",
+    "successfulBuildLog": "consumer-build-restored.log",
+    "successfulBuildLogSha256": "bb9a4eb4b22c0beebc26a7820f69b31c8182286130fea73e60ed92e01866d6c4",
+    "bundle": "res://.godot_fabric/modal-host-probe.js",
+    "bundleSha256": "08892931180df899cdd1488b94e8deef0d1c237e109ebcd9e6bab6d85782903d",
+    "bundleReportSha256": "641126c8daa75956949771a4df194bb2c409aecd060e94f26b428d4d7a74f408",
+    "bundleInputCount": 340,
+    "fixtureInputIncluded": true
+  },
+  "typeChecks": {
+    "validWitness": "ModalProps none/fullScreen/overFullScreen and SafeAreaView passed in the SDK CLI build.",
+    "validWitnessSha256": "c6b804f44310b3700d4f2b907e9c9c3fe2ad2cd091b52acbcbdb4971cc1a8e3e",
+    "unsupportedAnimation": "slide rejected with TS2322 because the type permits only none.",
+    "negativeLog": "consumer-types-negative.log",
+    "negativeLogSha256": "e1b0772e3b51885ca160f41306e6a42de1c36e7aa7cc10196c286921822394e4",
+    "validWitnessRestoredBeforeFinalBuild": true
+  },
+  "runtime": {
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "mode": "headless",
+    "probeSha256": "515a1d1376b3c6f337a71bc81ff4e1e9e4102e7616ee96df88a9e56121092b03",
+    "report": "external consumer build/modal-host-report.json",
+    "reportSha256": "842dae5559dba717b88b6830835f37ee841307c37a5ef0d00ea35abafbf5b1ee",
+    "checks": 68,
+    "passedChecks": 68,
+    "allCurrentAssertionsPassed": true,
+    "log": "consumer-modal-headless.log",
+    "logSha256": "53bb556604026cf3ff238a9ebf652a058281a8037b1975db1a737d9cb13afe0e",
+    "scriptErrors": false,
+    "engineErrors": false,
+    "crash": false
+  },
+  "setupNote": "The initial run showed that this fixture writes to build/; after creating that directory in the external consumer, the final run passed. No tracked repository files were edited for consumer validation.",
+  "rootIndependent": {
+    "checkedAt": "2026-10-07T21:49:51.752956+00:00",
+    "manifestProducersVerified": 153,
+    "sdkProducersVerified": 95,
+    "fixtureByteIdentical": true,
+    "probeChange": "Only bundle resource path points to the SDK output.",
+    "checks": 68,
+    "passed": 68,
+    "displayServer": "headless",
+    "reportSha256": "98f9b48f58bb16d4e253e10aed1076cf0a500084d0366071cb562bedea1b3001",
+    "logSha256": "675366e2a1a9119bf912ac1f711466d16534d0e077e884d6f77bdd15190f5118"
+  },
+  "limits": {
+    "headlessConsumer": true,
+    "abiCertified": false,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "hostedImplementationCI": false,
+    "fullGF18Acceptance": false
+  }
+}

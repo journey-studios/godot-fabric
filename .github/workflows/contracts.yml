@@ -25,8 +25,9 @@ jobs:
       # GDExtension, graphical rendering or other platform support.
   native-cold-start:
     runs-on: macos-15
-    # The headless suites take ~21-24 minutes; macOS capacity delays can add more.
-    timeout-minutes: 45
+    # Cold dependency builds and native/headed suites took about 46 minutes.
+    # Keep a bounded global budget without changing individual probe deadlines.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -183,6 +184,33 @@ jobs:
             build/websocket-load-*
             build/websocket-transport-lifetime.json
             build/websocket-transport-lifetime-*
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:modal
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-modal
+          path: |
+            build/modal-host-report.json
+            build/modal-host-current-report.json
+            build/modal-host-current.log
+            build/modal-host-probe-bundle.json
+            build/modal-capture-lifetime-report.json
+            build/modal-capture-lifetime.log
+            build/modal-sibling-order-report.json
+            build/modal-sibling-order.log
+            build/modal-owner-windows-report.json
+            build/modal-owner-windows.log
+            build/modal-owner-windows-target-missing-report.json
+            build/modal-owner-windows-target-missing.log
+            build/modal-surface-lifetime-report.json
+            build/modal-surface-lifetime.log
+            build/modal-stack-membership-report.json
+            build/modal-stack-membership.log
+            build/modal-stack-membership-probe.js
+            build/modal-stack-membership-probe-bundle.json
+            build/modal-discriminators-probe.js
+            build/modal-discriminators-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor

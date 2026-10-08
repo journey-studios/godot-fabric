@@ -36,7 +36,13 @@ test("a relocated consumer builds with its copied native checker and preserves i
   const manifestFile = path.join(sdk, "manifest.json");
   const saveManifest = value => fs.writeFileSync(manifestFile, JSON.stringify(value));
   saveManifest(manifest);
-  const entry = path.join(project, "ui/index.tsx"), source = fs.readFileSync(entry, "utf8");
+  const entry = path.join(project, "ui/index.tsx");
+  let source = fs.readFileSync(entry, "utf8");
+  source = source.replace("import { AppRegistry, RootTagContext, View, Text, Button, TextInput } from \"react-native\";",
+    "import { AppRegistry, RootTagContext, View, Text, Button, TextInput, Modal, SafeAreaView } from \"react-native\";")
+    .replace("  </View>;\n}\nAppRegistry.registerComponent",
+      "    <Modal visible={false} transparent animationType=\"none\" presentationStyle=\"overFullScreen\" backdropColor=\"#101820\" testID=\"consumer-modal\" onShow={() => {}} onRequestClose={() => {}}><SafeAreaView testID=\"consumer-safe-area\" /></Modal>\n  </View>;\n}\nAppRegistry.registerComponent");
+  fs.writeFileSync(entry, source);
   const bundle = path.join(project, ".godot_fabric/app.js");
   const build = () => spawnSync(process.execPath,
     [path.join(sdk, "toolchain/build.mjs"), project, "res://ui/index.tsx", "res://.godot_fabric/app.js"],
@@ -56,6 +62,16 @@ test("a relocated consumer builds with its copied native checker and preserves i
     assert.match(failed.stderr, pattern);
     assert.equal(hash(fs.readFileSync(bundle)), expectedHash, "a rejected build must preserve the valid bundle");
   };
+  await t.test("the relocated public RN entry accepts the supported Modal and SafeAreaView contract", () => {
+    assert.match(source, /Modal visible=\{false\}[^>]*presentationStyle=\"overFullScreen\"/);
+    assert.match(source, /<SafeAreaView testID=\"consumer-safe-area\"/);
+  });
+  await t.test("the relocated public RN entry rejects unsupported Modal props", () => {
+    try {
+      fs.writeFileSync(entry, source.replace("testID=\"consumer-modal\"", "hardwareAccelerated testID=\"consumer-modal\""));
+      reject(/TypeScript failed[\s\S]*hardwareAccelerated/);
+    } finally { fs.writeFileSync(entry, source); }
+  });
   await t.test("semantic errors retain native TS diagnostics and the valid bundle", () => {
     try {
       fs.writeFileSync(entry, source + "\nconst invalidMigration: string = 123;\n");
