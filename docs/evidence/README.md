@@ -732,6 +732,26 @@ four times, and with the window narrowed). Real italic faces, the double, dotted
 bidirectional text and line geometry that matches either platform are open. The hosted CI run and the Pages publication
 are **pending**.
 
+The [Frontier game record](frontier-game/README.md) is the first package of the 0.5 milestone (V05-03, criterion
+`replay`, tied to GF-28): the rules and the scenario of the reference game in plain GDScript, with Godot as the authority
+and no C++, React or example. A 24x16 map from a fixed seed, a Settler and a Warrior moving by points, one city with a
+production queue, a linear research list, one blocking event and a scripted faction take only integers, a PCG32 of the
+game's own (checked against PCG's published outputs), a canonical serialization and SHA-256; the seven HUD contexts come
+from the state and the selection by one pure function, and the snapshot the HUD will project is immutable, integers and
+strings only. A 12-turn roteiro of 73 intents (43 accepted, 30 refused with a code and a text and leaving the state
+untouched) ends in one golden hash, and a trace hash pins the state after every step; both are identical in 9 executions
+(3 rounds of 3 processes) whose 338,700-byte reports are byte-identical, 629 checks each. The probe also plays the
+roteiro a second time in the same process and once with every `end_turn` sliced into phases, and requires the same state at
+every step; every enabled action in a snapshot is an intent accepted on a copy of the game. An independent oracle in Node
+reads only the raw serializations: it proves them canonical, recomputes SHA-256, re-derives PCG32 in `BigInt` and the map
+from the seed, justifies every refusal and recomputes every accepted intent and every turn phase by phase. Four retained
+sabotages (the PRNG's output from `randi()`, a serializer that does not sort keys, a forest that costs one point, a city
+centre that yields one production too many) fail 6, 1, 13 and 3 probe checks, and the oracle rejects each in its own place;
+the `prng` one also gives three different hashes in three processes. The previous-host control does not apply: there is no
+native code. `type-check`, `check:static`, `check:publication`, `test:contracts` and all 35 examples pass on the same commit
+(`4b86a7b`). The snapshot is a written and checked contract, not yet a service: the services, the HUD, the export and the
+devices are open, and the **hosted CI run (`native-civ-lite-game`) and the Pages publication are pending**.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

@@ -1,6 +1,7 @@
 # Frontier: the rules and the scenario of the 0.5 reference game, in GDScript
 
-Status: model published for the services slice (V05-03 `servicos`) and the HUD slice (V05-05); evidence pending.
+Status: model published for the services slice (V05-03 `servicos`) and the HUD slice (V05-05). The [evidence](../evidence/frontier-game/README.md)
+records the local macOS arm64 runs; the hosted CI run is pending.
 
 This is the first package of the 0.5 milestone (V05-03, criterion `replay`). The 0.5 asks whether a real app is usable
 on this platform. Its reference app is **Frontier**, a small turn-based strategy game in the interaction style of
