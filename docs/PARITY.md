@@ -84,7 +84,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   reduce transparency and increase contrast, read once per frame, with the events of their changes; bold text,
   grayscale, inverted colors and cross-fade reject as unavailable. GF-20's second slice, part b
   ([record](evidence/accessibility-announcements/README.md)), adds the announcements (`announceForAccessibility`, `announceForAccessibilityWithOptions`): each is a live element that AccessKit
-  speaks (assertive for `priority: 'high'`), dropped and counted with no screen reader; `queue: true`, `priority: 'low'` and the
+  announces to the screen reader (assertive for `priority: 'high'`; the post to AppKit is proven, the audible speech is not), dropped and counted with no screen reader; `queue: true`, `priority: 'low'` and the
   screen reader's programmatic focus stay refused with their reasons (the macOS API has no queue, AccessKit has two live
   modes, Godot has one focus) and `announcementFinished` never fires. A headless probe in two applications with an
   independent oracle (the recorder replaces the `AccessibilityServer`), the preceding host as the control and eight retained
@@ -242,7 +242,7 @@ stubs. Diagnostic guards are interim safety; they do not complete parity.
 
 | Target | Current evidence | Required before 1.0 support |
 | --- | --- | --- |
-| macOS arm64 | Official Godot 4.7.2; native subset validated, cold-import failure open | Clean install, packaged debug/release consumer, Retina/physical input/IME, lifecycle, accessibility (the View tree and the announcements AccessKit posts are read through NSAccessibility locally; screen-reader speech and focus are open) and system-service contracts |
+| macOS arm64 | Official Godot 4.7.2; native subset validated, cold-import failure open | Clean install, packaged debug/release consumer, Retina/physical input/IME, lifecycle, accessibility (the View tree is read through NSAccessibility by the first slice's local lane; the announcements are proven only up to the call AccessKit makes to AppKit, by interposing `NSAccessibilityPostNotificationWithUserInfo` in the second slice's local lane; screen-reader speech and focus are open) and system-service contracts |
 | Linux x86_64 | No native build/runtime proof | Portable dependency build, exported consumer, display/input/scaling/IME/AT contracts and native CI |
 | Windows x86_64 | No native build/runtime proof | MSVC/ABI/DLL packaging, exported consumer, focus/input/DPI/IME/AT contracts and native CI |
 | Android arm64 | No native build/runtime proof | NDK/shared libraries/JNI and exported Gradle packaging, real device touch/keyboard/insets, lifecycle/permissions/services and native CI |

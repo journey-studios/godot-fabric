@@ -24,16 +24,18 @@ changes and the events line counts the change. The four native buttons on the ri
 operating system, so the screen can be driven without touching System Settings: each press cycles a
 setting through *system* (the real reading), *unknown*, *off* and *on* by changing the application's
 `validation_accessibility_settings` meta, which replaces only the keys it names. The fifth, **Announcement
-reader**, stands in for the screen reader the announcements are spoken to: it cycles the application's
+reader**, stands in for the screen reader the announcements are announced to: it cycles the application's
 `validation_accessibility_announcer` meta through *reader* (a recorder that behaves as a screen reader),
 *none* (a recorder with no screen reader) and *system* (no meta: Godot's real `AccessibilityServer`, which
-speaks through AccessKit when a screen reader such as VoiceOver is on and drops the announcement when none
+announces through AccessKit when a screen reader such as VoiceOver is on and drops the announcement when none
 is).
 
 **Announce** calls `AccessibilityInfo.announceForAccessibility("Announcement N")`. The screen counts what it
 sent (**Announcements sent**), and the native line under the stand-in counts what the host did with it:
-`requested`, `published` (a new live element AccessKit speaks) and `dropped` (no screen reader to speak it).
-With VoiceOver on and the stand-in on *system*, pressing it makes VoiceOver say the text.
+`requested`, `published` (a new live element that AccessKit announces to the screen reader) and `dropped` (no screen
+reader to announce it to). With VoiceOver on and the stand-in on *system*, pressing it is expected to make VoiceOver say
+the text; that speech has **not** been verified. What the graphical test observes is the notification AccessKit posts to
+AppKit (the text and the priority level), not VoiceOver's output, so a claim here is limited to what that post proves.
 
 `npm run test:accessibility-info` is the [evidence](../../docs/evidence/accessibility-info/README.md) suite (the announcements have a
 [record](../../docs/evidence/accessibility-announcements/README.md) of their own),
@@ -65,12 +67,12 @@ event.
 **Announced** is the screen after **Announce** was pressed twice, the second time with the stand-in's *Announcement
 reader* turned to *none*: **Announcements sent** says 2, and the native line says
 `requested 2 · published 1 · dropped 1`. The first announcement was published (a new live element, polite, with the
-text as its value) and the second was dropped because no screen reader was there to speak it; a screen reader that
+text as its value) and the second was dropped because no screen reader was there to announce it to; a screen reader that
 turns on afterwards hears neither.
 
 - **Announce** sends an announcement. With a screen reader behind the stand-in (*reader*, or *system* on a Mac with
   VoiceOver running) it is published and the line counts it; with none (*none*, or *system* without VoiceOver) it is
-  dropped and counted, and never kept to be spoken later.
+  dropped and counted, and never kept to be announced later.
 - **Announcement reader** (native) cycles *reader*, *none* and *system*: try pressing **Announce** after each.
 - **Ask again** calls every getter again; the answer is the last reading the host took, so a setting that
   changed shows as soon as the next frame has been polled.
@@ -166,7 +168,7 @@ sends none.
 
 | Announcement | What the host does |
 | --- | --- |
-| `announceForAccessibility(text)` | A new static text element with the text as its value and a polite live mode, which AccessKit speaks; returns and counts a drop when no screen reader is there |
+| `announceForAccessibility(text)` | A new static text element with the text as its value and a polite live mode, which AccessKit posts to AppKit as an announcement (the expected result is VoiceOver saying the text; the audible speech was not verified); returns and counts a drop when no screen reader is there |
 | `announceForAccessibilityWithOptions(text, {priority: 'high'})` | The same, assertive |
 | `{priority: 'default'}`, absent, null, or a string iOS ignores | The same as the plain call |
 | `{queue: true}` | Throws `E_UNSUPPORTED`: the macOS accessibility API has no announcement queue |

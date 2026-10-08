@@ -3485,7 +3485,7 @@ by the first slice; no whole GF, other checkpoint, weight or denominator closes.
 GF-20 stays **In progress**; this is its second slice, part b, and it closes no checkpoint: the first slice already
 closed `slice`, and the full item, contract, parity and targets remain open. The
 [announcements evidence](docs/evidence/accessibility-announcements/README.md) makes `announceForAccessibility` and
-`announceForAccessibilityWithOptions` of React Native's original `AccessibilityInfo` speak through AccessKit on macOS and
+`announceForAccessibilityWithOptions` of React Native's original `AccessibilityInfo` are announced through AccessKit on macOS and
 closes the screen reader's focus with the reason it cannot be honored: **69 headless checks** in two applications of one
 bundle, and **12 checks** on a local graphical lane. Nothing there says that VoiceOver spoke: the proof reaches the call
 AccessKit makes to AppKit.

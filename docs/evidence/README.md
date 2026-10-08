@@ -653,10 +653,10 @@ does not complete GF-20, and it closes no checkpoint, whole GF, weight or denomi
 closed GF-20's `slice` checkpoint).
 
 The [accessibility announcements record](accessibility-announcements/README.md) is GF-20's second slice, part b:
-`announceForAccessibility` and `announceForAccessibilityWithOptions` of RN's original `AccessibilityInfo` speak through
-AccessKit on macOS. Each announcement is a new static text element under the `FabricApplication`'s own element, with the
+`announceForAccessibility` and `announceForAccessibilityWithOptions` of RN's original `AccessibilityInfo` are announced through
+AccessKit on macOS (the proof reaches the post to AppKit, not VoiceOver's speech). Each announcement is a new static text element under the `FabricApplication`'s own element, with the
 text as its `value` and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`), made inside the accessibility update and
-freed outside the next one; a `name` alone is silent (measured) and a value equal to the one before does not speak again,
+freed outside the next one; a `name` alone is silent (measured) and a value equal to the one before is not announced again,
 so every announcement is an element of its own. The announcements of one frame are published one per update, in the order
 asked, because AccessKit posts the elements of one update in an order of its own that is not stable (three runs, three
 orders). With no screen reader the call returns and the announcement is counted and dropped, never kept for one that

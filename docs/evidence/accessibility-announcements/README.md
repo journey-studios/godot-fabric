@@ -1,7 +1,7 @@
 # Anúncios ao leitor de tela do `AccessibilityInfo`, pelo AccessKit
 
 Esta fatia, a segunda do GF-20 (parte b: os anúncios e o foco), faz o `announceForAccessibility` e o
-`announceForAccessibilityWithOptions` do `AccessibilityInfo` ORIGINAL do RN 0.87.1 falarem de verdade no
+`announceForAccessibilityWithOptions` do `AccessibilityInfo` ORIGINAL do RN 0.87.1 serem anunciados no
 macOS, pelo AccessKit do Godot 4.7.2, e fecha com dados o motivo de o foco do leitor de tela continuar
 recusado. O AccessKit do macOS anuncia um nó novo que tem `value` e modo live: o host cria, a cada anúncio, um
 elemento de texto estático novo sob o elemento da própria `FabricApplication`, com o texto no `value` e
@@ -238,7 +238,7 @@ O exemplo de `accessibility-info` ganhou o botão React **Announce**, que chama
 `AccessibilityInfo.announceForAccessibility("Announcement N")`, e a linha **Announcements sent**; um quinto botão
 nativo, **Announcement reader**, faz o stand-in do leitor de tela (a meta `validation_accessibility_announcer`)
 passar por *reader* (o gravador que se comporta como leitor), *none* (um gravador sem leitor) e *system* (sem meta:
-o servidor real do Godot, que fala pelo AccessKit com o VoiceOver ligado e descarta sem ele). Um rótulo nativo
+o servidor real do Godot, que anuncia pelo AccessKit com o VoiceOver ligado e descarta sem ele). Um rótulo nativo
 conta o que o host fez: `requested`, `published` e `dropped`. Com `--capture` salva três quadros do renderer, todos
 de 900 × 680 pixels, conferidos um a um. As três capturas que já estavam nesta pasta foram refeitas em `030ebcf` e
 saíram idênticas (mesmo SHA-256), então ficam: o exemplo não mudou depois delas.

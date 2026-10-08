@@ -315,7 +315,7 @@ The [AccessibilityInfo example](examples/accessibility-info/README.md) runs Reac
 last reading, which the host takes once per frame, and each change is one event heard by every listener of every
 root, with `change` as the alias of `screenReaderChanged`. A setting the platform does not report rejects as unknown,
 and bold text, grayscale, inverted colors and cross-fade reject as unavailable, never off. `announceForAccessibility` and
-`announceForAccessibilityWithOptions` are spoken through AccessKit: each is a new live element with the text as its value
+`announceForAccessibilityWithOptions` are announced through AccessKit (the post to AppKit is proven, the audible speech is not): each is a new live element with the text as its value
 (assertive for `priority: 'high'`, polite otherwise), dropped and counted when no screen reader is there; `queue: true`,
 `priority: 'low'` and the screen reader's programmatic focus throw `E_UNSUPPORTED` with their reasons (the macOS API has no
 queue, AccessKit has two live modes, Godot has one focus). The headless probe runs two applications, one with validation

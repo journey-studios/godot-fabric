@@ -107,7 +107,7 @@ struct that the validation meta `validation_accessibility_settings` can replace 
 `setAccessibilityContentSizeMultipliers` validates its argument (`E_ARGUMENT`) and throws `E_UNSUPPORTED`; `setAccessibilityFocus`
 throws `E_UNSUPPORTED` with the reason (Godot has one focus, so moving the screen reader's would blur the keyboard's), and so does a
 `focus` event of the `UIManager`; its accessibility events of any other type are ignored and counted by type.
-`announceForAccessibility` and `announceForAccessibilityWithOptions` are spoken through AccessKit: the `Announcer`
+`announceForAccessibility` and `announceForAccessibilityWithOptions` are announced through AccessKit (the post to AppKit is proven, the audible speech is not verified): the `Announcer`
 (`native/accessibility_announcement_core.h`, pure, with a core test of its own) keeps each announcement until the accessibility update
 that `FabricApplication` receives as `NOTIFICATION_ACCESSIBILITY_UPDATE` and publishes it there as a new static text element under the
 application's own element, with the text as its value and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`), then frees it

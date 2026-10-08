@@ -1,4 +1,4 @@
-# Accessibility announcements: AccessKit speaks them, the screen reader's focus stays refused
+# Accessibility announcements: AccessKit announces them, the screen reader's focus stays refused
 
 Godot 4.7.2 (headless for the hosted suite; a graphical macOS window for the local lane), RN
 0.87.1, for the second slice of GF-20, part b. Slice 2a (PR #63) brought RN's original
@@ -44,8 +44,8 @@ pins the executions to the implementation commit.
   (`scene/main/window.cpp:2492-2496`) exists but is not in the ClassDB or in
   `extension_api.json`. It keeps one element per window and sets its **name** and an
   assertive live mode (`window.cpp:1613-1621`), and, as measured below, AccessKit's macOS
-  adapter does not speak a name. The extension builds its own announcement instead.
-- **What AccessKit's macOS adapter speaks** (accesskit_macos, `platforms/macos/src/event.rs`):
+  adapter does not announce a name. The extension builds its own announcement instead.
+- **What AccessKit's macOS adapter announces** (accesskit_macos, `platforms/macos/src/event.rs`):
   `node_added` (`:228-240`) and `node_updated` (`:242-306`) queue a live-region announcement
   when the node has a **value** and a live mode other than off, and, for an update, when the
   value or the live mode changed. The text is the value; the priority level is high for
@@ -83,7 +83,7 @@ pins the executions to the implementation commit.
 
 | RN | Here | Why |
 | --- | --- | --- |
-| `announceForAccessibility(text)` | A new static text element under the application's own element, with `text` as its value and `LIVE_POLITE`, made in the next accessibility update and freed outside the update after it. With no screen reader the call returns and the announcement is counted and dropped | AccessKit speaks a live node's value; an element per announcement is the iOS notification's equivalent |
+| `announceForAccessibility(text)` | A new static text element under the application's own element, with `text` as its value and `LIVE_POLITE`, made in the next accessibility update and freed outside the update after it. With no screen reader the call returns and the announcement is counted and dropped | AccessKit announces a live node's value (the post is measured, the speech is not); an element per announcement is the iOS notification's equivalent |
 | Several announcements in one frame | Published one per update, in the order they were asked for, a frame apart | See "Decision: one announcement per update" |
 | `announceForAccessibilityWithOptions(text, {priority})` | `"high"` is `LIVE_ASSERTIVE`; `"default"`, an absent or null priority and a string iOS ignores are `LIVE_POLITE`. `queue: false`, absent or null is accepted | iOS's own mapping, with the two live modes AccessKit has |
 | `{queue: true}` | `E_UNSUPPORTED: announceForAccessibilityWithOptions queue: the macOS accessibility API has no announcement queue` | AppKit's announcement has no queue |

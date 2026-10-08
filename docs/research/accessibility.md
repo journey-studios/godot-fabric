@@ -17,7 +17,7 @@ certifies a screen reader's speech, other platforms or mobile. The
 controls and captures.
 
 Not in this slice: `AccessibilityInfo` (settings and events, the fatter half of
-the roadmap item; they are the [next note](accessibility-info.md), and the announcements `announceForAccessibility` speaks are the
+the roadmap item; they are the [next note](accessibility-info.md), and the announcements `announceForAccessibility` makes are the
 [one after](accessibility-announcements.md)), text scale, focus and keyboard navigation, the announcement of a View's live region, custom actions (`accessibilityActions`), group
 semantics that suppress children (`accessible` on a container), Text (GF-11),
 Button and TextInput of the host (GF-17), and the mobile bridges (see Open).
@@ -205,7 +205,7 @@ a name (`native/accessible_view.cpp:134-136`), so it is probably silent on macOS
 sentence used to say to combine the roles with `accessibilityLiveRegion` and was probably
 wrong; the behavior of the live region is not measured on VoiceOver and is open
 ([accessibility-announcements.md](accessibility-announcements.md); use
-`AccessibilityInfo.announceForAccessibility` to speak).
+`AccessibilityInfo.announceForAccessibility` to announce).
 
 ### Errors
 
