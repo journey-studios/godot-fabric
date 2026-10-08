@@ -1,6 +1,7 @@
 #pragma once
 #include <react/nativemodule/dom/NativeDOM.h>
 #include <react/renderer/dom/DOM.h>
+#include "physical_embedding.h"
 #include <functional>
 
 namespace fabric_godot {
@@ -9,7 +10,7 @@ namespace fabric_godot {
 class GodotDOM final : public facebook::react::NativeDOM {
  public:
   using Project = std::function<facebook::react::dom::DOMRect(
-      facebook::react::SurfaceId, facebook::react::dom::DOMRect, bool)>;
+      const PhysicalEmbedding &, facebook::react::dom::DOMRect, bool)>;
   using Authority = std::function<bool(const facebook::react::ShadowNode &)>;
   GodotDOM(std::shared_ptr<facebook::react::CallInvoker> invoker, Project project, Authority authority);
  private:

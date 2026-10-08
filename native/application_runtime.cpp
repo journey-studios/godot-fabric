@@ -13,6 +13,9 @@
 #include "svg_node.h"
 #include "scroll_adapter.h"
 #include "appearance_adapter.h"
+#include "modal_host_view_component_descriptor.h"
+#include "modal_presentation.h"
+#include "modal_window_stack.h"
 #include "transform_adapter.h"
 #include "coordinate_transform.h"
 #include "paragraph_view.h"
@@ -41,6 +44,7 @@
 #include <react/renderer/components/image/ImageComponentDescriptor.h>
 #include <godot_cpp/classes/input_event_mouse_button.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/input_event_key.hpp>
 #include <godot_cpp/classes/input_event_screen_touch.hpp>
 #include <godot_cpp/classes/input_event_screen_drag.hpp>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
@@ -83,6 +87,7 @@ using fabric_godot::ControlEventEmitter;
 
 static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("View")) return "view";
+  if (shadow.componentName == std::string(rn::ModalHostViewComponentName)) return "modal";
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
   if (shadow.componentName == std::string(rn::AppleSwitchComponentName)) return "switch";
@@ -132,7 +137,7 @@ class GodotHostPhaseCallback final : public CallableCustom {
  private:
   std::function<void()> callback;
 };
-enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key, Toggle };
+enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key, Toggle, ModalWindowInput };
 // A Control's connection belongs to its original runtime and mount. Binding a
 // mutable FabricSurface would reroute an old queued signal after an owner switch.
 class GodotCoreControlCallback final : public CallableCustom {
@@ -193,10 +198,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::set<int> pending_pointer_removals;
   int next_pointer_id{1};
   uint64_t last_pointer_event{};
-  std::set<int> pointer_event_callers;
+  std::set<std::pair<int, uint64_t>> pointer_event_callers;
   bool pointer_event_delivered{};
   std::function<fabric_godot::WindowMetrics()> read_window;
-  fabric_godot::WindowMetrics host_metrics;
+  std::shared_ptr<fabric_godot::WindowMetricsSnapshot> host_metrics{
+      std::make_shared<fabric_godot::WindowMetricsSnapshot>()};
+  Ref<fabric_godot::ModalWindowStack> modal_stack;
   uint64_t runtime_id;
   int next_surface_id{1};
   int bundle_evaluations{};
@@ -251,10 +258,21 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::unique_ptr<fabric_godot::ScrollAdapter> scroll;
     std::unique_ptr<fabric_godot::AdapterView> external;
     uint64_t mount_id{};
+    std::shared_ptr<fabric_godot::ModalPresentation> modal;
     // What the committed transform leaves of this View, resolved with its shadow.
     fabric_godot::PlanarTransform transform{};
   };
   std::map<int, Mounted> views;
+  struct PhysicalHost {
+    Window *window{};
+    Window *owner_window{};
+    Viewport *viewport{};
+    Control *control_root{};
+    Transform2D boundary_to_viewport;
+    fabric_godot::PointerInputSource source;
+  };
+  std::map<int, std::vector<int>> logical_children;
+  std::unordered_map<int, int> logical_parent;
   std::unordered_map<Control *, int> native_tags;
   std::set<int> retiring;
   int next_frame{1};
@@ -262,6 +280,162 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool stopping{false};
   bool stop_requested{false};
   bool inactive() const { return stopped || stopping || stop_requested; }
+
+  static const rn::ShadowNode *find_family(const rn::ShadowNode &node, rn::Tag tag) {
+    if (node.getTag() == tag) return &node;
+    for (const auto &child : node.getChildren())
+      if (const auto *found = find_family(*child, tag)) return found;
+    return nullptr;
+  }
+
+  std::optional<PhysicalHost> physical_host(const rn::RootShadowNode::Shared &revision,
+      int surface_id, int boundary_tag,
+      uint64_t mount_id, const rn::ShadowNodeFamily::Shared &family) const {
+    auto root = roots.find(surface_id);
+    if (inactive() || root == roots.end() || root->second->stopping || root->second->stopped || !family || !revision)
+      return std::nullopt;
+    PhysicalHost result;
+    if (boundary_tag == surface_id && mount_id == 0 && family == revision->getFamilyShared()) {
+      auto *host = root->second->host();
+      if (!host || !host->is_inside_tree() || !host->get_window() || !host->get_viewport()) return std::nullopt;
+      result.window = host->get_window();
+      result.owner_window = result.window;
+      result.viewport = host->get_viewport();
+      result.control_root = host;
+      result.boundary_to_viewport = host->get_global_transform_with_canvas();
+    } else {
+      auto mounted = views.find(boundary_tag);
+      if (mounted == views.end() || mounted->second.surface_id != surface_id ||
+          mounted->second.mount_id != mount_id || !mounted->second.modal ||
+          mounted->second.shadow.componentName != std::string(rn::ModalHostViewComponentName)) return std::nullopt;
+      const auto *current = find_family(*revision, boundary_tag);
+      if (!current || current->getFamilyShared() != family ||
+          !current->getTraits().check(rn::ShadowNodeTraits::Trait::RootNodeKind)) return std::nullopt;
+      auto *window = mounted->second.modal->window();
+      if (!window || !window->is_inside_tree() || !window->is_embedded()) return std::nullopt;
+      result.window = window;
+      auto *host = root->second->host();
+      result.owner_window = host ? host->get_window() : nullptr;
+      if (!result.owner_window) return std::nullopt;
+      result.viewport = window;
+      result.control_root = mounted->second.control;
+      if (!result.control_root || !result.control_root->is_inside_tree()) return std::nullopt;
+      result.boundary_to_viewport = result.control_root->get_global_transform_with_canvas();
+    }
+    result.source.surface = surface_id;
+    result.source.boundary_tag = boundary_tag;
+    result.source.boundary_mount = mount_id;
+    result.source.window_id = result.window->get_instance_id();
+    result.source.viewport_id = result.viewport->get_instance_id();
+    result.source.owner_window_id = result.owner_window->get_instance_id();
+    result.source.boundary_family = family;
+    result.source.boundary_to_viewport = result.boundary_to_viewport;
+    auto canvas_inverse = Transform2D();
+    if (!coordinate_inverse(result.owner_window->get_global_canvas_transform(), canvas_inverse)) return std::nullopt;
+    const auto content = result.owner_window->get_final_transform() * canvas_inverse;
+    const auto density = content.get_scale().x;
+    if (!std::isfinite(density) || density <= 0 || !Math::is_equal_approx(density, content.get_scale().y))
+      return std::nullopt;
+    auto screen = result.viewport->get_screen_transform();
+    screen.set_origin(screen.get_origin() + Vector2(result.owner_window->get_position()));
+    const auto inverse_density = 1.0 / density;
+    result.source.viewport_to_screen = Transform2D(
+        screen[0] * inverse_density, screen[1] * inverse_density,
+        screen[2] * inverse_density);
+    return result;
+  }
+
+  std::optional<PhysicalHost> physical_host(const fabric_godot::PhysicalEmbedding &embedding) const {
+    const auto surface_id = embedding.target().getSurfaceId();
+    const auto &boundary = *embedding.path()[embedding.projection_boundary_index()];
+    auto mounted = views.find(boundary.getTag());
+    return physical_host(embedding.revision(), surface_id, boundary.getTag(),
+        mounted == views.end() ? 0 : mounted->second.mount_id,
+        boundary.getFamilyShared());
+  }
+
+  std::optional<PhysicalHost> physical_host(const fabric_godot::PointerInputSource &source,
+      rn::RootShadowNode::Shared revision) const {
+    auto host = physical_host(revision, source.surface, source.boundary_tag, source.boundary_mount,
+        source.boundary_family);
+    if (!host || host->window->get_instance_id() != source.window_id ||
+        host->viewport->get_instance_id() != source.viewport_id ||
+        host->owner_window->get_instance_id() != source.owner_window_id) return std::nullopt;
+    return host;
+  }
+
+  std::optional<PhysicalHost> physical_input_host(const fabric_godot::PointerInputSource &source,
+      rn::RootShadowNode::Shared revision) const {
+    auto host = physical_host(source, std::move(revision));
+    if (!host || !host->control_root || !host->control_root->is_visible_in_tree()) return std::nullopt;
+    return host;
+  }
+
+  std::optional<PhysicalHost> physical_input_host(const fabric_godot::PointerInputSource &source) const {
+    auto revision = ui ? ui->getShadowTreeRevisionProvider()->getCurrentRevision(source.surface) : nullptr;
+    return physical_input_host(source, std::move(revision));
+  }
+
+  std::optional<fabric_godot::PointerInputSource> root_pointer_source(int surface_id) const {
+    auto root = roots.find(surface_id);
+    if (root == roots.end() || !ui) return std::nullopt;
+    auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(surface_id);
+    if (!revision) return std::nullopt;
+    auto host = physical_host(revision, surface_id, surface_id, 0, revision->getFamilyShared());
+    if (!host) return std::nullopt;
+    return host->source;
+  }
+
+  std::optional<fabric_godot::PointerInputSource> modal_pointer_source(int surface_id,
+      int tag, uint64_t mount_id) const {
+    auto root = roots.find(surface_id);
+    if (root == roots.end() || !ui) return std::nullopt;
+    auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(surface_id);
+    const auto *boundary = revision ? find_family(*revision, tag) : nullptr;
+    if (!boundary) return std::nullopt;
+    auto host = physical_host(revision, surface_id, tag, mount_id, boundary->getFamilyShared());
+    if (!host) return std::nullopt;
+    return host->source;
+  }
+
+  void remove_logical_child(int parent_tag, int child_tag) {
+    auto owner = logical_parent.find(child_tag);
+    if (owner == logical_parent.end() || owner->second != parent_tag) return;
+    auto parent = logical_children.find(parent_tag);
+    if (parent != logical_children.end()) {
+      auto &children = parent->second;
+      children.erase(std::remove(children.begin(), children.end(), child_tag), children.end());
+    }
+    logical_parent.erase(owner);
+  }
+  void forget_logical_tag(int tag) {
+    auto owner = logical_parent.find(tag);
+    if (owner != logical_parent.end()) remove_logical_child(owner->second, tag);
+    auto children = logical_children.find(tag);
+    if (children != logical_children.end()) {
+      for (int child : children->second) {
+        auto parent = logical_parent.find(child);
+        if (parent != logical_parent.end() && parent->second == tag) logical_parent.erase(parent);
+      }
+    }
+    logical_children.erase(tag);
+  }
+  int insert_logical_child(int parent_tag, int child_tag, int index, Node *physical_parent) {
+    auto owner = logical_parent.find(child_tag);
+    if (owner != logical_parent.end()) remove_logical_child(owner->second, child_tag);
+    auto &children = logical_children[parent_tag];
+    if (index < 0 || static_cast<size_t>(index) > children.size())
+      throw std::runtime_error("E_MODAL_MOUNT_ORDER: React supplied an invalid logical child index");
+    children.insert(children.begin() + index, child_tag);
+    logical_parent[child_tag] = parent_tag;
+    int physical_index = 0;
+    for (int current = 0; current < index; ++current) {
+      const auto sibling = views.find(children[current]);
+      if (sibling != views.end() && sibling->second.control->get_parent() == physical_parent)
+        ++physical_index;
+    }
+    return physical_index;
+  }
   int execution_depth{};
   struct ExecutionScope {
     Impl &owner;
@@ -319,11 +493,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // RN's Image shadow node takes its requests from the ImageManager registered under this name, inside layout.
     images = std::make_shared<fabric_godot::ImageLoader>(host_thread);
     context->insert(rn::ImageManagerKey, std::shared_ptr<rn::ImageManager>(std::make_shared<fabric_godot::GodotImageManager>(context, images)));
-    host_metrics = read_window();
-    viewport_size = host_metrics.size;
-    refresh_rate = host_metrics.refresh_rate;
-    pacing = host_metrics.pacing;
-    pacing_source = host_metrics.pacing_source;
+    host_metrics->set(read_window());
+    context->insert(fabric_godot::modal_window_metrics_context, host_metrics);
+    const auto initial_metrics = host_metrics->get();
+    viewport_size = initial_metrics.size;
+    refresh_rate = initial_metrics.refresh_rate;
+    pacing = initial_metrics.pacing;
+    pacing_source = initial_metrics.pacing_source;
     runtime->global().setProperty(*runtime, "godotScenario", jsi::String::createFromUtf8(*runtime, scenario));
     // RN's ReactInstance sets this before every JS callback its runtime executor
     // runs and never resets it (ReactInstance.cpp:101): on the JS thread, a shadow
@@ -350,8 +526,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // originating root stops. Revoked source authority must also cover that
       // native envelope, while TouchCancel still performs responder cleanup.
       if (const auto *pointer = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&payload)) {
-        auto source = roots.find(pointer->source_surface);
-        if (inactive() || source == roots.end() || source->second->stopping) return;
+        auto source = roots.find(pointer->source.surface);
+        if (inactive() || source == roots.end() || source->second->stopping || !physical_input_host(pointer->source)) return;
       }
       if (target) {
         auto root = roots.find(target->getSurfaceId());
@@ -379,6 +555,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     providers.add(rn::concreteComponentDescriptorProvider<rn::ActivityIndicatorViewComponentDescriptor>());
     // RN's own Image descriptor, state and events; the mount side is GodotImage.
     providers.add(rn::concreteComponentDescriptorProvider<rn::ImageComponentDescriptor>());
+    providers.add(rn::concreteComponentDescriptorProvider<fabric_godot::ModalHostViewComponentDescriptor>());
     // Original Fabric registry requests selected descriptors lazily. Requests
     // only register immutable providers; native objects wait for Create commits.
     providers.setComponentDescriptorProviderRequest([this](rn::ComponentName name) {
@@ -417,13 +594,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (scenario == "images-fixture") fabric_godot::install_image_loader_fixture(*native_modules, images);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
-          [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
+          [this](const fabric_godot::PhysicalEmbedding &embedding, rn::dom::DOMRect rect, bool transforms) {
+            const auto id = embedding.target().getSurfaceId();
             auto root = roots.find(id);
             if (root == roots.end() || root->second->stopping || root->second->stopped)
               return rn::dom::DOMRect{};
-            auto *host = root->second->host();
-            if (!host) return rn::dom::DOMRect{};
-            auto transform = host->get_global_transform_with_canvas();
+            auto physical = physical_host(embedding);
+            if (!physical) return rn::dom::DOMRect{};
+            const auto transform = physical->boundary_to_viewport;
             // Layout/offset sizes exclude transforms. Window rectangles include
             // the affine embedding (all four corners, including rotation).
             if (!transforms) {
@@ -488,7 +666,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     rn::LayoutConstraints constraints;
     constraints.minimumSize = constraints.maximumSize = {static_cast<float>(surface.size.x), static_cast<float>(surface.size.y)};
     rn::LayoutContext layout;
-    layout.pointScaleFactor = host_metrics.scale;
+    layout.pointScaleFactor = host_metrics->get().scale;
     auto tree = std::make_unique<rn::ShadowTree>(id, constraints, layout, *ui, *context);
     surface.started = true;
     if (surface.component.empty()) ui->startEmptySurface(std::move(tree));
@@ -522,8 +700,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     if (inactive()) throw std::runtime_error("Application is stopped");
     if (!host.get_window() || host.get_viewport() != host.get_window() ||
-        host.get_window()->get_instance_id() != host_metrics.window_instance_id)
+        host.get_window()->get_instance_id() != host_metrics->get().window_instance_id)
       throw std::runtime_error("Fabric surfaces require the application's native Window; SubViewport and cross-window hosting need a metrics adapter");
+    auto *owner_window = host.get_window();
     auto props = folly::parseJson(props_json);
     if (!component.empty()) {
       auto registry = runtime->global().getProperty(*runtime, "RN$AppRegistry");
@@ -549,63 +728,38 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     roots.emplace(id, std::move(root));
     auto &surface = *roots.at(id);
     surface.pointer = std::make_unique<fabric_godot::PointerAdapter>(
-        [this, id](Vector2 point) {
-          auto root = roots.find(id);
-          auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
-          return host ? hit_test(host, point) : 0;
+        [this](Vector2 point, const fabric_godot::PointerInputSource &source) {
+          return physical_hit_test(source, point);
         },
-        [this, id](int tag) {
-          // The mounted (native) hierarchy, like RN's hit path: flattened views
-          // have no Control and the root host never receives an event.
-          std::vector<int> path;
-          auto root = roots.find(id);
-          auto *host = root == roots.end() ? nullptr : root->second->host();
+        [this](int tag, const fabric_godot::PointerInputSource &source) {
+          return physical_hit_path(tag, source);
+        },
+        [this](Vector2 point, const fabric_godot::PointerInputSource &source) {
+          return physical_inside(source, point);
+        },
+        [this](int tag, Vector2 point, const fabric_godot::PointerInputSource &source) {
           auto found = views.find(tag);
-          if (!host || found == views.end()) return path;
-          for (Control *control = found->second.control; control && control != host;
-              control = Object::cast_to<Control>(control->get_parent()))
-            if (const int mounted = tag_for(control)) path.push_back(mounted);
-          return path;
-        },
-        [this, id](Vector2 point) {
-          auto root = roots.find(id);
-          auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
-          if (!host || !host->is_visible_in_tree()) return false;
-          const auto local = fabric_godot::local_coordinate(host->get_global_transform_with_canvas(), point);
-          return local.is_finite() && Rect2(Vector2(), host->get_size()).has_point(local);
-        },
-        [this](int tag, Vector2 point) {
-          auto found = views.find(tag);
-          return found == views.end() ? fabric_godot::invalid_coordinate() :
+          auto physical = physical_input_host(source);
+          return found == views.end() || !physical || !found->second.control->is_inside_tree() ?
+              fabric_godot::invalid_coordinate() :
               fabric_godot::local_coordinate(found->second.control->get_global_transform_with_canvas(), point);
         },
-        [this, id](Vector2 point) {
-          auto root = roots.find(id);
-          auto *host = root == roots.end() ? nullptr : root->second->host();
+        [this](Vector2 point, const fabric_godot::PointerInputSource &source) {
           const auto invalid = fabric_godot::invalid_coordinate();
-          if (!host) return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
+          auto physical = physical_input_host(source);
+          if (!physical) return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
           // RN page points and measure() share the logical React root space.
-          // Godot has already localized native window input before _input.
-          auto page = fabric_godot::local_coordinate(host->get_global_transform_with_canvas(), point);
-          auto screen = point;
-          if (auto *window = host->get_window()) {
-            const auto transform = window->get_final_transform();
-            // Sample transform and density together: the first input after a
-            // content-scale change can precede the frame's metrics refresh.
-            Transform2D canvas_inverse;
-            if (!fabric_godot::coordinate_inverse(window->get_global_canvas_transform(), canvas_inverse))
-              return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
-            const auto density = (transform * canvas_inverse).get_scale().x;
-            if (!std::isfinite(density) || density <= 0)
-              return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
-            screen = (Vector2(window->get_position()) + transform.xform(point)) / density;
-          }
+          // Capture the source frame with the native sample; modal input uses
+          // its own viewport and cannot borrow a mutable surface transform.
+          auto page = fabric_godot::local_coordinate(physical->boundary_to_viewport, point);
+          const auto screen = source.viewport_to_screen.xform(point);
           return fabric_godot::PointerAdapter::Coordinates{page, screen};
         },
         [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); },
         [this, id](int tag, bool root_target, const std::string &phase, rn::PointerEvent event, Vector2 point,
+            fabric_godot::PointerInputSource source,
             std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
-          pointer_event(id, tag, root_target, phase, std::move(event), point, std::move(history));
+          pointer_event(id, tag, root_target, phase, std::move(event), point, std::move(source), std::move(history));
         },
         [this, id]() {
           // Every root of this application shares one Hermes runtime and so
@@ -617,6 +771,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           }
           return active;
         });
+    if (modal_stack.is_null()) modal_stack = fabric_godot::ModalWindowStack::for_window(*owner_window);
+    std::weak_ptr<Impl> weak = shared_from_this();
+    modal_stack->register_runtime(*owner_window, runtime_id, [weak] {
+      auto runtime = weak.lock();
+      if (!runtime || runtime->inactive()) return false;
+      for (auto &[surface_id, root] : runtime->roots)
+        if (root->pointer) root->pointer->cancel();
+      runtime->synchronize_pointer_routes();
+      return !runtime->inactive();
+    });
     if (defer_start) surface.start_pending = true;
     else start_root(id);
     return id;
@@ -643,29 +807,59 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     jsi::Object result(rt);
     result.setProperty(rt, "width", viewport_size.x);
     result.setProperty(rt, "height", viewport_size.y);
-    result.setProperty(rt, "scale", host_metrics.scale);
+    result.setProperty(rt, "scale", host_metrics->get().scale);
     result.setProperty(rt, "fontScale", 1);
     return result;
   }
   folly::dynamic device_dimensions() const {
+    const auto current = host_metrics->get();
     auto metrics = [&](Vector2 size) {
       // Font scaling remains the actual Fabric layout multiplier (1). OS text
       // preferences/insets are still pending; they are not fabricated here.
       return folly::dynamic::object("width", size.x)("height", size.y)
-          ("scale", host_metrics.scale)("fontScale", 1);
+          ("scale", current.scale)("fontScale", 1);
     };
-    return folly::dynamic::object("window", metrics(host_metrics.size))
-        ("screen", metrics(host_metrics.screen));
+    return folly::dynamic::object("window", metrics(current.size))
+        ("screen", metrics(current.screen));
   }
   void update_viewport() {
     const auto next = read_window();
-    if (next.window_instance_id != host_metrics.window_instance_id)
+    const auto previous = host_metrics->get();
+    if (next.window_instance_id != previous.window_instance_id)
       throw std::runtime_error("A live Fabric application cannot migrate between native Windows");
     refresh_rate = next.refresh_rate;
     pacing = next.pacing;
     pacing_source = next.pacing_source;
     if (next.size.x <= 0 || next.size.y <= 0) return;
-    const bool density_changed = next.scale != host_metrics.scale;
+    const bool density_changed = next.scale != previous.scale;
+    const bool size_changed = next.size != previous.size;
+    if (size_changed || density_changed || next.screen != previous.screen) {
+      host_metrics->set(next);
+      viewport_size = next.size;
+      ++viewport_updates;
+      if (size_changed) {
+        const rn::Size screen_size{.width = static_cast<rn::Float>(next.size.x),
+            .height = static_cast<rn::Float>(next.size.y)};
+        std::vector<std::pair<std::shared_ptr<fabric_godot::ModalPresentation>,
+            std::shared_ptr<const rn::ModalHostViewShadowNode::ConcreteState>>> modal_states;
+        for (const auto &[tag, mounted] : views) {
+          if (!mounted.modal) continue;
+          std::shared_ptr<const rn::ModalHostViewShadowNode::ConcreteState> state;
+          if (mounted.shadow.state)
+            state = std::dynamic_pointer_cast<const rn::ModalHostViewShadowNode::ConcreteState>(
+                mounted.shadow.state);
+          modal_states.emplace_back(mounted.modal, std::move(state));
+        }
+        for (const auto &[modal, state] : modal_states) {
+          if (inactive()) break;
+          modal->resize(next.size);
+          if (!state) continue;
+          if (state->getData().screenSize.width == screen_size.width &&
+              state->getData().screenSize.height == screen_size.height) continue;
+          state->updateState(rn::ModalHostViewState(screen_size));
+        }
+      }
+    }
     for (auto &[id, root] : roots) {
       if (root->stopping) continue;
       auto *host = root->host();
@@ -682,12 +876,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         tree.commit([&](const rn::RootShadowNode &node) { return node.clone({id, *context}, constraints, layout); }, {});
       });
     }
-    if (next.size == host_metrics.size && next.screen == host_metrics.screen &&
-        !density_changed) return;
-    host_metrics = next;
-    viewport_size = next.size;
-    ++viewport_updates;
-    work.push_back([this, dimensions = device_dimensions()](jsi::Runtime &rt) {
+    if (!size_changed && !density_changed && next.screen == previous.screen) return;
+    const auto dimensions = device_dimensions();
+    work.push_back([this, dimensions](jsi::Runtime &rt) {
       auto emitter = rt.global().getProperty(rt, "__rctDeviceEventEmitter");
       if (emitter.isObject()) {
         auto object = emitter.asObject(rt);
@@ -976,25 +1167,50 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     auto found = roots.find(id);
     if (found == roots.end() || found->second->stopping) return;
-    auto &root = *found->second;
-    root.stopping = true;
+    found->second->stopping = true;
     retire_pointers(id);
-    root.start_pending = false;
+    found->second->start_pending = false;
     pending_retirements.emplace(id, legacy_hook);
     // A native child removal can emit game signals during this transaction.
     // Detaching an ancestor from such a signal re-enters Godot's tree mutation.
     // Revoke authority now; the independent phase disposes this live host after
     // the outer child-removal stack has returned. Other callbacks retain the
     // immediate detachment required when a game frees the Surface itself.
-    if (root.child_removal_depth) return;
-    // The Node may be destroyed by the game before deferred React cleanup.
-    // Detach only this root's top-level owned Controls, retaining the entire
-    // native subtree and adapters until the independent phase can dispose it.
-    if (auto *host = root.host()) {
-      std::vector<Control *> detach;
-      for (const auto &[tag, mounted] : views)
-        if (mounted.surface_id == id && mounted.control->get_parent() == host) detach.push_back(mounted.control);
-      for (auto *control : detach) if (control->get_parent() == host) host->remove_child(control);
+    if (found->second->child_removal_depth) return;
+    const uint64_t host_id = found->second->host_id;
+    std::vector<uint64_t> root_controls;
+    std::vector<std::pair<std::shared_ptr<fabric_godot::ModalPresentation>, uint64_t>> presentations;
+    std::vector<std::pair<uint64_t, uint64_t>> modal_controls;
+    if (auto *host = found->second->host()) {
+      for (const auto &[tag, mounted] : views) {
+        if (mounted.surface_id != id) continue;
+        if (mounted.control->get_parent() == host) root_controls.push_back(mounted.control->get_instance_id());
+        if (!mounted.modal) continue;
+        auto modal = mounted.modal;
+        auto *window = modal->window();
+        if (!window) continue;
+        presentations.emplace_back(modal, window->get_instance_id());
+        if (mounted.control->get_parent() == window)
+          modal_controls.emplace_back(mounted.control->get_instance_id(), window->get_instance_id());
+      }
+    }
+    // Remove ordinary root controls before modal visibility callbacks can free
+    // the Surface. IDs are re-resolved after each Godot tree mutation.
+    for (uint64_t control_id : root_controls) {
+      auto *host = Object::cast_to<Node>(ObjectDB::get_instance(host_id));
+      auto *control = Object::cast_to<Node>(ObjectDB::get_instance(control_id));
+      if (host && control && control->get_parent() == host) host->remove_child(control);
+    }
+    for (const auto &[modal, window_id] : presentations) {
+      auto *window = Object::cast_to<Window>(ObjectDB::get_instance(window_id));
+      if (window && modal->window() == window && window->is_visible()) modal->hide();
+    }
+    // A callback may destroy the Surface, revoke a presentation, or stop the
+    // runtime. Resolve both endpoints again before detaching modal content.
+    for (const auto &[control_id, window_id] : modal_controls) {
+      auto *window = Object::cast_to<Node>(ObjectDB::get_instance(window_id));
+      auto *control = Object::cast_to<Node>(ObjectDB::get_instance(control_id));
+      if (window && control && control->get_parent() == window) window->remove_child(control);
     }
   }
   void finalize_unmount(int id, bool legacy_hook = false) {
@@ -1026,17 +1242,29 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         mounted.control->get_parent()->remove_child(mounted.control);
     for (auto it = views.begin(); it != views.end();) {
       if (it->second.surface_id != id) { ++it; continue; }
+      forget_logical_tag(it->first);
       retiring.insert(it->first);
       native_tags.erase(it->second.control);
       if (it->second.external) { it->second.external->dispose(); it->second.external.reset(); }
+      auto modal = it->second.modal;
       memdelete(it->second.control);
+      destroy_modal(std::move(modal));
       retiring.erase(it->first);
       it = views.erase(it);
       ++root.deletes;
     }
+    forget_logical_tag(id);
     root.stopped = true;
-    if (auto *host = root.host()) host->native_unmounted(runtime_id, id, gd(snapshot(id)));
+    auto *host = root.host();
+    auto retired = folly::parseJson(snapshot(id));
     roots.erase(id);
+    if (roots.empty() && modal_stack.is_valid()) {
+      modal_stack->unregister_runtime(runtime_id);
+      modal_stack.unref();
+    }
+    retired["rootCount"] = roots.size();
+    retired["modalRuntimeMembers"] = modal_stack.is_valid() ? modal_stack->runtime_count() : 0;
+    if (host) host->native_unmounted(runtime_id, id, gd(folly::toJson(retired)));
   }
   void stop() {
     if (stopped || stopping) return;
@@ -1075,6 +1303,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (adapters) {
       try { adapters->dispose_modules(); }
       catch (const std::exception &error) { fail(error.what()); }
+    }
+    if (modal_stack.is_valid()) {
+      modal_stack->unregister_runtime(runtime_id);
+      modal_stack.unref();
     }
     ui->setDelegate(nullptr);
     rn::UIManagerBinding::getBinding(*runtime)->setPointerEventProjectionForGodot({});
@@ -1129,6 +1361,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (!control->is_visible()) cancel_subtree(control);
     if (mounted.external) {
       mounted.external->update(previous, shadow);
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
+    if (kind == "modal") {
+      const auto modal_props = std::static_pointer_cast<const rn::ModalHostViewProps>(shadow.props);
+      auto modal = mounted.modal;
+      if (!modal) throw std::runtime_error("E_MODAL_WINDOW: mounted Modal has no presentation owner");
+      if (!modal->apply(*modal_props, host_metrics->get().size)) return;
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
       apply_frame(mounted);
       return;
@@ -1202,6 +1443,44 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     apply_frame(mounted);
   }
 
+  void present_modals(int surface_id) {
+    auto root = roots.find(surface_id);
+    if (root == roots.end() || root->second->stopping || !root->second->host() ||
+        !root->second->host()->get_window()) return;
+    std::vector<std::pair<int, uint64_t>> candidates;
+    for (const auto &[tag, mounted] : views)
+      if (mounted.surface_id == surface_id && mounted.modal)
+        candidates.emplace_back(tag, mounted.mount_id);
+
+    for (const auto &[tag, mount_id] : candidates) {
+      root = roots.find(surface_id);
+      auto mounted = views.find(tag);
+      if (root == roots.end() || root->second->stopping || mounted == views.end() ||
+          mounted->second.surface_id != surface_id || mounted->second.mount_id != mount_id ||
+          !mounted->second.shadow.props) continue;
+      auto modal = mounted->second.modal;
+      if (!modal) continue;
+      const auto props = std::static_pointer_cast<const rn::ModalHostViewProps>(mounted->second.shadow.props);
+      if (!props->visible) {
+        if (modal->visible()) modal->hide();
+        continue;
+      }
+      if (modal->visible()) continue;
+      if (!modal->present()) continue;
+
+      root = roots.find(surface_id);
+      mounted = views.find(tag);
+      if (root == roots.end() || root->second->stopping || mounted == views.end() ||
+          mounted->second.surface_id != surface_id || mounted->second.mount_id != mount_id ||
+          !mounted->second.shadow.props || !mounted->second.shadow.eventEmitter) continue;
+      const auto current_props = std::static_pointer_cast<const rn::ModalHostViewProps>(mounted->second.shadow.props);
+      if (!current_props->visible || !modal->visible()) continue;
+      ++root->second->events;
+      std::static_pointer_cast<const rn::ModalHostViewEventEmitter>(
+          mounted->second.shadow.eventEmitter)->onShow({});
+    }
+  }
+
   static void apply_frame(Mounted &mounted) {
     const auto size = Vector2(mounted.shadow.layoutMetrics.frame.size.width,
         mounted.shadow.layoutMetrics.frame.size.height);
@@ -1250,13 +1529,46 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::weak_ptr<Impl> owner = shared_from_this();
     const auto thread = host_thread;
     const bool takes_argument = signal == CoreControlSignal::Change || signal == CoreControlSignal::Submit ||
-        signal == CoreControlSignal::Key || signal == CoreControlSignal::Toggle;
+        signal == CoreControlSignal::Key || signal == CoreControlSignal::Toggle ||
+        signal == CoreControlSignal::ModalWindowInput;
     return Callable(memnew(GodotCoreControlCallback(takes_argument ? 1 : 0,
-        signal == CoreControlSignal::Key ? Variant::OBJECT : signal == CoreControlSignal::Toggle ? Variant::BOOL : Variant::STRING,
+        signal == CoreControlSignal::Key || signal == CoreControlSignal::ModalWindowInput ? Variant::OBJECT :
+            signal == CoreControlSignal::Toggle ? Variant::BOOL : Variant::STRING,
         [owner, thread, surface_id, tag, mount_id, signal](const Variant **args) {
           auto [guard, mounted] = live_mount(owner, thread, surface_id, tag, mount_id);
           if (!mounted) return;
           ExecutionScope execution(*guard);
+          if (signal == CoreControlSignal::ModalWindowInput) {
+            auto &root = guard->roots.at(surface_id);
+            Ref<InputEvent> event = static_cast<Ref<InputEvent>>(*args[0]);
+            const bool pointer_sample = Object::cast_to<InputEventMouse>(event.ptr()) ||
+                Object::cast_to<InputEventScreenTouch>(event.ptr()) ||
+                Object::cast_to<InputEventScreenDrag>(event.ptr());
+            auto modal = mounted->modal;
+            auto *window = modal ? modal->window() : nullptr;
+            if (pointer_sample && window) {
+              auto source = guard->modal_pointer_source(surface_id, tag, mount_id);
+              if (source) {
+                bool blocked = false;
+                if (guard->routed_input(surface_id, *root, event, *source, blocked)) {
+                  guard->pump();
+                  if (blocked)
+                    if (auto *still_open = modal->window()) still_open->set_input_as_handled();
+                }
+              }
+              return;
+            }
+            auto *key = Object::cast_to<InputEventKey>(event.ptr());
+            if (!key || !window || !window->is_exclusive() || !key->is_pressed() || key->is_echo() ||
+                key->get_keycode() != Key::KEY_ESCAPE) return;
+            if (mounted->shadow.componentName != std::string(rn::ModalHostViewComponentName) ||
+                !mounted->shadow.eventEmitter) return;
+            window->set_input_as_handled();
+            ++root->events;
+            std::static_pointer_cast<const rn::ModalHostViewEventEmitter>(
+                mounted->shadow.eventEmitter)->onRequestClose({});
+            return;
+          }
           if (signal == CoreControlSignal::Activate) {
             if (component_kind(mounted->shadow) != "button" || !mounted->shadow.eventEmitter) return;
             ++guard->roots.at(surface_id)->events;
@@ -1337,6 +1649,34 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     return tag;
   }
+  int physical_hit_test(const fabric_godot::PointerInputSource &source, Vector2 point) const {
+    auto physical = physical_input_host(source);
+    return physical && physical->control_root ? hit_test(physical->control_root, point) : 0;
+  }
+  std::vector<int> physical_hit_path(int tag,
+      const fabric_godot::PointerInputSource &source) const {
+    std::vector<int> result;
+    auto physical = physical_input_host(source);
+    auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(source.surface);
+    const auto *target = revision ? find_family(*revision, tag) : nullptr;
+    if (!physical || !target) return result;
+    auto embedding = fabric_godot::PhysicalEmbedding::capture(std::move(revision), *target);
+    if (!embedding || embedding->boundary().getFamilyShared() != source.boundary_family) return result;
+    const auto &path = embedding->path();
+    for (std::size_t index = path.size(); index-- > embedding->boundary_index();) {
+      const int current = path[index]->getTag();
+      if (current != source.boundary_tag && views.contains(current)) result.push_back(current);
+    }
+    return result;
+  }
+  bool physical_inside(const fabric_godot::PointerInputSource &source, Vector2 point) const {
+    auto physical = physical_input_host(source);
+    if (!physical || !physical->control_root) return false;
+    auto *host = physical->control_root;
+    const auto local = fabric_godot::local_coordinate(host->get_global_transform_with_canvas(), point);
+    return host->is_visible_in_tree() && local.is_finite() &&
+        Rect2(Vector2(), host->get_size()).has_point(local);
+  }
   bool wheel(Root &surface, const Ref<InputEvent> &event) {
     auto *mouse = Object::cast_to<InputEventMouseButton>(event.ptr());
     if (!mouse || !mouse->is_pressed()) return false;
@@ -1395,6 +1735,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       } else it = pointer_routes.erase(it);
     }
   }
+  void retire_pointer_endpoint(uint64_t window_id) {
+    auto &processor = pointer_processor();
+    for (auto route = pointer_routes.begin(); route != pointer_routes.end();) {
+      if (std::get<0>(route->first) != window_id) { ++route; continue; }
+      processor.removePointerForGodot(route->second.id);
+      pending_pointer_removals.erase(route->second.id);
+      route = pointer_routes.erase(route);
+    }
+  }
+  void destroy_modal(std::shared_ptr<fabric_godot::ModalPresentation> modal) {
+    if (!modal) return;
+    if (auto *window = modal->window()) retire_pointer_endpoint(window->get_instance_id());
+    modal->destroy();
+  }
   void synchronize_pointer_routes() {
     for (auto it = pointer_routes.begin(); it != pointer_routes.end();) {
       auto root = roots.find(it->second.surface);
@@ -1414,31 +1768,23 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::shared_ptr<const rn::ShadowNode> root_pointer_target(const rn::EventPayload &payload) const {
     const auto *sample = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&payload);
     if (!sample || !sample->root_target || inactive()) return nullptr;
-    auto root = roots.find(sample->source_surface);
+    auto root = roots.find(sample->source.surface);
     if (root == roots.end() || root->second->stopping) return nullptr;
-    std::shared_ptr<const rn::ShadowNode> node;
-    ui->getShadowTreeRegistry().visit(sample->source_surface, [&node](const rn::ShadowTree &tree) {
-      node = tree.getCurrentRevision().rootShadowNode;
-    });
-    return node;
+    auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(sample->source.surface);
+    if (!revision) return nullptr;
+    if (sample->source.boundary_tag == sample->source.surface) return revision;
+    const auto *boundary = find_family(*revision, sample->source.boundary_tag);
+    return boundary && boundary->getFamilyShared() == sample->source.boundary_family ?
+        std::shared_ptr<const rn::ShadowNode>(revision, boundary) : nullptr;
   }
   bool project_pointer(const rn::ShadowNode &target, const rn::EventPayload &source, rn::PointerEvent &event) {
     const auto *sample = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&source);
     // Other native adapters can still supply ordinary upstream PointerEvents.
     if (!sample) return true;
-    auto origin = roots.find(sample->source_surface);
+    auto origin = roots.find(sample->source.surface);
     auto root = roots.find(target.getSurfaceId());
     if (inactive() || origin == roots.end() || root == roots.end() ||
         origin->second->stopping || root->second->stopping || retiring.contains(target.getTag())) return false;
-    auto *host = root->second->host();
-    auto *source_host = origin->second->host();
-    if (!host || !source_host || !host->is_inside_tree() || !source_host->is_inside_tree() ||
-        !host->get_window() || !host->get_viewport() ||
-        !source_host->get_window() || !source_host->get_viewport() ||
-        source_host->get_window()->get_instance_id() != sample->window_id ||
-        source_host->get_viewport()->get_instance_id() != sample->viewport_id ||
-        host->get_window()->get_instance_id() != sample->window_id ||
-        host->get_viewport()->get_instance_id() != sample->viewport_id) return false;
     // Upstream unique moves can replace an earlier queue slot, so their native
     // sample serials need not be dispatched in increasing order. Older samples
     // still deliver normally, but cannot erase the newest cancellation history.
@@ -1448,8 +1794,26 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::optional<Vector2> offset;
     bool hidden = false;
     try {
-      offset = fabric_godot::pointer_local_point(*ui, target, sample->viewport_point,
-        host->get_global_transform_with_canvas(), [this](rn::Tag tag) -> std::optional<Transform2D> {
+      auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(target.getSurfaceId());
+      auto embedding = revision ? fabric_godot::PhysicalEmbedding::capture(revision, target) : std::nullopt;
+      if (!embedding) return false;
+      auto source_revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(sample->source.surface);
+      auto source_host = physical_input_host(sample->source, std::move(source_revision));
+      auto target_host = physical_host(*embedding);
+      // RN may target another root or a logical ancestor outside a Modal's
+      // RootNodeKind. Keep the contact's original screen frame, then project it
+      // into the target viewport through Godot's captured host transforms.
+      if (!source_host || !target_host || !target_host->control_root->is_visible_in_tree() ||
+          source_host->owner_window->get_instance_id() !=
+          target_host->owner_window->get_instance_id()) return false;
+      Vector2 target_point = sample->viewport_point;
+      if (sample->source.viewport_id != target_host->viewport->get_instance_id()) {
+        Transform2D screen_to_target;
+        if (!coordinate_inverse(target_host->source.viewport_to_screen, screen_to_target)) return false;
+        target_point = screen_to_target.xform(sample->source.viewport_to_screen.xform(target_point));
+      }
+      offset = fabric_godot::pointer_local_point(*embedding, target_point,
+        target_host->boundary_to_viewport, [this](rn::Tag tag) -> std::optional<Transform2D> {
           auto mounted = views.find(tag);
           if (mounted == views.end() || retiring.contains(tag) ||
               !mounted->second.control->is_inside_tree()) return std::nullopt;
@@ -1482,11 +1846,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     return true;
   }
   void pointer_event(int id, int tag, bool root_target, const std::string &phase, rn::PointerEvent event, Vector2 point,
+      fabric_godot::PointerInputSource source,
       std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
     auto root = roots.find(id);
     if (inactive() || root == roots.end() || root->second->stopping) return;
-    auto *host = root->second->host();
-    if (!host || !host->get_window() || !host->get_viewport()) return;
+    if (!physical_input_host(source)) return;
     auto found = views.find(tag);
     const bool mounted = tag && found != views.end() && !retiring.contains(tag) && found->second.shadow.eventEmitter;
     // A click names the view both hit paths share. RN routes it through no
@@ -1496,8 +1860,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const auto timestamp = event.timeStamp;
     // A click ends its contact like Up: it never borrows geometry from another
     // target and never raises a geometry error for an embedding that changed.
-    const auto payload = std::make_shared<fabric_godot::GodotPointerEvent>(std::move(event), point, id,
-        host->get_window()->get_instance_id(), host->get_viewport()->get_instance_id(), std::move(history),
+    const auto payload = std::make_shared<fabric_godot::GodotPointerEvent>(std::move(event), point,
+        std::move(source), std::move(history),
         phase == "cancel" || phase == "up" || phase == "leave" || phase == "click", root_target && !tag);
     const std::string type = phase == "down" ? "pointerDown" : phase == "up" ? "pointerUp" :
         phase == "cancel" ? "pointerCancel" : phase == "leave" ? "pointerLeave" : phase == "click" ? "click" :
@@ -1520,12 +1884,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (phase == "move") emitter->dispatchUniqueEvent(type, payload, timestamp);
     else emitter->dispatchEvent(type, payload, category, timestamp);
   }
-  std::optional<PointerKey> pointer_key(Root &source, const Ref<InputEvent> &event, Vector2 &position) {
-    if (event.is_null() || event->get_device() == -1) return std::nullopt;
-    auto *host = source.host();
-    if (!host || !host->is_inside_tree()) return std::nullopt;
-    const auto viewport = host->get_viewport()->get_instance_id();
-    const auto window = host->get_window() ? host->get_window()->get_instance_id() : viewport;
+  std::optional<PointerKey> pointer_key(const fabric_godot::PointerInputSource &source,
+      const Ref<InputEvent> &event, Vector2 &position) {
+    if (event->get_device() == -1) return std::nullopt;
+    if (!physical_input_host(source)) return std::nullopt;
+    const auto viewport = source.viewport_id;
+    const auto window = source.window_id;
     if (auto *mouse = Object::cast_to<InputEventMouse>(event.ptr())) {
       if (auto *button = Object::cast_to<InputEventMouseButton>(event.ptr())) {
         const auto index = button->get_button_index();
@@ -1555,20 +1919,32 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     return result;
   }
-  bool routed_input(int caller, Root &source, const Ref<InputEvent> &event, bool &blocked) {
+  bool routed_input(int caller, Root &source, const Ref<InputEvent> &event,
+      const fabric_godot::PointerInputSource &input_source, bool &blocked) {
+    if (event.is_null()) return false;
+    // Emulated mouse and wheel events can have no RN pointer key, but still
+    // must be consumed before Godot GUI hit-testing a singular Control.
+    if (auto *host = source.host(); host && host->has_meta("validation_input_device") &&
+        (event->is_class("InputEventMouse") || event->is_class("InputEventScreenTouch") ||
+            event->is_class("InputEventScreenDrag")) &&
+        event->get_device() != static_cast<int>(host->get_meta("validation_input_device"))) {
+      blocked = true;
+      return true;
+    }
     Vector2 position;
-    auto key = pointer_key(source, event, position);
+    auto key = pointer_key(input_source, event, position);
     if (!key) return false;
     // Godot forwards one InputEvent to several Surface _input callbacks. Keep
     // its one physical sample owned by the first selected root even after Up.
     // A repeated caller starts a new dispatch when a game reuses an event Ref.
     const uint64_t event_id = event->get_instance_id();
-    if (last_pointer_event != event_id || pointer_event_callers.contains(caller)) {
+    const auto caller_key = std::pair{caller, input_source.window_id};
+    if (last_pointer_event != event_id || pointer_event_callers.contains(caller_key)) {
       last_pointer_event = event_id;
       pointer_event_callers.clear();
       pointer_event_delivered = false;
     }
-    pointer_event_callers.insert(caller);
+    pointer_event_callers.insert(caller_key);
     if (pointer_event_delivered) return false;
     auto found = pointer_routes.find(*key);
     const bool mouse = std::get<3>(*key);
@@ -1598,7 +1974,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       }
     }
     int selected = found != pointer_routes.end() && found->second.active ? found->second.surface :
-        pointer_hit_surface(std::get<1>(*key), position);
+        input_source.boundary_tag == caller ? pointer_hit_surface(std::get<1>(*key), position) : caller;
     if (!selected && found != pointer_routes.end() && mouse) selected = found->second.surface;
     if (!selected || selected != caller) return false;
     auto target = roots.find(selected);
@@ -1638,7 +2014,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       route.active = touch->is_pressed() && !touch->is_canceled();
     const bool terminal = !mouse && !route.active;
     blocked = target->second->pointer->blocks_native();
-    const bool accepted = target->second->pointer->input(event, route.id, route.primary);
+    const bool accepted = target->second->pointer->input(event, route.id, route.primary, input_source);
     const bool invalid = target->second->pointer->invalid_coordinates();
     blocked = blocked || invalid;
     if (terminal) { pointer_routes.erase(*key); pending_pointer_removals.insert(pointer_id); }
@@ -1659,10 +2035,21 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ++surface.commits;
     auto *focused = host.get_viewport()->gui_get_focus_owner();
     uint64_t focus_id = focused ? focused->get_instance_id() : 0;
-    auto parent = [this, &host, surface_id](int tag) -> Control * {
-      if (tag == surface_id) return &host;
+    struct MountPoint {
+      Node *node;
+      int index;
+    };
+    auto parent = [this, &host, surface_id](int tag, int child_tag) -> MountPoint {
+      auto &child = views.at(child_tag);
+      if (child.modal) {
+        auto *window = child.modal->window();
+        if (!window) throw std::runtime_error("E_MODAL_WINDOW: insert target Window was retired");
+        return {window, 0};
+      }
+      if (tag == surface_id) return {&host, -1};
       auto &mounted = views.at(tag);
-      return mounted.external ? mounted.external->children_host() : mounted.control;
+      if (mounted.modal) return {mounted.control, -1};
+      return {mounted.external ? static_cast<Node *>(mounted.external->children_host()) : mounted.control, -1};
     };
     std::map<int, int> inserted_parents;
     for (const auto &mutation : transaction->getMutations()) {
@@ -1681,6 +2068,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         case rn::ShadowViewMutation::Create: {
           const auto kind = component_kind(next);
           Control *control = nullptr;
+          Window *modal_window = nullptr;
+          std::shared_ptr<fabric_godot::ModalPresentation> modal;
           std::unique_ptr<fabric_godot::AdapterView> external;
           const auto mount_id = next_mount_id++;
           const auto *selected = adapters ? adapters->component(next.componentHandle) : nullptr;
@@ -1718,6 +2107,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
               if (control && !control->get_parent() && !control->is_inside_tree() && !native_tags.contains(control)) memdelete(control);
               throw std::runtime_error("E_ADAPTER_VIEW: expected an off-tree Control and a contained children host");
             }
+          } else if (kind == "modal") {
+            auto *host = surface.host();
+            auto *owner_window = host ? host->get_window() : nullptr;
+            if (!owner_window) throw std::runtime_error("E_MODAL_WINDOW: Fabric root has no host Window");
+            modal = fabric_godot::ModalPresentation::create(*owner_window,
+                {runtime_id, surface_id, next.tag, mount_id}, host_metrics->get().size);
+            modal_window = modal->window();
+            if (!modal_window) throw std::runtime_error("E_MODAL_WINDOW: stack failed to retain its Window");
+            auto *panel = memnew(Panel);
+            panel->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
+            control = panel;
           } else if (next.componentName == std::string(rn::AppleSwitchComponentName)) {
             auto *toggle = memnew(GodotSwitch);
             toggle->connect("toggled", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Toggle));
@@ -1747,6 +2147,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           } else throw std::runtime_error("Unsupported GodotControl kind: " + kind);
           native_tags.emplace(control, next.tag);
           auto entry = views.emplace(next.tag, Mounted{control, {}, surface_id, false, {}, {}, std::move(external), mount_id}).first;
+          entry->second.modal = std::move(modal);
           if (!entry->second.external) {
           if (auto *scroll = Object::cast_to<ScrollContainer>(control))
             entry->second.scroll = std::make_unique<fabric_godot::ScrollAdapter>(*scroll);
@@ -1758,6 +2159,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             input->connect("text_submitted", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Submit));
             input->connect("gui_input", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Key));
           }
+          if (modal_window)
+            modal_window->connect("window_input", core_control_signal(
+                surface_id, next.tag, mount_id, CoreControlSignal::ModalWindowInput));
           }
           ++surface.creates;
           apply(next);
@@ -1765,14 +2169,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         }
         case rn::ShadowViewMutation::Insert: {
           auto *control = views.at(next.tag).control;
-          if (control->get_parent() != parent(mutation.parentTag))
-            parent(mutation.parentTag)->add_child(control);
+          auto mount_point = parent(mutation.parentTag, next.tag);
+          const auto physical_index = insert_logical_child(
+              mutation.parentTag, next.tag, mutation.index, mount_point.node);
+          if (control->get_parent() != mount_point.node)
+            mount_point.node->add_child(control);
           if (surface.stopping || inactive()) break;
-          parent(mutation.parentTag)->move_child(control, mutation.index);
+          mount_point.node->move_child(control, mount_point.index < 0 ? physical_index : mount_point.index);
           apply(next);
           break;
         }
         case rn::ShadowViewMutation::Remove:
+          remove_logical_child(mutation.parentTag, old.tag);
           // A same-parent keyed move is a reorder, not a native detachment.
           // Detaching a focused LineEdit cancels its editing/IME session.
           if (!inserted_parents.contains(old.tag) || inserted_parents.at(old.tag) != mutation.parentTag) {
@@ -1781,15 +2189,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             // recovery still retires that node, but it was never attached.
             if (control->get_parent()) {
               ChildRemovalScope removal(surface.child_removal_depth);
-              parent(mutation.parentTag)->remove_child(control);
+              parent(mutation.parentTag, old.tag).node->remove_child(control);
             }
           }
           break;
         case rn::ShadowViewMutation::Delete: {
           auto entry = views.extract(old.tag);
+          forget_logical_tag(old.tag);
           native_tags.erase(entry.mapped().control);
           if (entry.mapped().external) { entry.mapped().external->dispose(); entry.mapped().external.reset(); }
+          auto modal = entry.mapped().modal;
+          if (entry.mapped().control->get_parent())
+            entry.mapped().control->get_parent()->remove_child(entry.mapped().control);
           memdelete(entry.mapped().control);
+          destroy_modal(std::move(modal));
           ++surface.deletes;
           break;
         }
@@ -1810,6 +2223,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     for (auto &[tag, mounted] : views)
       if (!roots.at(mounted.surface_id)->stopping && mounted.scroll) mounted.scroll->layout();
+    present_modals(surface_id);
     apply_pointer_filters();
     for (auto &[tag, mounted] : views) {
       if (roots.at(mounted.surface_id)->stopping) continue;
@@ -1958,6 +2372,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   folly::dynamic status() {
     folly::dynamic result = folly::dynamic::object("runtimeId", static_cast<int64_t>(runtime_id))
         ("rootCount", roots.size())("bundleEvaluations", bundle_evaluations)("stopped", stopped)
+        ("modalRuntimeMembers", modal_stack.is_valid() ? modal_stack->runtime_count() : 0)
         ("pendingTimers", timer_registry->size())("pendingWork", work.size())
         ("pointerListenerQueryInstalled", pointer_listener_query.has_value())
         ("pointerListenerQuerySuppressed", static_cast<int64_t>(suppressed_sample_query_failures))
@@ -2041,6 +2456,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("fabricX", mounted.shadow.layoutMetrics.frame.origin.x)
           ("fabricY", mounted.shadow.layoutMetrics.frame.origin.y)
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
+      if (mounted.modal) {
+        if (auto *window = mounted.modal->window())
+          node["modalWindow"] = folly::dynamic::object
+              ("id", static_cast<int64_t>(window->get_instance_id()))
+              ("parentId", static_cast<int64_t>(window->get_parent()->get_instance_id()))
+              ("width", window->get_size().x)("height", window->get_size().y)
+              ("visible", window->is_visible())("embedded", window->is_embedded())
+              ("exclusive", window->is_exclusive());
+      }
       if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
       if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input" ||
@@ -2128,8 +2552,10 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
   auto &root = *found->second;
   if (guard->wheel(root, event)) { guard->pump(); return true; }
+  auto source = guard->root_pointer_source(id);
+  if (!source) return false;
   bool blocked = false;
-  if (!guard->routed_input(id, root, event, blocked)) return false;
+  if (!guard->routed_input(id, root, event, *source, blocked)) return false;
   guard->pump();
   found = guard->roots.find(id);
   return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());

@@ -1,0 +1,210 @@
+{
+  "format": "godot-fabric.modal-retired-window-routes-local/v1",
+  "checkedAt": "2026-10-07T21:01:50.926110+00:00",
+  "reviewer": "root",
+  "sameProbeFixtureBundleAsNegative": true,
+  "negativeReceipt": "retired-window-routes-negative.json",
+  "nativeHostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+  "checks": 44,
+  "passed": true,
+  "tenCycles": [
+    {
+      "cycle": 0,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 2.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 1,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 3.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 2,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 4.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 3,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 5.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 4,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 6.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 5,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 7.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 6,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 8.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 7,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 9.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 8,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 10.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    },
+    {
+      "cycle": 9,
+      "pointerProcessor": {
+        "active": 0.0,
+        "activeCapture": 0.0,
+        "hover": 0.0,
+        "pendingCapture": 0.0
+      },
+      "pointerRouting": {
+        "active": 0.0,
+        "contacts": 0.0,
+        "hoverPointers": 0.0,
+        "nextId": 11.0,
+        "stored": 0.0,
+        "suppressed": 0.0
+      }
+    }
+  ],
+  "destroyedDistinctWindowIds": [
+    27162314215,
+    28672263662,
+    29980886511,
+    31289509370,
+    32598132217,
+    33923532285,
+    35232155097,
+    36540777947,
+    37849400822,
+    39174800866
+  ],
+  "runtimeErrors": [],
+  "files": {
+    "addons/fabric_godot.dylib": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+    "fixture.jsx": "ecd6cb53861af36c1ad5092700070e910af7938390a9e54ca6a9336fe5ea8a8f",
+    "tests/probe.gd": "e9fca35445e7f4877ceca39024e50f2955262a6cd417b91da42a2f9426e7323e",
+    "build/modal-discriminators-probe.js": "334c8fe0af9220c1761af0f3e916b0456df172e60a06f7d463e35aa8a8f50e7c",
+    "headless.log": "c8d6e63dd9afc9a5d5c0b4700c4a01ab508af6d422ff969347dc32261bb79d0c",
+    "build/modal-discriminators/capture-tombstone-report.json": "4779436dfd9a5809ef0048a4f2e3d93ec2951ebd00e77b4f8109f86b59d3aa9e"
+  },
+  "sourceReceiptDoesNotCertifyNativeBuild": true,
+  "limits": {
+    "sameLiveWindowSuppressionCertifiedByThisFixture": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  }
+}

@@ -147,6 +147,17 @@ export declare const Image: React.ComponentType<ImageProps & React.RefAttributes
 export declare const ImageBackground: React.ComponentType<ImageBackgroundProps & React.RefAttributes<NativeInstance>>;
 /** RN's AssetRegistry, which the bundled asset modules register their descriptors in. */
 export declare const AssetRegistry: typeof RN.AssetRegistry;
+/** RN's original Modal with the Godot presentation and lifecycle props. */
+export type ModalProps = Pick<RN.ModalProps, "visible" | "transparent" | "onShow" | "onRequestClose" |
+  "testID" | "children" | "backdropColor"> & {
+  animationType?: "none";
+  presentationStyle?: "fullScreen" | "overFullScreen";
+};
+/** RN's original Modal with the subset currently hosted by Godot. */
+export declare const Modal: React.ComponentType<ModalProps>;
+/** RN's original SafeAreaView maps to the View path on Godot; device safe-area
+ * insets are not supplied by this desktop host. */
+export declare const SafeAreaView: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {

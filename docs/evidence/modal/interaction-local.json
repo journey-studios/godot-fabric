@@ -1,0 +1,315 @@
+{
+  "format": "godot-fabric.modal-interaction-local/v1",
+  "checkedAt": "2026-10-07T19:32:00.492275+00:00",
+  "publishedHead": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+  "implementationPublished": false,
+  "scope": {
+    "originalModal": true,
+    "originalSafeAreaDefaultView": true,
+    "publicTextInputAdapter": true,
+    "publicButtonAdapter": true,
+    "stockTextInputButtonJSParity": false,
+    "engineInjectedInput": true,
+    "hardwareInput": false,
+    "headlessChecks": 30,
+    "graphicalChecks": 34,
+    "independentlyRecomputedObservations": 44,
+    "renderedPixels": [
+      [
+        420,
+        320
+      ],
+      [
+        500,
+        350
+      ]
+    ],
+    "nestedOriginalRNModal": false,
+    "rnPointerGeometry": false,
+    "foreignOwnerStackTeardown": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  },
+  "headless": {
+    "reportSha256": "fb65dd8c92a376645f1918ed6e4fe9d6e723a042a167508fba01dc12bbfcdc40",
+    "logSha256": "3b8f2ff9341ceb00f2530423e365d4b3ed9f0747a052b1d5ad61f05e12cccaf1"
+  },
+  "graphical": {
+    "godot": "4.7.2-stable (official)",
+    "displayServer": "macOS",
+    "probeSha256": "86391aeaf137a396c09be4db48d8e82279b29f763934210a8e8b3faca63f8561",
+    "reportSha256": "df9153dcfd506d3562e79f69a41227325d14dcc9978306c01a5922fc0efad850",
+    "logSha256": "7f7c138ab92a7b7048b86bf51484852d174d159218b08c05f9b1c68b17c1e814",
+    "captures": {
+      "interaction-initial.png": "16bdf4faeb8ba15ac8e00eace9f96a7a2e2f727eadaa59d543fd4bb2086faef8",
+      "interaction-resized.png": "fba0d4771779493e0efcadc49942ee34f7fb5841525730f80e8df503dd765f74"
+    }
+  },
+  "independentObservations": [
+    {
+      "execution": "headless",
+      "name": "all expected producer checks passed",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "initial sibling embedded exclusive Window",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "initial original Modal Yoga dimensions",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "first original onLayout and onShow",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "native public TextInput controlled edit",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "public native Button click and blocked background",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "original requestClose without automatic dismissal",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "same Window resized through original Modal State",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "original RN resize onLayout recorded",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "visible toggle retires and presents a fresh Window exactly once",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "native input witnessed and owner stopped from visibility callback",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "all expected producer checks passed",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "initial sibling embedded exclusive Window",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "initial original Modal Yoga dimensions",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "first original onLayout and onShow",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "native public TextInput controlled edit",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "public native Button click and blocked background",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "original requestClose without automatic dismissal",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "same Window resized through original Modal State",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "original RN resize onLayout recorded",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root dimensions preserved",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "visible toggle retires and presents a fresh Window exactly once",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "native input witnessed and owner stopped from visibility callback",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "runtime diagnostic errors absent",
+      "passed": true
+    }
+  ],
+  "provenance": {
+    "node": "v22.23.3",
+    "nativeHostSha256": "ce3079a1d68f62095c8327ac4517b5f1248e3bde1b0b37671491ae8f8b72e07c",
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "bundleSha256": "4c3478997a7915161c6e3fb6acb5fb16388843df76d63a3d146c2d523712bd75",
+    "bundleInputCount": 340,
+    "bundleReceiptSha256": "3bb90a5c7042912142bb48d4f0a8cbdd51d423b88772168b3b2beabe2e3a58fb",
+    "sources": {
+      "tests/modal-host-fixture.jsx": "113167e3f1b6c114b44b96aec55e4bed9fcda3dbf22c7605aafdf16b991e5e7b",
+      "tests/modal-host-probe.gd": "3cb5c235c13b702685e37a04822a34e60b138420abd80d51e74547686aa705bf",
+      "tests/modal-host-native.test.mjs": "5bac2d8b090aff8166fed2b13c29d6a6e1ee7cbaf62dc9887090ec1705cbae19",
+      "scripts/modal-host-bundle.mjs": "59ce74220fdf7197ba42fa9d870f59b4cf447c97c49d62b28ac63c1f0085e07a",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+      "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+      "native/application_runtime.cpp": "43bce6aab8c0f1127a9aa4524dea9d0e144a2e7add46696152e1fa0c99e6e8e7",
+      "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+      "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+      "native/modal_window_stack.cpp": "691137b88fbf258cf91aa312e0f54e68677fcf78524c365ea391843eca6af2d5",
+      "native/modal_window_stack.h": "4219283c3aa8ef97125d8c48135ea5ae6be3865e879511f701dc690177f7978a",
+      "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+      "native/CMakeLists.txt": "d4e1cbfa1b23be845bcdf6a3a97b3a5f9d333471e07599101ecb36de67d8ee12",
+      "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535"
+    },
+    "originalReactNativeSources": {
+      "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+      "Libraries/Modal/RCTModalHostViewNativeComponent.js": "737ad639e5c189d0e01bbe31b30cf0f9691a901928529fbcbccfc6f190be4bdd",
+      "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js": "d8458e8b7a9036589f4633f8289d58bdcb6bfdba9716b7fcb8b03101e1b064cd",
+      "Libraries/Components/SafeAreaView/SafeAreaView.js": "4e673548079b02e4806c3e8ee8ea153da5abda17850b0dd498d25d925c7174dd",
+      "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+      "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.h": "0855c0f8ae339ac0d61f2601698ef65e3da37845ff83b7a4f1dec95aa646f65d",
+      "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm": "9b84a7d80d9b7afd58cec6827a4c5afbf4feb8dc29df0e19a7138eb5bf3bd96d",
+      "ReactAndroid/src/main/java/com/facebook/react/views/modal/ReactModalHostView.kt": "8c767b176b070a4034570fc94cda5e8898a87270b472fa56e0869ede241902e8",
+      "ReactCommon/react/renderer/components/modal/ModalHostViewShadowNode.cpp": "8be230fc06bfd55e95352a0bc03c347a7aa60bcbfc886830499b25c710981610",
+      "ReactCommon/react/renderer/components/modal/ModalHostViewComponentDescriptor.h": "257eb658668d0c4f6d4036df47cb22de18392183c315c5aa39a823fac4bd26be"
+    }
+  },
+  "limitations": [
+    "Native host hash identifies the executable rerun; no frozen SDK producer/build certification is claimed.",
+    "This captures the pre-extraction local implementation; subsequent native changes require fresh execution.",
+    "Background Button count alone does not prove all pointer/responder routing or nested stack authority.",
+    "The producer retains one original TextInput wording in a check label; the actual public TextInput/Button implementations are Godot adapters.",
+    "No checkpoint is closed by this local milestone."
+  ]
+}

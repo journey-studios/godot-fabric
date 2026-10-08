@@ -1,0 +1,53 @@
+{
+  "format": "godot-fabric.modal-review-gates/v1",
+  "checkedAt": "2026-10-07T20:56:58.184640+00:00",
+  "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+  "scope": "State before retired-endpoint P2 correction; no later native edits or hosted CI certified.",
+  "contracts": {
+    "nodeTests": 283,
+    "pythonTests": 13,
+    "passed": true,
+    "initialFailures": 4,
+    "cause": "Focused test bundler lacked SDK canonical __DEV__=false production define; focused DEV transform diagnostic remains tested separately."
+  },
+  "static": {
+    "entries": 209,
+    "issues": 0
+  },
+  "publication": {
+    "files": 1171,
+    "failures": []
+  },
+  "dashboard": {
+    "checkpointTotal": 156,
+    "done": 23,
+    "requiredTasks": 39,
+    "completeTasks": 0
+  },
+  "nativeRegressions": [
+    "pointer geometry",
+    "pointer processor and errors",
+    "capture notifications",
+    "event ancestry",
+    "original EventTarget",
+    "focus commands",
+    "shared touches",
+    "touchables"
+  ],
+  "files": {
+    "contracts.log": "efa7ee9fa293e3b8c053b8a458f7cd52fd7ef55484a295b6038aa40db63158c8",
+    "contracts-corrected.log": "664dddb2a57f2fd0228bd2c7017d34175989be8a241658245d07d4e9993f3449",
+    "platform-seams-corrected.log": "e09b33eb995222ebf788a54470a0eb6884b99832f8873649b55bf588c54b1e4f",
+    "static.log": "aa94b460d520cf0dc109328cf8fae7a4714a89c4abfd416a22dc075bdb7986eb",
+    "publication.log": "287bfdef0cfd86982764a9a673fc98a9d261f87567249aee6737aa0eef0dd546",
+    "dashboard-final.log": "09540fd003659d719ce2ff052634c4dd3012ba353ccbca8bdea549415bc35851",
+    "pointer-geometry.log": "df41082beac43617b65adfaca7bcaac8f2560d96fd05d555527554ae3d9880fe",
+    "pointer-processor.log": "2db57daa8ea696e24ab9cb961ebb4e107b20c942f09a1661acfadbc03c410da6",
+    "pointer-capture.log": "fbf57e89aa7a1635d7153e064c6224f70c3aa6d36a58f151981218c1857f4274",
+    "event-ancestry.log": "5115336cbc24b53609c02dcfac3563a0676ff68916ffcdfe00956708ff1901cd",
+    "event-original.log": "b733c163ca8a1212996b8e6540b0e9a140008cf452a8c9efb86e1699107cf021",
+    "focus-commands.log": "5ddf52699cf8b73db9508b25cb830502fdc76aa7673fb119ec939b72914e196e",
+    "shared-touches.log": "6f8ad60a97e4f6c32a18dd936958a70cb90f48eedd9dd9c03c855437f4069b65",
+    "touchables.log": "b5de23312f5e1f6daa1dcf1264d1c10e677873d5fa0bbd36455858432fb92d26"
+  }
+}

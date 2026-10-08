@@ -1,0 +1,234 @@
+{
+  "format": "godot-fabric.modal-review-regressions-local/v1",
+  "checkedAt": "2026-10-07T20:44:31.253885+00:00",
+  "implementationPublished": false,
+  "publishedHead": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+  "reviewer": "root",
+  "allThreeSameFixtureRegressionsPassed": true,
+  "sourceReceiptDoesNotCertifyNativeBuild": true,
+  "executions": {
+    "zero": {
+      "negativeReceipt": "zero-size-negative.json",
+      "identicalProbeAndBundle": true,
+      "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+      "files": {
+        "probe.gd": "90663425e5f2f2457cb6b881448c14e5285ddc904f971dfdd869c154a5b498cb",
+        "build/probe.js": "e33e1d1d2dbcc00dcb45b078564ce67ff0a5e10b2f019a40a0e0fb4ef67dcd27",
+        "report.json": "648bc18a9ab0e03b176e143c661fa5196afd433070c9df691a3eb990b7a147a5",
+        "headless.log": "1f0972b6d3bc7f4b36df0e6b6bed8635066f961f1b662332c2007896fb15087f"
+      },
+      "observed": {
+        "errors": [],
+        "measurements": {
+          "hidden": {
+            "height": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "modal": {
+            "height": 0.0,
+            "width": 0.0,
+            "x": 11.0,
+            "y": 13.0
+          },
+          "zero": {
+            "height": 0.0,
+            "width": 0.0,
+            "x": 37.0,
+            "y": 55.0
+          }
+        },
+        "physical": {
+          "modal-zero": {
+            "height": 0.0,
+            "width": 0.0,
+            "x": 11.0,
+            "y": 13.0
+          },
+          "zero": {
+            "height": 0.0,
+            "width": 0.0,
+            "x": 37.0,
+            "y": 55.0
+          }
+        },
+        "surfaceOrigin": {
+          "x": 32.0,
+          "y": 48.0
+        }
+      }
+    },
+    "foreign": {
+      "negativeReceipt": "foreign-owner-negative.json",
+      "identicalProbeAndBundle": true,
+      "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+      "files": {
+        "probe.gd": "84ac920e0981d2dce8327398db94af49be2d9395c296abb178feea1c4b62ee16",
+        "build/probe.js": "84c0b72d3cc64dc58b05f6454354ecd7878364dbb44fed2676b202237a4d832a",
+        "report.json": "cbc5364428a1ed4564725e1c5dae6c54f379974111213a303e28b230778ef4f0",
+        "headless.log": "e05cf39b794515ac5edc38c1cff0cd31d1e2837a7f55bc8ff910e055a180c495"
+      },
+      "observed": {
+        "afterLowerStop": {
+          "cancels": 0.0,
+          "changes": [
+            "firstx"
+          ],
+          "downs": 1.0,
+          "pressIns": 1.0,
+          "pressOuts": 0.0,
+          "presses": 0.0,
+          "touchCancels": 0.0,
+          "value": "firstx"
+        },
+        "afterUpAndKey": {
+          "cancels": 0.0,
+          "changes": [
+            "firstx",
+            "firstxy"
+          ],
+          "downs": 1.0,
+          "pressIns": 1.0,
+          "pressOuts": 1.0,
+          "presses": 1.0,
+          "touchCancels": 0.0,
+          "value": "firstxy"
+        },
+        "beforeIds": {
+          "control": 27984397827,
+          "input": 27934066177,
+          "viewport": 27766294007,
+          "window": 27766294007
+        },
+        "held": {
+          "cancels": 0.0,
+          "changes": [
+            "firstx"
+          ],
+          "downs": 1.0,
+          "pressIns": 1.0,
+          "pressOuts": 0.0,
+          "presses": 0.0,
+          "touchCancels": 0.0,
+          "value": "firstx"
+        },
+        "lowerStopped": true,
+        "preserved": {
+          "control": 27984397827,
+          "exclusive": true,
+          "input": 27934066177,
+          "inputFocused": true,
+          "text": "firstx",
+          "viewport": 27766294007,
+          "visible": true,
+          "window": 27766294007
+        },
+        "upperErrors": []
+      }
+    },
+    "cross": {
+      "negativeReceipt": "cross-root-capture-negative.json",
+      "identicalProbeAndBundle": true,
+      "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+      "files": {
+        "probe.gd": "71654b742bcf4578747a0987ea119867d4d28235a7eb12448173f8b5456d8f45",
+        "build/probe.js": "7508e0af4d814f9553a84717a54d441e292faaab743637ae82ee5149af0f3d8e",
+        "report.json": "fb6de9fe2942e3b486daf045f606ea64c4c0bd806de643683ff4bc8fd8aeecfe",
+        "headless.log": "c9b93fe40b960fb662a7df8f178e0dce4320d080b55c55bcb3efa5554e327953"
+      },
+      "observed": {
+        "afterDown": {
+          "captured": true,
+          "connected": {
+            "A": true,
+            "B": true
+          },
+          "events": [
+            {
+              "id": 1.0,
+              "name": "A",
+              "phase": "down"
+            }
+          ],
+          "pending": true,
+          "pointerId": 1.0
+        },
+        "afterMove": {
+          "captured": true,
+          "connected": {
+            "A": true,
+            "B": true
+          },
+          "events": [
+            {
+              "id": 1.0,
+              "name": "A",
+              "phase": "down"
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "got"
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "move",
+              "x": -135.0,
+              "y": 15.0
+            }
+          ],
+          "pending": true,
+          "pointerId": 1.0
+        },
+        "afterUp": {
+          "captured": false,
+          "connected": {
+            "A": true,
+            "B": true
+          },
+          "events": [
+            {
+              "id": 1.0,
+              "name": "A",
+              "phase": "down"
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "got"
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "move",
+              "x": -135.0,
+              "y": 15.0
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "up"
+            },
+            {
+              "id": 1.0,
+              "name": "B",
+              "phase": "lost"
+            }
+          ],
+          "pending": true,
+          "pointerId": 1.0
+        },
+        "errors": []
+      }
+    }
+  },
+  "limits": {
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false,
+    "sdkBuildCertified": false,
+    "otherSubsequentEditsCertified": false
+  }
+}

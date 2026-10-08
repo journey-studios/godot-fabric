@@ -1,0 +1,80 @@
+{
+  "format": "godot-fabric.modal-owner-input-control/v1",
+  "checkedAt": "2026-10-07T21:46:49.017978+00:00",
+  "reviewer": "root",
+  "probeSha256": "a231a942336e49e54bfb43efcb7782aaff9d74294309baaca921d03bc22b0044",
+  "bundleSha256": "47c69ec9bea820281d5f6c54953aa4083aaa3859ce54a5367af483dae869cd95",
+  "inputDevice": 4242,
+  "scope": "Original no-logger JS bundle; only input-device separation from the desktop stream. Same Down/Up frame waits and all nine assertions. Root independently reran the corrected host.",
+  "executions": [
+    {
+      "run": "c229",
+      "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "checks": 9,
+      "passed": 9,
+      "ownerB": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 0.0,
+        "presses": 2.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "reportSha256": "0d3a39bb984961695c86cb8980084a6844bf3d733b800f7e3917a62520354dc7",
+      "logSha256": "f89bbae22d101951558360d3939049d848f277b01655d840df9c0f43262703a5"
+    },
+    {
+      "run": "current37",
+      "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+      "checks": 9,
+      "passed": 9,
+      "ownerB": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 0.0,
+        "presses": 2.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "reportSha256": "9edd0dcb73f6c28203d891edf4bec55ee91122ed53df0727c4f4c836951b0b8e",
+      "logSha256": "4cd3d4b65a54e226956963e387eb36e1ab8cf92463bd26f28ef42b82ab4fb833"
+    },
+    {
+      "run": "root",
+      "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+      "checks": 9,
+      "passed": 9,
+      "ownerB": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 0.0,
+        "presses": 2.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "reportSha256": "8693a41c6bdae68cb5951c17485d128f45f60a02b7e0977d5dc3d57e0c6cba55",
+      "logSha256": "045168b1042ad1174ad8dd5335b5f8cb43e6b12e8d74030b90338dc3af6814c1"
+    }
+  ],
+  "historicalFailureReceipt": "owner-input-review-inconclusive.json",
+  "diagnosticFinding": "Native MouseMotion device 32 appeared between injected default-device Down/Up in a c229 diagnostic. Other diagnostic failures remain unexplained; this proves partial interference, not the complete historical cause.",
+  "limits": {
+    "historicalDefaultDeviceCauseIsolated": false,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "hostedCI": false
+  }
+}

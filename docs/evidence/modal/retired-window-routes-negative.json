@@ -1,0 +1,227 @@
+{
+  "format": "godot-fabric.modal-retired-window-routes-negative/v1",
+  "checkedAt": "2026-10-07T20:51:33.852273+00:00",
+  "severity": "P2",
+  "reviewer": "root",
+  "reproductionPassed": true,
+  "featureAssertionPassed": false,
+  "hostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+  "executionChecks": {
+    "total": 44,
+    "passed": 43,
+    "failed": 1
+  },
+  "sameFrozenProducerInputs": true,
+  "files": {
+    "tests/probe.gd": "e9fca35445e7f4877ceca39024e50f2955262a6cd417b91da42a2f9426e7323e",
+    "fixture.jsx": "ecd6cb53861af36c1ad5092700070e910af7938390a9e54ca6a9336fe5ea8a8f",
+    "build/modal-discriminators-probe.js": "334c8fe0af9220c1761af0f3e916b0456df172e60a06f7d463e35aa8a8f50e7c",
+    "headless.log": "755ad460332580ade4e3265c0befe2c94ddce65c1aa7b82ba04e16318879c8fd",
+    "build/modal-discriminators/capture-tombstone-report.json": "e322e271132ac255fadb1f8b5d9a3f0021ba8e31e90b425460183bbbb9f226dd"
+  },
+  "observed": {
+    "destroyedDistinctWindowIds": [
+      27162314215,
+      28672263662,
+      29980886511,
+      31289509370,
+      32598132217,
+      33923532285,
+      35232155097,
+      36540777947,
+      37849400822,
+      39141246434
+    ],
+    "remountedWindowId": 40466646515,
+    "routeSamples": [
+      {
+        "cycle": 0,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 2.0,
+          "stored": 1.0,
+          "suppressed": 1.0
+        }
+      },
+      {
+        "cycle": 1,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 3.0,
+          "stored": 2.0,
+          "suppressed": 2.0
+        }
+      },
+      {
+        "cycle": 2,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 4.0,
+          "stored": 3.0,
+          "suppressed": 3.0
+        }
+      },
+      {
+        "cycle": 3,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 5.0,
+          "stored": 4.0,
+          "suppressed": 4.0
+        }
+      },
+      {
+        "cycle": 4,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 6.0,
+          "stored": 5.0,
+          "suppressed": 5.0
+        }
+      },
+      {
+        "cycle": 5,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 7.0,
+          "stored": 6.0,
+          "suppressed": 6.0
+        }
+      },
+      {
+        "cycle": 6,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 8.0,
+          "stored": 7.0,
+          "suppressed": 7.0
+        }
+      },
+      {
+        "cycle": 7,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 9.0,
+          "stored": 8.0,
+          "suppressed": 8.0
+        }
+      },
+      {
+        "cycle": 8,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 10.0,
+          "stored": 9.0,
+          "suppressed": 9.0
+        }
+      },
+      {
+        "cycle": 9,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 11.0,
+          "stored": 10.0,
+          "suppressed": 10.0
+        }
+      }
+    ],
+    "afterTenCycles": {
+      "active": 0.0,
+      "contacts": 0.0,
+      "hoverPointers": 0.0,
+      "nextId": 11.0,
+      "stored": 10.0,
+      "suppressed": 10.0
+    },
+    "runtimeErrors": []
+  },
+  "expected": {
+    "suppressedRoutesForDestroyedPhysicalWindows": 0,
+    "boundedRouteStorage": true
+  },
+  "existingRNContract": {
+    "removedTargetReceivesLostCallback": false,
+    "sameLiveWindowRemovedOriginSuppressesOldHeldContact": true
+  },
+  "explanation": "Physical endpoint lifetime is distinct from Surface lifetime. Suppression is required for an old held contact in the same live Window, but a destroyed embedded Window cannot ever receive its matching Up. Ten captured Modal removal/remount cycles retain ten unreachable routes. Fix retirement in canonical routing without fabricating capture callbacks or dropping same-Window suppression."
+}

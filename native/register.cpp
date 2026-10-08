@@ -8,6 +8,7 @@
 #include "image_view.h"
 #include "appearance_adapter.h"
 #include "native_animated.h"
+#include "modal_window_stack.h"
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -23,6 +24,7 @@ void initialize_fabric(godot::ModuleInitializationLevel level) {
     godot::ClassDB::register_class<GodotActivityIndicator>();
     godot::ClassDB::register_class<GodotImage>();
     godot::ClassDB::register_class<GodotFabricBinding>();
+    godot::ClassDB::register_class<fabric_godot::ModalWindowStack>();
     godot::ClassDB::register_class<FabricApplication>();
     godot::ClassDB::register_class<FabricSurface>();
   }

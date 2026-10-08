@@ -2699,8 +2699,17 @@ their sources when a signal ends them, through `scripts/sabotage-sources.mjs`
 dead server ([`8b7c890`](https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43)), and a sabotage run past its
 timeout kills a child that ignores SIGTERM instead of waiting on it ([`57bc3e8`](https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85)); the counts above are
 those executed at `83a3557`, and the `postReview` section of `report.json` pins the changed files
-to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
-closes; no whole GF, other checkpoint, weight or denominator closes.
+to these commits. Hosted Contracts run 37571237096 (the push of main
+[`afa5d87`](https://github.com/journey-studios/godot-fabric/commit/afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea))
+passed all five jobs in its first attempt; its [audited
+artifact](docs/evidence/networking/hosted-ci.json) repeats the 100 headless
+checks with identical IDs, and the independent oracle accepts the downloaded
+report. The producer `src/react-native-platform.jsx`, which the committed pins
+do not list, has the same SHA-256 at
+[`83a3557`](https://github.com/journey-studios/godot-fabric/commit/83a3557eb200b2bbaa337f2e302fb4c2aaf767f5)
+and at `afa5d87`, and the bundle SHA-256 equality shows that the same bundle
+ran. [Pages 37571237256](docs/evidence/networking/publication.json) deployed
+this record from main `afa5d87`. Only GF-22's first-slice checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
 ### WebSocket transport review (2026-10-07)
 
@@ -2741,6 +2750,25 @@ is headless macOS for pinned `422c2ee`, with later PR-head gates separate.
 Other open scope includes extensions, cookies, proxy/system trust configuration, HTTP/2,
 reconnect/offline behavior, hardware load and Android/iOS/Web runtime acceptance. GF-22’s
 contract, parity and targets remain open.
+
+### Modal desktop review (2026-10-07)
+
+GF-18 remains **In progress** with all four checkpoints open. The
+[thermo-nuclear review](docs/research/modal-implementation-review.md) requires
+typed Window stack ownership, one immutable physical embedding for geometry and
+input, canonical endpoint retirement and last-Surface membership cleanup.
+Independent paired controls reproduce and correct the geometry, capture and
+validation-device regressions. No full roadmap item or denominator changes.
+
+On corrected head `bee7b40`, the [hosted receipt](docs/evidence/modal/hosted-bee7b40-timeout.json)
+verifies 193 Modal assertions (11 on the macOS display), the fail-fast negative
+with both applications cleaned up, 164 transform and 672 capture assertions,
+35 Modal/95 SDK producer pins and 10 original RN pins. CodeRabbit approved that
+head and all six threads are resolved. The workflow nevertheless exhausted its
+45-minute global budget at cold-start completion; parity was skipped. The total
+budget is raised to 60 minutes without changing probes or their failure criteria,
+and a fresh complete CI run remains required before merge. Orientation/insets,
+hardware, mobile/export and complete pinned RN parity remain acceptance work.
 
 ### Images and the asset pipeline (2026-10-07)
 
@@ -2837,7 +2865,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
 | GF-16 · P1 · Images and asset pipeline | In progress | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |
-| GF-18 · P1 · Modals and safe areas | Planned | Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation | GF-07, GF-09, GF-13, GF-20, GF-23 |
+| GF-18 · P1 · Modals and safe areas | In progress | Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation | GF-07, GF-09, GF-13, GF-20, GF-23 |
 
 ## M2 — Supply the platform runtime and OS behavior
 

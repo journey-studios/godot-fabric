@@ -1,0 +1,130 @@
+{
+  "format": "godot-fabric.modal-sibling-order-local/v1",
+  "checkedAt": "2026-10-07T20:59:29.315100+00:00",
+  "reviewer": "root",
+  "passed": true,
+  "checks": 10,
+  "sameFrozenProducerInputs": true,
+  "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+  "execution": {
+    "controlIds": {
+      "a": 27061650914,
+      "b": 27229423084,
+      "c": 27279754735,
+      "input": 27430749688,
+      "modal_content": 27380418037
+    },
+    "observed": [
+      {
+        "actualParent": "Fabric_18",
+        "actualPhysical": [
+          "ordinary-a",
+          "ordinary-b",
+          "ordinary-c"
+        ],
+        "focused": true,
+        "identityOk": true,
+        "logical": [
+          "a",
+          "portal",
+          "b",
+          "c"
+        ],
+        "parentId": 27011319263,
+        "physical": [],
+        "react": {
+          "changes": [
+            "seedz"
+          ],
+          "order": [
+            "a",
+            "portal",
+            "b",
+            "c"
+          ],
+          "shows": 1.0,
+          "value": "seedz"
+        },
+        "text": "seedz"
+      },
+      {
+        "actualParent": "Fabric_18",
+        "actualPhysical": [
+          "ordinary-c",
+          "ordinary-a",
+          "ordinary-b"
+        ],
+        "focused": true,
+        "identityOk": true,
+        "logical": [
+          "c",
+          "portal",
+          "a",
+          "b"
+        ],
+        "parentId": 27011319263,
+        "physical": [],
+        "react": {
+          "changes": [
+            "seedz"
+          ],
+          "order": [
+            "c",
+            "portal",
+            "a",
+            "b"
+          ],
+          "shows": 1.0,
+          "value": "seedz"
+        },
+        "text": "seedz"
+      },
+      {
+        "actualParent": "Fabric_18",
+        "actualPhysical": [
+          "ordinary-a",
+          "ordinary-b",
+          "ordinary-c"
+        ],
+        "focused": true,
+        "identityOk": true,
+        "logical": [
+          "a",
+          "b",
+          "portal",
+          "c"
+        ],
+        "parentId": 27011319263,
+        "physical": [],
+        "react": {
+          "changes": [
+            "seedz"
+          ],
+          "order": [
+            "a",
+            "b",
+            "portal",
+            "c"
+          ],
+          "shows": 1.0,
+          "value": "seedz"
+        },
+        "text": "seedz"
+      }
+    ],
+    "runtimeErrors": []
+  },
+  "files": {
+    "tests/probe.gd": "107f4464f8b5f21d707dbb6adf35161d0ac41dd47ce3ba226b325345336fdbcf",
+    "fixture.jsx": "b8f6eec3a8dc863203ce6f63006130893e09ee4b39a1481499e7622f60975440",
+    "build/modal-order-discriminator-probe.js": "5b5a24c7ba819f420e8cf1e2d24c7d0d9381a4a5be6f75ba9f7db9a51e10f83c",
+    "headless.log": "9aecc2ff49f059857b0c30fb2e9bcae47967ce580f2672286abfcfce7efa9fca",
+    "build/modal-discriminators/sibling-order-report.json": "7df283d693129d67f4ef728150f5a36402cda175bda42f316f467dbdf1efecc5"
+  },
+  "limits": {
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false,
+    "subsequentRetirementFixCertified": false
+  }
+}

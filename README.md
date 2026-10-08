@@ -373,7 +373,9 @@ validation seam), with an independent oracle that compares the 137 requests the 
 recorded with what JS observed. The preceding host fails exactly its 84 normative checks, and
 retained sabotages (redirects not followed, repeated headers not joined) fail 8 and 2. Cookies,
 compressed responses, HTTP/2, progress events, `uri` and file bodies are open (the `WebSocket`
-global got its module in the next record, below). Hosted CI is pending.
+global got its module in the next record, below). Hosted CI passed the five jobs
+on main (run 37571237096) and repeated the 100 checks
+([receipt](docs/evidence/networking/hosted-ci.json)).
 [Evidence](docs/evidence/networking/README.md).
 
 The same example's second card runs React Native's own `WebSocket` against an echo server the
