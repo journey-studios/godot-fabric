@@ -3,6 +3,7 @@
   "entry": [
     "dashboard/app.mjs",
     "dashboard/style.css",
+    "dashboard/agents.css",
     "examples/entry.jsx",
     "src/initialize.js",
     "src/private-interface.js",
@@ -375,6 +376,7 @@
     }
   ],
   "ignoreUnresolvedImports": [
-    "@godot-fabric/runtime"
+    "@godot-fabric/runtime",
+    "./agents.json"
   ]
 }
