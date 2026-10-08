@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
-import {copyFile, lstat, mkdir, readFile, readlink, readdir, realpath, rename, rm, stat, writeFile} from "node:fs/promises";
+import {copyFile, cp, lstat, mkdir, readFile, readlink, readdir, realpath, rename, rm, stat, symlink, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
@@ -10,6 +10,13 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const fixtureChecksPath = fileURLToPath(new URL("./macos-export-checks.json", import.meta.url));
 const expectedBundleIdentifier = "org.journeystudios.godotfabric.exportvalidation";
 const frameworkNames = ["hermesvm.framework", "ReactNativeDependencies.framework"];
+const frameworkVersions = {"hermesvm.framework": "1", "ReactNativeDependencies.framework": "A"};
+const rnResourceBundles = [
+  "ReactNativeDependencies_SocketRocket.bundle",
+  "ReactNativeDependencies_boost.bundle",
+  "ReactNativeDependencies_folly.bundle",
+  "ReactNativeDependencies_glog.bundle",
+];
 const fatalOutput = /SCRIPT ERROR|Parse Error|(?:^|\n)ERROR:|Program crashed|Stack overflow|ObjectDB instances leaked|Resources still in use|FABRIC_ERROR|CONSUMER_CHECK_FAILED/;
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 
@@ -225,7 +232,10 @@ export async function verifySignatures(harness, app) {
   const executableName = await plistValue(harness, path.join(contents, "Info.plist"), "CFBundleExecutable", harness.directory, "signature-plist-executable");
   const executable = path.join(contents, "MacOS", executableName);
   const frameworkBundles = frameworkNames.map(name => path.join(contents, "Frameworks", "frameworks", name));
-  const signedItems = [...frameworkBundles, path.join(contents, "Frameworks", "fabric_godot.dylib"), executable, app];
+  const resourceBundles = rnResourceBundles.map(name => path.join(contents, "Frameworks", "frameworks",
+    "ReactNativeDependencies.framework", "Versions", "A", name));
+  const signedItems = [...resourceBundles, ...frameworkBundles,
+    path.join(contents, "Frameworks", "fabric_godot.dylib"), executable, app];
   for (let index = 0; index < signedItems.length; index++)
     await harness.run(`verify-signature-${index}`, "/usr/bin/codesign", ["--verify", "--deep", "--strict", signedItems[index]]);
   return signedItems;
@@ -236,6 +246,10 @@ async function signAndVerifyApp(harness, app, inspection) {
   const host = path.join(contents, "Frameworks", "fabric_godot.dylib");
   const executable = inspection.executable;
   const frameworkBundles = inspection.frameworks.map(item => path.join(app, item.bundlePath));
+  const resourceBundles = rnResourceBundles.map(name => path.join(contents, "Frameworks", "frameworks",
+    "ReactNativeDependencies.framework", "Versions", "A", name));
+  for (let index = 0; index < resourceBundles.length; index++)
+    await harness.run(`sign-resource-bundle-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", resourceBundles[index]]);
   for (let index = 0; index < frameworkBundles.length; index++)
     await harness.run(`sign-framework-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", frameworkBundles[index]]);
   await harness.run("sign-host", "/usr/bin/codesign", ["--force", "--sign", "-", host]);
@@ -357,6 +371,149 @@ async function hashApp(app) {
   return sha256(Buffer.from(JSON.stringify(rows)));
 }
 
+async function retainRejectedApp(app, harnessDirectory) {
+  if (!(await existsIncludingDangling(app))) return null;
+  const rejected = path.join(harnessDirectory, "rejected.app");
+  assert.equal(await existsIncludingDangling(rejected), false, "diagnostic app destination already exists");
+  try {
+    await rename(app, rejected);
+  } catch (error) {
+    if (error.code !== "EXDEV") throw error;
+    await cp(app, rejected, {recursive: true, errorOnExist: true, force: false, dereference: false, preserveTimestamps: true});
+    await rm(app, {recursive: true});
+  }
+  return rejected;
+}
+
+export async function normalizeFrameworkPackaging(app) {
+  const frameworkRoot = path.join(app, "Contents", "Frameworks", "frameworks");
+  const hostPath = path.join(app, "Contents", "Frameworks", "fabric_godot.dylib");
+  const hostBefore = sha256(await readFile(hostPath));
+  const plans = [];
+  const frameworkRecords = [];
+
+  async function planAlias(framework, aliasRelative, canonicalRelative, linkTarget, kind) {
+    const alias = path.join(framework, aliasRelative);
+    const canonical = path.join(framework, canonicalRelative);
+    const canonicalInfo = await lstat(canonical);
+    assert.equal(kind === "directory" ? canonicalInfo.isDirectory() : canonicalInfo.isFile(), true,
+      `framework canonical ${kind} is missing: ${canonicalRelative}`);
+    const canonicalReal = await realpath(canonical);
+    const aliasInfo = await lstat(alias);
+    if (aliasInfo.isSymbolicLink()) {
+      assert.equal(await realpath(alias), canonicalReal, `framework alias has an unexpected target: ${aliasRelative}`);
+      return {framework, alias, aliasRelative, canonical, linkTarget, kind, action: "retained-symlink",
+        previousLink: await readlink(alias)};
+    }
+    assert.equal(kind === "directory" ? aliasInfo.isDirectory() : aliasInfo.isFile(), true,
+      `framework alias has an unexpected type: ${aliasRelative}`);
+    const sourceSha256 = kind === "directory" ? await hashApp(alias) : sha256(await readFile(alias));
+    const canonicalSha256 = kind === "directory" ? await hashApp(canonical) : sha256(await readFile(canonical));
+    assert.equal(sourceSha256, canonicalSha256, `framework alias differs from its canonical ${kind}: ${aliasRelative}`);
+    const expectedLink = path.join(framework, `${aliasRelative}.fabric-normalized`);
+    assert.equal(await existsIncludingDangling(expectedLink), false, `framework normalization path already exists: ${aliasRelative}`);
+    plans.push({framework, alias, aliasRelative, canonical, linkTarget, kind, action: "replaced-verified-duplicate",
+      sourceSha256, canonicalSha256, temporary: expectedLink});
+    return plans[plans.length - 1];
+  }
+
+  for (const name of frameworkNames) {
+    const framework = path.join(frameworkRoot, name);
+    const frameworkInfo = await lstat(framework);
+    assert.ok(frameworkInfo.isDirectory() && !frameworkInfo.isSymbolicLink(), `framework root is not a real directory: ${name}`);
+    const version = frameworkVersions[name];
+    const binaryName = name === "hermesvm.framework" ? "hermesvm" : "ReactNativeDependencies";
+    const versionEntries = (await readdir(path.join(framework, "Versions"))).sort();
+    assert.deepEqual(versionEntries, ["Current", version].sort(), `framework version layout changed unexpectedly: ${name}`);
+    const expectedRootEntries = new Set(["Versions", "Resources", binaryName]);
+    if (name === "ReactNativeDependencies.framework")
+      for (const bundle of rnResourceBundles) expectedRootEntries.add(bundle);
+    const actualRootEntries = (await readdir(framework)).sort();
+    assert.deepEqual(actualRootEntries, [...expectedRootEntries].sort(), `framework root layout changed unexpectedly: ${name}`);
+    const beforeTreeSha256 = await hashApp(framework);
+    const binaryBefore = sha256(await readFile(path.join(framework, "Versions", version, binaryName)));
+    const aliasRecords = [];
+
+    aliasRecords.push(await planAlias(framework, "Versions/Current", `Versions/${version}`, version, "directory"));
+    aliasRecords.push(await planAlias(framework, "Resources", `Versions/${version}/Resources`,
+      `Versions/Current/Resources`, "directory"));
+    aliasRecords.push(await planAlias(framework, binaryName, `Versions/${version}/${binaryName}`,
+      `Versions/Current/${binaryName}`, "file"));
+
+    const movedResources = [];
+    if (name === "ReactNativeDependencies.framework") {
+      for (const bundleName of rnResourceBundles) {
+        const source = path.join(framework, bundleName);
+        const destination = path.join(framework, "Versions", version, bundleName);
+        const sourceInfo = await lstat(source);
+        if (sourceInfo.isSymbolicLink()) {
+          assert.equal(await realpath(source), await realpath(destination), `resource bundle alias has an unexpected target: ${bundleName}`);
+          movedResources.push({name: bundleName, action: "retained-symlink", previousLink: await readlink(source),
+            treeSha256: await hashApp(destination)});
+          continue;
+        }
+        assert.ok(sourceInfo.isDirectory(), `resource bundle has an unexpected type: ${bundleName}`);
+        assert.equal(await existsIncludingDangling(destination), false, `resource bundle destination already exists: ${bundleName}`);
+        await assertFrameworkSymlinksStayInside(source);
+        const sourceTreeSha256 = await hashApp(source);
+        movedResources.push({name: bundleName, action: "moved-verified-resource", sourceTreeSha256,
+          target: path.relative(framework, destination).split(path.sep).join("/"), linkTarget: `Versions/Current/${bundleName}`,
+          source, destination, temporary: `${source}.fabric-normalized`});
+        assert.equal(await existsIncludingDangling(`${source}.fabric-normalized`), false, `resource bundle normalization path already exists: ${bundleName}`);
+      }
+    }
+    frameworkRecords.push({name, framework, version, binaryName, beforeTreeSha256, binaryBefore,
+      aliases: aliasRecords, resourceBundles: movedResources});
+  }
+
+  // The full expected layout and every duplicate's bytes/tree are checked before the first mutation.
+  for (const record of frameworkRecords) {
+    for (const operation of record.resourceBundles) {
+      if (operation.action !== "moved-verified-resource") continue;
+      await rename(operation.source, operation.destination);
+      await symlink(operation.linkTarget, operation.temporary, "dir");
+      await rename(operation.temporary, operation.source);
+      assert.equal(await hashApp(operation.destination), operation.sourceTreeSha256,
+        `moved resource bundle changed during normalization: ${operation.name}`);
+    }
+  }
+  for (const operation of plans) {
+    await symlink(operation.linkTarget, operation.temporary, operation.kind === "directory" ? "dir" : "file");
+    await rm(operation.alias, {recursive: operation.kind === "directory"});
+    await rename(operation.temporary, operation.alias);
+  }
+
+  for (const record of frameworkRecords) {
+    await assertFrameworkSymlinksStayInside(record.framework);
+    for (const operation of record.aliases) {
+      const alias = path.join(record.framework, operation.aliasRelative);
+      assert.equal(await realpath(alias), await realpath(operation.canonical), `normalized framework alias is incorrect: ${operation.aliasRelative}`);
+    }
+    for (const resource of record.resourceBundles) {
+      const source = path.join(record.framework, resource.name);
+      const destination = path.join(record.framework, "Versions", record.version, resource.name);
+      assert.equal(await realpath(source), await realpath(destination), `resource bundle root alias is incorrect: ${resource.name}`);
+      if (resource.action === "moved-verified-resource")
+        assert.equal(await hashApp(destination), resource.sourceTreeSha256, `resource bundle bytes changed: ${resource.name}`);
+    }
+    const binaryAfter = sha256(await readFile(path.join(record.framework, "Versions", record.version, record.binaryName)));
+    assert.equal(binaryAfter, record.binaryBefore, `canonical framework binary changed during normalization: ${record.name}`);
+    record.afterTreeSha256 = await hashApp(record.framework);
+    record.binaryAfter = binaryAfter;
+  }
+  const hostAfter = sha256(await readFile(hostPath));
+  assert.equal(hostAfter, hostBefore, "framework normalization modified the exported Godot host");
+  return {hostSha256Before: hostBefore, hostSha256After: hostAfter, frameworks: frameworkRecords.map(record => ({
+    name: record.name, version: record.version, binaryName: record.binaryName,
+    beforeTreeSha256: record.beforeTreeSha256, afterTreeSha256: record.afterTreeSha256,
+    binaryBeforeSha256: record.binaryBefore, binaryAfterSha256: record.binaryAfter,
+    aliases: record.aliases.map(({aliasRelative, linkTarget, action, previousLink, sourceSha256, canonicalSha256}) =>
+      ({alias: aliasRelative, linkTarget, action, previousLink, duplicateSha256: sourceSha256, canonicalSha256})),
+    resourceBundles: record.resourceBundles.map(({name, action, previousLink, sourceTreeSha256, treeSha256, target, linkTarget}) =>
+      ({name, action, previousLink, sourceTreeSha256: sourceTreeSha256 ?? treeSha256, target, linkTarget})),
+  }))};
+}
+
 export async function runMacOSExport({template, output}) {
   assert.ok(path.isAbsolute(output) && output.endsWith(".app"), "--out must resolve to a new absolute .app destination");
   if (await existsIncludingDangling(output)) throw new Error("Refusing to overwrite an existing output path");
@@ -464,6 +621,7 @@ export async function runMacOSExport({template, output}) {
     assert.equal(pack.pckSHA256, sha256(await readFile(pckPath)), "PCK hash differs from the inspector result");
     receipt.pack = {path: path.relative(staging, pckPath).split(path.sep).join("/"), ...pack,
       inspectorLogSha256: sha256(Buffer.from(packLog))};
+    receipt.frameworkNormalization = await normalizeFrameworkPackaging(staging);
     const appInspection = await signAndVerifyApp(harness, staging, unsignedInspection);
     const versionOutput = await tool(harness, "exported-engine-version", appInspection.executable, ["--version"], harness.outside);
     assert.match(versionOutput, /^4\.7\.2\.stable(?:\.official\.[^\s]+)?$/);
@@ -498,6 +656,22 @@ export async function runMacOSExport({template, output}) {
       const diagnostic = {status: "app-published-report-update-failed", output, receiptPath, error: error.message};
       try { await writeJson(path.join(harness.directory, "post-publish-diagnostic.json"), diagnostic); } catch {}
       throw new Error(`The app was published, but its final receipt update failed: ${error.message}`);
+    }
+    const failedApp = stagingOwned ? staging : relocatedOwned ? relocated : null;
+    if (failedApp) {
+      receipt.rejectedAppPath = failedApp;
+      try {
+        receipt.rejectedAppPath = await retainRejectedApp(failedApp, harness.directory);
+        if (receipt.rejectedAppPath) {
+          stagingOwned = false;
+          relocatedOwned = false;
+        }
+      } catch (retentionError) {
+        receipt.rejectedAppRetentionError = retentionError.message;
+        // Preserve the original staged app if moving it into the diagnostic directory fails.
+        if (failedApp === staging) stagingOwned = false;
+        else relocatedOwned = false;
+      }
     }
     receipt.status = "failed";
     receipt.completedAt = new Date().toISOString();
