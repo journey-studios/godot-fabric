@@ -1,0 +1,30 @@
+{
+  "name": "godot-fabric-libraries-consumer",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "nativewind": "4.2.7",
+    "react-native-chart-kit": "7.0.4",
+    "react-native-svg": "15.15.5"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  },
+  "peerDependencies": {
+    "react": "19.2.3",
+    "react-native": "0.87.1"
+  },
+  "godotFabric": {
+    "tailwind": {
+      "content": ["./ui/**/*.{ts,tsx}"],
+      "darkMode": "media",
+      "theme": {
+        "extend": {
+          "colors": {
+            "brand": { "400": "#34d399", "600": "#059669" }
+          }
+        }
+      }
+    }
+  }
+}

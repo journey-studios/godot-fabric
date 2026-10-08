@@ -162,13 +162,14 @@ export interface AccessibilityProps {
   "aria-expanded"?: boolean;
   "aria-selected"?: boolean;
 }
-export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
+// An interface, so that a project's opt-in declarations (types/nativewind.ts) can merge into it.
+export interface ViewProps extends Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
   "onPointerDown" | "onPointerDownCapture" | "onPointerMove" | "onPointerMoveCapture" |
   "onPointerUp" | "onPointerUpCapture" | "onPointerCancel" | "onPointerCancelCapture" |
   "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
-  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> &
-  AccessibilityProps & { style?: StyleProp<ViewStyle> };
+  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture">,
+  AccessibilityProps { style?: StyleProp<ViewStyle> }
 /** Text renders RN's original Text.js (see docs/research/text-original.md). onTextLayout is RN's original event, one
  * entry per visible line (docs/research/text-layout.md); only the outer Text emits it, a nested Text ignores it, as
  * in RN. The outer paragraph presses with onPress, onPressIn, onPressOut and onLongPress (Pressability, with
@@ -179,13 +180,13 @@ export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | 
  * scale is 1 and nothing highlights outside iOS. selectable, adjustsFontSizeToFit, selectionColor, dataDetectorType,
  * textBreakStrategy, lineBreakStrategyIOS, android_hyphenationFrequency and the head and middle ellipsize modes fail
  * where the Text renders. */
-export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout" |
+export interface TextProps extends Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout" |
   "onPress" | "onPressIn" | "onPressOut" | "onLongPress" | "pressRetentionOffset" | "disabled" | "allowFontScaling" |
   "maxFontSizeMultiplier" | "dynamicTypeRamp" | "suppressHighlighting" | "onResponderGrant" | "onResponderMove" |
   "onResponderRelease" | "onResponderTerminate" | "onResponderTerminationRequest" | "onStartShouldSetResponder" |
-  "onMoveShouldSetResponder"> & {
+  "onMoveShouldSetResponder"> {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
-};
+}
 export type TextLayoutEvent = RN.TextLayoutEvent;
 export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "onChangeText" | "onSelectionChange" |
   "onFocus" | "onBlur" | "onEndEditing" | "onSubmitEditing" | "onKeyPress" | "onLayout"> {
@@ -216,9 +217,9 @@ export type ImageLoadEvent = RN.ImageLoadEvent;
 export type ImageErrorEvent = RN.ImageErrorEvent;
 export type ImageProgressEventIOS = RN.ImageProgressEventIOS;
 export type ImageStyle = Omit<ViewStyle, "overflow"> & Pick<RN.ImageStyle, "resizeMode" | "objectFit" | "overflow" | "tintColor" | "overlayColor">;
-export type ImageProps = Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" | "testID" | "nativeID" |
+export interface ImageProps extends Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" | "testID" | "nativeID" |
   "onLayout" | "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad" | "blurRadius" | "capInsets" | "tintColor" |
-  "defaultSource" | "loadingIndicatorSource" | "fadeDuration" | "progressiveRenderingEnabled" | "resizeMethod" | "resizeMultiplier"> & { style?: StyleProp<ImageStyle> };
+  "defaultSource" | "loadingIndicatorSource" | "fadeDuration" | "progressiveRenderingEnabled" | "resizeMethod" | "resizeMultiplier"> { style?: StyleProp<ImageStyle> }
 export type ImageBackgroundProps = ImageProps & { children?: React.ReactNode; style?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ImageStyle>; imageRef?: React.Ref<NativeInstance> };
 export interface ImageStatics {
@@ -275,6 +276,14 @@ export type TouchableNativeFeedbackProps = Pick<RN.TouchableNativeFeedbackProps,
   "pressRetentionOffset" | "testID" | "nativeID" | "onLayout" | "children">;
 export declare const TouchableNativeFeedback: React.ComponentType<TouchableNativeFeedbackProps> &
   Pick<typeof RN.TouchableNativeFeedback, "SelectableBackground" | "SelectableBackgroundBorderless" | "Ripple" | "canUseNativeForeground">;
+/** RN's original Pressable.js over the Godot View: Pressability's press props, and a style that may be a function of
+ * `pressed`. Props this platform has not verified (hover, focus, the Android ripple and sound) are omitted. */
+export interface PressableProps extends Pick<RN.PressableProps, "onPress" | "onPressIn" | "onPressOut" | "onLongPress" |
+  "delayLongPress" | "disabled" | "hitSlop" | "pressRetentionOffset" | "testID" | "nativeID" | "onLayout" | "children">,
+  AccessibilityProps { style?: StyleProp<ViewStyle> | ((state: RN.PressableStateCallbackType) => StyleProp<ViewStyle>) }
+export declare const Pressable: React.ComponentType<PressableProps & React.RefAttributes<NativeInstance>>;
+/** RN's original useWindowDimensions, fed by the Godot window. */
+export declare const useWindowDimensions: typeof RN.useWindowDimensions;
 export declare const StyleSheet: {
   hairlineWidth: number;
   create<T extends Record<string, TextStyle>>(styles: T): T;

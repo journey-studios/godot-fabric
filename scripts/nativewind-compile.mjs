@@ -1,8 +1,11 @@
-import { spawnSync } from "node:child_process";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { cssToReactNativeRuntime } from "react-native-css-interop/css-to-rn/index.js";
+import {
+  compileNativeWindStyles,
+  registrationModule,
+} from "../sdk/toolchain/nativewind-compile.mjs";
 
 export function assertNativeWindBundle(inputs) {
   for (const required of [
@@ -27,31 +30,23 @@ export function assertNativeWindBundle(inputs) {
 export async function compileNativeWind() {
   const root = fileURLToPath(new URL("..", import.meta.url));
   await mkdir(path.join(root, "build"), { recursive: true });
-  const cli = spawnSync(
-    process.execPath,
-    [
-      "node_modules/tailwindcss/lib/cli.js",
-      "--config",
-      "tailwind.config.cjs",
-      "--input",
-      "src/nativewind.css",
-      "--output",
-      "build/nativewind.css",
-    ],
-    { cwd: root, encoding: "utf8" },
-  );
-  if (cli.error || cli.status !== 0) throw new Error(cli.error ?? cli.stderr);
-  const compiled = cssToReactNativeRuntime(
-    await readFile(path.join(root, "build/nativewind.css"), "utf8"),
-    { inlineRem: 14 },
-  );
+  // The laboratory keeps its own tailwind.config.cjs and the preset's default
+  // pipeline (no NATIVEWIND_OS); the compile step itself is the SDK's.
+  const config = createRequire(import.meta.url)("../tailwind.config.cjs");
+  const input = path.join(root, "src/nativewind.css");
+  const { tailwindCss, compiled } = await compileNativeWindStyles({
+    css: await readFile(input, "utf8"),
+    from: input,
+    config: { ...config, content: config.content.map((glob) => path.resolve(root, glob)) },
+  });
+  await writeFile(path.join(root, "build/nativewind.css"), tailwindCss);
   await writeFile(
     path.join(root, "build/nativewind-compiled.json"),
     JSON.stringify(compiled, null, 2) + "\n",
   );
   await writeFile(
     path.join(root, "build/nativewind-compiled.js"),
-    `import { StyleSheet } from "react-native-css-interop";\nStyleSheet.registerCompiled(${JSON.stringify(compiled)});\n`,
+    registrationModule(compiled, "react-native-css-interop"),
   );
   return compiled;
 }

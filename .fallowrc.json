@@ -18,8 +18,10 @@
     "src/unsupported-reanimated.js",
     "src/unsupported-safe-area.js",
     "types/react-native.ts",
+    "types/nativewind.ts",
     "tests/types/consumer.tsx",
     "consumers/minimal/ui/index.tsx",
+    "consumers/libraries/ui/index.tsx",
     "src/renderer-proxy.js",
     "src/godot-fabric.js",
     "types/godot-fabric.ts",
@@ -338,7 +340,10 @@
             "ImageSourcePropType",
             "ImageLoadEvent",
             "ImageErrorEvent",
-            "ImageProgressEventIOS"
+            "ImageProgressEventIOS",
+            "Pressable",
+            "PressableProps",
+            "useWindowDimensions"
           ]
         },
         {

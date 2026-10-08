@@ -28,9 +28,12 @@ export function selectedAdapterInputs(project, packageJson) {
   project = fs.realpathSync(project);
   const config = packageJson.godotFabric;
   if (config === undefined) return [];
-  if (!config || typeof config !== "object" || Array.isArray(config)
-      || Object.keys(config).length !== 1 || !Array.isArray(config.adapters))
-    fail("E_ADAPTER_SELECTION", "godotFabric requires exactly an adapters array");
+  // godotFabric.tailwind belongs to the style step (tailwind-plugin.mjs); adapters stay the only selection.
+  if (!config || typeof config !== "object" || Array.isArray(config) || !Object.keys(config).length
+      || Object.keys(config).some(key => !["adapters", "tailwind"].includes(key))
+      || (config.adapters !== undefined && !Array.isArray(config.adapters)))
+    fail("E_ADAPTER_SELECTION", "godotFabric accepts only an adapters array and a tailwind declaration");
+  if (config.adapters === undefined) return [];
   const seen = new Set();
   return config.adapters.map(selection => {
     if (!selection || typeof selection !== "object" || Array.isArray(selection)
