@@ -47,7 +47,7 @@ const variants = [
     find: 'import TextAncestorContext from "react-native/Libraries/Text/TextAncestorContext";',
     replace: "const TextAncestorContext = React.createContext(false);"},
   {name: "span-press", argument: "--sabotage=span-press", file: "src/text.jsx",
-    find: "    for (const name of spanPressProps) {\n      if (props[name] != null) {\n" +
+    find: "    for (const name of Object.keys(props)) {\n      if (isSpanPressProp(name) && props[name] != null) {\n" +
       "        throw new Error(`Godot Text does not implement ${name} on a nested Text: only the outer paragraph is pressable`);\n" +
       "      }\n    }\n", replace: ""},
   {name: "default", argument: "--sabotage=default", file: "src/text.jsx",

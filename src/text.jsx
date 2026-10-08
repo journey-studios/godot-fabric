@@ -31,20 +31,13 @@ const unsupportedProps = [
 // The props of this platform's earlier wrapper that RN's Text does not have, and what to do instead.
 const wrapperOnlyProps = { text: "pass the text as children", fontSize: "set it in style" };
 // A nested Text is a span of its paragraph. A press on a span needs hit testing by fragment and its own dispatch,
-// which the host does not have: only the outer paragraph is pressable.
-const spanPressProps = [
-  "onPress",
-  "onPressIn",
-  "onPressOut",
-  "onLongPress",
-  "onStartShouldSetResponder",
-  "onMoveShouldSetResponder",
-  "onResponderGrant",
-  "onResponderMove",
-  "onResponderRelease",
-  "onResponderTerminate",
-  "onResponderTerminationRequest",
-];
+// which the host does not have: only the outer paragraph is pressable. Text.js hands every responder prop it does
+// not know to the span's host component, so the whole family is refused by its shape and not by a list that would
+// have to follow RN: the four press props, and every onResponder*, onStartShouldSetResponder* and
+// onMoveShouldSetResponder* (the Capture, Reject, Start, End and Termination variants included).
+const pressProps = ["onPress", "onPressIn", "onPressOut", "onLongPress"];
+const responderProp = /^on(Responder|StartShouldSetResponder|MoveShouldSetResponder)/;
+const isSpanPressProp = name => pressProps.includes(name) || responderProp.test(name);
 
 export function ParagraphText({ style, numberOfLines, ellipsizeMode, onTextLayout, ...props }) {
   const nested = useTextAncestor();
@@ -65,8 +58,8 @@ export function ParagraphText({ style, numberOfLines, ellipsizeMode, onTextLayou
     }
   }
   if (nested) {
-    for (const name of spanPressProps) {
-      if (props[name] != null) {
+    for (const name of Object.keys(props)) {
+      if (isSpanPressProp(name) && props[name] != null) {
         throw new Error(`Godot Text does not implement ${name} on a nested Text: only the outer paragraph is pressable`);
       }
     }

@@ -3154,7 +3154,7 @@ checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 GF-11 stays **In progress**: this is its second slice, and its first-slice checkpoint was already closed by the
 first. The [text original evidence](docs/evidence/text-original/README.md) makes the public `Text` render React
 Native's own `Libraries/Text/Text.js` instead of a wrapper that registered `RCTText` and `RCTVirtualText` itself
-(RN's `NativeText` would collide with it, `Tried to register two views with the same name RCTText`): **114 headless
+(RN's `NativeText` would collide with it, `Tried to register two views with the same name RCTText`): **119 headless
 checks** in one Hermes application, every press gesture with a real mouse and a real touch. No checkpoint of any
 other item changes.
 
@@ -3172,9 +3172,9 @@ a press over a nested span's text is the outer paragraph's. `allowFontScaling`, 
 `dynamicTypeRamp` and `suppressHighlighting` are accepted and change nothing (the host's font scale is 1 and nothing
 highlights outside iOS).
 
-Twenty-eight props fail where the `Text` renders, word for word: any press or responder prop on a nested `Text`
-(`onPress`, `onPressIn`, `onPressOut`, `onLongPress`, `onStartShouldSetResponder`, `onMoveShouldSetResponder`,
-`onResponder*`), `selectable`, `adjustsFontSizeToFit`, `ellipsizeMode` head, middle or invalid (`tail or clip`),
+Thirty-three props fail where the `Text` renders, word for word: any press or responder prop on a nested `Text`
+(the four press props and every prop that starts with `onResponder`, `onStartShouldSetResponder` or
+`onMoveShouldSetResponder`, the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included), `selectable`, `adjustsFontSizeToFit`, `ellipsizeMode` head, middle or invalid (`tail or clip`),
 `selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS`, `android_hyphenationFrequency`, the
 wrapper-only `text=` and `fontSize=`, `fontStyle` and `textDecoration*`, a bad `numberOfLines`, a non-function
 `onTextLayout` and inline Controls. A native guard in `ParagraphLayout::prepare` repeats the refusal of head, middle and
@@ -3184,11 +3184,11 @@ ignored: `measure` and the paint report it and the Yoga callback survives. The d
 divergence is kept, documented and open.
 
 An independent oracle replays Pressability from the raw samples and timestamps, checks the runs of 19 paragraphs
-and the 28 rejected props word for word, and sees the host refuse the bypass. The SDK and host of main `6d02746` fail
-exactly 63 of the 114 checks (the original `Text.js` is not in its bundle either); the same bundle on that host alone fails
+and the 33 rejected props word for word, and sees the host refuse the bypass. The SDK and host of main `6d02746` fail
+exactly 68 of the 119 checks (the original `Text.js` is not in its bundle either); the same bundle on that host alone fails
 the 3 that need the native guard (and the oracle rejects only `bypass`); six retained sabotages (the wrapper registering
 `RCTText` again, no text styles in the base config, a private ancestor context, a nested press allowed, no native guard,
-RN's default size of 14) fail 102 of 105, 5, 13, 7, 3 and 2, and the oracle rejects each; the host without the guard is
+RN's default size of 14) fail 107 of 110, 5, 18, 12, 3 and 2, and the oracle rejects each; the host without the guard is
 byte-identical to the previous host. The previous SDK is bundled by the canonical `bundleNativeProbe` with `platformRoot`.
 The example passes 22 headless and 36 renderer checks and ends with a pressable paragraph; four captures show it at rest,
 held, after the click and with the column narrowed, taken by a capture driver that is not project code.
@@ -3199,6 +3199,9 @@ Open: press on a span (hit testing by text fragment and a dispatch in the pointe
 scaling, the default size of 14, font loading and fallback, bidi, emoji and grapheme clusters, and a reference
 measurement on an iOS simulator and an Android emulator. The hosted CI run of the new `native-text-original` step and the
 Pages publication are **pending**.
+
+The record pinned at `ba5ff00` ran 114 checks (63 failures on the previous SDK and host; sabotages 102 of 105, 5, 13, 7, 3
+and 2; 28 rejected props): the review of PR #62 added five nested-span responder cases afterwards.
 
 Executed on macOS arm64 with official Godot 4.7.2 at implementation
 [`ba5ff00`](https://github.com/journey-studios/godot-fabric/commit/ba5ff00fe1b22c6d5ba30925e57e8df6687a8261) and

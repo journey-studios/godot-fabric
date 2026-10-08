@@ -40,8 +40,9 @@ captures (hosted CI pending); the [research](docs/research/text-layout.md) has t
 the measured tolerance and the controls. `Text` now renders RN's original `Text.js`, and a
 paragraph presses through RN's own Pressability (`onPress`, `onPressIn`, `onPressOut`,
 `onLongPress`, `pressRetentionOffset`, `disabled`); the example's last line is a pressable
-paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 114 headless checks with a real
-mouse and touch, the controls of the previous SDK and host (63 and 3 failures) and six retained
+paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 119 headless checks (114 in the record pinned at `ba5ff00`, before the review of PR #62 added five nested-span
+responder cases) with a real
+mouse and touch, the controls of the previous SDK and host (68 and 3 failures; 63 and 3 in the record) and six retained
 sabotages, and four captures of the pressable line (hosted CI pending). Press on a nested span, selection,
 `adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 

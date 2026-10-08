@@ -582,7 +582,10 @@ previous host). The example passes 22 headless and 36 renderer checks, with four
 (at rest, held, after the click, and with the column narrowed), and a capture driver that is not project code.
 Press on a span, Text accessibility (the `link` role is not applied), selection, `adjustsFontSizeToFit`, font
 scaling (accepted and inert), italics and decoration and head and middle ellipsizing are open, and the default size
-stays 18, not RN's 14. The hosted CI run and the Pages publication are **pending**.
+stays 18, not RN's 14. The record is pinned at `ba5ff00`: the current suite has 119 checks (the previous SDK and host fail 68, the
+sabotages 107, 5, 18, 12, 3 and 2, and 33 props are rejected) because the review of PR #62 added five nested-span responder
+cases (`onStartShouldSetResponderCapture`, `onMoveShouldSetResponderCapture`, `onResponderReject`, `onResponderStart` and
+`onResponderEnd`) to the 114 that it ran. The hosted CI run and the Pages publication are **pending**.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

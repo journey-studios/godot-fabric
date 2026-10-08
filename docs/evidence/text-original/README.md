@@ -1,5 +1,11 @@
 # Text original: o `Text.js` do RN e o press no parágrafo
 
+> **Registro fixado.** As contagens abaixo são as da execução sobre `ba5ff00`: 114 checks, 63 falhas no SDK e no host anteriores,
+> sabotagens com 102, 5, 13, 7, 3 e 2 falhas e 28 props rejeitadas. A suíte atual tem **119 checks** (68 falhas no SDK e no host
+> anteriores; sabotagens com 107, 5, 18, 12, 3 e 2; 33 props rejeitadas) porque a revisão do PR #62 acrescentou cinco casos de
+> responder em span aninhado (`onStartShouldSetResponderCapture`, `onMoveShouldSetResponderCapture`, `onResponderReject`,
+> `onResponderStart` e `onResponderEnd`) depois de o registro ser fixado; o recibo e os links continuam descrevendo `ba5ff00`.
+
 Esta fatia, a segunda do GF-11, faz o `Text` público renderizar o `Libraries/Text/Text.js` ORIGINAL
 do RN 0.87.1, no lugar do wrapper do repositório que registrava `RCTText` e `RCTVirtualText` por
 conta própria. O `Text.js` é dono das props, do processamento do estilo, do Pressability de um

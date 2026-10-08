@@ -119,17 +119,17 @@ npm run test:text-original
 ```
 
 [tests/text-original-native.test.mjs](../../tests/text-original-native.test.mjs)
-runs 114 headless checks in one Hermes application over RN's original `Text.js`: the
+runs 119 headless checks in one Hermes application over RN's original `Text.js`: the
 registry (`RCTText` and `RCTVirtualText` registered once, by RN's own
 `TextNativeComponent`), every press gesture with a real mouse and a real touch (tap, a
 press held past 130 ms, a long press, leaving and re-entering the region with the default
 offsets and with `pressRetentionOffset`, outside, `disabled`, a span's text, inert props),
 the style of 19 paragraphs run by run, the default size and the spans that inherit it,
-28 rejected props word for word and three `NativeText`s that skip the facade and are
+33 rejected props word for word and three `NativeText`s that skip the facade and are
 refused by the host. An independent
 [oracle](../../tests/text-original-oracle.mjs) replays each gesture against
 Pressability's rules. [scripts/text-original-sabotage.mjs](../../scripts/text-original-sabotage.mjs)
-retains the controls: the SDK and host of main before the slice fail exactly 63
+retains the controls: the SDK and host of main before the slice fail exactly 68
 normative checks (`node tests/text-original-native.test.mjs --previous`), the same bundle
 on that host alone fails the 3 bypass checks (`--previous-host`), and six sabotages
 (the wrapper registering `RCTText` again, no text styles in the base config, a private
@@ -137,7 +137,8 @@ ancestor context, a nested press allowed, no native guard, RN's default size of 
 the probe and are rejected by the oracle. See the
 [research](../../docs/research/text-original.md) and the
 [evidence record](../../docs/evidence/text-original/README.md) (the commit it pins, the host and bundle
-hashes of every lane, and the captures).
+hashes of every lane, and the captures; it ran 114 checks and 63 failures before the review of PR #62 added five
+nested-span responder cases).
 
 ## Original syntax
 

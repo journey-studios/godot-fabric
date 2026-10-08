@@ -1,15 +1,16 @@
 # Text original: RN's `Text.js` over the paragraph, with press
 
 Status: second slice of GF-11, executed locally on macOS arm64 against pinned RN
-0.87.1 and official Godot 4.7.2, headless. The probe ran **114 checks**, every
+0.87.1 and official Godot 4.7.2, headless. The probe ran **119 checks**, every
 press gesture with a real mouse and a real touch; the SDK and the host of main
-before this slice ran the same fixture and failed exactly its **63 normative
+before this slice ran the same fixture and failed exactly its **68 normative
 checks**; the same bundle on that host alone (the guard missing) failed exactly
 **3**; six retained sabotages each fail the probe and the independent oracle
 rejects every one of them. The example ran 22 checks headless and 36 with the
 renderer. The [evidence record](../evidence/text-original/README.md) pins the
 implementation commit `ba5ff00`, the host and bundle hashes of every lane, the
-receipts and four captures of the pressable line. The hosted CI run of the new
+receipts and four captures of the pressable line; the record ran 114 checks (63 failures on the previous
+SDK and host) because the review of PR #62 added five nested-span responder cases afterwards. The hosted CI run of the new
 step and the Pages publication are **pending**.
 
 ## What RN does
@@ -128,7 +129,7 @@ Both were checked first, in Hermes inside Godot, with a throwaway fixture:
 | Default size | 14 | **18 kept**, documented, open |
 | `onPress`, `onLongPress`, `onPressIn`, `onPressOut` (outer) | `Pressability`, 130 ms minimum press, 500 ms long press | accepted, behave as upstream |
 | `pressRetentionOffset`, `disabled` | the region and the grant | accepted, behave as upstream |
-| press props on a nested `Text` | `PressableVirtualText`, needs a hit test per fragment | rejected with an error: `Godot Text does not implement <prop> on a nested Text: only the outer paragraph is pressable` (`onPress*`, `onLongPress`, `onResponder*`, `onStartShouldSetResponder`, `onMoveShouldSetResponder`) |
+| press props on a nested `Text` | `PressableVirtualText`, needs a hit test per fragment | rejected with an error: `Godot Text does not implement <prop> on a nested Text: only the outer paragraph is pressable` (the four press props and every prop that starts with `onResponder`, `onStartShouldSetResponder` or `onMoveShouldSetResponder` (the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included)) |
 | `allowFontScaling`, `maxFontSizeMultiplier`, `dynamicTypeRamp`, `suppressHighlighting` | scale and highlight on iOS | accepted and inert: the host's font scale is 1 and nothing highlights outside iOS |
 | `selectable`, `adjustsFontSizeToFit` | selection, fit to the box | rejected when on: `Godot Text does not implement <prop>`; the host refuses `adjustsFontSizeToFit` too |
 | `ellipsizeMode` head, middle, invalid | ellipsis at the head or in the middle | rejected: `Godot Text supports tail or clip ellipsizeMode`; the host refuses head and middle too |
@@ -185,14 +186,14 @@ Each of these runs with a real mouse and a real touch.
 - [`scripts/text-original-sabotage.mjs`](../../scripts/text-original-sabotage.mjs) retains the controls
   and restores every source byte for byte:
   - **previous SDK and host** (main before the slice, installed in `addons/`): fails exactly the
-    63 normative checks (the original `Text.js` is not in its bundle either, and
+    68 normative checks (the original `Text.js` is not in its bundle either, and
     the fixture's import of `TextNativeComponent` throws the registry's collision
     message, so the bypass cases fail at render);
   - **previous host with this SDK**: fails exactly the 3 bypass checks and is silent on all three;
     the oracle rejects only `bypass`;
   - sabotages: `register` (the wrapper registers `RCTText` again: the application does
-    not even start; 102 checks fail), `style` (no text styles in the base config: 5),
-    `ancestor` (a private context: 13), `span-press` (a nested press allowed: 7),
+    not even start; 107 checks fail), `style` (no text styles in the base config: 5),
+    `ancestor` (a private context: 18), `span-press` (a nested press allowed: 12),
     `guard` (no native guard, which rebuilds the host: 3 — and the dylib it
     produces is byte-identical to the previous host's), `default` (RN's 14 instead
     of 18: 2). The oracle rejects each by sections the table of the comparison

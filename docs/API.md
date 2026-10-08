@@ -486,8 +486,8 @@ tooling and exports remain pending.
   press over any of its text, a nested span's included. `onStartShouldSetResponder`
   and the `onResponder*` handlers work on the outer paragraph.
 - Fail where the Text renders, with these errors:
-  - on a nested `Text`, any of `onPress`, `onPressIn`, `onPressOut`, `onLongPress`,
-    `onStartShouldSetResponder`, `onMoveShouldSetResponder` and `onResponder*`:
+  - on a nested `Text`, any of the four press props (`onPress`, `onPressIn`,
+    `onPressOut` and `onLongPress`) and every prop that starts with `onResponder`, `onStartShouldSetResponder` or `onMoveShouldSetResponder` (the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included):
     `Godot Text does not implement <name> on a nested Text: only the outer paragraph is pressable`;
   - `selectable` or `adjustsFontSizeToFit` when on: `Godot Text does not implement <name>`;
   - `ellipsizeMode` head, middle or any other value:
