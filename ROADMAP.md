@@ -3113,7 +3113,7 @@ checkpoint, weight or denominator closes.
 **Network images and the image caches (2026-10-08).** The second slice of GF-16 replaces what the paragraphs above
 leave open or refused: `http(s)` sources with `headers`, `method`, `body` and `cache`, the decoded-image cache,
 `prefetch`, `queryCache` and `getSize` of a network URL, and `repeat` at an exact fractional size. The
-[network evidence](docs/evidence/images-network/README.md) records **72 headless checks** (64 normative) over a
+[network evidence](docs/evidence/images-network/README.md) records **74 headless checks** (66 normative) over a
 loopback Node server in HTTP and HTTPS, which the independent oracle rechecks against the server's own log and a
 model of both caches. The `ImageLoader` owns a second `HttpTransport` (Networking's factory, trust and clock), runs
 at most four downloads at once as `RCTImageLoader` does, builds the request as `NSURLRequestFromImageSource`, judges
@@ -3128,16 +3128,23 @@ cancelling an Image mid-download closes the transport request, and a view never 
 shares among Images. Time moves through the validation clock, so no check sleeps. The same bundle on the preceding
 host (main `6d02746`) runs 37 checks and fails exactly the 30 normative ones among them; three retained sabotages
 (a reload that consults the decoded cache, a download whose transport request is never closed, a repeating Image
-that resizes the shared texture) fail 1, 32 and 2 checks and the oracle rejects each, and 27 mutations of the
+that resizes the shared texture) fail 1, 34 and 2 checks and the oracle rejects each, and 33 mutations of the
 genuine report are refused. The example now shows a network PNG, a remount answered by the decoded cache without a
 second request and a 404 (22 headless and 30 graphical checks; two new captures). Departures from RN iOS are
 listed in the evidence and the [research note](docs/research/images.md): coalesced progress with none for a cache
-hit, redirects that keep the source's headers, only the final 200 kept in the byte cache, no revalidation or `Vary`,
-a `prefetch` that keeps bytes only, host failure texts, no cookies, compression or HTTP/2 and cleartext allowed; a
-failure's `responseCode` and response headers reach `onError` as they do on iOS. The first slice's
-suite changed with the contract (73 checks, 62 normative). Open: a disk cache, revalidation, remote servers and
+hit, only the final 200 kept in the byte cache, no revalidation or `Vary`, a `prefetch` that keeps bytes only, host
+failure texts, no cookies, compression or HTTP/2, and cleartext allowed for a request without credentials; a
+failure's `responseCode` and response headers reach `onError`, and an image redirect drops the source's headers, as
+they do on iOS. The first slice's suite changed with the contract (73 checks, 62 normative). Open: a disk cache, revalidation, remote servers and
 real network conditions, hosted CI for this slice, and everything the first slice left open apart from network
 images, the decoded cache, `prefetch` and `queryCache`. This slice closes no checkpoint: GF-16 stays in progress.
+After the review of #64 ([`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10)),
+a request that carries `Authorization`, `Proxy-Authorization` or `Cookie` neither reads nor writes either cache (stricter
+than iOS, whose caches are keyed by URL) and is refused over http (what App Transport Security does on iOS), image
+redirects drop the source's headers as `RCTHTTPRequestHandler` does (the old deviation is gone), header numbers keep
+every digit and the example's server answers 400 and 431 instead of reading a bad request line; the lanes ran again
+with 74 checks (66 normative), the control failing the same 30 of 37, sabotages failing 1, 34 and 2, 33 oracle
+mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`.
 
 ### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
 

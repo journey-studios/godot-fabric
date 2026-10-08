@@ -2,14 +2,15 @@
   "schemaVersion": 1,
   "scenario": "images-network",
   "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
-  "at": "2026-10-08T06:05:03Z",
-  "executionBaseCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
-  "executedTreeSha": "48950cc037493d0a0da777a01cc477237605a757",
+  "at": "2026-10-08T08:00:17Z",
+  "executionBaseCommit": "05970c39f99f4609cef9d8887e8a7813797f7024",
+  "executedTreeSha": "89ebe446b20cf069750fe0b076915afebc50b2dc",
   "executedTreeEqualsImplementationTree": true,
   "sourceDirtyDuringExecution": false,
   "documentsEditedDuringExecution": "none during the lanes; docs/evidence/images-network, docs/evidence/images, docs/research/images.md, ROADMAP.md, README.md, docs/API.md, docs/evidence/README.md, examples/README.md and the example README were written after them, and the gates that read documents ran again on the tree that holds them",
-  "implementationCommit": "6bbd03665b0b2136f0eabe58a540cbf4394215ee",
-  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee",
+  "implementationCommit": "910cffb1c35009438e06f14775aac80211664a10",
+  "firstImplementationCommit": "6bbd03665b0b2136f0eabe58a540cbf4394215ee",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10",
   "implementationPr": null,
   "dependsOn": "The first Images slice (docs/evidence/images: RN's C++ image pipeline, the GodotImageManager, the worker-pool loader and the GodotImage view), the Networking slice's HttpTransport and its Godot HTTPClient implementation (docs/evidence/networking), the application's validation seams (the trusted authority of the HTTPS lane and the clock offset) and the AppLifecycle that carries the OS memory warning (docs/evidence/app-state)",
   "environment": {
@@ -19,7 +20,7 @@
     "node": "v22.23.3",
     "platform": "macOS arm64",
     "displayServer": "headless (the capture lane: macOS native renderer)",
-    "nativeHostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+    "nativeHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
     "precedingHostSha256": "425844941d6d3df3c41def190dcbe900ecc9b3d517e2cde23592c4899cfc687f"
   },
   "commands": [
@@ -31,10 +32,11 @@
     "npm run example -- images --capture",
     ".deps/build/image_core_test",
     ".deps/build/image_cache_test",
-    ".deps/build/image_network_test"
+    ".deps/build/image_network_test",
+    ".deps/build/http_core_test"
   ],
-  "headlessChecks": 72,
-  "normativeChecks": 64,
+  "headlessChecks": 74,
+  "normativeChecks": 66,
   "structuralChecks": 8,
   "exampleChecks": {
     "headless": 22,
@@ -44,7 +46,7 @@
     {
       "file": "native/image_cache_test.cpp",
       "target": "image_cache_test",
-      "groups": 7,
+      "groups": 8,
       "groupNames": [
         "http_dates_are_read_in_the_one_format_the_formatter_reads",
         "integer_values_read_as_nsstring_does",
@@ -52,11 +54,12 @@
         "decoded_keys_follow_rctimagecache",
         "the_cache_gives_up_the_least_recently_used_first",
         "a_request_is_routed_by_its_policy_and_what_the_caches_hold",
+        "credentials_are_named_by_their_headers",
         "staleness_is_for_the_caller_to_judge"
       ],
-      "assertions": 66,
+      "assertions": 76,
       "marker": "IMAGE_CACHE_PASSED",
-      "coverage": "HTTP dates in the one format RCTImageCache's formatter reads, NSString integerValue, RCTImageCache's freshness (no-cache, no-store and a component ending in max-age=0 forbid keeping; max-age=N at Date + N; Expires; a tenth of Date - Last-Modified; no stale time without a Date; the byte cache's arrival date), the decoded cache's %g key, the routing of a request by its policy and by what the caches hold (a decoded hit never touches the byte cache), the LRU store (eviction, the entry limit, replacement) and staleness as the caller's judgment"
+      "coverage": "HTTP dates in the one format RCTImageCache's formatter reads, NSString integerValue, RCTImageCache's freshness (no-cache, no-store and a component ending in max-age=0 forbid keeping; max-age=N at Date + N; Expires; a tenth of Date - Last-Modified; no stale time without a Date; the byte cache's arrival date), the decoded cache's %g key, the routing of a request by its policy and by what the caches hold (a decoded hit never touches the byte cache, and a request that carries Authorization, Proxy-Authorization or Cookie asks neither), the names that count as credentials, the LRU store (eviction, the entry limit, replacement) and staleness as the caller's judgment"
     },
     {
       "file": "native/image_network_test.cpp",
@@ -74,14 +77,14 @@
         "stopping_silences_everything_and_stops_the_transport_first",
         "a_hook_may_queue_more_downloads"
       ],
-      "assertions": 60,
+      "assertions": 64,
       "marker": "IMAGE_NETWORK_PASSED",
-      "coverage": "NSURLRequestFromImageSource (method upper-cased, headers replaced without case, a body on any method, the names and values the wire cannot carry), RCTImageLoader's judgment of a download (an empty body before the status, Failed to load <URL>, the response that comes with a failure, repeated headers joined), at most four downloads in first-in-first-out order, cumulative progress coalesced per poll, cancellation outside the transport's poll and listeners, the size limit by Content-Length and by bytes, the idle timeout on an injected clock, an abandoned queued download leaving the queue, stop() silencing every hook after stopping the transport, and hooks that queue more downloads"
+      "coverage": "NSURLRequestFromImageSource (method upper-cased, headers replaced without case, a body on any method, the names and values the wire cannot carry), RCTImageLoader's judgment of a download (an empty body before the status, Failed to load <URL>, the response that comes with a failure, repeated headers joined), at most four downloads in first-in-first-out order, cumulative progress coalesced per poll, cancellation outside the transport's poll and listeners, the size limit by Content-Length and by bytes, the idle timeout on an injected clock, an abandoned queued download leaving the queue, the refusal of a credential header over http and its acceptance over https, the redirect option every image request sets, stop() silencing every hook after stopping the transport, and hooks that queue more downloads"
     },
     {
       "file": "native/image_core_test.cpp",
       "target": "image_core_test",
-      "groups": 7,
+      "groups": 8,
       "groupNames": [
         "sources_are_classified_by_scheme",
         "bundled_files_carry_their_scale_in_the_name",
@@ -89,11 +92,12 @@
         "headers_give_dimensions",
         "absurd_headers_are_refused_before_decoding",
         "decoding_shrinks_to_cover_the_request_and_never_upscales",
-        "resize_modes_draw_like_uiimageview"
+        "resize_modes_draw_like_uiimageview",
+        "numbers_are_written_as_the_shortest_text_that_reads_back"
       ],
-      "assertions": 70,
+      "assertions": 77,
       "marker": "IMAGE_CORE_PASSED",
-      "coverage": "URI classification (res://, user://, file://, data:, http(s), bare paths), the @Nx scale in a bundled file name, magic-byte sniffing, header dimensions of PNG, JPEG, WebP, BMP, TGA and SVG, the refusal of absurd headers before any decoder runs, the decode target of RCTTargetSize and the rectangles of the six UIViewContentModes"
+      "coverage": "URI classification (res://, user://, file://, data:, http(s), bare paths), the @Nx scale in a bundled file name, magic-byte sniffing, header dimensions of PNG, JPEG, WebP, BMP, TGA and SVG, the refusal of absurd headers before any decoder runs, the decode target of RCTTargetSize the rectangles of the six UIViewContentModes and the shortest text that reads back for a number written as a header value (0.123456789 stays 0.123456789)"
     }
   ],
   "scope": {
@@ -110,6 +114,9 @@
     "cachePoliciesCertified": true,
     "prefetchQueryCacheGetSizeCertified": true,
     "cacheTimeMovedThroughTheValidationClock": true,
+    "credentialsKeepOutOfBothCaches": true,
+    "credentialsRefusedOverHttp": true,
+    "redirectsDropTheSourceHeaders": true,
     "actualSceneTreeFrames": true,
     "memoryWarningCertified": true,
     "diskCacheCertified": false,
@@ -127,27 +134,27 @@
   "lanes": [
     {
       "lane": "current",
-      "meaning": "Current host, headless: the 24 declared network Images over a loopback Node server (HTTP and HTTPS with a test authority), the stages that hold downloads at the server (four at once, partial progress, cancel, swap, size limits, the idle timeout), the 100 operations of the cache stages moved through the validation clock, the picture two Images share, and the stop with a decode and five downloads in flight, then the independent oracle over the report.",
-      "nativeHostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
-      "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7",
-      "checks": 72,
-      "passed": 72,
+      "meaning": "Current host, headless: the 24 declared network Images over a loopback Node server (HTTP and HTTPS with a test authority), the stages that hold downloads at the server (four at once, partial progress, cancel, swap, size limits, the idle timeout), the 115 operations of the cache and credential stages moved through the validation clock, the picture two Images share, and the stop with a decode and five downloads in flight, then the independent oracle over the report.",
+      "nativeHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
+      "checks": 74,
+      "passed": 74,
       "failed": 0,
-      "checkIdDigestSha256": "4fbb86cdfccbb6e9d42fd91aa0037976294e03b9f00bdb94baef86df70b02ed9",
-      "reportSha256": "1655143dfee6842ad6e8ab51bc7496797712341cb3b004b956ce7fc38892a793",
-      "logSha256": "0640ef050b7fad7635a33b7d0146f907a9c2feee92c5ccba8cc02ce2217b6fb5"
+      "checkIdDigestSha256": "d01c6a744f35998ad2a049fc426a645c29b76b3e46894b670a0073f2437d20ac",
+      "reportSha256": "44d1c1f630d533aa2f68979757cb4cc380a8cf5c71d2006f2bf384d7bafeaf37",
+      "logSha256": "f99e4a4d5052a5814c712065f9384a7a370a51c693277da345c416d3296b372e"
     },
     {
       "lane": "preceding-host",
-      "meaning": "The same bundle on the host built from main 6d02746 (no network images); expected negative control (--allow-original-negative). The probe runs only the stages that need nothing the loader's network would hold: 37 checks, of which the 7 that need none hold and the 30 that need the network fail; the other 27 normative checks are not executed.",
+      "meaning": "The same bundle on the host built from main 6d02746 (no network images); expected negative control (--allow-original-negative). The probe runs only the stages that need nothing the loader's network would hold: 37 checks, of which the 7 that need none hold and the 30 that need the network fail; the other 36 normative checks are not executed.",
       "nativeHostSha256": "425844941d6d3df3c41def190dcbe900ecc9b3d517e2cde23592c4899cfc687f",
-      "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
       "checks": 37,
       "passed": 7,
       "failed": 30,
-      "checkIdDigestSha256": "0661f2124dfb6782a522bb4f549cbf812a721405f8524f5fc652b8164d19b7e5",
-      "reportSha256": "4d0684e386ae1a20255a07a74e8433200b8856cba4cb4ad09b0048e046bc97e5",
-      "logSha256": "9b38c2333c928131da2cadb740233e5043af54637dd71549d297c27d868912e8",
+      "checkIdDigestSha256": "8a1cde4f0b9310043656e039bf35658e98798184d553dd496db5d314d3a824d2",
+      "reportSha256": "99adcf0ca4b63622c20aef1b582e8b44a1be92f4d9420d9c6db2dc263913c7c6",
+      "logSha256": "15b152fa056efdb7f992d620f5990ff3bb21bf972c0ebf6556c89dbe80fff355",
       "failedIds": [
         "loads/Pictures served over http and https load, with redirects and chunked bodies: PNG, JPEG, SVG and a wide PNG at the sizes of their headers",
         "loads/The decoded pixels of a PNG downloaded over http, https, chunked or after a redirect are those of the file",
@@ -157,7 +164,7 @@
         "loads/A downloaded picture is drawn like any other: a 40x20 pixel picture is 20x10 points at scale 2, and cover crops it to the 60x60 frame",
         "redirects/onLoad reports the uri the source asked for after the redirect was followed",
         "redirects/The server saw the redirect and the picture it led to",
-        "redirects/A redirect to another origin keeps the source's headers and drops Authorization",
+        "redirects/A redirect drops the source's headers, as RCTHTTPRequestHandler's redirect delegate does: the request it leads to reaches the server without them, to another origin or not",
         "request/The method (upper-cased), headers and body of a source reach the server as declared",
         "request/A body goes with any method, a GET included",
         "request/crossOrigin and referrerPolicy become the headers RN's Image gives them",
@@ -184,14 +191,14 @@
     {
       "lane": "sabotage-decoded-reload",
       "meaning": "The same bundle on a host whose route consults the decoded cache even for a request that asks to reload (native/image_cache.h, scripts/images-network-sabotage.mjs).",
-      "nativeHostSha256": "6fd2f8c80c1d63c82d8a7b7b7d4bd6c101415d5307e2eed553201af56e06a3b1",
-      "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7",
-      "checks": 72,
-      "passed": 71,
+      "nativeHostSha256": "13da4722a9cf8c796f86225de200af1cf611b9062d7738e5baed10854ccda694",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
+      "checks": 74,
+      "passed": 73,
       "failed": 1,
-      "checkIdDigestSha256": "4fbb86cdfccbb6e9d42fd91aa0037976294e03b9f00bdb94baef86df70b02ed9",
-      "reportSha256": "1fb191c6494a3c662288accd92480581fdb6ae659d35b369c14765c5421cf450",
-      "logSha256": "3caf0c96b1c627890a6818ceb9889656df63fcb98389b0817f6748bf22c3da72",
+      "checkIdDigestSha256": "d01c6a744f35998ad2a049fc426a645c29b76b3e46894b670a0073f2437d20ac",
+      "reportSha256": "e5a6024e8fdb16d7b92b42421cc3a9e76590a5459b4a118dd67b0475d2afb545",
+      "logSha256": "37e33a550c3ce7f5a8e30d0d6807b6e7950260aadcd689c86cb2814d47c4dcd7",
       "failedIds": [
         "cache/reload ignores both caches and asks the server again, and leaves the decoded picture where it was"
       ]
@@ -199,14 +206,14 @@
     {
       "lane": "sabotage-cancel-open",
       "meaning": "The same bundle on a host whose network does not tell the transport to close the request of a download nobody wants any more (native/image_network.cpp).",
-      "nativeHostSha256": "6e13ea1c347782f6adb7c78c5723909a42122d57c924d4da474780eccb9518b8",
-      "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7",
-      "checks": 72,
+      "nativeHostSha256": "7fba20b38e560a562d712a60dfed5544895432c1120860b8a5338175b5597426",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
+      "checks": 74,
       "passed": 40,
-      "failed": 32,
-      "checkIdDigestSha256": "4fbb86cdfccbb6e9d42fd91aa0037976294e03b9f00bdb94baef86df70b02ed9",
-      "reportSha256": "7c0997db1e4adb80a0dd9c9b79b8b844b6215b3d4c7f5d49cc42cd25eab626cd",
-      "logSha256": "4d5486c97929c73821d983ca48873b065451372d9a10b567d7f46f2f8fdf8649",
+      "failed": 34,
+      "checkIdDigestSha256": "d01c6a744f35998ad2a049fc426a645c29b76b3e46894b670a0073f2437d20ac",
+      "reportSha256": "60640c8b37c4e7f751da090e11d8c29ba62187bcaa77a78bf29f8d51ff888ae7",
+      "logSha256": "35cc4472d817762e04633cb708de66728b832179bca1b208e33a9ddecddb4e1f",
       "failedIds": [
         "cancel/Unmounting an Image mid-download, before or after the head, closes its request: the server sees the client leave and the transport counts the cancellation",
         "cancel/Swapping the source mid-download closes the old request and only the new one loads",
@@ -230,6 +237,8 @@
         "api/A size that cannot be downloaded rejects with E_GET_SIZE_FAILURE and the failure text, with the iOS message of each of the two methods",
         "api/queryCache reports what the byte cache holds, and nothing for a failed download or a source that is not on the network",
         "cache/A response that forbids caching, with no-store, no-cache or max-age=0, is kept by neither cache: the second Image asks the server again",
+        "cache/A request that carries Authorization, Proxy-Authorization or Cookie neither reads nor writes either cache: it asks the server wherever a response is cached, and what it fetched answers no later request",
+        "failures/A request that carries Authorization, Proxy-Authorization or Cookie over http fails through onError, or rejects a size, with the host's message, and nothing reaches the server",
         "cache/A cached picture is served while it is fresh and loaded again once it is stale, as the clock moves: max-age after its seconds, Expires at its date, a heuristic tenth of the time since Last-Modified, and never without any of them",
         "cache/force-cache and only-if-cached serve a stale response from the byte cache (the picture decoded from it is stale at once and is not kept), and the default policy asks the server again",
         "cache/The decoded cache keeps no picture over 2 MiB: one of 900x600 pixels is decoded again from the byte cache, one of 800x655 stays",
@@ -245,14 +254,14 @@
     {
       "lane": "sabotage-texture-mutation",
       "meaning": "The same bundle on a host whose repeating Image resizes the texture that the decoded cache shares among every Image of the picture (native/image_view.cpp).",
-      "nativeHostSha256": "0f09f7bc9767056e904520eaf198ab65f3494f382c12d013ed4ea65fee40172b",
-      "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7",
-      "checks": 72,
-      "passed": 70,
+      "nativeHostSha256": "34fcd916d568c93f8773c64ea33cefda1117dc42c7cc7760d3a38bbdb9985624",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
+      "checks": 74,
+      "passed": 72,
       "failed": 2,
-      "checkIdDigestSha256": "4fbb86cdfccbb6e9d42fd91aa0037976294e03b9f00bdb94baef86df70b02ed9",
-      "reportSha256": "aec49dcad3a95b410364c8cb135a49a6c47b6c0f8e81b24055a63e42d9cef2e8",
-      "logSha256": "3bc4e4b1d9f31e1e9652a95db6a0797d8ed770bf6b12e36e232bfc5a38eb284b",
+      "checkIdDigestSha256": "d01c6a744f35998ad2a049fc426a645c29b76b3e46894b670a0073f2437d20ac",
+      "reportSha256": "885c8dbfe2d53b3ebf885dd6db875ddd15784d1ba630c1fefa84d5640e1530b9",
+      "logSha256": "235f4c60c3dbb3e852b9be172690169e5c64afafeb91d58d96d540679e8e71dd",
       "failedIds": [
         "shared/Neither Image changes the texture they share: both read the 40x20 pixels of the picture, although one repeats it",
         "shared/Changing the modes of the two Images changes what each draws and still not the texture"
@@ -267,19 +276,19 @@
       "kept": "build/images-network-previous-host/fabric_godot.dylib (local, not in Git)"
     },
     "current": {
-      "sha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
-      "bytes": 6453440,
+      "sha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "bytes": 6505312,
       "rebuiltFromCommittedSources": true,
       "note": "The sabotage script's genuine build recompiled the guarded sources from the committed tree and reproduced this hash, and its rebuild after the last variant did too"
     },
     "sabotage-decoded-reload": {
-      "sha256": "6fd2f8c80c1d63c82d8a7b7b7d4bd6c101415d5307e2eed553201af56e06a3b1"
+      "sha256": "13da4722a9cf8c796f86225de200af1cf611b9062d7738e5baed10854ccda694"
     },
     "sabotage-cancel-open": {
-      "sha256": "6e13ea1c347782f6adb7c78c5723909a42122d57c924d4da474780eccb9518b8"
+      "sha256": "7fba20b38e560a562d712a60dfed5544895432c1120860b8a5338175b5597426"
     },
     "sabotage-texture-mutation": {
-      "sha256": "0f09f7bc9767056e904520eaf198ab65f3494f382c12d013ed4ea65fee40172b"
+      "sha256": "34fcd916d568c93f8773c64ea33cefda1117dc42c7cc7760d3a38bbdb9985624"
     }
   },
   "precedingHostControl": {
@@ -290,15 +299,15 @@
     },
     "receipt": {
       "format": "godot-fabric.images-network-control/v1",
-      "genuineHostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+      "genuineHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
       "previousHostSha256": "425844941d6d3df3c41def190dcbe900ecc9b3d517e2cde23592c4899cfc687f",
-      "restoredHostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+      "restoredHostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
       "runStatus": 0
     },
     "checks": 37,
     "normativeFailures": 30,
     "structuralChecksPassed": 7,
-    "normativeChecksNotExecuted": 34,
+    "normativeChecksNotExecuted": 36,
     "sameBundle": true,
     "normativeFailureIds": [
       "loads/Pictures served over http and https load, with redirects and chunked bodies: PNG, JPEG, SVG and a wide PNG at the sizes of their headers",
@@ -309,7 +318,7 @@
       "loads/A downloaded picture is drawn like any other: a 40x20 pixel picture is 20x10 points at scale 2, and cover crops it to the 60x60 frame",
       "redirects/onLoad reports the uri the source asked for after the redirect was followed",
       "redirects/The server saw the redirect and the picture it led to",
-      "redirects/A redirect to another origin keeps the source's headers and drops Authorization",
+      "redirects/A redirect drops the source's headers, as RCTHTTPRequestHandler's redirect delegate does: the request it leads to reaches the server without them, to another origin or not",
       "request/The method (upper-cased), headers and body of a source reach the server as declared",
       "request/A body goes with any method, a GET included",
       "request/crossOrigin and referrerPolicy become the headers RN's Image gives them",
@@ -338,19 +347,19 @@
     "receiptFormat": "godot-fabric.images-network-sabotage/v1",
     "sourceSha256": {
       "genuine": {
-        "native/image_cache.h": "6198bcd119194db6fd9f1a70d2eab20db6d587990833beeb39db7e72f706d69d",
-        "native/image_network.cpp": "5511cf4b7637677c1d1b29fd33d01bf315cc19db3717652b908345e479718781",
+        "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+        "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
         "native/image_view.cpp": "fbd46ad8615fc8eb7e4bb903d88382d500ceaacf614028a479829966cf2a1aed"
       },
       "restored": {
-        "native/image_cache.h": "6198bcd119194db6fd9f1a70d2eab20db6d587990833beeb39db7e72f706d69d",
-        "native/image_network.cpp": "5511cf4b7637677c1d1b29fd33d01bf315cc19db3717652b908345e479718781",
+        "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+        "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
         "native/image_view.cpp": "fbd46ad8615fc8eb7e4bb903d88382d500ceaacf614028a479829966cf2a1aed"
       }
     },
     "hostSha256": {
-      "genuine": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
-      "restored": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221"
+      "genuine": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "restored": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9"
     },
     "variants": [
       {
@@ -358,8 +367,8 @@
         "file": "native/image_cache.h",
         "find": "  if (view && policy != CachePolicy::Reload) {",
         "replace": "  if (view) {",
-        "sourceSha256": "c689c763d9a7858e734255c3555988c818aea81ed1f400c9eb5d4c9c395f0830",
-        "hostSha256": "6fd2f8c80c1d63c82d8a7b7b7d4bd6c101415d5307e2eed553201af56e06a3b1",
+        "sourceSha256": "2aa58f4f7f8859ed9d6ae48f22ec98bcf2a260c2bb04146720ff4ad694d2310f",
+        "hostSha256": "13da4722a9cf8c796f86225de200af1cf611b9062d7738e5baed10854ccda694",
         "runStatus": 0,
         "failedChecks": 1
       },
@@ -368,10 +377,10 @@
         "file": "native/image_network.cpp",
         "find": "      transport_->cancel(id);\n      active_.erase(id);\n      ++abandoned_;",
         "replace": "      active_.erase(id);\n      ++abandoned_;",
-        "sourceSha256": "4345e101ec09929c0e4d287400a34cae839cc430c03aaafbba7aa615ce5a3d5e",
-        "hostSha256": "6e13ea1c347782f6adb7c78c5723909a42122d57c924d4da474780eccb9518b8",
+        "sourceSha256": "0dfc38b77d896df1cb45188c9761fb22a9e82b90c58fb1556b06da0b0450c2c7",
+        "hostSha256": "7fba20b38e560a562d712a60dfed5544895432c1120860b8a5338175b5597426",
         "runStatus": 0,
-        "failedChecks": 32
+        "failedChecks": 34
       },
       {
         "name": "texture-mutation",
@@ -379,37 +388,37 @@
         "find": "    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));\n    draw_texture_rect(",
         "replace": "    image_->texture->set_size_override(Vector2i(std::max(1, static_cast<int>(std::lround(natural.width))), std::max(1, static_cast<int>(std::lround(natural.height)))));\n    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));\n    draw_texture_rect(",
         "sourceSha256": "a443858a20193c571be086c619e7e87ecafb62a49db12c34fe763e2382ec5034",
-        "hostSha256": "0f09f7bc9767056e904520eaf198ab65f3494f382c12d013ed4ea65fee40172b",
+        "hostSha256": "34fcd916d568c93f8773c64ea33cefda1117dc42c7cc7760d3a38bbdb9985624",
         "runStatus": 0,
         "failedChecks": 2
       }
     ],
     "oracleRejections": {
       "decoded-reload": "c1-reload: where the picture came from, and whether it loaded",
-      "cancel-open": "expires-1: ended",
+      "cancel-open": "c11-auth: ended",
       "texture-mutation": "shared a: the texture has the pixels of the picture"
     }
   },
   "oracle": {
     "file": "tests/images-network-oracle.mjs",
-    "independence": "Written apart from the probe and from the C++. Reads the server's own log (every request as it arrived on the wire and every answer as it was sent) and the files the server serves, and recomputes what RCTImageLoader, RCTImageCache and NSURLCache do with them: the request's method, headers and body, the failure payloads, the progress semantics, the decoded pictures, the order in which the caches answer, the freshness of a response from its Date, Cache-Control, Expires and Last-Modified, the LRU order and the limits. It replays the 100 operations of the probe over a model of the two caches with the clock each one ran at; where every picture came from, every request the server saw and the keys both caches hold at three checkpoints must agree. Its decode expectations reuse the independent helpers of tests/images-oracle.mjs",
-    "expectedCheckCount": 72,
+    "independence": "Written apart from the probe and from the C++. Reads the server's own log (every request as it arrived on the wire and every answer as it was sent) and the files the server serves, and recomputes what RCTImageLoader, RCTImageCache and NSURLCache do with them: the request's method, headers and body, the failure payloads, the progress semantics, the decoded pictures, the order in which the caches answer, the freshness of a response from its Date, Cache-Control, Expires and Last-Modified, the LRU order and the limits. It replays the 115 operations of the probe over a model of the two caches with the clock each one ran at; where every picture came from, every request the server saw and the keys both caches hold at three checkpoints must agree. Its decode expectations reuse the independent helpers of tests/images-oracle.mjs",
+    "expectedCheckCount": 74,
     "model": {
-      "operations": 100,
+      "operations": 115,
       "operationKinds": {
         "memory": 2,
-        "view": 57,
+        "view": 66,
         "checkpoint": 3,
         "prefetch": 27,
-        "queryCache": 4,
+        "queryCache": 6,
         "prefetchWithMetadata": 1,
-        "getSize": 4,
-        "getSizeWithHeaders": 2
+        "getSize": 5,
+        "getSizeWithHeaders": 5
       },
-      "urls": 56,
+      "urls": 61,
       "checkpoints": 3,
       "declaredCases": 24,
-      "jobsJudged": 133
+      "jobsJudged": 146
     },
     "stalenessMarginMs": 20000,
     "mutationsOfTheGenuineReport": [
@@ -425,6 +434,12 @@
       "the server holds every download that started",
       "a second Image of one picture is answered by the decoded cache",
       "reload asks the server again",
+      "a request that carries credentials is not answered by the decoded cache",
+      "a request that carries credentials does not leave its response in the byte cache",
+      "a size measured with credentials does not leave its response in the byte cache",
+      "a request that carries credentials is not sent over http",
+      "a size measured with credentials is not asked over http",
+      "a redirect drops the source's headers",
       "a stale picture is loaded again",
       "a heuristic stale time is a tenth of the age",
       "the decoded cache gives up the least recently used",
@@ -451,65 +466,65 @@
   },
   "executedObservations": {
     "note": "Observations of the recorded run, not assertions: the probe and the oracle never fix a count that depends on pace or on how the bytes were segmented",
-    "serverRequests": 111,
-    "jobsRecorded": 133,
-    "jobsOnWorkerThreads": 97,
+    "serverRequests": 119,
+    "jobsRecorded": 146,
+    "jobsOnWorkerThreads": 105,
     "workerThreadIdentities": 11,
     "jobsByWhereTheyWereServedFrom": {
-      "refused before any source": 3,
-      "network": 106,
-      "decoded": 14,
+      "refused before any source": 7,
+      "network": 114,
+      "decoded": 15,
       "bytes": 9,
       "local source (no request)": 1
     },
     "jobsByOutcome": {
-      "failed": 24,
-      "loaded": 75,
+      "failed": 28,
+      "loaded": 81,
       "cancelled": 4,
       "prefetched": 26,
-      "measured": 4
+      "measured": 7
     },
-    "operations": 100,
+    "operations": 115,
     "operationsByKind": {
       "memory": 2,
-      "view": 57,
+      "view": 66,
       "checkpoint": 3,
       "prefetch": 27,
-      "queryCache": 4,
+      "queryCache": 6,
       "prefetchWithMetadata": 1,
-      "getSize": 4,
-      "getSizeWithHeaders": 2
+      "getSize": 5,
+      "getSizeWithHeaders": 5
     },
-    "operationUrls": 56,
+    "operationUrls": 61,
     "loaderAtStop": {
       "byteHits": 9,
       "cacheClears": 2,
       "cancelled": 4,
-      "decodedHits": 14,
+      "decodedHits": 15,
       "deferredUploads": 0,
-      "downloads": 112,
+      "downloads": 120,
       "dropped": 0,
-      "failed": 20,
-      "loaded": 75,
-      "measured": 6,
-      "measures": 6,
+      "failed": 23,
+      "loaded": 81,
+      "measured": 10,
+      "measures": 10,
       "peakInFlight": 4,
       "peakUploadsPerPoll": 4,
       "prefetched": 28,
       "prefetches": 28,
-      "requested": 105,
-      "tasksAwaited": 98,
-      "tasksStarted": 98,
-      "uploadBytes": 33776384,
-      "uploads": 61
+      "requested": 114,
+      "tasksAwaited": 106,
+      "tasksStarted": 106,
+      "uploadBytes": 33787904,
+      "uploads": 66
     },
     "loaderBeforeStop": {
       "inFlight": 1,
       "atGate": 1,
       "downloading": 5,
       "held": true,
-      "tasksStarted": 98,
-      "tasksAwaited": 97
+      "tasksStarted": 106,
+      "tasksAwaited": 105
     },
     "networkBeforeStop": {
       "active": 4,
@@ -517,24 +532,24 @@
       "peakActive": 4
     },
     "networkAtStop": {
-      "started": 109,
-      "completed": 95,
+      "started": 117,
+      "completed": 103,
       "failed": 8,
       "abandoned": 4,
       "abortedByIdle": 2,
       "abortedBySize": 2,
-      "progressEvents": 123,
+      "progressEvents": 127,
       "peakActive": 4,
-      "bytes": 36392456
+      "bytes": 36393390
     },
     "transportAtStop": {
-      "started": 109,
-      "completed": 96,
+      "started": 117,
+      "completed": 104,
       "failed": 3,
       "cancelled": 10,
       "redirectsFollowed": 3,
-      "responses": 103,
-      "bytesReceived": 36408736
+      "responses": 111,
+      "bytesReceived": 36409670
     },
     "limits": {
       "network": {
@@ -557,8 +572,8 @@
       {
         "label": "memory-1",
         "before": {
-          "bytes": 22,
-          "decoded": 19
+          "bytes": 21,
+          "decoded": 18
         },
         "after": {
           "bytes": 0,
@@ -581,7 +596,7 @@
     "scale": 2
   },
   "refreshedControlsOfOtherSlices": {
-    "reason": "src/image-contract.mjs sits in every native bundle through the facade, so the local controls and sabotages of other slices (build/, never committed and absent in CI) compared against stale bundles",
+    "reason": "src/image-contract.mjs sits in every native bundle through the facade, and the review round changed the transport the Networking and WebSocket bundles pin (native/http_core.h, http_transport.h, godot_http_transport.cpp), so the local controls and sabotages of other slices (build/, never committed and absent in CI) compared against stale bundles; the retained redirects sabotage of the networking suite follows plan_redirect's new signature (scripts/networking-sabotage.mjs)",
     "suites": [
       "test:images (control on build/images-previous-host, sabotages main-thread and stale-request)",
       "test:networking (control and two sabotages)",
@@ -627,34 +642,33 @@
     "note": "The first slice's two captures stay in docs/evidence/images and show the example before its network row; they keep the pins of that record"
   },
   "regressions": {
-    "note": "Ran on the working tree that equals the implementation commit, after the quality review's extraction of ImageSources and the final rebuild of the host. Controls and sabotages live only in build/ and were refreshed on the preserved preceding hosts where they pin a bundle",
+    "note": "Ran on the working tree that equals the implementation commit 910cffb: the review round of PR #64 on top of the merge of main 05970c3. Controls and sabotages live only in build/ and were refreshed on the preserved preceding hosts where they pin a bundle or a producer",
     "firstPassFailures": {
-      "check:static": "fallow reported unused exports of the new server module and two duplicate export names between the oracles; the exports were removed and the names made unique",
-      "test:images": "compared against a stale local control after the bundle changed; rerun in the order current, control, sabotages, current",
-      "test:networking": "its local control and sabotage receipts pinned a bundle without the changed image contract; rebuilt on the preserved preceding host",
-      "test:websocket": "the same, rebuilt on its preserved preceding host"
+      "test:images-network and test:images": "the first run after each change compared against a stale local control (the bundle and the oracle are pinned by it); rerun in the order current, control, sabotages, current",
+      "test:networking": "its local control pinned a bundle that carries the old transport sources, and the find string of its retained redirects sabotage named plan_redirect's old call; the control was rebuilt on the preserved preceding host and the string follows the new signature",
+      "test:websocket": "its local control pinned the same sources; rebuilt on its preserved preceding host",
+      "probe and oracle": "the new stage's first run stopped at a GDScript type-inference error (typed bool declarations fixed it), and an oracle assertion that matched decode errors against the whole message instead of the refusal's text was narrowed before the first green run"
     },
     "passed": {
-      "image_core_test": "IMAGE_CORE_PASSED (7 groups, 70 assertions)",
-      "image_cache_test": "IMAGE_CACHE_PASSED (7 groups, 66 assertions)",
-      "image_network_test": "IMAGE_NETWORK_PASSED (10 groups, 60 assertions)",
-      "test:images-network": "72 checks on the current lane, 37 run and 30 failing on the control, 1, 32 and 2 failures on the sabotages",
+      "http_core_test": "HTTP_CORE_PASSED",
+      "image_core_test": "IMAGE_CORE_PASSED (8 groups, 77 assertions)",
+      "image_cache_test": "IMAGE_CACHE_PASSED (8 groups, 76 assertions)",
+      "image_network_test": "IMAGE_NETWORK_PASSED (10 groups, 64 assertions)",
+      "test:images-network": "74 checks on the current lane, 37 run and 30 failing on the control, 1, 34 and 2 failures on the sabotages",
       "test:images": "73 checks on the current lane, the control with 3 normative failures among 11, and the sabotages with 12 and 2",
-      "test:networking": "passed",
-      "test:websocket": "passed",
-      "test:app-state": "passed (the AppLifecycle gained a memory-warning listener list)",
-      "test:contracts": "passed (301 Node tests, 43 dashboard tests, 13 Python tests)",
-      "test:examples": "passed, every interactive example, images with 22 headless checks and 30 with the renderer",
+      "test:networking": "passed, after its control and sabotages were rebuilt",
+      "test:websocket": "4 of 4, after its control and sabotages were rebuilt",
+      "example images": "22 headless checks and 30 with the renderer; both frames have the SHA-256 of the committed captures",
+      "test:contracts": "passed (302 Node tests, 43 dashboard tests, 13 Python tests)",
       "type-check": "passed",
       "check:static": "passed",
-      "check:publication": "passed",
-      "test:recovery": "passed"
+      "check:publication": "passed"
     }
   },
   "nativeBuildRecord": {
-    "hostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+    "hostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
     "inputsMatchCommit": true,
-    "inputs": 123,
+    "inputs": 127,
     "target": {
       "architecture": "arm64",
       "configuration": "Release",
@@ -669,33 +683,33 @@
     "pinsVerifiedAgainstTheCommit": 18
   },
   "sourcePins": {
-    "tests/images-network-fixture.jsx": "3b496b3f17c3955b29cec79bed837deeda473bbaa57139f8ebd5ed99b4018175",
-    "tests/images-network-probe.gd": "1bff752cb8c0d5d6a40d033d87161d6afc01d367c317aa6c6cf406e88daf4b0b",
+    "tests/images-network-fixture.jsx": "819404428ebea7f3304a41dd328c98dcb55751c198b18e594ff3f8cc1f8e58dd",
+    "tests/images-network-probe.gd": "673af50d4043193bc2f3afa6ecd677057d62bf98916f4e54133dec7baf2a16f5",
     "tests/images-network-base.gd": "ff0dd4e966e1f031c6264c98412ef6839c470a6e08247722af9a3a7da1b51722",
-    "tests/images-network-native.test.mjs": "ea3d544d86a741009ebc40efd43c8b7598c9f354edd6677d73b26dcce14b5c53",
-    "tests/images-network-oracle.mjs": "865d25beeaaacbc1868cae61b92aeeb27fb68a910c01e6bda30f88205254f40a",
+    "tests/images-network-native.test.mjs": "bd3b1ec2fe9643277a508e6fc4109c4b8da0cee1051f390e9715bf3c101f3e0e",
+    "tests/images-network-oracle.mjs": "6fa1e8d9d6e376703c8169f42a920630f54f70534b7a003959b116348f063152",
     "tests/images-network-server.mjs": "10fc73dc59d6bd1d6f6aa9a204ea6d6af7eadf9a19db33b4e85cafae367b4c18",
     "tests/networking-certificates.mjs": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
     "tests/images-pattern.mjs": "d664768094c8fb3246003d5ea3546612a58891dc798c01ba2638e5d808170ac6",
     "scripts/images-network-bundle.mjs": "964f9698815fbcebb1a9cdfbeae24a93dad6d7d7d0e42ba3cf587eadd16c95bb",
-    "scripts/native-probe-bundle.mjs": "92cb02dbedbab70bd0437abaecb5fb0ef6ffb7be40d7558d4a47bcc6cc6e6d19",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
     "src/image.jsx": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
     "src/image-contract.mjs": "1805a0b93afccd7d6968a1036cf25d38d5a8f759d72de906f2fbe5209742cd1a",
-    "src/react-native-platform.jsx": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+    "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
     "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
-    "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
     "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f"
   },
   "verificationSourcePins": {
-    "package.json": "d191a81f811165a51fd0c84d812c06c78119500b48edf827a2b3630cfb39fac0",
-    ".fallowrc.json": "836b683391b026cb8d58d01d4c5932b4722e2298369498dbdb6ed4cf1f272d9c",
-    ".github/workflows/contracts.yml": "8b2c6f9d56aab993cb6fe6c04c89d41f189110266d661e4293bd8c2adb030db8",
-    "examples/catalog.json": "79c06d19b5289e731c3a9a50f9bb4b47efab21956bb1f2e0f2356495bcad4d76",
-    "examples/entry.jsx": "43ab16d041c7afddfbfaba3a805679906e7650d62f153a7d8478bc3e162c6ab1",
+    "package.json": "34002fdf7ba176e18c0e0ecabd7bd6b37c8331e854f19c3281123f978ff4f319",
+    ".fallowrc.json": "1ea4fc81403f9d36546c1be145b729f207343b4040f68fd7f719d6ae851c61b6",
+    ".github/workflows/contracts.yml": "e24ed1b4e107b3a164c0e7cb8f5aafb094cdf1287346b1e87645374e180bdaf7",
+    "examples/catalog.json": "146e93cc0f274fe80389207aa812a18cae2a6475a3b6010ba41742c7521d16fc",
+    "examples/entry.jsx": "198a8422847e896390193b70fe89360d6ce97404292b8047c272ecaf3620a9e9",
     "examples/images/App.jsx": "9410395659d536071158a9ec5199a46ab374175ffb1c8263f141bea09af3fd70",
     "examples/images/scene.tscn": "8755489dec98d7c4b8809d24d26a1ccc5f08253fc19a6a9af73e5f94a42a333e",
     "examples/images/validation.gd": "1639169409276259661bde6386c6ee6cc15f0229b03228140f3c5cac08d566ce",
-    "examples/images/local_server.gd": "c7516399095271d9c14ab402445439ef7d5cf1ac42eb92602ca0696a168f6cdd",
+    "examples/images/local_server.gd": "c3a4ba1742d8bdd9b77b6d2a42025123c791e3abe35ee6686c34d20e7ab1fa9e",
     "examples/images/assets/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "examples/images/assets/landscape.png": "f1d79a65a1528501d2ae745572bb6818e7723c9ed3b7cb6da9f21ea21c2a1450",
     "examples/images/assets/logo.png": "ca6976f236a755c44a45081c2baa8be11f54f34466112de4be8643e4d0de8366",
@@ -722,9 +736,13 @@
     "tests/native-animated-probe.gd": "92441f28b2912f2bd783da8bf345f7f4657eb578b3fb59c670fc745ba51f1c13"
   },
   "nativeSourcePins": {
-    "native/CMakeLists.txt": "35baee1cbd689c74521cd104f675c6ba61e679a8d88e121f813d04a233ee889b",
+    "native/CMakeLists.txt": "dd9c5791329d2abfe34bcfa366adbcbb2bc324b6090d43eec9a75166cdcf6f75",
     "native/accessibility_core.h": "3ea9b42a852a186da46db9b7c265dbec29d84359867e65fcbb5e962766ad0821",
     "native/accessibility_core_test.cpp": "626965f3e41c9043dea9e819900ee44480b17d86badf5d9b805f8af7b01fa674",
+    "native/accessibility_info.cpp": "f394ce90d226aba9965c14042d50fb9aed10926f7afd894f729ec2596b90b07d",
+    "native/accessibility_info.h": "ba48f4e86f35a4519eca3904d1240a3bfd40ae63f85ce62c16e64ac435aff85e",
+    "native/accessibility_info_core.h": "914afbdc01ecc8697bbdca03945b10e2590d711b0f2a3cd07c38fc44ae009057",
+    "native/accessibility_info_core_test.cpp": "adef9c4718314712e2bb550d5fe2cd8881d4e152ff78e22c6773a55a8a241b67",
     "native/accessible_view.cpp": "cc67fcfd9f9b7f9fffdceb9c7f98d5ab78bffed7ce027e6ef5f0a3e7c3dc3cf4",
     "native/accessible_view.h": "e9c9bb8ad6e05ba349cb4ce42b059731b23a7bd19e71636966665c07ccbbea7f",
     "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
@@ -738,16 +756,16 @@
     "native/app_lifecycle.h": "52caf77bc818b0d5c3456ff47836871c81e56395579efd83251cac2b6f466fe8",
     "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
     "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
-    "native/application_runtime.cpp": "331d30503cbcc83a62132a3e633f5156273cb7a7c2f634c570750a611582d9aa",
-    "native/application_runtime.h": "a98aeca24f8bd31cc8c9e54b656dc15b0c15e579e9268fe40ead6270b9066248",
+    "native/application_runtime.cpp": "4cbc5be656e6c558575d0aacc77f5026792b464b3cb237433de190382df575c3",
+    "native/application_runtime.h": "f57714d514fdfbf7b62b033ebde9e0c5493b8261102e1f13ffde600dda531e46",
     "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
     "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
     "native/device_services.cpp": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b",
     "native/device_services.h": "01e5ac09983f821602fc828e6aec11e374cfa6635e2828c061c50be4a0b3bd40",
     "native/device_services_core.h": "e78e359827d67d8436e4c86476fb342ea6c4d1fc622e8ec0b1358f8b0288b0d9",
     "native/device_services_core_test.cpp": "3410d829e4d899b81c915b878effba6cea5cc0aab153c60938f0d2e9fbfa700f",
-    "native/fabric_application.cpp": "211c0dec8b8851313c013f0f98e15ff3edf963841c35ca7ab50fc68eb0a7494c",
-    "native/fabric_application.h": "87eb529fadd1da60993dd78e43d461d3ed76786f086fa7fd558cb5e093d5d957",
+    "native/fabric_application.cpp": "9294813e8ff0fec1798031fe929483df3ba5fb518b43aff5723240d40f21e9da",
+    "native/fabric_application.h": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
     "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
     "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
     "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
@@ -760,7 +778,7 @@
     "native/godot_device_backend.h": "3a57b370eb9bc1d47b36c615a1c9c90b265351b8801cb131b314a50884d0d109",
     "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
     "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
-    "native/godot_http_transport.cpp": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+    "native/godot_http_transport.cpp": "f734bf964ce9bd73b9096a6574e5b1efb2b95be62270f24a44e36cb9d5dd3a92",
     "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
     "native/godot_image_manager.cpp": "e11aec4600b5932f5de309230648d565808cb53f1c1e6ee74549a7c29a0d9baa",
     "native/godot_image_manager.h": "ecd7e9ef99451e0a0d1b1fb2c6de6dbc70ef39accf38859b4f77186f524dbb63",
@@ -769,22 +787,22 @@
     "native/godot_websocket_connection.h": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
     "native/godot_websocket_transport.cpp": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
     "native/godot_websocket_transport.h": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
-    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
-    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
-    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
-    "native/image_cache.h": "6198bcd119194db6fd9f1a70d2eab20db6d587990833beeb39db7e72f706d69d",
-    "native/image_cache_test.cpp": "563f5ddf932686a3e8d04f5123694f91834c3b2fe79c5ef6e1d7f1e8c0eb15d2",
-    "native/image_core.h": "749a9fdb5781d445d05de8bef8df7901351eaab3e983da1553164dbaa34d0a3a",
-    "native/image_core_test.cpp": "feb933a64df861e7186f1ddea158afa1672bc3912d1161fa73d0eb3d3f95e016",
+    "native/http_core.h": "b74f06fc71706c517796ec1d78d931b3c93fe478ee8b2da3c95a97bfbf76ed0e",
+    "native/http_core_test.cpp": "0f39053aaae91104c03bdcd0cee13a395f52e1047f12fc7a997a416d7ac4e177",
+    "native/http_transport.h": "04caf1a8a8bc098f9620d6959257296ae4c8d212fc5b5add7a840289a837925e",
+    "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+    "native/image_cache_test.cpp": "98ce48fdc5bf6525a060a5192aa54f2c4daad108a63a3474cce95e5f72704d94",
+    "native/image_core.h": "50badde2b8aabfaf3716f5ffff63b238ed8a00f78a8e6ba44af781b539e6ef75",
+    "native/image_core_test.cpp": "8b90b75733fcb4d411f0d945c2df5bdc6e3901b889d8c0933e5bbe9e7e4eab4d",
     "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
     "native/image_loader.cpp": "1c6639f5beb5418eee6bc56d15e7394fd50afa6a605b1d13e781fe4a88161b4b",
     "native/image_loader.h": "0afee8b50d26b2d2c9df522c7942f57188f7b1a031918f50de178271d94a9d5b",
-    "native/image_loader_module.cpp": "2d2a785c8776fa19ddced02a4e77b0af8d20db5f040fed1c7aeca2b4056ecf32",
+    "native/image_loader_module.cpp": "4ef62cbfb773af9a8b7db4bffa560c733b260d1ef8ebed8439f563106bcc37f2",
     "native/image_loader_module.h": "301c602a7a92b878b2d632faaa2acb093ea1f3e0d8b9b21a08a2ac95a005e68f",
-    "native/image_network.cpp": "5511cf4b7637677c1d1b29fd33d01bf315cc19db3717652b908345e479718781",
+    "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
     "native/image_network.h": "76ce61479cb577d81c96fdfd38830decb4476ed8a507da6714bd75153668b61e",
-    "native/image_network_test.cpp": "265573f26dbf2fec80def5cfe79e2e9dc4c6355d4c89b6ffc34cd4f29bf11894",
-    "native/image_sources.cpp": "236ba5fc4a5b786f896ca30913b02003085c966dfae7f033cf451d19ffee9d43",
+    "native/image_network_test.cpp": "c837bc010fc5f8c695c1e61f5e987e3675dfc58f2b121718b4c009c7570df821",
+    "native/image_sources.cpp": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
     "native/image_sources.h": "2f44ceb4a27a5284828dd0ab2fdeb23e0cbdae5cb9bf50f216da987f173c4619",
     "native/image_view.cpp": "fbd46ad8615fc8eb7e4bb903d88382d500ceaacf614028a479829966cf2a1aed",
     "native/image_view.h": "6b9f4ee92f104c40eccbbbb3792f392975d186e6b130e4d67603cd550809fad6",
@@ -896,19 +914,278 @@
   "hostedCI": {
     "status": "pending-images-network-slice"
   },
+  "postReview": {
+    "at": "2026-10-08T08:13:19Z",
+    "base": {
+      "commit": "6bbd03665b0b2136f0eabe58a540cbf4394215ee",
+      "recordCommit": "be6101d4e7f2bf89b3ef5c9618ee2308566c9eda",
+      "note": "The first record (be6101d) pinned the execution at 6bbd036: 72 headless checks (64 normative), the control with 30 failures among 37 checks, the sabotages with 1, 32 and 2, 27 mutations of the genuine report. This record describes the tree after the review of PR #64, whose one review commit is listed in implementation: every count above is the one of the re-executed lanes, and firstExecution keeps the first record's. pins names the SHA-256 each changed file has at the review commit and previousPins the SHA-256 it had at 6bbd036, each equal to git show <commit>:<path>"
+    },
+    "implementation": [
+      {
+        "changeSet": "A",
+        "commit": "910cffb1c35009438e06f14775aac80211664a10",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10",
+        "subject": "fix(images): Keep credentials out of caches, cleartext and redirects",
+        "files": [
+          "examples/images/local_server.gd",
+          "native/godot_http_transport.cpp",
+          "native/http_core.h",
+          "native/http_core_test.cpp",
+          "native/http_transport.h",
+          "native/image_cache.h",
+          "native/image_cache_test.cpp",
+          "native/image_core.h",
+          "native/image_core_test.cpp",
+          "native/image_loader_module.cpp",
+          "native/image_network.cpp",
+          "native/image_network_test.cpp",
+          "native/image_sources.cpp",
+          "scripts/networking-sabotage.mjs",
+          "tests/images-network-fixture.jsx",
+          "tests/images-network-native.test.mjs",
+          "tests/images-network-oracle.mjs",
+          "tests/images-network-probe.gd"
+        ]
+      }
+    ],
+    "mergedTree": {
+      "base": "05970c3",
+      "note": "The review commit sits on the merge of main #63 (AccessibilityInfo) over the merge of main #61 (OS-specific contracts): those merges changed shared files (src/react-native-platform.jsx, native/CMakeLists.txt, native/application_runtime.cpp and others) and no image file, and they changed the bundle every lane runs, which is why the lanes were refreshed on this tree"
+    },
+    "causes": [
+      {
+        "source": "CodeRabbit on PR #64, examples/images/local_server.gd, try_answer",
+        "finding": "The request line was indexed before it was validated, and a connection whose head never ended was kept and grew its buffer without bound"
+      },
+      {
+        "source": "CodeRabbit on PR #64, native/image_loader_module.cpp, header_text",
+        "finding": "A number written as a header value went through %g, which keeps six significant digits: 0.123456789 became 0.123457"
+      },
+      {
+        "source": "CodeRabbit on PR #64 (CWE-524), the decoded cache and the byte cache",
+        "finding": "Both caches are keyed by URL (and size and scale) alone, so a response fetched with a credential could answer a request that carries none, or another's"
+      },
+      {
+        "source": "CodeRabbit on PR #64, docs/evidence/images-network (README and report.json), the control lane",
+        "finding": "The record said that 27 normative checks are not executed on the preceding host; the suite had 64 normative checks and the control ran 30 of them, so 34 were not"
+      },
+      {
+        "source": "CodeRabbit on PR #64 (CWE-319), network image requests with credentials",
+        "finding": "A request whose headers carry Authorization, Proxy-Authorization or Cookie was written to a cleartext http wire"
+      },
+      {
+        "source": "CodeRabbit on PR #64, redirects of image downloads",
+        "finding": "A redirect kept the source's headers (and dropped only an Authorization that crossed to another origin), where RCTHTTPRequestHandler's redirect delegate replaces them with the cookies', of which the host keeps none"
+      },
+      {
+        "source": "CodeRabbit on PR #64, docs/API.md, the Image row",
+        "finding": "The row did not say that the callbacks and their payloads follow RN iOS where applicable while the transport's failure messages are the host's own"
+      }
+    ],
+    "changes": {
+      "localServer": "try_answer answers 400 and closes when the request line is not METHOD TARGET HTTP/x.y (exactly three tokens, the first two not empty), and answers 431 and closes when the head passes 16 KiB (MAX_HEAD_BYTES) before or at its blank line; get_data only appends when it returned OK, so one bad connection never stops poll() from serving the others",
+      "numbers": "header_text writes an integral number as its digits (std::to_chars for long long, -0 kept) and any other as the shortest decimal of 1 to 17 significant digits that reads back as the same double (image::number_text in image_core.h); std::to_chars for doubles is marked unavailable below macOS 13.3 by libc++ and the host builds for 13.0, so streams with the classic locale find the digits",
+      "credentialsAndCaches": "image::carries_credentials (Authorization, Proxy-Authorization, Cookie, compared without case) and a credentialed parameter of route(): such a request asks neither cache and is downloaded (only-if-cached finds nothing, with a message that says so); ImageSources::resolve stores neither the response in the byte cache nor, through keep_picture, the picture in the decoded cache; queryCache is unchanged",
+      "credentialsOverCleartext": "build_download_request refuses a request that carries one of those headers when its URL is http, before any request, with a host message (onError for an Image, a rejection for a size); https is sent as before",
+      "redirects": "HttpRequest.drop_headers_on_redirect (off by default) and plan_redirect's drop_headers: the follow-up request carries none of the request's headers; every image download sets it, Networking does not and keeps OkHttp's rules; the retained redirects sabotage of the networking suite follows plan_redirect's new call",
+      "probeAndOracle": "ok-redirect carries X-Keep and ok-redirect-cross goes through the https listener; a check drops the old 'redirect keeps the source's headers' and says that a redirect leaves the next request without them; credentials_stage adds two normative checks (the caches and the cleartext refusal); the oracle models the credential rule, selects the listener by URL and verifies the headers the server received"
+    },
+    "oracle": {
+      "mutationsBefore": 27,
+      "mutationsAfterTheReview": 33,
+      "added": [
+        "a request that carries credentials is not answered by the decoded cache",
+        "a request that carries credentials does not leave its response in the byte cache",
+        "a size measured with credentials does not leave its response in the byte cache",
+        "a request that carries credentials is not sent over http",
+        "a size measured with credentials is not asked over http",
+        "a redirect drops the source's headers"
+      ]
+    },
+    "countsAfterTheReview": {
+      "commit": "910cffb1c35009438e06f14775aac80211664a10",
+      "hostSha256": "f44b7c3b1b0e8cf5dbe4a73f1031301a39b67878c3042b7d503cbec8689c4ff9",
+      "bundleSha256": "38e6eceb0f4aecfc864bc5cf0106ac72a0d161ccf0fef7a2773d9e1e71707c25",
+      "headlessChecks": 74,
+      "normativeChecks": 66,
+      "structuralChecks": 8,
+      "control": {
+        "checks": 37,
+        "normativeFailures": 30,
+        "normativeNotExecuted": 36
+      },
+      "sabotageFailures": {
+        "decoded-reload": 1,
+        "cancel-open": 34,
+        "texture-mutation": 2
+      },
+      "unitTests": {
+        "image_cache_test": {
+          "groups": 8,
+          "assertions": 76
+        },
+        "image_network_test": {
+          "groups": 10,
+          "assertions": 64
+        },
+        "image_core_test": {
+          "groups": 8,
+          "assertions": 77
+        }
+      },
+      "exampleChecks": {
+        "headless": 22,
+        "capture": 30
+      },
+      "imagesSuite": {
+        "current": {
+          "checks": 73,
+          "failed": 0
+        },
+        "control": {
+          "checks": 11,
+          "failed": 3
+        },
+        "sabotageMainThread": {
+          "checks": 73,
+          "failed": 12
+        },
+        "sabotageStaleRequest": {
+          "checks": 73,
+          "failed": 2
+        }
+      },
+      "contracts": {
+        "nodeTests": 302,
+        "dashboardTests": 43,
+        "pythonTests": 13
+      },
+      "networkingAndWebsocket": "test:networking 1 of 1 and test:websocket 4 of 4, after their local controls and sabotages were rebuilt"
+    },
+    "firstExecution": {
+      "commit": "6bbd03665b0b2136f0eabe58a540cbf4394215ee",
+      "recordCommit": "be6101d4e7f2bf89b3ef5c9618ee2308566c9eda",
+      "hostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+      "headlessChecks": 72,
+      "normativeChecks": 64,
+      "structuralChecks": 8,
+      "mutations": 27,
+      "lanes": [
+        {
+          "lane": "current",
+          "checks": 72,
+          "passed": 72,
+          "failed": 0,
+          "nativeHostSha256": "034bc08d847446c8a202485b7b293dc599ef3a8b216e891d121b8ed384c95221",
+          "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7"
+        },
+        {
+          "lane": "preceding-host",
+          "checks": 37,
+          "passed": 7,
+          "failed": 30,
+          "nativeHostSha256": "425844941d6d3df3c41def190dcbe900ecc9b3d517e2cde23592c4899cfc687f",
+          "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7"
+        },
+        {
+          "lane": "sabotage-decoded-reload",
+          "checks": 72,
+          "passed": 71,
+          "failed": 1,
+          "nativeHostSha256": "6fd2f8c80c1d63c82d8a7b7b7d4bd6c101415d5307e2eed553201af56e06a3b1",
+          "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7"
+        },
+        {
+          "lane": "sabotage-cancel-open",
+          "checks": 72,
+          "passed": 40,
+          "failed": 32,
+          "nativeHostSha256": "6e13ea1c347782f6adb7c78c5723909a42122d57c924d4da474780eccb9518b8",
+          "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7"
+        },
+        {
+          "lane": "sabotage-texture-mutation",
+          "checks": 72,
+          "passed": 70,
+          "failed": 2,
+          "nativeHostSha256": "0f09f7bc9767056e904520eaf198ab65f3494f382c12d013ed4ea65fee40172b",
+          "bundleSha256": "1b8c53434960cafe83a69d9da103818b3d58e6bc4e6ffb5d3ed82074f91d39a7"
+        }
+      ],
+      "unitTests": [
+        {
+          "target": "image_cache_test",
+          "groups": 7,
+          "assertions": 66
+        },
+        {
+          "target": "image_network_test",
+          "groups": 10,
+          "assertions": 60
+        },
+        {
+          "target": "image_core_test",
+          "groups": 7,
+          "assertions": 70
+        }
+      ]
+    },
+    "pins": {
+      "examples/images/local_server.gd": "c3a4ba1742d8bdd9b77b6d2a42025123c791e3abe35ee6686c34d20e7ab1fa9e",
+      "native/godot_http_transport.cpp": "f734bf964ce9bd73b9096a6574e5b1efb2b95be62270f24a44e36cb9d5dd3a92",
+      "native/http_core.h": "b74f06fc71706c517796ec1d78d931b3c93fe478ee8b2da3c95a97bfbf76ed0e",
+      "native/http_core_test.cpp": "0f39053aaae91104c03bdcd0cee13a395f52e1047f12fc7a997a416d7ac4e177",
+      "native/http_transport.h": "04caf1a8a8bc098f9620d6959257296ae4c8d212fc5b5add7a840289a837925e",
+      "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+      "native/image_cache_test.cpp": "98ce48fdc5bf6525a060a5192aa54f2c4daad108a63a3474cce95e5f72704d94",
+      "native/image_core.h": "50badde2b8aabfaf3716f5ffff63b238ed8a00f78a8e6ba44af781b539e6ef75",
+      "native/image_core_test.cpp": "8b90b75733fcb4d411f0d945c2df5bdc6e3901b889d8c0933e5bbe9e7e4eab4d",
+      "native/image_loader_module.cpp": "4ef62cbfb773af9a8b7db4bffa560c733b260d1ef8ebed8439f563106bcc37f2",
+      "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
+      "native/image_network_test.cpp": "c837bc010fc5f8c695c1e61f5e987e3675dfc58f2b121718b4c009c7570df821",
+      "native/image_sources.cpp": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
+      "scripts/networking-sabotage.mjs": "7138b02d8ab3ca918ea5341b8fc05bdf6e4dbd64b6534f5cf47915329f5a23e2",
+      "tests/images-network-fixture.jsx": "819404428ebea7f3304a41dd328c98dcb55751c198b18e594ff3f8cc1f8e58dd",
+      "tests/images-network-native.test.mjs": "bd3b1ec2fe9643277a508e6fc4109c4b8da0cee1051f390e9715bf3c101f3e0e",
+      "tests/images-network-oracle.mjs": "6fa1e8d9d6e376703c8169f42a920630f54f70534b7a003959b116348f063152",
+      "tests/images-network-probe.gd": "673af50d4043193bc2f3afa6ecd677057d62bf98916f4e54133dec7baf2a16f5"
+    },
+    "previousPins": {
+      "examples/images/local_server.gd": "c7516399095271d9c14ab402445439ef7d5cf1ac42eb92602ca0696a168f6cdd",
+      "native/godot_http_transport.cpp": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+      "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+      "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+      "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+      "native/image_cache.h": "6198bcd119194db6fd9f1a70d2eab20db6d587990833beeb39db7e72f706d69d",
+      "native/image_cache_test.cpp": "563f5ddf932686a3e8d04f5123694f91834c3b2fe79c5ef6e1d7f1e8c0eb15d2",
+      "native/image_core.h": "749a9fdb5781d445d05de8bef8df7901351eaab3e983da1553164dbaa34d0a3a",
+      "native/image_core_test.cpp": "feb933a64df861e7186f1ddea158afa1672bc3912d1161fa73d0eb3d3f95e016",
+      "native/image_loader_module.cpp": "2d2a785c8776fa19ddced02a4e77b0af8d20db5f040fed1c7aeca2b4056ecf32",
+      "native/image_network.cpp": "5511cf4b7637677c1d1b29fd33d01bf315cc19db3717652b908345e479718781",
+      "native/image_network_test.cpp": "265573f26dbf2fec80def5cfe79e2e9dc4c6355d4c89b6ffc34cd4f29bf11894",
+      "native/image_sources.cpp": "236ba5fc4a5b786f896ca30913b02003085c966dfae7f033cf451d19ffee9d43",
+      "scripts/networking-sabotage.mjs": "aaeb10a59e33bbceee97fe77efc0ed75cbe7d25a33918afbdc370d8b1e86212d",
+      "tests/images-network-fixture.jsx": "3b496b3f17c3955b29cec79bed837deeda473bbaa57139f8ebd5ed99b4018175",
+      "tests/images-network-native.test.mjs": "ea3d544d86a741009ebc40efd43c8b7598c9f354edd6677d73b26dcce14b5c53",
+      "tests/images-network-oracle.mjs": "865d25beeaaacbc1868cae61b92aeeb27fb68a910c01e6bda30f88205254f40a",
+      "tests/images-network-probe.gd": "1bff752cb8c0d5d6a40d033d87161d6afc01d367c317aa6c6cf406e88daf4b0b"
+    }
+  },
   "notDepartures": [
     "A failure's responseCode and httpResponseHeaders reach onError as on iOS: RCTImageLoader.mm:37-46 (addResponseHeadersToError) puts the status and the response's headers in the error's userInfo, the loader's completion applies it at 576-579 to every error that arrives with an NSHTTPURLResponse unless the completion runs on the main queue with data (567-574, not the path of a download), and RCTImageComponentView.mm:195-205 sends them to onError"
   ],
   "departuresFromRN": [
     "Progress is coalesced to at most one event per request per pump; NSURLSession's data delegate calls the progress block for every chunk, and RCTImageLoader forwards each one",
     "A response served from either cache reports no progress; on iOS NSURLSession hands a cached body to the delegate as data, which the progress block counts",
-    "Redirects keep the source's headers (the transport drops only an Authorization header that would cross to another origin); RCTHTTPRequestHandler's redirect delegate lets NSURLSession replace them with the cookies' on iOS, so an app header is dropped there",
     "Only the final 200 is kept in the byte cache, under the URL that was asked for; NSURLCache also keeps the redirect responses",
     "A stale byte-cache entry is downloaded again and never revalidated (no If-None-Match, no 304 handling); Vary, Set-Cookie and Authorization are not considered when a response is kept",
     "prefetch keeps the response in the byte cache only; RCTImageLoader also stores the decoded picture under the key of size 0x0 and scale 1, which no view request has, and the host does not. getSize does not consult the decoded cache either",
     "The byte cache is the host's own: 20 MiB in memory, no entry over 1 MiB, GET without a body and 200 only, and a response without a readable Date is dated by the time it arrived; there is no disk cache, and queryCache answers 'memory' or nothing",
     "The failure text of a transport error comes from the host (Failed to connect to 127.0.0.1:N, unexpected end of stream from H:N, The request timed out.), not from NSURLError; the status and headers that come with a failure are RCTImageLoader's",
-    "No cookies, no compression offered (Accept-Encoding is not sent; iOS sends gzip and decodes it), HTTP/1.1 only, and cleartext http is allowed (no App Transport Security)",
+    "No cookies, no compression offered (Accept-Encoding is not sent; iOS sends gzip and decodes it), HTTP/1.1 only, and cleartext http is allowed for a request without credentials (iOS's App Transport Security blocks it by default; a request with credentials is refused, see below)",
+    "A request whose headers carry Authorization, Proxy-Authorization or Cookie neither reads nor writes either cache, so it always asks the server: RCTImageCache and NSURLCache are keyed by URL (RCTImageCache.mm:30-34), so on iOS a response fetched with one credential can answer a request that carries another or none. The host takes the stricter rule (native/image_cache.h:172-177 and 204-221, native/image_sources.cpp:74-158 and 215-220); queryCache still reports what the byte cache holds",
+    "A request that carries Authorization, Proxy-Authorization or Cookie and whose URL is http fails through onError (a size rejects) with the host's message before any request is made (native/image_network.cpp:32-55); iOS reaches the same end through App Transport Security, which blocks cleartext http by default, while the host keeps allowing cleartext http for requests without credentials",
     "A response over 128 MiB is refused (by Content-Length or as it arrives) and a download with no bytes for 60 s fails with The request timed out.; RN's loader bounds concurrency, not size, and 60 s is NSURLSession's default request timeout read as an idle timeout",
     "A header name or value the wire cannot carry and a method the transport cannot send fail through onError before any request, with a host-written message",
     "repeat now tiles at the picture's size in points exactly, with a transform under the draw; the old integer-size limit is gone, and the texture is never resized because the decoded cache hands it to every view of the picture",
@@ -933,32 +1210,26 @@
   "implementationPinVerification": {
     "method": "git show <implementationCommit>:<path> SHA-256 equals the SHA-256 of the file in the tree the lanes ran from",
     "sourcePins": 16,
-    "nativeSourcePins": 123,
+    "nativeSourcePins": 127,
     "verificationSourcePins": 33,
     "fixtureFilePins": 18,
-    "uniqueCodeAndConfigurationInputs": 190,
+    "uniqueCodeAndConfigurationInputs": 194,
     "mismatches": [],
     "originalReactNativeSources": 25,
     "executedFromTheCommittedTree": true
   },
   "gates": {
-    "ranAt": "2026-10-08T06:33:01Z",
-    "meaning": "Contracts-job gates and the dashboard test on the tree that holds this record's documents (the implementation commit 6bbd036 plus the stage's documentation and captures; no executed source differs from it)",
+    "ranAt": "2026-10-08T08:13:16Z",
+    "meaning": "Gates that read documents, on the tree that holds this record (the implementation commit 910cffb plus the record's documents and captures; no executed source differs from it). test:contracts, type-check and the lanes ran on the code tree of 910cffb and are in regressions",
     "steps": {
-      "test:contracts": "passed",
-      "check:static": "passed",
       "check:publication": "passed",
+      "check:static": "passed",
       "test:dashboard": "passed"
     },
     "counts": {
-      "parityTests": 7,
       "dashboardTests": 43,
-      "nodeContractTests": 301,
-      "pythonContractChecks": 13,
-      "nodeFailures": 0,
-      "nodeBreakdown": "7 (parity) + 43 (dashboard) + 301 (contracts); test:contracts also runs bundle and type-check, which passed",
       "staticAnalysis": "fallow: no issues",
-      "publicationScan": "1379 files, no failures"
+      "publicationScan": "1411 files, no failures"
     }
   }
 }

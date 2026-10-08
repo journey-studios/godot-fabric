@@ -463,12 +463,14 @@ texture. `http(s)` sources, with `headers`, `method`, `body` and `cache`, downlo
 own HTTP transport (at most four at once) with RN iOS's request, failure and progress semantics,
 through an `RCTImageCache`-like decoded cache and an `NSURLCache`-like memory byte cache that the OS
 memory warning empties; `Image.prefetch`, `queryCache` and `getSize` work for them, and a
-cancelled download closes its transport request. 73 headless checks of the local pipeline in two
-roots of one application and 72 of the network slice over a loopback server, each with an
+cancelled download closes its transport request, a request that carries `Authorization`,
+`Proxy-Authorization` or `Cookie` neither reads nor writes either cache (stricter than iOS) and is refused
+over http, and a redirect drops the source's headers as on iOS. 73 headless checks of the local pipeline in
+two roots of one application and 74 of the network slice over a loopback server, each with an
 independent oracle; the preceding host fails the 3 and 30 normative checks it can reach, and
 retained sabotages (decoding on the main thread, a view that keeps listening to a swapped-away
 request, a reload that consults the decoded cache, a download whose transport request stays open, a
-repeating Image that resizes the shared texture) fail 12, 2, 1, 32 and 2. A disk cache,
+repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. A disk cache,
 revalidation, cookies, compression, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping
 and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI passed
 the first slice's 74 checks on main (run 37724902858,

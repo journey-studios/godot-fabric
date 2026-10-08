@@ -374,9 +374,9 @@ and shows a network PNG from a server the scene starts on loopback). Its
 [receipt](../docs/evidence/images/README.md) records 74 headless checks (73 now, since the network
 slice), two captures, the preceding-host control, which fails the 3 normative checks it can reach, and
 two retained sabotages, which fail 12 and 2. The
-[network images receipt](../docs/evidence/images-network/README.md) records 72 headless checks over a
+[network images receipt](../docs/evidence/images-network/README.md) records 74 headless checks over a
 loopback Node server (`npm run test:images-network`), the control that fails the 30 normative checks the
-preceding host reaches, three retained sabotages that fail 1, 32 and 2, and the example's 22 headless and
+preceding host reaches, three retained sabotages that fail 1, 34 and 2, and the example's 22 headless and
 30 graphical checks with two captures.
 
 | Public TSX form | Public counter | NativeWind |

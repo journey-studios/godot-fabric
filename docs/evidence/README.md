@@ -551,14 +551,16 @@ cache (2 MiB a picture, 20 MiB, stale times from `Cache-Control`, `Expires` and 
 `reload`, `force-cache` and `only-if-cached`; `Image.prefetch`, `queryCache` and `getSize` work for network
 sources, the OS memory warning empties both caches, a cancelled download closes its transport request and
 a view never resizes the texture the cache shares. A Node server on loopback (HTTP and HTTPS) holds
-responses so that every stage waits on state, the clock moves through the validation offset, and 72 headless
-checks run in actual SceneTree frames with an independent oracle that replays 100 cache operations against
+responses so that every stage waits on state, the clock moves through the validation offset, and 74 headless
+checks run in actual SceneTree frames with an independent oracle that replays 115 cache and credential operations against
 a model of both caches and the server's own log. The preceding host runs 37 of them and fails exactly the
 30 normative ones among those; three retained sabotages (a reload that consults the decoded cache, a
-download whose transport request stays open, a repeating Image that resizes the shared texture) fail 1, 32
-and 2 checks and the oracle rejects each, as it does 27 mutations of the genuine report. Two captures of
-the example, three C++ tests (cache 66, network 60 and core 70 assertions), and a list of every departure
-from RN iOS. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
+download whose transport request stays open, a repeating Image that resizes the shared texture) fail 1, 34
+and 2 checks and the oracle rejects each, as it does 33 mutations of the genuine report. Two captures of
+the example, three C++ tests (cache 76, network 64 and core 77 assertions), and a list of every departure
+from RN iOS, among them a rule stricter than iOS's URL-keyed caches (a request that carries `Authorization`,
+`Proxy-Authorization` or `Cookie` neither reads nor writes either cache, and is refused over http, which is what
+App Transport Security does there); image redirects drop the source's headers as iOS does. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
 target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
 
 The [OS-specific contracts record](os-contracts/README.md) makes the public `react-native` export React

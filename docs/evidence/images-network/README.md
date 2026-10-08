@@ -11,23 +11,90 @@ mesmo tempo e julga cada resultado como o `RCTImageLoader` julga; os bytes baixa
 caminho do pool de threads da primeira fatia (leitura do formato, cabeçalho, limites, decodificação
 e redução). Dois caches em memória decidem de onde sai a imagem: o decodificado, no papel do
 `RCTImageCache`, e o de bytes, no papel do `NSURLCache`. O [recibo](report.json) fixa fontes,
-hashes e resultados, executados na implementação
-[`6bbd036`](https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee).
+hashes e resultados, executados na árvore de
+[`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10),
+que é a implementação
+[`6bbd036`](https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee)
+mais a rodada de revisão do PR #64 (a nota logo abaixo).
 
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
-| Host anterior `42584494` (main `6d02746`), mesmo bundle | 7/37 | Só 37 checks são alcançáveis lá: passam os 7 que não dependem da rede e falham exatamente os 30 normativos que dependem; os outros 27 normativos não são executados |
-| Sabotagem retida: a rota consulta o cache decodificado mesmo com `reload`, host `6fd2f8c8` | 71/72 | 1 falha, e o oráculo independente rejeita o relatório |
-| Sabotagem retida: o download abandonado não fecha o pedido no transporte, host `6e13ea1c` | 40/72 | 32 falhas, e o oráculo independente rejeita o relatório |
-| Sabotagem retida: o Image com `repeat` redimensiona a textura compartilhada, host `0f09f7bc` | 70/72 | 2 falhas, e o oráculo independente rejeita o relatório |
-| Host atual `034bc08d`, headless | 72/72 | Frames reais do SceneTree, 24 Images de rede declaradas, 100 operações de cache e o oráculo independente sobre o relatório |
+| Host anterior `42584494` (main `6d02746`), mesmo bundle | 7/37 | Só 37 checks são alcançáveis lá: passam os 7 que não dependem da rede e falham exatamente os 30 normativos que dependem; os outros 36 normativos não são executados |
+| Sabotagem retida: a rota consulta o cache decodificado mesmo com `reload`, host `13da4722` | 73/74 | 1 falha, e o oráculo independente rejeita o relatório |
+| Sabotagem retida: o download abandonado não fecha o pedido no transporte, host `7fba20b3` | 40/74 | 34 falhas, e o oráculo independente rejeita o relatório |
+| Sabotagem retida: o Image com `repeat` redimensiona a textura compartilhada, host `34fcd916` | 72/74 | 2 falhas, e o oráculo independente rejeita o relatório |
+| Host atual `f44b7c3b`, headless | 74/74 | Frames reais do SceneTree, 24 Images de rede declaradas, 115 operações de cache e de credenciais, os casos de credenciais e o oráculo independente sobre o relatório |
 
 ```sh
 npm run test:images-network
 ```
 
-A suíte nova tem 72 checks, 64 normativos (os que dependem do carregamento de rede) e 8
-estruturais. O mesmo bundle, de SHA-256 `1b8c5343…`, rodou em todas as lanes.
+A suíte nova tem 74 checks, 66 normativos (os que dependem do carregamento de rede) e 8
+estruturais. O mesmo bundle, de SHA-256 `38e6eceb…`, rodou em todas as lanes.
+
+> Nota posterior (2026-10-08): o primeiro registro desta fatia
+> ([`be6101d`](https://github.com/journey-studios/godot-fabric/commit/be6101d4e7f2bf89b3ef5c9618ee2308566c9eda)) fixou a execução em
+> [`6bbd036`](https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee): 72 checks (64 normativos), o
+> controle com 30 falhas em 37 checks, sabotagens com 1, 32 e 2 falhas e 27 mutações do relatório genuíno. O
+> CodeRabbit fez sete observações no PR #64, e o commit
+> [`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10) as acolheu (18 arquivos). Esta
+> página, as contagens e o [recibo](report.json) descrevem agora a árvore dele, reexecutada; o `postReview` do
+> recibo guarda a execução anterior (`firstExecution`) e os SHA-256 dos arquivos mudados nos dois lados. As
+> observações e o que mudou:
+>
+> 1. **Servidor do exemplo.** O `try_answer` indexava a linha de requisição antes de validá-la, e uma
+>    conexão cujo cabeçalho nunca terminava crescia sem limite. Agora uma linha que não seja `MÉTODO ALVO
+>    HTTP/x.y` recebe 400 e a conexão fecha, um cabeçalho acima de 16 KiB (antes ou na linha em branco)
+>    recebe 431 e fecha, e `get_data` só acrescenta quando devolve `OK`: uma conexão ruim nunca impede o
+>    `poll()` de atender as outras.
+> 2. **Números em cabeçalhos.** O `getSizeWithHeaders` escrevia um número com `%g` (seis dígitos:
+>    `0.123456789` virava `0.123457`). Um número inteiro sai com os seus dígitos e qualquer outro com o
+>    menor texto decimal, de 1 a 17 dígitos significativos, que lê de volta o mesmo `double`
+>    (`image::number_text`, testado em `image_core_test`). O `std::to_chars` de `double` não compila no alvo do
+>    projeto (o libc++ o marca como disponível só a partir do macOS 13.3, e o host é compilado para 13.0), então
+>    streams com o locale clássico acham os dígitos. A sonda manda `0.123456789`, `7` e `true`, e o servidor tem
+>    que receber `0.123456789`, `7` e `1`.
+> 3. **Credenciais e caches (CWE-524).** Os dois caches são chaveados pela URL (e pelo tamanho e a escala),
+>    então uma resposta buscada com uma credencial podia responder um pedido que não leva nenhuma, ou a de
+>    outro. O `RCTImageCache` e o `NSURLCache` do iOS também são chaveados pela URL; o host adota uma regra
+>    **mais estrita que a do iOS** e a registra como desvio: um pedido cujos cabeçalhos tragam `Authorization`,
+>    `Proxy-Authorization` ou `Cookie` não lê nem grava nenhum dos dois caches (a rota devolve sempre o download,
+>    `only-if-cached` não acha nada, e o `queryCache` continua informando o que o cache de bytes guarda).
+> 4. **Contagem de normativos não executados.** O recibo e esta página diziam 27 checks normativos não
+>    executados no host anterior; eram 64 normativos e o controle executava 30, então eram 34 (agora, com 66
+>    normativos, são 36).
+> 5. **Credenciais em texto claro (CWE-319).** Um pedido com um desses três cabeçalhos e URL `http://` falha por
+>    `onError` (e um `getSizeWithHeaders` rejeita) com uma mensagem do host, antes de qualquer pedido; `https`
+>    segue. O iOS chega ao mesmo fim pelo App Transport Security, que bloqueia `http` em claro por padrão; o
+>    host continua permitindo `http` sem credenciais.
+> 6. **Redirecionamentos como no iOS.** O `RCTHTTPRequestHandler` troca, num redirecionamento, os cabeçalhos do
+>    pedido seguinte pelos dos cookies (e o host não tem cookies), então um cabeçalho do app não sobrevive. O
+>    `HttpRequest` ganhou `drop_headers_on_redirect` (desligado por padrão: o Networking mantém as regras do
+>    OkHttp) e o `plan_redirect` o honra; todo download de imagem o liga. O desvio "o host mantém os
+>    cabeçalhos da fonte no redirecionamento" deixou de existir e saiu desta página, do recibo, da nota de
+>    pesquisa e do ROADMAP.
+> 7. **Linha "Image" do `docs/API.md`.** Agora diz que os callbacks e seus payloads seguem o RN iOS onde se
+>    aplica e que as mensagens de falha do transporte são as do próprio host.
+>
+> Arquivos mudados em `910cffb`, com o SHA-256 que têm lá (o `postReview` do recibo guarda também o que tinham
+> em `6bbd036`): `examples/images/local_server.gd` (`c3a4ba17…`), `native/godot_http_transport.cpp`
+> (`f734bf96…`), `native/http_core.h` (`b74f06fc…`), `native/http_core_test.cpp`
+> (`0f39053a…`), `native/http_transport.h` (`04caf1a8…`), `native/image_cache.h`
+> (`6c5dec51…`), `native/image_cache_test.cpp` (`98ce48fd…`), `native/image_core.h`
+> (`50badde2…`), `native/image_core_test.cpp` (`8b90b757…`),
+> `native/image_loader_module.cpp` (`4ef62cbf…`), `native/image_network.cpp`
+> (`7a2c3d68…`), `native/image_network_test.cpp` (`c837bc01…`),
+> `native/image_sources.cpp` (`02d7d7f2…`), `scripts/networking-sabotage.mjs` (`7138b02d…`),
+> `tests/images-network-fixture.jsx` (`81940442…`), `tests/images-network-native.test.mjs` (`bd3b1ec2…`),
+> `tests/images-network-oracle.mjs` (`6fa1e8d9…`) e `tests/images-network-probe.gd` (`673af50d…`).
+> Reexecutado na árvore de `910cffb` (host `f44b7c3b`, bundle `38e6eceb`): a lane atual passa 74/74, o controle
+> falha as mesmas 30 checks entre 37 (36 normativas não executadas), as sabotagens falham 1, 34 e 2 e a lane atual
+> passa 74/74 outra vez; o oráculo recusa 33 mutações (seis novas); os testes C++ passam (`image_core_test` 77
+> asserções, `image_cache_test` 76, `image_network_test` 64 e `http_core_test`); o exemplo passa 22 checks headless e
+> 30 com o renderizador, com os mesmos SHA-256 dos dois quadros; a suíte da primeira fatia passa 73 checks (controle
+> 11 com 3 falhas, sabotagens 12 e 2); o `test:networking` e o `test:websocket` passam depois de refeitos os
+> controles e as sabotagens locais deles (o transporte que eles fixam mudou); o `test:contracts` passa (302 testes
+> Node, 43 do painel e 13 Python).
 
 ## O que o RN faz
 
@@ -50,8 +117,9 @@ ao `NSURLCache` compartilhado, o `prefetch` carrega como um pedido sem tamanho, 
 lê só o cabeçalho. O progresso é o `loaded` e o `total` do `RCTNetworkTask`, e o
 `RCTImageComponentView` lê o código e os cabeçalhos da resposta de uma falha das chaves
 `httpStatusCode` e `httpResponseHeaders` do `userInfo`, que o `RCTImageLoader` preenche
-(`addResponseHeadersToError`). As referências com linha estão na
-[nota de pesquisa](../../research/images.md).
+(`addResponseHeadersToError`). Num redirecionamento, o `RCTHTTPRequestHandler` troca os cabeçalhos do pedido
+seguinte pelos dos cookies, então um cabeçalho do app não sobrevive; e o App Transport Security bloqueia `http`
+em claro por padrão. As referências com linha estão na [nota de pesquisa](../../research/images.md).
 
 ## O que este host fazia
 
@@ -65,11 +133,11 @@ controle mostra quais checks dependem da rede.
 
 ## A implementação
 
-1. O [contrato do wrapper](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/src/image-contract.mjs)
+1. O [contrato do wrapper](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/src/image-contract.mjs)
    deixa de recusar `headers`, `method`, `body` e `cache` nas fontes e `crossOrigin` e
    `referrerPolicy` na Image (o `ImageSourceUtils` do RN transforma os dois últimos em cabeçalhos do
    pedido); o resto da recusa continua como estava.
-2. O [`ImageNetwork`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_network.cpp)
+2. O [`ImageNetwork`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_network.cpp)
    monta o pedido como o `NSURLRequestFromImageSource` (e valida com `http::valid_header_name` e
    `http::valid_header_value` o que o transporte escreveria na rede), enfileira os downloads em
    ordem de chegada, roda no máximo quatro e os julga como o `RCTImageLoader`. Os listeners do
@@ -77,22 +145,28 @@ controle mostra quais checks dependem da rede.
    os limites de tamanho e de ociosidade, o progresso e o resultado acontecem no `poll()`, depois
    que o `poll` do transporte retornou, porque cancelar dentro de um listener é um uso depois da
    liberação no `godot_http_transport.cpp`. O `stop()` para o transporte primeiro, de modo que nenhum
-   listener roda depois, e esquece os downloads sem avisar ninguém.
-3. O [`image_cache.h`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_cache.h)
+   listener roda depois, e esquece os downloads sem avisar ninguém. Todo pedido de imagem liga o
+   `drop_headers_on_redirect` do `HttpRequest` (o `plan_redirect` o honra: o pedido seguinte não leva nenhum
+   cabeçalho, como no iOS; o Networking não o liga e segue as regras do OkHttp), e um pedido com
+   `Authorization`, `Proxy-Authorization` ou `Cookie` cuja URL é `http` é recusado aqui, antes de qualquer
+   pedido, com uma mensagem do host.
+3. O [`image_cache.h`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_cache.h)
    reúne o que não depende de Godot: o formato único de data HTTP que o formatador do
    `RCTImageCache` lê, o `integerValue` do `NSString`, a regra de validade (`response_freshness`), a
    chave do cache decodificado, a decisão `route()` (decodificada, bytes em cache, download ou falha
    por `only-if-cached`) e o `ExpiringLru`, um armazém limitado em bytes que descarta o menos
    recente. A decisão consulta cada cache só quando precisa, porque uma consulta move a entrada para
-   a frente.
-4. O [`ImageSources`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_sources.cpp)
+   a frente, e não consulta nenhum para um pedido com credenciais (`carries_credentials` e o parâmetro
+   `credentialed` do `route()`).
+4. O [`ImageSources`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_sources.cpp)
    é dono do `ImageNetwork` e dos dois caches e roda o ciclo de vida de um pedido de rede: monta o
    pedido, consulta `route()`, entrega a imagem do cache decodificado ou os bytes do cache de bytes,
    ou enfileira o download, e guarda no cache de bytes a resposta 200 de um `GET` sem corpo que o
    `Cache-Control` permite (no máximo 1 MiB por entrada e 20 MiB no total). O cache decodificado
    guarda só o resultado de uma Image (um `prefetch` e um `getSize` não guardam a imagem
-   decodificada), nunca em `reload` e nunca de uma resposta que proíbe guardar.
-5. O [`ImageLoader`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_loader.cpp)
+   decodificada), nunca em `reload`, nunca de uma resposta que proíbe guardar e nunca de um pedido com
+   credenciais (nem os bytes nem a imagem).
+5. O [`ImageLoader`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_loader.cpp)
    passa os bytes baixados pelo mesmo pipeline do pool de threads da primeira fatia: o sniff, a
    leitura do cabeçalho, os limites, a decodificação e a redução (os bytes de rede são dados não
    confiáveis, então as checagens de cabeçalho seguem obrigatórias) e nunca lê, mede ou decodifica na
@@ -102,16 +176,18 @@ controle mostra quais checks dependem da rede.
    `prefetch` baixa e confere, fora da thread principal, que os bytes são uma imagem, e fica só no
    cache de bytes; `getSize` baixa (ou usa o cache de bytes) e lê o cabeçalho fora da thread
    principal.
-6. O [`GodotImage`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_view.cpp)
+6. O [`GodotImage`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_view.cpp)
    deixa de redimensionar a textura em `repeat`: ladrilha no tamanho da imagem em pontos, exatamente
    (fracionário também), com uma transformação sob o desenho, porque o cache decodificado entrega a
    mesma textura a toda Image da imagem e nenhuma pode mudá-la. A falha de uma Image preenche
    `responseCode` e `httpResponseHeaders`, que o emissor do RN só envia quando existem.
-7. O [módulo `ImageLoader`](https://github.com/journey-studios/godot-fabric/blob/6bbd03665b0b2136f0eabe58a540cbf4394215ee/native/image_loader_module.cpp)
+7. O [módulo `ImageLoader`](https://github.com/journey-studios/godot-fabric/blob/910cffb1c35009438e06f14775aac80211664a10/native/image_loader_module.cpp)
    responde `prefetchImage` e `prefetchImageWithMetadata` (verdadeiro, ou `E_PREFETCH_FAILURE` com
    o texto da falha), `queryCache` (`"memory"` para uma URL no cache de bytes, nada para o resto) e
    `getSize` e `getSizeWithHeaders` de uma URL de rede (as formas de resultado do iOS e
-   `E_GET_SIZE_FAILURE`).
+   `E_GET_SIZE_FAILURE`); um valor de cabeçalho que não é texto sai como o `RCTConvert` o escreve: o número
+   inteiro com os seus dígitos, o outro com o menor texto que lê de volta (`image::number_text`) e o
+   booleano como `1` ou `0`.
 8. O `AppLifecycle` ganhou `on_memory_warning`, uma lista de ouvintes do aviso de memória do sistema
    que roda antes de o JS ser avisado; o `application_runtime.cpp` registra nela a limpeza dos dois
    caches e liga o loader ao transporte, ao relógio e ao deslocamento do relógio de validação (o
@@ -127,9 +203,6 @@ que mudam o que se vê ou o que se mede (os que dependem do comportamento intern
 - **Progresso.** O host entrega no máximo um evento por pedido a cada pump, com o acumulado; o iOS
   entrega um por pedaço de dados. Uma imagem que vem de um dos dois caches não informa progresso; no
   iOS o `NSURLSession` entrega o corpo em cache como dados, e o bloco de progresso o conta.
-- **Redirecionamentos.** O host mantém os cabeçalhos da fonte no redirecionamento (o transporte só
-  retira um `Authorization` que passaria para outra origem); o `willPerformHTTPRedirection` do iOS
-  troca os cabeçalhos do pedido seguinte pelos dos cookies, então um cabeçalho do app se perde lá.
 - **O que o cache de bytes guarda.** Só a resposta 200 final, sob a URL pedida; o `NSURLCache` guarda
   também os redirecionamentos. Uma entrada velha é baixada de novo, nunca revalidada (nenhum
   `If-None-Match`, nenhum 304), e `Vary`, `Set-Cookie` e `Authorization` não são considerados ao
@@ -150,7 +223,16 @@ que mudam o que se vê ou o que se mede (os que dependem do comportamento intern
   A única conclusão que não os recebe é a entregue na fila principal com dados (567-574), que não é a de um
   download.
 - **Protocolo.** Nenhum cookie, nenhuma compressão oferecida (o iOS oferece `gzip` e a decodifica),
-  HTTP/1.1 apenas, e `http` em claro é permitido (não há App Transport Security).
+  HTTP/1.1 apenas, e `http` em claro é permitido para um pedido sem credenciais (o App Transport Security
+  do iOS o bloqueia por padrão; um pedido com credenciais é recusado, abaixo).
+- **Credenciais e caches, mais estrito que o iOS.** O `RCTImageCache` e o `NSURLCache` são chaveados pela URL
+  (`RCTImageCache.mm:30-34`), então no iOS uma resposta buscada com uma credencial pode responder um pedido que
+  leva outra, ou nenhuma. O host não: um pedido cujos cabeçalhos tragam `Authorization`,
+  `Proxy-Authorization` ou `Cookie` não lê nem grava nenhum dos dois caches e sempre pergunta ao servidor;
+  `only-if-cached` não acha nada para ele, e o `queryCache` continua informando o que o cache de bytes guarda.
+- **Credenciais em texto claro.** Um pedido com um desses cabeçalhos e URL `http` falha por `onError` (um
+  tamanho rejeita) com uma mensagem do host, antes de qualquer pedido. O iOS chega ao mesmo fim pelo App
+  Transport Security; a diferença é que o host só recusa o `http` que leva credenciais, e `https` segue.
 - **Limites do host.** Uma resposta acima de 128 MiB é recusada (pelo `Content-Length` ou conforme
   chega) e um download sem bytes por 60 s falha com `The request timed out.`: o loader do RN limita a
   concorrência, não o tamanho de uma resposta, e 60 s é o tempo limite padrão do `NSURLSession`, lido
@@ -165,8 +247,8 @@ que mudam o que se vê ou o que se mede (os que dependem do comportamento intern
 ## O que foi verificado
 
 Uma aplicação Hermes, 24 Images de rede declaradas, os estágios que seguram downloads no servidor e as
-100 operações de cache sobre um servidor Node em loopback (HTTP em duas origens e HTTPS com uma
-autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
+115 operações de cache e de credenciais sobre um servidor Node em loopback (HTTP em duas origens e HTTPS com uma
+autoridade de teste), e 74 checks, 66 deles normativos e 8 estruturais:
 
 - **Carregamento.** PNG, JPEG, SVG e um PNG largo por `http` e `https`, com redirecionamentos 302 e 307
   (este para outra origem) e corpo em pedaços, chegam nos tamanhos dos cabeçalhos; os pixels
@@ -175,8 +257,9 @@ autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
   informa a URI que a fonte pediu, também depois do redirecionamento.
 - **Pedido.** O método (em maiúsculas), os cabeçalhos e o corpo chegam ao servidor como declarados, um
   corpo vai com qualquer método, `crossOrigin` e `referrerPolicy` viram os cabeçalhos que o `Image` do RN
-  dá a eles, um redirecionamento a outra origem mantém os cabeçalhos da fonte e retira o `Authorization`,
-  e uma fonte simples é um `GET` sem cookies e sem compressão oferecida.
+  dá a eles, um redirecionamento (na mesma origem ou em outra) deixa o pedido seguinte sem nenhum dos
+  cabeçalhos da fonte, como o `RCTHTTPRequestHandler`, e uma fonte simples é um `GET` sem cookies e sem
+  compressão oferecida.
 - **Falhas.** Um status diferente de 200 falha com `Failed to load <URL>`, o código e os cabeçalhos
   (repetidos juntados); depois de um redirecionamento a falha nomeia a URL final; um corpo vazio falha com
   `Unknown image download error`, com o código e os cabeçalhos, qualquer que seja o status; um 200 que
@@ -184,8 +267,10 @@ autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
   falha com a mensagem do transporte e sem código; uma conexão perdida no corpo falha com a mensagem, o
   200 e os cabeçalhos que vieram; um 301 que leva a um 404 falha nomeando a URL final; um cabeçalho que a
   rede não carrega e um método que o transporte não envia falham por `onError` sem que nada chegue ao
-  servidor; `only-if-cached` sem nada em cache falha nomeando a política, sem pedido; e a Image que
-  falhou termina com `error` e `loadEnd`, sem textura.
+  servidor; `only-if-cached` sem nada em cache falha nomeando a política, sem pedido; um pedido com
+  `Authorization`, `Proxy-Authorization` ou `Cookie` e URL `http` falha por `onError` (e um `getSizeWithHeaders`
+  rejeita) com a mensagem do host, sem que nada chegue ao servidor; e a Image que falhou termina com `error` e
+  `loadEnd`, sem textura.
 - **Progresso.** É cumulativo, os bytes até agora sobre o `Content-Length`, e termina no corpo todo; um
   corpo em pedaços não tem total (`-1`) e a fração é negativa; enquanto só parte do corpo chegou a Image
   informa o parcial e ainda não carregou. Nenhum check conta eventos.
@@ -211,6 +296,11 @@ autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
   (`no-store`, `no-cache`, `max-age=0`) não fica em nenhum dos dois; nenhuma imagem acima de 2 MiB fica (uma de
   900×600 é decodificada de novo, uma de 800×655 fica); e aos 20 MiB sai a menos recente (a primeira de
   onze volta a ser decodificada dos bytes, a última continua e pedir a primeira expulsou a seguinte).
+- **Credenciais.** Um pedido com `Authorization`, `Proxy-Authorization` ou `Cookie` (por `https`) não lê nem
+  grava nenhum cache: pergunta ao servidor mesmo onde há uma resposta em cache, `force-cache` incluído, a
+  resposta dele não responde um pedido seguinte sem credenciais, e o que um pedido sem credenciais guardou
+  continua lá; `only-if-cached` não acha nada para ele; um `getSizeWithHeaders` com credenciais não lê nem grava o
+  cache de bytes; e o servidor recebe o cabeçalho como foi declarado, em qualquer caixa.
 - **Validade.** Pelo relógio de validação, uma imagem em cache é servida enquanto fresca e carregada de
   novo depois de velha: `max-age` depois dos seus segundos, `Expires` na data, um décimo do tempo desde o
   `Last-Modified` na heurística, e nunca sem nenhum dos três; `force-cache` e `only-if-cached` servem uma
@@ -230,8 +320,8 @@ autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
   carrega sem pedido e uma `force-cache` seguinte sai da imagem decodificada; `prefetchWithMetadata`
   resolve verdadeiro, um `prefetch` que falha rejeita com `E_PREFETCH_FAILURE` e o texto da falha (um status,
   um corpo que não decodifica) e uma fonte local resolve; `getSize` e `getSizeWithHeaders` baixam (ou usam o
-  cache de bytes), leem o tamanho do cabeçalho fora da thread principal, mandam os cabeçalhos e não
-  decodificam nada; um tamanho que não pode ser baixado rejeita com `E_GET_SIZE_FAILURE` e o texto da
+  cache de bytes), leem o tamanho do cabeçalho fora da thread principal, mandam os cabeçalhos (um número sai
+  como `0.123456789`, um inteiro como `7` e um booleano como `1`) e não decodificam nada; um tamanho que não pode ser baixado rejeita com `E_GET_SIZE_FAILURE` e o texto da
   falha, com a mensagem do iOS de cada um dos dois métodos; e `queryCache` não informa nada para um
   download que falhou nem para uma fonte que não é de rede.
 - **Memória.** O aviso de memória do sistema esvazia os dois caches, as imagens decodificadas e as
@@ -244,29 +334,31 @@ autoridade de teste), e 72 checks, 64 deles normativos e 8 estruturais:
 Nenhum check fixa uma contagem que dependa de ritmo de quadros, de tempo ou de como o transporte
 segmentou os bytes: as esperas são por estado, o servidor segura as respostas até uma requisição de
 controle soltá-las, o relógio se move por deslocamento, e as cotas (no máximo 4 ativos, margem de 20 s)
-vêm de limites com motivo. Na execução registrada o servidor viu 111 requisições (109 em HTTP, 1 em
-HTTPS e 1 na outra origem) e o loader gravou 133 jobs, 97 deles em threads de worker de 11 identidades
-(nenhum na principal), servidos 106 pela rede, 14 pelo cache decodificado e 9 pelo de bytes, 3 recusados
-antes de qualquer fonte (um cabeçalho inválido e dois `only-if-cached` sem nada em cache) e 1 `prefetch` de
-fonte local; as 100 operações percorreram 56 URLs. Os contadores do loader na parada eram 105 pedidos de
-Image (75 carregados, 20 falhos, 4 cancelados, 0 descartados e 6 ainda em andamento ou esperando), 28 `prefetch`, 6
-medidas, 98 tarefas iniciadas e 98 aguardadas, 112 downloads, 14 acertos decodificados, 9 acertos de bytes,
-2 limpezas de cache, no máximo 4 ao mesmo tempo e 61 texturas criadas; a rede contava 109 iniciados, 4
-abandonados, 2 abortados por ociosidade, 2 abortados por tamanho e 123 eventos de progresso, e o
-transporte 109 iniciados, 96 completos, 3 falhos, 10 cancelados, 3 redirecionamentos e 36.408.736 bytes. Antes
+vêm de limites com motivo. Na execução registrada o servidor viu 119 requisições (108 em HTTP, 10 em
+HTTPS e 1 na outra origem) e o loader gravou 146 jobs, 105 deles em threads de worker de 11 identidades
+(nenhum na principal), servidos 114 pela rede, 15 pelo cache decodificado e 9 pelo de bytes, 7 recusados
+antes de qualquer fonte (um cabeçalho inválido, dois `only-if-cached` sem nada em cache, um
+`only-if-cached` com credenciais e três pedidos com credenciais por `http`) e 1 `prefetch` de fonte local; as
+115 operações percorreram 61 URLs. Os contadores do loader na parada eram 114 pedidos de Image (81
+carregados, 23 falhos, 4 cancelados, 0 descartados e 6 ainda em andamento ou esperando), 28 `prefetch`, 10
+medidas, 106 tarefas iniciadas e 106 aguardadas, 120 downloads, 15 acertos decodificados, 9 acertos de bytes,
+2 limpezas de cache, no máximo 4 ao mesmo tempo e 66 texturas criadas; a rede contava 117 iniciados, 4
+abandonados, 2 abortados por ociosidade, 2 abortados por tamanho e 127 eventos de progresso, e o
+transporte 117 iniciados, 104 completos, 3 falhos, 10 cancelados, 3 redirecionamentos e 36.409.670 bytes. Antes
 da parada havia 1 decodificação segurada no portão e 5 downloads (4 ativos e 1 na fila); os avisos de
-memória acharam 19 imagens decodificadas e 22 respostas, depois 10 e 20. Esses números são observações
+memória acharam 18 imagens decodificadas e 21 respostas, depois 10 e 20. Esses números são observações
 desta execução.
 
-O runner roda os testes C++ antes da lane atual: `image_cache_test` (7 grupos, 66 asserções), `image_network_test`
-(10 grupos, 60 asserções) e `image_core_test` (7 grupos, 70 asserções).
+O runner roda os testes C++ antes da lane atual: `image_cache_test` (8 grupos, 76 asserções), `image_network_test`
+(10 grupos, 64 asserções) e `image_core_test` (8 grupos, 77 asserções); o `http_core_test`, que cobre o
+`plan_redirect` com e sem a opção de largar os cabeçalhos, passa junto.
 
 ## Controles
 
 O host anterior foi preservado e roda o mesmo bundle. Como ele recusa toda fonte de rede, a sonda só
 executa os estágios que independem do que o loader da rede segura: 37 checks, dos quais os 7 que não
 dependem da rede passam e os 30 que dependem falham (a rede carregando, o progresso, os redirecionamentos,
-o pedido, as falhas, as threads, a memória e a API estática). Os outros 27 checks normativos não são
+o pedido, as falhas, as threads, a memória e a API estática). Os outros 36 checks normativos não são
 executados nesse host, o que o recibo registra. O oráculo aceita o relatório em modo original: as falhas
 são exatamente as normativas entre as que a sonda rodou, cada Image de rede declarada falha com a recusa
 do host anterior e o servidor não viu requisição nenhuma.
@@ -275,21 +367,24 @@ As três sabotagens retidas quebram um comportamento cada e o oráculo rejeita a
 consulta o cache decodificado mesmo para um pedido que pede `reload` (uma linha em `native/image_cache.h`):
 1 check falha, o do `reload`, e o oráculo rejeita a operação `c1-reload` (de onde saiu a imagem). Na
 segunda, o `ImageNetwork` não manda o transporte fechar o pedido de um download que ninguém quer mais
-(`native/image_network.cpp`): 32 checks falham, todos a partir do primeiro cancelamento (o próprio
+(`native/image_network.cpp`): 34 checks falham, todos a partir do primeiro cancelamento (o próprio
 cancelamento e a troca de fonte, os limites, os caches, a textura compartilhada, a API estática, a memória
 e a parada: o servidor não vê o cliente sair), e o oráculo rejeita no primeiro Image que não termina em
 `loadEnd` (`expires-1`). Na terceira, uma Image com `repeat` redimensiona a textura que o cache entrega a
 todas (`native/image_view.cpp`): 2 checks falham, e o oráculo rejeita a leitura dos pixels da textura
 compartilhada. As fontes foram restauradas byte a byte
-(os três SHA-256 de antes e de depois conferem) e o rebuild reproduziu o host `034bc08d`.
+(os três SHA-256 de antes e de depois conferem) e o rebuild reproduziu o host `f44b7c3b`.
 
-O oráculo também recusa 27 mutações do relatório genuíno, cada uma pelo motivo que o dano nomeia (o
+O oráculo também recusa 33 mutações do relatório genuíno, cada uma pelo motivo que o dano nomeia (o
 progresso, a fração de um comprimento desconhecido, o código e os cabeçalhos de uma falha, o corpo vazio, a
 textura nunca redimensionada, o método, os cookies, o pedido fechado pelo cancelamento, o servidor que
 segura cada download, de onde saiu a imagem em cinco operações do modelo de cache, o que `queryCache` informa, a
 ordem do LRU dos bytes, o que os caches guardavam no aviso de memória, a thread de worker e a principal, a
 textura viva, o download vivo, o JS depois da parada, os quatro ao mesmo tempo, o limite de tamanho e a
-textura compartilhada).
+textura compartilhada). As seis da rodada de revisão: um pedido com credenciais respondido pelo cache
+decodificado, um que deixa a resposta no cache de bytes, um tamanho medido com credenciais que a deixa lá, um
+pedido com credenciais enviado por `http`, um tamanho com credenciais perguntado por `http` e um redirecionamento
+que deixa passar um cabeçalho da fonte.
 
 ## Capturas
 
@@ -299,7 +394,8 @@ nativo, de 1800 × 1676 pixels (900 × 838 pontos na escala de conteúdo 2), enq
 clica de verdade e lê cada imagem na `GodotImage` que a mostra, no que o JS observou e, com o
 renderizador, em pontos do quadro (22 checks headless, 30 com o renderizador). O exemplo inclui agora um
 servidor HTTP de loopback em GDScript que a cena sobe e consulta a cada quadro. O recibo registra o
-caminho, o SHA-256 e as dimensões de cada quadro, e os bytes se repetiram em duas execuções.
+caminho, o SHA-256 e as dimensões de cada quadro, e os bytes se repetiram em todas as execuções, também
+depois da revisão do PR #64 (o servidor do exemplo mudou, os quadros não).
 
 ![As imagens do exemplo, a linha de rede e o preview em cover](images-network-all-modes.png)
 
@@ -330,18 +426,20 @@ Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
 
 Passaram na árvore da implementação, depois da revisão que extraiu do `image_loader.cpp` a decisão e o
 ciclo de vida das fontes de rede para o `ImageSources` (o arquivo foi de 591 linhas na primeira fatia para
-789): os testes C++ de imagens, a suíte nova (72 checks na lane atual, 37 executados e 30 falhando no
-controle, 1, 32 e 2 falhas nas sabotagens), a suíte da primeira fatia (73 checks, 62 normativos; 11 checks e
-3 falhas normativas no controle; 12 e 2 falhas nas sabotagens), Networking, WebSocket, AppState,
-`test:contracts` (301 testes Node, 43 do painel e 13 Python), os exemplos (22 checks headless no `images` e 30
-com o renderizador), o `type-check`, a análise estática, o scan de publicação e o teste de recuperação. O
-recibo registra cada passo.
+789) e da rodada de revisão do PR #64: os testes C++ de imagens e o `http_core_test`, a suíte nova (74 checks na
+lane atual, 37 executados e 30 falhando no controle, 1, 34 e 2 falhas nas sabotagens), a suíte da primeira
+fatia (73 checks, 62 normativos; 11 checks e 3 falhas normativas no controle; 12 e 2 falhas nas sabotagens),
+Networking (1 de 1) e WebSocket (4 de 4), `test:contracts` (302 testes Node, 43 do painel e 13 Python), o
+exemplo `images` (22 checks headless e 30 com o renderizador), o `type-check`, a análise estática e o scan de
+publicação. O recibo registra cada passo.
 
-Quatro passos falharam na primeira passada por motivos alheios ao comportamento testado e foram
-corrigidos e repetidos: a análise estática (exports sem uso no módulo do servidor e dois nomes duplicados
-entre os oráculos), a suíte de Imagens da primeira fatia contra um controle local defasado depois de o
-bundle mudar, e os controles e sabotagens locais do Networking e do WebSocket, que fixam bundles que o
-`src/image-contract.mjs` mudou. Esses recibos vivem só em `build/`, não vão para o git e não existem na
+Alguns passos falharam na primeira passada por motivos alheios ao comportamento testado e foram corrigidos e
+repetidos: na primeira execução, a análise estática (exports sem uso no módulo do servidor e dois nomes
+duplicados entre os oráculos) e os controles locais defasados depois de o bundle mudar; na rodada de revisão, a
+sonda parou num erro de inferência de tipo do GDScript no estágio novo e uma asserção do oráculo comparava erros de
+decodificação com a mensagem inteira em vez do texto da recusa, e os controles e sabotagens locais do Networking e
+do WebSocket fixavam o transporte que a revisão mudou (a string de busca da sabotagem `redirects` do Networking
+seguiu a nova assinatura do `plan_redirect`). Esses recibos vivem só em `build/`, não vão para o git e não existem na
 CI; foram refeitos nos hosts anteriores preservados.
 
 A suíte da primeira fatia mudou com o contrato: o caso `neg-http`, os casos de `getSize` por `http` e as
@@ -349,9 +447,9 @@ seis recusas de chave saíram do fixture; `prefetch` resolve verdadeiro para um 
 com `E_PREFETCH_FAILURE` para um ausente; um `repeat` não redimensiona mais a textura; e a suíte tem agora 73
 checks (62 normativos), onde tinha 74 (63). O [registro dela](../images/README.md) leva uma nota datada.
 
-As 190 fontes de código e configuração executadas (16 do bundle e da suíte, 123 do build nativo, 33 de
+As 194 fontes de código e configuração executadas (16 do bundle e da suíte, 127 do build nativo, 33 de
 verificação e 18 do fixture, com sobreposição) correspondem à implementação
-`6bbd03665b0b2136f0eabe58a540cbf4394215ee` por `git show`/SHA-256, e as lanes rodaram dessa árvore
+`910cffb1c35009438e06f14775aac80211664a10` por `git show`/SHA-256, e as lanes rodaram dessa árvore
 commitada, sem fonte alterada durante a execução. Os documentos desta fatia foram escritos depois delas; os
 gates que os leem rodaram de novo na árvore final.
 
@@ -359,7 +457,8 @@ gates que os leem rodaram de novo na árvore final.
 
 - **Disco.** Não há cache em disco: o de bytes é só de memória, nada sobrevive à aplicação e `queryCache`
   nunca responde `disk` ou `disk/memory`.
-- **Rede.** Sem revalidação, `Vary`, cookies, compressão, HTTP/2 nem cache HTTP de redirecionamentos. O
+- **Rede.** Sem revalidação, `Vary`, cookies, compressão, HTTP/2 nem cache HTTP de redirecionamentos; as
+  credenciais só vão por `https`. O
   transporte e os caches rodaram contra um servidor Node em loopback (HTTP e HTTPS com uma autoridade de
   teste) e o servidor GDScript do exemplo; um servidor remoto, um proxy, um portal cativo e condições
   reais de rede não foram exercitados.

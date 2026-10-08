@@ -6,9 +6,9 @@ pipeline across actual SceneTree frames (74 when it was recorded, 73 now that th
 changed the contract), the control on the preceding host (the 3 normative checks it can reach
 fail), two retained sabotages that the probe and the independent oracle both reject and the oracle's
 mutations of the genuine report. The [network slice's evidence](../evidence/images-network/README.md)
-owns the 72 headless checks over a loopback Node server (HTTP and HTTPS), the control on the
+owns the 74 headless checks over a loopback Node server (HTTP and HTTPS), the control on the
 preceding host (37 checks run, the 30 that need the network fail), three retained sabotages that the
-probe and the oracle both reject, 27 mutations of the genuine report that the oracle refuses and the
+probe and the oracle both reject, 33 mutations of the genuine report that the oracle refuses and the
 22 headless and 30 graphical checks of the example and its two captures. Hosted run 37724902858 (the
 push of main 6d02746, the squash of #56) passed all five jobs in its first attempt; its native job
 ran `npm run test:images` (1 of 1 TAP test passing) and its artifact repeated the first slice's 74
@@ -220,29 +220,38 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
   under `assets/` with a `<bundle>.assets.json` manifest that holds each file's SHA-256 and the
   bundle's. The iOS export hook copies the manifest's files (`sdk/addon/ios_export.gd`).
 - **Network downloads (the second slice).** `native/image_network.cpp` is `ImageNetwork`, the loader's own
-  downloader over an `HttpTransport` that `application_runtime.cpp:596-603` makes from the same factory,
+  downloader over an `HttpTransport` that `application_runtime.cpp:599-607` makes from the same factory,
   trust and clock as Networking's (a second instance: a shared one would collide on caller-chosen ids and
   `Networking::stop` would end image loads). It builds the request like `NSURLRequestFromImageSource`
-  (`build_download_request`, 31-47), runs at most four downloads in first-in-first-out order
-  (`start_queued`, 121-177), judges each result like `processResponse` (`judge_download`, 49-66) and
-  enforces the size and idle limits and the progress in `settle_active` (179-233). Transport listeners only
+  (`build_download_request`, 32-55), runs at most four downloads in first-in-first-out order
+  (`start_queued`, 129-185), judges each result like `processResponse` (`judge_download`, 57-73) and
+  enforces the size and idle limits and the progress in `settle_active` (187-241). Transport listeners only
   record; cancelling, the limits, the progress and the outcome all happen after `transport->poll()` returns,
   because cancelling inside a listener is a use-after-free in the transport, and `stop()` stops the transport
-  first so that no listener runs afterwards (244-249).
+  first so that no listener runs afterwards (252-259). Every image request sets
+  `HttpRequest::drop_headers_on_redirect` (`native/http_transport.h:21-26`, honored by `plan_redirect`,
+  `native/http_core.h:283-310`, and passed at `native/godot_http_transport.cpp:177`): the follow-up request
+  carries none of the request's headers, as `RCTHTTPRequestHandler` leaves only the cookies and the host has none;
+  Networking leaves it off and keeps OkHttp's rules. A request that carries `Authorization`,
+  `Proxy-Authorization` or `Cookie` and whose URL is http is refused in `build_download_request` before any
+  request, with a host message.
 - **The route and the two caches.** `native/image_cache.h` holds what needs no Godot: the HTTP date format
-  and `integerValue` of `RCTImageCache` (57-105), `response_freshness` (123-157), the decoded key (32-36),
-  `route()` (193-211) and `ExpiringLru` (213-302). `native/image_sources.cpp` (`ImageSources`) owns the network
-  and both caches: `resolve` (74-157) builds the request, asks `route()` (a decoded hit never touches the
-  byte cache, because a lookup moves an entry to the front of its cache), and answers from the decoded
-  cache, from the byte cache (decoded again off the main thread) or from a download; `from_download`
-  (159-196) keeps a 200 in the byte cache whoever asked (a view, `getSize` or `prefetch`), and `keep_picture`
-  (212-217) keeps the decoded picture of a view's request unless it reloaded or the response forbids it.
+  and `integerValue` of `RCTImageCache` (57-104), `response_freshness` (123-154), the decoded key (32-36),
+  `carries_credentials` (172-177), `route()` (204-221) and `ExpiringLru` (227-314). `native/image_sources.cpp`
+  (`ImageSources`) owns the network and both caches: `resolve` (74-158) builds the request, asks `route()` (a
+  decoded hit never touches the byte cache, because a lookup moves an entry to the front of its cache; a
+  request that carries credentials asks neither cache), and answers from the decoded cache, from the byte
+  cache (decoded again off the main thread) or from a download; `from_download` (162-199) keeps a 200 in the
+  byte cache whoever asked (a view, `getSize` or `prefetch`) unless the request carried credentials, and
+  `keep_picture` (215-220) keeps the decoded picture of a view's request unless it reloaded, the response
+  forbids it or the request carried credentials.
   Time is the validation clock, moved by `validation_clock_offset_ms` (monotonic for the idle timeout, wall
   for the stale times), so no check sleeps.
 - **The statics.** `native/image_loader_module.cpp` answers `getSize` and `getSizeWithHeaders` of a network
-  URL (49-80), `prefetchImage` and `prefetchImageWithMetadata` (82-115, which download, check off the main
-  thread that the bytes are a picture, and keep only the response) and `queryCache` (88-100, `memory` for a
-  URL the byte cache holds).
+  URL (45-75; a header value that is not a string is written as `image::number_text` or as `1` or `0`,
+  `native/image_core.h`), `prefetchImage` and `prefetchImageWithMetadata` (79-80 and 102-111, which download,
+  check off the main thread that the bytes are a picture, and keep only the response) and `queryCache`
+  (83-95, `memory` for a URL the byte cache holds).
 - **The view and the lifecycle.** `GodotImage` fills `responseCode` and `httpResponseHeaders` of a failure
   (`native/image_view.cpp:152-162`) and tiles without resizing the shared texture (182-190);
   `AppLifecycle::on_memory_warning` (`native/app_lifecycle.h:46-53`) runs the caches' clearing before JS is
@@ -288,9 +297,7 @@ documentation and RN's code and were not compared on an iOS device.
 
 - **Progress is coalesced** to at most one event per request per pump, cumulative; iOS reports one per
   chunk (`RCTNetworkTask.mm:211-215`). A picture served from either cache reports none.
-- **Redirects keep the source's headers** (`native/http_core.h:285-305` drops only an `Authorization`
-  that would cross to another origin); iOS replaces them with the cookies' (`RCTHTTPRequestHandler.mm:147-160`).
-- **The byte cache is the host's own** (`native/image_cache.h:23-28`, `native/image_sources.cpp:159-196`):
+- **The byte cache is the host's own** (`native/image_cache.h:24-28`, `native/image_sources.cpp:162-199`):
   memory only, 20 MiB, no entry over 1 MiB, only a 200 for a `GET` without a body, under the URL that was
   asked for (a redirect's own response is not kept), with `Date` taken as the arrival time when the response
   has none. A stale entry is downloaded again, never revalidated (no `If-None-Match`, no 304), and `Vary`,
@@ -302,20 +309,31 @@ documentation and RN's code and were not compared on an iOS device.
 - **Failure texts of the transport are the host's** (`Failed to connect to 127.0.0.1:N`, `unexpected end of
   stream from H:N`, `The request timed out.`), and a header name or value the wire cannot carry, or a
   method the transport cannot send, fails through `onError` before any request
-  (`native/image_network.cpp:31-47`).
+  (`native/image_network.cpp:32-55`).
 - **No departure in the error payload.** The status and the headers that come with a failure are the ones
-  `RCTImageLoader` hands the completion (`native/image_network.cpp:49-66`), and `GodotImage` sends them as
+  `RCTImageLoader` hands the completion (`native/image_network.cpp:57-73`), and `GodotImage` sends them as
   `responseCode` and `httpResponseHeaders` (`native/image_view.cpp:152-162`), as `RCTImageComponentView`
   does from the `userInfo` that `addResponseHeadersToError` fills (see above).
 - **No cookies, no compression offered** (iOS offers `gzip` and decodes it), HTTP/1.1 only, and cleartext
-  http is allowed (no App Transport Security).
+  http is allowed for a request without credentials (App Transport Security blocks it by default on iOS; a
+  request with credentials is refused, below).
+- **A request that carries credentials neither reads nor writes either cache**, which is stricter than iOS.
+  `RCTImageCache` and `NSURLCache` are keyed by URL (`RCTImageCache.mm:30-34`), so on iOS a response fetched
+  with one credential can answer a request that carries another or none; here a request whose headers
+  carry `Authorization`, `Proxy-Authorization` or `Cookie` (`native/image_cache.h:172-177`, `route()` at
+  204-221, `ImageSources::resolve` and `keep_picture`) always asks the server, `only-if-cached` finds nothing
+  for it, and `queryCache` still reports what the byte cache holds.
+- **A request that carries those headers over http is refused** (`native/image_network.cpp:32-55`): it fails
+  through `onError`, or rejects a size, with a host message before any request. iOS reaches the same end
+  through App Transport Security, which blocks cleartext http by default; the host blocks only the http
+  that carries credentials.
 - **Host policy.** A response over 128 MiB is refused, by `Content-Length` or as it arrives, and a download
-  that receives no bytes for 60 s fails with `The request timed out.` (`native/image_network.cpp:179-233`);
+  that receives no bytes for 60 s fails with `The request timed out.` (`native/image_network.cpp:187-241`);
   RN bounds concurrency, not the size of a response, and 60 s is `NSURLSession`'s default request timeout
   read as idleness. The limit of four downloads is exact, where `dequeueTasks` can let a fifth run after a
   cancellation (432-437).
 - **The OS memory warning empties both caches** (`native/app_lifecycle.h:46-53`,
-  `native/application_runtime.cpp:605-607`); `RCTImageCache` also empties when the app resigns active, and
+  `native/application_runtime.cpp:608-610`); `RCTImageCache` also empties when the app resigns active, and
   this host does not.
 - **`crossOrigin` and `referrerPolicy`** become request headers as `ImageSourceUtils.js` makes them, and
   the source's own headers are used as given.
@@ -348,12 +366,12 @@ responses until a control request releases them, so the stages wait on state: fo
 and two queued, a partial body, a download cancelled before and after its head, a swap, the size limit
 (announced and found out), the idle timeout moved by the clock offset, and a stop with a decode and five
 downloads in flight. The oracle reads the server's log and the served files, recomputes what
-`RCTImageLoader`, `RCTImageCache` and `NSURLCache` do with them, and replays the 100 cache operations over a
+`RCTImageLoader`, `RCTImageCache` and `NSURLCache` do with them, and replays the 115 cache and credential operations over a
 model of the two caches with the clock each ran at. No check counts progress events or relies on how the
 transport segmented the bytes, and each stale time sits more than 20 s from the clock of its stage. The
 control on the preceding host runs 37 checks and fails exactly the 30 normative ones among them. Three
 retained sabotages break one behavior each: a reload that consults the decoded cache fails 1 check (the oracle
-rejects where `c1-reload` came from), a download whose transport request is never closed fails 32 (the oracle
+rejects where `c1-reload` came from), a download whose transport request is never closed fails 34 (the oracle
 rejects the first Image that does not end in `loadEnd`) and a repeating Image that resizes the shared texture
 fails 2 (the oracle rejects the shared texture's pixels).
 
