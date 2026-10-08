@@ -150,3 +150,88 @@ test("Manual publication pins only JSON and identifies data outside main", async
   await assert.rejects(fetchDashboardData({ repository: "journey-studios/godot-fabric", ref: "missing", request: async () => ({ ok: false, status: 404 }) }), /HTTP 404/);
   await assert.rejects(fetchDashboardData({ repository: "journey-studios/godot-fabric", ref: "bad", request: async url => ({ ok: true, json: async () => url.includes("commits") ? { sha } : { encoding: "base64", content: Buffer.from('{}').toString('base64') } }) }));
 });
+
+// Optional milestones (the 0.5 cut). They must stay invisible to the 1.0 numbers and to the roadmap parser.
+const { criteriaProgress, criteriaStatus, milestoneCriteria } = await import("../dashboard/model.mjs");
+const milestoneOf = copy => copy.milestones.find(item => item.id === "0.5");
+// A copy with every 0.5 criterion reset: the versioned JSON records live progress, so these tests must not depend on it.
+const fresh = () => {
+  const copy = clone();
+  [...milestoneCriteria(milestoneOf(copy)), ...milestoneOf(copy).exit].forEach(step => { step.done = false; step.evidence = []; });
+  return copy;
+};
+
+test("the versioned JSON carries the 0.5 milestone: an agent that rebuilds the document with fixed keys would erase it", () => {
+  const milestone = milestoneOf(data);
+  assert.ok(milestone, "milestones[0.5] ausente: restaure a chave `milestones` do JSON versionado (agentes devem preservar chaves desconhecidas, ver dashboard/AGENT_PROMPT.md)");
+  assert.equal(milestone.items.length, 10);
+  assert.ok(milestone.items.every(item => /^V05-\d\d$/.test(item.id) && item.criteria.length > 0));
+  assert.ok(milestone.exit.length > 0);
+  assert.ok(data.tasks.every(task => !("milestone" in task) && !/^V05-/.test(task.id)), "o 0.5 não pode virar tag ou task dos GF: o sync os descarta ou rejeita");
+});
+
+test("milestones never change the release numbers and are optional", () => {
+  const without = clone();
+  delete without.milestones;
+  validate(without);
+  assert.deepEqual(summarize(without), summarize(data));
+  const finished = clone();
+  milestoneCriteria(milestoneOf(finished)).forEach(step => { step.done = true; step.evidence = [{ label: "x", url: "https://example.com/x" }]; });
+  validate(finished);
+  assert.deepEqual(summarize(finished), summarize(data));
+  assert.equal(criteriaProgress(milestoneCriteria(milestoneOf(finished))), 100);
+  assert.equal(criteriaStatus(milestoneCriteria(milestoneOf(finished))), "complete");
+});
+
+test("milestone progress and status are derived from criteria", () => {
+  assert.equal(criteriaProgress([]), 0);
+  assert.equal(criteriaProgress([{ done: true }, { done: false }, { done: false }, { done: true }]), 50);
+  assert.equal(criteriaStatus([{ done: false }]), "planned");
+  assert.equal(criteriaStatus([{ done: true }, { done: false }]), "in_progress");
+  assert.equal(criteriaStatus([{ done: true }]), "complete");
+  assert.equal(criteriaStatus([{ done: true }], "sem aparelho"), "blocked");
+  assert.equal(criteriaProgress(milestoneCriteria(milestoneOf(fresh()))), 0);
+  assert.ok(milestoneCriteria(milestoneOf(data)).every(step => !step.done || step.evidence.length), "critério do 0.5 concluído sem evidência executada");
+});
+
+test("invalid milestones are rejected without touching the release data", () => {
+  const broken = mutate => { const copy = fresh(); mutate(milestoneOf(copy), copy); return copy; };
+  assert.throws(() => validate({ ...clone(), milestones: {} }), /milestones: lista obrigatória/);
+  // "" and null mean "not blocked", as they do on the GF tasks: an agent that unblocks an item must not take the dashboard down.
+  for (const empty of ["", null]) {
+    validate(broken((milestone, copy) => { milestone.blocker = empty; milestone.items[2].blocker = empty; return copy; }));
+  }
+  assert.throws(() => validate(broken(milestone => { milestone.items[2].blocker = 7; })), /blocker: texto obrigatório/);
+  assert.throws(() => validate(broken((milestone, copy) => { copy.milestones.push({ ...milestone }); })), /IDs duplicados/);
+  assert.throws(() => validate(broken(milestone => { milestone.items.push({ ...milestone.items[0] }); })), /IDs duplicados/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[1].gf = ["GF-99"]; })), /item GF desconhecido GF-99/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[1].dependsOn = ["V05-99"]; })), /dependência inválida/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[1].dependsOn = [milestone.items[1].id]; })), /dependência inválida/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[0].criteria[0].done = true; })), /conclusão sem evidência/);
+  assert.throws(() => validate(broken(milestone => { milestone.exit[0].done = true; })), /conclusão sem evidência/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[0].criteria[0].evidence = [{ label: "x", url: "javascript:alert(1)" }]; })), /URL deve usar http ou https/);
+  assert.throws(() => validate(broken(milestone => { milestone.items[0].criteria = {}; })), /lista obrigatória/);
+  assert.throws(() => validate(broken(milestone => { milestone.scope = "texto"; })), /lista de textos/);
+});
+
+test("sync preserves milestones and the 0.5 prose does not reconfigure the roadmap parser", () => {
+  const synced = syncRoadmap(clone(), roadmap);
+  assert.deepEqual(synced.milestones, data.milestones);
+  assert.deepEqual(synced.activity, data.activity);
+  const parsed = parseRoadmap(roadmap);
+  assert.deepEqual([parsed.phases.length, parsed.tasks.length, parsed.sequences.length, parsed.releaseChecklist.length, parsed.integrationChecklist.length], [6, 40, 8, 9, 7]);
+  assert.ok(parsed.tasks.every(task => !task.id.startsWith("V05")));
+  const section = roadmap.split("\n## 0.5 — ")[1]?.split("\n## ")[0] ?? "";
+  assert.ok(section, "seção `## 0.5 — ` ausente do ROADMAP.md");
+  // Every V05 item is named in the roadmap prose and the other way around, so the two descriptions cannot drift apart.
+  const inJson = milestoneOf(data).items.map(item => item.id);
+  const inProse = [...section.matchAll(/^\| (V05-\d\d) \|/gm)].map(match => match[1]);
+  assert.deepEqual(inProse, inJson);
+});
+
+test("the milestone section ids used by the renderer exist in the page", async () => {
+  const html = await readFile(new URL("../dashboard/index.html", import.meta.url), "utf8");
+  for (const id of ["milestones", "milestones-nav", "milestone-list"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+});

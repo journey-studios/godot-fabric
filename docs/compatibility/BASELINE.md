@@ -34,13 +34,16 @@ not recursive. Private deep imports, undocumented globals, every possible
 value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
-`npm run parity:status` generates `build/parity-status.json`. On 2026-10-07 the
-current facade has **44 exported names awaiting differential certification, 5
-explicit placeholders and 48 missing public names** of the 97 root values, against
-39, 5 and 53 on 2026-10-06 (Linking, Clipboard and Vibration were added, and so were Modal
-and SafeAreaView) and 17, 11 and 69
-after adding Button/public TextInput (2026-10-02). The five
-placeholders are Image, ImageBackground, KeyboardAvoidingView, RefreshControl and
+`npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
+current facade has **56 exported names awaiting differential certification, 3
+explicit placeholders and 38 missing public names** of the 97 root values, against
+44, 5 and 48 on 2026-10-07 (the Image slice exported AssetRegistry and took Image and
+ImageBackground out of the placeholders, and nine OS-specific names were added: ToastAndroid,
+PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid,
+InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback), 39, 5 and 53 on 2026-10-06
+(Linking, Clipboard and Vibration were added, and so were Modal and SafeAreaView) and 17, 11 and 69
+after adding Button/public TextInput (2026-10-02). The three
+placeholders are KeyboardAvoidingView, RefreshControl and
 StatusBar. This describes source presence: the board counts the export forms the
 facade uses (`export { x }`, `export { default as x }`, `export * as x` and exported
 functions, classes and constants). The
@@ -84,12 +87,16 @@ slice's own suite, not a coverage percentage.
 | Runtime globals | none: `fetch`, `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are globals, not names of the root (`Networking` stays missing) | [Networking](../evidence/networking/README.md) | 100 against a local server over HTTP and HTTPS, with an independent oracle; the preceding host fails exactly 84, two retained sabotages 8 and 2 | pending |
 | Runtime globals | none: `WebSocket` is a global, not a name of the root | [WebSocket](../evidence/websocket/README.md) | 93 against a local RFC 6455 server over ws and wss, with an independent oracle that checks the server's frame log; the preceding host fails exactly 81, two retained sabotages 4 and 2 | pending |
 | Device services | `Linking`, `Clipboard`, `Vibration` | [Device services](../evidence/device-services/README.md) | 65 in two applications (the validation backend and Godot's real one) and 2 in a launch without `--uri=`, with an independent oracle; the preceding host fails exactly 52 and 1, two retained sabotages are rejected by the probe and the oracle | pending |
+| OS-specific contracts | `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`, `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS`, `TouchableNativeFeedback` (`StatusBar` stays a placeholder) | [OS-specific contracts](../evidence/os-contracts/README.md) ([research](../research/os-contracts.md)) | 37 in two applications with the real host registry and an independent oracle that reads every text, key and count from the pinned RN sources; the previous SDK fails exactly 30 (this slice has no native code, so the SDK is its control), three retained sabotages fail 14, 8 and 5 | pending |
 
 The two Runtime globals rows are not facade areas: RN installs those names as globals, so
 they do not move the counts above, and the root's `Networking` export is still missing. The
 Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
 counts from 39 and 53 to 42 and 50 before the Modal slice added `Modal` and `SafeAreaView`
-(44 and 48 now). Their hosted CI runs are pending.
+(44 and 48), the Image slice moved them to 47 and 47, and the OS-specific contracts row exported
+nine names, which moved them to 56 and 38. That row reproduces RN's own unavailability on a platform that is neither iOS nor Android:
+`'denied'` and `false` from `PermissionsAndroid` mean unavailable on Godot, and no
+Android or iOS behavior is certified. Their hosted CI runs are pending.
 
 ## Original native oracle
 

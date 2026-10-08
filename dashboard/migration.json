@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Imagens: Image do RN sobre decodificação em threads do Godot."
+    "focusTitle": "Contratos específicos de iOS e Android: a indisponibilidade do RN reproduzida no Godot."
   },
-  "updatedAt": "2026-10-08T02:37:03.732+00:00",
+  "updatedAt": "2026-10-08T04:32:15.000+00:00",
   "source": {
-    "commit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
-    "scope": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN sobre o pipeline C++ de imagens do próprio RN e um ImageManager do host: leitura e decodificação no WorkerThreadPool do Godot, nunca na main thread; GodotImage com os seis modos do UIKit e os eventos do iOS; plugin esbuild de assets com o descritor do Metro. Implementação local fixada em 552fb56a098f35beb41a0a333f99f0f35b4b3ec9: 74 checks headless em duas roots, host anterior com as 3 falhas normativas que alcança, sabotagens retidas com 12 e 2 falhas rejeitadas pelo oráculo, exemplo com 17 checks headless e 25 gráficos. Evidência fixada em 7da93542b057f0e0d25b0a0984ff9b2329ba35bb. CI hospedada pendente. GF-16 segue parcial: só o checkpoint de fatia fecha."
+    "commit": "1b2dfd53aa114b88f5ba3bff133ee6e09651243e",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/1b2dfd53aa114b88f5ba3bff133ee6e09651243e",
+    "scope": "ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN no import público react-native, cada um no ramo que o próprio RN toma fora do iOS e do Android, sem módulo nativo no host e sem código nativo na fatia. Implementação local fixada em 4338d1c5a2803a8c1b8feda633fc8be63565ac3d: 37 checks headless em duas aplicações contra o registro real do host, com um oráculo independente que lê textos, chaves e contagens dos fontes do RN pinado; o SDK anterior (main 6d02746) falha exatamente os 30 normativos e três sabotagens em memória falham 14, 8 e 5, todas rejeitadas pelo oráculo; os recibos dos onze outros chamadores do bundleNativeProbe ficam idênticos. Evidência fixada em 1b2dfd53aa114b88f5ba3bff133ee6e09651243e. CI hospedada pendente. GF-24 segue parcial: só o checkpoint de fatia fecha."
   },
   "phases": [
     {
@@ -2214,7 +2214,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "OS-specific public contracts",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract",
       "dependencies": [
         "GF-09",
@@ -2229,14 +2229,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "ToastAndroid (pelo ToastAndroidFallback), PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid (pelo DrawerLayoutAndroidFallback), InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN, lidos pelo import público react-native, cada um no ramo que o próprio RN toma numa plataforma que não é iOS nem Android (Platform.OS \"godot\"): o ToastAndroid avisa e tem constantes 0; o PermissionsAndroid avisa e resolve false, 'denied' ou {} (no Godot isso significa indisponível, não recusa); DynamicColorIOS, ActionSheetIOS (depois dos invariantes de argumento) e 15 estáticos do PushNotificationIOS lançam os erros do RN; ProgressBarAndroid e DrawerLayoutAndroid renderizam uma View comum em volta dos filhos e os 8 métodos do drawer lançam; o InputAccessoryView avisa a cada render e devolve null; o TouchableNativeFeedback é Pressability sem o drawable do Android (onPressIn, onPressOut e onPress num clique real de mouse e de toque). A fatia não tem código nativo: src/os-specific.js tem getters preguiçosos que devolvem os módulos originais, e a fachada embrulha o TouchableNativeFeedback com a guarda de Control inline e os quatro estáticos do RN. O host não registra nenhum dos seis módulos que eles procuram (get devolve null e getEnforcing lança): a ausência é o contrato. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê textos, chaves e contagens dos fontes do RN pinado (46 operações, 16 avisos atribuídos, 44 permissões) e confere que cada aviso é uma linha HERMES: do log. Como a fatia não tem código nativo, o controle é o SDK anterior (o src/ da main 6d02746) pelo mesmo bundleNativeProbe, que falha exatamente os 30 checks normativos; três sabotagens em memória (Platform.OS android, Toast mudo com PermissionsAndroid que concede, caminho genérico do Toast que importa a si mesmo) falham 14, 8 e 5, todas rejeitadas pelo oráculo. A pesquisa em Node vm difere em sete pontos, entre eles o addEventListener do PushNotificationIOS, que funciona em JS, e a ordem do clique (in, out, press). O bundleNativeProbe ganhou platformRoot e plugins opcionais, e os recibos dos onze outros chamadores ficaram idênticos byte a byte. Abertos: StatusBar (continua placeholder e o host não tem StatusBarManager), as props específicas de SO, as implementações de Android e iOS (GF-34 e GF-35), a comparação por versão do SO e o alias no platform-plugin para pacotes de terceiros, cujo import do caminho genérico do ToastAndroid ou do DrawerLayoutAndroid segue undefined; Alert, Share, Settings e BackHandler ficam no GF-23 (V2-D30). CI hospedada pendente. Só o checkpoint slice fecha; nenhum item, peso ou denominador muda.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Contratos específicos de iOS e Android: 37 checks headless em duas aplicações (30 normativos), SDK anterior com exatamente 30 falhas normativas e três sabotagens retidas (14, 8 e 5) rejeitadas pelo oráculo (implementação 4338d1c; CI hospedada pendente)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
+            },
+            {
+              "label": "Contratos específicos de iOS e Android: recibo de execução, hashes, controles e os onze recibos do bundleNativeProbe",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3257,6 +3266,536 @@
       "acceptance": "Close coverage for the promised scope, budgets and soak/recovery cases; verify the actual release head, current stable baseline policy and reproducible SDK/consumer artifacts before 1.0"
     }
   ],
+  "milestones": [
+    {
+      "id": "0.5",
+      "title": "0.5 · Frontier: HUD em React Native guiada por um jogo",
+      "summary": "Recorte de prioridade sobre a 1.0, não uma versão paralela. Prova um app real usável: um mini-jogo estilo Civilization 2 em Godot (mapa, regras e turnos) com toda a HUD em React Native, cujos painéis mudam conforme o contexto do jogo. Fecha no macOS exportado e, depois, em um iPhone físico. Termina com um comparativo do jogo sem HUD, com HUD nativa do Godot e com HUD React Native. A 1.0 não muda: IDs, pesos, prioridades e aceite dos GF-xx continuam valendo; o 0.5 só diz o que pegar primeiro.",
+      "validations": [
+        {
+          "id": "app-driven-hud",
+          "title": "O app TSX decide o que montar (HUD + inventário)",
+          "note": "Marco já existente, HUD-1..HUD-7 do integrationChecklist. Continua em consumers/minimal como regressão e não é alterado."
+        },
+        {
+          "id": "game-driven-hud",
+          "title": "O estado do jogo em Godot escolhe qual HUD React Native aparece",
+          "note": "Este marco. Godot é dono das regras e do contexto; React só projeta o estado e envia intenções."
+        }
+      ],
+      "scope": [
+        "Jogo de referência Frontier, com regras, nomes e arte originais (só o padrão de interação do Civilization 2 é emprestado): mapa 24x16 de semente fixa, 2 unidades (Settler e Warrior), 1 cidade com 3 a 5 itens de produção, pesquisa em lista, 1 evento ou diálogo e IA roteirizada mínima.",
+        "6 painéis de HUD contextuais em React Native: barra de turno e recursos, ações da unidade, cartão de tile, tela da cidade, pesquisa e diálogo de evento, em 7 contextos (nenhum, tile, Settler, Warrior, pilha de 2 unidades, cidade, diálogo).",
+        "Replay determinístico de 12 turnos com hash dourado e soak de 100 turnos, no editor, no .app macOS e, se houver GO, no iPhone.",
+        "Alvos: .app macOS arm64 exportado e um iPhone arm64 físico, paisagem, Release assinado. Primeiro o macOS completo; o mobile vem depois."
+      ],
+      "outOfScope": [
+        "Texto digitado, teclado virtual, IME e KeyboardAvoidingView; imagem de rede; inércia de scroll.",
+        "Hover e clique direito públicos em Pressable (tooltips e menu de contexto ficam com o Godot ou com long-press).",
+        "Árvore tecnológica em grafo, Boat, diplomacia, fog of war, combate probabilístico, save/load completo e multiplayer.",
+        "Android, Linux e Windows; simulador iOS arm64; Debug iOS; TestFlight e loja.",
+        "Novas fatias de ponteiro, EventTarget, Document ou hover (cauda do GF-13): congeladas; as suítes existentes seguem como regressão.",
+        "Qualquer mudança em tasks, fases, sequências, checklists, decisões, pesos, prioridades ou aceite da 1.0."
+      ],
+      "goNoGo": "V05-02 decide o plano: se o clique no vazio da HUD não chegar ao mundo com a política documentada, o game-driven-hud volta ao usuário antes de qualquer item seguinte. No iPhone, um NO-GO fecha o 0.5 como macOS completo e devolve o mobile ao GF-35, sem alterar nenhum número da 1.0. Limiares de desempenho são propostas, congeladas uma única vez depois da baseline macOS do V05-06.",
+      "items": [
+        {
+          "id": "V05-01",
+          "title": "Marco 0.5 e aviso aos agentes no dashboard (aditivo)",
+          "effort": "S",
+          "gf": [],
+          "dependsOn": [],
+          "acceptance": "O marco aparece no dashboard e no ROADMAP.md sem alterar nenhum dado da 1.0: o check da 1.0 é idêntico antes e depois da PR, e o diff de tasks, phases, sequences, checklists e decisions é vazio.",
+          "criteria": [
+            {
+              "id": "insercao",
+              "label": "Chave opcional milestones, seção do painel, aviso em activity e seção 0.5 no ROADMAP.md entregues por PR aditiva; summarize() e o parse do ROADMAP da 1.0 idênticos com e sem a chave",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "agentes",
+              "label": "AGENT_PROMPT.md e README orientam os agentes: progresso do 0.5 em milestones, preservar chaves desconhecidas ao reescrever o JSON, HUD-* e GF-* seguem o fluxo normal",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "publicacao",
+              "label": "Testes do dashboard cobrem milestones válido e inválido e a preservação pelo sync; Pages publicado com o marco visível (workflow Migration dashboard Pages confirmado)",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-02",
+          "title": "Spike de ponteiro: HUD React Native sobre o mapa Godot (go/no-go nº 1)",
+          "effort": "L",
+          "gf": [
+            "GF-13",
+            "GF-07",
+            "GF-09",
+            "GF-10",
+            "GF-18"
+          ],
+          "dependsOn": [],
+          "acceptance": "Em uma cena de prova com Camera2D, CanvasLayer, tiles clicáveis e uma FabricSurface em tela cheia (root View com pointerEvents=box-none), 100/100 cliques em ponto vazio chegam ao mundo exatamente 1x e 0 à HUD; 100/100 cliques em Pressable ativam 1x e 0 chegam ao mundo; com overlay aberto 0/100 chegam ao mundo. Fecha o que a decisão V2-D10 deixou sem execução: nenhum .gd, .tscn ou .cpp do repo usa _unhandled_input, CanvasLayer, Camera2D, TileMap ou Area2D, e FabricSurface não define mouse_filter.",
+          "criteria": [
+            {
+              "id": "vermelho",
+              "label": "Cena de prova e oráculo escritos antes da política: com a Surface no padrão o teste de clique no vazio FALHA, e o vermelho é registrado em commit",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "politica",
+              "label": "Política aplicada e documentada em docs/ (mouse_filter da Surface, ordem _input, GUI e _unhandled_input; topologia de uma Surface em tela cheia contra uma por painel, time-box de 3 fatias): 100/100, 0/100 e overlay 0/100 no macOS gráfico, com capturas",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "sabotagem",
+              "label": "Sabotagem (Surface em STOP) rejeitada pelo oráculo; roda da tela e clique direito no mundo funcionam; toque no HUD gera 0 eventos de mouse emulado no mundo (variante ScreenTouch com emulate_mouse_from_touch ligado)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "iphone",
+              "label": "Mesma prova com toque real no iPhone, incluindo arrastar o mapa com um dedo enquanto outro dedo está num botão da HUD (liga a V05-09)",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-03",
+          "title": "Jogo mínimo em GDScript e serviços tipados de contexto e ordens",
+          "effort": "M",
+          "gf": [
+            "GF-25",
+            "GF-07",
+            "GF-28",
+            "GF-04"
+          ],
+          "dependsOn": [],
+          "acceptance": "Consumidor consumers/civ-lite com o jogo como fixture, não como produto: regras, mapa e IA em GDScript com testes headless próprios; um Node persistente GameServices registra serviços de nome fixo antes da montagem e publica um campo epoch no DTO, sem depender de reconexão nem de gerações de ativação (D22 e D23 pendentes). A lógica pura pode começar antes do V05-02; os serviços usam a política que ele definir.",
+          "criteria": [
+            {
+              "id": "replay",
+              "label": "Regras e cenário em GDScript com testes headless: replay de 12 turnos com hash dourado idêntico em 3 de 3 execuções (só inteiros, PRNG próprio, serialização canônica) e cobertura dos 7 contextos",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "servicos",
+              "label": "Node persistente GameServices com epoch: estados, sinais e métodos registrados antes da montagem; schemas e tipos TS com testes positivos e negativos de paridade Godot e TS",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "consumidor",
+              "label": "Consumidor civ-lite provisionado pelo addon (TSX público, sem Node global) abrindo no editor; 10 ciclos novo jogo, recarregar cenário e menu sem vazar listeners ou nós, com epoch monotônico",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "autoridade",
+              "label": "turn.end aceito sobrevive ao fechamento da tela e job.finished chega 1x; uma regra mutada no Godot muda a HUD sem alterar JS; rajadas de fim de turno medidas contra 64 tarefas e 128 eventos por fase",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-04",
+          "title": "Lacunas de componentes, tipos e consumidor SDK dos nomes que o jogo usa",
+          "effort": "M",
+          "gf": [
+            "GF-03",
+            "GF-04",
+            "GF-09",
+            "GF-10",
+            "GF-13",
+            "GF-14",
+            "GF-28"
+          ],
+          "dependsOn": [],
+          "acceptance": "Um manifesto finito (cerca de 12 nomes do React Native que o Frontier importa, derivado de docs/compatibility/react-native-0.87.1.json) com decisão por nome: suportado, erro explícito ou ignorado documentado. O consumidor passa no type-check sem asserções de tipo forçadas.",
+          "criteria": [
+            {
+              "id": "manifesto",
+              "label": "Manifesto de escopo do 0.5 com a decisão por nome (hoje View descarta accessible* e userSelect por decisão documentada, então 'zero descartes' não é o critério)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "tipos",
+              "label": "Tipos de Pressable, ScrollView, Platform, Dimensions e useWindowDimensions (e os demais do manifesto) em types/react-native.ts, verificados pelo type-check do consumidor",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "props",
+              "label": "Props fora do manifesto nos componentes usados falham de forma visível, ou são ignoradas de forma documentada, no mount e no update",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-05",
+          "title": "Suíte de HUDs React Native sensíveis ao contexto do jogo",
+          "effort": "L",
+          "gf": [
+            "GF-10",
+            "GF-11",
+            "GF-13",
+            "GF-15",
+            "GF-16",
+            "GF-17",
+            "GF-18",
+            "GF-19"
+          ],
+          "dependsOn": [
+            "V05-02",
+            "V05-03",
+            "V05-04"
+          ],
+          "acceptance": "Os 6 painéis aparecem e desaparecem conforme o contexto escolhido pelo Godot: para cada um dos 7 contextos, o conjunto exato de testIDs visíveis bate 100% com a tabela do teste, e a lista de ações exibida é idêntica a unit.available_actions. Sem hover, clique direito em Pressable nem listeners imperativos na HUD.",
+          "criteria": [
+            {
+              "id": "matriz",
+              "label": "Store por escopo de módulo e switch de contexto: matriz de testIDs passando para os 7 contextos, sem painel extra",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "mapa",
+              "label": "Barra de turno e recursos (End Turn desabilitado com spinner na fase da IA), ações da unidade com motivo da ação desabilitada e cartão de tile (hover vem do Godot)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "overlays",
+              "label": "Tela da cidade com lista de produção, pesquisa em lista e diálogo de evento como overlays bloqueantes (Modal do GF-18, já na main só para desktop; se não servir no iPhone, overlay na árvore); fila de 3 eventos em ordem, inclusive com remontagem",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "estabilidade",
+              "label": "Abrir e fechar cada tela 20x sem vazar nós ou listeners, foco restaurado e 0/100 cliques ao mundo sob overlay; capturas do macOS por contexto; varredura sem APIs proibidas; ícones por Image (GF-16, já na main) ou por glifos se a Image não bastar",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-06",
+          "title": "Ciclo de vida, pausa e orçamento de desempenho do turno (soak)",
+          "effort": "M",
+          "gf": [
+            "GF-07",
+            "GF-21",
+            "GF-25",
+            "GF-30",
+            "GF-18"
+          ],
+          "dependsOn": [
+            "V05-03"
+          ],
+          "acceptance": "Relatório reprodutível (commit, plataforma, comando, resultado, limitações) com latência clique até painel em quadros, tempo de quadro p50, p95 e p99 em turno com IA, heap Hermes, RSS e nós nativos por transição, e soak de 100 turnos. Estende o harness do GF-30 sem duplicá-lo. Hermes, GDScript, Yoga e mount dividem a thread principal, então a IA é fatiada por quadro.",
+          "criteria": [
+            {
+              "id": "baseline",
+              "label": "Linha de base na cena de prova do V05-02 (50 a 100 nós por troca de painel) no macOS, estendendo o harness do GF-30, com a proposta de orçamento registrada",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "turno",
+              "label": "Latência clique até painel, tempo de quadro em turno com IA fatiada, heap Hermes, RSS e nós nativos por transição, no consumidor do jogo",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "soak",
+              "label": "Soak de 100 turnos em 3 execuções: hash final idêntico, nós e RSS estáveis, 0 erros JS não tratados; pausa do jogo mantém a UI viva; decisão escrita entre montar e desmontar ou manter oculto, com base nos números",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "congelado",
+              "label": "Orçamento congelado uma única vez depois da baseline macOS e antes da primeira medição no iPhone",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-07",
+          "title": "Exportação macOS arm64: .app do jogo executável e relocável",
+          "effort": "XL",
+          "gf": [
+            "GF-28",
+            "GF-31",
+            "GF-02",
+            "GF-36",
+            "GF-38"
+          ],
+          "dependsOn": [],
+          "acceptance": "O .app Release exportado executa o replay de 12 turnos com o mesmo hash dourado do editor, em perfil de usuário limpo, sem Node, Godot nem Xcode; codesign --verify ad hoc passa; hash, tamanho e versões (RN 0.87.1, React 19.2.3, Hermes 250829098.0.17, Godot 4.7.2) registrados. Hoje só existe sdk/addon/ios_export.gd: não há export macOS nem .app executado.",
+          "criteria": [
+            {
+              "id": "plugin",
+              "label": "Plugin de export macOS: o .app Release de consumers/minimal executa os checks existentes (começa no dia 0)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "assinatura",
+              "label": "Frameworks Hermes e RN embutidos com rpath correto, codesign --verify --deep --strict ad hoc e nenhum caminho absoluto de desenvolvimento (otool -L e check:publication)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "replay",
+              "label": "O .app do jogo executa o replay de 12 turnos com o hash dourado do editor, copiado para outro diretório e em perfil de usuário limpo",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "limpa",
+              "label": "Prova em segundo Mac ou VM sem Node, Godot e Xcode; sem ela, o limite 'mesmo Mac, perfil limpo' fica registrado no recibo",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-08",
+          "title": "Preparação iOS: densidade, paisagem, safe area e toque (simulador)",
+          "effort": "M",
+          "gf": [
+            "GF-09",
+            "GF-13",
+            "GF-18",
+            "GF-21",
+            "GF-31",
+            "GF-35"
+          ],
+          "dependsOn": [
+            "V05-02"
+          ],
+          "acceptance": "Com stretch canvas_items, Dimensions.scale coincide com a escala da tela e um Pressable de 44 pt mede 44 ± 0,5 pt via measureInWindow; a HUD inteira fica dentro dos insets; 20 toques automatizados são 20 onPress sem duplicação. Hoje a densidade sai da transformação de conteúdo do Godot e não há leitura de safe area (get_display_safe_area tem 0 ocorrências em native, sdk e src).",
+          "criteria": [
+            {
+              "id": "densidade",
+              "label": "Densidade por canvas_items: Dimensions.scale coincide com a escala da tela e Pressable de 44 pt mede 44 ± 0,5 pt (simulador)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "insets",
+              "label": "Provedor de insets a partir de get_display_safe_area e orientação paisagem travada; HUD dentro dos insets",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "toque",
+              "label": "Política de toque sem duplicação: 20 toques são 20 onPress, toque na HUD gera 0 eventos no mundo; arrastar o mapa com um dedo com outro dedo na HUD",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "segundo-plano",
+              "label": "AppState em segundo plano e retorno preserva timers, lista e estado do jogo",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-09",
+          "title": "Prova mobile: gate de aparelho em um iPhone arm64 físico (go/no-go)",
+          "effort": "XL",
+          "gf": [
+            "GF-35",
+            "GF-31",
+            "GF-36",
+            "GF-30",
+            "GF-09",
+            "GF-13"
+          ],
+          "dependsOn": [
+            "V05-05",
+            "V05-06",
+            "V05-08"
+          ],
+          "acceptance": "O consumidor do jogo, exportado em Release e assinado com o time Apple do usuário, passa os estágios do gate em um iPhone arm64 físico em paisagem (modelo, iOS e taxa de atualização registrados), com recibo manual nomeado. Um NO-GO fecha o 0.5 como macOS completo. Hoje o script ios-consumer-export.py recusa execução em aparelho e usa CODE_SIGNING_ALLOWED=NO; o estágio G0 (o fixture de fumaça iOS, não o jogo) começa no dia 0.",
+          "criteria": [
+            {
+              "id": "g0",
+              "label": "G0: boot assinado do fixture de fumaça iOS (FabricIOSSmoke, gerado por scripts/ios-consumer-export.py a partir do consumers/minimal) no aparelho (physicalDeviceExecuted=true): 22/22 checks do fixture e mediana de 5 cold launches até o primeiro commit React (limiar proposto de 3,0 s)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "export",
+              "label": "Export iOS com --device e --team (assinatura local, nenhuma credencial no repo) e coleta de contadores por devicectl em user://device-gate.json",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "toque",
+              "label": "G1 e G2: métricas, safe area e toque real (mundo contra HUD; 20 toques são 20 onPress; arrastar o mapa com um dedo na HUD)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "turno",
+              "label": "G3: turno completo do jogo com IA no aparelho, medido contra o controle do macOS; 30 s em segundo plano e retorno; recibo manual nomeado",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "decisao",
+              "label": "Decisão GO ou NO-GO registrada; NO-GO fecha o 0.5 como macOS completo e devolve o mobile ao GF-35 sem alterar números da 1.0",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        },
+        {
+          "id": "V05-10",
+          "title": "Comparativo final: jogo sem HUD, com HUD nativa do Godot e com HUD React Native",
+          "effort": "L",
+          "gf": [
+            "GF-30",
+            "GF-36"
+          ],
+          "dependsOn": [
+            "V05-05",
+            "V05-06",
+            "V05-07",
+            "V05-09"
+          ],
+          "acceptance": "Depois que o resto do 0.5 estiver fechado, o mesmo jogo roda em três braços (A sem HUD, B com HUD nativa do Godot em GDScript, C com a HUD React Native do V05-05) com o mesmo seed e as mesmas entradas, e um relatório mede FPS e tempo de quadro, latência, memória, partida, tamanho do pacote e custo de mudança. O braço A é o controle de custo (B menos A e C menos A são o preço de cada HUD); a pergunta de ganho é C contra B. O relatório dá, por eixo, o veredito ganho, neutro, custo ou inconclusivo (intervalo largo demais para decidir). Um ganho de FPS só é afirmado se o intervalo de confiança excluir zero; 'sem ganho' é um resultado válido e é registrado como tal. Se o braço B não ficar pronto no time-box, o relatório sai como comparativo parcial entre A e C e não afirma ganho. Se o iPhone for NO-GO, o comparativo cobre só o macOS.",
+          "criteria": [
+            {
+              "id": "protocolo",
+              "label": "Protocolo e hipóteses pré-registrados antes de qualquer medição: desfecho primário (tempo de CPU por quadro p95 nas janelas ativas: fase da IA, rajada de eventos e troca de contexto), margem de não-inferioridade, número de execuções, regra de decisão e limiares, commitados e congelados a partir da baseline do V05-06",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "braco-b",
+              "label": "Braço B: HUD nativa do Godot idiomática (Controls, sinais, atualizando só o que mudou) com os mesmos 6 painéis, 7 contextos e testIDs equivalentes; paridade funcional provada pela mesma matriz de contexto; esforço registrado (linhas, arquivos, horas de agente)",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "execucao",
+              "label": "Braços A, B e C com o mesmo seed, replay de 12 turnos e soak de 100 turnos, entradas roteirizadas idênticas, Release exportado, mesma máquina, ao menos 10 execuções por braço em ordem alternada; dados brutos retidos",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "metricas",
+              "label": "Janelas ativas medidas à parte do total (fase da IA, rajada de eventos, 50 trocas seguidas de contexto e um cenário de estresse com log de 200 linhas e lista de produção de 100 itens), para que quadros ociosos não diluam a diferença; tempo de CPU por quadro e FPS sem limite só com DisplayServer.window_get_vsync_mode() lido de volta como DISABLED (senão a faixa fica N/A com a leitura registrada) e quadros perdidos com vsync ligado; p50, p95 e p99, quadros acima de 2x e de 100 ms; latência clique até painel; RSS (e heap Hermes e nós nativos no braço C); tempo até a HUD interativa; tamanho do pacote",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "mudanca",
+              "label": "Custo de mudança: o mesmo pedido (uma ação nova para o Settler) implementado nos braços B e C, com arquivos, linhas, tempo e testes necessários",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "iphone",
+              "label": "Mesmas medições no iPhone, se o V05-09 for GO, com a taxa de atualização efetiva registrada; se o vsync não puder ser desligado lá, valem o tempo de CPU por quadro e a folga com vsync ligado",
+              "done": false,
+              "evidence": []
+            },
+            {
+              "id": "relatorio",
+              "label": "Relatório reprodutível com mediana, IQR e intervalo de confiança de 95% por eixo e veredito (ganho, neutro, custo ou inconclusivo); conclusão registrada mesmo que seja 'sem ganho'; decisão sobre manter a HUD React Native para jogos",
+              "done": false,
+              "evidence": []
+            }
+          ]
+        }
+      ],
+      "exit": [
+        {
+          "id": "X1",
+          "label": "Vertical slice: cenário fixo com 6 painéis e 7 contextos exercitado pelo replay no editor e no .app",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X2",
+          "label": "Turno determinístico: replay de 12 turnos com hash dourado idêntico em 3 de 3 execuções (editor e .app macOS; iPhone se houver GO)",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X3",
+          "label": "Input mundo contra HUD: 100/100 cliques no vazio chegam ao mundo 1x e 0/100 à HUD; 100/100 em Pressable ativam 1x e 0/100 ao mundo; com overlay aberto 0/100 chegam ao mundo",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X4",
+          "label": "Autoridade no Godot: 0 regras de jogo em JS; uma ação desabilitada no Godot muda a HUD sem alterar JS",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X5",
+          "label": "Sessão e ciclo de vida: 10 ciclos sem vazamento, epoch monotônico, turn.end aceito sobrevive ao fechamento de tela",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X6",
+          "label": "Desempenho: orçamento pré-registrado e cumprido no macOS (limiares propostos, congelados após a baseline)",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X7",
+          "label": "macOS: .app Release exportado executa o replay em perfil limpo; codesign ad hoc verificado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X8",
+          "label": "iPhone: estágios do gate passando no aparelho, ou NO-GO registrado fechando o 0.5 como macOS completo",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X9",
+          "label": "A 1.0 não se move: diff de tasks, phases, sequences, checklists e decisions vazio; summarize() idêntico com e sem milestones",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X10",
+          "label": "Cauda congelada: 0 fatias novas de pointer-*, EventTarget, Document ou hover durante o 0.5",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "X11",
+          "label": "Comparativo final entregue (V05-10) com veredito por eixo, inclusive se não houver ganho",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    }
+  ],
   "releaseChecklist": [
     {
       "id": "RC-01",
@@ -3540,6 +4079,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "os-contracts-first-slice-1b2dfd5",
+      "at": "2026-10-08T04:32:15.000+00:00",
+      "taskIds": [
+        "GF-24"
+      ],
+      "message": "Primeira fatia do GF-24 com evidência local: ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN reproduzem a indisponibilidade que o próprio RN tem fora do iOS e do Android, sem módulo nativo no host e sem código nativo na fatia. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê os fontes do RN pinado; o SDK anterior falha exatamente os 30 normativos e três sabotagens em memória falham 14, 8 e 5, todas rejeitadas pelo oráculo; os recibos dos onze outros chamadores do bundleNativeProbe ficam idênticos. No Godot, 'denied' e false do PermissionsAndroid significam indisponível. Só o checkpoint slice do GF-24 fecha; CI hospedada pendente. Abertos: StatusBar, props específicas de SO, implementações Android e iOS (GF-34 e GF-35) e o alias do platform-plugin para pacotes de terceiros; Alert, Share, Settings e BackHandler ficam no GF-23.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
+    },
     {
       "id": "accessibility-first-slice-20261008",
       "at": "2026-10-08T02:23:27.221171+00:00",
@@ -4525,6 +5073,12 @@
       ],
       "message": "Up View 62/62 e viewport 90/90 com 24 pixels; 16 comandos de regressão passaram: contracts 255 Node/13 Python, Document 2723, interest 193/233, query/getter 186/65, integrated 181/206, examples 22/2250, consumer 30/40, SDK pack/verify, loader 89/21 e 13 adapters/213. Controles anteriores query/getter seguem com 12/3 negativos no SDK atual, sem retry Down ou query Cancel. CI de Up e publicação positiva pendentes; sem novo fechamento GF/checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "milestone-0-5-frontier-20261008",
+      "at": "2026-10-08T03:35:00.000Z",
+      "taskIds": [],
+      "message": "NOVO MARCO 0.5 (game-driven-hud): recorte de prioridade \"app real usável\", validado por um mini-jogo estilo Civilization 2 em Godot (mapa, regras e turnos) com toda a HUD em React Native; o estado do jogo escolhe qual painel aparece. Alvos: .app macOS e, depois, um iPhone físico; termina com um comparativo do jogo sem HUD, com HUD nativa do Godot e com HUD React Native (FPS, memória, partida e custo de mudança). A 1.0 NÃO muda: IDs, pesos, prioridades e aceite dos GF-xx continuam valendo. Ao pegar task nova, priorize o que destrava o jogo: V05-02 (input mundo e HUD), V05-06 (orçamento de quadro, estendendo o harness do GF-30) e V05-07 (export macOS), além do mínimo de GF-14 e GF-16. A cauda de ponteiro (pointer-*, EventTarget, Document, hover) está CONGELADA: nenhuma fatia nova. Progresso do 0.5 vai em milestones, nunca em tasks ou pesos da 1.0; ao reescrever o JSON, preserve a chave milestones. Detalhes na seção 0.5 do ROADMAP.md e em dashboard/README.md."
     },
     {
       "id": "pointer-up-view-native-current-and-capture-20261004",
