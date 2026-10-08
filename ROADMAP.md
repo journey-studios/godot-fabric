@@ -543,11 +543,25 @@ gain, neutral, cost, or inconclusive when the interval is too wide to decide, pl
 decision on keeping the RN HUD for games. If arm B is not ready in its time-box, the
 report is a partial A against C comparison and claims no gain.
 
-**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
-the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
-not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
-item in the title. Record 0.5 progress only in `milestones`; when rewriting
-`migration.json`, keep unknown top-level keys.
+**Progress.** V05-02 has its first slice, the first of the three the spike is
+time-boxed to. With `FabricSurface` taking `MOUSE_FILTER_IGNORE` by default, a click
+on the empty area of the HUD's `pointerEvents="box-none"` root reached the Godot map
+100 times out of 100 and no HUD handler, a click or a tap on a `Pressable` pressed it
+100 times and never reached the map, and with a tree overlay or a `Modal` open nothing
+did. Both layouts, one full-screen Surface and one Surface per panel, ran headless (the
+overlays only in the full-screen one), and only the full-screen layout ran on a real
+macOS window with captures. The red test came first (the preceding host fails exactly
+the 31 checks that need the policy) and two retained sabotages are rejected by an
+independent oracle; the
+[evidence record](https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md)
+has the numbers. In `milestones` the criteria `vermelho`, `politica` and `sabotagem`
+are done and `iphone` is not: the events are synthetic, with no hardware pointer or
+touch screen and no iPhone run, which waits for the device package. What remains of
+V05-02 is slice 2, variant (a2), for what the minimal policy leaves open (a hit slop, a
+`Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD or a tree
+overlay, which still reach the map as well as React Native), which the merge of PR #58
+has unblocked, and the go/no-go decision of slice 3. Hosted CI for the slice is pending. No 1.0
+number moves.
 
 **Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
 GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
@@ -596,6 +610,12 @@ fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
 visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
 that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
 No 1.0 checkpoint, weight or denominator moves.
+
+**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
+the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
+not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
+item in the title. Record 0.5 progress only in `milestones`; when rewriting
+`migration.json`, keep unknown top-level keys.
 
 ## Next implementation order
 
