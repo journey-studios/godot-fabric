@@ -3468,13 +3468,13 @@
             },
             {
               "id": "overlays",
-              "label": "Tela da cidade com lista de produção, pesquisa em lista e diálogo de evento como overlays bloqueantes (Modal se a PR do GF-18 estiver mergeada e provada; senão overlay na árvore); fila de 3 eventos em ordem, inclusive com remontagem",
+              "label": "Tela da cidade com lista de produção, pesquisa em lista e diálogo de evento como overlays bloqueantes (Modal do GF-18, já na main só para desktop; se não servir no iPhone, overlay na árvore); fila de 3 eventos em ordem, inclusive com remontagem",
               "done": false,
               "evidence": []
             },
             {
               "id": "estabilidade",
-              "label": "Abrir e fechar cada tela 20x sem vazar nós ou listeners, foco restaurado e 0/100 cliques ao mundo sob overlay; capturas do macOS por contexto; varredura sem APIs proibidas; ícones por glifos, ou Image se a PR do GF-16 integrar",
+              "label": "Abrir e fechar cada tela 20x sem vazar nós ou listeners, foco restaurado e 0/100 cliques ao mundo sob overlay; capturas do macOS por contexto; varredura sem APIs proibidas; ícones por Image (GF-16, já na main) ou por glifos se a Image não bastar",
               "done": false,
               "evidence": []
             }
