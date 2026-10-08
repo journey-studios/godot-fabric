@@ -296,7 +296,13 @@ node scripts/performance-sabotage.mjs    # the three retained sabotages, source 
 node tests/performance-native.test.mjs --replay=build/performance-current-report.json
 ```
 
-A replay judges the readings a report recorded, and a report that lacks a section or the shape a check indexes (the windows, the stopped
-application, the surface rows of a cycle, which later versions of the probe added) is incomplete: the probe's replay says
-`PERFORMANCE_REPLAY_INCOMPLETE` and exits with status 2, where it would otherwise abort on the index it does not have. The suite
-replays five damaged copies of its own report to show it.
+A replay judges the readings a report recorded, and a report that lacks a section, or has it with another shape, is incomplete: the
+probe's replay says `PERFORMANCE_REPLAY_INCOMPLETE` and exits with status 2, where it would otherwise abort on the index it does not
+have (and, before this was checked, exit 0). What counts as complete is `REPORT_SHAPE` in `tests/performance-probe.gd`, a declarative
+description (type names, nested keys, `["each", shape]` and `["pair", shape]`) of every field that `evaluate()` and `readings()` read
+by name, checked by one recursive `matches`. The host's performance section inside a reading is only a Dictionary there, because the
+checks read it through `dig()` and `get()`, which tolerate its absence. The suite replays twenty damaged copies of its own report, at
+least one for each section (the provenance, the baseline, the heap source, the busy turns, the windows, the stopped application, each
+workload, its cycles and readings, the surface rows and the final reading), and requires status 2 and no script error from each. A
+throwaway sweep (not kept) damaged each field of the report in turn, in 3,742 copies, 1,432 of which the shape refused; `evaluate()`
+ran on the other 2,310 without a script error.

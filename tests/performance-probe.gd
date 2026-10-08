@@ -42,6 +42,30 @@ const SAMPLES_META := "validation_performance_samples"
 # Where each duration series sits in the host's section, so that a reading can drop the sample windows.
 const SERIES_PATHS := [["pump"], ["phases", "js"], ["phases", "mount"], ["phases", "layout"], ["surfaces", "start"], ["surfaces", "retire"]]
 
+# The shape of a recorded report, as far as evaluate() indexes it: every field some check, or readings(), reads by its name or
+# takes as a Dictionary or an Array. A replay refuses a report that does not match it (PERFORMANCE_REPLAY_INCOMPLETE, status 2),
+# where indexing what the report lacks would abort the script. A shape is a type name ("number", "string", "bool", "dictionary"
+# for a Dictionary of any content, "any" for any value that is there), a Dictionary of the keys that must be present, each with its
+# shape, ["each", shape] for an Array whose items all have the shape, or ["pair", shape] for an Array of exactly two. What the checks
+# read inside the host's performance section they read through dig() and get(), which tolerate its absence (a host with no section
+# is the point of the old-host control), so the section is only a Dictionary here.
+const READING := {"godot": {"nodes": "number", "nodeMonitor": "number", "orphans": "number"},
+  "host": {"rootCount": "number", "pendingRootRetirements": "number"}, "performance": "dictionary"}
+const SURFACE := {"state": "string", "nativeTags": "number", "creates": "number", "deletes": "number", "rootCount": "number",
+  "liveRoots": "number", "retiredRoots": "number"}
+const CYCLE := {"before": READING, "mounted": READING, "after": READING, "mountedSurface": SURFACE, "retiredSurface": SURFACE,
+  "mountFrames": "number", "unmountFrames": "number"}
+const SOAK := {"cycles": ["each", CYCLE], "final": READING}
+const WINDOW := {"aggregates": "bool", "samples": "bool", "performanceBytes": "number"}
+const REPORT_SHAPE := {
+  "provenance": "dictionary",
+  "baseline": READING,
+  "heapSource": {"retainedObjects": "number", "releasedObjects": "number", "rest": READING, "retained": READING, "released": READING},
+  "burn": ["each", {"ranMs": "number", "before": READING, "after": READING}],
+  "windows": {"withoutMeta": WINDOW, "withMeta": WINDOW},
+  "stopped": {"stopped": "bool", "rootCount": "number", "plain": ["pair", "string"], "withMetas": ["pair", "string"]},
+  "workloads": {"idle": SOAK, "forms": SOAK, "chart": SOAK, "list": SOAK}}
+
 var allow_original_negative := false
 var sabotage := false
 var application: Node
@@ -595,44 +619,35 @@ func _initialize() -> void:
       return
   call_deferred("run_probe")
 
-func has_keys(value: Variant, keys: Array) -> bool:
-  if not value is Dictionary:
-    return false
-  for key: String in keys:
-    if not value.has(key):
+# Whether a value has a shape (see REPORT_SHAPE).
+func matches(value: Variant, shape: Variant) -> bool:
+  if shape is String:
+    match shape:
+      "number":
+        return value is int or value is float
+      "string":
+        return value is String
+      "bool":
+        return value is bool
+      "dictionary":
+        return value is Dictionary
+      _:
+        return true
+  if shape is Array:
+    if not value is Array or (shape[0] == "pair" and value.size() != 2):
       return false
-  return true
-
-func is_pair(value: Variant) -> bool:
-  return value is Array and value.size() == 2
-
-# Whether a recorded report holds the sections the checks index, and the shapes they index in the later ones: the windows, the
-# stopped application and the surface rows of each cycle. A report of another version of the probe, or a damaged one, is
-# incomplete, and replay says so and stops, where indexing what it lacks would abort the script.
-func replay_is_complete(recorded: Variant) -> bool:
-  if not has_keys(recorded, ["provenance", "baseline", "heapSource", "burn", "workloads", "windows", "stopped"]):
-    return false
-  var side_keys := ["aggregates", "samples", "performanceBytes", "snapshotBytes"]
-  var windows: Dictionary = recorded["windows"] if recorded["windows"] is Dictionary else {}
-  if not has_keys(windows.get("withoutMeta"), side_keys) or not has_keys(windows.get("withMeta"), side_keys):
-    return false
-  if not has_keys(recorded["stopped"], ["stopped", "rootCount", "plain", "withMetas"]):
-    return false
-  if not is_pair(recorded["stopped"]["plain"]) or not is_pair(recorded["stopped"]["withMetas"]):
-    return false
-  var workloads: Variant = recorded["workloads"]
-  if not has_keys(workloads, WORKLOADS):
-    return false
-  var row_keys := ["rootCount", "liveRoots", "retiredRoots"]
-  for workload: String in WORKLOADS:
-    var cycles: Variant = workloads[workload].get("cycles") if workloads[workload] is Dictionary else null
-    if not cycles is Array:
-      return false
-    for cycle: Variant in cycles:
-      if not has_keys(cycle, ["mountedSurface", "retiredSurface"]) or not has_keys(cycle["mountedSurface"], row_keys) \
-          or not has_keys(cycle["retiredSurface"], row_keys):
+    for item: Variant in value:
+      if not matches(item, shape[1]):
         return false
-  return true
+    return true
+  if shape is Dictionary:
+    if not value is Dictionary:
+      return false
+    for key: String in shape.keys():
+      if not value.has(key) or not matches(value[key], shape[key]):
+        return false
+    return true
+  return false
 
 # Judges a report recorded before, without the application: the readings it holds are all the checks read.
 func replay_probe(path: String) -> void:
@@ -649,7 +664,7 @@ func replay_probe(path: String) -> void:
     return
   var report: Dictionary = parsed
   var recorded: Variant = report.get("stages", {})
-  if not replay_is_complete(recorded):
+  if not matches(recorded, REPORT_SHAPE):
     push_error("PERFORMANCE_REPLAY_INCOMPLETE: " + path)
     quit(2)
     return

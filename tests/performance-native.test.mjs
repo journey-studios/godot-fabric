@@ -242,13 +242,28 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   assert.equal(allowed.status, 0, allowed.log);
   assert.equal(oracleRejection(atLimit.copy), null, "The oracle accepts a rise of exactly the limit");
   // A recorded report with a section emptied or malformed is incomplete: the replay says so with status 2 and does not abort on what it
-  // lacks. The sections the later versions of the probe added are the ones that older or damaged reports lack.
+  // lacks. Each section the checks index is damaged at least once, in the ways an older or a damaged report would be.
   const damaged = {
+    "provenance-null": stages => { stages.provenance = null; },
+    "baseline-hollow": stages => { stages.baseline = {}; },
+    "baseline-without-godot": stages => { delete stages.baseline.godot; },
+    "heap-source-hollow": stages => { stages.heapSource = {}; },
+    "heap-source-without-released": stages => { delete stages.heapSource.released; },
+    "burn-null": stages => { stages.burn = null; },
+    "burn-entry-without-after": stages => { delete stages.burn[1].after; },
+    "windows-hollow": stages => { stages.windows.withMeta = {}; },
     "stopped-empty": stages => { stages.stopped = {}; },
     "stopped-short": stages => { stages.stopped.plain = [stages.stopped.plain[0]]; },
-    "windows-hollow": stages => { stages.windows.withMeta = {}; },
-    "surface-row-old": stages => { delete stages.workloads.forms.cycles[2].retiredSurface.liveRoots; },
     "workloads-null": stages => { stages.workloads = null; },
+    "workload-missing": stages => { delete stages.workloads.chart; },
+    "cycle-without-before": stages => { delete stages.workloads.idle.cycles[3].before; },
+    "cycle-reading-null": stages => { stages.workloads.forms.cycles[5].mounted = null; },
+    "reading-without-godot": stages => { delete stages.workloads.chart.cycles[1].after.godot; },
+    "surface-row-old": stages => { delete stages.workloads.forms.cycles[2].retiredSurface.liveRoots; },
+    "surface-state-not-text": stages => { stages.workloads.list.cycles[0].mountedSurface.state = 7; },
+    "cycles-not-a-list": stages => { stages.workloads.list.cycles = {}; },
+    "final-missing": stages => { delete stages.workloads.list.final; },
+    "heap-source-reading-list": stages => { stages.heapSource.rest = []; },
   };
   for (const [name, change] of Object.entries(damaged)) {
     const broken = await mutated(report, `incomplete-${name}`, change);
