@@ -1,0 +1,17 @@
+{
+  "format": "godot-fabric.dashboard-local-preview-provenance/v1",
+  "url": "http://127.0.0.1:4317/#milestones",
+  "capturedAt": null,
+  "observedAt": "2026-10-08T16:39:34Z",
+  "sourceEvidenceCommit": "c6e5a81507cbe7d04fe879d694cb59943b2282b0",
+  "dirty": true,
+  "imagePath": "dashboard-local-criteria-preview.png",
+  "imageSha256": "3625031b436b8680b59989d317a2610907a96cb26f093300412aa084342c10f3",
+  "note": "Root-reviewed local branch preview taken after the initial checkpoint update and before the final focusTitle, evidence-link and status-prose correction. Exact capture time and byte-identical migration.json snapshot were not preserved. The image was captured from the local dashboard tab at this URL; it shows the Frontier 0.5 milestone projection (3/42), not the address bar. It is not a public Pages snapshot, runtime proof, or additional acceptance evidence.",
+  "migrationSnapshotSha256": null,
+  "observedDashboardProjection": {
+    "milestoneProgress": "3/42",
+    "completedItems": "1/10",
+    "exitCriteria": "0/11"
+  }
+}
