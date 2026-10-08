@@ -8,11 +8,11 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T23:19:38.019Z",
+  "updatedAt": "2026-10-08T23:51:02.819Z",
   "source": {
-    "commit": "881a711b9972421017e98997539e56615586d1e1",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/881a711b9972421017e98997539e56615586d1e1",
-    "scope": "P2 V05-07: nova prova local após revisão de contenção em 881a711. Export nativo 13/13, runtime minimal 40/43, auditoria independente do tar 284/284. Os 220 pins do SDK e as três capturas 540×300 seguem iguais à prova 29969eb e à baseline editável. CI do head final e revisão CodeRabbit pendentes; falha antiga de remount preservada sem causa comprovada. Nenhum critério adicional foi fechado; P1/P5, critérios P2, campos da 1.0 e denominadores preservados.",
+    "commit": "5596acb1cf975ff470acf531c0843fef19706e70",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/5596acb1cf975ff470acf531c0843fef19706e70",
+    "scope": "Prova local V05-07 no produtor limpo 5596acb: export macOS arm64 14/14 sem skips, consumidor 40/43, seis controles e auditoria local 285/285. Os 220 pins do SDK e as três capturas coincidem com a evidência C anterior. CI/revisão finais seguem pendentes; critérios e denominadores da 1.0 não mudaram.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
   },
   "phases": [
@@ -6671,6 +6671,13 @@
       ],
       "message": "CI hospedada dos efeitos de imagem: o push da main em 9c5d0eb (squash de #66, run 37773373567) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:images-visual (1 de 1 ok) e o artefato repete os 53 checks headless com IDs idênticos aos do relatório commitado e o bundle que o postReview registra (9e2b7e03…); o oráculo independente aceita o relatório baixado, e os 40, 2, 3, 8 e 2 checks que o controle e as sabotagens locais falham existem e passam. Dos 181 pins rastreados, 168 têm em 9c5d0eb os bytes de 6c221e8, 3 são os arquivos da revisão, com os SHA-256 do postReview, e 10 vieram com os merges de #59 e #62; nenhum difere entre b5471d9 e o run. Pages 37773373621 implantou exatamente os dados de 9c5d0eb.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/984d64127ee3dfde7de9ed0f32a2cc494c7f4a70/docs/evidence/images-visual/hosted-ci.json"
+    },
+    {
+      "id": "macos-export-symlink-review-5596acb",
+      "at": "2026-10-08T23:51:02.819Z",
+      "taskIds": [],
+      "message": "V05-07: acompanhamento local de contenção de symlinks no produtor 5596acb; export 14/14, consumidor 40/43, seis controles e auditoria local 285/285. CI/revisão finais e o escopo ampliado permanecem separados; nenhum critério ou denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
     }
   ]
 }

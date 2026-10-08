@@ -600,6 +600,8 @@ and a 24-check independent baseline review. The earlier failed hosted run and un
 local remount failure remain recorded; new hosted CI and delivery review are pending. The Frontier
 12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
 
+**Follow-up, V05-07 (local, symlink containment).** Clean producer `5596acb1cf975ff470acf531c0843fef19706e70` adds a copied-app `LC_RPATH` symlink escape control; the six native controls pass and the local archive audit passes 285 checks. The exact 40/43 consumer checks and 220 SDK source pins remain bound to this producer. [Evidence](docs/evidence/macos-export/symlink-review/README.md). Hosted CI/review and the remaining V05-07 scope stay separate; no 1.0 checkpoint changes.
+
 **Progress.** V05-04: the twelve names the HUD imports are decided in
 [`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
 props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with

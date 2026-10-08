@@ -632,7 +632,7 @@ records the original 2B checkpoint. The later
 offline builds, typed Godot operations, inventory-only resize and explicit errors.
 The [macOS Release export](docs/MACOS_BUILD.md) adds a signed, relocated minimal app with
 40/43 checks and three fixed-window captures identical to an independently executed editable
-baseline ([local proof](docs/evidence/macos-export/fixed-window/README.md); new hosted CI pending).
+baseline ([local proof](docs/evidence/macos-export/fixed-window/README.md); the [symlink review](docs/evidence/macos-export/symlink-review/README.md) adds a six-control containment follow-up and 285-check local archive audit; hosted CI is not evidenced by this local record).
 Provisioning stays from source; public prebuilt artifacts, other-target/Debug exports and complete development tools remain open.
 
 A second consumer, [`consumers/libraries`](consumers/libraries/README.md), brings its own lockfile and uses the original

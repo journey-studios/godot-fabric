@@ -1,0 +1,23 @@
+{
+  "format": "private-macos-symlink-auditor-negative-controls/v1",
+  "status": "passed",
+  "producerCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+  "controls": [
+    {
+      "name": "omitted-symlink-control",
+      "expectedFailedCheck": "controls-have-exact-six-names",
+      "reportPath": "build/p2-native-export-producer/audit-local-symlink-5596acb/omitted-symlink-control/rejection.json",
+      "rejected": true
+    },
+    {
+      "name": "fabricated-green-control",
+      "expectedFailedCheck": "symlink-rpath-control-rejected",
+      "reportPath": "build/p2-native-export-producer/audit-local-symlink-5596acb/fabricated-green-control/rejection.json",
+      "rejected": true
+    }
+  ],
+  "limits": [
+    "Mutated reports retain status=passed. Both independent audits reject the expected condition before archive extraction.",
+    "The earlier partial summary records only the first iteration; this final summary validates both retained rejection reports."
+  ]
+}

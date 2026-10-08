@@ -17,7 +17,7 @@ external TSX provisioning, offline checks and native roots/lifecycle. The [macOS
 adds a signed, relocated Release app. Its [current fixed-window proof](macos-export/fixed-window/README.md)
 records exact 40/43 assertions, three 540×300 captures byte-identical to an independently
 executed editable baseline, 220 SDK source pins and a 280-check local archive audit.
-This is local evidence; the preceding hosted failure remains recorded and new CI is pending.
+This is local evidence; the preceding hosted failure remains recorded and new CI is pending. The later [symlink review](macos-export/symlink-review/README.md) records a physical `LC_RPATH` escape control and a 285-check local archive audit; it does not claim hosted acceptance.
 
 The later [project-resolution record](project-resolution/README.md) exercises
 inherited local aliases and non-hoisted dependencies through that normal addon.

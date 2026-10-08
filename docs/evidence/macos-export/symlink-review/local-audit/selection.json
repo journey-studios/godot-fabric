@@ -1,0 +1,10 @@
+{
+  "producerCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+  "exportReceipt": "build/macos-export-Verified-37799-1791503052426-8966a9/receipt.json",
+  "controlsReport": "build/macos-export-native-controls-1c011807-b800-408b-8755-8e9ffb141e11/report.json",
+  "app": "{WORKTREE}/build/macos-export-native-positive-1c011807-b800-408b-8755-8e9ffb141e11/Verified.app",
+  "archive": "build/p2-native-export-producer/audit-local-symlink-5596acb/files/macos-export-native-positive-1c011807-b800-408b-8755-8e9ffb141e11/Verified.app.tar.gz",
+  "archiveSha256": "086be9a2a9cd16e5d849e301a6aa80aaf47afc756f93920c06afeb114e7cae88",
+  "startedAt": "2026-10-08T23:44:12.455Z",
+  "completedAt": "2026-10-08T23:44:43.510Z"
+}

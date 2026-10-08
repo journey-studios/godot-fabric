@@ -52,9 +52,9 @@ relocated `.app` passed 40/43 checks; all three 540×300 captures match an indep
 executed editable baseline byte for byte, with RN window metrics 1080×600 at scale 0.5.
 The native lane passed 13/13 without skips, the local archive audit passed 280 checks
 and the independent baseline review passed 24 checks. All 220 SDK source pins match
-the producer. This does not certify hosted CI: run `37844090577` at `7c6a4f8` failed
-the preceding capture-size protocol, and the revised protocol has no hosted result yet.
-The packet preserves that failure and the unexplained earlier local remount failure.
+the producer. Run `37844090577` at `7c6a4f8` failed the preceding capture-size protocol;
+this local record does not establish hosted acceptance.
+The packet preserves that failure and the unexplained earlier local remount failure. The later [symlink review](evidence/macos-export/symlink-review/README.md) adds six native controls and a 285-check local archive audit for physical load-path containment; hosted CI remains a separate result.
 The [historical 58f5271 proof](evidence/macos-export/README.md#historical-producer-58f5271)
 and its 1080×600 images remain unchanged.
 
