@@ -3680,14 +3680,32 @@
             {
               "id": "plugin",
               "label": "Plugin de export macOS: o .app Release de consumers/minimal executa os checks existentes (começa no dia 0)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Export Release minimal real:40/43,3PNG,219pins auditados;produtor58f5271,local",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/README.md"
+                },
+                {
+                  "label": "Recibo do app assinado e relocável;SDK/build/PCK vinculados",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/executed-export.json"
+                }
+              ]
             },
             {
               "id": "assinatura",
               "label": "Frameworks Hermes e RN embutidos com rpath correto, codesign --verify --deep --strict ad hoc e nenhum caminho absoluto de desenvolvimento (otool -L e check:publication)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Deep/strict no caminho final e auditoria independente18checks;local",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/root-independent-review.json"
+                },
+                {
+                  "label": "Normalização idempotente e quatro mutações reais rejeitadas",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/native-controls.json"
+                }
+              ]
             },
             {
               "id": "replay",
