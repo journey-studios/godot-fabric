@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
-import {mkdir, readFile, writeFile} from "node:fs/promises";
+import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {guardSources} from "./sabotage-sources.mjs";
@@ -68,16 +68,30 @@ try {
     try {
       const broken = sources.sabotaged(variant);
       const entry = {name: variant.name, file: variant.file, find: variant.find, replace: variant.replace, sourceSha256: digest(broken)};
+      // What the run observed is written by the run itself. A file left by an earlier run must never stand for this one.
+      const observedFile = path.join(root, `build/frontier-services-sabotage-${variant.name}.json`);
+      await rm(observedFile, {force: true});
       sources.swap(variant.file, broken);
       const run = await sources.run(process.execPath, ["tests/frontier-services-native.test.mjs", `--sabotage=${variant.name}`]);
       await writeFile(path.join(root, `build/frontier-services-sabotage-${variant.name}.log`), run.stdout + run.stderr);
       entry.runStatus = run.status;
-      const observed = JSON.parse(await readFile(path.join(root, `build/frontier-services-sabotage-${variant.name}.json`), "utf8"));
-      entry.failedChecks = observed.failedChecks.length;
-      entry.firstFailedCheck = observed.failedChecks[0] ?? null;
-      entry.oracle = observed.oracle;
-      entry.parity = observed.parity;
-      entry.registrationErrors = observed.registrationErrors;
+      // A run that ended before it wrote what it observed (a crash, a failed assertion that came first) leaves no file:
+      // that is recorded as nothing observed, and the variant is not rejected.
+      let observed = null;
+      try {
+        observed = JSON.parse(await readFile(observedFile, "utf8"));
+      } catch (error) {
+        if (error.code !== "ENOENT") {
+          throw error;
+        }
+      }
+      entry.observed = observed !== null;
+      entry.failedChecks = observed === null ? null : observed.failedChecks.length;
+      entry.firstFailedCheck = observed === null ? null : (observed.failedChecks[0] ?? null);
+      entry.oracle = observed === null ? null : observed.oracle;
+      entry.parity = observed === null ? null : observed.parity;
+      entry.registrationErrors = observed === null ? null : observed.registrationErrors;
+      entry.rejected = entry.runStatus === 0 && entry.observed;
       receipt.variants.push(entry);
     } finally {
       sources.restore();
@@ -93,7 +107,8 @@ await writeFile(path.join(root, "build/frontier-services-sabotage-control.log"),
 receipt.controlStatus = control.status;
 await writeFile(path.join(root, "build/frontier-services-sabotage.json"), JSON.stringify(receipt, null, 2) + "\n");
 for (const entry of receipt.variants) {
-  assert.equal(entry.runStatus, 0, `The probe, the oracle and the parity must reject the ${entry.name} node: build/frontier-services-sabotage-${entry.name}.log`);
+  assert.ok(entry.rejected, `The probe, the oracle and the parity must reject the ${entry.name} node, and its run must leave what it observed `
+    + `(status ${entry.runStatus}, observed ${entry.observed}): build/frontier-services-sabotage-${entry.name}.log`);
 }
 assert.equal(receipt.controlStatus, 0, "The restored node must pass the plain test: build/frontier-services-sabotage-control.log");
 console.log(JSON.stringify(receipt, null, 2));

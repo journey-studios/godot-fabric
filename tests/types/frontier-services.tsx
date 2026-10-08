@@ -14,6 +14,7 @@ import {
   FRONTIER_SET_RESEARCH,
   FRONTIER_SNAPSHOT,
   FRONTIER_TURN_ENDED,
+  type FrontierCall,
   type FrontierMethods,
   type FrontierResult,
   type FrontierSignals,
@@ -125,3 +126,16 @@ void callFrontier("frontier.teleport", [1, 2]);
 // @ts-expect-error a method's tuple is exactly its arguments
 const tooShort: FrontierMethods["frontier.move_unit"] = [1, 7];
 void tooShort;
+
+// A name and its arguments are one pair. A pair can be built, kept and spread into the call.
+const pair: FrontierCall = [FRONTIER_SELECT_TILE, [6, 8]];
+void callFrontier(...pair);
+// @ts-expect-error a pair is the name with the arguments of that same method
+const mismatched: FrontierCall = [FRONTIER_END_TURN, [6, 8]];
+void mismatched;
+// A name that is itself a union must not accept the arguments of only one of its members.
+declare const eitherMethod: typeof FRONTIER_END_TURN | typeof FRONTIER_SELECT_TILE;
+// @ts-expect-error end_turn takes no argument, though select_tile takes two
+void callFrontier(eitherMethod, [6, 8]);
+// @ts-expect-error select_tile takes two arguments, though end_turn takes none
+void callFrontier(eitherMethod, []);

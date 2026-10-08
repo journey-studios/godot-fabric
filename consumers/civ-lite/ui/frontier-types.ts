@@ -251,12 +251,18 @@ export interface FrontierMethods {
 }
 
 /**
+ * A method name paired with the arguments it declares: a union of labeled tuples, one per method. Pairing them (and
+ * not indexing `FrontierMethods` by a generic name) keeps a name that is itself a union from accepting the arguments of
+ * only one of its members.
+ */
+export type FrontierCall = {
+  [Method in keyof FrontierMethods]: [method: Method, args: FrontierMethods[Method]];
+}[keyof FrontierMethods];
+
+/**
  * Calls a method with the arguments it declares. `GodotFabric.call` takes any DTO array, so a wrong type or a wrong
  * count only fails when the call reaches Godot (E_SERVICE_SCHEMA); through this function it does not compile.
  */
-export function callFrontier<Method extends keyof FrontierMethods>(
-  method: Method,
-  args: FrontierMethods[Method],
-): Promise<ServiceCallResult<FrontierResult>> {
+export function callFrontier(...[method, args]: FrontierCall): Promise<ServiceCallResult<FrontierResult>> {
   return GodotFabric.call<FrontierResult>(method, args);
 }

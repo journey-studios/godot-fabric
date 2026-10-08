@@ -146,8 +146,10 @@ Conventions:
 - A shape a signal carries (`FrontierTurnEnded`, `TurnPhase`) is a type alias of an object literal with mutable arrays: the
   transport's `GodotDTO` constraint on signal argument tuples accepts that and not an interface, which has no index signature.
 - `callFrontier(method, args)` is the one function in the file. `GodotFabric.call` takes any `readonly GodotDTO[]`, so a wrong
-  type or count would compile and fail only at the boundary; through `callFrontier`, with `args: FrontierMethods[Method]`, it
-  does not compile.
+  type or count would compile and fail only at the boundary; through `callFrontier` it does not compile. Its parameters are one
+  `FrontierCall`, a union of `[method, args]` tuples, one per method, so the name and its arguments are a pair: a name that is
+  itself a union of two methods does not accept the arguments of only one of them (indexing `FrontierMethods` by a generic name
+  would have).
 
 ### The parity test
 
@@ -173,7 +175,8 @@ checks that the sources pinned in the report are the ones in the tree.
 
 `tests/types/frontier-services.tsx`, included in `tsconfig.godot.json` and so in `npm run type-check`, holds the type-level
 cases in the style of `tests/types/godot-fabric.tsx`: `connect<FrontierSnapshot>`, `subscribe<[FrontierTurnEnded]>` and
-`callFrontier` with the right tuples; and, with `@ts-expect-error`, a wrong argument type, a wrong count, an unknown method,
+`callFrontier` with the right tuples; and, with `@ts-expect-error`, a wrong argument type, a wrong count, an unknown method, a name that is a union of two methods called with the arguments of
+only one of them, a `FrontierCall` pairing a name with another method's arguments,
 a field the snapshot does not have, an action's `args` read as an object or as strings or pushed to, an `ok` treated as a
 boolean, and a `turn` read from a result. A positive case sends each action of a snapshot back with
 `GodotFabric.call("frontier." + action.id, action.args)`.
