@@ -103,7 +103,8 @@ not supported`.
   `start_root` creates the `ShadowTree` (so `startSurface` and `startEmptySurface` are both covered),
   `clock(frame_time)` and `active()` in the pump where the frame clock's consumer is decided,
   `tick(frame_time)` next to the Native Animated frame, `surface_stopped(id)` after
-  `ui->stopSurface(id)`, `stop()` next to Native Animated's, and `snapshot()` in `status()`.
+  `ui->stopSurface(id)`, `stop()` next to Native Animated's, and `snapshot()` in `status()`, after the
+  `performance` section ([performance](performance.md)) that follows `frameClock`.
 - **What the surfaces point to.** The `UIManager`'s animation delegate is the driver, but a surface's
   mounting coordinator is given a delegate of the module's own (`RecordingDriver`, in the `.cpp`) that
   forwards `shouldOverridePullTransaction` and `pullTransaction` to the driver and reports the transaction
@@ -223,7 +224,8 @@ afterwards:
 A tick is `UIManager::animationTick()`, which runs the whole `uiManagerDidFinishTransaction` (the pull
 through the driver, then the mutations and `apply` of every live key frame) once per frame-clock tick.
 Timing it around the call in a temporary instrumented host (a stopwatch on `animationTick()` and nothing
-else, not retained and not a gate; the GF-30 counters are not in this tree's base) over 1, 10, 100 and 400
+else, not retained and not a gate; the GF-30 `performance` section was not in this tree's base then, and is described
+below) over 1, 10, 100 and 400
 absolutely positioned 6-point views that all move for 1 s under one `LayoutAnimation`, three runs each of 53
 to 68 ticks, on an Apple M3 Pro, headless, release host, on the pinned commit, gives the figures below. A 60 Hz
 tick period is 16.7 ms. The machine carried other heavy processes (load average about 8): an earlier run on a quieter
@@ -238,6 +240,24 @@ machine gave about half the figures for one view, so they depend on the environm
 
 It grows with the number of live key frames: the host applies every view of every transaction, and does
 not skip one whose interpolated props did not change. Budgets belong to GF-30.
+
+**Where a tick lands in the `performance` phases.** The pump times JS, mount and layout as exclusive
+phases ([performance](performance.md)): the JS phase is bracketed around the microtasks, frame callbacks,
+timers and the queued work, and the mounting callback opens the Mount phase itself. The driver's tick sits
+between two of those brackets, next to the Native Animated frame, so it is in no JS turn, and the
+transaction it pulls reaches `uiManagerDidFinishTransaction`, which is the Mount phase: an animation
+frame is mount time and none of it is JS time. The performance note lists native animation among the work
+that is in the pump and in no phase; a layout animation differs, because its frames are mounting
+transactions. The callbacks the driver queues (the
+success callback of a finished animation) run in the work drain, in the JS phase of a later part of the
+pump. A tick has no real layout: when no revision is committed, `MountingCoordinator::pullTransaction`
+stamps the driver's transaction with a telemetry whose `willLayout` and `didLayout` are back to back
+(`MountingCoordinator.cpp:108-122`), so the Layout phase takes a sample of microseconds out of unattributed
+pump time for it, never more than that time has. A commit that animates or interrupts carries its own
+telemetry and is charged its real layout. Observed once, with a temporary line in the probe that was not
+kept: a run of the suite that served 329 ticks ended with 358 mount samples, 215 layout samples of 0.55 ms
+in all and 1196 pumps, and the phases stayed within the pumps. This does not change what the host does, and
+the suite does not assert it.
 
 ## Remaining scope
 
