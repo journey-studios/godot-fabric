@@ -582,6 +582,9 @@ export function verifyBridgeReport(report, {original = false} = {}) {
     assistiveTechnologySpeech: false, externalAXUIElement: false, hardwareCertified: false});
   assert.equal(report.accessibilitySupported, true, "Godot has an OS accessibility driver in a window");
   assert.equal(report.accessibilityEnabled, true, "Godot's tree is active (--accessibility always)");
+  // An inspector that stops answering fails every wait and press that follows: say so, also on the preceding host,
+  // where the tree checks fail by design and would hide it.
+  assert.equal(report.inspectorLost, "", "The inspector answered every request: " + report.inspectorLost);
   const tree = report.stages.tree.tree;
   if (original) {
     // The preceding host serves a tree of unnamed elements.

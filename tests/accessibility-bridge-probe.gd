@@ -53,6 +53,8 @@ var expected_original_failures: Array = []
 var directory := ""
 var request_id := 0
 var waits: Array = []
+# Why the inspector is taken as lost (ask), or empty while it answers.
+var inspector_lost := ""
 
 func check(condition: bool, name: String, normative: bool = false) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -87,8 +89,13 @@ func mount(name: String, position: Vector2) -> void:
   surfaces[name] = surface
   root.add_child(surface)
 
-# One round trip with the inspector, counted in frames. An answer that does not come is reported as such.
+# One round trip with the inspector, counted in frames. An answer that does not come is reported as such, with
+# "unanswered": true. The first time that happens the inspector is taken as lost: every later ask fails at once with the
+# same reason, so a dead inspector costs POLL_FRAMES once and not once per wait and press, and the probe still writes its
+# report well inside the test's timeout.
 func ask(operation: Dictionary) -> Dictionary:
+  if inspector_lost != "":
+    return {"error": inspector_lost, "unanswered": true}
   request_id += 1
   operation["id"] = request_id
   var response_path := directory + "/response.json"
@@ -108,7 +115,10 @@ func ask(operation: Dictionary) -> Dictionary:
   # been asked. A late reply to an earlier id is still ignored above, which checks the id.
   if FileAccess.file_exists(request_path):
     DirAccess.remove_absolute(request_path)
-  return {"error": "the inspector did not answer in %d frames" % POLL_FRAMES}
+  inspector_lost = "the inspector did not answer the %s request in %d frames" % [operation.get("op", "?"), POLL_FRAMES]
+  # A check of its own (once), so that the loss is in the report and in the log as a failure with its reason.
+  check(false, "bridge/The inspector answers every request: " + inspector_lost)
+  return {"error": inspector_lost, "unanswered": true}
 
 # Every node of a tree, depth first.
 func flatten(node: Dictionary, nodes: Array = []) -> Array:
@@ -141,11 +151,16 @@ func describes(node: Dictionary, expected: Dictionary) -> bool:
       return false
   return true
 
-# Asks for the tree until the predicate holds on its nodes, or the frames run out. Returns the last tree.
+# Asks for the tree until the predicate holds on its nodes, or the frames run out. Returns the last tree. An inspector
+# that does not answer ends the wait at once, as a wait that was not met and says why: asking again would only spend
+# POLL_FRAMES more on each of the FRAMES attempts.
 func wait_tree(label: String, predicate: Callable) -> Dictionary:
   var last := {}
   for attempt in range(FRAMES):
     var answer := await ask({"op": "dump"})
+    if answer.get("unanswered", false):
+      waits.append({"label": label, "attempts": attempt + 1, "met": false, "error": answer.error})
+      return last
     if answer.has("tree"):
       last = answer.tree
       if predicate.call(flatten(answer.tree)):
@@ -158,6 +173,10 @@ func wait_tree(label: String, predicate: Callable) -> Dictionary:
 # Waits for a state of the app's log.
 func wait_log(label: String, minimum: int) -> Dictionary:
   var last := {}
+  # The events it waits for come from presses the inspector never made.
+  if inspector_lost != "":
+    waits.append({"label": label, "attempts": 0, "met": false, "error": inspector_lost})
+    return state()
   for attempt in range(FRAMES):
     last = state()
     if handlers(last.get("log", [])).size() >= minimum:
@@ -331,7 +350,7 @@ func run_probe() -> void:
   expected.sort()
   var original_negative_observed := allow_original_negative and observed == expected and not failures.is_empty()
   var report := {"scenario": "native-accessibility-bridge", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
-    "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages, "waits": waits,
+    "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages, "waits": waits, "inspectorLost": inspector_lost,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": original_negative_observed, "allCurrentAssertionsPassed": failures.is_empty(),
     "accessibilitySupported": AccessibilityServer.is_supported(), "accessibilityEnabled": is_accessibility_enabled(),
