@@ -3,6 +3,7 @@
 #include "adapter_loader.h"
 #include "app_lifecycle.h"
 #include "device_services.h"
+#include "accessibility_info.h"
 #include "godot_device_backend.h"
 #include "system_appearance.h"
 #include <godot_cpp/classes/project_settings.hpp>
@@ -119,6 +120,8 @@ FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_g
   // until the VM is released), and replaces what the validation_device_services meta names.
   device_services = std::make_shared<fabric_godot::DeviceServices>(
       fabric_godot::make_godot_device_backend(id), fabric_godot::godot_launch_url());
+  // Likewise found by id on every reading; the validation_accessibility_settings meta replaces the keys it names.
+  accessibility_info = std::make_shared<fabric_godot::AccessibilityInfo>(fabric_godot::make_godot_accessibility_backend(id));
 }
 FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
@@ -227,7 +230,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
           utf8(scenario), get_instance_id(), game_services, app_state, appearance,
           [id = get_instance_id()] { return read_validation_tls_authorities(id); },
           [id = get_instance_id()] { return read_validation_clock_offset(id); },
-          adapter_loader ? adapter_loader->registry() : nullptr, device_services,
+          adapter_loader ? adapter_loader->registry() : nullptr, device_services, accessibility_info,
           [id = get_instance_id()] { return read_validation_collect_garbage(id); },
           [id = get_instance_id()] { return read_validation_performance_samples(id); });
     }
@@ -276,6 +279,7 @@ void FabricApplication::stop() {
   else {
     game_services->stop();
     device_services->stop();
+    accessibility_info->stop();
   }
   if (adapter_loader) {
     try { adapter_loader->registry()->dispose_modules(); }
@@ -289,6 +293,7 @@ String FabricApplication::snapshot() {
   folly::dynamic result = runtime ? folly::parseJson(runtime->status()) :
       folly::dynamic::object("stopped", terminal_stopped)("rootCount", 0)("bundleEvaluations", 0)
           ("gameServices", game_services->snapshot())("deviceServices", device_services->snapshot())
+          ("accessibilityInfo", accessibility_info->snapshot())
           ("errors", folly::dynamic::array());
   result["runtimeInitialized"] = static_cast<bool>(runtime);
   result["initializationAttempted"] = initialization_attempted;

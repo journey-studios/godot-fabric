@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "GF-30 Performance: primeira fatia (contadores, heap do Hermes e fases do pump em um soak de quatro cargas) com evidência local fixada em 966edb5; CI hospedada pendente. Orçamentos por dispositivo, shaping, 10.000 linhas e iOS e Android seguem abertos."
   },
-  "updatedAt": "2026-10-08T04:54:59.544Z",
+  "updatedAt": "2026-10-08T07:25:14.000+00:00",
   "source": {
     "commit": "966edb530dd79da397d8ccca711aaaf086d97116",
     "url": "https://github.com/journey-studios/godot-fabric/commit/966edb530dd79da397d8ccca711aaaf086d97116",
@@ -1974,7 +1974,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Primeira fatia: View, Pressable e TouchableOpacity levam as props de acessibilidade do RN (label e hint como nome e descrição do elemento, papel, estados, região live, aria-hidden e onAccessibilityTap) à árvore de acessibilidade do Godot (AccessKit), e o press do SO chega aos callbacks do RN. Todas as 105 grafias de accessibilityRole e role do RN 0.87.1 são mapeadas (61 grafias, 44 nomes distintos) para um papel do Godot ou rejeitadas com o motivo (44 grafias, 39 nomes distintos), sem cair num papel genérico. A prova tem dois tipos: 80 checks headless que provam só metadado (descritor, propriedades dos Controls e o caminho do host do press) e 22 checks que leem a árvore NSAccessibility real do Godot gráfico no macOS e pressionam elementos com AXPress; o host anterior falha exatamente 10 e 5, e quatro sabotagens são rejeitadas. O bridge só roda localmente (sessão gráfica) e o passo headless ainda não rodou na CI hospedada. Seguem abertos AccessibilityInfo (fatia 2), foco e teclado, anúncios, grupos, ações customizadas, text scale e o mobile: o Godot 4.7.2 não tem bridge de acessibilidade em iOS nem Android, o que bloqueia GF-34 e GF-35.",
+      "note": "Primeira fatia: View, Pressable e TouchableOpacity levam as props de acessibilidade do RN (label e hint como nome e descrição do elemento, papel, estados, região live, aria-hidden e onAccessibilityTap) à árvore de acessibilidade do Godot (AccessKit), e o press do SO chega aos callbacks do RN. Todas as 105 grafias de accessibilityRole e role do RN 0.87.1 são mapeadas (61 grafias, 44 nomes distintos) para um papel do Godot ou rejeitadas com o motivo (44 grafias, 39 nomes distintos), sem cair num papel genérico. A prova tem dois tipos: 80 checks headless que provam só metadado (descritor, propriedades dos Controls e o caminho do host do press) e 22 checks que leem a árvore NSAccessibility real do Godot gráfico no macOS e pressionam elementos com AXPress; o host anterior falha exatamente 10 e 5, e quatro sabotagens são rejeitadas. O bridge só roda localmente (sessão gráfica) e o passo headless ainda não rodou na CI hospedada. Segunda fatia, parte a: o AccessibilityInfo original do RN sobre o AccessibilityManager do contrato do iOS e o DisplayServer do Godot, com o leitor de tela, o movimento reduzido, a transparência reduzida e o contraste aumentado lidos uma vez por frame e um evento por mudança (change é o apelido de screenReaderChanged); -1 rejeita E_ACCESSIBILITY_UNKNOWN e nunca vira desligado, negrito, tons de cinza, cores invertidas e cross-fade não têm backing e rejeitam E_ACCESSIBILITY_UNAVAILABLE, o focus do UIManager falha em voz alta e os demais tipos de evento são ignorados e contados. 54 checks headless em duas aplicações com um oráculo independente; o host anterior falha exatamente 40 de 54 e quatro sabotagens (12, 17, 8 e 2 falhas) são rejeitadas (evidência: https://github.com/journey-studios/godot-fabric/blob/c1eed3644dbfc9854c128e8acdc55ec78f770d7c/docs/evidence/accessibility-info/README.md). Seguem abertos anúncio e foco programático (fatia 2b), foco e teclado, grupos, ações customizadas, text scale e fontScale, a CI gráfica, CI hospedada e Pages, e o mobile: o Godot 4.7.2 não tem bridge de acessibilidade em iOS nem Android, o que bloqueia GF-34 e GF-35.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4089,6 +4089,24 @@
   ],
   "activity": [
     {
+      "id": "performance-first-slice-20261008",
+      "at": "2026-10-08T07:25:14.000+00:00",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "Primeira fatia do GF-30 (Frame, heap and threading budgets): o snapshot da aplicação ganha a seção performance, com contadores exatos da árvore nativa, o heap vivo do Hermes depois de uma coleta forçada e o pump dividido em JS, mount e layout (este último vindo da telemetria do próprio RN). Um soak monta e desmonta quatro cargas 20 vezes cada em headless: 41 checks provam que nós, órfãos e views voltam ao baseline da execução, que as invariantes dos contadores e das fases valem em toda leitura e que o heap em repouso sobe no máximo 2.048 bytes (pior medido: 312). Um oráculo independente recalcula os percentis a partir das amostras do host; o host anterior falha exatamente 27 checks e três sabotagens retidas falham 4, 3 e 2, todas rejeitadas pelo oráculo. As amostras só vão ao snapshot com uma meta de validação (5.997 bytes por padrão, 18.398 com elas). Tempos, RSS e memória estática são só registrados e não representam um display. Pendentes: a CI hospedada do passo novo não rodou; orçamentos por dispositivo, shaping de texto, 10.000 linhas, tempo de quadro gráfico e iOS e Android seguem abertos. Só o checkpoint da primeira fatia fecha; nenhum item, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/966edb530dd79da397d8ccca711aaaf086d97116/docs/evidence/performance/README.md"
+    },
+    {
+      "id": "accessibility-info-slice-2a-c1eed36",
+      "at": "2026-10-08T06:20:00.000+00:00",
+      "taskIds": [
+        "GF-20"
+      ],
+      "message": "Segunda fatia do GF-20, parte a, com evidência local: o AccessibilityInfo original do RN roda sobre o AccessibilityManager (contrato do iOS) e o DisplayServer do Godot. Leitor de tela, movimento reduzido, transparência reduzida e contraste aumentado são lidos uma vez por frame e cada mudança é um evento ouvido uma vez por todas as roots; -1 rejeita E_ACCESSIBILITY_UNKNOWN e nunca vira desligado, e os quatro settings sem backing rejeitam E_ACCESSIBILITY_UNAVAILABLE. 54 checks headless em duas aplicações, com um oráculo independente; o host anterior falha exatamente 40 de 54 e quatro sabotagens do host falham 12, 17, 8 e 2, todas rejeitadas pelo oráculo; o exemplo passa 10 checks headless e 12 com duas capturas. Pendentes: anúncio e foco programático (fatia 2b), text scale e fontScale, o mobile (GF-34 e GF-35), a CI gráfica, a CI hospedada e o Pages. Nenhum checkpoint, item, peso ou denominador muda: o checkpoint slice do GF-20 já fechou na primeira fatia.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c1eed3644dbfc9854c128e8acdc55ec78f770d7c/docs/evidence/accessibility-info/README.md"
+    },
+    {
       "id": "os-contracts-first-slice-1b2dfd5",
       "at": "2026-10-08T04:32:15.000+00:00",
       "taskIds": [
@@ -4096,15 +4114,6 @@
       ],
       "message": "Primeira fatia do GF-24 com evidência local: ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN reproduzem a indisponibilidade que o próprio RN tem fora do iOS e do Android, sem módulo nativo no host e sem código nativo na fatia. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê os fontes do RN pinado; o SDK anterior falha exatamente os 30 normativos e três sabotagens em memória falham 14, 8 e 5, todas rejeitadas pelo oráculo; os recibos dos onze outros chamadores do bundleNativeProbe ficam idênticos. No Godot, 'denied' e false do PermissionsAndroid significam indisponível. Só o checkpoint slice do GF-24 fecha; CI hospedada pendente. Abertos: StatusBar, props específicas de SO, implementações Android e iOS (GF-34 e GF-35) e o alias do platform-plugin para pacotes de terceiros; Alert, Share, Settings e BackHandler ficam no GF-23.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
-    },
-    {
-      "id": "performance-first-slice-20261008",
-      "at": "2026-10-08T03:52:11.870857+00:00",
-      "taskIds": [
-        "GF-30"
-      ],
-      "message": "Primeira fatia do GF-30 (Frame, heap and threading budgets): o snapshot da aplicação ganha a seção performance, com contadores exatos da árvore nativa, o heap vivo do Hermes depois de uma coleta forçada e o pump dividido em JS, mount e layout (este último vindo da telemetria do próprio RN). Um soak monta e desmonta quatro cargas 20 vezes cada em headless: 41 checks provam que nós, órfãos e views voltam ao baseline da execução, que as invariantes dos contadores e das fases valem em toda leitura e que o heap em repouso sobe no máximo 2.048 bytes (pior medido: 312). Um oráculo independente recalcula os percentis a partir das amostras do host; o host anterior falha exatamente 27 checks e três sabotagens retidas falham 4, 3 e 2, todas rejeitadas pelo oráculo. As amostras só vão ao snapshot com uma meta de validação (5.997 bytes por padrão, 18.398 com elas). Tempos, RSS e memória estática são só registrados e não representam um display. Pendentes: a CI hospedada do passo novo não rodou; orçamentos por dispositivo, shaping de texto, 10.000 linhas, tempo de quadro gráfico e iOS e Android seguem abertos. Só o checkpoint da primeira fatia fecha; nenhum item, peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/966edb530dd79da397d8ccca711aaaf086d97116/docs/evidence/performance/README.md"
     },
     {
       "id": "accessibility-first-slice-20261008",

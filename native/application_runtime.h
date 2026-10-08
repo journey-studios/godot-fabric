@@ -13,6 +13,7 @@ class GameServiceRegistry;
 class AdapterRegistry;
 class SystemAppearance;
 class DeviceServices;
+class AccessibilityInfo;
 
 class ApplicationRuntime {
  public:
@@ -21,7 +22,8 @@ class ApplicationRuntime {
       std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
       std::function<std::string()> trusted_authorities, std::function<double()> clock_offset_ms,
       std::shared_ptr<AdapterRegistry> adapters = {}, std::shared_ptr<DeviceServices> device_services = {},
-      std::function<bool()> collect_garbage_on_status = {}, std::function<bool()> performance_samples = {});
+      std::shared_ptr<AccessibilityInfo> accessibility_info = {}, std::function<bool()> collect_garbage_on_status = {},
+      std::function<bool()> performance_samples = {});
   ~ApplicationRuntime();
   void load_bundle(const std::string &source, const std::string &source_url);
   void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);
