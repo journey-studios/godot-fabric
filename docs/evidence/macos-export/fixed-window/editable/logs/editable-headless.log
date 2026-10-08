@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+HERMES: Running "HUD"
+HERMES: Running "Inventory"
+HERMES: Updating props for Surface "HUD" with {"rootTag":1,"initialProps":{"title":"Props from Godot","panel":"hud"},"fabric":true}
+HERMES: Running "Inventory"
+CONSUMER_VALIDATION_PASSED
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W1008 19:41:04.343122 4187611520 UIManagerBinding.cpp:61] UIManagerBinding::~UIManagerBinding() was called (address: 0x10eefd768).
+W1008 19:41:04.343148 4187611520 UIManager.cpp:57] UIManager::~UIManager() was called (address: 0xabb3a0c18).

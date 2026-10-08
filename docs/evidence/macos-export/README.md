@@ -1,5 +1,31 @@
 # macOS Release export: executed minimal consumer
 
+## Current fixed-window proof
+
+Producer `29969eb0d64201a1797e6e866a2ef650b1282fde`, including main's accepted
+Frontier input policy (`7ef63ed`), passed the real macOS arm64 export lane:
+13/13 tests without skips, exact ordered 40 headless / 43 headed consumer checks,
+and three 540×300 captures of a complete 1080×600 logical canvas at scale 0.5.
+An independently executed editable baseline passed the same checks and produced
+byte-identical captures. All 220 SDK source pins were checked against the producer.
+
+The [current evidence packet](fixed-window/README.md) contains receipts, both
+sets of images, canonical/adapted fixtures, actual logs, five native controls,
+the 280-check local archive audit, the 24-check independent editable review and
+the original/public hash index. Contracts passed 395 Node tests plus one explicit
+native-template skip and 23 Python tests; static and publication checks passed.
+
+This is local evidence. The hosted `7c6a4f8` run failed its old 1080×600 capture
+expectation; the new fixed-window protocol has no green hosted result yet.
+The [failure history](fixed-window/failure-history.json) also preserves an
+unexplained local remount failure and the corrected generic-output false positive.
+The Frontier game replay, clean OS profile and second Mac/VM remain open.
+The earlier evidence below is retained unchanged and describes its own producer.
+
+![Current exported app after inventory-only resize](fixed-window/export/captures/resized.png)
+
+## Historical producer 58f5271
+
 Producer `58f527193039222b19794960e7b662cb34c65e74`, with main `ec831ac` (LayoutAnimation) integrated, produced and published a signed, relocated macOS arm64 Release application. The run began at 20:04:52.883 UTC and finished at 20:05:27.433 UTC on 2026-10-08. This is local validation of the minimal consumer; hosted CI and the delivery PR review are pending.
 
 The final app contains one Godot engine, one addon host, the two required runtime frameworks and a 27-file PCK. Its regular files total 106,438,140 bytes (filesystem allocation and symlink metadata are separate). React 19.2.3, RN 0.87.1, Hermes 250829098.0.17 and Godot 4.7.2.stable.official.ed1daf0bf are pinned/observed. [Executed summary](executed-summary.json), [app receipt](executed-export.json), [original/public file hashes](executed-observation-files.json).

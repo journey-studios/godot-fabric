@@ -38,7 +38,18 @@ Ad-hoc signing is for local validation only. This slice does not establish Devel
 
 ## Evidence status
 
-The [historical executed evidence](evidence/macos-export/README.md) records producer `58f527193039222b19794960e7b662cb34c65e74`: its signed, relocated `.app` passed the exact 40/43 checks and three 1080×600 captures matched the editable baseline byte for byte. That result predates the fixed physical-window protocol above. The later hosted run at `7c6a4f8` failed when the hosted capture was 1024×600 instead of the asserted 1080×600. The revised exported app has not yet been measured, so this historical proof does not validate the new capture protocol.
+The [current executed evidence](evidence/macos-export/fixed-window/README.md)
+records clean producer `29969eb0d64201a1797e6e866a2ef650b1282fde`, after integrating
+main's Frontier input policy and rebuilding the addon host. The actual signed,
+relocated `.app` passed 40/43 checks; all three 540×300 captures match an independently
+executed editable baseline byte for byte, with RN window metrics 1080×600 at scale 0.5.
+The native lane passed 13/13 without skips, the local archive audit passed 280 checks
+and the independent baseline review passed 24 checks. All 220 SDK source pins match
+the producer. This does not certify hosted CI: run `37844090577` at `7c6a4f8` failed
+the preceding capture-size protocol, and the revised protocol has no hosted result yet.
+The packet preserves that failure and the unexplained earlier local remount failure.
+The [historical 58f5271 proof](evidence/macos-export/README.md#historical-producer-58f5271)
+and its 1080×600 images remain unchanged.
 
 Run the same lane with `MACOS_EXPORT_TEMPLATE` set to the derived ZIP:
 

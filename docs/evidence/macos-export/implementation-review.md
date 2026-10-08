@@ -3,12 +3,43 @@
 The root reviewer applies the thermo-nuclear code-quality skill to the Luna
 implementation. The first review below covered the shared payload boundary and
 thin export hooks based on `e0f0a9d2958a12b92fee0706162fe7f9e9eeac2a`.
-The final review covers producer `58f527193039222b19794960e7b662cb34c65e74`,
+The historical review covers producer `58f527193039222b19794960e7b662cb34c65e74`,
 including main `ec831ac`. Local signing, relocation, exported runtime and negative
 controls now have separate executed evidence; hosted CI and CodeRabbit remain
 pending for delivery. This accepts only the minimal macOS Release slice.
 
-## Final independent review
+## Current fixed-window delivery review
+
+Root reviewed Luna's changes through producer
+`29969eb0d64201a1797e6e866a2ef650b1282fde`, including the accepted main71 policy.
+The physical-window adaptation stays in the disposable fixture: 540×300 physical,
+1080×600 logical, headed-only canvas-items scaling and fixed aspect/resizing.
+Canonical consumer assertions, check IDs/order and geometry tolerances are unchanged.
+The runner requires actual PNG dimensions and RN window metrics together.
+
+One shared list owns failed consumer output retention and cleanup. Before copying,
+the helper rejects symlink/non-file inputs and every existing destination; exclusive
+copies retain exact bytes and hashes. A retention error is recorded separately from
+the original failure and leaves source outputs in place. Four storage tests cover
+byte preservation and fail-closed preflight. They do not claim that the historical
+pre-Godot failure exercised runtime-output retention.
+
+Root rejected a broader fatal-output matcher and a duplicated engine version.
+Generic subprocess execution now checks process errors and status; the unchanged
+Godot fatal markers belong to editor/runtime boundaries. Portable controls verify
+that a source literal in a diff is accepted, while genuine engine markers and wrong
+process exits are rejected. The canonical PCK parser and consumer harness remain
+shared. The affected code files remain below 1,000 lines.
+
+The [current packet](fixed-window/README.md) records the executed 13/13 native lane,
+40/43 exported checks, 280-check local archive audit and 24-check root comparison
+against a separately executed editable project. Root independently checked every
+curated source/public hash and confirmed that substitutions redact paths only.
+The private baseline runner records equality values; the root review independently
+asserts all three actual byte equalities. No passing replay explains the historical
+remount failure. Hosted CI and the new delivery review remain pending.
+
+## Historical independent review
 
 The runner reuses the canonical consumer harness and PCK reader. Its export
 hooks share one payload validator; the iOS hook retains its existing embedding

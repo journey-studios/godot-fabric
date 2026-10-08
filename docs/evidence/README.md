@@ -14,7 +14,10 @@ their historical provenance.
 
 The [independent consumer record](consumer/README.md) covers the 2B Resource/addon/editor prototype,
 external TSX provisioning, offline checks and native roots/lifecycle. The [macOS export record](macos-export/README.md)
-adds a signed, relocated Release app, exact 40/43 assertions and three baseline-matching captures (local; hosted CI pending).
+adds a signed, relocated Release app. Its [current fixed-window proof](macos-export/fixed-window/README.md)
+records exact 40/43 assertions, three 540×300 captures byte-identical to an independently
+executed editable baseline, 220 SDK source pins and a 280-check local archive audit.
+This is local evidence; the preceding hosted failure remains recorded and new CI is pending.
 
 The later [project-resolution record](project-resolution/README.md) exercises
 inherited local aliases and non-hoisted dependencies through that normal addon.

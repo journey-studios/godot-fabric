@@ -589,12 +589,15 @@ publication are pending. The `consumidor` and `autoridade` criteria of V05-03 st
 no 1.0 checkpoint, weight or denominator moves.
 
 **Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
-`58f527193039222b19794960e7b662cb34c65e74` exports and publishes a signed macOS arm64
-Release minimal consumer after relocation, exact 40/43 assertions and three 1080×600 captures
-identical to the editable baseline. Frameworks resolve inside the app; deep/strict signature
-verification, idempotent layout normalization and four real rejected mutations passed.
-[Evidence](docs/evidence/macos-export/README.md) retains the SDK/build/PCK bindings and a root
-review of 219 producer source pins. Hosted CI and delivery review are pending. The Frontier
+`29969eb0d64201a1797e6e866a2ef650b1282fde` exports and publishes a signed macOS arm64
+Release minimal consumer after relocation, exact 40/43 assertions and three 540×300 captures
+of the complete 1080×600 logical canvas at scale 0.5, identical to an independently executed
+editable baseline. Frameworks resolve inside the app; deep/strict signature verification,
+idempotent layout normalization and four real rejected mutations passed. The native lane
+passed 13/13 without skips. [Evidence](docs/evidence/macos-export/fixed-window/README.md)
+retains SDK/build/PCK bindings, all 220 producer source pins, a 280-check local archive audit
+and a 24-check independent baseline review. The earlier failed hosted run and unexplained
+local remount failure remain recorded; new hosted CI and delivery review are pending. The Frontier
 12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
 
 **Progress.** V05-04: the twelve names the HUD imports are decided in
