@@ -209,6 +209,18 @@ jobs:
             build/device-services-launch-current.log
             build/device-services-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:os-contracts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-os-contracts
+          path: |
+            build/os-contracts-report.json
+            build/os-contracts-current-report.json
+            build/os-contracts-comparison.json
+            build/os-contracts-current.log
+            build/os-contracts-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:websocket
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

@@ -8,6 +8,7 @@ import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
 import OriginalTouchableOpacity from "react-native/Libraries/Components/Touchable/TouchableOpacity";
+import OriginalTouchableNativeFeedback from "react-native/Libraries/Components/Touchable/TouchableNativeFeedback";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 import OriginalModal from "react-native/Libraries/Modal/Modal";
@@ -53,6 +54,20 @@ export {
 // RN's original Linking, Clipboard and Vibration over the application's device
 // services. Each is constructed on first read, as in RN's index.js.
 export { Linking, Clipboard, Vibration } from "./device-services";
+// RN's original iOS- and Android-specific APIs, which RN itself leaves
+// unavailable on a platform that is neither: each runs the branch RN takes there
+// (a warning, a rejected value, a thrown error or an UnimplementedView) and is
+// constructed on first read, as in index.js. See src/os-specific.js.
+export {
+  ToastAndroid,
+  PermissionsAndroid,
+  DynamicColorIOS,
+  ActionSheetIOS,
+  ProgressBarAndroid,
+  DrawerLayoutAndroid,
+  InputAccessoryView,
+  PushNotificationIOS,
+} from "./os-specific";
 export { useWindowDimensions } from "./window-dimensions";
 export { default as useColorScheme } from "react-native/Libraries/Utilities/useColorScheme";
 export const Modal = OriginalModal;
@@ -205,6 +220,19 @@ export function TouchableOpacity({ style, ...props }) {
   }
   return <OriginalTouchableOpacity {...props} style={nativeStyle(style, "TouchableOpacity")} />;
 }
+// RN's original TouchableNativeFeedback: Pressability drives the press events and
+// RN leaves out the Android drawable (getBackgroundProp is null off Android), so
+// no native background or foreground prop reaches the host. Its statics are RN's.
+export function TouchableNativeFeedback(props) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalTouchableNativeFeedback {...props} />;
+}
+TouchableNativeFeedback.SelectableBackground = OriginalTouchableNativeFeedback.SelectableBackground;
+TouchableNativeFeedback.SelectableBackgroundBorderless = OriginalTouchableNativeFeedback.SelectableBackgroundBorderless;
+TouchableNativeFeedback.Ripple = OriginalTouchableNativeFeedback.Ripple;
+TouchableNativeFeedback.canUseNativeForeground = OriginalTouchableNativeFeedback.canUseNativeForeground;
 // RN's original ActivityIndicator.js takes its non-Android path: a sized View
 // around the generated ActivityIndicatorView component.
 export function ActivityIndicator({ style, ...props }) {

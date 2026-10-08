@@ -40,12 +40,18 @@
     },
     {
       "name": "ActionSheetIOS",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original module: its argument invariants run, then every method throws \"ActionSheetManager doesn't exist\" because the host registers no ActionSheetManager."
     },
     {
       "name": "ActivityIndicator",
@@ -194,22 +200,33 @@
     },
     {
       "name": "DrawerLayoutAndroid",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
       ],
-      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+      "note": "RN's own DrawerLayoutAndroidFallback: an UnimplementedView of its props and eight methods that throw 'DrawerLayoutAndroid is only available on Android'; RN's deprecation notice prints once on the first read. The generic deep path stays undefined."
     },
     {
       "name": "DynamicColorIOS",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original named export throws 'DynamicColorIOS is not available on this platform.' off iOS."
     },
     {
       "name": "Easing",
@@ -270,12 +287,18 @@
     },
     {
       "name": "InputAccessoryView",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original component off iOS: warns '<InputAccessoryView> is only supported on iOS.' on each render and renders null."
     },
     {
       "name": "Keyboard",
@@ -392,12 +415,18 @@
     },
     {
       "name": "PermissionsAndroid",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original module off Android: a warning, then check resolves false, request 'denied' and requestMultiple {}; 'denied' and false mean unavailable on Godot, not a refusal. No host module: the native lookups return null."
     },
     {
       "name": "PixelRatio",
@@ -443,22 +472,33 @@
     },
     {
       "name": "ProgressBarAndroid",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original export off Android: UnimplementedView, a plain View around its children (flattened by Fabric); RN's extraction notice prints once on the first read. No Android rendering."
     },
     {
       "name": "PushNotificationIOS",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
       ],
-      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+      "note": "RN's original class: fifteen static methods throw 'PushNotificationManager is not available.'; addEventListener and removeEventListener keep a JavaScript-only listener for RN's four events; RN's extraction notice prints once on the first read."
     },
     {
       "name": "ReactNativeVersion",
@@ -603,12 +643,18 @@
     },
     {
       "name": "ToastAndroid",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's own ToastAndroidFallback: SHORT, LONG, TOP, BOTTOM and CENTER are 0 and every call warns 'ToastAndroid is not supported on this platform.'. The generic deep path imports itself and stays undefined for a package that uses it."
     },
     {
       "name": "TouchableHighlight",
@@ -621,12 +667,18 @@
     },
     {
       "name": "TouchableNativeFeedback",
-      "status": "missing_public_export",
+      "status": "implemented_subset",
       "target": "1_0",
       "roadmap": "GF-24",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/os-specific.js",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "docs/research/os-contracts.md",
+        "docs/evidence/os-contracts/README.md"
+      ],
+      "note": "RN's original class behind the facade's inline-Control guard: Pressability's press events and RN's four statics; off Android RN leaves out the drawable, so nativeBackgroundAndroid and nativeForegroundAndroid never reach the host. No Android ripple, focus or accessibility."
     },
     {
       "name": "TouchableOpacity",

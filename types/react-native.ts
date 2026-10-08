@@ -21,6 +21,20 @@ export declare const Linking: typeof RN.Linking;
 export declare const Clipboard: typeof RN.Clipboard;
 /** RN's original Vibration over Godot's Input.vibrate_handheld. */
 export declare const Vibration: typeof RN.Vibration;
+/** RN's original iOS- and Android-specific APIs, which RN itself leaves unavailable on a platform that is neither. Godot
+ * runs the branch RN takes there, so none of them reaches a native module (see docs/research/os-contracts.md):
+ * ToastAndroid's constants are 0 and every call warns; PermissionsAndroid's check resolves false, request 'denied'
+ * and requestMultiple {}, each after a warning, so on Godot 'denied' and false mean unavailable; DynamicColorIOS,
+ * ActionSheetIOS and PushNotificationIOS throw; ProgressBarAndroid and DrawerLayoutAndroid render a plain View
+ * around their children and the drawer's methods throw; InputAccessoryView warns and renders null. */
+export declare const ToastAndroid: typeof RN.ToastAndroid;
+export declare const PermissionsAndroid: typeof RN.PermissionsAndroid;
+export declare const DynamicColorIOS: typeof RN.DynamicColorIOS;
+export declare const ActionSheetIOS: typeof RN.ActionSheetIOS;
+export declare const ProgressBarAndroid: typeof RN.ProgressBarAndroid;
+export declare const DrawerLayoutAndroid: typeof RN.DrawerLayoutAndroid;
+export declare const InputAccessoryView: typeof RN.InputAccessoryView;
+export declare const PushNotificationIOS: typeof RN.PushNotificationIOS;
 /** RN's original Appearance and useColorScheme, fed by Godot's system theme. */
 export declare const Appearance: typeof RN.Appearance;
 export declare const useColorScheme: typeof RN.useColorScheme;
@@ -235,6 +249,14 @@ export type TouchableOpacityProps = Pick<RN.TouchableOpacityProps, "activeOpacit
   "onLongPress" | "delayLongPress" | "delayPressIn" | "delayPressOut" | "disabled" | "hitSlop" | "pressRetentionOffset" |
   "testID" | "nativeID" | "onLayout" | "children"> & Omit<AccessibilityProps, "role" | "onAccessibilityTap"> & { style?: StyleProp<ViewStyle> };
 export declare const TouchableOpacity: React.ComponentType<TouchableOpacityProps & React.RefAttributes<NativeInstance>>;
+/** RN's original TouchableNativeFeedback.js: Pressability's press props around the single child RN clones. Off Android RN
+ * leaves out the drawable, so `background` and `useForeground` are accepted and never reach the host. The statics are
+ * RN's own; props this platform has not verified are omitted. */
+export type TouchableNativeFeedbackProps = Pick<RN.TouchableNativeFeedbackProps, "background" | "useForeground" | "onPress" |
+  "onPressIn" | "onPressOut" | "onLongPress" | "delayLongPress" | "delayPressIn" | "delayPressOut" | "disabled" | "hitSlop" |
+  "pressRetentionOffset" | "testID" | "nativeID" | "onLayout" | "children">;
+export declare const TouchableNativeFeedback: React.ComponentType<TouchableNativeFeedbackProps> &
+  Pick<typeof RN.TouchableNativeFeedback, "SelectableBackground" | "SelectableBackgroundBorderless" | "Ripple" | "canUseNativeForeground">;
 export declare const StyleSheet: {
   hairlineWidth: number;
   create<T extends Record<string, TextStyle>>(styles: T): T;

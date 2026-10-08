@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 PR #58: provas integradas completas; CI/CodeRabbit e aceite pendentes"
+    "focusTitle": "GF-14 PR #58: integração da main OS-specific #61 em validação"
   },
-  "updatedAt": "2026-10-08T04:18:31.994Z",
+  "updatedAt": "2026-10-08T04:52:06.981947+00:00",
   "source": {
     "commit": "6b2833e493e957d208f34e38a94c8fedc7c682b3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6b2833e493e957d208f34e38a94c8fedc7c682b3",
-    "scope": "Main Images #56, Accessibility #57 e milestone Frontier #60 integrados: 28/156 checkpoints, 0/39 itens. GF-14 local verificado no commit 6b2833e: 28 checks, listas44, Images74, Accessibility80 e quatro capturas; 123 produtores do host,18bundle,seisRN conferidos. CI/CodeRabbit e aceite pendentes.",
+    "scope": "Main OS-specific #61 integrada, preservando todos os dados da main, GF-18 aceito e milestones. 29/156 checkpoints, 0/39 itens; GF-14 sem aceite. Prova anterior 6b2833e preservada; repetir bundle/produtores e runtime integrados antes de novo CI/CodeRabbit.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -2224,7 +2224,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "OS-specific public contracts",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract",
       "dependencies": [
         "GF-09",
@@ -2239,14 +2239,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "ToastAndroid (pelo ToastAndroidFallback), PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid (pelo DrawerLayoutAndroidFallback), InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN, lidos pelo import público react-native, cada um no ramo que o próprio RN toma numa plataforma que não é iOS nem Android (Platform.OS \"godot\"): o ToastAndroid avisa e tem constantes 0; o PermissionsAndroid avisa e resolve false, 'denied' ou {} (no Godot isso significa indisponível, não recusa); DynamicColorIOS, ActionSheetIOS (depois dos invariantes de argumento) e 15 estáticos do PushNotificationIOS lançam os erros do RN; ProgressBarAndroid e DrawerLayoutAndroid renderizam uma View comum em volta dos filhos e os 8 métodos do drawer lançam; o InputAccessoryView avisa a cada render e devolve null; o TouchableNativeFeedback é Pressability sem o drawable do Android (onPressIn, onPressOut e onPress num clique real de mouse e de toque). A fatia não tem código nativo: src/os-specific.js tem getters preguiçosos que devolvem os módulos originais, e a fachada embrulha o TouchableNativeFeedback com a guarda de Control inline e os quatro estáticos do RN. O host não registra nenhum dos seis módulos que eles procuram (get devolve null e getEnforcing lança): a ausência é o contrato. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê textos, chaves e contagens dos fontes do RN pinado (46 operações, 16 avisos atribuídos, 44 permissões) e confere que cada aviso é uma linha HERMES: do log. Como a fatia não tem código nativo, o controle é o SDK anterior (o src/ da main 6d02746) pelo mesmo bundleNativeProbe, que falha exatamente os 30 checks normativos; três sabotagens em memória (Platform.OS android, Toast mudo com PermissionsAndroid que concede, caminho genérico do Toast que importa a si mesmo) falham 14, 8 e 5, todas rejeitadas pelo oráculo. A pesquisa em Node vm difere em sete pontos, entre eles o addEventListener do PushNotificationIOS, que funciona em JS, e a ordem do clique (in, out, press). O bundleNativeProbe ganhou platformRoot e plugins opcionais, e os recibos dos onze outros chamadores ficaram idênticos byte a byte. Abertos: StatusBar (continua placeholder e o host não tem StatusBarManager), as props específicas de SO, as implementações de Android e iOS (GF-34 e GF-35), a comparação por versão do SO e o alias no platform-plugin para pacotes de terceiros, cujo import do caminho genérico do ToastAndroid ou do DrawerLayoutAndroid segue undefined; Alert, Share, Settings e BackHandler ficam no GF-23 (V2-D30). CI hospedada pendente. Só o checkpoint slice fecha; nenhum item, peso ou denominador muda.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Contratos específicos de iOS e Android: 37 checks headless em duas aplicações (30 normativos), SDK anterior com exatamente 30 falhas normativas e três sabotagens retidas (14, 8 e 5) rejeitadas pelo oráculo (implementação 4338d1c; CI hospedada pendente)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
+            },
+            {
+              "label": "Contratos específicos de iOS e Android: recibo de execução, hashes, controles e os onze recibos do bundleNativeProbe",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -4081,6 +4090,16 @@
   ],
   "activity": [
     {
+      "id": "gf14-os-integration-start-20261008",
+      "at": "2026-10-08T04:52:06.981947+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Integração da main dd05760 (#61 OS-specific) após conflito compartilhado. Preservados GF-24 aceito, GF-18 aceito, histórico e milestones. GF-14 sem aceite; fontes/bundle e runtime em revalidação. Review aprovado 3fe88da permanece evidência do head anterior.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
+    {
       "id": "gf14-images-integrated-local-20261008",
       "at": "2026-10-08T04:18:31.991Z",
       "taskIds": [
@@ -4099,6 +4118,52 @@
       ],
       "message": "PR #51 mergeada em 7e2df46 após CI final 109e6fd com cinco jobs verdes e sete threads CodeRabbit resolvidas. A raiz auditou 193 Modal (11 macOS), 164 transforms, 672 capture, cold start e paridade restrita a 13 casos; a árvore mergeada é idêntica. Primeiro checkpoint GF-18 aceito: 24/156 e 0/39; outros três continuam abertos. GF-14 inicia com um Luna e investigação de comandos/offset reproduzida, sem aceite novo.",
       "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "gf14-local-axis-proof-20261008",
+      "at": "2026-10-08T03:02:37.570129+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos."
+    },
+    {
+      "id": "gf14-diagonal-pan-review-20261008",
+      "at": "2026-10-08T03:11:21.894800+00:00",
+      "taskIds": [
+        "GF-14"
+      ],
+      "message": "A revisão principal reproduziu pan diagonal alterando o eixo transversal: vertical (100,100)→(130,150), horizontal→(150,130), com momentum transversal indevido. Build integrado interrompido antes do relink; host/provas 60fa18 preservados. Um Luna corrige no owner nativo e amplia os controles, sem marcar aceite."
+    },
+    {
+      "id": "gf14-integrated-root-review-20261008",
+      "at": "2026-10-08T03:29:22.784832+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Fatia desktop revisada localmente: ScrollView original RN 0.87.1 com um owner nativo para offsets fracionários, pan/momentum, cancelamento, Fabric e pintura. Principal repetiu 25/25 checks no host integrado; controle anterior executou os mesmos inputs e reproduziu exatamente três defeitos diagonal/orientação. Listas 44/44, oráculo de sabotagem rejeitado mesmo com flags verdes e quatro capturas verificadas. scrollToEnd preserva eixo transversal; diagonal e soltura têm velocidade transversal zero. CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos."
+    },
+    {
+      "id": "gf14-interruption-neutral-review-20261008",
+      "at": "2026-10-08T03:59:17.610748+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15",
+        "GF-20"
+      ],
+      "message": "Fatia desktop revisada no host integrado com Text, Device Services e Accessibility: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. O mesmo bundle no host anterior reproduz exatamente duas falhas de interrupção por roda/contentOffset; controles históricos de diagonal/orientação ficam preservados. Props neutras válidas renderizam e scrollam; recursos ativos fora da fatia falham explicitamente. Listas 44/44 e quatro capturas finais verificadas no mesmo host; CI/CodeRabbit finais e aceite pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
+    {
+      "id": "os-contracts-first-slice-1b2dfd5",
+      "at": "2026-10-08T04:32:15.000+00:00",
+      "taskIds": [
+        "GF-24"
+      ],
+      "message": "Primeira fatia do GF-24 com evidência local: ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN reproduzem a indisponibilidade que o próprio RN tem fora do iOS e do Android, sem módulo nativo no host e sem código nativo na fatia. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê os fontes do RN pinado; o SDK anterior falha exatamente os 30 normativos e três sabotagens em memória falham 14, 8 e 5, todas rejeitadas pelo oráculo; os recibos dos onze outros chamadores do bundleNativeProbe ficam idênticos. No Godot, 'denied' e false do PermissionsAndroid significam indisponível. Só o checkpoint slice do GF-24 fecha; CI hospedada pendente. Abertos: StatusBar, props específicas de SO, implementações Android e iOS (GF-34 e GF-35) e o alias do platform-plugin para pacotes de terceiros; Alert, Share, Settings e BackHandler ficam no GF-23.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
     },
     {
       "id": "accessibility-first-slice-20261008",
@@ -5085,32 +5150,6 @@
       ],
       "message": "Up View 62/62 e viewport 90/90 com 24 pixels; 16 comandos de regressão passaram: contracts 255 Node/13 Python, Document 2723, interest 193/233, query/getter 186/65, integrated 181/206, examples 22/2250, consumer 30/40, SDK pack/verify, loader 89/21 e 13 adapters/213. Controles anteriores query/getter seguem com 12/3 negativos no SDK atual, sem retry Down ou query Cancel. CI de Up e publicação positiva pendentes; sem novo fechamento GF/checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/pull/14"
-    },
-    {
-      "id": "gf14-local-axis-proof-20261008",
-      "at": "2026-10-08T03:02:37.570129+00:00",
-      "taskIds": [
-        "GF-14",
-        "GF-15"
-      ],
-      "message": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos."
-    },
-    {
-      "id": "gf14-diagonal-pan-review-20261008",
-      "at": "2026-10-08T03:11:21.894800+00:00",
-      "taskIds": [
-        "GF-14"
-      ],
-      "message": "A revisão principal reproduziu pan diagonal alterando o eixo transversal: vertical (100,100)→(130,150), horizontal→(150,130), com momentum transversal indevido. Build integrado interrompido antes do relink; host/provas 60fa18 preservados. Um Luna corrige no owner nativo e amplia os controles, sem marcar aceite."
-    },
-    {
-      "id": "gf14-integrated-root-review-20261008",
-      "at": "2026-10-08T03:29:22.784832+00:00",
-      "taskIds": [
-        "GF-14",
-        "GF-15"
-      ],
-      "message": "Fatia desktop revisada localmente: ScrollView original RN 0.87.1 com um owner nativo para offsets fracionários, pan/momentum, cancelamento, Fabric e pintura. Principal repetiu 25/25 checks no host integrado; controle anterior executou os mesmos inputs e reproduziu exatamente três defeitos diagonal/orientação. Listas 44/44, oráculo de sabotagem rejeitado mesmo com flags verdes e quatro capturas verificadas. scrollToEnd preserva eixo transversal; diagonal e soltura têm velocidade transversal zero. CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos."
     },
     {
       "id": "milestone-0-5-frontier-20261008",
@@ -6101,17 +6140,6 @@
       ],
       "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
-    },
-    {
-      "id": "gf14-interruption-neutral-review-20261008",
-      "at": "2026-10-08T03:59:17.610748+00:00",
-      "taskIds": [
-        "GF-14",
-        "GF-15",
-        "GF-20"
-      ],
-      "message": "Fatia desktop revisada no host integrado com Text, Device Services e Accessibility: ScrollView original RN 0.87.1, 28/28 checks repetidos independentemente. O mesmo bundle no host anterior reproduz exatamente duas falhas de interrupção por roda/contentOffset; controles históricos de diagonal/orientação ficam preservados. Props neutras válidas renderizam e scrollam; recursos ativos fora da fatia falham explicitamente. Listas 44/44 e quatro capturas finais verificadas no mesmo host; CI/CodeRabbit finais e aceite pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
     }
   ]
 }

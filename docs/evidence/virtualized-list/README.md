@@ -127,8 +127,15 @@ offsets; os Controls dão a posição de cada célula no conteúdo.
   envia o offset atual.
 - **Ref e duas roots.** O ref do `FlatList` tem os métodos do `ScrollView` do RN
   sobre a instância nativa; input numa root nunca move as listas da outra;
-  `scrollToEnd()` sem argumentos pede a animação padrão do RN e falha
-  visivelmente; o stop desmonta as duas roots sem erros.
+  no host desta evidência histórica, `scrollToEnd()` sem argumentos pedia a
+  animação padrão do RN e falhava visivelmente; o stop desmontava as duas roots
+  sem erros.
+
+A limitação de animação acima pertence ao host histórico desta fatia. A
+[prova posterior de ScrollView](../scroll-view/README.md) inclui o comando
+animado original; o fixture e o oráculo atuais de listas também verificam seu
+avanço entre frames e sua chegada ao fim. Os demais critérios completos do
+GF-15 continuam abertos.
 
 O [oráculo](../../../tests/virtualized-list-oracle.mjs) refaz tudo a partir dos
 algoritmos do RN e do layout declarado no fixture: a janela e os visíveis exatos

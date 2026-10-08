@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
-import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
+import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
@@ -161,6 +161,33 @@ Vibration.vibrate([0, 100, 50, 100], false);
 Vibration.cancel();
 // @ts-expect-error a vibration pattern is a number or an array of numbers
 Vibration.vibrate("long");
+
+// iOS- and Android-specific APIs are the original pinned modules; on Godot they warn, resolve a fixed value or throw.
+ToastAndroid.show("Saved", ToastAndroid.SHORT);
+ToastAndroid.showWithGravity("Saved", ToastAndroid.LONG, ToastAndroid.TOP);
+const cameraGranted: Promise<boolean> = PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+const cameraStatus: Promise<"granted" | "denied" | "never_ask_again"> = PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+void cameraGranted; void cameraStatus;
+// @ts-expect-error a permission is one of RN's names
+PermissionsAndroid.check("camera");
+ActionSheetIOS.showActionSheetWithOptions({ options: ["Cancel"], cancelButtonIndex: 0 }, (index: number) => { void index; });
+// @ts-expect-error the options are required
+ActionSheetIOS.showActionSheetWithOptions({}, () => {});
+const themedColor = DynamicColorIOS({ light: "white", dark: "black" });
+void themedColor;
+PushNotificationIOS.checkPermissions((permissions) => { const alert: boolean = permissions.alert; void alert; });
+const unavailableBar = <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={0.5} />;
+const unavailableDrawer = <DrawerLayoutAndroid drawerPosition="left" drawerWidth={200} renderNavigationView={() => <View />}><View /></DrawerLayoutAndroid>;
+const unavailableAccessory = <InputAccessoryView nativeID="accessory"><View /></InputAccessoryView>;
+void unavailableBar; void unavailableDrawer; void unavailableAccessory;
+// TouchableNativeFeedback: Pressability's press props and RN's own statics.
+const feedbackProps: TouchableNativeFeedbackProps = { background: TouchableNativeFeedback.Ripple("#ffffff", false), useForeground: false, onPress: () => {} };
+const originalFeedbackProps: import("../../node_modules/react-native/types_generated/index").TouchableNativeFeedbackProps = feedbackProps;
+const feedback = <TouchableNativeFeedback {...feedbackProps}><View /></TouchableNativeFeedback>;
+const canUseForeground: boolean = TouchableNativeFeedback.canUseNativeForeground();
+// @ts-expect-error accessibility props are not verified on this platform
+const feedbackAccessibility = <TouchableNativeFeedback accessibilityLabel="Save"><View /></TouchableNativeFeedback>;
+void originalFeedbackProps; void feedback; void canUseForeground; void feedbackAccessibility;
 
 // Appearance and useColorScheme are the original pinned modules.
 const scheme: ColorSchemeName | null = Appearance.getColorScheme();
