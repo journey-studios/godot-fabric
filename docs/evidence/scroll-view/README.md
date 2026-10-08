@@ -9,9 +9,9 @@ runtime cleanup.
 
 | Run | Result | Scope |
 | --- | ---: | --- |
-| Mounted GF-14 probe | 25/25 | Godot 4.7.2, headless, original RN component |
+| Mounted GF-14 probe | 28/28 | Godot 4.7.2, headless, original RN component |
 | VirtualizedList consumer regression | 44/44 | Existing names and offsets retained, including shelf x=180 |
-| ScrollView contract/native node tests | 3/3 | Public rejection and component-specific Fabric config |
+| ScrollView contract/native node tests | 4/4 | Neutral values, public rejection and component-specific Fabric config |
 | Type check | passed | `tsc-rs` Godot configuration |
 | Native ScrollMotion tests | 44 checks | Release coordinate, frame-partitioned decay, stale velocity, throttle and bounds |
 
@@ -23,6 +23,18 @@ list regression preserves the historical 180 px shelf offset with matching
 logical/Fabric offset and painted content translation. The report also checks
 that stopping the app retires roots, tags, contacts, captures, routes and pending
 work.
+
+An accepted wheel step or changed `contentOffset` during a claimed pan ends the
+drag once at its current offset before applying the external replacement. The
+later Move and Up cannot resume that drag or emit another EndDrag. The wheel
+case applies y=178 after EndDrag at y=130; the prop case applies y=260 after
+EndDrag at y=130. Logical offset, Fabric state and painted content stay aligned.
+
+Host-equivalent RN options mount the original component without a Fabric error
+and still scroll to `(12,24)`, with painted translation `(-12,-24)`. The explicit
+option policy accepts neutral flags, `keyboardDismissMode="none"`, cancellation
+enabled and persistent indicators enabled. Cancellation disabled and fading
+indicators requested with `persistentScrollbar=false` remain unsupported.
 
 The vertical diagonal drag releases at `(80, 150)` and the horizontal diagonal
 drag releases at `(150, 70)`. EndDrag records those exact points, the transverse
@@ -41,12 +53,12 @@ The following identities bind the result to its inputs:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| Loaded `addons/fabric_godot.dylib` | `4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445` |
-| `.deps/build/native-sdk-build.json` | `76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c` |
-| Mounted probe bundle | `c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec` |
-| GDScript probe source | `c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988` |
-| Mounted report | `925ba5e2dd87f03dc4c15137aff3bb27f18819dad2a70d283369b6b659bff1ae` |
-| Mounted log | `6e0a8f1ff517aa8ff78ebddd9b6eaf5d5f6a847819a96403a77fad9230131279` |
+| Loaded `addons/fabric_godot.dylib` | `bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe` |
+| `.deps/build/native-sdk-build.json` | `a3bd2e88322cc60e748096f6740c9e017671a9b733836e82b83c1545f4c12af5` |
+| Mounted probe bundle | `29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b` |
+| GDScript probe source | `3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915` |
+| Mounted report | `a7a104a84243e573738ebec66e124660d3e5f1a43c1bd47ce4a100343e098adc` |
+| Mounted log | `70bbf5fbe24d1edf4bd76f5be39eda6f5f285fb87b65eab2c2451165cf110865` |
 
 The build record's host digest matches the loaded library and remained stable
 during the probe. All eight compiled native source pins in the receipt match
@@ -59,26 +71,32 @@ compact machine-readable identities and results.
 
 The root-owned [independent receipt](root-independent.json) is preserved as
 pre-integration evidence for the earlier 22-check bundle and hosts built before
-Device Services integration. It is not a repeat of this 25-check integrated
+Device Services integration. It is not a repeat of this 28-check integrated
 host. Its original artifacts remain under ignored
 `build/scroll-view-pre-integration-60fa18/`; this receipt records the integrated
 host and current sources.
 
-The root then repeated the integrated 25-check bundle in two isolated projects.
-The current host passes 25/25. The preceding `60fa18ed` host executes the same
-bundle and probe and fails exactly the two diagonal-axis checks and orientation
-cancellation, with no unrelated error or cleanup failure. The
-[integrated independent receipt](root-integrated.json) derives release
-coordinates, transverse velocity, settled target, Fabric state, paint and event
-order from the reports rather than relying only on their check flags. It also
-independently verifies the current list oracle, forced-green sabotage rejection
-and all four graphical artifacts. This closes the local review; hosted CI and
-CodeRabbit acceptance remain open.
+The root-owned [integrated independent receipt](root-integrated.json) preserves
+the earlier 25-check comparison: host `4f28ed0f` passes; host `60fa18ed` fails
+exactly the two diagonal controls and orientation cancellation.
+
+The [interruption receipt](root-interruption.json) binds an independent isolated
+28-check repeat to the current host. The frozen `4f28ed0f` host executes the same
+bundle and probe and fails exactly the wheel and `contentOffset` interruption
+controls, without unrelated errors or cleanup failures. Report derivation checks
+the EndDrag ordering, logical/Fabric/paint offsets and retirement before later
+Move and Up, rather than trusting check flags alone. Original pre-fix artifacts
+remain under ignored `build/scroll-view-pre-wheel-cancel-4f28/`.
 
 The [committed producer proof](committed-source.json) compares every one of the
-108 native build input files and 18 bundle producer files against committed
-Git blobs. It separately verifies the installed pinned RN inputs. Receipt-only
+112 native build input files and 18 bundle producer files against committed
+Git blobs. It separately verifies six installed pinned RN inputs. Receipt-only
 commits after the recorded producer commit do not change the tested sources.
+
+Affected integrated regressions also pass: Accessibility metadata 80/80 and
+594 core assertions in 11 groups, Text layout 76/76, native modules 76/76 and
+Device Services 65/65. These are local desktop checks; the headless accessibility
+lane does not certify an OS tree or assistive technology hardware.
 
 ## Windowed graphical capture
 

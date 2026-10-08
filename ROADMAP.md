@@ -2068,7 +2068,7 @@ paint, Fabric state, pan and momentum. The desktop host preserves the transverse
 offset on `scrollToEnd`, following the pinned Android axis policy. A component
 specific registered config retains `horizontal` in Fabric create/diff payloads.
 
-Local evidence includes 25 mounted checks repeated independently against current
+Local evidence includes 28 mounted checks repeated independently against current
 and preceding hosts with identical inputs, the unchanged 44-check list oracle,
 44 native motion checks, four windowed macOS captures and a retained onLayout
 sabotage rejected by the oracle. Roots, tags, captures, contacts and pending work
@@ -2080,9 +2080,13 @@ hardware input, broad RN differential parity and mobile exports remain open.
 
 Diagonal gestures preserve their transverse offset through release and momentum;
 orientation replacement cancels the claimed gesture once through the native
-owner. The preceding host fails exactly those three new controls. The earlier
-22-check pre-integration comparison remains separately labeled historical
-evidence. Public options without a Godot implementation are explicitly rejected.
+owner. The earlier 25-check comparison retains exactly three diagonal/orientation
+failures on its preceding host. The final 28-check comparison instead reproduces
+exactly two interruption failures on host `4f28ed0f`: wheel and changed
+`contentOffset` must retire the drag before replacing its offset, and later Move
+and Up cannot resume it. The 22-check pre-integration comparison remains
+separately labeled historical evidence. Host-equivalent neutral RN options pass
+through one explicit policy; active options without a Godot implementation fail.
 
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
 

@@ -245,3 +245,53 @@ See [the integrated independent receipt](../evidence/scroll-view/root-integrated
 The thermo-nuclear local structural and behavioral review is satisfied for this
 desktop slice. Final publication, CI and CodeRabbit review are still required;
 no GF-14 checkpoint or full-contract acceptance follows from local evidence alone.
+
+## Interrupted drag and neutral option review
+
+A later root review reproduced two further defects on retained host `4f28ed0f`.
+Wheel replacement moved y=130 to 178 and changed `contentOffset` moved it to 260,
+but both left the pan candidate claimed while motion was Idle. Subsequent Move
+was swallowed and EndDrag arrived only on Up at the replacement offset. The
+earlier 25-check review did not cover these interruptions.
+
+The canonical native interruption owner now retires a claimed pan before
+canceling motion or applying the external offset. Duplicate command retirement
+branches disappear; canceled finish uses the existing motion cancellation
+directly. It adds no candidate flag, gesture mode or fallback owner.
+
+The CodeRabbit boundary finding also exposed an overly broad unsupported-option
+set. One explicit option policy now distinguishes host-equivalent values from
+active unsupported requests. Neutral false flags, keyboard dismissal `none`,
+touch cancellation enabled and persistent indicators enabled pass through.
+`canCancelContentTouches=false` and `persistentScrollbar=false` request behavior
+the host does not provide and remain rejected. Valid active options and callback
+types have positive and negative boundary coverage. A mounted original RN
+component using neutral values scrolls to `(12,24)` without errors.
+
+After integrating Accessibility from main #57, the root independently executes
+the final 28-check bundle `29f2c928` and probe `3c42b5ef` on host `bbb683e2` and
+retained host `4f28ed0f`, with identical framework bytes. Current passes 28/28;
+preceding executes all 28 and fails exactly the two interruption controls with
+two expected check errors. Both fully retire runtime and pointer ownership.
+Independent report derivation confirms EndDrag at y=130 before scroll to 178
+or 260, retired candidates before later Move and Up, one EndDrag and no new
+momentum. Logical offset, Fabric state and painted translation agree.
+
+The root verifies the 44-check list oracle and exact three-failure sabotage;
+forced-green flags still fail that oracle. All four current graphical artifacts
+match their receipts. Independently read PNG pixels inside `(554,109)` are
+`(29,78,216)` and outside `(680,109)` are `(245,248,250)`, confirming clipping.
+The integrated Accessibility oracle independently passes 80 metadata checks.
+Other affected regressions pass 594 Accessibility core assertions in 11 groups,
+76 Text layout checks, 76 native module checks and 65 Device Services checks.
+No OS accessibility tree or hardware certification follows from these lanes.
+
+All 112 native producers and 18 bundle producers match committed Git blobs at
+`0273dc38`; six installed RN inputs match the pinned sources. The complete
+contract gate passes 331 Node and 13 Python tests, with static, type, publication
+and dashboard gates passing. The implementation retains canonical ownership
+and the structural simplifications from this review. Final hosted acceptance
+remains pending; no GF-14 checkpoint is accepted by this local review.
+
+See [the independent interruption proof](../evidence/scroll-view/root-interruption.json)
+and [committed producers](../evidence/scroll-view/committed-source.json).

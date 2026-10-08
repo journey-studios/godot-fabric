@@ -11,16 +11,24 @@
   "commands": [
     "npm run test:scroll-view",
     "npm run test:lists",
-    "npm run type-check",
-    ".deps/build/scroll_motion_test"
+    "node scripts/scroll-view-list-sabotage.mjs",
+    ".deps/build/scroll_motion_test",
+    "npm run test:accessibility",
+    ".deps/build/accessibility_core_test",
+    "npm run test:text-layout",
+    "npm run test:modules",
+    "npm run test:device-services",
+    "node scripts/scroll-view-graphics.mjs",
+    "npm run type-check"
   ],
   "mountedProbe": {
-    "passed": 25,
-    "total": 25,
+    "passed": 28,
+    "total": 28,
     "cleanup": true,
     "checkNames": [
       "original ScrollView mounts with content extent, default indicator, and RN Context",
       "Godot preserves horizontal through RCTScrollView create/diff only",
+      "mounted original ScrollView accepts neutral RN options and still scrolls",
       "fractional offset agrees across logical state, Fabric state, and content transform",
       "RN DOM measurement follows the fractional painted offset",
       "omitted animated defaults to upstream animation",
@@ -29,6 +37,8 @@
       "native routed pan changes offset and completes one drag",
       "RN receives one measured BeginDrag, EndDrag, MomentumBegin and MomentumEnd in order",
       "native takeover cancels the child pointer and touch stream once",
+      "wheel replacement retires a claimed pan once before later pointer movement and Up",
+      "contentOffset replacement retires a claimed pan once before later pointer movement and Up",
       "fast release enters momentum before the next accepted Down",
       "stationary Down interrupts momentum once without an offset jump",
       "a row-zero tap below the pan threshold remains a tap",
@@ -48,32 +58,32 @@
     "files": {
       "host": {
         "path": "addons/fabric_godot.dylib",
-        "sha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445"
+        "sha256": "bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe"
       },
       "buildReceipt": {
         "path": ".deps/build/native-sdk-build.json",
-        "sha256": "76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c",
+        "sha256": "a3bd2e88322cc60e748096f6740c9e017671a9b733836e82b83c1545f4c12af5",
         "stableDuringProbe": true
       },
       "bundle": {
         "path": "build/scroll-view-gf14-probe.js",
-        "sha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec"
+        "sha256": "29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b"
       },
       "probe": {
         "path": "tests/scroll-view-probe.gd",
-        "sha256": "c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988"
+        "sha256": "3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915"
       },
       "report": {
         "path": "build/scroll-view-gf14-report.json",
-        "sha256": "925ba5e2dd87f03dc4c15137aff3bb27f18819dad2a70d283369b6b659bff1ae"
+        "sha256": "a7a104a84243e573738ebec66e124660d3e5f1a43c1bd47ce4a100343e098adc"
       },
       "log": {
         "path": "build/scroll-view-gf14.log",
-        "sha256": "6e0a8f1ff517aa8ff78ebddd9b6eaf5d5f6a847819a96403a77fad9230131279"
+        "sha256": "70bbf5fbe24d1edf4bd76f5be39eda6f5f285fb87b65eab2c2451165cf110865"
       },
       "bundleReceipt": {
         "path": "build/scroll-view-gf14-probe-bundle.json",
-        "sha256": "266fa9134d0a2db80e30d5acc871b049045ba5dd2ec0b873e9e5630fd6700f6e"
+        "sha256": "05c89cc2ceb473af20a2f8d6103a6ecaf9fcb63c4abd52dc53237f6674dd7d30"
       }
     },
     "hostStableDuringProbe": true,
@@ -81,7 +91,7 @@
     "compiledSourcePinsMatch": true,
     "compiledSourcePins": {
       "native/application_runtime.cpp": {
-        "sha256": "196856d792f3a31fbbb97e13d574d23622b85d342fb0093d840627ccbac162cb",
+        "sha256": "6428a09c2292606ef7141feed93712e7c526d0145d930f584505e2c7fddec2e9",
         "matchesBuildReceipt": true
       },
       "native/pointer_adapter.cpp": {
@@ -93,7 +103,7 @@
         "matchesBuildReceipt": true
       },
       "native/scroll_adapter.cpp": {
-        "sha256": "b73bc8328146e663b6cd23e413912e4ae726b8a9b737339a3ff41ed82f1f1cd9",
+        "sha256": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
         "matchesBuildReceipt": true
       },
       "native/scroll_adapter.h": {
@@ -114,20 +124,20 @@
       }
     },
     "wrapperSources": {
-      "tests/scroll-view-fixture.jsx": "ee3a7ac8000a8a96d0a48d975f9da6542070d7c27efb034d6550cd1b3f998f7d",
-      "tests/scroll-view-probe.gd": "c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988",
-      "tests/scroll-view-native.test.mjs": "7910eead6e061436f03ab3ca21f743dc77a3f9cd2eff0e6405b529617dfdedb9",
+      "tests/scroll-view-fixture.jsx": "166c1a2badbdf64a14336808351b80af60ee9dd1fda20ecad4f02c1a4b2df0ce",
+      "tests/scroll-view-probe.gd": "3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915",
+      "tests/scroll-view-native.test.mjs": "12f22e10835e41ed9fb4e37cb5cb94fccaaf2215469d4f1067e7b549c1c6cd32",
       "scripts/scroll-view-bundle.mjs": "545aa978e838a5186f183b5639f7f4fc2e229e2ce56a5c67a7f36261642450d0",
       "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
       "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
-      "src/scroll-view-contract.mjs": "e1d8a9f543cc4a0eb834d605468dd3a990be3b91ad94360ac6110d0db1dc04db",
-      "src/react-native-platform.jsx": "ba6dbcdbab5ce090d7d5a02f30e91bb9d34b60b3cd5cb25e80dbed5156fa5965",
-      "types/react-native.ts": "702c9ce6ad49651fac9ea461791fd1ff8866459fef1d1e1c720de33551e8df47",
-      "tests/types/consumer.tsx": "aa83d8250ddcf37e3715234ab32adbcab8cf6b2ff1406733f47e13d8651cd079",
-      "native/application_runtime.cpp": "196856d792f3a31fbbb97e13d574d23622b85d342fb0093d840627ccbac162cb",
+      "src/scroll-view-contract.mjs": "a0644efdb267baf478add4192dda509c3c12c8f8825b2bae6ccfea0c5547ad25",
+      "src/react-native-platform.jsx": "009c43b8e620b715638df3190b79c0077c08644609c4b409ca963ec1657643bc",
+      "types/react-native.ts": "04290de06d602479bf657afed69e573e44bc37e2e172c5e43403ffd12e47f46c",
+      "tests/types/consumer.tsx": "7c08876075341a2d46978e9d72d54f91baf6f3ea2a7ef2f8a87262260fea52ac",
+      "native/application_runtime.cpp": "6428a09c2292606ef7141feed93712e7c526d0145d930f584505e2c7fddec2e9",
       "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
       "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
-      "native/scroll_adapter.cpp": "b73bc8328146e663b6cd23e413912e4ae726b8a9b737339a3ff41ed82f1f1cd9",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
       "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
       "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
       "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
@@ -178,6 +188,30 @@
         ]
       },
       "orientationChangeCancelsClaimedPan": true
+    },
+    "externalReplacementCancellation": {
+      "wheel": {
+        "claimedOffsetY": 130,
+        "endY": 130,
+        "replacementOffsetY": 178,
+        "laterMoveAndUpKeepOffset": true,
+        "endCountIncrease": 1,
+        "momentum": false
+      },
+      "contentOffset": {
+        "claimedOffsetY": 130,
+        "endY": 130,
+        "replacementOffsetY": 260,
+        "laterMoveAndUpKeepOffset": true,
+        "endCountIncrease": 1,
+        "momentum": false
+      }
+    },
+    "compiledSourcePinCount": 8,
+    "buildInputs": {
+      "commit": "0273dc38cab2b2aaf9fb5a7accf4904d3f820ca7",
+      "nativeBuildInputPinCount": 112,
+      "experimentalExternalAbiCertified": false
     }
   },
   "virtualizedListRegression": {
@@ -188,26 +222,33 @@
     "shelfPaintedContentX": -180,
     "files": {
       "virtualized-list-current-report.json": {
-        "sha256": "4efaa1a68c8171cdba207f8ddf985ab25830089514f3a4e409a40dcd2a87fc3b"
+        "sha256": "9da47215795cf184cc1481dafffa5f2be78b74c445d348d71cf1613ade95abbd"
       },
       "virtualized-list-current-bundle.json": {
-        "sha256": "b107a607746be8a58a8e32762c8bbdb2c44c8c93b28e13ad7fd9e144f978f6d5"
+        "sha256": "817480471b6ecd79421600a29b61a00973636b8f67a28aadd5488887bd294d95"
       },
       "virtualized-list-current.js": {
-        "sha256": "c79455ede63656262fc7c42632839296e679fc5c6710f6493be1441fbc506367"
+        "sha256": "8fc2fca272c66bbfafea9fa91fa13e3e0be198a6ebdac607666bedf76e5763b2"
       },
       "virtualized-list-current.log": {
-        "sha256": "8f6d867c97394cc9a4e864e28970ff9e22578dd655ce7c1acb8b01cde55adb91"
+        "sha256": "e636d4304ad16106fda33fd1ab6e2b580f60bffb02b85829d84d5d9a2897a6d1"
       }
-    }
+    },
+    "hostSha256": "bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe",
+    "bundleSha256": "8fc2fca272c66bbfafea9fa91fa13e3e0be198a6ebdac607666bedf76e5763b2"
   },
   "otherGates": {
-    "scrollViewContractAndNativeTests": "3/3 passed",
-    "typeCheck": "passed",
+    "scrollViewContractAndNativeTests": "4/4 top-level tests passed",
+    "virtualizedListRegression": "44/44 passed; historical offsets retained",
+    "virtualizedListSabotage": "44 executed; exactly 3 derived feed/viewability failures rejected by oracle",
+    "typeCheck": "passed on integrated tree",
     "scrollMotionNativeChecks": "44 passed",
-    "windowedCapture": "4/4 passed; separate macOS windowed pixel/clipping proof",
-    "textNativeModules": "76 checks passed",
-    "deviceServices": "passed"
+    "accessibilityHeadless": "80/80 passed",
+    "accessibilityCore": "594 assertions passed in 11 groups",
+    "textLayout": "76 checks passed",
+    "nativeModules": "76 checks passed",
+    "deviceServices": "65 checks passed",
+    "windowedCapture": "4/4 passed; separate macOS windowed pixel/clipping proof"
   },
   "limits": [
     "Mounted functional probe is headless; the separate capture is Godot macOS windowed rendering.",
