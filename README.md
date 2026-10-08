@@ -413,6 +413,17 @@ touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-l
 cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
 [Evidence](docs/evidence/device-services/README.md); [research](docs/research/device-services.md).
 
+The [performance baselines](docs/research/performance.md) (GF-30's first slice) add a `performance` section to
+the application snapshot: exact counters of the native views, Hermes' live heap after a forced collection, and the
+host's pump split into JS, mount and layout phases. A soak mounts and unmounts four workloads 20 times each,
+headless (a `View`, `Button`/`TextInput`/`Switch`, a react-native-chart-kit chart and a 120-row `FlatList`):
+after every cycle the SceneTree, Godot's orphan count and the host's native views are back to the baseline of the
+run, and the live heap at rest rises at most 2,048 bytes in the steady state (0 to 312 measured). 41 checks, recomputed
+by an independent oracle from the samples the host reports; the preceding host fails exactly 27 and three retained sabotages (a Control never freed,
+a frozen heap reading, a phase counted twice) are rejected. Durations, the resident memory and Godot's static
+memory are recorded with their provenance and never judged; target-device budgets, text shaping, 10,000 rows,
+graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -687,6 +698,7 @@ npm run test:pointers:interest          # original Map query and native View poi
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
+npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

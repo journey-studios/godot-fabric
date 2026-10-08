@@ -23,6 +23,7 @@
 #include "activity_indicator_view.h"
 #include "timer_registry.h"
 #include "frame_clock.h"
+#include "performance_metrics.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
 #include "native_animated.h"
@@ -56,12 +57,14 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <hermes/hermes.h>
 #include <jsi/JSIDynamic.h>
+#include <jsi/instrumentation.h>
 #include <folly/json.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/core/EventQueueProcessor.h>
 #include <react/renderer/core/ShadowNode.h>
 #include <react/renderer/runtimescheduler/RuntimeScheduler.h>
 #include <react/renderer/runtimescheduler/RuntimeSchedulerBinding.h>
+#include <react/renderer/telemetry/TransactionTelemetry.h>
 #include <react/renderer/uimanager/UIManager.h>
 #include <react/renderer/uimanager/UIManagerBinding.h>
 #include <react/renderer/uimanager/UIManagerDelegate.h>
@@ -97,6 +100,16 @@ namespace {
 double now_ms() {
   return std::chrono::duration<double, std::milli>(
       std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+// RN's own timing of the layout that a mounted revision went through, which the host does not
+// bracket: zero when the revision recorded none.
+double layout_ms(const rn::TransactionTelemetry &telemetry) {
+  const auto start = telemetry.getLayoutStartTime();
+  const auto end = telemetry.getLayoutEndTime();
+  if (start == rn::kTelemetryUndefinedTimePoint || end == rn::kTelemetryUndefinedTimePoint || end < start) {
+    return 0;
+  }
+  return std::chrono::duration<double, std::milli>(end - start).count();
 }
 std::string utf8(const String &value) { return value.utf8().get_data(); }
 String gd(const std::string &value) { return String::utf8(value.c_str()); }
@@ -244,6 +257,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   double refresh_rate{};
   fabric_godot::FrameClock::Pacing pacing{fabric_godot::FrameClock::Pacing::Time};
   const char *pacing_source{"unknown"};
+  // What the host counts and times of its own work (performance_metrics.h), reported by status().
+  // A validation run asks, through the application, for a full garbage collection before every
+  // heap reading, so that two readings compare what is live and not when the collector last ran.
+  fabric_godot::PerformanceMetrics performance;
+  std::function<bool()> collect_garbage_on_status;
+  // The section reports aggregates (counts, totals, maxima and percentiles). The samples the
+  // percentiles come from are about 12 KB on every status(), so only a validation run that asks
+  // for them (validation_performance_samples) gets them.
+  std::function<bool()> performance_samples;
   struct Mounted {
     Control *control;
     rn::ShadowView shadow;
@@ -654,6 +676,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto *host = surface.host();
     if (!host || !host->is_inside_tree()) { unmount(id); return; }
     surface.start_pending = false;
+    fabric_godot::SeriesTimer timing(performance.surface_start(), now_ms);
     rn::LayoutConstraints constraints;
     constraints.minimumSize = constraints.maximumSize = {static_cast<float>(surface.size.x), static_cast<float>(surface.size.y)};
     rn::LayoutContext layout;
@@ -1065,6 +1088,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void pump(bool frame_tick = false) {
     ExecutionScope execution(*this);
     if (stopped || stop_requested) return;
+    fabric_godot::PumpScope timing(performance, now_ms);
+    // The JS turns of this pump, which the phase accounting separates from the mounting
+    // callbacks and layout that a React commit inside them runs.
+    fabric_godot::PhaseScope js(performance, fabric_godot::Phase::Js, now_ms, false);
     // A React commit below can enqueue PointerCancel after this pump's beat.
     // Keep that pointer registered until a later beat has delivered its terminal
     // event. Do not consume the live set up front: exceptions must retain cleanup.
@@ -1094,7 +1121,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       }
       beat->tick();
       // Finish the preceding JS turn's microtasks before due native timers.
+      js.open();
       runtime->drainMicrotasks();
+      js.close();
       // The frame clock decides whether this Godot frame is a tick: the display
       // link RN's frame consumers run on never fires twice within a refresh period.
       // A consumer is a pending frame callback or a Native Animated backend with an
@@ -1107,6 +1136,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       std::vector<int> frame_ids;
       if (tick)
         for (const auto &[id, callback] : frame_callbacks) frame_ids.push_back(id);
+      js.open();
       for (int id : frame_ids) {
         if (stop_requested) break;
         auto callback = frame_callbacks.extract(id);
@@ -1116,6 +1146,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         catch (const std::exception &error) { fail(error.what()); }
         if (!stop_requested) runtime->drainMicrotasks();
       }
+      js.close();
       // One native animation frame per tick, at the frame callbacks' time: RN's
       // backend runs its queued operations, drivers and prop updates.
       if (tick && native_animated && !stopping && !stop_requested) {
@@ -1123,15 +1154,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         catch (const std::exception &error) { fail(error.what()); }
       }
       // Bound a frame's work. Timers created by a callback run on a later tick.
+      js.open();
       if (!stopping && !stop_requested)
         for (auto id : timer_registry->take_due(now_ms())) {
           if (stop_requested) break;
           dispatching_timer = id;
           timer_manager->callTimer(id);
         }
+      js.close();
       // Requests advance before the drain, so the events they produce are delivered
       // in this pump; one pump reads at most a megabyte of response bodies.
       if (!stopping && !stop_requested) networking->poll(1024 * 1024);
+      js.open();
       for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
@@ -1140,6 +1174,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (!stop_requested) runtime->drainMicrotasks();
       }
       if (!stop_requested) runtime->drainMicrotasks();
+      js.close();
       // A bounded work drain can leave the induced beat callback in the queue.
       // In that case defer retirement rather than erase a still-queued target.
       if (!stop_requested && work.empty())
@@ -1206,6 +1241,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     auto found = roots.find(id);
     if (found == roots.end()) return;
+    fabric_godot::SeriesTimer timing(performance.surface_retire(), now_ms);
     auto &root = *found->second;
     root.stopping = true;
     retire_pointers(id);
@@ -1246,6 +1282,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     root.stopped = true;
     auto *host = root.host();
     auto retired = folly::parseJson(snapshot(id));
+    performance.retire_root(root.commits, root.creates, root.deletes, root.updates);
     roots.erase(id);
     if (roots.empty() && modal_stack.is_valid()) {
       modal_stack->unregister_runtime(runtime_id);
@@ -1986,8 +2023,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   void uiManagerDidFinishTransaction(std::shared_ptr<const rn::MountingCoordinator> coordinator, bool) override {
     ExecutionScope execution(*this);
+    fabric_godot::PhaseScope mounting(performance, fabric_godot::Phase::Mount, now_ms);
     auto transaction = coordinator->pullTransaction();
     if (!transaction) return;
+    // The commit that produced this revision laid it out before it reached this callback: RN timed
+    // that layout, and it was part of the work that was running around the callback.
+    mounting.charge_enclosing(fabric_godot::Phase::Layout, layout_ms(transaction->getTelemetry()));
     auto root_entry = roots.find(transaction->getSurfaceId());
     if (root_entry == roots.end() || root_entry->second->stopping) return;
     auto &surface = *root_entry->second;
@@ -2328,6 +2369,59 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void uiManagerDidSetViewSnapshot(rn::Tag, rn::Tag, rn::SurfaceId) override { fail("View transitions are not implemented"); }
   void uiManagerDidClearPendingSnapshots() override {}
 
+  // The performance section of status(): exact counters of the native tree, Hermes' heap and the
+  // durations the host measured, each with the samples its percentiles come from.
+  static folly::dynamic durations_snapshot(const fabric_godot::DurationSeries &durations, bool samples) {
+    folly::dynamic result = folly::dynamic::object("count", static_cast<int64_t>(durations.count()))
+        ("rejected", static_cast<int64_t>(durations.rejected()))("totalMs", durations.total_ms())
+        ("maxMs", durations.max_ms())("p50Ms", durations.percentile(50))("p95Ms", durations.percentile(95))
+        ("p99Ms", durations.percentile(99));
+    if (samples) {
+      auto window = folly::dynamic::array();
+      for (double ms : durations.window()) {
+        window.push_back(ms);
+      }
+      result["windowMs"] = std::move(window);
+    }
+    return result;
+  }
+  folly::dynamic performance_snapshot() {
+    const auto &retired = performance.retired();
+    int64_t commits = static_cast<int64_t>(retired.commits), creates = static_cast<int64_t>(retired.creates),
+        deletes = static_cast<int64_t>(retired.deletes), updates = static_cast<int64_t>(retired.updates);
+    for (const auto &[id, root] : roots) {
+      commits += root->commits;
+      creates += root->creates;
+      deletes += root->deletes;
+      updates += root->updates;
+    }
+    bool collected = false;
+    if (collect_garbage_on_status && collect_garbage_on_status()) {
+      runtime->instrumentation().collectGarbage("godot-fabric performance status");
+      collected = true;
+    }
+    const auto info = runtime->instrumentation().getHeapInfo(false);
+    const bool samples = performance_samples && performance_samples();
+    folly::dynamic heap = folly::dynamic::object();
+    for (const auto &entry : std::map<std::string, int64_t>(info.begin(), info.end())) {
+      heap[entry.first] = entry.second;
+    }
+    folly::dynamic phases = folly::dynamic::object();
+    for (size_t index = 0; index < fabric_godot::phase_count; ++index) {
+      const auto phase = static_cast<fabric_godot::Phase>(index);
+      phases[fabric_godot::phase_name(phase)] = durations_snapshot(performance.phase(phase), samples);
+    }
+    return folly::dynamic::object
+        ("counters", folly::dynamic::object("commits", commits)("creates", creates)("deletes", deletes)
+            ("updates", updates)("nativeViews", static_cast<int64_t>(views.size()))
+            ("liveRoots", static_cast<int64_t>(roots.size()))("retiredRoots", static_cast<int64_t>(retired.roots)))
+        ("hermes", folly::dynamic::object("source", "jsi::Instrumentation::getHeapInfo")
+            ("collectedBeforeReading", collected)("heap", std::move(heap)))
+        ("pump", durations_snapshot(performance.pump(), samples))("phases", std::move(phases))
+        ("surfaces", folly::dynamic::object("start", durations_snapshot(performance.surface_start(), samples))
+            ("retire", durations_snapshot(performance.surface_retire(), samples)))
+        ("windowSize", static_cast<int64_t>(fabric_godot::DurationSeries::window_size));
+  }
   folly::dynamic status() {
     folly::dynamic result = folly::dynamic::object("runtimeId", static_cast<int64_t>(runtime_id))
         ("rootCount", roots.size())("bundleEvaluations", bundle_evaluations)("stopped", stopped)
@@ -2364,6 +2458,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("pacingSource", pacing_source)("frames", static_cast<int64_t>(clock.frames))
         ("ticks", static_cast<int64_t>(clock.ticks))("skippedFrames", static_cast<int64_t>(clock.skipped))
         ("lastFrameMs", clock.last_frame_ms)("lastTickMs", clock.last_tick_ms);
+    result["performance"] = performance_snapshot();
     result["hostPhasePending"] = host_phase_pending;
     result["stopRequested"] = stop_requested;
     result["pendingRootRetirements"] = pending_retirements.size();
@@ -2472,10 +2567,13 @@ ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::functio
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
     std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
     std::function<std::string()> trusted_authorities, std::function<double()> clock_offset_ms,
-    std::shared_ptr<AdapterRegistry> adapters, std::shared_ptr<DeviceServices> device_services)
+    std::shared_ptr<AdapterRegistry> adapters, std::shared_ptr<DeviceServices> device_services,
+    std::function<bool()> collect_garbage_on_status, std::function<bool()> performance_samples)
     : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services),
           lifecycle, appearance, std::move(trusted_authorities), std::move(clock_offset_ms), std::move(adapters),
           std::move(device_services))) {
+  impl->collect_garbage_on_status = std::move(collect_garbage_on_status);
+  impl->performance_samples = std::move(performance_samples);
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
