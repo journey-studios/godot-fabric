@@ -3334,8 +3334,9 @@ and its getters reject with RN's own `NativeAccessibilityManagerIOS is not avail
 does not have) fail 12, 17, 8 and 2 checks and the oracle rejects each; the missing resolver alias breaks the bundle in the
 platform-seams test (17 tests). The example passes 10 headless checks, 10 with the native renderer and 12 with two captures.
 
-Open: announcements and programmatic focus are slice 2b (they need a spike on whether AccessKit on macOS announces live
-regions); text scale and `fontScale` wait for a content size category that Godot does not have; the mobile servers report
+Open: announcements and programmatic focus were slice 2b, now delivered in
+[Accessibility announcements through AccessKit](#accessibility-announcements-through-accesskit-2026-10-08) (the spike found
+that AccessKit's macOS adapter speaks a live node's value; the focus stays refused, with the reason); text scale and `fontScale` wait for a content size category that Godot does not have; the mobile servers report
 `-1` today and the iOS and Android bridges are GF-34 and GF-35; no real VoiceOver, Reduce Motion, Reduce Transparency or
 Increase Contrast change is exercised (headless reads `-1`, so a swap of two existing `DisplayServer` methods is not
 distinguishable there); there is no graphical CI run; and the hosted CI run of the new step and the Pages publication are
@@ -3478,6 +3479,78 @@ seams (17) pass on that tree. After merging main (`bf1e9e9`, GF-30) the host was
 were refreshed and the suite repeated its 61 checks (47 and 27 on the previous SDK and host, the eight sabotages
 rejected), and the text original and the 35 examples passed again. Only the first-slice checkpoint was closed, earlier,
 by the first slice; no whole GF, other checkpoint, weight or denominator closes.
+
+### Accessibility announcements through AccessKit (2026-10-08)
+
+GF-20 stays **In progress**; this is its second slice, part b, and it closes no checkpoint: the first slice already
+closed `slice`, and the full item, contract, parity and targets remain open. The
+[announcements evidence](docs/evidence/accessibility-announcements/README.md) makes `announceForAccessibility` and
+`announceForAccessibilityWithOptions` of React Native's original `AccessibilityInfo` speak through AccessKit on macOS and
+closes the screen reader's focus with the reason it cannot be honored: **69 headless checks** in two applications of one
+bundle, and **12 checks** on a local graphical lane. Nothing there says that VoiceOver spoke: the proof reaches the call
+AccessKit makes to AppKit.
+
+An announcement is a **new** static text element under the `FabricApplication`'s own accessibility element, with the text
+as its `value` and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`; `'default'`, an absent priority and a string iOS
+ignores are polite), made inside the accessibility update (`NOTIFICATION_ACCESSIBILITY_UPDATE`) and freed outside the
+update after it, because Godot refuses `free_element` inside one. AccessKit's macOS adapter posts
+`NSAccessibilityAnnouncementRequestedNotification` for a live node that has a value, and a value equal to the one before
+does not speak again, so every announcement is an element of its own; a node with only a name posts nothing (measured),
+which is what Godot's own `Window::accessibility_announcement` sets. **One announcement per update, in the order asked:**
+the three announcements of one frame, put in one update, were posted by AccessKit as `Second`, `First`, `Third`; a spike
+that wrote three elements in one update posted `First`, `Second`, `Third` in its first run and `Third`, `First`, `Second`
+when it was run again for the evidence (three runs, three orders), and on iOS, with no `queue`, each announcement
+interrupts the one before, so the user hears the last one asked for. The host therefore publishes one per update, a frame
+apart, and the local lane measures `First`, `Second`, `Third`. With no screen reader (`SceneTree.is_accessibility_enabled()`,
+`AccessibilityServer.is_supported()` and an element for the application) the call returns without error, as on iOS and
+Android, and the announcement is counted and dropped, never kept for a screen reader that turns on later; an announcement
+that waits more than 120 pumps for an update that does not come is dropped too, and so is an empty text (AccessKit clears an
+empty value). `queue: true` throws `E_UNSUPPORTED` (the macOS API has no announcement queue), `priority: 'low'` throws
+`E_UNSUPPORTED` (AccessKit has only polite and assertive), and an option of the wrong type throws `E_ARGUMENT`.
+`setAccessibilityFocus` and the `focus` event of the `UIManager` fail with the reason: Godot has a single focus, and
+moving the screen reader's is `grab_focus()`, which would blur a focused `TextInput` where iOS's
+`UIAccessibilityLayoutChangedNotification` does not. `announcementFinished` stays silent: macOS, AccessKit and Godot have no
+end-of-speech signal, and Godot's text to speech is not the screen reader (it speaks without one).
+
+The announcements are a pure `Announcer` with a port (`native/accessibility_announcement_core.h`, with a test of its own,
+independent of the settings' core), a port into Godot's `AccessibilityServer` by name whose every name and constant is asked
+of the ClassDB (`native/accessibility_announcer.{h,cpp}`), a `case` of the `FabricApplication`'s notification and the
+frame's `pump` in `AccessibilityInfo::poll`. A validation meta (`validation_accessibility_announcer`) replaces the server by
+a recorder that runs the update the engine would run and records every call; the probe never sends the notification.
+
+The probe has application A with the recorder (36 steps, eleven of them announcements: a published one, the priorities,
+the same text twice, a batch of three, an empty text and one with accents and CJK, the refusals, the focus, no screen reader,
+the screen reader leaving, an update that never comes, no element, and a stop with one waiting) and application R with
+Godot's real backend, where headless has no screen reader, so announcements are dropped, `published` stays 0 and `osTree` is
+false. An independent oracle replays the announcer as a state machine and compares the counters and every recorded call, and
+holds the announcement API names to its own list of the engine's. The preceding host (`bd0c6f71`, main `bf1e9e9`, which has
+the settings and not the announcements) fails exactly the **15 normative checks of 69**. **Eight retained host sabotages**
+(the four of the settings, and four of the announcements: the text in the name, the priorities swapped, no screen-reader gate,
+one element reused) fail 12, 17, 8, 2, 5, 7, 6 and 6 checks and the oracle rejects each. The two pure cores pass their tests
+(14 and 15 functions). A **local graphical lane** (a macOS window session, no permission, not part of hosted CI) interposes
+`NSAccessibilityPostNotificationWithUserInfo` in the running Godot and measures what AccessKit posts: each announcement once,
+with its text and the priority level (50 polite, 90 assertive), the three of one frame in order; the preceding host fails its
+8 post checks and the sabotages of the name, the priorities and the reused element are rejected. The example passes 12
+headless checks, 12 with the native renderer and 15 with three captures, and the evidence keeps the spike of the
+interposition.
+
+Open: that VoiceOver spoke an announcement is a manual check; `announcementFinished` has no signal to follow; `queue: true`
+and `priority: 'low'` are refused, and the screen reader's programmatic focus waits for a separate accessibility focus in the
+engine; a View's `accessibilityLiveRegion` sets a live mode on a node with a name and is probably silent on macOS (not measured);
+the mobile servers have no accessibility bridge (GF-34 and GF-35) and the Windows and Linux AccessKit adapters were not
+measured; there is no graphical CI run, and the hosted CI run of the `test:accessibility-info` step and the Pages publication
+are **pending**.
+
+Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
+[`030ebcf`](https://github.com/journey-studios/godot-fabric/commit/030ebcf3c2787e9cb58db0a3f3196b4c55e23b2f) (the feature at
+`493d8f7`, and the review round that published one announcement per update and separated the announcements' core) and
+recorded at
+[`1491f34`](https://github.com/journey-studios/godot-fabric/commit/1491f3496412c41aaa6e052cfbaeb996935f5466). On the
+implementation tree the contracts gate (302 Node/13 Python), the type check, static analysis, the publication scan, the
+platform seams (17), the 35 examples and the accessibility suites (80 headless and 22 on the OS tree) pass. After merging
+main (`b82fbdd`, #67) the host was reconfigured and rebuilt, the controls were refreshed, the suite repeated its 69 checks (15 on
+the preceding host, the eight sabotages rejected, 12 on the local lane) and the performance, text style, the 35 examples and the
+contracts gate (303 Node/13 Python) passed again. No checkpoint, whole GF, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
