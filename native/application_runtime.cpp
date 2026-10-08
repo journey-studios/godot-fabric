@@ -1732,24 +1732,22 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     return host->is_visible_in_tree() && local.is_finite() &&
         Rect2(Vector2(), host->get_size()).has_point(local);
   }
-  bool wheel(Root &surface, const Ref<InputEvent> &event) {
+  bool wheel(Root &surface, const Ref<InputEvent> &event,
+      const fabric_godot::PointerInputSource &source) {
     auto *mouse = Object::cast_to<InputEventMouseButton>(event.ptr());
     if (!mouse || !mouse->is_pressed()) return false;
     const auto button = mouse->get_button_index();
     if (button < MOUSE_BUTTON_WHEEL_UP || button > MOUSE_BUTTON_WHEEL_RIGHT) return false;
     if (surface.pointer->blocks_native()) return true;
-    auto *host = surface.host();
-    if (!host || surface.stopping) return false;
-    const int target = hit_test(host, mouse->get_position());
-    auto found = views.find(target);
-    while (found != views.end()) {
-      if (found->second.scroll) {
-        found->second.scroll->wheel(button == MOUSE_BUTTON_WHEEL_UP || button == MOUSE_BUTTON_WHEEL_LEFT ? -1 : 1, mouse->get_factor());
-        return true;
-      }
-      found = views.find(tag_for(Object::cast_to<Control>(found->second.control->get_parent())));
-    }
-    return false;
+    if (surface.stopping) return false;
+    const int target = physical_hit_test(source, mouse->get_position());
+    const int scroll_tag = scroll_ancestor(target, source);
+    auto found = views.find(scroll_tag);
+    if (found == views.end() || !found->second.scroll || found->second.surface_id != source.surface) return false;
+    found->second.scroll->wheel(
+        button == MOUSE_BUTTON_WHEEL_UP || button == MOUSE_BUTTON_WHEEL_LEFT ? -1 : 1,
+        mouse->get_factor());
+    return true;
   }
   void touch_event(int tag, const std::string &phase, rn::TouchEvent event) {
     if (stopped) return;
@@ -2026,6 +2024,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         (event->is_class("InputEventMouse") || event->is_class("InputEventScreenTouch") ||
             event->is_class("InputEventScreenDrag")) &&
         event->get_device() != static_cast<int>(host->get_meta("validation_input_device"))) {
+      blocked = true;
+      return true;
+    }
+    if (wheel(source, event, input_source)) {
       blocked = true;
       return true;
     }
@@ -2711,7 +2713,6 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   auto found = guard->roots.find(id);
   if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
   auto &root = *found->second;
-  if (guard->wheel(root, event)) { guard->pump(); return true; }
   auto source = guard->root_pointer_source(id);
   if (!source) return false;
   bool blocked = false;

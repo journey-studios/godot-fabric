@@ -133,6 +133,10 @@ jobs:
             build/scroll-view-gf14-provenance.json
             build/scroll-view-gf14.log
             build/scroll-view-gf14-probe-bundle.json
+            build/scroll-view-modal-report.json
+            build/scroll-view-modal.log
+            build/scroll-view-modal-provenance.json
+            build/scroll-view-modal-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:appearance
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
