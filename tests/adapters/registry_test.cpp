@@ -3,6 +3,7 @@
 #include "adapter_registry.h"
 #include <react/renderer/components/CodegenFixture/ComponentDescriptors.h>
 #include <react/renderer/components/root/RootComponentDescriptor.h>
+#include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include <cstddef>
 #include <functional>
 #include <iostream>
@@ -109,7 +110,7 @@ void declaration_selection_precedes_initializer() {
   rejects("E_ADAPTER_DECLARATION", [&] { registry.register_adapter("Null", {"CodegenBadge"}, {}, nullptr); });
   fail_component({"CodegenBadge", "CodegenBadge"});
   fail_component({"bad-name"});
-  for (const auto &name : {"GodotControl", "RootView", "View", "ScrollView", "Paragraph", "RawText", "Image", "TextInput"})
+  for (const auto &name : {"GodotControl", "RootView", "View", "ScrollView", "Paragraph", "RawText", "Image", "TextInput", "ModalHostView"})
     fail_component({name});
   // The first SPI explicitly refuses aliases as declarations: its generated
   // descriptor must expose the canonical name. Requested lookups may alias it.
@@ -237,6 +238,7 @@ void provider_handle_collisions_preserve_prior_selection() {
   };
   attempt(badge().handle);
   attempt(rn::concreteComponentDescriptorProvider<rn::RootComponentDescriptor>().handle);
+  attempt(rn::concreteComponentDescriptorProvider<rn::ModalHostViewComponentDescriptor>().handle);
   rejects("E_ADAPTER_COMPONENT_COLLISION", [&] { registry.register_adapter("Duplicate", {"CodegenBadge"}, {}, forbidden_initializer); });
   rejects("E_ADAPTER_MODULE_COLLISION", [&] { registry.register_adapter("Other", {}, {"CodegenBadge"}, forbidden_initializer); });
   registry.seal();

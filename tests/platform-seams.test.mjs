@@ -27,7 +27,7 @@ function fixture(t, files) {
 async function compile(directory, entry, options = {}) {
   return build({absWorkingDir: directory, entryPoints: [entry], bundle: true,
     write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
-    define: {"process.env.NODE_ENV": '"production"'}, metafile: true, plugins: plugins(), ...options});
+    define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"}, metafile: true, plugins: plugins(), ...options});
 }
 function execute(result, globals = {}) {
   const module = {exports: {}};
@@ -174,7 +174,12 @@ test("original RN transform processors reach the composed ViewConfig without los
   // native validation instead of being silently filtered by this config.
   const unsupportedNative3D = [{rotateX: "45deg"}, {perspective: 800}];
   assert.equal(processTransform(unsupportedNative3D), unsupportedNative3D);
-  const debugStyle = execute(result, {__DEV__: true}).default.validAttributes.style;
+  // This focused processor test exercises upstream development diagnostics;
+  // public-entry builds above use the same production defines as the SDK.
+  const debugResult = await compile(directory, "App.js", {
+    define: {"process.env.NODE_ENV": '"production"'},
+  });
+  const debugStyle = execute(debugResult, {__DEV__: true}).default.validAttributes.style;
   assert.throws(() => debugStyle.transform.process([{rotate: "45"}]), /degrees|radians/);
   assert.throws(() => debugStyle.transformOrigin.process([20, "75%"]), /exactly 3 values/);
   const inputs = Object.keys(result.metafile.inputs);

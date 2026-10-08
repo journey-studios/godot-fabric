@@ -1,0 +1,19 @@
+{
+  "format": "godot-fabric.modal-coderabbit-source-publication/v1",
+  "checkedAt": "2026-10-07T22:51:55.974532+00:00",
+  "implementationCommit": "f95a3e2ebad4111819a7fa076a86fc4e3e031f98",
+  "pullRequest": "https://github.com/journey-studios/godot-fabric/pull/51",
+  "hostSha256": "45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d",
+  "producerPinsVerifiedInCommit": 35,
+  "nativeSdkProducerPinsVerifiedInCommit": 95,
+  "addonProducerPinsVerifiedInCommit": 153,
+  "sourcePinsReceipt": "coderabbit-final-local.json",
+  "consumerReceipt": "coderabbit-consumer-local.json",
+  "localVerdict": "Desktop first slice approved locally after independent correction controls; broader mapped acceptance remains open",
+  "hostedFinalHeadCI": "pending",
+  "codeRabbitFinalHeadReview": "pending",
+  "hardwareInput": false,
+  "mobile": false,
+  "export": false,
+  "fullGF18Acceptance": false
+}

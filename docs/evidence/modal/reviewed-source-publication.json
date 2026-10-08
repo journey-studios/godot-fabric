@@ -1,0 +1,15 @@
+{
+  "format": "godot-fabric.modal-reviewed-source-publication/v1",
+  "checkedAt": "2026-10-07T21:53:11.031797+00:00",
+  "implementationCommit": "dd66069eb7b5923c416fa11276b0224cf97e08fe",
+  "pullRequest": "https://github.com/journey-studios/godot-fabric/pull/51",
+  "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+  "producerPinsVerifiedInCommit": 33,
+  "sourcePinsReceipt": "thermonuclear-final-local.json",
+  "localVerdict": "Approved for hosted review of the desktop first slice after five corrected findings.",
+  "hostedCI": "pending implementation commit checks",
+  "codeRabbit": "pending implementation review",
+  "mobile": false,
+  "export": false,
+  "fullGF18Acceptance": false
+}

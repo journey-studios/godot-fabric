@@ -1,0 +1,99 @@
+{
+  "format": "godot-fabric.modal-owner-input-review/v1",
+  "reviewer": "root",
+  "result": "blocked-pending-causal-input-trace",
+  "executions": [
+    {
+      "execution": "first-new-host",
+      "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+      "bundleSha256": "47c69ec9bea820281d5f6c54953aa4083aaa3859ce54a5367af483dae869cd95",
+      "probeSha256": "7ea24688e67120edc61fe5c406c681a9f0a46681c1aa79a5a037b04b7ba72e30",
+      "checks": 9,
+      "passed": 8,
+      "failed": [
+        "owners/B-remains-interactive-after-A-presentation-is-destroyed"
+      ],
+      "ownerBReact": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 2.0,
+        "presses": 1.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "runtimeErrors": [
+        [],
+        []
+      ],
+      "reportSha256": "2ff6be82c6c129724ce38cb0a34ea32f148bfd4eb5b0b7af87af82fb5338f5f3",
+      "logSha256": "b468619d6491b01ff2d5487f653064ac5661d74259fd37d119fe2f1fe412536c"
+    },
+    {
+      "execution": "c229-control",
+      "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "bundleSha256": "47c69ec9bea820281d5f6c54953aa4083aaa3859ce54a5367af483dae869cd95",
+      "probeSha256": "7ea24688e67120edc61fe5c406c681a9f0a46681c1aa79a5a037b04b7ba72e30",
+      "checks": 9,
+      "passed": 9,
+      "failed": [],
+      "ownerBReact": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 0.0,
+        "presses": 2.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "runtimeErrors": [
+        [],
+        []
+      ],
+      "reportSha256": "882136442d5229557ad2d4c23ad53ca5819f7a58aa5353c67d79246b22643ebc",
+      "logSha256": "7923598a89369651340818c3f1a05fc08487d6a057e96c249869f6d58dea0d44"
+    },
+    {
+      "execution": "new-host-rerun",
+      "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+      "bundleSha256": "47c69ec9bea820281d5f6c54953aa4083aaa3859ce54a5367af483dae869cd95",
+      "probeSha256": "7ea24688e67120edc61fe5c406c681a9f0a46681c1aa79a5a037b04b7ba72e30",
+      "checks": 9,
+      "passed": 7,
+      "failed": [
+        "owners/input-in-owner-B-is-confined-to-runtime-B",
+        "owners/B-remains-interactive-after-A-presentation-is-destroyed"
+      ],
+      "ownerBReact": {
+        "cancels": 0.0,
+        "capturePresentOnGot": true,
+        "downs": 2.0,
+        "gots": 2.0,
+        "losts": 2.0,
+        "mounted": true,
+        "moves": 2.0,
+        "presses": 1.0,
+        "shows": 1.0,
+        "ups": 2.0
+      },
+      "runtimeErrors": [
+        [],
+        []
+      ],
+      "reportSha256": "9ce82732f8c0255c2df9674083746acd0b8530f869476327e8de6fdc02a12d68",
+      "logSha256": "955836866dd7ac24948ec30874b97cfde8b92bd2ea7457220c778786a2115ea6"
+    }
+  ],
+  "observations": "B receives two Down/Up/Got/Lost in all runs. The new host runs also contain two pointer moves, no cancel, and only one onPress. The probe injects no motion between Down and Up. Motion origin is not recorded, so OS interference is a hypothesis, not a certified cause.",
+  "limits": {
+    "productRegressionConfirmed": false,
+    "OSInterferenceConfirmed": false,
+    "fixApproved": false
+  }
+}

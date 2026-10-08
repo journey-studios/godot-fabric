@@ -2,6 +2,7 @@
 #include "godot_component.h"
 #include <react/renderer/componentregistry/componentNameByReactViewName.h>
 #include <react/renderer/components/root/RootComponentDescriptor.h>
+#include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
@@ -51,6 +52,7 @@ struct AdapterRegistry::Impl {
     const rn::ComponentDescriptorProvider core[] = {
         rn::concreteComponentDescriptorProvider<ControlDescriptor>(),
         rn::concreteComponentDescriptorProvider<rn::RootComponentDescriptor>(),
+        rn::concreteComponentDescriptorProvider<rn::ModalHostViewComponentDescriptor>(),
         rn::concreteComponentDescriptorProvider<rn::ScrollViewComponentDescriptor>(),
         rn::concreteComponentDescriptorProvider<rn::ParagraphComponentDescriptor>(),
         rn::concreteComponentDescriptorProvider<rn::TextComponentDescriptor>(),

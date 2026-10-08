@@ -65,15 +65,19 @@ jsi::Value GodotDOM::bounding_rect(jsi::Runtime &rt, rn::TurboModule &module,
     throw jsi::JSError(rt, "getBoundingClientRect requires a node and transform flag");
   auto &self = static_cast<GodotDOM &>(module);
   auto node = rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::fromJs(rt, args[0]);
-  // EmptyLayoutMetrics is distinct from a legitimate 0x0 frame. Use the
-  // same RN revision and layout computation as NativeDOM before projection.
-  auto [x, y, width, height] = self.getBoundingClientRect(rt, node, args[1].getBool());
-  rn::dom::DOMRect rect{x, y, width, height};
-  const auto revision = rn::UIManagerBinding::getBinding(rt)->getUIManager()
-      .getShadowTreeRevisionProvider()->getCurrentRevision(node->getSurfaceId());
-  if (revision && rn::LayoutableShadowNode::computeLayoutMetricsFromRoot(node->getFamily(), *revision,
-      {.includeTransform = args[1].getBool(), .includeViewportOffset = true}) != rn::EmptyLayoutMetrics)
-    rect = self.project_(node->getSurfaceId(), rect, args[1].getBool());
+  if (!node) return jsi::Array::createWithElements(rt, 0, 0, 0, 0);
+  // Keep tree ancestry, boundary selection and layout on one immutable Fabric
+  // revision. RN's canonical relative-layout function stops at RootNodeKind.
+  auto &ui = rn::UIManagerBinding::getBinding(rt)->getUIManager();
+  auto revision = ui.getShadowTreeRevisionProvider()->getCurrentRevision(node->getSurfaceId());
+  auto embedding = PhysicalEmbedding::capture(std::move(revision), *node);
+  if (!embedding) return jsi::Array::createWithElements(rt, 0, 0, 0, 0);
+  auto rect = embedding->bounding_rect(args[1].getBool());
+  // A legitimate zero-sized layout still has a meaningful origin. RN's
+  // EmptyLayoutMetrics sentinel, rather than the rect dimensions, distinguishes
+  // an unmeasurable or display:none node from a mounted 0×0 View.
+  if (embedding->has_layout(args[1].getBool()))
+    rect = self.project_(*embedding, rect, args[1].getBool());
   return jsi::Array::createWithElements(rt, rect.x, rect.y, rect.width, rect.height);
 }
 

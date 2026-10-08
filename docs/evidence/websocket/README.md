@@ -11,6 +11,19 @@ and its exact reason. A TLS drop after the client's close remains an abnormal
 failure. See the curated [execution receipt](execution.json). Raw per-run reports remain
 local and ignored.
 
+The final reviewed head `55980ac` passed all five hosted jobs and PR [#48](https://github.com/journey-studios/godot-fabric/pull/48)
+was squash-merged as `ebcb292` on 2026-10-07. CodeRabbit approved that same head,
+and all five review threads were resolved before merge. The [final receipt](hosted-ci-55980ac.json)
+records [run 37658942136](https://github.com/journey-studios/godot-fabric/actions/runs/37658942136).
+Independent artifact inspection recomputed WebSocket 95/60/53 and HTTP
+100 checks/137 requests, verified both load phases and eight lifetime cases,
+and matched 56 distinct repository inputs across product, load, lifetime and
+HTTP to the hosted checkout. Its 13-case parity subset is described below;
+it does not certify WebSocket differential parity or Godot mobile execution.
+The [dashboard capture after merge](dashboard-merged-main.jpg) records 23/156
+checkpoints and 0/39 completed release items. This slice does not add a checkpoint.
+
+Historical receipts remain pinned to the sources they actually measured.
 Hosted CI passed all five jobs for implementation commit `422c2ee` ([receipt](hosted-ci.json),
 [GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent
 inspection of the native artifact recomputed the product oracle and matched 46 repository inputs.
@@ -106,12 +119,12 @@ The verified macOS native SDK pack and provisioned addon include the pinned wsla
 license. The iOS simulator arm64 build passed and its combined archive link retains both Fabric
 and wslay symbols. That link proof did not execute on an iOS runtime or export a consumer app;
 ABI certification remains open. Hosted native execution is headless macOS for receipt
-commits `422c2ee` and `e8dd7b0` and for the main push `ebcb292` (run 37663778397); it is not mobile runtime evidence.
+commits `422c2ee`, `e8dd7b0`, final head `55980ac`, and for the main push `ebcb292` (run 37663778397); it is not mobile runtime evidence.
 
 ## Boundaries
 
 The product and graphical captures are local macOS arm64 evidence; hosted native execution
-covers receipt commits `422c2ee` and `e8dd7b0` and the main push `ebcb292` (run 37663778397). Android, iOS-device and Web runtime behavior remain separate.
+covers receipt commits `422c2ee`, `e8dd7b0`, `55980ac`, and the main push `ebcb292` (run 37663778397). Android, iOS-device and Web runtime behavior remain separate.
 The fixtures do not certify `permessage-deflate`, other
 extensions, cookies, proxies, system trust integration, HTTP/2, long-duration or
 hardware load, offline reconnection, or the complete GF-22 acceptance. This PR
