@@ -87,6 +87,62 @@ test("RN's RCTNetworking resolves to its Android wrapper and a project's own mod
   assert.equal(Object.keys(result.metafile.inputs).length, 2);
 });
 
+// The platform plugin with one of its resolve rules left out, to show what that rule is for: the rule is the one whose
+// filter has this source, and every other rule of the plugin is registered unchanged.
+function withoutRule(plugin, filterSource) {
+  return {name: plugin.name, setup(builder) {
+    plugin.setup(new Proxy(builder, {get(target, key) {
+      if (key === "onResolve") return (options, callback) => options.filter.source === filterSource ? undefined : target.onResolve(options, callback);
+      const value = target[key];
+      return typeof value === "function" ? value.bind(target) : value;
+    }}));
+  }};
+}
+// What the native module registry and event emitter need to run the function in a vm, with a native module that records the
+// focus call it gets.
+function accessibilityHost(calls) {
+  const host = {RN$Bridgeless: true, nativeModuleProxy: {}, RN$registerCallableModule() {},
+    __turboModuleProxy: name => name === "AccessibilityManager" ? {setAccessibilityFocus: tag => calls.push(tag)} : null};
+  host.global = host;
+  host.globalThis = host;
+  return host;
+}
+
+test("RN's legacySendAccessibilityEvent resolves to its iOS function, and without that seam AccessibilityInfo's focus call breaks", async t => {
+  // RN ships the function only as .ios.js and .android.js; legacySendAccessibilityEvent.js merely imports itself, and this
+  // host's extensions pick neither platform file. The iOS one is what the Godot AccessibilityManager module implements: it
+  // calls setAccessibilityFocus for a focus event and nothing for any other.
+  const entry = 'import legacy from "react-native/Libraries/Components/AccessibilityInfo/legacySendAccessibilityEvent"; export default legacy;';
+  const deep = fixture(t, {"App.js": entry});
+  const result = await compile(deep, "App.js");
+  const inputs = Object.keys(result.metafile.inputs);
+  assert.ok(inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Components/AccessibilityInfo/legacySendAccessibilityEvent.ios.js")));
+  assert.ok(!inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Components/AccessibilityInfo/legacySendAccessibilityEvent.js")));
+  const calls = [];
+  const legacy = execute(result, accessibilityHost(calls)).default;
+  legacy(7, "focus");
+  legacy(8, "click");
+  assert.deepEqual(calls, [7], "Only a focus event reaches the native module");
+  // AccessibilityInfo itself imports the function by its relative path, and the same seam answers it.
+  const info = fixture(t, {"App.js": 'import AccessibilityInfo from "react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo"; export default AccessibilityInfo;'});
+  const infoInputs = Object.keys((await compile(info, "App.js")).metafile.inputs);
+  assert.ok(infoInputs.some(input => input.endsWith("AccessibilityInfo/legacySendAccessibilityEvent.ios.js")));
+  assert.ok(!infoInputs.some(input => input.endsWith("AccessibilityInfo/legacySendAccessibilityEvent.js")));
+  // Without the seam the module imports itself and its default export is not the function: the bundle breaks where
+  // AccessibilityInfo.setAccessibilityFocus would call it.
+  const sabotaged = await compile(deep, "App.js", {plugins: [withoutRule(plugins()[0], "(?:^|\\/)legacySendAccessibilityEvent$")]});
+  const brokenInputs = Object.keys(sabotaged.metafile.inputs);
+  assert.ok(brokenInputs.some(input => input.endsWith("AccessibilityInfo/legacySendAccessibilityEvent.js")));
+  assert.ok(!brokenInputs.some(input => input.endsWith("AccessibilityInfo/legacySendAccessibilityEvent.ios.js")));
+  assert.throws(() => execute(sabotaged, accessibilityHost([])).default(7, "focus"), /is not a function/);
+  // A project's own module of that name stays.
+  const project = fixture(t, {"legacySendAccessibilityEvent.js": 'export default "owned";',
+    "App.js": 'import value from "./legacySendAccessibilityEvent"; export default value;'});
+  const owned = await compile(project, "App.js");
+  assert.equal(execute(owned).default, "owned");
+  assert.equal(Object.keys(owned.metafile.inputs).length, 2);
+});
+
 test("RN's Image resolves to the Godot wrapper for every importer, and a project's own Image stays", async t => {
   // RN ships Image only as .ios.js and .android.js (Image.js merely imports itself), and this host resolves neither extension.
   // The deep import, ImageBackground and AnimatedImage all get the wrapper over Image.ios.js.

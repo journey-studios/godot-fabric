@@ -527,6 +527,18 @@ jobs:
             build/accessibility-current.log
             build/accessibility-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:accessibility-info
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-accessibility-info
+          path: |
+            build/accessibility-info-report.json
+            build/accessibility-info-current-report.json
+            build/accessibility-info-comparison.json
+            build/accessibility-info-current.log
+            build/accessibility-info-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:responders:shared-touches
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

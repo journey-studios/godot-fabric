@@ -35,6 +35,15 @@ export declare const ProgressBarAndroid: typeof RN.ProgressBarAndroid;
 export declare const DrawerLayoutAndroid: typeof RN.DrawerLayoutAndroid;
 export declare const InputAccessoryView: typeof RN.InputAccessoryView;
 export declare const PushNotificationIOS: typeof RN.PushNotificationIOS;
+/** RN's original AccessibilityInfo over Godot's DisplayServer, with iOS's contract: isScreenReaderEnabled,
+ * isReduceMotionEnabled, isReduceTransparencyEnabled and isDarkerSystemColorsEnabled resolve the platform's setting,
+ * or reject with E_ACCESSIBILITY_UNKNOWN where the platform does not report it (the headless server, mobile today);
+ * isBoldTextEnabled, isGrayscaleEnabled, isInvertColorsEnabled and prefersCrossFadeTransitions reject with
+ * E_ACCESSIBILITY_UNAVAILABLE, never false. screenReaderChanged (and its alias change), reduceMotionChanged,
+ * reduceTransparencyChanged and darkerSystemColorsChanged fire once per change; boldTextChanged, grayscaleChanged,
+ * invertColorsChanged and announcementFinished never fire. announceForAccessibility, announceForAccessibilityWithOptions
+ * and setAccessibilityFocus throw E_UNSUPPORTED until GF-20's next slice. */
+export declare const AccessibilityInfo: typeof RN.AccessibilityInfo;
 /** RN's original Appearance and useColorScheme, fed by Godot's system theme. */
 export declare const Appearance: typeof RN.Appearance;
 export declare const useColorScheme: typeof RN.useColorScheme;

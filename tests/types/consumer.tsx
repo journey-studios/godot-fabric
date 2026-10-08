@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AccessibilityInfo, AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
@@ -124,6 +124,24 @@ void appState; void blurEvent;
 AppState.addEventListener("change", (state: number) => { void state; });
 // @ts-expect-error unknown AppState events are rejected
 AppState.addEventListener("suspend", () => {});
+
+// AccessibilityInfo is the original pinned module and keeps its getter and event contract.
+const screenReader: Promise<boolean> = AccessibilityInfo.isScreenReaderEnabled();
+const reduceMotion: Promise<boolean> = AccessibilityInfo.isReduceMotionEnabled();
+const reduceTransparency: Promise<boolean> = AccessibilityInfo.isReduceTransparencyEnabled();
+const darkerColors: Promise<boolean> = AccessibilityInfo.isDarkerSystemColorsEnabled();
+const boldText: Promise<boolean> = AccessibilityInfo.isBoldTextEnabled();
+const recommended: Promise<number> = AccessibilityInfo.getRecommendedTimeoutMillis(3000);
+const motionSubscription = AccessibilityInfo.addEventListener("reduceMotionChanged", (enabled: boolean) => { void enabled; });
+const aliasSubscription = AccessibilityInfo.addEventListener("change", (enabled: boolean) => { void enabled; });
+const announcementSubscription = AccessibilityInfo.addEventListener("announcementFinished", (result: { announcement: string; success: boolean }) => { void result; });
+motionSubscription.remove(); aliasSubscription.remove(); announcementSubscription.remove();
+AccessibilityInfo.announceForAccessibility("Saved");
+void screenReader; void reduceMotion; void reduceTransparency; void darkerColors; void boldText; void recommended;
+// @ts-expect-error change handlers receive a boolean
+AccessibilityInfo.addEventListener("reduceMotionChanged", (enabled: string) => { void enabled; });
+// @ts-expect-error unknown AccessibilityInfo events are rejected
+AccessibilityInfo.addEventListener("fontScaleChanged", () => {});
 
 // Linking, Clipboard and Vibration are the original pinned modules.
 const initialURL: Promise<string | null | undefined> = Linking.getInitialURL();
