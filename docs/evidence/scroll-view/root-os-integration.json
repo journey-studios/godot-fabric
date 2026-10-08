@@ -206,7 +206,43 @@
       "checks": 37,
       "reportSha256": "d67de70e64595bab8a3bc9f60d39527683922ac044dd0d6b5f0326dcec2611f8",
       "oracle": "independently-passed",
-      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2"
+      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+      "retainedControls": {
+        "previousSdk": 1,
+        "sabotages": 3,
+        "sdkSourcesRestored": true,
+        "controls": [
+          {
+            "lane": "previous-sdk",
+            "checks": 37,
+            "failures": 30,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "a3622f8c540d34d86a7a90607b0d836fb3f2cf5861abbae8cfd04860057b7134"
+          },
+          {
+            "lane": "sabotage-platform-android",
+            "checks": 37,
+            "failures": 14,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "fd6f3e4093cb267c05df07e32425a67b2c0e5528f68b19d403f04ebc1a97adc3"
+          },
+          {
+            "lane": "sabotage-silent-shim",
+            "checks": 37,
+            "failures": 8,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "ce9dfd5a1f208c2998db111c73d36fb1011f0c236e6f16581b8049478ecb2d8c"
+          },
+          {
+            "lane": "sabotage-self-import",
+            "checks": 37,
+            "failures": 5,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "6cb96ba5e42789a7284ba33e376ac2bb27c9e96fcb3fdf568296bb45d2551573"
+          }
+        ],
+        "scope": "The previous SDK is an absence control, not a sabotage. Root confirms all four reports and rejects forced-green flags using the independent OS oracle."
+      }
     }
   },
   "producerGroups": {

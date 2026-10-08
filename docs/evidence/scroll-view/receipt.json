@@ -255,7 +255,7 @@
     "windowedCapture": "4/4 passed on frozen host and OS-integrated GF14 bundle; macOS windowed pixel/clipping proof",
     "imagesRuntime": "74/74 passed; bundled, file and data image sources loaded and released",
     "imagesCore": "passed",
-    "osSpecificContracts": "37/37 passed; all four previous-SDK/platform/silent-shim/self-import sabotage controls rejected"
+    "osSpecificContracts": "37/37 passed; previous SDK and three platform/silent-shim/self-import sabotage variants rejected"
   },
   "limits": [
     "Mounted functional probe is headless; the separate capture is Godot macOS windowed rendering.",

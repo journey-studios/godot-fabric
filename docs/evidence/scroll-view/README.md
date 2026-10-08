@@ -173,7 +173,15 @@ The uploaded artifact, public JSON and committed data match, allowing only the
 publication metadata added by the workflow. This snapshot shows 28/156
 checkpoints and 0/39 complete items. This is a historical publication snapshot.
 After OS #61 integration the branch has 29/156 checkpoints; all GF-14 checkpoints
-remain open until the new head passes hosted CI and CodeRabbit acceptance. The
-current branch data needs its own publication receipt.
+remain open until the new head passes hosted CI and CodeRabbit acceptance.
 
 ![Published review progress for PR #58](dashboard-public-24bc971.jpg)
+
+The [OS-integrated publication receipt](publication-0a0aeaa.json) records the
+current 29/156 dataset from committed head `0a0aeaa`, rendered and deployed by
+main workflow run `37731033472`. The uploaded artifact and public JSON match
+exactly; removing only the generated publication metadata yields the committed
+JSON. All GF-14 checkpoints remain open. Subsequent documentation-only updates
+preserve this dataset and the tested producer sources.
+
+![Published OS-integrated review progress for PR #58](dashboard-public-0a0aeaa.jpg)

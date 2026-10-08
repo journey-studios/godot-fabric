@@ -341,8 +341,8 @@ The GF-14 bundle changes to `f2af26ef`; evidence for `7944e7ca` remains
 historical. The root executes the new bundle in a fresh isolated project and
 independently derives all 28 controls, with full runtime and pointer cleanup.
 The 44-check list oracle, exact three-failure sabotage and forced-green oracle
-rejection pass. OS contracts pass 37 checks and all four sabotage controls are
-rejected. Accessibility, Images, Text and Device/launch oracles are independently
+rejection pass. OS contracts pass 37 checks; the previous SDK and three sabotage
+variants are rejected. Accessibility, Images, Text and Device/launch oracles are independently
 rechecked on the frozen host. NativeModules and Metrics/Errors also pass their
 native assertions. Four new graphical executions pass; the captured PNG bytes
 are identical to the earlier Images-integrated images.
