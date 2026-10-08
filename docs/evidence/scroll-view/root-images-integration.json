@@ -221,7 +221,7 @@
   },
   "historicalInterruptionControl": {
     "receipt": "root-interruption.json",
-    "receiptSha256": "ae1b4fb9c3aaaa03bb19d0a894b2bde916ff116df732afa159e629360a25ffe6",
+    "receiptSha256": "b989fcab5af4585d5835896c55b75ca137954a14703f30169f40f59a55ebf36e",
     "scope": "Earlier bbb683 vs 4f28 28-check pair; exactly two interruption failures. Its bundle is preserved separately and is not relabeled as this Images-integrated bundle."
   },
   "limitations": [

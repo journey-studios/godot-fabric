@@ -149,3 +149,15 @@ and `.deps/build/scroll_motion_test`. The mounted report
 and its raw log/bundle are retained under the ignored `build/` tree. Pixel
 clipping is checked in the separate graphical lane above; hardware touch, a
 refresh-rate matrix, mobile exports and full RN parity remain future work.
+
+## Published review progress
+
+The [publication receipt](publication-24bc971.json) records the dashboard data
+from committed PR head `24bc971`, rendered and deployed by the workflow on main.
+The uploaded artifact, public JSON and committed data match, allowing only the
+publication metadata added by the workflow. This snapshot shows 28/156
+checkpoints and 0/39 complete items; all GF-14 checkpoints remain open while CI
+and CodeRabbit acceptance are pending. Receipt-only documentation updates retain
+this dataset and the tested producer sources.
+
+![Published review progress for PR #58](dashboard-public-24bc971.jpg)

@@ -295,7 +295,7 @@
       "method": "Root independently read PNG pixels and inspected the rendered fractional and clipped frames"
     }
   },
-  "historicalEvidence": "root-independent.json retains the earlier22-check pair; root-integrated.json retains25 checks with the three diagonal/orientation negative controls. This final28-check pair isolates the two interruption defects on4f28.",
+  "historicalEvidence": "root-independent.json retains the earlier 22-check pair; root-integrated.json retains 25 checks with the three diagonal/orientation negative controls. This final 28-check pair isolates the two interruption defects on 4f28.",
   "limitations": [
     "macOS desktop Godot 4.7.2; no physical touch hardware or mobile export certification",
     "Full GF-14 contract and RN differential parity remain open",
