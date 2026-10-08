@@ -116,7 +116,9 @@ the view turns the node's message translation off as well
 ### Roles
 
 Every spelling of RN 0.87.1's `accessibilityRole` and `role`
-(`ViewAccessibility.js`) is either mapped or rejected. `role` takes precedence
+(`ViewAccessibility.js`) is either mapped or rejected: of the 105 spellings (40 + 65), 61 map and
+name 44 distinct roles (42 with a Godot role, plus `none` and `presentation`), and 44 are rejected
+and name 39 distinct roles (five names are rejected in both vocabularies). `role` takes precedence
 over `accessibilityRole`, as in RN, and both are validated. A role without a
 Godot equivalent is never replaced by a generic one (`ROLE_UNKNOWN` and
 `ROLE_PANEL` are used by no row); a role Godot has no word for gets the nearest
@@ -262,7 +264,7 @@ metadata only (`scope.metadataOnly`, `osTree: false`):
   name, description and live mode (the engine's constants, looked up by the
   probe itself);
 - 32 updates and removals of one view, `aria-*` against `accessibility*`, and
-  the whole of both role vocabularies (105 spellings) swept, each mapped with the
+  the whole of both role vocabularies (105 spellings, 61 mapped and 44 rejected) swept, each mapped with the
   engine's number or rejected with exactly one error;
 - the negatives: 13 invalid values stopped where the View renders (an error
   boundary keeps each), 9 the host rejects, their reasons reported once, and a

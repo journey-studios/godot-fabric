@@ -54,6 +54,21 @@ func descriptor(id: String) -> Dictionary:
   var value: Variant = node_of(id).get("accessibility", {}).get("descriptor", {})
   return value if value is Dictionary else {}
 
+# What the host counted for an element: the OS's requests, the ones it ignored, and the clicks and taps it sent on.
+func counters(id: String) -> Dictionary:
+  var value: Variant = node_of(id).get("accessibility", {})
+  return value if value is Dictionary else {}
+
+# One request more, ignored, and no click or tap sent on to React.
+func refused(before: Dictionary, after: Dictionary) -> bool:
+  for key in ["requests", "ignoredRequests", "clicks", "taps"]:
+    if not before.has(key) or not after.has(key):
+      return false
+  return int(after["requests"]) == int(before["requests"]) + 1 \
+    and int(after["ignoredRequests"]) == int(before["ignoredRequests"]) + 1 \
+    and int(after["clicks"]) == int(before["clicks"]) \
+    and int(after["taps"]) == int(before["taps"])
+
 func control(id: String) -> Control:
   return surface.find_child(id, true, false) as Control
 
@@ -131,11 +146,28 @@ func run() -> void:
   verify(done.get("sent") == true and status.get("name") == "Thanks! You rated this 2 of 3" and send.get("disabled") == true and send.get("clickAction") == false,
     "Pressing Send through the touchable sends once, tells the live region and disables Send again")
   await capture("sent")
-  # A press on the disabled Send, and on the hidden decoration, does nothing.
-  var before: Variant = example().get("renders")
+  # A press on the disabled Send is delivered to the host and refused there: the host counts one more request,
+  # all of them ignored, sends no click, and the Send handler of React, which ran once for the press above, does not run.
+  var send_before := counters("a11y-send")
+  var sends_before: Variant = example().get("sends")
   await press("a11y-send")
+  var send_after := counters("a11y-send")
+  verify(sends_before == 1 and example().get("sends") == sends_before and example().get("sent") == true
+    and refused(send_before, send_after),
+    "The OS's press on the disabled Send is refused by the host and never reaches the Send handler")
+  # The same press on the hidden decoration, which has no handler, is checked on the host's counters alone.
+  var decoration_before := counters("a11y-decoration")
   await press("a11y-decoration")
-  verify(example().get("renders") == before and example().get("sent") == true, "The OS's press on a disabled or hidden element reaches nothing")
+  verify(refused(decoration_before, counters("a11y-decoration")),
+    "The OS's press on the hidden decoration is refused by the host")
+  # A new rating after the send is a new message: the sent state clears and Send offers the press again.
+  await press("a11y-rating-3")
+  var rerated := example()
+  send = descriptor("a11y-send")
+  status = descriptor("a11y-status")
+  verify(rerated.get("rating") == 3 and rerated.get("sent") == false and rerated.get("sends") == 1
+    and send.get("disabled") == false and send.get("clickAction") == true and status.get("name") == "3 of 3 chosen",
+    "Choosing another rating after the send clears it: the status follows the rating and Send offers the press again")
   # onAccessibilityTap answers the OS's press instead of onPress.
   await press("a11y-reset")
   var reset := example()

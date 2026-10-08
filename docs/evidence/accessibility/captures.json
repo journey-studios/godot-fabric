@@ -4,8 +4,8 @@
   "godot": "4.7.2-stable (official)",
   "displayServer": "macOS",
   "exampleChecks": {
-    "headless": 16,
-    "nativeRenderer": 18
+    "headless": 18,
+    "nativeRenderer": 20
   },
   "files": [
     {

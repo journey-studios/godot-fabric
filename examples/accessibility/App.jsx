@@ -5,9 +5,9 @@ import { AppRegistry, Pressable, StyleSheet, Text, TouchableOpacity, View } from
 // (accessibilityLabel/Hint/Role/State, aria-*, accessibilityLiveRegion, hidden, onAccessibilityTap), written the
 // way RN writes them: View, Pressable and TouchableOpacity from the public react-native import. Nothing here
 // names Godot; the host gives each View an accessibility element with that name, role, state and press.
-const observations = { renders: 0, values: {}, taps: [] };
+const observations = { renders: 0, values: {}, taps: [], sends: 0 };
 globalThis.AccessibilityExample = {
-  state: () => ({ renders: observations.renders, taps: observations.taps.map((row) => ({ ...row })), ...observations.values }),
+  state: () => ({ renders: observations.renders, sends: observations.sends, taps: observations.taps.map((row) => ({ ...row })), ...observations.values }),
 };
 
 const RATINGS = [1, 2, 3];
@@ -58,7 +58,11 @@ function AccessibilityExample() {
               accessibilityLabel={`${value} of 3`}
               accessibilityHint="Rates this screen"
               accessibilityState={{ checked: rating === value }}
-              onPress={() => setRating(value)}
+              onPress={() => {
+                // A new rating is a new message: the earlier send no longer describes it.
+                setRating(value);
+                setSent(false);
+              }}
               style={[styles.choice, rating === value && styles.choiceChecked]}
             >
               <Text style={styles.choiceText}>{value}</Text>
@@ -71,7 +75,10 @@ function AccessibilityExample() {
           accessibilityLabel="Send"
           accessibilityHint="Sends your feedback"
           disabled={rating === 0 || sent}
-          onPress={() => setSent(true)}
+          onPress={() => {
+            observations.sends += 1;
+            setSent(true);
+          }}
           style={[styles.send, (rating === 0 || sent) && styles.sendDisabled]}
         >
           <Text style={styles.sendText}>{sent ? "Sent" : "Send"}</Text>

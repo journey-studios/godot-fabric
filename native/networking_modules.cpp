@@ -2,6 +2,7 @@
 #include "networking_state.h"
 #include "blob_store.h"
 #include "http_core.h"
+#include "stoppable_invoker.h"
 #include "turbo_module_registry.h"
 #include "FBReactNativeSpecJSI.h"
 #include <ReactCommon/TurboModule.h>
@@ -29,32 +30,6 @@ std::string upper(std::string text) {
   for (auto &c : text) c = c >= 'a' && c <= 'z' ? static_cast<char>(c - 'a' + 'A') : c;
   return text;
 }
-
-// A CallInvoker that runs nothing once its owner has stopped, so that queued
-// events and promise settlements cannot outlive the application. RN's own
-// callbacks keep calling through it unchanged.
-class StoppableInvoker final : public rn::CallInvoker {
- public:
-  StoppableInvoker(std::shared_ptr<rn::CallInvoker> delegate, std::weak_ptr<NetworkingState> owner)
-      : delegate_(std::move(delegate)), owner_(std::move(owner)) {}
-  void invokeAsync(rn::CallFunc &&function) noexcept override { delegate_->invokeAsync(guard(std::move(function))); }
-  void invokeAsync(rn::SchedulerPriority priority, rn::CallFunc &&function) noexcept override {
-    delegate_->invokeAsync(priority, guard(std::move(function)));
-  }
-  void invokeSync(rn::CallFunc &&function) override { delegate_->invokeSync(guard(std::move(function))); }
-
- private:
-  std::shared_ptr<rn::CallInvoker> delegate_;
-  std::weak_ptr<NetworkingState> owner_;
-  rn::CallFunc guard(rn::CallFunc &&function) const {
-    return [owner = owner_, function = std::move(function)](jsi::Runtime &runtime) {
-      auto state = owner.lock();
-      if (!state) return;
-      if (state->active) function(runtime);
-      else ++state->events_dropped;
-    };
-  }
-};
 
 std::optional<std::string> string_property(jsi::Runtime &rt, const jsi::Object &object, const char *name) {
   return string_value(rt, object.getProperty(rt, name));
@@ -547,7 +522,7 @@ void Networking::install(TurboModuleRegistry &registry) {
   const auto state = state_;
   // Every module of the four binds the same invoker, created when the first is.
   const auto bind = [state](const std::shared_ptr<rn::CallInvoker> &invoker) {
-    if (!state->invoker) state->invoker = std::make_shared<StoppableInvoker>(invoker, state);
+    if (!state->invoker) state->invoker = std::make_shared<StoppableInvoker<NetworkingState>>(invoker, state);
   };
   const auto dispose = [state] { state->stop(); };
   registry.add(std::string(NativeNetworking::kModuleName),

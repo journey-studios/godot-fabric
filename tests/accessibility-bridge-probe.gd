@@ -92,9 +92,10 @@ func ask(operation: Dictionary) -> Dictionary:
   request_id += 1
   operation["id"] = request_id
   var response_path := directory + "/response.json"
+  var request_path := directory + "/request.json"
   if FileAccess.file_exists(response_path):
     DirAccess.remove_absolute(response_path)
-  var file := FileAccess.open(directory + "/request.json", FileAccess.WRITE)
+  var file := FileAccess.open(request_path, FileAccess.WRITE)
   file.store_string(JSON.stringify(operation))
   file.close()
   for frame in range(POLL_FRAMES):
@@ -103,6 +104,10 @@ func ask(operation: Dictionary) -> Dictionary:
       var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(response_path))
       if parsed is Dictionary and int(parsed.get("id", -1)) == request_id:
         return parsed
+  # No answer: withdraw the request the inspector never took, so that it cannot answer it after the next one has
+  # been asked. A late reply to an earlier id is still ignored above, which checks the id.
+  if FileAccess.file_exists(request_path):
+    DirAccess.remove_absolute(request_path)
   return {"error": "the inspector did not answer in %d frames" % POLL_FRAMES}
 
 # Every node of a tree, depth first.

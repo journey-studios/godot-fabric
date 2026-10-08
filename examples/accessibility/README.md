@@ -55,11 +55,15 @@ method that Godot's `AccessibilityServer` calls (`accessibility_click`):
   the status says what the screen says;
 - the other tab becomes the selected one;
 - Send, a `TouchableOpacity`, runs once, tells the live region and disables itself again;
-- a press on the disabled Send and on the hidden decoration reaches nothing;
+- a press on the disabled Send is refused by the host (one more request, counted as ignored, no
+  click or tap sent on) and Send's handler does not run again, and the same press on the hidden
+  decoration is refused by the host's counters alone;
+- choosing another rating after the send clears it: the status follows the new rating and Send
+  offers the press again;
 - Start over answers with `onAccessibilityTap`, and the form starts over.
 
-The headless run and the window run both pass 16 checks; `--capture` adds the two
-renderer captures (18). **This proves the metadata and the host path of the press. It does
+The headless run and the window run both pass 18 checks; `--capture` adds the two
+renderer captures (20). **This proves the metadata and the host path of the press. It does
 not read the OS tree**, which is why the example has no claim about what an assistive
 technology sees: [accessibility-bridge.test.mjs](../../tests/accessibility-bridge.test.mjs)
 does that, for the elements of its own fixture, on a graphical macOS run.

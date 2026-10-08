@@ -53,7 +53,10 @@
     "descriptorUpdatesAndRemovals": 32,
     "ariaPairs": 5,
     "roleSpellingsSwept": 105,
+    "roleSpellingsMapped": 61,
+    "roleDistinctNamesMapped": 44,
     "roleSpellingsRejected": 44,
+    "roleDistinctNamesRejected": 39,
     "jsNegatives": 13,
     "hostNegatives": 9,
     "hostErrorsReported": 55,
@@ -186,9 +189,10 @@
     "checkStatic": "npm run check:static: no issues found",
     "checkPublication": "npm run check:publication: passed, no failures",
     "example": {
-      "headless": "npm run example -- accessibility --headless: 16 acceptance checks",
-      "nativeRenderer": "npm run example -- accessibility --check: 16 acceptance checks",
-      "capture": "npm run example -- accessibility --capture: 18 acceptance checks; two captures, bytes identical across two runs (captures.json)"
+      "headless": "npm run example -- accessibility --headless: 16 acceptance checks at 42615f4; 18 after the validation was extended (see extendedValidation)",
+      "nativeRenderer": "npm run example -- accessibility --check: 16 acceptance checks at 42615f4; 18 after the validation was extended",
+      "capture": "npm run example -- accessibility --capture: 18 acceptance checks at 42615f4, 20 after the validation was extended; two captures, bytes identical across two runs and after the extension (captures.json)",
+      "extendedValidation": "After review, on the tree merged with main's device services slice (585ca1b): the press on the disabled Send and on the hidden decoration is observed on the host's counters (one more request, ignored, no click or tap), and on React's Send handler for Send; choosing another rating after the send clears the sent state."
     }
   },
   "limitations": [

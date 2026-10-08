@@ -77,7 +77,7 @@ verdict. It proves:
   (`auto_translate_mode` does not stop Godot's `tr()`, so the View also turns message
   translation off);
 - 32 updates and removals of one view, `aria-*` against `accessibility*` in 5 pairs, and the
-  whole of both role vocabularies swept: 105 spellings, 44 of them rejected, each mapped to a
+  whole of both role vocabularies swept: 105 spellings, 61 mapped and 44 rejected, each mapped to a
   role with the engine's number or rejected with exactly one error;
 - the negatives: 13 invalid values stopped where the View renders, each kept by an error
   boundary, and 9 valid-in-RN values the host rejects with the reason, reported once, the View
@@ -153,8 +153,9 @@ machine was Portuguese.) "Skipped" (`importantForAccessibility="no-hide-descenda
 ## Roles
 
 Every spelling of RN 0.87.1's `accessibilityRole` (40) and `role` (65) is either mapped or
-rejected: 44 spellings map (42 to a Godot role, plus `none` and `presentation`), and 44
-spellings, 39 distinct names, are rejected with a reason in the error. No spelling maps to the
+rejected. Of the 105 spellings, 61 map and name 44 distinct roles (42 with a Godot role, plus
+`none` and `presentation`; a name in both vocabularies counts once), and 44 spellings, naming 39
+distinct roles, are rejected with a reason in the error. No spelling maps to the
 generic `ROLE_UNKNOWN` or `ROLE_PANEL`; a role Godot has no word for gets the nearest role plus
 a role description (`header` is static text described as `heading`). The full table, the
 rejected roles with their reasons and the capabilities (which role can carry `checked`,
@@ -185,9 +186,10 @@ oracle, and restore the sources byte for byte (the rebuilt host is the genuine o
 ## Captures
 
 `npm run example -- accessibility --capture` saves two frames of the renderer, 900 × 680, while
-its validation presses through the host path of the OS's press (16 checks headless and in a
-window, 18 with the capture). The [capture receipt](captures.json) records the SHA-256 and
-dimensions of each, and the bytes were identical across two runs.
+its validation presses through the host path of the OS's press (18 checks headless and in a
+window, 20 with the capture). The [capture receipt](captures.json) records the SHA-256 and
+dimensions of each, and the bytes were identical across two runs. They were also identical when the
+example was run again after its validation was extended (see below).
 
 ![Compact tab selected, no rating chosen, Send disabled, the status asks for a rating](accessibility-initial.png)
 
@@ -207,8 +209,14 @@ fixture. There is no oracle of pixels and no comparison with iOS.
 
 At the implementation commit: `npm run test:contracts` passed (296 Node tests and 13 Python
 tests, with the parity inventory at 8113 contracts and 97 public values), and so did
-`npm run type-check`, `npm run check:static` and `npm run check:publication`. The example runs
-headless and in a window (16 checks each) and with captures (18).
+`npm run type-check`, `npm run check:static` and `npm run check:publication`. The example ran
+headless and in a window (16 checks each) and with captures (18) at that commit. After review its
+validation was extended, and it passes 18 checks headless and in a window and 20 with captures on the tree
+that merged main's device services slice (`585ca1b`): a press on the disabled Send and on the hidden
+decoration is now observed on the host's own counters (one more request, ignored, no click or tap sent on)
+and, for Send, on React's handler (it ran once, for the earlier press); and choosing another rating after
+the send clears the sent state, so that the radios and Send stay usable. The two captures are
+byte-identical to the pinned ones.
 
 ## Code
 

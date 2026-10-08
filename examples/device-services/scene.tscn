@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://examples/device-services/validation.gd" id="1"]
+
+[node name="DeviceServicesExample" type="Node"]
+script = ExtResource("1")
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "device-services"
+
+[node name="Surface" type="FabricSurface" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 640.0
+offset_bottom = 656.0
+application_path = NodePath("../Application")
+component_name = "DeviceServicesExample"
+initial_props = {}
+
+[node name="DeepLink" type="Button" parent="."]
+offset_left = 664.0
+offset_top = 24.0
+offset_right = 876.0
+offset_bottom = 72.0
+text = "Deep link"
+
+[node name="Backend" type="Label" parent="."]
+offset_left = 664.0
+offset_top = 88.0
+offset_right = 876.0
+offset_bottom = 656.0
+autowrap_mode = 3

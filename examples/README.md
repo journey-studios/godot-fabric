@@ -54,6 +54,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
 | [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
 | [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
+| [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic

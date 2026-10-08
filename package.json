@@ -80,6 +80,7 @@
     "test:animated": "node --test tests/native-animated-native.test.mjs",
     "test:frame-clock": "node --test tests/frame-clock-native.test.mjs",
     "test:networking": "node --test tests/networking-native.test.mjs",
+    "test:device-services": "node --test tests/device-services-native.test.mjs",
     "test:websocket": "node --test --test-concurrency=1 tests/websocket-native.test.mjs tests/websocket-transport-smoke.test.mjs tests/websocket-transport-lifetime.test.mjs tests/websocket-load.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
