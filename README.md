@@ -549,7 +549,7 @@ golden hash in three processes (integers only, its own PCG32, canonical serializ
 contexts and refuses invalid intents with a reason, judged by an independent oracle, with seven retained sabotages
 (`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The second package, the persistent `GameServices`
 node, publishes the snapshot and takes the intents as typed services with an epoch, with hand-written TypeScript types
-checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [research](docs/research/frontier-services.md)).
+checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-services/README.md), [research](docs/research/frontier-services.md)).
 The consumer project, the authority under bursts, the HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 

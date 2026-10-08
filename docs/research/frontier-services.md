@@ -1,8 +1,8 @@
 # Frontier's services: the GameServices node, its epoch and the types in parity
 
 Status: implemented and executed locally on macOS arm64 against pinned RN 0.87.1 and official Godot 4.7.2 (headless), for
-the criterion `servicos` of V05-03. The evidence record is pending; hosted CI for `npm run test:frontier-services` is
-pending.
+the criterion `servicos` of V05-03. The [evidence record](../evidence/frontier-services/README.md) pins the local runs at
+commit `75c4c0f`; hosted CI for `npm run test:frontier-services` is pending.
 
 The second package of the 0.5 milestone exposes the Frontier game ([research](frontier-game.md), rules in GDScript, already on
 `main`) to a React Native HUD through the typed game services the repository already has
@@ -236,7 +236,7 @@ process, which the services never touch, plays the same steps and is the referen
   game, the same epoch and the same state. One more step is played with no surface at all (`select_tile(7, 8)`) and the node
   answers it. The surface is mounted again: the panel reconnects, its first value is the current snapshot, and it is of the
   same generation, so nothing was registered a second time.
-- **DTO limits.** The largest snapshot of the roteiro has 175 value nodes and depth 4 (the limits are 10,000 and 32). One
+- **DTO limits.** The largest snapshot of the roteiro has 173 value nodes and depth 4 (the limits are 10,000 and 32). One
   state, one signal and eleven methods are 13 bindings.
 - **The dump of the registered schemas** goes in the report for the parity test.
 
@@ -284,7 +284,7 @@ must pass the plain test.
   checks names and shapes; it does not check that a type means what its name says.
 - **Typed `subscribe` and `connect` helpers** beyond `callFrontier` are not provided: a HUD calls `GodotFabric.connect` with
   `FrontierSnapshot` and `GodotFabric.subscribe` with `[FrontierTurnEnded]`, which the type test shows.
-- **Hosted CI** for `npm run test:frontier-services` and the evidence record (pinned commit, versions, counts) are pending.
+- **Hosted CI** for `npm run test:frontier-services` is pending; the local record is the [evidence](../evidence/frontier-services/README.md).
 
 ## Compatibility
 

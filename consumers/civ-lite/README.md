@@ -16,7 +16,8 @@ project of its own yet: the root project loads it as `res://consumers/civ-lite/g
 `services/` is the persistent `GameServices` node (`game_services.gd`) that owns a session of the game and its `epoch` and
 publishes the snapshot and the intents as typed services; `schema.gd` is the one GDScript source of every schema it registers.
 `ui/frontier-types.ts` is the hand-written TypeScript mirror, which a parity test compares with the registered schemas in both
-directions. See [docs/research/frontier-services.md](../../docs/research/frontier-services.md).
+directions. See [docs/research/frontier-services.md](../../docs/research/frontier-services.md); the runs are recorded in
+[docs/evidence/frontier-services/](../../docs/evidence/frontier-services/README.md).
 
 ```sh
 npm run test:civ-lite-game          # three processes, one golden hash, an independent oracle
