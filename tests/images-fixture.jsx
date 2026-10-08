@@ -51,7 +51,6 @@ const specs = [
   {id: "neg-empty", group: "failures", source: {uri: broken + "empty.png", width: 8, height: 8}},
   {id: "neg-oversize-png", group: "failures", source: {uri: broken + "oversize.png", width: 8, height: 8}},
   {id: "neg-oversize-jpg", group: "failures", source: {uri: broken + "oversize.jpg", width: 8, height: 8}},
-  {id: "neg-http", group: "failures", source: {uri: "https://example.invalid/picture.png", width: 8, height: 8}},
   {id: "neg-scheme", group: "failures", source: {uri: "ftp://example.invalid/picture.png", width: 8, height: 8}},
   {id: "neg-data", group: "failures", source: {uri: "data:image/png;base64,@@@@", width: 8, height: 8}},
   {id: "neg-data-garbage", group: "failures", source: {uri: "data:image/png;base64," + garbageBase64, width: 8, height: 8}},
@@ -62,7 +61,8 @@ const specs = [
   {id: "mode-changing", group: "dynamic", source: {asset: "wide"}, style: box(60), resizeMode: "cover"},
 ];
 
-// Image props the host refuses where the Image renders. Each is rendered inside a boundary that records the error.
+// Image props the host refuses where the Image renders. Each is rendered inside a boundary that records the error. (The request keys
+// of a source, headers, method, body and cache, and crossOrigin and referrerPolicy, are the network's: tests/images-network-fixture.jsx.)
 const refusals = [
   {id: "tintColor", props: {tintColor: "#f00"}},
   {id: "style.tintColor", props: {style: {tintColor: "#f00"}}},
@@ -77,12 +77,6 @@ const refusals = [
   {id: "overlayColor", props: {overlayColor: "#fff"}},
   {id: "style.borderRadius", props: {style: {borderRadius: 4}}},
   {id: "style.borderTopLeftRadius", props: {style: [{width: 5}, {borderTopLeftRadius: 4}]}},
-  {id: "source.headers", props: {source: {uri: formats + "format.png", headers: {a: "b"}}}},
-  {id: "source.method", props: {source: {uri: formats + "format.png", method: "POST"}}},
-  {id: "source.body", props: {source: {uri: formats + "format.png", body: "x"}}},
-  {id: "source.cache", props: {source: {uri: formats + "format.png", cache: "reload"}}},
-  {id: "crossOrigin", props: {src: formats + "format.png", crossOrigin: "use-credentials"}},
-  {id: "referrerPolicy", props: {src: formats + "format.png", referrerPolicy: "no-referrer"}},
   {id: "resizeMode", props: {resizeMode: "fill"}},
   {id: "style.resizeMode", props: {style: {resizeMode: "fill"}}},
   {id: "style.objectFit", props: {style: {objectFit: "fill-ish"}}},
@@ -260,11 +254,10 @@ globalThis.ImagesProbe = {
     settle("getSize-missing", () => Image.getSize(formats + "does-not-exist.png"));
     settle("getSize-corrupt", () => Image.getSize(broken + "corrupt.png"));
     settle("getSize-oversize", () => Image.getSize(broken + "oversize.png"));
-    settle("getSize-http", () => Image.getSize("https://example.invalid/picture.png"));
     settle("getSizeWithHeaders", () => Image.getSizeWithHeaders(file, {Accept: "image/png"}));
-    settle("getSizeWithHeaders-http", () => Image.getSizeWithHeaders("https://example.invalid/picture.png", {}));
     settle("prefetch", () => Image.prefetch(file));
     settle("prefetchWithMetadata", () => Image.prefetchWithMetadata(file, "Probe", 1));
+    settle("prefetch-missing", () => Image.prefetch(formats + "does-not-exist.png"));
     settle("queryCache", () => Image.queryCache([file, "https://example.invalid/picture.png"]));
     settle("getSize-failure-callback", () => new Promise(resolve => Image.getSize(formats + "does-not-exist.png", () => resolve("unexpected"), error => resolve(String(error?.message ?? error)))));
     return callbacks.length;
