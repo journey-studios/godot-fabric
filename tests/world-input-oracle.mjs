@@ -16,8 +16,8 @@ import assert from "node:assert/strict";
 //  - An open overlay (a View in the tree, or a Modal) covers the whole HUD and the world: nothing under it hears
 //    anything, and the overlay's own Pressable is pressed.
 //  - The Surface itself takes no pointer: mouse_filter IGNORE.
-// The gaps of this slice's policy (a hit slop, a Text with onPress, the gaps of a ScrollView, the wheel over the HUD or
-// over a tree overlay) are only recorded: the oracle checks their shape and never judges them.
+// The gaps of this slice's policy (a hit slop, a Text with onPress, the gaps of a ScrollView, the wheel over the HUD, a
+// ScrollView or a tree overlay) are only recorded: the oracle checks their shape and never judges them.
 const inside = ([x, y], [left, top, width, height]) => x >= left && x < left + width && y >= top && y < top + height;
 
 // The HUD of tests/world-input-fixture.jsx in the 800x600 root, in the order a pointer meets it (the top-most first).
@@ -169,7 +169,7 @@ function verifyTopology(report, name) {
   assert.deepEqual(topology.transitions, name === "a" ? ["tree", "modal"].flatMap(overlay => ["open", "closed"].map(to => ({overlay, to, reached: true}))) : [],
     name + ": the overlays opened and closed");
   // The gaps: only their shape.
-  const gaps = name === "a" ? ["tree/open/wheel", "gap/hit-slop", "gap/text-onpress", "gap/scroll-gap", "gap/wheel-over-hud"] : [];
+  const gaps = name === "a" ? ["tree/open/wheel", "gap/hit-slop", "gap/text-onpress", "gap/scroll-gap", "gap/wheel-over-hud", "gap/wheel-over-scroll"] : [];
   assert.deepEqual(topology.gaps.map(row => row.id), gaps.map(id => `${name}/${id}`), name + ": the gaps");
   for (const gap of topology.gaps) {
     assert.equal(gap.n, report.small, gap.id + ": repetitions");

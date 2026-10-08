@@ -75,6 +75,11 @@ fixture/driver and commands. It compares original versus integrated native
 delivery, batching, faults and retirement, with two actual captures. It is
 outside the ordinary launcher catalog while public EventTarget flags remain off.
 
+The [world-input spike](world-input/README.md) puts a React Native HUD over a Godot map: a click on the
+HUD's empty area reaches the map once, a click on a `Pressable` never does, and neither does one under an
+open overlay or `Modal`. It has its own scenes and `npm run test:world-input` command, outside the launcher
+catalog, and a local windowed lane (`node scripts/world-input-graphics.mjs`).
+
 The separate [pointer-interest validation](pointer-interest/README.md) compares
 original/current native View `pointerdown` interest using original listener maps.
 It has its own fixture and `npm run test:pointers:interest` command, outside the

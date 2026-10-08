@@ -123,6 +123,16 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   (GF-23's first slice; a headless probe in two applications with an independent oracle, the
   preceding host as the control and two retained sabotages; its hosted CI run is pending). Alert,
   Share, Settings and BackHandler, mobile deep-link plugins and real-device behavior stay open.
+- **Input over a Godot world:** a React Native HUD drawn over a Godot map, in which a click on the
+  HUD's empty area reaches the map exactly once, a click on a `Pressable` presses it once and never
+  reaches the map, and with a tree overlay or a `Modal` open nothing does (the first slice of the pointer
+  spike, go/no-go no. 1 of the 0.5 Frontier milestone; [research](research/world-input.md)). `FabricSurface`
+  now takes `MOUSE_FILTER_IGNORE` by default and the Views are the Controls that stop the pointer; a headless
+  probe in two topologies (one full-screen Surface, and one per panel) with an independent oracle and a local
+  windowed lane, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
+  its evidence record and hosted CI run are pending. It is a host behavior and not an RN name: it moves no
+  count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD still reach
+  the map too (the second slice), and hardware pointers, a real touch screen and mobile exports stay open.
 - **Performance baselines:** a `performance` section in the application snapshot (exact counters of
   the native views, Hermes' live heap after a forced collection, and the host's pump split into JS,
   mount and layout phases) and a soak of 20 mounts and unmounts of four workloads (idle, forms, chart,

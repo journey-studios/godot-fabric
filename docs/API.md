@@ -378,6 +378,7 @@ entries. Each `FabricSurface` Control uses:
 | `unmount()` / named `stop()` | Immediately retire this root's input/event/command authority; defer original React cleanup, input cancellation and native tree/tag deletion to the host's surface phase |
 | `get_surface_id()` | Current native root tag, or zero after unmount; remount receives a new identity |
 | `hide()` / `show()` | Godot visibility; the mounted React state and effects continue |
+| `mouse_filter` | `MOUSE_FILTER_IGNORE` by default, set by the constructor (a `.tscn` may still override it). The Surface takes no pointer from Godot's GUI: the Views React Native mounts are the Controls that stop it, so a click on the empty area of a `pointerEvents="box-none"` root reaches the `_unhandled_input` of the game's world exactly once, and a click on a `Pressable` presses it once and never reaches the world; with an overlay (a `View` in the tree, or a `Modal`) open nothing does. React Native receives the pointer through the Surface's `_input` whatever the filter is. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the world as well as React Native; see [world input](research/world-input.md) |
 
 `unmount()` sets `get_surface_id()` to zero before returning. The root snapshot
 reports `retiring` while physical cleanup is pending; mounted Controls are
