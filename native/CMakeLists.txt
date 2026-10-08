@@ -164,6 +164,8 @@ add_executable(frame_clock_test frame_clock_test.cpp)
 add_executable(affine_transform_test affine_transform_test.cpp)
 # The pure HTTP core (URLs, redirects, charsets, base64, multipart) and the blob store need neither Godot nor RN.
 add_executable(http_core_test http_core_test.cpp)
+# The pure accessibility core (RN's roles to the roles an OS assistive technology is given) needs neither Godot nor RN.
+add_executable(accessibility_core_test accessibility_core_test.cpp)
 # The pure WebSocket core (the URL, origin, protocols, headers and close parameters OkHttp accepts) needs neither Godot nor RN.
 add_executable(websocket_core_test websocket_core_test.cpp)
 add_executable(websocket_handshake_test websocket_handshake_test.cpp)
@@ -191,7 +193,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp device_services.cpp godot_device_backend.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp accessible_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp device_services.cpp godot_device_backend.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
@@ -221,7 +223,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test device_services_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test affine_transform_test http_core_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES
