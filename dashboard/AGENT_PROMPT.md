@@ -101,3 +101,29 @@ mostra branch, commit do JSON e se esse commit está integrado ao main.
 Um push relevante no main volta a publicar os dados do main; para restaurar
 manualmente, dispare com `data_ref=main`. Não execute o workflow com
 `--ref SUA_BRANCH`: o deploy é permitido apenas pelo workflow do main.
+
+## Marco 0.5 (recorte de prioridade)
+
+Existe um marco opcional **0.5 · Frontier** em `milestones[0]` do JSON, descrito
+na seção `## 0.5 — Frontier` do `ROADMAP.md`: um mini-jogo estilo Civilization 2
+em Godot com toda a HUD em React Native, alvo `.app` macOS e depois um iPhone
+físico, terminando em um comparativo do jogo sem HUD, com HUD nativa e com HUD
+React Native. É um recorte de prioridade, não uma segunda versão.
+
+- A 1.0 não muda. Não altere IDs, prioridades, pesos, `releaseRequired`, aceite
+  nem checkpoints dos GF-xx por causa do 0.5. O percentual da 1.0 continua
+  calculado só pelos itens GF; o 0.5 é calculado à parte, em `milestones`.
+- Ao pegar uma task nova, prefira o que destrava o jogo (V05-02, V05-06, V05-07 e
+  o mínimo de GF-14 e GF-16). A cauda de ponteiro (`pointer-*`, EventTarget,
+  Document, hover) está congelada: nenhuma fatia nova.
+- Registre o progresso do 0.5 só em `milestones[0].items[].criteria[]` (e em
+  `exit[]`), com `done: true` apenas com evidência executada (`evidence`
+  com `{label, url}`). O status do item e do marco é derivado dos critérios:
+  não grave status. Não crie tasks `V05-xx`, fase, sequência ou tag `milestone`
+  nos GF: o `sync` os descarta ou rejeita.
+- Ao reescrever o JSON, **preserve as chaves que você não conhece**, em especial
+  `milestones`. Um documento remontado com chaves fixas apaga o marco; o teste
+  `milestones[0.5]` do dashboard falha se isso acontecer.
+- Uma fatia pode servir ao 0.5 e a um GF ao mesmo tempo: marque os checkpoints
+  do GF como sempre e os critérios do 0.5 separadamente, sem repetir o aceite.
+- Faça `claim` com áreas exclusivas como sempre e cite o item V05 no título.

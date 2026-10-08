@@ -25,6 +25,23 @@ export function pendingDependencies(task, tasks) {
   return task.dependencies.filter(id => tasks.find(item => item.id === id)?.status !== "complete");
 }
 
+// Optional milestones (e.g. 0.5) are a separate scope with their own criteria. They never feed summarize()/progress(),
+// so the release percentage is identical with and without the `milestones` key.
+export function criteriaProgress(criteria) {
+  return criteria.length ? criteria.filter(step => step.done).length / criteria.length * 100 : 0;
+}
+
+export function milestoneCriteria(milestone) {
+  return (milestone.items ?? []).flatMap(item => item.criteria ?? []);
+}
+
+// Status is derived from the criteria, so agents never have to keep a stored status consistent with them.
+export function criteriaStatus(criteria, blocker) {
+  if (blocker) { return "blocked"; }
+  const done = criteria.filter(step => step.done).length;
+  return done === 0 ? "planned" : done === criteria.length ? "complete" : "in_progress";
+}
+
 export function validate(data) {
   const fail = message => { throw new Error(message); };
   const string = (value, field) => { if (typeof value !== "string" || !value.trim()) fail(`${field}: texto obrigatório`); };
@@ -101,5 +118,40 @@ export function validate(data) {
     string(entry.id, "activity.id"); string(entry.message, "activity.message"); date(entry.at, "activity.at");
     if (!Array.isArray(entry.taskIds) || entry.taskIds.some(id => !data.tasks.some(task => task.id === id))) fail(`${entry.id}: itens desconhecidos`);
   });
+  // Optional and deliberately light: this runs on every refresh and in the Pages build for JSON from any branch, so it only
+  // rejects what would break rendering or claim an unproven criterion.
+  if (data.milestones !== undefined) {
+    if (!Array.isArray(data.milestones)) { fail("milestones: lista obrigatória quando presente"); }
+    unique(data.milestones, "milestones");
+    const criteria = (steps, field) => {
+      if (!Array.isArray(steps)) { fail(`${field}: lista obrigatória`); }
+      unique(steps, field);
+      steps.forEach(step => {
+        string(step.id, `${field}.id`); string(step.label, `${field}.${step.id}.label`);
+        if (typeof step.done !== "boolean") { fail(`${field}.${step.id}: done deve ser booleano`); }
+        evidence(step.evidence, `${field}.${step.id}.evidence`);
+        if (step.done && !step.evidence.length) { fail(`${field}.${step.id}: conclusão sem evidência`); }
+      });
+    };
+    const list = (value, field) => { if (value !== undefined && (!Array.isArray(value) || value.some(item => typeof item !== "string"))) { fail(`${field}: lista de textos`); } };
+    data.milestones.forEach(milestone => {
+      string(milestone.id, "milestone.id"); string(milestone.title, `${milestone.id}.title`);
+      if (milestone.blocker) { string(milestone.blocker, `${milestone.id}.blocker`); }
+      list(milestone.scope, `${milestone.id}.scope`); list(milestone.outOfScope, `${milestone.id}.outOfScope`);
+      if (milestone.validations !== undefined && (!Array.isArray(milestone.validations) || milestone.validations.some(item => typeof item?.id !== "string" || typeof item?.title !== "string"))) { fail(`${milestone.id}.validations: lista de {id, title}`); }
+      if (milestone.items !== undefined && !Array.isArray(milestone.items)) { fail(`${milestone.id}.items: lista obrigatória`); }
+      const items = milestone.items ?? [];
+      unique(items, `${milestone.id}.items`);
+      items.forEach(item => {
+        string(item.id, `${milestone.id}.item.id`); string(item.title, `${item.id}.title`);
+        if (item.blocker) { string(item.blocker, `${item.id}.blocker`); }
+        list(item.gf, `${item.id}.gf`); list(item.dependsOn, `${item.id}.dependsOn`);
+        for (const id of item.gf ?? []) { if (!data.tasks.some(task => task.id === id)) { fail(`${item.id}: item GF desconhecido ${id}`); } }
+        for (const id of item.dependsOn ?? []) { if (id === item.id || !items.some(other => other.id === id)) { fail(`${item.id}: dependência inválida ${id}`); } }
+        criteria(item.criteria ?? [], `${item.id}.criteria`);
+      });
+      criteria(milestone.exit ?? [], `${milestone.id}.exit`);
+    });
+  }
   return data;
 }
