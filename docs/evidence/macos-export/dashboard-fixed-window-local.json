@@ -1,0 +1,45 @@
+{
+  "format": "godot-fabric.macos-export-dashboard-local-observation/v1",
+  "recordedAt": "2026-10-08T22:57:19.015720+00:00",
+  "url": "http://127.0.0.1:4317/#milestones",
+  "sourceCommit": "ead6ad46a68083c0ba9fd10e82d296d93750ac23",
+  "dashboardSha256": "1aa3db933bd5a56349f9f7edfc85c43f254c364689f6717b1a196cb81ad079e2",
+  "image": "dashboard-fixed-window-local.jpg",
+  "imageBytes": 85711,
+  "imageSha256": "8b4bf98f7a85e28662aaea41cfcad7ec2537977b7dde0e89679f4a20621791cd",
+  "observed": {
+    "releasePercent": 20.5,
+    "releaseCheckpoints": [
+      32,
+      156
+    ],
+    "releaseItems": [
+      0,
+      39
+    ],
+    "frontierPercent": 31,
+    "frontierCriteria": [
+      13,
+      42
+    ],
+    "frontierItems": [
+      2,
+      10
+    ],
+    "frontierExit": [
+      0,
+      11
+    ],
+    "p2Criteria": {
+      "plugin": true,
+      "assinatura": true,
+      "replay": false,
+      "limpa": false
+    }
+  },
+  "limitations": [
+    "Local served dashboard, not a hosted Pages deployment.",
+    "No additional criterion was marked done.",
+    "The prior failed CI remains recorded; revised hosted CI is pending."
+  ]
+}

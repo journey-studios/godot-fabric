@@ -22,6 +22,9 @@ unexplained local remount failure and the corrected generic-output false positiv
 The Frontier game replay, clean OS profile and second Mac/VM remain open.
 The earlier evidence below is retained unchanged and describes its own producer.
 
+The [local dashboard capture](dashboard-fixed-window-local.md) shows these evidence
+links and the remaining P2 criteria. It does not claim a public Pages deployment.
+
 ![Current exported app after inventory-only resize](fixed-window/export/captures/resized.png)
 
 ## Historical producer 58f5271

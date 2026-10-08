@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T19:56:44.981Z",
+  "updatedAt": "2026-10-08T22:55:24.948Z",
   "source": {
-    "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
-    "scope": "P5 V05-04 do marco 0.5: manifesto de escopo dos 12 nomes do React Native que a HUD do Frontier importa e política única de props (src/prop-scope.mjs) para View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView, com evidência local em 1b9f120 (lane JS, lane nativa, controle causal sobre e1c7a39 e seis sabotagens). Também traz os recibos de CI e Pages do #69 (GF-27). CI hospedada e Pages deste PR pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/74"
+    "commit": "ead6ad46a68083c0ba9fd10e82d296d93750ac23",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/ead6ad46a68083c0ba9fd10e82d296d93750ac23",
+    "scope": "P2 V05-07: prova local do produtor 29969eb com main71 integrada, export nativo 13/13, runtime minimal 40/43, três capturas físicas 540×300 byte a byte iguais à execução editável, 220 pins SDK, auditoria local tar 280/280 e revisão independente da baseline 24/24. CI anterior 7c6a4f8 falhou; nova CI e CodeRabbit pendentes. Falha antiga de remount preservada sem causa comprovada. Só os links dos dois critérios P2 já concluídos foram atualizados; P1/P5 e todos os campos da 1.0 preservados.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
   },
   "phases": [
     {
@@ -3807,12 +3807,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Export Release minimal real:40/43,3PNG,219pins auditados;produtor58f5271,local",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/README.md"
+                  "label": "Prova local do produtor 29969eb: export Release minimal, 40/43 checks e 3 PNG físicos 540×300, idênticos à execução editável; 220 pins SDK auditados; nova CI pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/README.md"
                 },
                 {
-                  "label": "Recibo do app assinado e relocável;SDK/build/PCK vinculados",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/executed-export.json"
+                  "label": "Recibo real do app assinado e relocável, com SDK/build/PCK vinculados e RN lógico 1080×600 a scale 0.5",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/export/receipt.json"
                 }
               ]
             },
@@ -3822,12 +3822,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Deep/strict no caminho final e auditoria independente18checks;local",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/root-independent-review.json"
+                  "label": "Auditoria local do arquivo tar: 280 checks, incluindo deep/strict, links, modos e 220 pins; sem certificação de CI",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/local-audit/audit.json"
                 },
                 {
-                  "label": "Normalização idempotente e quatro mutações reais rejeitadas",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/954a56378fe124608ceb02d821402525363e88be/docs/evidence/macos-export/native-controls.json"
+                  "label": "Normalização idempotente e quatro mutações reais rejeitadas no produtor 29969eb",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/controls/report.json"
                 }
               ]
             },
@@ -4353,6 +4353,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-p2-fixed-window-29969eb",
+      "at": "2026-10-08T22:55:24.948Z",
+      "taskIds": [],
+      "message": "P2, critérios plugin e assinatura: produtor local 29969eb passou 13/13 testes nativos e o app assinado/relocado passou os mesmos 40/43 checks. As três capturas físicas 540×300 mostram o canvas lógico 1080×600 a scale 0.5 e são idênticas à execução editável independente. Root verificou 220 pins SDK, o tar local em 280 checks e a baseline em 24 checks. Contratos: 395 Node PASS + 1 skip explícito e 23 Python PASS; static/publication PASS. Evidências e falhas anteriores preservadas por hashes; o remount antigo continua sem causa comprovada. A CI anterior 7c6a4f8 está vermelha; nova CI e revisão pendentes. Replay do jogo, perfil limpo, segundo Mac/VM e critérios de saída continuam abertos. Nenhum done, checkpoint, peso ou denominador da 1.0 mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/README.md"
+    },
     {
       "id": "library-consumer-main-hosted-ci-and-pages-20261008",
       "at": "2026-10-08T19:56:44.981Z",
