@@ -486,6 +486,20 @@ touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-l
 cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
 [Evidence](docs/evidence/device-services/README.md); [research](docs/research/device-services.md).
 
+The [world-input spike](examples/world-input/README.md) draws a React Native HUD over a Godot map
+(a `Node2D` of 24x16 tiles under a `Camera2D` at zoom 2) and measures who gets the pointer. A
+`FabricSurface` now takes `MOUSE_FILTER_IGNORE` by default, so the Views React Native mounts are the only
+Controls that stop a pointer: a click on the empty area of the `pointerEvents="box-none"` root reaches the
+map's `_unhandled_input` exactly once (and picks the tile the camera gives), a click or tap on a `Pressable`
+presses it once and never reaches the map, and with a `View` overlay or a `Modal` open nothing does. The
+headless probe counts bursts of 100 events delivered by one flush, so no count depends on frame pacing, in
+two topologies (one full-screen Surface, and one Surface per panel; the overlay checks and a local windowed
+lane with captures on a real macOS window use the full-screen one only) with an independent oracle; the host that
+predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
+a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the map as well
+as React Native: they are recorded and left to the second slice of the spike. Hardware pointers, a real touch
+screen and mobile exports are open, and so is hosted CI. [Evidence](docs/evidence/world-input/README.md); [research](docs/research/world-input.md).
+
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline
 (`ImageShadowNode`, `ImageRequest` and its observers) with a host `ImageManager`. Pictures are
