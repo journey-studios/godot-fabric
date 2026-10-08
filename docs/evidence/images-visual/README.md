@@ -30,6 +30,37 @@ npm run test:images-visual
 A suíte tem 53 checks, 40 normativos (os que dependem de um efeito) e 13 estruturais. O mesmo bundle, de
 SHA-256 `814ca94d…`, rodou em todas as lanes, e cada uma percorre todos os estágios.
 
+> Nota posterior (2026-10-08): esta página, as contagens e o [recibo](report.json) descrevem a execução em
+> [`6c221e8`](https://github.com/journey-studios/godot-fabric/commit/6c221e8500e159ba9322d9b7a6b5adace4f8aff2). Depois
+> dos merges da `main` (#62 e #59) e da revisão do PR #66, o commit
+> [`b5471d9`](https://github.com/journey-studios/godot-fabric/commit/b5471d9a36a36e5aabd9469652b9b9b9e6113248) acolheu
+> duas observações do CodeRabbit (3 arquivos) e manteve as contagens da execução, exceto a das asserções do teste C++.
+> O `postReview` do recibo guarda os SHA-256 dos arquivos mudados nos dois lados, as lanes reexecutadas e a causa de
+> cada mudança. As observações e o que mudou:
+>
+> 1. **O tamanho do buffer do blur.** O `box_blur_rgba8` calculava `width × height` e depois `count × 4` sem checar o
+>    estouro de `size_t`: dimensões que nenhum bitmap tem davam uma conta que dá a volta, e a função poderia ler e escrever
+>    fora do buffer que recebeu. Agora ela retorna sem tocar no buffer quando uma das duas contas estouraria; nos
+>    tamanhos reais nada muda. O `image_effects_test` ganhou o grupo `dimensions_that_overflow_leave_the_buffer`, com
+>    três casos (`2^63 × 2`, que dá a volta até zero pixels; `SIZE_MAX × 3`; e uma largura de `SIZE_MAX / 4 + 1`, cuja
+>    contagem de pixels cabe e a de bytes não), e passa a ter 11 grupos e 49 asserções, onde tinha 10 e 46.
+>
+> 2. **Um laço de supersampling só.** O `logoAt` do `scripts/images-example-assets.mjs` repetia o laço que o `drawn` roda
+>    para os outros assets; agora o `drawn` vem antes dele e o `logoAt` o chama, e todo asset desenhado passa pelo mesmo
+>    laço. Os 12 PNGs de `examples/images/assets` foram desenhados de novo e têm os mesmos SHA-256 de antes, byte a byte.
+>
+> Arquivos mudados depois de `6c221e8`, com o SHA-256 em `b5471d9` (o `postReview` guarda os dois lados):
+> `native/image_effects_core.h` (`20877a74…`), `native/image_effects_test.cpp` (`5d8ecbbe…`) e
+> `scripts/images-example-assets.mjs` (`0401ef5f…`). Reexecutado na árvore de `b5471d9`, sem mudança fora do commit e
+> com o host `a231884f` (a árvore inclui os merges da `main`): a lane atual passa 53/53, o controle no host anterior
+> falha os mesmos 40 normativos entre 53 checks, as sabotagens falham 2, 3, 8 e 2, todas rejeitadas pelo oráculo, e a
+> lane atual passa 53/53 outra vez. O bundle das lanes é o `9e2b7e03…`: o de `6c221e8` (`814ca94d…`) mudou porque a
+> #62 alterou `src/text.jsx` e `src/base-view-config.js`, que ele contém, e a revisão não o mudou. Passam também o
+> `test:images` (72 checks) e o `test:images-network` (74), o `test:examples` (35 exemplos, o `images` com 26 checks
+> headless), a captura com o renderizador (39 checks, com os dois quadros nos SHA-256 dos commitados, `a1b31fee` e
+> `7f92a89a`), o `type-check`, a análise estática, o scan de publicação e o `test:dashboard`. O host `3ddf4725` e o
+> bundle `814ca94d…` das tabelas acima são os de `6c221e8`.
+
 ## O que o RN faz
 
 **O que chega ao lado nativo.** A view config que o `Image.ios.js` usa no iOS

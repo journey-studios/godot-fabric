@@ -3187,7 +3187,13 @@ unverified, a list of `capInsets` is refused (RN's parser reads it as a map and 
 black tint is not a tint (RN's C++ color has no value for it), and the border is painted below the picture where iOS
 paints it above (nothing differs in what is seen). The first slice's suite changed with the contract (72 checks, 13
 refusals fewer). Open: a comparison of the effects with iOS, hosted CI for this slice, and everything the earlier
-slices left open. This slice closes no checkpoint: GF-16 stays in progress.
+slices left open. This slice closes no checkpoint: GF-16 stays in progress. After the review of #66
+([`b5471d9`](https://github.com/journey-studios/godot-fabric/commit/b5471d9a36a36e5aabd9469652b9b9b9e6113248)),
+`box_blur_rgba8` returns without touching the buffer when `width x height` or the byte count would overflow `size_t`
+(the C++ test has 11 groups and 49 assertions), the example's `logoAt` shares the supersampling loop of every other
+drawn asset (the 12 PNGs are byte-identical), and the lanes ran again with the same counts (53, 40, and 2, 3, 8 and
+2); the `postReview` section of the [visual `report.json`](docs/evidence/images-visual/report.json) pins the three
+changed files.
 
 ### Node, heap and pump-phase baselines in a soak (2026-10-08)
 
