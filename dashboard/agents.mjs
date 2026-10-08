@@ -202,6 +202,9 @@ function checkAgent(agent, now, add) {
   if (reserved.length) {
     add("shared-area", "warning", [agent.slot], `slot ${agent.slot}`, `${label(agent)} reservou arquivos compartilhados (${reserved.join(", ")}): a reserva não é exclusiva; merge sequencial pelo orquestrador. Remova-os das áreas no próximo update.`);
   }
+  if (agent.git?.error) {
+    add("git-error", "warning", [agent.slot], `slot ${agent.slot}`, `${label(agent)}: não foi possível ler o git da worktree (${agent.git.error}); arquivos alterados desconhecidos.`);
+  }
   if (agent.git?.exists === false) {
     add("missing", "warning", [agent.slot], agent.worktree, `${label(agent)}: worktree não encontrada (${agent.worktree}); libere o slot.`);
   }

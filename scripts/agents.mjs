@@ -10,9 +10,13 @@ import { AGENT_SLOTS, AGENT_STATES, MAX_MESSAGES, coordinate, messageTimeline, v
 import { ago, shortPath } from "../dashboard/format.mjs";
 
 const run = promisify(execFile);
+// Git hooks (pre-commit...) export variables that locate the hook's own repository state. Inherited, they would
+// make `git -C <other worktree>` read the wrong place or fail, so every git call here runs without them.
+const GIT_LOCATION_VARIABLES = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR", "GIT_PREFIX"];
+const gitEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !GIT_LOCATION_VARIABLES.includes(name)));
 // The board polls other agents' worktrees: without --no-optional-locks, `git status` would refresh their index
 // and could make a concurrent `git add`/`git commit` of that agent fail on index.lock.
-const git = async (directory, ...args) => (await run("git", ["--no-optional-locks", "-C", directory, ...args], { maxBuffer: 64 * 1024 * 1024 })).stdout;
+const git = async (directory, ...args) => (await run("git", ["--no-optional-locks", "-C", directory, ...args], { env: gitEnv, maxBuffer: 64 * 1024 * 1024 })).stdout;
 const slotName = slot => `slot-${slot}.json`;
 
 // The registry lives in the shared git directory, so every worktree of this clone sees it and Git never tracks it.
@@ -21,7 +25,7 @@ export function resolveAgentsDirectory(cwd) {
     return path.resolve(process.env.FABRIC_AGENTS_DIR);
   }
   try {
-    const common = execFileSync("git", ["--no-optional-locks", "rev-parse", "--git-common-dir"], { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    const common = execFileSync("git", ["--no-optional-locks", "rev-parse", "--git-common-dir"], { cwd, env: gitEnv, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
     return path.resolve(cwd, common, "fabric-agents");
   } catch {
     throw new Error("Repositório git não encontrado; use --agents <dir> ou FABRIC_AGENTS_DIR.");
@@ -334,10 +338,17 @@ async function say({ positionals, options, context }) {
 
 async function check({ context }) {
   const mine = registered(context);
-  const issues = coordinate(context.board.agents).issues.filter(issue => issue.slots.includes(mine.slot));
+  // Unreadable git state of any agent hides its changed files, so those warnings matter to everyone's check.
+  const issues = coordinate(context.board.agents).issues.filter(issue => issue.slots.includes(mine.slot) || issue.kind === "git-error");
   const conflicts = issues.filter(issue => issue.severity === "conflict");
   printIssues(conflicts, console.error);
   printIssues(issues.filter(issue => issue.severity === "warning"));
+  if (mine.git.error) {
+    // Without reading its own files the check cannot vouch for anything.
+    console.error(`Agente ${mine.slot}: check recusado; sem ler o git desta worktree não dá para afirmar que não há conflitos.`);
+    process.exitCode = 1;
+    return;
+  }
   if (conflicts.length) {
     process.exitCode = 1;
     return;

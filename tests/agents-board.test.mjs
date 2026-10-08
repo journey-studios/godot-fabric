@@ -116,6 +116,15 @@ test("branch, resource, worktree and slot clashes are conflicts; missing worktre
   assert.deepEqual(missing.issues.map(issue => issue.kind), ["missing"]);
 });
 
+test("an agent whose git state cannot be read gets a git-error warning instead of vanishing silently", () => {
+  const unreadable = live(record(1, { areas: ["src/a/"] }), [], { error: "fatal: unknown revision main...HEAD" });
+  delete unreadable.git.changed;
+  const result = coordinate([unreadable, live(record(2), ["src/a/new.js"])], start);
+  assert.deepEqual(result.issues.map(issue => [issue.kind, issue.severity, issue.slots]), [["trespass", "conflict", [1, 2]], ["git-error", "warning", [1]]]);
+  const warning = find(result, "git-error")[0];
+  assert.match(warning.message, /Agente 1: não foi possível ler o git da worktree \(fatal: unknown revision main\.\.\.HEAD\); arquivos alterados desconhecidos\./);
+});
+
 test("lanes always have five positions keyed by slot", () => {
   const result = coordinate([record(5), record(2)], start);
   assert.equal(result.lanes.length, AGENT_SLOTS);
@@ -551,6 +560,27 @@ test("a held registry lock is waited for, and reads never wait", async t => {
   const done = await waiting;
   assert.equal(done.code, 0, done.stderr);
   assert.deepEqual(await readdir(directory), ["slot-1.json"]);
+});
+
+test("check still sees trespass when a git hook leaks its repository variables, and refuses when it cannot read git", async t => {
+  const { main, a, b, git, directory } = await createRepository(t);
+  assert.equal((await cli(a, directory, "claim", "--task", "GF-22", "--title", "A", "--area", "lib/")).code, 0);
+  assert.equal((await cli(b, directory, "claim", "--task", "GF-23", "--title", "B", "--area", "src/b/")).code, 0);
+  await writeFile(path.join(b, "lib/leaked.js"), "export {}\n");
+  // What a pre-commit hook exports: they would point `git -C <worktree>` at the wrong repository state.
+  const leaked = { GIT_DIR: path.join(main, ".git"), GIT_WORK_TREE: main, GIT_INDEX_FILE: path.join(path.dirname(main), "nowhere-index") };
+  const check = await cliWithEnv(leaked, b, directory, "check");
+  assert.equal(check.code, 1);
+  assert.match(check.stderr, /\[trespass\] Agente 2 alterou lib\/leaked\.js na área reservada pelo Agente 1/);
+
+  // Breaking the base branch makes git fail for every worktree: the check cannot vouch for anything and says so.
+  await git(main, "update-ref", "-d", "refs/remotes/origin/main");
+  await git(main, "update-ref", "-d", "refs/heads/main");
+  const blind = await cli(b, directory, "check");
+  assert.equal(blind.code, 1);
+  assert.match(blind.stdout, /AVISO \[git-error\] Agente 2: não foi possível ler o git da worktree/);
+  assert.match(blind.stderr, /Agente 2: check recusado/);
+  assert.doesNotMatch(blind.stdout, /sem conflitos/);
 });
 
 test("renaming a file out of another agent's area is trespass, staged and committed", async t => {
