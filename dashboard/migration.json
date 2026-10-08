@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Accessibility: primeira fatia (árvore semântica e bridge macOS) com evidência em ac5f913; o bridge é só local e a CI hospedada está pendente. Próximo: AccessibilityInfo (fatia 2)."
+    "focusTitle": "Imagens: Image do RN sobre decodificação em threads do Godot."
   },
-  "updatedAt": "2026-10-08T02:23:27.221171+00:00",
+  "updatedAt": "2026-10-08T02:37:03.732+00:00",
   "source": {
-    "commit": "ac5f913c1ca060c12e960ff1b6c22c372da2ebe9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9",
-    "scope": "Fatia GF-20 fixada em ac5f913 (execução em 42615f4, evidência registrada em ad7c53c e com a redação corrigida em ac5f913, integrada à main em 673c79e): árvore semântica e bridge AccessKit/macOS para View, Pressable e TouchableOpacity. 80 checks headless que provam só metadado, 22 na árvore NSAccessibility real e 594 asserções do núcleo C++; o host anterior falha 10 e 5 checks e quatro sabotagens são rejeitadas. O bridge roda só localmente, numa sessão gráfica do macOS, e o passo headless ainda não rodou na CI hospedada. O Godot 4.7.2 não tem bridge de acessibilidade em iOS nem Android. GF-20 segue parcial: apenas o checkpoint da primeira fatia fecha."
+    "commit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+    "scope": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN sobre o pipeline C++ de imagens do próprio RN e um ImageManager do host: leitura e decodificação no WorkerThreadPool do Godot, nunca na main thread; GodotImage com os seis modos do UIKit e os eventos do iOS; plugin esbuild de assets com o descritor do Metro. Implementação local fixada em 552fb56a098f35beb41a0a333f99f0f35b4b3ec9: 74 checks headless em duas roots, host anterior com as 3 falhas normativas que alcança, sabotagens retidas com 12 e 2 falhas rejeitadas pelo oráculo, exemplo com 17 checks headless e 25 gráficos. Evidência fixada em 7da93542b057f0e0d25b0a0984ff9b2329ba35bb. CI hospedada pendente. GF-16 segue parcial: só o checkpoint de fatia fecha."
   },
   "phases": [
     {
@@ -1721,7 +1721,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Images and asset pipeline",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22",
       "dependencies": [
         "GF-03",
@@ -1732,14 +1732,35 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Image, ImageBackground, AssetRegistry e Animated.Image originais do RN (Image.ios.js atrás de um wrapper validador) sobre o pipeline C++ de imagens do próprio RN (ImageShadowNode, ImageRequest e o coordenador de observadores) com um ImageManager do host: leitura, detecção do formato, limites e decodificação no WorkerThreadPool do Godot, nunca na main thread, com a textura criada na main thread dentro de um orçamento de upload por pump, cancelamento por troca e por desmontagem e parada que aguarda cada tarefa. GodotImage com os seis modos de redimensionamento do UIKit e os eventos onLoadStart, onProgress, onLoad, onError e onLoadEnd na ordem e com os payloads do iOS; módulo ImageLoader (getSize, getSizeWithHeaders, prefetch rejeitado, queryCache vazio). Fontes: require() de assets (plugin esbuild com o descritor do Metro, variantes @Nx escolhidas pelo pickScale e manifesto com SHA-256), res://, user://, file:// e data:; PNG, JPEG, WebP, BMP, TGA e SVG. 74 checks headless em duas roots, com um oráculo independente; o host anterior alcança 11 checks e falha os 3 normativos que alcança; as sabotagens retidas (decodificação na main thread e view que mantém o pedido trocado) falham 12 e 2, rejeitadas pelo oráculo, que também recusa 15 mutações do relatório genuíno. Exemplo: 17 checks headless, 25 gráficos e 2 capturas macOS. Abertos: imagens de rede (dependem do GF-22), cache de imagem decodificada e prefetch, tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier e overlayColor (falham onde a Image renderiza), recorte arredondado (o raio de borda no estilo da Image falha), GIF e WebP animados, nativeImageSource, export de assets para desktop e Android (o hook iOS copia o manifesto, sem app exportado executado), oráculo independente de pixels, comparação com o iOS e alvos além do macOS arm64. CI hospedada pendente. O aceite total do GF-16 continua em andamento; esta fatia fecha só o checkpoint de fatia e não altera peso nem denominador.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Images: 74 checks headless, host anterior com as 3 falhas normativas que alcança e duas sabotagens retidas rejeitadas pelo oráculo (implementação 552fb56)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/README.md"
+            },
+            {
+              "label": "Images: recibo de execução, pins SHA-256, lanes e limites",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/report.json"
+            },
+            {
+              "label": "Images: captura dos seis modos e das fontes (SHA-256 52c7b512)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/images-all-modes.png"
+            },
+            {
+              "label": "Images: captura depois dos cliques (SHA-256 3ee69e2b)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/images-interaction.png"
+            },
+            {
+              "label": "Images: nota de pesquisa com o contrato do RN e os desvios do host",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/research/images.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3529,6 +3550,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
     },
     {
+      "id": "device-services-first-slice-f3571fd",
+      "at": "2026-10-08T02:06:52.660442+00:00",
+      "taskIds": [
+        "GF-23"
+      ],
+      "message": "Primeira fatia do GF-23 com evidência local: Linking, Clipboard e Vibration originais do RN sobre três TurboModules C++ e um backend substituível. 65 checks headless em duas aplicações e 2 num processo sem --uri=, com oráculo independente; o host anterior falha exatamente 52/65 e 1/2, as sabotagens url duplicado e getString com cache obsoleto falham 5 e 9; o exemplo passa 16 headless, 16 gráficos e 23 com sete capturas. Só o checkpoint slice do GF-23 fecha; CI hospedada pendente e sem PR aberta. Abertos: Alert, Share, Settings, BackHandler, deep link mobile, Windows e Linux.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/ba0a63f7d697fef7eaab7951e3b211a49b58f635"
+    },
+    {
       "id": "text-layout-first-slice-20261007",
       "at": "2026-10-08T02:06:47.722+00:00",
       "taskIds": [
@@ -3536,6 +3566,22 @@
       ],
       "message": "Primeira fatia do GF-11 (Text and fonts): onTextLayout e o baseline do Yoga passam a vir das linhas do parágrafo que o host mede e pinta, por um TextLayoutManager de plataforma do Godot com measureLines. 76 checks headless confrontados com as tabelas dos TTFs empacotados por um oráculo independente (tolerância ±1 px; o desvio medido é de no máximo 0,576 px com o arredondamento do FreeType, e a escala crua erra até 1,484 px); o host anterior falha exatamente 5 checks e as três sabotagens retidas falham 4, 3 e 9, todas rejeitadas pelo oráculo; exemplo com 18 checks headless e 32 gráficos e duas capturas. A CI hospedada do passo novo está pendente. Só o checkpoint slice do GF-11 fecha; nenhum item completo, peso ou denominador muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
+    },
+    {
+      "id": "images-local-verified-20261007",
+      "at": "2026-10-08T02:03:11.000Z",
+      "taskIds": [
+        "GF-16"
+      ],
+      "message": "Image, ImageBackground, AssetRegistry e Animated.Image do RN sobre o pipeline C++ de imagens do próprio RN e um ImageManager do host: 74 checks headless em duas roots, nenhuma leitura nem decodificação na main thread, pedidos cancelados na troca e na desmontagem sem criar textura, os seis modos do UIKit e o plugin de assets com o descritor do Metro. O host anterior alcança 11 checks e falha os 3 normativos que alcança; decodificar na main thread falha 12 checks e a view que mantém o pedido trocado falha 2, ambas rejeitadas pelo oráculo independente, que também recusa 15 mutações do relatório genuíno. Primeira fatia do GF-16: fecha só o checkpoint de fatia; imagens de rede, cache, tint, blur, capInsets, recorte arredondado e formatos animados seguem abertos; CI pendente. Checkpoints e itens concluídos: 24/156 e 0/39; pesos e denominadores preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7da93542b057f0e0d25b0a0984ff9b2329ba35bb/docs/evidence/images/README.md"
+    },
+    {
+      "id": "agent-board-parallel-20261008",
+      "at": "2026-10-08T00:43:16.000Z",
+      "taskIds": [],
+      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
     },
     {
       "id": "modal-hosted-bee7b40-global-timeout",
@@ -5463,22 +5509,6 @@
       ],
       "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
-    },
-    {
-      "id": "agent-board-parallel-20261008",
-      "at": "2026-10-08T00:43:16.000Z",
-      "taskIds": [],
-      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
-    },
-    {
-      "id": "device-services-first-slice-f3571fd",
-      "at": "2026-10-08T02:06:52.660442+00:00",
-      "taskIds": [
-        "GF-23"
-      ],
-      "message": "Primeira fatia do GF-23 com evidência local: Linking, Clipboard e Vibration originais do RN sobre três TurboModules C++ e um backend substituível. 65 checks headless em duas aplicações e 2 num processo sem --uri=, com oráculo independente; o host anterior falha exatamente 52/65 e 1/2, as sabotagens url duplicado e getString com cache obsoleto falham 5 e 9; o exemplo passa 16 headless, 16 gráficos e 23 com sete capturas. Só o checkpoint slice do GF-23 fecha; CI hospedada pendente e sem PR aberta. Abertos: Alert, Share, Settings, BackHandler, deep link mobile, Windows e Linux.",
-      "url": "https://github.com/journey-studios/godot-fabric/commit/ba0a63f7d697fef7eaab7951e3b211a49b58f635"
     }
   ]
 }

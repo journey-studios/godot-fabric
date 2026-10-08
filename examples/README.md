@@ -56,6 +56,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
 | [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
 | [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
+| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -360,6 +361,17 @@ networking` clicks Connect, Send, Binary, Server close, Drop and Close against a
 scene starts). Its receipt records 93 headless checks, the preceding-host control, which fails
 exactly 81, and two retained sabotages, which fail 4 and 2. The example now has two cards, so
 its captures, 11 in all, were taken again and live with that record.
+
+The [images probe](images/README.md) runs RN's original `Image`, `ImageBackground`, `AssetRegistry` and
+`Animated.Image` over RN's own C++ image pipeline in two roots of one application: the declared
+sources (bundled `@Nx` assets, `res://`, `user://`, `file://` and `data:` URIs in every format), the six
+resize modes, the events and their order, failures, and decodes held in flight while their request is
+swapped away or unmounted, with an independent oracle that recomputes the sources, pixel sizes, events
+and rectangles from RN's formulas and the fixture's own pixels: `npm run test:images`, next to the
+launcher entry (`npm run example -- images` clicks `Next mode` and `Swap the picture`). Its
+[receipt](../docs/evidence/images/README.md) records 74 headless checks, two captures, the
+preceding-host control, which fails the 3 normative checks it can reach, and two retained sabotages,
+which fail 12 and 2.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

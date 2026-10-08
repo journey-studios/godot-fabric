@@ -439,6 +439,21 @@ touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-l
 cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
 [Evidence](docs/evidence/device-services/README.md); [research](docs/research/device-services.md).
 
+The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
+`ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline
+(`ImageShadowNode`, `ImageRequest` and its observers) with a host `ImageManager`. Pictures are
+read, bounded and decoded on Godot's `WorkerThreadPool`, never on the main thread, and a native
+`GodotImage` draws the texture with the six resize modes UIKit maps; `require()`d assets are
+Metro's modules with Metro's descriptor, every `@Nx` variant, chosen by RN's `pickScale`, and
+`res://`, `user://`, `file://` and `data:` sources decode PNG, JPEG, WebP, BMP, TGA and SVG. A
+request swapped away or unmounted while its decode is in flight reports nothing and creates no
+texture. 74 headless checks in two roots of one application with an independent oracle; the
+preceding host fails the 3 normative checks it can reach, and retained sabotages (decoding on the
+main thread, a view that keeps listening to a swapped-away request) fail 12 and 2. Network
+images, the decoded-image cache, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping and
+animated formats are open; each unsupported prop fails where the Image renders. Hosted CI is
+pending. [Evidence](docs/evidence/images/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -586,6 +601,13 @@ touchables, `FlatList` and `SectionList`, `Appearance` and `PanResponder` from t
 public `react-native` import, each driven by real mouse input in its validation.
 Every example README shows all the states it captures, and each evidence record
 keeps the SHA-256 of its frames in a `captures.json`.
+
+| Image: modes and sources | Image: after the clicks |
+| --- | --- |
+| [![The six resize modes, an @2x asset, data URIs, an ImageBackground and a failed picture](docs/evidence/images/images-all-modes.png)](examples/images/README.md) | [![The preview in center mode showing the logo after a swap](docs/evidence/images/images-interaction.png)](examples/images/README.md) |
+
+The Image example's frames are taken at content scale 2; its evidence keeps their SHA-256 in
+`report.json`.
 
 | Pointerdown interest: initial | Pointerdown interest: after React updates |
 | --- | --- |

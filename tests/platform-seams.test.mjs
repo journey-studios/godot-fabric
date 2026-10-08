@@ -76,6 +76,24 @@ test("RN's RCTNetworking resolves to its Android wrapper and a project's own mod
   assert.equal(Object.keys(result.metafile.inputs).length, 2);
 });
 
+test("RN's Image resolves to the Godot wrapper for every importer, and a project's own Image stays", async t => {
+  // RN ships Image only as .ios.js and .android.js (Image.js merely imports itself), and this host resolves neither extension.
+  // The deep import, ImageBackground and AnimatedImage all get the wrapper over Image.ios.js.
+  const rn = fixture(t, {"App.js": [
+    'import Image from "react-native/Libraries/Image/Image";',
+    'import ImageBackground from "react-native/Libraries/Image/ImageBackground";',
+    'import AnimatedImage from "react-native/Libraries/Animated/components/AnimatedImage";',
+    "export default [Image, ImageBackground, AnimatedImage];"].join("\n")});
+  const inputs = Object.keys((await compile(rn, "App.js")).metafile.inputs);
+  assert.ok(inputs.some(input => input.endsWith("src/image.jsx")));
+  assert.ok(inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Image/Image.ios.js")));
+  assert.ok(!inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Image/Image.js")));
+  const project = fixture(t, {"Image.js": 'export default "owned";', "App.js": 'import value from "./Image"; export default value;'});
+  const result = await compile(project, "App.js");
+  assert.equal(execute(result).default, "owned");
+  assert.equal(Object.keys(result.metafile.inputs).length, 2);
+});
+
 test("a project AppRegistryImpl and renderApplication do not become original RN hooks", async t => {
   const directory = fixture(t, {
     "ReactNative/AppRegistryImpl.js": 'import render from "./renderApplication"; export default render();',
