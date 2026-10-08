@@ -89,6 +89,16 @@ clipboard. `Vibration`: `vibrate(ms)` for a finite, non-negative duration (`E_AR
 `cancel()` to the backend and `vibrateByPattern` refused with `E_UNSUPPORTED`. See the [research
 note](research/device-services.md).
 
+The OS-specific APIs (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetIOS`, `PushNotificationIOS`,
+`StatusBar` and the rest of the [OS-specific contracts](research/os-contracts.md)) add **no native
+module**, and their absence is the contract. RN looks the modules up by name (`ToastAndroid` with
+`getEnforcing`, `PermissionsAndroid`, `ActionSheetManager`, `DialogManagerAndroid` and
+`PushNotificationManager` with `get`, `StatusBarManager` with `getEnforcing`). The host registers none
+of the six: `TurboModuleRegistry.get` returns `null` and `getEnforcing` throws `'<name>' could not be
+found`, which the original JavaScript turns into its own warning, resolved value or error. The
+adapter manifest reserves the six names as host core, so a native extension cannot register one
+to make an API look supported. See the [OS-specific APIs](API.md#os-specific-apis) contract.
+
 ## Original logical tree and IDs
 
 The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,
