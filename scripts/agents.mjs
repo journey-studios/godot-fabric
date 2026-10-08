@@ -343,9 +343,14 @@ async function check({ context }) {
   const conflicts = issues.filter(issue => issue.severity === "conflict");
   printIssues(conflicts, console.error);
   printIssues(issues.filter(issue => issue.severity === "warning"));
-  if (mine.git.error) {
-    // Without reading its own files the check cannot vouch for anything.
-    console.error(`Agente ${mine.slot}: check recusado; sem ler o git desta worktree não dá para afirmar que não há conflitos.`);
+  // Files that cannot be read are files that cannot be ruled out: any agent with unreadable git fails the check.
+  const unreadable = context.board.agents.filter(agent => agent.git.error);
+  for (const agent of unreadable) {
+    console.error(agent === mine
+      ? `Agente ${mine.slot}: check recusado; sem ler o git desta worktree não dá para afirmar que não há conflitos.`
+      : `Agente ${mine.slot}: check recusado; o git de ${describe(agent)} está ilegível e seus arquivos alterados são desconhecidos. Fale com esse agente ou espere a worktree voltar.`);
+  }
+  if (unreadable.length) {
     process.exitCode = 1;
     return;
   }

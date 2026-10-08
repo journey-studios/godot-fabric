@@ -137,7 +137,8 @@ npm run agents -- claim --task GF-22 --title "Rede sobre o cliente HTTP" \
 npm run agents -- update --state testing --now "rodando os testes" --next "abrir a PR"
 # 3. recados para outro agente (sem --to vai para todos)
 npm run agents -- say "contrato do fetch pronto" --to 2
-# 4. antes de commit e push: sai com 1 se houver conflito com você
+# 4. antes de commit e push: sai com 1 se houver conflito com você ou se o
+#    git de algum agente estiver ilegível (arquivos alterados desconhecidos)
 npm run agents -- check
 # 5. ao entregar
 npm run agents -- release

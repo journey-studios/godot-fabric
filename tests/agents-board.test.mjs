@@ -583,6 +583,24 @@ test("check still sees trespass when a git hook leaks its repository variables, 
   assert.doesNotMatch(blind.stdout, /sem conflitos/);
 });
 
+test("check also fails when only ANOTHER agent's git cannot be read", async t => {
+  const { base, a, b, directory } = await createRepository(t);
+  assert.equal((await cli(a, directory, "claim", "--task", "GF-22", "--title", "A", "--area", "lib/")).code, 0);
+  assert.equal((await cli(b, directory, "claim", "--task", "GF-23", "--title", "B", "--area", "src/b/", "--agent", "Outro agente")).code, 0);
+  assert.equal((await cli(a, directory, "check")).code, 0, "both readable: no conflicts");
+  // Agent 2's registered worktree turns into a directory that is not a git repository.
+  const broken = path.join(base, "broken");
+  await mkdir(broken);
+  const file = path.join(directory, "slot-2.json");
+  await writeFile(file, JSON.stringify({ ...JSON.parse(await readFile(file, "utf8")), worktree: broken }));
+  const check = await cli(a, directory, "check");
+  assert.equal(check.code, 1);
+  assert.match(check.stdout, /AVISO \[git-error\] Agente 2: não foi possível ler o git da worktree/);
+  assert.match(check.stderr, /Agente 1: check recusado; o git de Agente 2 \(Outro agente · B\) está ilegível e seus arquivos alterados são desconhecidos\. Fale com esse agente ou espere a worktree voltar\./);
+  assert.doesNotMatch(check.stderr, /desta worktree/, "the own-git message is for the agent's own worktree only");
+  assert.doesNotMatch(check.stdout, /sem conflitos/);
+});
+
 test("renaming a file out of another agent's area is trespass, staged and committed", async t => {
   const { a, b, git, directory } = await createRepository(t);
   assert.equal((await cli(a, directory, "claim", "--task", "GF-22", "--title", "A", "--area", "lib/")).code, 0);
