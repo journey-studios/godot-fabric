@@ -784,7 +784,12 @@
     "ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29"
   },
   "hostedCI": {
-    "status": "pending-images-visual-slice"
+    "status": "verified",
+    "run": 37773373567,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37773373621,
+    "publication": "publication.json"
   },
   "postReview": {
     "at": "2026-10-08T11:37:39.735Z",

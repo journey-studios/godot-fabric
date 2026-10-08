@@ -1,56 +1,18 @@
 import assert from "node:assert/strict";
 import path from "node:path";
-import { tmpdir } from "node:os";
-import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, writeFile, rm, rename, symlink } from "node:fs/promises";
-import { createHash } from "node:crypto";
-import { ensureGodotBinary } from "./godot-binary.mjs";
+import { cp, mkdir, readFile, writeFile, rm, rename, symlink } from "node:fs/promises";
+import { createHarness, hash } from "./consumer-harness.mjs";
 
-const root = fileURLToPath(new URL("..", import.meta.url));
 const capture = process.argv.includes("--capture");
 const nativeChecks = 40;
 const graphicalChecks = nativeChecks + 3;
-const directory = path.join(root, "build", "consumer");
-await mkdir(directory, { recursive: true });
+const harness = await createHarness({ template: "minimal", name: "consumer" });
+const { directory, project, outside, env, checks, sdk, verify, run, editor } = harness;
+const runtime = (label, headed = false) => harness.runtime(label, { headed, marker: /CONSUMER_VALIDATION_PASSED/, report: "consumer-report.json", expectedChecks: headed ? graphicalChecks : nativeChecks });
 await rm(path.join(directory, "report.json"), { force: true });
-const temporary = await mkdtemp(path.join(tmpdir(), "godot-fabric-consumer-"));
-const project = path.join(temporary, "project");
-const outside = await mkdtemp(path.join(tmpdir(), "godot-fabric-output-control-"));
-const sdk = path.join(project, "addons", "godot_fabric");
-const env = { ...process.env, PATH: "/usr/bin:/bin", NODE_PATH: "" };
-const godot = await ensureGodotBinary();
-const checks = [];
-const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
-function verify(condition, name) { checks.push({ name, passed: !!condition }); assert.ok(condition, name); }
-async function run(label, command, args, expected = 0, environment = env) {
-  const result = spawnSync(command, args, { cwd: label === "provision" ? root : project, env: environment, encoding: "utf8", timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
-  const log = (result.stdout ?? "") + (result.stderr ?? "");
-  await writeFile(path.join(directory, label + ".log"), log);
-  assert.equal(result.error, undefined, log);
-  assert.equal(result.status, expected, log);
-  assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|CONSUMER_CHECK_FAILED/);
-  return log;
-}
-async function editor(label, expected = 0) {
-  const log = await run(label, godot, ["--path", project, "--headless", "--editor", "--", "--godot-fabric-build-check"], expected);
-  assert.match(log, expected === 0 ? /CONSUMER_EDITOR_BUILD_PASSED/ : /CONSUMER_EDITOR_BUILD_REJECTED/);
-  if (!expected) assert.doesNotMatch(log, /(?:^|\n)ERROR:/);
-  return log;
-}
-async function runtime(label, headed = false) {
-  await rm(path.join(project, "consumer-report.json"), { force: true });
-  const log = await run(label, godot, ["--path", project, ...(headed ? [] : ["--headless"]), "--", "--validate", ...(headed ? ["--capture"] : [])]);
-  assert.doesNotMatch(log, /(?:^|\n)ERROR:|FABRIC_ERROR/);
-  assert.match(log, /CONSUMER_VALIDATION_PASSED/);
-  const report = JSON.parse(await readFile(path.join(project, "consumer-report.json"), "utf8"));
-  assert.equal(report.checks.length, headed ? graphicalChecks : nativeChecks);
-  assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
-  await writeFile(path.join(directory, label + ".json"), JSON.stringify(report, null, 2) + "\n");
-  return report;
-}
 try {
-  await run("provision", process.execPath, [path.join(root, "scripts", "create-consumer.mjs"), project], 0, process.env);
+  await harness.provision();
   await cp(path.join(sdk, "manifest.json"), path.join(directory, "sdk-manifest.json"));
   const manifest = JSON.parse(await readFile(path.join(sdk, "manifest.json"), "utf8"));
   const guide = await readFile(path.join(project, "README.md"), "utf8");
@@ -234,7 +196,4 @@ try {
   verify(hash(await readFile(bundlePath)) === bundleHash, "The original consumer can build again after rejected requests");
   await writeFile(path.join(directory, "report.json"), JSON.stringify({ schemaVersion: 1, host: "macOS arm64", checks, nativeChecks, graphicalChecks: capture ? graphicalChecks : null }, null, 2) + "\n");
   console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; " + nativeChecks + " native checks");
-} finally {
-  await rm(temporary, { recursive: true, force: true });
-  await rm(outside, { recursive: true, force: true });
-}
+} finally { await harness.cleanup(); }

@@ -261,7 +261,7 @@ redondo incluído, com a imagem recortada pelo raio menos a borda. Não há orá
 inteiro, e a comparação com o UIKit segue aberta em Limites. Os quadros da fatia de rede ficam em
 [`docs/evidence/images-network`](../images-network/README.md), mostrando o exemplo antes dos quatro cartões.
 
-Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
+A lane com o renderizador roda só localmente; a CI hospedada rodou a lane headless da suíte (veja Limites).
 
 ## Regressões
 
@@ -308,9 +308,22 @@ depois delas; os gates que os leem rodaram de novo na árvore final.
   app exportado, export desktop ou Android foi executado.
 - **Plataformas.** Só macOS arm64 foi executado; Windows, Linux, Android, iOS e Web não foram exercitados, nem
   hardware real.
-- **CI.** A CI hospedada desta fatia está pendente: o oráculo e a sonda afirmam valores que o host entregou ou estados
-  de um modelo, nunca o ritmo de quadros nem a segmentação dos bytes, e toda espera é limitada por tempo e termina
-  num estado.
+- **CI.** A CI hospedada do push da `main` em `9c5d0eb` (o squash do #66, run 37773373567) passou nos cinco jobs na
+  primeira tentativa, sem reexecução. O job `native-cold-start` rodou `npm run test:images-visual` (1 de 1 teste
+  ok), e o artefato `native-images-visual` repete os **53 checks headless** com os IDs do relatório commitado (o
+  mesmo digest, `cc900508…`) e o bundle que o `postReview` do relatório registra (`9e2b7e03…`); o mesmo job rodou o
+  exemplo `images` no `test:examples` (26 checks headless). O oráculo independente aceita o relatório baixado (52
+  Images declaradas, 13 mudanças ao vivo, 62 jobs), e os 40, 2, 3, 8 e 2 checks que o controle e as sabotagens
+  locais falham existem e passam todos no run. Dos 181 pins de código e configuração, 168 têm em `9c5d0eb` os bytes
+  de `6c221e8` e 13 diferem: 3 são os arquivos do commit da revisão, com os SHA-256 que o `postReview` registra, e
+  10 vieram com os merges da `main` (#59 e #62); nenhum dos 181, os 34 produtores do bundle entre eles, difere
+  entre o commit da revisão `b5471d9` e o run. O hash do host nativo (`964c61dd…`) é declarado pelo runner, que usou o Node
+  v22.23.2 onde o estado commitado rodou o v22.23.3. O [Pages](publication.json) (run 37773373621) implantou
+  exatamente os dados commitados de `9c5d0eb`; o site público já foi substituído pelo deploy de `b82fbdd` (run
+  37780395930). O oráculo e a sonda afirmam valores que o host entregou ou estados de um modelo, nunca o ritmo de
+  quadros nem a segmentação dos bytes, e toda espera é limitada por tempo e termina num estado. A CI hospedada não
+  roda o controle no host anterior, as sabotagens nem a captura com o renderizador, e o renderer headless não
+  desenha pixel. [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, contrato, paridade, alvo, outro checkpoint, peso ou denominador fecha: o GF-16 continua aberto,
 e esta terceira fatia não fecha nenhum checkpoint.
