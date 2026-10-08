@@ -1,0 +1,31 @@
+{
+  "runId": 37727042426,
+  "artifactId": 11527254889,
+  "artifactSha256": "b32df9e1f3fbfd33ad29e0002852c02fd0f3bb1a146e15561730d2ccb228022c",
+  "rendererCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+  "dataRef": "24bc971133ba3a88c2f9151de4c247091ddb5d89",
+  "artifactAndPublicJsonExactlyMatch": true,
+  "equalsCommittedJsonExceptPublication": true,
+  "publicJsonSha256": "ca3b3e7f3ebacac2df2a15e67968c6d46ca2a43a2bd1112524b8528499adf33b",
+  "checkpoints": 28,
+  "denominator": 156,
+  "wholeItemsComplete": 0,
+  "wholeItemsRequired": 39,
+  "allGf14CheckpointsRemainOpen": true,
+  "milestonesPreserved": true,
+  "verifiedAt": "2026-10-08T04:22:35.241151+00:00",
+  "url": "https://journey-studios.github.io/godot-fabric/",
+  "scope": "Published review progress from committed branch data through main workflow; GF14 acceptance is pending CI/CodeRabbit.",
+  "screenshot": {
+    "path": "docs/evidence/scroll-view/dashboard-public-24bc971.jpg",
+    "sha256": "8438b002aa63df7f0528bab82c62c158bc49c40367de1b67e353324d275bfe4c",
+    "shows": [
+      "publication24bc971 outside main",
+      "28/156 checkpoints",
+      "0/39 complete items",
+      "GF14 CI/CodeRabbit acceptance pending",
+      "Frontier milestone preserved"
+    ]
+  },
+  "snapshotBoundary": "This publication pins review-progress data committed in 24bc971. Later receipt-only commits preserve the same dashboard data and tested producer sources."
+}

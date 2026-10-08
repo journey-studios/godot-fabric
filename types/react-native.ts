@@ -48,8 +48,8 @@ export declare const AccessibilityInfo: typeof RN.AccessibilityInfo;
 export declare const Appearance: typeof RN.Appearance;
 export declare const useColorScheme: typeof RN.useColorScheme;
 export type ColorSchemeName = RN.ColorSchemeName;
-/** RN's original lists on the Godot ScrollView. Sticky headers, pull to refresh
- * and animated scrolling fail when requested. */
+/** RN's original lists on the Godot ScrollView. Unsupported native behavior
+ * such as sticky headers and pull to refresh fail at the public boundary. */
 export declare const FlatList: typeof RN.FlatList;
 export type FlatList<ItemT = unknown> = RN.FlatList<ItemT>;
 export declare const SectionList: typeof RN.SectionList;
@@ -249,6 +249,12 @@ export declare const Modal: React.ComponentType<ModalProps>;
  * insets are not supplied by this desktop host. */
 export declare const SafeAreaView: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
+/** RN's original ScrollView component, imperative methods, props and Context.
+ * Native behavior outside the Godot subset is rejected at runtime by the
+ * public wrapper; see docs/API.md for supported props and commands. */
+export declare const ScrollView: typeof RN.ScrollView;
+export type ScrollViewProps = RN.ScrollViewProps;
+export type ScrollViewInstance = RN.ScrollViewInstance;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {
   State: {

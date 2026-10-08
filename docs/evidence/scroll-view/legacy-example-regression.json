@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "status": "local-example-correction-independently-reviewed; hosted acceptance pending",
+  "producerCommit": "a0f1fc772c88396393ee5ee25bd0d6c27a893554",
+  "failedHead": "4a6dd9267814ee7200a7d061ff81e804e94c10c0",
+  "verifiedAt": "2026-10-08T06:28:00.666473+00:00",
+  "scope": "Legacy ScrollView example migration; GF-14 contract and checkpoint acceptance unchanged.",
+  "baselineAndRed": {
+    "schemaVersion": 1,
+    "scope": "CI example regression diagnosis; no checkpoint acceptance",
+    "head": "4a6dd9267814ee7200a7d061ff81e804e94c10c0",
+    "baseline": {
+      "main": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+      "runHead": "ed1ea6aeb690e8ea1066bb48b71bec4d37333f6b",
+      "actualCheckout": "2236b0dab63f66526ab8dc2950558bf421a14463",
+      "checkoutTree": "afef87833d86df083bbcde985395fd8f190d8f45",
+      "mainTree": "afef87833d86df083bbcde985395fd8f190d8f45",
+      "treesIdentical": true,
+      "runId": 37728153077,
+      "jobId": 113150925590,
+      "jobConclusion": "success",
+      "scrollChecks": 62,
+      "mode": "headless",
+      "logsSha256": "25e564c62b7bf86489c46acdd83aea7b2da77acdd3102d9ded3ae7942bfbad9a",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37728153077"
+    },
+    "red": {
+      "hostedRunId": 37731725838,
+      "hostedJobId": 113162134955,
+      "jobConclusion": "failure",
+      "stage": "npm run test:examples / scroll-headless",
+      "hostedLogSha256": "67d1b03c5bd8c5f41f9f058fe95f480e182a2e5ff7be18dad16448499d8c2d80",
+      "localLogSha256": "89f268965f99b20dfa84694c44f576b31f5695813bf2210f3d83ed23351d9b79",
+      "localErrors": [
+        "ERROR: FABRIC_CHECK_FAILED: Fabric ScrollView mounts a real Godot ScrollContainer",
+        "SCRIPT ERROR: Invalid access to property or key 'height' on a base object of type 'Dictionary'."
+      ],
+      "originalExampleAndValidatorMatchMain": true
+    },
+    "limitations": [
+      "Snapshot printed on GitHub was truncated; exact failing check comes from the preserved local RED log.",
+      "Green correction, product regressions, final CI and review are pending."
+    ]
+  },
+  "implementationReceipt": {
+    "schema": "godot-fabric.scroll-ci-reproduction/v1",
+    "head": "4a6dd9267814ee7200a7d061ff81e804e94c10c0",
+    "baseline": {
+      "commit": "2236b0dab63f66526ab8dc2950558bf421a14463",
+      "tree": "afef87833d86df083bbcde985395fd8f190d8f45",
+      "mainCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+      "result": "passed",
+      "scrollChecks": 62,
+      "evidence": {
+        "path": "build/scroll-view-root/example-ci-red-baseline.json",
+        "sha256": "7be1f7b6c15b808e458271ebc9aec2c05fb9d75238e480e75161af3492c623ed"
+      },
+      "note": "The example and validator sources match this baseline; the tree equals main. The RED was not present on baseline."
+    },
+    "red": {
+      "hosted": {
+        "path": "build/scroll-ci-red-4a6dd92/hosted-native-job.log",
+        "sha256": "67d1b03c5bd8c5f41f9f058fe95f480e182a2e5ff7be18dad16448499d8c2d80",
+        "failedTarget": "scroll-headless",
+        "note": "The FAILED_SNAPSHOT line was truncated by the hosted log upload; local reproduction supplied the complete assertions and script error."
+      },
+      "local": {
+        "path": "build/scroll-ci-red-4a6dd92/local-scroll-headless.log",
+        "sha256": "89f268965f99b20dfa84694c44f576b31f5695813bf2210f3d83ed23351d9b79",
+        "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+        "failedAssertions": [
+          "Fabric ScrollView mounts a real Godot ScrollContainer"
+        ],
+        "scriptError": "Invalid access to property or key 'height' on a base object of type 'Dictionary'.",
+        "failureReport": "not generated: verify() quits before save_report()"
+      },
+      "preservedPriorReport": {
+        "path": "build/scroll-ci-red-4a6dd92/preexisting-report.json",
+        "sha256": "b129763ecca0de2634818ee5bc45fc926ce265a05d5dc4c26917474ed4e4f69e",
+        "classification": "historical report from before the reproduction; not evidence of the RED"
+      }
+    },
+    "green": {
+      "headless": {
+        "path": "build/scroll-ci-red-4a6dd92/green-scroll-headless-report.json",
+        "sha256": "a50ca456c27dc1141ae09d92a95dc3a3c576fa7a607edd65922d059151c94e41",
+        "checks": 73,
+        "failedChecks": 0,
+        "runtimeErrors": 0,
+        "shutdownStopped": true,
+        "nativeTags": 0,
+        "activeTouches": 0
+      },
+      "headed": {
+        "path": "build/scroll-ci-red-4a6dd92/green-scroll-headed-report.json",
+        "sha256": "9d38768fb19975546514805169d85ad4c507caad67397765949b7c90b6e607d5",
+        "checks": 79,
+        "failedChecks": 0,
+        "runtimeErrors": 0,
+        "shutdownStopped": true,
+        "nativeTags": 0,
+        "activeTouches": 0,
+        "captures": [
+          {
+            "path": "build/scroll-initial.png",
+            "sha256": "2a6c45dc5fa0309f650a0be98c8698107e6bd279640ac98e772673522c388918"
+          },
+          {
+            "path": "build/scroll-drag.png",
+            "sha256": "092102f39d9c839921e99d5946f586c8cb21483fa2e38a3fb881c71852d5b158"
+          },
+          {
+            "path": "build/scroll-narrow.png",
+            "sha256": "e3671234730001d63c4ac6dc02325494c18ea2a39cf8e4f035864cd8219ca267"
+          }
+        ]
+      },
+      "fullExamples": {
+        "path": "build/scroll-ci-red-4a6dd92/full-examples.log",
+        "sha256": "24198f187781e961981a597d49cc67cda610d2d34967c50977f0fb6c6d8ea755",
+        "scenarios": 34,
+        "checks": 2457,
+        "result": "passed",
+        "fixtureRevision": "before the final category flex sizing correction; the final scroll-only runs include that correction"
+      },
+      "scrollContractTests": {
+        "path": "build/scroll-ci-red-4a6dd92/scroll-contract-tests.log",
+        "sha256": "cf4fddae2c7f0bff986a9153dd64f61a3b6598d0366562ddaeae80e12c57d2d3",
+        "passed": 4,
+        "failed": 0,
+        "result": "passed"
+      }
+    },
+    "finalInputs": {
+      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+      "bundleSha256": "d996737445600099810bf2fffd826add6e210e717bb0f15c3fa4e8c0d03cee8f",
+      "bundleInputsSha256": "d6eff48286078c3276d99b3e81ef1d2c33052110f04b0d496c53a25868a49040",
+      "appSourceSha256": "8b782cbd34705530b7fbe32929621690c1cc244d538d15593e292aeb5d87c598",
+      "validationSourceSha256": "254d132c7e9ce242f6b5efb4ef28cad408222c48b871510e1b053fb03e8d3246",
+      "finalHeadlessLogSha256": "60fa39b453e2ff4d0ecbf5ef1eee840513680a79a5fb17486a9792d94ee273fe",
+      "finalHeadedLogSha256": "0d07bfffe0110bfc13a203dca81a19fe335c93a36d4440d9990b814c0eb5e9d9",
+      "fullExamplesLogSha256": "24198f187781e961981a597d49cc67cda610d2d34967c50977f0fb6c6d8ea755"
+    },
+    "scope": [
+      "examples/scroll/App.jsx",
+      "scripts/scroll_validation.gd"
+    ],
+    "limitations": [
+      "The full examples suite passed before the final category flex sizing correction; final ScrollView headless and headed/capture runs passed after it.",
+      "No native source or binary was changed or rebuilt; hosted CI must still validate the patch."
+    ]
+  },
+  "independentRepeat": {
+    "schemaVersion": 1,
+    "status": "independently-repeated-local-example",
+    "executedAt": "2026-10-08T06:23:37.886770+00:00",
+    "project": "build/scroll-view-root/legacy-example-root-kulgepn1",
+    "godot": "4.7.2-stable (official)",
+    "displayServer": "headless",
+    "checks": 73,
+    "sourceSha256": {
+      "project.godot": "bd2d2febfcd045fc9ca17bfd984fa25bc5cd9f0cd64c9d5aaec6fb210957bb33",
+      "fabric.gdextension": "a637bbd04639fd4240a90b7ad9a71f21328b82aca35bc00717688ae1ba9dd6f0",
+      "examples/scroll/scene.tscn": "48144235436a4c6d19bc2df8b5e9783a44dd05b4cf4ca1b7231b2e4397a9a1d7",
+      "examples/scroll/App.jsx": "8b782cbd34705530b7fbe32929621690c1cc244d538d15593e292aeb5d87c598",
+      "scripts/validation_base.gd": "301cc8934e81529c3a0681640c64318a9f2ad4f04bb771c7864cc5b1849e1496",
+      "scripts/pointer_validation.gd": "83fa48be5a4ae239519471f3ad700587f146721003948591623f8dc5a8c9d8f8",
+      "scripts/scroll_validation.gd": "254d132c7e9ce242f6b5efb4ef28cad408222c48b871510e1b053fb03e8d3246",
+      "build/app.js": "d996737445600099810bf2fffd826add6e210e717bb0f15c3fa4e8c0d03cee8f",
+      "addons/fabric_godot.dylib": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2"
+    },
+    "frameworkSha256": {
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_SocketRocket.bundle/Contents/Info.plist": "6113b55a99f61521dd8686658dc2ea3411deecc6b0a00cd295471838f70be82d",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources/PrivacyInfo.xcprivacy": "97e32f473284df703a5fc921076956ef84a765ca9e7ba2e7ba61350652d12727",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_boost.bundle/Contents/Info.plist": "3ab31cddf070c17e56c236a430bfe9021eb516d150d6e2aad53c1f843947d7aa",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_boost.bundle/Contents/Resources/PrivacyInfo.xcprivacy": "d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle/Contents/Info.plist": "ffa96886d59ea3ce5e0956aedcd34e27f095addc41766f789f568296373eb27c",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle/Contents/Resources/PrivacyInfo.xcprivacy": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle/Contents/Info.plist": "bef9c1acf6b69457a101740e882edefcb1ae77f6f9747d4ed007a6f5f1450935",
+      "addons/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle/Contents/Resources/PrivacyInfo.xcprivacy": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335",
+      "addons/frameworks/ReactNativeDependencies.framework/Resources/Info.plist": "fe5083c8446d81f43cd2eea32df15608ced8c63a8d0f1724b5426cb66c618439",
+      "addons/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+      "addons/frameworks/ReactNativeDependencies.framework/Versions/A/Resources/Info.plist": "fe5083c8446d81f43cd2eea32df15608ced8c63a8d0f1724b5426cb66c618439",
+      "addons/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+      "addons/frameworks/ReactNativeDependencies.framework/Versions/Current/Resources/Info.plist": "fe5083c8446d81f43cd2eea32df15608ced8c63a8d0f1724b5426cb66c618439",
+      "addons/frameworks/hermesvm.framework/Versions/1/Resources/Info.plist": "2cfcc650f3f2ab8ff39a9347622eb8365cbc62dfbfabc539baaab4b1a0a75799",
+      "addons/frameworks/hermesvm.framework/Versions/1/hermesvm": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+      "addons/frameworks/hermesvm.framework/hermesvm": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+    },
+    "isolatedMainScene": "res://examples/scroll/scene.tscn",
+    "isolatedConfigurationSha256": "3de4895c181ccd6b755e91b354000a40ebb5985bb48a811aa6a2fbc50b4da40d",
+    "reportSha256": "494ecd535fb178f7641e3fed734b28d1771e6a9b4a8dc3f3dc73b153f6e5202c",
+    "logSha256": "0cf0f8dc0766f5021d5f07da68c3f40c73650da8b2bc9493186d5eaaee00f4a8",
+    "fullShutdownCleanup": true,
+    "limitations": [
+      "Local macOS headless execution; no hosted acceptance or mobile parity."
+    ]
+  },
+  "nativeResponderPolicy": {
+    "reactNative": "0.87.1",
+    "status": "independent-source-analysis; native reference replay not performed",
+    "decision": "Keep canonical native pan ownership and explicit native responder blocking; do not introduce a private termination-request bridge.",
+    "distinction": "Pressability.cancelable is JS responder transfer policy; blockNativeResponder is native interception policy. The removed JS ScrollView wrapper conflated them in the example.",
+    "sources": {
+      "pressability": {
+        "path": "node_modules/react-native/Libraries/Pressability/Pressability.js",
+        "sha256": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1"
+      },
+      "scrollView": {
+        "path": "node_modules/react-native/Libraries/Components/ScrollView/ScrollView.js",
+        "sha256": "2255279c0a1055c2b594a381e4817b1b9931fdb069272e63fff11086363e02cc"
+      },
+      "androidScroll": {
+        "path": "node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollView.kt",
+        "sha256": "aea406b8361847130596c2bf6e69e7aa12255ff9d2c0aa71dc1475be7a598a7d"
+      },
+      "androidResponderMount": {
+        "path": "node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.kt",
+        "sha256": "01da06daa1d77c521f3deb54d44c5f64152e6851d3745c527ee34e61d8effd20"
+      },
+      "androidResponder": {
+        "path": "node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/touch/JSResponderHandler.kt",
+        "sha256": "0c1280d431c1a5dd005762da048d063506c85ac769146246892fec706baf1d51"
+      },
+      "featureDefaults": {
+        "path": "node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h",
+        "sha256": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29"
+      },
+      "iosScroll": {
+        "path": "node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm",
+        "sha256": "787df789fab4fab9cb205f591d2ebc5aa12a8db4132c46308f65fff48e04e86b"
+      },
+      "godotPressable": {
+        "path": "src/components.jsx",
+        "sha256": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a"
+      },
+      "godotPanRouting": {
+        "path": "native/application_runtime.cpp",
+        "sha256": "84f1bd89aba4bcb6b3bb7ce8e4a9b44997c0989a4ae16233507989a555b6d746"
+      },
+      "godotPointer": {
+        "path": "native/pointer_adapter.cpp",
+        "sha256": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb"
+      }
+    },
+    "ranges": {
+      "pressability": [
+        479,
+        527,
+        531
+      ],
+      "scrollView": [
+        1438,
+        1447,
+        1498,
+        1505,
+        1873
+      ],
+      "androidScroll": [
+        553,
+        577
+      ],
+      "androidResponderMount": [
+        1009,
+        1040
+      ],
+      "androidResponder": [
+        31,
+        66
+      ],
+      "featureDefaults": [
+        306,
+        308
+      ],
+      "iosScroll": [
+        575,
+        590,
+        740,
+        743
+      ],
+      "godotPressable": [
+        179,
+        216
+      ],
+      "godotPanRouting": [
+        2122,
+        2137
+      ]
+    }
+  },
+  "preservedProductProof": {
+    "sourceCommit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
+    "currentComparisonCommit": "a0f1fc772c88396393ee5ee25bd0d6c27a893554",
+    "groups": {
+      "native": 123,
+      "scroll": 18,
+      "lists": 21,
+      "os": 11,
+      "supplemental": 40
+    },
+    "groupComparisons": 213,
+    "overlappingGroups": true,
+    "allGitBlobsAndWorkingFilesMatch": true,
+    "nativeHostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+    "gf14BundleSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
+    "priorProof": "docs/evidence/scroll-view/root-os-integration.json",
+    "note": "Only the legacy example and its validation script changed; neither is a producer in these dedicated GF-14/list/OS proof groups."
+  },
+  "captures": [
+    {
+      "path": "docs/evidence/scroll-view/legacy-example-initial.png",
+      "sha256": "2a6c45dc5fa0309f650a0be98c8698107e6bd279640ac98e772673522c388918",
+      "inspection": "Viewed by principal; final initial and narrow captures have the fixed-height category strip."
+    },
+    {
+      "path": "docs/evidence/scroll-view/legacy-example-drag.png",
+      "sha256": "092102f39d9c839921e99d5946f586c8cb21483fa2e38a3fb881c71852d5b158",
+      "inspection": "Viewed by principal; final initial and narrow captures have the fixed-height category strip."
+    },
+    {
+      "path": "docs/evidence/scroll-view/legacy-example-narrow.png",
+      "sha256": "e3671234730001d63c4ac6dc02325494c18ea2a39cf8e4f035864cd8219ca267",
+      "inspection": "Viewed by principal; final initial and narrow captures have the fixed-height category strip."
+    }
+  ],
+  "limitations": [
+    "The complete 34-scenario/2457-check example suite ran before the final category-strip presentation change; final 73/79 focused checks and the principal 73-check isolated repeat ran after it.",
+    "Native reference source analysis does not certify a replay on physical Android or iOS.",
+    "New hosted CI and CodeRabbit review are required; all GF-14 checkpoints remain false."
+  ]
+}

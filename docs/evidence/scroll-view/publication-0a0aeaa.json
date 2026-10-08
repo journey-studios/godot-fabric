@@ -1,0 +1,37 @@
+{
+  "runId": 37731033472,
+  "artifactId": 11530135047,
+  "artifactSha256": "1ef422689074286920e19d0b27dc758df60e963d04259a74a2ae6d0b237fe03b",
+  "rendererCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+  "dataRef": "0a0aeaaec11abc60b650c83685535850de18feb6",
+  "artifactAndPublicJsonExactlyMatch": true,
+  "equalsCommittedJsonExceptPublication": true,
+  "publicJsonSha256": "6d2954012b6ca61dee61106450f1c2ff076625fcccbb7a4fdf90ed57e8ff8816",
+  "checkpoints": 29,
+  "denominator": 156,
+  "wholeItemsComplete": 0,
+  "wholeItemsRequired": 39,
+  "allGf14CheckpointsRemainOpen": true,
+  "milestonesPreserved": true,
+  "verifiedAt": "2026-10-08T05:13:26.737788+00:00",
+  "url": "https://journey-studios.github.io/godot-fabric/",
+  "publication": {
+    "ref": "0a0aeaaec11abc60b650c83685535850de18feb6",
+    "commit": "0a0aeaaec11abc60b650c83685535850de18feb6",
+    "inMain": false,
+    "at": "2026-10-08T05:10:38.716Z"
+  },
+  "scope": "Published local review progress; current hosted CI and CodeRabbit acceptance remain pending. This receipt does not accept GF-14.",
+  "screenshot": {
+    "path": "docs/evidence/scroll-view/dashboard-public-0a0aeaa.jpg",
+    "sha256": "e2fb8c180fa72da0c1491e217e158006885ae77fa955c5e84efeae3a0063f64b",
+    "shows": [
+      "publication0a0aeaa outside main",
+      "29/156 checkpoints",
+      "0/39 complete items",
+      "GF14 CI/CodeRabbit acceptance pending",
+      "Frontier milestone preserved"
+    ]
+  },
+  "snapshotBoundary": "Published review-progress data from commit 0a0aeaa; later documentation and receipt-only changes preserve this exact dashboard dataset and tested producers. GF-14 is not accepted by this publication."
+}

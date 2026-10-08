@@ -8,6 +8,7 @@ extends SceneTree
 # for it, so a scroll never clicks. Inputs are actual Godot events.
 const DEVICE := 1001
 const AWAY := Vector2(320, 60)
+const QUIET_RELEASE_SECONDS := 0.35 # Longer than ScrollMotion's 250 ms velocity sample window.
 const POINTS := {"L1": Vector2(45, 40), "L2": Vector2(115, 40), "G": Vector2(80, 70), "S": Vector2(185, 45),
   "X": Vector2(260, 45), "P": Vector2(40, 110), "I0": Vector2(145, 110), "EMPTY": Vector2(260, 150)}
 # Root-relative origins of every possible click target; nothing is transformed.
@@ -122,6 +123,10 @@ func perform(name: String, action: Array) -> void:
     "touch": await touch(name, action[1], action[2], action[3])
     "touch-cancel": await touch(name, action[1], action[2], false, true)
     "drag": await drag(name, action[1], action[2])
+    "hold-stationary":
+      var deadline := Time.get_ticks_msec() + int(float(action[1]) * 1000.0)
+      while Time.get_ticks_msec() < deadline:
+        await process_frame
     "remove-left":
       js("removeLeft(%s)" % JSON.stringify(name))
       await settle()
@@ -131,16 +136,6 @@ func node_with(value: Dictionary, test_id: String) -> Dictionary:
     if node.get("testID") == test_id:
       return node
   return {}
-
-# Fixture refs plus W (the only View without a testID) and CT from the host.
-func tag_map(name: String, value: Dictionary, host: Dictionary) -> Dictionary:
-  var map := {}
-  var refs: Dictionary = value.panels[name].tags
-  for key: String in refs:
-    map[key] = int(refs[key]) if refs[key] != null else 0
-  map["W"] = int(node_with(host, "").get("tag", 0))
-  map["CT"] = int(node_with(host, name + "-scroll-content").get("tag", 0))
-  return map
 
 # RN's propagation for one click per lane: Document listeners need D, the
 # documentElement and View listeners I and D. Capture runs from the Document
@@ -174,7 +169,7 @@ func expected_events(name: String, target: String, map: Dictionary) -> Array:
   if native_dispatch:
     rows.append(["DocB", 3, "Doc"])
   return rows.map(func(row: Array) -> Array:
-    return [name, row[0], row[1], map[target], row[2] if row[2] in ["Doc", "Root"] else map[row[2]]])
+    return [name, row[0], row[1], int(map[target]), row[2] if row[2] in ["Doc", "Root"] else int(map[row[2]])])
 
 func observed_events(value: Dictionary) -> Array:
   return value.events.map(func(row: Dictionary) -> Array:
@@ -215,12 +210,12 @@ func run_case(spec: Dictionary) -> void:
   var after := native(surfaces[name])
   var app := native(application)
   stages[prefix] = {"react": value, "before": before, "after": after, "application": app}
-  var map := tag_map(name, value, after)
+  var map: Dictionary = value.panels[name].tags
   var target: String = spec.get("target", "")
   var kinds := {
     "click": prefix + "/The release synthesizes exactly the expected click from its own sample",
     "delivery": prefix + "/Click callbacks follow RN's propagation for this lane",
-    "takeover": prefix + "/A native scroll drag takes the contact over: one cancel, then only touches",
+    "takeover": prefix + "/A native scroll drag takes the contact over: one pointer and touch cancel, then native scrolling",
   }
   var clicks: Array = value.raw.filter(func(row: Dictionary) -> bool: return row.type == "topClick")
   var expected: Array = [] if target.is_empty() else expected_events(name, target, map)
@@ -236,12 +231,13 @@ func run_case(spec: Dictionary) -> void:
   check(click_ok, kinds.click)
   # Every callback shares the click's payload, which owns pointerType (so
   # Pressability ignores it), at Discrete priority, in this lane's event kind.
-  check(observed_events(value) == expected and value.events.all(func(row: Dictionary) -> bool:
-      return (row.type == ("click" if native_dispatch else null) and row.trusted == native_dispatch and
-        row.originalEvent == native_dispatch and row.compiledLegacySynthetic == (not native_dispatch) and row.ownPointerType and
-        not clicks.is_empty() and row.payloadId == clicks[0].payloadId and int(row.currentPriority) == int(value.discretePriority))) and
-      value.globalEventRestored and int(value.currentPriority) == int(value.defaultPriority),
-    kinds.delivery)
+  var observed := observed_events(value)
+  var event_payloads_valid: bool = value.events.all(func(row: Dictionary) -> bool:
+    return (row.type == ("click" if native_dispatch else null) and row.trusted == native_dispatch and
+      row.originalEvent == native_dispatch and row.compiledLegacySynthetic == (not native_dispatch) and row.ownPointerType and
+      not clicks.is_empty() and row.payloadId == clicks[0].payloadId and int(row.currentPriority) == int(value.discretePriority)))
+  var delivery_ok: bool = observed == expected and event_payloads_valid and value.globalEventRestored and int(value.currentPriority) == int(value.defaultPriority)
+  check(delivery_ok, kinds.delivery)
   if spec.get("takeover", false):
     expected_original_failures.append(kinds.takeover)
     check(takeover_matches(spec, value, before, after, name), kinds.takeover)
@@ -253,24 +249,43 @@ func run_case(spec: Dictionary) -> void:
       int(after.pointer.get("takenPointers", 0)) == 0,
     prefix + "/The contact ends without a retained touch, pointer, route or takeover")
 
-# One pointercancel at the takeover, after the scroll's begin-drag: the contact
-# then emits no move, Up or click, while its touches keep driving the scroll.
+# Native scroll takeover cancels both child streams before BeginDrag. No child
+# pointer or touch events follow; the native scroll owner continues the gesture.
 func takeover_matches(spec: Dictionary, value: Dictionary, before: Dictionary, after: Dictionary, name: String) -> bool:
-  var cancels := typed(value, "topPointerCancel")
-  if cancels.size() != 1 or value.raw.filter(func(row: Dictionary) -> bool: return row.channel == "star" and row.type == "topPointerCancel").size() != 1:
+  var pointer_cancels := typed(value, "topPointerCancel")
+  var touch_cancels := typed(value, "topTouchCancel")
+  var pointer_stars: Array = value.raw.filter(func(row: Dictionary) -> bool: return row.channel == "star" and row.type == "topPointerCancel")
+  var touch_stars: Array = value.raw.filter(func(row: Dictionary) -> bool: return row.channel == "star" and row.type == "topTouchCancel")
+  if pointer_cancels.size() != 1 or pointer_stars.size() != 1 or touch_cancels.size() != 1 or touch_stars.size() != 1:
     return false
-  var cancel: Dictionary = cancels[0]
-  var later := func(type: String) -> Array:
-    return typed(value, type).filter(func(row: Dictionary) -> bool: return int(row.sequence) > int(cancel.sequence))
+  var pointer_cancel: Dictionary = pointer_cancels[0]
+  var touch_cancel: Dictionary = touch_cancels[0]
+  var pointer_downs := typed(value, "topPointerDown")
+  if pointer_downs.size() != 1 or pointer_cancel.pointerId != pointer_downs[0].pointerId:
+    return false
+  if pointer_stars[0].payloadId != pointer_cancel.payloadId or touch_stars[0].payloadId != touch_cancel.payloadId:
+    return false
+  var after_pointer := func(type: String) -> Array:
+    return typed(value, type).filter(func(row: Dictionary) -> bool: return int(row.sequence) > int(pointer_cancel.sequence))
+  var after_touch := func(type: String) -> Array:
+    return typed(value, type).filter(func(row: Dictionary) -> bool: return int(row.sequence) > int(touch_cancel.sequence))
   var scroll_before: Dictionary = node_with(before, name + "-scroll").get("scroll", {})
   var scroll_after: Dictionary = node_with(after, name + "-scroll").get("scroll", {})
+  var scroll_began_after_cancels: bool = (value.scrollBegins.size() == 1 and
+    int(value.scrollBegins[0]) > int(pointer_cancel.sequence) and int(value.scrollBegins[0]) > int(touch_cancel.sequence) and
+    int(value.scrollBegins[0]) > int(pointer_stars[0].sequence) and int(value.scrollBegins[0]) > int(touch_stars[0].sequence))
   return (typed(value, "topPointerDown").size() == 1 and typed(value, "topPointerUp").is_empty() and
-    later.call("topPointerMove").filter(func(row: Dictionary) -> bool: return row.pointerId == cancel.pointerId).is_empty() and
-    not later.call("topTouchMove").is_empty() and later.call("topTouchEnd").size() == 1 and
-    value.scrollBegins.size() == 1 and int(value.scrollBegins[0]) < int(cancel.sequence) and
-    cancel.pointerType == spec.pointer and int(cancel.buttons) == 0 and
-    is_equal_approx(float(scroll_after.get("y", -1)), spec.scrolled) and int(scroll_after.get("begins", 0)) == int(scroll_before.get("begins", 0)) + 1 and
+    after_pointer.call("topPointerMove").filter(func(row: Dictionary) -> bool: return row.pointerId == pointer_cancel.pointerId).is_empty() and
+    after_pointer.call("topPointerUp").is_empty() and after_pointer.call("topClick").is_empty() and
+    after_touch.call("topTouchMove").is_empty() and after_touch.call("topTouchEnd").is_empty() and
+    pointer_cancel.pointerType == spec.pointer and int(pointer_cancel.buttons) == 0 and
+    float(scroll_before.get("y", -1)) == spec.startsAt and scroll_began_after_cancels and
+    is_equal_approx(float(scroll_after.get("y", -1)), spec.scrolled) and
+    int(scroll_after.get("begins", 0)) == int(scroll_before.get("begins", 0)) + 1 and
     int(scroll_after.get("ends", 0)) == int(scroll_before.get("ends", 0)) + 1 and
+    int(scroll_after.get("momentumBegins", 0)) == int(scroll_before.get("momentumBegins", 0)) and
+    int(scroll_after.get("momentumEnds", 0)) == int(scroll_before.get("momentumEnds", 0)) and
+    int(scroll_after.get("motion", -1)) == 0 and not bool(scroll_after.get("dragging", true)) and
     int(after.pointer.get("pointerTakeovers", -1)) == int(before.pointer.get("pointerTakeovers", -1)) + 1)
 
 func cases() -> Array:
@@ -317,13 +332,15 @@ func cases() -> Array:
     {"id": "touch/scroll-tap", "pointer": "touch", "target": "I0", "release": "I0",
       "actions": [["touch", "I0", 0, true], ["touch", "I0", 0, false]]},
     # Dragging up 55 points: the third sample passes the 8-point slop.
-    {"id": "touch/scroll-takeover", "pointer": "touch", "takeover": true, "scrolled": 55.0,
+    {"id": "touch/scroll-takeover", "pointer": "touch", "takeover": true, "startsAt": 0.0, "scrolled": 55.0,
       "actions": [["touch", Vector2(145, 175), 0, true], ["drag", Vector2(145, 167), 0], ["drag", Vector2(145, 159), 0],
-        ["drag", Vector2(145, 140), 0], ["drag", Vector2(145, 120), 0], ["touch", Vector2(145, 120), 0, false]]},
+        ["drag", Vector2(145, 140), 0], ["drag", Vector2(145, 120), 0], ["hold-stationary", QUIET_RELEASE_SECONDS],
+        ["touch", Vector2(145, 120), 0, false]]},
     # A mouse drag scrolls back down; its release ends the takeover.
-    {"id": "mouse/scroll-takeover", "pointer": "mouse", "takeover": true, "scrolled": 0.0,
+    {"id": "mouse/scroll-takeover", "pointer": "mouse", "takeover": true, "startsAt": 55.0, "scrolled": 0.0,
       "actions": [["move", Vector2(145, 110)], ["left", Vector2(145, 110), true], ["move", Vector2(145, 118)],
-        ["move", Vector2(145, 126)], ["move", Vector2(145, 150)], ["move", Vector2(145, 165)], ["left", Vector2(145, 165), false]]},
+        ["move", Vector2(145, 126)], ["move", Vector2(145, 150)], ["move", Vector2(145, 165)],
+        ["hold-stationary", QUIET_RELEASE_SECONDS], ["left", Vector2(145, 165), false]]},
     {"id": "mouse/after-scroll", "pointer": "mouse", "actions": down_up.call("L1"), "target": "L1", "release": "L1"},
     # Pressed on A, released over B: A's release hits nothing of A's.
     {"id": "mouse/cross-root", "pointer": "mouse",

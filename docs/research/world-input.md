@@ -20,9 +20,9 @@ time-box of three slices:
 
 1. **This one:** the minimal policy (a1) and a probe that measures it, including what it
    leaves open.
-2. **The next:** variant (a2) for the open cases below, after PR #58 (the ScrollView and
-   pointer adapter work) merges, because it touches the same hunks of
-   `native/application_runtime.cpp`.
+2. **The next:** variant (a2) for the open cases below. It waited for PR #58 (the ScrollView and
+   pointer adapter work), because it touches the same hunks of `native/application_runtime.cpp`; now
+   that #58 has merged it is unblocked.
 3. **The decision:** go or no-go on the numbers of the two.
 
 ## What Godot does with a pointer event

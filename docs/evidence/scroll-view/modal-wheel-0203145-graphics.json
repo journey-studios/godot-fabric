@@ -1,0 +1,64 @@
+{
+  "scenario": "scroll-view-modal-wheel-routing",
+  "status": "passed",
+  "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+  "buildReceiptSha256": "c1f3c7caef69cd6b7f47083edc479e230685ecdd2569d4af8529fe421d963615",
+  "canonicalBundleReceiptSha256": "16035e1c396a53a77df16dbea0858fdb5e892947c5ab975403474bf0af8859af",
+  "canonicalBundleJsSha256": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400",
+  "canonicalProbeSha256": "63ebdbf7dc75195010c0bf18dd0c9cbc74fe0a2b68e8850d70e518a9b2eb7a25",
+  "graphicsProbeSha256": "1e2fd0b338d89b6e17172d7445d1c0813ec7d4d659e8b3ab15c5a24954a09bcb",
+  "graphicsProbeDiff": "build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/scroll-view-modal-graphics-probe.diff",
+  "graphicsProbeDiffSha256": "dcc4001112fef7e158f9a7b309a2b3d5ecbd9879f4a2c0024aa5093422dbd9a9",
+  "captureRunnerSha256": "a9236f493e1ed3b513b770eeb00b4aff39c8ecbe179d2a1e252d8150bf06cc1d",
+  "captureInsertionPoints": [
+    {
+      "line": 244,
+      "after": "after_down snapshot",
+      "before": "modal/down offset assertion"
+    },
+    {
+      "line": 267,
+      "after": "after_left snapshot",
+      "before": "modal/left offset assertion"
+    }
+  ],
+  "captureReportSha256": "bae8512e34b33db4abc88b6c67ed877f0ed7b3c2288224677e50de6ccf1c3bec",
+  "logSha256": "3d40544509ddab2cc4417968050021de5e8646791ff1e3795091d70ebdc90964",
+  "captures": [
+    {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/modal-wheel-0203145-down.png",
+      "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124",
+      "bytes": 3155,
+      "publishedPath": "docs/evidence/scroll-view/modal-wheel-0203145-down.png"
+    },
+    {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/modal-wheel-0203145-horizontal.png",
+      "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903",
+      "bytes": 1868,
+      "publishedPath": "docs/evidence/scroll-view/modal-wheel-0203145-horizontal.png"
+    }
+  ],
+  "before": {
+    "host": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+    "receipt": "c1f3c7caef69cd6b7f47083edc479e230685ecdd2569d4af8529fe421d963615",
+    "bundle": "16035e1c396a53a77df16dbea0858fdb5e892947c5ab975403474bf0af8859af",
+    "builtBundle": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400"
+  },
+  "after": {
+    "host": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+    "receipt": "c1f3c7caef69cd6b7f47083edc479e230685ecdd2569d4af8529fe421d963615",
+    "bundle": "16035e1c396a53a77df16dbea0858fdb5e892947c5ab975403474bf0af8859af",
+    "builtBundle": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400"
+  },
+  "checks": 13,
+  "passedChecks": 13,
+  "limitations": [
+    "Headed macOS Godot Window viewport captures; no mobile hardware or refresh-rate certification."
+  ],
+  "publishedDiff": "docs/evidence/scroll-view/modal-wheel-0203145-capture.diff",
+  "review": {
+    "allCapturesViewedByRoot": true,
+    "copyChangesReviewed": true,
+    "actualCopyChanges": "Adds a bounded Window viewport capture helper, two frame-post-draw capture calls and capture metadata; isolates report path and output marker. Canonical fixture and report remain unchanged."
+  }
+}

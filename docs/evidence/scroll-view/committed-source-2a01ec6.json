@@ -1,0 +1,836 @@
+{
+  "schemaVersion": 4,
+  "status": "local-producers-reviewed; hosted-ci-pending",
+  "sourceCommit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+  "rootReview": {
+    "draft": {
+      "path": "build/scroll-view-root/committed-source-2a01ec6-integrated-draft.json",
+      "sha256": "7c595bdfdc8eef918d5f5a08683360613feb1f9f1a318fa21ec793aafbdebc20"
+    },
+    "allRepositoryPinsMatchWorkingBytesAndGit": true,
+    "allOriginalPinsMatchInstalledDependencies": true,
+    "distinctRepositoryPathCount": 218,
+    "originalReactNativePathCount": 106,
+    "originalVirtualizedListPathCount": 13
+  },
+  "nativeBuild": {
+    "inputs": {
+      "path": ".deps/build/native-sdk-inputs.json",
+      "sha256": "3a8f78756611312e147c4e786825319973be518530b99f38f2ba0e8cd6b8d9bf"
+    },
+    "buildReceipt": {
+      "path": ".deps/build/native-sdk-build.json",
+      "sha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b"
+    },
+    "nativePinsCount": 134,
+    "allNativePinsMatchGit": true,
+    "host": {
+      "path": "addons/fabric_godot.dylib",
+      "sha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+      "matchesBuildReceipt": true
+    },
+    "sdkClaims": {
+      "adapterLinked": false,
+      "adapterLoaded": false,
+      "runtimeExecuted": false,
+      "runtimeIdentityVerified": false,
+      "abiCertified": false
+    },
+    "sdkPack": {
+      "path": "build/native-sdk-scrollview-fb50",
+      "receipt": {
+        "path": "build/native-sdk-scrollview-fb50/receipt.json",
+        "sha256": "00ca71ca0ab2de6eacc02f571713f8e237370e88d70a67d781bac31d0d5b6d05"
+      },
+      "manifest": {
+        "path": "build/native-sdk-scrollview-fb50/manifest.json",
+        "sha256": "25bd9286a347355da8d0c1d5008a4c52cf72aa01e90f6d2520c07c98039b7055"
+      },
+      "nativeCombination": {
+        "path": "build/native-sdk-scrollview-fb50/native-combination.json",
+        "sha256": "99d70422ad16f3a79f448977bb4b7dd4047ab3bbfd49a74609a39bbc2905b406"
+      },
+      "packagedHost": {
+        "path": "build/native-sdk-scrollview-fb50/lib/fabric_godot.dylib",
+        "sha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "manifestEntrySha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "matchesBuildHostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9"
+      },
+      "buildReceiptSha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b",
+      "verificationLog": {
+        "path": "build/scroll-view-root/sdk-2a01-root-verify.log",
+        "sha256": "40abe8d46a5f89f8baad6e5ac96023078d6b5deba3ade1274a072d5a1af41e32"
+      },
+      "verificationNote": "Root directly verified this exact package. An old accessibility-package log was rejected and excluded."
+    },
+    "nativeInputPaths": [
+      "dependencies.json",
+      "native/CMakeLists.txt",
+      "native/accessibility_core.h",
+      "native/accessibility_core_test.cpp",
+      "native/accessibility_info.cpp",
+      "native/accessibility_info.h",
+      "native/accessibility_info_core.h",
+      "native/accessibility_info_core_test.cpp",
+      "native/accessible_view.cpp",
+      "native/accessible_view.h",
+      "native/activity_indicator_view.cpp",
+      "native/activity_indicator_view.h",
+      "native/adapter_loader.cpp",
+      "native/adapter_loader.h",
+      "native/adapter_registry.cpp",
+      "native/adapter_registry.h",
+      "native/affine_transform.h",
+      "native/affine_transform_test.cpp",
+      "native/app_lifecycle.h",
+      "native/appearance_adapter.cpp",
+      "native/appearance_adapter.h",
+      "native/application_runtime.cpp",
+      "native/application_runtime.h",
+      "native/blob_store.h",
+      "native/coordinate_transform.h",
+      "native/device_services.cpp",
+      "native/device_services.h",
+      "native/device_services_core.h",
+      "native/device_services_core_test.cpp",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/fabric_surface.cpp",
+      "native/fabric_surface.h",
+      "native/frame_clock.h",
+      "native/frame_clock_test.cpp",
+      "native/game_service_registry.cpp",
+      "native/game_service_registry.h",
+      "native/godot-profile.json",
+      "native/godot_component.h",
+      "native/godot_device_backend.cpp",
+      "native/godot_device_backend.h",
+      "native/godot_dom.cpp",
+      "native/godot_dom.h",
+      "native/godot_http_transport.cpp",
+      "native/godot_http_transport.h",
+      "native/godot_image_manager.cpp",
+      "native/godot_image_manager.h",
+      "native/godot_tls.h",
+      "native/godot_websocket_connection.cpp",
+      "native/godot_websocket_connection.h",
+      "native/godot_websocket_transport.cpp",
+      "native/godot_websocket_transport.h",
+      "native/http_core.h",
+      "native/http_core_test.cpp",
+      "native/http_transport.h",
+      "native/image_cache.h",
+      "native/image_cache_test.cpp",
+      "native/image_core.h",
+      "native/image_core_test.cpp",
+      "native/image_geometry.h",
+      "native/image_loader.cpp",
+      "native/image_loader.h",
+      "native/image_loader_module.cpp",
+      "native/image_loader_module.h",
+      "native/image_network.cpp",
+      "native/image_network.h",
+      "native/image_network_test.cpp",
+      "native/image_sources.cpp",
+      "native/image_sources.h",
+      "native/image_view.cpp",
+      "native/image_view.h",
+      "native/input_adapter.cpp",
+      "native/input_adapter.h",
+      "native/modal_host_view_component_descriptor.h",
+      "native/modal_presentation.cpp",
+      "native/modal_presentation.h",
+      "native/modal_window_stack.cpp",
+      "native/modal_window_stack.h",
+      "native/native_animated.cpp",
+      "native/native_animated.h",
+      "native/networking_modules.cpp",
+      "native/networking_modules.h",
+      "native/networking_state.h",
+      "native/paragraph_layout.cpp",
+      "native/paragraph_layout.h",
+      "native/paragraph_view.cpp",
+      "native/paragraph_view.h",
+      "native/physical_embedding.cpp",
+      "native/physical_embedding.h",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/pointer_geometry.cpp",
+      "native/pointer_geometry.h",
+      "native/pointer_geometry_history.h",
+      "native/pointer_geometry_test.cpp",
+      "native/pointer_processor_test.cpp",
+      "native/pointer_projection_test.cpp",
+      "native/register.cpp",
+      "native/scroll_adapter.cpp",
+      "native/scroll_adapter.h",
+      "native/scroll_motion.h",
+      "native/scroll_motion_test.cpp",
+      "native/scroll_offset.h",
+      "native/scroll_throttle.h",
+      "native/smoke.cpp",
+      "native/stoppable_invoker.h",
+      "native/svg_node.cpp",
+      "native/svg_node.h",
+      "native/switch_view.cpp",
+      "native/switch_view.h",
+      "native/system_appearance.h",
+      "native/text_layout.cpp",
+      "native/text_layout.h",
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h",
+      "native/timer_registry.h",
+      "native/timer_registry_test.cpp",
+      "native/transform_adapter.cpp",
+      "native/transform_adapter.h",
+      "native/turbo_module_registry.cpp",
+      "native/turbo_module_registry.h",
+      "native/websocket_core.h",
+      "native/websocket_core_test.cpp",
+      "native/websocket_handshake.h",
+      "native/websocket_handshake_test.cpp",
+      "native/websocket_module.cpp",
+      "native/websocket_module.h",
+      "native/websocket_transport.h",
+      "native/websocket_transport_test_fixture.cpp",
+      "native/window_metrics.h",
+      "scripts/codegen-contract.mjs",
+      "scripts/native-sdk.mjs",
+      "scripts/rn-pointer-overlay.mjs"
+    ]
+  },
+  "sourcePins": {
+    "path": "docs/evidence/scroll-view/source-pins-2a01ec6.json",
+    "sha256": "5d1e66b110905f30a272b096f3f4e936672fba601d058628c04fcd7fa95661bb"
+  },
+  "producerGroups": {
+    "scrollView": {
+      "bundleReceipt": {
+        "path": "build/scroll-view-gf14-probe-bundle.json",
+        "sha256": "b61f42adc7434185e7749cdbec70810feacb69200b89126571001e1453ec516d"
+      },
+      "bundle": {
+        "path": "build/scroll-view-gf14-probe.js",
+        "sha256": "9be2f9b5815707d1fc9c40f389d5454901db6aafe00a27e51694a0929233df90"
+      },
+      "report": {
+        "path": "build/scroll-view-gf14-report.json",
+        "sha256": "873c2339b09f59544e2ffc6cd195475adc688f1abb1cc39a6c4e28504c718594"
+      },
+      "repoSourceCount": 18,
+      "originalRNCount": 6,
+      "originalVirtualizedListsCount": 0,
+      "checks": {
+        "count": 33,
+        "passed": 33
+      },
+      "repositoryPaths": [
+        "native/application_runtime.cpp",
+        "native/pointer_adapter.cpp",
+        "native/pointer_adapter.h",
+        "native/scroll_adapter.cpp",
+        "native/scroll_adapter.h",
+        "native/scroll_motion.h",
+        "native/scroll_offset.h",
+        "native/scroll_throttle.h",
+        "scripts/scroll-view-bundle.mjs",
+        "src/react-native-platform.jsx",
+        "src/scroll-view-contract.mjs",
+        "src/scroll-view-native-config.js",
+        "src/scroll-view.jsx",
+        "tests/scroll-view-fixture.jsx",
+        "tests/scroll-view-native.test.mjs",
+        "tests/scroll-view-probe.gd",
+        "tests/types/consumer.tsx",
+        "types/react-native.ts"
+      ],
+      "originalReactNativePaths": [
+        "Libraries/Components/ScrollView/ScrollView.js",
+        "Libraries/Components/ScrollView/ScrollViewCommands.js",
+        "Libraries/Components/ScrollView/ScrollViewNativeComponent.js",
+        "Libraries/NativeComponent/NativeComponentRegistry.js",
+        "Libraries/NativeComponent/ViewConfig.js",
+        "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js"
+      ]
+    },
+    "lists": {
+      "bundleReceipt": {
+        "path": "build/virtualized-list-current-bundle.json",
+        "sha256": "2451167f1b896bc8a0d67555a40323a85c7cb0860daff7b8028f266f6cb113d9"
+      },
+      "bundle": {
+        "path": "build/virtualized-list-current.js",
+        "sha256": "658c643a7d951a33e950af4f9496c9930c03465b8d13e09460e4c7f3601c3e17"
+      },
+      "report": {
+        "path": "build/virtualized-list-current-report.json",
+        "sha256": "1b40199fa1d30308ced896c93609f714bc28ff1ece951ebb3b6a6e6a5995523e"
+      },
+      "repoSourceCount": 21,
+      "originalRNCount": 17,
+      "originalVirtualizedListsCount": 13,
+      "checks": {
+        "count": 44,
+        "passed": 44
+      },
+      "repositoryPaths": [
+        "native/application_runtime.cpp",
+        "native/pointer_adapter.cpp",
+        "native/pointer_adapter.h",
+        "native/scroll_adapter.cpp",
+        "native/scroll_adapter.h",
+        "native/scroll_motion.h",
+        "native/scroll_offset.h",
+        "native/scroll_throttle.h",
+        "scripts/virtualized-list-bundle.mjs",
+        "sdk/toolchain/platform-plugin.mjs",
+        "src/list-props.mjs",
+        "src/lists.js",
+        "src/react-native-platform.jsx",
+        "src/scroll-view-contract.mjs",
+        "src/scroll-view-native-config.js",
+        "src/scroll-view.jsx",
+        "tests/scroll-view-contract.test.mjs",
+        "tests/virtualized-list-fixture.jsx",
+        "tests/virtualized-list-native.test.mjs",
+        "tests/virtualized-list-oracle.mjs",
+        "tests/virtualized-list-probe.gd"
+      ],
+      "originalReactNativePaths": [
+        "Libraries/Components/ScrollView/ScrollView.js",
+        "Libraries/Components/ScrollView/ScrollViewNativeComponent.js",
+        "Libraries/Lists/FlatList.js",
+        "Libraries/Lists/SectionList.js",
+        "Libraries/Lists/VirtualizedList.js",
+        "Libraries/Lists/VirtualizedSectionList.js",
+        "Libraries/NativeComponent/NativeComponentRegistry.js",
+        "Libraries/NativeComponent/ViewConfig.js",
+        "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js",
+        "Libraries/StyleSheet/StyleSheet.js",
+        "React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm",
+        "ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt",
+        "ReactCommon/react/renderer/components/scrollview/ScrollEvent.cpp",
+        "ReactCommon/react/renderer/components/scrollview/ScrollViewEventEmitter.cpp",
+        "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp",
+        "index.js",
+        "src/private/featureflags/ReactNativeFeatureFlags.js"
+      ],
+      "originalVirtualizedListPaths": [
+        "Lists/CellRenderMask.js",
+        "Lists/ChildListCollection.js",
+        "Lists/FillRateHelper.js",
+        "Lists/ListMetricsAggregator.js",
+        "Lists/StateSafePureComponent.js",
+        "Lists/ViewabilityHelper.js",
+        "Lists/VirtualizeUtils.js",
+        "Lists/VirtualizedList.js",
+        "Lists/VirtualizedListCellRenderer.js",
+        "Lists/VirtualizedListContext.js",
+        "Lists/VirtualizedSectionList.js",
+        "Utilities/clamp.js",
+        "index.js"
+      ]
+    },
+    "os": {
+      "bundleReceipt": {
+        "path": "build/os-contracts-probe-bundle.json",
+        "sha256": "b20c38eeeff971f4f77074a5de4432aa29a1ce8e378a1c2aee4343fdf031bf2b"
+      },
+      "bundle": {
+        "path": "build/os-contracts-probe.js",
+        "sha256": "169aeeea8822249f19b42e05950a9b1a7c5ca445640a5f586749296cbc7266a9"
+      },
+      "report": {
+        "path": "build/os-contracts-current-report.json",
+        "sha256": "d7ebcb4476adefac3e8feeab7ad453e0af6c60b7877031f9dece21bd9f36365c"
+      },
+      "repoSourceCount": 11,
+      "originalRNCount": 34,
+      "originalVirtualizedListsCount": 0,
+      "checks": {
+        "count": 37,
+        "passed": 37
+      },
+      "repositoryPaths": [
+        "scripts/native-probe-bundle.mjs",
+        "scripts/os-contracts-bundle.mjs",
+        "scripts/os-contracts-sabotage.mjs",
+        "sdk/toolchain/platform-plugin.mjs",
+        "src/os-specific.js",
+        "src/platform.js",
+        "src/react-native-platform.jsx",
+        "tests/os-contracts-fixture.jsx",
+        "tests/os-contracts-native.test.mjs",
+        "tests/os-contracts-oracle.mjs",
+        "tests/os-contracts-probe.gd"
+      ],
+      "originalReactNativePaths": [
+        "Libraries/ActionSheetIOS/ActionSheetIOS.js",
+        "Libraries/ActionSheetIOS/NativeActionSheetManager.js",
+        "Libraries/Components/DrawerAndroid/DrawerLayoutAndroid.android.js",
+        "Libraries/Components/DrawerAndroid/DrawerLayoutAndroid.ios.js",
+        "Libraries/Components/DrawerAndroid/DrawerLayoutAndroid.js",
+        "Libraries/Components/DrawerAndroid/DrawerLayoutAndroidFallback.js",
+        "Libraries/Components/DrawerAndroid/DrawerLayoutAndroidTypes.js",
+        "Libraries/Components/ProgressBarAndroid/ProgressBarAndroid.android.js",
+        "Libraries/Components/ProgressBarAndroid/ProgressBarAndroid.js",
+        "Libraries/Components/StatusBar/StatusBar.js",
+        "Libraries/Components/TextInput/InputAccessoryView.js",
+        "Libraries/Components/ToastAndroid/ToastAndroid.android.js",
+        "Libraries/Components/ToastAndroid/ToastAndroid.ios.js",
+        "Libraries/Components/ToastAndroid/ToastAndroid.js",
+        "Libraries/Components/ToastAndroid/ToastAndroidFallback.js",
+        "Libraries/Components/Touchable/TouchableNativeFeedback.js",
+        "Libraries/Components/UnimplementedViews/UnimplementedView.js",
+        "Libraries/NativeModules/specs/NativeDialogManagerAndroid.js",
+        "Libraries/PermissionsAndroid/NativePermissionsAndroid.js",
+        "Libraries/PermissionsAndroid/PermissionsAndroid.js",
+        "Libraries/Pressability/Pressability.js",
+        "Libraries/PushNotificationIOS/PushNotificationIOS.js",
+        "Libraries/StyleSheet/PlatformColorValueTypes.js",
+        "Libraries/StyleSheet/PlatformColorValueTypesIOS.ios.js",
+        "Libraries/StyleSheet/PlatformColorValueTypesIOS.js",
+        "Libraries/TurboModule/TurboModuleRegistry.js",
+        "Libraries/Utilities/warnOnce.js",
+        "index.js",
+        "src/private/specs_DEPRECATED/modules/NativeActionSheetManager.js",
+        "src/private/specs_DEPRECATED/modules/NativePermissionsAndroid.js",
+        "src/private/specs_DEPRECATED/modules/NativePushNotificationManagerIOS.js",
+        "src/private/specs_DEPRECATED/modules/NativeStatusBarManagerAndroid.js",
+        "src/private/specs_DEPRECATED/modules/NativeStatusBarManagerIOS.js",
+        "src/private/specs_DEPRECATED/modules/NativeToastAndroid.js"
+      ]
+    },
+    "images": {
+      "bundleReceipt": {
+        "path": "build/images-probe-bundle.json",
+        "sha256": "c2a50443312cd52589495428e92862fba5766e6876e1118ec876e8f4f02de9b7"
+      },
+      "bundle": {
+        "path": "build/images-probe.js",
+        "sha256": "7a699a5a8dd3f64137f91cd88fc819710a1fcd39b3bd8c16b1dd716e39f3b35c"
+      },
+      "report": {
+        "path": "build/images-current-report.json",
+        "sha256": "47bfddaead8c6523ed07b86e654696f45b23bbeba96c772f030a45d3e737a07c"
+      },
+      "repoSourceCount": 36,
+      "originalRNCount": 33,
+      "originalVirtualizedListsCount": 0,
+      "checks": {
+        "count": 73,
+        "passed": 73
+      },
+      "repositoryPaths": [
+        "native/CMakeLists.txt",
+        "native/application_runtime.cpp",
+        "native/godot-profile.json",
+        "native/godot_image_manager.cpp",
+        "native/godot_image_manager.h",
+        "native/image_cache.h",
+        "native/image_core.h",
+        "native/image_core_test.cpp",
+        "native/image_geometry.h",
+        "native/image_loader.cpp",
+        "native/image_loader.h",
+        "native/image_loader_module.cpp",
+        "native/image_loader_module.h",
+        "native/image_network.cpp",
+        "native/image_network.h",
+        "native/image_sources.cpp",
+        "native/image_sources.h",
+        "native/image_view.cpp",
+        "native/image_view.h",
+        "native/register.cpp",
+        "scripts/images-bundle.mjs",
+        "scripts/images-fixtures.gd",
+        "scripts/images-fixtures.mjs",
+        "scripts/native-probe-bundle.mjs",
+        "sdk/toolchain/asset-plugin.mjs",
+        "sdk/toolchain/platform-plugin.mjs",
+        "src/animated-exports.js",
+        "src/image-contract.mjs",
+        "src/image.jsx",
+        "src/react-native-platform.jsx",
+        "tests/fixtures/images/manifest.json",
+        "tests/images-fixture.jsx",
+        "tests/images-native.test.mjs",
+        "tests/images-oracle.mjs",
+        "tests/images-pattern.mjs",
+        "tests/images-probe.gd"
+      ],
+      "originalReactNativePaths": [
+        "Libraries/Animated/components/AnimatedImage.js",
+        "Libraries/Image/AssetSourceResolver.js",
+        "Libraries/Image/AssetUtils.js",
+        "Libraries/Image/Image.android.js",
+        "Libraries/Image/Image.ios.js",
+        "Libraries/Image/Image.js",
+        "Libraries/Image/ImageBackground.js",
+        "Libraries/Image/ImageInjection.js",
+        "Libraries/Image/ImageSourceUtils.js",
+        "Libraries/Image/ImageUtils.js",
+        "Libraries/Image/ImageViewNativeComponent.js",
+        "Libraries/Image/NativeImageLoaderIOS.js",
+        "Libraries/Image/RCTBundleAssetImageLoader.mm",
+        "Libraries/Image/RCTImageLoader.mm",
+        "Libraries/Image/RCTImageUtils.mm",
+        "Libraries/Image/resolveAssetSource.js",
+        "Libraries/NativeComponent/NativeComponentRegistry.js",
+        "Libraries/Network/RCTDataRequestHandler.mm",
+        "Libraries/Network/RCTFileRequestHandler.mm",
+        "Libraries/Network/RCTNetworkTask.mm",
+        "React/FBReactNativeSpec/FBReactNativeSpecJSI.h",
+        "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm",
+        "ReactCommon/react/renderer/components/image/ImageComponentDescriptor.cpp",
+        "ReactCommon/react/renderer/components/image/ImageEventEmitter.cpp",
+        "ReactCommon/react/renderer/components/image/ImageShadowNode.cpp",
+        "ReactCommon/react/renderer/components/image/conversions.h",
+        "ReactCommon/react/renderer/imagemanager/ImageRequest.h",
+        "ReactCommon/react/renderer/imagemanager/ImageResponseObserverCoordinator.cpp",
+        "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImageManager.mm",
+        "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h",
+        "src/asset-registry.js",
+        "src/private/assets/AssetRegistry.js",
+        "src/private/specs_DEPRECATED/modules/NativeImageLoaderIOS.js"
+      ]
+    },
+    "imagesNetwork": {
+      "bundleReceipt": {
+        "path": "build/images-network-probe-bundle.json",
+        "sha256": "caa0fbeaf06e64fc49d01b67fd3504b559e0d72391f752831e2282364a70c48f"
+      },
+      "bundle": {
+        "path": "build/images-network-probe.js",
+        "sha256": "9665ce6b21cedca56bdc7a8613cd760cac1f6be0c34f584f12e695492bcb64a6"
+      },
+      "report": {
+        "path": "build/images-network-current-report.json",
+        "sha256": "96d8d72167fced9c82b40eec51be2047570f4d91cb520d42eb9b5983588037f7"
+      },
+      "repoSourceCount": 40,
+      "originalRNCount": 25,
+      "originalVirtualizedListsCount": 0,
+      "checks": {
+        "count": 74,
+        "passed": 74
+      },
+      "repositoryPaths": [
+        "native/CMakeLists.txt",
+        "native/app_lifecycle.h",
+        "native/application_runtime.cpp",
+        "native/godot-profile.json",
+        "native/godot_http_transport.cpp",
+        "native/godot_image_manager.cpp",
+        "native/http_core.h",
+        "native/http_transport.h",
+        "native/image_cache.h",
+        "native/image_cache_test.cpp",
+        "native/image_core.h",
+        "native/image_core_test.cpp",
+        "native/image_loader.cpp",
+        "native/image_loader.h",
+        "native/image_loader_module.cpp",
+        "native/image_loader_module.h",
+        "native/image_network.cpp",
+        "native/image_network.h",
+        "native/image_network_test.cpp",
+        "native/image_sources.cpp",
+        "native/image_sources.h",
+        "native/image_view.cpp",
+        "native/image_view.h",
+        "native/register.cpp",
+        "scripts/images-network-bundle.mjs",
+        "scripts/native-probe-bundle.mjs",
+        "sdk/toolchain/asset-plugin.mjs",
+        "sdk/toolchain/platform-plugin.mjs",
+        "src/animated-exports.js",
+        "src/image-contract.mjs",
+        "src/image.jsx",
+        "src/react-native-platform.jsx",
+        "tests/images-network-base.gd",
+        "tests/images-network-fixture.jsx",
+        "tests/images-network-native.test.mjs",
+        "tests/images-network-oracle.mjs",
+        "tests/images-network-probe.gd",
+        "tests/images-network-server.mjs",
+        "tests/images-pattern.mjs",
+        "tests/networking-certificates.mjs"
+      ],
+      "originalReactNativePaths": [
+        "Libraries/Image/AssetSourceResolver.js",
+        "Libraries/Image/AssetUtils.js",
+        "Libraries/Image/Image.ios.js",
+        "Libraries/Image/ImageInjection.js",
+        "Libraries/Image/ImageSourceUtils.js",
+        "Libraries/Image/ImageUtils.js",
+        "Libraries/Image/ImageViewNativeComponent.js",
+        "Libraries/Image/NativeImageLoaderIOS.js",
+        "Libraries/Image/RCTImageCache.mm",
+        "Libraries/Image/RCTImageLoader.mm",
+        "Libraries/Image/RCTImageUtils.mm",
+        "Libraries/Image/resolveAssetSource.js",
+        "Libraries/NativeComponent/NativeComponentRegistry.js",
+        "Libraries/Network/RCTHTTPRequestHandler.mm",
+        "Libraries/Network/RCTNetworkTask.mm",
+        "React/FBReactNativeSpec/FBReactNativeSpecJSI.h",
+        "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm",
+        "ReactCommon/react/renderer/components/image/ImageEventEmitter.cpp",
+        "ReactCommon/react/renderer/components/image/conversions.h",
+        "ReactCommon/react/renderer/imagemanager/ImageResponseObserverCoordinator.cpp",
+        "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImageManager.mm",
+        "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h",
+        "src/asset-registry.js",
+        "src/private/assets/AssetRegistry.js",
+        "src/private/specs_DEPRECATED/modules/NativeImageLoaderIOS.js"
+      ]
+    }
+  },
+  "pointerClick": {
+    "producerReceipt": {
+      "path": "build/pointer-click-bundles.json",
+      "sha256": "36c21d01a785c679d5b75c0172d3fcb13eb44d858b5957e8adced60910f85f45"
+    },
+    "repositoryPaths": [
+      "native/application_runtime.cpp",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/scroll_adapter.cpp",
+      "native/scroll_adapter.h",
+      "scripts/event-target-bundle.mjs",
+      "scripts/rn-pointer-overlay.mjs",
+      "sdk/toolchain/platform-plugin.mjs",
+      "sdk/toolchain/rn-event-target-overlay.mjs",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "src/base-view-config.js",
+      "src/components.jsx",
+      "src/pointer-listener-query.js",
+      "src/private-interface.js",
+      "src/render-application.jsx",
+      "src/scroll-view.jsx",
+      "tests/event-target-bootstrap.js",
+      "tests/pointer-click-fixture.jsx",
+      "tests/pointer-click-native.test.mjs",
+      "tests/pointer-click-probe.gd",
+      "tests/pointer-document-bootstrap.js"
+    ],
+    "originalReactNativePaths": [
+      "Libraries/Components/View/ViewPropTypes.js",
+      "Libraries/NativeComponent/BaseViewConfig.android.js",
+      "Libraries/NativeComponent/BaseViewConfig.ios.js",
+      "Libraries/Pressability/Pressability.js",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js",
+      "React/Fabric/RCTSurfacePointerHandler.mm",
+      "ReactAndroid/src/main/java/com/facebook/react/uimanager/JSPointerDispatcher.kt",
+      "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp",
+      "ReactCommon/react/renderer/core/EventQueue.cpp",
+      "ReactCommon/react/renderer/core/EventQueueProcessor.cpp",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp",
+      "src/private/featureflags/ReactNativeFeatureFlags.js",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js",
+      "src/private/renderer/events/LegacySyntheticEvent.js",
+      "src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/webapis/dom/events/CustomEvent.js",
+      "src/private/webapis/dom/events/Event.js",
+      "src/private/webapis/dom/events/EventTarget.js",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+      "src/private/webapis/dom/nodes/ReactNativeDocument.js",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js"
+    ],
+    "runs": [
+      {
+        "hostMode": "current",
+        "mode": "disabled",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-current-disabled-report.json",
+          "sha256": "f687c78d78d7e1fa34cbcc8a7e63c21c5b4f0a2a2c17078244d6bf3393c27877"
+        },
+        "log": {
+          "path": "build/pointer-click-current-disabled.log",
+          "sha256": "c2a8cbb6cbebcb4a2b114a7eef682560efeee5df5b4d68a4cade416b51be44fe"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "current",
+        "mode": "enabled",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-current-enabled-report.json",
+          "sha256": "e968b17ea91516c79422c486fd02a143b0ef10a63bd170914b6c7819733e09c4"
+        },
+        "log": {
+          "path": "build/pointer-click-current-enabled.log",
+          "sha256": "c7ee6eb12cdd48a1fc233efa9e819d6463a6397e190ac7eb04e85afce530886d"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "current",
+        "mode": "imperative-only",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-current-imperative-only-report.json",
+          "sha256": "0edc9b689e8c4c3a62e3c15d7ac22e9452e0b9f556147ce52cb8480986e24232"
+        },
+        "log": {
+          "path": "build/pointer-click-current-imperative-only.log",
+          "sha256": "37f9a00ce49a714b886e0a717ee67f46f95de59b53447a7e5b4cb7fed91ff26e"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "current",
+        "mode": "internal-only",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-current-internal-only-report.json",
+          "sha256": "1acb76ccd374dd23ff25495e94128494ab4cd0b7c7f23a5cb924639637e120fe"
+        },
+        "log": {
+          "path": "build/pointer-click-current-internal-only.log",
+          "sha256": "0b72bdb50c3646b7ea2d730609eacad2cdeabe23f42cf6939dc7a76b3cb198e4"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "original",
+        "mode": "disabled",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-original-disabled-report.json",
+          "sha256": "9c5028e74231e4607c30978dc4dd557005f694120d8038a74a9b1ea2cbd60e73"
+        },
+        "log": {
+          "path": "build/pointer-click-original-disabled.log",
+          "sha256": "813a0c1ec336108cbf89bb8c86d75702484cef18eb947ebed4d0f77132eb841d"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "original",
+        "mode": "enabled",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-original-enabled-report.json",
+          "sha256": "a794c7c7b739cc5219b12f3286ce2d929470013f6cac44cc9811688860f28c9d"
+        },
+        "log": {
+          "path": "build/pointer-click-original-enabled.log",
+          "sha256": "5b6029338df0e5672c2b2ce823a69b5c3aac67739b483f04ea066274c75e034e"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "original",
+        "mode": "imperative-only",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-original-imperative-only-report.json",
+          "sha256": "d893887bac7d26e762b1fac51990e5cef6b5f611c1e73e2b07bae5fdfb2b772d"
+        },
+        "log": {
+          "path": "build/pointer-click-original-imperative-only.log",
+          "sha256": "906c3425ed18a75c8b6fb94bc098b278303699d5d64f0af100389367b8c85b2b"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      },
+      {
+        "hostMode": "original",
+        "mode": "internal-only",
+        "checks": 91,
+        "report": {
+          "path": "build/pointer-click-original-internal-only-report.json",
+          "sha256": "c7829c1c5f298fadaaad5d6dcae8b09d8c12934e7f0a96c51f7021047cfc0c61"
+        },
+        "log": {
+          "path": "build/pointer-click-original-internal-only.log",
+          "sha256": "44e4f6c95619e48c0f6eb2fc860d55db7c65514ed1046d0f616b799aa2931f03"
+        },
+        "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+        "publicBundleSha256": "f3c35bdeec189bf39898e34649ebc377862a4d150e9ba027b53158c6119f409b"
+      }
+    ]
+  },
+  "metafileInputs": {
+    "repositoryPathCountsByLane": {
+      "scrollView": 35,
+      "lists": 35,
+      "os": 35,
+      "images": 38,
+      "imagesNetwork": 35
+    },
+    "repositoryPathUnionCount": 42,
+    "unionGitBlobIds": {
+      "src/accessibility-info.js": "715a4e1ac23bc4016248b6a87558d644d85f090d",
+      "src/accessibility-view-config.js": "38520b569d257d1f065a2ed836839a30671de51f",
+      "src/animated-exports.js": "0b9f24ea6e9f1ec4c02e056bef7236e94ab09dba",
+      "src/app-registry.js": "404f6c746371667dc2db7a8dbb64f2aa619ced6f",
+      "src/app-state.js": "9efcc77fffbc315b5dbc96a152ee1dc49d12f17f",
+      "src/base-view-config.js": "d5d0e962a07d5ae0641c4f70d81ac6d3fc773e87",
+      "src/components.jsx": "b6275b8a7e36250af520e09ac15c40d078bf3763",
+      "src/control-contracts.mjs": "464f0fa51cc4b579e5c9ccaf2673dbbc1c2a6a0e",
+      "src/device-services.js": "ceef2d4c6579640fa08999d136517a37df8bd863",
+      "src/image-contract.mjs": "6e654449cde8c09b37954eded07c02b0196cb997",
+      "src/image.jsx": "833876c60adcbf957a4e8c5d7a272d05d76c87a1",
+      "src/initialize.js": "8cd4c758c642e2fed9a9ff5bc69256e8c13d20cf",
+      "src/list-props.mjs": "6a1994f8710bb4c22d5962be10797c8e9096ff1d",
+      "src/lists.js": "468b6f8affa54d3f4f86dc1ce8132ab9a885350f",
+      "src/native-module-runtime.js": "e12db05af5941b0aff43e3db291369b2ed097201",
+      "src/native-modules.js": "d89c5ae00d4273e39a1f5e13284b44cbc10fcc79",
+      "src/os-specific.js": "f3389fd1a98870827acc3605be430f3413ec9353",
+      "src/platform-color-value-types.js": "611d627ff5f60f1bc50957d1f9ae7316e6a33579",
+      "src/platform-environment.js": "4ae3066ca672ba031ecf5044d43e3543e689eae9",
+      "src/platform.js": "7748dad939fecf9d76309a5f2798f56bda07a379",
+      "src/pointer-listener-query.js": "8b09d3dd6c56a98ba8e28dc0e17f3717f167ef7d",
+      "src/private-interface.js": "bb879a24a1365190a14361e4a46771035d1ab219",
+      "src/public-input.jsx": "3f625f5f092e79a1aaccd3046a3a83ef56e2d87e",
+      "src/react-native-platform.jsx": "7ce3bd8334b5c7f40a108f02c4e158639aa81189",
+      "src/render-application.jsx": "46a4149ac1f66c839d79f4d34e4d9f93e18da3da",
+      "src/renderer-proxy.js": "5409697b8466efe2470c5ca21ca68a0a59a1fb15",
+      "src/runtime.js": "5d9f1d58fd5f8b5af698c7cef572105c5608372c",
+      "src/scroll-view-contract.mjs": "5a33aee21c0ff84319056ba057561ad98d59b03e",
+      "src/scroll-view-native-config.js": "e488d3225931208608596291074f24556ada56b4",
+      "src/scroll-view.jsx": "cc9c2ac726c900dc6df04eaa727f6ab4a85459c3",
+      "src/text-input-state.js": "94adb15f3e07b44849f0c99c346e29402d75b0da",
+      "src/text.jsx": "3dbfa6e793382d37613c537aaac78ded11ba3f0e",
+      "src/ui-manager.js": "45972710a78be7bfd7d200832812e7cd39c5edd7",
+      "src/window-dimensions.js": "e288912cd43c5b0ebbea4c4e8a116890bbd4810b",
+      "tests/fixtures/images/assets/badge.png": "1de17df10797e0e2bcf39c5e6dca5ae8f85fc3f0",
+      "tests/fixtures/images/assets/tile.png": "2f64ad56cd6f86f39c7dacfd1eb0e8d6c30479db",
+      "tests/fixtures/images/assets/wide.png": "d86568b520eacc2caaa75a017709d2352da6792d",
+      "tests/images-fixture.jsx": "6353bcb9eecd806ef5a78f5540627ace0d2da21b",
+      "tests/images-network-fixture.jsx": "67a0e6abf0bd24f252eacd11dd2b16a8a9512a2a",
+      "tests/os-contracts-fixture.jsx": "57f64a22f03460c92d9a618e342acfd9a672d987",
+      "tests/scroll-view-fixture.jsx": "7b982612a4ee9263493af430fea4c1e3f0cac3c6",
+      "tests/virtualized-list-fixture.jsx": "fbc25792830b23cbad067ef2e2fd5d77a7d0653c"
+    },
+    "limitation": "These metadata list repository paths; Git blob IDs identify the committed bytes, but no per-input SHA-256 from bundler reads is claimed.",
+    "coreGF14ListsOSUnionCount": 37,
+    "coreGF14ListsOSPathCounts": {
+      "scrollView": 35,
+      "lists": 35,
+      "os": 35
+    }
+  },
+  "limits": [
+    "Local macOS runtime/build only; no physical mobile/iOS proof.",
+    "Host bytes match local SDK receipt; no ABI, external adapter runtime, or hosted binary equivalence is claimed.",
+    "Previous-SDK/sabotage lanes are negative controls, not current positive results.",
+    "Image base oracle is 73 as declared by current fixture; network-image oracle is 74.",
+    "These metadata list repository paths; Git blob IDs identify the committed bytes, but no per-input SHA-256 from bundler reads is claimed."
+  ]
+}

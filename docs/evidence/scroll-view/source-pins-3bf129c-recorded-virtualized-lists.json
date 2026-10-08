@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+  "origin": "virtualized-lists",
+  "hashBasis": "recorded",
+  "pathCount": 13,
+  "pins": {
+    "Lists/CellRenderMask.js": "75ef80edf5dd2be0869d16905ae62bef51496697cbc12465a518b95fee601c16",
+    "Lists/ChildListCollection.js": "fd6d8443abd8680245ecd5eecbad3492f0f5746fe995ad65a1849d800c626bbe",
+    "Lists/FillRateHelper.js": "3f384443edca0c2682f378aa82fa085a4ffab16f398d0418164f32e5f36aec12",
+    "Lists/ListMetricsAggregator.js": "94f053bebb32ea4d537390143f17fde7bd4d94ad73a14c27edf64ae55982181a",
+    "Lists/StateSafePureComponent.js": "af3498d9bc2a06960acb92d47a85662354e6c7fb89133043e84acd734904176c",
+    "Lists/ViewabilityHelper.js": "e32453954403db2d5e3dc68f815ba63e3ea28e68856b2bd7b220e5f128e79a40",
+    "Lists/VirtualizeUtils.js": "e44a4e32bab044dadf4caefa894b2d4724e248738bc1568e4816cbf6b73f1eea",
+    "Lists/VirtualizedList.js": "ff290b618c714f441e85a0a4660051b20481577470811221a53633e32f51fa85",
+    "Lists/VirtualizedListCellRenderer.js": "9e0a68a1892005375d8b7c7eda791c1d92b2a0ba17b3c44ba50989798e6904c7",
+    "Lists/VirtualizedListContext.js": "2b750316732136e0179d0356f4008a547348d3b9aeb3d6c6f2731b3d547a19c6",
+    "Lists/VirtualizedSectionList.js": "6218538922183ddb933a28e4a8f062a9ec9f2bcdb0767f98d69bd3d9f7b43750",
+    "Utilities/clamp.js": "d5f1b5ef744b618ee64975593366674fbfbd4b7f18ed8d8049cf86c1cb0d4b18",
+    "index.js": "8504b9c94898d7a8de8b20971a26232cc8287dee1a290954b2e302a881d7e69b"
+  }
+}

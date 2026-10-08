@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AccessibilityInfo, AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AccessibilityInfo, AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
@@ -23,6 +23,20 @@ const sheetModal = <Modal presentationStyle="pageSheet" />;
 // @ts-expect-error Android system-window flags are outside this desktop host
 const hardwareModal = <Modal hardwareAccelerated />;
 void animatedModal; void sheetModal; void hardwareModal;
+const scrollViewProps: ScrollViewProps = {
+  horizontal: false,
+  scrollEventThrottle: 16,
+  onScroll: () => {},
+};
+function ScrollConsumer() {
+  const scroll = useRef<ScrollViewInstance>(null);
+  scroll.current?.scrollTo({x: 0, y: 40, animated: false});
+  scroll.current?.scrollToEnd();
+  return <ScrollView ref={scroll} {...scrollViewProps}>
+    <ScrollView.Context.Consumer>{value => { void value; return null; }}</ScrollView.Context.Consumer>
+  </ScrollView>;
+}
+void ScrollConsumer;
 const transformStyle: ViewStyle = {
   transform: [{translateX: "25%"}, {scaleX: 2}, {rotate: "45deg"}, {skewY: "10deg"}],
   transformOrigin: [20, "75%", 0],

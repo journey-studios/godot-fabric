@@ -768,7 +768,7 @@ stream, emulated mouse included, and a tap is blocked in both streams by a Press
 checks, N = 100, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) repeats the counts on a real
 window and keeps four captures, linked from the record. A hit slop, a `Text` with `onPress`, the gaps of a
 ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
-recorded, not judged, and left to slice 2 (variant a2, after PR #58). Slice 1 of 3 reads GO for the minimal policy;
+recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
 mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
 

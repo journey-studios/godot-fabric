@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "status": "independently-reviewed-local-correction-and-main-integration; hosted acceptance pending",
+  "recordedAt": "2026-10-08T07:47:35.664646+00:00",
+  "sourceCommit": "cae0d2e41b7d80e2f70afbbcd9a4634be42ceecc",
+  "clickCorrectionCommit": "b097fb3232372e79603fa2eeabafd8c4d7bc2251",
+  "versions": {
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "platform": "macOS arm64"
+  },
+  "previousBaseline": {
+    "runId": 37728153077,
+    "checkoutCommit": "2236b0dab63f66526ab8dc2950558bf421a14463",
+    "sameTreeAsMain": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+    "pointerClick": "success",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37728153077/job/113150925590"
+  },
+  "failedHostedRun": {
+    "runId": 37737980468,
+    "head": "d785d1cf0737f38eb254e8615203784fbe058eb7",
+    "conclusion": "failure",
+    "failedStep": "test:pointers:click",
+    "parityComparison": "skipped",
+    "nativeJobUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37737980468/job/113181803117",
+    "pointerClickArtifact": {
+      "id": 11534077437,
+      "zipSha256": "de3e484d41d31b3f3676ecd29d837d64a657da9cef9e07f95ede17aef39065cc",
+      "extractionReceipt": {
+        "path": "build/scroll-view-root/hosted-click-d785d1c/pointer-click-artifact-extraction.json",
+        "sha256": "a476aa8201edc1e9834067ae963fe5d7ec9fa2ffa73d291aaaa26b8f225f2368"
+      }
+    },
+    "allEightRawReportsInspected": true,
+    "checksPerLane": 91,
+    "failuresPerLane": {
+      "disabled": 3,
+      "imperative-only": 3,
+      "internal-only": 4,
+      "enabled": 4
+    },
+    "rootFailureAudit": {
+      "path": "build/scroll-view-root/pointer-click-d785d1c-root-failure-audit.json",
+      "sha256": "e3d28913b3cfc0e44a5f2dda2fca719c1c7e89d96eb632e9e3b4707a40d9c858"
+    },
+    "earlierSuccessfulArtifacts": {
+      "scope": "Partial results from a globally failed run; no acceptance",
+      "scrollViewChecks": 28,
+      "listChecks": 44,
+      "osChecks": 37,
+      "rootAudit": {
+        "path": "build/scroll-view-root/hosted-d785d1c/root-hosted-audit.json",
+        "sha256": "f855ce537abf32499623a167a322694cb54ba9a63186afb8e80a1dd0cfa44aad"
+      }
+    },
+    "fullHostedAcceptance": false
+  },
+  "findings": [
+    "The empty-testID sentinel selected ScrollContentView tag20 instead of the actual AppRegistry parent tag32. The new fixture obtains the shared parent through original RN public instances, independently of click observations.",
+    "Native takeover cancels the pointer and touch child streams before ScrollBeginDrag; the old test required touches to continue driving a JS ScrollView. RN ReactScrollView.kt calls notifyNativeGestureStarted before emitScrollBeginDragEvent. This source analysis does not certify mobile parity.",
+    "The old exact offsets were sampled after release during measured momentum. A stationary hold exceeding the velocity sample window retains exact displacement checks (55 then 0), with zero momentum."
+  ],
+  "localRed": {
+    "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+    "interest": "current",
+    "flags": "enabled",
+    "failures": [
+      "mouse/top-level/The release synthesizes exactly the expected click from its own sample",
+      "mouse/top-level/Click callbacks follow RN's propagation for this lane",
+      "touch/scroll-takeover/A native scroll drag takes the contact over: one cancel, then only touches",
+      "mouse/scroll-takeover/A native scroll drag takes the contact over: one cancel, then only touches"
+    ],
+    "report": {
+      "path": "build/scroll-view-root/pointer-click-red-current-enabled/pointer-click-current-enabled-report.json",
+      "sha256": "ef3c6a90737830697fcfb8482924385d97f8aa4ad65a3a610e8e1f1512c9172b"
+    },
+    "log": {
+      "path": "build/scroll-view-root/pointer-click-red-current-enabled/pointer-click-current-enabled.log",
+      "sha256": "f2343fe6d0edfd38618a0e0eff642ee8c4de889a393168dd050768238ecdea93"
+    }
+  },
+  "correction": {
+    "files": {
+      "tests/pointer-click-fixture.jsx": "fd1237c2aabdbe94103083bb45a3c64391e3423569701328d6de547a26831a64",
+      "tests/pointer-click-probe.gd": "f8c98778841aef26fa1136065e85830fe54bcd9f740095523af36e768e7192e2",
+      "tests/pointer-click-native.test.mjs": "7fba086a453b48af46b707a9c3678820cbea8b62f3c9138415736dabef5dd568"
+    },
+    "nativeOrPublicImplementationChangedByCorrection": false,
+    "checksRetainedPerLane": 91,
+    "requiresSamePointerIdentity": true,
+    "requiresBothTypedAndStarCancelPairs": true,
+    "requiresNoLaterChildEventsOrClick": true,
+    "requiresExactOffsetsAndNoMomentum": true,
+    "rootOfflineOracleAudit": {
+      "path": "build/scroll-view-root/root-pointer-click-oracle-audit.json",
+      "sha256": "33570fc9c34ba773da8c87e92c665889b50ab99d974f26c593c0612b98f32cc7"
+    },
+    "actualCasesAccepted": 26,
+    "damagedReportCopiesRejected": 16,
+    "offlineAuditIsNotANewRuntime": true
+  },
+  "currentLocalIntegration": {
+    "mainIntegrated": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+    "mainPR": 63,
+    "mainCIUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37737238078",
+    "hostSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
+    "sourceMap": {
+      "path": "docs/evidence/scroll-view/committed-source-cae0d2e.json",
+      "sha256": "705be7e4e33b7258cbe827e46d5f462d1746eb53b73f3ed58c3566a7a8dd2293"
+    },
+    "nativeInputCount": 127,
+    "distinctRepositoryProducerPaths": 181,
+    "groupsOverlap": true,
+    "pointerLanes": [
+      {
+        "interest": "current",
+        "flags": "disabled",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-disabled-report.json",
+          "sha256": "fed380ab90d8067e69240a2bd44cdd1293aeff4db4e2af309aa9ec3388350479"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-disabled.log",
+          "sha256": "cdeb289c26fe132f0713b8ba2e0b4035a058532dc04c629dd1af7e852efaa498"
+        }
+      },
+      {
+        "interest": "current",
+        "flags": "enabled",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-enabled-report.json",
+          "sha256": "97fecf294302919fa3ca86f91c050a16c5695d52c4fab10958ca7cae5c522623"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-enabled.log",
+          "sha256": "83d45ac505eccfcb48ae948e0c76404c8bf4f9f62b6007e406f58bff29f82eb6"
+        }
+      },
+      {
+        "interest": "current",
+        "flags": "imperative-only",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-imperative-only-report.json",
+          "sha256": "e58e46955f9db5220102df2fdd36caf9232925213048396fe83b43efc31aadea"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-imperative-only.log",
+          "sha256": "561bfa3f161edd15c03b9602852e1e725e6eb8d6101a8204b2959fecbf26aacb"
+        }
+      },
+      {
+        "interest": "current",
+        "flags": "internal-only",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-internal-only-report.json",
+          "sha256": "eed6349d1de50079972dae919ad9447f00865ddeb009166672cc43e6d4143223"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-current-internal-only.log",
+          "sha256": "0c14b4d426bcc1f9a62a4b8e0a9307e03b39a6e12be3f8db642492ca20c2e2bb"
+        }
+      },
+      {
+        "interest": "original",
+        "flags": "disabled",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-disabled-report.json",
+          "sha256": "52a55dfaf210d29c522b5eea8b6f5b81567c81f9b970a607b5ae24c47b95256f"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-disabled.log",
+          "sha256": "35c24944357073133fa36526c7a9da6c3c641f12f1f18b89fff3b43489740af5"
+        }
+      },
+      {
+        "interest": "original",
+        "flags": "enabled",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-enabled-report.json",
+          "sha256": "7f354ba425bb9abeda365a6ed97b38af2c486c795094acf5b964cc12cf24b328"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-enabled.log",
+          "sha256": "85dcd6bb4666610c53358c93c511d879ea4905e260a5080a771b7672e5df081c"
+        }
+      },
+      {
+        "interest": "original",
+        "flags": "imperative-only",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-imperative-only-report.json",
+          "sha256": "7b6f20f58c618295c1e91c4b65363bf3439da1b83bf0971a1d6ec5fce5668d52"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-imperative-only.log",
+          "sha256": "e04e5309ab85cd262a9e7e3eb1e72278289aa291641609b8dff7690ee43ba9b4"
+        }
+      },
+      {
+        "interest": "original",
+        "flags": "internal-only",
+        "checks": 91,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-internal-only-report.json",
+          "sha256": "d7511ee2e832ad8395cc335d35e67c971bdb4be021b49bc110e51726f88f5ad5"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/pointer-click-original-internal-only.log",
+          "sha256": "55081706947a14d6c1681eb45c32fcf618608a2073a737a0255467d9a4c9ffdc"
+        }
+      }
+    ],
+    "runtimeReports": {
+      "scrollView": {
+        "checks": 28,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/scroll-view-gf14-report.json",
+          "sha256": "0b5609d846105632781f541f6858b772cdf127f1b59a0fbdc10cb4c6783ee756"
+        }
+      },
+      "lists": {
+        "checks": 44,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/virtualized-list-current-report.json",
+          "sha256": "b58f0b406e1e03f70dec6eeb329246b84faa7c8fc23684a872c06f5259a18925"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/virtualized-list-current.log",
+          "sha256": "84fae3c7c9fb607962c0141adcfb701c7578947a5cb0695a9d92c757d7f695e3"
+        }
+      },
+      "os": {
+        "checks": 37,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/os-contracts-current-report.json",
+          "sha256": "19dc8c25ec9dc942821297a4f5a817f3f2600b49d47e0deefcf368140ff8dc70"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/os-contracts-current.log",
+          "sha256": "faa28a9c8ca9ce830deddcd7ff15816e8d8400ed76fbcc655e4ff10f95df1916"
+        }
+      },
+      "accessibilityInfo": {
+        "checks": 54,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/accessibility-info-current-report.json",
+          "sha256": "72c36d3a2694309692ec860ab5328c69cc76983bc8bb42adab2374736190086c"
+        },
+        "log": {
+          "path": "build/scroll-view-root/integration-cae0d2e/accessibility-info-current.log",
+          "sha256": "db7f20b3a87ca800912fe420b167569a4795b45b33ce0a21cdc72ef5ed0aa30d"
+        }
+      },
+      "legacyExample": {
+        "checks": 73,
+        "report": {
+          "path": "build/scroll-view-root/integration-cae0d2e/legacy-scroll-report.json",
+          "sha256": "815d5c2166ab406c3ed0dbf97f89b05136da74af45b65e23244bf49f34c567c4"
+        }
+      }
+    },
+    "rootMeasuredScrollAudit": {
+      "path": "build/scroll-view-root/root-scroll-measured-cae0d2e.json",
+      "sha256": "cfd1ed0f7e2f27da53dce0ca2d938a491f62ce233cecf28d3327fd47d3a9f09b"
+    },
+    "lists": {
+      "precedingSdkAndSabotageRerunOnCurrentHost": true,
+      "sabotageFailures": 3,
+      "comparison": {
+        "path": "build/virtualized-list-comparison.json",
+        "sha256": "38ce48a831d25bc97c907c56c054d78ee6f669d320dc12473a5f6d1afe4e846b"
+      }
+    },
+    "osControls": {
+      "path": "build/os-contracts-sabotage.json",
+      "sha256": "388356f0702703b6ceb27d2ae36d4c41a663089c3f07d1d5e66041d10e730ac4"
+    },
+    "graphics": {
+      "checks": 4,
+      "receipt": {
+        "path": "docs/evidence/scroll-view/graphics-receipt.json",
+        "sha256": "04497d07ea2e04d4bcc476d49601988166e2bb418dc07cacc8e80ebf8fd7799b"
+      },
+      "allFourCapturesViewedByPrincipal": true,
+      "captureBytesUnchangedFromPriorRun": true
+    },
+    "contracts": {
+      "nodeTests": 352,
+      "pythonTests": 13,
+      "log": {
+        "path": "build/scroll-view-root/contracts-accessibility-integration.log",
+        "sha256": "d3f7795bc7ce9a6a11613c7966732e8da2d62a3eaf76f79dbdbaa9de6a376d7b"
+      }
+    },
+    "core": {
+      "scrollMotionChecks": 44,
+      "accessibilityInfoCore": "passed"
+    },
+    "sdkPackAndVerify": "passed; adapter/ABI certification claims remain false",
+    "agentBoard": {
+      "snapshot": {
+        "path": "docs/evidence/scroll-view/agents-cae0d2e-review.jpg",
+        "sha256": "649e85546729bdd7218a58ca3b5080a75b7c023e979997c6cc4b9ea04851ac70"
+      },
+      "scope": "Local shared coordination board at review time, not public Pages or acceptance.",
+      "privateInterfaceOverlap": "Board still reports the historical overlap. Principal inspected both diffs: ScrollView command methods versus new legacy LayoutAnimation methods are independent; sequential preservation was communicated to agent5. No new edit in that file."
+    }
+  },
+  "limits": [
+    "Current results are local Godot desktop runtime and independent/offline checks. A new hosted run and CodeRabbit review of the published head are still required.",
+    "The old list/OS controls were archived rather than reused across different hosts; current SDK controls were regenerated and rejected before the positive rerun.",
+    "The pointer old-host negative-control branch is preserved but was not rerun for this fixture correction. The earlier host is not certified by the new eight positive lanes.",
+    "GF-14 first slice, complete contract, target/parity checkpoints remain open. Dashboard stays29/156 with0/39 items complete.",
+    "No physical-device, Godot mobile export, complete RN differential parity, adapter loading or ABI certification is claimed."
+  ],
+  "acceptance": {
+    "hosted": false,
+    "sourceMerged": false,
+    "gf14Slice": false,
+    "gf14Complete": false,
+    "allCheckpointsRemainOpen": true
+  }
+}
