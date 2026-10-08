@@ -10,9 +10,10 @@
   },
   "updatedAt": "2026-10-08T19:56:44.981Z",
   "source": {
-    "commit": "092dd14bd70df31bf751c13a3797a9109ca95bb9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9",
-    "scope": "LayoutAnimation original do RN e UIManager.configureNextLayoutAnimation legado sobre o LayoutAnimationDriver C++ do próprio RN, compilado de react/renderer/animations e instalado no UIManager como o Scheduler do RN instala: o relógio de quadros do host é o display link do driver (um quadro só é tick com uma animação em voo), o relógio que o RN lê é o tempo de quadro do pump em milissegundos inteiros, e cada superfície entrega ao driver um delegate de override que registra a transação que ele serve. Updates animam o layout, creates e deletes entram e saem com opacidade ou escala, com linear, easeInEaseOut e spring; onAnimationDidEnd vem do driver (o timer de JS do RN fica de reserva) e onAnimationDidFail de uma config inválida. Implementação local fixada em ee8f5bd55e60556bd3fb4408eed11734399ae378: 121 checks headless em uma root, com um oráculo independente que refaz cada quadro de cada animação a partir do relógio que o RN leu, três execuções seguidas e uma sob carga; o host anterior (main c858263) falha exatamente 83 de 121 e quatro sabotagens do host falham 75, 87, 86 e 6, todas rejeitadas pelo oráculo; exemplo com 12 checks headless, 12 com o renderer nativo e 23 com cinco capturas. A suíte atual tem 128 checks (o host anterior falha exatamente 87 e seis sabotagens falham 80, 90, 91, 7, 1 e 4): a revisão do PR #65 fez o driver ignorar os ticks que outro consumidor do relógio de quadros causa e devolver o interesse nos ticks à root que monta depois de a última parar com uma animação que o RN ainda guarda, e acrescentou os estágios de requestAnimationFrame e de reinício de root que provam isso. Evidência fixada em 092dd14bd70df31bf751c13a3797a9109ca95bb9. CI hospedada e Pages pendentes. GF-19 segue parcial: nenhum checkpoint novo fecha."
+    "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
+    "scope": "P5 V05-04 do marco 0.5: manifesto de escopo dos 12 nomes do React Native que a HUD do Frontier importa e política única de props (src/prop-scope.mjs) para View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView, com evidência local em 1b9f120 (lane JS, lane nativa, controle causal sobre e1c7a39 e seis sabotagens). Também traz os recibos de CI e Pages do #69 (GF-27). CI hospedada e Pages deste PR pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/74"
   },
   "phases": [
     {
