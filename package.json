@@ -96,6 +96,7 @@
     "test:images-network": "node --test tests/images-network-native.test.mjs",
     "test:images-visual": "node --test tests/images-visual-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
+    "test:civ-lite-game": "node --test tests/civ-lite-game-native.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {
