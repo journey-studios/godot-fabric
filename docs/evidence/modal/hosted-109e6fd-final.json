@@ -12,6 +12,15 @@
   "nativeHostSha256Recorded": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
   "nativeHostBinaryIncludedAndRehashed": false,
   "compiledSourcePinsVerified": 95,
+  "addonProducerEvidence": {
+    "pinsVerifiedLocally": 153,
+    "finalLocalReceipt": "ci-input-filter-final-local.json",
+    "finalLocalReceiptSha256": "72aaa974b33e3ec691a26fe482200bca349fd059f0529dc3bffc62ae63adf2f7",
+    "reviewedCodeCommit": "3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
+    "earlierSourcePublicationReceipt": "coderabbit-reviewed-source-publication.json",
+    "earlierSourcePublicationReceiptSha256": "c5c26475866a05254061529829f13b35721ca821568aa3368e53ad971c9fffa7",
+    "scope": "Local addon producer verification is separate from the 95 hosted compiled source pins; the hosted artifact does not contain the addon payload for rehashing."
+  },
   "sdkBuildReceiptSha256": "027c34731bfd5aa9ab4245cfbc79a2162dbf79b1d4ebcf2e1bd06ef0bfb73aeb",
   "sdkReceiptSha256": "870cd4fafa7f709611a16399674c2036f14c454402d79a7df07d0902bdd7546c",
   "sdkManifestSha256": "39f3e7add112c33de955aa36b9c28a96626b2e101487df5d99204d8a823a4ed6",
