@@ -1,0 +1,9 @@
+{
+  "format": "godot-fabric.source-hash-map/v1",
+  "sourceCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+  "hashBasis": "Producer-recorded external source path; not in Git.",
+  "pathCount": 1,
+  "pins": {
+    ".deps/hermes/destroot/include/jsi/instrumentation.h": "1395779ad53ec372518b977d077e65a876215bc31a94cf049ed55d0a3d2426f4"
+  }
+}
