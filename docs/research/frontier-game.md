@@ -118,8 +118,15 @@ The selection is part of the state because the context is derived from it and th
 - **Event.** `wanderers` is raised when turn 5 begins. Welcoming them adds `6 + draw(4)` food, a draw from the game's PRNG;
   turning them away adds 4 production.
 - **The faction.** Its Warrior walks the closed route
-  `(17,8) (18,8) (19,8) (19,9) (19,10) (18,10) (17,10) (17,9)` one step a turn, and waits when a player's unit stands on
-  the next tile. It never attacks.
+  `(17,8) (18,8) (19,8) (19,9) (19,10) (18,10) (17,10) (17,9)` one step a turn. It **waits where it is** when a unit of the
+  player or the player's city is on the next tile of the route, and keeps waiting for as long as that holds (the step does not
+  advance, and the phase reports one task and one `ai_blocked` event, as when it walks). It never attacks and never captures:
+  capturing a city is outside the ceiling. So units of two sides never share a tile and the faction never stands on the city
+  (the oracle checks both in every state). The rule is in one place, `turn.gd`'s `_blocked`, and it also keeps the Warrior a city
+  finishes from being born on top of a hostile unit, which is why `production` does not check for one: no intent reaches that
+  state, because `move_unit` refuses a tile with a unit of the other side (`tile_occupied`), the faction refuses to enter a tile
+  with a unit of the player or the city, and a Settler founds a city only on the tile it stands on, which no unit of the faction
+  can share. A check there would be dead code.
 
 ## The seven contexts
 
@@ -214,7 +221,7 @@ time.
 | Phase | What it does | Tasks |
 | --- | --- | --- |
 | `ai_plan` | the faction picks the next tile of its route | 1 |
-| `ai_move` | its Warrior walks there, or waits when blocked | 1 |
+| `ai_move` | its Warrior walks there, or waits when a unit of the player or the player's city is on that tile | 1 |
 | `production` | adds production, builds the first queued item if paid | tiles worked + 1, or 0 with no city or an empty queue |
 | `growth` | adds food, grows the city if paid | tiles worked + 1, or 0 with no city or at size 3 |
 | `research` | adds science, learns the technology if paid | tiles worked + 1, or 0 with none chosen |
@@ -347,6 +354,10 @@ that the session's epoch reaches the snapshot and not the hash. The Node test th
   trace hash of every step;
 - requires the 12 turns, the coverage of the seven contexts (a step labelled for each), every refusal code the roteiro
   lists and the four the probe builds a state for, each refusal leaving the state as it found it;
+- requires the faction's wait on three turns built for it, because the roteiro never puts the player on its route: a city
+  on the route that finishes a Warrior that turn (`city-on-route`), the same city a turn later (`city-on-route-next-turn`)
+  and a unit of the player on the route (`unit-on-route`). The faction stays on the first tile, the Warrior is born alone on the
+  city and nothing overlaps; the oracle judges each of the three turns as it judges a step of the roteiro;
 - requires every snapshot of the labelled steps to have exactly the fields and types of the tables above, and the actions
   each context documents;
 - scans the game's scripts for the engine's generators (`randi`, `randf`, `RandomNumberGenerator`, `shuffle` and the like)
@@ -361,7 +372,8 @@ growth, research, the faction's route, the refresh) from the serialization befor
 raised once and resolved once; the context derived again from the serialization. It also re-derives the PRNG in
 `BigInt`: PCG's reference outputs, the generator's state after the number of draws the game says it made, and the map the
 generator must have drawn from the seed. Every refusal is justified by the state before it, and every accepted intent must
-leave exactly the state the oracle computes.
+leave exactly the state the oracle computes. In every state, the roteiro's and the three built turns', it also requires that
+no tile holds units of two sides and that no unit of the faction stands on the player's city.
 
 ### Retained sabotages
 
@@ -377,6 +389,12 @@ leave exactly the state the oracle computes.
   terrain's cost.
 - **economy**: the city centre yields 2 production instead of 1. The oracle, which recomputes the end of every turn from the
   serialization before it, finds the first turn in which the city produced.
+- **ai-ignores-block**: the faction no longer waits for a unit of the player or the city. The roteiro never reaches the wait, so
+  its states and the golden hash stay the genuine ones; the three built turns fail five probe checks and the oracle finds the
+  faction on the player's tile.
+- **ai-city**: only a unit of the player blocks the faction, not the city: the defect found in the review of PR #70, where the
+  faction walked into the city and the Warrior the city finished that turn was born on top of it. Four probe checks fail and the
+  oracle rejects `city-on-route`.
 
 The control with a previous host **does not apply**: this slice has no native code and no host to compare with. The restored
 sources are proven by hash and must pass the plain test.

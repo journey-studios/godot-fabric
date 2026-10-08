@@ -191,6 +191,57 @@ func check_unreachable_refusals() -> Array:
   return codes
 
 
+# Whether units of two sides share a tile, or a unit of the faction stands on the player's city.
+func overlaps(state: Dictionary) -> bool:
+  for unit: Dictionary in state.units:
+    for other: Dictionary in World.units_at(state, unit.x, unit.y):
+      if other.owner != unit.owner:
+        return true
+  for city: Dictionary in state.cities:
+    if not World.units_at(state, city.x, city.y, Rules.OWNER_AI).is_empty():
+      return true
+  return false
+
+
+# The faction's wait. The roteiro never puts the player on the faction's route, so these are states built for it: the
+# player's city, or a unit of the player, on the tile the faction would enter next (the second tile of its route). The
+# faction waits where it is, nothing overlaps, and a unit that finishes in the city that turn is born alone on it.
+# Answers each turn as its serialization before and after, for the oracle to judge.
+func check_faction_waits() -> Array:
+  var start: Array = Rules.ROUTE[0]
+  var target: Array = Rules.ROUTE[1]
+  var cases := []
+
+  var city_game = Game.new()
+  city_game.state.cities.append({"name": "Aurora", "x": target[0], "y": target[1], "size": 1, "queue": ["warrior"], "buildings": []})
+  city_game.state.res.production = Rules.ITEMS[Rules.item_index("warrior")].cost
+  var before: String = city_game.serialize()
+  var result: Dictionary = city_game.end_turn()
+  var born: Array = World.units_at(city_game.state, target[0], target[1])
+  cases.append({"name": "city-on-route", "before": before, "after": city_game.serialize()})
+  check(result.ok == 1 and city_game.state.ai.step == 0 and World.unit_by_id(city_game.state, 3).x == start[0] and World.unit_by_id(city_game.state, 3).y == start[1],
+    "ai wait: a city on the faction's route keeps the faction where it was")
+  check(born.size() == 1 and born[0].owner == Rules.OWNER_PLAYER and born[0].kind == "warrior" and World.city_at(city_game.state, target[0], target[1]).queue.is_empty(),
+    "ai wait: the Warrior finished in that city is born alone on its tile")
+  check(not overlaps(city_game.state) and city_game.state.log.any(func(entry: Dictionary) -> bool: return entry.code == "ai_blocked" and entry.a == target[0] and entry.b == target[1]),
+    "ai wait: nothing overlaps and the wait is an ai_blocked event")
+  before = city_game.serialize()
+  city_game.end_turn()
+  cases.append({"name": "city-on-route-next-turn", "before": before, "after": city_game.serialize()})
+  check(city_game.state.ai.step == 0 and World.unit_by_id(city_game.state, 3).x == start[0] and not overlaps(city_game.state),
+    "ai wait: the faction keeps waiting for as long as the city stays on its route")
+
+  var unit_game = Game.new()
+  unit_game.state.units.append(World.make_unit(int(unit_game.state.next_unit), Rules.OWNER_PLAYER, "warrior", target[0], target[1]))
+  unit_game.state.next_unit = int(unit_game.state.next_unit) + 1
+  before = unit_game.serialize()
+  unit_game.end_turn()
+  cases.append({"name": "unit-on-route", "before": before, "after": unit_game.serialize()})
+  check(unit_game.state.ai.step == 0 and World.unit_by_id(unit_game.state, 3).x == start[0] and not overlaps(unit_game.state),
+    "ai wait: a unit of the player on the faction's route keeps the faction where it was")
+  return cases
+
+
 func check_epoch(primary: Dictionary) -> void:
   var other = Game.new(Rules.SEED, SESSION_EPOCH + 1)
   check(other.snapshot().epoch == SESSION_EPOCH + 1 and primary.snapshots.final.epoch == SESSION_EPOCH, "epoch: the snapshot carries the session's epoch")
@@ -202,6 +253,7 @@ func _init() -> void:
   check_prng()
   check_turn_slicing()
   var unreachable := check_unreachable_refusals()
+  var waits := check_faction_waits()
   var primary := play(false, SESSION_EPOCH, true)
   var repeated := play(false, SESSION_EPOCH, false)
   var sliced := play(true, SESSION_EPOCH, false)
@@ -216,7 +268,7 @@ func _init() -> void:
   var final_hash: String = hashes[hashes.size() - 1]
   var report := {"scenario": "civ-lite-game", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
     "seed": Rules.SEED, "epoch": SESSION_EPOCH, "prng": {"vector": Prng.reference_vector()}, "initial": primary.initial,
-    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "finalHash": final_hash, "checks": checks,
+    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "waitCases": waits, "finalHash": final_hash, "checks": checks,
     "allPassed": failures.is_empty()}
   DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://build"))
   var output := FileAccess.open(output_path(), FileAccess.WRITE)

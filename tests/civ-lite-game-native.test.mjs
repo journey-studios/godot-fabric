@@ -29,6 +29,8 @@ const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain",
   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot", "unknown_tech",
   "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"];
 const BUILT_REFUSALS = ["city_exists", "too_close_to_edge", "tile_occupied", "queue_full"];
+// The turns the probe builds states for, because the roteiro never puts the player on the faction's route.
+const WAIT_CASES = ["city-on-route", "city-on-route-next-turn", "unit-on-route"];
 const GAME_DIRECTORY = "consumers/civ-lite/game";
 // Nothing in the game may draw from the engine's generators: the game's own PRNG is the only source of randomness.
 const ENGINE_RANDOMNESS = /\b(randi|randf|randi_range|randf_range|randomize|rand_from_seed|RandomNumberGenerator|pick_random|shuffle)\b/;
@@ -157,8 +159,21 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
     };
     await writeFile(path.join(root, `build/civ-lite-game-sabotage-${sabotage}.json`), JSON.stringify({format: "godot-fabric.civ-lite-game-sabotage-run/v1",
       sabotage, hashes, goldenHash: GOLDEN_HASH, rejections, failedChecks: [...new Set(failed)], oracle, scan, sourceSha256: pinned}, null, 2) + "\n");
-    assert.ok(rejections.goldenHashDiffers, "The golden hash rejects the sabotaged game");
     assert.ok(rejections.oracleRejects, "The oracle rejects the sabotaged game in every execution");
+    if (sabotage.startsWith("ai-")) {
+      // The roteiro never puts the player on the faction's route, so its states and the golden hash are the genuine
+      // ones: only the states built for the faction's wait can tell, to the probe's checks and to the oracle.
+      assert.ok(!rejections.goldenHashDiffers && !rejections.executionsDiffer, "The roteiro does not reach the faction's wait");
+      assert.ok(failed.some(name => /^ai wait: /.test(name)), failed.join("\n"));
+      assert.ok(oracle.every(message => /^case (city-on-route|unit-on-route)/.test(message)), oracle.join("\n"));
+      if (sabotage === "ai-city") {
+        // The defect the review of PR #70 found: the city is not a block, so the faction walks into it.
+        assert.ok(oracle.every(message => /^case city-on-route/.test(message)), oracle.join("\n"));
+        assert.ok(failed.includes("ai wait: a city on the faction's route keeps the faction where it was"), failed.join("\n"));
+      }
+      return;
+    }
+    assert.ok(rejections.goldenHashDiffers, "The golden hash rejects the sabotaged game");
     if (sabotage === "prng") {
       // A generator that is not the game's own gives a different map every process.
       assert.ok(rejections.probeChecksFailed && failed.includes("prng: PCG32 matches its published reference outputs"), failed.join("\n"));
@@ -238,9 +253,18 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   assert.deepEqual(Object.keys(verified.refusals).sort(), [...ROTEIRO_REFUSALS].sort(), "The roteiro refuses with every code it documents");
   assert.deepEqual(report.unreachableRefusals.map(entry => entry.code).sort(), [...BUILT_REFUSALS].sort());
 
+  // The faction's wait: a city and a unit of the player on its route, on states built for it, judged by the oracle.
+  assert.deepEqual(verified.waitCases, WAIT_CASES, "The faction waits in every case built for it");
+  for (const entry of report.waitCases) {
+    const before = JSON.parse(entry.before);
+    const after = JSON.parse(entry.after);
+    assert.deepEqual([after.ai.step, after.units.find(unit => unit.id === after.ai.unit).x], [0, 17], `${entry.name}: the faction stays on the first tile of its route`);
+    assert.deepEqual(before.units.length + (entry.name === "city-on-route" ? 1 : 0), after.units.length, `${entry.name}: the units are the ones that were there, and the one the city finished`);
+  }
+
   await writeFile(path.join(root, "build/civ-lite-game-report.json"), JSON.stringify({format: "godot-fabric.civ-lite-game/v1", godot: report.godot,
     goldenHash: GOLDEN_HASH, traceHash, executions: runs.map((run, position) => ({execution: position + 1, status: run.result.status, finalHash: run.report.finalHash,
       checks: run.report.checks.length, reportSha256: digest(run.text)})),
     byteIdentical: true, steps: report.steps.length, turns: verified.turns, rngDraws: verified.draws, coverage, refusals: verified.refusals,
-    unreachableRefusals: report.unreachableRefusals, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
+    unreachableRefusals: report.unreachableRefusals, waitCases: verified.waitCases, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
 });

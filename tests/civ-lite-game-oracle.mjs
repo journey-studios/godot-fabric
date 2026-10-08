@@ -401,7 +401,8 @@ function endTurn(state, phases) {
   } else {
     [ai.tx, ai.ty] = ROUTE[(ai.step + 1) % ROUTE.length];
     phase("ai_plan", 1, 1);
-    if (unitAt(state, ai.tx, ai.ty, PLAYER).length === 0) {
+    // The faction waits on a tile with a unit of the player or the player's city: it never captures and never overlaps.
+    if (unitAt(state, ai.tx, ai.ty, PLAYER).length === 0 && cityAt(state, ai.tx, ai.ty) === undefined) {
       faction.x = ai.tx;
       faction.y = ai.ty;
       ai.step = (ai.step + 1) % ROUTE.length;
@@ -556,6 +557,13 @@ function checkInvariants(state, where) {
   const faction = unitById(state, state.ai.unit);
   assert.ok(faction !== undefined && faction.owner === FACTION, `${where} the faction's Warrior`);
   assert.deepEqual([faction.x, faction.y], ROUTE[state.ai.step], `${where} the faction's Warrior stands on its route`);
+  // Units of different sides never share a tile, and the faction never enters the player's city.
+  for (const unit of state.units) {
+    assert.ok(unitAt(state, unit.x, unit.y).every(other => other.owner === unit.owner), `${where} no tile holds units of two sides`);
+  }
+  for (const city of state.cities) {
+    assert.ok(unitAt(state, city.x, city.y).every(unit => unit.owner === PLAYER), `${where} the faction never enters the player's city`);
+  }
   assert.ok(state.sel.unit === 0 || (unitById(state, state.sel.unit)?.owner === PLAYER), `${where} selected unit`);
   if (state.sel.unit !== 0) {
     const unit = unitById(state, state.sel.unit);
@@ -657,5 +665,20 @@ export function verifyFrontierReport(report) {
   assert.equal(report.finalHash, digest(report.steps.at(-1).serialization));
   assert.equal(previous.event.resolved, 1, "the event was resolved once");
   assert.equal(previous.cities.length, 1, "one city was founded");
-  return {steps: report.steps.length, turns, finalHash: report.finalHash, contexts: [...seen].sort(), refusals, draws: previous.rng.draws};
+
+  // The turns the roteiro cannot play, because it never puts the player on the faction's route: states built so the
+  // faction's next tile holds the player's city or a unit of the player. Each end_turn is judged as a roteiro step is,
+  // and neither state may have units of two sides on a tile.
+  assert.ok(Array.isArray(report.waitCases) && report.waitCases.length > 0, "the report holds the states built for the faction's wait");
+  for (const entry of report.waitCases) {
+    const where = `case ${entry.name}`;
+    const before = parseState(entry.before, `${where} before`);
+    const after = parseState(entry.after, `${where} after`);
+    checkInvariants(before, `${where} before`);
+    checkInvariants(after, `${where} after`);
+    assert.equal(refusal(before, "end_turn", []), "", `${where} must be an accepted end_turn`);
+    assert.deepEqual(withoutLog(after), withoutLog(accept(before, "end_turn", []).next), `${where}: end_turn must leave the state the rules compute from the state before it`);
+  }
+  return {steps: report.steps.length, turns, finalHash: report.finalHash, contexts: [...seen].sort(), refusals, draws: previous.rng.draws,
+    waitCases: report.waitCases.map(entry => entry.name)};
 }

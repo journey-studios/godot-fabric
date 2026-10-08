@@ -6,7 +6,7 @@ extends RefCounted
 # the same way, whether they run in one call or one per frame.
 #
 #   ai_plan     the scripted faction picks the next tile of its route
-#   ai_move     its Warrior walks there, or waits when a player's unit stands on it
+#   ai_move     its Warrior walks there, or waits when a unit of the player or the player's city is on it
 #   production  the city adds its production to the stock and finishes the item it can pay
 #   growth      the city adds its food to the stock and grows when it can pay
 #   research    the empire adds its science to the stock and learns the technology it can pay
@@ -53,7 +53,7 @@ static func _ai_move(state: Dictionary) -> int:
   var unit := World.unit_by_id(state, int(ai.unit))
   if unit.is_empty():
     return 0
-  if not World.units_at(state, int(ai.tx), int(ai.ty), Rules.OWNER_PLAYER).is_empty():
+  if _blocked(state, int(ai.tx), int(ai.ty)):
     World.emit(state, "ai_blocked", ai.tx, ai.ty)
     return 1
   unit.x = ai.tx
@@ -61,6 +61,13 @@ static func _ai_move(state: Dictionary) -> int:
   ai.step = (int(ai.step) + 1) % Rules.ROUTE.size()
   World.emit(state, "ai_moved", ai.tx, ai.ty)
   return 1
+
+
+# The faction waits where it is instead of entering a tile with a unit of the player or the player's city. Capturing a
+# city is outside the game's ceiling, and a unit of each side on one tile is a state no intent can reach (move_unit
+# refuses it with tile_occupied), so the route simply stays blocked for as long as the tile is.
+static func _blocked(state: Dictionary, x: int, y: int) -> bool:
+  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()
 
 
 # Production accumulates only while something is queued: with an empty queue it is lost, not banked.

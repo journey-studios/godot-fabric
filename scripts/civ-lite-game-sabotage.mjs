@@ -20,6 +20,13 @@ import {guardSources} from "./sabotage-sources.mjs";
 //  economy the city centre yields one production too many. The roteiro's first turns still play, but the stock the city
 //         adds is wrong from its first turn of production: the golden hash is lost and the oracle, which recomputes the
 //         end of every turn from the serialization before it, finds the first one that does not add up.
+//  ai-ignores-block  the faction's Warrior no longer waits for a unit of the player or the player's city on its next
+//         tile. The roteiro never puts the player on the faction's route, so its states and the golden hash stay the
+//         genuine ones: the states the probe builds for the wait (a city on the route that finishes a Warrior that
+//         turn, and a unit of the player on the route) fail the probe's checks, and the oracle finds the faction on the
+//         player's tile.
+//  ai-city  the defect the review of PR #70 found: only a unit of the player blocks the faction, not the city. The
+//         faction walks into the city and the Warrior the city finishes that turn is born on top of it.
 //
 // There is no host here and nothing to rebuild: the game is plain GDScript. Run with:
 //   node scripts/civ-lite-game-sabotage.mjs
@@ -32,6 +39,12 @@ const variants = [
   {name: "rule", file: `${game}/rules.gd`, find: "  {\"name\": \"Forest\", \"food\": 1, \"production\": 2, \"science\": 0, \"move\": 2},\n",
     replace: "  {\"name\": \"Forest\", \"food\": 1, \"production\": 2, \"science\": 0, \"move\": 1},\n"},
   {name: "economy", file: `${game}/rules.gd`, find: "const CENTER_PRODUCTION := 1\n", replace: "const CENTER_PRODUCTION := 2\n"},
+  {name: "ai-ignores-block", file: `${game}/turn.gd`,
+    find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
+    replace: "  return false\n"},
+  {name: "ai-city", file: `${game}/turn.gd`,
+    find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
+    replace: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty()\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
