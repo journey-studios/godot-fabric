@@ -576,8 +576,15 @@
       "roadmap": "GF-11",
       "evidence": [
         "src/react-native-platform.jsx",
-        "src/text.jsx"
-      ]
+        "src/text.jsx",
+        "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
+        "native/paragraph_layout.cpp",
+        "tests/text-layout-native.test.mjs",
+        "docs/research/text-layout.md",
+        "docs/evidence/text-layout/README.md",
+        "examples/text-layout/App.jsx"
+      ],
+      "note": "onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; span press/selection, font scaling, decoration, inline views and the original Text.js remain open."
     },
     {
       "name": "TextInput",

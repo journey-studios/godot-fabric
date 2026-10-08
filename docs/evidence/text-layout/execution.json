@@ -1,0 +1,344 @@
+{
+  "format": "godot-fabric.text-layout-execution/v1",
+  "executedAt": "2026-10-07",
+  "implementationCommit": "8e3e43513a2324503450c7f08511b6225619b9c0",
+  "sourceState": "clean working tree at the implementation commit; every executed input matches it",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (example only)"
+    ]
+  },
+  "commands": [
+    "npm run test:text-layout",
+    "node scripts/text-layout-sabotage.mjs",
+    "node tests/text-layout-native.test.mjs --allow-original-negative (previous host installed in addons/)",
+    "npm run example -- text-layout --headless",
+    "npm run example -- text-layout --capture"
+  ],
+  "probe": {
+    "suite": "1/1 subtest passed, repeated three times with the same verdict",
+    "checks": 76,
+    "groups": {
+      "events": 4,
+      "payload": 8,
+      "agreement": 33,
+      "dedupe": 7,
+      "baseline": 4,
+      "negative": 7,
+      "failure": 7,
+      "cleanup": 5,
+      "report": 1
+    },
+    "allCurrentAssertionsPassed": true,
+    "hostSha256": "35018602e91c4144638c4e38be1ff1440df68a8da7f61c85d6e5907882596346",
+    "bundleSha256": "9abd5f13b6206a68a3e0f786db77117606aa404e41894f486718fc1c3a85cf9f",
+    "rawReportSha256": "8f529f92882fef5c4c3a12b4a6457ef47c5e2761a4abc086ba42c356b3d7ba02",
+    "paragraphsWithHandler": 10,
+    "eventsAtMount": 10,
+    "eventsPerParagraph": "exactly 1 for each of the 10 paragraphs with the prop; none for the silent paragraph or the nested span",
+    "baselineCallbackCalls": 30,
+    "dedupe": [
+      {
+        "step": "color",
+        "eventsBefore": 1,
+        "eventsAfter": 1,
+        "measureLinesCalls": 10
+      },
+      {
+        "step": "sameLines",
+        "eventsBefore": 1,
+        "eventsAfter": 1,
+        "measureLinesCalls": 10
+      },
+      {
+        "step": "width",
+        "eventsBefore": 1,
+        "eventsAfter": 2,
+        "measureLinesCalls": 10
+      },
+      {
+        "step": "text",
+        "eventsBefore": 2,
+        "eventsAfter": 3,
+        "measureLinesCalls": 10
+      },
+      {
+        "step": "numberOfLines",
+        "eventsBefore": 3,
+        "eventsAfter": 4,
+        "measureLinesCalls": 10
+      },
+      {
+        "step": "withoutHandler",
+        "eventsBefore": 4,
+        "eventsAfter": 4,
+        "measureLinesCalls": 9
+      }
+    ],
+    "failurePaths": {
+      "baselineOnly": {
+        "listen": false,
+        "errors": 8,
+        "measureCalls": 2,
+        "measureLinesCalls": 4
+      },
+      "withHandler": {
+        "listen": true,
+        "errors": 9,
+        "measureCalls": 2,
+        "measureLinesCalls": 5
+      }
+    },
+    "rejections": [
+      "Godot Text onTextLayout must be a function",
+      "Godot Text onTextLayout must be a function",
+      "Godot Text does not implement onPress",
+      "Godot Text does not implement selectable",
+      "Godot Text does not implement adjustsFontSizeToFit"
+    ]
+  },
+  "tolerance": {
+    "normative": "±1 px per measure",
+    "hostVersusFontTables": {
+      "note": "Tables read in Node from the bundled TTFs, with FreeType's documented rounding of the scaled ascender (up) and descender (down) to whole pixels and the host's whole-pixel font size.",
+      "ascender": 0,
+      "descender": 0,
+      "height": 0,
+      "capHeight": 0.5760000000000005,
+      "xHeight": 0.49599999999999955,
+      "baselineOffset": 0.5
+    },
+    "rawTables": {
+      "note": "The plain table scale, without that rounding: the proposed ±1 px does not hold for the natural line height.",
+      "ascender": 0.8960000000000008,
+      "descender": 0.7259999999999991,
+      "height": 1.4840000000000018
+    },
+    "baselineOffsets": [
+      {
+        "row": "baseline-small",
+        "expected": 15,
+        "measured": 15
+      },
+      {
+        "row": "self-small",
+        "expected": 13,
+        "measured": 13
+      },
+      {
+        "row": "mixed-sans",
+        "expected": 9.5,
+        "measured": 9
+      }
+    ]
+  },
+  "previousHost": {
+    "note": "The fabric_godot.dylib of main (e88b5bb) before the slice, installed in addons/ for the control.",
+    "hostSha256": "54808dfa617cfdfddf16d3eda40db7cc9b300b32a2cbe07d9c7084958b389a6f",
+    "checks": 26,
+    "failed": 5,
+    "failedIds": [
+      "events/Every paragraph with onTextLayout receives exactly one event after its first layout",
+      "baseline/In an alignItems baseline row the 14 px text sits below the top of the 28 px text",
+      "baseline/With alignSelf baseline the 12 px text sits below the top of the 24 px text",
+      "baseline/Across two fonts the baseline of a lineHeight 40 mono text pushes the 14 px sans text down",
+      "baseline/Yoga's baseline callback reaches measureLines: no paragraph of this root has a handler"
+    ],
+    "checksByGroup": {
+      "events": 4,
+      "baseline": 4,
+      "negative": 7,
+      "failure": 5,
+      "cleanup": 5,
+      "report": 1
+    },
+    "eventsDelivered": 0,
+    "measureLinesCalls": 0,
+    "oracleRejectsReport": true,
+    "sameBundleSha256": true
+  },
+  "sabotages": [
+    {
+      "name": "all-lines",
+      "file": "native/paragraph_layout.cpp",
+      "find": "    return lines_of(prepare(text.getValue(), props, size.width));",
+      "replace": "    auto unlimited = props;\n    unlimited.maximumNumberOfLines = 0;\n    return lines_of(prepare(text.getValue(), unlimited, size.width));",
+      "sourceSha256": "0aa236f96b49f0e62319c1cae2b8f07877ae1cb6c45e4222edd315b0477bd40d",
+      "hostSha256": "8f45134e6891e5d81a0e1777d42c9af64ee4ad6004c12a7fdee3c09008440438",
+      "checks": 76,
+      "failed": 4,
+      "failedIds": [
+        "agreement/limited/The number of lines is the number of visible lines",
+        "agreement/limited/The heights add up to the node's height",
+        "agreement/limited/Each line has the x, width, height and baseline of the host's own line metrics",
+        "dedupe/A new numberOfLines emits one event with the visible lines"
+      ],
+      "oracleRejection": "limited: one line per visible line",
+      "runStatus": 0
+    },
+    {
+      "name": "no-centering",
+      "file": "native/paragraph_layout.cpp",
+      "find": "    const float ascender = line.y - line.top;",
+      "replace": "    const float ascender = line.ascent;",
+      "sourceSha256": "422c3b828d29696ad3178a8fdf3804a065aba65070d90377a285365102ea3eab",
+      "hostSha256": "71a13953f1d73f18f525987a81a65368c2c9d163062d4aaee3165bcf4076df2d",
+      "checks": 76,
+      "failed": 3,
+      "failedIds": [
+        "agreement/leading/Each line has the x, width, height and baseline of the host's own line metrics",
+        "agreement/monoLeading/Each line has the x, width, height and baseline of the host's own line metrics",
+        "baseline/Across two fonts the baseline of a lineHeight 40 mono text pushes the 14 px sans text down"
+      ],
+      "oracleRejection": "mixed-sans baseline offset: -2 differs from the font tables' 9.5 by more than 1",
+      "runStatus": 0
+    },
+    {
+      "name": "sentinel",
+      "file": "native/paragraph_layout.cpp",
+      "find": "lines.emplace_back(std::string(full.substr(line.start, line.end - line.start).utf8().get_data()),",
+      "replace": "lines.emplace_back(std::string((full + String::chr(0x200B)).substr(line.start, line.end - line.start + (line.end == full.length() ? 1 : 0)).utf8().get_data()),",
+      "sourceSha256": "2e4b6b4f3bd8d964cc50846db5335b31a55d579b2cb501fd491aed2669e3e133",
+      "hostSha256": "78ef2916c610cf5953b6e28956379d07848631e6abb6df2e491698a9d1b169c3",
+      "checks": 76,
+      "failed": 9,
+      "failedIds": [
+        "agreement/wrap/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/center/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/right/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/breaks/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/mono/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/leading/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/monoLeading/The line texts concatenate to the paragraph's text without the sentinel",
+        "agreement/span-outer/A composite paragraph reports its nested text as part of its lines",
+        "dedupe/A new text emits one event with the new lines"
+      ],
+      "oracleRejection": "wrap: the line texts tile the paragraph's text",
+      "runStatus": 0
+    }
+  ],
+  "hosts": {
+    "genuine": "35018602e91c4144638c4e38be1ff1440df68a8da7f61c85d6e5907882596346",
+    "restored": "35018602e91c4144638c4e38be1ff1440df68a8da7f61c85d6e5907882596346",
+    "previous": "54808dfa617cfdfddf16d3eda40db7cc9b300b32a2cbe07d9c7084958b389a6f",
+    "restoredEqualsGenuine": true,
+    "sourceRestoredByteForByte": true,
+    "sabotaged": {
+      "all-lines": "8f45134e6891e5d81a0e1777d42c9af64ee4ad6004c12a7fdee3c09008440438",
+      "no-centering": "71a13953f1d73f18f525987a81a65368c2c9d163062d4aaee3165bcf4076df2d",
+      "sentinel": "78ef2916c610cf5953b6e28956379d07848631e6abb6df2e491698a9d1b169c3"
+    }
+  },
+  "executedSources": {
+    "tests/text-layout-fixture.jsx": "58142d88cdd5220426cbe5490789eed4e565aa2ca89cbe2bac15424b964a983f",
+    "tests/text-layout-probe.gd": "110e2492df7920ef9dc54b0b618a3a68f4bf32ca13d6d7d6dd8c72eb3dfea174",
+    "tests/text-layout-native.test.mjs": "af9d857b4f811c018f7514321062c1e0b4cee965b6410a6b3fb701ce9a6c7151",
+    "tests/text-layout-oracle.mjs": "d5fa869fec114923a82c193dcaa30e2117db42023ef593d083cae40b769a8b01",
+    "scripts/text-layout-bundle.mjs": "102deab5092cfb322e40d28e2d66f91453887caf22dfecd050de3183ab61517c",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+    "src/text.jsx": "2edcafb828946a908abef4afffd9adccdf03a6d874da62e33afb54a6b2168f3a",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h": "53734eedcf8e3a415894b907b341318235b447f263cfd9b2d390e1a010e1ec7c",
+    "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp": "3a2622449236244167511078388db81ee2d760740c94696ce1e241ed92daea69",
+    "native/paragraph_layout.h": "2560d18658f9919d7ebd6a44d9b6f80d8658fa923de89a5467937954fbbb4a36",
+    "native/paragraph_layout.cpp": "6f0b2a678c43603fd57be96421455a5b9b79536179e95ef29cfd7b904a9544f3",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/application_runtime.cpp": "1ac0c534b57c4a89455dba316ccdd94aba710f5c39ffc6e3421501a79fc9ebbb",
+    "native/CMakeLists.txt": "f755bf61c91e2bbab01c4b4a9739ae134c2327a58d4c8a562f6f32b1767b56e0"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": "816494cf365fbb7318c274e5406856df41e96426efaad5a74141fc863372331b",
+    "ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp": "22053df9c418b4580c546d3c9db7fe09ff7db39fb6def658ee8806fce5dbf849",
+    "ReactCommon/react/renderer/components/text/ParagraphEventEmitter.cpp": "2accdc80e1bef3e68a5355ffbc2713a0546b779cbb1b939fb98a9e415c0f607f",
+    "ReactCommon/react/renderer/components/text/BaseParagraphProps.cpp": "27b2560f914004142746d2a394b8b703243779bac0fd85d6555f186c00f18b9d",
+    "ReactCommon/react/renderer/textlayoutmanager/TextLayoutManagerExtended.h": "cb8e3672844d9fb5c128f20d3a33191e525c105669fa47061f740499b37eda9d",
+    "ReactCommon/react/renderer/textlayoutmanager/TextMeasureCache.h": "2faea3ccec7f6e1d12fc442fb5c84e0d4f7055b45d275d0dbccd876e3a22c9b6",
+    "ReactCommon/react/renderer/textlayoutmanager/platform/cxx/react/renderer/textlayoutmanager/TextLayoutManager.h": "2d4bab7c7deb857450ed6bb6b370e21526fe5602840a49f631698c2e553529d8",
+    "ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm": "02c3d8c054e9483c1f02766e22d35a998940b9978d618d18ce0b90270668c595",
+    "ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTAttributedTextUtils.mm": "c142f3b66658ede30d370e767c14086e53b10a21ac9c2d748d55991508a2c107",
+    "ReactAndroid/src/main/java/com/facebook/react/views/text/FontMetricsUtil.kt": "4e7bf1e349a5ccde73f770b958763067b6e02568b904cddd7b1b434dc3bb458e",
+    "Libraries/Text/TextNativeComponent.js": "3e783f0b9fcf2e2905d4be23449c77970d29de39755b966cdd259b2f671d5740",
+    "Libraries/Types/CoreEventTypes.js": "adc76d93692fab0cf9d689134ac2d5998d10690f34c4d634085cb86b2ce4acef"
+  },
+  "example": {
+    "id": "text-layout",
+    "headlessChecks": 18,
+    "nativeRendererChecks": 32,
+    "captures": [
+      "docs/evidence/text-layout/text-layout-initial.png",
+      "docs/evidence/text-layout/text-layout-narrow.png"
+    ],
+    "capturesRecord": "docs/evidence/text-layout/captures.json"
+  },
+  "gates": [
+    {
+      "command": "npm run test:contracts",
+      "result": "pass",
+      "nodeTests": 285,
+      "pythonTests": 13,
+      "parityInventory": "8113 contracts, 97 public values",
+      "parityTests": 7,
+      "dashboardTests": 8,
+      "includes": "tests/text-platform-manager.test.mjs (4 tests)"
+    },
+    {
+      "command": "npm run type-check",
+      "result": "pass"
+    },
+    {
+      "command": "npm run check:static",
+      "result": "pass",
+      "detail": "No issues found"
+    },
+    {
+      "command": "npm run check:publication",
+      "result": "pass"
+    },
+    {
+      "command": "npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk; npm run sdk:native:verify -- --sdk build/native-sdk",
+      "result": "pass"
+    },
+    {
+      "command": "npm run test:adapters:native / test:adapters:loader against that SDK",
+      "result": "pass",
+      "registryChecks": 207,
+      "loaderChecks": 89
+    },
+    {
+      "command": "npm run test:typography; npm run example -- typography --headless / --capture",
+      "result": "pass",
+      "tests": 4,
+      "headlessChecks": 50,
+      "nativeRendererChecks": 63
+    },
+    {
+      "command": "npm run test:examples",
+      "result": "pass",
+      "examples": 31
+    },
+    {
+      "command": "npm run test:runtime / test:application / test:modules / test:lists / test:switch / test:activity-indicator / test:touchables / test:responders:pan / test:appearance / test:charts / test:nativewind / test:animated / parity:godot",
+      "result": "pass",
+      "parityGodot": "13 native subset cases"
+    }
+  ],
+  "hostedCI": {
+    "status": "pending",
+    "note": "The native-text-layout step of .github/workflows/contracts.yml has not run on a hosted runner; nothing here claims a green hosted run."
+  },
+  "limitations": [
+    "Local macOS arm64 evidence, headless; the example also with the native renderer. Hosted CI and other targets are separate.",
+    "The tolerance is against the bundled fonts' tables at weight 400; other weights are not compared for capHeight and xHeight.",
+    "No iOS simulator or Android emulator reference was measured; the platform divergences (truncated last line, empty text, lineHeight centring condition, lines beyond a fixed height, Android's baseline field) are documented, not normative.",
+    "Open: the original Text.js, span press and selection, font loading and fallback, bidi/emoji/grapheme clusters, textDecoration/fontStyle, head and middle ellipsis, font scaling, inline views."
+  ]
+}
