@@ -25,6 +25,24 @@ npm run test:consumer:libraries -- --capture --control-ref 9c5d0eb
 node --test tests/library-consumer.test.mjs
 ```
 
+> Nota posterior (2026-10-08): esta página, as contagens e o [recibo](report.json) descrevem a execução em
+> [`fc0f428`](https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e). Depois
+> dos merges da `main` (#67 e #68) e da revisão do PR #69, o commit
+> [`91c545d`](https://github.com/journey-studios/godot-fabric/commit/91c545d765e570809c7fbf3211ce9988574ff9d4) acolheu uma
+> observação do CodeRabbit (CWE-22) sobre o `godotFabric.tailwind.content` e mudou 4 arquivos
+> (`sdk/toolchain/tailwind-plugin.mjs`, `tests/library-consumer.test.mjs`, `sdk/README.md` e
+> `consumers/libraries/README.md`). A validação separava cada glob em segmentos, então `{..,ui}/**/*.tsx` passava e
+> expandia para fora do projeto, e um link simbólico dentro do projeto podia levar o Tailwind a ler arquivos de fora.
+> Agora o SDK expande os globs ele mesmo, com o fast-glob do Tailwind, no projeto (chaves continuam permitidas, como em
+> `./ui/**/*.{ts,tsx}`); recusa `..`, caminho absoluto e `~` em qualquer alternativa, inclusive dentro de chaves; falha
+> com `E_PROJECT_TAILWIND` nomeando o link simbólico, de arquivo ou de diretório, cujo caminho real sai do projeto; e
+> entrega ao Tailwind o texto dos arquivos achados, não os globs, de modo que nada fora do projeto é lido. O bloco `styles`
+> do `build-report.json` ganhou `contentFiles` (4). A lane JS passou de 13 para 15 testes, e a lane nativa repetiu os
+> mesmos 19 + 46 e 58 checks, com os mesmos nomes. O bundle (`10ec3baa…`; o `7bd32171…` do corpo mudou porque o #67
+> alterou `src/base-view-config.js` e `src/react-native-platform.jsx`), os estilos compilados (`212765e0…`) e as quatro
+> capturas não mudaram com a correção: o mesmo código construído com o plugin anterior dá o mesmo bundle. O `postReview`
+> do recibo guarda os SHA-256 dos 4 arquivos nos dois lados, as lanes reexecutadas, a causa e o que mudou.
+
 ## O que o consumer instala
 
 O lock é do próprio projeto (`consumers/libraries/package-lock.json`, SHA-256 `3aea116d…`, 112 pacotes instalados,

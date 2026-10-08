@@ -3611,7 +3611,12 @@ Executed on macOS arm64 with official Godot 4.7.2 at implementation
 [`fc0f428`](https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e): the JS lane
 (13), the native lane (19 build and install checks, 46 and 58 native), the minimal consumer (30 and 40), the 35 examples (chart 34, nativewind 49 and typography 50 headless checks),
 the type check, the contracts gate, static analysis and the publication scan pass on that tree. Only the first-slice
-checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes. After the review of PR #69,
+[`91c545d`](https://github.com/journey-studios/godot-fabric/commit/91c545d765e570809c7fbf3211ce9988574ff9d4) has the SDK
+expand and scan the `godotFabric.tailwind.content` globs itself, so a brace branch cannot leave the project, a symbolic
+link that leaves it fails the build naming the link, and Tailwind receives the files' text instead of the globs; the JS
+lane is at 15 tests and the bundle and compiled styles are unchanged by the fix, as the
+[evidence](docs/evidence/library-consumer/README.md) records in a later note.
 
 ## M1 — Complete the native UI tree
 

@@ -392,5 +392,206 @@
       "seconds": 2
     },
     "flake": "One headed Godot run of the minimal consumer (local-alias-graphical) timed out at 180 s on the first execution of npm run test:consumer -- --capture on this machine under load; the rerun passed all 30 and 40 checks. No explanation was found, and the libraries lane never timed out."
+  },
+  "postReview": {
+    "at": "2026-10-08T14:50:41Z",
+    "base": {
+      "commit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+      "note": "The receipt above is what fc0f428 executed, with the counts and hashes of that run (host a231884f, bundle 7bd32171, 13 JS tests). Every pin above still equals git show fc0f428:<path>. This section describes the tree after the review of PR #69: the one commit listed in implementation changes four files, and pins names the SHA-256 each has at that commit, equal to git show <commit>:<path>, with previousPins at e235ade (the head CodeRabbit reviewed; the first three also equal fc0f428, consumers/libraries/README.md differs only by the captures the evidence stage added). The merges of main after fc0f428 (#67 text and #68 screen reader announcements) carry other slices' files; #67 changed two files the bundle contains, which is why the bundle SHA-256 differs from the recorded one (bundleChangedBy), and the review did not change it"
+    },
+    "implementation": [
+      {
+        "changeSet": "A",
+        "commit": "91c545d765e570809c7fbf3211ce9988574ff9d4",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/91c545d765e570809c7fbf3211ce9988574ff9d4",
+        "subject": "fix(sdk): Keep the Tailwind content scan inside the project",
+        "files": [
+          "sdk/toolchain/tailwind-plugin.mjs",
+          "tests/library-consumer.test.mjs",
+          "sdk/README.md",
+          "consumers/libraries/README.md"
+        ]
+      }
+    ],
+    "executedTree": {
+      "commit": "91c545d765e570809c7fbf3211ce9988574ff9d4",
+      "treeSha": "080e8055b08e7c1d27952b019b8c4eca04a121c5",
+      "sdkManifestSourceCommit": "91c545d765e570809c7fbf3211ce9988574ff9d4",
+      "sdkManifestSourceDirty": false,
+      "sdkManifestSha256": "ba9eb6ec51b9b48a6dbacd73ae024bf2de10971a87f225153d0de5976a4e1106",
+      "nativeHostSha256": "0d011e050e5c4ba7bd6ae13808f5c66a1c42db77f195649253eaa09b6db25411",
+      "note": "The tree of the review commit, which holds the merges of main after fc0f428 (#67 and #68); the JS lane and the native lane below ran on it with git status empty and gave the SDK manifest sourceDirty false. The host is the one rebuilt after the #68 merge (native changed there, not in this slice), so its SHA-256 is not the recorded a231884f"
+    },
+    "bundleChangedBy": {
+      "recordedBundleSha256": "7bd321710d95456b0286a2b9fab439a80786077778f8fb056c20c479f875f36d",
+      "bundleSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+      "bytes": 1424473,
+      "files": [
+        "src/base-view-config.js",
+        "src/react-native-platform.jsx"
+      ],
+      "source": "origin/main b82fbdd (#67), merged in 7703cc7; #68 changed no file the bundle contains",
+      "inputs": 562
+    },
+    "causes": [
+      {
+        "source": "CodeRabbit on PR #69, sdk/toolchain/tailwind-plugin.mjs, parseTailwindDeclaration (CWE-22)",
+        "finding": "godotFabric.tailwind.content was validated by splitting each glob on separators and looking for .. or an absolute path, so a brace branch such as {..,ui}/**/*.tsx passed and the glob expanded outside the project (micromatch.braces leaves that pattern unexpanded, so even an expansion-based check misses it); and the globs were handed to Tailwind, whose scan follows a symbolic link inside the project to files outside it"
+      }
+    ],
+    "rule": {
+      "declaration": "Each content glob, and the raw pattern text, is held against a regular expression for an alternative that is absolute, starts at ~ or a drive letter, or names a parent directory at the start or after /, {, ,, (, | or a backslash; the check runs on the pattern and on every micromatch brace expansion. Negated globs, NUL bytes and a pattern that cannot be expanded are refused. The error is E_PROJECT_TAILWIND and names the glob and the escaping alternative",
+      "scan": "scanTailwindContent expands the globs with the fast-glob Tailwind depends on (cwd the real path of the project, files only, symbolic links followed) and holds every path component of every match to the project by its real path. A symbolic link to a file or to a directory that leaves the project fails the build with E_PROJECT_TAILWIND naming the link; a glob that matches no file fails too; files are de-duplicated by real path",
+      "tailwind": "Tailwind receives {raw, extension} for each file the SDK read, never a glob or a path, so it reads nothing from disk and nothing outside the project is ever read. The build report's styles block gains contentFiles (4 for this consumer)"
+    },
+    "changes": {
+      "pluginApi": "parseTailwindDeclaration(value) (it lost the project argument and returns patterns, the globs without a leading ./) and the new scanTailwindContent(project, patterns), both exported from sdk/toolchain/tailwind-plugin.mjs",
+      "docs": "sdk/README.md and consumers/libraries/README.md state the rule: braces allowed, no absolute path, ~ or .. in any alternative, negated globs refused, a link that leaves the project fails naming it, no match fails, Tailwind receives the file text",
+      "unitTests": "The declaration test refuses {..,ui}/**/*.tsx, ui/{a,../../b}/**/*.tsx, {/etc,ui}/**/*.tsx, ~/ui/** and a negated glob (besides the cases it already had) and accepts ./ui/**/*.{ts,tsx}, whose patterns keep the braces; the new scan test expands braces and alternatives inside a temporary project, reads the files' text, fails when nothing matches, reads a link that stays inside the project once, and, with an fs.readFileSync spy, refuses a file link, a directory link and a link at the project root that leave it, naming each link, without reading any file outside",
+      "integrationTest": "The new build test runs the real SDK builder with {../outside,ui}/**/*.tsx, {..,ui}/**/*.tsx and {/etc,ui}/**/*.tsx (each refused with E_PROJECT_TAILWIND, naming the glob in the first, the previous bundle kept), then with a symbolic link to a file and one to a directory that leave the project (refused naming the link, the previous bundle kept), and finally with ./ui/**/*.{ts,tsx} plus ./ui/{App,index}.tsx, which reach the same files: the same bundle SHA-256 and contentFiles 4. The test of the existing refusals now expects the new message for ../outside/**",
+      "sabotage": "With the regular expression and the real-path check disabled, the unit tests that exercise them fail; the files were restored byte for byte"
+    },
+    "unchanged": {
+      "bundleSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+      "compiledSha256": "212765e09a93dfe6354ebbdc794d0154fe7ca72c0398c1718c9b295e94e62ae4",
+      "rules": 55,
+      "note": "The same tree built with the sdk/toolchain/tailwind-plugin.mjs of e235ade (SHA-256 d587a8082bbd55f02a81dc1872c9365b64f172beccdac13c3298d0874c136e63) instead of the one of the fix gives the same bundle SHA-256 and the same compiledSha256 (npm run test:consumer:libraries, 16 build and install checks and 46 native checks, with no contentFiles in the styles block); the file was restored afterwards and git status was empty",
+      "screenshots": {
+        "note": "npm run test:consumer:libraries -- --capture wrote the four frames again from the review tree; they have the SHA-256 of the committed captures",
+        "light": "b141eafe1b232f73136918143b96ffc425b3fab267e15c348322f8b0f009253e",
+        "accent": "8f7ebd64c4ad54752cfa9436b8063fb601cc16e6b1a3c3fc580c3bdccb529484",
+        "dark": "0413e074c0cb3e86f365839247b1d7280f5e8d1c587c8dfe7c82128e94fcd4fd",
+        "chart": "00ce02e41bff8cebef3e54654f4fc170987180cf25e870278e011f430b2dc082"
+      },
+      "libraries": {
+        "nativewind": "4.2.7",
+        "react-native-css-interop": "0.2.7",
+        "tailwindcss": "3.4.17",
+        "react-native-chart-kit": "7.0.4",
+        "react-native-svg": "15.15.5"
+      }
+    },
+    "countsAfterTheReview": {
+      "jsLane": {
+        "command": "node --test tests/library-consumer.test.mjs",
+        "before": 13,
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "durationSeconds": 78,
+        "added": [
+          "the SDK owns the content scan: braces expand inside the project and nothing outside it is read",
+          "the content scan stays inside the project: braces cannot leave it, a link cannot lead out, and valid braces still build"
+        ]
+      },
+      "nativeHarnessChecks": 19,
+      "nativeChecks": 46,
+      "nativeChecksWithRenderer": 58,
+      "contentFiles": 4,
+      "testContracts": {
+        "nodeTestGroups": [
+          {
+            "tests": 7,
+            "passed": 7
+          },
+          {
+            "tests": 43,
+            "passed": 43
+          },
+          {
+            "tests": 321,
+            "passed": 321
+          }
+        ],
+        "pythonTests": 13
+      },
+      "dashboardTests": 43
+    },
+    "note": "The native lane was run once as npm run test:consumer:libraries -- --capture --control-ref 9c5d0eb on the clean tree of 91c545d, so the headless and the renderer lanes below are the two stages of that run, as in the receipt above; its check names have the same digests as the receipt's (harness e54d6d76, native 3cfe2419, renderer 96fc62b4), the JS lane and the contracts gate were run on the same tree, and the local logs are in build/consumer-libraries (not in Git)",
+    "lanes": [
+      {
+        "lane": "js",
+        "command": "node --test tests/library-consumer.test.mjs",
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "durationSeconds": 78,
+        "network": "npm ci of the consumer lockfile"
+      },
+      {
+        "lane": "native-headless",
+        "command": "npm run test:consumer:libraries -- --capture --control-ref 9c5d0eb",
+        "harnessChecks": 19,
+        "nativeChecks": 46,
+        "passed": true,
+        "displayServer": "headless",
+        "bundleSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+        "harnessCheckIdDigestSha256": "e54d6d7617bf53fa6b248901dddeef9575effeb49baf4e317181d6ee5d41f86b",
+        "nativeCheckIdDigestSha256": "3cfe2419b458c53e92f64c33e78cb0a0a6759bf6d6caffa8d8e6b1ef7815314b",
+        "reportSha256": "47224fdcfad2586731269ea41e486ecd1738efe2f5e6a49156c2ded4439573d9",
+        "logSha256": "f9ae5944cdf5878c556d099a421b957fd28f41b48ee2804b0f97fea31a366a1c"
+      },
+      {
+        "lane": "native-renderer",
+        "command": "npm run test:consumer:libraries -- --capture --control-ref 9c5d0eb",
+        "nativeChecks": 58,
+        "capturedChecks": 12,
+        "passed": true,
+        "displayServer": "macOS",
+        "nativeCheckIdDigestSha256": "96fc62b4c57d1ed28e40bfbbcb73a3c8322685fc0cab44e7af6325ac244ba039",
+        "reportSha256": "308288ba7696b754feb6b248c9b5dcc982a264d2d1809d034782feac3efeae93",
+        "logSha256": "6e645bbe6ee2e298f48cd71940c921da0073ff9297efdd5d4031ed480b233c4d",
+        "pixels": {
+          "accent": "059669",
+          "chart": "4f46e5",
+          "dark": "4f46e5",
+          "light": "4f46e5"
+        }
+      },
+      {
+        "lane": "control-on-main",
+        "meaning": "The same template built by the SDK of main before the slice (9c5d0eb) is still refused at the two points, with the messages recorded above",
+        "ref": "9c5d0eb",
+        "reducedConsumer": "✘ [ERROR] E_PROJECT_DEPENDENCY: react-native-safe-area-context: undeclared import in react-native-css-interop dependencies [plugin project-owned-resolution]",
+        "fullConsumer": "GODOT_FABRIC_BUILD_ERROR: E_ADAPTER_SELECTION: godotFabric requires exactly an adapters array"
+      }
+    ],
+    "gates": {
+      "typeCheck": {
+        "command": "npm run type-check",
+        "passed": true
+      },
+      "testContracts": {
+        "command": "npm run test:contracts",
+        "exit": 0
+      },
+      "checkStatic": {
+        "command": "npm run check:static",
+        "passed": true
+      },
+      "checkPublication": {
+        "command": "npm run check:publication",
+        "passed": true,
+        "files": 1526
+      },
+      "testDashboard": {
+        "command": "npm run test:dashboard",
+        "tests": 43,
+        "passed": 43
+      },
+      "note": "test:contracts, the type check and static analysis ran on the working tree whose four changed files have the SHA-256 of pins, before the commit; the review reran the JS lane, the type check and static analysis on the commit. The publication scan and the dashboard tests ran after these documents were written"
+    },
+    "pins": {
+      "sdk/toolchain/tailwind-plugin.mjs": "d6a399285d4bff0a7877ae7f41e6085d381f5b22ef57270bf74e7be957318fe1",
+      "tests/library-consumer.test.mjs": "e240a8c5f3d1de66be71a7383bc79c27024d0927babd83526c500c03f822e944",
+      "sdk/README.md": "927769d9a8bd6bcf8469099db04da4acf14e27dcce6a421821610faadd4ef009",
+      "consumers/libraries/README.md": "f8b60aaf952e8d768e354a44ba46c1c59f25770a7e559b143109bce46df7603b"
+    },
+    "previousPins": {
+      "sdk/toolchain/tailwind-plugin.mjs": "d587a8082bbd55f02a81dc1872c9365b64f172beccdac13c3298d0874c136e63",
+      "tests/library-consumer.test.mjs": "5404f800e4ca065ad979b34e621b225f346e985cc78dfa4530faa129ca5eb547",
+      "sdk/README.md": "6a2d17dea38dc969a66b4141e050fdbb2792a804c3f7f6f20821536066203d7c",
+      "consumers/libraries/README.md": "37fd0cceec02d922259d87190efe400f432b54f80acc7925e45425e471e3fa77"
+    }
   }
 }
