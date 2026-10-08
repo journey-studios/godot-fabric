@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 #58: captura e retirement corrigidos, regressões Images #64 verificadas"
+    "focusTitle": "GF-14 #58: wheel em Modal corrigido e Text #62 integrado; validação local concluída"
   },
-  "updatedAt": "2026-10-08T09:13:04.810493+00:00",
+  "updatedAt": "2026-10-08T10:34:52.022Z",
   "source": {
-    "commit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/2a01ec6f6b7816c54776b7dd9977afa448eb7502",
-    "scope": "Correção 465ae76 dos dois achados CodeRabbit e integração main Images #64 em 2a01ec6. Prova local host787: ScrollView33, listas44, OS37, clique8×91, Images73/rede74, controles e gráfica4; principal conferiu estados medidos e134pinsGit. Contratos352Node/13Python, static e publication passaram. CI antiga3e cancelada; CI/review do próximo head pendentes. 29/156, milestones e dados dos demais agentes preservados, sem aceite antecipado.",
+    "commit": "0203145048604cebd475ab4eedf3d0b959b4b0ab",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/0203145048604cebd475ab4eedf3d0b959b4b0ab",
+    "scope": "Correção412eba2 do wheel em Modal e main Text#62 integradas em0203145. Host7fc local: ScrollView33, Modal13, regressãoModal193, clique8×91, listas44, OS37, controles e duas capturas revisados. Contratos352Node/13Python, static/publication,134pinsGit e SDK2713arquivos conferidos. CI/review do head publicado pendentes;29/156, demais agentes e milestones preservados, sem aceite antecipado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "ScrollView original RN0.87.1 implementado em revisão na #58. Correções do exemplo legado e teste de clique preservadas. Dois achados CodeRabbit reproduzidos: captura em irmão fora do Down path e rota órfã ao ocultar filho montado. Corrigidos em 465ae76; host antigo falha quatro dos 33 checks, corrigido passa 33. Main Images #64 integrada em 2a01; principal conferiu 33 checks e cleanup, listas44, OS37, clique8×91 com 26 casos por lane, Images73/rede74, controles e gráfica4. Contratos: 352 Node, 13 Python e 134 pins Git. CI/review final e aceite pendentes; GF-14 completo permanece aberto.",
+      "note": "ScrollView original RN0.87.1 em revisão na #58. Capture/retirement465ae76 preservados; terceiro achado CodeRabbit reproduzido com9/13PASS e quatro falhas wheel no Window Modal real. Correção412eba2 reutiliza rota física canônica e remove dispatch separado. Text#62 integrado020; host7fc:33ScrollView,13Modal,193regressãoModal,clique8×91/listas44/OS37 com controles recentes,duas capturas vistas. Principal verificou estados,cleanup,14adulterações e134pinsGit/SDK2713.352Node/13Python/static/publication passaram. CI/review final e aceite pendentes; contratoGF14 completo aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4117,6 +4117,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "scroll-modal-wheel-text-0203145",
+      "at": "2026-10-08T10:34:52.022Z",
+      "taskIds": [
+        "GF-14",
+        "GF-15",
+        "GF-18"
+      ],
+      "message": "#58: wheel em Modal corrigido após REDreal9/13; Text#62 integrado. Prova local7fc:33+13/Modal193/clique8×91/listas44/OS37, controles/capturas e produtor134/SDK2713 revisados. Tentativas com produtor concorrente e sidecars antigos preservadas e rejeitadas. CI/review final pendentes;29/156 e todos checkpointsGF14false.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
     {
       "id": "scroll-pointer-route-images-2a01ec6",
       "at": "2026-10-08T09:13:04.810493+00:00",

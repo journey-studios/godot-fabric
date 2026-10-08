@@ -1,6 +1,85 @@
 # ScrollView desktop probe
 
-The latest local source is `2a01ec6`, integrating the capture/route correction
+The latest reviewed local source is `0203145`: Modal wheel correction
+`412eba2` integrated with main's original RN Text PR #62. The loaded macOS host
+is `7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3`.
+Final published-head CI and CodeRabbit review remain pending. No GF-14
+checkpoint is accepted by these local results; the dashboard stays 29/156.
+
+| Current local run | Result | Evidence scope |
+| --- | ---: | --- |
+| Original RN ScrollView | 33/33 | Independently measured offsets, lifecycle, route/capture and two-root cleanup |
+| ScrollView inside original RN Modal | 13/13 | Headed Godot; four actual Window.window_input events, fractional factors, independent owners |
+| Existing Modal regression | 7 Node tests / 193 mounted checks | Six mounted reports plus discriminator contract; missing-owner negative retained separately |
+| Pointer click | 8 × 91 | All 26 required cases per lane; runtime and both stopped surfaces checked |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | Fresh same-host preceding SDK and sabotage controls rejected independently |
+| Build and SDK identity | 134 native inputs / 2,713 package files | Committed source pins and all package bytes/symlinks checked by root |
+| Local contract gates | 352 Node + 13 Python | Parity7, dashboard43, main contracts302; static and publication checks pass |
+| Modal viewport captures | 2 images, copied probe13/13 | Exact instrumented copy and diff identified; both images viewed by root |
+
+CodeRabbit found a third real error: replacing ScrollContainer with a plain
+Control removed implicit wheel handling inside a Modal. Its Window callback
+entered routed_input, which rejected wheel buttons; the wheel handler was only
+called by the Surface root. The preceding `8dd6129` host receives all four
+Window signals but fails exactly the four Modal wheel checks, with offsets
+remaining zero. Root wheel, click, pan, public scrollTo reset, independent-owner
+isolation and complete teardown all pass, establishing a bounded RED.
+
+The correction moves wheel dispatch into the existing routed input path and
+uses physical_hit_test and scroll_ancestor to locate the current mounted
+ScrollAdapter. The separate root dispatch and duplicate Control-parent walk
+are deleted. No Modal callback branch, second wheel authority, state or new
+public API is added. Local thermo-nuclear review accepts this structure.
+
+The current report independently checks logical and Fabric offsets72/48,
+paint offsets−72/−48, unchanged cross-axis and content bounds, real signal
+Window IDs/positions/factors, background root60/24, the second owner's zero
+offset and final ownership cleanup. Fourteen damaged copies are rejected even
+with passing check flags. The older RED header read its Modal ID after teardown;
+its live stage snapshots and signal observer establish identity. The permanent
+regression saves both IDs while live and verifies retirement after stop.
+
+See [the RED/GREEN and Text integration receipt](modal-wheel-and-text-integration.json),
+[committed producer inventory](committed-source-0203145.json),
+[canonical source pins](source-pins-0203145.json) and
+[actual capture receipt](modal-wheel-0203145-graphics.json). The producer maps
+separate recorded pins from additional hashes computed from bundle-metafile
+paths after execution. They do not claim esbuild recorded every input hash.
+Raw reports, logs, SDK package and failed attempts remain under the ignored
+build/scroll-view-root/modal-wheel-green/host-7fc20194 tree.
+
+The first click attempt was invalidated because root ran the main bundle
+producer concurrently. The full eight-lane rerun ran serially with unchanged
+app.js and host. The first list attempt rejected stale host-bound sidecars;
+these were archived, and list/OS controls were regenerated on7fc before the
+final current runs. Neither rejected attempt contributes to a passing count.
+SDK build/pack/verify terminal output was not retained as standalone logs;
+raw receipts/manifests remain, and root independently verified every packaged
+file and symlink. Adapter/runtime/ABI SDK certification flags remain false.
+
+Reproduce the permanent ScrollView and Modal wheel regression with
+npm run test:scroll-view after building the native host. It explicitly runs
+serially. Run npm run test:modal and npm run test:pointers:click separately.
+For current-host list controls, run the list test with --lane preceding-sdk,
+then --lane sabotage, then npm run test:lists; OS similarly runs its
+previous-sdk and three sabotage lanes before the current test. Historical
+optional sidecars must be archived first, rather than relabeled.
+
+![Modal after a down wheel: vertical content moved72px](modal-wheel-0203145-down.png)
+
+![Modal after horizontal wheel reversal: clipped content at48px](modal-wheel-0203145-horizontal.png)
+
+These are actual Modal Window viewport images from a copy that adds a capture
+helper, two frame-post-draw capture calls and capture metadata, and isolates
+the report path/output marker. The [exact diff](modal-wheel-0203145-capture.diff)
+is preserved. The canonical13-check report is unchanged. No mobile hardware,
+refresh-rate, full parity or complete GF-14 acceptance is claimed.
+
+![Registered Agent1 task and current testing scope](agents-0203145-testing.jpg)
+
+## Historical Images-integrated source2a01ec6
+
+The preceding local source is `2a01ec6`, integrating the capture/route correction
 `465ae76` with main's Images network/cache PR #64. The loaded macOS host is
 `7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9`.
 Final-head hosted CI, CodeRabbit review and checkpoint acceptance are pending.
