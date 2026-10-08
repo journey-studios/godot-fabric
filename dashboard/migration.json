@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "GF-14 #58: #69 Library consumer integrado à árvore local; validação combinada aguarda CI e revisão."
   },
-  "updatedAt": "2026-10-08T15:25:04.000Z",
+  "updatedAt": "2026-10-08T19:56:44.981Z",
   "source": {
     "commit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
     "url": "https://github.com/journey-studios/godot-fabric/commit/57e41f2e89a774eb79752cc87cd5e2096d2f3041",
@@ -2488,7 +2488,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Primeira fatia: NativeWind 4.2.7 e Chart Kit 7.0.4 (v2) num consumer independente (consumers/libraries), com package.json e package-lock.json próprios (112 pacotes instalados com npm ci --ignore-scripts pelo Node privado do SDK, com react-native-css-interop 0.2.7, Tailwind 3.4.17 e react-native-svg 15.15.5 nas versões do lock), construído, tipado e empacotado só pelo SDK público. Cobre className em View, Text, Image e Pressable (cores, espaçamento, bordas, raio, a tipografia que o host aceita e active: no Pressable), o modo escuro manual por Appearance.setColorScheme com variantes dark:, estado e Controls retidos numa troca de classe, numa troca de tema e numa remontagem de subtree, e o LineChart do Chart Kit v2 pelo adaptador SVG. O construtor passou a contar como declarado um peer opcional que só peerDependenciesMeta nomeia (os facades do SDK respondem por ele); a compilar a entrada Tailwind do projeto com o Tailwind, o preset do NativeWind e o compilador do css-interop do próprio SDK, no pipeline nativo do NativeWind e com rem 14, a partir de godotFabric.tailwind no package.json (content, darkMode media e theme em JSON; um tailwind.config.* é recusado, porque o SDK nunca roda JavaScript do projeto), registrando os estilos no único runtime de interop do bundle; a carregar o doctor.native.js do css-interop por uma regra estreita de JSX; a exigir que o nativewind e o css-interop instalados sejam os do SDK; e a oferecer className nos tipos só a quem lista types/nativewind.ts (ViewProps, TextProps e ImageProps viraram interfaces, e o SDK declara Pressable e useWindowDimensions). Lane JS, no job contracts: 13 testes, com as recusas e a sabotagem retida da regra de peer opcional. Lane nativa, no native-cold-start: 19 checks de build e instalação e 46 nativos (58 com o renderizador), com eventos reais de ponteiro, esperas por estado e 4 capturas. O consumer minimal segue com 30 e 40, e o test:charts entra no native-cold-start. O mesmo consumer falha no SDK da main (9c5d0eb) em react-native-safe-area-context e em E_ADAPTER_SELECTION. Abertos: className em TextInput (GF-12), Switch e listas; seguir o tema do sistema (só o override manual é certificado); fontScale, rem e PixelRatio; darkMode class; a expansão do adaptador SVG (transform, opacidade de grupo, peso 700 e 800 de fonte, Polygon, Polyline e a API v1) e qualquer mudança em native/svg_node.*; os outros gráficos do Chart Kit e o contrato escrito dos gráficos; as portas de Reanimated, Gesture Handler, safe-area e screens (P2); outras plataformas além do macOS arm64; o preset web do laboratório contra o nativo do SDK; as strings de versão duplicadas; e a CI hospedada desta fatia, pendente. O aceite total do GF-27 segue em andamento: só o checkpoint da primeira fatia fecha, e nenhum peso ou denominador muda.",
+      "note": "Primeira fatia: NativeWind 4.2.7 e Chart Kit 7.0.4 (v2) num consumer independente (consumers/libraries), com package.json e package-lock.json próprios (112 pacotes instalados com npm ci --ignore-scripts pelo Node privado do SDK, com react-native-css-interop 0.2.7, Tailwind 3.4.17 e react-native-svg 15.15.5 nas versões do lock), construído, tipado e empacotado só pelo SDK público. Cobre className em View, Text, Image e Pressable (cores, espaçamento, bordas, raio, a tipografia que o host aceita e active: no Pressable), o modo escuro manual por Appearance.setColorScheme com variantes dark:, estado e Controls retidos numa troca de classe, numa troca de tema e numa remontagem de subtree, e o LineChart do Chart Kit v2 pelo adaptador SVG. O construtor passou a contar como declarado um peer opcional que só peerDependenciesMeta nomeia (os facades do SDK respondem por ele); a compilar a entrada Tailwind do projeto com o Tailwind, o preset do NativeWind e o compilador do css-interop do próprio SDK, no pipeline nativo do NativeWind e com rem 14, a partir de godotFabric.tailwind no package.json (content, darkMode media e theme em JSON; um tailwind.config.* é recusado, porque o SDK nunca roda JavaScript do projeto), registrando os estilos no único runtime de interop do bundle; a carregar o doctor.native.js do css-interop por uma regra estreita de JSX; a exigir que o nativewind e o css-interop instalados sejam os do SDK; e a oferecer className nos tipos só a quem lista types/nativewind.ts (ViewProps, TextProps e ImageProps viraram interfaces, e o SDK declara Pressable e useWindowDimensions). Lane JS, no job contracts: 13 testes, com as recusas e a sabotagem retida da regra de peer opcional. Lane nativa, no native-cold-start: 19 checks de build e instalação e 46 nativos (58 com o renderizador), com eventos reais de ponteiro, esperas por estado e 4 capturas. O consumer minimal segue com 30 e 40, e o test:charts entra no native-cold-start. O mesmo consumer falha no SDK da main (9c5d0eb) em react-native-safe-area-context e em E_ADAPTER_SELECTION. Abertos: className em TextInput (GF-12), Switch e listas; seguir o tema do sistema (só o override manual é certificado); fontScale, rem e PixelRatio; darkMode class; a expansão do adaptador SVG (transform, opacidade de grupo, peso 700 e 800 de fonte, Polygon, Polyline e a API v1) e qualquer mudança em native/svg_node.*; os outros gráficos do Chart Kit e o contrato escrito dos gráficos; as portas de Reanimated, Gesture Handler, safe-area e screens (P2); outras plataformas além do macOS arm64; o preset web do laboratório contra o nativo do SDK; as strings de versão duplicadas; e as lanes com o renderizador e o controle sobre a main, que a CI hospedada não roda. CI hospedada: o push da main em 57e41f2 (squash de #69, run 37797780642) passou nos cinco jobs na primeira tentativa, com recibo em docs/evidence/library-consumer/hosted-ci.json. O aceite total do GF-27 segue em andamento: só o checkpoint da primeira fatia fecha, e nenhum peso ou denominador muda.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2523,6 +2523,14 @@
             {
               "label": "Consumer de bibliotecas: nota de pesquisa com os pontos em que o consumer falhava na main, as referências de linha e as decisões",
               "url": "https://github.com/journey-studios/godot-fabric/blob/c4dc8548e48f7e73837a224ff0a7c2ca8947d425/docs/research/library-consumer.md"
+            },
+            {
+              "label": "CI hospedada do consumer de bibliotecas 37797780642: 5 jobs na primeira tentativa, 15 testes JS e 46 checks nativos com IDs idênticos e o bundle do postReview (push da main em 57e41f2, squash de #69)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/eda4ac424ef0bff43b24bd234de9b28e67410f55/docs/evidence/library-consumer/hosted-ci.json"
+            },
+            {
+              "label": "Pages do consumer de bibliotecas 37797780563 e 37799702595: os dados da main em 57e41f2 implantados, e o disparo manual com os dados da branch do #58, que contêm a entrega do GF-27",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/eda4ac424ef0bff43b24bd234de9b28e67410f55/docs/evidence/library-consumer/publication.json"
             }
           ]
         },
@@ -3538,20 +3546,111 @@
             {
               "id": "manifesto",
               "label": "Manifesto de escopo do 0.5 com a decisão por nome (hoje View descarta accessible* e userSelect por decisão documentada, então 'zero descartes' não é o critério)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): o manifesto decide os 12 nomes e cada uma das 880 props que o RN declara para os 7 componentes (433 suportadas, 325 ignoradas com motivo, 122 recusadas); CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das 23 fontes da fatia, dos relatórios e do host, contagens por componente e itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/report.json"
+                },
+                {
+                  "label": "Manifesto do escopo do 0.5: 12 nomes com a decisão e a linha da auditoria, e a decisão de cada prop dos 7 componentes (gerado do módulo da política)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/compatibility/scope-0.5.json"
+                },
+                {
+                  "label": "Módulo único da política de props: as tabelas por componente e o verificador `checkProps`",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/src/prop-scope.mjs"
+                },
+                {
+                  "label": "Teste do manifesto: 12 nomes, cada prop classificada uma vez, motivos e fontes que existem, e o JSON versionado sem deriva do módulo",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5.test.mjs"
+                },
+                {
+                  "label": "Gerador do manifesto: `node scripts/scope-manifest.mjs --write` e `--check`",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/scripts/scope-manifest.mjs"
+                }
+              ]
             },
             {
               "id": "tipos",
               "label": "Tipos de Pressable, ScrollView, Platform, Dimensions e useWindowDimensions (e os demais do manifesto) em types/react-native.ts, verificados pelo type-check do consumidor",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): tipos de View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions e StyleSheet em types/react-native.ts, com 433 positivos e 121 negativos no guarda de tipos; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
+                },
+                {
+                  "label": "Recibo: o guarda de tipos (433 casos positivos, 121 `@ts-expect-error`, 5 positivos e 3 negativos de valor) e as fontes fixadas",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/report.json"
+                },
+                {
+                  "label": "Manifesto do escopo do 0.5, de onde o guarda de tipos é gerado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/compatibility/scope-0.5.json"
+                },
+                {
+                  "label": "Módulo da política de props que as declarações de tipos acompanham",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/src/prop-scope.mjs"
+                },
+                {
+                  "label": "Declarações de tipos do SDK (View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions, StyleSheet)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/types/react-native.ts"
+                },
+                {
+                  "label": "Fixture do consumidor, verificada pelo type-check: positivos e negativos de tipo",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/types/consumer.tsx"
+                },
+                {
+                  "label": "Guarda de tipos gerado do manifesto e conferido com o tsc-rs",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5-types.mjs"
+                },
+                {
+                  "label": "Teste \"os tipos e as tabelas concordam\": uma prop suportada compila e uma recusada não",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5.test.mjs"
+                }
+              ]
             },
             {
               "id": "props",
               "label": "Props fora do manifesto nos componentes usados falham de forma visível, ou são ignoradas de forma documentada, no mount e no update",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): cada prop recusada falha, e cada ignorada deixa o host como a linha de base, no mount e no update; 181 checks nativos, o SDK anterior falha 22 de 177 e 6 sabotagens são rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
+                },
+                {
+                  "label": "Recibo: as lanes, o controle causal, as sabotagens retidas, os hashes dos relatórios e do host, e os itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/report.json"
+                },
+                {
+                  "label": "Manifesto do escopo do 0.5 com a classe de cada prop",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/compatibility/scope-0.5.json"
+                },
+                {
+                  "label": "Módulo único da política de props: o verificador roda em toda renderização de View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/src/prop-scope.mjs"
+                },
+                {
+                  "label": "Teste da política (lane de JS, 16 testes com o contrato do ScrollView): o verificador recusa pela tabela, aceita o default e descarta as chaves não declaradas",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5.test.mjs"
+                },
+                {
+                  "label": "Lane nativa no host Godot real: um caso por vaga ao lado de uma linha de base, na montagem e na atualização no lugar (181 checks), e o controle sobre a main",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5-native.test.mjs"
+                },
+                {
+                  "label": "Oráculo independente: recomputa as expectativas só do inventário e do manifesto em JSON",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5-oracle.mjs"
+                },
+                {
+                  "label": "As seis sabotagens retidas, cada uma rejeitada",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/scripts/scope-sabotage.mjs"
+                }
+              ]
             }
           ]
         },
@@ -4192,6 +4291,22 @@
     }
   ],
   "activity": [
+    {
+      "id": "library-consumer-main-hosted-ci-and-pages-20261008",
+      "at": "2026-10-08T19:56:44.981Z",
+      "taskIds": [
+        "GF-27"
+      ],
+      "message": "CI hospedada do consumer de bibliotecas: o push da main em 57e41f2 (squash de #69, run 37797780642) passou nos cinco jobs na primeira tentativa. O job contracts passou os 15 testes da lane de JS e o job nativo rodou npm run test:consumer:libraries (16 checks de build e instalação e 46 nativos), e o artefato independent-libraries-consumer repete os 46 checks com IDs idênticos aos do relatório commitado e o bundle que o postReview registra (10ec3baa…), com o digest do zip igual ao da API e ao do log de upload; o consumer minimal repete 30 e 40 e o test:charts passa 4 testes. A lane com o renderizador (58 checks e as capturas) e o controle sobre a main seguem locais. Dos 32 pins rastreados, 25 têm em 57e41f2 os bytes de fc0f428, 7 diferem pela revisão e pelos merges de #67 e #68, e os 4 do postReview são iguais. Pages: o push 37797780563 implantou exatamente os dados commitados de 57e41f2, com a entrega do GF-27 e os links pinados, e o disparo manual 37799702595, de outro agente, publicou os dados de a3fe519, a branch do #58, que a contém. Só o checkpoint da primeira fatia do GF-27 está fechado; nenhum peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/eda4ac424ef0bff43b24bd234de9b28e67410f55/docs/evidence/library-consumer/hosted-ci.json"
+    },
+    {
+      "id": "milestone-0-5-v05-04-scope-1b9f120",
+      "at": "2026-10-08T19:56:44.981Z",
+      "taskIds": [],
+      "message": "V05-04 do marco 0.5, critérios manifesto, tipos e props, com evidência local: o manifesto docs/compatibility/scope-0.5.json decide os 12 nomes do React Native que a HUD do Frontier importa e cada uma das 880 props que o RN 0.87.1 declara para os sete componentes (View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView): 433 suportadas, 325 ignoradas com motivo e fonte e 122 recusadas com `Godot <Componente> does not implement <prop>`, tudo checado em toda montagem e toda atualização por um só módulo (src/prop-scope.mjs). A lane nativa conduz cada caso no host Godot real ao lado de uma linha de base (181 checks, todos passando), um oráculo independente recalcula as expectativas só do inventário e do manifesto, o SDK anterior (e1c7a39) falha exatamente 22 dos seus 177 checks e seis sabotagens retidas são rejeitadas; os tipos de View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions e StyleSheet passam num guarda de tipos gerado do manifesto (433 casos positivos e 121 negativos). A fatia não tem saída visual e não traz captura. Abertos: as 26 props do ScrollView que recusam até o default do RN (decisão do GF-14), a queda do host quando a sabotagem scroll tira a verificação (reproduzida, não consertada) e a CI hospedada com a publicação no Pages, ambas pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
+    },
     {
       "id": "milestone-0-5-v05-03-replay-c2e4501",
       "at": "2026-10-08T15:25:04.000Z",
