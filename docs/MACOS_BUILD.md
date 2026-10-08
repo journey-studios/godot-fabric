@@ -38,6 +38,13 @@ Ad-hoc signing is for local validation only. This slice does not establish Devel
 
 ## Evidence status
 
+The [containment review delta](evidence/macos-export/containment-review/README.md)
+records a subsequent clean run at `881a711`: 13/13 native tests, exact 40/43 runtime
+checks and 284 independent local archive checks. The new private containment
+predicate admits the app root and valid `..framework` children while rejecting
+parent traversal and prefix-sharing siblings. The SDK's 220 source pins and all
+three capture bytes are unchanged. This follow-up remains local evidence.
+
 The [current executed evidence](evidence/macos-export/fixed-window/README.md)
 records clean producer `29969eb0d64201a1797e6e866a2ef650b1282fde`, after integrating
 main's Frontier input policy and rebuilding the addon host. The actual signed,

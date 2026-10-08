@@ -47,6 +47,11 @@ also covers `.app/..framework`: treating every relative string that starts with
 component boundaries instead. Portable checks pass without a real Godot binary;
 the native-export test remains an explicit skip in that lane. These runner/test
 files are outside the SDK's 220 source-pin inventory, which remains unchanged.
+The [executed follow-up](containment-review/README.md) then passed 13/13 real
+native tests, exact 40/43 runtime checks and 284 independent local archive checks
+at clean producer `881a711`. Root also compared all 220 pins and the three new PNG
+bytes with the existing exported/editable packet; all match. Hosted CI for the
+final delivery remains pending.
 
 ## Historical independent review
 

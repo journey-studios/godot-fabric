@@ -8,11 +8,11 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T22:55:24.948Z",
+  "updatedAt": "2026-10-08T23:19:38.019Z",
   "source": {
-    "commit": "ead6ad46a68083c0ba9fd10e82d296d93750ac23",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/ead6ad46a68083c0ba9fd10e82d296d93750ac23",
-    "scope": "P2 V05-07: prova local do produtor 29969eb com main71 integrada, export nativo 13/13, runtime minimal 40/43, três capturas físicas 540×300 byte a byte iguais à execução editável, 220 pins SDK, auditoria local tar 280/280 e revisão independente da baseline 24/24. CI anterior 7c6a4f8 falhou; nova CI e CodeRabbit pendentes. Falha antiga de remount preservada sem causa comprovada. Só os links dos dois critérios P2 já concluídos foram atualizados; P1/P5 e todos os campos da 1.0 preservados.",
+    "commit": "881a711b9972421017e98997539e56615586d1e1",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/881a711b9972421017e98997539e56615586d1e1",
+    "scope": "P2 V05-07: nova prova local após revisão de contenção em 881a711. Export nativo 13/13, runtime minimal 40/43, auditoria independente do tar 284/284. Os 220 pins do SDK e as três capturas 540×300 seguem iguais à prova 29969eb e à baseline editável. CI do head final e revisão CodeRabbit pendentes; falha antiga de remount preservada sem causa comprovada. Nenhum critério adicional foi fechado; P1/P5, critérios P2, campos da 1.0 e denominadores preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
   },
   "phases": [
@@ -4353,6 +4353,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-p2-containment-review-881a711",
+      "at": "2026-10-08T23:19:38.019Z",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "P2 V05-07: revisão CodeRabbit consolidou três verificações de caminhos. Nova execução real no produtor limpo 881a711 passou 13/13 testes nativos, 40/43 checks do runtime e 284/284 verificações da auditoria independente. Os 220 pins do SDK e as três capturas continuam iguais à baseline. Critérios adicionais continuam abertos; CI do head final pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
+    },
     {
       "id": "milestone-0-5-p2-fixed-window-29969eb",
       "at": "2026-10-08T22:55:24.948Z",

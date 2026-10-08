@@ -1,5 +1,15 @@
 # macOS Release export: executed minimal consumer
 
+## Containment review follow-up
+
+Clean producer `881a711b9972421017e98997539e56615586d1e1` repeated the real
+export after consolidating the three path guards: 13/13 native tests, exact
+40/43 runtime checks and a 284-check independent local archive audit passed.
+All 220 SDK source pins remain identical to the preceding producer; all three
+new captures are byte-identical to its exported and independently executed
+editable captures. The [review delta](containment-review/README.md) retains the
+new observations and hash index. Hosted CI for the final delivery is pending.
+
 ## Current fixed-window proof
 
 Producer `29969eb0d64201a1797e6e866a2ef650b1282fde`, including main's accepted
