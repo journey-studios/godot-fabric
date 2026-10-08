@@ -3,6 +3,7 @@ import { AccessibilityInfo, AppRegistry, AppState, Appearance, Linking, Clipboar
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
+import { Pressable, useWindowDimensions, type PressableProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
@@ -434,3 +435,28 @@ const dottedText = <Text style={{ textDecorationStyle: "dotted" }}>Lines</Text>;
 // @ts-expect-error the line is none, underline, line-through or underline line-through, in that order
 const overlineText = <Text style={{ textDecorationLine: "overline" }}>Lines</Text>;
 void styledText; void resetText; void obliqueText; void dottedText; void overlineText;
+// Pressable is RN's original: Pressability's press props, accessibility, and a style that may depend on `pressed`.
+const pressableProps: PressableProps = { onPress: () => {}, onPressIn: () => {}, onPressOut: () => {}, onLongPress: () => {},
+  delayLongPress: 300, disabled: false, hitSlop: 4, pressRetentionOffset: 8, testID: "press", accessibilityRole: "button",
+  style: ({ pressed }) => ({ opacity: pressed ? 0.5 : 1 }) };
+const pressable = <Pressable {...pressableProps}><Text>Press</Text></Pressable>;
+const staticPressable = <Pressable style={{ padding: 8 }} onPress={() => {}} />;
+function WindowSize() {
+  const { width, height, scale } = useWindowDimensions();
+  void width; void height; void scale;
+  return <View />;
+}
+// @ts-expect-error the Android ripple is outside the Godot Pressable contract
+const ripplePressable = <Pressable android_ripple={{ color: "red" }} />;
+// @ts-expect-error hover handlers are not verified on this platform
+const hoverPressable = <Pressable onHoverIn={() => {}} />;
+// className exists only after a project opts in with types/nativewind.ts, which this fixture does not.
+// @ts-expect-error className on View
+const classView = <View className="p-4" />;
+// @ts-expect-error className on Text
+const classText = <Text className="text-sm" />;
+// @ts-expect-error className on Image
+const classImage = <Image source={{ uri: "res://logo.png" }} className="w-8" />;
+// @ts-expect-error className on Pressable
+const classPressable = <Pressable className="p-2" />;
+void pressable; void staticPressable; void WindowSize; void ripplePressable; void hoverPressable; void classView; void classText; void classImage; void classPressable;

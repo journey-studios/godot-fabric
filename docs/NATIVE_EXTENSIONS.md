@@ -164,6 +164,10 @@ package manager. Selection is opt-in:
 }
 ```
 
+`godotFabric` also holds `tailwind`, the declarative Tailwind configuration of the
+[SDK guide](../sdk/README.md#libraries-nativewind-and-chart-kit); it selects no
+adapter, and any other key is rejected.
+
 Provision the addon with an explicitly verified native SDK:
 
 ```sh

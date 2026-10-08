@@ -1,0 +1,8 @@
+addons/
+node_modules/
+.godot/
+.godot_fabric/
+*.uid
+*.import
+libraries-*.png
+libraries-report.json
