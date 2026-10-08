@@ -7,8 +7,8 @@ the public `react-native` import on one real root: the host installs RN's own C+
 `LayoutAnimationDriver`, the host's frame clock is its display link, and an independent oracle
 recomputes every frame of every animation from RN's formulas. The host that main built before
 this slice fails exactly the checks that need the driver, and four retained host sabotages are
-rejected by the probe and by the oracle. An evidence record (`docs/evidence/layout-animation/`)
-pins the executions to the implementation commit once the slice is committed. Reduced motion,
+rejected by the probe and by the oracle. The [evidence record](../evidence/layout-animation/README.md)
+pins the executions to the implementation commit `ee8f5bd`. Reduced motion,
 several roots animating at once, the interpolation of Text and Image state, background and resume,
 behavior under JS load, the mobile exports and a performance budget are not certified; see
 "Remaining scope".
@@ -185,7 +185,7 @@ RN's JS timer, and compares them with the report.
 
 Because the clock is the frame time of the pump, the oracle's expected values do not depend on the
 pace of the host: the report of a run under CPU load is checked against the same formulas. The largest
-distance from the oracle in the run that wrote this note (377 transactions) is 2.4e-5 in position, 3.3e-8 in opacity and 4.5e-8 in scale,
+distance from the oracle in the run that wrote this note (359 transactions) is 1.8e-5 in position, 4.2e-8 in opacity and 4.5e-8 in scale,
 against tolerances of 5e-4 in position and 1e-5 in opacity and scale (the Controls and RN's interpolation both hold single-precision floats).
 
 **Facts the runs showed.** The first transaction of an animation is the commit's: it applies the
@@ -224,16 +224,17 @@ A tick is `UIManager::animationTick()`, which runs the whole `uiManagerDidFinish
 through the driver, then the mutations and `apply` of every live key frame) once per frame-clock tick.
 Timing it around the call in a temporary instrumented host (a stopwatch on `animationTick()` and nothing
 else, not retained and not a gate; the GF-30 counters are not in this tree's base) over 1, 10, 100 and 400
-absolutely positioned 6-point views that all move for 1 s under one `LayoutAnimation`, three runs each of 51
-to 67 ticks, on an Apple M3 Pro, headless, release host, gives the medians below. A 60 Hz tick period is
-16.7 ms.
+absolutely positioned 6-point views that all move for 1 s under one `LayoutAnimation`, three runs each of 53
+to 68 ticks, on an Apple M3 Pro, headless, release host, on the pinned commit, gives the figures below. A 60 Hz
+tick period is 16.7 ms. The machine carried other heavy processes (load average about 8): an earlier run on a quieter
+machine gave about half the figures for one view, so they depend on the environment.
 
 | Views moving | Median per tick | p95 per tick | Worst tick |
 | ---: | ---: | ---: | ---: |
-| 1 | 59 to 62 us | up to 131 us | 0.5 ms |
-| 10 | 121 to 138 us | up to 0.69 ms | 4.7 ms |
-| 100 | 0.74 to 1.9 ms | up to 2.4 ms | 10.2 ms |
-| 400 | 2.6 to 2.9 ms | up to 4.1 ms | 13.3 ms |
+| 1 | 121 to 135 us | 203 to 389 us | 0.32 to 0.48 ms |
+| 10 | 288 to 313 us | 0.50 to 0.78 ms | 0.65 to 1.00 ms |
+| 100 | 1.37 to 1.97 ms | 2.5 to 3.0 ms | 3.1 to 3.5 ms |
+| 400 | 3.71 to 3.80 ms | 4.3 to 5.4 ms | 6.2 to 6.7 ms |
 
 It grows with the number of live key frames: the host applies every view of every transaction, and does
 not skip one whose interpolated props did not change. Budgets belong to GF-30.

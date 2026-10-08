@@ -15,24 +15,50 @@ host's [frame clock](../../docs/research/frame-clock.md), the same ticks that pa
 without a React commit per frame; the Controls change on every tick and only the root
 re-renders, when a button is pressed and when RN calls `onAnimationDidEnd`. The two buttons are
 `TouchableOpacity`. The launcher entry is the interactive demo; `npm run test:layout-animation`
-is the [research](../../docs/research/layout-animation.md) suite, outside the catalog.
+is the [evidence](../../docs/evidence/layout-animation/README.md) suite, outside the catalog.
 
 ## Use the example
 
-**Spring row / column** calls `LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)`
-and flips the stage's `flexDirection`. Yoga lays the three tiles out in their new places at
-once (`onLayout`, `measure` and the shadow tree report the column immediately); the driver
-shows the move over 700 ms along RN's spring curve, which overshoots before it settles, so the
-tiles swing past their places and back.
+![The three tiles in a row, the status idle](../../docs/evidence/layout-animation/layout-animation-before.png)
 
-**Ease in / out** calls `Presets.easeInEaseOut` and replaces the first tile with a fourth. The
-new tile is created at opacity 0 and fades in while the old one, which stays mounted, fades
-out; the two in the middle slide into the gap. Only when the 300 ms animation ends does the
-host remove the old tile.
+**Idle** is the three tiles in a row, one tile and a gap apart, with the status `idle`. RN's driver is
+installed and has served no transaction, and React has rendered once.
 
-Pressing **Spring** again returns the tiles to a row. The status line follows the
-callbacks: `running` is set in the same commit that is animated and `finished` when RN calls
-`onAnimationDidEnd`.
+**Spring row / column** calls `LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)` and flips the
+stage's `flexDirection`. Yoga lays the three tiles out in their new places at once (`onLayout`, `measure` and the
+shadow tree report the column immediately); the driver shows the move over 700 ms along RN's spring curve, which
+overshoots before it settles, so the tiles swing past their places and back.
+
+![The second and third tiles leaving the row for the column](../../docs/evidence/layout-animation/layout-animation-spring-mid.png)
+
+**Mid-spring** is the first frame in which the third tile has moved more than 8 points and the driver is in flight,
+three ticks in: the first tile has not moved, the other two have left the row, about 10 and 20 points toward the
+column, and the status reads `spring: running`. The frame is early in the animation, and the instant it catches
+changes from one run to the next.
+
+![The three tiles in a column](../../docs/evidence/layout-animation/layout-animation-spring-end.png)
+
+**After the spring** the tiles rest in a column, exactly where Yoga laid them out, 84 points apart, and the status
+is `spring: finished`. React rendered three times (mount, request, end), not once per frame.
+
+**Ease in / out** calls `Presets.easeInEaseOut` and replaces the first tile with a fourth. The new tile is created
+at opacity 0 and fades in while the old one, which stays mounted, fades out; the two in the middle slide into the
+gap. Only when the 300 ms animation ends does the host remove the old tile.
+
+![The old tile fading out and the new one barely visible](../../docs/evidence/layout-animation/layout-animation-ease-mid.png)
+
+**Mid-ease** is the first frame in which both opacities are between 5% and 95%: the orange tile that is leaving is
+still mounted at about 95%, the two in the middle have started up (the gap under the first tile is 7 points instead
+of 12), and the yellow tile that is entering, in the third place, is at about 5%. The status reads
+`easeInEaseOut: running`.
+
+![The orange tile gone and the yellow one in its place](../../docs/evidence/layout-animation/layout-animation-ease-end.png)
+
+**After the ease** the orange tile is gone, removed by the animation's last transaction, and the cyan, purple and
+yellow tiles rest in a column, the yellow one opaque; the status is `easeInEaseOut: finished`.
+
+Pressing **Spring** again returns the tiles to a row. The status line follows the callbacks: `running` is set in the
+same commit that is animated and `finished` when RN calls `onAnimationDidEnd`.
 
 ## What the validation establishes
 

@@ -352,10 +352,11 @@ The [LayoutAnimation example](examples/layout-animation/README.md) runs React Na
 clock: the next commit's updates animate layout, its creates fade or scale in and its deletes fade
 or scale out, with the linear, easeInEaseOut and spring curves, and the driver calls
 `onAnimationDidEnd` (RN's JS timer stays the fallback) and `onAnimationDidFail`. The headless
-suite recomputes every frame from the clocks RN read with RN's formulas; the preceding host fails
-exactly its driver checks and four retained host sabotages are rejected. One root at a time;
+suite (121 checks) recomputes every frame from the clocks RN read with RN's formulas; the preceding host fails
+exactly its 83 driver checks and four retained host sabotages are rejected (75, 87, 86 and 6 checks). One root at a time;
 reduced motion, Text and Image state interpolation, background and resume, JS load and a
-performance budget are open. [Research](docs/research/layout-animation.md).
+performance budget are open. Hosted CI is pending. [Evidence](docs/evidence/layout-animation/README.md)
+and [research](docs/research/layout-animation.md).
 
 The [uniform scale proof](examples/transforms/README.md#uniform-scale) mounts RN's
 uniform `transform: [{ scale }]` in five Hermes applications: a scale, a scale with

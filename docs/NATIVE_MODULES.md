@@ -123,7 +123,7 @@ Animated; the transactions it pulls reach `uiManagerDidFinishTransaction`.
 `frameMs` (the frame time last handed to the driver), `lastReadMs` (what RN last read, in whole milliseconds), `pullsTotal`, `pullsDropped` and
 `pulls`, a ring of the last 64 transactions the driver served (`sequence`, `godotFrame`, `readMs` as RN read it, `frameMs`, `callbacks`, `active`, and the
 mutations by type); a host without the module has no such key. See the [research
-note](research/layout-animation.md).
+note](research/layout-animation.md) and the [evidence](evidence/layout-animation/README.md).
 
 The OS-specific APIs (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetIOS`, `PushNotificationIOS`,
 `StatusBar` and the rest of the [OS-specific contracts](research/os-contracts.md)) add **no native

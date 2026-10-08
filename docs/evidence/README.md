@@ -584,6 +584,28 @@ graphical CI run, announcements, programmatic focus and text scale are open. Hos
 does not complete GF-20, and it closes no checkpoint, whole GF, weight or denominator (the first slice already
 closed GF-20's `slice` checkpoint).
 
+The [LayoutAnimation record](layout-animation/README.md) runs React Native's original `LayoutAnimation` (and the
+legacy `UIManager.configureNextLayoutAnimation`) from the public import on RN's own C++ `LayoutAnimationDriver`,
+which the host now compiles from `react/renderer/animations` and installs on the `UIManager` as RN's Scheduler does:
+GF-19's layout animation slice. Until now `configureNext` reached a `UIManager` with no animation delegate and did
+nothing, so only RN's JS timer ended a call and the commit was mounted at once. The host's frame clock is the
+driver's display link (a tick only while an animation is in flight, with the frame time of the pump as the clock RN
+reads, in whole milliseconds), and every surface hands its mounting coordinator a delegate that forwards to the
+driver and records each transaction it serves. Updates animate layout, creates fade or scale in, deletes fade or
+scale out, with the linear, easeInEaseOut and spring curves; the driver calls `onAnimationDidEnd` (RN's timer stays
+the fallback and the callback is called once) and `onAnimationDidFail` for a config it cannot parse. One bundle on one
+root runs 121 headless checks (83 normative) in 18 stages, three times in a row and once under CPU load, with an
+independent oracle that recomputes every frame of every animation from the clock RN read for each of the 359
+transactions of its run, with RN's own formulas, to within 1.8e-5 in position and 4.2e-8 in opacity. The preceding
+host (main `c858263`, host `7efa0b06`) fails exactly the 83 normative checks: every `configureNext` ends by RN's JS
+timer, once, and the Controls take the committed layout in one step. Four retained host sabotages (the driver
+reading seconds, no surface registered, the animation not a frame-clock consumer, the success callback dropped) fail
+75, 87, 86 and 6 checks and the oracle rejects each. The example passes 12 checks headless, 12 with the native
+renderer and 23 with five captures, linked from the record; the temporary-instrumentation cost per tick (121 to 135 us
+for one view, 3.7 to 3.8 ms for 400) is recorded and is not a gate. Reduced motion, several roots, Text and Image
+state interpolation, background and resume, JS load, the mobile exports and a per-tick budget are open. Hosted CI and
+Pages are pending; this record does not complete GF-19.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.
