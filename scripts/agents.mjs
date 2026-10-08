@@ -1,4 +1,5 @@
 import { execFile, execFileSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { mkdir, readFile, readdir, realpath, rename, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -116,41 +117,88 @@ export async function readBoard(directory) {
   };
 }
 
-const LOCK_WAIT_MS = 10_000;
+// FABRIC_AGENTS_LOCK_WAIT_MS shortens the lock wait (tests only).
+const LOCK_WAIT_MS = parseInt(process.env.FABRIC_AGENTS_LOCK_WAIT_MS ?? "", 10) || 10_000;
 const LOCK_STALE_MS = 60_000;
 const LOCK_RETRY_MS = 50;
+
+async function readOwner(lock) {
+  try {
+    const owner = JSON.parse(await readFile(path.join(lock, "owner.json"), "utf8"));
+    return Number.isInteger(owner?.pid) && typeof owner.token === "string" ? owner : null;
+  } catch {
+    return null;
+  }
+}
+
+const isAlive = pid => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error.code !== "ESRCH";
+  }
+};
+
+// A lock is abandoned when its owner process is gone. A lock without a readable owner is only abandoned once it is old:
+// its process may have died between mkdir and writing owner.json, or may still be about to write it.
+async function abandonedOwner(lock) {
+  const owner = await readOwner(lock);
+  if (owner) {
+    return { abandoned: !isAlive(owner.pid), owner };
+  }
+  const held = await stat(lock).catch(() => null);
+  return { abandoned: Boolean(held) && Date.now() - held.mtimeMs > LOCK_STALE_MS, owner };
+}
 
 // Every command that writes runs alone: the slot choice, the coordination check and the write all see one snapshot.
 // mkdir is atomic, so the lock is a directory; readBoard only reads slot-N.json and never sees it.
 async function withRegistryLock(directory, task) {
   await mkdir(directory, { recursive: true });
   const lock = path.join(directory, ".lock");
+  const mine = { pid: process.pid, token: randomUUID() };
   const deadline = Date.now() + LOCK_WAIT_MS;
   for (;;) {
     try {
       await mkdir(lock);
+      await writeFile(path.join(lock, "owner.json"), JSON.stringify(mine)).catch(async error => {
+        await rm(lock, { recursive: true, force: true });
+        throw error;
+      });
       break;
     } catch (error) {
       if (error.code !== "EEXIST") {
         throw error;
       }
     }
-    const held = await stat(lock).catch(() => null);
-    if (held && Date.now() - held.mtimeMs > LOCK_STALE_MS) {
-      // Left behind by a dead process: move it aside (only one waiter wins the rename) and retry.
-      const aside = `${lock}.${process.pid}.stale`;
-      await rename(lock, aside).then(() => rm(aside, { recursive: true, force: true }), () => {});
+    const { abandoned, owner } = await abandonedOwner(lock);
+    if (abandoned) {
+      // Move it aside (only one waiter wins the rename), and put it back if what we took is not what we inspected.
+      const aside = `${lock}.${process.pid}.aside`;
+      const moved = await rename(lock, aside).then(() => true, () => false);
+      if (moved) {
+        const taken = await readOwner(aside);
+        if (taken?.token === owner?.token) {
+          await rm(aside, { recursive: true, force: true });
+        } else {
+          await rename(aside, lock).catch(() => {});
+        }
+      }
       continue;
     }
     if (Date.now() >= deadline) {
-      throw new Error(`O registro de agentes está em uso por outro comando há mais de ${LOCK_WAIT_MS / 1000} s; tente de novo. Se nenhum comando estiver rodando, remova ${lock}.`);
+      const holder = owner ? ` (PID ${owner.pid})` : "";
+      throw new Error(`O registro de agentes está em uso por outro comando${holder} há mais de ${LOCK_WAIT_MS / 1000} s; tente de novo. Se nenhum comando estiver rodando, remova ${lock}.`);
     }
     await sleep(LOCK_RETRY_MS);
   }
   try {
     return await task();
   } finally {
-    await rm(lock, { recursive: true, force: true });
+    // Only the owner removes the lock: after a takeover it belongs to someone else.
+    if ((await readOwner(lock))?.token === mine.token) {
+      await rm(lock, { recursive: true, force: true });
+    }
   }
 }
 

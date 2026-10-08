@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { devNull, tmpdir } from "node:os";
 import path from "node:path";
@@ -275,13 +275,26 @@ async function createRepository(t, extra = 0) {
   return { base, main, a, b, all, git, directory: path.join(base, "registry") };
 }
 
-async function cli(cwd, directory, ...args) {
+async function cliWithEnv(env, cwd, directory, ...args) {
   try {
-    const { stdout, stderr } = await exec(process.execPath, [cliPath, ...args], { cwd, env: { ...process.env, FABRIC_AGENTS_DIR: directory, FABRIC_AGENT_NAME: "" } });
+    const { stdout, stderr } = await exec(process.execPath, [cliPath, ...args], { cwd, env: { ...process.env, FABRIC_AGENTS_DIR: directory, FABRIC_AGENT_NAME: "", ...env } });
     return { code: 0, stdout, stderr };
   } catch (error) {
     return { code: error.code, stdout: error.stdout, stderr: error.stderr };
   }
+}
+const cli = (...args) => cliWithEnv({}, ...args);
+
+// Leaves a registry lock behind as another command would. Without `pid` there is no owner.json yet.
+async function plantLock(directory, { pid, ageMinutes }) {
+  const lock = path.join(directory, ".lock");
+  await mkdir(lock, { recursive: true });
+  if (pid !== undefined) {
+    await writeFile(path.join(lock, "owner.json"), JSON.stringify({ pid, token: "planted" }));
+  }
+  const when = new Date(Date.now() - ageMinutes * 60000);
+  await utimes(lock, when, when);
+  return lock;
 }
 
 test("readBoard reads live git state and reports invalid files without throwing", async t => {
@@ -491,27 +504,53 @@ test("concurrent claims are serialized: one winner for a contested area, no lost
   assert.deepEqual([board.agents.length, board.invalid.length, new Set(board.agents.map(agent => agent.worktree)).size], [5, 0, 5]);
 });
 
-test("a stale registry lock is recovered, a live one is waited for, and reads never wait", async t => {
+test("an abandoned registry lock is recovered by its owner's liveness", async t => {
   const { a, b, directory } = await createRepository(t);
-  const lock = path.join(directory, ".lock");
   const claim = cwd => cli(cwd, directory, "claim", "--task", "GF-30", "--title", "Lock");
-  await mkdir(lock, { recursive: true });
-  const old = new Date(Date.now() - 5 * 60000);
-  await utimes(lock, old, old);
+  const dead = spawn(process.execPath, ["-e", ""]);
+  await once(dead, "exit");
+  // The owner process is gone: the lock is taken over at once, even though it is brand new.
+  await plantLock(directory, { pid: dead.pid, ageMinutes: 0 });
   const recovered = await claim(a);
   assert.equal(recovered.code, 0, recovered.stderr);
-  assert.deepEqual(await readdir(directory), ["slot-1.json"], "the stale lock is removed and released");
+  assert.deepEqual(await readdir(directory), ["slot-1.json"], "the recovered lock is released afterwards");
+  // No owner.json and old: its process died between mkdir and writing the owner.
+  await plantLock(directory, { ageMinutes: 5 });
+  const ownerless = await claim(b);
+  assert.equal(ownerless.code, 0, ownerless.stderr);
+  assert.deepEqual((await readdir(directory)).sort(), ["slot-1.json", "slot-2.json"]);
+});
 
-  await mkdir(lock);
-  const waiting = claim(b);
+test("a lock held by a live process is never taken over, however old", async t => {
+  const { a, directory } = await createRepository(t);
+  const claim = () => cliWithEnv({ FABRIC_AGENTS_LOCK_WAIT_MS: "600" }, a, directory, "claim", "--task", "GF-30", "--title", "Lock");
+  const lock = await plantLock(directory, { pid: process.pid, ageMinutes: 5 });
+  const refused = await claim();
+  assert.equal(refused.code, 1);
+  assert.match(refused.stderr, new RegExp(`em uso por outro comando \\(PID ${process.pid}\\)`));
+  assert.deepEqual((await readdir(directory)).sort(), [".lock"], "no record was written");
+  assert.deepEqual(JSON.parse(await readFile(path.join(lock, "owner.json"), "utf8")), { pid: process.pid, token: "planted" }, "the owner's lock is untouched");
+  // A recent lock without an owner yet may still be about to get one: also respected.
+  await rm(lock, { recursive: true });
+  await plantLock(directory, { ageMinutes: 0 });
+  const recent = await claim();
+  assert.equal(recent.code, 1);
+  assert.match(recent.stderr, /em uso por outro comando há mais de/);
+  assert.deepEqual((await readdir(directory)).sort(), [".lock"]);
+});
+
+test("a held registry lock is waited for, and reads never wait", async t => {
+  const { a, b, directory } = await createRepository(t);
+  const lock = await plantLock(directory, { ageMinutes: 0 });
+  const waiting = cli(b, directory, "claim", "--task", "GF-30", "--title", "Lock");
   assert.equal((await cli(a, directory, "list")).code, 0, "listing is read-only and does not take the lock");
-  assert.equal((await cli(a, directory, "check")).code, 0);
+  assert.equal((await cli(a, directory, "check")).code, 1, "check without a record asks for a claim, but does not wait");
   await sleep(1200);
-  assert.deepEqual((await readdir(directory)).sort(), [".lock", "slot-1.json"], "the claim keeps waiting while the lock is held");
+  assert.deepEqual((await readdir(directory)).sort(), [".lock"], "the claim keeps waiting while the lock is held");
   await rm(lock, { recursive: true });
   const done = await waiting;
   assert.equal(done.code, 0, done.stderr);
-  assert.deepEqual((await readdir(directory)).sort(), ["slot-1.json", "slot-2.json"]);
+  assert.deepEqual(await readdir(directory), ["slot-1.json"]);
 });
 
 test("renaming a file out of another agent's area is trespass, staged and committed", async t => {
