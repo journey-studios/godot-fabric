@@ -561,6 +561,15 @@ snapshot the HUD will project is written down field by field but is not yet a se
 the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
 checkpoint, weight or denominator moves.
 
+**Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
+`58f527193039222b19794960e7b662cb34c65e74` exports and publishes a signed macOS arm64
+Release minimal consumer after relocation, exact 40/43 assertions and three 1080×600 captures
+identical to the editable baseline. Frameworks resolve inside the app; deep/strict signature
+verification, idempotent layout normalization and four real rejected mutations passed.
+[Evidence](docs/evidence/macos-export/README.md) retains the SDK/build/PCK bindings and a root
+review of 219 producer source pins. Hosted CI and delivery review are pending. The Frontier
+12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)

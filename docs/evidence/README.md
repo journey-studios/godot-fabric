@@ -12,9 +12,9 @@ The [public controls record](public-controls/README.md) adds the typed form,
 fresh ten-example reports and README gallery captures. Earlier records retain
 their historical provenance.
 
-The [independent consumer record](consumer/README.md) adds the 2B
-Resource/addon/editor prototype, fresh external TSX project, private/offline
-build and dependency checks, native roots/lifecycle and two actual captures.
+The [independent consumer record](consumer/README.md) covers the 2B Resource/addon/editor prototype,
+external TSX provisioning, offline checks and native roots/lifecycle. The [macOS export record](macos-export/README.md)
+adds a signed, relocated Release app, exact 40/43 assertions and three baseline-matching captures (local; hosted CI pending).
 
 The later [project-resolution record](project-resolution/README.md) exercises
 inherited local aliases and non-hoisted dependencies through that normal addon.

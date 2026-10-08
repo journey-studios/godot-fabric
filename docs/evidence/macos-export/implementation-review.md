@@ -1,11 +1,37 @@
-# P2 implementation review
+# P2 implementation review: payload and executed export
 
 The root reviewer applies the thermo-nuclear code-quality skill to the Luna
-implementation. This record covers the shared payload boundary and thin export
-hooks on the working tree based on
-`e0f0a9d2958a12b92fee0706162fe7f9e9eeac2a`. It is not approval of the complete
-macOS export lane; signing, publication, exported runtime, CI and CodeRabbit
-still need their own evidence.
+implementation. The first review below covered the shared payload boundary and
+thin export hooks based on `e0f0a9d2958a12b92fee0706162fe7f9e9eeac2a`.
+The final review covers producer `58f527193039222b19794960e7b662cb34c65e74`,
+including main `ec831ac`. Local signing, relocation, exported runtime and negative
+controls now have separate executed evidence; hosted CI and CodeRabbit remain
+pending for delivery. This accepts only the minimal macOS Release slice.
+
+## Final independent review
+
+The runner reuses the canonical consumer harness and PCK reader. Its export
+hooks share one payload validator; the iOS hook retains its existing embedding
+and linker behavior. Mach-O inspection distinguishes library identities from
+dependency loads, resolves both required frameworks inside the app, and rejects
+external runtime paths. The staged framework normalizer verifies duplicate
+content before changing aliases and signs resource bundles before their parent.
+Output guards reject existing paths and dangling symlinks; failures retain the
+rejected app and diagnostics.
+
+Root corrected a redundant identity wrapper and a signature-test expectation:
+modifying the enclosing Info.plist is correctly rejected while checking its
+executable, before reaching the outer app check. The final Luna read-only review
+found no high-confidence implementation blockers. Root then independently
+verified all 219 SDK source pins against producer Git blobs, the retained
+manifest/report/bundle, engine/template and host bindings, exact 40/43 runtime
+assertions, three captures, five controls and the final app signature.
+
+The [18-check root report](root-independent-review.json),
+[native controls](native-controls.json) and [executed summary](executed-summary.json)
+record these observations. The native lane passed 7/7 without skips. The
+[executed export record](README.md) defines the remaining Frontier and target
+limits; the historical asset preflights below are not exported-image proof.
 
 ## Corrected before accepting the first slice
 
