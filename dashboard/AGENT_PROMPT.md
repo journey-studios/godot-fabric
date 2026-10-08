@@ -73,8 +73,9 @@ Até cinco agentes trabalham ao mesmo tempo, cada um na própria worktree e bran
    combinar com o outro agente. Arquivos compartilhados (ROADMAP.md,
    dashboard/migration.json, package.json, native/register.cpp,
    native/CMakeLists.txt, native/application_runtime.cpp,
-   src/react-native-platform.jsx, types/react-native.ts, tests/types/consumer.tsx...
-   a lista completa, com 14 caminhos, está no README) nunca são exclusivos: não os reserve em `--area` (a reserva é
+   src/react-native-platform.jsx, types/react-native.ts, tests/types/consumer.tsx,
+   tests/platform-seams.test.mjs... a lista completa, com 15 caminhos, está no
+   README) nunca são exclusivos: não os reserve em `--area` (a reserva é
    ignorada, com aviso `shared-area`); alterá-los só gera aviso e eles entram
    por merge sequencial do orquestrador, mantendo os dois lados.
 5. `npm run agents -- release` ao entregar.

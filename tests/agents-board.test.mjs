@@ -51,13 +51,17 @@ test("the same file outside any area is a file conflict", () => {
 });
 
 test("shared files only warn when 2+ agents change them", () => {
-  for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", "tests/types/consumer.tsx"]) {
+  // Test files every slice with public API appends cases to.
+  const appended = ["tests/types/consumer.tsx", "tests/platform-seams.test.mjs"];
+  for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", ...appended]) {
     assert.ok(SHARED_PATHS.includes(shared), shared);
   }
-  assert.equal(SHARED_PATHS.length, 14);
-  // The consumer type test is appended to by every slice: outside any area it is only a shared warning.
-  const consumer = coordinate([live(record(1), ["tests/types/consumer.tsx"]), live(record(2), ["tests/types/consumer.tsx"])], start);
-  assert.deepEqual(consumer.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", "tests/types/consumer.tsx"]]);
+  assert.equal(SHARED_PATHS.length, 15);
+  // Outside any area, changing them from two agents is only a shared warning.
+  for (const file of appended) {
+    const both = coordinate([live(record(1), [file]), live(record(2), [file])], start);
+    assert.deepEqual(both.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", file]], file);
+  }
   const result = coordinate([live(record(1), ["ROADMAP.md", "package.json"]), live(record(2), ["ROADMAP.md"])], start);
   assert.deepEqual(result.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", "ROADMAP.md"]]);
   assert.match(result.issues[0].message, /merge sequencial pelo orquestrador/);
