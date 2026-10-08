@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import {createHash, randomUUID} from "node:crypto";
 import {spawnSync} from "node:child_process";
-import {cp, mkdtemp, mkdir, readdir, rm, symlink, readFile, writeFile} from "node:fs/promises";
+import {chmod, cp, mkdtemp, mkdir, readdir, rm, symlink, readFile, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {assertConsumerCapture, assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, retainFailedConsumerOutputs, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
 import {createHarness} from "../scripts/consumer-harness.mjs";
+import {GODOT_VERSION} from "../scripts/godot-binary.mjs";
 import {verifyAddonNativeInputs} from "../scripts/pack-addon.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -123,6 +124,52 @@ async function controlHarness(name) {
   await mkdir(harness.project, {recursive: true});
   return harness;
 }
+
+test("generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-harness-fatal-boundary-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const fakeGodot = path.join(directory, "godot-fixture");
+  await writeFile(fakeGodot, `#!/bin/sh\nif [ "$1" = "--version" ]; then echo ${GODOT_VERSION}.stable.official.fixture; exit 0; fi\nprintf '%s\\n' "$FAKE_GODOT_OUTPUT"\nexit "$FAKE_GODOT_STATUS"\n`);
+  await chmod(fakeGodot, 0o755);
+
+  const previousGodot = process.env.GODOT_BIN;
+  process.env.GODOT_BIN = fakeGodot;
+  let harness;
+  try {
+    harness = await controlHarness(`macos-export-harness-fatal-${randomUUID()}`);
+    const literals = "SCRIPT ERROR | Program crashed | CONSUMER_CHECK_FAILED";
+    const genericLog = await harness.run("generic-diagnostic-literals", process.execPath,
+      ["-e", `process.stdout.write(${JSON.stringify(literals)})`]);
+    assert.equal(genericLog, literals, "generic subprocess output must remain data");
+    await assert.rejects(harness.run("generic-unexpected-exit", process.execPath,
+      ["-e", "process.exit(7)"]), /AssertionError|assert/);
+
+    harness.env.FAKE_GODOT_OUTPUT = "CONSUMER_EDITOR_BUILD_REJECTED\nSCRIPT ERROR: injected fatal marker";
+    harness.env.FAKE_GODOT_STATUS = "1";
+    await assert.rejects(harness.editor("editor-rejection-with-script-error", 1), /SCRIPT ERROR/);
+    for (const [index, fatal] of ["Program crashed", "CONSUMER_CHECK_FAILED: injected fatal marker"].entries()) {
+      harness.env.FAKE_GODOT_OUTPUT = `CONSUMER_EDITOR_BUILD_REJECTED\n${fatal}`;
+      await assert.rejects(harness.editor(`editor-rejection-${index}`, 1), error => error.message.includes(fatal));
+    }
+    harness.env.FAKE_GODOT_OUTPUT = "CONSUMER_EDITOR_BUILD_REJECTED\nERROR: Missing optional module";
+    assert.match(await harness.editor("editor-legitimate-rejection", 1), /CONSUMER_EDITOR_BUILD_REJECTED/);
+
+    harness.env.FAKE_GODOT_STATUS = "0";
+    harness.env.FAKE_GODOT_OUTPUT = "CONSUMER_VALIDATION_PASSED\nCONSUMER_CHECK_FAILED: injected fatal marker";
+    await assert.rejects(harness.runtime("runtime-fatal-before-report-read", {
+      marker: /CONSUMER_VALIDATION_PASSED/, report: "missing-report.json", expectedChecks: 40,
+    }), /CONSUMER_CHECK_FAILED/);
+    assert.match(await readFile(path.join(harness.directory, "runtime-fatal-before-report-read.log"), "utf8"),
+      /CONSUMER_VALIDATION_PASSED[\s\S]*CONSUMER_CHECK_FAILED/);
+  } finally {
+    if (previousGodot === undefined) delete process.env.GODOT_BIN;
+    else process.env.GODOT_BIN = previousGodot;
+    if (harness) {
+      await harness.cleanup();
+      await rm(harness.directory, {recursive: true, force: true});
+    }
+  }
+});
 
 test("failed consumer outputs are retained byte-for-byte and missing outputs are allowed", async t => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-failed-consumer-outputs-"));

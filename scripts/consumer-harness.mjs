@@ -9,6 +9,7 @@ import { ensureGodotBinary } from "./godot-binary.mjs";
 
 export const root = fileURLToPath(new URL("..", import.meta.url));
 export const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const fatalGodotOutput = /SCRIPT ERROR|Program crashed|CONSUMER_CHECK_FAILED/;
 
 // What the consumer lanes share: a template provisioned into a fresh project
 // outside the SDK checkout, a Node-less environment, and the editor and runtime
@@ -40,7 +41,6 @@ export async function createHarness({ template, name }) {
       await writeFile(path.join(directory, label + ".log"), log);
       assert.equal(result.error, undefined, log);
       assert.equal(result.status, expected, log);
-      assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|CONSUMER_CHECK_FAILED/);
       return log;
     },
     async provision() {
@@ -48,6 +48,7 @@ export async function createHarness({ template, name }) {
     },
     async editor(label, expected = 0) {
       const log = await harness.run(label, godot, ["--path", project, "--headless", "--editor", "--", "--godot-fabric-build-check"], expected);
+      assert.doesNotMatch(log, fatalGodotOutput);
       assert.match(log, expected === 0 ? /CONSUMER_EDITOR_BUILD_PASSED/ : /CONSUMER_EDITOR_BUILD_REJECTED/);
       if (!expected) {
         assert.doesNotMatch(log, /(?:^|\n)ERROR:/);
@@ -58,6 +59,7 @@ export async function createHarness({ template, name }) {
     async runtime(label, { headed = false, marker, report, expectedChecks }) {
       await rm(path.join(project, report), { force: true });
       const log = await harness.run(label, godot, ["--path", project, ...(headed ? [] : ["--headless"]), "--", "--validate", ...(headed ? ["--capture"] : [])]);
+      assert.doesNotMatch(log, fatalGodotOutput);
       assert.doesNotMatch(log, /(?:^|\n)ERROR:|FABRIC_ERROR/);
       assert.match(log, marker);
       const result = JSON.parse(await readFile(path.join(project, report), "utf8"));
