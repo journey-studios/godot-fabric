@@ -2355,7 +2355,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // iOS acts on focus alone (RCTMountingManager.mm:342-348) and ignores the other types; the host counts those.
     // Focus waits for the next slice and fails out loud until then.
     if (!accessibility_info) { fail("Accessibility adapter is not implemented"); return; }
-    if (!accessibility_info->ui_event(type)) fail("focus is not implemented yet (GF-20 slice 2b)");
+    if (accessibility_info->ui_event(type) == fabric_godot::accessibility::UiEvent::Unsupported) fail("focus is not implemented yet (GF-20 slice 2b)");
   }
   void uiManagerDidSetIsJSResponder(const std::shared_ptr<const rn::ShadowNode> &node, bool active, bool block) override {
     auto root = roots.find(node->getSurfaceId());

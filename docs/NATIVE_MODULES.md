@@ -96,7 +96,8 @@ lookup returns `null`), from one `AccessibilityInfo` owned by each `FabricApplic
 (`native/accessibility_info.{h,cpp}`) and shared by its roots. Its constructor takes the baseline reading of the four settings
 Godot's `DisplayServer` can report (the screen reader, reduce motion, reduce transparency and increase contrast), and
 `ApplicationRuntime`'s pump reads them again once per frame, before it drains the queued work, because Godot has no change
-signal. A getter calls its success callback with the last reading, or its error callback with an `Error` whose message starts
+signal; a reading is an integer, and a method the `DisplayServer` lacks or a non-integer answer is unknown (`-1`), never off.
+A getter calls its success callback with the last reading, or its error callback with an `Error` whose message starts
 `E_ACCESSIBILITY_UNKNOWN` when the platform reports `-1`; the four settings Godot cannot read (bold text, grayscale, inverted
 colors, cross-fade) call it with `E_ACCESSIBILITY_UNAVAILABLE`. A change is a known value that differs from the last known one
 and leaves as a device event (`screenReaderChanged`, `reduceMotionChanged`, `reduceTransparencyChanged`,

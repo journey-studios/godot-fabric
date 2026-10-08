@@ -1,6 +1,7 @@
 #include "accessibility_info_core.h"
 #include <cmath>
 #include <iostream>
+#include <iterator>
 #include <limits>
 #include <set>
 #include <stdexcept>
@@ -47,28 +48,86 @@ void readings_are_three_valued() {
   }
 }
 
-void names_follow_the_ios_contract() {
-  require(std::string(getter_name(Setting::ScreenReader)) == "getCurrentVoiceOverState", "VoiceOver is the screen reader");
-  require(std::string(getter_name(Setting::ReduceMotion)) == "getCurrentReduceMotionState", "reduce motion getter");
-  require(std::string(getter_name(Setting::ReduceTransparency)) == "getCurrentReduceTransparencyState", "reduce transparency getter");
-  require(std::string(getter_name(Setting::IncreaseContrast)) == "getCurrentDarkerSystemColorsState", "darker system colors is increased contrast");
-  require(std::string(event_name(Setting::ScreenReader)) == "screenReaderChanged", "The screen reader event is the one 'change' aliases");
-  require(std::string(event_name(Setting::IncreaseContrast)) == "darkerSystemColorsChanged", "darker system colors event");
+// One row of the descriptor table per setting, in the order of the enum: a row out of place would name the wrong setting.
+void the_table_names_each_setting_once() {
+  struct Expected {
+    Setting setting;
+    const char *getter, *event, *snapshot, *description, *validation_key, *display_method;
+  };
+  const Expected expected[] = {
+      {Setting::ScreenReader, "getCurrentVoiceOverState", "screenReaderChanged", "screenReader", "the screen reader", "screen_reader",
+          "accessibility_screen_reader_active"},
+      {Setting::ReduceMotion, "getCurrentReduceMotionState", "reduceMotionChanged", "reduceMotion", "reduce motion", "reduce_animation",
+          "accessibility_should_reduce_animation"},
+      {Setting::ReduceTransparency, "getCurrentReduceTransparencyState", "reduceTransparencyChanged", "reduceTransparency",
+          "reduce transparency", "reduce_transparency", "accessibility_should_reduce_transparency"},
+      {Setting::IncreaseContrast, "getCurrentDarkerSystemColorsState", "darkerSystemColorsChanged", "increaseContrast",
+          "increase contrast", "increase_contrast", "accessibility_should_increase_contrast"},
+  };
+  require(setting_info.size() == setting_count && std::size(expected) == setting_count, "One row per setting");
+  for (std::size_t index = 0; index < setting_count; ++index) {
+    const auto &row = expected[index];
+    require(all_settings[index] == row.setting && index_of(row.setting) == index, "The settings are listed in the order of the enum");
+    const auto &actual = info(row.setting);
+    require(&actual == &setting_info[index], "info() reads the row of the setting");
+    require(std::string(actual.getter) == row.getter, row.getter);
+    require(std::string(actual.event) == row.event, row.event);
+    require(std::string(actual.snapshot) == row.snapshot, row.snapshot);
+    require(std::string(actual.description) == row.description, row.description);
+    require(std::string(actual.validation_key) == row.validation_key, row.validation_key);
+    require(std::string(actual.display_method) == row.display_method, row.display_method);
+    require(std::string(actual.display_method).rfind("accessibility_", 0) == 0, "Every reading is an accessibility_ method of the DisplayServer");
+  }
+  require(std::string(info(Setting::ScreenReader).getter) == "getCurrentVoiceOverState", "VoiceOver is the screen reader");
+  require(std::string(info(Setting::IncreaseContrast).getter) == "getCurrentDarkerSystemColorsState", "darker system colors is increased contrast");
+  // No two settings share a name of any kind, and none is a name of the settings with no backing or of a silent event.
   std::set<std::string> names;
+  std::size_t count = 0;
+  const auto add = [&](const char *name) {
+    require(name != nullptr && *name != '\0', "Every field of a row is filled");
+    names.insert(name);
+    ++count;
+  };
   for (const auto setting : all_settings) {
-    names.insert(getter_name(setting));
-    names.insert(event_name(setting));
-    names.insert(snapshot_name(setting));
+    const auto &row = info(setting);
+    for (const auto *name : {row.getter, row.event, row.snapshot, row.description, row.validation_key, row.display_method}) {
+      add(name);
+    }
   }
   for (const auto setting : all_unbacked) {
-    names.insert(getter_name(setting));
-    names.insert(snapshot_name(setting));
+    const auto &row = info(setting);
+    // The description of "grayscale" is its snapshot key, so it is not part of the set.
+    for (const auto *name : {row.getter, row.snapshot}) {
+      add(name);
+    }
   }
   for (const auto *event : silent_events) {
-    names.insert(event);
+    add(event);
   }
-  require(names.size() == 4 * 3 + 4 * 2 + 4, "Every getter, event and snapshot name is distinct, and no silent event is a backed one");
-  require(std::string(getter_name(Unbacked::CrossFadeTransitions)) == "getCurrentPrefersCrossFadeTransitionsState", "cross-fade getter");
+  require(count == 4 * 6 + 4 * 2 + 4 && names.size() == count, "Every getter, event, snapshot key, description, meta key and method is distinct");
+}
+
+void the_unbacked_table_names_each_setting_once() {
+  struct Expected {
+    Unbacked setting;
+    const char *getter, *snapshot, *description;
+  };
+  const Expected expected[] = {
+      {Unbacked::BoldText, "getCurrentBoldTextState", "boldText", "bold text"},
+      {Unbacked::Grayscale, "getCurrentGrayscaleState", "grayscale", "grayscale"},
+      {Unbacked::InvertColors, "getCurrentInvertColorsState", "invertColors", "inverted colors"},
+      {Unbacked::CrossFadeTransitions, "getCurrentPrefersCrossFadeTransitionsState", "crossFadeTransitions",
+          "the preference for cross-fade transitions"},
+  };
+  require(unbacked_info.size() == unbacked_count && std::size(expected) == unbacked_count, "One row per setting with no backing");
+  for (std::size_t index = 0; index < unbacked_count; ++index) {
+    const auto &row = expected[index];
+    require(all_unbacked[index] == row.setting && index_of(row.setting) == index, "They are listed in the order of the enum");
+    const auto &actual = info(row.setting);
+    require(&actual == &unbacked_info[index], "info() reads the row of the setting");
+    require(std::string(actual.getter) == row.getter && std::string(actual.snapshot) == row.snapshot
+        && std::string(actual.description) == row.description, row.getter);
+  }
 }
 
 void start_reads_the_baseline_without_reporting() {
@@ -247,7 +306,8 @@ void refusals_are_counted() {
 
 int main() {
   readings_are_three_valued();
-  names_follow_the_ios_contract();
+  the_table_names_each_setting_once();
+  the_unbacked_table_names_each_setting_once();
   start_reads_the_baseline_without_reporting();
   a_change_is_reported_once();
   each_setting_reports_itself();

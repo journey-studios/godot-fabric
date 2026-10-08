@@ -48,25 +48,6 @@ std::shared_ptr<rn::CallInvoker> guarded(const std::shared_ptr<rn::CallInvoker> 
   return std::make_shared<StoppableInvoker<AccessibilityInfoState>>(invoker, state);
 }
 
-const char *description(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "the screen reader";
-    case Setting::ReduceMotion: return "reduce motion";
-    case Setting::ReduceTransparency: return "reduce transparency";
-    case Setting::IncreaseContrast: return "increase contrast";
-  }
-  return "";
-}
-const char *description(Unbacked setting) {
-  switch (setting) {
-    case Unbacked::BoldText: return "bold text";
-    case Unbacked::Grayscale: return "grayscale";
-    case Unbacked::InvertColors: return "inverted colors";
-    case Unbacked::CrossFadeTransitions: return "the preference for cross-fade transitions";
-  }
-  return "";
-}
-
 // AccessibilityManager is the module AccessibilityInfo.js uses when Platform.OS is not "android" (Godot's is
 // "godot"), with the contract of iOS's RCTAccessibilityManager: the getters hand the setting to a success callback
 // and an error to the other, and the changes are device events whose body is the new boolean. The settings come from
@@ -164,47 +145,28 @@ class NativeAccessibilityManager final : public rn::NativeAccessibilityManagerCx
         success(false);
         break;
       case Reading::Unknown:
-        reject(runtime, error, std::string(accessibility::code_unknown) + ": the platform does not report " + description(setting));
+        reject(runtime, error, std::string(accessibility::code_unknown) + ": the platform does not report " + accessibility::info(setting).description);
         break;
     }
   }
   void unavailable(jsi::Runtime &runtime, Unbacked setting, jsi::Function &error) {
     live(runtime);
     state_->core.note_unavailable(setting);
-    reject(runtime, error, std::string(accessibility::code_unavailable) + ": Godot has no way to read " + description(setting));
+    reject(runtime, error, std::string(accessibility::code_unavailable) + ": Godot has no way to read " + accessibility::info(setting).description);
   }
   void emit(Setting setting, bool value) {
     // Queued through RN's emitDeviceEvent: one emit on the runtime's single RCTDeviceEventEmitter reaches every
     // listener of every root, in order, and AccessibilityInfo.js maps both "change" and "screenReaderChanged" to
     // the first event.
-    emitDeviceEvent(accessibility::event_name(setting), [value](jsi::Runtime &, std::vector<jsi::Value> &args) {
+    emitDeviceEvent(accessibility::info(setting).event, [value](jsi::Runtime &, std::vector<jsi::Value> &args) {
       args.emplace_back(value);
     });
   }
 };
 
-// Godot's backend. The meta is read on every reading, so a validation run changes a setting by setting it again.
+// Godot's backend. The meta is read on every reading, so a validation run changes a setting by setting it again. The key
+// of each setting in the meta and the DisplayServer method that is its reading are in the core's table.
 constexpr const char *validation_accessibility_settings = "validation_accessibility_settings";
-
-// The key of a setting in the validation meta, and the DisplayServer method that backs it.
-constexpr const char *validation_key(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "screen_reader";
-    case Setting::ReduceMotion: return "reduce_animation";
-    case Setting::ReduceTransparency: return "reduce_transparency";
-    case Setting::IncreaseContrast: return "increase_contrast";
-  }
-  return "";
-}
-constexpr const char *display_method(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "accessibility_screen_reader_active";
-    case Setting::ReduceMotion: return "accessibility_should_reduce_animation";
-    case Setting::ReduceTransparency: return "accessibility_should_reduce_transparency";
-    case Setting::IncreaseContrast: return "accessibility_should_increase_contrast";
-  }
-  return "";
-}
 
 int64_t read_setting(uint64_t id, Setting setting) {
   constexpr int64_t unknown = -1;
@@ -212,21 +174,25 @@ int64_t read_setting(uint64_t id, Setting setting) {
   if (application == nullptr) {
     return unknown;
   }
+  const auto &names = accessibility::info(setting);
   if (application->has_meta(validation_accessibility_settings)) {
     const godot::Variant meta = application->get_meta(validation_accessibility_settings);
     if (meta.get_type() == godot::Variant::DICTIONARY) {
       const godot::Dictionary replaced = meta;
-      if (replaced.has(validation_key(setting))) {
-        const godot::Variant value = replaced[validation_key(setting)];
+      if (replaced.has(names.validation_key)) {
+        const godot::Variant value = replaced[names.validation_key];
         return value.get_type() == godot::Variant::INT ? static_cast<int64_t>(value) : unknown;
       }
     }
   }
   auto *display = godot::Engine::get_singleton()->get_singleton("DisplayServer");
-  if (display == nullptr) {
+  if (display == nullptr || !display->has_method(names.display_method)) {
     return unknown;
   }
-  return static_cast<int64_t>(display->call(display_method(setting)));
+  // Only an integer is a reading. Anything else (a call that returns nil is what a method that does not do its job looks
+  // like) is unknown, and an unknown setting is never off.
+  const godot::Variant reading = display->call(names.display_method);
+  return reading.get_type() == godot::Variant::INT ? static_cast<int64_t>(reading) : unknown;
 }
 }  // namespace
 
@@ -253,9 +219,7 @@ void AccessibilityInfo::poll() {
   }
 }
 
-bool AccessibilityInfo::ui_event(const std::string &type) {
-  return state_->core.note_ui_event(type) == accessibility::UiEvent::Ignored;
-}
+accessibility::UiEvent AccessibilityInfo::ui_event(const std::string &type) { return state_->core.note_ui_event(type); }
 
 void AccessibilityInfo::stop() { state_->stop(); }
 
@@ -267,10 +231,12 @@ folly::dynamic AccessibilityInfo::snapshot() const {
   for (const auto setting : accessibility::all_settings) {
     const auto &counters = c.settings[accessibility::index_of(setting)];
     const auto known = s.core.known(setting);
-    settings[accessibility::snapshot_name(setting)] = folly::dynamic::object("last", static_cast<int>(s.core.last(setting)))
-        ("known", known ? folly::dynamic(*known) : folly::dynamic(nullptr))("reads", counters.reads)
-        ("resolved", counters.resolved)("rejectedUnknown", counters.rejected_unknown)("events", counters.events);
-    events[accessibility::event_name(setting)] = counters.events;
+    const auto &names = accessibility::info(setting);
+    settings[names.snapshot] = folly::dynamic::object("displayMethod", names.display_method)
+        ("last", static_cast<int>(s.core.last(setting)))("known", known ? folly::dynamic(*known) : folly::dynamic(nullptr))
+        ("reads", counters.reads)("resolved", counters.resolved)("rejectedUnknown", counters.rejected_unknown)
+        ("events", counters.events);
+    events[names.event] = counters.events;
   }
   // The events RN lets JS subscribe to that Godot can never send; the count is part of what the snapshot promises.
   for (const auto *name : accessibility::silent_events) {
@@ -278,7 +244,7 @@ folly::dynamic AccessibilityInfo::snapshot() const {
   }
   folly::dynamic unbacked = folly::dynamic::object;
   for (const auto setting : accessibility::all_unbacked) {
-    unbacked[accessibility::snapshot_name(setting)] = c.unbacked_rejected[accessibility::index_of(setting)];
+    unbacked[accessibility::info(setting).snapshot] = c.unbacked_rejected[accessibility::index_of(setting)];
   }
   folly::dynamic by_type = folly::dynamic::object;
   for (const auto &[type, count] : s.core.ignored_types()) {

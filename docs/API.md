@@ -663,7 +663,8 @@ default is Godot's `DisplayServer` (`accessibility_screen_reader_active`, `acces
 `accessibility_should_reduce_transparency` and `accessibility_should_increase_contrast`, each `-1`, `0` or `1`) and a
 validation run replaces any of them through the application's `validation_accessibility_settings` meta, a Dictionary of the
 keys `screen_reader`, `reduce_animation`, `reduce_transparency` and `increase_contrast`. Godot has no change signal for them,
-so the host reads the four once per frame from `ApplicationRuntime`'s pump once the module exists. The module takes the first
+so the host reads the four once per frame from `ApplicationRuntime`'s pump once the module exists. A reading is an
+integer: a `DisplayServer` without the method, or a call that returns anything else, is unknown (`-1`), never off. The module takes the first
 reading when it is created, as `RCTAccessibilityManager` does in `init`, and a getter answers the last reading; a stop makes
 retained methods throw `E_MODULE_DISPOSED` synchronously and drops every queued callback and event. The [research
 note](research/accessibility-info.md) has the contract and its sources.

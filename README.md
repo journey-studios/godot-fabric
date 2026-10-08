@@ -301,8 +301,8 @@ last reading, which the host takes once per frame, and each change is one event 
 root, with `change` as the alias of `screenReaderChanged`. A setting the platform does not report rejects as unknown,
 and bold text, grayscale, inverted colors and cross-fade reject as unavailable, never off; announcements and
 programmatic focus throw until the next slice. The headless probe runs two applications, one with a validation meta
-that stands in for the system and one with Godot's real backend, which reports nothing there: 52 checks replayed by an
-independent oracle. The preceding host fails exactly its 38 normative checks, and three host sabotages are rejected.
+that stands in for the system and one with Godot's real backend, which reports nothing there: 54 checks replayed by an
+independent oracle. The preceding host fails exactly its 40 normative checks, and four host sabotages are rejected.
 Real operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
 [Research](docs/research/accessibility-info.md).
 

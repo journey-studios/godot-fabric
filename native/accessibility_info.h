@@ -29,9 +29,9 @@ class AccessibilityInfo {
   // The settings of one frame. Once the module exists it reads each setting and queues a device event for each
   // known value that changed; before that, and after stop(), it does nothing.
   void poll();
-  // An event of Fabric's UIManager.sendAccessibilityEvent. Returns true when the event is ignored, as iOS ignores
-  // every type but focus; false for focus, which the caller refuses.
-  bool ui_event(const std::string &type);
+  // An event of Fabric's UIManager.sendAccessibilityEvent, counted. Ignored for every type but focus, as iOS does;
+  // Unsupported for focus, which the caller refuses out loud.
+  accessibility::UiEvent ui_event(const std::string &type);
   // Ends the owner: later calls to a retained module throw E_MODULE_DISPOSED, nothing is read and no queued
   // event or callback reaches JS.
   void stop();
@@ -45,6 +45,9 @@ class AccessibilityInfo {
 // until the VM is released): DisplayServer's accessibility_screen_reader_active, accessibility_should_reduce_animation,
 // accessibility_should_reduce_transparency and accessibility_should_increase_contrast, each -1 (unknown), 0 or 1. The
 // headless server and the mobile servers report -1.
+//
+// Only an integer is a reading: a DisplayServer without the method, or a call that returns anything else, is unknown (-1)
+// and never off. The method of each setting is `displayMethod` in the snapshot.
 //
 // A validation run replaces readings by setting the application's "validation_accessibility_settings" meta to a
 // Dictionary of the keys screen_reader, reduce_animation, reduce_transparency and increase_contrast, each -1, 0 or

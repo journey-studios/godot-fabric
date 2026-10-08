@@ -84,7 +84,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   reduce transparency and increase contrast, read once per frame, with the events of their changes; bold text,
   grayscale, inverted colors and cross-fade reject as unavailable, and announcements and programmatic focus wait
   for the slice's second part. A headless probe in two applications with an independent oracle, the preceding host
-  as the control and three retained sabotages; its hosted CI run is pending.
+  as the control and four retained sabotages; its hosted CI run is pending.
 - **Input:** the original [PanResponder](evidence/pan-responder/README.md) (128 checks
   in four flag lanes), the [shared touches](evidence/shared-touches/README.md) (92)
   that let the roots of one application share RN's single responder, and the

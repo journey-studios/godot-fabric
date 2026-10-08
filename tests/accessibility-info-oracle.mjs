@@ -19,13 +19,17 @@ import assert from "node:assert/strict";
 //  - The multipliers of setAccessibilityContentSizeMultipliers are numbers above zero (RCTAccessibilityManager.mm
 //    ignores any other); a valid call, the announcements and the programmatic focus are refused with E_UNSUPPORTED.
 //  - sendAccessibilityEvent reaches the host's UIManager delegate; iOS acts on focus alone (RCTMountingManager.mm).
+// display is the DisplayServer method of Godot 4.7.2 that is the setting's reading (extension_api.json lists each as an int
+// with no arguments); it is this list's, not the host's, that the host's names are held to.
 const settings = [
-  {name: "screenReader", key: "screen_reader", event: "screenReaderChanged", getter: "isScreenReaderEnabled", method: "getCurrentVoiceOverState"},
-  {name: "reduceMotion", key: "reduce_animation", event: "reduceMotionChanged", getter: "isReduceMotionEnabled", method: "getCurrentReduceMotionState"},
+  {name: "screenReader", key: "screen_reader", event: "screenReaderChanged", getter: "isScreenReaderEnabled", method: "getCurrentVoiceOverState",
+    display: "accessibility_screen_reader_active"},
+  {name: "reduceMotion", key: "reduce_animation", event: "reduceMotionChanged", getter: "isReduceMotionEnabled", method: "getCurrentReduceMotionState",
+    display: "accessibility_should_reduce_animation"},
   {name: "reduceTransparency", key: "reduce_transparency", event: "reduceTransparencyChanged", getter: "isReduceTransparencyEnabled",
-    method: "getCurrentReduceTransparencyState"},
+    method: "getCurrentReduceTransparencyState", display: "accessibility_should_reduce_transparency"},
   {name: "increaseContrast", key: "increase_contrast", event: "darkerSystemColorsChanged", getter: "isDarkerSystemColorsEnabled",
-    method: "getCurrentDarkerSystemColorsState"},
+    method: "getCurrentDarkerSystemColorsState", display: "accessibility_should_increase_contrast"},
 ];
 const unbackedSettings = [
   {name: "boldText", getter: "isBoldTextEnabled", method: "getCurrentBoldTextState"},
@@ -389,7 +393,7 @@ function verifyCounters(step, device, previous, app, name) {
     assert.equal(info.polls, 0, where + ": nothing is polled before the module exists");
   }
   for (const entry of settings) {
-    assert.deepEqual(info.settings[entry.name], {last: device.created ? device.last[entry.name] : -1,
+    assert.deepEqual(info.settings[entry.name], {displayMethod: entry.display, last: device.created ? device.last[entry.name] : -1,
       known: device.known[entry.name], reads: device.created ? 1 + info.polls : 0, resolved: device.resolved[entry.name],
       rejectedUnknown: device.rejectedUnknown[entry.name], events: device.events[entry.event]}, `${where}: ${entry.name}`);
   }
@@ -459,6 +463,16 @@ export function verifyAccessibilityInfoReport(report) {
   coverage(report, a);
   const r = new Device({meta: null, mounted: ["R"]});
   verifyApplication(report, "R", stepsR, r);
+  // The method the host reads for each setting is the DisplayServer method the oracle names for it, the engine has that method,
+  // and what the engine answers to it is what the host last read (-1 for all four in headless, where R has no meta).
+  assert.deepEqual(Object.keys(report.displayMethods).sort(), settings.map(entry => entry.name).sort(), "a display method for each setting");
+  for (const entry of settings) {
+    const facts = report.displayMethods[entry.name];
+    assert.equal(facts.method, entry.display, `${entry.name}: the DisplayServer method`);
+    assert.equal(facts.exists, true, `${entry.name}: the DisplayServer has ${entry.display}`);
+    assert.equal(facts.reading, r.last[entry.name], `${entry.name}: the DisplayServer's answer is what the host last read`);
+    assert.equal(facts.last, r.last[entry.name], `${entry.name}: the host's last reading of the real backend`);
+  }
   // The real backend in headless reports nothing: no setting is ever known, and no event reached its listeners.
   assert.deepEqual(Object.values(r.known), [null, null, null, null]);
   assert.deepEqual(r.events, Object.fromEntries(deviceEvents.map(event => [event, 0])), "R never emitted");

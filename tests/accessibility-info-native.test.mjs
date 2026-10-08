@@ -17,7 +17,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 // oracle must both reject it.
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
-const sabotageNames = ["unknown-as-false", "poll-every-frame", "swapped-settings"];
+const sabotageNames = ["unknown-as-false", "emit-every-poll", "swapped-settings", "display-name"];
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? sabotageNames[0]);
 assert.ok(sabotage === null || sabotageNames.includes(sabotage), "Unknown sabotage: " + sabotage);
 assert.ok(!(allowOriginalNegative && sabotage !== null), "A run is the current host, the previous one, or one sabotage");
@@ -163,6 +163,17 @@ test("RN's own AccessibilityInfo runs over the host's accessibility settings and
     assert.ok(failures.length > 0);
     assert.match(log, new RegExp(`ACCESSIBILITY_INFO_SABOTAGE_REJECTED: ${failures.length}`));
     assert.ok(oracleRejection(report) != null, "The oracle rejects the sabotaged report");
+    if (sabotage === "display-name") {
+      // A method the engine lacks is unknown and never off: the real backend still rejects, and what fails is the proof that the
+      // name is the engine's.
+      const settings = report.stages.R["real-subscribe"].info.settings;
+      assert.equal(settings.reduceMotion.displayMethod, "accessibility_should_reduce_animations");
+      assert.equal(settings.reduceMotion.last, -1, "a method the DisplayServer lacks reads unknown, not off");
+      assert.equal(stateOf(report, "R", "real-getters", "real/motion").state, "rejected");
+      assert.match(stateOf(report, "R", "real-getters", "real/motion").error, /E_ACCESSIBILITY_UNKNOWN/);
+      assert.ok(failures.some(name => /exists in the DisplayServer/.test(name)));
+      assert.equal(report.displayMethods.reduceMotion.exists, false);
+    }
     return;
   }
   assert.equal(result.status, 0, log);

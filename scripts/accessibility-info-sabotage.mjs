@@ -11,12 +11,16 @@ import {guardSources} from "./sabotage-sources.mjs";
 //
 //  unknown-as-false  reads a setting the platform does not report (-1) as off: a getter then resolves false where RN
 //                    must be told it is unknown, and a setting that becomes unknown emits an event for "false".
-//  poll-every-frame  reports the known value of every setting on every frame, not only when it changed: each
-//                    listener then hears the same value over and over.
-//  swapped-settings  reads reduce transparency where the platform meant reduce motion, and the other way round: a
-//                    change of one is reported as the other.
+//  emit-every-poll   reports the known value of every setting on every poll, whether or not it changed: each listener
+//                    then hears the same value over and over.
+//  swapped-settings  swaps the keys of the validation meta of reduce motion and reduce transparency in the descriptor
+//                    table: a change of one is reported as the other.
+//  display-name      names a DisplayServer method that does not exist for reduce motion. The host reads it as unknown (-1),
+//                    never as off, so the getter still rejects; but the method is not one the engine has, and neither the
+//                    probe's existence check nor the oracle's list of the engine's four names accepts it. In headless all
+//                    four real readings are -1, so only that check can tell a wrong name from a right one.
 //
-// A fourth sabotage, the missing legacySendAccessibilityEvent alias, breaks the JavaScript bundle and not the host:
+// A fifth sabotage, the missing legacySendAccessibilityEvent alias, breaks the JavaScript bundle and not the host:
 // tests/platform-seams.test.mjs bundles without that rule and shows AccessibilityInfo's focus call break.
 //
 // Both the probe's checks and the oracle (which replays the commands against RN's rules) must reject each host. The
@@ -25,17 +29,23 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
+const table = "native/accessibility_info_core.h";
 const variants = [
   {name: "unknown-as-false", argument: "--sabotage=unknown-as-false", hostDirectory: "build/accessibility-info-sabotage-unknown-as-false-host",
-    file: "native/accessibility_info_core.h", find: "  if (raw == 0) {\n    return Reading::Off;\n  }\n  return Reading::Unknown;\n",
-    replace: "  return Reading::Off;\n"},
-  {name: "poll-every-frame", argument: "--sabotage=poll-every-frame", hostDirectory: "build/accessibility-info-sabotage-poll-every-frame-host",
-    file: "native/accessibility_info_core.h", find: "      if (state.known && *state.known == *value) {\n",
-    replace: "      if (false && state.known && *state.known == *value) {\n"},
+    file: table, find: "  if (raw == 0) {\n    return Reading::Off;\n  }\n  return Reading::Unknown;\n", replace: "  return Reading::Off;\n"},
+  {name: "emit-every-poll", argument: "--sabotage=emit-every-poll", hostDirectory: "build/accessibility-info-sabotage-emit-every-poll-host",
+    file: table, find: "      if (state.known && *state.known == *value) {\n", replace: "      if (false && state.known && *state.known == *value) {\n"},
   {name: "swapped-settings", argument: "--sabotage=swapped-settings", hostDirectory: "build/accessibility-info-sabotage-swapped-settings-host",
-    file: "native/accessibility_info.cpp",
-    find: "    case Setting::ReduceMotion: return \"reduce_animation\";\n    case Setting::ReduceTransparency: return \"reduce_transparency\";\n",
-    replace: "    case Setting::ReduceMotion: return \"reduce_transparency\";\n    case Setting::ReduceTransparency: return \"reduce_animation\";\n"},
+    file: table,
+    find: "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n"
+      + "    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n"
+      + "        \"reduce_transparency\", \"accessibility_should_reduce_transparency\"},\n",
+    replace: "        \"reduce_transparency\", \"accessibility_should_reduce_animation\"},\n"
+      + "    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n"
+      + "        \"reduce_animation\", \"accessibility_should_reduce_transparency\"},\n"},
+  {name: "display-name", argument: "--sabotage=display-name", hostDirectory: "build/accessibility-info-sabotage-display-name-host",
+    file: table, find: "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n",
+    replace: "        \"reduce_animation\", \"accessibility_should_reduce_animations\"},\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));

@@ -27,7 +27,7 @@ setting through *system* (the real reading), *unknown*, *off* and *on* by changi
 `npm run test:accessibility-info` is the [evidence](../../docs/research/accessibility-info.md) suite,
 outside the catalog: a headless probe in two applications, one with the validation meta and two roots and
 one with the real backend, replayed by an independent oracle. The preceding host, with the same bundle,
-fails exactly its normative checks, and three retained host sabotages are rejected.
+fails exactly its normative checks, and four retained host sabotages are rejected.
 
 ## Use the example
 

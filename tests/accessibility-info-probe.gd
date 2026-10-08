@@ -30,6 +30,9 @@ var apps := {}
 # The meta each application started with (null for the one that uses the real backend), which the oracle needs to
 # know what the platform reported before the first command.
 var initial_meta := {}
+# What the real backend's application says each setting reads, and what the DisplayServer says to this script: the oracle
+# compares the method names with its own list of the engine's.
+var display_facts := {}
 # Every accessibility event the probe sent through the public API: how many, and how many were "focus". The log of
 # the run holds one engine error for each focus event on this host and one for each event on the preceding host.
 var sent := 0
@@ -287,6 +290,22 @@ func run_real_setup() -> void:
   normative(subscribed.commands[5].reached == true and rows(subscribed).is_empty() and section(subscribed, "events").get("screenReaderChanged", -1) == 0
     and int(section(subscribed, "settings").get("screenReader", {}).get("reads", -1)) == 1 + int(subscribed.info.get("polls", -2)),
     "real/The real backend polls every frame and, reporting -1 each time, emits nothing")
+  # The headless server reports -1 for all four, so a reading taken from the wrong method looks the same as the right one.
+  # What does tell them apart is the method the host names for each setting (displayMethod in its snapshot): it has to be a
+  # method the DisplayServer has, and the DisplayServer's own answer to it has to be what the host last read.
+  var all_exist := true
+  var all_equal := true
+  for name: String in ["screenReader", "reduceMotion", "reduceTransparency", "increaseContrast"]:
+    var method: Variant = sv(subscribed, name, "displayMethod")
+    var last: Variant = sv(subscribed, name, "last")
+    var exists: bool = method is String and method != "" and ClassDB.class_has_method("DisplayServer", method)
+    var reading: Variant = DisplayServer.call(method) if exists else null
+    var equal: bool = exists and (typeof(last) == TYPE_FLOAT or typeof(last) == TYPE_INT) and int(reading) == int(last)
+    display_facts[name] = {"method": method, "exists": exists, "reading": reading, "last": last}
+    all_exist = all_exist and exists
+    all_equal = all_equal and equal
+  normative(all_exist, "real/The method the host reads for each of the four settings exists in the DisplayServer of this engine")
+  normative(all_equal, "real/What the DisplayServer answers to each of those methods is what the host last read for that setting")
 
 # ---------------------------------------------------------------- application A
 func run_validation_application() -> void:
@@ -551,7 +570,7 @@ func finish() -> void:
   var original_negative_observed := allow_original_negative and observed == expected and not failures.is_empty()
   var sabotage_observed := sabotage and not failures.is_empty()
   var report := {"scenario": "native-accessibility-info", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
-    "displayServer": DisplayServer.get_name(), "initialMeta": initial_meta, "checks": checks, "stages": stages, "expectedOriginalFailures": expected_original_failures,
+    "displayServer": DisplayServer.get_name(), "initialMeta": initial_meta, "displayMethods": display_facts, "checks": checks, "stages": stages, "expectedOriginalFailures": expected_original_failures,
     "allowOriginalNegative": allow_original_negative, "originalNegativeObserved": original_negative_observed,
     "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(),
     # The engine errors this run provokes on purpose: a focus event is refused out loud (one error each), and the

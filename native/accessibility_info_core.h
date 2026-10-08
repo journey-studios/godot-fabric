@@ -35,44 +35,35 @@ inline Reading reading_from(int64_t raw) {
   return Reading::Unknown;
 }
 
-// The four settings Godot 4.7.2 can read, with the RCTAccessibilityManager name
-// of each one's getter and device event.
+// The four settings Godot 4.7.2 can read.
 enum class Setting { ScreenReader, ReduceMotion, ReduceTransparency, IncreaseContrast };
 inline constexpr std::size_t setting_count = 4;
 inline constexpr std::array<Setting, setting_count> all_settings{
     Setting::ScreenReader, Setting::ReduceMotion, Setting::ReduceTransparency, Setting::IncreaseContrast};
 inline constexpr std::size_t index_of(Setting setting) { return static_cast<std::size_t>(setting); }
 
-inline constexpr const char *getter_name(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "getCurrentVoiceOverState";
-    case Setting::ReduceMotion: return "getCurrentReduceMotionState";
-    case Setting::ReduceTransparency: return "getCurrentReduceTransparencyState";
-    case Setting::IncreaseContrast: return "getCurrentDarkerSystemColorsState";
-  }
-  return "";
-}
-// The device event RCTAccessibilityManager sends; AccessibilityInfo.js maps both "change" and
-// "screenReaderChanged" to the first one.
-inline constexpr const char *event_name(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "screenReaderChanged";
-    case Setting::ReduceMotion: return "reduceMotionChanged";
-    case Setting::ReduceTransparency: return "reduceTransparencyChanged";
-    case Setting::IncreaseContrast: return "darkerSystemColorsChanged";
-  }
-  return "";
-}
-// The key of the snapshot, and of the validation seam's own name for the setting.
-inline constexpr const char *snapshot_name(Setting setting) {
-  switch (setting) {
-    case Setting::ScreenReader: return "screenReader";
-    case Setting::ReduceMotion: return "reduceMotion";
-    case Setting::ReduceTransparency: return "reduceTransparency";
-    case Setting::IncreaseContrast: return "increaseContrast";
-  }
-  return "";
-}
+// Everything that names a setting, in one row of one table (setting_info, indexed by Setting):
+//   getter          the RCTAccessibilityManager method AccessibilityInfo.js calls for it
+//   event           the device event RCTAccessibilityManager sends; AccessibilityInfo.js maps both "change" and
+//                   "screenReaderChanged" to the first one
+//   snapshot        the key of the host's snapshot
+//   description     what the getter's error says the platform does not report
+//   validation_key  the key of the validation meta (validation_accessibility_settings) that replaces the reading
+//   display_method  the DisplayServer method of Godot 4.7.2 that is the reading (-1, 0 or 1)
+struct SettingInfo {
+  const char *getter, *event, *snapshot, *description, *validation_key, *display_method;
+};
+inline constexpr std::array<SettingInfo, setting_count> setting_info{{
+    {"getCurrentVoiceOverState", "screenReaderChanged", "screenReader", "the screen reader",
+        "screen_reader", "accessibility_screen_reader_active"},
+    {"getCurrentReduceMotionState", "reduceMotionChanged", "reduceMotion", "reduce motion",
+        "reduce_animation", "accessibility_should_reduce_animation"},
+    {"getCurrentReduceTransparencyState", "reduceTransparencyChanged", "reduceTransparency", "reduce transparency",
+        "reduce_transparency", "accessibility_should_reduce_transparency"},
+    {"getCurrentDarkerSystemColorsState", "darkerSystemColorsChanged", "increaseContrast", "increase contrast",
+        "increase_contrast", "accessibility_should_increase_contrast"},
+}};
+inline constexpr const SettingInfo &info(Setting setting) { return setting_info[index_of(setting)]; }
 
 // The settings iOS reports and Godot has no way to read. Their getters reject; they never resolve false.
 enum class Unbacked { BoldText, Grayscale, InvertColors, CrossFadeTransitions };
@@ -80,24 +71,20 @@ inline constexpr std::size_t unbacked_count = 4;
 inline constexpr std::array<Unbacked, unbacked_count> all_unbacked{
     Unbacked::BoldText, Unbacked::Grayscale, Unbacked::InvertColors, Unbacked::CrossFadeTransitions};
 inline constexpr std::size_t index_of(Unbacked setting) { return static_cast<std::size_t>(setting); }
-inline constexpr const char *getter_name(Unbacked setting) {
-  switch (setting) {
-    case Unbacked::BoldText: return "getCurrentBoldTextState";
-    case Unbacked::Grayscale: return "getCurrentGrayscaleState";
-    case Unbacked::InvertColors: return "getCurrentInvertColorsState";
-    case Unbacked::CrossFadeTransitions: return "getCurrentPrefersCrossFadeTransitionsState";
-  }
-  return "";
-}
-inline constexpr const char *snapshot_name(Unbacked setting) {
-  switch (setting) {
-    case Unbacked::BoldText: return "boldText";
-    case Unbacked::Grayscale: return "grayscale";
-    case Unbacked::InvertColors: return "invertColors";
-    case Unbacked::CrossFadeTransitions: return "crossFadeTransitions";
-  }
-  return "";
-}
+
+// The same for the settings with no backing (unbacked_info, indexed by Unbacked): the getter, the snapshot key and what the
+// getter's error says Godot has no way to read.
+struct UnbackedInfo {
+  const char *getter, *snapshot, *description;
+};
+inline constexpr std::array<UnbackedInfo, unbacked_count> unbacked_info{{
+    {"getCurrentBoldTextState", "boldText", "bold text"},
+    {"getCurrentGrayscaleState", "grayscale", "grayscale"},
+    {"getCurrentInvertColorsState", "invertColors", "inverted colors"},
+    {"getCurrentPrefersCrossFadeTransitionsState", "crossFadeTransitions", "the preference for cross-fade transitions"},
+}};
+inline constexpr const UnbackedInfo &info(Unbacked setting) { return unbacked_info[index_of(setting)]; }
+
 // The device events AccessibilityInfo.js lets JS subscribe to that Godot can never send: three of the unbacked
 // settings, and the end of an announcement (Godot has no announce method and no end-of-speech callback).
 inline constexpr std::array<const char *, 4> silent_events{

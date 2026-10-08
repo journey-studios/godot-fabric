@@ -5,8 +5,8 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 their events. The probe runs RN's original `AccessibilityInfo` through the public
 `react-native` import in two actual `FabricApplication`s; the preceding host (the one built
 from `main` before this slice) fails exactly the checks that need the native module, and
-three retained host sabotages are rejected by the probe and by an independent oracle (a
-fourth, the missing resolver alias, is rejected by the platform-seams test). The
+four retained host sabotages are rejected by the probe and by an independent oracle (a
+fifth, the missing resolver alias, is rejected by the platform-seams test). The
 [evidence record](../evidence/accessibility-info/README.md) is written after the
 implementation commit. Real operating-system settings (a user turning VoiceOver, Reduce
 Motion, Reduce Transparency or Increase Contrast on), the mobile servers and a graphical CI
@@ -165,24 +165,29 @@ Decisions:
    pump's drain delivers it to JS. Polling does nothing until the module exists (an
    application whose JS never imports `AccessibilityInfo` reads nothing) and nothing after
    stop.
-4. **A change is a known value that differs from the last known one.** An unknown reading
+4. **A reading is an integer or it is unknown.** A `DisplayServer` that lacks the method, or a
+   call that returns anything other than an integer (nil is what a wrong method name would
+   give), is `-1`, never `0`. Everything that names a setting (its getter, event, snapshot key,
+   error description, meta key and `DisplayServer` method) is one row of one table in
+   `native/accessibility_info_core.h`, so a setting is added or changed in one place.
+5. **A change is a known value that differs from the last known one.** An unknown reading
    changes nothing and emits nothing, and the last known value is kept: a setting that goes
    `1`, `-1`, `1` emits nothing, and one that goes `1`, `-1`, `0` emits `false`. `-1` after `-1`
    emits nothing. The first known value after only unknown readings has no earlier known value
    to equal, so it is a change (a screen reader that appears after the platform could not
    report one emits once). iOS emits only on a difference from its cached value (lines
    126-221); this is the same rule with a third state.
-5. **One owner per application, one module per runtime.** Two applications are independent:
+6. **One owner per application, one module per runtime.** Two applications are independent:
    each reads its own settings and counts its own events.
-6. **Validation seam.** The application's `validation_accessibility_settings` meta is a
+7. **Validation seam.** The application's `validation_accessibility_settings` meta is a
    Dictionary with the keys `screen_reader`, `reduce_animation`, `reduce_transparency` and
    `increase_contrast`, each `-1`, `0` or `1`. Only the keys present replace the
    `DisplayServer`'s reading, and a value that is not one of those integers is unknown. The meta
    is read on every reading, so a validation run changes a setting by setting the meta again
    and waits for the host's own poll counter (frames the host delivered), never for time.
-7. **Module calls after stop throw `E_MODULE_DISPOSED`** synchronously, for all twelve
+8. **Module calls after stop throw `E_MODULE_DISPOSED`** synchronously, for all twelve
    methods; queued callbacks and events are dropped and counted.
-8. **`uiManagerDidSendAccessibilityEvent`**: `focus` still fails (the message above) and is
+9. **`uiManagerDidSendAccessibilityEvent`**: `focus` still fails (the message above) and is
    counted; every other type is counted by type (at most sixteen distinct types, then one
    overflow count).
 
@@ -217,19 +222,32 @@ RN's rules and not from the host:
 - Order and counts, never time: the probe waits for the host's poll counter, and the oracle
   checks the host polled at least the frames it waited for and that a stopped application
   polls no more.
-- The preceding host fails exactly the 38 normative checks of 52, the getters reject with RN's
-  own `NativeAccessibilityManagerIOS is not available` and no event arrives. Three host
-  sabotages are rejected: `-1` read as off, a poll that reports every frame and two settings
-  swapped. The missing resolver alias breaks the bundle (the platform-seams test).
+- The names of the readings are held to the engine's, not to the host's. In headless all four real
+  readings are `-1`, so a reading taken from the wrong method looks like the right one; what tells
+  them apart is the `displayMethod` the host's snapshot names for each setting. The probe checks, in
+  the real-backend application, that each one is a method `DisplayServer` has
+  (`ClassDB.class_has_method`) and that what the script gets from calling it is what the host last
+  read; the oracle checks the four names against its own list of Godot 4.7.2's.
+- The preceding host fails exactly the 40 normative checks of 54, the getters reject with RN's
+  own `NativeAccessibilityManagerIOS is not available` and no event arrives. Four host
+  sabotages are rejected: `unknown-as-false` (`-1` read as off, 12 checks fail), `emit-every-poll`
+  (every poll reports the known value, 17), `swapped-settings` (the meta keys of reduce motion and
+  reduce transparency swapped in the descriptor table, 8) and `display-name` (a `DisplayServer`
+  method that does not exist for reduce motion: the host reads `-1`, the getter still rejects, and
+  the 2 checks that hold the names to the engine's fail). The missing resolver alias breaks the
+  bundle (the platform-seams test).
 
 ## Remaining scope
 
 - **Not certified: the real operating system.** The suite never changes a real VoiceOver,
   Reduce Motion, Reduce Transparency or Increase Contrast setting; macOS values are the
   delegate's cache that Godot fills, read by name, and only the validation meta changes
-  them in the tests. The mapping from a setting to its `DisplayServer` method is not
-  distinguishable in headless (all four are `-1`), so a swap there would not be seen; the
-  meta's key mapping, which is, is what the swap sabotage exercises.
+  them in the tests. Because all four readings are `-1` in headless, the suite proves that
+  each setting names a method the engine has and that the engine answers it as the host read
+  it, not that the method is the one of that setting on a machine that reports a value: a swap
+  of two existing methods would pass in headless. The names are the oracle's list of Godot
+  4.7.2's, and the meta's key mapping, which headless does distinguish, is what the
+  `swapped-settings` sabotage exercises.
 - **Mobile.** Godot's iOS and Android servers report `-1` today, so every getter rejects
   `E_ACCESSIBILITY_UNKNOWN` there. A bridge to UIKit and Android's accessibility manager is
   the work of the mobile slices (GF-34 and GF-35).
