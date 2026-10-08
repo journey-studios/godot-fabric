@@ -423,6 +423,6 @@
   "publishedAt": "2026-10-08T20:05:27.434Z",
   "curation": {
     "originalReceiptSHA256": "63d1c9995fce14be0108762ba9bd90d18bcf6f1f3eb0871cafcb22b250ffaa74",
-    "sourcePinsSummary": "All219 pins independently match the producer Git blobs; the exact original SDK manifest is retained locally and uploaded by CI."
+    "sourcePinsSummary": "All 219 pins independently match the producer Git blobs; the exact original SDK manifest is retained locally and uploaded by CI."
   }
 }

@@ -3675,7 +3675,7 @@
             "GF-38"
           ],
           "dependsOn": [],
-          "acceptance": "O .app Release exportado executa o replay de 12 turnos com o mesmo hash dourado do editor, em perfil de usuário limpo, sem Node, Godot nem Xcode; codesign --verify ad hoc passa; hash, tamanho e versões (RN 0.87.1, React 19.2.3, Hermes 250829098.0.17, Godot 4.7.2) registrados. Hoje só existe sdk/addon/ios_export.gd: não há export macOS nem .app executado.",
+          "acceptance": "O .app Release exportado executa o replay de 12 turnos com o mesmo hash dourado do editor, em perfil de usuário limpo, sem Node, Godot nem Xcode; codesign --verify ad hoc passa; hash, tamanho e versões (RN 0.87.1, React 19.2.3, Hermes 250829098.0.17, Godot 4.7.2) registrados. Estado inicial do marco: só existia sdk/addon/ios_export.gd, sem export macOS nem .app executado.",
           "criteria": [
             {
               "id": "plugin",

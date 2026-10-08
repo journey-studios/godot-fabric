@@ -33,6 +33,23 @@ record these observations. The native lane passed 7/7 without skips. The
 [executed export record](README.md) defines the remaining Frontier and target
 limits; the historical asset preflights below are not exported-image proof.
 
+## Delivery-review test correction
+
+PR75's CodeRabbit review identified that failed payload expectations used Godot
+`assert()` without a reliable process exit. In the retained pre-fix control,
+a forced positive-expectation failure actually returned zero and printed
+`MACOS_EXPORT_PAYLOAD_PASSED: 27` alongside a script error; it did not reproduce
+the proposed timeout mechanism. The Node runner already rejected that log/count,
+but the probe's own success marker and exit status were misleading.
+
+Expectation helpers now return a boolean, print a specific diagnostic and request
+exit status 1 on failure; every call returns from the scenario immediately when false.
+The existing 28 expectations retain their meaning. Two disposable mutated probe
+copies force success and rejection expectations to fail: each must exit 1 before
+its bounded 5-second process timeout, with the exact diagnostic, no script error
+and no success marker. This test-only correction leaves the exported app producer
+and its original observations unchanged.
+
 ## Corrected before accepting the first slice
 
 - The first validator compared a project-relative bundle path to the builder's

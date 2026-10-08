@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
-import {copyFile, mkdir, mkdtemp, rm, writeFile} from "node:fs/promises";
+import {copyFile, mkdir, mkdtemp, readFile, rm, writeFile} from "node:fs/promises";
 import {spawnSync} from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -21,7 +21,7 @@ test("Godot export payload and registered hooks validate in an isolated project"
     await mkdir(path.dirname(file), {recursive: true});
     await writeFile(file, value);
   };
-  const invoke = args => spawnSync(godot, args, {cwd: project, encoding: "utf8", timeout: 30000, maxBuffer: 4 * 1024 * 1024});
+  const invoke = (args, timeout = 30000) => spawnSync(godot, args, {cwd: project, encoding: "utf8", timeout, maxBuffer: 4 * 1024 * 1024});
   try {
     for (const name of addonFiles) {
       const target = path.join(project, "sdk/addon", name);
@@ -66,6 +66,38 @@ test("Godot export payload and registered hooks validate in an isolated project"
     assert.equal(editor.error, undefined, editorLog);
     assert.equal(editor.status, 0, editorLog);
     assert.doesNotMatch(editorLog, /SCRIPT ERROR|Parse Error|Failed to load script/);
+
+    const probe = await readFile(path.join(repository, "tests/macos-export-payload.gd"), "utf8");
+    const forcedFailures = [
+      {
+        name: "expect-success",
+        source: probe.replace("var report := _report(null)", "var report := _report(null)\n\treport.sha256 = _sha(\"forced mismatch\")"),
+        diagnostic: "MACOS_EXPORT_PAYLOAD_CHECK_FAILED: valid bundle without assets: expected success, got: The bundle SHA-256 does not match its build report",
+      },
+      {
+        name: "expect-rejection",
+        source: probe.replace(
+          "_expect_rejection(app, \"SDK source field is required\", \"sdkSourceCommit\")",
+          "_expect_rejection(app, \"SDK source field is required\", \"not-the-diagnostic\")"),
+        diagnostic: "MACOS_EXPORT_PAYLOAD_CHECK_FAILED: SDK source field is required: expected rejection containing 'not-the-diagnostic', got: The bundle build report is missing required field 'sdkSourceCommit'",
+      },
+    ];
+    const controlDirectory = path.join(repository, "build/macos-export-payload-controls");
+    await mkdir(controlDirectory, {recursive: true});
+    for (const control of forcedFailures) {
+      assert.notEqual(control.source, probe, `${control.name} mutation must change the disposable probe copy`);
+      const script = `res://tests/macos-export-payload-${control.name}.gd`;
+      await writeFile(path.join(project, script.slice("res://".length)), control.source);
+      const result = invoke(["--headless", "--path", project, "--script", script], 5000);
+      const log = (result.stdout ?? "") + (result.stderr ?? "");
+      await writeFile(path.join(controlDirectory, `${control.name}.log`), log);
+      assert.equal(result.error, undefined, log);
+      assert.equal(result.signal, null, log);
+      assert.equal(result.status, 1, log);
+      assert.ok(log.includes(control.diagnostic), log);
+      assert.doesNotMatch(log, /MACOS_EXPORT_PAYLOAD_PASSED:/);
+      assert.doesNotMatch(log, /SCRIPT ERROR|Parse Error|Program crashed|Stack overflow|ObjectDB instances leaked|Resources still in use/);
+    }
   } finally {
     await rm(project, {recursive: true, force: true});
   }
