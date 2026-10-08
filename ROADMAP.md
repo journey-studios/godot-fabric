@@ -3410,6 +3410,59 @@ type check, the contracts gate (301 Node/13 Python, static analysis, publication
 on that tree. Only the first-slice checkpoint was closed, earlier, by the first slice; no whole GF, other checkpoint,
 weight or denominator closes.
 
+### NativeWind and Chart Kit in an independent consumer (2026-10-08)
+
+GF-27 leaves **Planned** with this slice, its first verified one: it certifies NativeWind (`className` on View, Text,
+Image and Pressable, manual dark mode, retained state) and Chart Kit v2's `LineChart` in a project that owns its
+lockfile and is built by the public SDK alone. Only the first-slice checkpoint closes; the table row and the dashboard
+record move to In progress together, in the dashboard record that follows the
+[evidence](docs/evidence/library-consumer/README.md). The libraries used to run only through the laboratory's own
+bundler; a consumer that imported NativeWind failed at four points of the builder
+([research](docs/research/library-consumer.md)): an optional peer that css-interop names only in
+`peerDependenciesMeta`, the `import "./global.css"` (no Tailwind step), the JSX in css-interop's `doctor.native.js`, and
+`className` against type aliases that cannot merge (with no Pressable or `useWindowDimensions` declaration). The JSX
+import source already worked.
+
+`consumers/libraries/` is an independent project (its own `package.json` and committed `package-lock.json`, TSX that
+imports only packages) with the exact releases NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17,
+react-native-chart-kit 7.0.4 and react-native-svg 15.15.5, installed by `npm ci --ignore-scripts` with the SDK's private
+Node. The builder now counts an optional peer in `peerDependenciesMeta` as declared (the SDK's facades answer it),
+compiles a project's Tailwind CSS entry with the SDK's own Tailwind, NativeWind preset and css-interop compiler into a
+module that registers the styles with the one interop runtime of the bundle, takes the Tailwind configuration from
+`godotFabric.tailwind` in `package.json` and never runs a `tailwind.config.*` (it fails with the field named), loads
+`doctor.native.js` through one narrow JSX rule, and offers `className` types only to a project that lists
+`types/nativewind.ts`. The installed nativewind and css-interop must be the SDK's releases. The laboratory and the SDK share
+one compile implementation: the laboratory's `build/app.js` and compiled styles keep their SHA-256.
+
+The JS lane (`tests/library-consumer.test.mjs`, in `test:contracts`) runs 13 tests: the lock against the installed
+versions, the bundle's inputs (no `examples/`, no project `src/`, no web interop runtime, no upstream react-native-svg
+file), the compiled classes, a repeatable bundle, and the refusals (a `tailwind.config.js`, other CSS, a bad declaration,
+css-interop 0.2.6, `className` without the opt-in and on TextInput, Switch, ActivityIndicator and Button) with a retained
+sabotage that removes the optional-peer rule. The native lane (`npm run test:consumer:libraries`, in the
+`native-cold-start` job) provisions the template, installs it, builds it through the editor plugin and runs it: **46
+headless checks**, 58 with the renderer, over real pointer events and waits for states. The minimal consumer still passes
+its 30 build and 40 native checks, and `test:charts` (4 tests, about 2 s) joins `native-cold-start`. The same consumer
+fails on main's SDK (`9c5d0eb`): the reduced one, which only imports NativeWind, at `react-native-safe-area-context`, and
+the full one at `E_ADAPTER_SELECTION`, since main does not know the `tailwind` key.
+
+Four captures show the light theme, a `className` swap to the project's own `brand` colour, the dark theme (`dark:`
+variants through `Appearance.setColorScheme`) and a remounted subtree with an updated chart. The SDK compiles the native
+pipeline of NativeWind (`NATIVEWIND_OS=godot`) while the laboratory keeps the web preset it always ran: open item, since
+unifying them would change the laboratory's evidence.
+
+Open: `className` on TextInput (GF-12), Switch and the lists, following the system theme (the host feeds `Appearance`
+with it; only the manual override is certified), `fontScale`, `rem` and `PixelRatio` scaling, `darkMode: "class"`, the
+SVG adapter's transform, group opacity, font weights 700 and 800, Polygon, Polyline and the v1 root API (and any
+`native/svg_node.*` change), the other Chart Kit charts and the written chart contract, the Reanimated, Gesture Handler,
+safe-area and screens ports (P2), other platforms, the laboratory's web preset against the SDK's native one, and the
+duplicated version strings. The hosted CI run of the new steps and the Pages publication are **pending**.
+
+Executed on macOS arm64 with official Godot 4.7.2 at implementation
+[`fc0f428`](https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e): the JS lane
+(13), the native lane (19 build and install checks, 46 and 58 native), the minimal consumer (30 and 40), the 35 examples (chart 34, nativewind 49 and typography 50 headless checks),
+the type check, the contracts gate, static analysis and the publication scan pass on that tree. Only the first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

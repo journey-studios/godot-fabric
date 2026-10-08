@@ -83,6 +83,17 @@ releases (`E_PROJECT_NATIVEWIND_VERSION` otherwise).
 the SDK checkout: provision, `npm ci`, editor build, headless run, offline rebuild,
 rejected requests, and `-- --capture` for the headed screenshots.
 
+## Captures
+
+Real renderer readbacks of this template, from the
+[executed run](../../docs/evidence/library-consumer/README.md).
+
+| Light theme | A `className` swap (the project's `brand` colour) |
+| --- | --- |
+| ![Light theme: indigo card, count 0, light chart](../../docs/evidence/library-consumer/libraries-light.png) | ![The card in bg-brand-600 after two counts and a class swap](../../docs/evidence/library-consumer/libraries-accent.png) |
+| **Dark theme through `Appearance.setColorScheme`** | **A remounted subtree and an updated chart** |
+| ![Dark theme: slate-900 root, slate-800 panels, dark chart](../../docs/evidence/library-consumer/libraries-dark.png) | ![Local 0 after the remount and a repainted chart](../../docs/evidence/library-consumer/libraries-chart.png) |
+
 ## Supported, and not
 
 Supported and exercised: the features above, with NativeWind's native rem of 14.

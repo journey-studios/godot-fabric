@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "scenario": "library-consumer",
+  "status": "verified-local-js-and-native-lanes-with-control-on-main-and-retained-sabotage",
+  "at": "2026-10-08T13:45:31Z",
+  "executionBaseCommit": "9c5d0eba274df1ad47376946270b044209a9243d",
+  "executedTreeSha": "7e6a0ea1a3570ae7a97218577a3a81840af8a3d9",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "none during the lanes; docs/evidence/library-consumer, docs/research/library-consumer.md, ROADMAP.md, README.md, docs/evidence/README.md and consumers/libraries/README.md were written after the executed run and are not execution inputs",
+  "implementationCommit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+  "implementationPr": null,
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "a231884fcdcde5d8f0b31510bb0e35165923931ccd8cc27b2648cf8e76fcfc4f",
+    "typeChecker": {
+      "name": "tsc-rs",
+      "version": "0.1.0",
+      "typescriptVersion": "7.1.0-dev",
+      "platformPackage": "@tsc-rs/darwin-arm64",
+      "executableSha256": "3a2736e002cdeaa7a7514adb9c5b2f367021fd8253d1fdfb4058f135ead04b49"
+    },
+    "sdkManifestSha256": "949f1978a76bc01d2d01a0c1e7feec54766a88d49aeb2af2d56a97ff7cb205cf",
+    "sdkManifestSourceCommit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
+    "sdkManifestSourceDirty": false,
+    "note": "No native source changed in this slice; the host is the one the previous slice built, packed by the unchanged scripts/pack-addon.mjs"
+  },
+  "commands": [
+    "npm run test:consumer:libraries -- --capture --control-ref 9c5d0eb",
+    "node --test tests/library-consumer.test.mjs",
+    "node --test tests/project-resolution.test.mjs",
+    "npm run test:consumer -- --capture",
+    "npm run test:examples",
+    "npm run test:typography",
+    "npm run test:charts",
+    "npm run type-check",
+    "npm run test:contracts",
+    "npm run check:static",
+    "npm run check:publication",
+    "npm run test:dashboard",
+    "node scripts/adapter-runtime-check.mjs --sdk <native SDK repacked from .deps/build> --out build/adapter-runtime-library-slice"
+  ],
+  "releases": {
+    "lockfile": "consumers/libraries/package-lock.json",
+    "lockfileSha256": "3aea116dc76f6b841dc720333d850708a5cb6ca97ac0c34aeb7506f2d1d06ebf",
+    "installedPackages": 112,
+    "installedEqualsLock": true,
+    "libraries": {
+      "nativewind": "4.2.7",
+      "react-native-css-interop": "0.2.7",
+      "tailwindcss": "3.4.17",
+      "react-native-chart-kit": "7.0.4",
+      "react-native-svg": "15.15.5"
+    },
+    "sdkCompilesWith": {
+      "tailwindcss": "3.4.17",
+      "nativewind": "4.2.7",
+      "react-native-css-interop": "0.2.7"
+    },
+    "outsideTheConsumer": [
+      "react",
+      "react-native",
+      "react-native-reanimated",
+      "react-native-safe-area-context"
+    ],
+    "outsideTheConsumerNote": "not in node_modules: the SDK owns the first two and fronts the other two with facades",
+    "registry": "https://registry.npmjs.org/ through npm ci --ignore-scripts with the SDK's private Node (npm 10.9.9)"
+  },
+  "bundle": {
+    "sha256": "7bd321710d95456b0286a2b9fab439a80786077778f8fb056c20c479f875f36d",
+    "bytes": 1423822,
+    "inputs": 562,
+    "inputsByOwner": {
+      "projectUiAndCss": 5,
+      "projectNodeModules": 159,
+      "sdk": 398
+    },
+    "assets": {
+      "path": ".godot_fabric/app.js.assets.json",
+      "files": 1
+    },
+    "styles": {
+      "entry": "global.css",
+      "content": [
+        "./ui/**/*.{ts,tsx}"
+      ],
+      "darkMode": "media",
+      "rules": 55,
+      "compiledSha256": "212765e09a93dfe6354ebbdc794d0154fe7ca72c0398c1718c9b295e94e62ae4",
+      "nativewindOs": "godot",
+      "inlineRem": 14,
+      "tailwind": "3.4.17",
+      "nativewind": "4.2.7",
+      "reactNativeCssInterop": "0.2.7"
+    },
+    "sameBundleAcross": [
+      "the two captured runs",
+      "the offline sandbox-exec rebuild",
+      "the recovery rebuild after every rejected request"
+    ]
+  },
+  "lanes": [
+    {
+      "lane": "js",
+      "command": "node --test tests/library-consumer.test.mjs",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "durationSeconds": 64,
+      "network": "npm ci of the consumer lockfile",
+      "testNames": [
+        "godotFabric.tailwind is closed JSON, and adapters stay the only selection",
+        "the bundle holds the original native interop and the SDK's SVG facade, and nothing of the laboratory",
+        "the build report records the style step and the exact releases",
+        "the compiled styles register with the one interop runtime and answer every class the consumer uses",
+        "the same inputs build the same bundle",
+        "a missing optional peer does not fail the build, and the SDK's facade is the control that proves it",
+        "a tailwind.config.js is refused and names the declarative field",
+        "CSS other than the Tailwind entry is still refused",
+        "the Tailwind declaration must exist, stay inside its fields and name only project globs",
+        "the installed interop must be the release the SDK compiles with",
+        "className is a type error until the project opts in, and only for the four certified components",
+        "the consumer builds again after every rejected request"
+      ]
+    },
+    {
+      "lane": "native-headless",
+      "command": "npm run test:consumer:libraries",
+      "harnessChecks": 19,
+      "nativeChecks": 46,
+      "passed": true,
+      "displayServer": "headless",
+      "harnessCheckIdDigestSha256": "e54d6d7617bf53fa6b248901dddeef9575effeb49baf4e317181d6ee5d41f86b",
+      "nativeCheckIdDigestSha256": "3cfe2419b458c53e92f64c33e78cb0a0a6759bf6d6caffa8d8e6b1ef7815314b",
+      "reportSha256": "63c95a3880e56d4e6ed9f6399a1adfa19dfd476ba99e75a9bfe7155951bcb0f0",
+      "logSha256": "f64557d5b850bbd916ab0e9d2b9e6f6652e29bc064059ff75d51a9b941bcfa34"
+    },
+    {
+      "lane": "native-renderer",
+      "command": "npm run test:consumer:libraries -- --capture",
+      "nativeChecks": 58,
+      "capturedChecks": 12,
+      "passed": true,
+      "displayServer": "macOS",
+      "nativeCheckIdDigestSha256": "96fc62b4c57d1ed28e40bfbbcb73a3c8322685fc0cab44e7af6325ac244ba039",
+      "reportSha256": "5a75112b125cac94c3fcb7177952caf1fe53381a40a674fc4add1466f08b0044",
+      "logSha256": "82434930b509720dfc223ceb0b035f270101ece143c1ae55ea70416550a8b826",
+      "pixels": {
+        "accent": "059669",
+        "chart": "4f46e5",
+        "dark": "4f46e5",
+        "light": "4f46e5"
+      }
+    }
+  ],
+  "headlessChecks": 46,
+  "graphicalChecks": 58,
+  "harnessChecks": 19,
+  "checkIdDigest": "SHA-256 of the check names joined by newlines, in the order the lane ran them",
+  "minimalConsumer": {
+    "command": "npm run test:consumer -- --capture",
+    "buildAndOwnershipChecks": 30,
+    "nativeHeadlessChecks": 40,
+    "nativeGraphicalChecks": 43,
+    "passed": true,
+    "reportSha256": "28a7079a0900c5219fec44cb055c9589641adeb96c930e2462b7bd3ec7cc9a88"
+  },
+  "controls": {
+    "mainSdk": {
+      "ref": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "meaning": "The same template built by the SDK of main before this slice (git archive of sdk/toolchain, src and types into the provisioned addon)",
+      "reducedConsumer": "✘ [ERROR] E_PROJECT_DEPENDENCY: react-native-safe-area-context: undeclared import in react-native-css-interop dependencies [plugin project-owned-resolution]",
+      "fullConsumer": "GODOT_FABRIC_BUILD_ERROR: E_ADAPTER_SELECTION: godotFabric requires exactly an adapters array",
+      "logs": [
+        "control-nativewind-root-9c5d0eb.log",
+        "control-full-9c5d0eb.log"
+      ],
+      "kept": "build/consumer-libraries (local, not in Git)"
+    },
+    "currentSdkReduced": "The reduced consumer, which only imports nativewind, builds on this SDK with no CSS: the doctor module's JSX loads through the narrow rule and styles is null"
+  },
+  "retainedSabotages": [
+    {
+      "name": "optional-peer-rule-removed",
+      "where": [
+        "tests/library-consumer.test.mjs",
+        "scripts/consumer-libraries-check.mjs"
+      ],
+      "change": "owner.manifest.peerDependenciesMeta?.[name]?.optional === true is removed from requireOwned in the SDK copy",
+      "rejection": "E_PROJECT_DEPENDENCY: react-native-safe-area-context: undeclared import in react-native-css-interop dependencies",
+      "restored": "byte for byte (the lane checks the hash of the restored source), and the next build gives the same bundle"
+    },
+    {
+      "name": "optional-peer-unit",
+      "where": "tests/project-resolution.test.mjs",
+      "change": "the same line removed while the 59 tests run",
+      "rejection": "2 of the 3 new optional-peer tests fail (59 pass with the rule)"
+    }
+  ],
+  "laboratory": {
+    "before": {
+      "build/app.js": "5517637ef70f617424acbdbb83efd504404681415d2be19548459dc866fe4f41",
+      "build/nativewind-compiled.json": "508678832545f8ad5e740b4f4febb6f2aed1566339ed28ca473ba416b2ae360d",
+      "build/nativewind-compiled.js": "97a2d791d60c83227d82182a918a2cc67b51d0431a1da758cb7e397b5e81c4b7",
+      "build/bundle-inputs.json": "482913963a5ade347307d66b1212658a2f5a32344599f794da8aaedc77a9752d"
+    },
+    "after": {
+      "build/app.js": "5517637ef70f617424acbdbb83efd504404681415d2be19548459dc866fe4f41",
+      "build/nativewind-compiled.json": "508678832545f8ad5e740b4f4febb6f2aed1566339ed28ca473ba416b2ae360d",
+      "build/nativewind-compiled.js": "97a2d791d60c83227d82182a918a2cc67b51d0431a1da758cb7e397b5e81c4b7",
+      "build/bundle-inputs.json": "482913963a5ade347307d66b1212658a2f5a32344599f794da8aaedc77a9752d"
+    },
+    "identical": true,
+    "note": "build/nativewind.css, an intermediate, differs in whitespace only: the Tailwind CLI formats its output and the shared in-process pipeline does not"
+  },
+  "laboratoryExamples": {
+    "examples": 35,
+    "headlessChecks": {
+      "chart": 34,
+      "nativewind": 49,
+      "typography": 50
+    },
+    "typographyContract": "4 of 4"
+  },
+  "typeFixtures": {
+    "file": "tests/types/consumer.tsx",
+    "added": "Pressable and useWindowDimensions positives; className on View, Text, Image and Pressable, android_ripple and onHoverIn as @ts-expect-error negatives"
+  },
+  "adapterRuntime": {
+    "command": "scripts/adapter-runtime-check.mjs",
+    "passed": true,
+    "headlessChecks": 35,
+    "note": "run on a native SDK repacked from the current .deps/build (the build/native-sdk of the worktree predated it), then deleted"
+  },
+  "screenshots": {
+    "light": {
+      "file": "docs/evidence/library-consumer/libraries-light.png",
+      "sha256": "b141eafe1b232f73136918143b96ffc425b3fab267e15c348322f8b0f009253e",
+      "bytes": 40311,
+      "width": 1120,
+      "height": 680
+    },
+    "accent": {
+      "file": "docs/evidence/library-consumer/libraries-accent.png",
+      "sha256": "8f7ebd64c4ad54752cfa9436b8063fb601cc16e6b1a3c3fc580c3bdccb529484",
+      "bytes": 40215,
+      "width": 1120,
+      "height": 680
+    },
+    "dark": {
+      "file": "docs/evidence/library-consumer/libraries-dark.png",
+      "sha256": "0413e074c0cb3e86f365839247b1d7280f5e8d1c587c8dfe7c82128e94fcd4fd",
+      "bytes": 41855,
+      "width": 1120,
+      "height": 680
+    },
+    "chart": {
+      "file": "docs/evidence/library-consumer/libraries-chart.png",
+      "sha256": "00ce02e41bff8cebef3e54654f4fc170987180cf25e870278e011f430b2dc082",
+      "bytes": 43066,
+      "width": 1120,
+      "height": 680
+    }
+  },
+  "screenshotsNote": "Renderer readbacks of the template, 1120x680. Byte-stability between runs is not claimed: before the scene waited for every Pressable to rest, two runs gave different hashes for the same frame; the next two matched. These are the hashes of the executed run.",
+  "scope": {
+    "originalNativeWindRuntime": true,
+    "originalCssInteropRuntime": true,
+    "originalChartKitV2": true,
+    "publicReactNativeImports": true,
+    "independentProjectOwnLockfile": true,
+    "noProjectJavaScriptExecuted": true,
+    "declarativeTailwind": true,
+    "optInClassNameTypes": true,
+    "nativePipelineOfNativeWind": true,
+    "realPointerEvents": true,
+    "waitsByState": true,
+    "actualRendererCaptures": true,
+    "systemThemeFollowing": false,
+    "textInputClassName": false,
+    "fontScaleAndRem": false,
+    "darkModeClass": false,
+    "svgAdapterExpansion": false,
+    "otherCharts": false,
+    "writtenChartContract": false,
+    "p2Ports": false,
+    "otherPlatforms": false,
+    "hostedCI": false,
+    "uikitOrRnDifferential": false
+  },
+  "limits": [
+    "className exists on View, Text, Image and Pressable only; TextInput, Switch, lists and the rest are type errors",
+    "darkMode is media; the manual override is certified, the OS theme is not (the headed host feeds Appearance with it, so the scene pins light first)",
+    "NativeWind's rem is 14; fontScale, rem scaling and PixelRatio are not exercised",
+    "Reanimated animations fail at the facade (animate-spin is the executed negative); safe-area and screens have no port",
+    "fontFamily accepts NotoSans and JetBrainsMono only, and the preset's default stacks were not exercised",
+    "SVG: no transform, group opacity, font weights 700 and 800, Polygon, Polyline or v1 root API; no native/svg_node change",
+    "The laboratory compiles the web variant of the NativeWind preset and the SDK the native one; unifying them would change the laboratory's evidence",
+    "macOS arm64 only; hosted CI and the Pages publication pending",
+    "The duplicated version strings across manifests and docs are not cleaned up"
+  ],
+  "sources": {
+    "sdk/toolchain/build.mjs": "a89af21bf46a26eeba1a05410ce0007b32cab8f5a6d6398507a615584fdbdd9f",
+    "sdk/toolchain/tailwind-plugin.mjs": "d587a8082bbd55f02a81dc1872c9365b64f172beccdac13c3298d0874c136e63",
+    "sdk/toolchain/nativewind-compile.mjs": "a256b6b350b82de4c351df56d41b4be4408c0a69e41dcc0c1fe77808facc1bc9",
+    "sdk/toolchain/project-resolution.mjs": "f1f78e75bff1315da766c951fee7036a628c216e9e9f40080b688f5342c76705",
+    "sdk/toolchain/adapter-plugin.mjs": "40b215b4bcb69490050cc5b36c3589fa85da91f4e72eaecd5aa2b230775a4c63",
+    "types/react-native.ts": "f52ecd926942e1f6e6f0523d63f3120baf31f14a2f52f0dd7c6571a2b834ba7f",
+    "types/nativewind.ts": "72bd079d68c820e51d950518e22240d61d8dcd42891b42c2b6b7ad97bd69ff66",
+    "scripts/consumer-libraries-check.mjs": "85e0a063183db504b3dc98fab802a125f585621e73d733311de1ce688dbb132d",
+    "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+    "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+    "scripts/consumer-check.mjs": "171d35f49cdedd359eae4ef9d916cf8f6f1108f5901bc6937a4b317ed249b29d",
+    "scripts/nativewind-compile.mjs": "fca7e6a045e4e645fcb03ae92c61e223e50544497dcd3c86eadef8b0ecc3c25a",
+    "tests/library-consumer.test.mjs": "5404f800e4ca065ad979b34e621b225f346e985cc78dfa4530faa129ca5eb547",
+    "tests/project-resolution.test.mjs": "5f2dd8ec45875160deae68ed0ab7b7bdea2714bdf1b782f61388d3d1a1233934",
+    "tests/types/consumer.tsx": "3adac0668049dc392d5a44c70366f049df4ba7b9a199ebf2a116210733a5dc7b",
+    "consumers/libraries/package.json": "c68d11a6c8a7d2bb21f0ece11845a9f4b97a5fb79cfcc495666275936f2f0feb",
+    "consumers/libraries/package-lock.json": "3aea116dc76f6b841dc720333d850708a5cb6ca97ac0c34aeb7506f2d1d06ebf",
+    "consumers/libraries/.npmrc": "a3efd8c4417051c97416492cd6b54ab2dd7f638d454c8e75a8508230711f02d9",
+    "consumers/libraries/tsconfig.json": "8c4aa7aa3712843e122abc4e48759a9c1220457f6dc06cd84c3a9cbf9e6067a7",
+    "consumers/libraries/global.css": "cc1a7ad0d019ddb1d32d0ecb588ba0ac26ce41d8625dd6c366348b25f83a28ec",
+    "consumers/libraries/project.godot": "693869ca75635f342cabab9eeb9ac8d4b30360a35aa2ccc6be02e5e93ba21894",
+    "consumers/libraries/main.tscn": "be762c4fbaeacb4fa67b279644bc8c4d0fdbb392871f08c5c9ca84ce976eb306",
+    "consumers/libraries/validation.gd": "b263594f3533fd0688e7b4b0546004c35d3a6982b4dc5c86b180c250ad49e365",
+    "consumers/libraries/ui/App.tsx": "3c6b1118f278208b3a745e8cb6556fe2e72a6de91a69a2db056761c954917f4a",
+    "consumers/libraries/ui/index.tsx": "7352818657a65255c5dd00b5d404e89383c154303c7e537476c5aeee31fefb8d",
+    "consumers/libraries/ui/stats.ts": "8f125a1645bffa7e82a7057f2d91237ffbfe7c14178084d1dcc90d8568a526b6",
+    "consumers/libraries/ui/assets.d.ts": "5c3233fe1132effb1693f46c2aa9e46790c7592fc0cecb7303c01d28d6c8a265",
+    "consumers/libraries/ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+    "consumers/libraries/ui/swatch.png": "9db4faa9b9f49bf3ae5294145d2d0558730fb3b25ee0126fdee75c6c5a255c4d",
+    "package.json": "f371baf2cf65cea0b9dc890cb9e5ef181e186f5854653b42f223e701074755e4",
+    ".github/workflows/contracts.yml": "71295bc7442981b663190c9ffa3c576e461d9f8894bee4a9e03e2bbd1d6b9e16",
+    ".fallowrc.json": "d9f8aacd6f2ce73beca349e187833b5562ec289cf14944ec5ecc6aeded226671"
+  },
+  "sourcesNote": "SHA-256 of each executed source, each verified equal to git show fc0f4280c43e01d26d6fc9374e922fa449b88c5e:<path> and to the working tree at execution",
+  "gates": {
+    "tree": "the tree of the implementation commit plus the documents of this evidence, before it was committed",
+    "typeCheck": {
+      "command": "npm run type-check",
+      "passed": true
+    },
+    "testContracts": {
+      "command": "npm run test:contracts",
+      "exit": 0,
+      "nodeTestGroups": [
+        {
+          "tests": 7,
+          "passed": 7
+        },
+        {
+          "tests": 43,
+          "passed": 43
+        },
+        {
+          "tests": 319,
+          "passed": 319
+        }
+      ],
+      "pythonTests": 13,
+      "includes": [
+        "tests/library-consumer.test.mjs",
+        "tests/project-resolution.test.mjs",
+        "the lab bundle and test:dashboard"
+      ]
+    },
+    "checkStatic": {
+      "command": "npm run check:static",
+      "passed": true,
+      "issues": 0
+    },
+    "checkPublication": {
+      "command": "npm run check:publication",
+      "passed": true,
+      "files": 1498
+    },
+    "testDashboard": {
+      "command": "npm run test:dashboard",
+      "tests": 43,
+      "passed": 43
+    },
+    "testCharts": {
+      "command": "npm run test:charts",
+      "tests": 4,
+      "passed": 4,
+      "seconds": 2
+    },
+    "flake": "One headed Godot run of the minimal consumer (local-alias-graphical) timed out at 180 s on the first execution of npm run test:consumer -- --capture on this machine under load; the rerun passed all 30 and 40 checks. No explanation was found, and the libraries lane never timed out."
+  }
+}

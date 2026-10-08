@@ -680,6 +680,22 @@ sabotages 107, 5, 18, 12, 3 and 2, and 33 props are rejected) because the review
 cases (`onStartShouldSetResponderCapture`, `onMoveShouldSetResponderCapture`, `onResponderReject`, `onResponderStart` and
 `onResponderEnd`) to the 114 that it ran. The hosted CI run and the Pages publication are **pending**.
 
+The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
+lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
+react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,
+`active:`, manual dark mode through `Appearance.setColorScheme`, retained state and Chart Kit v2's `LineChart`, built only
+by the public SDK. The builder counts an optional peer named in `peerDependenciesMeta` as declared, compiles a project's
+Tailwind CSS entry with the SDK's own Tailwind and css-interop compiler from a declarative `godotFabric.tailwind` (a
+`tailwind.config.*` is refused, since the SDK never runs project JavaScript), loads css-interop's `doctor.native.js` through
+one narrow JSX rule, and offers `className` types only to a project that opts in. A JS lane (13 tests, in `test:contracts`)
+and a native lane (19 build and install checks and 46 native, 58 with the renderer, in `native-cold-start`) pass, the
+minimal consumer still passes its 30 and 40, and four renderer captures show the light, class-swapped and dark themes
+and a remounted subtree with a repainted chart. The same consumer fails on main's SDK (`9c5d0eb`) at
+`react-native-safe-area-context` and at `E_ADAPTER_SELECTION`, and a retained sabotage of the optional-peer rule fails
+there too. `className` on TextInput, following the system theme, font scaling, the rest of the SVG contract, the other
+charts, the P2 ports, other platforms, and the laboratory's web preset against the SDK's native one are open. The hosted
+CI run and the Pages publication are **pending**.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.
