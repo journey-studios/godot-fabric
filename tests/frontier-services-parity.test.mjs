@@ -43,12 +43,12 @@ test("the dump is of this tree: the report was made from the sources the types a
 });
 
 test("the TypeScript types and the schemas Godot registered declare the same names, fields and types", () => {
-  assert.equal(typescript.registrations.length, 13, "one state, one signal and 11 methods");
+  assert.equal(typescript.registrations.length, 14, "one state, one signal and 12 methods");
   assert.deepEqual(diffRegistrations(typescript.registrations, report.registered), []);
   // The name constants are the registered names: a constant that named nothing would be a call to a missing service.
   assert.deepEqual(Object.values(typescript.constants).sort(), typescript.registrations.map(entry => entry.name).sort());
   assert.deepEqual(report.registered.map(entry => entry.kind).sort(), ["method", "method", "method", "method", "method", "method", "method", "method", "method",
-    "method", "method", "signal", "state"]);
+    "method", "method", "method", "signal", "state"]);
   // The shapes the HUD leans on, spelled out once more.
   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
   assert.deepEqual(at(snapshot, ["actions", "[]", "args"]), {array: "integer"}, "an action's args are the intent's positional arguments, integers");

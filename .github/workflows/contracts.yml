@@ -719,6 +719,7 @@ jobs:
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
       - run: npm run test:consumer:libraries
+      - run: npm run test:consumer:civ-lite
       - name: Original Codegen adapter in a provisioned independent consumer
         run: |
           ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
@@ -754,6 +755,15 @@ jobs:
             build/consumer-libraries/*.json
             build/consumer-libraries/*.log
             build/consumer-libraries/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-civ-lite-consumer
+          path: |
+            build/consumer-civ-lite/*.json
+            build/consumer-civ-lite/*.log
+            build/consumer-civ-lite/*-bundle.js
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

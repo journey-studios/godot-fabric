@@ -161,8 +161,12 @@ fixture synchronously frees a live application from its registered method and
 checks the surviving surface's retired nodes, queues and canceled request.
 
 Frontier, the 0.5 reference game, is the reference consumer with a nested object schema: its persistent `GameServices` node
-registers a state, a signal and eleven methods from one GDScript schema source, and hand-written TypeScript types are
-compared with them in both directions (see [Frontier's services](research/frontier-services.md)).
+registers a state, a signal and twelve methods from one GDScript schema source, and hand-written TypeScript types are
+compared with them in both directions (see [Frontier's services](research/frontier-services.md)). It names no path to the SDK:
+the scene injects the facade's script (`@export var fabric_api: Script`), so the same node runs in the laboratory and in a
+project provisioned by the addon, where ten cycles of new game, intents, scene reload and menu leave the registry's
+bindings and subscriptions, the signal's connections and the nodes where they started (see
+[Frontier as a consumer](research/frontier-consumer.md)).
 
 Full generated service/component specs, thread handoff, activation/reload
 generations, dev diagnostics and per-target exported consumer certification

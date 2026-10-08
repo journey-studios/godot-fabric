@@ -9,7 +9,9 @@ extends SceneTree
 # The scene is the one consumers/minimal has: the game node, a child `Application` that emits `runtime_available` while it
 # enters the tree, and the surface. The stand-in below does what sdk/addon/application_node.gd does (it builds the
 # FabricApplication and emits the signal) without the Resource that node needs, because this probe's bundle lives in build/
-# and not under res://.godot_fabric/. That the provisioned node does the same in a consumer project is criterion `consumidor`.
+# and not under res://.godot_fabric/. The provisioned node doing the same in a consumer project is criterion `consumidor`,
+# which scripts/consumer-civ-lite-check.mjs runs (docs/research/frontier-consumer.md). The node names no path to the SDK:
+# this probe injects the facade (`fabric_api`) as that consumer's main.tscn injects the addon's copy.
 #
 # The probe only reports. The roteiro's own session (a second FrontierGame in this process, never touched by the services)
 # is the reference every step is compared with; the golden hash is fixed in tests/frontier-services-native.test.mjs; and
@@ -21,14 +23,17 @@ const Game := preload("res://consumers/civ-lite/game/game.gd")
 const Canon := preload("res://consumers/civ-lite/game/canon.gd")
 const Replay := preload("res://consumers/civ-lite/game/replay.gd")
 const GameServices := preload("res://consumers/civ-lite/services/game_services.gd")
+# The laboratory keeps the SDK sources behind .gdignore, so the probe reaches the facade by path and hands it to the node,
+# as a provisioned consumer's main.tscn hands it the addon's copy.
+const FabricAPI := preload("res://sdk/addon/godot_fabric.gd")
 
 const BUNDLE := "res://build/frontier-services-probe.js"
 const REPORT := "res://build/frontier-services-report.json"
 # The surface is unmounted after this many accepted end_turns, one step is played with no surface, and it is remounted.
 const UNMOUNT_AFTER_TURNS := 3
 const NEW_GAMES := 3
-# What the registry must hold: the state, the signal and one method per intent.
-const BINDINGS := 13
+# What the registry must hold: the state, the signal and one method per intent, plus open_menu, which the scene answers.
+const BINDINGS := 14
 
 # Stands in for sdk/addon/application_node.gd: the FabricApplication is built while this node enters the tree, and the
 # signal tells the game node, which connected to it from its own _enter_tree, to register before anything mounts.
@@ -172,6 +177,7 @@ func step_name(index: int, step: Dictionary) -> String:
 func build_scene() -> void:
   services = GameServices.new()
   services.name = "GameServices"
+  services.fabric_api = FabricAPI
   var stand_in := ApplicationStandIn.new()
   stand_in.name = "Application"
   stand_in.bundle_path = BUNDLE
@@ -407,7 +413,7 @@ func run_probe() -> void:
   var registered_before_mount: Array = services.registered.duplicate(true)
   var registered_in_time := check(services.registered.size() == BINDINGS and services.bindings.size() == BINDINGS
     and services.bindings.all(func(binding: Variant) -> bool: return binding != null),
-    "registration: the node registered the state, the signal and the 11 methods while the application entered the tree")
+    "registration: the node registered the state, the signal and the 12 methods while the application entered the tree")
   await wait_for(func() -> bool: return int(counts().snapshots) >= 1 or not counts().application.errors.is_empty(), 6000)
   await settle(8)
   var started := counts()
@@ -417,7 +423,7 @@ func run_probe() -> void:
   var initial_ok := check(int(started.snapshots) == 1 and first is Dictionary and canon(first.value) == canon(services.game.snapshot()) and int(first.value.epoch) == 1,
     "registration: the first connection received the initial snapshot of epoch 1")
   check(int(started.stepsReceived) == Replay.STEPS.size(), "registration: the roteiro reached the JavaScript side as a prop, from replay.gd")
-  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 13 bindings")
+  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 14 bindings")
   check(native().errors.is_empty(), "registration: the application reports no error")
   var registration := {"application": started.application, "snapshots": started.snapshots, "inTime": registered_in_time}
   if not (registered_in_time and connected and initial_ok):
@@ -451,7 +457,7 @@ func run_probe() -> void:
     "epoch: the game after the last new_game answers an intent in its own epoch")
 
   var final_native := native()
-  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 13 bindings are still there")
+  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 14 bindings are still there")
   var report := {"scenario": "frontier-services", "reactNative": "0.87.1", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
     "checks": checks, "sabotage": sabotage, "allPassed": checks.all(func(row: Dictionary) -> bool: return row.passed),
     "registered": registered_before_mount, "registration": registration, "bindings": BINDINGS, "steps": steps_report, "roteiroSteps": Replay.STEPS.size(),
