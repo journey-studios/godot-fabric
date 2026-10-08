@@ -62,8 +62,8 @@ derived and what is measured").
 - **The update arrives only when a screen reader is looking.** `SceneTree::_flush_accessibility_changes`
   (`scene_tree.cpp:304-315`) calls `update_if_active`, whose callback runs only while the
   window's adapter is active (a client has asked for the tree). It runs at most
-  `accessibility/general/updates_per_second` times a second (`:307-310`, `:2059`), so several
-  announcements of one frame share an update. In a headless run everything is a dummy:
+  `accessibility/general/updates_per_second` times a second (`:307-310`, `:2059`), which is why
+  an announcement per frame is all the host asks of it. In a headless run everything is a dummy:
   `AccessibilityServer.is_supported()` is false, `is_accessibility_enabled()` is false,
   `create_element` returns an invalid RID and 3000 never arrives, even with
   `--accessibility always`.
@@ -83,6 +83,7 @@ derived and what is measured").
 | RN | Here | Why |
 | --- | --- | --- |
 | `announceForAccessibility(text)` | A new static text element under the application's own element, with `text` as its value and `LIVE_POLITE`, made in the next accessibility update and freed outside the update after it. With no screen reader the call returns and the announcement is counted and dropped | AccessKit speaks a live node's value; an element per announcement is the iOS notification's equivalent |
+| Several announcements in one frame | Published one per update, in the order they were asked for, a frame apart | See "Decision: one announcement per update" |
 | `announceForAccessibilityWithOptions(text, {priority})` | `"high"` is `LIVE_ASSERTIVE`; `"default"`, an absent or null priority and a string iOS ignores are `LIVE_POLITE`. `queue: false`, absent or null is accepted | iOS's own mapping, with the two live modes AccessKit has |
 | `{queue: true}` | `E_UNSUPPORTED: announceForAccessibilityWithOptions queue: the macOS accessibility API has no announcement queue` | AppKit's announcement has no queue |
 | `{priority: 'low'}` | `E_UNSUPPORTED: announceForAccessibilityWithOptions priority "low": AccessKit has only polite and assertive` | AccessKit has no live mode below polite |
@@ -95,9 +96,9 @@ After `stop()` every method throws `E_MODULE_DISPOSED`; nothing is made, set or 
 
 ### The mechanism
 
-`announcer` is a pure state machine in `native/accessibility_info_core.h`
-(`accessibility::Announcer`), with a port (`AnnouncePort`) into the platform. The host's
-port is `native/accessibility_announcer.{h,cpp}`; `FabricApplication` is the Node whose element
+`announcer` is a pure state machine in `native/accessibility_announcement_core.h`
+(`accessibility::Announcer`, independent of the settings' core in `accessibility_info_core.h`), with a port
+(`AnnouncePort`) into the platform. The host's port is `native/accessibility_announcer.{h,cpp}`; `FabricApplication` is the Node whose element
 the announcements hang from, and it publishes when it receives
 `NOTIFICATION_ACCESSIBILITY_UPDATE`.
 
@@ -112,11 +113,27 @@ the announcements hang from, and it publishes when it receives
    waited more than 120 pumps for an update that never came (a screen reader that is not looking at this
    window), and asks for an update (`queue_accessibility_update()`) when something waits or something was
    freed (the update takes the freed nodes out of the OS tree).
-3. **`publish()`**, inside `NOTIFICATION_ACCESSIBILITY_UPDATE`: for each waiting announcement, in order,
+3. **`publish()`**, inside `NOTIFICATION_ACCESSIBILITY_UPDATE`: for the first waiting announcement,
    `create_sub_element(application element, ROLE_STATIC_TEXT)`, `update_set_value(text)` and
-   `update_set_live(...)`. Announcements of one frame share the update.
+   `update_set_live(...)`. One announcement per update: the others wait for the updates after it, which the next pumps
+   ask for (an announcement the platform has no element for is dropped without taking the update, and the next one
+   is tried). Each announcement ages on its own, so the expiry and the gate of step 2 apply to every one.
 4. **`stop()`** drops what waits (`dropped.stopped`), frees what was published (outside any update,
    and never from inside the one the announcer runs), and is idempotent.
+
+### Decision: one announcement per update
+
+An early design put the announcements of one frame in one update, as the Godot limit of 60 updates a second
+suggests. The graphical lane measured what that does: the three announcements of one frame (`First`, `Second`,
+`Third`, with `Third` high) were posted by AccessKit as `Second`, `First`, `Third`, so the order inside one update is
+AccessKit's, not the host's (a spike that wrote the elements in Godot directly had happened to post them in creation
+order). On iOS, with no `queue`, each announcement interrupts the one before, so the user hears the last one asked for;
+an order that changes with the update would change which announcement is heard. The decision is therefore to publish
+one announcement per update, in the order they were asked for, a frame apart (one frame of latency for each additional
+announcement of the same frame, well within 60 updates a second). With that, the lane measures `First`, `Second`,
+`Third` in the posts, each with its own priority level. A queue longer than the expiry (120 announcements asked in one
+frame) loses the ones that would wait longer than 120 pumps (`dropped.expired`), which no screen reader could have
+spoken in time.
 
 The **gate** that says a screen reader is there is `SceneTree.is_accessibility_enabled()` and
 `AccessibilityServer.is_supported()` and an accessibility element for the application, and every
@@ -141,12 +158,14 @@ asked for, and records every call the announcer makes (`recorded`: `update.begin
 
 Three layers; none says that VoiceOver spoke.
 
-- **The core** (`native/accessibility_info_core_test.cpp`, no engine): the exact sequence of calls of one
-  announcement (create, value, live inside the update; the free outside the next one, followed by an
-  update); the priority mapping; the refusals; the drop without a screen reader, including one that goes away while
-  an announcement waits; an empty text; an element that cannot be made; expiry after 120 pumps; the same
-  text twice as two elements; several announcements in one update; stop dropping what waits, freeing
-  outside an update and idempotent, including a stop that arrives from inside the update.
+- **The core** (`native/accessibility_announcement_core_test.cpp`, no engine, its own executable; the settings'
+  core has `accessibility_info_core_test.cpp`): the exact sequence of calls of one announcement (create, value,
+  live inside the update; the free outside the next one, followed by an update); the priority mapping; the
+  refusals; the drop without a screen reader, including one that goes away while a batch waits; an empty text; an
+  element that cannot be made, which does not take the update from the next announcement; expiry after 120
+  pumps, and of the tail of a batch longer than that; the same text twice as two elements; announcements of one
+  frame published one per update in the order asked; stop dropping what waits, freeing outside an update and
+  idempotent, including a stop that arrives from inside the update.
 - **The headless probe** (`npm run test:accessibility-info`, hosted CI): in application A the recorder is the
   server and every call above is made through RN's public `AccessibilityInfo` and through the module itself,
   with the independent oracle replaying each step against a state machine written from the rules (it
@@ -175,9 +194,10 @@ structure of the Godot sources quoted above; iOS's behavior (the RN sources, App
   the priority level 90 for assertive and 50 for polite. A node with only a **name** posts nothing: on the
   `announce-name` host, the same lane records no post for eight announcements.
 - The same text said twice in two elements is posted twice.
-- Through RN and the host, one frame's three announcements were three posts, **in an order that was not the
-  order made** (`Second`, `First`, `Third`, with `Third` high), while a spike that wrote the elements in
-  Godot directly happened to post them in creation order. The order inside one update belongs to AccessKit.
+- With the three announcements of one frame in one update (the first design), AccessKit posted them as
+  `Second`, `First`, `Third` (with `Third` high): the order inside one update is AccessKit's. A spike that wrote
+  the elements in Godot directly had happened to post them in creation order. With one announcement per update
+  (the decision above) the lane measures `First`, `Second`, `Third`, each with its own priority level.
 - The announcement elements are gone from the OS tree after they are freed.
 - On the sabotage hosts: the priorities swapped post 90 for the default ones and 50 for the high one;
   one reused element posts the first announcement only.
@@ -187,11 +207,6 @@ of a View (see below); an announcement while the user's own VoiceOver was runnin
 
 ## Open
 
-- **Order inside a frame.** The order in which AccessKit posts the announcements of one update is not the order
-  they were made in (measured, above). iOS posts them in order, and without `queue` each interrupts the one before,
-  so which of several announcements of one frame is heard differs. A fix is to publish one announcement per update
-  (one more frame of latency for each additional announcement of the same frame); the slice keeps the closed
-  decision that a frame's announcements share an update, and reports this.
 - **`queue: true` and `priority: 'low'`** are refused: AppKit's announcement has no queue and AccessKit has two live
   modes. A later slice could queue in the host (announce the next when the first would be done), which needs the
   end-of-speech signal nobody has.
@@ -222,3 +237,5 @@ of a View (see below); an announcement while the user's own VoiceOver was runnin
   `servers/display/accessibility_server.cpp`, `accessibility_server_accesskit.cpp:294,598-599,613,833,1061`,
   `scene/main/viewport.cpp:2724-2744`.
 - AccessKit macOS adapter 0.26: `platforms/macos/src/event.rs:35-43,65-103,228-240,242-306`.
+- This repository: `native/accessibility_announcement_core.h` (the announcements' core), `native/accessibility_info_core.h`
+  (the settings' core), `native/accessibility_announcer.{h,cpp}` (the port into Godot and the validation recorder).

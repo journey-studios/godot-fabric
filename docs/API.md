@@ -731,14 +731,15 @@ the executions.
 
 An announcement is a new static text element under the `FabricApplication`'s own accessibility element, with the text as its
 value and a live mode (`LIVE_ASSERTIVE` for `priority: 'high'`, `LIVE_POLITE` otherwise), made in the next accessibility
-update (`native/accessibility_announcer.{h,cpp}`, the pure `Announcer` in `accessibility_info_core.h`) and freed outside the
+update (`native/accessibility_announcer.{h,cpp}`, the pure `Announcer` in `accessibility_announcement_core.h`) and freed outside the
 update after it: AccessKit's macOS adapter posts `NSAccessibilityAnnouncementRequestedNotification` for a live node that has a
 value, and a value equal to the one before does not speak again, so the same text said twice is two elements. The host
 announces only if a screen reader is there (`SceneTree.is_accessibility_enabled()`, `AccessibilityServer.is_supported()` and an
 element for the application); with none the call returns without error, as on iOS and Android, and the announcement is counted
 (`dropped.noScreenReader` in `accessibilityInfo.announcements` of the application's snapshot) and never kept for a screen reader
-that turns on later. An announcement that waits more than 120 frames for an update that does not come is dropped
-(`dropped.expired`). A validation run replaces the `AccessibilityServer` by a recorder with the application's
+that turns on later. The announcements of one frame are published one per update, in the order they were asked for, a frame apart
+(AccessKit posts the elements of one update in an order of its own: measured, three announcements of one frame came out second, first,
+third). An announcement that waits more than 120 frames for an update that does not come is dropped (`dropped.expired`). A validation run replaces the `AccessibilityServer` by a recorder with the application's
 `validation_accessibility_announcer` meta (a Dictionary of `available`, `element` and `delivers`, each a bool that is true unless
 it says false). The [announcements note](research/accessibility-announcements.md) has the mechanism, what is derived and what is
 measured, and what is open.
@@ -764,11 +765,11 @@ A change is a known value that differs from the last known one: a setting that b
 change. `environmentStats().reduceMotion` counts the listeners of `reduceMotionChanged`, and `disposeEnvironment` removes the
 listeners of every accessibility event. The headless engine reports `-1` for all four settings and has no screen reader, so its
 getters reject and its announcements are dropped: the tests supply values and a screen reader through the validation metas. The
-announcement path is proven in three layers, none of which says that VoiceOver spoke: the pure core (the exact calls of one
-announcement, the refusals, the drops, stop), the headless probe (the recorder, an independent oracle, the preceding host failing
+announcement path is proven in three layers, none of which says that VoiceOver spoke: the pure core of the announcements (the exact
+calls of one announcement, the order of a batch, the refusals, the drops, stop), the headless probe (the recorder, an independent oracle, the preceding host failing
 exactly the new checks, eight retained sabotages rejected) and a local graphical macOS lane that interposes the call AccessKit makes
-to AppKit (`npm run test:accessibility-info:bridge`: text, priority level and one post for each announcement; the three announcements of
-one frame were posted in an order other than the one they were made in). Real operating-system settings, the mobile servers (they
+to AppKit (`npm run test:accessibility-info:bridge`: text, priority level and one post for each announcement, the three announcements of
+one frame in the order they were made). Real operating-system settings, the mobile servers (they
 report `-1` today), a graphical CI run and text scale are not certified.
 
 ### Device services

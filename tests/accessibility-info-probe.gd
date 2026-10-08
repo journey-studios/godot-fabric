@@ -584,7 +584,9 @@ func run_validation_application() -> void:
 # Application A's announcements and the focus. The recorder is the AccessibilityServer: it records every call the announcer
 # makes and runs the update itself when one is asked for, so a step is a number of frames and an exact list of calls. In
 # one frame an announcement is published (a new element: create, value, live, inside an update) and in the next the element is
-# freed (outside any update), which takes one more update to remove it from the tree.
+# freed (outside any update), which takes one more update to remove it from the tree. Announcements of one frame are published
+# one per update, in the order they were asked for, a frame apart (AccessKit posts the elements of one update in an order of its
+# own).
 func run_announcements() -> void:
   var basic: Dictionary = await step("A", "announce-basic", [say("announce/say", "Saved"), wait(3)])
   var basic_ops := ops_of(basic)
@@ -600,28 +602,31 @@ func run_announcements() -> void:
   var priority_ops := ops_of(priorities).slice(seen)
   seen += priority_ops.size()
   normative(["priority/high", "priority/default", "priority/unknown", "priority/null"].all(func(label: String) -> bool: return returned(priorities, label))
-    and priority_ops == ["update.begin", "create 2", "value 2 Alert", "live 2 assertive", "create 3", "value 3 Plain", "live 3 polite",
-      "create 4", "value 4 Odd", "live 4 polite", "create 5", "value 5 Null", "live 5 polite", "update.end", "free 2", "free 3", "free 4", "free 5",
-      "update.begin", "update.end"] and tally(priorities) == [5, 5, 5, 0, 0] and updates_of(priorities) == [4, 4]
+    and priority_ops == ["update.begin", "create 2", "value 2 Alert", "live 2 assertive", "update.end", "free 2",
+      "update.begin", "create 3", "value 3 Plain", "live 3 polite", "update.end", "free 3",
+      "update.begin", "create 4", "value 4 Odd", "live 4 polite", "update.end", "free 4",
+      "update.begin", "create 5", "value 5 Null", "live 5 polite", "update.end", "free 5", "update.begin", "update.end"]
+    and tally(priorities) == [5, 5, 5, 0, 0] and updates_of(priorities) == [7, 7]
     and announced(priorities).get("lastText") == "Null" and announced(priorities).get("lastPriority") == "polite",
-    "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one frame is one update for all four")
+    "priority/High is assertive; default, a priority iOS ignores, null options and queue: false are polite; one announcement per update, in the order asked")
 
   var twice: Dictionary = await step("A", "announce-twice", [say("again/first", "Saved"), wait(3), say("again/second", "Saved"), wait(3)])
   var twice_ops := ops_of(twice).slice(seen)
   seen += twice_ops.size()
   normative(twice_ops == ["update.begin", "create 6", "value 6 Saved", "live 6 polite", "update.end", "free 6", "update.begin", "update.end",
       "update.begin", "create 7", "value 7 Saved", "live 7 polite", "update.end", "free 7", "update.begin", "update.end"]
-    and tally(twice) == [7, 7, 7, 0, 0] and updates_of(twice) == [8, 8],
+    and tally(twice) == [7, 7, 7, 0, 0] and updates_of(twice) == [11, 11],
     "again/The same text said twice is two elements, never a value set again on the first one (a value equal to the one before does not speak)")
 
   var batch: Dictionary = await step("A", "announce-batch", [say("batch/one", "One"), say("batch/two", "Two"),
     direct("batch/three", "announceForAccessibility", ["Three"]), wait(3)])
   var batch_ops := ops_of(batch).slice(seen)
   seen += batch_ops.size()
-  normative(returned(batch, "batch/three") and batch_ops == ["update.begin", "create 8", "value 8 One", "live 8 polite", "create 9", "value 9 Two",
-      "live 9 polite", "create 10", "value 10 Three", "live 10 polite", "update.end", "free 8", "free 9", "free 10", "update.begin", "update.end"]
-    and tally(batch) == [10, 10, 10, 0, 0] and updates_of(batch) == [10, 10],
-    "batch/Announcements of one frame, public or direct, share one update in the order they were made")
+  normative(returned(batch, "batch/three") and batch_ops == ["update.begin", "create 8", "value 8 One", "live 8 polite", "update.end", "free 8",
+      "update.begin", "create 9", "value 9 Two", "live 9 polite", "update.end", "free 9",
+      "update.begin", "create 10", "value 10 Three", "live 10 polite", "update.end", "free 10", "update.begin", "update.end"]
+    and tally(batch) == [10, 10, 10, 0, 0] and updates_of(batch) == [15, 15],
+    "batch/Announcements of one frame, public or direct, are published one per update, in the order they were made")
 
   var odd: Dictionary = await step("A", "announce-empty", [say("odd/empty", ""), say("odd/unicode", "Salvo ✓ ação 日本"), wait(3)])
   var odd_ops := ops_of(odd).slice(seen)
@@ -657,27 +662,27 @@ func run_announcements() -> void:
   var silent: Dictionary = await step("A", "announce-no-reader", [recorder({"available": false}), say("silent/plain", "Silent"),
     say_with("silent/high", "Silent high", {"priority": "high"}), wait(3), recorder({}), wait(3)])
   normative(returned(silent, "silent/plain") and returned(silent, "silent/high") and tally(silent) == [14, 11, 11, 0, 0] and dropped(silent) == [2, 1, 0, 0]
-    and ops_of(silent).slice(seen).is_empty() and updates_of(silent) == [12, 12] and announced(silent).get("lastText") == "Silent high"
+    and ops_of(silent).slice(seen).is_empty() and updates_of(silent) == [17, 17] and announced(silent).get("lastText") == "Silent high"
     and announced(silent).get("lastPriority") == "assertive",
     "no-reader/With no screen reader the call returns without error, the announcement is dropped and counted, and it is not spoken when one turns on")
 
   var leaves: Dictionary = await step("A", "announce-reader-leaves", [recorder({"delivers": false}), say("leaves/waiting", "Waiting"),
     recorder({"available": false, "delivers": false}), wait(3), recorder({}), wait(3)])
   normative(returned(leaves, "leaves/waiting") and tally(leaves) == [15, 11, 11, 0, 0] and dropped(leaves) == [3, 1, 0, 0] and ops_of(leaves).slice(seen).is_empty()
-    and updates_of(leaves) == [12, 12],
+    and updates_of(leaves) == [17, 17],
     "reader-leaves/An announcement waiting for the update is dropped when the screen reader goes away, and is not published when it comes back")
 
   var expires: Dictionary = await step("A", "announce-expires", [recorder({"delivers": false}), say("expire/unheard", "Unheard"), wait(130),
     recorder({}), wait(3)])
   normative(returned(expires, "expire/unheard") and tally(expires) == [16, 11, 11, 0, 0] and dropped(expires) == [3, 1, 1, 0]
-    and ops_of(expires).slice(seen).is_empty() and updates_of(expires) == [132, 12],
+    and ops_of(expires).slice(seen).is_empty() and updates_of(expires) == [137, 17],
     "expires/An update that never comes (a screen reader not looking at this window) expires the announcement after 120 pumps: asked for 120 times, never published")
 
   var missing: Dictionary = await step("A", "announce-no-element", [recorder({"element": false}), say("element/none", "No element"), wait(3), recorder({})])
   var missing_ops := ops_of(missing).slice(seen)
   seen += missing_ops.size()
   normative(returned(missing, "element/none") and missing_ops == ["update.begin", "update.end"] and tally(missing) == [17, 11, 11, 0, 0]
-    and dropped(missing) == [4, 1, 1, 0] and updates_of(missing) == [133, 13],
+    and dropped(missing) == [4, 1, 1, 0] and updates_of(missing) == [138, 18],
     "element/When the application has no element to put it in, the update finds nothing to create and the announcement is dropped")
 
 func run_stop() -> void:
@@ -710,7 +715,7 @@ func run_stop() -> void:
   check(disposed.all(func(label: String) -> bool: return threw(stopped, label, "E_MODULE_DISPOSED")),
     "stop/A retained module throws E_MODULE_DISPOSED synchronously after stop, for all twelve methods and the public announcement")
   normative(returned(stopped, "stop/pending") and announced(stopped).get("stopped") == true and tally(stopped) == [18, 11, 11, 0, 0]
-    and dropped(stopped) == [4, 1, 1, 1] and ops_of(stopped) == before_ops and updates_of(stopped) == [133, 13],
+    and dropped(stopped) == [4, 1, 1, 1] and ops_of(stopped) == before_ops and updates_of(stopped) == [138, 18],
     "stop/Stop drops the announcement that was waiting for an update, counts it, and nothing is made, set or freed after it")
   check(stopped.commands[stopped.commands.size() - 3].result.removable == true,
     "stop/RN's own JS-only subscription still works after stop and hears nothing")

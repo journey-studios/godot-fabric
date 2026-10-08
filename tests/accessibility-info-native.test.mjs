@@ -81,11 +81,16 @@ const stateOf = (report, app, step, label) => report.stages[app][step].calls.fin
 const eventRows = (report, app, step) => report.stages[app][step].events.filter(event => !event.cleanup);
 
 test("RN's own AccessibilityInfo runs over the host's accessibility settings and events in two applications", async () => {
-  const unit = spawnSync(path.join(root, ".deps/build/accessibility_info_core_test"), [], {encoding: "utf8", timeout: 20000});
+  // The two pure cores, each in its own executable: the settings' and the announcements'.
+  const units = [["accessibility_info_core_test", /ACCESSIBILITY_INFO_CORE_PASSED/],
+    ["accessibility_announcement_core_test", /ACCESSIBILITY_ANNOUNCEMENT_CORE_PASSED/]].map(([name, passed]) =>
+    ({passed, run: spawnSync(path.join(root, ".deps/build", name), [], {encoding: "utf8", timeout: 20000})}));
   if (sabotage === null && !allowOriginalNegative) {
-    assert.equal(unit.error, undefined);
-    assert.equal(unit.status, 0, unit.stdout + unit.stderr);
-    assert.match(unit.stdout, /ACCESSIBILITY_INFO_CORE_PASSED/);
+    for (const {passed, run} of units) {
+      assert.equal(run.error, undefined);
+      assert.equal(run.status, 0, run.stdout + run.stderr);
+      assert.match(run.stdout, passed);
+    }
   }
   const hostSha256 = digest(await readFile(host));
   if (allowOriginalNegative) {

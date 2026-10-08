@@ -1,6 +1,6 @@
 #pragma once
 
-#include "accessibility_info_core.h"
+#include "accessibility_announcement_core.h"
 #include <folly/dynamic.h>
 #include <cstdint>
 #include <functional>

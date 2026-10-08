@@ -24,9 +24,11 @@ import assert from "node:assert/strict";
 //    is assertive and every other priority, "low" aside, is polite. iOS's queue option and "low" priority have no AccessKit
 //    equivalent and are refused. With no screen reader (headless, or the recorder says so) the call returns and the
 //    announcement is dropped, never kept for a screen reader that turns on later. The element is made inside an accessibility
-//    update, the update is asked for by the frame's pump, and the element is freed outside the next update. The recorder is the
-//    AccessibilityServer: it runs the update itself and records every call, so the model below is a state machine over frames
-//    whose recorded calls are compared one by one.
+//    update, the update is asked for by the frame's pump, and the element is freed outside the next update. An update holds one
+//    announcement, in the order they were asked for, because AccessKit posts the elements of one update in an order of its own
+//    (measured) and iOS, with no queue, lets the last announcement asked for interrupt the rest: the announcements of one frame
+//    wait for the updates after the first, a frame apart. The recorder is the AccessibilityServer: it runs the update itself and
+//    records every call, so the model below is a state machine over frames whose recorded calls are compared one by one.
 // display is the DisplayServer method of Godot 4.7.2 that is the setting's reading (extension_api.json lists each as an int
 // with no arguments); it is this list's, not the host's, that the host's names are held to.
 const settings = [
@@ -136,11 +138,13 @@ class Announcements {
     }
     return "returned";
   }
-  // The update the engine would run: a new element for each announcement waiting, with its value and live mode.
+  // The update the engine would run: a new element, with its value and live mode, for the first announcement waiting. One that has
+  // no element to be put in is dropped and does not take the update from the next.
   update() {
     this.record("update.begin");
     this.updates += 1;
-    for (const {text, live} of this.pending.splice(0)) {
+    while (this.pending.length > 0) {
+      const {text, live} = this.pending.shift();
       if (!this.setting("element")) {
         this.dropped.noScreenReader += 1;
         continue;
@@ -151,6 +155,7 @@ class Announcements {
       this.record("live", handle, live);
       this.held.push(handle);
       this.published += 1;
+      break;
     }
     this.record("update.end");
   }
@@ -670,11 +675,16 @@ function announcementCoverage(report, a) {
     assert.ok(count >= 1, "an announcement dropped for " + reason);
   }
   assert.ok(final.refused.queue >= 1 && final.refused.priority >= 1 && final.published >= 5 && a.announcements.stopped, "every outcome happens");
-  // Several announcements of one frame share the update, the same text is said twice, and a handle is never reused.
+  // Announcements of one frame are published one per update, in order, the same text is said twice, and a handle is never reused.
   const creates = final.recorded.filter(entry => entry.op === "create").map(entry => entry.handle);
   assert.equal(new Set(creates).size, creates.length, "no element is made twice with the same handle");
-  assert.ok(final.recorded.some((entry, index) => entry.op === "create" && final.recorded[index + 3]?.op === "create"), "an update with several elements");
+  let inUpdate = 0;
+  for (const entry of final.recorded) {
+    inUpdate = entry.op === "update.begin" ? 0 : inUpdate + (entry.op === "create" ? 1 : 0);
+    assert.ok(inUpdate <= 1, "an update holds at most one announcement");
+  }
   const values = final.recorded.filter(entry => entry.op === "value").map(entry => entry.text);
+  assert.ok(values.join("|").includes("One|Two|Three"), "three announcements of one frame come out in the order they were made");
   assert.ok(values.some((text, index) => values.indexOf(text) !== index), "the same text is announced twice");
 }
 
@@ -722,8 +732,8 @@ export function verifyAccessibilityInfoReport(report) {
 
 // The graphical lane (accessibility-announcements-bridge): what AccessKit asked AppKit to post for each announcement, re-derived
 // from the rules (priority high is the high level, 90, and every other accepted priority the medium level, 50; each announcement
-// is one post on the window; an empty text, queue: true and priority low post nothing). Throws on any difference. The batch of
-// one frame is judged as a set: the order AccessKit posts it in is measured and reported, not assumed.
+// is one post on the window; an empty text, queue: true and priority low post nothing). Throws on any difference. The three
+// announcements of one frame are posted in the order they were made, because each is published in an update of its own.
 export function verifyAnnouncementsBridgeReport(report) {
   const level = priority => (priority === "high" ? 90 : 50);
   const post = (text, priority) => [text, level(priority), "GodotWindow"];
@@ -733,8 +743,8 @@ export function verifyAnnouncementsBridgeReport(report) {
   assert.deepEqual(steps.high, [post("Alert", "high")], "priority high is the high level");
   assert.deepEqual(steps.plain, [post("Plain", "default")], "priority default is the medium level");
   assert.deepEqual(steps.odd, [post("Odd", "urgent")], "a priority iOS ignores is the medium level");
-  assert.deepEqual([...steps.batch].sort(), [post("First"), post("Second"), post("Third", "high")].sort(), "three announcements of a frame are three posts");
-  assert.deepEqual(report.stages.batchOrder.slice().sort(), ["First", "Second", "Third"], "the order measured is of the same three");
+  assert.deepEqual(steps.batch, [post("First"), post("Second"), post("Third", "high")], "three announcements of a frame are three posts, in the order made");
+  assert.deepEqual(report.stages.batchOrder, ["First", "Second", "Third"], "the order AccessKit posted them in");
   assert.deepEqual(steps.silent, [], "an empty text, queue: true and priority low post nothing");
   assert.deepEqual(report.stages.afterStop.late, [], "nothing is posted after stop");
   const posted = [steps.saved, steps.again, steps.high, steps.plain, steps.odd, steps.batch].reduce((total, rows) => total + rows.length, 0);

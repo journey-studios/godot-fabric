@@ -192,6 +192,8 @@ add_executable(websocket_handshake_test websocket_handshake_test.cpp)
 add_executable(device_services_core_test device_services_core_test.cpp)
 # The pure AccessibilityInfo core (readings, change rules, names and error codes) needs neither Godot nor RN.
 add_executable(accessibility_info_core_test accessibility_info_core_test.cpp)
+# The pure announcement core (when an announcement is kept, published, dropped or refused, and what it asks of the platform).
+add_executable(accessibility_announcement_core_test accessibility_announcement_core_test.cpp)
 target_include_directories(timer_registry_test PRIVATE "${RN}")
 
 # Pin the same upstream wslay implementation used by Godot, without building or
@@ -247,7 +249,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test performance_metrics_test affine_transform_test http_core_test image_core_test image_cache_test image_network_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test accessibility_info_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test performance_metrics_test affine_transform_test http_core_test image_core_test image_cache_test image_network_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test accessibility_info_core_test accessibility_announcement_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

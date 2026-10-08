@@ -179,7 +179,8 @@ The headless engine and Godot's mobile servers report that they do not know any 
 every getter rejects there; the evidence supplies values through the validation meta. Real operating-system
 settings are read by Godot on macOS and are not certified by the suite, and the screen reader is VoiceOver
 alone. A change is seen at the next frame. That VoiceOver spoke an announcement is not proven (the graphical lane
-proves what AccessKit posts), and AccessKit posts the announcements of one frame in an order of its own. Queueing,
+proves what AccessKit posts), and the announcements of one frame are published one per update, a frame apart, so that they keep
+the order they were asked for. Queueing,
 low priority, programmatic focus, text scale, the announcement of a View's live region and the mobile bridges are
 open. See the [research](../../docs/research/accessibility-info.md) and the
 [announcements note](../../docs/research/accessibility-announcements.md).

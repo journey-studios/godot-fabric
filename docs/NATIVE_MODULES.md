@@ -108,10 +108,10 @@ struct that the validation meta `validation_accessibility_settings` can replace 
 throws `E_UNSUPPORTED` with the reason (Godot has one focus, so moving the screen reader's would blur the keyboard's), and so does a
 `focus` event of the `UIManager`; its accessibility events of any other type are ignored and counted by type.
 `announceForAccessibility` and `announceForAccessibilityWithOptions` are spoken through AccessKit: the `Announcer`
-(`native/accessibility_info_core.h`, pure) keeps each announcement until the accessibility update that
-`FabricApplication` receives as `NOTIFICATION_ACCESSIBILITY_UPDATE` and publishes it there as a new static text element under the
+(`native/accessibility_announcement_core.h`, pure, with a core test of its own) keeps each announcement until the accessibility update
+that `FabricApplication` receives as `NOTIFICATION_ACCESSIBILITY_UPDATE` and publishes it there as a new static text element under the
 application's own element, with the text as its value and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`), then frees it
-outside the update after it; `queue: true` and `priority: 'low'` throw `E_UNSUPPORTED`, an option of the wrong type `E_ARGUMENT`, and
+outside the update after it, one announcement per update in the order they were asked for; `queue: true` and `priority: 'low'` throw `E_UNSUPPORTED`, an option of the wrong type `E_ARGUMENT`, and
 with no screen reader (or an application with no element) the call returns and the announcement is dropped and counted, never kept
 for a screen reader that turns on later. The engine's `AccessibilityServer` is called by name through
 `native/accessibility_announcer.{h,cpp}`, whose names are asked of the ClassDB, and a validation run replaces it by a recorder with the

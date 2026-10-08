@@ -42,6 +42,8 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
 const table = "native/accessibility_info_core.h";
+// The announcements' pure core, where the four sabotages of the announcements are made.
+const announcements = "native/accessibility_announcement_core.h";
 const variants = [
   {name: "unknown-as-false", argument: "--sabotage=unknown-as-false", hostDirectory: "build/accessibility-info-sabotage-unknown-as-false-host",
     file: table, find: "  if (raw == 0) {\n    return Reading::Off;\n  }\n  return Reading::Unknown;\n", replace: "  return Reading::Off;\n"},
@@ -59,17 +61,17 @@ const variants = [
     file: table, find: "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n",
     replace: "        \"reduce_animation\", \"accessibility_should_reduce_animations\"},\n"},
   {name: "announce-name", argument: "--sabotage=announce-name", hostDirectory: "build/accessibility-info-sabotage-announce-name-host",
-    file: table, find: "inline constexpr TextProperty announcement_text = TextProperty::Value;\n",
+    file: announcements, find: "inline constexpr TextProperty announcement_text = TextProperty::Value;\n",
     replace: "inline constexpr TextProperty announcement_text = TextProperty::Name;\n"},
   {name: "swapped-priorities", argument: "--sabotage=swapped-priorities", hostDirectory: "build/accessibility-info-sabotage-swapped-priorities-host",
-    file: table,
+    file: announcements,
     find: "  if (priority == \"high\") {\n    return Live::Assertive;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Polite;\n",
     replace: "  if (priority == \"high\") {\n    return Live::Polite;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Assertive;\n"},
   {name: "ungated-announce", argument: "--sabotage=ungated-announce", hostDirectory: "build/accessibility-info-sabotage-ungated-announce-host",
-    file: table, find: "  bool available() const { return port_.available && port_.available(); }\n",
+    file: announcements, find: "  bool available() const { return port_.available && port_.available(); }\n",
     replace: "  bool available() const { return true; }\n"},
   {name: "reused-element", argument: "--sabotage=reused-element", hostDirectory: "build/accessibility-info-sabotage-reused-element-host",
-    file: table, find: "      const uint64_t handle = port_.create ? port_.create() : 0;\n      if (handle == 0) {\n",
+    file: announcements, find: "      const uint64_t handle = port_.create ? port_.create() : 0;\n      if (handle == 0) {\n",
     replace: "      static uint64_t reused = 0;\n      if (reused == 0) {\n        reused = port_.create ? port_.create() : 0;\n      }\n      const uint64_t handle = reused;\n      if (handle == 0) {\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");

@@ -238,11 +238,9 @@ func announce_stages() -> void:
   say_with("a/third", "Third", {"priority": "high"})
   var batch := await posts_after("batch", 3)
   steps.batch = batch
-  var texts := batch.map(func(row: Array) -> Variant: return row[0])
-  texts.sort()
-  check(texts == ["First", "Second", "Third"] and batch.filter(func(row: Array) -> bool: return row[1] == HIGH).map(func(row: Array) -> Variant: return row[0]) == ["Third"],
-    "post/Three announcements of one frame are three posts, each with its own priority level", true)
-  # What AccessKit's adapter did with the order is measured, not assumed: it is in the report.
+  check(batch == [["First", MEDIUM, WINDOW], ["Second", MEDIUM, WINDOW], ["Third", HIGH, WINDOW]],
+    "post/Three announcements of one frame are three posts in the order they were made, each with its own priority level: one per update", true)
+  # The order AccessKit's adapter posted them in, for the report (the elements of one update came out in an order of their own).
   stages.batchOrder = batch.map(func(row: Array) -> Variant: return row[0])
   say("a/empty", "")
   say_with("a/queue", "Queued", {"queue": true})

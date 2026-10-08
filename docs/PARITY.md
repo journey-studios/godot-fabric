@@ -89,7 +89,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   modes, Godot has one focus) and `announcementFinished` never fires. A headless probe in two applications with an
   independent oracle (the recorder replaces the `AccessibilityServer`), the preceding host as the control and eight retained
   sabotages, and a local graphical macOS lane that proves what AccessKit posts to AppKit (text, priority level, one post each;
-  not that VoiceOver spoke, and the order of one frame's announcements is AccessKit's); its hosted CI run is pending.
+  not that VoiceOver spoke; the announcements of one frame are published one per update so that the posts keep the order they were asked for); its hosted CI run is pending.
 - **Input:** the original [PanResponder](evidence/pan-responder/README.md) (128 checks
   in four flag lanes), the [shared touches](evidence/shared-touches/README.md) (92)
   that let the roots of one application share RN's single responder, and the

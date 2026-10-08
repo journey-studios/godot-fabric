@@ -315,7 +315,7 @@ metas that stand in for the system and for the `AccessibilityServer` (a recorder
 reports nothing there: 69 checks replayed by an independent oracle. The preceding host fails exactly its 15 normative checks,
 and eight host sabotages are rejected. `npm run test:accessibility-info:bridge` (local, graphical macOS, no permission)
 interposes the call AccessKit makes to AppKit and proves it posts each announcement with its text and priority level (12 checks;
-that VoiceOver spoke is not proven, and AccessKit posts the announcements of one frame in an order of its own). Real
+that VoiceOver spoke is not proven; the announcements of one frame are published one per update and posted in the order they were made). Real
 operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
 [Evidence](docs/evidence/accessibility-info/README.md) (settings), [research](docs/research/accessibility-info.md) and
 [announcements](docs/research/accessibility-announcements.md).
