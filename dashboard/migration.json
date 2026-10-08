@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "WebSocket: CI 5/5; integração da main em validação. Próximo: Modal."
   },
-  "updatedAt": "2026-10-07T16:57:03.264Z",
+  "updatedAt": "2026-10-08T00:43:16.000Z",
   "source": {
     "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
     "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
@@ -5233,6 +5233,13 @@
       ],
       "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+    },
+    {
+      "id": "agent-board-parallel-20261008",
+      "at": "2026-10-08T00:43:16.000Z",
+      "taskIds": [],
+      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
     }
   ]
 }
