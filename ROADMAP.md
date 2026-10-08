@@ -574,6 +574,18 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
+provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
+the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the
+laboratory's SDK path (the scene injects the facade), and its HUD is minimal public TSX. Ten
+cycles of new game, scenery reload and menu end every time with the same nodes, orphans,
+bindings, subscriptions and connections and a strictly rising epoch, and four retained
+sabotages are rejected. The services gained `frontier.open_menu`, so they register 14 bindings.
+The [record](https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md)
+is local macOS arm64 evidence, with synthetic presses and a HUD that is not the playable one;
+the hosted CI run and the Pages publication are pending. The `autoridade` criterion of V05-03
+remains open, and no 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-04: the twelve names the HUD imports are decided in
 [`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
 props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
