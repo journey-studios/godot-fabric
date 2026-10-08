@@ -56,19 +56,19 @@ const variants = [
   {name: "skew-sign", argument: "--sabotage=skew-sign", file: layout, native: true,
     find: "constexpr float ITALIC_SKEW = 0.25f;", replace: "constexpr float ITALIC_SKEW = -0.25f;"},
   {name: "facade-dotted", argument: "--sabotage=facade-dotted", file: facade,
-    find: 'name === "textDecorationStyle" && value !== "solid"',
-    replace: 'name === "textDecorationStyle" && value !== "solid" && value !== "dotted"'},
+    find: '["textDecorationStyle", { values: ["solid"], hint: "only solid" }],',
+    replace: '["textDecorationStyle", { values: ["solid", "dotted"], hint: "only solid" }],'},
   {name: "ellipsis-run", argument: "--sabotage=ellipsis-run", file: layout, native: true,
     find: "  paint(ts->shaped_text_get_ellipsis_glyphs(line.rid), -1, true);",
     replace: "  run = 0;\n  paint(ts->shaped_text_get_ellipsis_glyphs(line.rid), -1, true);"},
   {name: "guard", argument: "--sabotage=guard", file: layout, native: true,
     find: "  if (a.fontStyle == rn::FontStyle::Oblique) {\n" +
-      '    throw std::runtime_error("Godot Text does not implement style fontStyle oblique: use normal or italic");\n' +
+      '    throw std::runtime_error("Godot Text does not implement style fontStyle " + rn::toString(*a.fontStyle) +\n' +
+      '        ": use normal or italic");\n' +
       "  }\n" +
       "  if (a.textDecorationStyle.has_value() && *a.textDecorationStyle != rn::TextDecorationStyle::Solid) {\n" +
-      '    static const char *const names[] = {"solid", "double", "dotted", "dashed", "wavy"};\n' +
-      '    throw std::runtime_error(std::string("Godot Text does not implement style textDecorationStyle ") +\n' +
-      '        names[static_cast<int>(*a.textDecorationStyle)] + ": only solid");\n' +
+      '    throw std::runtime_error("Godot Text does not implement style textDecorationStyle " +\n' +
+      '        rn::toString(*a.textDecorationStyle) + ": only solid");\n' +
       "  }\n",
     replace: "  (void)a;\n"},
 ];

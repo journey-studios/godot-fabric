@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/text_server_manager.hpp>
 #include <godot_cpp/variant/transform2d.hpp>
+#include <react/renderer/attributedstring/conversions.h>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -172,14 +173,15 @@ TextRun make_run(int start, int end, const rn::TextAttributes &a, const Ref<Font
 }
 // The facade rejects these before they reach the host. A paragraph built without it (RN's NativeText imported
 // directly) must not get a silent substitute either: oblique would be drawn upright and a dotted or wavy line solid.
+// The value is named by RN's own toString, with the words of the facade's errors.
 void refuse_unsupported_style(const rn::TextAttributes &a) {
   if (a.fontStyle == rn::FontStyle::Oblique) {
-    throw std::runtime_error("Godot Text does not implement style fontStyle oblique: use normal or italic");
+    throw std::runtime_error("Godot Text does not implement style fontStyle " + rn::toString(*a.fontStyle) +
+        ": use normal or italic");
   }
   if (a.textDecorationStyle.has_value() && *a.textDecorationStyle != rn::TextDecorationStyle::Solid) {
-    static const char *const names[] = {"solid", "double", "dotted", "dashed", "wavy"};
-    throw std::runtime_error(std::string("Godot Text does not implement style textDecorationStyle ") +
-        names[static_cast<int>(*a.textDecorationStyle)] + ": only solid");
+    throw std::runtime_error("Godot Text does not implement style textDecorationStyle " +
+        rn::toString(*a.textDecorationStyle) + ": only solid");
   }
 }
 }
