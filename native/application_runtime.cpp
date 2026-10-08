@@ -23,6 +23,7 @@
 #include "activity_indicator_view.h"
 #include "app_lifecycle.h"
 #include "image_view.h"
+#include "image_effects.h"
 #include "image_loader.h"
 #include "image_loader_module.h"
 #include "godot_image_manager.h"
@@ -2569,6 +2570,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["nativeModules"] = native_modules->snapshot();
     result["networking"] = networking->snapshot();
     result["images"] = images->snapshot();
+    result["imageEffects"] = fabric_godot::PictureLayer::counters();
     result["deviceServices"] = device_services ? device_services->snapshot() : folly::dynamic::object("installed", false);
     result["accessibilityInfo"] = accessibility_info ? accessibility_info->snapshot() : folly::dynamic::object("installed", false);
     result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);

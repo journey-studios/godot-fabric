@@ -6,9 +6,14 @@ import { AppRegistry, Image, ImageBackground, PixelRatio, Pressable, StyleSheet,
 // chooses by the pixel ratio), a PNG and an SVG as data: URIs, an ImageBackground under its children and a picture that does
 // not exist, which fails through onError. A row of network pictures comes from a small server the scene starts on loopback (its
 // address is the root's baseUrl): a PNG downloaded over HTTP, the same address and size mounted again on a click, which the host
-// answers from memory without a second request, and an address the server answers 404 for, whose status reaches onError.
+// answers from memory without a second request, and an address the server answers 404 for, whose status reaches onError. Four
+// tiles show what is done to a picture: an icon tinted by tintColor beside the same icon, a landscape blurred by blurRadius, a
+// card stretched with capInsets beside the same card without them, and two avatars clipped by borderRadius, one with a border.
 const logo = require("./assets/logo.png");
 const landscape = require("./assets/landscape.png");
+const icon = require("./assets/icon.png");
+const avatar = require("./assets/avatar.png");
+const panel = require("./assets/panel.png");
 const sprite = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAArUlEQVR42u2XvRGAIAxGrdzA1t4ZHMwlXcBVbLRFj/z6ATkP7tIJ7xE1hGHowziObby4aAYuJpIueu6TKmAiVjAl0gT+SQIFd0mg4WaJEvBUwrX7eVkfQQGk58QsULtHCbBZ4N49WiArEVqgyt/QBbpATkD66qXIzWeLESXgkaDmipUQIcHBVeeBdkELXHUYabLgrYSQnuANoKJoV1QFHqIpDdGWh7iYhLma/XbcImEsh21OnggAAAAASUVORK5CYII=";
 const badge = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
   '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
@@ -80,6 +85,10 @@ function ImagesExample({ baseUrl }) {
   const [backgroundStatus, backgroundHandlers] = useLoading("background");
   const [missingStatus, missingHandlers] = useLoading("missing");
   const [previewStatus, previewHandlers] = useLoading("preview");
+  const [tintStatus, tintHandlers] = useLoading("tint");
+  const [blurStatus, blurHandlers] = useLoading("blur");
+  const [capsStatus, capsHandlers] = useLoading("caps");
+  const [avatarStatus, avatarHandlers] = useLoading("avatar");
   const [photoStatus, photoHandlers] = useLoading("net-photo", { network: true });
   const [againStatus, againHandlers] = useLoading("net-again", { network: true });
   const [netMissingStatus, netMissingHandlers] = useLoading("net-missing", { network: true });
@@ -115,6 +124,12 @@ function ImagesExample({ baseUrl }) {
           <Tile id="missing" title="Missing file" caption="onError, then onLoadEnd" status={missingStatus}>
             <Image testID="images-missing" source={{ uri: "res://examples/images/assets/missing.png", width: 84, height: 84 }} style={styles.missing} {...missingHandlers} />
           </Tile>
+          <Tile id="tint" title="tintColor" caption="a template: the pixels take the color" status={tintStatus}>
+            <View style={styles.pair}>
+              <Image testID="images-tint-plain" source={icon} style={styles.icon} />
+              <Image testID="images-tint" source={icon} tintColor="#f97316" style={styles.icon} {...tintHandlers} />
+            </View>
+          </Tile>
         </View>
         <View style={styles.grid}>
           <Tile id="net-photo" title="Network PNG" caption="over HTTP" status={photoStatus}>
@@ -129,6 +144,21 @@ function ImagesExample({ baseUrl }) {
           </Tile>
           <Tile id="net-missing" title="HTTP error" caption="404 reaches onError" status={netMissingStatus}>
             <Image testID="images-net-missing" source={{ uri: `${baseUrl}/pictures/missing.png` }} style={styles.netMissing} {...netMissingHandlers} />
+          </Tile>
+          <Tile id="blur" title="blurRadius" caption="8 points, blurred on a worker" status={blurStatus}>
+            <Image testID="images-blur" source={landscape} blurRadius={8} resizeMode="cover" style={styles.modeImage} {...blurHandlers} />
+          </Tile>
+          <Tile id="caps" title="capInsets" caption="corners and border keep their size" status={capsStatus}>
+            <View style={styles.stack}>
+              <Image testID="images-caps" source={panel} capInsets={{ top: 10, left: 10, bottom: 10, right: 10 }} resizeMode="stretch" style={styles.panel} {...capsHandlers} />
+              <Image testID="images-caps-plain" source={panel} resizeMode="stretch" style={styles.panel} />
+            </View>
+          </Tile>
+          <Tile id="avatar" title="borderRadius" caption="clipped, and one with a border" status={avatarStatus}>
+            <View style={styles.pair}>
+              <Image testID="images-avatar" source={avatar} style={styles.avatar} {...avatarHandlers} />
+              <Image testID="images-avatar-border" source={avatar} style={[styles.avatar, styles.avatarBorder]} />
+            </View>
           </Tile>
         </View>
         <View style={styles.footer}>
@@ -175,6 +205,12 @@ const styles = StyleSheet.create({
   overlay: { margin: 4, paddingHorizontal: 6, color: "#ffffff", fontFamily: "NotoSans", fontSize: 12, lineHeight: 16, backgroundColor: "#00000099" },
   missing: { width: 84, height: 84, backgroundColor: "#450a0a", borderWidth: 1, borderColor: "#ef4444" },
   netImage: { width: 96, height: 64, backgroundColor: "#1e293b" },
+  pair: { flexDirection: "row", gap: 8 },
+  stack: { gap: 6 },
+  icon: { width: 32, height: 32 },
+  panel: { width: 96, height: 38 },
+  avatar: { width: 44, height: 44, borderRadius: 22 },
+  avatarBorder: { borderWidth: 3, borderColor: "#38bdf8", borderRadius: 14 },
   netMissing: { width: 96, height: 64, backgroundColor: "#450a0a", borderWidth: 1, borderColor: "#ef4444" },
   footer: { flexDirection: "row", alignItems: "center", gap: 14 },
   previewStage: { padding: 6, backgroundColor: "#111c33", borderRadius: 10 },

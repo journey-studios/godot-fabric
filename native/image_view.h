@@ -1,4 +1,5 @@
 #pragma once
+#include "image_effects.h"
 #include "image_geometry.h"
 #include "image_loader.h"
 #include <folly/dynamic.h>
@@ -9,6 +10,7 @@
 #include <deque>
 #include <functional>
 #include <memory>
+#include <optional>
 
 namespace fabric_godot {
 // Runs a function with the committed event emitter of the view when the application still takes events for it. The
@@ -17,10 +19,12 @@ using ImageEmitter = std::function<void(const std::function<void(const facebook:
 }  // namespace fabric_godot
 
 // RN's Image on a Godot Panel, as RCTImageComponentView is a view around a UIImageView: the host paints the View
-// appearance (background and border), and the picture is drawn over it in the content frame with the resize mode's
-// UIViewContentMode. The view subscribes to the ImageRequest that RN's ImageShadowNode keeps in its state, swapping the
-// subscription when the state changes, and tells JS what the request reports, in the order and with the payloads of the
-// iOS component: onLoadStart when the source changes, then onProgress, then onLoad and onLoadEnd, or onError and onLoadEnd.
+// appearance (background and border), and the picture is drawn over it, on a canvas item of its own (image_effects.h), in the content
+// frame with the resize mode's UIViewContentMode. It is tinted by tintColor, stretched or tiled by capInsets and clipped to the
+// view's rounded corners, as the iOS component does, and a blurRadius is part of the request, so that the worker blurs the bitmap.
+// The view subscribes to the ImageRequest that RN's ImageShadowNode keeps in its state, swapping the subscription when the state
+// changes, and tells JS what the request reports, in the order and with the payloads of the iOS component: onLoadStart when the
+// source changes, then onProgress, then onLoad and onLoadEnd, or onError and onLoadEnd.
 class GodotImage final : public godot::Panel {
   GDCLASS(GodotImage, godot::Panel)
  public:
@@ -44,6 +48,8 @@ class GodotImage final : public godot::Panel {
   void emitted(folly::dynamic event);
   void emit(const std::function<void(const facebook::react::ImageEventEmitter &)> &call);
   fabric_godot::image::Size natural_size() const;
+  std::optional<fabric_godot::image::Painting> painting() const;
+  folly::dynamic props_json() const;
 
   fabric_godot::ImageEmitter emitter_;
   std::shared_ptr<const facebook::react::ImageShadowNode::ConcreteState> state_;
@@ -51,6 +57,15 @@ class GodotImage final : public godot::Panel {
   std::shared_ptr<fabric_godot::LoadedImage> image_;
   fabric_godot::image::ResizeMode mode_{fabric_godot::image::ResizeMode::Stretch};
   facebook::react::Rect content_{};
+  // What the committed props ask of the picture beyond placing it (RCTImageComponentView, RCTViewComponentView).
+  fabric_godot::image::Size frame_{};
+  std::optional<fabric_godot::image::Rgba> tint_;
+  fabric_godot::image::Edges cap_insets_{}, border_widths_{};
+  fabric_godot::image::Corners border_radii_{};
+  double blur_radius_{};
+  bool clips_{};
+  folly::dynamic ignored_ = nullptr;
+  fabric_godot::PictureLayer layer_;
   std::string status_{"idle"}, error_;
   std::deque<folly::dynamic> emitted_;
   int states_{}, load_starts_{}, progresses_{}, loads_{}, errors_{}, load_ends_{}, draws_{};
