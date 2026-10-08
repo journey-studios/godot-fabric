@@ -212,6 +212,18 @@ jobs:
             build/text-original-current.log
             build/text-original-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:text-style
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-text-style
+          path: |
+            build/text-style-report.json
+            build/text-style-current-report.json
+            build/text-style-comparison.json
+            build/text-style-current.log
+            build/text-style-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:networking
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

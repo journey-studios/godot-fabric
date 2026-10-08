@@ -6,7 +6,12 @@ plan and from the implementer's test report. It applies the user-supplied
 thermo-nuclear review criteria: simpler ownership, original RN behavior,
 explicit boundaries and independent executed evidence.
 
-## Current independent review: source `3bf129c`
+The local ScrollView/Images run below used source `3bf129c` and host `fa9bcca`
+before Text #67 (`b82fbdd`) was integrated. That run is historical for the
+combined tree. Text #67 is integrated; a fresh combined native build and runtime replay are
+pending in final-head CI, with no new local combined run claimed. GF-14 remains at 30/156 with all four checkpoints false.
+
+## Historical local review before Text #67: source `3bf129c`
 
 The implementation passes the local structural review at
 `3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba`. The public wrapper replaces 259
@@ -39,9 +44,11 @@ is explicitly recorded after execution, without recapturing images. The
 earlier `18d3478` wrapper-label discrepancy remains documented rather than
 rewriting its receipt.
 
-Final published-head CI and CodeRabbit remain pending. This local review
-does not accept GF-14's full contract, physical mobile or refresh-rate parity.
-The dashboard remains 30/156 with all four GF-14 checkpoints false.
+No Contracts run started for published `d35808a`, because Text #67 had made
+the PR conflicting. CI and review of the combined merge remain pending. This
+historical local review does not accept GF-14's full contract, physical mobile
+or refresh-rate parity. The dashboard remains 30/156 with all four GF-14
+checkpoints false.
 
 ## Historical Performance integration: source `18d3478`
 

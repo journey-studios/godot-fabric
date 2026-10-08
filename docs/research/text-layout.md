@@ -239,8 +239,9 @@ and no check depends on it:
   pointer pipeline.
 - Font loading and fallback (V2-D24 and the asset pipeline).
 - Bidi, emoji and grapheme clusters, which need a deterministic bundled font.
-- `textDecoration` and `fontStyle`, head and middle ellipsis, font scaling and
-  `adjustsFontSizeToFit`, inline views.
+- Head and middle ellipsis, font scaling and `adjustsFontSizeToFit`, inline
+  views. (`textDecoration` and `fontStyle` were done by the third slice of GF-11:
+  [text-style](text-style.md).)
 - A reference measurement on an iOS simulator and an Android emulator.
 - Weights other than 400 for `capHeight` and `xHeight`: the host reads the
   outline of the variation; the oracle reads the default instance.

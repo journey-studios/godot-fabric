@@ -1,0 +1,900 @@
+{
+  "format": "godot-fabric.text-style-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "7819302a7513363e15437bff70bf982ab2a2ce9f",
+  "executedTreeSha": "b45838297ea9f977516817708f1dd6b744d3ed65",
+  "implementationCommits": [
+    {
+      "sha": "bc1df3b8d2abc47bad8acccec7272718d97521e5",
+      "subject": "feat(text): Paint italic and decorated text in the native paragraph"
+    },
+    {
+      "sha": "7819302a7513363e15437bff70bf982ab2a2ce9f",
+      "subject": "ref(text): Validate text style values from one table"
+    }
+  ],
+  "baseMainCommit": "0f2cc7e7b87af4826c76bf7490637c282cab77cd",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file outside the ignored build/, addons/, .deps/ and node_modules/, when every command below ran; the evidence files were added afterwards and are not inputs",
+  "previousSdkCommit": "0f2cc7e7b87af4826c76bf7490637c282cab77cd",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (examples and captures only)"
+    ]
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The text-style step and the native-text-style artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below are the pins of the probe bundle's receipt and equal the blobs of the implementation commit. They certify what was bundled and read, not the native binary another machine compiles: the host hashes are those of the binaries built on this machine."
+  },
+  "nativeCode": {
+    "changed": true,
+    "file": "native/paragraph_layout.cpp",
+    "header": "native/paragraph_layout.h",
+    "change": "synthetic italic (a FontVariation transform of 0.25), painted_glyphs as the one source of what a row paints, decoration_segments() feeding draw and snapshot, the guards for fontStyle oblique and a non-solid textDecorationStyle in ParagraphLayout::prepare, and the ellipsis taking the run of the last glyph before it",
+    "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+    "previousHostSha256": "5e4306a848d7ac2e121ebeaa060b851aaad60073cff2f97fbcc19a1d28bc364b",
+    "previousHost": "the fabric_godot.dylib that main's build (0f2cc7e sources) produced before the slice, kept in build/text-style-previous-host/ and installed in addons/ by scripts/text-style-sabotage.mjs only for the two controls on it"
+  },
+  "productProbe": {
+    "command": "npm run test:text-style",
+    "suite": "1/1 subtests passed",
+    "application": "one Hermes application with two roots (41 static paragraphs, the rejected styles) and one root per bypass case",
+    "checks": 61,
+    "checksByGroup": {
+      "mount": 2,
+      "italic": 5,
+      "measure": 2,
+      "decoration": 8,
+      "inheritance": 1,
+      "opacity": 1,
+      "rows": 5,
+      "ellipsis": 3,
+      "negative": 20,
+      "bypass": 5,
+      "stop": 8,
+      "report": 1
+    },
+    "normativeChecks": 20,
+    "hostChecks": 27,
+    "checksThatHoldOnAnySdk": 14,
+    "allCurrentAssertionsPassed": true,
+    "marker": [
+      "TEXT_STYLE_PASSED: 61"
+    ],
+    "rounds": [
+      {
+        "label": "1",
+        "exit": 0,
+        "elapsedMs": 5008,
+        "marker": "TEXT_STYLE_PASSED: 61",
+        "checks": 61,
+        "failed": 0,
+        "suite": "# pass 1 | # fail 0",
+        "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "09c49dfa36eeaf90a4be9712556ba3fe8b4ac0362e8c7f447131542402a428b4"
+      },
+      {
+        "label": "2",
+        "exit": 0,
+        "elapsedMs": 4811,
+        "marker": "TEXT_STYLE_PASSED: 61",
+        "checks": 61,
+        "failed": 0,
+        "suite": "# pass 1 | # fail 0",
+        "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "3a197cf4b89542958cf87b7f37e8420eae0fea3cccf3ba55e79832b754ee510f"
+      },
+      {
+        "label": "3",
+        "exit": 0,
+        "elapsedMs": 4796,
+        "marker": "TEXT_STYLE_PASSED: 61",
+        "checks": 61,
+        "failed": 0,
+        "suite": "# pass 1 | # fail 0",
+        "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "ec492c9907d42fb7cb618c4cb4bfdd9a9d5d49207207e589a1dc33b0aeb1f98a"
+      }
+    ],
+    "loadedRound": {
+      "label": "loaded",
+      "exit": 0,
+      "elapsedMs": 12143,
+      "marker": "TEXT_STYLE_PASSED: 61",
+      "checks": 61,
+      "failed": 0,
+      "suite": "# pass 1 | # fail 0",
+      "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+      "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+      "rawReportSha256": "acc1e96db2cde1d262b3f5bc9be29f8dcc602fea3a0b85769c01688863217fa7",
+      "busyLoops": 22,
+      "cores": 11
+    },
+    "oracle": {
+      "sections": [
+        "mount",
+        "runs",
+        "italic",
+        "measure",
+        "decorations",
+        "inheritance",
+        "ellipsis",
+        "negative",
+        "bypass",
+        "stop"
+      ],
+      "readsSdkSource": false,
+      "readsFontTables": [
+        "head",
+        "hhea",
+        "post",
+        "OS/2"
+      ],
+      "recomputesFromRawReport": true,
+      "checkedWithEveryProbeCheckMarkedPassed": true,
+      "staticParagraphsChecked": 41,
+      "rejectedStylesWordForWord": 18,
+      "bypassRefusalsWordForWord": 5
+    },
+    "hostSha256": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+    "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+    "bundleInputs": 395,
+    "originalModules": {
+      "Libraries/Text/Text.js": true,
+      "Libraries/Text/TextNativeComponent.js": true,
+      "Libraries/Text/TextAncestorContext.js": true,
+      "Libraries/Components/View/View.js": true,
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": true,
+      "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": true
+    },
+    "comparisonSha256": "aa4b15e000010fb44a27f08ed6072a0bb93c5038577304826e44a9303c205ca1",
+    "fontTables": {
+      "NotoSans": {
+        "unitsPerEm": 1000,
+        "hheaAscender": 1069,
+        "hheaDescender": -293,
+        "postUnderlinePosition": -100,
+        "postUnderlineThickness": 50,
+        "os2CapHeight": 714,
+        "fileSha256": "bfb7bb691513f12e734dc346c03a03f784912432d7e3fa8e56efcf906fe86b3d"
+      },
+      "JetBrainsMono": {
+        "unitsPerEm": 1000,
+        "hheaAscender": 1020,
+        "hheaDescender": -300,
+        "postUnderlinePosition": -155,
+        "postUnderlineThickness": 50,
+        "os2CapHeight": 730,
+        "fileSha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda"
+      }
+    },
+    "decorationsAgainstOracle": [
+      {
+        "paragraph": "underline",
+        "family": "NotoSans",
+        "size": 16,
+        "kind": "underline",
+        "color": "f8fafcff",
+        "baseline": 18,
+        "observedY": 20,
+        "expectedY": 20,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 128.797
+      },
+      {
+        "paragraph": "strike",
+        "family": "NotoSans",
+        "size": 16,
+        "kind": "line-through",
+        "color": "f8fafcff",
+        "baseline": 18,
+        "observedY": 11.5,
+        "expectedY": 11.5,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 128.797
+      },
+      {
+        "paragraph": "both",
+        "family": "NotoSans",
+        "size": 16,
+        "kind": "underline",
+        "color": "f8fafcff",
+        "baseline": 18,
+        "observedY": 20,
+        "expectedY": 20,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 128.797
+      },
+      {
+        "paragraph": "both",
+        "family": "NotoSans",
+        "size": 16,
+        "kind": "line-through",
+        "color": "f8fafcff",
+        "baseline": 18,
+        "observedY": 11.5,
+        "expectedY": 11.5,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 128.797
+      },
+      {
+        "paragraph": "color",
+        "family": "NotoSans",
+        "size": 16,
+        "kind": "underline",
+        "color": "f97316ff",
+        "baseline": 18,
+        "observedY": 20,
+        "expectedY": 20,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 128.797
+      },
+      {
+        "paragraph": "mono-underline",
+        "family": "JetBrainsMono",
+        "size": 16,
+        "kind": "underline",
+        "color": "f8fafcff",
+        "baseline": 17,
+        "observedY": 19.875,
+        "expectedY": 19.88,
+        "deltaY": -0.005,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 153.5
+      },
+      {
+        "paragraph": "big-underline",
+        "family": "NotoSans",
+        "size": 28,
+        "kind": "underline",
+        "color": "f8fafcff",
+        "baseline": 30,
+        "observedY": 33.5,
+        "expectedY": 33.5,
+        "deltaY": 0,
+        "observedThickness": 1.406,
+        "expectedThickness": 1.4,
+        "x0": 0,
+        "x1": 225
+      },
+      {
+        "paragraph": "small-underline",
+        "family": "NotoSans",
+        "size": 12,
+        "kind": "underline",
+        "color": "f8fafcff",
+        "baseline": 13,
+        "observedY": 14.5,
+        "expectedY": 14.5,
+        "deltaY": 0,
+        "observedThickness": 1,
+        "expectedThickness": 1,
+        "x0": 0,
+        "x1": 96.594
+      }
+    ],
+    "skewMeasuredOnTheOutlineOfI": [
+      {
+        "slanted": "italic",
+        "upright": "base",
+        "glyphHeight": 12,
+        "topShift": 3,
+        "topShiftOverHeight": 0.25,
+        "bottomShift": 0,
+        "advanceSlanted": 5.421875,
+        "advanceUpright": 5.421875
+      },
+      {
+        "slanted": "italic-mono",
+        "upright": "mono",
+        "glyphHeight": 12,
+        "topShift": 3,
+        "topShiftOverHeight": 0.25,
+        "bottomShift": 0,
+        "advanceSlanted": 9.59375,
+        "advanceUpright": 9.59375
+      },
+      {
+        "slanted": "italic-bold",
+        "upright": "bold",
+        "glyphHeight": 12,
+        "topShift": 3,
+        "topShiftOverHeight": 0.25,
+        "bottomShift": 0,
+        "advanceSlanted": 6.21875,
+        "advanceUpright": 6.21875
+      }
+    ]
+  },
+  "formulaDivergence": {
+    "note": "Godot's metrics (the convention of RichTextLabel), against Android's formulas (ReactUnderlineSpan.kt:32 and ReactStrikethroughSpan.kt:37) computed from the same font tables at 16 px; iOS leaves both lines to TextKit and was not measured.",
+    "rows": [
+      {
+        "font": "NotoSans",
+        "size": 16,
+        "underlineHere": 2,
+        "underlineAndroid": 1.8,
+        "strikeHere": -6.5,
+        "strikeAndroid": -5.208
+      },
+      {
+        "font": "JetBrainsMono",
+        "size": 16,
+        "underlineHere": 2.875,
+        "underlineAndroid": 1.8,
+        "strikeHere": -6,
+        "strikeAndroid": -4.76
+      }
+    ]
+  },
+  "controls": {
+    "previous": {
+      "checks": 61,
+      "passed": 14,
+      "failed": 47,
+      "failedByGroup": {
+        "mount": 1,
+        "italic": 5,
+        "measure": 2,
+        "decoration": 8,
+        "inheritance": 1,
+        "opacity": 1,
+        "rows": 5,
+        "ellipsis": 3,
+        "negative": 16,
+        "bypass": 5
+      },
+      "bundleSha256": "072c5fc54cd6c86b7c01fad988ff8faff9658c59593aaddeae05fea1283c136d",
+      "bundleInputs": 395,
+      "hostSha256": "5e4306a848d7ac2e121ebeaa060b851aaad60073cff2f97fbcc19a1d28bc364b",
+      "oracleRejectedSections": [
+        "mount",
+        "runs",
+        "italic",
+        "measure",
+        "decorations",
+        "inheritance",
+        "ellipsis",
+        "negative",
+        "bypass"
+      ],
+      "oracleRejection": {
+        "mount": "Expected values to be strictly deep-equal: + actual - expected + [ + { + case: 'normal', + message: 'Godot Text does not implement style fontStyle' + }, + { + case: 'italic', + message: 'Godot Text does not implement style fontStyle' + }, + { + case: 'italic-mono', + message: 'Godot Text does not im",
+        "runs": "base: run 0 style + actual - expected [ 16, 400, 'NotoSans', 'f8fafcff', + undefined, + undefined, + undefined, + undefined - 'normal', - false, - 'none', - 'f8fafcff' ] ",
+        "italic": "base: the run's font has an I",
+        "measure": "normal is mounted as a paragraph",
+        "decorations": "base: the host reports what it paints and the lines it draws",
+        "inheritance": "inherit is mounted as a paragraph",
+        "ellipsis": "truncated is mounted as a paragraph",
+        "negative": "oblique fails with Godot Text does not implement style fontStyle oblique: use normal or italic, not Godot Text does not implement style fontStyle",
+        "bypass": "oblique: the host refuses it"
+      },
+      "command": "node tests/text-style-native.test.mjs --previous (host installed by scripts/text-style-sabotage.mjs)",
+      "sdk": "src/ of main 0f2cc7e, extracted from git into build/text-style-previous-sdk/ and bundled by bundleNativeProbe with platformRoot",
+      "facadeSha256": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+      "sdkSourceSha256": {
+        "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+        "src/base-view-config.js": "df216df6b5d2705ffe9077715a0ce71823224f8a559b7ad9d18f43a3b7606350"
+      },
+      "failedEqualsNormativeAndHost": true,
+      "marker": [
+        "TEXT_STYLE_PREVIOUS_NEGATIVE: 47"
+      ],
+      "rawReportSha256": "fd6cb97016d19cfa4b1620ec819bfebabb283ed5d33142f84e8765c0b6637c27"
+    },
+    "previousHost": {
+      "checks": 61,
+      "passed": 34,
+      "failed": 27,
+      "failedByGroup": {
+        "italic": 5,
+        "decoration": 7,
+        "inheritance": 1,
+        "opacity": 1,
+        "rows": 5,
+        "ellipsis": 3,
+        "bypass": 5
+      },
+      "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+      "bundleInputs": 395,
+      "hostSha256": "5e4306a848d7ac2e121ebeaa060b851aaad60073cff2f97fbcc19a1d28bc364b",
+      "oracleRejectedSections": [
+        "runs",
+        "italic",
+        "decorations",
+        "inheritance",
+        "ellipsis",
+        "bypass"
+      ],
+      "oracleRejection": {
+        "runs": "base: run 0 style + actual - expected [ 16, 400, 'NotoSans', 'f8fafcff', + undefined, + undefined, + undefined, + undefined - 'normal', - false, - 'none', - 'f8fafcff' ] ",
+        "italic": "base: the run's font has an I",
+        "decorations": "base: the host reports what it paints and the lines it draws",
+        "inheritance": "inherit: none cancels, line-through replaces, a color alone recolors + actual - expected + [] - [ - [ - 0, - 'underline', - '22c55eff' - ], - [ - 2, - 'underline', - '22c55eff' - ], - [ - 3, - 'line-through', - '22c55eff' - ], - [ - 4, - 'underline', - '22c55eff' - ], - [ - 5, - 'underline', - 'f973",
+        "ellipsis": "Cannot read properties of undefined (reading 'filter')",
+        "bypass": "oblique: the host refuses it"
+      },
+      "command": "node tests/text-style-native.test.mjs --previous-host (host installed by scripts/text-style-sabotage.mjs)",
+      "sdk": "this slice's SDK, the very bundle of the product probe",
+      "sameBundleAsProductProbe": true,
+      "failedEqualsHostChecks": true,
+      "silentOnAllBypassCases": true,
+      "marker": [
+        "TEXT_STYLE_PREVIOUS_HOST_NEGATIVE: 27"
+      ],
+      "rawReportSha256": "23cbdf0b46eb4e25b8e64afea28ae89e60fa42b2809c52703b4247f12b753c3e"
+    },
+    "sabotages": [
+      {
+        "name": "decoration-above",
+        "command": "node tests/text-style-native.test.mjs --sabotage=decoration-above",
+        "file": "native/paragraph_layout.cpp",
+        "find": "add(false, line.y + run.font->get_underline_position(run.size));",
+        "replace": "add(false, line.y - run.font->get_underline_position(run.size));",
+        "sabotagedSourceSha256": "0ce86a32014906cdeefb989c1da009ed21f44d91e00a1fa3aa28ad4e073f71ba",
+        "hostSha256": "197f7d6695521369493193876e6ffaf2eaebd00b8a12b6264f105e3e286bbab8",
+        "checks": 61,
+        "failed": 1,
+        "failedByGroup": {
+          "decoration": 1
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 1",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "decorations",
+        "oracleRejectedSections": [
+          "decorations"
+        ],
+        "oracleRejection": {
+          "decorations": "underline: line 0 is on the right side of the baseline"
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "7055f572fe9b6ae53e894f263fa262e9a7715822c93ee41095c2fd16e903d663"
+      },
+      {
+        "name": "color-ignored",
+        "command": "node tests/text-style-native.test.mjs --sabotage=color-ignored",
+        "file": "native/paragraph_layout.cpp",
+        "find": "auto decoration = a.textDecorationColor ? color(a.textDecorationColor) : ink;",
+        "replace": "auto decoration = ink;",
+        "sabotagedSourceSha256": "7a50d7372a1783ae94a8ed0b1db4a7b4a74e0e61543db649d0aa4278cdb5e057",
+        "hostSha256": "036ce0b45cc4eaf31124895c780aa1bb33430b924cc2c6574604553098ff13af",
+        "checks": 61,
+        "failed": 5,
+        "failedByGroup": {
+          "decoration": 2,
+          "inheritance": 1,
+          "opacity": 1,
+          "ellipsis": 1
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 5",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "decorations",
+        "oracleRejectedSections": [
+          "runs",
+          "decorations",
+          "inheritance"
+        ],
+        "oracleRejection": {
+          "runs": "color: run 0 style + actual - expected ... Skipped lines [ 16, 400, 'NotoSans', 'f8fafcff', ... 'underline', + 'f8fafcff' - 'f97316ff' ] ",
+          "decorations": "color: the lines are the ones its runs ask for, in the colors they ask for + actual - expected [ [ 0, 0, 'underline', + 'f8fafcff' - 'f97316ff' ] ] ",
+          "inheritance": "inherit: none cancels, line-through replaces, a color alone recolors + actual - expected [ [ 0, 'underline', + 'f8fafcff' - '22c55eff' ], [ 2, 'underline', + 'f8fafcff' - '22c55eff' ], [ 3, 'line-through', + 'f8fafcff' - '22c55eff' ], [ 4, 'underline', + 'f8fafcff' - '22c55eff' ], [ 5, 'underline', "
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "35849cb8d8e3fda068a592e5fcf0b4dc89a814b2319314790c434b07f548e411"
+      },
+      {
+        "name": "inherit",
+        "command": "node tests/text-style-native.test.mjs --sabotage=inherit",
+        "file": "src/react-native-platform.jsx",
+        "find": "  return <GodotText {...props} style={flat} />;",
+        "replace": "  const { textDecorationLine, ...inherited } = flat;\n  return <GodotText {...props} style={textDecorationLine === \"none\" ? inherited : flat} />;",
+        "sabotagedSourceSha256": "d53af8a3a49327400973a20736926d588dc2e4b6bb4e22cd5450f3abd12a307b",
+        "checks": 61,
+        "failed": 1,
+        "failedByGroup": {
+          "inheritance": 1
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 1",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "inheritance",
+        "oracleRejectedSections": [
+          "runs",
+          "decorations",
+          "inheritance"
+        ],
+        "oracleRejection": {
+          "runs": "inherit: run 1 style + actual - expected [ 16, 400, 'NotoSans', 'f8fafcff', 'normal', false, + 'underline', - 'none', '22c55eff' ] ",
+          "decorations": "inherit: the lines are the ones its runs ask for, in the colors they ask for + actual - expected ... Skipped lines [ [ 0, 0, 'underline', ... 0, + 1, + 'underline', + '22c55eff' + ], + [ + 0, 2, 'underline', '22c55eff' ], [ ",
+          "inheritance": "inherit: none cancels, line-through replaces, a color alone recolors + actual - expected [ [ 0, 'underline', '22c55eff' ], [ + 1, + 'underline', + '22c55eff' + ], + [ 2, 'underline', '22c55eff' ], [ "
+        },
+        "bundleSha256": "37406b6ce6aa68f4303d6ce89d2f76c5d449994594bdfb6585bc30fe15984bf1",
+        "rawReportSha256": "eeb29603d87fe464003958214f195fdba6bbf87fecc52e7e62431a56a20fbf64"
+      },
+      {
+        "name": "whole-line",
+        "command": "node tests/text-style-native.test.mjs --sabotage=whole-line",
+        "file": "native/paragraph_layout.cpp",
+        "find": "    for (const auto &group : painted_groups(painted_glyphs(line, runs), false)) {\n",
+        "replace": "    for (auto group : painted_groups(painted_glyphs(line, runs), false)) {\n      group.x0 = line.x;\n      group.x1 = line.x + line.width;\n",
+        "sabotagedSourceSha256": "434138df3258156bf8a22d31f22ff5bbe8dcbc2e6a5ff5b78a4a516bddfc4a6b",
+        "hostSha256": "7924402a56de33ca40ed1dd4c6f4378d2056baf03975b4a3caae45572d0fe419",
+        "checks": 61,
+        "failed": 3,
+        "failedByGroup": {
+          "decoration": 1,
+          "ellipsis": 2
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 3",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "decorations",
+        "oracleRejectedSections": [
+          "decorations",
+          "ellipsis"
+        ],
+        "oracleRejection": {
+          "decorations": "underline: line 0 ends where its glyphs do: 129 differs from 128.796875 by more than 0.001",
+          "ellipsis": "truncated: the line ends with the ellipsis: 144 differs from 144.46875 by more than 0.001"
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "2c277cc9b619c30150d95f9740041d852aea8edb0034e77f0914107cbfd77274"
+      },
+      {
+        "name": "skew-sign",
+        "command": "node tests/text-style-native.test.mjs --sabotage=skew-sign",
+        "file": "native/paragraph_layout.cpp",
+        "find": "constexpr float ITALIC_SKEW = 0.25f;",
+        "replace": "constexpr float ITALIC_SKEW = -0.25f;",
+        "sabotagedSourceSha256": "ecff0e5ae274e60b790866dd8cd59802047dd3cbdf50d51599e8ea936ca2439b",
+        "hostSha256": "32ccabe0e2568b3449f3bb2477a47a79a9ef0c1fc6022822b0ab2ab3aac73dd0",
+        "checks": 61,
+        "failed": 2,
+        "failedByGroup": {
+          "italic": 2
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 2",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "italic",
+        "oracleRejectedSections": [
+          "italic"
+        ],
+        "oracleRejection": {
+          "italic": "italic: the top leans to the right by a quarter of the height: -3 differs from 3 by more than 0.1"
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "48cf10a633eaccf3122f327cc29ae3decb8c128137237219a41bb57ce5089bd1"
+      },
+      {
+        "name": "facade-dotted",
+        "command": "node tests/text-style-native.test.mjs --sabotage=facade-dotted",
+        "file": "src/react-native-platform.jsx",
+        "find": "[\"textDecorationStyle\", { values: [\"solid\"], hint: \"only solid\" }],",
+        "replace": "[\"textDecorationStyle\", { values: [\"solid\", \"dotted\"], hint: \"only solid\" }],",
+        "sabotagedSourceSha256": "428f9f206541890beb1ce97b44283df25c8aaf11e8623dd922bda822a75ed3d7",
+        "checks": 61,
+        "failed": 4,
+        "failedByGroup": {
+          "negative": 4
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 4",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "negative",
+        "oracleRejectedSections": [
+          "negative"
+        ],
+        "oracleRejection": {
+          "negative": "style-dotted fails with Godot Text does not implement style textDecorationStyle dotted: only solid, not "
+        },
+        "bundleSha256": "08f6973a2cd50af8dcc5a06246dfea02b30bcdb9157b70be510a9c8481b0cd7d",
+        "rawReportSha256": "2dfb29347d6c1e874d1816ad9edcfda1a6329f229e7105b9dca06d15979d9c77"
+      },
+      {
+        "name": "ellipsis-run",
+        "command": "node tests/text-style-native.test.mjs --sabotage=ellipsis-run",
+        "file": "native/paragraph_layout.cpp",
+        "find": "  paint(ts->shaped_text_get_ellipsis_glyphs(line.rid), -1, true);",
+        "replace": "  run = 0;\n  paint(ts->shaped_text_get_ellipsis_glyphs(line.rid), -1, true);",
+        "sabotagedSourceSha256": "f383a47b520573af82f69d01ddf3d77d3265b8aa9acf0ae7cbe9824a6da0b60b",
+        "hostSha256": "c85967e1dc678eb0ff9ae69af39f6e027b7a6a66816c40101881be05f811a379",
+        "checks": 61,
+        "failed": 2,
+        "failedByGroup": {
+          "ellipsis": 2
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 2",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "ellipsis",
+        "oracleRejectedSections": [
+          "ellipsis"
+        ],
+        "oracleRejection": {
+          "ellipsis": "truncated: the ellipsis takes the run of the red tail, not the run of the first glyph 0 !== 1 "
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "3facdb94656b3d0842d48f0e748d751fec051a06a29e493287558e4d645b94b8"
+      },
+      {
+        "name": "guard",
+        "command": "node tests/text-style-native.test.mjs --sabotage=guard",
+        "file": "native/paragraph_layout.cpp",
+        "find": "  if (a.fontStyle == rn::FontStyle::Oblique) {\n    throw std::runtime_error(\"Godot Text does not implement style fontStyle \" + rn::toString(*a.fontStyle) +\n        \": use normal or italic\");\n  }\n  if (a.textDecorationStyle.has_value() && *a.textDecorationStyle != rn::TextDecorationStyle::Solid) {\n    throw std::runtime_error(\"Godot Text does not implement style textDecorationStyle \" +\n        rn::toString(*a.textDecorationStyle) + \": only solid\");\n  }\n",
+        "replace": "  (void)a;\n",
+        "sabotagedSourceSha256": "38399e446f9f6b6025b7429f9d357a7e278d681372128ab91eadde7badbc06ed",
+        "hostSha256": "bbe314fe6801a45f3ac56118062762c67d0c635c6dbb4b097032a16d0a0a72d0",
+        "checks": 61,
+        "failed": 5,
+        "failedByGroup": {
+          "bypass": 5
+        },
+        "marker": "TEXT_STYLE_SABOTAGE_REJECTED: 5",
+        "runStatus": 0,
+        "sectionTheOracleMustReject": "bypass",
+        "oracleRejectedSections": [
+          "bypass"
+        ],
+        "oracleRejection": {
+          "bypass": "oblique: the host refuses it"
+        },
+        "bundleSha256": "0850aabb14bf6527497173a95f976941e9bf1ef1f15d204a3c82cd470af32911",
+        "rawReportSha256": "f24a218e69ae0f02203b7fe94dca36c97cbf08f38d32b6b63e4b5a904f3c9189"
+      }
+    ],
+    "script": "node scripts/text-style-sabotage.mjs",
+    "scriptElapsed": "about 1 min 52 s (10:56:54Z to 10:58:46Z)",
+    "sourceHashesUnchanged": true,
+    "sourceSha256": {
+      "native/paragraph_layout.cpp": "2b2bb6f8532ef72d701b4c6c1b40aee84656a7a8e92dd045961f207ff2c4f344",
+      "src/react-native-platform.jsx": "947856a03aa80618ab5095db3da89a4c3c39aa94892085bfb2e989da9fee893a"
+    },
+    "hostSha256": {
+      "genuine": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7",
+      "restored": "3dc5a5911aed40bb87577e1099f19d16fe661302acd6e21ea9e7d711edcfb1a7"
+    },
+    "runStatuses": {
+      "previous": 0,
+      "previousHost": 0,
+      "genuineRunAfterwards": 0
+    },
+    "previousHostSha256": "5e4306a848d7ac2e121ebeaa060b851aaad60073cff2f97fbcc19a1d28bc364b"
+  },
+  "regressions": [
+    {
+      "command": "test:text-original",
+      "exit": 0,
+      "elapsedMs": 13599,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "test:text-layout",
+      "exit": 0,
+      "elapsedMs": 4836,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "test:typography",
+      "exit": 0,
+      "elapsedMs": 4695,
+      "printed": [
+        "# tests 4",
+        "# pass 4",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "test:touchables",
+      "exit": 0,
+      "elapsedMs": 11750,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "example typography headless",
+      "exit": 0,
+      "elapsedMs": 8841,
+      "printed": [
+        "Fabric/Godot: 55 acceptance checks passed (headless)."
+      ]
+    },
+    {
+      "command": "example typography capture",
+      "exit": 0,
+      "elapsedMs": 10590,
+      "printed": [
+        "Fabric/Godot: 72 acceptance checks passed (native renderer)."
+      ]
+    },
+    {
+      "command": "test:examples",
+      "exit": 0,
+      "elapsedMs": 185146,
+      "printed": [
+        "Fabric/Godot: 35 acceptance checks passed (headless).",
+        "Fabric/Godot: 19 acceptance checks passed (headless).",
+        "Fabric/Godot: 23 acceptance checks passed (headless).",
+        "Fabric/Godot: 23 acceptance checks passed (headless).",
+        "Fabric/Godot: 89 acceptance checks passed (headless).",
+        "Fabric/Godot: 175 acceptance checks passed (headless).",
+        "Fabric/Godot: 132 acceptance checks passed (headless).",
+        "Fabric/Godot: 631 acceptance checks passed (headless).",
+        "Fabric/Godot: 67 acceptance checks passed (headless).",
+        "Fabric/Godot: 238 acceptance checks passed (headless).",
+        "Fabric/Godot: 309 acceptance checks passed (headless).",
+        "Fabric/Godot: 64 acceptance checks passed (headless).",
+        "Fabric/Godot: 36 acceptance checks passed (headless).",
+        "Fabric/Godot: 39 acceptance checks passed (headless).",
+        "Fabric/Godot: 36 acceptance checks passed (headless).",
+        "Fabric/Godot: 47 acceptance checks passed (headless).",
+        "Fabric/Godot: 45 acceptance checks passed (headless).",
+        "Fabric/Godot: 47 acceptance checks passed (headless).",
+        "Fabric/Godot: 62 acceptance checks passed (headless).",
+        "Fabric/Godot: 34 acceptance checks passed (headless).",
+        "Fabric/Godot: 49 acceptance checks passed (headless).",
+        "Fabric/Godot: 55 acceptance checks passed (headless).",
+        "Fabric/Godot: 12 acceptance checks passed (headless).",
+        "Fabric/Godot: 20 acceptance checks passed (headless).",
+        "Fabric/Godot: 14 acceptance checks passed (headless).",
+        "Fabric/Godot: 18 acceptance checks passed (headless).",
+        "Fabric/Godot: 13 acceptance checks passed (headless).",
+        "Fabric/Godot: 14 acceptance checks passed (headless).",
+        "Fabric/Godot: 14 acceptance checks passed (headless).",
+        "Fabric/Godot: 11 acceptance checks passed (headless).",
+        "Fabric/Godot: 29 acceptance checks passed (headless).",
+        "Fabric/Godot: 22 acceptance checks passed (headless).",
+        "Fabric/Godot: 22 acceptance checks passed (headless).",
+        "Fabric/Godot: 16 acceptance checks passed (headless).",
+        "Fabric/Godot: 10 acceptance checks passed (headless)."
+      ]
+    },
+    {
+      "command": "platform-seams",
+      "exit": 0,
+      "elapsedMs": 10241,
+      "printed": [
+        "# tests 17",
+        "# pass 17",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "test:contracts",
+      "exit": 0,
+      "elapsedMs": 53126,
+      "printed": [
+        "# tests 7",
+        "# pass 7",
+        "# fail 0",
+        "# tests 43",
+        "# pass 43",
+        "# fail 0",
+        "# tests 302",
+        "# pass 302",
+        "# fail 0",
+        "Ran 13 tests in 0.024s"
+      ]
+    },
+    {
+      "command": "test:parity",
+      "exit": 0,
+      "elapsedMs": 2538,
+      "printed": [
+        "# tests 7",
+        "# pass 7",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "type-check",
+      "exit": 0,
+      "elapsedMs": 240,
+      "printed": []
+    },
+    {
+      "command": "check:static",
+      "exit": 0,
+      "elapsedMs": 339,
+      "printed": [
+        "✓ No issues found (0.13s)"
+      ]
+    },
+    {
+      "command": "check:publication",
+      "exit": 0,
+      "printed": [
+        "\"passed\": true, \"files\": 1440, \"failures\": []"
+      ],
+      "note": "run after the evidence files were added, because it scans the documents: it is not one of the inputs of the other commands"
+    }
+  ],
+  "regressionMarkers": {
+    "test:text-original": "TEXT_ORIGINAL_PASSED: 119",
+    "test:text-layout": "TEXT_LAYOUT_PASSED: 76",
+    "test:touchables": "TOUCHABLES_PASSED: 93",
+    "test:touchables animated lane": "TOUCHABLES_ANIMATED_PASSED: 7",
+    "test:examples": {
+      "examples": 35,
+      "typography": 55,
+      "text-layout": 22,
+      "touchables": 13,
+      "pressable": 47
+    },
+    "typography laboratory": {
+      "headless": 55,
+      "renderer": 72
+    }
+  },
+  "executedSourceSha256": {
+    "tests/text-style-fixture.jsx": "47e31153a312d2b14c09fc7127f9f330b654c79e749649161e0a9eb666eff8a7",
+    "tests/text-style-probe.gd": "fcffd5eef59039171636393e001451412193b578dfc17b0fc7c1d6c4dc3d759c",
+    "tests/text-style-native.test.mjs": "0c157f971f26034e113cc263c9a637aabc1208880920ad26aa1c4fcb62c2a482",
+    "tests/text-style-oracle.mjs": "6a13a37ce00309dc78886dd484a6ddd2d1204b46660bebeca864c48cca861603",
+    "scripts/text-style-bundle.mjs": "28670578b33069dda7dd27e669d76b4b825b2c9f2e2fc2832832a558444ee8b9",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "src/react-native-platform.jsx": "947856a03aa80618ab5095db3da89a4c3c39aa94892085bfb2e989da9fee893a",
+    "src/base-view-config.js": "c3f1565770fcef7f7586face406dac8ee8d53203b0a3093daa833d910f934e56",
+    "native/paragraph_layout.h": "f75cf1f1c9d1501f96ed6048a0d2129d47f58e88b6bfaa72071926b9e966c3b0",
+    "native/paragraph_layout.cpp": "2b2bb6f8532ef72d701b4c6c1b40aee84656a7a8e92dd045961f207ff2c4f344",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/application_runtime.cpp": "4cbc5be656e6c558575d0aacc77f5026792b464b3cb237433de190382df575c3",
+    "native/CMakeLists.txt": "dd9c5791329d2abfe34bcfa366adbcbb2bc324b6090d43eec9a75166cdcf6f75",
+    "scripts/text-style-sabotage.mjs": "b1848c84b8026f3f1eedf6a0fe73e4fc430ae0f85fb2ac49e06b5827c4a85189",
+    "tests/platform-seams.test.mjs": "d410fb1983db7e760409b1903c3b7be114c4583e252ba7c69f1ffc736eb24716",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "examples/typography/App.jsx": "e81e472d6071c441850a00293e1c6ac0a8f08219e8d4eb10e105db7d8f252d37",
+    "scripts/typography_validation.gd": "b3131ae8f00f0c1dba85420321136f1b58b11c46c45fe836edb85d521af991cc"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Text/Text.js": "953284065228869852d6c16cebc5cd69fa810f81ed1ce57e4b7d9c746eda154a",
+    "Libraries/Text/TextNativeComponent.js": "3e783f0b9fcf2e2905d4be23449c77970d29de39755b966cdd259b2f671d5740",
+    "Libraries/Text/TextAncestorContext.js": "bf1a2a6b0f76d505b0c447d6f3be8fa827dc07adb22a9f291c142550c442832c",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": "816494cf365fbb7318c274e5406856df41e96426efaad5a74141fc863372331b",
+    "Libraries/StyleSheet/StyleSheetTypes.js": "d1e2863f2ea41fbdefe5336e766b4f1d7ae2f7ec7a8579e2ea6007dd3d3e8207",
+    "Libraries/Components/View/ReactNativeStyleAttributes.js": "b5bb2afd224853bdf2689389b763067de8a25736f51a186ad126d84b9dc2595a",
+    "ReactCommon/react/renderer/components/text/BaseTextProps.cpp": "397f5444ac85de9f0edd13ebf97b832527486d3e8a3e426e57d140de8a48bd9e",
+    "ReactCommon/react/renderer/attributedstring/TextAttributes.cpp": "be96b0f0f07eb03ef65fa70ff66feb1664c0c6b73798a28445abd1fe6a296e8a",
+    "ReactCommon/react/renderer/attributedstring/conversions.h": "5558630dc960c87e4e01f3f1c3b87c290757dcec94061fcca641bea0d5d7586c",
+    "ReactCommon/react/renderer/attributedstring/primitives.h": "6a430aec7b07c862e442fd91d93472754323d4a7df402f14b2aff290d3a9fe63"
+  }
+}

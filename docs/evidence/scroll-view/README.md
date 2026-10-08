@@ -1,5 +1,7 @@
 # ScrollView desktop probe
 
+Current status (2026-10-08): the local evidence below was produced at source `3bf129c` with host `fa9bcca`, before Text #67 (`b82fbdd`) was integrated. It is historical for the combined tree. No combined-tree rebuild, replay or hosted CI has run; hosted CI/review remain pending. GF-14 remains open with all four checkpoints false.
+
 ## Integrated local evidence: source `3bf129c`
 
 The current local replay combines original React Native 0.87.1 ScrollView and

@@ -1,6 +1,6 @@
 # React Native ScrollView on Godot
 
-Evidence status (2026-10-08): the integrated local run at source `3bf129c` verifies the desktop slice against original RN 0.87.1, including a real Modal window-wheel path, lists, click routing, OS contracts, performance and Images integration. See the [curated evidence receipt](../evidence/scroll-view/integration-3bf129c.json). This is not full GF-14 acceptance: 30/156 project checkpoints are complete, all four GF-14 checkpoints remain false, and hosted review is pending. Mobile hardware, refresh-rate behavior and the remaining unsupported ScrollView contract are still open.
+Evidence status (2026-10-08): the local run at source `3bf129c` and host `fa9bcca` verifies the desktop slice against original RN 0.87.1, including a real Modal window-wheel path, lists, click routing, OS contracts, performance and Images integration. See the [curated evidence receipt](../evidence/scroll-view/integration-3bf129c.json). This run predates Text #67 (`b82fbdd`) and is historical for the combined tree; no combined-tree rebuild, replay or hosted CI has run. This is not full GF-14 acceptance: 30/156 project checkpoints are complete and all four GF-14 checkpoints remain false. Mobile hardware, refresh-rate behavior and the remaining unsupported ScrollView contract are still open.
 
 Status: desktop implementation slice under review; no GF-14 checkpoint has
 been accepted. The pinned React Native 0.87.1 `ScrollView` remains the public

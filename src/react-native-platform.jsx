@@ -92,6 +92,21 @@ export const StyleSheet = {
 };
 function nativeStyle(style, kind) {
   const flat = StyleSheet.flatten(style);
+  // The values of the text styles the host paints: a synthetic italic and solid lines under or through the text.
+  // Oblique, the aliases of the native parser ("strikethrough", "underline-strikethrough"), another order, overline
+  // and the other line styles would be drawn as something else, so they fail instead. In the function because
+  // tests/platform-seams.test.mjs runs this function alone.
+  const textStyleValues = new Map([
+    ["fontStyle", { values: ["normal", "italic"], hint: "use normal or italic" }],
+    [
+      "textDecorationLine",
+      {
+        values: ["none", "underline", "line-through", "underline line-through"],
+        hint: "use none, underline, line-through or underline line-through",
+      },
+    ],
+    ["textDecorationStyle", { values: ["solid"], hint: "only solid" }],
+  ]);
   for (const [name, value] of Object.entries(flat)) {
     if (value == null) continue;
     if (
@@ -139,6 +154,10 @@ function nativeStyle(style, kind) {
       ].includes(String(value))
     )
       throw new Error("Godot Text fontWeight must be normal, bold or 100..900");
+    const accepted = textStyleValues.get(name);
+    if (accepted !== undefined && !accepted.values.includes(value)) {
+      throw new Error(`Godot Text does not implement style ${name} ${String(value)}: ${accepted.hint}`);
+    }
   }
   return flat;
 }

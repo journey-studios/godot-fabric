@@ -1,0 +1,61 @@
+{
+  "format": "godot-fabric.text-style-captures/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "7819302a7513363e15437bff70bf982ab2a2ce9f",
+  "platform": "macOS arm64",
+  "displayServer": "native renderer (OpenGL 4.1 Metal, Apple M3 Pro, Compatibility renderer)",
+  "godot": "4.7.2-stable (official, ed1daf0bf)",
+  "exampleValidation": {
+    "command": "node scripts/check.mjs --typography --capture (the same run as npm run example -- typography --capture)",
+    "checks": 72,
+    "allPassed": true,
+    "note": "the example's own validation saves the frames; the checks below read the pixels of the initial frame against what the host reported",
+    "pixelChecks": [
+      "Pixels confirmam que o itálico sintético inclina a tinta para a direita",
+      "Pixels confirmam a linha de textDecorationColor na altura do sublinhado e em nenhuma outra",
+      "Pixels confirmam o tachado no meio da caixa do trecho",
+      "Pixels confirmam o sublinhado do pai e o buraco deixado pelo span que o cancela"
+    ],
+    "headlessChecksOfTheLine": [
+      "Itálico sintético inclina os glifos sem mudar avanço, largura nem quebras",
+      "Sublinhado, tachado e decoração colorida (NativeWind) desenham uma linha por trecho, na cor do texto ou na de textDecorationColor",
+      "Um span com textDecorationLine none cancela o sublinhado do pai e o texto seguinte volta a ser sublinhado"
+    ]
+  },
+  "cropDriver": {
+    "command": "godot --path . --headless --script res://build/crop-line.gd",
+    "source": "crop-line.gd.txt",
+    "sourceSha256": "a35ac3b9d7044d3ac19eb7faf18748ca2df2c33b6bb9d53ab0fe88e3872c17b8",
+    "note": "the driver is not project code: it crops the region (12, 398, 312, 114) of the initial frame and enlarges it by 4 with nearest-neighbour sampling"
+  },
+  "determinism": "node scripts/check.mjs --typography --capture ran twice in a row on the pinned commit and saved the very same bytes for the initial, changed, narrow and clip frames; the crop is a pure function of the initial frame, and a second run of the driver saved the same bytes",
+  "frames": {
+    "initial": {
+      "path": "typography-style-initial.png",
+      "sha256": "4898c0bfabd20beb7476e6bff3cbe35a64584cb1e5ebfb2a14e7c4a5a0b36602",
+      "bytes": 97416,
+      "source": "frame 'initial' of the typography example's own validation",
+      "description": "the laboratory at rest, 900 x 980, with the new rows under the regular and bold Hamburgefonts",
+      "width": 900,
+      "height": 980
+    },
+    "zoom": {
+      "path": "typography-style-zoom.png",
+      "sha256": "7d65a220a7ad5aae4e854dddbdc21d10246a3bb721028e13e93d36087212ceb5",
+      "bytes": 20259,
+      "source": "crop-line.gd.txt over the initial frame",
+      "description": "the new rows enlarged by 4: upright and italic Hamburgefonts, the line of italic, underline, line-through and colored decoration, and the span that cancels its parent's underline",
+      "width": 1248,
+      "height": 456
+    },
+    "narrow": {
+      "path": "typography-style-narrow.png",
+      "sha256": "2ff33f89f73c61af196c9615a4b3b391aaed9cf2fea4f25c9869fdb1b98db1a8",
+      "bytes": 106992,
+      "source": "frame 'narrow' of the typography example's own validation",
+      "description": "the window narrowed to 620 x 1100 after the fonts were changed to the monospaced family and a child was added: the new rows are unchanged",
+      "width": 620,
+      "height": 1100
+    }
+  }
+}

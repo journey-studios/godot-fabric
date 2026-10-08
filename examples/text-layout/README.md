@@ -167,8 +167,9 @@ paragraph presses through RN's original `Text.js`; a nested `Text` that sets any
 or responder prop fails (a handler of the span's own needs hit testing by fragment, while a touch over a span's text
 is the outer paragraph's press). Selection
 (`selectable`), `adjustsFontSizeToFit`, font scaling (accepted and inert), Text
-accessibility, decoration and italics, head/middle ellipsis, inline views, bidi/emoji
-and font fallback are not implemented; the default size is 18, not RN's 14. The text of a truncated last line, empty text, a
+accessibility, head/middle ellipsis, inline views, bidi/emoji
+and font fallback are not implemented (italics and solid text decoration are: see the
+[typography example](../typography/README.md)); the default size is 18, not RN's 14. The text of a truncated last line, empty text, a
 `lineHeight` smaller than the font and lines beyond a fixed height are not part of
 the contract because RN's platforms differ on them. The numbers agree with the
 bundled fonts' tables to one pixel; no iOS or Android reference was measured.
