@@ -99,7 +99,10 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   over RN's C++ Native Animated (75), RN's uniform [scale](evidence/uniform-scale/README.md)
   (29) and [singular transforms](evidence/singular-transforms/README.md) (49) on
   planar Controls, and the [frame clock](evidence/frame-clock/README.md) (37) that
-  paces `requestAnimationFrame` and the native animation like a display link.
+  paces `requestAnimationFrame` and the native animation like a display link. The original
+  [LayoutAnimation](research/layout-animation.md) runs on RN's C++ `LayoutAnimationDriver` on the same ticks:
+  updates, creates and deletes with the linear, easeInEaseOut and spring curves, recomputed frame by frame
+  by an independent oracle, on one root.
 - **Runtime globals:** RN's own web-standard globals, installed by the host's
   initialization and backed by native networking: the original
   [fetch, XMLHttpRequest, FormData, Blob, FileReader and AbortController](evidence/networking/README.md)
@@ -192,9 +195,9 @@ explain the scope.
 | Current public facade classification | Count | Meaning |
 | --- | ---: | --- |
 | Usable component subset | 5 | View, Text, Pressable, ScrollView, TouchableNativeFeedback; none certifies its complete upstream contract |
-| Environment/utility subset | 20 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
+| Environment/utility subset | 21 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, LayoutAnimation, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
 | Exported but unavailable | 14 | TextInput, Image/ImageBackground, Switch, touchables, ActivityIndicator, StatusBar, FlatList, VirtualizedList, KeyboardAvoidingView, PanResponder, useColorScheme throw when used |
-| Missing public export | 58 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
+| Missing public export | 57 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
 
 The inventory assigns **84 exports to 1.0** and **13 experimental/unstable
 exports to post-1.0 review**. These are scope assignments, not promises already

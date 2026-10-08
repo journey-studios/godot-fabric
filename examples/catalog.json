@@ -245,6 +245,13 @@
     "scene": "examples/accessibility-info/scene.tscn"
   },
   {
+    "id": "layout-animation",
+    "title": "Original RN LayoutAnimation on RN's C++ LayoutAnimationDriver, advanced by Godot frames: a spring between a row and a column, and one tile that enters while another leaves",
+    "api": "public",
+    "source": "examples/layout-animation/App.jsx",
+    "scene": "examples/layout-animation/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

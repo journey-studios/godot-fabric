@@ -30,6 +30,7 @@
 #include "frame_clock.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
+#include "layout_animation.h"
 #include "native_animated.h"
 #include "device_services.h"
 #include "accessibility_info.h"
@@ -238,6 +239,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   rn::SharedComponentDescriptorRegistry descriptors;
   // RN's Native Animated backend for this application; null without RN's flags.
   std::unique_ptr<fabric_godot::NativeAnimated> native_animated;
+  // RN's LayoutAnimationDriver on this application's UIManager (layout_animation.h).
+  std::unique_ptr<fabric_godot::LayoutAnimation> layout_animation;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
   GodotEventBeat *beat{};
@@ -573,6 +576,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     });
     descriptors = providers.createComponentDescriptorRegistry({dispatcher, context, nullptr});
     ui->setComponentDescriptorRegistry(descriptors);
+    layout_animation = fabric_godot::LayoutAnimation::attach(ui, descriptors, executor, context);
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(ui->getShadowTreeRevisionConsistencyManager());
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
     rn::UIManagerBinding::createAndInstallIfNeeded(*runtime, ui);
@@ -679,6 +683,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     rn::LayoutContext layout;
     layout.pointScaleFactor = host_metrics->get().scale;
     auto tree = std::make_unique<rn::ShadowTree>(id, constraints, layout, *ui, *context);
+    if (layout_animation) layout_animation->register_surface(*tree);
     surface.started = true;
     if (surface.component.empty()) ui->startEmptySurface(std::move(tree));
     else ui->startSurface(std::move(tree), surface.component, surface.initial_props, rn::DisplayMode::Visible);
@@ -1117,10 +1122,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       runtime->drainMicrotasks();
       // The frame clock decides whether this Godot frame is a tick: the display
       // link RN's frame consumers run on never fires twice within a refresh period.
-      // A consumer is a pending frame callback or a Native Animated backend with an
-      // animation to run. Timers, input and the work queue are not paced by it.
+      // A consumer is a pending frame callback, a Native Animated backend with an
+      // animation to run or a layout animation in flight. Timers, input and the work
+      // queue are not paced by it.
       const double frame_time = now_ms();
-      const bool consumer = !frame_callbacks.empty() || (native_animated && native_animated->active());
+      if (layout_animation) layout_animation->clock(frame_time);
+      const bool consumer = !frame_callbacks.empty() || (native_animated && native_animated->active()) || (layout_animation && layout_animation->active());
       const bool tick = frame_tick && !stopping && frame_clock.frame(frame_time, refresh_rate, pacing, consumer);
       // Snapshot the current tick. Callbacks scheduled by a callback, timer, or
       // React commit are deferred to the next tick, never a tight loop.
@@ -1140,6 +1147,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // backend runs its queued operations, drivers and prop updates.
       if (tick && native_animated && !stopping && !stop_requested) {
         try { native_animated->frame(frame_time); }
+        catch (const std::exception &error) { fail(error.what()); }
+      }
+      // RN's LayoutAnimationDriver animates on the same tick, at the same timestamp: its animationTick()
+      // pulls the in-flight animations' next frame, which reaches uiManagerDidFinishTransaction below.
+      if (tick && layout_animation && !stopping && !stop_requested) {
+        try { layout_animation->tick(frame_time); }
         catch (const std::exception &error) { fail(error.what()); }
       }
       // Bound a frame's work. Timers created by a callback run on a later tick.
@@ -1247,6 +1260,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (root.started) {
         ui->getShadowTreeRegistry().visit(id, [](const rn::ShadowTree &tree) { tree.commitEmptyTree(); });
         ui->stopSurface(id);
+        if (layout_animation) layout_animation->surface_stopped(id);
       }
       pump();
     } catch (const std::exception &error) { fail(error.what()); }
@@ -1297,6 +1311,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     surface_phase_pending = false;
     game_services->stop();
     if (native_animated) native_animated->stop();
+    if (layout_animation) layout_animation->stop();
     // In-flight requests end first: nothing may report to JS from here on.
     networking->stop();
     images->stop();
@@ -2049,6 +2064,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     auto transaction = coordinator->pullTransaction();
     if (!transaction) return;
+    if (layout_animation) layout_animation->pulled(*transaction);
     auto root_entry = roots.find(transaction->getSurfaceId());
     if (root_entry == roots.end() || root_entry->second->stopping) return;
     auto &surface = *root_entry->second;
@@ -2439,6 +2455,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("pacingSource", pacing_source)("frames", static_cast<int64_t>(clock.frames))
         ("ticks", static_cast<int64_t>(clock.ticks))("skippedFrames", static_cast<int64_t>(clock.skipped))
         ("lastFrameMs", clock.last_frame_ms)("lastTickMs", clock.last_tick_ms);
+    result["layoutAnimation"] = layout_animation ? layout_animation->snapshot() : folly::dynamic::object("enabled", false);
     result["hostPhasePending"] = host_phase_pending;
     result["stopRequested"] = stop_requested;
     result["pendingRootRetirements"] = pending_retirements.size();

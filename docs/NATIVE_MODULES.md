@@ -109,6 +109,21 @@ struct that the validation meta `validation_accessibility_settings` can replace 
 `UIManager`'s accessibility events other than `focus` are ignored and counted by type. See the [research
 note](research/accessibility-info.md).
 
+LayoutAnimation adds **no TurboModule**: `LayoutAnimation.configureNext` reaches RN's compiled `nativeFabricUIManager.configureNextLayoutAnimation`,
+which only acts on a `UIManagerAnimationDelegate`. One `LayoutAnimation` (`native/layout_animation.{h,cpp}`) per application installs RN's
+own `LayoutAnimationDriver` (`react/renderer/animations`, compiled into the core) as that delegate, gives it the component descriptor registry,
+hands every `ShadowTree` the host starts its mounting coordinator as the driver's override (`register_surface`, from `start_root`) and counts what
+the driver queues on the application's `RuntimeExecutor` (the success callback of each completed animation and the failure callback of a config RN
+cannot parse; both reach JS through the scheduler's work queue). The driver reads the host's frame time in whole milliseconds, handed over once per
+pump (`clock`), and the frame clock treats an animation in flight (the driver's `LayoutAnimationStatusDelegate` edges, as iOS switches its run loop
+observer) as a frame consumer, so `tick` runs `UIManager::animationTick()` on the same ticks and timestamps as `requestAnimationFrame` and Native
+Animated; the transactions it pulls reach `uiManagerDidFinishTransaction`, which hands each one the driver served back to the module (`pulled`).
+`stop()` detaches the driver and destroys it, with the JS callbacks it holds, before the Hermes runtime; a retained `configureNext` then does nothing.
+`status().layoutAnimation` is the contract: `enabled`, `active`, `stopped`, `started`, `completed`, `callbacksQueued`, `ticks`, `clockReads`,
+`lastClockMs`, `pullsTotal`, `pullsDropped` and `pulls`, a ring of the last 64 transactions the driver served (`sequence`, `godotFrame`, `clockMs`
+as RN read it, `frameMs`, `callbacks`, `active`, and the mutations by type); a host without the module has no such key. See the [research
+note](research/layout-animation.md).
+
 The OS-specific APIs (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetIOS`, `PushNotificationIOS`,
 `StatusBar` and the rest of the [OS-specific contracts](research/os-contracts.md)) add **no native
 module**, and their absence is the contract. RN looks the modules up by name (`ToastAndroid` with

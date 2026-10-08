@@ -325,12 +325,17 @@
     },
     {
       "name": "LayoutAnimation",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-19",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/private-interface.js",
+        "native/layout_animation.cpp",
+        "tests/layout-animation-native.test.mjs",
+        "docs/research/layout-animation.md"
+      ],
+      "note": "RN's original LayoutAnimation over RN's C++ LayoutAnimationDriver, advanced by the host's frame clock: updates (layout), creates and deletes with the linear, easeInEaseOut and spring curves, onAnimationDidEnd by the driver and onAnimationDidFail for a rejected config; the legacy UIManager.configureNextLayoutAnimation and setLayoutAnimationEnabledExperimental. One root at a time; reduced motion, Text and Image state interpolation, keyboard/easeIn/easeOut certificates, background and resume, JS load, a performance budget and mobile exports are not certified."
     },
     {
       "name": "Linking",

@@ -37,6 +37,10 @@ export { default as Animated } from "react-native/Libraries/Animated/Animated";
 export { default as Easing } from "react-native/Libraries/Animated/Easing";
 export { default as useAnimatedValue } from "react-native/Libraries/Animated/useAnimatedValue";
 export { default as useAnimatedValueXY } from "react-native/Libraries/Animated/useAnimatedValueXY";
+// RN's original LayoutAnimation over RN's C++ LayoutAnimationDriver (native/layout_animation.h): configureNext
+// reaches nativeFabricUIManager.configureNextLayoutAnimation, and the driver animates the next commit's
+// mutations on the Godot frame tick.
+export { default as LayoutAnimation } from "react-native/Libraries/LayoutAnimation/LayoutAnimation";
 export * as TurboModuleRegistry from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 export { default as codegenNativeComponent } from "react-native/Libraries/Utilities/codegenNativeComponent";
 export { default as codegenNativeCommands } from "react-native/Libraries/Utilities/codegenNativeCommands";

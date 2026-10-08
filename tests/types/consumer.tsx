@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { AccessibilityInfo, AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
-import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
+import { Animated, Easing, LayoutAnimation, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type LayoutAnimationConfig, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
@@ -304,6 +304,18 @@ Animated.timing(new Animated.Value(0), {toValue: 1, duration: 100});
 Animated.timing(new Animated.Value(0), {toValue: "1", duration: 100, useNativeDriver: true});
 const easing: typeof Easing.linear = Easing.bezier(0.4, 0, 0.2, 1);
 void AnimatedConsumer; void easing;
+
+// RN's original LayoutAnimation keeps its upstream declarations, and the legacy UIManager methods the host adds are typed with them.
+const layoutConfig: LayoutAnimationConfig = LayoutAnimation.create(300, LayoutAnimation.Types.easeInEaseOut, LayoutAnimation.Properties.opacity);
+LayoutAnimation.configureNext(layoutConfig);
+LayoutAnimation.configureNext(LayoutAnimation.Presets.spring, () => {}, () => {});
+LayoutAnimation.spring(() => {});
+UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.configureNextLayoutAnimation(layoutConfig, () => {}, error => { void error; });
+// @ts-expect-error a layout animation config needs its duration
+LayoutAnimation.configureNext({create: {type: "linear"}});
+// @ts-expect-error the type of an animation is one of RN's
+LayoutAnimation.create(300, "bounce");
 
 // TouchableOpacity: Pressability's press props and a Godot View style.
 const touchableProps: TouchableOpacityProps = {activeOpacity: 0.4, delayPressOut: 100, disabled: false, testID: "touchable",

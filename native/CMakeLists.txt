@@ -77,7 +77,9 @@ set(MODULES
   # Scheduler symbols, which the shared AnimationBackend path never calls.
   react/renderer/animated react/renderer/animated/drivers
   react/renderer/animated/event_drivers react/renderer/animated/internal
-  react/renderer/animated/nodes react/renderer/scheduler)
+  react/renderer/animated/nodes react/renderer/scheduler
+  # RN's own LayoutAnimation engine (LayoutAnimationDriver and its keyframe manager).
+  react/renderer/animations)
 set(SOURCES "${RN}/jsi/jsi/jsi.cpp" "${RN}/jsi/jsi/JSIDynamic.cpp"
   "${RN}/react/runtime/TimerManager.cpp"
   "${RN}/runtimeexecutor/platform/cxx/ReactCommon/RuntimeExecutorSyncUIThreadUtils.cpp")
@@ -211,6 +213,8 @@ add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp app
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
 # AccessibilityInfo: the AccessibilityManager module over the DisplayServer's accessibility settings.
 target_sources(fabric_godot PRIVATE accessibility_info.cpp)
+# LayoutAnimation: RN's LayoutAnimationDriver over the application's frame clock.
+target_sources(fabric_godot PRIVATE layout_animation.cpp)
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
 # registered only in this library; the shipped Fabric extension has no probe API.

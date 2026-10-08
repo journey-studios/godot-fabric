@@ -79,6 +79,13 @@ export declare const Easing: typeof RN.Easing;
 export type EasingFunction = RN.EasingFunction;
 export declare const useAnimatedValue: typeof RN.useAnimatedValue;
 export declare const useAnimatedValueXY: typeof RN.useAnimatedValueXY;
+/** RN's original LayoutAnimation, run by RN's own LayoutAnimationDriver on the Godot frame tick: configureNext arms the
+ * next commit, whose updates animate layout (x, y, width, height), creates fade or scale in and deletes fade or scale
+ * out. The driver calls onAnimationDidEnd when the animation ends, and RN's own JS timer (duration + 17 ms) stays the
+ * fallback, so it is called once whichever comes first. A config the driver cannot parse calls onAnimationDidFail.
+ * One root at a time; reduced motion is not read. */
+export declare const LayoutAnimation: typeof RN.LayoutAnimation;
+export type LayoutAnimationConfig = RN.LayoutAnimationConfig;
 export declare const TurboModuleRegistry: typeof RN.TurboModuleRegistry;
 export type TurboModule = RN.TurboModule;
 export type EmitterSubscription = RN.EmitterSubscription;
@@ -117,7 +124,12 @@ export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFo
 };
 export type ViewInstance = NativeInstance;
 export declare const findNodeHandle: typeof RN.findNodeHandle;
-export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureInWindow" | "measureLayout">;
+export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureInWindow" | "measureLayout"> & {
+  /** A no-op, as in RN's New Architecture. */
+  setLayoutAnimationEnabledExperimental(enabled: boolean): void;
+  /** The legacy name of LayoutAnimation.configureNext, delegated to Fabric as RN's BridgelessUIManager does. */
+  configureNextLayoutAnimation(config: RN.LayoutAnimationConfig, callback: () => void, errorCallback: (error: object) => void): void;
+};
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }

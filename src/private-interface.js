@@ -111,6 +111,12 @@ const legacyMethods = {
     if (node && ancestor) NativeDOM.measureLayout(node, ancestor, onFail, onSuccess);
     else onFail?.();
   },
+  // As RN's BridgelessUIManager has them (Libraries/ReactNative/BridgelessUIManager.js): the flag is a no-op in the
+  // New Architecture (RN warns about it only when __DEV__), and the legacy call is the Fabric one.
+  setLayoutAnimationEnabledExperimental() {},
+  configureNextLayoutAnimation(config, callback, errorCallback) {
+    nativeFabricUIManager.configureNextLayoutAnimation(config, callback, errorCallback);
+  },
 };
 export const UIManager = new Proxy(legacyMethods, {
   get(target, name) {
