@@ -48,10 +48,10 @@ third slice: `fontStyle: 'italic'` (a synthetic slant of 0.25, the bundled fonts
 face), `textDecorationLine` (underline, line-through, both, `none`), `textDecorationColor` and a
 solid `textDecorationStyle`, a child replacing its parent field by field, with the ellipsis now
 taking the color of the run before it instead of the first run's. The
-[research](docs/research/text-style.md) records 61 headless checks with an independent oracle that
-recomputes every line from the fonts' tables, the controls of the previous SDK and host (47 and 27
-failures), eight retained sabotages and the typography example's pixel checks (evidence record and
-hosted CI pending); `oblique`, the other line styles and the real italic faces stay open. Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
+[evidence record](docs/evidence/text-style/README.md) and the [research](docs/research/text-style.md) record 61
+headless checks with an independent oracle that recomputes every line from the fonts' tables, the controls of the
+previous SDK and host (47 and 27 failures), eight retained sabotages and the typography example's pixel checks, with
+three captures of the new line (hosted CI pending); `oblique`, the other line styles and the real italic faces stay open. Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
 paragraph's press), selection,
 `adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 

@@ -632,6 +632,7 @@
         "docs/research/text-layout.md",
         "docs/research/text-original.md",
         "docs/research/text-style.md",
+        "docs/evidence/text-style/README.md",
         "docs/evidence/text-original/README.md",
         "docs/evidence/text-layout/README.md",
         "examples/text-layout/App.jsx",

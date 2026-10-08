@@ -6,8 +6,10 @@ the slice (`0f2cc7e`) ran the same fixture and failed exactly **47**; the same b
 alone (nothing slants, draws a line or refuses) failed exactly **27**; eight retained sabotages each
 fail the probe and the independent oracle rejects every one of them in the section meant for it.
 The typography laboratory gained a line of italic, underline, line-through and colored decoration
-and a span that cancels it, with pixel checks in the renderer lane. The evidence record, the hosted
-CI run of the new step and the Pages publication are **pending**.
+and a span that cancels it, with pixel checks in the renderer lane. The
+[evidence record](../evidence/text-style/README.md) pins the implementation commit `7819302`, the
+host and bundle hashes of every lane, the receipts and three captures of the new line. The hosted CI
+run of the new step and the Pages publication are **pending**.
 
 ## What RN does
 
@@ -174,4 +176,5 @@ painting order, with `ellipsis` on the group the ellipsis took.
   reordering splits would get one line per piece. Bidi is outside the slice.
 - An invalid color string in `textDecorationColor` is dropped by `processColor` as it is for `color`:
   the line takes the text color.
-- The hosted run of the new CI step and the Pages publication are pending.
+- The hosted run of the new CI step (`native-text-style`) and the Pages publication are pending; the
+  [evidence record](../evidence/text-style/README.md) is local macOS arm64 only.

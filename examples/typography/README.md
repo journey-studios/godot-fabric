@@ -31,7 +31,7 @@ bidi/accessibility behavior are not certified.
 Distinct rendered colors/variable-font weight, wrapping/truncation, empty and
 trailing lines, line heights, retained child state and balanced native cleanup.
 
-The text style ([research](../../docs/research/text-style.md)) is written with NativeWind
+The text style ([evidence](../../docs/evidence/text-style/README.md), [research](../../docs/research/text-style.md)) is written with NativeWind
 classes (`italic`, `underline`, `line-through`, `decoration-*`) and one style prop
 (`textDecorationLine: "none"` on the span that cancels). Headless, it checks that the italic
 run says italic and synthetic, measures exactly like the upright one, that each decorated run
@@ -54,3 +54,14 @@ These are Godot Viewport readbacks from the [current validation record](../../do
 ![Rich text and variable fonts](../../docs/evidence/public-controls/typography-initial.png)
 
 ![Changed fonts with child state retained](../../docs/evidence/public-controls/typography-changed.png)
+
+### Text style
+
+The italic and decoration rows, from the [text style record](../../docs/evidence/text-style/README.md) (Godot Viewport
+readbacks pinned to its commit, each checked against what the host reported):
+
+![The laboratory at rest with the new rows: upright and italic Hamburgefonts, a line of italic, underline, line-through and colored decoration, and a span that cancels its parent's underline](../../docs/evidence/text-style/typography-style-initial.png)
+
+![The new rows enlarged four times, without smoothing](../../docs/evidence/text-style/typography-style-zoom.png)
+
+![The window narrowed to 620 by 1100 with the monospaced fonts: the new rows are unchanged](../../docs/evidence/text-style/typography-style-narrow.png)
