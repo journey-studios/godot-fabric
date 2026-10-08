@@ -287,6 +287,6 @@
     "Deep links while the application runs exist only through FabricApplication.deliver_url; the engine emits no event.",
     "The suite replaces every backend that could open a URL, touch the real pasteboard or vibrate: those real effects are not exercised. Only the headless clipboard, the silent desktop vibration and the launch argument are exercised against the real Godot backend.",
     "Alert, Share, Settings and BackHandler, mobile deep-link plugins, Windows and Linux are outside this slice.",
-    "This slice is the first of GF-23; it does not complete GF-23 or change roadmap checkpoints."
+    "This slice is the first of GF-23; it does not complete GF-23. Only GF-23's first-slice checkpoint (slice) closes: no whole GF, other checkpoint, weight or denominator closes."
   ]
 }

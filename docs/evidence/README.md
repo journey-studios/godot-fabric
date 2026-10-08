@@ -478,7 +478,7 @@ checks, 16 with the native renderer and 23 with seven captures, all linked from 
 replaced so that nothing opens a real URL or touches the real pasteboard. `canOpenURL` cannot ask which
 handlers are installed, a vibration cannot be cancelled in Godot, a deep link reaches a running application
 only through `FabricApplication.deliver_url`, and Alert, Share, Settings, BackHandler, mobile deep-link plugins
-and real-device behavior are open. Hosted CI is pending; this does not complete GF-23 or add a checkpoint.
+and real-device behavior are open. Hosted CI is pending; this does not complete GF-23: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

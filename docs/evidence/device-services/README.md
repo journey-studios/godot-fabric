@@ -46,8 +46,8 @@ com `npm run example -- device-services` (também `--headless`, `--check` e `--c
 
 > **CI hospedada pendente.** O passo `npm run test:device-services` e o artefato
 > `native-device-services` do workflow `contracts.yml` ainda não rodaram na CI hospedada. Tudo
-> o que esta página registra é evidência local, em macOS arm64. Nenhum GF, checkpoint, peso ou
-> denominador fecha com ela.
+> o que esta página registra é evidência local, em macOS arm64. Só o checkpoint `slice` da primeira
+> fatia do GF-23 fecha com ela; nenhum GF completo, outro checkpoint, peso ou denominador fecha.
 
 ## O que o RN faz
 
@@ -237,4 +237,5 @@ verificados por `tests/types/consumer.tsx`.
   silenciosa do desktop e o argumento de lançamento são exercitados contra o backend real do Godot.
 - `Alert`, `Share`, `Settings` e `BackHandler` (que dependem da decisão pendente V2-D30 e do Modal
   do GF-18), plugins mobile de deep link (GF-34 e GF-35), Windows e Linux seguem abertos. Esta fatia
-  é a primeira do GF-23 e não o completa.
+  é a primeira do GF-23 e não o completa: só o checkpoint `slice` fecha; contrato, paridade e alvos seguem
+  abertos.
