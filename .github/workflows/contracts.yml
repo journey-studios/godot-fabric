@@ -707,6 +707,28 @@ jobs:
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
       - run: npm run test:consumer:libraries
+      - name: Derive the locked official macOS arm64 export template
+        run: |
+          EXPORT_TEMPLATES_URL=$(node -p "require('./dependencies.json').godot.export_templates.url")
+          EXPORT_TEMPLATES_BYTES=$(node -p "require('./dependencies.json').godot.export_templates.bytes")
+          curl --fail --location --retry 2 --max-time 180 --max-filesize "$EXPORT_TEMPLATES_BYTES" "$EXPORT_TEMPLATES_URL" -o .deps/godot-export-templates.tpz
+          python3 scripts/macos-template.py --archive .deps/godot-export-templates.tpz --out .deps/macos-arm64-template.zip > build/macos-template-derivation.json
+      - name: Export, sign and execute the relocated macOS consumer with rejection controls
+        env:
+          MACOS_EXPORT_TEMPLATE: ${{ github.workspace }}/.deps/macos-arm64-template.zip
+        run: npm run test:export:macos
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-macos-export
+          path: |
+            build/macos-template-derivation.json
+            build/macos-export-*/receipt.json
+            build/macos-export-*/*.log
+            build/macos-export-*/runtime-*.json
+            build/macos-export-*/*.png
+            build/macos-export-native-*/report.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - name: Original Codegen adapter in a provisioned independent consumer
         run: |
           ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"

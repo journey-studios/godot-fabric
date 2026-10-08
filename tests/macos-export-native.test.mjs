@@ -1,15 +1,20 @@
 import assert from "node:assert/strict";
+import {createHash, randomUUID} from "node:crypto";
 import {spawnSync} from "node:child_process";
-import {mkdtemp, mkdir, rm, symlink, readFile} from "node:fs/promises";
+import {cp, mkdtemp, mkdir, readdir, rm, symlink, readFile, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {assertLocalLoadPaths} from "../scripts/macos-export.mjs";
+import {assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
+import {createHarness} from "../scripts/consumer-harness.mjs";
+import {verifyAddonNativeInputs} from "../scripts/pack-addon.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const runner = path.join(root, "scripts/macos-export.mjs");
 const checkInventory = JSON.parse(await readFile(path.join(root, "scripts/macos-export-checks.json"), "utf8"));
+const nativeTemplate = process.env.MACOS_EXPORT_TEMPLATE ? path.resolve(process.env.MACOS_EXPORT_TEMPLATE) : null;
+const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 
 function run(args, cwd) {
   return spawnSync(process.execPath, [runner, ...args], {cwd, encoding: "utf8", timeout: 10000, maxBuffer: 1024 * 1024});
@@ -72,4 +77,152 @@ test("load-path validation permits contained loader paths and rejects traversal"
   assert.throws(() => assertLocalLoadPaths(["@rpath/../outside.dylib"], host, app), /unsafe @rpath traversal suffix/);
   assert.throws(() => assertLocalLoadPaths(["@loader_path/../../../../outside.dylib"], host, app), /escapes the \.app/);
   assert.throws(() => assertLocalLoadPaths(["/workspace/developer/libcustom.dylib"], host, app), /unexpected absolute path/);
+});
+
+function appBinaries(app, executableName) {
+  const contents = path.join(app, "Contents");
+  return [
+    {label: "app-executable", path: path.join(contents, "MacOS", executableName)},
+    {label: "host", path: path.join(contents, "Frameworks", "fabric_godot.dylib")},
+  ];
+}
+
+async function copyApp(source, destination) {
+  await cp(source, destination, {recursive: true, verbatimSymlinks: true, errorOnExist: true, force: false});
+}
+
+async function controlHarness(name) {
+  const harness = await createHarness({template: "minimal", name});
+  await mkdir(harness.project, {recursive: true});
+  return harness;
+}
+
+test("native macOS arm64 export and copied-app rejection controls", {
+  skip: nativeTemplate ? false : "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template",
+}, async t => {
+  const startedAt = new Date().toISOString();
+  const token = randomUUID();
+  const outputDirectory = path.join(root, "build", `macos-export-native-positive-${token}`);
+  await mkdir(outputDirectory);
+  const output = path.join(outputDirectory, "Verified.app");
+  const positive = await runMacOSExport({template: nativeTemplate, output});
+  const receipt = positive.receipt;
+  assert.equal(receipt.status, "passed");
+  assert.equal(receipt.published, true);
+  assert.deepEqual(receipt.runtimes.map(item => item.checkCount), [40, 43]);
+  assert.equal(receipt.captures.length, 3);
+  assert.equal(receipt.pack.bundleEmbeddedByteForByte, true);
+  assert.ok(receipt.app.signing.includes("verified"));
+
+  const controlsName = `macos-export-native-controls-${token}`;
+  const controlsDirectory = path.join(root, "build", controlsName);
+  await mkdir(controlsDirectory);
+  const controls = [];
+  const executableName = receipt.app.executableName;
+  const frameworkRelative = path.join("Contents", "Frameworks", "frameworks", "ReactNativeDependencies.framework");
+
+  const idempotentApp = path.join(controlsDirectory, "idempotent-framework-layout.app");
+  await copyApp(output, idempotentApp);
+  const normalization = await normalizeFrameworkPackaging(idempotentApp);
+  for (const framework of normalization.frameworks) {
+    assert.equal(framework.beforeTreeSha256, framework.afterTreeSha256, `${framework.name} changed on repeated normalization`);
+    assert.ok(framework.aliases.every(alias => alias.action === "retained-symlink"), `${framework.name} aliases were not already normalized`);
+    assert.ok(framework.resourceBundles.every(bundle => bundle.action === "retained-symlink"), `${framework.name} resource bundles were not already normalized`);
+  }
+  const idempotentHarness = await controlHarness(`${controlsName}-idempotent`);
+  t.after(() => idempotentHarness.cleanup());
+  await verifySignatures(idempotentHarness, idempotentApp);
+  controls.push({name: "framework-normalization-is-idempotent-and-preserves-signatures", app: idempotentApp,
+    logDirectory: idempotentHarness.directory, normalization});
+
+  const missingFrameworkApp = path.join(controlsDirectory, "missing-rn-dependencies.app");
+  const rnDependenciesBinary = path.join(output, "Contents", "Frameworks", "frameworks",
+    "ReactNativeDependencies.framework", "Versions", "A", "ReactNativeDependencies");
+  const rnDependenciesSha256 = digest(await readFile(rnDependenciesBinary));
+  await copyApp(output, missingFrameworkApp);
+  await rm(path.join(missingFrameworkApp, frameworkRelative), {recursive: true});
+  const missingHarness = await controlHarness(`${controlsName}-missing-framework`);
+  t.after(() => missingHarness.cleanup());
+  let missingReason;
+  await assert.rejects(
+    () => auditAppLoadPaths(missingHarness, missingFrameworkApp, appBinaries(missingFrameworkApp, executableName)),
+    error => { missingReason = error.message; return /ENOENT|no such file/i.test(error.message); },
+  );
+  controls.push({name: "missing-rn-dependencies-framework", app: missingFrameworkApp,
+    logDirectory: missingHarness.directory, rejectedBy: "auditAppLoadPaths",
+    removedBinarySha256: rnDependenciesSha256, reason: missingReason});
+
+  const plistApp = path.join(controlsDirectory, "modified-info-plist.app");
+  await copyApp(output, plistApp);
+  const plistPath = path.join(plistApp, "Contents", "Info.plist");
+  const plistBefore = await readFile(plistPath);
+  const plistText = plistBefore.toString("utf8");
+  assert.match(plistText, /<plist[\s>]/, "exported Info.plist is not XML; harmless whitespace control is unavailable");
+  assert.match(plistText, /<\/plist>\s*$/);
+  const plistAfter = Buffer.concat([plistBefore, Buffer.from("\n")]);
+  assert.notEqual(digest(plistBefore), digest(plistAfter));
+  await writeFile(plistPath, plistAfter);
+  const signatureHarness = await controlHarness(`${controlsName}-signature`);
+  t.after(() => signatureHarness.cleanup());
+  let signatureReason;
+  await assert.rejects(() => verifySignatures(signatureHarness, plistApp),
+    error => { signatureReason = error.message; return true; });
+  const signatureLogNames = await readdir(signatureHarness.directory);
+  for (let index = 0; index <= 8; index++)
+    assert.ok(signatureLogNames.includes(`verify-signature-${index}.log`),
+      `signature control did not reach production verification command ${index}`);
+  controls.push({name: "xml-whitespace-invalidates-signed-info-plist", app: plistApp,
+    logDirectory: signatureHarness.directory, beforeSha256: digest(plistBefore), mutationSha256: digest(plistAfter), rejectedBy: "verifySignatures", reason: signatureReason});
+
+  const rpathApp = path.join(controlsDirectory, "absolute-rpath.app");
+  await copyApp(output, rpathApp);
+  const host = path.join(rpathApp, "Contents", "Frameworks", "fabric_godot.dylib");
+  const rpathHarness = await controlHarness(`${controlsName}-rpath`);
+  t.after(() => rpathHarness.cleanup());
+  await rpathHarness.run("install-absolute-rpath", "/usr/bin/install_name_tool", ["-add_rpath", "/fabric-export-negative", host]);
+  const mutatedHostSha256 = digest(await readFile(host));
+  let rpathReason;
+  await assert.rejects(
+    () => auditAppLoadPaths(rpathHarness, rpathApp, appBinaries(rpathApp, executableName)),
+    error => { rpathReason = error.message; return /unexpected absolute path: \/fabric-export-negative/.test(error.message); },
+  );
+  controls.push({name: "absolute-rpath-rejected", app: rpathApp, mutation: "/usr/bin/install_name_tool -add_rpath /fabric-export-negative",
+    logDirectory: rpathHarness.directory, mutationSha256: mutatedHostSha256,
+    rejectedBy: "auditAppLoadPaths", reason: rpathReason});
+
+  const sourceCopy = path.join(controlsDirectory, "native-source-copy");
+  const sourcePaths = ["native", "scripts/rn-pointer-overlay.mjs", "dependencies.json", ".deps/build/native-sdk-build.json",
+    "addons/fabric_godot.dylib", "addons/frameworks"];
+  for (const relative of sourcePaths) {
+    const source = path.join(root, relative);
+    const destination = path.join(sourceCopy, relative);
+    await mkdir(path.dirname(destination), {recursive: true});
+    await cp(source, destination, {recursive: true, verbatimSymlinks: true, errorOnExist: true, force: false});
+  }
+  const matchingNativeInputs = await verifyAddonNativeInputs({sourceRoot: sourceCopy});
+  const lockPath = path.join(sourceCopy, "dependencies.json");
+  const originalLockBytes = await readFile(lockPath);
+  const staleLock = JSON.parse(originalLockBytes.toString("utf8"));
+  staleLock.godot.version += ".stale-control";
+  const staleLockBytes = Buffer.from(JSON.stringify(staleLock, null, 2) + "\n");
+  await writeFile(lockPath, staleLockBytes);
+  let sourceReason;
+  await assert.rejects(
+    () => verifyAddonNativeInputs({sourceRoot: sourceCopy}),
+    error => { sourceReason = error.message; return error.code === "SDK_HOST_SOURCE_MISMATCH"; },
+  );
+  controls.push({name: "stale-native-source-lock-rejected", sourceCopy, rejectedBy: "verifyAddonNativeInputs",
+    reason: sourceReason, modifiedFile: "dependencies.json", beforeSha256: digest(originalLockBytes),
+    mutationSha256: digest(staleLockBytes)});
+
+  const controlReport = {
+    format: "godot-fabric.macos-export-native-controls/v1",
+    status: "passed", startedAt, completedAt: new Date().toISOString(),
+    positive: {app: output, sdkSourceCommit: receipt.sdk.sourceCommit, harnessDirectory: positive.directory, receiptPath: path.join(positive.directory, "receipt.json"),
+      hostSha256: receipt.app.host.source.sha256, checkCounts: [40, 43], pckSha256: receipt.pack.pckSHA256},
+    controls,
+    nativeSourceControl: {matchingInputsAccepted: true, nativeHashes: matchingNativeInputs.nativeHashes,
+      staleDependenciesRejected: true},
+  };
+  await writeFile(path.join(controlsDirectory, "report.json"), JSON.stringify(controlReport, null, 2) + "\n");
 });

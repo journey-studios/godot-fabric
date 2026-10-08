@@ -605,6 +605,8 @@ export async function runMacOSExport({template, output}) {
     assert.ok(await existsIncludingDangling(staging), "Godot export returned success without creating the staged application");
     receipt.stages.push({name: "arm64-release-export", passed: true, logSha256: sha256(Buffer.from(exportLog))});
     const unsignedInspection = await inspectApp(harness, staging, harness.sdk);
+    assert.equal(unsignedInspection.executableRecord.sha256, receipt.templateMember.sha256,
+      "exported unsigned engine differs from the inspected template member");
     const resources = path.join(staging, "Contents", "Resources");
     const pckPaths = await filesWithExtension(resources, ".pck");
     assert.equal(pckPaths.length, 1, "export must contain exactly one PCK in Contents/Resources");
