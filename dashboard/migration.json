@@ -6,14 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 #58: #69 Library consumer integrado à árvore local; validação combinada aguarda CI e revisão."
+    "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
   "updatedAt": "2026-10-08T19:56:44.981Z",
   "source": {
-    "commit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/57e41f2e89a774eb79752cc87cd5e2096d2f3041",
-    "scope": "Main #69 (Library consumer) integrada localmente à branch da PR #58. A fatia GF-27 e as evidências de CI/Pages de GF-16 vêm da main; as evidências GF-14/Modal/Images locais continuam ligadas aos produtores e hosts históricos registrados, sem validação combinada neste merge. A CI de c5 foi cancelada e seus inputs congelados permanecem sem inspeção de artifacts. GF-14 segue aberto com os quatro checkpoints false; a validação da árvore combinada, CI e revisão ainda estão pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
+    "commit": "092dd14bd70df31bf751c13a3797a9109ca95bb9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9",
+    "scope": "LayoutAnimation original do RN e UIManager.configureNextLayoutAnimation legado sobre o LayoutAnimationDriver C++ do próprio RN, compilado de react/renderer/animations e instalado no UIManager como o Scheduler do RN instala: o relógio de quadros do host é o display link do driver (um quadro só é tick com uma animação em voo), o relógio que o RN lê é o tempo de quadro do pump em milissegundos inteiros, e cada superfície entrega ao driver um delegate de override que registra a transação que ele serve. Updates animam o layout, creates e deletes entram e saem com opacidade ou escala, com linear, easeInEaseOut e spring; onAnimationDidEnd vem do driver (o timer de JS do RN fica de reserva) e onAnimationDidFail de uma config inválida. Implementação local fixada em ee8f5bd55e60556bd3fb4408eed11734399ae378: 121 checks headless em uma root, com um oráculo independente que refaz cada quadro de cada animação a partir do relógio que o RN leu, três execuções seguidas e uma sob carga; o host anterior (main c858263) falha exatamente 83 de 121 e quatro sabotagens do host falham 75, 87, 86 e 6, todas rejeitadas pelo oráculo; exemplo com 12 checks headless, 12 com o renderer nativo e 23 com cinco capturas. A suíte atual tem 128 checks (o host anterior falha exatamente 87 e seis sabotagens falham 80, 90, 91, 7, 1 e 4): a revisão do PR #65 fez o driver ignorar os ticks que outro consumidor do relógio de quadros causa e devolver o interesse nos ticks à root que monta depois de a última parar com uma animação que o RN ainda guarda, e acrescentou os estágios de requestAnimationFrame e de reinício de root que provam isso. Evidência fixada em 092dd14bd70df31bf751c13a3797a9109ca95bb9. CI hospedada e Pages pendentes. GF-19 segue parcial: nenhum checkpoint novo fecha."
   },
   "phases": [
     {
@@ -1633,14 +1632,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "The local ScrollView/Modal + Images #66 evidence in docs/evidence/scroll-view/integration-3bf129c.json was produced from source 3bf129c with host fa9bcca before Text #67 (main b82fbdd) was integrated. Treat those results as pre-Text historical evidence, not validation of the combined tree. No combined-tree rebuild/replay or hosted CI has run yet. Dashboard remains 30/156; all four GF-14 checkpoints stay false. Physical mobile, refresh-rate behavior, complete RN parity and the full ScrollView contract remain open.",
+      "note": "The principal accepted the first desktop ScrollView slice from hosted run 37799420834 and its 17/17 artifact audit; only the slice checkpoint is recorded here. The hosted producer tree is a3fe519, merged source 66c948b, and the receipt is immutable at this evidence commit. The full contract, positive/negative RN parity, and target acceptance remain open, as do physical mobile behavior and refresh-rate coverage. The hosted receipt does not include native library bytes, so it does not certify binary-byte equivalence or ABI behavior. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Hosted macOS producer and principal-reviewed first desktop slice (17/17 audit checks)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/hosted-ci.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -1986,7 +1990,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls nos ticks do relógio de quadros do host, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam; um transform scale uniforme falhava com E_TRANSFORM_3D e passou a renderizar, animado ou não, na fatia da escala uniforme (GF-10). Abertos: LayoutAnimation, Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI 37439650201 repetiu os 75 checks em 0157b15, após reexecutar o native-cold-start por um check de ritmo do decay. O relógio de quadros do host faz o backend e o requestAnimationFrame rodarem em ticks na cadência da tela, e o decay nativo pousa na mesma janela sob todo ritmo de loop, as rajadas de runner hospedado incluídas; cinco checks do driver nativo foram renomeados (o primeiro tick depois do pedido entrega o primeiro quadro); CI 37538167415 repetiu os 37 checks em 0bc0166.",
+      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls nos ticks do relógio de quadros do host, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam; um transform scale uniforme falhava com E_TRANSFORM_3D e passou a renderizar, animado ou não, na fatia da escala uniforme (GF-10). Abertos: Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI 37439650201 repetiu os 75 checks em 0157b15, após reexecutar o native-cold-start por um check de ritmo do decay. O relógio de quadros do host faz o backend e o requestAnimationFrame rodarem em ticks na cadência da tela, e o decay nativo pousa na mesma janela sob todo ritmo de loop, as rajadas de runner hospedado incluídas; cinco checks do driver nativo foram renomeados (o primeiro tick depois do pedido entrega o primeiro quadro); CI 37538167415 repetiu os 37 checks em 0bc0166. Segunda fatia: o LayoutAnimation original do RN (e o UIManager.configureNextLayoutAnimation legado, com o setLayoutAnimationEnabledExperimental como no-op) roda sobre o LayoutAnimationDriver C++ do próprio RN nos ticks do relógio de quadros, que é o seu display link; o relógio que o RN lê é o tempo de quadro do pump em milissegundos inteiros, cada superfície entrega ao driver um delegate de override que registra a transação que ele serve, e o status().layoutAnimation expõe os contadores e as transações. Updates animam o layout, creates e deletes entram e saem com opacidade ou escala, com linear, easeInEaseOut e spring, onAnimationDidEnd vem do driver e onAnimationDidFail de uma config inválida. 128 checks headless com oráculo independente (121 na evidência fixada em 092dd14: a revisão do PR #65 fez o driver ignorar os ticks que outro consumidor do relógio de quadros causa e devolver o interesse nos ticks à root que monta depois de a última parar com uma animação que o RN ainda guarda, com um estágio de requestAnimationFrame, um estágio de reinício de root e mais duas sabotagens); o host anterior falha exatamente 87 de 128 e seis sabotagens do host falham 80, 90, 91, 7, 1 e 4, todas rejeitadas pelo oráculo. Abertos da fatia: movimento reduzido, várias roots, interpolação de estado de Text e Image, keyboard, easeIn e easeOut sem certificado, segundo plano, carga de JS, mobile, hit-test de delete atrasado, orçamento por tick (GF-30), CI hospedada e Pages. Evidência fixada em 092dd14bd70df31bf751c13a3797a9109ca95bb9: https://github.com/journey-studios/godot-fabric/blob/092dd14bd70df31bf751c13a3797a9109ca95bb9/docs/evidence/layout-animation/README.md",
       "blocker": "",
       "checkpoints": [
         {
@@ -3426,20 +3430,35 @@
             {
               "id": "insercao",
               "label": "Chave opcional milestones, seção do painel, aviso em activity e seção 0.5 no ROADMAP.md entregues por PR aditiva; summarize() e o parse do ROADMAP da 1.0 idênticos com e sem a chave",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 insertion criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L10"
+                }
+              ]
             },
             {
               "id": "agentes",
               "label": "AGENT_PROMPT.md e README orientam os agentes: progresso do 0.5 em milestones, preservar chaves desconhecidas ao reescrever o JSON, HUD-* e GF-* seguem o fluxo normal",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 agent-guidance criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L66"
+                }
+              ]
             },
             {
               "id": "publicacao",
               "label": "Testes do dashboard cobrem milestones válido e inválido e a preservação pelo sync; Pages publicado com o marco visível (workflow Migration dashboard Pages confirmado)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "V05-01 publication criterion, principal-accepted evidence",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/v05-01.json#L84"
+                }
+              ]
             }
           ]
         },
@@ -4306,6 +4325,24 @@
       "taskIds": [],
       "message": "V05-04 do marco 0.5, critérios manifesto, tipos e props, com evidência local: o manifesto docs/compatibility/scope-0.5.json decide os 12 nomes do React Native que a HUD do Frontier importa e cada uma das 880 props que o RN 0.87.1 declara para os sete componentes (View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView): 433 suportadas, 325 ignoradas com motivo e fonte e 122 recusadas com `Godot <Componente> does not implement <prop>`, tudo checado em toda montagem e toda atualização por um só módulo (src/prop-scope.mjs). A lane nativa conduz cada caso no host Godot real ao lado de uma linha de base (181 checks, todos passando), um oráculo independente recalcula as expectativas só do inventário e do manifesto, o SDK anterior (e1c7a39) falha exatamente 22 dos seus 177 checks e seis sabotagens retidas são rejeitadas; os tipos de View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions e StyleSheet passam num guarda de tipos gerado do manifesto (433 casos positivos e 121 negativos). A fatia não tem saída visual e não traz captura. Abertos: as 26 props do ScrollView que recusam até o default do RN (decisão do GF-14), a queda do host quando a sabotagem scroll tira a verificação (reproduzida, não consertada) e a CI hospedada com a publicação no Pages, ambas pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
+    },
+    {
+      "id": "layout-animation-slice-092dd14",
+      "at": "2026-10-08T18:46:05.000Z",
+      "taskIds": [
+        "GF-19"
+      ],
+      "message": "Segunda fatia do GF-19 com evidência local: o LayoutAnimation original do RN (e o UIManager.configureNextLayoutAnimation legado) roda sobre o LayoutAnimationDriver C++ do próprio RN nos ticks do relógio de quadros do host. O relógio que o RN lê é o tempo de quadro do pump em milissegundos inteiros; cada superfície entrega ao driver um delegate de override que registra a transação que ele serve, e o status().layoutAnimation expõe os contadores e as transações. Updates animam o layout, creates e deletes entram e saem com opacidade ou escala, com linear, easeInEaseOut e spring; onAnimationDidEnd vem do driver e onAnimationDidFail de uma config inválida. 128 checks headless (121 na evidência fixada em 092dd14) com um oráculo independente que refaz cada quadro; o driver ignora os ticks que outro consumidor do relógio de quadros causa, e a root que monta depois de a última parar com uma animação que o RN ainda guarda recebe o interesse nos ticks de volta; o host anterior falha exatamente 87 de 128 e seis sabotagens do host falham 80, 90, 91, 7, 1 e 4, todas rejeitadas pelo oráculo; o exemplo passa 12 checks headless, 12 com o renderer nativo e 23 com cinco capturas. Pendentes: movimento reduzido, várias roots, interpolação de estado de Text e Image, keyboard, easeIn e easeOut sem certificado, segundo plano, carga de JS, mobile, hit-test de delete atrasado, orçamento por tick (GF-30), a CI hospedada e o Pages. Nenhum checkpoint, item, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/092dd14bd70df31bf751c13a3797a9109ca95bb9/docs/evidence/layout-animation/README.md"
+    },
+    {
+      "id": "gf14-desktop-slice-v05-01-accepted-c6e5a81",
+      "at": "2026-10-08T16:34:51Z",
+      "taskIds": [
+        "GF-14"
+      ],
+      "message": "O principal aceitou a primeira fatia desktop do ScrollView: run hospedado 37799420834, árvore produtora a3fe519, auditoria independente 17/17. Só GF-14 slice é registrado; contrato completo, paridade e alvos continuam abertos. Os três critérios V05-01 também foram aceitos e registrados nesta branch. Naquele registro, a publicação do dashboard/Pages aguardava a revisão e o merge desta atualização; o recibo imutável preserva seu estado anterior à sincronização.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c6e5a81507cbe7d04fe879d694cb59943b2282b0/docs/evidence/scroll-view/hosted-ci.json"
     },
     {
       "id": "milestone-0-5-v05-03-replay-c2e4501",

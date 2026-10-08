@@ -1,0 +1,597 @@
+{
+  "format": "godot-fabric.scroll-view-hosted-ci/v1",
+  "status": "principal-reviewed-first-desktop-slice",
+  "acceptance": true,
+  "producerSourceCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+  "mergedSourceCommit": "66c948bc21fd88c2bb279f198849a5843519f741",
+  "mergeTree": "adbb18e298f7077c34c7d6028bc8a97feccea201",
+  "run": {
+    "id": 37799420834,
+    "head": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+    "conclusion": "success",
+    "allRequiredJobsSucceeded": true,
+    "mergeTreeMatchesAuditedProducer": true
+  },
+  "sourceInputs": {
+    "freeze": {
+      "path": "build/scroll-view-root/hosted-a3fe519-freeze.json",
+      "sha256": "89ca91cd7a74d861f6e936b9d2ddd4dc7d0277ce658b9da1c87006d7fb409966",
+      "inputsPath": "build/scroll-view-root/hosted-text-integrated-audit-inputs-a3fe519.json",
+      "inputsSha256": "b4f7ac0d6b837d5482a2794cf389cf156e91cf144cdef2ac601e8553a3677579",
+      "frozenAt": "2026-10-08T15:32:25.401873+00:00"
+    },
+    "rootReviewedBeforeArtifacts": {
+      "path": "build/scroll-view-root/root-reviewed-inputs-a3fe519.json",
+      "sha256": "d50ecdafad08669c0c056ab839a534af465e453822203a7771eb9dcf6a34e769"
+    },
+    "sourceIndex": "source-pins-a3fe519.json",
+    "sourceIndexSha256": "93d09d3ff935e1b98d2f9c042619d338afb93f87beefb6dcad8f1ab2908e106c",
+    "sourceDelta": {
+      "path": "build/scroll-view-root/source-input-delta-a3fe519.json",
+      "sha256": "287de08f432b811b5a7afa8f31aae056f300e0d3c33fff41633c5eb6565a8690"
+    },
+    "sourceCounts": {
+      "repositoryUniquePaths": 235,
+      "producerRecordedPaths": 109,
+      "nativeSdkCollectorPaths": 144,
+      "supplementalRepositoryMetafilePaths": 19,
+      "installedNodeModulePaths": 544,
+      "externalProducerPaths": 1,
+      "generatedWorkspacePaths": 0
+    },
+    "originalReactNativeReconciliation": {
+      "producerDeclared": 109,
+      "metafilePaths": 322,
+      "intersection": 60,
+      "declaredOnly": 49,
+      "metafileOnly": 262,
+      "uniqueUnion": 371
+    }
+  },
+  "sdk": {
+    "artifact": "adapter-registry-sdk",
+    "artifactId": 11559284975,
+    "recordedHostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+    "rawBuildReceiptSha256": "22135916ec55321c02ea77deae84ff2b3d5a9ec8d86c8431b158aa432ae17d81",
+    "recordedNativeSourceCount": 144,
+    "binaryBytesInspected": false,
+    "adapterLinked": false,
+    "adapterLoaded": false,
+    "runtimeExecuted": false,
+    "abiCertified": false
+  },
+  "artifacts": {
+    "adapter-registry-sdk": {
+      "artifactId": 11559284975,
+      "zipSha256": "d4fa8b8a3e0ccf58f87d95141dbc5028c32715b076e3b48a96b8f2c8e0fec9fa",
+      "extraction": "verified",
+      "fileCount": 14
+    },
+    "native-scroll-view": {
+      "artifactId": 11561021066,
+      "zipSha256": "b3dadec927abe1be46fad21f81bd70b5ed392d456319e1bfa23a6185a1d4512a",
+      "extraction": "verified",
+      "fileCount": 8
+    },
+    "native-virtualized-list": {
+      "artifactId": 11561095825,
+      "zipSha256": "acb2757755789ade2ecaf9dda5376c39124814ca69dbb8de4b956c155e09cf29",
+      "extraction": "verified",
+      "fileCount": 5
+    },
+    "native-os-contracts": {
+      "artifactId": 11561690547,
+      "zipSha256": "3e1d98341b2cf88691f94adf3656f14c50f9bebe61cb1f1176d8761ad2372d0a",
+      "extraction": "verified",
+      "fileCount": 5
+    },
+    "native-pointer-click": {
+      "artifactId": 11561788403,
+      "zipSha256": "ebc70135c885b345159d1f19f8116ba6a83744ce18a343751f6c9b86a146722a",
+      "extraction": "verified",
+      "fileCount": 18
+    },
+    "native-performance": {
+      "artifactId": 11560318042,
+      "zipSha256": "f0dae76ae213f47092a33a8d25501effd04a648d3bb801e6682ef44485226e7f",
+      "extraction": "verified",
+      "fileCount": 5
+    },
+    "native-images-visual": {
+      "artifactId": 11560343990,
+      "zipSha256": "f47e298da493ac93a6a8aac3ebc8adbb9ee78728d7e062529a69d35b879dafba",
+      "extraction": "verified",
+      "fileCount": 5
+    },
+    "native-text-style": {
+      "artifactId": 11559954835,
+      "zipSha256": "c437d9d3976ada569191290b2444773f460dde385170b3126e4a4f8a351a4709",
+      "extraction": "verified",
+      "fileCount": 5
+    }
+  },
+  "hostedAudit": {
+    "path": "build/scroll-view-root/hosted-a3fe519-audit-v2.json",
+    "sha256": "2125b673e45605901d3d588fed4c5e44df3ba0223243fdc335d81e7beecdc702",
+    "passed": 17,
+    "total": 17,
+    "results": [
+      {
+        "name": "historical evidence maps, current producer inventory and click integration identity",
+        "passed": true,
+        "evidence": {
+          "producerMapSha256": "5aa2a1ba337667e2df704efb97b1bb23e4c6735d369d57b56e9b782869ccf0c1",
+          "sourcePinsSha256": "6d82fa985a0d2c809cb9aff10c665f5e15e7b59fae2e8bfb790e83103dce630c",
+          "sourceCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+          "hostedHead": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+          "clickCorrectionCommit": "b097fb3232372e79603fa2eeabafd8c4d7bc2251",
+          "clickReceiptSha256": "5e36ec07df8a56f2080b6d526d0862bb5c95827b9f4a80a378df4c1605d898b3",
+          "hostedClickAcceptance": "must be established by uploaded current-head reports"
+        }
+      },
+      {
+        "name": "SDK receipt and visible package manifest/combination links",
+        "passed": true,
+        "evidence": {
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "buildReceiptSha256": "22135916ec55321c02ea77deae84ff2b3d5a9ec8d86c8431b158aa432ae17d81",
+          "sourcePinCount": 144,
+          "rawSdkBuildReceiptInspected": true,
+          "binaryInspected": false,
+          "packageClaims": {
+            "adapterLinked": false,
+            "adapterLoaded": false,
+            "runtimeExecuted": false,
+            "abiCertified": false
+          }
+        }
+      },
+      {
+        "name": "all eight pointer-click reports verify the fixed 26-case inventory and semantics",
+        "passed": true,
+        "evidence": {
+          "lanes": 8,
+          "checksPerLane": 91,
+          "semanticCasesPerLane": 26,
+          "logs": [
+            {
+              "interest": "original",
+              "mode": "disabled",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "75e7ce198d3e92b00ed49236ea99af1bed5310fc0770c5f522bb27414c971448"
+            },
+            {
+              "interest": "original",
+              "mode": "imperative-only",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "a2680732797bfa45905437284949a1419017b49ff7985c41a0def6a3596bda3c"
+            },
+            {
+              "interest": "original",
+              "mode": "internal-only",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "550c92754bef7409251e1b72a7a79b31c65e650e1056eb380a5a6946b9a60a44"
+            },
+            {
+              "interest": "original",
+              "mode": "enabled",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "fa098058417fc898b9b7ec66499372c1ad488985680acdb2e23ab3e750f749e8"
+            },
+            {
+              "interest": "current",
+              "mode": "disabled",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "26c18618b3dddbdb0b94e329663f1493047247dd65230d2cedf0378cb30d60c0"
+            },
+            {
+              "interest": "current",
+              "mode": "imperative-only",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "e386543007930cbf30d1f5b1c2fb168c253b3b6b5d0534f136de4c2da678e4a7"
+            },
+            {
+              "interest": "current",
+              "mode": "internal-only",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "9dc2804b98d8182f3e6385d044f5ffe5ce9eee4e8045868e192134cc02d6a591"
+            },
+            {
+              "interest": "current",
+              "mode": "enabled",
+              "checks": 91,
+              "caseCount": 26,
+              "logSha256": "a370133aec46c80f887abe6bd59f784353d65f640e28ce4df3507f2fd3300f77"
+            }
+          ]
+        }
+      },
+      {
+        "name": "source pin maps match both producer commit and hosted head",
+        "passed": true,
+        "evidence": {
+          "pinMapComparisons": 552,
+          "producerCommitPinMapComparisons": 552,
+          "uniqueRepositoryPaths": 235,
+          "producerCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+          "hostedHead": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+          "groupCounts": {
+            "native": 144,
+            "scroll": 18,
+            "modalWheel": 17,
+            "lists": 21,
+            "os": 11,
+            "performance": 17,
+            "imagesVisual": 34,
+            "textStyle": 14,
+            "pointerClick": 23,
+            "supplemental": 19,
+            "allRepositoryProducerPins": 235
+          }
+        }
+      },
+      {
+        "name": "ScrollView bundle/provenance pins, exact RN sources and metafile inputs",
+        "passed": true,
+        "evidence": {
+          "bundleSha256": "264adad3ff29b2a6e3b33695034cc53ecf1227be2f3da8fa78f4a6e75ebfcfe5",
+          "sourcePinCount": 18,
+          "reactNativePinCount": 6,
+          "metafile": {
+            "repositoryMetafileInputCount": 35,
+            "completeMetafileInputCount": 397
+          }
+        }
+      },
+      {
+        "name": "ScrollView provenance links to visible SDK identity and recorded compiled source pins",
+        "passed": true,
+        "evidence": {
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "buildReceiptSha256": "22135916ec55321c02ea77deae84ff2b3d5a9ec8d86c8431b158aa432ae17d81",
+          "compiledScrollSourcePins": 8,
+          "externalAbiCertification": false
+        }
+      },
+      {
+        "name": "ScrollView exact 33 checks, actual measured lifecycle and cleanup",
+        "passed": true,
+        "evidence": {
+          "checks": 33,
+          "cleanup": true,
+          "errors": 0,
+          "log": {
+            "sha256": "f13922fbaf35845af2a6be4bc8701c5ef3a9dee70539fa2e209fadb8a68664b9",
+            "bytes": 132026,
+            "knownUiManagerWarningsAllowed": 2
+          }
+        }
+      },
+      {
+        "name": "original RN Modal ScrollView bundle and provenance pins",
+        "passed": true,
+        "evidence": {
+          "bundleSha256": "3de5962e518ad0c8fc1b7208b30b004248df2d0691c1c91d37c71e5ad6874ce8",
+          "sourcePinCount": 17,
+          "reactNativePinCount": 10,
+          "metafile": {
+            "repositoryMetafileInputCount": 35,
+            "completeMetafileInputCount": 397
+          }
+        }
+      },
+      {
+        "name": "Modal report links to the uploaded SDK host, receipt and recorded source pins",
+        "passed": true,
+        "evidence": {
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "buildReceiptSha256": "22135916ec55321c02ea77deae84ff2b3d5a9ec8d86c8431b158aa432ae17d81",
+          "compiledModalSourcePins": 8
+        }
+      },
+      {
+        "name": "original RN Modal wheel semantics, exact 13 checks, and full cleanup",
+        "passed": true,
+        "evidence": {
+          "checks": 13,
+          "canonicalOracle": "passed",
+          "fullTwoOwnerCleanup": true,
+          "log": {
+            "sha256": "062776d669e1c88b0c1ee629ee049dce0915b11535ae624240cc0179bd75c934",
+            "bytes": 1066,
+            "knownUiManagerWarningsAllowed": 4
+          },
+          "displayServer": "macOS",
+          "observedWheelEvents": 4
+        }
+      },
+      {
+        "name": "diagonal release, interruption, orientation and neutral behavior is measured",
+        "passed": true,
+        "evidence": {
+          "neutral": {
+            "x": 12,
+            "y": 24,
+            "fabricX": 12,
+            "fabricY": 24,
+            "paintX": -12,
+            "paintY": -24
+          },
+          "interruptions": {
+            "wheel": {
+              "endY": 130,
+              "replacementY": 178,
+              "lifecycle": [
+                "begin",
+                "end"
+              ],
+              "endBeforeReplacement": true,
+              "candidateRetiredThroughUp": true
+            },
+            "contentOffset": {
+              "endY": 130,
+              "replacementY": 260,
+              "lifecycle": [
+                "begin",
+                "end"
+              ],
+              "endBeforeReplacement": true,
+              "candidateRetiredThroughUp": true
+            }
+          },
+          "verticalDiagonal": {
+            "release": {
+              "x": 80,
+              "y": 150
+            },
+            "velocityX": 0,
+            "settled": {
+              "x": 80,
+              "y": 192.80850956596
+            },
+            "events": [
+              "begin",
+              "end",
+              "momentumBegin",
+              "momentumEnd"
+            ]
+          },
+          "horizontalDiagonal": {
+            "release": {
+              "x": 150,
+              "y": 70
+            },
+            "velocityY": 0,
+            "settled": {
+              "x": 197.966973897025,
+              "y": 70
+            },
+            "events": [
+              "begin",
+              "end",
+              "momentumBegin",
+              "momentumEnd"
+            ]
+          },
+          "orientation": [
+            "begin",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "five independent pointer-route retirement and capture behaviors",
+        "passed": true,
+        "evidence": {
+          "checks": 5,
+          "siblingCaptureRetained": true,
+          "captureReleasedOnce": true,
+          "hiddenTouchRetiredBeforeMove": true,
+          "hiddenMouseSuppressedThroughUp": true,
+          "freshMouseDisplacement": 36
+        }
+      },
+      {
+        "name": "VirtualizedList 44 checks, source/metafile pins, host link, and independent oracle",
+        "passed": true,
+        "evidence": {
+          "checks": 44,
+          "independentOracle": "passed",
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "bundleSha256": "4da729893526d5b3fcda9cce57098a1c3e75c5cf4b2c93f7cc09a77d0dc6fdd8",
+          "metafile": {
+            "repositoryMetafileInputCount": 35,
+            "completeMetafileInputCount": 397
+          },
+          "log": {
+            "sha256": "488e336639be84511cf7867a260427bc0f6da52fac55df1357e74d0b40e7f3a8",
+            "bytes": 485,
+            "knownUiManagerWarningsAllowed": 2
+          }
+        }
+      },
+      {
+        "name": "OS contracts 37 checks, source/metafile pins, host link, and independent oracle",
+        "passed": true,
+        "evidence": {
+          "checks": 37,
+          "independentOracle": "passed",
+          "oracle": {
+            "operations": 46,
+            "warnings": 16,
+            "permissions": 44,
+            "notices": 3,
+            "hostModules": 6,
+            "pushStatics": 17,
+            "drawerMethods": 8
+          },
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "bundleSha256": "eb5e1e4f613785b1def2e8080cf5428287481cc32a7f7fb3fad315b823b14862",
+          "metafile": {
+            "repositoryMetafileInputCount": 35,
+            "completeMetafileInputCount": 398
+          },
+          "log": {
+            "sha256": "1bfb3c34f193039a8c23c7aa083fd6ddeddff8eb2c33715a350681ae110493a1",
+            "bytes": 3740,
+            "knownUiManagerWarningsAllowed": 4
+          }
+        }
+      },
+      {
+        "name": "performance: current measured stages, producer inventory and SDK identity",
+        "passed": true,
+        "evidence": {
+          "checks": 43,
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "bundleSha256": "8da0749c46917d72fe229fcc75e43c8ef2189265e3961cbe9a08af125e4364ad",
+          "logSha256": "cddf96fb01f0c1efed318392b8f8c80d3a64b3960339c81fabf83d49c67c8938",
+          "declaredSourceCount": 17,
+          "repositoryMetafileInputCount": 38,
+          "binaryInspected": false,
+          "externalAbiCertification": false
+        }
+      },
+      {
+        "name": "imagesVisual: current measured stages, producer inventory and SDK identity",
+        "passed": true,
+        "evidence": {
+          "checks": 53,
+          "oracle": {
+            "cases": 52,
+            "changes": 13,
+            "jobs": 62
+          },
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "bundleSha256": "695d5aefd431557b718e968cdc7bd60d86b95d4ba18484f69ae929decc0b9c3f",
+          "logSha256": "f1194113640f7e7e0d2fa8a0edc9de59c04b787c01cb1c3f9befee824b08e329",
+          "declaredSourceCount": 34,
+          "repositoryMetafileInputCount": 35,
+          "binaryInspected": false,
+          "externalAbiCertification": false
+        }
+      },
+      {
+        "name": "textStyle: current measured stages, producer inventory and SDK identity",
+        "passed": true,
+        "evidence": {
+          "checks": 61,
+          "measuredStateOraclePassed": true,
+          "hostSha256": "9d8959ec54a17427ba8d8900987fe979d35b997dd6b34392d0114c7151652533",
+          "bundleSha256": "428265e1ee2c672695fcca1403f56c89bf06c111c6cecae868d271cab8cdb01a",
+          "declaredSourceCount": 14,
+          "repositoryMetafileInputCount": 35,
+          "deliberateBypassErrors": 15,
+          "logSha256": "c5190acc9b1883eaa0342b74eb197b84cdf4e30322c46e0e5cafa2532c734127",
+          "binaryInspected": false,
+          "externalAbiCertification": false
+        }
+      }
+    ],
+    "metadataCorrection": {
+      "originalAttempt": {
+        "path": "build/scroll-view-root/hosted-a3fe519-audit.json",
+        "sha256": "bbca4181f09a3a0c30a340a3b5577690df5d25b02bd23726842c397092ed9814",
+        "passed": 16,
+        "total": 17,
+        "cause": "The first auditor compared producer-declared RN references (109) directly with RN metafile paths (322). V2 reconciled path sets against frozen inputs; expected checks were unchanged."
+      },
+      "correctionReceipt": {
+        "path": "build/scroll-view-root/metadata-correction-a3fe519.json",
+        "sha256": "87b93c780ff75d5713e6bfc3e4ab3f31657a61aacc3e21d3664b848306f28e3b"
+      }
+    }
+  },
+  "parity": {
+    "path": "build/scroll-view-root/hosted-parity-a3fe519-audit.json",
+    "sha256": "a3b867e82d156a13fae499003ff645c2a16f5d90d5311b318968b97393cc28f6",
+    "status": "passed_subset",
+    "caseCount": 13,
+    "fixture": "core-ui-v2",
+    "platforms": [
+      "ios-simulator",
+      "android-emulator"
+    ],
+    "scope": "Only 13 core UI/runtime cases; no ScrollView parity or physical-device acceptance.",
+    "note": "Parity artifact has a limited core-ui-v2 subset; it is not ScrollView differential parity."
+  },
+  "limitations": [
+    "SDK manifest and receipt link a recorded host digest, but uploaded artifact did not contain native library bytes; no hosted binary-byte equivalence or ABI claim.",
+    "Parity covers only 13 core-ui-v2 cases on simulators/emulators, not ScrollView parity or physical devices.",
+    "This verifies the first desktop ScrollView slice only. Refresh, unsupported props, full RN contract, physical mobile and refresh-rate matrices remain open.",
+    "3bf local evidence predates Text #67; 0bf is a prior integrated tree; c5 run 37794332105 was cancelled and its artifact contents were not inspected."
+  ],
+  "supplementalHistoricalGraphics": {
+    "status": "historical-local-captures-not-current-hosted-artifact-evidence",
+    "sourceCommit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+    "hostSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "integratedReceipt": {
+      "path": "integration-3bf129c.json",
+      "sha256": "5aa2a1ba337667e2df704efb97b1bb23e4c6735d369d57b56e9b782869ccf0c1"
+    },
+    "graphicsReceipts": [
+      {
+        "path": "scroll-view-graphics-3bf129c.json",
+        "sha256": "fdc2f6dba2a4d515b72a9c6d0940780d5b8e06ca17555fda4fb0205297713102"
+      },
+      {
+        "path": "modal-wheel-3bf129c-graphics.json",
+        "sha256": "ca8c5d4f0b926ffacfdf8ea4a1aafcaf59a4f8603f85e17810062a29aa6b57db"
+      }
+    ],
+    "captures": [
+      {
+        "path": "scroll-view-3bf129c-initial.png",
+        "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136"
+      },
+      {
+        "path": "scroll-view-3bf129c-fractional-13_25.png",
+        "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1"
+      },
+      {
+        "path": "scroll-view-3bf129c-horizontal-pan-clipped.png",
+        "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26"
+      },
+      {
+        "path": "scroll-view-3bf129c-cleanup.png",
+        "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8"
+      },
+      {
+        "path": "modal-wheel-3bf129c-down.png",
+        "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124"
+      },
+      {
+        "path": "modal-wheel-3bf129c-horizontal.png",
+        "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903"
+      },
+      {
+        "path": "../images-visual/images-visual-all-modes.png",
+        "sha256": "a1b31feef1f2b8d602c9b36ea4900a1525c6ffdc24417019c809dd6227aa2383"
+      },
+      {
+        "path": "../images-visual/images-visual-interaction.png",
+        "sha256": "7f92a89ab965ce81279cb56bb1a1c290a3c40d3390b36425710994f9fdf70171"
+      }
+    ],
+    "note": "The six ScrollView/Modal captures and two Images captures are from the 3bf local run before Text #67. They remain useful visual context but are not presented as graphics produced by hosted run 37799420834."
+  },
+  "acceptanceScope": "First desktop ScrollView slice only.",
+  "principalAcceptance": {
+    "reviewedAt": "2026-10-08T16:30:48Z",
+    "acceptedScope": "first desktop slice",
+    "gf14": {
+      "slice": true,
+      "contract": false,
+      "parity": false,
+      "targets": false
+    },
+    "dashboardUpdatePending": true
+  }
+}

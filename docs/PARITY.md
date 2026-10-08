@@ -58,19 +58,19 @@ per-target acceptance; pending V2 decisions retain their status.
 
 ## Subsequent checkpoint — 2026-10-06
 
-The public facade now exports **56 names awaiting differential certification and 3
-explicit placeholders** (KeyboardAvoidingView, RefreshControl and StatusBar) and omits 38
+The public facade now exports **57 names awaiting differential certification and 3
+explicit placeholders** (KeyboardAvoidingView, RefreshControl and StatusBar) and omits 37
 of the 97 root values, as `npm run parity:status` counts them; Linking, Clipboard and Vibration
 (the first slice of GF-23), Modal and SafeAreaView (the Modal slice), AssetRegistry with Image and
 ImageBackground (the Image slice, which also took those two out of the placeholders), and
 ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid,
 DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback (the first
-slice of GF-24) are the seventeen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
+slice of GF-24), and LayoutAnimation (the second slice of GF-19) are the eighteen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
-remain the 2026-10-01 snapshot, except the three GF-23 entries and the nine GF-24 entries
-now updated (5 usable components, 20 environment names, 14 unavailable names and 58
-missing), and must not be read as current counts.
+remain the 2026-10-01 snapshot, except the three GF-23 entries, the nine GF-24 entries and the
+GF-19 `LayoutAnimation` entry now updated (5 usable components, 21 environment names, 14 unavailable
+names and 57 missing), and must not be read as current counts.
 
 Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
 source, each with retained negative controls and a hosted CI run that repeated its
@@ -104,7 +104,10 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   over RN's C++ Native Animated (75), RN's uniform [scale](evidence/uniform-scale/README.md)
   (29) and [singular transforms](evidence/singular-transforms/README.md) (49) on
   planar Controls, and the [frame clock](evidence/frame-clock/README.md) (37) that
-  paces `requestAnimationFrame` and the native animation like a display link.
+  paces `requestAnimationFrame` and the native animation like a display link. The original
+  [LayoutAnimation](evidence/layout-animation/README.md) (128) runs on RN's C++ `LayoutAnimationDriver` on the same
+  ticks: updates, creates and deletes with the linear, easeInEaseOut and spring curves, recomputed frame by frame
+  by an independent oracle, on one root.
 - **Runtime globals:** RN's own web-standard globals, installed by the host's
   initialization and backed by native networking: the original
   [fetch, XMLHttpRequest, FormData, Blob, FileReader and AbortController](evidence/networking/README.md)
@@ -212,9 +215,9 @@ explain the scope.
 | Current public facade classification | Count | Meaning |
 | --- | ---: | --- |
 | Usable component subset | 5 | View, Text, Pressable, ScrollView, TouchableNativeFeedback; none certifies its complete upstream contract |
-| Environment/utility subset | 20 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
+| Environment/utility subset | 21 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, LayoutAnimation, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
 | Exported but unavailable | 14 | TextInput, Image/ImageBackground, Switch, touchables, ActivityIndicator, StatusBar, FlatList, VirtualizedList, KeyboardAvoidingView, PanResponder, useColorScheme throw when used |
-| Missing public export | 58 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
+| Missing public export | 57 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
 
 The inventory assigns **84 exports to 1.0** and **13 experimental/unstable
 exports to post-1.0 review**. These are scope assignments, not promises already

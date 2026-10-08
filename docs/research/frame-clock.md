@@ -106,7 +106,8 @@ backend with an animation to run). Only a tick runs the frame callbacks and the 
 frame, both with the tick's timestamp. Timers, input, the host phase and the work queue
 keep running on every Godot frame.
 
-A frame is a tick only if a consumer exists, and then the way the window's frames reach
+A frame is a tick only if a consumer exists (a pending frame callback, a Native Animated backend with an animation to run, or
+RN's `LayoutAnimationDriver` with one in flight, see [layout-animation.md](layout-animation.md)), and then the way the window's frames reach
 the screen (`Pacing`) decides:
 
 - **Presentation** (a window on a real display that can draw, V-Sync enabled or adaptive):
