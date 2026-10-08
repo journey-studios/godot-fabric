@@ -1,0 +1,1058 @@
+{
+  "schemaVersion": 1,
+  "scenario": "networking",
+  "status": "verified-completed-hosted-workflow-and-headless-networking-artifact",
+  "run": {
+    "id": 37571237096,
+    "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/47",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-07T04:23:40Z",
+        "jobs": [
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112630124548,
+            "runAttempt": 1,
+            "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+            "startedAt": "2026-10-07T04:23:49Z",
+            "completedAt": "2026-10-07T04:59:31Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124548"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112630124659,
+            "runAttempt": 1,
+            "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+            "startedAt": "2026-10-07T04:23:44Z",
+            "completedAt": "2026-10-07T04:29:48Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124659"
+          },
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112630124691,
+            "runAttempt": 1,
+            "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+            "startedAt": "2026-10-07T04:23:44Z",
+            "completedAt": "2026-10-07T04:24:45Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124691"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112630124764,
+            "runAttempt": 1,
+            "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+            "startedAt": "2026-10-07T04:23:49Z",
+            "completedAt": "2026-10-07T04:30:53Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124764"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112639042141,
+            "runAttempt": 1,
+            "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+            "startedAt": "2026-10-07T04:59:34Z",
+            "completedAt": "2026-10-07T04:59:56Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112639042141"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112630124548,
+        "runAttempt": 1,
+        "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "startedAt": "2026-10-07T04:23:49Z",
+        "completedAt": "2026-10-07T04:59:31Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124548"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112630124659,
+        "runAttempt": 1,
+        "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "startedAt": "2026-10-07T04:23:44Z",
+        "completedAt": "2026-10-07T04:29:48Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124659"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112630124691,
+        "runAttempt": 1,
+        "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "startedAt": "2026-10-07T04:23:44Z",
+        "completedAt": "2026-10-07T04:24:45Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124691"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112630124764,
+        "runAttempt": 1,
+        "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "startedAt": "2026-10-07T04:23:49Z",
+        "completedAt": "2026-10-07T04:30:53Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112630124764"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112639042141,
+        "runAttempt": 1,
+        "headSha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "startedAt": "2026-10-07T04:59:34Z",
+        "completedAt": "2026-10-07T04:59:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37571237096/job/112639042141"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "native-cold-start": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "parity-comparison": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "reference-android": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "reference-ios": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 265,
+        "pass": 265,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 35.7
+  },
+  "implementationCommit": "83a3557eb200b2bbaa337f2e302fb4c2aaf767f5",
+  "committedStateExercised": {
+    "source": "postReview",
+    "commit": "57bc3e897f7d92a0002e12586fed4ad140d5bf85",
+    "headlessChecks": 100,
+    "reviewCommits": [
+      "155d35b1cb3e0cddf8f4e3daada74c701779b4ae",
+      "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+      "8b7c890c6d6458bb0500f3132402275149c28f43",
+      "57bc3e897f7d92a0002e12586fed4ad140d5bf85"
+    ],
+    "note": "the report's top level describes the implementation commit; the hosted run exercises the tree after review, which the report records in postReview"
+  },
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 47,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/47",
+    "title": "feat(networking): Run RN's fetch and XHR over Godot's HTTP client",
+    "headSha": "dde70a95a2a8e438c468fae4e46f8d72b847b5fd",
+    "squashMergeCommit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+    "mergedAt": "2026-10-07T04:23:38Z",
+    "headTreeSha": "cdad31dc6804f8b01be6c047be58e67525a68f94",
+    "mainTreeSha": "cdad31dc6804f8b01be6c047be58e67525a68f94",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "stackedBranchCommitsBeforeImplementation": [],
+    "commitsAfterImplementation": [
+      {
+        "commit": "7d05dce",
+        "subject": "docs(networking): Pin executed HTTP networking evidence"
+      },
+      {
+        "commit": "c57b386",
+        "subject": "docs(dashboard): Record the HTTP networking slice"
+      },
+      {
+        "commit": "155d35b",
+        "subject": "fix(examples): Keep the networking example on its newest request"
+      },
+      {
+        "commit": "7f45f24",
+        "subject": "fix(scripts): Restore sabotaged sources when a signal ends a run"
+      },
+      {
+        "commit": "8b7c890",
+        "subject": "test(networking): Stop the test server without waiting on a dead child"
+      },
+      {
+        "commit": "57bc3e8",
+        "subject": "fix(scripts): Kill a sabotage child that ignores its timeout"
+      },
+      {
+        "commit": "dde70a9",
+        "subject": "docs(networking): Record the post-review changes"
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 4
+  },
+  "actualCheckout": {
+    "sha": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+    "parents": [
+      "99216e296d2e6284e25a8e492d1121079f683940"
+    ],
+    "treeSha": "cdad31dc6804f8b01be6c047be58e67525a68f94",
+    "treeEntries": 1225,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 25,
+      "nativeSourcePins": 73,
+      "verificationSourcePins": 11
+    },
+    "allCuratedTrackedPathsVerified": 96,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 92,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      "examples/networking/App.jsx",
+      "examples/networking/validation.gd",
+      "scripts/networking-sabotage.mjs",
+      "tests/networking-native.test.mjs"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11461106737,
+    "name": "native-networking",
+    "zipSizeBytes": 47952,
+    "zipSha256": "912f92924a52512817f0772bf0841744c82e6b64e9ed6db2995368cd23f64f86",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-07T04:35:52Z",
+    "expiresAt": "2027-01-05T04:23:40Z",
+    "fileCount": 5,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "networking-comparison.json": "2776f5b51c0afd2a52cd6200881d781c4490b9aaab9c7cdc67b249a22e5410cd",
+      "networking-current-report.json": "f17fb19d6147f4ff7506a7a3b42563f083f71a917574631762ebed3fb2918aca",
+      "networking-current.log": "250f9b6d72374279a2b5b07f9d41ed51cd4d9cf8783f75857e8f07ba8f8c0073",
+      "networking-probe-bundle.json": "3d85e3a3b2f94c441585f007bfff0591093468d590f70bd116eb39b3b6171b04",
+      "networking-report.json": "2c51f3eb3b4ff05a1e9f1060358ac7dda908e74a7ab6daca3b499dde8815021a"
+    }
+  },
+  "verification": {
+    "headlessChecks": 100,
+    "committedHeadlessChecks": 100,
+    "lanes": [
+      {
+        "lane": "current",
+        "reportFile": "networking-current-report.json",
+        "logFile": "networking-current.log",
+        "checks": 100,
+        "passed": 100,
+        "uniqueCheckIds": true,
+        "committedChecks": 100,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline",
+        "committedCheckIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+        "bundleInputCount": 307,
+        "bundleEqualsHashRecordedInCommittedReportAt": [
+          "lanes[0].bundleSha256",
+          "lanes[1].bundleSha256",
+          "lanes[2].bundleSha256",
+          "lanes[3].bundleSha256"
+        ],
+        "pinnedBundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+        "bundleEqualsPinnedBundle": true,
+        "nativeHostSha256": "13ca48e2bb8ac20d0d0b9482dd3661edace7b30ad90289255cc741ba75faa6e8",
+        "node": "v22.23.2",
+        "reportSha256": "f17fb19d6147f4ff7506a7a3b42563f083f71a917574631762ebed3fb2918aca",
+        "logSha256": "250f9b6d72374279a2b5b07f9d41ed51cd4d9cf8783f75857e8f07ba8f8c0073",
+        "passedMarker": "NETWORKING_PASSED: 100",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [
+          "ERROR: TLS handshake error: -9984",
+          "ERROR: TLS handshake error: -9984",
+          "ERROR: TLS handshake error: -9984"
+        ],
+        "errorLines": [
+          "ERROR: TLS handshake error: -9984",
+          "ERROR: TLS handshake error: -9984",
+          "ERROR: TLS handshake error: -9984"
+        ],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "pointerRegistryWarningLines": 0,
+        "pinnedProducersChangedSinceTheCommittedState": [
+          "tests/networking-native.test.mjs"
+        ]
+      }
+    ],
+    "producersRecordedByContent": {
+      "src/react-native-platform.jsx": {
+        "sha256AtImplementation": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+        "sha256AtRunHead": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+        "equalAtImplementation": true,
+        "changedAfterImplementationBy": [],
+        "declaredByTheHostedProvenance": true
+      }
+    },
+    "independentOracle": [
+      {
+        "module": "tests/networking-oracle.mjs",
+        "atCommit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+        "export": "verifyNetworkingReport",
+        "lane": "current",
+        "acceptsDownloadedReport": true,
+        "modulesLoaded": [
+          "tests/networking-certificates.mjs",
+          "tests/networking-oracle.mjs",
+          "tests/networking-server.mjs"
+        ],
+        "result": {
+          "requests": 137,
+          "byListener": {
+            "http": 134,
+            "other": 1,
+            "https": 1,
+            "https-untrusted": 1
+          }
+        }
+      }
+    ],
+    "rawReportEqualsLaneReportWithoutExcludedKeys": {
+      "current": true
+    },
+    "expectedOriginalFailuresEqualCommittedPrecedingHostFailures": true,
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "comparison": {
+      "originalControlPresent": false,
+      "sabotageReceiptsPresent": [
+        false,
+        false
+      ],
+      "oracleRequests": 137,
+      "intentionalNativeProducerDifferences": [
+        "native/http_core.h",
+        "native/http_core_test.cpp",
+        "native/http_transport.h",
+        "native/godot_http_transport.h",
+        "native/godot_http_transport.cpp",
+        "native/blob_store.h",
+        "native/networking_modules.h",
+        "native/networking_modules.cpp",
+        "native/application_runtime.cpp",
+        "native/application_runtime.h",
+        "native/fabric_application.cpp",
+        "native/godot-profile.json",
+        "native/CMakeLists.txt"
+      ],
+      "currentRecordEqualsTheLane": true
+    },
+    "polyfillSources": {
+      "files": {
+        "node_modules/whatwg-fetch/fetch.js": true
+      },
+      "installedVersion": "3.6.20",
+      "lockVersion": "3.6.20",
+      "equalsCommitted": true
+    },
+    "controlsAgainstTheHostedLanes": {
+      "preceding-host": {
+        "checksFailingInTheCommittedControl": 84,
+        "presentInHostedLane": 84,
+        "passingInHostedLane": 84
+      },
+      "sabotage-redirects": {
+        "checksFailingInTheCommittedControl": 8,
+        "presentInHostedLane": 8,
+        "passingInHostedLane": 8
+      },
+      "sabotage-headers": {
+        "checksFailingInTheCommittedControl": 2,
+        "presentInHostedLane": 2,
+        "passingInHostedLane": 2
+      }
+    },
+    "declaredNativeHostSha256": "13ca48e2bb8ac20d0d0b9482dd3661edace7b30ad90289255cc741ba75faa6e8",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/networking-fixture.jsx": "cc489722a72ec0a77ec066d7f48ae16d6c53ed6d17ca2c02f84a419913885e58",
+      "tests/networking-probe.gd": "54c55b697911adc102f4f2bbce9eef603d055d21d6fb4c2a3dce2e1c4369e25c",
+      "tests/networking-native.test.mjs": "ad2064b1b25b46ec2c189e2dcfa55853b77e4b54cf5fae168565f56e0a49318f",
+      "tests/networking-oracle.mjs": "c661a0ce69a30b15f0b6ee3ab80711879f4c23525515053cef9a1013f6843a79",
+      "tests/networking-server.mjs": "b384897baa66253733786d43f381f1f919bc6daabc73ef378a1c7491345e64ca",
+      "tests/networking-certificates.mjs": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
+      "scripts/networking-bundle.mjs": "a3f86de15a68a0401b0a3bf1dc1d519fae783bf6ef9a3198680702754a034978",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/initialize.js": "fec416522ddf321e095904a7570e0680f7a66f8fa118f73516dde2d5d13cdbab",
+      "src/platform-environment.js": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+      "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+      "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+      "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+      "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+      "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+      "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+      "native/godot_http_transport.cpp": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+      "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+      "native/networking_modules.h": "2530f387f469213e870eb2f1a4a831fc79cf1d941300d85a9e16d9c64ae1283e",
+      "native/networking_modules.cpp": "e1bd6d8b00719297d787c6aae456b873c2f4c3658a6074bbbb6b82dfda47ab05",
+      "native/application_runtime.cpp": "a1ad7d912c5b780706a467c0baa9f83915b31189bb3588cf11807f118dea7ca0",
+      "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+      "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+      "native/godot-profile.json": "ce635ff8a62f48afdf8b13e8e656260d7b1e0c5cd47907b5277286e4d14008a0",
+      "native/CMakeLists.txt": "0cbec528d780c8d3c558d16fa5b870379b004b24d756a028b76289f089c2e549"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [
+      "tests/networking-native.test.mjs"
+    ],
+    "producerPinsDifferingFromTheCommittedState": [
+      "tests/networking-native.test.mjs"
+    ],
+    "producerPinsOutsideTheReportsSourcePins": [
+      "src/react-native-platform.jsx"
+    ],
+    "producerPinsNotInAnyCommittedPinSet": [
+      "src/react-native-platform.jsx"
+    ],
+    "producerPinsAddedBy": {
+      "src/react-native-platform.jsx": []
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpXHR.js": "290697c07f2afc79a8b6a7fdac6cf77bc3d660a68efb4777dee252b533162a9c",
+      "Libraries/Network/XMLHttpRequest.js": "588f2f39bde35c1cc0aef12f1e2d64ef5b37039542a28f469c504e34182eaca3",
+      "Libraries/Network/RCTNetworking.android.js": "0cf21588e1357e057aae3fb932477c22ab8d94dbda624709c622368f51d9e40a",
+      "Libraries/Network/NativeNetworkingAndroid.js": "333a32ed1625c5f17e45e2176092c734de1f46d56bd3764bf5a397e910a4227d",
+      "src/private/specs_DEPRECATED/modules/NativeNetworkingAndroid.js": "31269a59001b502a305b221dba4592bf439c083c97808fcd45dbd4561e432821",
+      "Libraries/Network/fetch.js": "b626a9897d7476825c89924b692dd33b5ae36634e1b90f40e59b16f3749be873",
+      "Libraries/Network/FormData.js": "c3536931abde38d5b4cd49934f281f942c80a92575b3ae15f7006c9d32ca70af",
+      "Libraries/Network/convertRequestBody.js": "538a98838d32b3ea2bd12250e7cbab6628b8f4efc0793b61c9a7a748e6cb5d0d",
+      "Libraries/Blob/Blob.js": "050bc512a24749ec3d91a45832549e9b78dd3717de716bda17782ff36917dc0a",
+      "Libraries/Blob/BlobManager.js": "aeaa78b92cb1d5a58773a9deeb44f85f98b3255f8099b2a6b9551e8a70e87ee1",
+      "Libraries/Blob/BlobRegistry.js": "eee107ecded210d45b4c8f26e10e0738dc56bb6fd44d07ae5560b0d33bfa4267",
+      "Libraries/Blob/File.js": "d5245d78e47d325ab854fff5c34641eb046e57222787b6a25650f2c579b92a80",
+      "Libraries/Blob/FileReader.js": "a0a1244ea1bd20007bdef6b4b9279ac12a3ad93576dc7914c1e573d3a55c904b",
+      "Libraries/Blob/URL.js": "8d5ee781805c74a16a5a04b0eb069d3bb69a7705e4a0c9ad1e2c8a96d20929db",
+      "Libraries/Blob/NativeBlobModule.js": "71ed77bf0eae95820839faa04c498822fa7e3f44f1214b908f0929d8672dbe72",
+      "Libraries/Blob/NativeFileReaderModule.js": "c2e7745b591f30c57d1866ffcab6f9d8dbf5babc18c548f0e9002601eb142d28",
+      "src/private/specs_DEPRECATED/modules/NativeBlobModule.js": "cd22553a309f2f2912fd10a1225f4000a14d308c8be8cca2b048bfbe06ee4f25",
+      "src/private/specs_DEPRECATED/modules/NativeFileReaderModule.js": "af12fda7ca8b5e607b891b5c5c9c7f1a9340d5a35d2c88c25f3ed7796359107b",
+      "src/private/webapis/dom/abort-api/AbortController.js": "03082ec42dfbb3de1fc5270b3c6fe7addf7be85ba595f877a0d5f3768c84963a",
+      "src/private/webapis/dom/abort-api/AbortSignal.js": "c0791a70fa3dd97652736b74b789b2bc162709822815405624155c0bb48b8d3e",
+      "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+      "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+      "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+      "Libraries/Network/RCTNetworking.js": "660e670c5442c43782590371a89cc88f97d09729cea795fa636ec07a5035f459",
+      "Libraries/Network/RCTNetworking.ios.js": "50a770779387c39c0bd68d0b8f40a039a6e53977f9b379e8d775a18685dc5fe8",
+      "Libraries/Network/RCTNetworking.mm": "6a087d1a0744c5987f6653d21051d0f1ef023e6f9c5afa51746fbe2f50c3cedc",
+      "Libraries/Network/RCTNetworkingEventDefinitions.flow.js": "6ad8c7f488fbef8016c077cbab2150d713e1f56d158c6122082d65dd956f1c93",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/network/NetworkingModule.kt": "31200e6ba3e50aaaa418e84ee924ff4836939610bd735d6b2bdbfcc74ed02e2a",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/network/NetworkEventUtil.kt": "e3836d4ef579b85e46f19e946dbc81b968b4bec523d3cc1b5089dcb2eb63a0a4",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/network/RequestBodyUtil.kt": "e5e0d4978ae984141d13b836f1b1dfed869ae8e41c0e727a258e591209dfdac3",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/network/HeaderUtil.kt": "84409c5c09bf65a961ad1fe4990440b34ae4e708ef0f4d73bba1deeda0ad06f5",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/blob/BlobModule.kt": "65adac5b201eeef3bd84bf6ca2955b3e15583c9d697f79a7c2a55e8ce0b34d2c",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/blob/FileReaderModule.kt": "83cf8e6ed5d1c71c89e5ffd0b198d4b761e6732717d1da5ffd82427c1af19db6",
+      "Libraries/Blob/RCTBlobManager.mm": "f05c7e27a60330690aefd3d3d128450b9e80f7eead0cb3b31028529e0d20009c",
+      "Libraries/Blob/RCTFileReaderModule.mm": "a5d38077d9612cd75341cf967f041ef93bb6f1a349f7b1d7a2c74bc9862bcde8",
+      "Libraries/WebSocket/WebSocket.js": "722508694e0fb0d7cd7878421801d3e9df2b119b79775320ee832870628f2569",
+      "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+      "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4"
+    },
+    "originalReactNativeInputCount": 38,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "de3c5347afc17a58c8817f89950e79c499bd42495d6114f7cd51162149a77d98",
+        "gitBlobSha1": "db91ba13f6169720b54f3d268d78ac522af8088b",
+        "pinSet": "verificationSourcePins"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "a2a616f10de41a6043e6a49c4a1667a2c2240424deb96316467159c3f3ceda1c",
+        "gitBlobSha1": "d2ef15b5749aa14988893a0e0b9d611d8a09d702",
+        "pinSet": "verificationSourcePins"
+      },
+      "dependencies.json": {
+        "sha256": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "gitBlobSha1": "f0480c2a65061b3bfc7d6350e07d5189d3b8dda9",
+        "pinSet": "nativeSourcePins"
+      },
+      "examples/catalog.json": {
+        "sha256": "fd4b3d94220795d8b89eb90bb3258724cf8ac8bba27567a52905799b586eee95",
+        "gitBlobSha1": "952f1636291591ab625c9474c270c033e2b66ff5",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/entry.jsx": {
+        "sha256": "769113ef2a16e1f1956a2ffdc4ecd775b641f8b3588200053f3fd48f9c229e9a",
+        "gitBlobSha1": "4bf92f590aafdb536363411502841f43705ff2ce",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/networking/App.jsx": {
+        "sha256": "0a9a3d469e6255c05e713c2ec97795be499cab64d802c0e5306c3a3c778703b8",
+        "gitBlobSha1": "11159fc57b954e56834a9fe7a1891fae2ef060e0",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "6cbd05acbdc19d19b94c3d2eac4e10e9b0b5c347d2132c88b10da44d6b287d01",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "155d35b",
+            "subject": "fix(examples): Keep the networking example on its newest request"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.examples/networking/App.jsx.sha256"
+      },
+      "examples/networking/local_server.gd": {
+        "sha256": "d79141db2fd45bf8be68c30daba8405a298d15dd2589633b3ea8227b3855ad59",
+        "gitBlobSha1": "81d01d764e67e5407b41469e53b8b6001d5e7808",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/networking/scene.tscn": {
+        "sha256": "039980a466568695d292832e144a18df74c6e40edaeb3d11a461e6a6a532bb64",
+        "gitBlobSha1": "a65b3e7a61030b865ae1fb6ad6635fd601238c44",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/networking/validation.gd": {
+        "sha256": "baf55979278803f3f35d6089e4fea92d17073f6f5098010b7729dc899694d94d",
+        "gitBlobSha1": "78145f924f0adbc92e35e52ce861cd2a6b5e406f",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "fdca39140029ed7b882cd6f0f2b7ff5b5d9dbe738bf2edfa93cb4a60876656e5",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "155d35b",
+            "subject": "fix(examples): Keep the networking example on its newest request"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.examples/networking/validation.gd.sha256"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "0cbec528d780c8d3c558d16fa5b870379b004b24d756a028b76289f089c2e549",
+        "gitBlobSha1": "77c593cfb3c7a0837a62b8c075cc52fc06196294",
+        "pinSet": "sourcePins"
+      },
+      "native/activity_indicator_view.cpp": {
+        "sha256": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+        "gitBlobSha1": "f75c30df1a893444883f70624c25274f4b05ab20",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/activity_indicator_view.h": {
+        "sha256": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+        "gitBlobSha1": "8fe602f1e6cbc4cd90d8262a213744caf94376cd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "gitBlobSha1": "b72cd2f29399e1c85f8b49cbc6bae3bbb1c26355",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform.h": {
+        "sha256": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+        "gitBlobSha1": "add1aedcb90ef3e44432875e248b8e2b1d7d8755",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+        "gitBlobSha1": "e4023fd8ad7b8bf6baf7a14dc320b295a2ebb167",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "gitBlobSha1": "bbc5295c158d6b856a12aa96c47db3ffb4936e9a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "a1ad7d912c5b780706a467c0baa9f83915b31189bb3588cf11807f118dea7ca0",
+        "gitBlobSha1": "67ff13e1a7aa2224b5826ea9778714140872f913",
+        "pinSet": "sourcePins"
+      },
+      "native/application_runtime.h": {
+        "sha256": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+        "gitBlobSha1": "dc812529d4c02675e2012e39704391744e33aa4b",
+        "pinSet": "sourcePins"
+      },
+      "native/blob_store.h": {
+        "sha256": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+        "gitBlobSha1": "d6dd2fc72a9a90914624aed31b872a3b3561b9c9",
+        "pinSet": "sourcePins"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+        "gitBlobSha1": "40090bf43f6e82c7dba7201bbcc183a1edcf9667",
+        "pinSet": "sourcePins"
+      },
+      "native/fabric_application.h": {
+        "sha256": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "gitBlobSha1": "6491975833295fc096a250bd12d46b0d43243534",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "gitBlobSha1": "7236f0fa2dcc99a0b116b9106c5875a704ece920",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock.h": {
+        "sha256": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+        "gitBlobSha1": "807a10fd3ea0eb8245590575aab4962cc727a9b0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock_test.cpp": {
+        "sha256": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+        "gitBlobSha1": "67d4bd6a612db9d952ed1daf74418937d9b22ae6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot-profile.json": {
+        "sha256": "ce635ff8a62f48afdf8b13e8e656260d7b1e0c5cd47907b5277286e4d14008a0",
+        "gitBlobSha1": "e69f6af29bef4b28de389a227d5aa10fadb3ef1c",
+        "pinSet": "sourcePins"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "gitBlobSha1": "f5b738bf9ac46cbbc28d0fffe121bd905ad6983b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.h": {
+        "sha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "gitBlobSha1": "0fa395d405c49add5db2aa13d81e56883cce5daf",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_http_transport.cpp": {
+        "sha256": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+        "gitBlobSha1": "5221ca236526e4b3fba048a33186b389cf397a19",
+        "pinSet": "sourcePins"
+      },
+      "native/godot_http_transport.h": {
+        "sha256": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+        "gitBlobSha1": "afcdc0fc8078417a6ef18409ba133e8e92948c6a",
+        "pinSet": "sourcePins"
+      },
+      "native/http_core.h": {
+        "sha256": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+        "gitBlobSha1": "5f48cf2199f1a43d6782876a40d3f0a50337f205",
+        "pinSet": "sourcePins"
+      },
+      "native/http_core_test.cpp": {
+        "sha256": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+        "gitBlobSha1": "a67804e8893dcc222af8a5aac8ec64e110c6b505",
+        "pinSet": "sourcePins"
+      },
+      "native/http_transport.h": {
+        "sha256": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+        "gitBlobSha1": "4a5971c7bca7086d5252648c39419ad0cb4f150c",
+        "pinSet": "sourcePins"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.cpp": {
+        "sha256": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+        "gitBlobSha1": "5e65cf77bc7198992464b1b5dbd18c23e2745364",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.h": {
+        "sha256": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+        "gitBlobSha1": "a17ec1f16c053666803e19235f76e93dd9efdc4a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_modules.cpp": {
+        "sha256": "e1bd6d8b00719297d787c6aae456b873c2f4c3658a6074bbbb6b82dfda47ab05",
+        "gitBlobSha1": "4d4285bf37747239de8668111b588f6782f73d7f",
+        "pinSet": "sourcePins"
+      },
+      "native/networking_modules.h": {
+        "sha256": "2530f387f469213e870eb2f1a4a831fc79cf1d941300d85a9e16d9c64ae1283e",
+        "gitBlobSha1": "4fc3c5fd86f4ee1334364847bebca0080460ff27",
+        "pinSet": "sourcePins"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "gitBlobSha1": "7412ebe6f12f3e9a5c7b02ffa18538c11aa9c4eb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "gitBlobSha1": "83600b2957d39833353c6045b0d2cf85ff13a6f7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "gitBlobSha1": "0d18cc8f8f2096f48ba2a558fbf1e383a5ea52d6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "gitBlobSha1": "d5b79148e62e992c6d2366822841961a6e5c7b63",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_event.h": {
+        "sha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "gitBlobSha1": "1fded160c6d93d439ff2775cf32679394ddb4501",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+        "gitBlobSha1": "358f9cdee1e6481124dec452c06cfa7caf493547",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "gitBlobSha1": "ac6ec4d84af956672279ec8f7099a764a55c7e89",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/register.cpp": {
+        "sha256": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+        "gitBlobSha1": "2dd0159bb736ce77d204a61ce1888db0e2abc593",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+        "gitBlobSha1": "bf147a008d79af29178bd9fce09bed9eb0bb749b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+        "gitBlobSha1": "9bf853c26868c0327ceb4b5bbc6953be114bbdc9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.cpp": {
+        "sha256": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+        "gitBlobSha1": "fa5aa5b5dc27d43be4f9c3f71cfd3706b2b5dfa5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.h": {
+        "sha256": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+        "gitBlobSha1": "5a9bee39b55c89037601afdddcd6d0fb0a797225",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/system_appearance.h": {
+        "sha256": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "gitBlobSha1": "f8faf4cf5e0ec942dfeff10bbeb2e1c3040f3656",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+        "gitBlobSha1": "2af57be4b8b9c05d370b13668d8c5f317c797f62",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+        "gitBlobSha1": "00a19be080a8a6f7c1dd8e80bec6e2dab3db6ee3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+        "gitBlobSha1": "f8cd7a960417ac96fd9ddcad9aff02920cc46c1c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+        "gitBlobSha1": "ba1b7885dc5064776a5d77a5423499c83f68d87b",
+        "pinSet": "nativeSourcePins"
+      },
+      "package.json": {
+        "sha256": "dfa089a8b6e28965f12fcdff2d9e404647b65b608dd4c0e7d18aecb176939598",
+        "gitBlobSha1": "6f8f8f94a45912950ed5ffbcb81770de757b933d",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/godot-binary.mjs": {
+        "sha256": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+        "gitBlobSha1": "602d0992e7edd31d3ed3b050bf764d6a3602c581",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-probe-bundle.mjs": {
+        "sha256": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+        "gitBlobSha1": "9b23a853fc52d88e1d190b769c33c8b44216d284",
+        "pinSet": "sourcePins"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+        "gitBlobSha1": "e0e8469f4c498b6c2a063a93fdb56eeb1b286e01",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/networking-bundle.mjs": {
+        "sha256": "a3f86de15a68a0401b0a3bf1dc1d519fae783bf6ef9a3198680702754a034978",
+        "gitBlobSha1": "8029c54b7f8d3a1532dbb803c890fe7457de6892",
+        "pinSet": "sourcePins"
+      },
+      "scripts/networking-sabotage.mjs": {
+        "sha256": "aaeb10a59e33bbceee97fe77efc0ed75cbe7d25a33918afbdc370d8b1e86212d",
+        "gitBlobSha1": "3b0700eb5470f811260ae41117c6ebde0a91cda3",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "6feb96900dbc106b159850955c6989953fa5f0a529457fc081b865dbb9cbc278",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7f45f24",
+            "subject": "fix(scripts): Restore sabotaged sources when a signal ends a run"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.scripts/networking-sabotage.mjs.sha256"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f",
+        "pinSet": "nativeSourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+        "gitBlobSha1": "c6a275a83bd7e3f8ff0057d8033f0bf1eb50bb95",
+        "pinSet": "sourcePins"
+      },
+      "src/initialize.js": {
+        "sha256": "fec416522ddf321e095904a7570e0680f7a66f8fa118f73516dde2d5d13cdbab",
+        "gitBlobSha1": "432b4929d03ef308a1068e3ba9ea297648ece00d",
+        "pinSet": "sourcePins"
+      },
+      "src/platform-environment.js": {
+        "sha256": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+        "gitBlobSha1": "9156911c22fb0a42d6d62639293ff10321f24534",
+        "pinSet": "sourcePins"
+      },
+      "tests/networking-certificates.mjs": {
+        "sha256": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
+        "gitBlobSha1": "b911c6ceea1c87f3442c84ac0252930fe7bbe5be",
+        "pinSet": "sourcePins"
+      },
+      "tests/networking-fixture.jsx": {
+        "sha256": "cc489722a72ec0a77ec066d7f48ae16d6c53ed6d17ca2c02f84a419913885e58",
+        "gitBlobSha1": "4ee8e664dc68bf4a069f847519bc6bc6e71c1264",
+        "pinSet": "sourcePins"
+      },
+      "tests/networking-native.test.mjs": {
+        "sha256": "ad2064b1b25b46ec2c189e2dcfa55853b77e4b54cf5fae168565f56e0a49318f",
+        "gitBlobSha1": "b74d48fe62f5c5efceeafb15a2c1dc2a85d7db09",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "613c9f290d39993685ffcd4cd4b0de540448f61f04aa825ad72df0507f181156",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "8b7c890",
+            "subject": "test(networking): Stop the test server without waiting on a dead child"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/networking-native.test.mjs.sha256"
+      },
+      "tests/networking-oracle.mjs": {
+        "sha256": "c661a0ce69a30b15f0b6ee3ab80711879f4c23525515053cef9a1013f6843a79",
+        "gitBlobSha1": "ee932bb257527e04ca7b1302ee133be6f285dc08",
+        "pinSet": "sourcePins"
+      },
+      "tests/networking-probe.gd": {
+        "sha256": "54c55b697911adc102f4f2bbce9eef603d055d21d6fb4c2a3dce2e1c4369e25c",
+        "gitBlobSha1": "e57b852576f499b2f0d38c059cd2f3f0062f1640",
+        "pinSet": "sourcePins"
+      },
+      "tests/networking-server.mjs": {
+        "sha256": "b384897baa66253733786d43f381f1f919bc6daabc73ef378a1c7491345e64ca",
+        "gitBlobSha1": "8bc686fc51f00bccdd7fc82096bb74a408cafe24",
+        "pinSet": "sourcePins"
+      },
+      "tests/platform-seams.test.mjs": {
+        "sha256": "8be53680bed22e83000bc387cf797bcaf25be7bc164e9ed1b54e452fc6baa707",
+        "gitBlobSha1": "4088bd730950e8bebfd215f8cd4ea52b00ff1b3b",
+        "pinSet": "verificationSourcePins"
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the final attempt; this artifact audit certifies only the headless current networking lane (100 checks, the state after the review).",
+    "The preceding-host control (84 normative failures) and the two retained sabotages (8 and 2 failures) remain local evidence; this audit only shows that every check they fail and still exist passes in the hosted run.",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "WebSocket is the next slice: the global is RN's and fails on first use with 'WebSocketModule' could not be found, and BlobModule's socket methods throw E_UNSUPPORTED.",
+    "Cookies are neither stored nor sent: withCredentials has no effect and clearCookies calls back false. OkHttp and NSURLSession keep a cookie jar.",
+    "A response with a Content-Encoding other than identity fails explicitly (OkHttp and NSURLSession decode it); a string request body with Content-Encoding gzip also fails, and that path has no check of its own.",
+    "The body is buffered and delivered once: no incremental text updates, no upload or download progress events; a 1 MiB body arrives over several budgeted polls.",
+    "uri bodies and FormData file parts fail explicitly; PUT, DELETE, OPTIONS, TRACE and PATCH map to Godot's client with no check of their own.",
+    "HTTP/1.1, one connection per request: no pooling, keep-alive, HTTP/2, proxy configuration or system trust configuration; outside the validation seam TLS trusts Godot's roots, with no revocation or pinning.",
+    "The contract is Android's: RN's iOS wrapper would need a second native module over another spec; failure texts are this host's, not OkHttp's; BlobModule's constants are iOS's.",
+    "The react-native facade gains no export: Networking stays missing, and the globals are RN's own.",
+    "Only macOS arm64 was executed: Godot Android (INTERNET permission), iOS and Web (CORS) exports, hardware, offline and reconnect behavior are not covered.",
+    "GF-22 is open: only its first-slice checkpoint closes, and no whole GF, other checkpoint, dependency, weight or denominator closes."
+  ],
+  "findings": [
+    "explained, non-blocking: examples/networking/App.jsx: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 155d35b (fix(examples): Keep the networking example on its newest request); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.examples/networking/App.jsx.sha256",
+    "explained, non-blocking: examples/networking/validation.gd: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 155d35b (fix(examples): Keep the networking example on its newest request); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.examples/networking/validation.gd.sha256",
+    "explained, non-blocking: scripts/networking-sabotage.mjs: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 7f45f24 (fix(scripts): Restore sabotaged sources when a signal ends a run); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.scripts/networking-sabotage.mjs.sha256",
+    "explained, non-blocking: tests/networking-native.test.mjs: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 8b7c890 (test(networking): Stop the test server without waiting on a dead child); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/networking-native.test.mjs.sha256",
+    "explained, non-blocking: src/react-native-platform.jsx: not pinned by the committed state and not added after the implementation commit; changed by no commit after the implementation commit; recorded by content: SHA-256 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the run head and 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the implementation commit (equal: True); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112630124548,
+    "sha256": "1e0b7cd4de069a1ff583bf64584bdacb02b0dc44779a040fb1c48807663c1ee3",
+    "checkoutVerified": true,
+    "step": "npm run test:networking",
+    "stepTap": {
+      "ok": [
+        "RN's own fetch, XMLHttpRequest, FormData, Blob and AbortController run over native networking against a local server"
+      ],
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 127,
+    "fullRawLogIncludedInReceipt": false
+  }
+}
