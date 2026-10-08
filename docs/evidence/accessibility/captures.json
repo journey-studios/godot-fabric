@@ -1,0 +1,30 @@
+{
+  "example": "accessibility",
+  "command": "npm run example -- accessibility --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 16,
+    "nativeRenderer": 18
+  },
+  "files": [
+    {
+      "stage": "initial",
+      "path": "docs/evidence/accessibility/accessibility-initial.png",
+      "sha256": "f8e6d6c9eaf3354cbe39a703efbd5e0a7bdc1fdb946c0ab7075afd29b27a884d",
+      "bytes": 40901,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "sent",
+      "path": "docs/evidence/accessibility/accessibility-sent.png",
+      "sha256": "530a3741d249da74b968c10a440081ee54bb1af0e1dd5321a1d57d32bba8a6e2",
+      "bytes": 41921,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

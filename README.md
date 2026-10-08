@@ -281,6 +281,8 @@ rejected). `npm run test:accessibility:bridge` reads the real NSAccessibility tr
 the graphical Godot and presses elements with `AXPress` (22 checks, local macOS
 only; the preceding host fails exactly 5). `AccessibilityInfo`, focus, text scale,
 announcements and mobile (Godot 4.7.2 has no bridge on iOS or Android) are open.
+Hosted CI has not run the headless step yet.
+[Evidence](docs/evidence/accessibility/README.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original

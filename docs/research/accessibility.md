@@ -2,7 +2,8 @@
 
 Status: first slice of GF-20. The semantic tree of `View`, `Pressable` and the
 touchables reaches Godot's accessibility element for each Control, and on
-macOS an assistive technology reads it and presses it through NSAccessibility.
+macOS the tree is readable and pressable through NSAccessibility (proved by an
+in-process inspector, not by a screen reader).
 **Two kinds of proof back this, and they are not the same.** The headless
 suite (`npm run test:accessibility`) proves metadata: the descriptor the host
 resolved, the properties it set on each Control and the host path of the OS's
@@ -11,7 +12,9 @@ OS accessibility driver without a window. The graphical macOS test
 (`npm run test:accessibility:bridge`, local, not in hosted CI) proves the real
 tree: it injects an NSAccessibility inspector into the running Godot and reads
 the tree that `NSApp` serves, and presses elements with `AXPress`. Neither
-certifies a screen reader's speech, other platforms or mobile.
+certifies a screen reader's speech, other platforms or mobile. The
+[evidence record](../evidence/accessibility/README.md) pins the runs, hashes,
+controls and captures.
 
 Not in this slice: `AccessibilityInfo` (settings and events, the fatter half of
 the roadmap item), text scale, focus and keyboard navigation, announcements
@@ -315,7 +318,7 @@ The press of `AXPress` ran `onAccessibilityTap` on the View that had it, a click
 ones. Hiding a View removed it and its descendants from the tree, and `display:
 none` is never mounted by Fabric, so nothing of it exists. A prop update, a removal
 and an unmount/remount moved the tree as soon as the frames delivered it (the
-waits met their state in one or two polls).
+waits met their state in one to four polls).
 
 ## Open
 

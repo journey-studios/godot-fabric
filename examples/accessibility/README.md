@@ -5,7 +5,7 @@ npm run example -- accessibility              # interactive window
 npm run example -- accessibility --headless   # bounded, no window
 npm run example -- accessibility --check      # bounded, in a window
 npm run example -- accessibility --capture    # bounded, saves the frames
-npm run test:accessibility                    # evidence suite, headless
+npm run test:accessibility                    # evidence suite, headless (metadata)
 npm run test:accessibility:bridge             # the OS tree, graphical macOS only
 ```
 
@@ -27,6 +27,21 @@ What the form has:
   click with `onPress`;
 - a status that is a polite live region (`accessibilityLiveRegion="polite"`);
 - a decoration hidden from assistive technologies (`aria-hidden`).
+
+## Use the example
+
+![Compact tab selected, no rating chosen and Send disabled](../../docs/evidence/accessibility/accessibility-initial.png)
+
+**Initial** is the screen as mounted: Compact selected, three unchecked radios, Send
+disabled until a rating is chosen, and the polite status asking for one. The decoration at
+the bottom is drawn, and removed from the OS's accessibility tree by `aria-hidden`.
+
+![Detailed tab selected, rating 2 checked and Send sent](../../docs/evidence/accessibility/accessibility-sent.png)
+
+**After the presses** is the screen after the OS's press (the host path) on the Detailed tab,
+the second radio and Send. Send ran once and disabled itself, and the live region says `Thanks!
+You rated this 2 of 3`. The [evidence record](../../docs/evidence/accessibility/README.md)
+pins these captures and the runs behind this example.
 
 ## What the validation establishes
 

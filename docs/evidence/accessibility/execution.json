@@ -1,0 +1,202 @@
+{
+  "format": "godot-fabric.accessibility-execution/v1",
+  "executedAt": "2026-10-07",
+  "implementationCommit": "42615f4513cda44671ebc63a7f695ae1d9d7286e",
+  "sourceState": "Clean working tree at implementationCommit. The 18 code and configuration inputs the headless bundle pins match that commit by git show and SHA-256. The native build is not certified by source hashes alone: the host hash below is the one the runs loaded.",
+  "environment": {
+    "platform": "macOS 26.6.2 (25G83) arm64",
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "headlessMode": "godot --headless",
+    "bridgeMode": "graphical window, --accessibility always, in-process NSAccessibility inspector (DYLD_INSERT_LIBRARIES)"
+  },
+  "scope": {
+    "headless": "Metadata only: the semantic descriptor the host resolved, the properties set on each Control and the host path of the OS's press. No OS accessibility tree exists in a headless run.",
+    "bridge": "The real NSAccessibility tree the window serves to the system, read from inside the process, and AXPress (accessibilityPerformPress). No screen reader's speech, no external AXUIElement client, no other platform.",
+    "notCertified": [
+      "screen-reader speech",
+      "Windows and Linux trees",
+      "iOS and Android (Godot 4.7.2 has no accessibility bridge there)",
+      "hardware"
+    ]
+  },
+  "hosts": {
+    "current": "1654249608505fa8045788598eb4c7ac6aa54c0ff833b867514c1b687fd1b606",
+    "previous": "150d7ea12b0a8175077472e05b31e3ef3bbd5856288dd4b2e1608171c7ae0c35",
+    "previousMeaning": "The host built from main (e88b5bb) before the accessible View, preserved before any C++ changed",
+    "inspector": "06db70c572470ebb56e9f2397ff223a750c46dc29d1fc1b08898ba7c8a9896f3"
+  },
+  "bundle": {
+    "sha256": "1d8fdfad4f03345a3528d5c5775352aa2c3147fb12f10d4920ff9a8beebda535",
+    "inputs": 308,
+    "originalReactNativeSourcesPinned": 15,
+    "sameBundleOnEveryHost": true
+  },
+  "core": {
+    "command": ".deps/build/accessibility_core_test",
+    "result": "ACCESSIBILITY_CORE_PASSED",
+    "assertions": 594,
+    "groups": 11
+  },
+  "headless": {
+    "command": "npm run test:accessibility",
+    "suite": "1/1 TAP test passed",
+    "marker": "ACCESSIBILITY_PASSED: 80",
+    "checks": 80,
+    "passed": 80,
+    "failed": 0,
+    "scope": "metadata only",
+    "twoRoots": true,
+    "staticElementRows": 34,
+    "descriptorUpdatesAndRemovals": 32,
+    "ariaPairs": 5,
+    "roleSpellingsSwept": 105,
+    "roleSpellingsRejected": 44,
+    "jsNegatives": 13,
+    "hostNegatives": 9,
+    "hostErrorsReported": 55,
+    "pressStages": 13,
+    "timelineSteps": 192,
+    "engineConstants": {
+      "roles": 48,
+      "flags": 10,
+      "actions": 23,
+      "live": 3
+    },
+    "independentOracle": "accepts the report; every descriptor, error message and press is re-derived from the raw observations with its own role table",
+    "rawReportSha256": "89a308010b5db5982165354929c2831412eacfcfdc56073574cc839138cae7f8",
+    "logSha256": "dd802f43e44e333a349631779f4c961b4679dc0079c7485aa4879bec207cd103"
+  },
+  "bridge": {
+    "command": "npm run test:accessibility:bridge",
+    "suite": "1/1 TAP test passed",
+    "marker": "ACCESSIBILITY_BRIDGE_PASSED: 22",
+    "checks": 22,
+    "passed": 22,
+    "failed": 0,
+    "scope": "real NSAccessibility tree and AXPress",
+    "waits": {
+      "count": 27,
+      "allMet": true,
+      "maxPolls": 4,
+      "unit": "inspector round trips counted in delivered frames; no fixed time"
+    },
+    "pressStages": 8,
+    "updateSteps": 17,
+    "independentOracle": "accepts the report and rejects the same report with every title blanked",
+    "rawReportSha256": "73f559660630448175637fd675e695f380940b14f718de5823f592b9de653861",
+    "logSha256": "c952719787096d10815f48dcdec36f9ef2b3032637406b6ee62d05100e910bee"
+  },
+  "negativeControls": {
+    "previousHost": {
+      "headless": {
+        "command": "node tests/accessibility-native.test.mjs --allow-original-negative (preserved previous host installed)",
+        "marker": "ACCESSIBILITY_ORIGINAL_NEGATIVE: 10",
+        "checks": 19,
+        "passed": 9,
+        "failed": 10,
+        "failedIds": [
+          "mount/Each root mounts its Views, and the surface's root View, as accessible Views on the host",
+          "static/Every element resolves to the descriptor of its RN props, in both roots",
+          "static/The label and the hint are the Control's accessibility name and description",
+          "static/The accessibilityLabel reaches the accessibility name of the Control",
+          "static/The accessibilityHint reaches the accessibility description of the Control",
+          "static/A View without accessibility props carries an empty descriptor",
+          "static/accessibilityLiveRegion sets the Control's live mode to the engine's constant",
+          "static/An RN label that is also a translation key stays literal",
+          "static/The accessible View translates no message and does not auto translate",
+          "static/A View whose descriptor is empty is not applied again, and one with a descriptor is applied at least once"
+        ],
+        "exactlyTheNormativeChecks": true,
+        "rawReportSha256": "fe151a80f523ff32aa0907adfc479d80b25ebb26e653fc59087793f0f15f1ec2"
+      },
+      "bridge": {
+        "command": "node tests/accessibility-bridge.test.mjs --allow-original-negative (preserved previous host installed)",
+        "marker": "ACCESSIBILITY_BRIDGE_ORIGINAL_NEGATIVE: 5",
+        "checks": 7,
+        "passed": 2,
+        "failed": 5,
+        "failedIds": [
+          "tree/The OS tree names every View RN labeled, with the role, the hint and the enabled state RN gave it, in both roots",
+          "tree/importantForAccessibility no-hide-descendants and display none leave nothing of the View in the OS tree",
+          "tree/Both roots serve their own element of the same label",
+          "tree/accessibilityRole tab is the OS's tab button",
+          "press/AXPress on a View with onAccessibilityTap runs that handler and sends RN no touch"
+        ],
+        "exactlyTheNormativeChecks": true,
+        "rawReportSha256": "6101b50ce80b3058d45c6c7310c1b855536c529d5a6bbf3dbc874095a901a605"
+      }
+    },
+    "sabotages": {
+      "command": "node scripts/accessibility-sabotage.mjs",
+      "receiptSha256": "e5e54deb3a8bb19ed1a2586624ac5bed1c0997e28e814452127aa1ca0e27a36e",
+      "variants": [
+        {
+          "name": "name",
+          "meaning": "the applier never sets the accessibility name",
+          "file": "native/accessible_view.cpp",
+          "checks": 80,
+          "failed": 6,
+          "oracleRejected": true,
+          "hostSha256": "10f53c3f6f21d4fa3b0883aac94abf550573106cbf10d9b662cdec791d009c22"
+        },
+        {
+          "name": "click",
+          "meaning": "the OS's press (ACTION_CLICK) does nothing",
+          "file": "native/accessible_view.cpp",
+          "checks": 80,
+          "failed": 17,
+          "oracleRejected": true,
+          "hostSha256": "8ace262371c41ee614efffa7155e129df68a441a86fbd06588becf7b72c5abdb"
+        },
+        {
+          "name": "roles",
+          "meaning": "the role table is swapped: a button is given the link role",
+          "file": "native/accessibility_core.h",
+          "checks": 80,
+          "failed": 3,
+          "oracleRejected": true,
+          "hostSha256": "e360dbf92a7698d9c9aa130bc440d22b71503e0e57151fc909830e703d092bd3"
+        },
+        {
+          "name": "hidden",
+          "meaning": "hidden is ignored: aria-hidden, accessibilityElementsHidden and no-hide-descendants hide nothing",
+          "file": "native/accessibility_core.h",
+          "checks": 80,
+          "failed": 5,
+          "oracleRejected": true,
+          "hostSha256": "569f33a7bd2f0e779503598f15d34c2de120d43aed3d6ab9a72695db42c4c58a"
+        }
+      ],
+      "genuineSourcesRestoredByteForByte": true,
+      "restoredHostEqualsGenuine": true
+    }
+  },
+  "regressions": {
+    "testContracts": {
+      "command": "npm run test:contracts",
+      "nodeTests": 296,
+      "nodeFailed": 0,
+      "pythonTests": 13,
+      "parityInventory": "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+    },
+    "typeCheck": "npm run type-check: no diagnostics",
+    "checkStatic": "npm run check:static: no issues found",
+    "checkPublication": "npm run check:publication: passed, no failures",
+    "example": {
+      "headless": "npm run example -- accessibility --headless: 16 acceptance checks",
+      "nativeRenderer": "npm run example -- accessibility --check: 16 acceptance checks",
+      "capture": "npm run example -- accessibility --capture: 18 acceptance checks; two captures, bytes identical across two runs (captures.json)"
+    }
+  },
+  "limitations": [
+    "The headless suite proves metadata only; the OS tree is proved by the bridge test, which runs locally on a graphical macOS session and is not part of hosted CI.",
+    "expanded and busy are published to Godot and carried by the descriptor, but AccessKit's macOS adapter does not serve them, so the bridge test does not cover them. selected is served for list items and options (a tab shows it as the radio value).",
+    "Godot 4.7.2 has no accessibility bridge on iOS or Android: a blocker for GF-34 and GF-35.",
+    "AccessibilityInfo (settings and events), text scale, focus and keyboard navigation, announcements, custom actions, grouping under accessible, Text, the host's Button and TextInput and the Switch are outside this slice.",
+    "No screen reader's speech was heard; only the tree a screen reader reads.",
+    "Hosted CI has not run the headless step yet. This slice does not complete GF-20 or close a checkpoint."
+  ]
+}

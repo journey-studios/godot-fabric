@@ -275,7 +275,9 @@ host path of the OS's press. `npm run test:accessibility:bridge` is the proof of
 the OS tree: it needs a graphical macOS session, reads the NSAccessibility tree of
 the running Godot and presses elements with `AXPress`, and it is not part of hosted
 CI. The preceding host fails exactly the descriptor checks in both, and retained
-sabotages are rejected by the probe and the independent oracle.
+sabotages are rejected by the probe and the independent oracle. Its
+[receipt](../docs/evidence/accessibility/README.md) records 80 headless checks
+(metadata only), 22 on the OS tree, the controls and two captures of the example.
 
 The [capture notification matrix](pointer-capture-notifications/README.md)
 captures mouse and touch contacts over two roots and observes got/lost on JSX
