@@ -33,6 +33,16 @@ func _ready() -> void:
   verify(node("ty-limited").lines > 2 and node("ty-limited").visibleLines == 2 and node("ty-limited").height == 42 and node("ty-limited").ellipses == 1, "numberOfLines limita medida a duas linhas e gera reticências nativas")
   verify(node("ty-spacing").measuredWidth > node("ty-regular").measuredWidth + 20, "letterSpacing altera os avanços reais dos glifos")
   verify(node("ty-break").lines == 3 and node("ty-break").height == 63 and node("ty-empty").lines == 1 and node("ty-empty").height == 21, "Texto vazio e newline final mantêm as linhas e leading declarados")
+  var lines := node("ty-lines")
+  var cancel := node("ty-cancel")
+  verify(node("ty-italic").runs[0].fontStyle == "italic" and node("ty-italic").runs[0].syntheticItalic and node("ty-upright").runs[0].fontStyle == "normal"
+    and node("ty-italic").measuredWidth == node("ty-upright").measuredWidth and node("ty-italic").lineMetrics == node("ty-upright").lineMetrics,
+    "Itálico sintético inclina os glifos sem mudar avanço, largura nem quebras")
+  verify(lines.decorations.map(func(row: Dictionary) -> Array: return [int(row.run), row.kind, row.color]) == [[2, "underline", "ffffffff"], [4, "line-through", "fb7185ff"], [6, "underline", "f97316ff"]]
+    and lines.runs[0].fontStyle == "italic",
+    "Sublinhado, tachado e decoração colorida (NativeWind) desenham uma linha por trecho, na cor do texto ou na de textDecorationColor")
+  verify(cancel.decorations.map(func(row: Dictionary) -> Array: return [int(row.run), row.kind, row.color]) == [[0, "underline", "38bdf8ff"], [2, "underline", "38bdf8ff"]],
+    "Um span com textDecorationLine none cancela o sublinhado do pai e o texto seguinte volta a ser sublinhado")
   verify_geometry("initial")
   await capture("initial")
 
@@ -78,14 +88,14 @@ func _ready() -> void:
   await wheel(at("ty-scroll"))
   verify(node("ty-scroll").scroll.y > 0, "Parágrafos medidos integram ScrollView e roda nativa")
 
-  var expected := ["not registered", "Inline Controls", "tail or clip"]
-  for index in range(3):
-    surface.evaluate("GodotApp.run('fail', '%s')" % ["font", "inline", "mode"][index])
+  var expected := ["not registered", "Inline Controls", "tail or clip", "textDecorationStyle dotted: only solid"]
+  for index in range(4):
+    surface.evaluate("GodotApp.run('fail', '%s')" % ["font", "inline", "mode", "dotted"][index])
     await wait_js("GodotApp.stats().errors.length === %d" % (index + 1), 4)
     verify(react().errors[index].contains(expected[index]) and not node("ty-fallback").is_empty(), "Contrato recusa recurso não implementado antes do layout nativo: " + expected[index])
     surface.evaluate("GodotApp.run('fail', null)")
     await frames(4)
-  verify(node("ty-fallback").is_empty() and data().errors.is_empty() and react().mounts == 1 and react().childMounts == 1 and react().count == 1, "ErrorBoundary recupera os três negativos sem perder estado nem causar erro do host")
+  verify(node("ty-fallback").is_empty() and data().errors.is_empty() and react().mounts == 1 and react().childMounts == 1 and react().count == 1, "ErrorBoundary recupera os quatro negativos sem perder estado nem causar erro do host")
   var before_stop := data()
   remove_child(surface)
   var stopped := data()
@@ -115,9 +125,53 @@ func ink(image: Image, id: String) -> float:
   var value := 0.0
   for y in range(rect.position.y, rect.end.y):
     for x in range(rect.position.x, rect.end.x):
-      var c := image.get_pixel(x, y)
-      value += maxf(0, minf(c.r, minf(c.g, c.b)) - 0.06)
+      value += ink_at(image, x, y)
   return value
+
+func near_color(pixel: Color, wanted: Color) -> bool:
+  return absf(pixel.r - wanted.r) < 0.15 and absf(pixel.g - wanted.g) < 0.15 and absf(pixel.b - wanted.b) < 0.15
+
+# The share of the columns of a decoration segment that hold the wanted color in the pixel rows around the line, moved
+# down by shift pixels. Segments are in the paragraph's coordinates, so they follow the control to the screen.
+func line_coverage(image: Image, id: String, row: Dictionary, wanted: Color, shift: float) -> float:
+  var origin: Vector2 = surface.find_child(id, true, false).get_global_rect().position
+  var first := int(floor(origin.x + float(row.x0))) + 1
+  var last := int(ceil(origin.x + float(row.x1))) - 1
+  var y := int(floor(origin.y + float(row.y) + shift))
+  var covered := 0
+  for x in range(first, last):
+    var found := false
+    for dy in range(-1, 2):
+      found = found or near_color(image.get_pixel(x, y + dy), wanted)
+    covered += int(found)
+  return float(covered) / float(last - first) if last > first else 0.0
+
+# How far the ink of the upper half of a paragraph sits to the right of the ink of its lower half, in pixels: the lean.
+func slant(image: Image, id: String) -> float:
+  var rect := Rect2i((surface.find_child(id, true, false) as Control).get_global_rect())
+  var first := rect.end.y
+  var last := rect.position.y
+  for y in range(rect.position.y, rect.end.y):
+    for x in range(rect.position.x, rect.end.x):
+      if ink_at(image, x, y) > 0.0:
+        first = mini(first, y)
+        last = maxi(last, y)
+  var middle := (first + last) / 2
+  return half_mean(image, rect, first, middle) - half_mean(image, rect, middle + 1, last)
+
+func ink_at(image: Image, x: int, y: int) -> float:
+  var c := image.get_pixel(x, y)
+  return maxf(0, minf(c.r, minf(c.g, c.b)) - 0.06)
+
+func half_mean(image: Image, rect: Rect2i, first: int, last: int) -> float:
+  var total := 0.0
+  var weighted := 0.0
+  for y in range(first, last + 1):
+    for x in range(rect.position.x, rect.end.x):
+      var weight := ink_at(image, x, y)
+      total += weight
+      weighted += weight * x
+  return weighted / total if total > 0.0 else 0.0
 
 func capture(stage: String) -> void:
   states[stage] = data()
@@ -138,4 +192,22 @@ func capture(stage: String) -> void:
   verify(green > 10 and amber > 10, "Pixels confirmam cores distintas dos spans herdados: " + stage)
   if stage == "initial":
     verify(ink(image, "ty-bold") > ink(image, "ty-regular") * 1.15, "Fonte variável bold desenha mais tinta que regular")
+    verify(slant(image, "ty-italic") - slant(image, "ty-upright") > 1.0, "Pixels confirmam que o itálico sintético inclina a tinta para a direita")
+    var orange := Color("f97316")
+    var colored: Dictionary = node("ty-lines").decorations[2]
+    verify(line_coverage(image, "ty-lines", colored, orange, 0.0) > 0.9 and line_coverage(image, "ty-lines", colored, orange, -6.0) == 0.0
+      and line_coverage(image, "ty-lines", colored, orange, 6.0) == 0.0,
+      "Pixels confirmam a linha de textDecorationColor na altura do sublinhado e em nenhuma outra")
+    var rose := Color("fb7185")
+    var struck: Dictionary = node("ty-lines").decorations[1]
+    verify(line_coverage(image, "ty-lines", struck, rose, 0.0) > 0.9 and line_coverage(image, "ty-lines", struck, rose, -6.0) == 0.0
+      and line_coverage(image, "ty-lines", struck, rose, 6.0) == 0.0,
+      "Pixels confirmam o tachado no meio da caixa do trecho")
+    var sky := Color("38bdf8")
+    var before: Dictionary = node("ty-cancel").decorations[0]
+    var after: Dictionary = node("ty-cancel").decorations[1]
+    var hole := {"x0": float(before.x1) + 2.0, "x1": float(after.x0) - 2.0, "y": before.y}
+    verify(line_coverage(image, "ty-cancel", before, sky, 0.0) > 0.9 and line_coverage(image, "ty-cancel", after, sky, 0.0) > 0.9
+      and line_coverage(image, "ty-cancel", hole, sky, 0.0) < 0.1,
+      "Pixels confirmam o sublinhado do pai e o buraco deixado pelo span que o cancela")
   verify(image.save_png("res://build/typography-" + stage + ".png") == OK, "Captura real salva: " + stage)

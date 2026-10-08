@@ -423,3 +423,14 @@ const middleEllipsis = <Text numberOfLines={1} ellipsizeMode="middle">Lines</Tex
 // @ts-expect-error fontSize is a style, not a prop of RN's Text
 const fontSizeProp = <Text fontSize={20}>Lines</Text>;
 void measuredText; void originalTextProps; void wrongTextLayout; void pressableText; void responderText; void wrongResponder; void captureResponder; void selectableText; void middleEllipsis; void fontSizeProp;
+// The text style the host paints: a synthetic italic and solid lines, in the values RN's own TextStyle declares.
+const styledText = <Text style={{ fontStyle: "italic", textDecorationLine: "underline line-through", textDecorationColor: "#ff0000",
+  textDecorationStyle: "solid" }}>Styled</Text>;
+const resetText = <Text style={[{ textDecorationLine: "underline" }, { textDecorationLine: "none", fontStyle: "normal" }]}>Reset</Text>;
+// @ts-expect-error oblique is not a fontStyle of RN's TextStyle
+const obliqueText = <Text style={{ fontStyle: "oblique" }}>Lines</Text>;
+// @ts-expect-error only solid lines are drawn: dotted, dashed, double and wavy are not implemented
+const dottedText = <Text style={{ textDecorationStyle: "dotted" }}>Lines</Text>;
+// @ts-expect-error the line is none, underline, line-through or underline line-through, in that order
+const overlineText = <Text style={{ textDecorationLine: "overline" }}>Lines</Text>;
+void styledText; void resetText; void obliqueText; void dottedText; void overlineText;

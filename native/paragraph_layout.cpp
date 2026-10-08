@@ -1,7 +1,10 @@
 #include "paragraph_layout.h"
 #include <godot_cpp/classes/font_variation.hpp>
+#include <godot_cpp/classes/rendering_server.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/text_server_manager.hpp>
+#include <godot_cpp/variant/transform2d.hpp>
+#include <react/renderer/attributedstring/conversions.h>
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -10,6 +13,9 @@
 namespace fabric_godot {
 using namespace godot;
 namespace {
+// How far the top of an italic glyph leans right, as a fraction of its height. It is the skew Android's Skia applies
+// (-0.25) to a typeface that has no italic face, which is the case of every font this platform bundles.
+constexpr float ITALIC_SKEW = 0.25f;
 Ref<TextServer> server() { return TextServerManager::get_singleton()->get_primary_interface(); }
 Color color(rn::SharedColor value) {
   auto c = rn::colorComponentsFromColor(value);
@@ -23,36 +29,54 @@ size_t run_index_at(const std::vector<TextRun> &runs, int position) {
   for (size_t index = 0; index < runs.size(); ++index) if (position < runs[index].end) return index;
   return runs.size() - 1;
 }
-const TextRun &run_at(const std::vector<TextRun> &runs, int position) {
-  return runs[run_index_at(runs, position)];
-}
-// Android's FontMetricsUtil reads capHeight and xHeight from the height of the
-// ink bounds of "T" and "x" at the line's font and size. The outline of the glyph
-// gives the same bounds, in pixels at that size (a glyph the font lacks has none).
-float ink_height(const Ref<Font> &font, int size, char32_t glyph) {
+// The outline of one glyph at a font and size, in pixels with y down from the baseline (a glyph the font lacks has
+// none): its top and bottom, where its leftmost point at each of them is and its advance. The skew of an italic font
+// shows in how far the top sits from the bottom.
+struct Outline {
+  float top{}, bottom{}, top_x{}, bottom_x{}, advance{};
+};
+Outline outline_of(const Ref<Font> &font, int size, char32_t glyph) {
+  Outline out;
   if (font.is_null()) {
-    return 0;
+    return out;
   }
   const auto rids = font->get_rids();
   if (rids.is_empty()) {
-    return 0;
+    return out;
   }
   const RID rid = rids[0];
   const auto ts = server();
   const int64_t index = ts->font_get_glyph_index(rid, size, glyph, 0);
   if (index == 0) {
-    return 0;
+    return out;
   }
   const PackedVector3Array points = ts->font_get_glyph_contours(rid, size, index)["points"];
   if (points.is_empty()) {
-    return 0;
+    return out;
   }
-  float lowest = points[0].y, highest = points[0].y;
+  out.top = out.bottom = points[0].y;
   for (int i = 1; i < points.size(); ++i) {
-    lowest = std::min(lowest, static_cast<float>(points[i].y));
-    highest = std::max(highest, static_cast<float>(points[i].y));
+    out.top = std::min(out.top, static_cast<float>(points[i].y));
+    out.bottom = std::max(out.bottom, static_cast<float>(points[i].y));
   }
-  return highest - lowest;
+  out.top_x = out.bottom_x = std::numeric_limits<float>::infinity();
+  for (int i = 0; i < points.size(); ++i) {
+    if (points[i].y == out.top) {
+      out.top_x = std::min(out.top_x, static_cast<float>(points[i].x));
+    }
+    if (points[i].y == out.bottom) {
+      out.bottom_x = std::min(out.bottom_x, static_cast<float>(points[i].x));
+    }
+  }
+  out.advance = ts->font_get_glyph_advance(rid, size, index).x;
+  return out;
+}
+// Android's FontMetricsUtil reads capHeight and xHeight from the height of the
+// ink bounds of "T" and "x" at the line's font and size. The outline of the glyph
+// gives the same bounds, in pixels at that size.
+float ink_height(const Ref<Font> &font, int size, char32_t glyph) {
+  const Outline outline = outline_of(font, size, glyph);
+  return outline.bottom - outline.top;
 }
 // RN's LineMeasurement rows of a paragraph the host has already shaped: the rows are the ones
 // measure sized and the painter draws, so no second line breaker exists. The row's top and its
@@ -78,19 +102,76 @@ rn::LinesMeasurements lines_of(const PreparedParagraph &prepared) {
   }
   return lines;
 }
-void draw_glyphs(const TypedArray<Dictionary> &glyphs, RID canvas,
-    Vector2 &pen, const std::vector<TextRun> &runs, int trim = -1) {
+// The glyphs a row paints, in painting order: its text up to where it was trimmed, then the glyphs of the ellipsis.
+// The ellipsis takes the run of the last glyph painted before it (the row's first run when none is): RN's span covers
+// the truncated text, so its color and its decoration go on under the ellipsis. The positions are the paragraph's.
+std::vector<PaintedGlyph> painted_glyphs(const ParagraphLine &line, const std::vector<TextRun> &runs) {
   auto ts = server();
-  for (int i = 0; i < glyphs.size() && (trim < 0 || i < trim); ++i) {
-    Dictionary glyph = glyphs[i];
-    const auto &run = run_at(runs, glyph["start"]);
-    const int repeat = glyph["repeat"];
-    for (int j = 0; j < repeat; ++j) {
-      RID font = glyph["font_rid"];
-      if (font.is_valid()) ts->font_draw_glyph(font, canvas, glyph["font_size"],
-          pen + static_cast<Vector2>(glyph["offset"]), glyph["index"], run.color);
-      pen.x += static_cast<double>(glyph["advance"]);
+  std::vector<PaintedGlyph> out;
+  float pen = line.x;
+  size_t run = run_index_at(runs, line.start);
+  const auto paint = [&](const TypedArray<Dictionary> &glyphs, int trim, bool ellipsis) {
+    for (int i = 0; i < glyphs.size() && (trim < 0 || i < trim); ++i) {
+      Dictionary glyph = glyphs[i];
+      if (!ellipsis) {
+        run = run_index_at(runs, glyph["start"]);
+      }
+      const int repeat = glyph["repeat"];
+      for (int j = 0; j < repeat; ++j) {
+        const float advance = static_cast<float>(static_cast<double>(glyph["advance"]));
+        out.push_back({glyph["font_rid"], glyph["font_size"], glyph["index"], glyph["offset"], pen, advance, run, ellipsis});
+        pen += advance;
+      }
     }
+  };
+  paint(ts->shaped_text_get_glyphs(line.rid), ts->shaped_text_get_trim_pos(line.rid), false);
+  paint(ts->shaped_text_get_ellipsis_glyphs(line.rid), -1, true);
+  return out;
+}
+// Consecutive painted glyphs of one run, from where the first starts to where the last ends on the row. A decoration
+// runs on under the ellipsis, which belongs to the run before it; the report of what is painted splits there, to say
+// which run the ellipsis took.
+struct PaintedGroup {
+  size_t run{};
+  bool ellipsis{};
+  float x0{}, x1{};
+};
+std::vector<PaintedGroup> painted_groups(const std::vector<PaintedGlyph> &glyphs, bool split_ellipsis) {
+  std::vector<PaintedGroup> groups;
+  for (const auto &glyph : glyphs) {
+    if (!groups.empty() && groups.back().run == glyph.run && (!split_ellipsis || groups.back().ellipsis == glyph.ellipsis)) {
+      groups.back().x1 = glyph.x + glyph.advance;
+    } else {
+      groups.push_back({glyph.run, glyph.ellipsis, glyph.x, glyph.x + glyph.advance});
+    }
+  }
+  return groups;
+}
+// What a fragment paints besides its font. Opacity multiplies the text and the decoration alike, and a decoration that
+// sets no color takes the text's.
+TextRun make_run(int start, int end, const rn::TextAttributes &a, const Ref<Font> &font, float opacity) {
+  auto ink = a.foregroundColor ? color(a.foregroundColor) : Color(1, 1, 1, 1);
+  auto decoration = a.textDecorationColor ? color(a.textDecorationColor) : ink;
+  ink.a *= opacity;
+  decoration.a *= opacity;
+  const auto line = a.textDecorationLineType.value_or(rn::TextDecorationLineType::None);
+  const bool both = line == rn::TextDecorationLineType::UnderlineStrikethrough;
+  return {start, end, font_size(a), static_cast<int>(a.fontWeight.value_or(rn::FontWeight::Regular)), a.fontFamily,
+      ink, std::isfinite(a.lineHeight) ? a.lineHeight : 0, font, a.fontStyle == rn::FontStyle::Italic,
+      line == rn::TextDecorationLineType::Underline || both,
+      line == rn::TextDecorationLineType::Strikethrough || both, decoration};
+}
+// The facade rejects these before they reach the host. A paragraph built without it (RN's NativeText imported
+// directly) must not get a silent substitute either: oblique would be drawn upright and a dotted or wavy line solid.
+// The value is named by RN's own toString, with the words of the facade's errors.
+void refuse_unsupported_style(const rn::TextAttributes &a) {
+  if (a.fontStyle == rn::FontStyle::Oblique) {
+    throw std::runtime_error("Godot Text does not implement style fontStyle " + rn::toString(*a.fontStyle) +
+        ": use normal or italic");
+  }
+  if (a.textDecorationStyle.has_value() && *a.textDecorationStyle != rn::TextDecorationStyle::Solid) {
+    throw std::runtime_error("Godot Text does not implement style textDecorationStyle " +
+        rn::toString(*a.textDecorationStyle) + ": only solid");
   }
 }
 }
@@ -99,10 +180,13 @@ ParagraphLayout::ParagraphLayout(const std::shared_ptr<const rn::ContextContaine
     : rn::TextLayoutManager(context), fallback_(std::move(fallback)), report_(std::move(report)) {}
 Ref<Font> ParagraphLayout::font(const rn::TextAttributes &a) const {
   const int weight = static_cast<int>(a.fontWeight.value_or(rn::FontWeight::Regular));
+  // The bundled fonts have no italic face, so italic is the same font slanted (see ITALIC_SKEW): it never takes the
+  // shortcut to the fallback font, which is not a variation.
+  const bool italic = a.fontStyle == rn::FontStyle::Italic;
   auto family = a.fontFamily;
-  if (family.empty() && weight == 400 && !std::isfinite(a.letterSpacing)) return fallback_;
+  if (family.empty() && weight == 400 && !std::isfinite(a.letterSpacing) && !italic) return fallback_;
   if (family.empty()) family = "NotoSans";
-  const auto key = family + ":" + std::to_string(weight) + ":" + std::to_string(a.letterSpacing);
+  const auto key = family + ":" + std::to_string(weight) + ":" + std::to_string(a.letterSpacing) + (italic ? ":italic" : "");
   if (auto it = fonts_.find(key); it != fonts_.end()) return it->second;
   if (family != "NotoSans" && family != "JetBrainsMono")
     throw std::runtime_error("Godot font family is not registered: " + family);
@@ -119,6 +203,9 @@ Ref<Font> ParagraphLayout::font(const rn::TextAttributes &a) const {
   variation->set_variation_opentype(axes);
   if (std::isfinite(a.letterSpacing))
     variation->set_spacing(TextServer::SPACING_GLYPH, std::lround(a.letterSpacing));
+  if (italic) {
+    variation->set_variation_transform(Transform2D(Vector2(1, ITALIC_SKEW), Vector2(0, 1), Vector2()));
+  }
   fonts_[key] = variation;
   return variation;
 }
@@ -146,24 +233,21 @@ PreparedParagraph ParagraphLayout::prepare(const rn::AttributedString &text,
   for (const auto &fragment : text.getFragments()) {
     if (fragment.isAttachment()) throw std::runtime_error("Inline Controls are not implemented in Godot Text");
     const auto &a = fragment.textAttributes;
+    refuse_unsupported_style(a);
     last_attributes = a;
     auto content = String::utf8(fragment.string.c_str());
     last_font = font(a);
-    auto ink = a.foregroundColor ? color(a.foregroundColor) : Color(1, 1, 1, 1);
-    if (std::isfinite(a.opacity)) ink.a *= a.opacity;
-    out.runs.push_back({offset, offset + static_cast<int>(content.length()), font_size(a),
-        static_cast<int>(a.fontWeight.value_or(rn::FontWeight::Regular)), a.fontFamily, ink,
-        std::isfinite(a.lineHeight) ? a.lineHeight : 0, last_font});
+    out.runs.push_back(make_run(offset, offset + static_cast<int>(content.length()), a, last_font,
+        std::isfinite(a.opacity) ? a.opacity : 1.0f));
     offset += content.length();
     out.text += fragment.string;
     out.paragraph->add_string(content, last_font, font_size(a));
   }
   if (out.runs.empty()) {
     const auto &a = text.getBaseTextAttributes();
+    refuse_unsupported_style(a);
     last_font = font(a);
-    out.runs.push_back({0, 0, font_size(a), static_cast<int>(a.fontWeight.value_or(rn::FontWeight::Regular)), a.fontFamily,
-        a.foregroundColor ? color(a.foregroundColor) : Color(1, 1, 1, 1),
-        std::isfinite(a.lineHeight) ? a.lineHeight : 0, last_font});
+    out.runs.push_back(make_run(0, 0, a, last_font, 1.0f));
   }
   // The sentinel retains empty/trailing-newline rows without adding spacing.
   last_attributes.letterSpacing = std::numeric_limits<float>::quiet_NaN();
@@ -240,24 +324,97 @@ rn::LinesMeasurements ParagraphLayout::measureLines(const rn::AttributedStringBo
     return {};
   }
 }
+PaintedRows PreparedParagraph::painted_rows() const {
+  PaintedRows rows;
+  rows.reserve(lines.size());
+  for (const auto &line : lines) {
+    rows.push_back(painted_glyphs(line, runs));
+  }
+  return rows;
+}
+std::vector<DecorationSegment> PreparedParagraph::decoration_segments(const PaintedRows &rows) const {
+  std::vector<DecorationSegment> segments;
+  for (size_t row = 0; row < lines.size(); ++row) {
+    const auto &line = lines[row];
+    // One segment per run on a row: from where its first painted glyph starts to where its last one ends.
+    for (const auto &group : painted_groups(rows[row], false)) {
+      const auto &run = runs[group.run];
+      // A group without width (the sentinel, a trimmed space) has nothing to draw a line under, and a run without
+      // a font has no metrics to place one by.
+      if (run.font.is_null() || group.x1 <= group.x0 || !(run.underline || run.strikethrough)) {
+        continue;
+      }
+      // Godot's metrics, as RichTextLabel reads them: the underline sits at the font's underline position below
+      // the baseline, the strike-through in the middle of the run's ascent and descent. Both are as thick as the
+      // underline, at least one pixel.
+      const float thickness = std::max(1.0f, run.font->get_underline_thickness(run.size));
+      const auto add = [&](bool strikethrough, float y) {
+        segments.push_back({static_cast<int>(row), static_cast<int>(group.run), strikethrough, group.x0, group.x1, y,
+            thickness, run.decoration_color});
+      };
+      if (run.underline) {
+        add(false, line.y + run.font->get_underline_position(run.size));
+      }
+      if (run.strikethrough) {
+        const float ascent = run.font->get_ascent(run.size), descent = run.font->get_descent(run.size);
+        add(true, line.y - ascent + (ascent + descent) / 2);
+      }
+    }
+  }
+  return segments;
+}
 void PreparedParagraph::draw(const RID &canvas, Vector2 origin) const {
   auto ts = server();
-  for (const auto &line : lines) {
-    Vector2 pen = origin + Vector2(line.x, line.y);
-    draw_glyphs(ts->shaped_text_get_glyphs(line.rid), canvas, pen, runs,
-        ts->shaped_text_get_trim_pos(line.rid));
-    draw_glyphs(ts->shaped_text_get_ellipsis_glyphs(line.rid), canvas, pen, runs);
+  // The glyphs are collected once, and both the glyphs and the lines are drawn from them.
+  const PaintedRows rows = painted_rows();
+  for (size_t row = 0; row < rows.size(); ++row) {
+    for (const auto &glyph : rows[row]) {
+      if (glyph.font.is_valid()) {
+        ts->font_draw_glyph(glyph.font, canvas, glyph.size, origin + Vector2(glyph.x, lines[row].y) + glyph.offset,
+            glyph.index, runs[glyph.run].color);
+      }
+    }
+  }
+  auto *rendering = RenderingServer::get_singleton();
+  for (const auto &segment : decoration_segments(rows)) {
+    rendering->canvas_item_add_rect(canvas, Rect2(origin.x + segment.x0, origin.y + segment.y - segment.thickness / 2,
+        segment.x1 - segment.x0, segment.thickness), segment.color);
   }
 }
 folly::dynamic PreparedParagraph::snapshot() const {
-  auto spans = folly::dynamic::array(), metrics = folly::dynamic::array();
-  for (const auto &run : runs) spans.push_back(folly::dynamic::object("start", run.start)("end", run.end)
-      ("fontSize", run.size)("fontWeight", run.weight)("fontFamily", run.family)
-      ("color", run.color.to_html(true).utf8().get_data())("lineHeight", run.line_height));
+  auto spans = folly::dynamic::array(), metrics = folly::dynamic::array(), decorations = folly::dynamic::array(),
+      painted = folly::dynamic::array();
+  for (const auto &run : runs) {
+    // The outline of "I" in the font the run paints with: how far its top leans from its bottom is the skew.
+    const Outline outline = outline_of(run.font, run.size, U'I');
+    const char *line = run.underline && run.strikethrough ? "underline line-through" :
+        run.underline ? "underline" : run.strikethrough ? "line-through" : "none";
+    spans.push_back(folly::dynamic::object("start", run.start)("end", run.end)
+        ("fontSize", run.size)("fontWeight", run.weight)("fontFamily", run.family)
+        ("color", run.color.to_html(true).utf8().get_data())("lineHeight", run.line_height)
+        ("fontStyle", run.italic ? "italic" : "normal")("syntheticItalic", run.italic)
+        ("textDecorationLine", line)("textDecorationColor", run.decoration_color.to_html(true).utf8().get_data())
+        ("glyphI", folly::dynamic::object("top", outline.top)("bottom", outline.bottom)("topX", outline.top_x)
+            ("bottomX", outline.bottom_x)("advance", outline.advance)));
+  }
   for (const auto &line : lines) metrics.push_back(folly::dynamic::object("x", line.x)("baseline", line.y)
       ("height", line.height)("width", line.width)("ascent", line.ascent));
+  // The glyphs are collected once: the decorations and the painted rows are both read from them.
+  const PaintedRows rows = painted_rows();
+  for (const auto &segment : decoration_segments(rows)) decorations.push_back(folly::dynamic::object("line", segment.line)
+      ("run", segment.run)("kind", segment.strikethrough ? "line-through" : "underline")("x0", segment.x0)
+      ("x1", segment.x1)("y", segment.y)("thickness", segment.thickness)
+      ("color", segment.color.to_html(true).utf8().get_data()));
+  // What each row paints: the runs of its glyphs in order, and the run the ellipsis took.
+  for (size_t row = 0; row < rows.size(); ++row) {
+    for (const auto &group : painted_groups(rows[row], true)) {
+      painted.push_back(folly::dynamic::object("line", row)("run", group.run)("ellipsis", group.ellipsis)
+          ("x0", group.x0)("x1", group.x1));
+    }
+  }
   return folly::dynamic::object("nativeText", text)("lines", total_lines)("visibleLines", lines.size())
       ("measuredWidth", size.x)("measuredHeight", size.y)("ellipses", ellipses)
-      ("runs", std::move(spans))("lineMetrics", std::move(metrics));
+      ("runs", std::move(spans))("lineMetrics", std::move(metrics))("decorations", std::move(decorations))
+      ("painted", std::move(painted));
 }
 }
