@@ -3122,7 +3122,8 @@ live heap as `jsi::Instrumentation::getHeapInfo` reports it (after a full collec
 `validation_collect_garbage_on_status` meta is set, since the pinned Hermes collects concurrently), and the pump
 split into JS, mount and layout phases. The phases are exclusive and never add up to more than the pumps; the
 layout is RN's own `TransactionTelemetry` timing of the commit, moved out of the JS turn it ran in. Each duration
-series reports its count, total, maximum and nearest-rank p50, p95 and p99 over its last 128 samples; the samples
+series reports its count, rejected count, total and maximum, which cover every accepted measurement, and its nearest-rank
+p50, p95 and p99, which use only its last 128 samples; the samples
 themselves are published only where `validation_performance_samples` is set, so the default application snapshot
 weighs 5,997 bytes and 18,398 with them. After every cycle the SceneTree's nodes, Godot's orphan count and the
 host's native views are back to the baseline of the run, `creates - deletes` is the views alive, counters only
@@ -3151,6 +3152,7 @@ board and GF-20) the performance suite passes again with its controls rebuilt on
 rest is 11.5 to 16.8 KB higher in every workload (1,802,128, 1,816,104, 1,832,944 and 1,949,872 bytes) because the
 bundle carries main's SDK additions, nodes and orphans do not change, the 2,048-byte limit holds (the same 312-byte
 worst step), and the accessibility, text-layout and device-services suites pass. Only GF-30's first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
 ### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
 

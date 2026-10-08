@@ -1268,7 +1268,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     auto found = roots.find(id);
     if (found == roots.end()) return;
-    fabric_godot::SeriesTimer timing(performance.surface_retire(), now_ms);
+    // The retirement is timed through its teardown. The snapshot and the notification below report it and are not part
+    // of what a retirement costs, so the sample is taken before them.
+    std::optional<fabric_godot::SeriesTimer> timing;
+    timing.emplace(performance.surface_retire(), now_ms);
     auto &root = *found->second;
     root.stopping = true;
     retire_pointers(id);
@@ -1306,6 +1309,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       ++root.deletes;
     }
     forget_logical_tag(id);
+    timing.reset();
     root.stopped = true;
     auto *host = root.host();
     auto retired = folly::parseJson(snapshot(id));

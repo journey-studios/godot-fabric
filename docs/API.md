@@ -570,7 +570,9 @@ the host and not part of the `react-native` API: the exact counters of the nativ
 `jsi::Instrumentation::getHeapInfo` reports it (`hermes.heap`, every key), and the time of the host's
 pump (`pump`) attributed to JS turns, Fabric's mounting callback and layout (`phases.js`, `.mount`,
 `.layout`) and to a surface's start and retirement (`surfaces`). Each duration series reports
-its `count`, `totalMs`, `maxMs` and the nearest-rank `p50Ms`, `p95Ms` and `p99Ms` over its last 128 samples. The
+`count`, `rejected`, `totalMs` and `maxMs`, which cover every accepted measurement since the application started (`rejected` counts the
+durations that were negative or not finite and entered nothing else), and the nearest-rank `p50Ms`, `p95Ms` and `p99Ms`, which use only
+its last 128 samples (`windowSize`). The
 samples themselves (`windowMs`) are reported only where a `validation_performance_samples` meta is set on the
 application, since they are most of the section's weight (about 12 KB of an 18 KB application snapshot) and every
 `status()` pays for them. The phases are exclusive and never add up to more than the pumps. A stopped application has one snapshot: the Hermes reading
