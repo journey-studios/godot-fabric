@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Modal PR #51: CodeRabbit aprovado; provas nativas hospedadas passam, CI excedeu 45 min. Novo head com budget global de 60 min aguarda CI completa."
+    "focusTitle": "GF-14: ScrollView original em implementação; primeira fatia Modal desktop aceita na PR #51"
   },
-  "updatedAt": "2026-10-08T00:17:03.208711+00:00",
+  "updatedAt": "2026-10-08T01:25:22.138062+00:00",
   "source": {
-    "commit": "bee7b40061319e25d002fc86808dc9c1140c5424",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/bee7b40061319e25d002fc86808dc9c1140c5424",
-    "scope": "Modal desktop: a correção 3b8ddbc foi validada na CI do bee7b40: 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture. A auditoria conferiu 35 pins do Modal, 95 do SDK e 10 pins RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 foi cancelado ao atingir o limite global de 45 minutos; o cold start reportou sucesso no artefato e a paridade ficou skipped. O orçamento global subiu para 60 minutos; o novo head precisa dos cinco jobs verdes antes do merge. GF-18 segue parcial, com 23/156 checkpoints e 0/39 itens completos.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51"
+    "commit": "109e6fd30c8510af4d2a206949fbfa7d3ff85832",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/109e6fd30c8510af4d2a206949fbfa7d3ff85832",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51",
+    "scope": "Modal desktop: primeira fatia aceita na PR #51. Head 109e6fd passou nos cinco jobs; CodeRabbit aprovou e sete threads foram resolvidas. Merge 7e2df46 preservou a árvore. Auditoria: 193 Modal, 164 transforms e 672 capture. Paridade limitada a 13 casos. Completude: 24/156 checkpoints e 0/39 itens. GF-14 inicia com um Luna."
   },
   "phases": [
     {
@@ -1613,7 +1613,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Scroll and refresh",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption",
       "dependencies": [
         "GF-08",
@@ -1624,7 +1624,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Investigação inicial reproduzida pela raiz: ScrollView original monta em Platform.OS godot, mas scrollTo válido envia três argumentos e o adaptador exige dois; scrollToEnd animado salta imediatamente. O deslocamento fracionário do ScrollContainer diverge da pintura. Implementação iniciada em branch separada após o merge da PR #51, com um Luna por vez e revisão thermo-nuclear. Nenhum checkpoint GF-14 aceito ainda.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1842,14 +1842,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #51: a revisão thermo-nuclear corrigiu geometria, captura cross-root, ownership da stack, lifetime, teardown e indexação lógica. A regressão singular de a978 foi reproduzida e corrigida em 3b8ddbc, sem afrouxar o oracle. Na CI do bee7b40 passaram 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture; foram auditados 35 pins Modal, 95 do SDK e 10 RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 atingiu o limite global de 45 minutos após COLD_START_PASSED; a paridade ficou skipped. O limite global agora é 60 minutos e uma nova CI completa ainda é necessária. O consumer local do SDK passou 68/68; os gates anteriores de 283 testes Node e 13 Python permanecem registrados. Orientação/insets, hardware/mobile/export e paridade integral continuam abertos; quatro checkpoints seguem false, com 23/156 e 0/39 preservados.",
+      "note": "Primeira fatia desktop aceita na PR #51, merge 7e2df46, árvore idêntica ao head revisado 109e6fd. Cinco jobs verdes, CodeRabbit aprovado e sete threads resolvidas. A raiz auditou 193 verificações Modal (11 macOS), 164 transforms, 672 capture, cleanup negativo e 35/95/10 pins de produtores/RN. Cold start: duas importações frias e quentes; paridade: somente 13 casos core-ui-v2 Android/iOS. Contrato completo, orientação/insets, hardware, mobile/export e paridade integral continuam abertos. Apenas slice fecha; outros três checkpoints ficam false.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "PR #51 mergeada: primeira fatia Modal desktop",
+              "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+            },
+            {
+              "label": "Head 109e6fd: cinco jobs verdes e artefatos auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37708637823"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3493,6 +3502,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-final-109e6fd-desktop-slice",
+      "at": "2026-10-08T01:25:22.138062+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-14"
+      ],
+      "message": "PR #51 mergeada em 7e2df46 após CI final 109e6fd com cinco jobs verdes e sete threads CodeRabbit resolvidas. A raiz auditou 193 Modal (11 macOS), 164 transforms, 672 capture, cold start e paridade restrita a 13 casos; a árvore mergeada é idêntica. Primeiro checkpoint GF-18 aceito: 24/156 e 0/39; outros três continuam abertos. GF-14 inicia com um Luna e investigação de comandos/offset reproduzida, sem aceite novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
     {
       "id": "modal-hosted-bee7b40-global-timeout",
       "at": "2026-10-08T00:17:03.208711+00:00",

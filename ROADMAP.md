@@ -2753,22 +2753,25 @@ contract, parity and targets remain open.
 
 ### Modal desktop review (2026-10-07)
 
-GF-18 remains **In progress** with all four checkpoints open. The
-[thermo-nuclear review](docs/research/modal-implementation-review.md) requires
-typed Window stack ownership, one immutable physical embedding for geometry and
-input, canonical endpoint retirement and last-Surface membership cleanup.
-Independent paired controls reproduce and correct the geometry, capture and
-validation-device regressions. No full roadmap item or denominator changes.
+GF-18 remains **In progress**. Its first desktop slice is accepted after the
+[thermo-nuclear review](docs/research/modal-implementation-review.md), final-head
+[CI](https://github.com/journey-studios/godot-fabric/actions/runs/37708637823)
+and merge of [PR #51](https://github.com/journey-studios/godot-fabric/pull/51)
+as `7e2df46`. Root verified the merge tree equals reviewed `109e6fd`.
 
-On corrected head `bee7b40`, the [hosted receipt](docs/evidence/modal/hosted-bee7b40-timeout.json)
-verifies 193 Modal assertions (11 on the macOS display), the fail-fast negative
-with both applications cleaned up, 164 transform and 672 capture assertions,
-35 Modal/95 SDK producer pins and 10 original RN pins. CodeRabbit approved that
-head and all six threads are resolved. The workflow nevertheless exhausted its
-45-minute global budget at cold-start completion; parity was skipped. The total
-budget is raised to 60 minutes without changing probes or their failure criteria,
-and a fresh complete CI run remains required before merge. Orientation/insets,
-hardware, mobile/export and complete pinned RN parity remain acceptance work.
+The [final receipt](docs/evidence/modal/hosted-109e6fd-final.json) records five
+successful required jobs, CodeRabbit approval and seven resolved review threads.
+It verifies 193 Modal assertions (11 on macOS display), 164 transforms,
+672 capture assertions, the precise missing-target negative and clean teardown,
+35 Modal/95 SDK producer pins and 10 original RN pins. Cold start passes two
+fresh imports and warm imports; parity covers only 13 core-ui-v2 cases against
+Android/iOS. The earlier 45-minute timeout remains historical evidence; the
+60-minute global budget preserves all individual probe deadlines and oracles.
+
+Only the first-slice checkpoint closes, moving the dashboard to 24/156;
+0/39 full items remain complete, with unchanged weights and denominator.
+Orientation/insets, hardware, mobile/export, full contract and complete pinned
+RN parity keep the other three GF-18 checkpoints open.
 
 ## M1 — Complete the native UI tree
 
@@ -2782,7 +2785,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-11 · P1 · Text and fonts | Planned | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
-| GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
+| GF-14 · P1 · Scroll and refresh | In progress | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
 | GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
 | GF-16 · P1 · Images and asset pipeline | Planned | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |

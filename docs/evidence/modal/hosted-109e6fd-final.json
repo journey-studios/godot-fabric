@@ -1,0 +1,443 @@
+{
+  "format": "godot-fabric.final-head-artifact-audit/v1",
+  "head": "109e6fd30c8510af4d2a206949fbfa7d3ff85832",
+  "runId": 37708637823,
+  "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37708637823",
+  "verifiedAt": "2026-10-08T01:20:03.155957+00:00",
+  "artifacts": {
+    "native-modal": 11520829772,
+    "native-transform-guards": 11521310773,
+    "adapter-registry-sdk": 11521300361
+  },
+  "nativeHostSha256Recorded": "485373290b21e2e31766b8c1524dce6bd43c42e03edd6022350b8223d1da7aae",
+  "nativeHostBinaryIncludedAndRehashed": false,
+  "compiledSourcePinsVerified": 95,
+  "sdkBuildReceiptSha256": "027c34731bfd5aa9ab4245cfbc79a2162dbf79b1d4ebcf2e1bd06ef0bfb73aeb",
+  "sdkReceiptSha256": "870cd4fafa7f709611a16399674c2036f14c454402d79a7df07d0902bdd7546c",
+  "sdkManifestSha256": "39f3e7add112c33de955aa36b9c28a96626b2e101487df5d99204d8a823a4ed6",
+  "sdkManifestRecords": 2712,
+  "sdkPayloadFilesIncludedAndRehashed": false,
+  "sdkWitnesses": {
+    "adapter-registry": {
+      "reportSha256": "80d5b0806a3efc555f09705900a2a3808d15e75b485d9f4c57548b610dadd774",
+      "sourcePinsVerified": 8,
+      "checks": 213,
+      "cases": 11,
+      "stageLogsVerified": true
+    },
+    "adapter-loader": {
+      "reportSha256": "09d7d129d90f653c53c29f803bf824c1be665e32d282c070327b57cac1ca4361",
+      "sourcePinsVerified": 4,
+      "checks": 89,
+      "cases": 21,
+      "stageLogsVerified": true
+    }
+  },
+  "producers": {
+    "modal-host": {
+      "receiptSha256": "37d906469c31b02a3463b8e07e2de57a7a0c0571ddd74a492f5a9779d2927c7b",
+      "sourcePinsVerified": 35,
+      "compiledSourcePinsMatched": 21,
+      "originalRnPinsVerified": 10,
+      "bundleBytesVerified": false,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8"
+    },
+    "modal-discriminators": {
+      "receiptSha256": "1a565662f015bf8298ac1dca4e9b282d57a832655998afd07ef91f947b81040b",
+      "sourcePinsVerified": 35,
+      "compiledSourcePinsMatched": 21,
+      "originalRnPinsVerified": 10,
+      "bundleBytesVerified": true,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8"
+    },
+    "modal-stack-membership": {
+      "receiptSha256": "1a17f1e0ce9a9e34327892ec76a659fe5f9034b1ed25215f732530f52f547f97",
+      "sourcePinsVerified": 35,
+      "compiledSourcePinsMatched": 21,
+      "originalRnPinsVerified": 10,
+      "bundleBytesVerified": true,
+      "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8"
+    }
+  },
+  "modal": {
+    "modal-host-current": {
+      "checks": 68,
+      "reportSha256": "03f74e06d8f84308a38bb6fd610ffa91ed644ed5146a051d7129c90f78537eb9",
+      "logSha256": "23a178d4f1a2454beae24704f1a8978d1aa8a8e2d5505b3961a6b59a0bc03957",
+      "displayServer": "headless"
+    },
+    "modal-capture-lifetime": {
+      "checks": 65,
+      "reportSha256": "24b910c94480f6fa39eed7045eab00b656834257c71cfa4e630d09198dd27b6a",
+      "logSha256": "c3e695590559c45b22b3473960571791b7afa560338bcda95ef5726c06b92c3c",
+      "displayServer": null
+    },
+    "modal-stack-membership": {
+      "checks": 31,
+      "reportSha256": "20bc41a2cc206fec11d112960b58909e621ef8b7cc2ebd676277fb940d91ba88",
+      "logSha256": "4651f1cd4d8f9fad1f87bd8ffb7e5a3753a96fe79977d5023197c3b556ca45f4",
+      "displayServer": null
+    },
+    "modal-sibling-order": {
+      "checks": 9,
+      "reportSha256": "4d07707e3811d83f3161a09bcef7669e35ebc126434a19e21c60bbab999f63f8",
+      "logSha256": "1c5c6768a8f01ca24a5f0352421d2057ff8e9828b399a0b86e32e1e5c666635a",
+      "displayServer": null
+    },
+    "modal-surface-lifetime": {
+      "checks": 9,
+      "reportSha256": "51234c534d8449075ec6f152689f9187a09eec96614a77625c05737ad7a22305",
+      "logSha256": "6c4238ebe1c08e3810b6cd1206ae1e640361bce441028239dbfc33cd99da5a72",
+      "displayServer": "headless"
+    },
+    "modal-owner-windows": {
+      "checks": 11,
+      "reportSha256": "9ee823b0c312d1e5bdbe6f52d0fd144cadbfb7301ab7b5f73817aa1eb6c53716",
+      "logSha256": "13983c6f7ef331174e057e4085d9f34f151caec2ee4a42ea53778c2feb91561a",
+      "displayServer": "macOS"
+    }
+  },
+  "modalChecks": 193,
+  "headedMacOsModalChecks": 11,
+  "missingTargetNegative": {
+    "reportSha256": "60773cbb76451d588e549c29f343ccb3d9b9abd2ce6e8b61810f29f950916acf",
+    "logSha256": "429f2ca3d056e256ce0235bca187b82534713215cc8140da3af019f0ecc199cd",
+    "preciseFailureAndCleanupVerified": true
+  },
+  "transforms": {
+    "transforms-guards.json": {
+      "checks": 61,
+      "reportSha256": "708f61ffb8cbbdd4a4b58b423c087620768745bd05812cdd5b29af991a185250",
+      "logSha256": "8be3627b87a2d0f9fd15f3ee36593b61f45fea6eb8550c1fe1ed49b22ceaba2c",
+      "intentionalNegativeErrors": 6
+    },
+    "transforms-input-guards.json": {
+      "checks": 25,
+      "reportSha256": "11598b6f360800e9c2dc885e3e95bd3b6fe5b6fb71ba38bc3408340af403c3df",
+      "logSha256": "9558fc5deafdf1844ff7f07e83346d75fe7dd5547e680050ceda81696a55ee83",
+      "intentionalNegativeErrors": 0
+    },
+    "transforms-uniform-scale-current-report.json": {
+      "checks": 29,
+      "reportSha256": "c533d4db9ab44e9f02a4b2ea15c7c22db620f63f229a74345813389cd2fe8a4a",
+      "logSha256": "6bdbd67fca0023796920eee4deea46156c242e4cae9d28a3152f3e1de10bc5d0",
+      "intentionalNegativeErrors": 0
+    },
+    "transforms-singular-current-report.json": {
+      "checks": 49,
+      "reportSha256": "53222549a9c6a997cfdcda0d0c48fd9c21f69dd3065a12d8e735277cc04dcba2",
+      "logSha256": "e4f1908f5f5544d944b45aaf2e3571257cff26ffdeeea7c0c11f89b69946f255",
+      "intentionalNegativeErrors": 0
+    }
+  },
+  "transformChecks": 164,
+  "fullCiCompleteAtAudit": true,
+  "fullGf18Complete": false,
+  "abiCertified": false,
+  "scope": "Five required hosted jobs passed on exact final PR head; desktop Modal slice and 13-case core UI parity subset only.",
+  "pointerCaptureNotifications": {
+    "artifactId": 11521858562,
+    "comparisonSha256": "2b1a6ace46db823a3ce308735d341190e8830dc42cf7260f56694eefbe847612",
+    "lanes": {
+      "original-disabled": {
+        "checks": 84,
+        "reportSha256": "a73baf3c6a48a35ba5dd6a4938210d9cfa8ac35202310a90b797868778f0ec52",
+        "logSha256": "88b5d41ea81261e93034bf49383d15bf9bee1b5ac0d144a7ccaf94c8e54f09e2",
+        "cleanupVerified": true
+      },
+      "original-imperative-only": {
+        "checks": 84,
+        "reportSha256": "e2634041708e491d527219eebea8783797fe41ecb05bf7e0e7ed17bf53563f22",
+        "logSha256": "68325276483b708d0953805b36137a94b649d384123c113ef9e19426a2066aa9",
+        "cleanupVerified": true
+      },
+      "original-internal-only": {
+        "checks": 84,
+        "reportSha256": "ac3ee9719891e36a53802bce37b0efdfda97aeec665676311b17af9ead5bd669",
+        "logSha256": "f347ff87c281b5b5b031515899f95cde7b5e2d1e18a8c0e2fe624735a81cac23",
+        "cleanupVerified": true
+      },
+      "original-enabled": {
+        "checks": 84,
+        "reportSha256": "189bc096bab7f13bb15d31bb39efdbb6fdbead86484fad3202e07cf4f10381b6",
+        "logSha256": "ca572ce0352351635de8d2ad6fb65730b256d09693c53c2b7fbe712dc62583d9",
+        "cleanupVerified": true
+      },
+      "current-disabled": {
+        "checks": 84,
+        "reportSha256": "a0539e1e2b8793c08c10ecd56ebfa2faf431e3de16487ebdaeec97f4c8f66c5b",
+        "logSha256": "f49bb6a6615867cfac5f5b02d8f710be24d94b229fc0d506aca0dd32bdb0873b",
+        "cleanupVerified": true
+      },
+      "current-imperative-only": {
+        "checks": 84,
+        "reportSha256": "100e08aa1f6bfb81d5af5ac93521c04351da53dc0cc85f6aaec08b4dd1ab268b",
+        "logSha256": "97a1f382a4ffb04dfd138c1654a64256a6d7d2455f4c62899f58530316d057c5",
+        "cleanupVerified": true
+      },
+      "current-internal-only": {
+        "checks": 84,
+        "reportSha256": "235981802af8912f18719938883bf6d0c27c8e8120d1565851d9aee63022b9ad",
+        "logSha256": "6f365c5cb45c30cf6cec102ea63459c6b2e0469921faf73b61538dd8ec4ae0d6",
+        "cleanupVerified": true
+      },
+      "current-enabled": {
+        "checks": 84,
+        "reportSha256": "db1e2d4db603e9b76bd49dffe63876ef8730b33557af64d5e3903bad75c6af34",
+        "logSha256": "af9a4e4f735d324a86df14734f0f382b04f6be523adb63ec4272330bf31d9294",
+        "cleanupVerified": true
+      }
+    },
+    "totalChecks": 672,
+    "uniqueProducerSourcePinsVerified": 20,
+    "uniqueOriginalRnSourcePinsVerified": 26,
+    "publicDefaultEnabled": false,
+    "hardwareCertified": false,
+    "bundleBytesIncludedAndRehashed": false
+  },
+  "coldStart": {
+    "artifactId": 11521269678,
+    "reportSha256": "7ead60a56a3d8c5a3ce192e8e2a1124b1f5c18b6c78ab274bab40b230853a39f",
+    "freshImports": 2,
+    "reactChecksPerRun": 36,
+    "typographyChecksPerRun": 50,
+    "warmImports": 2,
+    "logsSha256": {
+      "cold-1-typography.log": "9570abc5700ef6f30f62ed80e2a11d552e45f35895ab755abacb68d6cd9830be",
+      "cold-1-react.log": "066971d4f77b12d936d5cf35fd3b43fa32f340a1f5ff9bc1e3e32a346d84a795",
+      "cold-1-import.log": "c0c411f2fbfa7635bdf3a33e7fccf693d64dfde038c034486ad20e284092982e",
+      "cold-2-typography.log": "c11968ef08f0f1482f334d06d78b0535e488e19199beacf0ad91f1b521416de0",
+      "cold-1-warm-import.log": "f15ffd4c558b01611d562c8c257508942bdc2dc542124f423ae2a592a46edfa6",
+      "cold-2-import.log": "c0c411f2fbfa7635bdf3a33e7fccf693d64dfde038c034486ad20e284092982e",
+      "cold-2-react.log": "e81fafbd7bb443ba4dd69bdc60adad69d440e912b0ae7672388e26a0a8fb30d2",
+      "cold-2-warm-import.log": "f15ffd4c558b01611d562c8c257508942bdc2dc542124f423ae2a592a46edfa6"
+    },
+    "runtimeErrors": 0
+  },
+  "parityComparison": {
+    "artifactId": 11521939285,
+    "reportSha256": "4dcba19a18f52e71fef31c164451f3aa6d7892ac07dc2f084059a20a5cc8086c",
+    "status": "matched_subset",
+    "fixture": "core-ui-v2",
+    "cases": 13,
+    "references": [
+      "android",
+      "ios"
+    ],
+    "sourcePinsVerified": 4,
+    "fullRnContractOrModalMobileCertified": false
+  },
+  "codeRabbit": {
+    "reviewDecision": "APPROVED",
+    "approvedHead": "109e6fd30c8510af4d2a206949fbfa7d3ff85832",
+    "threads": 7,
+    "unresolved": 0,
+    "reviewReceiptSha256": "6f9ae1427a22f695a5caa7c19c92fd4b66d116a28f67ba3d7c5d43e97a770e2a"
+  },
+  "workflowJobs": [
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-08T00:36:21Z",
+      "completedAt": "2026-10-08T00:41:18Z"
+    },
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-08T00:37:00Z",
+      "completedAt": "2026-10-08T01:17:48Z"
+    },
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-08T00:36:21Z",
+      "completedAt": "2026-10-08T00:37:47Z"
+    },
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-08T00:42:06Z",
+      "completedAt": "2026-10-08T00:52:30Z"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-08T01:17:51Z",
+      "completedAt": "2026-10-08T01:18:14Z"
+    }
+  ],
+  "finalRunReceiptSha256": "69f4284eeab4e727b99dd59182e5af5c26cb7fd2fc797d93842000d11690ba0f",
+  "producerSourceSha256": {
+    "tests/modal-host-fixture.jsx": "44a27037ad2be368fd9e8795272087f392e363bd2a4d973721414246220f47d2",
+    "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+    "tests/modal-host-native.test.mjs": "ee0a2d4c869ebf6fbd7234eed867a3db7e6f645d4695412c63be09b84afca2a7",
+    "tests/modal-capture-lifetime-probe.gd": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26",
+    "tests/modal-sibling-order-probe.gd": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4",
+    "tests/modal-owner-windows-probe.gd": "7dc77bf722712f4c2ae243dc9d8870cd2e4a7bfd12ad70fb90760233d77b8806",
+    "tests/modal-stack-membership-probe.gd": "294c49bfbc093098a5d29a2fc9f14a8367904ed6e117540cde076ba6374bc3d1",
+    "tests/modal-surface-lifetime-probe.gd": "31b6407b9f8de2c35b28e0d7f3fbdea7fdf8b58b477ef509f5c00f229e1f02f2",
+    "tests/modal-stack-membership-native.test.mjs": "8e4a8e43f0f504765c1c15c2ac144692d23ba5a1b1688843bb45339419c5ecd1",
+    "tests/modal-discriminators-native.test.mjs": "e62ffd916b4862e318271422edab9b6182c75c8c2bef59dbc3a40f00f91c401a",
+    "scripts/modal-host-bundle.mjs": "c09fd2b851f6b7219bc6dcdcb51b4201a5dc9ff186f23fba94a92d0ae43608cf",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/application_runtime.cpp": "7e328fd5a5aa483b27c2b8bf09297d439fac60bbdf74bfbf971eb5c2a7688874",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535"
+  },
+  "originalReactNativeSourceSha256": {
+    "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+    "Libraries/Modal/RCTModalHostViewNativeComponent.js": "737ad639e5c189d0e01bbe31b30cf0f9691a901928529fbcbccfc6f190be4bdd",
+    "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js": "d8458e8b7a9036589f4633f8289d58bdcb6bfdba9716b7fcb8b03101e1b064cd",
+    "Libraries/Components/SafeAreaView/SafeAreaView.js": "4e673548079b02e4806c3e8ee8ea153da5abda17850b0dd498d25d925c7174dd",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.h": "0855c0f8ae339ac0d61f2601698ef65e3da37845ff83b7a4f1dec95aa646f65d",
+    "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm": "9b84a7d80d9b7afd58cec6827a4c5afbf4feb8dc29df0e19a7138eb5bf3bd96d",
+    "ReactAndroid/src/main/java/com/facebook/react/views/modal/ReactModalHostView.kt": "8c767b176b070a4034570fc94cda5e8898a87270b472fa56e0869ede241902e8",
+    "ReactCommon/react/renderer/components/modal/ModalHostViewShadowNode.cpp": "8be230fc06bfd55e95352a0bc03c347a7aa60bcbfc886830499b25c710981610",
+    "ReactCommon/react/renderer/components/modal/ModalHostViewComponentDescriptor.h": "257eb658668d0c4f6d4036df47cb22de18392183c315c5aa39a823fac4bd26be"
+  },
+  "compiledSourceSha256": {
+    "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "7e328fd5a5aa483b27c2b8bf09297d439fac60bbdf74bfbf971eb5c2a7688874",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+    "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "e8cc746a3c4c6fd0b451cf36d03ca635402ab1cf9495a8063095440b3f5d351c",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/godot_http_transport.cpp": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+    "native/godot_websocket_connection.cpp": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+    "native/godot_websocket_connection.h": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+    "native/godot_websocket_transport.cpp": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+    "native/godot_websocket_transport.h": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/networking_modules.cpp": "788a6169d959e2c161aaa295b8f280e03c11ca64a8906321f4a54e67a50471fa",
+    "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+    "native/networking_state.h": "0fb96f61422c6a88e85c76091bf83cdf215708a36e4ff47b5d6125e92107d415",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "native/websocket_core.h": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+    "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+    "native/websocket_handshake.h": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+    "native/websocket_handshake_test.cpp": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+    "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+    "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+    "native/websocket_transport.h": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+    "native/websocket_transport_test_fixture.cpp": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "42ef9e8da35f7c84676a028801972f3ab64f2617f3f86fba46f4e5bc5ba1a2c5",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "merge": {
+    "pr": "https://github.com/journey-studios/godot-fabric/pull/51",
+    "commit": "7e2df468405d9b02c6e6462ee0030922f2b9d43d",
+    "mergedAt": "2026-10-08T01:20:48Z",
+    "reviewedTreeSha": "224a95bb8b5bdbb5ef07c0f92a3ba6ecdc4600e7",
+    "mergedTreeSha": "224a95bb8b5bdbb5ef07c0f92a3ba6ecdc4600e7",
+    "treeEqualityVerified": true
+  },
+  "acceptance": {
+    "gf18SliceAccepted": true,
+    "fullGf18Complete": false,
+    "otherGf18CheckpointsClosed": false,
+    "basis": "Original RN desktop Modal, owner-scoped presentation/input/teardown, positive and negative host/consumer proof, strict structural review, final-head five-job CI and CodeRabbit approval. Full contract, parity and targets remain open."
+  },
+  "dashboardCapture": {
+    "path": "docs/evidence/modal/dashboard-109e6fd-final.jpg",
+    "sha256": "36b0b51a0abab6a5462dd7bcb5214aaf1ba57141de07a7daa2db0250b0c33c31",
+    "observedCheckpoints": "24/156",
+    "observedCompleteItems": "0/39",
+    "source": "Local dashboard reading the updated branch JSON; public publication requires a separate receipt.",
+    "publicPublicationVerifiedAtCapture": false
+  }
+}
