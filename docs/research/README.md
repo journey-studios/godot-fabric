@@ -76,6 +76,10 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   shaped paragraph the host measures and paints; the font-table oracle, the
   measured tolerance and the platform divergences.
 
+- [Frontier, the 0.5 reference game](frontier-game.md): its rules and scenario in GDScript with a replay that hashes
+  to the same value in three processes, the state and the snapshot (DTO) the HUD projects, and the seven contexts the game
+  derives. No React and no native code; the services, the HUD and the export are the next packages.
+
 ## Useful next experiments
 
 - Span interaction and explicit font invalidation (Text's baseline and `onTextLayout` are done: see [Text layout](text-layout.md)).
