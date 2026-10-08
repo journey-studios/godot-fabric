@@ -170,6 +170,17 @@ jobs:
             build/performance-comparison.json
             build/performance-current.log
             build/performance-probe-bundle.json
+      - run: npm run test:text-layout
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-text-layout
+          path: |
+            build/text-layout-report.json
+            build/text-layout-current-report.json
+            build/text-layout-comparison.json
+            build/text-layout-current.log
+            build/text-layout-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:networking
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -477,6 +488,20 @@ jobs:
             build/switch-current-report.json
             build/switch-comparison.json
             build/switch-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      # Headless, so it proves metadata (the descriptor, the Control properties, the host path of the OS's press). The OS
+      # accessibility tree is read by test:accessibility:bridge, which needs a window session and runs locally.
+      - run: npm run test:accessibility
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-accessibility
+          path: |
+            build/accessibility-report.json
+            build/accessibility-current-report.json
+            build/accessibility-comparison.json
+            build/accessibility-current.log
+            build/accessibility-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:responders:shared-touches
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

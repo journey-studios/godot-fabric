@@ -2770,6 +2770,107 @@ budget is raised to 60 minutes without changing probes or their failure criteria
 and a fresh complete CI run remains required before merge. Orientation/insets,
 hardware, mobile/export and complete pinned RN parity remain acceptance work.
 
+### Accessibility tree and OS bridge on macOS (2026-10-07)
+
+GF-20 becomes **In progress**; only its first-slice checkpoint becomes done, and the
+full item, contract, parity and targets remain open. The
+[accessibility evidence](docs/evidence/accessibility/README.md) maps RN's accessibility props on
+`View`, `Pressable` and `TouchableOpacity` to the accessibility element that Godot builds for each
+Control with AccessKit: the label and hint as the element's name and description, the role (every
+spelling of RN 0.87.1's `accessibilityRole` and `role`: 61 spellings map and name 44 distinct roles,
+42 of them a Godot role plus `none` and `presentation`; 44 spellings, naming 39 distinct roles, are
+rejected with the reason), the disabled, busy, checked,
+selected and expanded states, live regions, `aria-hidden` and `importantForAccessibility`
+hidden, and the OS's press. A role Godot has no word for gets the nearest role plus a role
+description (`header` is static text described as a heading) and is never replaced by a generic
+one; a value the host cannot honor (a role without an equivalent, `checked: "mixed"`, a state on a
+role that cannot show it, `accessibilityActions`) fails explicitly and leaves the View without
+semantics. The pure, Godot-free core (`native/accessibility_core.h`) holds the table and the
+resolution so that the mobile bridges of GF-34 and GF-35 can consume the same decisions.
+
+The proof has two kinds, kept apart. **Metadata:** 80 headless checks over two roots of one Hermes
+application prove the semantic descriptor the host resolved, the properties set on each Control and the
+host path of the OS's press; an independent oracle re-derives every stage, and both RN role
+vocabularies (105 spellings, 61 mapped and 44 rejected) are swept. A headless Godot has no OS accessibility driver, so this is
+metadata only and the report says so. **The real OS tree:** 22 checks on a graphical macOS run read the
+NSAccessibility tree that the running Godot's window serves to the system, from an inspector injected
+into the process, and press elements with `AXPress`: `onAccessibilityTap` answers alone, a View
+without a handler is clicked at its center and runs `onPress`, a disabled one refuses, and updates,
+removals, `aria-hidden` and remounts move the tree. This test is **local only**: it needs a window
+session and is not part of hosted CI. A 594-assertion C++ test covers the core. The preceding host
+fails exactly 10 headless checks and 5 bridge checks, and four retained sabotages (name, press, role
+table, hidden) fail 6, 17, 3 and 5 checks that the oracle rejects. The example is checked headless
+and in a window (18 checks) with two captures. A removal of `role` or `accessibilityRole` needed a
+workaround: RN's own `AccessibilityProps.cpp` keeps the previous role when the prop arrives as null.
+Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
+[`42615f4`](https://github.com/journey-studios/godot-fabric/commit/42615f4513cda44671ebc63a7f695ae1d9d7286e),
+recorded at [`ad7c53c`](https://github.com/journey-studios/godot-fabric/commit/ad7c53c396af2431e15b83d0acde8bd321fba9e8)
+and worded at [`ac5f913`](https://github.com/journey-studios/godot-fabric/commit/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9).
+After main's Modal slice was merged, the same suites passed on the merged tree (80 and 22 checks,
+594 assertions, the 7 Modal tests, 298 Node and 13 Python contract tests, with both controls and
+the four sabotages rebuilt for the new bundle); the receipt remains that of `42615f4`.
+
+Open: `AccessibilityInfo` (settings and events, the iOS `AccessibilityManager` contract) is the
+second slice; focus and keyboard navigation, announcements, grouping under `accessible`, custom
+`accessibilityActions`, `accessibilityValue`, text scale, `Text`, the host's Button and TextInput,
+and the Switch are not mapped yet. `expanded` and `busy` are published to Godot but AccessKit's macOS
+adapter does not serve them, so the bridge cannot cover them. **Mobile has no bridge:** Godot 4.7.2
+has no accessibility driver on iOS or Android, which blocks GF-34 and GF-35 until one exists, to be
+resolved early. No screen reader's speech was heard, and Windows and Linux trees are unread. The
+bridge in hosted CI and the hosted run of the headless step are pending. No whole GF, other checkpoint,
+weight or denominator closes.
+
+### Text line geometry: onTextLayout and the Yoga baseline (2026-10-07)
+
+GF-11 moves to **In progress** with only its first-slice checkpoint done. The
+[text layout evidence](docs/evidence/text-layout/README.md) gives the public `Text`
+the lines the host measures and paints: React Native's `onTextLayout` event and the
+Yoga baseline of a `Text` in an `alignItems`/`alignSelf: 'baseline'` row. RN asks the
+platform's `TextLayoutManager` for those lines through `measureLines`, behind
+`TextLayoutManagerExtended::supportsLineMeasurement()`; the host used RN's portable
+`cxx` manager, which has none, so the event was never emitted and every baseline was
+zero. A Godot platform `TextLayoutManager` (`native/text_platform/`, compiled in
+place of the `cxx` one) adds the virtual `measureLines`, `ParagraphLayout` overrides
+it over the same shaped paragraph that measures and paints, with no second line
+breaker, and a static guard compares the copy with the pinned RN file and its call
+sites. **76 headless checks** run in one Hermes application.
+
+The payload is RN's `{lines}`, each line with exactly the nine fields: the line box
+and the baseline inside it as on iOS (an explicit `lineHeight` centres the baseline),
+`capHeight` and `xHeight` as the ink height of "T" and "x" as on Android, and `text`
+without the host's sentinel. The `src/text.jsx` wrapper accepts a function
+`onTextLayout` on the outer paragraph, drops it on a nested span as RN does, rejects
+any other value, and keeps rejecting span presses, `selectable` and
+`adjustsFontSizeToFit`. Each paragraph with the prop receives exactly one event for
+its first layout; a change of color, or a width that wraps the same lines, asks
+`measureLines` again and emits nothing; a paragraph the host cannot lay out reports
+and the Yoga callback survives. An independent oracle reads the TrueType tables of
+the two bundled fonts in Node. The host is within 0.576 px of them (0 for ascender,
+descender and height) once FreeType's documented rounding of the scaled ascent and
+descent is modelled, while the plain table scale is off by up to 1.484 px and does
+not hold the proposed ±1 px; the normative tolerance stays ±1 px. The preceding host
+runs the same bundle and fails exactly the 5 normative checks (no event, zero
+baselines); three retained sabotages (every line reported despite `numberOfLines`, an
+ascender without the centred `lineHeight` offset, the sentinel left in a line's
+text) fail 4, 3 and 9 checks and the oracle rejects each. The example passes 18
+headless and 32 renderer checks, the painted ink agreeing with the reported baseline,
+`capHeight` and `xHeight` to a pixel, with two captures. The contracts gates (285
+Node/13 Python, static analysis, publication scan), the typography laboratory (50
+headless, 63 renderer) and the native SDK and adapter batches pass on the
+implementation host; after merging main (Modal, #51) the rebuilt host repeated the
+76 checks with refreshed controls and `test:modal` (7 of 7) passed.
+
+The original `Text.js` in place of the repository's wrapper, pressable and
+selectable spans, font loading and fallback, bidi, emoji and grapheme clusters,
+`textDecoration` and `fontStyle`, head and middle ellipsis, font scaling,
+`adjustsFontSizeToFit`, inline views and a reference measurement on an iOS simulator
+and an Android emulator remain open. The platforms differ on the text of a truncated
+last line, empty text, when `lineHeight` centres the baseline, lines beyond a fixed
+height and Android's extra `baseline` field; these are documented divergences, not
+checks. The hosted CI run of the new `native-text-layout` step is **pending**. Only
+GF-11's first-slice checkpoint closes, with the slice itself; no whole GF, other
+checkpoint, weight or denominator closes.
+
 ### Linking, Clipboard and Vibration over Godot's device services (2026-10-07)
 
 GF-23 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
@@ -2826,7 +2927,7 @@ work through public RN imports with applicable upstream behavior.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-10 · P1 · View, styles and RTL | In progress | Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema | GF-04, GF-08, GF-09, GF-25 |
-| GF-11 · P1 · Text and fonts | Planned | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
+| GF-11 · P1 · Text and fonts | In progress | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
@@ -2844,7 +2945,7 @@ observe the real system and retain the original event/callback contracts.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-19 · P1 · Animated and layout animation | In progress | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
-| GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
+| GF-20 · P1 · Accessibility | In progress | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | In progress | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |

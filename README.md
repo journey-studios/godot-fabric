@@ -30,6 +30,16 @@ React Native Chart Kit. The [TSX form](examples/form/README.md) uses the narrowe
 public types and native editing/activation. Mobile keyboard/IME contracts and
 complete React Native props remain open.
 
+The [text layout example](examples/text-layout/README.md) draws what Text's
+`onTextLayout` reports (each visible line's box and baseline) over the paragraphs
+the host measured and painted, and aligns a row by `alignItems: 'baseline'`; both
+come from the lines of that one shaped paragraph. Its
+[evidence](docs/evidence/text-layout/README.md) records 76 headless checks against the
+bundled fonts' tables, the preceding host's 5 failures, three retained sabotages and two
+captures (hosted CI pending); the [research](docs/research/text-layout.md) has the oracle,
+the measured tolerance and the controls. Span press and selection, font scaling,
+bidi/emoji and font fallback remain open.
+
 The [View geometry example](examples/view/README.md) exercises original public
 View/Fabric ordering, rectangular overflow and four solid border colors through
 real input targets and renderer pixels. The later
@@ -267,6 +277,22 @@ while `animating`, freezes when stopped and hides with `hidesWhenStopped`. 33
 headless checks in two roots; the preceding host fails the 2 mount checks.
 Hosted CI repeated the 33 checks ([receipt](docs/evidence/activity-indicator/hosted-ci.json)).
 [Evidence](docs/evidence/activity-indicator/README.md).
+
+The [accessibility example](examples/accessibility/README.md) maps RN's accessibility
+props on `View`, `Pressable` and `TouchableOpacity` to Godot's AccessKit tree: the
+label and hint as the element's name and description, the role (61 accepted
+spellings naming 44 distinct roles, a table in the [research note](docs/research/accessibility.md)), the
+disabled, busy, checked, selected and expanded states, live regions, `aria-hidden`
+and the OS's press (`onAccessibilityTap`, or a click at the View's center). Values
+the host cannot honor fail explicitly instead of becoming a generic element.
+`npm run test:accessibility` is headless, so it proves metadata only (80 checks in
+two roots; the preceding host fails exactly 10, and four retained sabotages are
+rejected). `npm run test:accessibility:bridge` reads the real NSAccessibility tree of
+the graphical Godot and presses elements with `AXPress` (22 checks, local macOS
+only; the preceding host fails exactly 5). `AccessibilityInfo`, focus, text scale,
+announcements and mobile (Godot 4.7.2 has no bridge on iOS or Android) are open.
+Hosted CI has not run the headless step yet.
+[Evidence](docs/evidence/accessibility/README.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
@@ -563,6 +589,10 @@ clock example separately.
 | --- | --- | --- |
 | [![Both lists scrolled by the mouse wheel, with their cells windowed](docs/evidence/virtualized-list/virtualized-list-scrolled.png)](examples/virtualized-list/README.md) | [![setColorScheme turned the whole screen dark](docs/evidence/appearance/appearance-dark.png)](examples/appearance/README.md) | [![A box dragged with the mouse](docs/evidence/pan-responder/pan-responder-dragging.png)](examples/pan-responder/README.md) |
 
+| Text layout: initial | Text layout: after narrowing the column |
+| --- | --- |
+| [![Boxes and baseline rules drawn over the lines onTextLayout reported](docs/evidence/text-layout/text-layout-initial.png)](examples/text-layout/README.md) | [![The narrowed column re-wraps and the boxes follow the new lines](docs/evidence/text-layout/text-layout-narrow.png)](examples/text-layout/README.md) |
+
 These six launcher examples run RN's original `Switch`, `ActivityIndicator`,
 touchables, `FlatList` and `SectionList`, `Appearance` and `PanResponder` from the
 public `react-native` import, each driven by real mouse input in its validation.
@@ -700,6 +730,7 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

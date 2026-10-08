@@ -23,6 +23,7 @@ import {
 import { PublicInput } from "./public-input";
 import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
+import { pressableAccessibilityProps, withExplicitRoles } from "./accessibility-view-config.js";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
 import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
 export { default as NativeModules } from "./native-modules";
@@ -126,19 +127,17 @@ function nativeStyle(style, kind) {
 }
 export function View({
   style,
-  accessible,
-  accessibilityRole,
-  accessibilityLabel,
   collapsable,
   ...props
 }) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");
   const flat = StyleSheet.flatten(style);
-  // Browser text selection is irrelevant to native Controls. Accessibility
-  // metadata remains explicitly unsupported, documented in the laboratory.
+  // Browser text selection is irrelevant to native Controls. The accessibility
+  // props reach RN's View, whose view config (src/accessibility-view-config.js)
+  // lets through the ones the host maps and rejects the values it cannot honor.
   const { userSelect, ...layout } = flat;
-  return <OriginalView {...props} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
+  return <OriginalView {...withExplicitRoles(props)} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
 }
 export function Text({ style, ...props }) {
   const flat = nativeStyle(style, "Text");
@@ -154,7 +153,7 @@ export function Pressable({ style, ...props }) {
     throw new Error("Inline Controls are not implemented in Godot Text");
   return (
     <GodotPressable
-      {...props}
+      {...pressableAccessibilityProps(props)}
       style={
         typeof style === "function"
           ? (state) => nativeStyle(style(state), "Pressable")

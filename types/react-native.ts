@@ -97,15 +97,57 @@ export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureIn
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }
+/** The values of RN's accessibilityRole that the host maps to a Godot accessibility role (native/accessibility_core.h).
+ * The others, such as "webview" or "adjustable", fail at the host with the reason. */
+export type AccessibilityRole = "none" | "button" | "togglebutton" | "imagebutton" | "keyboardkey" | "link" | "checkbox" |
+  "radio" | "switch" | "menuitem" | "tab" | "text" | "header" | "image" | "progressbar" | "alert" | "timer" | "list" | "menu" |
+  "menubar" | "tablist" | "tabbar" | "radiogroup" | "toolbar" | "viewgroup" | "search";
+/** The values of RN's role that the host maps to a Godot accessibility role. */
+export type AccessibilityAriaRole = "presentation" | "none" | "button" | "link" | "checkbox" | "radio" | "switch" |
+  "menuitem" | "option" | "tab" | "heading" | "img" | "progressbar" | "alert" | "status" | "timer" | "tooltip" | "list" |
+  "listitem" | "menu" | "menubar" | "tablist" | "tabpanel" | "dialog" | "alertdialog" | "radiogroup" | "toolbar" | "group" |
+  "region" | "banner" | "complementary" | "contentinfo" | "form" | "main" | "navigation";
+/** accessibilityState as the host maps it: checked has no "mixed", and a state fails on a role that cannot show it
+ * (checked needs checkbox, radio, switch or togglebutton; selected tab, listitem or option; expanded button or menuitem). */
+export interface AccessibilityState {
+  busy?: boolean; checked?: boolean; disabled?: boolean; expanded?: boolean; selected?: boolean;
+}
+/** The accessibility props the Godot host maps to the OS's assistive technology: the name, the description, the role,
+ * the states, the live region, hidden, and the press of the OS (onAccessibilityTap). The rest of RN's accessibility
+ * props, accessibilityActions among them, are not supported: accessibilityActions fails where it renders. */
+export interface AccessibilityProps {
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
+  role?: AccessibilityAriaRole;
+  accessibilityState?: AccessibilityState;
+  accessibilityLiveRegion?: "none" | "polite" | "assertive";
+  accessibilityElementsHidden?: boolean;
+  importantForAccessibility?: "auto" | "yes" | "no-hide-descendants";
+  onAccessibilityTap?: () => void;
+  "aria-label"?: string;
+  "aria-live"?: "off" | "polite" | "assertive";
+  "aria-hidden"?: boolean;
+  "aria-busy"?: boolean;
+  "aria-checked"?: boolean;
+  "aria-disabled"?: boolean;
+  "aria-expanded"?: boolean;
+  "aria-selected"?: boolean;
+}
 export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
   "onPointerDown" | "onPointerDownCapture" | "onPointerMove" | "onPointerMoveCapture" |
   "onPointerUp" | "onPointerUpCapture" | "onPointerCancel" | "onPointerCancelCapture" |
   "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
-  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> & { style?: StyleProp<ViewStyle> };
-export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID"> & {
+  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> &
+  AccessibilityProps & { style?: StyleProp<ViewStyle> };
+/** Text: onTextLayout is RN's original event, one entry per visible line (see docs/research/text-layout.md).
+ * Only the outer Text emits it; a nested Text ignores it, as in RN. */
+export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };
+export type TextLayoutEvent = RN.TextLayoutEvent;
 export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "onChangeText" | "onSelectionChange" |
   "onFocus" | "onBlur" | "onEndEditing" | "onSubmitEditing" | "onKeyPress" | "onLayout"> {
   value?: string; defaultValue?: string; placeholder?: string; editable?: boolean;
@@ -153,7 +195,7 @@ export declare const ActivityIndicator: React.ComponentType<ActivityIndicatorPro
  * the Godot View subset; props this platform has not verified are omitted. */
 export type TouchableOpacityProps = Pick<RN.TouchableOpacityProps, "activeOpacity" | "onPress" | "onPressIn" | "onPressOut" |
   "onLongPress" | "delayLongPress" | "delayPressIn" | "delayPressOut" | "disabled" | "hitSlop" | "pressRetentionOffset" |
-  "testID" | "nativeID" | "onLayout" | "children"> & { style?: StyleProp<ViewStyle> };
+  "testID" | "nativeID" | "onLayout" | "children"> & Omit<AccessibilityProps, "role" | "onAccessibilityTap"> & { style?: StyleProp<ViewStyle> };
 export declare const TouchableOpacity: React.ComponentType<TouchableOpacityProps & React.RefAttributes<NativeInstance>>;
 export declare const StyleSheet: {
   hairlineWidth: number;
