@@ -1,0 +1,45 @@
+{
+  "format": "godot-fabric.modal-thermonuclear-gates/v1",
+  "checkedAt": "2026-10-07T21:50:19.631491+00:00",
+  "hostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+  "contracts": {
+    "command": "npm run test:contracts",
+    "exitCode": 0,
+    "nodeTests": 283,
+    "pythonTests": 13,
+    "logSha256": "5a124a4a08e29daaeacde26701747eb7e72c180bce7e5b0a9c17e590534837ce"
+  },
+  "static": {
+    "command": "npm run check:static",
+    "exitCode": 0,
+    "logSha256": "c873859219c77613883a2ea10f88022c30577af87f4891a91da8106848c4b68a"
+  },
+  "publication": {
+    "command": "npm run check:publication",
+    "exitCode": 0,
+    "logSha256": "1f96e4c4f53144b0eceb15006735a5d333d1b5d5b5978827effb71ebfdeca3ac",
+    "scope": "Code, documentation and curated evidence before this gate receipt was added.",
+    "includingGateReceipt": {
+      "passed": true,
+      "files": 1199,
+      "logSha256": "7aa0d7c0ac2c73b9e652ed72b9deeb9251e9d57abeda4de40741b1e468e63e5c"
+    }
+  },
+  "diffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "dashboard": {
+    "valid": true,
+    "complete": 0,
+    "required": 39,
+    "checkpoints": 23,
+    "checkpointTotal": 156
+  },
+  "limits": {
+    "local": true,
+    "hostedImplementationCI": false,
+    "hostedCodeRabbit": false,
+    "fullGF18Acceptance": false
+  }
+}

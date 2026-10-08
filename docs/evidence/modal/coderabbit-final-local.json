@@ -1,0 +1,428 @@
+{
+  "format": "godot-fabric.modal-coderabbit-root-control/v1",
+  "checkedAt": "2026-10-07T22:42:29.428912+00:00",
+  "baseHead": "a32235dc9b5ed932bb7942e50fc33e7abe04f1e3",
+  "hostSha256": "45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d",
+  "oldHostSha256": "37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae",
+  "bundleSha256": "c6eb8e78a4411048adf9bef09e816f7bc8eb753096e7f2d1e529c617d11c27e8",
+  "sourcePins": {
+    "tests/modal-host-fixture.jsx": "44a27037ad2be368fd9e8795272087f392e363bd2a4d973721414246220f47d2",
+    "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+    "tests/modal-host-native.test.mjs": "ee0a2d4c869ebf6fbd7234eed867a3db7e6f645d4695412c63be09b84afca2a7",
+    "tests/modal-capture-lifetime-probe.gd": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26",
+    "tests/modal-sibling-order-probe.gd": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4",
+    "tests/modal-owner-windows-probe.gd": "7dc77bf722712f4c2ae243dc9d8870cd2e4a7bfd12ad70fb90760233d77b8806",
+    "tests/modal-stack-membership-probe.gd": "294c49bfbc093098a5d29a2fc9f14a8367904ed6e117540cde076ba6374bc3d1",
+    "tests/modal-surface-lifetime-probe.gd": "31b6407b9f8de2c35b28e0d7f3fbdea7fdf8b58b477ef509f5c00f229e1f02f2",
+    "tests/modal-stack-membership-native.test.mjs": "8e4a8e43f0f504765c1c15c2ac144692d23ba5a1b1688843bb45339419c5ecd1",
+    "tests/modal-discriminators-native.test.mjs": "e62ffd916b4862e318271422edab9b6182c75c8c2bef59dbc3a40f00f91c401a",
+    "scripts/modal-host-bundle.mjs": "c09fd2b851f6b7219bc6dcdcb51b4201a5dc9ff186f23fba94a92d0ae43608cf",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/application_runtime.cpp": "13b5d5e75b2a1777d40f365fe9dbfa228b5d82303b7a9345d36babcec8bf17a6",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/fabric_surface.cpp": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+    "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535"
+  },
+  "producerPinsVerified": 35,
+  "runs": {
+    "old/modal-surface-lifetime-probe.gd": {
+      "exitCode": 1,
+      "displayServer": "headless",
+      "checks": 9,
+      "passed": 7,
+      "failed": [
+        "hidden/connected Surface keeps DOM measurement coordinates when its native visibility is false",
+        "teardown/unmount detaches the ordinary RN root before visibility_changed queues Surface release"
+      ],
+      "reportSha256": "bb94cc3726f5d5ee4bb78b6be7731f0a9919fec766e1359499f8e0a8e4c6a2cb",
+      "logSha256": "4500de619dff8836296d6fa97924e2639706a548446af3e80301c78118c1a86b",
+      "probeSha256": "31b6407b9f8de2c35b28e0d7f3fbdea7fdf8b58b477ef509f5c00f229e1f02f2",
+      "visibleMeasurement": [
+        {
+          "height": 0.0,
+          "width": 0.0,
+          "x": 34.5,
+          "y": 55.5
+        }
+      ],
+      "hiddenMeasurement": [
+        {
+          "height": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        }
+      ],
+      "freeCallback": {
+        "called": true,
+        "ordinaryRootAlive": true,
+        "ordinaryRootDetached": false,
+        "releaseQueued": true,
+        "surfaceWasAlive": true
+      },
+      "jsHide": {
+        "called": true,
+        "ordinaryWasAlive": true,
+        "surfaceWasAlive": true
+      }
+    },
+    "current/modal-surface-lifetime-probe.gd": {
+      "exitCode": 0,
+      "displayServer": "headless",
+      "checks": 9,
+      "passed": 9,
+      "failed": [],
+      "reportSha256": "1f8d6c7b384184a2d12b963e1cfd8359bf2df80929975232f2b9c19c9ba67cd4",
+      "logSha256": "cc876a01df3d9eef387d48ab37514c1ecae39e14610f185b9b1698d8f4de08f0",
+      "probeSha256": "31b6407b9f8de2c35b28e0d7f3fbdea7fdf8b58b477ef509f5c00f229e1f02f2",
+      "visibleMeasurement": [
+        {
+          "height": 0.0,
+          "width": 0.0,
+          "x": 34.5,
+          "y": 55.5
+        }
+      ],
+      "hiddenMeasurement": [
+        {
+          "height": 0.0,
+          "width": 0.0,
+          "x": 34.5,
+          "y": 55.5
+        }
+      ],
+      "freeCallback": {
+        "called": true,
+        "ordinaryRootAlive": true,
+        "ordinaryRootDetached": true,
+        "releaseQueued": true,
+        "surfaceWasAlive": true
+      },
+      "jsHide": {
+        "called": true,
+        "ordinaryWasAlive": true,
+        "surfaceWasAlive": true
+      }
+    },
+    "current/modal-host-probe.gd": {
+      "exitCode": 0,
+      "displayServer": "headless",
+      "checks": 68,
+      "passed": 68,
+      "failed": [],
+      "reportSha256": "5fbe23ff20e384cf20b98bc61a19fd067686f9c6070a1f4c81c17431facc34d5",
+      "logSha256": "6b18717f11f9d3af20a882c3a8d53c4321636e4ae9f9f8fc052fbd1c6f4f428d",
+      "probeSha256": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b"
+    },
+    "current/modal-capture-lifetime-probe.gd": {
+      "exitCode": 0,
+      "displayServer": null,
+      "checks": 65,
+      "passed": 65,
+      "failed": [],
+      "reportSha256": "65653b1acbb36644d2939e789b7d95f0a433d2155344e774ef1eadfefad1efeb",
+      "logSha256": "1df7d80c6b6ae180e5345df70e2b6790cc1c9fa1514b08021f02f88c4c5c79ca",
+      "probeSha256": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26"
+    },
+    "current/modal-sibling-order-probe.gd": {
+      "exitCode": 0,
+      "displayServer": null,
+      "checks": 9,
+      "passed": 9,
+      "failed": [],
+      "reportSha256": "5f037175c2883a5eac0c69da4e3e5e5c149ab593324a4812a7871d714a9e8c2f",
+      "logSha256": "f4274686dd8c1034c1df1654cbd50d3ec56acc7666dd2b6fb6688fbeda59e731",
+      "probeSha256": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4"
+    },
+    "current/modal-stack-membership-probe.gd": {
+      "exitCode": 0,
+      "displayServer": null,
+      "checks": 31,
+      "passed": 31,
+      "failed": [],
+      "reportSha256": "3d47fd42c81512d12c2dc8f2a17c080a21845cf9d0d0ae37214babddf091c4d8",
+      "logSha256": "44ceb92011ee6a4a44b2031728871ecb3f0158600f97bb3607190cb46d279926",
+      "probeSha256": "294c49bfbc093098a5d29a2fc9f14a8367904ed6e117540cde076ba6374bc3d1"
+    },
+    "old/modal-owner-windows-probe.gd": {
+      "exitCode": 1,
+      "displayServer": "macOS",
+      "checks": 11,
+      "passed": 7,
+      "failed": [
+        "owners/input-in-owner-A-is-confined-to-runtime-A",
+        "owners/input-in-owner-B-is-confined-to-runtime-B",
+        "owners/B-remains-interactive-after-A-presentation-is-destroyed",
+        "owners/foreign-device-interlopers-never-reach-native-or-responder-moves"
+      ],
+      "reportSha256": "dad68d519f73e3c0350966d2f75154380f336250df8389813d33e9bef8a824f7",
+      "logSha256": "f7b8f31d2718745af9bb4d3b75cf867a4751b1e7abaf57bbfe547419d515ca36",
+      "probeSha256": "7dc77bf722712f4c2ae243dc9d8870cd2e4a7bfd12ad70fb90760233d77b8806",
+      "owners": {
+        "A": {
+          "react": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 1.0,
+            "gots": 1.0,
+            "losts": 1.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 0.0,
+            "shows": 1.0,
+            "ups": 1.0
+          },
+          "nativePointer": {
+            "pointerMoves": 1.0,
+            "moves": 1.0,
+            "pointerDowns": 1.0,
+            "pointerUps": 1.0,
+            "pointerClicks": 1.0
+          }
+        },
+        "B": {
+          "react": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 2.0,
+            "gots": 2.0,
+            "losts": 2.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 0.0,
+            "shows": 1.0,
+            "ups": 2.0
+          },
+          "nativePointer": {
+            "pointerMoves": 2.0,
+            "moves": 2.0,
+            "pointerDowns": 2.0,
+            "pointerUps": 2.0,
+            "pointerClicks": 2.0
+          }
+        }
+      },
+      "interlopers": [
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 26994542026,
+          "position": [
+            416.0,
+            316.0
+          ]
+        },
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 27380418014,
+          "position": [
+            356.0,
+            276.0
+          ]
+        },
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 27380418014,
+          "position": [
+            356.0,
+            276.0
+          ]
+        }
+      ]
+    },
+    "current/modal-owner-windows-probe.gd": {
+      "exitCode": 0,
+      "displayServer": "macOS",
+      "checks": 11,
+      "passed": 11,
+      "failed": [],
+      "reportSha256": "9bc2ce952067757e6985d649d2e18996f57c9ab6e5fb3892e47a2e489a3abb0c",
+      "logSha256": "3df188282bbe47c5cbc3969b4ae1d1326ae451ded795ba100daabcb5532a8044",
+      "probeSha256": "7dc77bf722712f4c2ae243dc9d8870cd2e4a7bfd12ad70fb90760233d77b8806",
+      "owners": {
+        "A": {
+          "react": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 1.0,
+            "gots": 1.0,
+            "losts": 1.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 1.0,
+            "shows": 1.0,
+            "ups": 1.0
+          },
+          "nativePointer": {
+            "pointerMoves": 0.0,
+            "moves": 0.0,
+            "pointerDowns": 1.0,
+            "pointerUps": 1.0,
+            "pointerClicks": 1.0
+          }
+        },
+        "B": {
+          "react": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 2.0,
+            "gots": 2.0,
+            "losts": 2.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 2.0,
+            "shows": 1.0,
+            "ups": 2.0
+          },
+          "nativePointer": {
+            "pointerMoves": 0.0,
+            "moves": 0.0,
+            "pointerDowns": 2.0,
+            "pointerUps": 2.0,
+            "pointerClicks": 2.0
+          }
+        }
+      },
+      "interlopers": [
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 26994542026,
+          "position": [
+            416.0,
+            316.0
+          ]
+        },
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 27380418014,
+          "position": [
+            356.0,
+            276.0
+          ]
+        },
+        {
+          "device": 4243,
+          "insideOwner": true,
+          "outsideTarget": true,
+          "ownerWindowId": 27380418014,
+          "position": [
+            356.0,
+            276.0
+          ]
+        }
+      ]
+    },
+    "current/missing-target-probe.gd": {
+      "exitCode": 1,
+      "displayServer": "macOS",
+      "checks": 1,
+      "passed": 0,
+      "failed": [
+        "owners/targets-are-present-before-native-input"
+      ],
+      "reportSha256": "a8b04867f2ddde9a290d571255fb4f65ac464b305d86384c787da28c0674e850",
+      "logSha256": "3e885b5dab831b1e7b525158eac06e2f5bebf0eb1128023610fbb2555ef3dfe2",
+      "probeSha256": "7584b8a07fc3813e61dc38c15a337a82260c6c95cd790f55bd1e4d854f6f1335"
+    },
+    "current/graphical-probe.gd": {
+      "exitCode": 0,
+      "displayServer": "macOS",
+      "checks": 73,
+      "passed": 73,
+      "failed": [],
+      "reportSha256": "aa4310d9b657b5db0577e6d32d63ba858007d435f1b8aca27c11b16bc6e9831a",
+      "logSha256": "2adb7039b37ba061cc60696337d12409591081489fb161a69338eb7f631e8935",
+      "probeSha256": "186a26c07da6e5936ebb8e8821cea0dd95795986db4ee569847c4350306dc227"
+    }
+  },
+  "pointerCaptureControl": {
+    "interest": "current",
+    "flags": "enabled",
+    "checks": 84,
+    "passed": 84,
+    "reportSha256": "30432157fc41f8fb5cd18d2b26319787fa453b9ccdeff78fad03d6e4dbdd131a",
+    "logSha256": "36377be725ac8a21c1d75c6ac76105d9069664f80d15b02d5defe561035e86bb"
+  },
+  "nativeBuild": {
+    "command": ".deps/python/bin/cmake --build .deps/build --parallel 4 --target fabric_godot",
+    "receiptSha256": "281d296167dfd76c289951a65b47dc5e5774f02051f4e18f85c04e1fea272f17",
+    "nativeHostBuildRecorded": true,
+    "modalNativeProducerPinsMatchedBuildReceipt": 21
+  },
+  "versions": {
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "reactNative": "0.87.1",
+    "platform": "macOS arm64"
+  },
+  "expectedNegativeDiagnosticsOnly": true,
+  "captures": [
+    {
+      "file": "review-coderabbit-initial.png",
+      "sha256": "e5b69974b0a3e8b93da74f176ca50544cdc0de358fb91aee0c735080b00e0719",
+      "visuallyInspected": true
+    },
+    {
+      "file": "review-coderabbit-resized.png",
+      "sha256": "6aba1b3d9d6d4d08ee3d8b741c80b8c7fda5ca48dbe99da745c44476eefeb10d",
+      "visuallyInspected": true
+    }
+  ],
+  "structuralAudit": {
+    "logicalChildOwnerIndex": "insert/remove/forget touch the known parent; no all-parent scans",
+    "logicalRootRetention": "finalize_unmount calls forget_logical_tag(id), removing empty root entries",
+    "teardown": "ordinary Controls detach before Modal.hide; shared presentations and Object IDs survive callbacks without a captured Surface pointer",
+    "geometry": "visibility lives at typed input boundary, not DOM geometry; unused source-only overload removed",
+    "validationDevice": "existing private metadata is checked once in routed_input after typed pointer_key; both ordinary and Modal streams reuse it; no new mode",
+    "fileSizes": {
+      "application_runtime.cpp": 2561,
+      "baselineMainApplicationRuntime": 2141,
+      "modal_window_stack.cpp": 249,
+      "modal_presentation.cpp": 69,
+      "physical_embedding.cpp": 50
+    },
+    "crossedBelowToAbove1000": false,
+    "asymptoticBenchmarkExecuted": false
+  },
+  "synchronousFreeInsideBoundUnmount": {
+    "observed": "Godot rejected Object.free during the bound Surface.unmount call because the Object is locked",
+    "historicalLogSha256": "f9f17e0b3021126ec39bd62945e75432da16f723b850793959572c2c270cf2bc",
+    "crashOrUseAfterFreeReproduced": false,
+    "validControls": "unmount visibility callback sees ordinary root alive/detached and queues free; separate JS-hide callback performs immediate Surface.free"
+  },
+  "limits": {
+    "hostedFinalImplementationCI": false,
+    "completeHistoricalInputCauseProven": false,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  }
+}

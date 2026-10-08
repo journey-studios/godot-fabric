@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: CI 5/5 na main (ebcb292); Próximo: Modal."
+    "focusTitle": "Modal PR #51: CodeRabbit aprovado; provas nativas hospedadas passam, CI excedeu 45 min. Novo head com budget global de 60 min aguarda CI completa."
   },
   "updatedAt": "2026-10-08T00:43:16.000Z",
   "source": {
-    "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Implementação local fixada em 73a27b0c467884a9bf51dc7b6cb70e4cb198ac78: backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay, prova local 95/60/53, limite global de 1 MiB wire por poll entre sockets WebSocket e capacidade canônica de 256 eventos após HTTP. Recibos CI históricos cobrem 422c2ee e a correção HTTP e8dd7b0; o push da main em ebcb292 (squash de #48, run 37663778397) passou CI 5/5, com recibo em docs/evidence/websocket/hosted-ci-ebcb292.json. GF-22 segue parcial.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
+    "commit": "bee7b40061319e25d002fc86808dc9c1140c5424",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/bee7b40061319e25d002fc86808dc9c1140c5424",
+    "scope": "Modal desktop: a correção 3b8ddbc foi validada na CI do bee7b40: 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture. A auditoria conferiu 35 pins do Modal, 95 do SDK e 10 pins RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 foi cancelado ao atingir o limite global de 45 minutos; o cold start reportou sucesso no artefato e a paridade ficou skipped. O orçamento global subiu para 60 minutos; o novo head precisa dos cinco jobs verdes antes do merge. GF-18 segue parcial, com 23/156 checkpoints e 0/39 itens completos.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51"
   },
   "phases": [
     {
@@ -1831,7 +1831,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Modals and safe areas",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation",
       "dependencies": [
         "GF-07",
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "PR #51: a revisão thermo-nuclear corrigiu geometria, captura cross-root, ownership da stack, lifetime, teardown e indexação lógica. A regressão singular de a978 foi reproduzida e corrigida em 3b8ddbc, sem afrouxar o oracle. Na CI do bee7b40 passaram 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture; foram auditados 35 pins Modal, 95 do SDK e 10 RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 atingiu o limite global de 45 minutos após COLD_START_PASSED; a paridade ficou skipped. O limite global agora é 60 minutos e uma nova CI completa ainda é necessária. O consumer local do SDK passou 68/68; os gates anteriores de 283 testes Node e 13 Python permanecem registrados. Orientação/insets, hardware/mobile/export e paridade integral continuam abertos; quatro checkpoints seguem false, com 23/156 e 0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2053,7 +2053,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Admissão WebSocket: byte budget de 1 MiB por poll compartilhado entre sockets WebSocket; capacidade de 256 eventos canônicos calculada após o poll HTTP, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. Hosted CI passou 5/5 jobs no head fixado 422c2ee (https://github.com/journey-studios/godot-fabric/actions/runs/37640391170); alterações posteriores do PR foram integradas à main: o push da main em ebcb292 (run 37663778397) passou nos cinco jobs, com recibo em docs/evidence/websocket/hosted-ci-ebcb292.json. O job de parity cobre 13 casos core-ui-v2 Android/iOS, não differential WebSocket nem runtime Godot móvel. Revisão documental final em curso; próxima fatia: Modal. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
+      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Admissão WebSocket: byte budget de 1 MiB por poll compartilhado entre sockets WebSocket; capacidade de 256 eventos canônicos calculada após o poll HTTP, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. PR #48 mergeada em ebcb292 após CI5/5 no head final55980ac (https://github.com/journey-studios/godot-fabric/actions/runs/37658942136), aprovação CodeRabbit e cinco threads resolvidas. Recibo final registra56inputs verificados independentemente, HTTP100/137 e WebSocket95/60/53; recibos422c2ee/e8dd7b0 históricos preservados. O push da main em ebcb292 também passou nos cinco jobs (run 37663778397), com recibo auditado em docs/evidence/websocket/hosted-ci-ebcb292.json; os recibos de Networking e Pages da PR #52 permanecem preservados. O job de parity cobre 13 casos core-ui-v2 Android/iOS, não differential WebSocket nem runtime Godot móvel. Revisão e merge desta fatia concluídos; próxima fatia: Modal. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2076,6 +2076,10 @@
             {
               "label": "WebSocket PR #48: hosted CI 5/5 jobs para head fixado 422c2ee (execução em https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37640391170"
+            },
+            {
+              "label": "WebSocket PR #48: head final55980ac, CI5/5 e merge após revisão",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37658942136"
             },
             {
               "label": "CI WebSocket 37663778397: 5 jobs, 95 checks e 109 entradas auditadas",
@@ -3490,6 +3494,36 @@
   ],
   "activity": [
     {
+      "id": "modal-hosted-bee7b40-global-timeout",
+      "at": "2026-10-08T00:17:03.208711+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "A raiz auditou no bee7b40 193 verificações Modal (11 com display macOS), 164 transforms, 672 capture, 35/95 pins de produtores e 10 pins RN. CodeRabbit aprovou; as seis threads foram resolvidas. A CI foi cancelada ao atingir o limite global de 45 minutos, confirmado pela annotation; o cold start passou no artefato e a paridade ficou skipped. O novo orçamento total de 60 minutos mantém probes e oráculos; merge e aceite aguardam uma nova CI totalmente verde. Nenhum checkpoint ou denominador foi alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37701896839"
+    },
+    {
+      "id": "modal-ci-input-filter-corrected-3b8ddbc",
+      "at": "2026-10-07T23:21:19.665442+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "Regressão CI a978 corrigida sem afrouxar o oracle: filtro existente antes de pointer_key. Mesmo bundle e 25 checks reprovam o host anterior por ERROR e passam no novo, também com evento emulado explícito. Root valida gates transform/Modal/capture/consumer/contratos e pins 35/95/153 em 3b8ddbc. CI e CodeRabbit finais pendentes; nenhuma contagem de aceite alterada.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/3b8ddbcc251a2a136c0708b484d68dad2a0ce60c"
+    },
+    {
+      "id": "modal-ci-transform-inverse-a978",
+      "at": "2026-10-07T23:05:33.256715+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "CI 37698981563 falhou em test:transforms:guards antes de executar Modal. Os 61 guards e 25 checks de input passam, mas ERROR det == 0 reprova corretamente o log. Root reproduziu a mesma falha no host 45ba095b; causa e correção em investigação no único Luna. Merge permanece pendente; checkpoints, pesos e denominadores preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37698981563"
+    },
+    {
       "id": "websocket-main-hosted-ci-and-pages-20261007",
       "at": "2026-10-07T22:40:19.017Z",
       "taskIds": [
@@ -3506,6 +3540,115 @@
       ],
       "message": "CI hospedada do Networking: o push da main em afa5d87 (run 37571237096) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:networking (1 de 1 ok) e o artefato repete os 100 checks headless com IDs idênticos aos do relatório commitado; o oráculo independente aceita o relatório baixado. O produtor src/react-native-platform.jsx, sem pin commitado, tem o mesmo SHA-256 em 83a3557 e em afa5d87. Pages 37571237256 implantou exatamente os dados de afa5d87.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/6fc83851bbd8fdf00c21abfc24580bd6720e791f/docs/evidence/networking/hosted-ci.json"
+    },
+    {
+      "id": "modal-coderabbit-a32235d-findings-20261007",
+      "at": "2026-10-07T22:09:00.522424+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "CodeRabbit solicitou mudanças em a32235d. Revalidar DOM de root oculto, reentrância de host no unmount e scans de listas lógicas; corrigir falha rápida da fixture e título de foco. Teste headed fica obrigatório; comprovação hospedada pendente. Cinco achados anteriores preservados; aceites integrais não alterados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-reviewed-source-published-dd66069",
+      "at": "2026-10-07T21:53:11.031797+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Implementação revisada publicada na PR #51 em dd66069; os 33 hashes executados conferem com os blobs do commit. Parecer e capturas atualizados. CI/CodeRabbit desse código permanecem pendentes; não conta os checks verdes da preparação. GF-18 segue parcial e sem novo checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/dd66069eb7b5923c416fa11276b0224cf97e08fe"
+    },
+    {
+      "id": "modal-thermonuclear-local-review-closed-20261007",
+      "at": "2026-10-07T21:48:19.032982+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Cinco achados corrigidos e revisão estrutural local aprovada para revisão hospedada. Root: 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder/owners. Device dedicado mantém as nove asserções e passa nos dois binários; falhas históricas preservadas com causa completa indeterminada. Consumer externo usa CLI do SDK e passa 68/68. CI/CodeRabbit da implementação seguem pendentes; sem alterar checkpoints ou completude.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-membership-fixed-owner-input-review-20261007",
+      "at": "2026-10-07T21:37:32.468664+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou membership31/31 com um observador persistente; revision duplicada de membership foi eliminada. Lifecycle65, reorder9 e cenário68headless passam no host37. Comparação gráfica com os mesmos inputs revelou onPress ausente em B; trace prova motions nativas intercaladas em parte dos casos, mas a causa completa segue indeterminada. Cinco achados fechados; merge bloqueado pelo input gráfico e verificação hospedada. Sem alterar checkpoints.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-endpoint-fixed-membership-review-20261007",
+      "at": "2026-10-07T21:16:06.541836+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou a correção P2 do endpoint com o mesmo negativo (44/44) e preservação do contrato em Window viva (84/84 × oito lanes). Reexecução final 68/73, lifecycle/reorder/dois owners 65/9/9, SDK/registry e consumer externo verdes. Auditoria estrutural encontrou membership de runtime sem unregister no último unmount; correção e controle delimitados no mesmo Luna. Merge bloqueado por esse vínculo e gates/CI/review finais. Sem elevar completude.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-retired-endpoint-p2-20261007",
+      "at": "2026-10-07T20:54:41.147317+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou a expansão final (68 headless/73 gráficos, 41 observações) e encontrou outro bloqueio P2: após 10 capturas/unmounts, 10 rotas permanecem presas a Windows destruídas. Negativo congelado e reproduzido; solução exige retirement canônico do endpoint físico, preservando supressão em Window viva. Oito suites nativas verdes e platform-seams 15/15 após alinhar production defines. Docs/receipts e duas capturas atualizados; sem checkpoint inflado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-same-input-fixes-20261007",
+      "at": "2026-10-07T20:46:04.521577+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou as três correções P1 com os mesmos probes/bundles e host c9fd78de: View 0×0 mede 37,55; parar owner inferior preserva contato/foco/texto do topo e entrega onPress; captura entre roots restaura got/move/up/lost. Freeze final reexecutado: 68/68 headless. Simplificações de Stack/embedding/TouchContact revisadas; faltam provas finais de reorder, unmount/captura reentrante e dois owners nativos. Sem checkpoint ou completude inflados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-nested-contact-zero-review-20261007",
+      "at": "2026-10-07T20:24:48.109773+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou46headless/51gráficos no host9c2e43ef, recomputou31observações e inspecionouduascapturas. NestedWindows,Pressability,canceldecontato e screenorigemreal+scale1.5 comprovados; não capture explícito. Nova negativa0×0 retorna5,7 em vezde37,55, semerrors. Correção do sentinel e autoridade/foco/owners em andamento no únicoLuna; head74preparatório não testa isso. Todos4GF18checkpointsfalse;23/156 e0/39 mantidos.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-embedding-pressability-20261007",
+      "at": "2026-10-07T20:07:27.411910+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou37headless/41gráficos do host730fcbe9 e recomputou22observações. measureInWindow inicial/resize começa em0,0; RN Down entregue. Probe Pressability independente idêntico comprova onPress0→1 entre hosts, fundo preservado. Capturas/recibo positivos e negativos históricos preservados; manifest incompleto declarado. Código local posterior ao head74fdb6d, sem certificação SDK/CI. Nested, escala/origem, focus/owners/capture seguem abertos;23/156 checkpoints e0/39 itens, todos4GF18false.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-interaction-resize-lifetime-20261007",
+      "at": "2026-10-07T19:34:10.486359+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou independentemente 30 checks headless e34 gráficos do Modal original RN, recomputou44 observações e inspecionou capturas420x320/500x350. First onLayout/resize viaState, controles públicos Godot, requestClose semdismiss e stop em callback de visibilidade passaram. Receipt ce3079a1 registra a versão local pré-extração, semcertificação SDK. Ainda pendentes geometry/DOM/RNpointer/foco/stack entre apps/capture e aceite completo. #51draft; todos quatro checkpointsfalse,23/156 e0/39 preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-first-local-rn-mount-20261007",
+      "at": "2026-10-07T19:13:47.557Z",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Modal saiu de planejado para em implementação após a primeira execução integrada original RN. Root confirmou 10 checks headless e 12 gráficos no host macOS, captura 420x320 e stop sem leaks. Evidência identifica esta versão local inicial, não o head publicado 74fdb6d. Revisão da pilha e contratos de interação/resize/geometry seguem no único Luna reutilizado; #51 permanece draft e nenhum checkpoint foi aceito. 23/156 checkpoints e 0/39 itens completos permanecem.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "websocket-final-merge-modal-design-20261007",
+      "at": "2026-10-07T18:42:00.851Z",
+      "taskIds": [
+        "GF-22",
+        "GF-18"
+      ],
+      "message": "PR #48 mergeada como ebcb292 após CI5/5 do head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Verificação independente dos artifacts:WebSocket95/60/53, HTTP100/137,56inputs SHA-256, duas fases de carga e oito casos lifetime. CI pós-merge37663778397 passou5/5 no commit ebcb292. Pages da main mergeada publicado e JSON integral comparado ao commit. Modal: bloqueador global de input rejeitado por impedir GUI; reparent rejeitado por perder foco. Investigação GUI56observações escolheu Windows embedded irmãs com topo exclusivo, mantendo controles/foco/texto ao remover inferior. Isso não é Modal RN implementado nem prova mobile. Nenhum checkpoint/aceite/peso/denominador alterado:23/156 e0/39; GF-22 parcial, GF-18 planejado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/48"
     },
     {
       "id": "websocket-e8-ci-green-main-integration-20261007",
@@ -5267,6 +5410,15 @@
       ],
       "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+    },
+    {
+      "id": "modal-coderabbit-corrections-f95a3e2",
+      "at": "2026-10-07T22:51:55.974532+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
     },
     {
       "id": "agent-board-parallel-20261008",

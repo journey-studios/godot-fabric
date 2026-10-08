@@ -1,0 +1,54 @@
+{
+  "format": "godot-fabric.modal-dom-negative/v1",
+  "checkedAt": "2026-10-07T19:35:59.751392+00:00",
+  "severity": "P1",
+  "finding": "DOM physical projection chooses the small Surface instead of the Modal Window",
+  "implementationPublished": false,
+  "expected": {
+    "measureInWindow": {
+      "x": 0,
+      "y": 0,
+      "width": 420,
+      "height": 320
+    }
+  },
+  "observed": {
+    "errors": [],
+    "measureInWindow": {
+      "height": 320.0,
+      "width": 420.0,
+      "x": 32.0,
+      "y": 48.0
+    },
+    "physical": {
+      "origin": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "size": {
+        "height": 320.0,
+        "width": 420.0
+      },
+      "windowId": 27246200297
+    },
+    "rootOrigin": {
+      "x": 32.0,
+      "y": 48.0
+    }
+  },
+  "featureAssertionPassed": false,
+  "reproductionPassed": true,
+  "provenance": {
+    "hostSha256": "ce3079a1d68f62095c8327ac4517b5f1248e3bde1b0b37671491ae8f8b72e07c",
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "bundleSha256": "e45499b975c0c190b2e19a669a99954e4164dcc41caa1136b544042317f96ffc",
+    "fixtureSha256": "52d73e0b4c77b4e6733b1c034bd74135fdb490b4867aa81d36c5826dc683f72d",
+    "probeSha256": "925b0b07ce9ef60477ee0d2e5fcc70bc03ca7d0e4718c9773ffd50bffe6787b6",
+    "reportSha256": "8da1357207f6253d78c5a732dfdf9285ad1943063e0587793702c6aa476e711f",
+    "logSha256": "e71a695359c955da7fad42da40ef4dd39625543247223065b68515843e984781",
+    "godot": "4.7.2-stable (official)",
+    "originalModalSourceSha256": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25"
+  },
+  "scope": "Original RN public ref measureInWindow on pinned non-iOS SafeAreaView/View, copied local native host, displaced small Surface. No mobile or export proof.",
+  "requiredFix": "Resolve the target family physical embedding against one retained current revision and reuse it across DOM, pointer geometry and input/focus authority."
+}
