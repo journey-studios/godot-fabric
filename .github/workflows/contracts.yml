@@ -724,6 +724,9 @@ jobs:
           path: |
             build/macos-template-derivation.json
             build/macos-export-*/receipt.json
+            build/macos-export-*/sdk-manifest.json
+            build/macos-export-*/build-report.json
+            build/macos-export-*/app.js
             build/macos-export-*/*.log
             build/macos-export-*/runtime-*.json
             build/macos-export-*/*.png

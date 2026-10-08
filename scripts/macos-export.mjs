@@ -551,6 +551,7 @@ export async function runMacOSExport({template, output}) {
     const provisionOutput = await harness.provision();
     const sdkManifestPath = path.join(harness.sdk, "manifest.json");
     const sdkManifestBytes = await readFile(sdkManifestPath);
+    await writeFile(path.join(harness.directory, "sdk-manifest.json"), sdkManifestBytes);
     const sdkManifest = JSON.parse(sdkManifestBytes);
     const hostSource = path.join(harness.sdk, "native/fabric_godot.dylib");
     assert.equal(sdkManifest.nativeSha256, sha256(await readFile(hostSource)), "provisioned host differs from its SDK manifest");
@@ -582,6 +583,8 @@ export async function runMacOSExport({template, output}) {
     const reportBytes = await readFile(reportPath);
     const report = JSON.parse(reportBytes);
     const bundleBytes = await readFile(bundle);
+    await writeFile(path.join(harness.directory, "build-report.json"), reportBytes);
+    await writeFile(path.join(harness.directory, "app.js"), bundleBytes);
     const applicationText = await readFile(path.join(harness.project, "ui/application.tres"), "utf8");
     const entryMatch = applicationText.match(/^entry_file="([^"]+)"$/m);
     assert.ok(entryMatch, "temporary application Resource omitted entry_file");
