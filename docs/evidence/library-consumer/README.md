@@ -178,6 +178,45 @@ título a `dark:text-white` e o gráfico ao tema escuro; o cartão voltou às cl
 Depois de desmontar e remontar o subtree (`Local: 0`, estilos escuros restaurados em Controls novos) e de atualizar os
 dados (o ponto D4 sobe a 100, e a linha e a área mudam), com a mesma superfície SVG.
 
+## CI hospedada
+
+O push da `main` em `57e41f2` (o squash do #69, run
+[37797780642](https://github.com/journey-studios/godot-fabric/actions/runs/37797780642) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (7 min), `reference-ios` (8 min),
+`native-cold-start` (53 min) e `parity-comparison` (25 s). O [recibo](hosted-ci.json) confere tudo contra a API do
+GitHub e o git local:
+
+- **O checkout.** Todos os jobs usaram `57e41f2`, e a árvore que o GitHub guarda para ele (1.700 entradas) é a árvore
+  local; o head do PR (`8436a45`) tem essa mesma árvore.
+- **A lane de JS.** O job `contracts` roda `npm run test:contracts`, e dele os **15 testes** de
+  `tests/library-consumer.test.mjs` (3 de primeiro nível e 12 subtestes, com os nomes que o arquivo tem no run)
+  passam, no total de 7, 43 e 321 testes de Node e 13 de Python.
+- **A lane nativa.** `npm run test:consumer:libraries` imprime `CONSUMER_LIBRARIES_CHECK_PASSED: 16 build/install
+  checks; 46 native checks`. Os **46 checks nativos** têm os IDs do relatório commitado, na mesma ordem (o mesmo digest,
+  `3cfe2419…`). Os 16 checks de build e instalação são os 19 do commitado sem os três que só existem com `--capture` e
+  `--control-ref`; a reconstrução dos 19 a partir dos 16 reproduz o digest `e54d6d76…`. A sabotagem retida da regra de
+  peer opcional é um dos 16 e passa no run.
+- **O que o run produziu.** O bundle é o que o `postReview` registra (`10ec3baa…`, 562 entradas), as versões e o
+  lockfile (112 pacotes) são os commitados, e os estilos compilados têm o mesmo SHA-256 (`212765e0…`). O consumer
+  minimal repete os 30 e os 40 checks, e o `test:charts` passa os 4 testes.
+- **O artefato.** `independent-libraries-consumer` (id 11562547148, 340.299 bytes, SHA-256 `c266c46f…`, igual ao digest
+  da API e ao do log de upload) tem 15 arquivos que casam com os caminhos do workflow; o recibo fixa o SHA-256 de cada
+  um e do artefato.
+
+O host nativo do runner (`64d61664…`) não é o binário do registro local (`0d011e05…`): o bundle é JavaScript e não
+depende dele. Dos 32 pins de código do primeiro registro, 25 têm em `57e41f2` os bytes de `fc0f428`, e 7 diferem por
+causa da revisão (`91c545d`, a varredura do conteúdo do Tailwind) e dos merges da `main` (#67 e #68); os 4 pins do
+`postReview` são iguais aos do run. O run **não** executa a lane com o renderizador (`--capture`, 58 checks e as quatro
+capturas) nem o controle sobre o SDK da `main` (`--control-ref`): continuam locais.
+
+O [Pages](publication.json) rodou duas vezes sobre `57e41f2`. O push (run 37797780563, 15:04:56 a 15:05:43Z) implantou
+exatamente os dados commitados de `57e41f2`, com o renderizador e as fontes do commit, e o JSON publicado tem a entrega do
+GF-27 (em andamento, só o checkpoint da fatia fechado, as sete evidências e as duas entradas de atividade) com todos os
+links pinados servidos pelo GitHub. Catorze minutos depois o run 37799702595, uma execução manual (`workflow_dispatch`,
+15:18:51 a 15:19:47Z, disparada por outro agente), publicou os dados de `a3fe519`, o head da branch do PR #58 (um merge
+de `57e41f2` nela), com o renderizador da `main`: o JSON é o desse commit mais o bloco `publication`, e também tem a
+entrega do GF-27. Esse deploy foi substituído pelo push de `66c948b` (o #58).
+
 ## O que fica suportado, e o que não
 
 Suportado e executado: `className` em `View`, `Text`, `Image` e `Pressable` (cores, espaçamento, bordas, raio,
@@ -193,7 +232,8 @@ Abertos para o GF-27 (a fatia não os fecha, e nenhum checkpoint além do da pri
   e qualquer mudança em `native/svg_node.*`;
 - os outros gráficos do Chart Kit e o contrato escrito dos gráficos;
 - as portas de Reanimated, Gesture Handler, safe-area e screens (P2);
-- outras plataformas além de macOS arm64, e a CI hospedada desta fatia (pendente);
+- outras plataformas além de macOS arm64; a CI hospedada não roda a lane com o renderizador nem o controle sobre a `main`
+  (recibo na seção acima);
 - a divisão entre o preset web do laboratório e o preset nativo do SDK: o laboratório compila com a variante web do
   preset do NativeWind (o CLI herdava um ambiente sem `NATIVEWIND_OS`), e o SDK, com a nativa; unificar mudaria a
   evidência do laboratório;

@@ -1,0 +1,3480 @@
+{
+  "schemaVersion": 1,
+  "milestone": "0.5",
+  "item": "V05-04",
+  "reactNative": "0.87.1",
+  "summary": "The finite set of React Native names the Frontier HUD imports, with one decision per name. Every name is `supported` with the subset below; a prop or member outside the subset fails visibly or is ignored in a documented way, on mount and on update.",
+  "decisions": {
+    "supported": "the name exists and behaves as the subset says",
+    "explicit-error": "the name or member throws where it is used",
+    "documented-ignore": "the name or member is accepted and changes nothing, for a stated reason"
+  },
+  "audit": {
+    "file": "docs/compatibility/react-native-0.87.1.json",
+    "auditDate": "2026-10-01",
+    "note": "A dated snapshot (docs/PARITY.md, docs/compatibility/README.md); nothing validates it and this manifest does not edit it. Each entry below carries the audit's row as recorded and says whether it is stale."
+  },
+  "names": [
+    {
+      "name": "View",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "View",
+        "status": "implemented_subset",
+        "target": "1_0",
+        "roadmap": "GF-10",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/components.jsx",
+          "src/accessibility-view-config.js",
+          "docs/research/accessibility.md"
+        ],
+        "note": "The accessibility props the host maps (label, hint, role, state, live region, hidden, onAccessibilityTap) reach Godot's AccessKit tree (GF-20, first slice); the rest of RN's accessibility props and the OS settings are open."
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/react-native-platform.jsx"
+      ],
+      "runtime": "RN's original View.js over the base view config of the platform (src/base-view-config.js); the facade checks the declared props and the style names",
+      "props": "components.View",
+      "subset": {
+        "style": "the names of controlViewConfig.validAttributes.style; another name throws `Godot View does not implement style <name>`",
+        "ref": "ViewInstance, the public instance with the pointer-capture methods"
+      },
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/base-view-config.js",
+        "src/accessibility-view-config.js",
+        "src/prop-scope.mjs",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/accessibility-native.test.mjs",
+        "tests/platform-seams.test.mjs",
+        "docs/research/accessibility.md"
+      ]
+    },
+    {
+      "name": "Text",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Text",
+        "status": "implemented_subset",
+        "target": "1_0",
+        "roadmap": "GF-11",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/text.jsx",
+          "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
+          "native/paragraph_layout.cpp",
+          "tests/text-layout-native.test.mjs",
+          "tests/text-original-native.test.mjs",
+          "tests/text-style-native.test.mjs",
+          "docs/research/text-layout.md",
+          "docs/research/text-original.md",
+          "docs/research/text-style.md",
+          "docs/evidence/text-style/README.md",
+          "docs/evidence/text-original/README.md",
+          "docs/evidence/text-layout/README.md",
+          "examples/text-layout/App.jsx",
+          "examples/typography/App.jsx"
+        ],
+        "note": "Runs RN's original Text.js. onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; the outer paragraph presses through RN's Pressability. fontStyle italic (a synthetic slant: the bundled fonts have no italic face) and textDecorationLine, textDecorationColor and a solid textDecorationStyle are painted by the host; oblique and the double, dotted, dashed and wavy lines fail. Span press, selection, adjustsFontSizeToFit, font scaling, head/middle ellipsis, inline views and Text accessibility remain open; the default size stays 18, not RN's 14."
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/react-native-platform.jsx",
+        "src/text.jsx"
+      ],
+      "runtime": "RN's original Text.js over the paragraph of the host (src/text.jsx)",
+      "props": "components.Text",
+      "subset": {
+        "style": "the text styles of src/base-view-config.js (textStyleAttributes) and the View styles; fontStyle is normal or italic, textDecorationLine none, underline, line-through or both, textDecorationStyle solid",
+        "nested": "a nested Text is a span: it takes no press or responder prop and no numberOfLines"
+      },
+      "evidence": [
+        "src/text.jsx",
+        "src/prop-scope.mjs",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/text-original-native.test.mjs",
+        "tests/text-layout-native.test.mjs",
+        "tests/text-style-native.test.mjs",
+        "docs/research/text-original.md",
+        "docs/research/text-layout.md",
+        "docs/research/text-style.md"
+      ]
+    },
+    {
+      "name": "Pressable",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Pressable",
+        "status": "implemented_subset",
+        "target": "1_0",
+        "roadmap": "GF-13",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/components.jsx",
+          "src/accessibility-view-config.js"
+        ],
+        "note": "Carries the mapped accessibility props (aria-* converted as RN's Pressable does, accessible by default, disabled as the disabled state); focus, keyboard and custom actions are open."
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/react-native-platform.jsx",
+        "src/components.jsx"
+      ],
+      "runtime": "Pressability's press props around the View of the host's Control (src/components.jsx); the keys RN does not declare are dropped before the Control",
+      "props": "components.Pressable",
+      "subset": {
+        "style": "an object, or a function of { pressed }",
+        "children": "nodes, or a function of { pressed }",
+        "hover": "onHoverIn and onHoverOut are refused: the 0.5 leaves public hover out"
+      },
+      "evidence": [
+        "src/components.jsx",
+        "src/prop-scope.mjs",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/accessibility-native.test.mjs",
+        "tests/shared-touches-native.test.mjs",
+        "tests/pointer-click-native.test.mjs"
+      ]
+    },
+    {
+      "name": "ScrollView",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "ScrollView",
+        "status": "implemented_subset",
+        "target": "1_0",
+        "roadmap": "GF-14",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/scroll-view.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/react-native-platform.jsx",
+        "src/scroll-view.jsx",
+        "src/scroll-view-contract.mjs"
+      ],
+      "runtime": "RN's original ScrollView.js behind the public wrapper (src/scroll-view.jsx) over the host's scroll adapter (native/scroll_adapter.cpp); src/prop-scope.mjs decides every prop RN declares for it, and src/scroll-view-contract.mjs checks the values of the ones the host honors and takes the lists' own props off",
+      "props": "components.ScrollView",
+      "subset": {
+        "honored": [
+          "horizontal",
+          "scrollEnabled",
+          "contentOffset",
+          "scrollEventThrottle",
+          "showsVerticalScrollIndicator",
+          "showsHorizontalScrollIndicator",
+          "onScroll",
+          "onScrollBeginDrag",
+          "onScrollEndDrag",
+          "onMomentumScrollBegin",
+          "onMomentumScrollEnd",
+          "onContentSizeChange",
+          "contentContainerStyle",
+          "innerViewRef",
+          "scrollViewRef"
+        ],
+        "refused": "bounce, paging, snapping, insets, zoom, sticky headers, keyboard handling and pull to refresh: the request that asks for nothing (bounces false, pagingEnabled false, an empty stickyHeaderIndices...) passes and any other fails with `Godot ScrollView does not implement <prop>`; onRefresh and refreshing, which the lists hand to the ScrollView, follow the same rule",
+        "ref": "scrollTo, scrollToEnd and flashScrollIndicators run on the host; scrollResponderZoomTo and scrollResponderScrollNativeHandleToKeyboard are not declared (the host has no zoom and no keyboard)",
+        "context": "ScrollView.Context is RN's"
+      },
+      "evidence": [
+        "src/scroll-view.jsx",
+        "src/scroll-view-contract.mjs",
+        "src/prop-scope.mjs",
+        "native/scroll_adapter.cpp",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/scroll-view-contract.test.mjs",
+        "tests/scroll-view-native.test.mjs",
+        "tests/scroll-view-modal-native.test.mjs",
+        "tests/virtualized-list-native.test.mjs"
+      ]
+    },
+    {
+      "name": "Image",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Image",
+        "status": "unavailable_placeholder",
+        "target": "1_0",
+        "roadmap": "GF-16",
+        "evidence": [
+          "src/react-native-platform.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit records an unavailable placeholder; the Image has been implemented since the images slices (PR #66 added the tint, blur and cap insets) and is certified by tests/images-native.test.mjs"
+      },
+      "facade": [
+        "src/react-native-platform.jsx",
+        "src/image.jsx",
+        "src/image-contract.mjs"
+      ],
+      "runtime": "RN's original Image.ios.js behind the validating wrapper, over the host's image pipeline",
+      "props": "components.Image",
+      "subset": {
+        "sources": "require()d assets, res://, user://, file:// and data: URIs, and http(s) addresses",
+        "style": "the View styles, resizeMode, objectFit, tintColor and overlayColor"
+      },
+      "evidence": [
+        "src/image.jsx",
+        "src/image-contract.mjs",
+        "src/prop-scope.mjs",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/images-native.test.mjs",
+        "docs/evidence/images/README.md",
+        "docs/research/images.md"
+      ]
+    },
+    {
+      "name": "Modal",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Modal",
+        "status": "missing_public_export",
+        "target": "1_0",
+        "roadmap": "GF-18",
+        "evidence": [
+          "src/react-native-platform.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit records a missing public export; Modal is exported and hosted by the Godot window stack (docs/research/modal.md, tests/modal-host-native.test.mjs)"
+      },
+      "facade": [
+        "src/react-native-platform.jsx"
+      ],
+      "runtime": "RN's original Modal.js behind a thin wrapper that checks the declared props; the host presents a window (native/modal_presentation.cpp), whose E_MODAL_* guards stay as a backstop",
+      "props": "components.Modal",
+      "subset": {
+        "animationType": "none",
+        "presentationStyle": "fullScreen or overFullScreen",
+        "statics": "Modal.Context and the ref (modalRef) of RN's Modal"
+      },
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/prop-scope.mjs",
+        "native/modal_presentation.cpp",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/modal-host-native.test.mjs",
+        "docs/research/modal.md"
+      ]
+    },
+    {
+      "name": "ActivityIndicator",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "ActivityIndicator",
+        "status": "unavailable_placeholder",
+        "target": "1_0",
+        "roadmap": "GF-17",
+        "evidence": [
+          "src/react-native-platform.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit records an unavailable placeholder; the spinner is hosted and certified by tests/activity-indicator-native.test.mjs"
+      },
+      "facade": [
+        "src/react-native-platform.jsx"
+      ],
+      "runtime": "RN's original ActivityIndicator.js over the generated ActivityIndicatorView component and the host's spinner",
+      "props": "components.ActivityIndicator",
+      "subset": {
+        "size": "small, large or a number; the value is not validated beyond RN's own switch"
+      },
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/prop-scope.mjs",
+        "native/activity_indicator_view.cpp",
+        "tests/scope-0.5-native.test.mjs",
+        "tests/activity-indicator-native.test.mjs",
+        "docs/research/activity-indicator.md"
+      ]
+    },
+    {
+      "name": "StyleSheet",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "StyleSheet",
+        "status": "environment_or_utility_subset",
+        "target": "1_0",
+        "roadmap": "GF-10",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/components.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/react-native-platform.jsx"
+      ],
+      "runtime": "the platform's own object (RN's StyleSheet.compose underneath)",
+      "props": null,
+      "subset": {
+        "members": [
+          "create",
+          "flatten",
+          "compose",
+          "hairlineWidth",
+          "absoluteFill"
+        ],
+        "hairlineWidth": 1,
+        "absoluteFill": {
+          "position": "absolute",
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0
+        },
+        "limits": [
+          "create returns the object it is given (no numeric style ids)",
+          "setStyleAttributePreprocessor, absoluteFillObject and the other members of RN's module are not part of the subset"
+        ]
+      },
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "tests/scope-0.5.test.mjs",
+        "tests/platform-seams.test.mjs"
+      ]
+    },
+    {
+      "name": "Platform",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Platform",
+        "status": "environment_or_utility_subset",
+        "target": "1_0",
+        "roadmap": "GF-09",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/platform.js"
+        ]
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/platform.js"
+      ],
+      "runtime": "the platform's own object",
+      "props": null,
+      "subset": {
+        "members": [
+          "OS",
+          "select",
+          "constants"
+        ],
+        "OS": "godot",
+        "select": "godot, native and default keys only: the ios and android keys are not selected",
+        "constants": {
+          "reactNativeVersion": {
+            "major": 0,
+            "minor": 87,
+            "patch": 1
+          }
+        },
+        "absent": [
+          "Version",
+          "isTV",
+          "isTesting",
+          "isPad",
+          "isDisableAnimations",
+          "isVision",
+          "isMacCatalyst"
+        ]
+      },
+      "evidence": [
+        "src/platform.js",
+        "tests/scope-0.5.test.mjs",
+        "tests/platform-seams.test.mjs"
+      ]
+    },
+    {
+      "name": "Dimensions",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "Dimensions",
+        "status": "environment_or_utility_subset",
+        "target": "1_0",
+        "roadmap": "GF-09",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/platform-environment.js"
+        ]
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/platform-environment.js",
+        "src/window-dimensions.js"
+      ],
+      "runtime": "RN's original Dimensions state, fed by the host's metrics; the platform tracks the subscriptions it hands out",
+      "props": null,
+      "subset": {
+        "members": [
+          "get",
+          "addEventListener"
+        ],
+        "get": "window and screen: width, height, scale and fontScale (fontScale is always 1)",
+        "addEventListener": "the change event, which carries { window, screen }",
+        "limits": [
+          "set is RN's native-only entry point and is out of scope"
+        ]
+      },
+      "evidence": [
+        "src/platform-environment.js",
+        "src/window-dimensions.js",
+        "tests/scope-0.5.test.mjs",
+        "tests/os-contracts-native.test.mjs"
+      ]
+    },
+    {
+      "name": "useWindowDimensions",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "useWindowDimensions",
+        "status": "environment_or_utility_subset",
+        "target": "1_0",
+        "roadmap": "GF-09",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/window-dimensions.js"
+        ]
+      },
+      "auditStale": {
+        "stale": false
+      },
+      "facade": [
+        "src/window-dimensions.js"
+      ],
+      "runtime": "a store hook over the window metrics RN's Dimensions holds",
+      "props": null,
+      "subset": {
+        "returns": "width, height, scale and fontScale of the window (fontScale is always 1)"
+      },
+      "evidence": [
+        "src/window-dimensions.js",
+        "tests/scope-0.5.test.mjs"
+      ]
+    },
+    {
+      "name": "AppState",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "AppState",
+        "status": "environment_or_utility_subset",
+        "target": "1_0",
+        "roadmap": "GF-21",
+        "evidence": [
+          "src/react-native-platform.jsx",
+          "src/platform-environment.js"
+        ],
+        "note": "Surface policy or fixed values; complete system behavior is not implemented."
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit note says surface policy or fixed values; AppState has been RN's original module fed by the application lifecycle since GF-21's first slice (docs/research/app-state.md)"
+      },
+      "facade": [
+        "src/app-state.js",
+        "src/platform-environment.js"
+      ],
+      "runtime": "RN's original AppState fed by the host's lifecycle",
+      "props": null,
+      "subset": {
+        "members": [
+          "currentState",
+          "addEventListener"
+        ],
+        "events": [
+          "change",
+          "focus",
+          "blur",
+          "memoryWarning"
+        ],
+        "limits": [
+          "a desktop host never reports the background state"
+        ]
+      },
+      "evidence": [
+        "src/app-state.js",
+        "tests/app-state-native.test.mjs",
+        "docs/research/app-state.md",
+        "docs/evidence/app-state/README.md"
+      ]
+    }
+  ],
+  "notInTheManifest": {
+    "FlatList": "the HUD's lists are short ScrollViews",
+    "PixelRatio": "density comes from Dimensions.get(...).scale"
+  },
+  "outOfScope": [
+    "TextInput, Keyboard, KeyboardAvoidingView and the IME: typed text and the virtual keyboard are out of the 0.5 (ROADMAP.md, `Out of the 0.5`)",
+    "network images",
+    "scroll inertia",
+    "public hover and right-click on Pressable (onHoverIn and onHoverOut are refused)",
+    "FlatList, SectionList and VirtualizedList",
+    "PixelRatio",
+    "Button, Switch, TouchableOpacity and the other touchables, which keep their own contracts (src/control-contracts.mjs)",
+    "Android, Linux and Windows"
+  ],
+  "rule": "A name in neither `names` nor `outOfScope` is not used by the HUD: adding one needs a change to this manifest.",
+  "propPolicy": {
+    "classes": {
+      "supported": "the prop has behavior on this host: the view config lets it reach the host, or the facade or RN's own JS consumes it",
+      "ignored": "the prop is accepted and changes nothing, with a reason and a source (RN's iOS drops it, or an earlier documented decision)",
+      "refused": "iOS has behavior that Godot does not implement: the facade throws `Godot <Component> does not implement <prop>` when the value is not null or undefined; `when` narrows the values that fail"
+    },
+    "undeclaredKeys": "A key that React Native does not declare for the component is never checked: RN's Fabric view config drops every name it does not list. The Pressable renders the host's Control, which lists names that only the Control has, so it drops the undeclared keys itself. The props of the earlier Text wrapper (text, fontSize) are the one documented exception and fail with a hint.",
+    "source": "docs/compatibility/contracts-0.87.1.json (the owner rows of each component's props type, flattened by the TypeScript checker)",
+    "module": "src/prop-scope.mjs",
+    "legacyProps": {
+      "Text": {
+        "text": "it is not a prop of RN's Text, pass the text as children",
+        "fontSize": "it is not a prop of RN's Text, set it in style"
+      }
+    }
+  },
+  "components": {
+    "View": {
+      "owner": "ViewProps",
+      "counts": {
+        "declared": 114,
+        "supported": 71,
+        "ignored": 33,
+        "refused": 10
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "onLayout",
+            "collapsable",
+            "collapsableChildren",
+            "style",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "id"
+          ],
+          "via": {
+            "id": "nativeID"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-label"
+          ],
+          "via": {
+            "aria-label": "accessibilityLabel"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-live"
+          ],
+          "via": {
+            "aria-live": "accessibilityLiveRegion"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-hidden"
+          ],
+          "via": {
+            "aria-hidden": "accessibilityElementsHidden"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "via": {
+            "aria-busy": "accessibilityState",
+            "aria-checked": "accessibilityState",
+            "aria-disabled": "accessibilityState",
+            "aria-expanded": "accessibilityState",
+            "aria-selected": "accessibilityState"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ],
+          "via": {
+            "aria-valuemax": "accessibilityValue",
+            "aria-valuemin": "accessibilityValue",
+            "aria-valuenow": "accessibilityValue",
+            "aria-valuetext": "accessibilityValue"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "tabIndex"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ],
+          "via": {
+            "tabIndex": "focusable"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "experimental_accessibilityOrder"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": [
+            "child"
+          ],
+          "defaultName": {
+            "experimental_accessibilityOrder": "accessibilityOrder"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "aria-labelledby"
+          ],
+          "reason": "RN's View.js turns it into accessibilityLabelledBy, which iOS does not list",
+          "source": [
+            "react-native/Libraries/Components/View/View.js",
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ],
+          "via": {
+            "aria-labelledby": "accessibilityLabelledBy"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "aria-modal"
+          ],
+          "reason": "RN's View.js does not map it and iOS does not list the name",
+          "source": [
+            "react-native/Libraries/Components/View/View.js",
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        }
+      ]
+    },
+    "Text": {
+      "owner": "TextProps",
+      "counts": {
+        "declared": 72,
+        "supported": 42,
+        "ignored": 17,
+        "refused": 13
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "onLayout",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onPointerEnter",
+            "onPointerLeave",
+            "onPointerMove",
+            "numberOfLines",
+            "onTextLayout",
+            "disabled"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children",
+            "style",
+            "onPress",
+            "onPressIn",
+            "onPressOut",
+            "onLongPress",
+            "pressRetentionOffset",
+            "onStartShouldSetResponder",
+            "onMoveShouldSetResponder",
+            "onResponderGrant",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "id"
+          ],
+          "via": {
+            "id": "nativeID"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-label"
+          ],
+          "via": {
+            "aria-label": "accessibilityLabel"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-hidden"
+          ],
+          "via": {
+            "aria-hidden": "accessibilityElementsHidden"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "via": {
+            "aria-busy": "accessibilityState",
+            "aria-checked": "accessibilityState",
+            "aria-disabled": "accessibilityState",
+            "aria-expanded": "accessibilityState",
+            "aria-selected": "accessibilityState"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "selectable",
+            "adjustsFontSizeToFit"
+          ],
+          "reason": "selection and fitting the font to the box are not implemented by the paragraph",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/Text.js"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "selectionColor"
+          ],
+          "reason": "a platform text option the paragraph does not implement, with no default: unset means none",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "dataDetectorType"
+          ],
+          "reason": "a platform text option the paragraph does not implement",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js"
+          ],
+          "probe": "link"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "textBreakStrategy"
+          ],
+          "reason": "a platform text option the paragraph does not implement",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ],
+          "accepts": [
+            "highQuality"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js",
+            "react-native/ReactCommon/react/renderer/attributedstring/ParagraphAttributes.h"
+          ],
+          "probe": "simple"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "lineBreakStrategyIOS"
+          ],
+          "reason": "a platform text option the paragraph does not implement",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js"
+          ],
+          "probe": "standard"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "android_hyphenationFrequency"
+          ],
+          "reason": "a platform text option the paragraph does not implement",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js"
+          ],
+          "probe": "normal"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "ellipsizeMode"
+          ],
+          "reason": "head and middle ellipsis are not implemented by the paragraph",
+          "source": [
+            "docs/research/text-original.md",
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ],
+          "accepts": [
+            "tail",
+            "clip"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Text/TextProps.js"
+          ],
+          "typed": true,
+          "message": "Godot Text supports tail or clip ellipsizeMode",
+          "probe": "middle"
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "allowFontScaling",
+            "maxFontSizeMultiplier",
+            "dynamicTypeRamp",
+            "suppressHighlighting"
+          ],
+          "reason": "accepted and inert: the host's font scale is 1 and nothing highlights outside iOS",
+          "source": [
+            "docs/research/text-original.md"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "dependent",
+          "names": [
+            "minimumFontScale"
+          ],
+          "reason": "it only matters with adjustsFontSizeToFit, which is refused",
+          "source": [
+            "react-native/Libraries/Text/TextNativeComponent.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-noop",
+          "names": [
+            "aria-live",
+            "aria-labelledby",
+            "aria-modal",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext"
+          ],
+          "reason": "RN's Text.js forwards the name as it is and no iOS component reads it",
+          "source": [
+            "react-native/Libraries/Text/Text.js"
+          ]
+        }
+      ]
+    },
+    "Pressable": {
+      "owner": "PressableProps",
+      "counts": {
+        "declared": 130,
+        "supported": 82,
+        "ignored": 35,
+        "refused": 13
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "onLayout",
+            "collapsable",
+            "collapsableChildren",
+            "style",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "id"
+          ],
+          "via": {
+            "id": "nativeID"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-label"
+          ],
+          "via": {
+            "aria-label": "accessibilityLabel"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-live"
+          ],
+          "via": {
+            "aria-live": "accessibilityLiveRegion"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-hidden"
+          ],
+          "via": {
+            "aria-hidden": "accessibilityElementsHidden"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "via": {
+            "aria-busy": "accessibilityState",
+            "aria-checked": "accessibilityState",
+            "aria-disabled": "accessibilityState",
+            "aria-expanded": "accessibilityState",
+            "aria-selected": "accessibilityState"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ],
+          "via": {
+            "aria-valuemax": "accessibilityValue",
+            "aria-valuemin": "accessibilityValue",
+            "aria-valuenow": "accessibilityValue",
+            "aria-valuetext": "accessibilityValue"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "tabIndex"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ],
+          "via": {
+            "tabIndex": "focusable"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "experimental_accessibilityOrder"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": [
+            "child"
+          ],
+          "defaultName": {
+            "experimental_accessibilityOrder": "accessibilityOrder"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "aria-labelledby"
+          ],
+          "reason": "RN's View.js turns it into accessibilityLabelledBy, which iOS does not list",
+          "source": [
+            "react-native/Libraries/Components/View/View.js",
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ],
+          "via": {
+            "aria-labelledby": "accessibilityLabelledBy"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "aria-modal"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ],
+          "via": {
+            "aria-modal": "accessibilityViewIsModal"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "onPress",
+            "onPressIn",
+            "onPressOut",
+            "onLongPress",
+            "onPressMove",
+            "disabled",
+            "pressRetentionOffset",
+            "delayLongPress",
+            "unstable_pressDelay",
+            "cancelable",
+            "blockNativeResponder"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "onHoverIn",
+            "onHoverOut"
+          ],
+          "reason": "hover events need a desktop pointer adapter that the 0.5 leaves out; the press stays on the responder",
+          "source": [
+            "ROADMAP.md",
+            "docs/PARITY.md"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "testOnly_pressed"
+          ],
+          "reason": "RN's Pressable.js forces the pressed state with it and the Godot port has no such switch",
+          "source": [
+            "react-native/Libraries/Components/Pressable/Pressable.js"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/Pressable/Pressable.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "android_disableSound",
+            "android_ripple"
+          ],
+          "reason": "RN's Pressable.js reads them for Android only: useAndroidRippleForView returns null off Android",
+          "source": [
+            "react-native/Libraries/Components/Pressable/Pressable.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "dependent",
+          "names": [
+            "delayHoverIn",
+            "delayHoverOut"
+          ],
+          "reason": "they only delay onHoverIn and onHoverOut, which are refused",
+          "source": [
+            "react-native/Libraries/Components/Pressable/Pressable.js"
+          ]
+        }
+      ]
+    },
+    "Image": {
+      "owner": "ImageProps",
+      "counts": {
+        "declared": 139,
+        "supported": 86,
+        "ignored": 42,
+        "refused": 11
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "onLayout",
+            "collapsable",
+            "collapsableChildren",
+            "style",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "source",
+            "resizeMode",
+            "tintColor",
+            "blurRadius",
+            "capInsets",
+            "onLoadStart",
+            "onLoad",
+            "onLoadEnd",
+            "onError",
+            "onProgress",
+            "onPartialLoad"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "src",
+            "srcSet",
+            "width",
+            "height",
+            "crossOrigin",
+            "referrerPolicy"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "alt"
+          ],
+          "via": {
+            "alt": "accessibilityLabel"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-label"
+          ],
+          "via": {
+            "aria-label": "accessibilityLabel"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-hidden"
+          ],
+          "via": {
+            "aria-hidden": "accessible"
+          }
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "via": {
+            "aria-busy": "accessibilityState",
+            "aria-checked": "accessibilityState",
+            "aria-disabled": "accessibilityState",
+            "aria-expanded": "accessibilityState",
+            "aria-selected": "accessibilityState"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "children"
+          ],
+          "reason": "RN's Image.ios.js throws for children, and the facade says the same first; no default: unset means no children",
+          "source": [
+            "react-native/Libraries/Image/Image.ios.js"
+          ],
+          "message": "The <Image> component cannot contain children. If you want to render content on top of the image, consider using the <ImageBackground> component or absolute positioning."
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "experimental_accessibilityOrder"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": [
+            "child"
+          ],
+          "defaultName": {
+            "experimental_accessibilityOrder": "accessibilityOrder"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "defaultSource",
+            "loadingIndicatorSource",
+            "fadeDuration",
+            "progressiveRenderingEnabled",
+            "resizeMethod",
+            "resizeMultiplier"
+          ],
+          "reason": "accepted without effect, as on iOS: Android's props, and defaultSource, which no iOS component reads",
+          "source": [
+            "src/image-contract.mjs",
+            "react-native/Libraries/Image/ImageViewNativeComponent.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "overwritten",
+          "names": [
+            "internal_analyticTag"
+          ],
+          "reason": "RN's Image.ios.js overwrites it with the analytics context",
+          "source": [
+            "react-native/Libraries/Image/Image.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-noop",
+          "names": [
+            "id",
+            "tabIndex",
+            "aria-live",
+            "aria-labelledby",
+            "aria-modal",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext"
+          ],
+          "reason": "RN's Image.ios.js forwards the name as it is and no iOS component reads it",
+          "source": [
+            "react-native/Libraries/Image/Image.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        }
+      ]
+    },
+    "Modal": {
+      "owner": "ModalProps",
+      "counts": {
+        "declared": 129,
+        "supported": 9,
+        "ignored": 111,
+        "refused": 9
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "visible",
+            "transparent",
+            "onShow",
+            "onRequestClose",
+            "testID"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children",
+            "style",
+            "modalRef",
+            "backdropColor"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "animationType"
+          ],
+          "reason": "the host presents a modal without animation",
+          "source": [
+            "native/modal_presentation.cpp",
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "typed": true,
+          "probe": "slide"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "presentationStyle"
+          ],
+          "reason": "the host presents full screen and over full screen only",
+          "source": [
+            "native/modal_presentation.cpp",
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "accepts": [
+            "overFullScreen",
+            "fullScreen"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "typed": true,
+          "probe": "pageSheet"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "statusBarTranslucent",
+            "navigationBarTranslucent",
+            "hardwareAccelerated",
+            "allowSwipeDismissal"
+          ],
+          "reason": "the host refuses system-window flags and swipe dismissal (E_MODAL_PROP)",
+          "source": [
+            "native/modal_presentation.cpp"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/src/private/components/modal/specs/RCTModalHostViewNativeComponent.js",
+            "react-native/Libraries/Modal/Modal.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onDismiss"
+          ],
+          "reason": "iOS calls it after the modal is dismissed and Modal.js calls it on iOS only",
+          "source": [
+            "react-native/Libraries/Modal/Modal.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onOrientationChange"
+          ],
+          "reason": "iOS calls it on the first render and on every rotation, and a desktop window never reports it",
+          "source": [
+            "react-native/Libraries/Modal/Modal.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "supportedOrientations"
+          ],
+          "reason": "iOS restricts the rotation of the modal with it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "accepts": [
+            [
+              "portrait"
+            ]
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Modal/Modal.js"
+          ],
+          "probe": [
+            "landscape"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "not-forwarded",
+          "names": [
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "onLayout",
+            "collapsable",
+            "collapsableChildren",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest",
+            "id",
+            "aria-label",
+            "aria-live",
+            "aria-hidden",
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected",
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer",
+            "accessibilityLargeContentTitle",
+            "accessibilityRespondsToUserInteraction",
+            "onAccessibilityAction",
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext",
+            "tabIndex",
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture",
+            "experimental_accessibilityOrder",
+            "onAccessibilityEscape",
+            "onMagicTap",
+            "removeClippedSubviews",
+            "shouldRasterizeIOS",
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp",
+            "aria-labelledby",
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus",
+            "aria-modal",
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's Modal.js reads only its own props, style, testID and children, and passes nothing else on",
+          "source": [
+            "react-native/Libraries/Modal/Modal.js"
+          ]
+        }
+      ]
+    },
+    "ActivityIndicator": {
+      "owner": "ActivityIndicatorProps",
+      "counts": {
+        "declared": 118,
+        "supported": 66,
+        "ignored": 42,
+        "refused": 10
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "collapsable",
+            "collapsableChildren",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest",
+            "animating",
+            "color",
+            "hidesWhenStopped",
+            "size"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children",
+            "style",
+            "onLayout"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "experimental_accessibilityOrder"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": [
+            "child"
+          ],
+          "defaultName": {
+            "experimental_accessibilityOrder": "accessibilityOrder"
+          }
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-noop",
+          "names": [
+            "id",
+            "tabIndex",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext",
+            "aria-label",
+            "aria-live",
+            "aria-hidden",
+            "aria-labelledby",
+            "aria-modal",
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "reason": "RN's ActivityIndicator.js forwards the name as it is and no iOS component reads it",
+          "source": [
+            "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        }
+      ]
+    },
+    "ScrollView": {
+      "owner": "ScrollViewProps",
+      "counts": {
+        "declared": 178,
+        "supported": 77,
+        "ignored": 45,
+        "refused": 56
+      },
+      "rules": [
+        {
+          "decision": "supported",
+          "how": "host",
+          "names": [
+            "testID",
+            "nativeID",
+            "pointerEvents",
+            "hitSlop",
+            "collapsable",
+            "collapsableChildren",
+            "accessible",
+            "accessibilityLabel",
+            "accessibilityHint",
+            "accessibilityRole",
+            "role",
+            "accessibilityState",
+            "accessibilityLiveRegion",
+            "accessibilityElementsHidden",
+            "importantForAccessibility",
+            "accessibilityActions",
+            "onAccessibilityTap",
+            "onPointerDown",
+            "onPointerDownCapture",
+            "onPointerMove",
+            "onPointerMoveCapture",
+            "onPointerUp",
+            "onPointerUpCapture",
+            "onPointerCancel",
+            "onPointerCancelCapture",
+            "onPointerOver",
+            "onPointerOverCapture",
+            "onPointerOut",
+            "onPointerOutCapture",
+            "onPointerEnter",
+            "onPointerEnterCapture",
+            "onPointerLeave",
+            "onPointerLeaveCapture",
+            "onGotPointerCapture",
+            "onGotPointerCaptureCapture",
+            "onLostPointerCapture",
+            "onLostPointerCaptureCapture",
+            "onClick",
+            "onClickCapture",
+            "onTouchStart",
+            "onTouchStartCapture",
+            "onTouchMove",
+            "onTouchMoveCapture",
+            "onTouchEnd",
+            "onTouchEndCapture",
+            "onTouchCancel",
+            "onTouchCancelCapture",
+            "onStartShouldSetResponder",
+            "onStartShouldSetResponderCapture",
+            "onMoveShouldSetResponder",
+            "onMoveShouldSetResponderCapture",
+            "onResponderGrant",
+            "onResponderReject",
+            "onResponderStart",
+            "onResponderEnd",
+            "onResponderMove",
+            "onResponderRelease",
+            "onResponderTerminate",
+            "onResponderTerminationRequest",
+            "scrollEnabled",
+            "showsVerticalScrollIndicator",
+            "showsHorizontalScrollIndicator",
+            "horizontal",
+            "contentOffset",
+            "scrollEventThrottle",
+            "onScroll",
+            "onScrollBeginDrag",
+            "onScrollEndDrag",
+            "onMomentumScrollBegin",
+            "onMomentumScrollEnd"
+          ]
+        },
+        {
+          "decision": "supported",
+          "how": "js",
+          "names": [
+            "children",
+            "style",
+            "onLayout",
+            "contentContainerStyle",
+            "onContentSizeChange",
+            "innerViewRef",
+            "scrollViewRef"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityIgnoresInvertColors",
+            "accessibilityShowsLargeContentViewer"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityLargeContentTitle"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            ""
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": "Large title"
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "accessibilityRespondsToUserInteraction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityAction"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "accessibilityValue",
+            "accessibilityViewIsModal",
+            "accessibilityLanguage",
+            "focusable"
+          ],
+          "reason": "recorded as not mapped yet and dropped by the view config, and RN's touchables set focusable and accessibilityValue on every View they clone",
+          "source": [
+            "docs/research/accessibility.md",
+            "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js",
+            "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "decision",
+          "names": [
+            "onFocus",
+            "onBlur",
+            "onFocusCapture",
+            "onBlurCapture"
+          ],
+          "reason": "no View of this host takes keyboard focus, so nothing emits them; RN's touchables strip them and the cells of its lists register onFocusCapture on every render",
+          "source": [
+            "react-native/Libraries/Components/Touchable/TouchableOpacity.js",
+            "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "onAccessibilityEscape",
+            "onMagicTap"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "removeClippedSubviews"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "ios",
+          "names": [
+            "shouldRasterizeIOS"
+          ],
+          "reason": "RN's iOS view reads it and this host has no equivalent",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js",
+            "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h"
+          ],
+          "defaultName": {
+            "shouldRasterizeIOS": "shouldRasterize"
+          }
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-noop",
+          "names": [
+            "id",
+            "tabIndex",
+            "aria-valuemax",
+            "aria-valuemin",
+            "aria-valuenow",
+            "aria-valuetext",
+            "aria-label",
+            "aria-live",
+            "aria-hidden",
+            "aria-labelledby",
+            "aria-modal",
+            "aria-busy",
+            "aria-checked",
+            "aria-disabled",
+            "aria-expanded",
+            "aria-selected"
+          ],
+          "reason": "RN's ScrollView.js forwards the name as it is and no iOS component reads it",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "accessibilityLabelledBy",
+            "screenReaderFocusable",
+            "nativeBackgroundAndroid",
+            "nativeForegroundAndroid",
+            "renderToHardwareTextureAndroid",
+            "nextFocusDown",
+            "nextFocusForward",
+            "nextFocusLeft",
+            "nextFocusRight",
+            "nextFocusUp"
+          ],
+          "reason": "RN's Android View declares it and RN's iOS view config does not list it",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "android-native",
+          "names": [
+            "needsOffscreenAlphaCompositing",
+            "hasTVPreferredFocus"
+          ],
+          "reason": "only RN's Android host props read it (platform/android HostPlatformViewProps.cpp)",
+          "source": [
+            "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "ios-drops",
+          "names": [
+            "onKeyDown",
+            "onKeyDownCapture",
+            "onKeyUp",
+            "onKeyUpCapture",
+            "onMouseEnter",
+            "onMouseLeave"
+          ],
+          "reason": "RN's iOS view config does not list it (desktop React Native only)",
+          "source": [
+            "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js"
+          ]
+        },
+        {
+          "decision": "ignored",
+          "basis": "dependent",
+          "names": [
+            "StickyHeaderComponent",
+            "invertStickyHeaders",
+            "stickyHeaderHiddenOnScroll"
+          ],
+          "reason": "they only matter for the sticky headers that stickyHeaderIndices names, and it accepts the empty list only",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "alwaysBounceHorizontal",
+            "alwaysBounceVertical",
+            "automaticallyAdjustContentInsets",
+            "automaticallyAdjustKeyboardInsets",
+            "automaticallyAdjustsScrollIndicatorInsets",
+            "bounces",
+            "bouncesZoom",
+            "centerContent",
+            "disableIntervalMomentum",
+            "disableScrollViewPanResponder",
+            "nestedScrollEnabled",
+            "pagingEnabled",
+            "pinchGestureEnabled",
+            "scrollToOverflowEnabled",
+            "scrollsToTop"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "canCancelContentTouches",
+            "persistentScrollbar"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            true
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": false
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "keyboardDismissMode"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            "none"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": "on-drag"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "overScrollMode"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            "never"
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": "always"
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "snapToOffsets"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": [
+            20
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "stickyHeaderIndices"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so only the request that asks for nothing passes",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            []
+          ],
+          "defaultSource": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js"
+          ],
+          "probe": [
+            0
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "contentInset",
+            "contentInsetAdjustmentBehavior",
+            "decelerationRate",
+            "directionalLockEnabled",
+            "endFillColor",
+            "experimental_endDraggingSensitivityMultiplier",
+            "fadingEdgeLength",
+            "indicatorStyle",
+            "keyboardShouldPersistTaps",
+            "maintainVisibleContentPosition",
+            "maximumZoomScale",
+            "minimumZoomScale",
+            "onScrollToTop",
+            "onKeyboardDidShow",
+            "onKeyboardDidHide",
+            "onKeyboardWillShow",
+            "onKeyboardWillHide",
+            "refreshControl",
+            "scrollIndicatorInsets",
+            "scrollPerfTag",
+            "scrollsChildToFocus",
+            "snapToAlignment",
+            "snapToInterval",
+            "snapToStart",
+            "snapToEnd",
+            "zoomScale"
+          ],
+          "reason": "the Godot ScrollView honors none of it, so it refuses every value that is not null, RN's default included",
+          "source": [
+            "react-native/Libraries/Components/ScrollView/ScrollView.js",
+            "tests/scroll-view-contract.test.mjs"
+          ]
+        }
+      ],
+      "listRules": [
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "onRefresh"
+          ],
+          "reason": "pull to refresh is not implemented; a list hands onRefresh to its ScrollView, which does not declare it",
+          "source": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js",
+            "tests/scroll-view-contract.test.mjs"
+          ]
+        },
+        {
+          "decision": "refused",
+          "basis": "decision",
+          "names": [
+            "refreshing"
+          ],
+          "reason": "pull to refresh is not implemented; a list hands refreshing to its ScrollView, which does not declare it",
+          "source": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js",
+            "tests/scroll-view-contract.test.mjs"
+          ],
+          "accepts": [
+            false
+          ],
+          "defaultSource": [
+            "@react-native/virtualized-lists/Lists/VirtualizedList.js"
+          ]
+        }
+      ]
+    }
+  }
+}
