@@ -70,6 +70,9 @@ struct NetworkingState {
   uint64_t sent{}, refused{}, aborted{}, responses{}, completions{}, failures{}, events_queued{}, events_delivered{},
       events_dropped{}, events_peak_pending{}, blob_handlers{}, cookie_clears{}, file_reads{}, file_failures{}, blobs_closed{}, blobs_collected{};
   uint64_t pending_events() const { return events_queued - events_delivered - events_dropped; }
+  // What StoppableInvoker asks of its state.
+  bool accepts_calls() const { return active; }
+  void drop_call() { ++events_dropped; }
   void release_collected() {
     for (const auto &id : collected->take()) {
       if (blobs.release(id)) ++blobs_collected;

@@ -55,6 +55,7 @@
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
     "tests/networking-fixture.jsx",
+    "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx"
   ],
   "ignorePatterns": [
@@ -158,6 +159,9 @@
         "Dimensions",
         "Appearance",
         "AppState",
+        "Linking",
+        "Clipboard",
+        "Vibration",
         "AccessibilityInfo",
         "PixelRatio",
         "I18nManager",
@@ -263,6 +267,9 @@
             "codegenNativeComponent",
             "codegenNativeCommands",
             "AppState",
+            "Linking",
+            "Clipboard",
+            "Vibration",
             "AppStateStatus",
             "AppStateEvent",
             "FlatList",

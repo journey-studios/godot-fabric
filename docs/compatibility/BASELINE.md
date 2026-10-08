@@ -34,10 +34,11 @@ not recursive. Private deep imports, undocumented globals, every possible
 value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
-`npm run parity:status` generates `build/parity-status.json`. On 2026-10-06 the
-current facade has **39 exported names awaiting differential certification, 5
-explicit placeholders and 53 missing public names** of the 97 root values, against
-17, 11 and 69 after adding Button/public TextInput (2026-10-02). The five
+`npm run parity:status` generates `build/parity-status.json`. On 2026-10-07 the
+current facade has **42 exported names awaiting differential certification, 5
+explicit placeholders and 50 missing public names** of the 97 root values, against
+39, 5 and 53 on 2026-10-06 (Linking, Clipboard and Vibration were added) and 17, 11 and 69
+after adding Button/public TextInput (2026-10-02). The five
 placeholders are Image, ImageBackground, KeyboardAvoidingView, RefreshControl and
 StatusBar. This describes source presence: the board counts the export forms the
 facade uses (`export { x }`, `export { default as x }`, `export * as x` and exported
@@ -78,10 +79,13 @@ slice's own suite, not a coverage percentage.
 | Frame pacing | `requestAnimationFrame` and RN's Native Animated frames | [Frame clock](../evidence/frame-clock/README.md) | 37 over eight loop paces; the preceding host fails exactly 29, three retained sabotages each fail at least one | run 37538167415 ([receipt](../evidence/frame-clock/hosted-ci.json)) |
 | Runtime globals | none: `fetch`, `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are globals, not names of the root (`Networking` stays missing) | [Networking](../evidence/networking/README.md) | 100 against a local server over HTTP and HTTPS, with an independent oracle; the preceding host fails exactly 84, two retained sabotages 8 and 2 | pending |
 | Runtime globals | none: `WebSocket` is a global, not a name of the root | [WebSocket](../evidence/websocket/README.md) | 93 against a local RFC 6455 server over ws and wss, with an independent oracle that checks the server's frame log; the preceding host fails exactly 81, two retained sabotages 4 and 2 | pending |
+| Device services | `Linking`, `Clipboard`, `Vibration` | [Device services](../research/device-services.md) | 65 in two applications (the validation backend and Godot's real one) and 2 in a launch without `--uri=`, with an independent oracle; the preceding host fails exactly 52 and 1, two retained sabotages are rejected by the probe and the oracle | pending |
 
-The last two rows are not facade areas: RN installs those names as globals, so the 39, 5
-and 53 above do not move, and the root's `Networking` export is still missing. Their
-hosted CI runs are pending.
+The two Runtime globals rows are not facade areas: RN installs those names as globals, so
+they do not move the counts above, and the root's `Networking` export is still missing. The
+Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
+counts from 39 and 53 to 42 and 50. Their hosted CI runs are pending, and its record is the
+research note until the evidence record is pinned.
 
 ## Original native oracle
 

@@ -45,6 +45,9 @@ export {
   PixelRatio,
   I18nManager,
 } from "./platform-environment";
+// RN's original Linking, Clipboard and Vibration over the application's device
+// services. Each is constructed on first read, as in RN's index.js.
+export { Linking, Clipboard, Vibration } from "./device-services";
 export { useWindowDimensions } from "./window-dimensions";
 export { default as useColorScheme } from "react-native/Libraries/Utilities/useColorScheme";
 export {

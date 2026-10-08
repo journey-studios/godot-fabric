@@ -397,6 +397,22 @@ changes need their own green run. The parity job covers 13 core-ui-v2 cases on A
 WebSocket differential or Godot mobile runtime behavior.
 [Evidence](docs/evidence/websocket/README.md).
 
+The [Device services example](examples/device-services/README.md) runs React Native's original
+`Clipboard`, `Linking` and `Vibration` from the public import, over three native TurboModules
+(`LinkingManager` with iOS's contract, `Clipboard`, `Vibration`) that call Godot's `OS.shell_open`,
+`DisplayServer` clipboard and `Input.vibrate_handheld`. `openURL` rejects what has no scheme before
+the platform sees it, `canOpenURL` answers by scheme (Godot cannot ask which handlers are
+installed), `getInitialURL` reads the process's `--uri=` argument, and a deep link that reaches the
+running application, handed to `FabricApplication.deliver_url`, is one `url` event for every
+listener of every root. Where the display server has no clipboard (the headless engine) both
+clipboard calls fail with `E_CLIPBOARD_UNAVAILABLE`, and a stop makes retained methods throw
+`E_MODULE_DISPOSED`. The headless probe runs two applications (a recording validation backend, and
+Godot's real one) with an independent oracle; the preceding host fails exactly its normative
+checks and two retained sabotages are rejected. The suite and the example never open a real URL or
+touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-link plugins,
+cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
+[Research](docs/research/device-services.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
