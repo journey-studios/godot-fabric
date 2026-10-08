@@ -395,6 +395,44 @@ function verifyOriginal(report) {
   }
 }
 
+// ---- the order of events ----
+
+// RCTImageComponentView tells JS loadStart when a request starts, and only then what the request reports: progress, then one result
+// (load or error) and its loadEnd. Nothing may reach JS ahead of the loadStart of its request, even when the request answers at once
+// because the coordinator kept a response (addObserver delivers it before it returns). A request swapped away while loading starts
+// the next one without a result of its own, so a loadStart may follow a loadStart or a progress.
+const eventTypes = new Set(["loadStart", "progress", "partialLoad", "load", "error", "loadEnd"]);
+function eventOrderProblem(events) {
+  let state = "idle";
+  for (const [index, {type}] of events.entries()) {
+    if (type === "loadStart" && state !== "result") state = "started";
+    else if (state === "idle") return index === 0 ? `event 0 (${type}) precedes the loadStart of its request` : `event ${index} (${type}) follows the loadEnd of its request`;
+    else if (type === "progress" || type === "partialLoad") {
+      if (state === "result") return `event ${index} (${type}) follows the result of its request`;
+    } else if (type === "load" || type === "error") {
+      if (state === "result") return `event ${index} (${type}) is a second result of its request`;
+      state = "result";
+    } else if (type === "loadEnd") {
+      if (state !== "result") return `event ${index} (loadEnd) has no result of its request before it`;
+      state = "idle";
+    } else return `event ${index} (${type}) is out of order`;
+  }
+  return null;
+}
+
+// Every list of events in the report, JS's own and the view's, follows that order. The lists are found by their shape, so a case
+// the probe adds later is judged without the oracle being told of it.
+function verifyEventOrder(value, where = "report", seen = {lists: 0}) {
+  if (Array.isArray(value) && value.length > 0 && value.every(item => item !== null && typeof item === "object" && eventTypes.has(item.type))) {
+    const problem = eventOrderProblem(value);
+    assert.equal(problem, null, `${where}: ${problem}`);
+    seen.lists += 1;
+  } else if (value !== null && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) verifyEventOrder(item, `${where}.${key}`, seen);
+  }
+  return seen.lists;
+}
+
 // ---- the whole report ----
 
 export function verifyImagesReport(report, {original = false} = {}) {
@@ -410,6 +448,7 @@ export function verifyImagesReport(report, {original = false} = {}) {
     return;
   }
   const {stages} = report;
+  assert.ok(verifyEventOrder(stages, "stages") > 150, "The report holds the event lists of every Image the probe mounted");
   const user = path.join(fixtures, "assets/wide.png");
   report.inputs.userFile = user;
   assert.equal(report.inputs.fileUri, "file://" + user);

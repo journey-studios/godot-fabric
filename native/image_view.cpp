@@ -96,17 +96,17 @@ void GodotImage::resubscribe(const std::shared_ptr<const rn::ImageShadowNode::Co
   if (starts) {
     status_ = "loading";
     error_.clear();
+    // Loading actually starts a little before this, but this is the first time the component knows (RCTImageComponentView.mm).
+    // It is told before the observer is swapped: addObserver answers at once when the request already holds a response, and that
+    // answer (onLoad or onError, then onLoadEnd) must not reach JS ahead of the onLoadStart of the request it answers.
+    ++load_starts_;
+    emitted(folly::dynamic::object("type", "loadStart"));
+    emit([](const rn::ImageEventEmitter &events) { events.onLoadStart(); });
   }
   if (state_) state_->getData().getImageRequest().getObserverCoordinator().removeObserver(observer_);
   state_ = state;
   // May answer at once (a response the request kept) and may start the request again (one that was cancelled or consumed).
   if (state_) state_->getData().getImageRequest().getObserverCoordinator().addObserver(observer_);
-  if (starts) {
-    // Loading actually starts a little before this, but this is the first time the component knows (RCTImageComponentView.mm).
-    ++load_starts_;
-    emitted(folly::dynamic::object("type", "loadStart"));
-    emit([](const rn::ImageEventEmitter &events) { events.onLoadStart(); });
-  }
 }
 
 void GodotImage::emit(const std::function<void(const rn::ImageEventEmitter &)> &call) {

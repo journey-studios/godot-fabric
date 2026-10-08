@@ -193,6 +193,9 @@ export function createAssetPipeline({ root: projectRoot, publicPath = defaultPub
   const plugin = {
     name: "godot-assets",
     setup(builder) {
+      // A pipeline that is reused (watch rebuilds) describes the files as they are at the start of each build, not as an earlier one
+      // found them, and stages only the assets this build asked for.
+      builder.onStart(() => { assets.clear(); });
       builder.onLoad({ filter: assetFilter }, async ({ path: file }) => {
         const { descriptor, files } = await describe(file);
         return { loader: "js", resolveDir: path.dirname(file), watchFiles: files.map((variant) => variant.source),
@@ -201,9 +204,11 @@ export function createAssetPipeline({ root: projectRoot, publicPath = defaultPub
     },
   };
 
-  // Writes what a bundle at `bundleFile` with this SHA-256 needs beside it, under staging names, and returns the step that
-  // puts it in place (every file, then the manifest) and the one that takes the staging files away. Without assets it
-  // retires the manifest a previous build left and the files only that manifest named.
+  // Writes what a bundle at `bundleFile` with this SHA-256 needs beside it, under staging names, and returns the two steps that
+  // publish it and the one that takes the staging files away. `place` puts the asset files in place: it only adds (or replaces
+  // a file of the same path), so the bundle that is still there keeps every file it names. `finish` runs after the bundle is
+  // published: it puts the manifest in place and retires the files only the previous manifest named. Without assets it retires
+  // the manifest a previous build left instead. The old bundle never loses a file before the new one is in place.
   async function stage(bundleFile, bundleSha256) {
     const directory = path.dirname(bundleFile);
     const manifestFile = bundleFile + manifestSuffix;
@@ -234,9 +239,11 @@ export function createAssetPipeline({ root: projectRoot, publicPath = defaultPub
       await discard();
       throw error;
     }
-    const commit = async () => {
-      const previous = await readManifest(manifestFile);
+    const place = async () => {
       for (const variant of sorted) await rename(path.join(directory, variant.path) + suffix, path.join(directory, variant.path));
+    };
+    const finish = async () => {
+      const previous = await readManifest(manifestFile);
       if (manifest) await rename(manifestFile + suffix, manifestFile);
       else await rm(manifestFile, { force: true });
       // What the previous manifest named and nobody names now. Another bundle in the directory may still name it.
@@ -247,7 +254,7 @@ export function createAssetPipeline({ root: projectRoot, publicPath = defaultPub
       }
       for (const entry of previous?.files ?? []) if (!keep.has(entry.path)) await rm(path.join(directory, entry.path), { force: true });
     };
-    return { manifest, commit, discard };
+    return { manifest, place, finish, discard };
   }
 
   return { plugin, stage, get count() { return assets.size; } };
@@ -257,7 +264,8 @@ export function createAssetPipeline({ root: projectRoot, publicPath = defaultPub
 export async function publishAssets(pipeline, bundleFile, code) {
   const staged = await pipeline.stage(bundleFile, sha256(code));
   try {
-    await staged.commit();
+    await staged.place();
+    await staged.finish();
   } finally {
     await staged.discard();
   }

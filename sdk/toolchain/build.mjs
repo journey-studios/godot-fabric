@@ -115,12 +115,15 @@ async function main() {
     if (packetText) await writeFile(packetStaging, packetText);
     resolution.assertUnchanged();
     adapterBuild.assertUnchanged();
-    await stagedAssets.commit();
+    // The new asset files only add to the directory, so they go first and the bundle still in place keeps every file it names.
+    await stagedAssets.place();
     // Publish selection first; the loader rejects a mixed generation by bundle
     // hash. The editor starts the runtime only after this builder succeeds.
     if (packetText) await rename(packetStaging, packetPath);
     await rename(staging, outfile);
     if (!packetText) await rm(packetPath, {force: true});
+    // The manifest names the bundle just published, and the files only the previous manifest named can go now.
+    await stagedAssets.finish();
   } finally { await rm(staging, {force: true}); await rm(packetStaging, {force: true}); await stagedAssets.discard(); }
   const inputs = Object.keys(result.metafile.inputs).map((file) => {
     const absolute = path.resolve(project, file);

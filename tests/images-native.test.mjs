@@ -59,13 +59,18 @@ function assertOracleMutations(report) {
   mutate(candidate => { view(candidate, "A-badge").image.width = 16; }, /picture|texture/, "the texture has the pixels of the chosen variant");
   mutate(candidate => { view(candidate, "A-mode-cover").drawn.src.x = 0; }, /src/, "cover crops the picture");
   mutate(candidate => { view(candidate, "A-mode-repeat").drawn.tiled = false; }, /tiled/, "repeat tiles");
+  mutate(candidate => { const log = candidate.stages.mount.react.logs["A-user-png"]; log.push(log.shift()); }, /precedes the loadStart of its request/,
+    "no event reaches JS before the loadStart of its request");
+  mutate(candidate => { const events = view(candidate, "A-badge").events; events.push(events.shift()); }, /precedes the loadStart of its request/,
+    "no event leaves the view before the loadStart of its request");
+  mutate(candidate => { candidate.stages.swap.log.push({type: "progress"}); }, /follows the loadEnd of its request/, "a request reports nothing after its loadEnd");
   mutate(candidate => { candidate.stages.inflight.jobs.at(-1).outcome = "loaded"; }, /outcome|dropped|expected/, "a cancelled decode is dropped");
   mutate(candidate => { candidate.stages.inflight.after.uploads += 1; }, /uploads|expected/, "a cancelled decode creates no texture");
   mutate(candidate => { candidate.stages.budget.after.peakUploadsPerPoll = 2; }, /peakUploadsPerPoll/, "a poll creates one texture at a budget of one byte");
   mutate(candidate => { candidate.stages.afterStop.loader.counters.tasksAwaited -= 1; }, /tasksStarted|expected/, "every task is awaited");
   mutate(candidate => { candidate.stages.mount.react.logs["A-neg-missing"].find(event => event.type === "error").error = "boom"; }, /neg-missing/,
     "a missing file says so");
-  mutate(candidate => { candidate.stages.mount.react.logs["A-neg-http"].splice(1, 1); }, /events/, "http(s) fails through onError");
+  mutate(candidate => { candidate.stages.mount.react.logs["A-neg-http"].splice(1, 1); }, /events|has no result of its request/, "http(s) fails through onError");
   mutate(candidate => { candidate.stages.contract.assets.badge.descriptor.hash = "0".repeat(32); }, /hash|expected/, "the descriptor is Metro's");
   mutate(candidate => { candidate.stages.api.results.prefetch.message = "E_PREFETCH_FAILURE: nothing"; }, /E_PREFETCH_FAILURE/, "prefetch says why it fails");
   mutate(candidate => { candidate.stages.scales.results[0].uri = candidate.stages.scales.results[0].uri.replace("@3x", "@2x"); }, /badge@3x|expected/,
