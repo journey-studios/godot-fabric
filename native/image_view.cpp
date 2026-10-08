@@ -26,6 +26,25 @@ img::ResizeMode mode_of(rn::ImageResizeMode mode) {
 folly::dynamic rect_json(const img::Rect &rect) {
   return folly::dynamic::object("x", rect.x)("y", rect.y)("width", rect.width)("height", rect.height);
 }
+folly::dynamic rgba_json(const img::Rgba &color) { return folly::dynamic::array(color.r, color.g, color.b, color.a); }
+folly::dynamic edges_json(const img::Edges &edges) {
+  return folly::dynamic::object("left", edges.left)("top", edges.top)("right", edges.right)("bottom", edges.bottom);
+}
+// A corner's radii in the order the shader reads them: top left, top right, bottom right, bottom left.
+folly::dynamic corners_json(const img::Corners &c) {
+  return folly::dynamic::object("horizontal", folly::dynamic::array(c.top_left.horizontal, c.top_right.horizontal, c.bottom_right.horizontal, c.bottom_left.horizontal))
+      ("vertical", folly::dynamic::array(c.top_left.vertical, c.top_right.vertical, c.bottom_right.vertical, c.bottom_left.vertical));
+}
+folly::dynamic rounded_json(const img::RoundedRect &shape) {
+  return folly::dynamic::object("rect", rect_json(shape.rect))("radii", corners_json(shape.radii));
+}
+// What one draw asked of the renderer, with the layer's own record of the calls it made.
+folly::dynamic effects_json(const img::Painting &painting, folly::dynamic layer) {
+  folly::dynamic clip = nullptr;
+  if (painting.clip) clip = folly::dynamic::object("outer", rounded_json(painting.clip->outer))("inner", rounded_json(painting.clip->inner));
+  return folly::dynamic::object("kind", img::paint_kind_name(painting.kind))("scale", painting.scale)
+      ("tint", painting.tint ? rgba_json(*painting.tint) : folly::dynamic(nullptr))("clip", std::move(clip))("layer", std::move(layer));
+}
 const char *type_name(rn::ImageSource::Type type) {
   switch (type) {
     case rn::ImageSource::Type::Local: return "local";
@@ -82,6 +101,27 @@ void GodotImage::apply(const rn::ShadowView &shadow) {
   const auto &props = static_cast<const rn::ImageProps &>(*shadow.props);
   mode_ = mode_of(props.resizeMode);
   content_ = shadow.layoutMetrics.getContentFrame();
+  frame_ = {shadow.layoutMetrics.frame.size.width, shadow.layoutMetrics.frame.size.height};
+  tint_.reset();
+  if (props.tintColor) {
+    const auto color = rn::colorComponentsFromColor(props.tintColor);
+    tint_ = img::Rgba{color.red, color.green, color.blue, color.alpha};
+  }
+  cap_insets_ = {props.capInsets.left, props.capInsets.top, props.capInsets.right, props.capInsets.bottom};
+  blur_radius_ = props.blurRadius;
+  // The border radii as ViewProps resolves them (percentages, the corners' overlap), and the widths of the borders beside them.
+  const auto border = props.resolveBorderMetrics(shadow.layoutMetrics);
+  const auto &radii = border.borderRadii;
+  border_radii_ = {{radii.topLeft.horizontal, radii.topLeft.vertical}, {radii.topRight.horizontal, radii.topRight.vertical},
+      {radii.bottomRight.horizontal, radii.bottomRight.vertical}, {radii.bottomLeft.horizontal, radii.bottomLeft.vertical}};
+  border_widths_ = {border.borderWidths.left, border.borderWidths.top, border.borderWidths.right, border.borderWidths.bottom};
+  clips_ = props.getClipsContentToBounds();
+  // Props that iOS' view config drops (loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod,
+  // resizeMultiplier, overlayColor) never reach this view, and defaultSource arrives and is not used: ImageProps parses it, and no
+  // iOS component reads it. What the view holds is reported, so that this can be seen.
+  ignored_ = folly::dynamic::object("defaultSource", !props.defaultSource.uri.empty())("loadingIndicatorSource", !props.loadingIndicatorSource.uri.empty())
+      ("fadeDuration", props.fadeDuration)("progressiveRenderingEnabled", props.progressiveRenderingEnabled)("resizeMethod", props.resizeMethod)
+      ("resizeMultiplier", props.resizeMultiplier)("overlayColor", static_cast<bool>(props.overlayColor));
   const auto state = std::static_pointer_cast<const rn::ImageShadowNode::ConcreteState>(shadow.state);
   if (state != state_) resubscribe(state);
   queue_redraw();
@@ -170,28 +210,42 @@ img::Size GodotImage::natural_size() const {
   return {static_cast<double>(image_->width) / image_->scale, static_cast<double>(image_->height) / image_->scale};
 }
 
+std::optional<img::Painting> GodotImage::painting() const {
+  if (!image_ || image_->texture.is_null()) return std::nullopt;
+  img::PaintInput input;
+  input.mode = mode_;
+  input.frame = frame_;
+  input.content = {content_.origin.x, content_.origin.y, content_.size.width, content_.size.height};
+  input.pixels = {static_cast<double>(image_->width), static_cast<double>(image_->height)};
+  input.scale = image_->scale;
+  // A blurred picture is a bitmap rebuilt from the image that was tinted, resized and tiled: it is none of them.
+  input.plain = image_->blur.applies;
+  input.tint = tint_;
+  input.cap_insets = cap_insets_;
+  input.clips = clips_;
+  input.radii = border_radii_;
+  input.widths = border_widths_;
+  return img::paint(input);
+}
+
 void GodotImage::_draw() {
   ++draws_;
   drawn_ = nullptr;
-  if (!image_ || image_->texture.is_null()) return;
-  const auto natural = natural_size();
-  const auto plan = img::plan(mode_, {content_.size.width, content_.size.height}, natural);
-  if (!plan) return;
-  const Vector2 origin(content_.origin.x, content_.origin.y);
-  const Rect2 destination(origin + Vector2(plan->dst.x, plan->dst.y), Vector2(plan->dst.width, plan->dst.height));
-  const auto scale = static_cast<float>(image_->scale);
-  if (plan->tiled) {
-    // Repeat tiles the picture at its size in points, as UIImage.size is for a resizable image. The texture is the cache's and
-    // every view of the picture shares it, so it is never resized: the tiles are laid in pixels under a transform that maps a
-    // pixel back to 1/scale of a point.
-    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));
-    draw_texture_rect(image_->texture, Rect2(destination.position * scale, destination.size * scale), true);
-    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f, 1.0f));
-  } else {
-    draw_texture_rect_region(image_->texture, destination, Rect2(plan->src.x * scale, plan->src.y * scale, plan->src.width * scale, plan->src.height * scale));
-  }
-  drawn_ = folly::dynamic::object("mode", img::mode_name(mode_))("dst", rect_json({content_.origin.x + plan->dst.x, content_.origin.y + plan->dst.y, plan->dst.width, plan->dst.height}))
-      ("src", rect_json(plan->src))("tiled", plan->tiled)("tileWidth", plan->tile.width)("tileHeight", plan->tile.height);
+  layer_.clear();
+  const auto painted = painting();
+  if (!painted) return;
+  // The texture is the cache's and every view of the picture shares it: it is drawn, never resized or written.
+  layer_.draw(get_canvas_item(), image_->texture->get_rid(), *painted);
+  drawn_ = folly::dynamic::object("mode", img::mode_name(painted->mode))
+      ("dst", rect_json({content_.origin.x + painted->plan.dst.x, content_.origin.y + painted->plan.dst.y, painted->plan.dst.width, painted->plan.dst.height}))
+      ("src", rect_json(painted->plan.src))("tiled", painted->plan.tiled)("tileWidth", painted->plan.tile.width)("tileHeight", painted->plan.tile.height)
+      ("effects", effects_json(*painted, layer_.snapshot()));
+}
+
+folly::dynamic GodotImage::props_json() const {
+  return folly::dynamic::object("tint", tint_ ? rgba_json(*tint_) : folly::dynamic(nullptr))("blurRadius", blur_radius_)("capInsets", edges_json(cap_insets_))
+      ("clips", clips_)("frame", folly::dynamic::object("width", frame_.width)("height", frame_.height))("borderWidths", edges_json(border_widths_))
+      ("borderRadii", corners_json(border_radii_));
 }
 
 folly::dynamic GodotImage::snapshot() const {
@@ -206,19 +260,21 @@ folly::dynamic GodotImage::snapshot() const {
     picture = folly::dynamic::object("width", image_->width)("height", image_->height)("sourceWidth", image_->source_width)
         ("sourceHeight", image_->source_height)("scale", image_->scale)("naturalWidth", natural.width)("naturalHeight", natural.height)
         ("format", image_->format)("fingerprint", image_->fingerprint)
+        ("blur", folly::dynamic::object("radius", image_->blur.radius)("scale", image_->blur.scale)("kernel", image_->blur.kernel)
+            ("passes", image_->blur.passes)("applies", image_->blur.applies))
         ("textureWidth", image_->texture.is_valid() ? image_->texture->get_width() : 0)
         ("textureHeight", image_->texture.is_valid() ? image_->texture->get_height() : 0);
   }
   folly::dynamic events = folly::dynamic::array();
   for (const auto &event : emitted_) events.push_back(event);
-  const auto planned = img::plan(mode_, {content_.size.width, content_.size.height}, natural_size());
+  const auto painted = painting();
   folly::dynamic expected = nullptr;
-  if (planned) expected = folly::dynamic::object("dst", rect_json({content_.origin.x + planned->dst.x, content_.origin.y + planned->dst.y, planned->dst.width, planned->dst.height}))
-      ("src", rect_json(planned->src))("tiled", planned->tiled);
+  if (painted) expected = folly::dynamic::object("dst", rect_json({content_.origin.x + painted->plan.dst.x, content_.origin.y + painted->plan.dst.y, painted->plan.dst.width, painted->plan.dst.height}))
+      ("src", rect_json(painted->plan.src))("tiled", painted->plan.tiled);
   return folly::dynamic::object("status", status_)("error", error_)("mode", img::mode_name(mode_))
       ("content", rect_json({content_.origin.x, content_.origin.y, content_.size.width, content_.size.height}))
       ("observing", state_ != nullptr)("source", std::move(source))("image", std::move(picture))("planned", std::move(expected))
-      ("drawn", drawn_)("events", std::move(events))
+      ("drawn", drawn_)("props", props_json())("ignored", ignored_)("events", std::move(events))
       ("counters", folly::dynamic::object("states", states_)("loadStarts", load_starts_)("progress", progresses_)("loads", loads_)
           ("errors", errors_)("loadEnds", load_ends_)("draws", draws_));
 }

@@ -135,7 +135,7 @@ Both were checked first, in Hermes inside Godot, with a throwaway fixture:
 | `ellipsizeMode` head, middle, invalid | ellipsis at the head or in the middle | rejected: `Godot Text supports tail or clip ellipsizeMode`; the host refuses head and middle too |
 | `selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS`, `android_hyphenationFrequency` | platform text options | rejected when set: `Godot Text does not implement <prop>` |
 | `text=`, `fontSize=` | not props of RN's `Text` (wrapper extensions) | rejected, naming the prop and the RN way |
-| `fontStyle`, `textDecoration*` | italics, decoration | still rejected by the facade's style check, unchanged (next slice) |
+| `fontStyle`, `textDecoration*` | italics, decoration | rejected by this slice's facade; the third slice of GF-11 ([text-style](text-style.md)) accepts `fontStyle` `normal`/`italic`, `textDecorationLine`, `textDecorationColor` and a solid `textDecorationStyle`, and this slice's negative cases now try `oblique` and a dotted `textDecorationStyle`, which stay rejected |
 | `accessibilityRole: 'link'` on a pressable paragraph | set by `Text.js` | reaches the paragraph's props; the host applies none yet (open, with GF-20) |
 
 ## Observed behavior of a press on a paragraph
@@ -211,9 +211,9 @@ Each of these runs with a real mouse and a real touch.
 - **Accessibility of Text** (GF-20): `Text.js` gives a pressable paragraph
   `accessibilityRole: 'link'`; `GodotParagraph` applies no accessibility props.
 - **Default size** 18 against RN's 14, a divergence on purpose, open.
-- `fontStyle` and `textDecoration*` (italics, decoration) are the next slice;
-  head and middle ellipsizing the one after; `adjustsFontSizeToFit`,
-  selection and the platform text options stay rejected.
+- `fontStyle` and `textDecoration*` were the next slice and are done there
+  ([text-style](text-style.md)); head and middle ellipsizing are the one after;
+  `adjustsFontSizeToFit`, selection and the platform text options stay rejected.
 - The font scale is 1 and nothing highlights outside iOS: `allowFontScaling`,
   `maxFontSizeMultiplier`, `dynamicTypeRamp` and `suppressHighlighting` are
   accepted and change nothing.

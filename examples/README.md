@@ -44,7 +44,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [scroll](scroll/README.md) | Scrolling, filtering, selection and editing | Internal | [App](scroll/App.jsx) · [scene](scroll/scene.tscn) |
 | [chart](chart/README.md) | Original Chart Kit with the supported SVG subset | Internal | [App](chart/App.jsx) · [scene](chart/scene.tscn) |
 | [nativewind](nativewind/README.md) | Utility classes, variables, breakpoints and manual theme | Public | [App](nativewind/App.jsx) · [scene](nativewind/scene.tscn) |
-| [typography](typography/README.md) | Nested text, fonts, wrapping and retained child state | Mixed | [App](typography/App.jsx) · [scene](typography/scene.tscn) |
+| [typography](typography/README.md) | Nested text, fonts, italics, text decoration, wrapping and retained child state | Mixed | [App](typography/App.jsx) · [scene](typography/scene.tscn) |
 | [animated](animated/README.md) | Original Animated on RN's C++ NativeAnimated advanced by the host's frame clock, and TouchableOpacity | Public | [App](animated/App.jsx) · [scene](animated/scene.tscn) |
 | [switch](switch/README.md) | Original RN Switch: controlled values, colors, disabled input and real clicks | Public | [App](switch/App.jsx) · [scene](switch/scene.tscn) |
 | [activity-indicator](activity-indicator/README.md) | Original RN ActivityIndicator: sizes, colors, animating and hidesWhenStopped | Public | [App](activity-indicator/App.jsx) · [scene](activity-indicator/scene.tscn) |
@@ -57,7 +57,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from, and a paragraph that presses through RN's original `Text.js` | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
 | [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
 | [accessibility-info](accessibility-info/README.md) | Original RN AccessibilityInfo over Godot's accessibility settings: the screen reader, reduce motion, reduce transparency and increase contrast with their events, the settings Godot cannot read rejected, an **Announce** button whose announcements the host publishes or drops (counted), and five native buttons that stand in for the system and for the screen reader | Public | [App](accessibility-info/App.jsx) · [scene](accessibility-info/scene.tscn) |
-| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure, a network PNG from a loopback server, a remount answered by the decoded cache and an HTTP 404, and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
+| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure, a network PNG from a loopback server, a remount answered by the decoded cache and an HTTP 404, a tinted icon, a blurred landscape, a card stretched by cap insets and two clipped avatars, and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -380,7 +380,11 @@ two retained sabotages, which fail 12 and 2. The
 [network images receipt](../docs/evidence/images-network/README.md) records 74 headless checks over a
 loopback Node server (`npm run test:images-network`), the control that fails the 30 normative checks the
 preceding host reaches, three retained sabotages that fail 1, 34 and 2, and the example's 22 headless and
-30 graphical checks with two captures.
+30 graphical checks with two captures. The
+[visual images receipt](../docs/evidence/images-visual/README.md) records 53 headless checks of what is done to
+a picture (`npm run test:images-visual`: tint, blur, cap insets, the rounded clip and the props iOS ignores), the
+control that fails the 40 normative checks, four retained sabotages that fail 2, 3, 8 and 2, and the example's 26
+headless and 39 graphical checks, whose pixel checks saw the shader draw, with two captures.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

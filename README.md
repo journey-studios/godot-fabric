@@ -43,7 +43,15 @@ paragraph presses through RN's own Pressability (`onPress`, `onPressIn`, `onPres
 paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 119 headless checks (114 in the record pinned at `ba5ff00`, before the review of PR #62 added five nested-span
 responder cases) with a real
 mouse and touch, the controls of the previous SDK and host (68 and 3 failures; 63 and 3 in the record) and six retained
-sabotages, and four captures of the pressable line (hosted CI pending). Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
+sabotages, and four captures of the pressable line (hosted CI pending). The text style is the
+third slice: `fontStyle: 'italic'` (a synthetic slant of 0.25, the bundled fonts have no italic
+face), `textDecorationLine` (underline, line-through, both, `none`), `textDecorationColor` and a
+solid `textDecorationStyle`, a child replacing its parent field by field, with the ellipsis now
+taking the color of the run before it instead of the first run's. The
+[evidence record](docs/evidence/text-style/README.md) and the [research](docs/research/text-style.md) record 61
+headless checks with an independent oracle that recomputes every line from the fonts' tables, the controls of the
+previous SDK and host (47 and 27 failures), eight retained sabotages and the typography example's pixel checks, with
+three captures of the new line (hosted CI pending); `oblique`, the other line styles and the real italic faces stay open. Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
 paragraph's press), selection,
 `adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 
@@ -484,13 +492,22 @@ two roots of one application and 74 of the network slice over a loopback server,
 independent oracle; the preceding host fails the 3 and 30 normative checks it can reach, and
 retained sabotages (decoding on the main thread, a view that keeps listening to a swapped-away
 request, a reload that consults the decoded cache, a download whose transport request stays open, a
-repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. A disk cache,
-revalidation, cookies, compression, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping
-and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI passed
-the first slice's 74 checks on main (run 37724902858,
-[receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network slice.
+repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. The same Image draws `tintColor`
+(the picture's pixels take the color, never the view's background or border), `blurRadius` (RN iOS's two-pass
+premultiplied box blur, run on the worker, on a texture no cache holds), `capInsets` (a stretched or tiled
+nine-patch) and the clip of `borderRadius` (the border box with the radii, and the content frame with each radius
+less the border beside it), on a canvas item of its own with one shared shader, and takes the props iOS ignores
+without effect. 53 headless checks of those effects, with an independent oracle that recomputes the pixels of 14
+blurred bitmaps exactly and every rectangle, radius and margin the view asked the renderer for; the preceding host
+fails the 40 normative checks, four retained sabotages (a clip that ignores the border width, a third blur pass, a
+blurred request that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 2, and the
+example's capture sampled the shader's pixels. A disk cache, revalidation, cookies, compression, animated formats
+and a comparison of the effects with iOS are open. Hosted CI passed the first slice's 74 checks on main (run
+37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and the network slice's 74 checks (run 37750455295,
+[receipt](docs/evidence/images-network/hosted-ci.json)), and is pending for the visual slice.
 [Evidence](docs/evidence/images/README.md);
-[network evidence](docs/evidence/images-network/README.md).
+[network evidence](docs/evidence/images-network/README.md);
+[visual evidence](docs/evidence/images-visual/README.md).
 
 The [performance baselines](docs/research/performance.md) (GF-30's first slice) add a `performance` section to
 the application snapshot: exact counters of the native views, Hermes' live heap after a forced collection, and the
@@ -671,12 +688,12 @@ public `react-native` import, each driven by real mouse input in its validation.
 Every example README shows all the states it captures, and each evidence record
 keeps the SHA-256 of its frames in a `captures.json`.
 
-| Image: modes, sources and network pictures | Image: after the clicks and a remount |
+| Image: modes, sources, network pictures and effects | Image: after the clicks and a remount |
 | --- | --- |
-| [![The six resize modes, an @2x asset, data URIs, an ImageBackground, a failed picture and a row of a network PNG, a remount tile and an HTTP 404](docs/evidence/images-network/images-network-all-modes.png)](examples/images/README.md) | [![The remounted network PNG answered by the decoded cache and the preview in center mode showing the logo after a swap](docs/evidence/images-network/images-network-remount.png)](examples/images/README.md) |
+| [![The six resize modes, an @2x asset, data URIs, an ImageBackground, a failed picture, a tinted icon, a network PNG, a remount tile, an HTTP 404, a blurred landscape, a card stretched by cap insets and two clipped avatars](docs/evidence/images-visual/images-visual-all-modes.png)](examples/images/README.md) | [![The remounted network PNG answered by the decoded cache and the preview in center mode showing the logo after a swap, with the four effect tiles unchanged](docs/evidence/images-visual/images-visual-interaction.png)](examples/images/README.md) |
 
-The Image example's frames are taken at content scale 2; the network evidence keeps their SHA-256 in
-`report.json`.
+The Image example's frames are taken at content scale 2; the visual evidence keeps their SHA-256 in
+`report.json`, and the network and first slices keep their earlier frames of the same example.
 
 | Pointerdown interest: initial | Pointerdown interest: after React updates |
 | --- | --- |
@@ -811,6 +828,7 @@ npm run test:frame-clock                 # display-paced frame callbacks and nat
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
+npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

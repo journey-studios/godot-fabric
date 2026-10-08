@@ -536,8 +536,8 @@ keeps listening to a request it swapped away from fails 2, and the oracle reject
 15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
 (68 assertions) and the research note with RN's file and line references. The second slice
 (below) later replaced the record's refusal of network images, `prefetch` and `queryCache`, so
-the suite now has 73 checks. Tint, blur, capInsets, rounded image clipping, animated formats and every
-target but macOS are open. Hosted run 37724902858 (the push of main 6d02746) repeated the 74 checks
+the suite now has 73 checks (72 since the visual slice, which stopped refusing the props it draws). Animated
+formats and every target but macOS are open. Hosted run 37724902858 (the push of main 6d02746) repeated the 74 checks
 with identical IDs, and the oracle accepts its report ([receipt](images/hosted-ci.json)).
 
 The [network images record](images-network/README.md) makes the same `Image` load `http` and `https`
@@ -561,7 +561,30 @@ the example, three C++ tests (cache 76, network 64 and core 77 assertions), and 
 from RN iOS, among them a rule stricter than iOS's URL-keyed caches (a request that carries `Authorization`,
 `Proxy-Authorization` or `Cookie` neither reads nor writes either cache, and is refused over http, which is what
 App Transport Security does there); image redirects drop the source's headers as iOS does. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
-target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
+target but macOS are open. Hosted run 37750455295 (the push of main fb50a32) repeated the 74 checks with identical IDs
+and the recorded bundle, and the oracle accepts its report ([receipt](images-network/hosted-ci.json)). This slice
+closes no checkpoint.
+
+The [visual images record](images-visual/README.md) makes the same `Image` draw `tintColor`, `blurRadius`,
+`capInsets` and the clip of the style's `borderRadius`, and take the seven props that RN iOS ignores without
+effect. The picture is drawn on a canvas item of its own, a child of the view's and scaled by 1/scale, so the
+view's background and border are never tinted or clipped; one shader shared by every view tints (every pixel takes
+the color and keeps its alpha) and clips to two anti-aliased rounded rectangles (the border box with the radii, and
+the content frame with each radius less the border beside it, limited as `RCTPathCreateWithRoundedRect` does), and
+`capInsets` are a stretched or tiled nine-patch of the same item. `blurRadius` is RN iOS's `RCTBlurredImageWithRadius`:
+a square box in premultiplied alpha, two passes, run on the worker after the decode; a blurred picture has a texture
+of its own, a request that blurs neither reads nor writes the decoded cache, and it takes no tint or caps. The
+headless renderer draws no pixel, so 53 headless checks in actual SceneTree frames certify what the view asked the
+renderer for (every rectangle, radius, margin, tint and shader parameter of 52 declared Images and 13 live changes,
+and the item and material it made and freed) and the exact pixels of the blur by the bitmap the worker made, which
+an independent oracle recomputes for 14 blurred pictures; the oracle also models six steps over the two caches with a
+loopback server and refuses 48 mutations of the genuine report. The preceding host runs all 53 and fails the 40
+normative ones; four retained sabotages (a clip that ignores the border width, a third blur pass, a blurred request
+that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 2 checks and the oracle rejects each.
+Two captures of the example, whose pixel checks saw the shader draw, a C++ test of the pure parts (46 assertions) and
+every departure from RN iOS (the blur's rounding, effects on the next draw, `onLoad` after the blur, `capInsets` in
+`stretch` and `repeat` only, a refused list of insets, a transparent black tint). A comparison of the effects with
+iOS, every target but macOS and hosted CI are open; this slice closes no checkpoint.
 
 The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
 section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into
@@ -681,6 +704,33 @@ stays 18, not RN's 14. The record is pinned at `ba5ff00`: the current suite has 
 sabotages 107, 5, 18, 12, 3 and 2, and 33 props are rejected) because the review of PR #62 added five nested-span responder
 cases (`onStartShouldSetResponderCapture`, `onMoveShouldSetResponderCapture`, `onResponderReject`, `onResponderStart` and
 `onResponderEnd`) to the 114 that it ran. The hosted CI run and the Pages publication are **pending**.
+
+The [text style record](text-style/README.md) makes the paragraph paint `fontStyle: 'italic'` and
+`textDecorationLine` (underline, line-through and both) with `textDecorationColor` and a solid
+`textDecorationStyle`: GF-11's third slice. The facade used to reject all four; now the base view config declares them
+(the color through the same processor as `color`), the facade validates their values from one table, and the host
+slants the run's font by 0.25 (a synthetic italic: the bundled fonts have no italic face) and draws the lines from
+Godot's font metrics, one segment per run and per visual row, over the glyphs that are painted. One `painted_glyphs`
+decides what a row paints and feeds the drawing, the decorations and the snapshot, and the same pass fixes the glyphs
+of the ellipsis, which used to take the color of the FIRST run: they now take the run of the last visible glyph, for the
+color and the line. 61 headless checks run in one Hermes application; an independent oracle reads `head`, `hhea`,
+`post` and `OS/2` of the bundled TTFs in Node and recomputes the center and thickness of every underline and
+strike-through (within 0.005 px of the host), that segments touch, that a run covering its row runs from the row's x
+to its x plus its width, that decoration never changes a measure, the inheritance (a child's `none` cancels the
+parent's underline, `line-through` replaces it, a color alone recolors), the opacity, the ellipsis and clipped text,
+18 rejected styles word for word and the host's refusal of `oblique` and the non-solid line styles for a `NativeText`
+that skips the facade. The skew is read on the outline of "I" (the top moves right by 0.25 of its height, 3 px at 16 px,
+in NotoSans, JetBrainsMono and bold, and the bottom and the advance stay). The control on the SDK and host of main
+(`0f2cc7e`) fails exactly 47 checks; the same bundle on that host alone fails the 27 that need the new native code;
+eight retained sabotages (an underline above the baseline, the line color ignored, a child's `none` dropped, a line over
+the whole row, the skew inverted, the facade letting `dotted` through, the ellipsis on the first run again, no native
+guard) fail 1, 5, 1, 3, 2, 4, 2 and 5, and the oracle rejects each in its own section. The measured divergence of RN's
+formulas is recorded: the underline sits 0.2 px (NotoSans) to 1.1 px (JetBrainsMono) lower than Android's formula
+would put it and the strike-through 1.3 and 1.2 px higher; iOS was not measured. The typography laboratory passes 55
+headless and 72 renderer checks, four of them reading pixels, with three captures of the new line (at rest, enlarged
+four times, and with the window narrowed). Real italic faces, the double, dotted, dashed and wavy lines, `overline`,
+bidirectional text and line geometry that matches either platform are open. The hosted CI run and the Pages publication
+are **pending**.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

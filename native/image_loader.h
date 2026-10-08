@@ -1,6 +1,7 @@
 #pragma once
 
 #include "http_core.h"
+#include "image_effects_core.h"
 #include <folly/dynamic.h>
 #include <godot_cpp/classes/image_texture.hpp>
 #include <react/renderer/imagemanager/ImageResponseObserverCoordinator.h>
@@ -31,6 +32,9 @@ struct LoadedImage {
   // A 64-bit FNV-1a of the decoded RGBA bytes, which the certification compares with the pixels of the fixture. Empty
   // unless the certification seam asks for it (fingerprints()): a decode does not pass over its pixels for it otherwise.
   std::string fingerprint;
+  // The blur that was asked for and what it did. A picture whose blur changed its pixels is derived: it was made for the one request
+  // that asked for the blur, and no cache holds it.
+  image::BlurPlan blur;
 };
 
 // What a view receives for a picture that did not. The code and the headers are those of the HTTP response a failed download came
@@ -77,8 +81,9 @@ class ImageLoader final {
 
   // Starts the load of `source` for the request whose observers `coordinator` serves, and returns what cancels it. The
   // request completes or fails once, from the main thread, in a later poll(); a request that is cancelled or whose
-  // coordinator is gone never does.
-  std::function<void()> load(const facebook::react::ImageSource &source, std::weak_ptr<const Coordinator> coordinator);
+  // coordinator is gone never does. A request with a `blur_radius` above epsilon is blurred on the worker after the decode
+  // (image_effects_core.h), and neither reads the decoded cache nor writes it.
+  std::function<void()> load(const facebook::react::ImageSource &source, std::weak_ptr<const Coordinator> coordinator, double blur_radius = 0);
   // Gives the loader the network: the transport its downloads go through, the clock their idle timeout runs on (monotonic
   // milliseconds) and the wall clock that decides when a cached response is stale (milliseconds since the epoch). Without it
   // an http(s) source fails. Host thread only.

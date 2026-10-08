@@ -201,9 +201,12 @@ export const coreEventConfigs = {
 // builds its view config over the base config below, and a style the config does not declare never reaches the
 // paragraph: the base style map is the Controls' map plus the names of this list that it lacks, with the entries
 // that exist (color and fontSize, whose processors stay) as they are. The Controls' own map above is untouched.
-export const textStyleAttributes = ["fontSize", "fontFamily", "fontWeight", "lineHeight", "letterSpacing", "textAlign", "color"];
+export const textStyleAttributes = ["fontSize", "fontFamily", "fontWeight", "lineHeight", "letterSpacing", "textAlign", "color",
+  "fontStyle", "textDecorationLine", "textDecorationColor", "textDecorationStyle"];
+// textDecorationColor is a color as RN declares it (colorAttribute): processed to the number the host reads, as color is.
 const platformStyle = Object.fromEntries([...Object.entries(style),
-  ...textStyleAttributes.filter(name => !(name in style)).map(name => [name, true])]);
+  ...textStyleAttributes.filter(name => !(name in style)).map(name =>
+    [name, name === "textDecorationColor" ? { process: processGodotColor } : true])]);
 
 // Generated components extend ViewProps, not the GodotControl-specific props.
 export default {

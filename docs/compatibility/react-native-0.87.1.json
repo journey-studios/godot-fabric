@@ -632,13 +632,17 @@
         "native/paragraph_layout.cpp",
         "tests/text-layout-native.test.mjs",
         "tests/text-original-native.test.mjs",
+        "tests/text-style-native.test.mjs",
         "docs/research/text-layout.md",
         "docs/research/text-original.md",
+        "docs/research/text-style.md",
+        "docs/evidence/text-style/README.md",
         "docs/evidence/text-original/README.md",
         "docs/evidence/text-layout/README.md",
-        "examples/text-layout/App.jsx"
+        "examples/text-layout/App.jsx",
+        "examples/typography/App.jsx"
       ],
-      "note": "Runs RN's original Text.js. onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; the outer paragraph presses through RN's Pressability. Span press, selection, adjustsFontSizeToFit, font scaling, decoration, head/middle ellipsis, inline views and Text accessibility remain open; the default size stays 18, not RN's 14."
+      "note": "Runs RN's original Text.js. onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; the outer paragraph presses through RN's Pressability. fontStyle italic (a synthetic slant: the bundled fonts have no italic face) and textDecorationLine, textDecorationColor and a solid textDecorationStyle are painted by the host; oblique and the double, dotted, dashed and wavy lines fail. Span press, selection, adjustsFontSizeToFit, font scaling, head/middle ellipsis, inline views and Text accessibility remain open; the default size stays 18, not RN's 14."
     },
     {
       "name": "TextInput",

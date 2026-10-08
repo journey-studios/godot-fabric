@@ -9,8 +9,8 @@ import { useTextAncestor } from "./text";
 // RN's Libraries/Image/Image.js only imports itself, so that deep imports pick a platform file; this host resolves
 // neither extension. Every importer of RN's Image (ImageBackground, AnimatedImage and the public export) gets this
 // module instead (sdk/toolchain/platform-plugin.mjs). The rendering is RN's own Image.ios.js, which reads the
-// sources, picks the asset scale and renders the generated host component; this wrapper only refuses what the host
-// has no native implementation for yet, where RN would have dropped it silently.
+// sources, picks the asset scale and renders the generated host component; this wrapper only refuses what is a mistake
+// (image-contract.mjs).
 //
 // Like RN's index.js, it loads Image.ios.js on first use: that module asks the host for the ImageLoader module as it
 // evaluates, and an application that never renders an Image should not create it.

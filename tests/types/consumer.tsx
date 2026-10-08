@@ -381,18 +381,15 @@ async function imageApis() {
   return { size, sized, resolved, registered };
 }
 const animatedImage = <Animated.Image source={asset} style={{ opacity: 0.5 }} />;
-// Props the host has no native implementation for fail at type-check time as they do at render time.
-// @ts-expect-error tinting needs a shader on the image's own canvas item (a later slice)
-const tinted = <Image source={asset} tintColor="#ff0000" />;
-// @ts-expect-error blurring is a later image effect
-const blurred = <Image source={asset} blurRadius={4} />;
-// @ts-expect-error placeholders are a later image state
-const placeholder = <Image source={asset} defaultSource={asset} />;
-// @ts-expect-error the host clips rectangles only; rounded image clipping is a later slice
-const rounded = <Image source={asset} style={{ borderRadius: 8 }} />;
+// What the Image draws (the tint, the blur, the cap insets and the radii of its style) and the props iOS ignores are props of the public Image.
+const tinted = <Image source={asset} tintColor="#ff0000" blurRadius={4} capInsets={{ top: 1, left: 1, bottom: 1, right: 1 }} />;
+const ignored = <Image source={asset} defaultSource={{ uri: "res://pictures/placeholder.png" }} fadeDuration={0} progressiveRenderingEnabled resizeMethod="resize" resizeMultiplier={2} />;
+const rounded = <Image source={asset} style={{ borderRadius: 8, borderTopLeftRadius: 2, borderWidth: 1, overflow: "hidden", tintColor: "#00f", overlayColor: "#fff" }} />;
+// @ts-expect-error a blur radius is a number
+const blurredByText = <Image source={asset} blurRadius="4" />;
 // @ts-expect-error resize modes are cover, contain, stretch, center, repeat and none
 const invalidMode = <Image source={asset} resizeMode="fill" />;
-void originalImageStyle; void publicImage; void background; void backgroundProps; void imageApis; void animatedImage; void tinted; void blurred; void placeholder; void rounded; void invalidMode;
+void originalImageStyle; void publicImage; void background; void backgroundProps; void imageApis; void animatedImage; void tinted; void ignored; void rounded; void blurredByText; void invalidMode;
 
 // Text: onTextLayout is RN's original event, with one entry per visible line.
 const layoutHandler = (event: TextLayoutEvent) => {
@@ -426,3 +423,14 @@ const middleEllipsis = <Text numberOfLines={1} ellipsizeMode="middle">Lines</Tex
 // @ts-expect-error fontSize is a style, not a prop of RN's Text
 const fontSizeProp = <Text fontSize={20}>Lines</Text>;
 void measuredText; void originalTextProps; void wrongTextLayout; void pressableText; void responderText; void wrongResponder; void captureResponder; void selectableText; void middleEllipsis; void fontSizeProp;
+// The text style the host paints: a synthetic italic and solid lines, in the values RN's own TextStyle declares.
+const styledText = <Text style={{ fontStyle: "italic", textDecorationLine: "underline line-through", textDecorationColor: "#ff0000",
+  textDecorationStyle: "solid" }}>Styled</Text>;
+const resetText = <Text style={[{ textDecorationLine: "underline" }, { textDecorationLine: "none", fontStyle: "normal" }]}>Reset</Text>;
+// @ts-expect-error oblique is not a fontStyle of RN's TextStyle
+const obliqueText = <Text style={{ fontStyle: "oblique" }}>Lines</Text>;
+// @ts-expect-error only solid lines are drawn: dotted, dashed, double and wavy are not implemented
+const dottedText = <Text style={{ textDecorationStyle: "dotted" }}>Lines</Text>;
+// @ts-expect-error the line is none, underline, line-through or underline line-through, in that order
+const overlineText = <Text style={{ textDecorationLine: "overline" }}>Lines</Text>;
+void styledText; void resetText; void obliqueText; void dottedText; void overlineText;

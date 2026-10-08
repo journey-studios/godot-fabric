@@ -59,6 +59,7 @@
     "tests/performance-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",
+    "tests/text-style-fixture.jsx",
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/accessibility-info-fixture.jsx",
@@ -66,6 +67,7 @@
     "tests/websocket-fixture.jsx",
     "tests/images-fixture.jsx",
     "tests/images-network-fixture.jsx",
+    "tests/images-visual-fixture.jsx",
     "tests/modal-host-fixture.jsx"
   ],
   "ignorePatterns": [

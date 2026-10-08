@@ -486,12 +486,6 @@ func contract_stage() -> void:
   var ids: Array = js_json("ImagesProbe.refusals()")
   var missing: Array = ids.filter(func(id: String) -> bool: return not messages.has("A-refusal-" + id))
   check(missing.is_empty(), "contract/Every unsupported Image prop fails where the Image renders")
-  var later := ["tintColor", "style.tintColor", "blurRadius", "capInsets", "defaultSource", "loadingIndicatorSource", "fadeDuration", "progressiveRenderingEnabled",
-    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius"]
-  var named := true
-  for id: String in later:
-    named = named and String(messages.get("A-refusal-" + id, "")).begins_with("Godot Image does not implement ") and String(messages.get("A-refusal-" + id, "")).contains(" yet: ")
-  check(named, "contract/Each refusal names the prop and why the host does not implement it yet")
   check(String(messages.get("A-refusal-resizeMode", "")).begins_with("Godot Image resizeMode must be") and String(messages.get("A-refusal-style.objectFit", "")).begins_with("Godot Image objectFit must be")
     and String(messages.get("A-refusal-style.aspectRatio", "")) == "Godot Image does not implement style aspectRatio"
     and String(messages.get("A-refusal-source.unregistered", "")).contains("no asset registered") and String(messages.get("A-refusal-onLoad", "")) == "Image onLoad must be a function"
