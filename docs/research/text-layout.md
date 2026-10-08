@@ -5,8 +5,9 @@ Status: first slice of GF-11, executed locally on macOS arm64 against pinned RN
 preceding host (main before this slice) ran the same bundle and failed exactly
 its **5 normative checks**; three retained sabotages each fail the probe and the
 independent oracle rejects every one of them. The example ran 18 checks
-headless and 32 with the renderer. There is no hosted CI receipt and no
-evidence record yet: both follow the implementation commit.
+headless and 32 with the renderer. The [evidence record](../evidence/text-layout/README.md)
+pins the executed commit, the host hashes, the receipt and two captures. The hosted CI
+run of the new step is **pending**: no hosted run has been made.
 
 ## What RN does
 
@@ -240,4 +241,4 @@ and no check depends on it:
 - A reference measurement on an iOS simulator and an Android emulator.
 - Weights other than 400 for `capHeight` and `xHeight`: the host reads the
   outline of the variation; the oracle reads the default instance.
-- A hosted CI run and the evidence record.
+- A hosted CI run of the `native-text-layout` step (pending).

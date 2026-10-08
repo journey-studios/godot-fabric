@@ -56,8 +56,21 @@ every reported line has painted ink; the box drawn at each line's event frame
 contains that line's ink, in both states; the ink of `HEH` ends on the baseline
 `y + ascender` (±1 pixel) and is as tall as the reported `capHeight`, and the ink
 of `xxx` is as tall as `xHeight`. The captures are saved as
-`build/text-layout-initial.png` and `build/text-layout-narrow.png`; the retained
-images and the evidence record follow the implementation commit.
+`build/text-layout-initial.png` and `build/text-layout-narrow.png`; the
+[evidence record](../../docs/evidence/text-layout/README.md) keeps both frames and their SHA-256.
+
+![Four paragraphs with the box and baseline of every reported line, a row of three texts sharing one baseline, HEH and xxx on the rule, and the Narrow the column button](../../docs/evidence/text-layout/text-layout-initial.png)
+
+**Initial.** The wrapped paragraph has three lines, the centred one starts where its line
+does, the one limited to two lines shows only those, and the `lineHeight` 28 boxes are taller
+with the rule inside them. The row of three texts shares one baseline rule, and `HEH` and
+`xxx` stand on theirs.
+
+![The narrowed column: the wrapped paragraph has four lines, the boxes and rules follow the new lines and the button now reads Widen the column](../../docs/evidence/text-layout/text-layout-narrow.png)
+
+**After the click.** The column is narrower, the paragraphs wrap again and RN delivers the new
+lines: the wrapped paragraph has four, the summary says `wrap: 4 lines`, and the boxes and rules
+follow. `HEH`, whose lines did not change, received no new event.
 
 ## Evidence suite
 

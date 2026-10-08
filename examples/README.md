@@ -243,7 +243,7 @@ launcher entry (`npm run example -- text-layout`; add `--headless` or `--capture
 Every number is checked against the bundled fonts' tables read in Node, and a
 click re-wraps the paragraphs. Its [research](../docs/research/text-layout.md)
 records 76 headless checks, the preceding host's 5 failures and three retained
-sabotages; the evidence record and captures follow the implementation commit.
+sabotages, with the [evidence record](../docs/evidence/text-layout/README.md) and two captures.
 
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag
