@@ -729,6 +729,29 @@ jobs:
         env:
           MACOS_EXPORT_TEMPLATE: ${{ github.workspace }}/.deps/macos-arm64-template.zip
         run: npm run test:export:macos
+      - name: Preserve the verified macOS application bundle
+        shell: bash
+        run: |
+          shopt -s nullglob
+          apps=(build/macos-export-native-positive-*/Verified.app)
+          if [[ ${#apps[@]} -ne 1 ]]; then
+            printf 'Expected exactly one Verified.app, found %s\n' "${#apps[@]}" >&2
+            exit 1
+          fi
+          app="${apps[0]}"
+          if [[ ! -d "$app" || -L "$app" || ! -f "$app/Contents/Info.plist" ]]; then
+            printf 'Verified.app is missing or invalid: %s\n' "$app" >&2
+            exit 1
+          fi
+          parent="${app%/*}"
+          name="${app##*/}"
+          archive="$parent/$name.tar.gz"
+          if [[ -e "$archive" || -L "$archive" ]]; then
+            printf 'Refusing to overwrite archive: %s\n' "$archive" >&2
+            exit 1
+          fi
+          tar -czf "$archive" -C "$parent" "$name"
+          tar -tzf "$archive" | grep -Fx "$name/Contents/Info.plist" >/dev/null
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -743,6 +766,7 @@ jobs:
             build/macos-export-*/runtime-*.json
             build/macos-export-*/*.png
             build/macos-export-native-*/report.json
+            build/macos-export-native-positive-*/Verified.app.tar.gz
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - name: Original Codegen adapter in a provisioned independent consumer
         run: |

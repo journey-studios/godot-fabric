@@ -30,6 +30,8 @@ Godot's export-plugin error message is not an abort guarantee. The runner theref
 
 The fixture adaptation is confined to the disposable copied project: its report and captures move from read-only `res://` to `user://`, and it prints the actual user-data directory so the runner can collect and verify the report and PNGs. The committed consumer stays unchanged. The runner compares exact check names and order against [`macos-export-checks.json`](../scripts/macos-export-checks.json), including the three headed captures.
 
+CI retains the verified app as `Verified.app.tar.gz`; extract it with `tar -xzf Verified.app.tar.gz` so bundle permissions and framework symlinks are preserved. Verify the extracted bundle with `codesign --verify --deep --strict --verbose=2 Verified.app`.
+
 Ad-hoc signing is for local validation only. This slice does not establish Developer ID distribution, notarization, an iOS export, mobile-device behavior, or a second-machine replay. The observed environment is the same Mac with fresh per-application user data, rather than a clean OS user profile. The Frontier twelve-turn game replay, clean profile, second Mac/VM and physical-device criteria remain open.
 
 ## Evidence status
