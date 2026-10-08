@@ -365,3 +365,44 @@ contract and all four checkpoints remain open.
 
 See [the current independent receipt](../evidence/scroll-view/root-os-integration.json)
 and [the facade regression receipt](../evidence/scroll-view/facade-regressions-43d0375.json).
+
+
+## Legacy example migration review
+
+CI on `4a6dd92` exposed the unconverted ScrollView example. Local reproduction
+identified the failing ScrollContainer assertion and missing `inventory-content`
+lookup. Hosted checkout `2236b0d` passed 62 legacy checks and has exactly the
+same Git tree as main `dd05760`; this failure is introduced by the migration,
+not inherited from main. No failure report was generated before the early quit.
+
+Correction `a0f1fc77` changes only the example and its validator.
+Geometry uses the committed rows and scroll metrics instead of a wrapper's
+private content testID. Instant commands explicitly request `animated:false`;
+default animation must make progress and finish idle with Fabric and painted
+content aligned. Wheel interruption is followed by a held Move and Up, with
+no resumed drag, extra terminal event or momentum. The fixed-height category
+strip disables RN's default flex growth in the consuming example.
+
+The old JS wrapper conflated Pressability's `cancelable` transfer policy with
+native pan blocking. Pinned RN 0.87.1 sources distinguish these paths:
+Pressability Grant returns `blockNativeResponder`, ScrollView's responder
+reject handler is a no-op, and native Android/iOS interception does not query
+a child's `cancelable` option. The fixture now verifies native cancellation
+of that child and separately verifies explicit native blocking and release.
+This is source-based analysis, not mobile parity certification. No private
+termination-request protocol, runtime flag or second offset owner was added.
+
+Final runs pass 73 headless and 79 headed checks. The principal repeats all
+73 checks in a fresh project with the copied host and dependency frameworks,
+checks complete shutdown, and views the final captures. The full 34-scenario
+example suite passes 2,457 checks before the final category presentation
+adjustment; final focused runs cover that adjustment. Four dedicated
+ScrollView tests, type checking and static checks pass. All 213 overlapping
+producer comparisons for the dedicated native, ScrollView, list, OS and
+supplemental groups still match committed sources.
+
+The patch removes stale assumptions without adding a compatibility layer or
+changing native/shared sources. Both modified files remain below 1,000 lines.
+Local thermo-nuclear review is satisfied for this correction. The prior CI
+failure, new hosted validation and acceptance remain separate evidence.
+See [the reproduction and independent correction receipt](../evidence/scroll-view/legacy-example-regression.json).

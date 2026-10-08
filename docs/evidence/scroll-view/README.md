@@ -185,3 +185,25 @@ JSON. All GF-14 checkpoints remain open. Subsequent documentation-only updates
 preserve this dataset and the tested producer sources.
 
 ![Published OS-integrated review progress for PR #58](dashboard-public-0a0aeaa.jpg)
+
+
+## Legacy example CI correction
+
+The native lane for `4a6dd92` failed on obsolete example assumptions about
+ScrollContainer and a private content testID. The
+[correction receipt](legacy-example-regression.json) binds the exact green
+main tree, local RED, native responder source analysis, final 73/79 focused
+checks, the principal's independent 73-check repeat and unchanged dedicated
+product producers. It preserves the distinction between the full 34-scenario
+suite before the final category sizing change and the final focused runs.
+
+The following final macOS captures show the original RN example with a
+48 px category viewport and the inventory filling the remaining space.
+
+![Final legacy ScrollView inventory](legacy-example-initial.png)
+
+![Edited inventory at the lower bound after resizing](legacy-example-narrow.png)
+
+These local results do not accept hosted CI or any GF-14 checkpoint. The
+previous 29/156 publication above is a historical dataset once newer review
+progress is deployed; every GF-14 checkpoint remains open.

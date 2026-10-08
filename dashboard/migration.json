@@ -8,11 +8,11 @@
     "focusSequence": "5",
     "focusTitle": "GF-14 PR #58: integração OS validada localmente; CI/review pendentes"
   },
-  "updatedAt": "2026-10-08T05:08:34.242Z",
+  "updatedAt": "2026-10-08T06:28:00.672145+00:00",
   "source": {
-    "commit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/43d0375ed4e39c248162f03efd4919c00a9bb999",
-    "scope": "Main OS #61 integrada com todos os dados, GF-18 e milestones preservados. Prova local independente do novo bundle em 43d0375; 29/156 checkpoints, 0/39 itens completos. GF-14 sem aceite; CI e CodeRabbit do novo head pendentes.",
+    "commit": "a0f1fc772c88396393ee5ee25bd0d6c27a893554",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/a0f1fc772c88396393ee5ee25bd0d6c27a893554",
+    "scope": "PR #58: falha do exemplo legado corrigida e revisada localmente; nova CI e CodeRabbit pendentes. Dashboard preserva 29/156, 0/39 e milestones, sem aceite GF-14.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Main OS #61 integrada em 43d0375; host preservado e novo bundle f2af26ef validado. Principal repetiu ScrollView 28/28, listas 44, sabotagem rejeitada e quatro capturas; oráculos Accessibility 80, Images 74, OS 37, Text 76 e Device 65+2 conferidos. Produtores 123 nativos/18 bundle/seis RN e 40 inputs suplementares verificados. CI e CodeRabbit do novo head pendentes; GF-14 e contrato completo continuam abertos.",
+      "note": "CI nativa do head 4a6dd92 falhou no exemplo legado de ScrollView. Correção a0f1fc7 validada: 73 checks headless, 79 com captura e repetição independente de 73 pelo principal. Estrutura RN original, bloqueio nativo explícito, animação e interrupção pela roda preservados; faixa de categorias corrigida. Suíte completa anterior ao último ajuste visual: 34 cenários/2457 checks; cenário afetado repetido no estado final. CI e CodeRabbit do novo head pendentes; GF-14 sem aceite.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4089,6 +4089,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf14-legacy-example-corrected-20261008",
+      "at": "2026-10-08T06:28:00.672145+00:00",
+      "taskIds": [
+        "GF-14"
+      ],
+      "message": "CI nativa do head 4a6dd92 falhou no exemplo legado de ScrollView. Correção a0f1fc7 validada: 73 checks headless, 79 com captura e repetição independente de 73 pelo principal. Estrutura RN original, bloqueio nativo explícito, animação e interrupção pela roda preservados; faixa de categorias corrigida. Suíte completa anterior ao último ajuste visual: 34 cenários/2457 checks; cenário afetado repetido no estado final. CI e CodeRabbit do novo head pendentes; GF-14 sem aceite.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/a0f1fc772c88396393ee5ee25bd0d6c27a893554"
+    },
     {
       "id": "gf14-os-integrated-local-20261008",
       "at": "2026-10-08T05:08:34.242Z",
