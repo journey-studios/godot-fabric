@@ -302,7 +302,7 @@
     "fontFamily accepts NotoSans and JetBrainsMono only, and the preset's default stacks were not exercised",
     "SVG: no transform, group opacity, font weights 700 and 800, Polygon, Polyline or v1 root API; no native/svg_node change",
     "The laboratory compiles the web variant of the NativeWind preset and the SDK the native one; unifying them would change the laboratory's evidence",
-    "macOS arm64 only; hosted CI and the Pages publication pending",
+    "macOS arm64 only; the hosted CI run and the Pages publication are recorded in hosted-ci.json and publication.json and cover the headless lanes (the renderer lane and the control on main's SDK stay local)",
     "The duplicated version strings across manifests and docs are not cleaned up"
   ],
   "sources": {
@@ -392,6 +392,33 @@
       "seconds": 2
     },
     "flake": "One headed Godot run of the minimal consumer (local-alias-graphical) timed out at 180 s on the first execution of npm run test:consumer -- --capture on this machine under load; the rerun passed all 30 and 40 checks. No explanation was found, and the libraries lane never timed out."
+  },
+  "hostedCI": {
+    "status": "verified",
+    "run": 37797780642,
+    "attempts": 1,
+    "headSha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+    "receipt": "hosted-ci.json",
+    "pages": 37797780563,
+    "pagesDispatch": 37799702595,
+    "publication": "publication.json",
+    "executedHosted": {
+      "jsTests": 15,
+      "harnessChecks": 16,
+      "nativeChecks": 46,
+      "nativeCheckIdsEqualCommitted": true,
+      "bundleSha256": "10ec3baae0f64a0aa71075e70da35157a74225bcbdd987052bd248b84305baf2",
+      "bundleEqualsPostReview": true,
+      "minimalConsumer": [
+        30,
+        40
+      ],
+      "chartsTests": 4
+    },
+    "notRunHosted": [
+      "the renderer lane (--capture: 58 native checks, the four captures)",
+      "the control on main's SDK (--control-ref)"
+    ]
   },
   "postReview": {
     "at": "2026-10-08T14:50:41Z",

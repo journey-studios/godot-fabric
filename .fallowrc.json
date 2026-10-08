@@ -75,7 +75,8 @@
     "tests/images-fixture.jsx",
     "tests/images-network-fixture.jsx",
     "tests/images-visual-fixture.jsx",
-    "tests/modal-host-fixture.jsx"
+    "tests/modal-host-fixture.jsx",
+    "tests/scope-0.5-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -354,7 +355,9 @@
             "ImageProgressEventIOS",
             "Pressable",
             "PressableProps",
-            "useWindowDimensions"
+            "useWindowDimensions",
+            "Dimensions",
+            "Platform"
           ]
         },
         {

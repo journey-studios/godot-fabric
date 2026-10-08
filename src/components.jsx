@@ -11,6 +11,7 @@ import usePressability from "react-native/Libraries/Pressability/usePressability
 import processColor from "react-native/Libraries/StyleSheet/processColor";
 import { getInternalInstanceHandleFromPublicInstance } from "react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactFabricPublicInstance";
 import TextInputState from "./text-input-state";
+import { checkProps, declaredProps } from "./prop-scope.mjs";
 
 import { controlViewConfig } from "./base-view-config";
 export { controlViewConfig };
@@ -176,27 +177,29 @@ export function TextInput({
 
 // This wrapper supplies Godot's View and React's pressed render state. The
 // responder handlers, geometry, delays and transitions are upstream Pressability.
-export function Pressable({
-  children,
-  style,
-  disabled = false,
-  hitSlop,
-  pressRetentionOffset,
-  delayLongPress,
-  unstable_pressDelay,
-  cancelable,
-  blockNativeResponder,
-  onPress,
-  onPressMove,
-  onPressIn,
-  onPressOut,
-  onLongPress,
-  onHoverIn,
-  onHoverOut,
-  ...props
-}) {
-  if (onHoverIn || onHoverOut)
-    throw new Error("Godot Pressable hover events are not implemented yet");
+// The props RN declares for a Pressable are checked on every render (src/prop-scope.mjs), and the host's Control would take
+// names that only the Control has (kind, text, onActivate...), so the ones RN does not declare are dropped here, as RN's
+// view config drops them for a View.
+export function Pressable(allProps) {
+  checkProps("Pressable", allProps);
+  const {
+    children,
+    style,
+    disabled = false,
+    hitSlop,
+    pressRetentionOffset,
+    delayLongPress,
+    unstable_pressDelay,
+    cancelable,
+    blockNativeResponder,
+    onPress,
+    onPressMove,
+    onPressIn,
+    onPressOut,
+    onLongPress,
+    id,
+    ...props
+  } = declaredProps("Pressable", allProps);
   const [pressed, setPressed] = useState(false);
   const config = useMemo(
     () => ({
@@ -243,6 +246,7 @@ export function Pressable({
   return (
     <View
       {...props}
+      {...(id === undefined ? {} : { nativeID: id })}
       {...responderHandlers}
       disabled={disabled}
       hitSlop={hitSlop}

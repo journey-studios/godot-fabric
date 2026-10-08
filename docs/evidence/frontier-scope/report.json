@@ -1,0 +1,750 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-scope",
+  "status": "verified-local-headless-causal-control-retained-sabotages-and-regressions",
+  "at": "2026-10-08T19:33:41Z",
+  "item": "V05-04",
+  "executionBaseCommit": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+  "executedTreeSha": "8d0321bd82f485b90155af18b2fb88d4d9b2eade",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "docs/API.md was edited while the last regression lanes of the batch ran; none of them reads it. docs/evidence/frontier-scope, docs/PARITY.md, ROADMAP.md and scripts/scope-scroll-crash.mjs were written after the lanes. None is an input of a lane; the gates that read documents ran afterwards (gates)",
+  "implementationCommit": "e33817e643c65c521d50e589219ff33d8b268643",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/e33817e643c65c521d50e589219ff33d8b268643",
+  "implementationCommits": [
+    {
+      "commit": "baff0022f0d5352761e854d301f664083ac0f3bc",
+      "meaning": "every prop RN declares for View, Text, Pressable, Image, Modal and ActivityIndicator decided in one policy module, with the manifest, the native lane, the oracle, the control and five of the six sabotages"
+    },
+    {
+      "commit": "6bbd63f4d9ff2cb2cbf67af5e07d538ceb694b5b",
+      "meaning": "merge of main e1c7a39 (the original ScrollView of #58 and the game rules of #70); not a change of this slice"
+    },
+    {
+      "commit": "e33817e643c65c521d50e589219ff33d8b268643",
+      "meaning": "the ScrollView in the same policy, its types, its groups in the lanes, the control recreated from main and the sixth sabotage"
+    }
+  ],
+  "implementationPr": null,
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64 26.6.2",
+    "displayServer": "headless",
+    "nativeHostSha256": "81dd68117d2da83b58046422cc9cc73a6184bb8ec6fb6cc7a6839cf23d04565e"
+  },
+  "screenshots": {
+    "count": 0,
+    "reason": "the slice has no visual output: what it changes is what the SDK accepts, ignores or refuses, and what the host then holds, read from the node tree and the Controls"
+  },
+  "commands": [
+    {
+      "command": "node --test tests/scope-0.5.test.mjs tests/scroll-view-contract.test.mjs",
+      "exit": 0,
+      "seconds": 4,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:scope-0.5",
+      "exit": 0,
+      "seconds": 22,
+      "result": "passed"
+    },
+    {
+      "command": "node tests/scope-0.5-native.test.mjs --previous",
+      "exit": 0,
+      "seconds": 23,
+      "result": "passed"
+    },
+    {
+      "command": "node scripts/scope-sabotage.mjs",
+      "exit": 0,
+      "seconds": 169,
+      "result": "passed"
+    },
+    {
+      "command": "npm run type-check",
+      "exit": 0,
+      "seconds": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "seconds": 1,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:scroll-view",
+      "exit": 0,
+      "seconds": 18,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:lists",
+      "exit": 0,
+      "seconds": 13,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:examples",
+      "exit": 0,
+      "seconds": 195,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:consumer",
+      "exit": 0,
+      "seconds": 110,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:consumer:libraries",
+      "exit": 0,
+      "seconds": 63,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:modal",
+      "exit": 0,
+      "seconds": 32,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:touchables",
+      "exit": 0,
+      "seconds": 13,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:accessibility",
+      "exit": 0,
+      "seconds": 21,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:pointers:click",
+      "exit": 0,
+      "seconds": 72,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:responders:pan",
+      "exit": 0,
+      "seconds": 22,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:text-original",
+      "exit": 0,
+      "seconds": 14,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:text-layout",
+      "exit": 0,
+      "seconds": 6,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:text-style",
+      "exit": 0,
+      "seconds": 5,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:images",
+      "exit": 0,
+      "seconds": 5,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:activity-indicator",
+      "exit": 0,
+      "seconds": 5,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:os-contracts",
+      "exit": 0,
+      "seconds": 5,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:charts",
+      "exit": 0,
+      "seconds": 1,
+      "result": "passed"
+    }
+  ],
+  "scope": {
+    "names": 12,
+    "components": 7,
+    "declaredProps": 880,
+    "supported": 433,
+    "ignored": 325,
+    "refused": 122,
+    "perComponent": {
+      "View": {
+        "declared": 114,
+        "supported": 71,
+        "ignored": 33,
+        "refused": 10
+      },
+      "Text": {
+        "declared": 72,
+        "supported": 42,
+        "ignored": 17,
+        "refused": 13
+      },
+      "Pressable": {
+        "declared": 130,
+        "supported": 82,
+        "ignored": 35,
+        "refused": 13
+      },
+      "Image": {
+        "declared": 139,
+        "supported": 86,
+        "ignored": 42,
+        "refused": 11
+      },
+      "Modal": {
+        "declared": 129,
+        "supported": 9,
+        "ignored": 111,
+        "refused": 9
+      },
+      "ActivityIndicator": {
+        "declared": 118,
+        "supported": 66,
+        "ignored": 42,
+        "refused": 10
+      },
+      "ScrollView": {
+        "declared": 178,
+        "supported": 77,
+        "ignored": 45,
+        "refused": 56
+      }
+    },
+    "scrollViewListRules": 2,
+    "originalRnComponents": true,
+    "publicFacade": true,
+    "actualSceneTreeFrames": true,
+    "pixelCapture": false,
+    "screenshots": false,
+    "hardwareCertified": false,
+    "hostedCI": false
+  },
+  "lanes": {
+    "js": {
+      "command": "node --test tests/scope-0.5.test.mjs tests/scroll-view-contract.test.mjs",
+      "tests": 16,
+      "passed": 16,
+      "typeFixture": {
+        "positive": 433,
+        "negative": 121,
+        "valuePositive": 5,
+        "valueNegative": 3
+      }
+    },
+    "nativeCurrent": {
+      "command": "npm run test:scope-0.5",
+      "checks": 181,
+      "passed": 181,
+      "checkKinds": {
+        "mount/The application starts without a host or runtime error": 1,
+        "Each refused prop fails in its own boundary with the error of the table and mounts nothing": 20,
+        "No case fails and the host reports nothing": 80,
+        "Every ignored prop leaves the host exactly as the baseline has it": 62,
+        "Each refused prop's default leaves the host exactly as the baseline has it": 14,
+        "controls/A supported prop of each component changes what the host shows, and nothing fails": 1,
+        "cleanup/Only the root View stays after every group is removed": 1,
+        "cleanup/Stop releases every root": 1,
+        "cleanup/All native Controls are balanced": 1
+      },
+      "outcome": {
+        "refusedCases": 248,
+        "ignoredCases": 650,
+        "allowedCases": 4,
+        "defaultCases": 150,
+        "undeclaredCases": 124
+      }
+    },
+    "nativePrevious": {
+      "command": "node tests/scope-0.5-native.test.mjs --previous",
+      "checks": 177,
+      "failed": 22,
+      "failedIds": [
+        "View/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "View/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/default/0/mount/No case fails and the host reports nothing",
+        "Text/default/0/mount/Each refused prop's default leaves the host exactly as the baseline has it",
+        "Text/default/0/update/No case fails and the host reports nothing",
+        "Text/default/0/update/Each refused prop's default leaves the host exactly as the baseline has it",
+        "Pressable/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Pressable/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Pressable/undeclared/0/mount/Every ignored prop leaves the host exactly as the baseline has it",
+        "Pressable/undeclared/0/update/Every ignored prop leaves the host exactly as the baseline has it",
+        "Image/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Image/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Modal/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Modal/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ActivityIndicator/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ActivityIndicator/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/1/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/1/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing"
+      ],
+      "skippedProps": [
+        {
+          "component": "Modal",
+          "prop": "animationType"
+        },
+        {
+          "component": "Modal",
+          "prop": "presentationStyle"
+        },
+        {
+          "component": "Modal",
+          "prop": "statusBarTranslucent"
+        },
+        {
+          "component": "Modal",
+          "prop": "navigationBarTranslucent"
+        },
+        {
+          "component": "Modal",
+          "prop": "hardwareAccelerated"
+        },
+        {
+          "component": "Modal",
+          "prop": "allowSwipeDismissal"
+        }
+      ],
+      "skippedBecause": "on the host of main the Modal itself refuses these six props from inside the mount (native/modal_presentation.cpp) and the exception stops the application, so the control cannot drive them; the other lanes keep them. The previous plan has the 181 checks minus the 4 of Modal/refused/1 and Modal/allowed/0",
+      "failedByGroup": {
+        "refused (mount and update, 8 groups)": 16,
+        "Text default (mount and update, 2 checks each)": 4,
+        "Pressable undeclared (mount and update)": 2
+      }
+    }
+  },
+  "causalControl": {
+    "previousSdk": {
+      "commit": "e1c7a39",
+      "extractedBy": "git archive e1c7a39 src into build/frontier-scope-previous/src",
+      "pins": {
+        "src/react-native-platform.jsx": "c077b25f5f724c36028eb91e25e11d9f4584d73ed1d4b0a8da8cb27f7b477313",
+        "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+        "src/text.jsx": "b78806e98d64ce5dac8eddefd22dabc81aede2c3a74838577e25021354223f8b",
+        "src/image-contract.mjs": "22cfd6bceb9b731f29efa34ca5386b029a8ce07d3bf351c9f7ec5cb12352ab4b"
+      }
+    },
+    "sameHostRequired": true,
+    "nativeHostSha256": "81dd68117d2da83b58046422cc9cc73a6184bb8ec6fb6cc7a6839cf23d04565e",
+    "currentChecks": 181,
+    "previousChecks": 177,
+    "previousFailed": 22,
+    "expectedFailuresEqualObserved": true
+  },
+  "reports": {
+    "current": {
+      "file": "build/scope-0.5-current-report.json",
+      "sha256": "9ae73202cb72c2b8d191823c3adb21b632e949eba928674e4ca2b274b8298416",
+      "bytes": 13177043,
+      "checks": 181,
+      "passed": 181,
+      "failed": 0,
+      "checkIdDigest": "f6151b131c054a1ba72cabf5eed0bf303bd9e9ba909a8bfb6ad4bb9f189eee9c",
+      "allCurrentAssertionsPassed": true
+    },
+    "previous": {
+      "file": "build/scope-0.5-original-report.json",
+      "sha256": "82525e77b7a902726b8780f6855715779f4cadca3f19079737413f437619d2a5",
+      "bytes": 13424115,
+      "checks": 177,
+      "passed": 155,
+      "failed": 22,
+      "checkIdDigest": "506442f1e9e6e6bec4ac6a0b9b91177bedb86597190d3adbdca5482e64d8250f",
+      "allCurrentAssertionsPassed": false,
+      "failedIds": [
+        "View/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "View/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Text/default/0/mount/No case fails and the host reports nothing",
+        "Text/default/0/mount/Each refused prop's default leaves the host exactly as the baseline has it",
+        "Text/default/0/update/No case fails and the host reports nothing",
+        "Text/default/0/update/Each refused prop's default leaves the host exactly as the baseline has it",
+        "Pressable/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Pressable/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Pressable/undeclared/0/mount/Every ignored prop leaves the host exactly as the baseline has it",
+        "Pressable/undeclared/0/update/Every ignored prop leaves the host exactly as the baseline has it",
+        "Image/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Image/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Modal/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "Modal/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ActivityIndicator/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ActivityIndicator/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/0/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/0/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/1/mount/Each refused prop fails in its own boundary with the error of the table and mounts nothing",
+        "ScrollView/refused/1/update/Each refused prop fails in its own boundary with the error of the table and mounts nothing"
+      ],
+      "skippedProps": [
+        {
+          "component": "Modal",
+          "prop": "animationType"
+        },
+        {
+          "component": "Modal",
+          "prop": "presentationStyle"
+        },
+        {
+          "component": "Modal",
+          "prop": "statusBarTranslucent"
+        },
+        {
+          "component": "Modal",
+          "prop": "navigationBarTranslucent"
+        },
+        {
+          "component": "Modal",
+          "prop": "hardwareAccelerated"
+        },
+        {
+          "component": "Modal",
+          "prop": "allowSwipeDismissal"
+        }
+      ]
+    },
+    "comparison": {
+      "file": "build/scope-0.5-comparison.json",
+      "sha256": "e0b141e4d5b192e48303b01ed206e05357843ba81448cbb37edc86a3087ff400"
+    },
+    "sabotage": {
+      "file": "build/scope-0.5-sabotage.json",
+      "sha256": "662cbf206255c76fed08a39c29a16bd9fe96a49aedb40c66be7202984fb2214f",
+      "bytes": 3187
+    }
+  },
+  "comparison": {
+    "scenario": "native-scope-0.5",
+    "originalControlPresent": true,
+    "sameHostRequired": true,
+    "current": {
+      "checks": 181,
+      "nativeHostSha256": "81dd68117d2da83b58046422cc9cc73a6184bb8ec6fb6cc7a6839cf23d04565e",
+      "outcome": {
+        "refusedCases": 248,
+        "ignoredCases": 650,
+        "allowedCases": 4,
+        "defaultCases": 150,
+        "undeclaredCases": 124
+      }
+    },
+    "original": {
+      "checks": 177,
+      "failed": 22,
+      "nativeHostSha256": "81dd68117d2da83b58046422cc9cc73a6184bb8ec6fb6cc7a6839cf23d04565e",
+      "previousSdk": {
+        "commit": "e1c7a39",
+        "pins": {
+          "src/react-native-platform.jsx": "c077b25f5f724c36028eb91e25e11d9f4584d73ed1d4b0a8da8cb27f7b477313",
+          "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+          "src/text.jsx": "b78806e98d64ce5dac8eddefd22dabc81aede2c3a74838577e25021354223f8b",
+          "src/image-contract.mjs": "22cfd6bceb9b731f29efa34ca5386b029a8ce07d3bf351c9f7ec5cb12352ab4b"
+        }
+      }
+    }
+  },
+  "retainedSabotages": {
+    "format": "godot-fabric.scope-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "src/react-native-platform.jsx": "935191a57c50174f4e77b9d78bb9fc295e17ee60f434e4f5a0402587efcdf157",
+        "src/components.jsx": "2f8f8404609c9f2fc5f1da40eb81a10ca01190f9c9aeb2316b095d3fd65ae331",
+        "src/scroll-view-contract.mjs": "e0a5af0cdb9ad43ecdf7e4a92e24eb5ac2f43bb14bbc99bdf9915607c3da3fd4",
+        "src/prop-scope.mjs": "90b9376208b362bd7f36c09dbb0fc634c92d3718f6939f0107cf0c2b4a0b3984",
+        "docs/compatibility/scope-0.5.json": "31cb52199e1c9bc29e059ae33f1d16375a5faaef6b1f5c8c5f95623db54cfd14"
+      },
+      "restored": {
+        "src/react-native-platform.jsx": "935191a57c50174f4e77b9d78bb9fc295e17ee60f434e4f5a0402587efcdf157",
+        "src/components.jsx": "2f8f8404609c9f2fc5f1da40eb81a10ca01190f9c9aeb2316b095d3fd65ae331",
+        "src/scroll-view-contract.mjs": "e0a5af0cdb9ad43ecdf7e4a92e24eb5ac2f43bb14bbc99bdf9915607c3da3fd4",
+        "src/prop-scope.mjs": "90b9376208b362bd7f36c09dbb0fc634c92d3718f6939f0107cf0c2b4a0b3984",
+        "docs/compatibility/scope-0.5.json": "31cb52199e1c9bc29e059ae33f1d16375a5faaef6b1f5c8c5f95623db54cfd14"
+      }
+    },
+    "variants": [
+      {
+        "name": "updates",
+        "file": "src/react-native-platform.jsx",
+        "find": "  checkProps(\"View\", props);\n",
+        "replace": "  React.useState(() => checkProps(\"View\", props));\n",
+        "sourceSha256": "ef238afeb96dc0e6b8edac9d6d28e6ea0e0d36d773a3e9490d0efced98df2597",
+        "nativeRejected": true,
+        "jsLaneRejected": false
+      },
+      {
+        "name": "undeclared",
+        "file": "src/components.jsx",
+        "find": "} = declaredProps(\"Pressable\", allProps);",
+        "replace": "} = allProps;",
+        "sourceSha256": "403919e5b73b0be0d2449ea425ff60ff503d6aad96c7d14a2e49462c9e6c7e21",
+        "nativeRejected": true,
+        "jsLaneRejected": true
+      },
+      {
+        "name": "modal",
+        "file": "src/react-native-platform.jsx",
+        "find": "  checkProps(\"Modal\", props);\n",
+        "replace": "",
+        "sourceSha256": "046ed74a038a5f97ceb8cf4fd83b91ecd13c81fce4be64ba6b7d7659c6913b1e",
+        "nativeRejected": true,
+        "jsLaneRejected": true
+      },
+      {
+        "name": "scroll",
+        "file": "src/scroll-view-contract.mjs",
+        "find": "  checkProps(\"ScrollView\", props);\n",
+        "replace": "",
+        "sourceSha256": "d28ba7d1be021c16eaac606ac220e8cc5aeb5cdb755547da33b67d0f66411f94",
+        "nativeRejected": true,
+        "jsLaneRejected": true
+      },
+      {
+        "name": "defaults",
+        "file": "src/prop-scope.mjs",
+        "find": "!(entry.accepts ?? []).some(works",
+        "replace": "!(entry.accepts ?? []).slice(1).some(works",
+        "sourceSha256": "877a4092559af45e9e42e7de17807161e5be3504c3e66da4574083ea2c829803",
+        "nativeRejected": true,
+        "jsLaneRejected": true
+      },
+      {
+        "name": "reason",
+        "file": "docs/compatibility/scope-0.5.json",
+        "find": "\"reason\": \"iOS calls it after the modal is dismissed and Modal.js calls it on iOS only\"",
+        "replace": "\"reason\": \"\"",
+        "sourceSha256": "bbfacdf47c3125a1f8160d5c30cee3481357c0ea089fbea14fd1709e05722a15",
+        "nativeRejected": true,
+        "jsLaneRejected": true
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/scope-0.5-oracle.mjs",
+    "independence": "Written apart from the probe and from the module: it recomputes every expectation from the inventory of the props and the manifest JSON and imports neither src/prop-scope.mjs nor the fixture",
+    "expectedCheckCount": 181
+  },
+  "hostBinary": {
+    "file": "addons/fabric_godot.dylib",
+    "sha256": "81dd68117d2da83b58046422cc9cc73a6184bb8ec6fb6cc7a6839cf23d04565e",
+    "bytes": 6625024,
+    "note": "the same host ran the current lane and the control, so the only difference between them is the SDK in src/"
+  },
+  "bundle": {
+    "currentProbeSha256": "9d2e45876d4161a42836817f4e2b71e9cb26ebdec8031c990c529f6e536d5b6f",
+    "format": "godot-fabric.native-probe-bundle/v1"
+  },
+  "openItems": [
+    {
+      "id": "scrollview-26-props-refuse-the-default",
+      "owner": "GF-14",
+      "decision": "kept as the original ScrollView (#58) had it; changing it is outside this slice",
+      "meaning": "these 26 ScrollView props refuse every value that is not null or undefined, the value RN uses when the prop is absent included",
+      "props": [
+        "contentInset",
+        "contentInsetAdjustmentBehavior",
+        "decelerationRate",
+        "directionalLockEnabled",
+        "endFillColor",
+        "experimental_endDraggingSensitivityMultiplier",
+        "fadingEdgeLength",
+        "indicatorStyle",
+        "keyboardShouldPersistTaps",
+        "maintainVisibleContentPosition",
+        "maximumZoomScale",
+        "minimumZoomScale",
+        "onKeyboardDidHide",
+        "onKeyboardDidShow",
+        "onKeyboardWillHide",
+        "onKeyboardWillShow",
+        "onScrollToTop",
+        "refreshControl",
+        "scrollIndicatorInsets",
+        "scrollPerfTag",
+        "scrollsChildToFocus",
+        "snapToAlignment",
+        "snapToEnd",
+        "snapToInterval",
+        "snapToStart",
+        "zoomScale"
+      ],
+      "values": 21,
+      "handlers": 5
+    },
+    {
+      "id": "scrollview-sabotage-crashes-the-host",
+      "status": "reproduced, not fixed",
+      "case": {
+        "component": "ScrollView",
+        "prop": "maintainVisibleContentPosition",
+        "value": true,
+        "phase": "mount",
+        "tableIndex": 39,
+        "lastGroupDriven": "ScrollView/refused/39 case remount=true"
+      },
+      "jsCaller": "node_modules/react-native/Libraries/Renderer/implementations/ReactFabric-prod.js:7104 (createNode in the completeWork of a new host component)",
+      "nativeCause": "node_modules/react-native/ReactCommon/react/renderer/components/scrollview/conversions.h:96-98 casts the RawValue to std::unordered_map<std::string, RawValue> with no type check; a value that is not an object reaches hermes::vm::getForInPropertyNames and the host dies with signal 11",
+      "stack": [
+        "hermes::vm::getForInPropertyNames",
+        "facebook::hermes::HermesRuntimeImpl::getPropertyNames",
+        "facebook::react::BaseScrollViewProps::setProp (symbolized as parsePlatformColor, the nearest exported symbol)",
+        "facebook::react::UIManager::createNode"
+      ],
+      "validObjectDoesNotCrash": {
+        "value": {
+          "minIndexForVisible": 0
+        },
+        "steps": 332
+      },
+      "notDriven": "the 18 refused cases after the 40th (maximumZoomScale to refreshing), and the update of this prop",
+      "withThePolicyOn": "maintainVisibleContentPosition is one of the 26 props that refuse every non-null value, so the value never reaches the C++",
+      "reproduction": [
+        "node scripts/scope-scroll-crash.mjs",
+        "node scripts/scope-scroll-crash.mjs maintainVisibleContentPosition",
+        "node scripts/scope-scroll-crash.mjs maintainVisibleContentPosition '{\"minIndexForVisible\":0}'"
+      ],
+      "script": {
+        "file": "scripts/scope-scroll-crash.mjs",
+        "sha256": "7c25683585bf43d990b42655afdfda70a9cf52f79734d744866c083b2ae96a39",
+        "note": "written after the implementation commit; not in the commit's tree and not an input of any lane"
+      },
+      "restoreCheck": {
+        "file": "src/scroll-view-contract.mjs",
+        "sha256": "e0a5af0cdb9ad43ecdf7e4a92e24eb5ac2f43bb14bbc99bdf9915607c3da3fd4",
+        "equalsCommitted": true
+      }
+    }
+  ],
+  "firstPassFailures": {
+    "refused props that RN's own components inject": "the first classification refused focusable (TouchableWithoutFeedback), accessibilityValue (TouchableNativeFeedback) and onFocusCapture (VirtualizedList cells); test:touchables, test:lists, test:examples and test:os-contracts failed. They became ignored by decision, registered as a divergence",
+    "stale controls in build/": "controls and sabotage reports of other slices (animated, images, images-network, images-visual, frame-clock, networking, websocket) failed 'the same bundle runs on every host' after the host was rebuilt for the merge of main; they were moved to build/stale-by-frontier-scope/ and the lanes rerun green",
+    "the control host": "the first previous-lane run died at supportedOrientations: true, which the host of main refuses from inside the mount; the Modal props the host refuses itself are skipped in that lane only",
+    "the scroll sabotage": "the crash of the host made the lane read the sabotage as 'not rejected'; a run that leaves no report and has Program crashed in the log now counts as rejected"
+  },
+  "sourcePins": {
+    ".fallowrc.json": "d70b7cc66d6fb76d3e60dc7eed46a84c0724e08ab8a36dc8c0d2f0e182fdbef3",
+    ".github/workflows/contracts.yml": "98e053af8c777282c62179c52cc8f8b441bd8cfaead6b74b746580ef7df66766",
+    "docs/compatibility/scope-0.5.json": "31cb52199e1c9bc29e059ae33f1d16375a5faaef6b1f5c8c5f95623db54cfd14",
+    "package.json": "1cb808e1a71fdaa320b0ab255decc45a67e0d52ccbfcc574173e465f0e38fb15",
+    "scripts/scope-bundle.mjs": "fd3cdc7f6fe8a045a5fd5a2af7003911c8e5357ffb20e5a83ff605f25e28a80f",
+    "scripts/scope-manifest.mjs": "28c0ee702fe3706699d02842213587b712a641ab270bb477c9beafad29f6126b",
+    "scripts/scope-sabotage.mjs": "58f43795d91c9861bd90ce53788fb714c5063a28af903ce72b547dcc8c73a7ba",
+    "scripts/scroll_validation.gd": "c20295435aef96332a755a9a1482740cfc0e2b20b805d3582cae398e3b62bf4b",
+    "src/components.jsx": "2f8f8404609c9f2fc5f1da40eb81a10ca01190f9c9aeb2316b095d3fd65ae331",
+    "src/image-contract.mjs": "2b2373b33f77adb3b966c41c943ab2ead491e1464f2b6f69b739a49a9d3993cd",
+    "src/prop-scope.mjs": "90b9376208b362bd7f36c09dbb0fc634c92d3718f6939f0107cf0c2b4a0b3984",
+    "src/react-native-platform.jsx": "935191a57c50174f4e77b9d78bb9fc295e17ee60f434e4f5a0402587efcdf157",
+    "src/scroll-view-contract.mjs": "e0a5af0cdb9ad43ecdf7e4a92e24eb5ac2f43bb14bbc99bdf9915607c3da3fd4",
+    "src/text.jsx": "b22bcffd45fc09569aef01682ab121393d7caac3a74f7f9bd3b4f08e63bfbe68",
+    "tests/scope-0.5-fixture.jsx": "b6a6a726ac2448ac82cd3e5f16a6a7a437f9115ee29f2fa0a7805dd810bf18c6",
+    "tests/scope-0.5-native.test.mjs": "0cf79cb7859654976d927090af418e360b112fde0a26fa4cbbec109e8191a438",
+    "tests/scope-0.5-oracle.mjs": "454161970a0933b2363aa3a07b6408cc07247bc95f9e8b855650883b8f0666eb",
+    "tests/scope-0.5-probe.gd": "5c5b6039864c92528e025085f92ff802c1be28667fd1b79c0589e2e29d202c0d",
+    "tests/scope-0.5-types.mjs": "6e13750fc467ac85d09b3c943d9c0970fc064357bfeb42598bef3e63ec58d0fd",
+    "tests/scope-0.5.test.mjs": "bf8f2c2501a62490e3d13a2235303bed41fa7276b4b4731aedcca1464337a228",
+    "tests/scroll-view-contract.test.mjs": "f168dea6e8444bace8385873891556d2c1d2c7cce3e6090cc348604e7cf1a1e5",
+    "tests/types/consumer.tsx": "c03fb7a5130a13190b779bcc54982fde7181335ede91346542ca42a458079fc7",
+    "types/react-native.ts": "22e35f9f23f0165471c14f23882fdbc92046f15391953ac455368d602c27b24d"
+  },
+  "verificationSourcePins": {
+    "docs/compatibility/contracts-0.87.1.json": "15bdd7e77d4538d91dc904058d0b8b97de7093cf79825353ea83a73fe609bd91",
+    "docs/compatibility/react-native-0.87.1.json": "e6757d037c9539489531a06ed31d33c2d537c5aa414d8ce4e3336e82a7af51b6",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "src/list-props.mjs": "1f18f3ab95a2ec2313c2b0a1d4e72caed64916d461fecdd1557d7be762a56255",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+    "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a"
+  },
+  "originalReactNativeSources": {
+    "@react-native/virtualized-lists/Lists/VirtualizedListCellRenderer.js": "9e0a68a1892005375d8b7c7eda791c1d92b2a0ba17b3c44ba50989798e6904c7",
+    "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator.js": "276303a2c3f0459c462a06775509a73170c36eead3cd9ad28597f9707702fca1",
+    "react-native/Libraries/Components/Pressable/Pressable.js": "af258af1c382f4e5ba450a2b53d20b330cbeaee427c3dbb71e8c88a1dca11a1f",
+    "react-native/Libraries/Components/ScrollView/ScrollView.js": "2255279c0a1055c2b594a381e4817b1b9931fdb069272e63fff11086363e02cc",
+    "react-native/Libraries/Components/Touchable/TouchableNativeFeedback.js": "23c72a2a102bfade312de23aba5e6fc97cadaca1804bc3463bdb32ad7311ddfa",
+    "react-native/Libraries/Components/Touchable/TouchableOpacity.js": "d1e90d0d5846866ccb1cc5ab35c6775379c2deb39bcd2c3e38c0a7b0d1fcd4bb",
+    "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback.js": "94ad7a089f1c9ebdd7e23acd5b1c8135c056fea9bc554f60730c070869ae0080",
+    "react-native/Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "react-native/Libraries/Image/Image.ios.js": "a23f5593958646ac0d61168219723f60987018c1696d481afa56bc2dc9330d26",
+    "react-native/Libraries/Image/ImageViewNativeComponent.js": "f7b4eeac6d29ae75d731f2bc5897bf71cd68ca8bc77c54085937c740706f2514",
+    "react-native/Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+    "react-native/Libraries/NativeComponent/BaseViewConfig.ios.js": "957a3dbf606155b1664ea04a0f1888cc2a41bdcc1fd4db8c9c7932395e0dc394",
+    "react-native/Libraries/Text/Text.js": "953284065228869852d6c16cebc5cd69fa810f81ed1ce57e4b7d9c746eda154a",
+    "react-native/Libraries/Text/TextNativeComponent.js": "3e783f0b9fcf2e2905d4be23449c77970d29de39755b966cdd259b2f671d5740",
+    "react-native/Libraries/Text/TextProps.js": "c44f742ca010685634a2696d94b89e0690b0e88a56729029488b166ecab3c017",
+    "react-native/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "react-native/ReactCommon/react/renderer/attributedstring/ParagraphAttributes.h": "b0b21b53abbc2fa48e91ee51cbd2a0a644e71e1fa8360c2ea14d91a0b7e30fcc",
+    "react-native/ReactCommon/react/renderer/components/view/AccessibilityProps.h": "d0b149c5849663e649553b96b2470f3d2609bd4ae1cd4f278565649258f7fba1",
+    "react-native/ReactCommon/react/renderer/components/view/BaseViewProps.h": "e208193ef8c6bfcaa2616aca1819c5d7c7774bfe33ad83f5adae7ef8555e2036",
+    "react-native/ReactCommon/react/renderer/components/view/platform/android/react/renderer/components/view/HostPlatformViewProps.cpp": "295cc976a3665419620dae2a9be0d40512d6f51566c648fa0da07773bf6bd445",
+    "react-native/src/private/components/modal/specs/RCTModalHostViewNativeComponent.js": "d8458e8b7a9036589f4633f8289d58bdcb6bfdba9716b7fcb8b03101e1b064cd",
+    "react-native/ReactCommon/react/renderer/components/scrollview/conversions.h": "e5b10ef080cdc68187d7e5f56c2d78884b94d101cabce8a844fb0efdbd8c7f02",
+    "react-native/Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+  },
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the SHA-256 of the file in the tree the lanes ran from",
+    "sourcePins": 23,
+    "verificationSourcePins": 9,
+    "originalReactNativeSources": 23,
+    "mismatches": [],
+    "executedFromTheCommittedTree": true
+  },
+  "departuresFromRN": [
+    "Props that RN's own components inject into a public View (focusable, accessibilityValue, onFocusCapture and the rest of the accessibility and focus props) are ignored by decision instead of refused, so that RN's touchables and lists keep working (docs/research/accessibility.md)",
+    "The ScrollView accepts the host-neutral request of a behavior prop it cannot honor (bounces false), not RN's default (true on iOS), as the original ScrollView of #58 did",
+    "A hover prop on the Pressable fails with 'Godot Pressable does not implement onHoverIn/onHoverOut', the text of every refusal, and no longer with 'hover events are not implemented yet'"
+  ],
+  "limits": [
+    "The run is local, macOS arm64 and headless; there is no hosted CI run and no Pages publication yet",
+    "No screenshot: the slice has no visual output, and no pixel is compared",
+    "Nothing was compared with an iOS device or simulator; the decisions follow RN's pinned sources, not a differential",
+    "The retained scroll sabotage ends in a host crash, so the cases after the 40th ScrollView refusal were not driven under it",
+    "The control depends on the host of main having been built from the committed sources of e1c7a39 and on the same host running both lanes",
+    "No 1.0 checkpoint, weight or denominator moves; the dashboard is not edited by this record"
+  ],
+  "gates": {
+    "ranAt": "2026-10-08T19:33:40Z",
+    "meaning": "Gates that read documents, on the tree that holds this record: the implementation commit e33817e plus docs/API.md, docs/PARITY.md, ROADMAP.md, docs/evidence/frontier-scope and scripts/scope-scroll-crash.mjs (no other executed source differs from the commit). The lanes ran on the code tree of e33817e and are in commands",
+    "steps": {
+      "check:publication": "passed",
+      "check:static": "passed",
+      "test:dashboard": "passed",
+      "test:contracts": "passed"
+    },
+    "counts": {
+      "contractsNodeTests": [
+        7,
+        43,
+        334
+      ],
+      "contractsPythonTests": 13,
+      "dashboardTests": 43,
+      "staticAnalysis": "fallow: no issues",
+      "publicationScan": "1678 files, no failures",
+      "parityInventory": "8113 contracts, 97 public values"
+    },
+    "dashboard": "dashboard/migration.json was not touched (git status shows no change to it)"
+  }
+}

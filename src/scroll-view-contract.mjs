@@ -1,77 +1,11 @@
 import {listOnlyProps} from "./list-props.mjs";
+import {checkProps} from "./prop-scope.mjs";
 
-// Values describe the only request that is neutral for the host. `rejectAny`
-// keeps behavior-bearing props fail-closed; `emptyArray` covers opt-in lists
-// with no configured entries. Keep this as the canonical public prop policy.
-const rejectAny = Symbol("reject-any-non-null");
-const emptyArray = Symbol("empty-array-is-neutral");
-const unsupportedProps = new Map([
-  ["alwaysBounceHorizontal", false],
-  ["alwaysBounceVertical", false],
-  ["automaticallyAdjustContentInsets", false],
-  ["automaticallyAdjustKeyboardInsets", false],
-  ["automaticallyAdjustsScrollIndicatorInsets", false],
-  ["bounces", false],
-  ["bouncesZoom", false],
-  ["canCancelContentTouches", true],
-  ["centerContent", false],
-  ["contentInset", rejectAny],
-  ["contentInsetAdjustmentBehavior", rejectAny],
-  ["decelerationRate", rejectAny],
-  ["disableIntervalMomentum", false],
-  ["disableScrollViewPanResponder", false],
-  ["directionalLockEnabled", rejectAny],
-  ["endFillColor", rejectAny],
-  ["experimental_endDraggingSensitivityMultiplier", rejectAny],
-  ["fadingEdgeLength", rejectAny],
-  ["indicatorStyle", rejectAny],
-  ["keyboardDismissMode", "none"],
-  ["keyboardShouldPersistTaps", rejectAny],
-  ["maintainVisibleContentPosition", rejectAny],
-  ["maximumZoomScale", rejectAny],
-  ["minimumZoomScale", rejectAny],
-  ["nestedScrollEnabled", false],
-  ["onScrollToTop", rejectAny],
-  ["onKeyboardDidShow", rejectAny],
-  ["onKeyboardDidHide", rejectAny],
-  ["onKeyboardWillShow", rejectAny],
-  ["onKeyboardWillHide", rejectAny],
-  ["overScrollMode", "never"],
-  ["pagingEnabled", false],
-  ["pinchGestureEnabled", false],
-  ["persistentScrollbar", true],
-  ["refreshControl", rejectAny],
-  ["scrollToOverflowEnabled", false],
-  ["scrollsToTop", false],
-  ["scrollIndicatorInsets", rejectAny],
-  ["scrollPerfTag", rejectAny],
-  ["scrollsChildToFocus", rejectAny],
-  ["removeClippedSubviews", false],
-  ["snapToAlignment", rejectAny],
-  ["snapToInterval", rejectAny],
-  ["snapToOffsets", emptyArray],
-  ["snapToStart", rejectAny],
-  ["snapToEnd", rejectAny],
-  ["stickyHeaderIndices", emptyArray],
-  ["zoomScale", rejectAny],
-]);
-
-function isRequested(neutral, value) {
-  if (value == null) return false;
-  if (neutral === rejectAny) return true;
-  if (neutral === emptyArray)
-    return !Array.isArray(value) || value.length > 0;
-  return !Object.is(value, neutral);
-}
-
+// What the public ScrollView takes of RN's ScrollViewProps. Which props are honored, ignored or refused (and the one request of a
+// refused prop that passes) is decided once per prop in src/prop-scope.mjs, which the check below runs first; what stays here
+// is the checking of the values of the props the host does honor, and the props of the lists that the host would not know.
 export function prepareScrollViewProps(props) {
-  if (props.onRefresh != null || props.refreshing === true)
-    throw new Error("Godot ScrollView refreshControl is not implemented");
-
-  for (const [name, value] of Object.entries(props)) {
-    if (unsupportedProps.has(name) && isRequested(unsupportedProps.get(name), value))
-      throw new Error(`Godot ScrollView ${name} is not implemented`);
-  }
+  checkProps("ScrollView", props);
   if (props.contentOffset != null) {
     const offset = props.contentOffset;
     if (typeof offset !== "object" || Array.isArray(offset))
