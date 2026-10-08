@@ -1,5 +1,15 @@
 # Listas virtualizadas no ScrollView do SDK
 
+A integração mais recente do ScrollView é `2a01ec6`, com a main de Images
+#64. Nesse host, `78707871`, a regressão de listas passa os 44 checks e o
+oráculo independente confere os estados medidos. Os controles foram refeitos:
+o SDK anterior falha os 11 checks previstos entre 16 executados; a sabotagem
+falha exatamente três checks e é rejeitada pelo oráculo. Controles de um host
+anterior são preservados à parte e não entram como prova desta execução.
+Os [recibos atuais](../scroll-view/pointer-route-capture-retirement.json) e o
+[mapa de produtores](../scroll-view/committed-source-2a01ec6.json) registram a
+identidade. CI, revisão final e aceite do ScrollView permanecem pendentes.
+
 Esta fatia troca os placeholders `FlatList` e `VirtualizedList` do SDK pelos
 módulos originais do RN 0.87.1 — `FlatList`, `SectionList`, `VirtualizedList` e
 `VirtualizedSectionList` —, lidos pelo import público `react-native` e

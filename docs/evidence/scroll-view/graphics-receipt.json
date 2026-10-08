@@ -2,6 +2,115 @@
   "schemaVersion": 1,
   "status": "verified",
   "scenario": "gf14-scroll-view-graphical-capture",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "before": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+    "after": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+    "unchanged": true
+  },
+  "buildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b",
+    "afterSha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b",
+    "unchanged": true
+  },
+  "bundle": {
+    "path": "build/scroll-view-gf14-probe.js",
+    "before": "9be2f9b5815707d1fc9c40f389d5454901db6aafe00a27e51694a0929233df90",
+    "after": "9be2f9b5815707d1fc9c40f389d5454901db6aafe00a27e51694a0929233df90",
+    "unchanged": true
+  },
+  "bundleReceipt": {
+    "path": "build/scroll-view-gf14-probe-bundle.json",
+    "sha256": "b61f42adc7434185e7749cdbec70810feacb69200b89126571001e1453ec516d",
+    "afterSha256": "b61f42adc7434185e7749cdbec70810feacb69200b89126571001e1453ec516d",
+    "unchanged": true
+  },
+  "probe": {
+    "originalPath": "tests/scroll-view-graphics-probe.gd",
+    "originalSha256": "1ec039f2c3c3a3149c18c08201a89b3fe0a5f2e64f66548284fc016257ca3001",
+    "executedCopyPath": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-probe.gd",
+    "executedCopySha256": "4bd64b9fba10022eb7e3966613aebd1b907db4fcae2f5f1a72b2c3aa018f0752",
+    "onlyDifference": "CAPTURE_DIR points to this ignored output folder"
+  },
+  "report": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-report.json",
+    "sha256": "cc9f5408da3ab063bb48049c655dc1b4dd353d202fb1e074d89fb4e001c47db3"
+  },
+  "checks": [
+    {
+      "name": "initial frame contains both mounted roots at expected viewport size",
+      "passed": true
+    },
+    {
+      "name": "fractional paint and RN measurement remain aligned at 13.25 px",
+      "passed": true
+    },
+    {
+      "name": "horizontal pan paints inside the viewport and clips blue content outside it",
+      "passed": true
+    },
+    {
+      "name": "both roots and all pointer/runtime ownership are empty after stop",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/initial.png",
+      "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
+      "bytes": 13524,
+      "trackedPath": "docs/evidence/scroll-view/captures/initial.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/fractional-13_25.png",
+      "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
+      "bytes": 12671,
+      "trackedPath": "docs/evidence/scroll-view/captures/fractional-13_25.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/horizontal-pan-clipped.png",
+      "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
+      "bytes": 12669,
+      "trackedPath": "docs/evidence/scroll-view/captures/horizontal-pan-clipped.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/cleanup.png",
+      "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
+      "bytes": 2205,
+      "trackedPath": "docs/evidence/scroll-view/captures/cleanup.png"
+    }
+  ],
+  "log": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics.log",
+    "sha256": "b84dda04aeed4be76f3bbbe1db285688c75f497d55fd3a0d65f099668c505df8"
+  },
+  "limitations": [
+    "Godot macOS windowed run only; no physical mobile or hardware touch claim."
+  ],
+  "sourceCommit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+  "rawExecutionReceipt": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/graphics-receipt.json",
+    "sha256": "2d49ed9bf09a476c04ed49a782abec063a39b2ef27cdd929a380ed6934ee8071"
+  },
+  "measurements": {
+    "fractional": {
+      "logicalY": 13.25,
+      "fabricY": 13.25,
+      "paintedY": -13.25,
+      "measuredRowY": 10.75
+    },
+    "horizontal": {
+      "logicalX": 540,
+      "fabricX": 540,
+      "paintedX": -540,
+      "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
+      "insidePixel": "(0.1137, 0.3059, 0.8471, 1.0)",
+      "outsidePixel": "(0.9608, 0.9725, 0.9804, 1.0)"
+    }
+  },
+  "allFourCapturesViewedByRoot": true,
+  "executedCopyDiffVerified": "Exactly CAPTURE_DIR; original and actual executed copy hashed separately.",
   "engine": {
     "build": "official",
     "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
@@ -15,135 +124,6 @@
   },
   "displayServer": "macOS",
   "renderer": "gl_compatibility",
-  "command": "Godot --path <checkout> --windowed --script res://tests/scroll-view-graphics-probe.gd",
-  "host": {
-    "path": "addons/fabric_godot.dylib",
-    "expectedSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
-    "beforeSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
-    "afterSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
-    "unchanged": true
-  },
-  "buildReceipt": {
-    "path": ".deps/build/native-sdk-build.json",
-    "sha256": "4f3cd1173d8afff4f275e4dca8c2355fe52460b9abb257e8f7b0b631643e856d",
-    "unchanged": true,
-    "recordedHostMatches": true
-  },
-  "bundle": {
-    "path": "build/scroll-view-gf14-probe.js",
-    "expectedSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
-    "beforeSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
-    "afterSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
-    "unchanged": true
-  },
-  "bundleReceipt": {
-    "path": "build/scroll-view-gf14-probe-bundle.json",
-    "sha256": "069d02eaf8da75e42500f334662f7ea7865ab5bdcc008a001764d76a12f1830b",
-    "unchanged": true
-  },
-  "probe": {
-    "path": "tests/scroll-view-graphics-probe.gd",
-    "sha256": "1ec039f2c3c3a3149c18c08201a89b3fe0a5f2e64f66548284fc016257ca3001"
-  },
-  "runner": {
-    "path": "scripts/scroll-view-graphics.mjs",
-    "sha256": "b92a862e2d7bc5953998108b7826a07f18ff9f84a5ab107896c544a589313fe6"
-  },
-  "report": {
-    "path": "build/scroll-view-graphics-report.json",
-    "sha256": "0f7b7599e4c4835dc1995fe4f6d93da69b480bddbcd27d73ea1bf8d079dbb02c"
-  },
-  "checks": [
-    {
-      "name": "initial frame contains both mounted roots at expected viewport size",
-      "passed": true,
-      "viewport": "(840, 420)",
-      "maxY": 590
-    },
-    {
-      "name": "fractional paint and RN measurement remain aligned at 13.25 px",
-      "passed": true,
-      "offsetY": 13.25,
-      "fabricY": 13.25,
-      "paintedContentY": -13.25,
-      "measuredRowY": 10.75
-    },
-    {
-      "name": "horizontal pan paints inside the viewport and clips blue content outside it",
-      "passed": true,
-      "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
-      "offsetX": 540,
-      "fabricX": 540,
-      "paintedContentX": -540,
-      "pixelInsideViewport": "(0.1137, 0.3059, 0.8471, 1.0)",
-      "pixelOutsideViewport": "(0.9608, 0.9725, 0.9804, 1.0)"
-    },
-    {
-      "name": "both roots and all pointer/runtime ownership are empty after stop",
-      "passed": true,
-      "afterStop": {
-        "stopped": true,
-        "rootCount": 0,
-        "pendingWork": 0,
-        "pendingTimers": 0,
-        "pendingAnimationFrames": 0,
-        "pointerRouting": {
-          "active": 0,
-          "contacts": 0,
-          "stored": 0,
-          "suppressed": 0
-        },
-        "pointerProcessor": {
-          "active": 0,
-          "activeCapture": 0,
-          "pendingCapture": 0
-        },
-        "surfaces": [
-          {
-            "nativeTags": 0,
-            "retiringTags": 0,
-            "activePointers": 0,
-            "activeTouches": 0,
-            "takenPointers": 0
-          },
-          {
-            "nativeTags": 0,
-            "retiringTags": 0,
-            "activePointers": 0,
-            "activeTouches": 0,
-            "takenPointers": 0
-          }
-        ]
-      }
-    }
-  ],
-  "captures": [
-    {
-      "path": "docs/evidence/scroll-view/captures/initial.png",
-      "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
-      "bytes": 13524
-    },
-    {
-      "path": "docs/evidence/scroll-view/captures/fractional-13_25.png",
-      "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
-      "bytes": 12671
-    },
-    {
-      "path": "docs/evidence/scroll-view/captures/horizontal-pan-clipped.png",
-      "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
-      "bytes": 12669
-    },
-    {
-      "path": "docs/evidence/scroll-view/captures/cleanup.png",
-      "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
-      "bytes": 2205
-    }
-  ],
-  "log": {
-    "path": "build/scroll-view-graphics.log",
-    "sha256": "ecf6137e477bfd54eb4eb0d965849d27dc50d0a5e40582711844e5d2b6eef205"
-  },
-  "limitations": [
-    "Godot macOS windowed run only; no physical hardware touch or mobile-export claim."
-  ]
+  "mode": "windowed",
+  "reproduce": "Godot --path <checkout> --windowed --script res://build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-probe.gd"
 }

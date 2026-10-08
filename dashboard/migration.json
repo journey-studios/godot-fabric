@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 #58: captura e retirement corrigidos; integração Images #64 em validação"
+    "focusTitle": "GF-14 #58: captura e retirement corrigidos, regressões Images #64 verificadas"
   },
-  "updatedAt": "2026-10-08T08:56:15.079938+00:00",
+  "updatedAt": "2026-10-08T09:13:04.810493+00:00",
   "source": {
-    "commit": "465ae7690f64773f8d97f7ed802301603f360f75",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/465ae7690f64773f8d97f7ed802301603f360f75",
-    "scope": "Correção local 465ae76 dos dois achados CodeRabbit: host b2a8 passa ScrollView33, clique8×91, listas44/OS37, AccessibilityInfo54, Animated75, exemplos35/2467, gráfica4 e contratos352Node/13Python. Esta prova antecede main fb50a32 (#64 Images de rede/cache), agora integrada para validação combinada; sem aceite antecipado. CI antiga3e cancelada por substituição. Checkpoints, milestones e dados dos demais agentes preservados.",
+    "commit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+    "scope": "Correção 465ae76 dos dois achados CodeRabbit e integração main Images #64 em 2a01ec6. Prova local host787: ScrollView33, listas44, OS37, clique8×91, Images73/rede74, controles e gráfica4; principal conferiu estados medidos e134pinsGit. Contratos352Node/13Python, static e publication passaram. CI antiga3e cancelada; CI/review do próximo head pendentes. 29/156, milestones e dados dos demais agentes preservados, sem aceite antecipado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "CI nativa do head 4a6dd92 falhou no exemplo legado de ScrollView. Correção a0f1fc7 validada: 73 checks headless, 79 com captura e repetição independente de 73 pelo principal. Estrutura RN original, bloqueio nativo explícito, animação e interrupção pela roda preservados; faixa de categorias corrigida. Suíte completa anterior ao último ajuste visual: 34 cenários/2457 checks; cenário afetado repetido no estado final. CI e CodeRabbit do novo head pendentes; GF-14 sem aceite. Correção b097fb3 e integração AccessibilityInfo em cae0d2e: oito lanes de clique 91 e 16 controles offline do oráculo; novo host b4dfdbda passa ScrollView 28/listas 44/OS 37/AccessibilityInfo 54/exemplo 73, quatro capturas conferidas. CI anterior d785 falhou em clique; nova CI pendente, sem aceite antecipado.",
+      "note": "ScrollView original RN0.87.1 implementado em revisão na #58. Correções do exemplo legado e teste de clique preservadas. Dois achados CodeRabbit reproduzidos: captura em irmão fora do Down path e rota órfã ao ocultar filho montado. Corrigidos em 465ae76; host antigo falha quatro dos 33 checks, corrigido passa 33. Main Images #64 integrada em 2a01; principal conferiu 33 checks e cleanup, listas44, OS37, clique8×91 com 26 casos por lane, Images73/rede74, controles e gráfica4. Contratos: 352 Node, 13 Python e 134 pins Git. CI/review final e aceite pendentes; GF-14 completo permanece aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4117,6 +4117,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "scroll-pointer-route-images-2a01ec6",
+      "at": "2026-10-08T09:13:04.810493+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "#58: captura em irmão e retirement de filho oculto corrigidos, com RED/GREEN medidos. Integração Images#64 em2a01 validada localmente:33/44/37, clique8×91, Images73/rede74 e quatro capturas. CI/review final pendentes;29/156 e milestone0.5 preservados, sem novo aceite.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
     {
       "id": "scroll-click-regression-accessibility-cae0d2e",
       "at": "2026-10-08T07:49:09.628742+00:00",

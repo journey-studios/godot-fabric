@@ -447,5 +447,77 @@ not certify an adapter ABI. The failed hosted run and historical successes
 remain separate from these local results. Hosted CI, new-head CodeRabbit
 review and GF-14 acceptance are still pending.
 
-See [the current integration receipt](../evidence/scroll-view/click-regression-and-accessibility-integration.json)
+See [the historical integration receipt](../evidence/scroll-view/click-regression-and-accessibility-integration.json)
 and [producer map](../evidence/scroll-view/committed-source-cae0d2e.json).
+
+## Capture authority and hidden-contact retirement
+
+CodeRabbit's two findings at `3e29553` are real. A sibling outside the Down
+path can receive capture from RN's original processor; limiting the query to
+that path lets native pan steal it. Separately, hiding a still-mounted child
+removes its PointerAdapter contact but previously left its runtime scroll
+candidate active. The principal confirmed capture loss and a 36 px offset on
+the old host, and a hidden row with the same tag, no adapter contact, an active
+route and a surviving scroll candidate. `display:none` unmounts this fixture;
+the regression uses a singular scale that actually enters subtree hiding.
+
+The structural correction in `465ae76` removes `RoutedPointer.down_path` and
+the associated out-parameter/clears. Capture is queried on the current surface
+revision through RN's existing `hasPointerCapture`, with one tree traversal
+instead of a separate owner cache or a second capture API. Physical-contact
+removal calls the existing route synchronizer immediately. Cancellation clears
+the route's scroll authority before callbacks. The extra duplicate cancellation
+on release is deleted. This removes state and redundant work rather than
+introducing feature flags into unrelated flows.
+
+EventDispatcher runs native listeners inline. Any use after dispatch or
+takeover re-resolves the route by key and identity; starting a pan also
+re-resolves its mounted adapter. Terminal cleanup cannot erase a replacement
+contact. The principal rejected an unnecessary removal boolean and an
+inconsistent terminal guard before accepting this version. No permanent change
+to the RN capture overlay or private interface is needed.
+
+The permanent probe has 33 unique checks. On `b4dfdbda`, exactly four fail:
+sibling capture retention/release, hidden touch retirement and hidden mouse
+suppression. Cleanup still succeeds. On the rebuilt `b2a8` host all 33 pass.
+An independent verifier derives the five new cases from measured booleans,
+offsets, identities, cancellations and route counts, and rejects the old report
+and nine damaged copies. Failed parser/instrumentation attempts remain distinct
+from the accepted red evidence; string capture queries in the isolated
+reproducer are not claimed as typed booleans in the permanent report.
+
+Main's Images #64 arrived before publication. Integration `2a01ec6` preserves
+the incoming Images sources, both CMake test target sets, GF-16 history, GF-18
+acceptance and unknown dashboard/milestone keys. Its new host `78707871` passes
+ScrollView 33, lists 44, OS 37, click eight lanes of 91, Images base 73 and
+network 74. Canonical SDK/sabotage controls are regenerated for the current
+host. The base Images contract expects 73; the network contract expects 74.
+Temporary native sabotage changes restore both sources and host byte for byte;
+the Images agent is informed through the board.
+
+The principal replays the measured scroll/list/OS/Images oracles, all 26 click
+cases in every lane, and all 134 native Git/source pins. A root audit that could
+skip a missing click case is corrected to iterate the required inventory and
+reject a missing-case control; 17 damaged click reports are rejected. Four
+graphical captures are viewed. The executed graphical probe copy differs only
+in `CAPTURE_DIR`; both actual and original hashes are recorded. Local gates
+pass 352 Node and 13 Python tests, static analysis and publication scanning.
+Supplemental `b2a8` runs are preserved as historical rather than silently
+relabeled with the new host.
+
+The principal also rejects a stale SDK verification-log reference in the
+Luna draft: it targeted the previous AccessibilityInfo package. The exact
+`native-sdk-scrollview-fb50` package is verified directly, and only that new
+log binds this integration. Its five external-adapter/ABI claims remain false.
+The source inventory separates producer metadata from its canonical pin map:
+218 distinct repository paths, 106 RN paths and 13 virtualized-list paths,
+without repeating source hashes per group. Both evidence files stay below
+1,000 lines; bundle metafiles record paths, not per-input byte hashes.
+
+This correction satisfies local thermo-nuclear review: cached state and
+duplicate cancellation are removed, canonical RN/route owners remain in place,
+and the new probe remains below 1,000 lines. Final-head hosted CI, CodeRabbit
+review and checkpoint acceptance still require their own evidence. The
+cancelled `3e29553` run is not accepted. See the
+[current receipt](../evidence/scroll-view/pointer-route-capture-retirement.json)
+and [committed producer inventory](../evidence/scroll-view/committed-source-2a01ec6.json).

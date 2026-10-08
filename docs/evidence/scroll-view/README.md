@@ -1,6 +1,50 @@
 # ScrollView desktop probe
 
-This is a local, headless execution record for the GF-14 desktop slice. It is
+The latest local source is `2a01ec6`, integrating the capture/route correction
+`465ae76` with main's Images network/cache PR #64. The loaded macOS host is
+`7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9`.
+Final-head hosted CI, CodeRabbit review and checkpoint acceptance are pending.
+
+| Integrated run | Result | Evidence scope |
+| --- | ---: | --- |
+| Original RN ScrollView | 33/33 | Exact inventory, measured offsets/lifecycles and complete two-root cleanup |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | Current reports and host-bound negative controls |
+| Pointer click | 8 × 91 | All 26 required cases replayed in every lane; 17 damaged reports rejected |
+| Images base / network | 73/73 / 74/74 | Independent oracles and five native sabotages; genuine sources/host restored |
+| Graphical ScrollView | 4/4 | All four captures viewed; actual executed probe copy identified |
+| Build source identity | 134 native inputs | Every pin matches the loaded-host receipt, working files and Git `2a01ec6` |
+| Local contract gates | 352 Node + 13 Python | Static and publication checks also pass |
+
+CodeRabbit found two reproducible ownership errors. A same-surface sibling
+outside the original Down path could own RN pointer capture and still lose it
+to native pan. Hiding a mounted child could remove its adapter contact while
+leaving the runtime's scroll candidate alive. On the preceding host, the
+permanent 33-case probe fails exactly four checks; the corrected host passes
+all 33. The root verifier checks typed capture booleans, the same mounted tag's
+visible-to-hidden transition, cancellation counts, retirement before later
+Move/Up, mouse suppression and a fresh 36 px pan. It rejects nine damaged
+reports independently of their `passed` flags.
+
+The correction deletes cached Down-path state and asks RN's existing capture
+authority across the current surface. Route ownership retires through the
+existing synchronization path. Reentrant native listeners require route
+key/ID and mounted-adapter relookup; no capture registry, compatibility mode
+or second offset authority is introduced.
+
+See the [current measured receipt](pointer-route-capture-retirement.json),
+[committed producer inventory](committed-source-2a01ec6.json) and
+[current graphical receipt](graphics-receipt.json). Earlier receipts below
+remain historical evidence. AccessibilityInfo, Animated and all 35 examples
+were executed on the corrected pre-Images host `b2a8`; they are explicitly
+historical, not repeated runs on `78707871`. The cancelled CI at `3e29553`
+does not accept this integration. The dashboard remains 29/156, and the full
+GF-14 contract remains open.
+
+![Registered task and coordination](agents-2a01-testing.jpg)
+
+## Historical initial desktop execution
+
+This is a preserved local, headless execution record for the GF-14 desktop slice. It is
 under review; it is not an accepted checkpoint or hosted CI result. The probe
 mounts the original React Native 0.87.1 `ScrollView` in two Fabric roots and
 checks command behavior, fractional offsets and DOM measurement, native pan and
@@ -62,7 +106,7 @@ The following identities bind the result to its inputs:
 
 The build record's host digest matches the loaded library and remained stable
 during the probe. All eight compiled native source pins in the receipt match
-the current native scroll, pointer and runtime source files. This verifies the
+the native scroll, pointer and runtime source files recorded for that execution. This verifies the
 recorded build inputs and loaded bytes; the receipt does not certify the
 experimental external SDK adapter ABI. The bundle pins the mounted fixture,
 probe and wrapper sources, plus RN's original ScrollView, command codegen,
@@ -74,7 +118,7 @@ pre-integration evidence for the earlier 22-check bundle and hosts built before
 Device Services integration. It is not a repeat of this 28-check integrated
 host. Its original artifacts remain under ignored
 `build/scroll-view-pre-integration-60fa18/`; this receipt records the integrated
-host and current sources.
+host and recorded sources.
 
 The root-owned [integrated independent receipt](root-integrated.json) preserves
 the earlier 25-check comparison: host `4f28ed0f` passes; host `60fa18ed` fails
@@ -93,13 +137,13 @@ records the 28-check run from `6b2833e` after main Images #56 and Frontier #60,
 using bundle `7944e7ca` on host `840d7f3e`. Its original identities remain
 preserved, with immutable links to its then-current receipts in `24bc971`.
 
-The current [OS-integrated independent receipt](root-os-integration.json)
+The historical [OS-integrated independent receipt](root-os-integration.json)
 records a new isolated 28-check run after main OS-specific #61 at `43d0375`.
 The host is unchanged, but the facade changes produce bundle `f2af26ef`.
 The root independently derives the interruption, diagonal, neutral-option and
 cleanup invariants, the 44-check list and sabotage oracles, Accessibility 80,
 Images 74, OS contracts 37 and all four graphical artifact identities. All four
-new captures match the historical PNG bytes; their current execution receipts
+new captures match the historical PNG bytes; their execution receipts
 bind them to the new bundle. The older negative controls retain their original
 bundles and scopes.
 
@@ -111,7 +155,7 @@ common bundler, resolver, asset tool and dependency manifests. These groups
 overlap; they are not a count of distinct compiled files. Later receipt-only
 commits do not change the tested producer sources.
 
-The [current facade regression receipt](facade-regressions-43d0375.json)
+The [historical facade regression receipt](facade-regressions-43d0375.json)
 records Accessibility 80/80, Images 74/74, Text layout 76/76, Device Services
 65/65 plus two launch checks, native modules 76/76 and Metrics/Errors 58/58.
 The root reruns the first four lanes' behavioral oracles and the launch oracle,
@@ -121,6 +165,12 @@ a new independent behavioral oracle. These are local desktop checks; the
 headless accessibility lane does not certify an OS tree or assistive hardware.
 
 ## Windowed graphical capture
+
+The captures are unchanged in the latest integrated execution. The
+[current receipt](graphics-receipt.json) hashes the actual executed probe copy
+and separately hashes its original source; their only difference is the output
+directory. The [preceding graphical receipt](graphics-receipt-pre-465ae76.json)
+is preserved for the `b4dfdbda` execution.
 
 A separate Godot macOS windowed probe executed the same host and unchanged
 GF-14 bundle. It saved the initial two-root view, the 13.25 px fractional
@@ -150,7 +200,7 @@ engine and Fabric errors.
 ## Retained negative control
 
 The dedicated list sabotage removes only `onLayout` forwarding in a temporary
-copy of the current wrapper. All 44 checks still run; exactly the initial feed
+copy of the wrapper recorded for that execution. All 44 checks still run; exactly the initial feed
 window and its derived viewability checks fail. The independent RN oracle also
 rejects the report even if its check flags are forced to “passed”. The positive
 44-check report remains intact. Reproduce with
@@ -178,7 +228,7 @@ remain open until the new head passes hosted CI and CodeRabbit acceptance.
 ![Published review progress for PR #58](dashboard-public-24bc971.jpg)
 
 The [OS-integrated publication receipt](publication-0a0aeaa.json) records the
-current 29/156 dataset from committed head `0a0aeaa`, rendered and deployed by
+then-current 29/156 dataset from committed head `0a0aeaa`, rendered and deployed by
 main workflow run `37731033472`. The uploaded artifact and public JSON match
 exactly; removing only the generated publication metadata yields the committed
 JSON. All GF-14 checkpoints remain open. Subsequent documentation-only updates
@@ -233,8 +283,8 @@ negative controls are regenerated on that host. Four fresh graphical checks
 pass; the principal views each capture, whose bytes match the prior images
 above. Contract checks pass 352 Node and 13 Python tests.
 
-The [current producer map](committed-source-cae0d2e.json) binds 127 recorded
-native inputs and the current bundle groups to committed sources: 181 distinct
+The [historical producer map](committed-source-cae0d2e.json) binds 127 recorded
+native inputs and the recorded bundle groups to committed sources: 181 distinct
 repository paths, with overlap between groups. The old 43d/123-pin proof remains
 historical. SDK packing/verification passes; its adapter and ABI certification
 claims remain false. The [correction and integration receipt](click-regression-and-accessibility-integration.json)
