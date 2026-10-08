@@ -27,6 +27,11 @@ async function existsIncludingDangling(filename) {
   catch (error) { if (error.code === "ENOENT") return false; throw error; }
 }
 
+function isPathInside(rootPath, candidatePath) {
+  const relative = path.relative(rootPath, candidatePath);
+  return relative === "" || (!path.isAbsolute(relative) && relative !== ".." && !relative.startsWith(`..${path.sep}`));
+}
+
 async function writeJson(filename, value) {
   await writeFile(filename, JSON.stringify(value, null, 2) + "\n");
 }
@@ -86,7 +91,7 @@ async function assertFrameworkSymlinksStayInside(framework) {
       const metadata = await lstat(filename);
       if (metadata.isSymbolicLink()) {
         const target = await realpath(filename);
-        assert.ok(target === rootPath || target.startsWith(rootPath + path.sep), `framework symlink escapes bundle: ${filename}`);
+        assert.ok(isPathInside(rootPath, target), `framework symlink escapes bundle: ${filename}`);
       } else if (metadata.isDirectory()) await visit(filename);
     }
   }
@@ -137,7 +142,7 @@ export function assertLocalLoadPaths(values, binary, app, label = "binary") {
     }
     const base = value.startsWith("@loader_path/") ? path.dirname(binary) : path.join(app, "Contents/MacOS");
     const resolved = path.resolve(base, suffix);
-    assert.ok(resolved === path.resolve(app) || resolved.startsWith(path.resolve(app) + path.sep), `${label} escapes the .app: ${value}`);
+    assert.ok(isPathInside(app, resolved), `${label} escapes the .app: ${value}`);
   }
 }
 
@@ -163,7 +168,7 @@ export async function auditAppLoadPaths(harness, app, binaries) {
     const suffix = load.slice("@rpath/".length);
     const candidate = path.resolve(path.dirname(host.path), "frameworks", suffix);
     const target = await realpath(candidate);
-    assert.ok(target === appRoot || target.startsWith(appRoot + path.sep), `host framework dependency escapes the app: ${load}`);
+    assert.ok(isPathInside(appRoot, target), `host framework dependency escapes the app: ${load}`);
     assert.ok((await stat(target)).isFile(), `host framework dependency is not a file inside the app: ${load}`);
   }
   return records;

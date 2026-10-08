@@ -39,6 +39,15 @@ The private baseline runner records equality values; the root review independent
 asserts all three actual byte equalities. No passing replay explains the historical
 remount failure. Hosted CI and the new delivery review remain pending.
 
+CodeRabbit's subsequent containment review consolidated the three path guards
+in one private `path.relative` predicate. Root itself and descendants are admitted;
+the parent component and sibling paths are rejected. The public load-path test
+also covers `.app/..framework`: treating every relative string that starts with
+`..` as a parent escape would incorrectly reject that valid child. The helper uses
+component boundaries instead. Portable checks pass without a real Godot binary;
+the native-export test remains an explicit skip in that lane. These runner/test
+files are outside the SDK's 220 source-pin inventory, which remains unchanged.
+
 ## Historical independent review
 
 The runner reuses the canonical consumer harness and PCK reader. Its export

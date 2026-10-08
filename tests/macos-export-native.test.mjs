@@ -94,16 +94,18 @@ test("headed consumer capture requires the fixed physical image and matching log
     consumerCaptureReport(undefined, {width: 1080, height: 600, scale: 0.5, fontScale: 2})), /geometry window metrics differ/);
 });
 
-test("load-path validation permits contained loader paths and rejects traversal", () => {
+test("load-path validation accepts app root and descendants but rejects parent and prefix siblings", () => {
   const app = path.join(os.tmpdir(), "Godot Fabric.app");
   const host = path.join(app, "Contents/Frameworks/fabric_godot.dylib");
   assert.doesNotThrow(() => assertLocalLoadPaths([
     "@rpath/hermesvm.framework/Versions/1/hermesvm", "@loader_path/frameworks",
     "@loader_path", "@executable_path",
+    "@loader_path/../..", "@loader_path/../../..framework",
     "/System/Library/Frameworks/AppKit.framework/AppKit", "/usr/lib/libSystem.B.dylib",
   ], host, app));
   assert.throws(() => assertLocalLoadPaths(["@rpath/../outside.dylib"], host, app), /unsafe @rpath traversal suffix/);
   assert.throws(() => assertLocalLoadPaths(["@loader_path/../../../../outside.dylib"], host, app), /escapes the \.app/);
+  assert.throws(() => assertLocalLoadPaths(["@loader_path/../../../Godot Fabric.app-sibling/host.dylib"], host, app), /escapes the \.app/);
   assert.throws(() => assertLocalLoadPaths(["/workspace/developer/libcustom.dylib"], host, app), /unexpected absolute path/);
 });
 
