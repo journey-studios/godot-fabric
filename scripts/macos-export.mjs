@@ -128,21 +128,34 @@ async function machOLoadCommands(harness, filename, name) {
   return {libraries, rpaths};
 }
 
-export function assertLocalLoadPaths(values, binary, app, label = "binary") {
+export async function assertLocalLoadPaths(values, binary, app, label = "binary") {
+  const appRoot = await realpath(app);
   for (const value of values) {
-    if (value === "@loader_path" || value === "@executable_path") continue;
-    assert.ok(value.startsWith("@rpath/") || value.startsWith("@loader_path/") || value.startsWith("@executable_path/")
-      || value.startsWith("/System/Library/") || value.startsWith("/usr/lib/"), `${label} has an unexpected absolute path: ${value}`);
-    if (!value.startsWith("@rpath/") && !value.startsWith("@loader_path/") && !value.startsWith("@executable_path/")) continue;
-    const suffix = value.slice(value.indexOf("/") + 1);
-    assert.ok(suffix.length > 0 && !path.isAbsolute(suffix), `${label} contains an unsafe load-path suffix: ${value}`);
-    if (value.startsWith("@rpath/")) {
+    if (value.startsWith("/System/Library/") || value.startsWith("/usr/lib/")) {
+      const systemRoot = value.startsWith("/System/Library/") ? "/System/Library" : "/usr/lib";
+      assert.ok(isPathInside(systemRoot, path.resolve(value)), `${label} contains an unsafe system load path: ${value}`);
+      continue;
+    }
+    const loaderAlias = value === "@loader_path" || value.startsWith("@loader_path/");
+    const executableAlias = value === "@executable_path" || value.startsWith("@executable_path/");
+    const rpathAlias = value.startsWith("@rpath/");
+    assert.ok(rpathAlias || loaderAlias || executableAlias,
+      `${label} has an unexpected absolute path: ${value}`);
+    if (rpathAlias) {
+      const suffix = value.slice("@rpath/".length);
+      assert.ok(!path.isAbsolute(suffix), `${label} contains an unsafe load-path suffix: ${value}`);
+      assert.ok(suffix.length > 0, `${label} contains an unsafe @rpath suffix: ${value}`);
       assert.ok(!suffix.split("/").includes(".."), `${label} contains an unsafe @rpath traversal suffix: ${value}`);
       continue;
     }
-    const base = value.startsWith("@loader_path/") ? path.dirname(binary) : path.join(app, "Contents/MacOS");
+    const alias = loaderAlias ? "@loader_path" : "@executable_path";
+    const suffix = value === alias ? "" : value.slice(alias.length + 1);
+    assert.ok(!path.isAbsolute(suffix), `${label} contains an unsafe load-path suffix: ${value}`);
+    const base = loaderAlias ? path.dirname(binary) : path.join(app, "Contents/MacOS");
     const resolved = path.resolve(base, suffix);
     assert.ok(isPathInside(app, resolved), `${label} escapes the .app: ${value}`);
+    const physical = await realpath(resolved);
+    assert.ok(isPathInside(appRoot, physical), `${label} resolves outside the .app through ${value}`);
   }
 }
 
@@ -150,8 +163,8 @@ export async function auditAppLoadPaths(harness, app, binaries) {
   const records = [];
   for (const {label, path: binary} of binaries) {
     const {libraries, rpaths: binaryRpaths} = await machOLoadCommands(harness, binary, label);
-    assertLocalLoadPaths(libraries, binary, app, label);
-    assertLocalLoadPaths(binaryRpaths, binary, app, `${label} rpath`);
+    await assertLocalLoadPaths(libraries, binary, app, label);
+    await assertLocalLoadPaths(binaryRpaths, binary, app, `${label} rpath`);
     records.push({label, binary, libraries, rpaths: binaryRpaths});
   }
 

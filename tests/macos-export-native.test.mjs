@@ -94,19 +94,92 @@ test("headed consumer capture requires the fixed physical image and matching log
     consumerCaptureReport(undefined, {width: 1080, height: 600, scale: 0.5, fontScale: 2})), /geometry window metrics differ/);
 });
 
-test("load-path validation accepts app root and descendants but rejects parent and prefix siblings", () => {
-  const app = path.join(os.tmpdir(), "Godot Fabric.app");
-  const host = path.join(app, "Contents/Frameworks/fabric_godot.dylib");
-  assert.doesNotThrow(() => assertLocalLoadPaths([
+test("load-path validation checks real targets behind app aliases and symlinks", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-load-path-symlinks-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const app = path.join(directory, "Godot Fabric.app");
+  const contents = path.join(app, "Contents");
+  const frameworks = path.join(contents, "Frameworks");
+  const executableDirectory = path.join(contents, "MacOS");
+  const host = path.join(frameworks, "fabric_godot.dylib");
+  const executable = path.join(executableDirectory, "Godot Fabric");
+  const internal = path.join(frameworks, "inside.dylib");
+  const internalLink = path.join(frameworks, "inside-link.dylib");
+  const external = path.join(directory, "outside.dylib");
+  const loaderEscape = path.join(frameworks, "loader-escape.dylib");
+  const executableEscape = path.join(executableDirectory, "executable-escape.dylib");
+  const dangling = path.join(frameworks, "dangling.dylib");
+  await mkdir(path.join(app, "..framework"), {recursive: true});
+  await mkdir(frameworks, {recursive: true});
+  await mkdir(path.join(frameworks, "frameworks"), {recursive: true});
+  await mkdir(executableDirectory, {recursive: true});
+  for (const file of [host, executable, internal, external, path.join(app, "..framework", "inside")])
+    await writeFile(file, "private load-path fixture\n");
+  await symlink("inside.dylib", internalLink);
+  await symlink(external, loaderEscape);
+  await symlink(external, executableEscape);
+  await symlink("missing-target.dylib", dangling);
+
+  await assert.doesNotReject(() => assertLocalLoadPaths([
     "@rpath/hermesvm.framework/Versions/1/hermesvm", "@loader_path/frameworks",
-    "@loader_path", "@executable_path",
-    "@loader_path/../..", "@loader_path/../../..framework",
+    "@loader_path", "@executable_path", "@loader_path/../..", "@loader_path/../../..framework/inside",
+    "@loader_path/inside-link.dylib", "@executable_path/../Frameworks/inside-link.dylib",
     "/System/Library/Frameworks/AppKit.framework/AppKit", "/usr/lib/libSystem.B.dylib",
+    "/usr/lib/sub/../libSystem.B.dylib",
   ], host, app));
-  assert.throws(() => assertLocalLoadPaths(["@rpath/../outside.dylib"], host, app), /unsafe @rpath traversal suffix/);
-  assert.throws(() => assertLocalLoadPaths(["@loader_path/../../../../outside.dylib"], host, app), /escapes the \.app/);
-  assert.throws(() => assertLocalLoadPaths(["@loader_path/../../../Godot Fabric.app-sibling/host.dylib"], host, app), /escapes the \.app/);
-  assert.throws(() => assertLocalLoadPaths(["/workspace/developer/libcustom.dylib"], host, app), /unexpected absolute path/);
+  const appAlias = path.join(directory, "Fixture Alias.app");
+  await symlink(app, appAlias);
+  await assert.doesNotReject(() => assertLocalLoadPaths(["@loader_path/inside-link.dylib"],
+    path.join(appAlias, "Contents/Frameworks/fabric_godot.dylib"), appAlias));
+
+  await assert.rejects(() => assertLocalLoadPaths(["@rpath/../outside.dylib"], host, app), /unsafe @rpath traversal suffix/);
+  await assert.rejects(() => assertLocalLoadPaths(["@loader_path/../../../outside.dylib"], host, app), /escapes the \.app/);
+  await assert.rejects(() => assertLocalLoadPaths(["@loader_path/../../../Godot Fabric.app-sibling/host.dylib"], host, app), /escapes the \.app/);
+  await assert.rejects(() => assertLocalLoadPaths(["@loader_path/loader-escape.dylib"], host, app), /resolves outside the \.app/);
+  await assert.rejects(() => assertLocalLoadPaths(["@executable_path/executable-escape.dylib"], host, app), /resolves outside the \.app/);
+  await assert.rejects(() => assertLocalLoadPaths(["@loader_path/dangling.dylib"], host, app), /ENOENT|no such file/i);
+  await assert.rejects(() => assertLocalLoadPaths(["/workspace/developer/libcustom.dylib"], host, app), /unexpected absolute path/);
+  await assert.rejects(() => assertLocalLoadPaths(["/usr/lib/../../outside.dylib"], host, app), /unsafe system load path/);
+  await assert.rejects(() => assertLocalLoadPaths(["/System/Library/../../Users/owned/lib.dylib"], host, app), /unsafe system load path/);
+});
+
+test("load-path audit awaits realpath containment for Mach-O aliases", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-load-audit-symlink-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const app = path.join(directory, "Fixture.app");
+  const host = path.join(app, "Contents/Frameworks/fabric_godot.dylib");
+  const executable = path.join(app, "Contents/MacOS/Fixture");
+  const external = path.join(directory, "outside.dylib");
+  await mkdir(path.dirname(host), {recursive: true});
+  await mkdir(path.dirname(executable), {recursive: true});
+  await mkdir(path.join(path.dirname(host), "frameworks"), {recursive: true});
+  await mkdir(path.join(path.dirname(host), "frameworks", "hermesvm.framework/Versions/1"), {recursive: true});
+  await mkdir(path.join(path.dirname(host), "frameworks", "ReactNativeDependencies.framework/Versions/A"), {recursive: true});
+  await writeFile(host, "host placeholder\n");
+  await writeFile(executable, "executable placeholder\n");
+  await writeFile(path.join(path.dirname(host), "frameworks", "hermesvm.framework/Versions/1/hermesvm"), "hermes placeholder\n");
+  await writeFile(path.join(path.dirname(host), "frameworks", "ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies"), "dependencies placeholder\n");
+  await writeFile(external, "external target\n");
+  await symlink(external, path.join(path.dirname(host), "escape.dylib"));
+  const externalSearch = path.join(directory, "external-search");
+  await mkdir(externalSearch);
+  await symlink(externalSearch, path.join(path.dirname(host), "external-search"));
+  const machoOutput = escapedLoad => [
+    "Load command 0", "          cmd LC_LOAD_DYLIB",
+    `         name ${escapedLoad ? "@loader_path/escape.dylib" : "@rpath/hermesvm.framework/Versions/1/hermesvm"} (offset 24)`,
+    "Load command 1", "          cmd LC_LOAD_DYLIB",
+    `         name ${escapedLoad ? "@rpath/hermesvm.framework/Versions/1/hermesvm" : "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies"} (offset 24)`,
+    "Load command 2", "          cmd LC_LOAD_DYLIB",
+    `         name ${escapedLoad ? "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies" : "/usr/lib/libSystem.B.dylib"} (offset 24)`,
+    "Load command 3", "          cmd LC_RPATH", "         path @loader_path/frameworks (offset 12)",
+    ...(escapedLoad ? [] : ["Load command 4", "          cmd LC_RPATH", "         path @loader_path/external-search (offset 12)"]),
+  ].join("\n");
+  let macho = machoOutput(true);
+  const harness = {env: {}, project: directory, async run() { return macho; }};
+  const binaries = [{label: "host", path: host}];
+  await assert.rejects(() => auditAppLoadPaths(harness, app, binaries), /resolves outside the \.app/);
+  macho = machoOutput(false);
+  await assert.rejects(() => auditAppLoadPaths(harness, app, binaries), /resolves outside the \.app/);
 });
 
 function appBinaries(app, executableName) {
@@ -361,6 +434,29 @@ test("native macOS arm64 export and copied-app rejection controls", {
   controls.push({name: "absolute-rpath-rejected", app: rpathApp, mutation: "/usr/bin/install_name_tool -add_rpath /fabric-export-negative",
     logDirectory: rpathHarness.directory, mutationSha256: mutatedHostSha256,
     rejectedBy: "auditAppLoadPaths", reason: rpathReason});
+
+  const symlinkRpathApp = path.join(controlsDirectory, "symlink-rpath.app");
+  await copyApp(output, symlinkRpathApp);
+  const externalSearch = path.join(controlsDirectory, "external-search");
+  await mkdir(externalSearch);
+  await writeFile(path.join(externalSearch, "private-control.dylib"), "external search-path target\n");
+  const symlinkRpath = path.join(symlinkRpathApp, "Contents", "Frameworks", "external-search");
+  await symlink(externalSearch, symlinkRpath);
+  const symlinkHost = path.join(symlinkRpathApp, "Contents", "Frameworks", "fabric_godot.dylib");
+  const symlinkRpathHarness = await controlHarness(`${controlsName}-symlink-rpath`);
+  t.after(() => symlinkRpathHarness.cleanup());
+  await symlinkRpathHarness.run("install-symlink-rpath", "/usr/bin/install_name_tool",
+    ["-add_rpath", "@loader_path/external-search", symlinkHost]);
+  const symlinkRpathHostSha256 = digest(await readFile(symlinkHost));
+  let symlinkRpathReason;
+  await assert.rejects(
+    () => auditAppLoadPaths(symlinkRpathHarness, symlinkRpathApp, appBinaries(symlinkRpathApp, executableName)),
+    error => { symlinkRpathReason = error.message; return /resolves outside the \.app/.test(error.message); },
+  );
+  controls.push({name: "symlink-rpath-target-outside-app-rejected", app: symlinkRpathApp,
+    mutation: "@loader_path/external-search symlink to a private external directory",
+    externalTarget: externalSearch, hostSha256: symlinkRpathHostSha256, logDirectory: symlinkRpathHarness.directory,
+    rejectedBy: "auditAppLoadPaths", reason: symlinkRpathReason});
 
   const sourceCopy = path.join(controlsDirectory, "native-source-copy");
   const sourcePaths = ["native", "scripts/rn-pointer-overlay.mjs", "dependencies.json", ".deps/build/native-sdk-build.json",
