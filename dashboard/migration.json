@@ -5,15 +5,15 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "5",
-    "focusTitle": "GF-14: ScrollView original em implementação; primeira fatia Modal desktop aceita na PR #51"
+    "focusSequence": "6",
+    "focusTitle": "GF-14: revisão thermo-nuclear local concluída; integração e PR pendentes"
   },
-  "updatedAt": "2026-10-08T01:25:22.138062+00:00",
+  "updatedAt": "2026-10-08T03:02:37.570129+00:00",
   "source": {
-    "commit": "109e6fd30c8510af4d2a206949fbfa7d3ff85832",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/109e6fd30c8510af4d2a206949fbfa7d3ff85832",
+    "commit": "e5e38581ae52604fd127f8c6e76fda8e9af20e15",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/e5e38581ae52604fd127f8c6e76fda8e9af20e15",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51",
-    "scope": "Modal desktop: primeira fatia aceita na PR #51. Head 109e6fd passou nos cinco jobs; CodeRabbit aprovou e sete threads foram resolvidas. Merge 7e2df46 preservou a árvore. Auditoria: 193 Modal, 164 transforms e 672 capture. Paridade limitada a 13 casos. Completude: 24/156 checkpoints e 0/39 itens. GF-14 inicia com um Luna."
+    "scope": "GF-14: prova local do ScrollView original 22/22, listas 44/44 e quatro capturas. Integração e CI/CodeRabbit pendentes; nenhum novo checkpoint aceito. GF-18 mantém primeira fatia Modal desktop aceita na PR #51."
   },
   "phases": [
     {
@@ -1624,7 +1624,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Investigação inicial reproduzida pela raiz: ScrollView original monta em Platform.OS godot, mas scrollTo válido envia três argumentos e o adaptador exige dois; scrollToEnd animado salta imediatamente. O deslocamento fracionário do ScrollContainer diverge da pintura. Implementação iniciada em branch separada após o merge da PR #51, com um Luna por vez e revisão thermo-nuclear. Nenhum checkpoint GF-14 aceito ainda.",
+      "note": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3502,6 +3502,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf14-local-axis-proof-20261008",
+      "at": "2026-10-08T03:02:37.570129+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos."
+    },
     {
       "id": "modal-final-109e6fd-desktop-slice",
       "at": "2026-10-08T01:25:22.138062+00:00",

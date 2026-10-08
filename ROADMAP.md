@@ -2060,6 +2060,24 @@ afterwards). [Pages
 deployed this record from main d62bc27. No whole GF, checkpoint, weight or
 denominator closes.
 
+### Original ScrollView desktop slice under review (2026-10-08)
+
+The public facade now uses the original RN 0.87.1 ScrollView and its command,
+ref and Context behavior, with one native scroll owner for fractional offset,
+paint, Fabric state, pan and momentum. The desktop host preserves the transverse
+offset on `scrollToEnd`, following the pinned Android axis policy. A component
+specific registered config retains `horizontal` in Fabric create/diff payloads.
+
+Local evidence includes 22 mounted checks repeated independently against current
+and preceding hosts with identical inputs, the unchanged 44-check list oracle,
+44 native motion checks, four windowed macOS captures and a retained onLayout
+sabotage rejected by the oracle. Roots, tags, captures, contacts and pending work
+retire on stop. See [the review](docs/research/scroll-view-implementation-review.md)
+and [the receipts and captures](docs/evidence/scroll-view/README.md). Hosted CI and
+CodeRabbit acceptance remain open; no GF-14 checkpoint is accepted yet. Full
+props/events, nested scroll, refresh, paging/snap, bounce/zoom, keyboard behavior,
+hardware input, broad RN differential parity and mobile exports remain open.
+
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
 
 GF-15 moves to **In progress** with only its first-slice checkpoint done. The

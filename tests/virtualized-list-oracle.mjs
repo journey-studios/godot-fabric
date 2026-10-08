@@ -215,8 +215,8 @@ function verifyScrollRecords(records, list, offsets, size) {
   }
 }
 
-// One onScrollBeginDrag before the drag's scroll events and one onScrollEndDrag
-// after them, with ScrollEndDragEvent's target offset and no fling velocity.
+// Historical consumer gestures intentionally settle before release, preserving
+// the fixed offsets/windows while the GF-14 fixture owns the fling oracle.
 function verifyDrag(records, list, from, to) {
   const axis = axisOf(list);
   const [begin, ...extraBegins] = recordsOf(records, list, "beginDrag");
@@ -228,6 +228,8 @@ function verifyDrag(records, list, from, to) {
   assert.equal(end[axis], to);
   assert.equal(end.targetContentOffset[axis], to);
   assert.deepEqual(end.velocity, {x: 0, y: 0});
+  assert.equal(recordsOf(records, list, "momentumBegin").length, 0, `${list} stationary release has no MomentumBegin`);
+  assert.equal(recordsOf(records, list, "momentumEnd").length, 0, `${list} stationary release has no MomentumEnd`);
   for (const row of recordsOf(records, list, "scroll")) {
     assert.ok(begin.sequence < row.sequence && row.sequence < end.sequence, `${list} scroll inside its drag`);
   }
@@ -273,9 +275,16 @@ function verifyFeed(stages, state) {
       assert.equal(ends.length, 0, name);
     }
   }
-  // scrollToEnd() without arguments asks the ScrollView for RN's animated
-  // scroll, which the host does not implement: it fails instead of jumping.
-  assert.match(stages["feed/top"].animated, /requires finite coordinates and animated: false/);
+  // scrollToEnd() without arguments uses RN's animated default on the original
+  // public component: the command advances over frames and settles at the end.
+  const animated = stages["feed/top"].animated;
+  assert.equal(animated.result, null);
+  assert.equal(animated.immediate, 0);
+  assert.ok(Array.isArray(animated.observedOffsets) && animated.observedOffsets.some(at => at > animated.immediate && at <
+    feed.header + 150 * feed.row + feed.footer - feed.visible));
+  assert.equal(animated.motion, 2);
+  assert.equal(animated.final, feed.header + 150 * feed.row + feed.footer - feed.visible);
+  assert.ok(recordsOf(animated.events, "feed", "scroll").length > 0);
   // Cells outside the window unmount and come back.
   assert.ok(!stages["feed/index"].lists.feed.rendered.includes(30) && stages["feed/top"].lists.feed.rendered.includes(16));
   assert.ok(stages["feed/end"].lists.feed.rendered.includes(120) && !stages["feed/top"].lists.feed.rendered.includes(120));
@@ -287,6 +296,7 @@ function verifyShelf(stages) {
   verifyPlacement(mount, "shelf", frames);
   const before = verifyMeasuredWindow(mount, "shelf", frames, shelf, 0);
   const drag = stages["shelf/drag"];
+  assert.equal(drag.offsets.shelf.horizontal, true, "horizontal list config reaches the native ScrollView axis");
   verifyDrag(drag.events, "shelf", 0, 180);
   verifyScrollRecords(drag.events, "shelf", null, null);
   const steps = recordsOf(drag.events, "shelf", "scroll").map(row => row.x);
@@ -416,8 +426,10 @@ export function verifyVirtualizedListReport(report) {
   assert.equal(stages["chat/drag"].offsets.shelf.x, stages["agenda/back"].offsets.shelf.x);
   // FlatList's ScrollView ref is RN's ScrollView instance contract.
   const reference = stages.mount.ref;
-  assert.deepEqual([reference.node, reference.ref, reference.inner, reference.responder],
-    [stages.mount.tags.feed, stages.mount.tags.feed, stages.mount.tags.content, true]);
+  assert.deepEqual([reference.node, reference.ref, reference.responder],
+    [stages.mount.tags.feed, stages.mount.tags.feed, true]);
+  assert.ok(Number.isInteger(reference.inner) && reference.inner > 0 && reference.inner !== reference.node,
+    "getInnerViewRef resolves RN's real mounted ScrollContentView tag, without a testID sentinel");
   assert.deepEqual(reference.methods, ["scrollTo", "scrollToEnd", "getScrollResponder", "getScrollableNode",
     "getNativeScrollRef", "getInnerViewRef"]);
   assert.deepEqual(stages.mount.empty.ids, ["header", "view"], "ListEmptyComponent after the header");
@@ -426,9 +438,25 @@ export function verifyVirtualizedListReport(report) {
   verifyAgenda(stages, {offset: 0, viewable: []});
   verifyChat(stages);
   verifyTicker(stages);
-  // The host has no fling: no momentum event ever reaches a list.
+  // These consumer drags intentionally release after a stationary hold; the
+  // separate original ScrollView fixture derives fling behavior.
   assert.equal(report.events.filter(row => row.type.startsWith("momentum")).length, 0);
   const stopped = stages.afterStop;
-  assert.ok(stopped.stopped && stopped.rootCount === 0 && stopped.pendingTimers === 0);
+  assert.ok(stopped.stopped && stopped.rootCount === 0 && stopped.pendingTimers === 0
+    && stopped.pendingAnimationFrames === 0 && stopped.pendingRootRetirements === 0 && stopped.pendingWork === 0
+    && stopped.modalRuntimeMembers === 0 && stopped.windowListener === false);
+  assert.deepEqual(stopped.pointerRouting, {active: 0, contacts: 0, hoverPointers: 0, nextId: stopped.pointerRouting.nextId,
+    stored: 0, suppressed: 0});
+  assert.equal(stopped.pointerProcessor.active, 0);
+  assert.equal(stopped.pointerProcessor.activeCapture, 0);
+  assert.equal(stopped.pointerProcessor.pendingCapture, 0);
+  for (const name of ["A", "B"]) {
+    const root = stopped.surfaces[name];
+    assert.equal(root.nativeTags, 0);
+    assert.equal(root.retiringTags, 0);
+    assert.equal(root.pointer.activePointers, 0);
+    assert.equal(root.pointer.activeTouches, 0);
+    assert.equal(root.pointer.takenPointers, 0);
+  }
   assert.deepEqual(stopped.errors, []);
 }

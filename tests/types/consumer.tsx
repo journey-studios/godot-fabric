@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, ScrollView, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type ScrollViewInstance, type ScrollViewProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
@@ -21,6 +21,20 @@ const sheetModal = <Modal presentationStyle="pageSheet" />;
 // @ts-expect-error Android system-window flags are outside this desktop host
 const hardwareModal = <Modal hardwareAccelerated />;
 void animatedModal; void sheetModal; void hardwareModal;
+const scrollViewProps: ScrollViewProps = {
+  horizontal: false,
+  scrollEventThrottle: 16,
+  onScroll: () => {},
+};
+function ScrollConsumer() {
+  const scroll = useRef<ScrollViewInstance>(null);
+  scroll.current?.scrollTo({x: 0, y: 40, animated: false});
+  scroll.current?.scrollToEnd();
+  return <ScrollView ref={scroll} {...scrollViewProps}>
+    <ScrollView.Context.Consumer>{value => { void value; return null; }}</ScrollView.Context.Consumer>
+  </ScrollView>;
+}
+void ScrollConsumer;
 const transformStyle: ViewStyle = {
   transform: [{translateX: "25%"}, {scaleX: 2}, {rotate: "45deg"}, {skewY: "10deg"}],
   transformOrigin: [20, "75%", 0],

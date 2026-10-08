@@ -210,25 +210,32 @@ void PointerAdapter::click(PointerSample &current) {
     return;
   }
 }
-// RN's native scroll views intercept a contact begun inside them: JS receives
-// its pointercancel and nothing more until it ends (Android's
-// onChildStartedNativeGesture; UIKit cancels the touches in the view). The
-// touch stream keeps driving the JS responder that scrolls this host.
-void PointerAdapter::takeover(int tag) {
-  for (auto &[id, current] : pointers_) {
-    if (!current.active || current.taken ||
-        std::find(current.down_path.begin(), current.down_path.end(), tag) == current.down_path.end()) continue;
-    current.down_path.clear();
-    auto cancel = current.event;
-    cancel.button = -1;
-    cancel.buttons = 0;
-    cancel.pressure = 0;
-    cancel.timeStamp = rn::HighResTimeStamp::now();
-    ++pointer_cancels_;
-    ++pointer_takeovers_;
-    current.taken = true;
+// A native scroll gesture cancels the child stream exactly once when it wins.
+void PointerAdapter::takeover(int tag, int pointer_id) {
+  auto found = pointers_.find(pointer_id);
+  if (found == pointers_.end()) return;
+  auto &current = found->second;
+  if (!current.active || current.taken ||
+      std::find(current.down_path.begin(), current.down_path.end(), tag) == current.down_path.end()) return;
+  current.down_path.clear();
+  auto cancel = current.event;
+  cancel.button = -1;
+  cancel.buttons = 0;
+  cancel.pressure = 0;
+  cancel.timeStamp = rn::HighResTimeStamp::now();
+  ++pointer_cancels_;
+  ++pointer_takeovers_;
+  current.taken = true;
   emit_pointer_(current.target, current.root, "cancel", cancel, current.viewport_point,
       current.source, current.geometry);
+  auto touch = touches_.find(current.touch_id);
+  if (touch != touches_.end()) {
+    auto canceled = touch->second.event;
+    touches_.erase(touch);
+    canceled.force = 0;
+    canceled.timeStamp = rn::HighResTimeStamp::now();
+    ++cancels_;
+    dispatch(canceled, "cancel");
   }
 }
 void PointerAdapter::leave_mouse(int id, const Vector2 *position) {

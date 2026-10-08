@@ -20,31 +20,37 @@ const precedingSdkCommit = "8f80feda8c38512f3608f479da21b7abac5c3e0a";
 // Executed producers: the reproducer, the public SDK seams and the native
 // ScrollView pieces that RN's scroll views own (drag coordinates, throttle).
 export const virtualizedListNativeProducers = ["native/application_runtime.cpp", "native/scroll_adapter.cpp",
-  "native/scroll_adapter.h"];
+  "native/scroll_adapter.h", "native/pointer_adapter.cpp", "native/pointer_adapter.h",
+  "native/scroll_motion.h", "native/scroll_offset.h", "native/scroll_throttle.h"];
 const sdkProducers = ["src/lists.js", "src/list-props.mjs", "src/scroll-view.jsx", "src/react-native-platform.jsx",
-  "sdk/toolchain/platform-plugin.mjs"];
+  "src/scroll-view-contract.mjs", "src/scroll-view-native-config.js", "sdk/toolchain/platform-plugin.mjs"];
 const sources = ["tests/virtualized-list-fixture.jsx", "tests/virtualized-list-probe.gd",
-  "tests/virtualized-list-native.test.mjs", "tests/virtualized-list-oracle.mjs", "scripts/virtualized-list-bundle.mjs",
+  "tests/virtualized-list-native.test.mjs", "tests/virtualized-list-oracle.mjs", "tests/scroll-view-contract.test.mjs",
+  "scripts/virtualized-list-bundle.mjs",
   ...sdkProducers, ...virtualizedListNativeProducers];
 // The original modules the current bundle runs.
 const bundledReactNative = ["Libraries/Lists/FlatList.js", "Libraries/Lists/SectionList.js",
   "Libraries/Lists/VirtualizedList.js", "Libraries/Lists/VirtualizedSectionList.js",
-  "Libraries/StyleSheet/StyleSheet.js", "src/private/featureflags/ReactNativeFeatureFlags.js"];
+  "Libraries/StyleSheet/StyleSheet.js", "src/private/featureflags/ReactNativeFeatureFlags.js",
+  "Libraries/Components/ScrollView/ScrollViewNativeComponent.js", "Libraries/NativeComponent/NativeComponentRegistry.js",
+  "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js", "Libraries/NativeComponent/ViewConfig.js"];
 const bundledLists = ["index.js", "Lists/VirtualizedList.js", "Lists/VirtualizedListCellRenderer.js",
   "Lists/VirtualizedListContext.js", "Lists/VirtualizedSectionList.js", "Lists/ListMetricsAggregator.js",
   "Lists/ViewabilityHelper.js", "Lists/VirtualizeUtils.js", "Lists/CellRenderMask.js", "Lists/ChildListCollection.js",
   "Lists/FillRateHelper.js", "Lists/StateSafePureComponent.js", "Utilities/clamp.js"];
 // RN's ScrollView contract that the SDK ScrollView and the host follow.
 const references = ["index.js", "Libraries/Components/ScrollView/ScrollView.js",
+  "Libraries/Components/ScrollView/ScrollViewNativeComponent.js", "Libraries/NativeComponent/NativeComponentRegistry.js",
+  "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js", "Libraries/NativeComponent/ViewConfig.js",
   "ReactCommon/react/renderer/components/scrollview/ScrollEvent.cpp",
   "ReactCommon/react/renderer/components/scrollview/ScrollViewEventEmitter.cpp",
   "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp",
   "ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt",
   "React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm"];
-// The retained sabotage: the SDK ScrollView stops forwarding onLayout, so a
-// list never learns its viewport length from layout.
-const sabotage = {file: "scroll-view.jsx", find: "      {...props}\n      ref={attach}\n",
-  replace: "      {...props}\n      onLayout={undefined}\n      ref={attach}\n"};
+// The retained sabotage: the public wrapper stops forwarding onLayout, so a
+// list never learns its viewport length from RN's original ScrollView.
+const sabotage = {file: "scroll-view.jsx", find: "  return <OriginalScrollView ref={ref} {...forwarded} />;",
+  replace: "  delete forwarded.onLayout;\n  return <OriginalScrollView ref={ref} {...forwarded} />;"};
 export const lanes = ["current", "preceding-sdk", "sabotage"];
 
 async function platformFor(lane) {
@@ -93,7 +99,7 @@ export async function bundleVirtualizedListProbe(lane = "current") {
     for (const file of originals) {
       assert.ok(inputs.includes(file), "Probe must bundle the original RN module: " + file);
     }
-    for (const file of ["lists.js", "list-props.mjs", "scroll-view.jsx", "react-native-platform.jsx"]) {
+    for (const file of ["lists.js", "list-props.mjs", "scroll-view.jsx", "scroll-view-native-config.js", "scroll-view-contract.mjs", "react-native-platform.jsx"]) {
       assert.ok(inputs.includes(path.join(sdk, file)), "Probe must bundle the public SDK seam: " + file);
     }
   }
@@ -116,7 +122,7 @@ export async function bundleVirtualizedListProbe(lane = "current") {
       sources: await pin(platformRoot, ["react-native-platform.jsx", "scroll-view.jsx"])};
   }
   if (lane === "sabotage") {
-    receipt.sabotage = {file: path.join(sdk, sabotage.file), removed: "onLayout forwarded to the native ScrollView",
+    receipt.sabotage = {file: path.join(sdk, sabotage.file), removed: "onLayout forwarded to RN's original ScrollView",
       sha256: digest(await readFile(path.join(platformRoot, sabotage.file)))};
   }
   await writeFile(path.join(output, "virtualized-list-" + lane + "-bundle.json"), JSON.stringify(receipt, null, 2) + "\n");

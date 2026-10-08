@@ -158,6 +158,7 @@ target_compile_definitions(pointer_processor_original_negative_test PRIVATE GODO
 target_link_libraries(pointer_processor_original_negative_test PRIVATE fabric_core)
 add_executable(timer_registry_test timer_registry_test.cpp)
 add_executable(frame_clock_test frame_clock_test.cpp)
+add_executable(scroll_motion_test scroll_motion_test.cpp)
 add_executable(affine_transform_test affine_transform_test.cpp)
 # The pure HTTP core (URLs, redirects, charsets, base64, multipart) and the blob store need neither Godot nor RN.
 add_executable(http_core_test http_core_test.cpp)
@@ -216,7 +217,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

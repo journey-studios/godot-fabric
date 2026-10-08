@@ -187,7 +187,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   // Physical contacts belong to one surface within a viewport. Pointer IDs
   // belong to the application, including the hover lifetime of a mouse.
   using PointerKey = std::tuple<uint64_t, uint64_t, int, bool, int>;
-  struct RoutedPointer { int id{}, surface{}, buttons{}; bool primary{}, active{}, mouse{}, suppressed{}; };
+  struct RoutedPointer {
+    int id{}, surface{}, buttons{};
+    bool primary{}, active{}, mouse{}, suppressed{};
+    int scroll_tag{};
+    std::vector<int> down_path;
+  };
   std::map<PointerKey, RoutedPointer> pointer_routes;
   std::set<int> pending_pointer_removals;
   int next_pointer_id{1};
@@ -1094,8 +1099,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // A consumer is a pending frame callback or a Native Animated backend with an
       // animation to run. Timers, input and the work queue are not paced by it.
       const double frame_time = now_ms();
-      const bool consumer = !frame_callbacks.empty() || (native_animated && native_animated->active());
+      const bool scroll_motion = std::any_of(views.begin(), views.end(), [](const auto &entry) {
+        return entry.second.scroll && entry.second.scroll->active_motion();
+      });
+      const bool consumer = !frame_callbacks.empty() || scroll_motion || (native_animated && native_animated->active());
       const bool tick = frame_tick && !stopping && frame_clock.frame(frame_time, refresh_rate, pacing, consumer);
+      if (tick) {
+        for (auto &[tag, mounted] : views) {
+          if (roots.at(mounted.surface_id)->stopping || !mounted.scroll) continue;
+          mounted.scroll->tick(frame_time / 1000.0);
+        }
+      }
       // Snapshot the current tick. Callbacks scheduled by a callback, timer, or
       // React commit are deferred to the next tick, never a tight loop.
       std::vector<int> frame_ids;
@@ -1203,6 +1217,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto &root = *found->second;
     root.stopping = true;
     retire_pointers(id);
+    // Retire active motion while this surface still owns its mounted event
+    // emitters. The later fallback deletion runs after UIManager stops it.
+    for (auto &[tag, mounted] : views)
+      if (mounted.surface_id == id && mounted.scroll) mounted.scroll->cancel();
     root.pointer->cancel();
     // React cleanup must run while this ShadowTree is still registered.
     try {
@@ -1678,11 +1696,19 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   rn::PointerEventsProcessor &pointer_processor() const {
     return rn::UIManagerBinding::getBinding(*runtime)->getPointerEventsProcessor();
   }
+  void cancel_scroll_route(RoutedPointer &route) {
+    auto scroll = views.find(route.scroll_tag);
+    if (route.scroll_tag && scroll != views.end() && scroll->second.scroll)
+      scroll->second.scroll->cancel_pointer(route.id);
+    route.scroll_tag = 0;
+    route.down_path.clear();
+  }
   void retire_pointers(int id) {
     auto &processor = pointer_processor();
     processor.clearCaptureTargetsForSurfaceForGodot(id);
     for (auto it = pointer_routes.begin(); it != pointer_routes.end();) {
       if (it->second.surface != id) { ++it; continue; }
+      cancel_scroll_route(it->second);
       processor.removePointerForGodot(it->second.id);
       if (it->second.mouse && it->second.active) {
         it->second.suppressed = true;
@@ -1695,6 +1721,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto &processor = pointer_processor();
     for (auto route = pointer_routes.begin(); route != pointer_routes.end();) {
       if (std::get<0>(route->first) != window_id) { ++route; continue; }
+      cancel_scroll_route(route->second);
       processor.removePointerForGodot(route->second.id);
       pending_pointer_removals.erase(route->second.id);
       route = pointer_routes.erase(route);
@@ -1708,9 +1735,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void synchronize_pointer_routes() {
     for (auto it = pointer_routes.begin(); it != pointer_routes.end();) {
       auto root = roots.find(it->second.surface);
-      if (it->second.suppressed || root == roots.end()) { ++it; continue; }
+      if (it->second.suppressed || root == roots.end()) {
+        cancel_scroll_route(it->second);
+        ++it;
+        continue;
+      }
       const auto ids = root->second->pointer->pointer_ids();
       if (std::find(ids.begin(), ids.end(), it->second.id) != ids.end()) { ++it; continue; }
+      cancel_scroll_route(it->second);
       pending_pointer_removals.insert(it->second.id);
       if (it->second.mouse && it->second.active) {
         it->second.suppressed = true;
@@ -1875,6 +1907,34 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     return result;
   }
+  int scroll_ancestor(int target, const fabric_godot::PointerInputSource &source,
+      std::vector<int> &down_path) const {
+    down_path.clear();
+    if (!target) return 0;
+    down_path = physical_hit_path(target, source);
+    for (int tag : down_path) {
+      auto mounted = views.find(tag);
+      if (mounted != views.end() && mounted->second.surface_id == source.surface && mounted->second.scroll)
+        return tag;
+    }
+    return 0;
+  }
+  Vector2 scroll_local_point(int tag, Vector2 viewport_point) const {
+    auto mounted = views.find(tag);
+    if (mounted == views.end() || !mounted->second.scroll) return Vector2(NAN, NAN);
+    return fabric_godot::local_coordinate(mounted->second.control->get_global_transform_with_canvas(), viewport_point);
+  }
+  bool captured_on_path(int pointer_id, const fabric_godot::PointerInputSource &source,
+      const std::vector<int> &path) const {
+    auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(source.surface);
+    if (!revision) return false;
+    auto &processor = pointer_processor();
+    for (int tag : path) {
+      const auto *node = find_family(*revision, tag);
+      if (node && processor.hasPointerCapture(pointer_id, node)) return true;
+    }
+    return false;
+  }
   bool routed_input(int caller, Root &source, const Ref<InputEvent> &event,
       const fabric_godot::PointerInputSource &input_source, bool &blocked) {
     if (event.is_null()) return false;
@@ -1968,11 +2028,55 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (native_buttons || !route.active) route.buttons = native_buttons;
     } else if (auto *touch = Object::cast_to<InputEventScreenTouch>(event.ptr()))
       route.active = touch->is_pressed() && !touch->is_canceled();
+    auto *mouse_button = Object::cast_to<InputEventMouseButton>(event.ptr());
+    auto *screen_touch = Object::cast_to<InputEventScreenTouch>(event.ptr());
+    const bool left_press = mouse_button && mouse_button->get_button_index() == MOUSE_BUTTON_LEFT &&
+        mouse_button->is_pressed() && !mouse_button->is_canceled();
+    const bool touch_press = screen_touch && screen_touch->is_pressed() && !screen_touch->is_canceled();
+    const bool left_release = mouse_button && mouse_button->get_button_index() == MOUSE_BUTTON_LEFT &&
+        (!mouse_button->is_pressed() || mouse_button->is_canceled());
+    const bool touch_release = screen_touch && (!screen_touch->is_pressed() || screen_touch->is_canceled());
+    const bool release = left_release || touch_release;
+    if (left_press || touch_press) {
+      route.scroll_tag = scroll_ancestor(physical_hit_test(input_source, position), input_source, route.down_path);
+      if (route.scroll_tag) {
+        const auto local = scroll_local_point(route.scroll_tag, position);
+        auto scroll = views.find(route.scroll_tag);
+        if (scroll != views.end()) scroll->second.scroll->pointer_down(route.id,
+            {static_cast<double>(local.x), static_cast<double>(local.y)}, now_ms() / 1000.0);
+      }
+    }
     const bool terminal = !mouse && !route.active;
     blocked = target->second->pointer->blocks_native();
     const bool accepted = target->second->pointer->input(event, route.id, route.primary, input_source);
     const bool invalid = target->second->pointer->invalid_coordinates();
-    blocked = blocked || invalid;
+    blocked = target->second->pointer->blocks_native() || invalid;
+    if (route.scroll_tag) {
+      const auto local = scroll_local_point(route.scroll_tag, position);
+      auto scroll = views.find(route.scroll_tag);
+      if (scroll == views.end() || !scroll->second.scroll || !local.is_finite()) {
+        cancel_scroll_route(route);
+      } else {
+        auto &adapter = *scroll->second.scroll;
+        const double now = now_ms() / 1000.0;
+        const fabric_godot::ScrollPoint point{static_cast<double>(local.x), static_cast<double>(local.y)};
+        if (adapter.dragging(route.id)) {
+          if (release) {
+            adapter.finish_pan(route.id, point, now,
+                (screen_touch && screen_touch->is_canceled()) || (mouse_button && mouse_button->is_canceled()));
+            route.scroll_tag = 0;
+            route.down_path.clear();
+          } else adapter.update_pan(route.id, point, now);
+        } else if (release) {
+          adapter.cancel_pointer(route.id);
+          cancel_scroll_route(route);
+        } else if (!invalid && adapter.pan_ready(route.id, point, blocked,
+            captured_on_path(route.id, input_source, route.down_path))) {
+          target->second->pointer->takeover(route.scroll_tag, route.id);
+          adapter.begin_pan(route.id, point, now);
+        }
+      }
+    }
     if (terminal) { pointer_routes.erase(*key); pending_pointer_removals.insert(pointer_id); }
     synchronize_pointer_routes();
     return accepted;
@@ -2080,7 +2184,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             control = toggle;
           } else if (next.componentName == std::string(rn::ActivityIndicatorViewComponentName)) {
             control = memnew(GodotActivityIndicator);
-          } else if (kind == "scroll") control = memnew(ScrollContainer);
+          } else if (kind == "scroll") control = memnew(Control);
           else if (kind == "paragraph") control = memnew(GodotParagraph);
           else if (kind == "text") control = memnew(Label);
           else if (kind == "button") {
@@ -2101,8 +2205,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           auto entry = views.emplace(next.tag, Mounted{control, {}, surface_id, false, {}, {}, std::move(external), mount_id}).first;
           entry->second.modal = std::move(modal);
           if (!entry->second.external) {
-          if (auto *scroll = Object::cast_to<ScrollContainer>(control))
-            entry->second.scroll = std::make_unique<fabric_godot::ScrollAdapter>(*scroll);
+          if (kind == "scroll")
+            entry->second.scroll = std::make_unique<fabric_godot::ScrollAdapter>(*control);
           if (auto *input = Object::cast_to<LineEdit>(control)) {
             entry->second.input = std::make_unique<fabric_godot::InputAdapter>(*input,
                 [this, tag = next.tag](const std::string &name, folly::dynamic payload) { emit(tag, name, std::move(payload)); });
@@ -2147,6 +2251,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           break;
         case rn::ShadowViewMutation::Delete: {
           auto entry = views.extract(old.tag);
+      if (entry.mapped().scroll) entry.mapped().scroll->cancel();
           forget_logical_tag(old.tag);
           native_tags.erase(entry.mapped().control);
           if (entry.mapped().external) { entry.mapped().external->dispose(); entry.mapped().external.reset(); }
@@ -2173,8 +2278,19 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       apply_frame(mounted);
       mounted.frame_pending = false;
     }
-    for (auto &[tag, mounted] : views)
-      if (!roots.at(mounted.surface_id)->stopping && mounted.scroll) mounted.scroll->layout();
+    for (auto &[tag, mounted] : views) {
+      if (roots.at(mounted.surface_id)->stopping || !mounted.scroll) continue;
+      const auto children = logical_children.find(tag);
+      if (children != logical_children.end() && !children->second.empty()) {
+        const auto content = views.find(children->second.front());
+        if (content != views.end() && content->second.surface_id == mounted.surface_id) {
+          mounted.scroll->set_content_frame(*content->second.control,
+              {content->second.shadow.layoutMetrics.frame.origin.x,
+               content->second.shadow.layoutMetrics.frame.origin.y});
+        }
+      } else mounted.scroll->clear_content();
+      mounted.scroll->layout();
+    }
     present_modals(surface_id);
     apply_pointer_filters();
     for (auto &[tag, mounted] : views) {
@@ -2229,32 +2345,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // objects; do not reuse the views iterator after invoking the Control.
       return;
     }
-    if ((name == "scrollDragStart" || name == "scrollDragTo") && !roots.at(found->second.surface_id)->pointer->owns(node->getTag())) return;
     if (auto *scroll = found->second.scroll.get()) {
-      const int tag = node->getTag(), surface_id = found->second.surface_id;
-      const bool idle = !scroll->dragging();
-      auto command_args = args;
-      if ((name == "scrollDragStart" || name == "scrollDragTo") && args.isArray() && args.size() == 2 &&
-          args[0].isNumber() && args[1].isNumber()) {
-        // JS sends page points. RN's native scroll views follow the finger in
-        // their own coordinates, so a flipped (inverted list) or scaled
-        // ScrollView still moves its content with the finger.
-        if (auto *host = roots.at(surface_id)->host()) {
-          const auto point = host->get_global_transform_with_canvas().xform(Vector2(args[0].asDouble(), args[1].asDouble()));
-          const auto local = fabric_godot::local_coordinate(found->second.control->get_global_transform_with_canvas(), point);
-          // A singular embedding has no local point. Like the input guard, drop
-          // this drag step instead of scrolling by a non-finite delta; the
-          // drag's end still arrives through scrollDragEnd.
-          if (!local.is_finite()) return;
-          command_args = folly::dynamic::array(local.x, local.y);
-        }
-      }
-      if (scroll->command(name, command_args)) {
-        // The drag now owns the contacts begun inside it, as RN's native
-        // scroll views do when they start dragging.
-        if (idle && scroll->dragging() && !roots.at(surface_id)->stopping) roots.at(surface_id)->pointer->takeover(tag);
-        return;
-      }
+      if (scroll->command(name, args)) return;
     }
     if (name == "setTextAndSelection" && found->second.input) {
       if (!args.isArray() || args.size() != 4 || !args[0].isNumber() ||

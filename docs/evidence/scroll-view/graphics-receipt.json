@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "scenario": "gf14-scroll-view-graphical-capture",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "displayServer": "macOS",
+  "renderer": "gl_compatibility",
+  "command": "Godot --path <checkout> --windowed --script res://tests/scroll-view-graphics-probe.gd",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "expectedSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
+    "beforeSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
+    "afterSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
+    "unchanged": true
+  },
+  "buildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "ddfc16a3ec85196f2c5e93e80970cc4459eed449388c52d3c6505862ae47ff7f",
+    "unchanged": true,
+    "recordedHostMatches": true
+  },
+  "bundle": {
+    "path": "build/scroll-view-gf14-probe.js",
+    "expectedSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
+    "beforeSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
+    "afterSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
+    "unchanged": true
+  },
+  "bundleReceipt": {
+    "path": "build/scroll-view-gf14-probe-bundle.json",
+    "sha256": "72709ce3a3c303449a096d77254d1a86864fa8842e23e9dc92e6d3d440f96248"
+  },
+  "probe": {
+    "path": "tests/scroll-view-graphics-probe.gd",
+    "sha256": "1ec039f2c3c3a3149c18c08201a89b3fe0a5f2e64f66548284fc016257ca3001"
+  },
+  "runner": {
+    "path": "scripts/scroll-view-graphics.mjs",
+    "sha256": "7e64271e39396f13f54da6f23b1879916c3f026458984eedc93e73a95c1967c9"
+  },
+  "report": {
+    "path": "build/scroll-view-graphics-report.json",
+    "sha256": "78db6f833b6b8d5565b043bd5f0f67e5378303414f4fbea760cb4b85599fab02"
+  },
+  "checks": [
+    {
+      "name": "initial frame contains both mounted roots at expected viewport size",
+      "passed": true,
+      "viewport": "(840, 420)",
+      "maxY": 590
+    },
+    {
+      "name": "fractional paint and RN measurement remain aligned at 13.25 px",
+      "passed": true,
+      "offsetY": 13.25,
+      "fabricY": 13.25,
+      "paintedContentY": -13.25,
+      "measuredRowY": 10.75
+    },
+    {
+      "name": "horizontal pan paints inside the viewport and clips blue content outside it",
+      "passed": true,
+      "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
+      "offsetX": 236.015278810533,
+      "fabricX": 236.015274047852,
+      "paintedContentX": -236.015274047852,
+      "pixelInsideViewport": "(0.1137, 0.3059, 0.8471, 1.0)",
+      "pixelOutsideViewport": "(0.9608, 0.9725, 0.9804, 1.0)"
+    },
+    {
+      "name": "both roots and all pointer/runtime ownership are empty after stop",
+      "passed": true,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "pendingCapture": 0
+        },
+        "surfaces": [
+          {
+            "nativeTags": 0,
+            "retiringTags": 0,
+            "activePointers": 0,
+            "activeTouches": 0,
+            "takenPointers": 0
+          },
+          {
+            "nativeTags": 0,
+            "retiringTags": 0,
+            "activePointers": 0,
+            "activeTouches": 0,
+            "takenPointers": 0
+          }
+        ]
+      }
+    }
+  ],
+  "captures": [
+    {
+      "path": "docs/evidence/scroll-view/captures/initial.png",
+      "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
+      "bytes": 13524
+    },
+    {
+      "path": "docs/evidence/scroll-view/captures/fractional-13_25.png",
+      "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
+      "bytes": 12671
+    },
+    {
+      "path": "docs/evidence/scroll-view/captures/horizontal-pan-clipped.png",
+      "sha256": "3f19f31e3c5e2cb9cabaf215a2854d22986b0fc3ec274cfe9a52451bb942860e",
+      "bytes": 12671
+    },
+    {
+      "path": "docs/evidence/scroll-view/captures/cleanup.png",
+      "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
+      "bytes": 2205
+    }
+  ],
+  "log": {
+    "path": "build/scroll-view-graphics.log",
+    "sha256": "96fa02e98b2f6820578cc10031d6e45c836c845792eec54ce10f54e97139c6c4"
+  },
+  "limitations": [
+    "Godot macOS windowed run only; no physical hardware touch or mobile-export claim."
+  ]
+}
