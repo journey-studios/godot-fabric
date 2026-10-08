@@ -50,6 +50,21 @@ static double read_validation_clock_offset(uint64_t id) {
   auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
   return application && application->has_meta(validation_clock_offset) ? static_cast<double>(application->get_meta(validation_clock_offset)) : 0;
 }
+// A heap reading compares only what is live once the collector has run, and it may run in
+// the background, so a validation run asks the application, through this meta, to collect
+// before it reports Hermes' heap in the snapshot.
+static constexpr const char *validation_collect_garbage_on_status = "validation_collect_garbage_on_status";
+static bool read_validation_collect_garbage(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  return application && application->has_meta(validation_collect_garbage_on_status);
+}
+// The performance section reports aggregates; a validation run that recomputes its percentiles asks for
+// the samples they come from through this meta.
+static constexpr const char *validation_performance_samples = "validation_performance_samples";
+static bool read_validation_performance_samples(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  return application && application->has_meta(validation_performance_samples);
+}
 static fabric_godot::SystemAppearance::System read_system_appearance(uint64_t id) {
   auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
   if (!application) return {};
@@ -215,7 +230,9 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
           utf8(scenario), get_instance_id(), game_services, app_state, appearance,
           [id = get_instance_id()] { return read_validation_tls_authorities(id); },
           [id = get_instance_id()] { return read_validation_clock_offset(id); },
-          adapter_loader ? adapter_loader->registry() : nullptr, device_services, accessibility_info);
+          adapter_loader ? adapter_loader->registry() : nullptr, device_services, accessibility_info,
+          [id = get_instance_id()] { return read_validation_collect_garbage(id); },
+          [id = get_instance_id()] { return read_validation_performance_samples(id); });
     }
     int legacy_id = 0;
     if (!bundle_loaded) {

@@ -118,6 +118,17 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   (GF-23's first slice; a headless probe in two applications with an independent oracle, the
   preceding host as the control and two retained sabotages; its hosted CI run is pending). Alert,
   Share, Settings and BackHandler, mobile deep-link plugins and real-device behavior stay open.
+- **Performance baselines:** a `performance` section in the application snapshot (exact counters of
+  the native views, Hermes' live heap after a forced collection, and the host's pump split into JS,
+  mount and layout phases) and a soak of 20 mounts and unmounts of four workloads (idle, forms, chart,
+  a 120-row `FlatList`), headless (GF-30's first slice; 43 checks, 41 in the evidence record pinned at `ad87234`, which predates the checks of the
+  unmount notification and of the stopped application's snapshot; the preceding host as the control,
+  three retained sabotages and an independent oracle; see the [evidence](evidence/performance/README.md) and the
+  [research note](research/performance.md); its hosted CI run is pending).
+  The nodes, orphans and views return to the baseline after every cycle and the live heap at rest may rise at
+  most 2,048 bytes in the steady state (a measured 0 to 312). Durations, the resident
+  memory and Godot's static memory are recorded and never judged. Target-device budgets, text shaping,
+  10,000 rows, graphic frame time and the mobile targets stay open.
 - **OS-specific contracts:** the original [ToastAndroid (its fallback), PermissionsAndroid, DynamicColorIOS,
   ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid (its fallback), InputAccessoryView, PushNotificationIOS
   and TouchableNativeFeedback](evidence/os-contracts/README.md), each on the branch RN takes off its own
