@@ -117,12 +117,24 @@ func rendered(root_name: String, list: String) -> Array:
 # Content-space [start, length] of each committed cell along the list's axis.
 func spans(root_name: String, list: String) -> Dictionary:
   var horizontal := list == "shelf"
-  var content := rect(root_name, list + "-content")
+  var viewport_node: Node = surfaces[root_name].find_child(root_name + "-" + list, true, false)
+  if not viewport_node is Control:
+    return {}
+  var viewport := viewport_node as Control
+  var inverse := viewport.get_global_transform_with_canvas().affine_inverse()
+  var scroll_offset := offset(root_name, list)
   var out := {}
   for id: String in ids(root_name, list):
-    var cell := rect(root_name, list + "-" + id)
-    out[id] = ([cell.position.x - content.position.x, cell.size.x] if horizontal
-      else [cell.position.y - content.position.y, cell.size.y])
+    var node: Node = surfaces[root_name].find_child(root_name + "-" + list + "-" + id, true, false)
+    if not node is Control:
+      continue
+    var cell := node as Control
+    # The ScrollContent node has no public testID in RN's original component.
+    # Convert mounted cell origins to the actual ScrollView viewport and add
+    # the logical offset; this fixture's Yoga content origin is zero.
+    var viewport_position := inverse * cell.get_global_transform_with_canvas().origin
+    out[id] = ([viewport_position.x + scroll_offset, cell.size.x] if horizontal
+      else [viewport_position.y + scroll_offset, cell.size.y])
   return out
 
 # Waits until a list's committed cells and offset have not changed for 250 ms:
@@ -191,7 +203,15 @@ func drag(from: Vector2, delta: Vector2, steps: int = 6) -> void:
   for step in range(1, steps + 1):
     move(from + delta * step / steps)
     await settle(2)
-  touch(from + delta, false)
+  # Keep the historical list offsets deterministic. The dedicated ScrollView
+  # probe covers flings; these consumer gestures intentionally release after
+  # the measured-velocity window has expired.
+  var terminal := from + delta
+  var stationary_since := Time.get_ticks_usec()
+  while Time.get_ticks_usec() - stationary_since < 350_000:
+    move(terminal)
+    await process_frame
+  touch(terminal, false)
   await settle(4)
 
 # RN's elementsThatOverlapOffsets on the feed's getItemLayout frames: the first
@@ -265,8 +285,8 @@ func consistent_changes(taken: Array, previous: Array) -> bool:
     before = now
   return true
 
-# onScrollBeginDrag and onScrollEndDrag reach the list's props once per drag,
-# with ScrollEndDragEvent's target offset and a zero velocity: no fling.
+# Historic list gestures release after a stationary hold, so they retain the
+# exact terminal offsets and do not exercise the dedicated fling contract.
 func dragged(taken: Array, list: String, from: float, to: float) -> bool:
   var begins := of(taken, list, "beginDrag")
   var ends := of(taken, list, "endDrag")
@@ -279,7 +299,8 @@ func dragged(taken: Array, list: String, from: float, to: float) -> bool:
   return (begins[0].get("keys") == SCROLL_KEYS and end.get("keys") == END_DRAG_KEYS
     and is_equal_approx(number(begins[0].get(axis)), from) and is_equal_approx(number(end.get(axis)), to)
     and target is Dictionary and is_equal_approx(number(target.get(axis)), to)
-    and velocity is Dictionary and number(velocity.get("x")) == 0.0 and number(velocity.get("y")) == 0.0)
+    and velocity is Dictionary and number(velocity.get("x")) == 0.0 and number(velocity.get("y")) == 0.0
+    and of(taken, list, "momentumBegin").is_empty() and of(taken, list, "momentumEnd").is_empty())
 
 # The committed cells cover [at, at + length] with no gap wider than a 2 px
 # separator, which has no testID.
@@ -340,6 +361,7 @@ func mount_case() -> Array:
   var content_tag := int(number(node_of("A", "feed-content").get("tag"), -2))
   stage("mount", ["feed", "shelf", "agenda"], {"renderErrors": errors, "events": mounted, "ref": reference,
     "tags": {"feed": tag, "content": content_tag}, "empty": {"ids": ids("A", "empty")},
+    "scrollRects": {"feed": rect("A", "feed"), "shelf": rect("A", "shelf"), "agenda": rect("B", "agenda")},
     "chat": {"rendered": rendered("B", "chat"), "list": [chat.position.y, chat.end.y],
       "first": [first.position.y, first.end.y], "second": [second.position.y, second.end.y]}})
   sdk_check(feed == feed_window(0.0, 120) and cells.has("header") and cells.has("footer"),
@@ -351,7 +373,8 @@ func mount_case() -> Array:
   sdk_check((first.size.y > 0.0 and is_equal_approx(first.end.y, chat.end.y) and second.size.y > 0.0
     and is_equal_approx(second.end.y, first.position.y)), "mount/chat/An inverted list puts its first item at the bottom of the viewport")
   sdk_check((reference is Dictionary and int(number(reference.get("node"))) == tag and int(number(reference.get("ref"))) == tag
-    and reference.get("responder") == true and int(number(reference.get("inner"))) == content_tag
+    and reference.get("responder") == true and int(number(reference.get("inner"))) > 0
+    and int(number(reference.get("inner"))) != tag
     and reference.get("methods", []).size() == 6), "mount/ref/FlatList exposes RN's ScrollView methods on its native scroll instance")
   return errors
 
@@ -416,17 +439,49 @@ func feed_case() -> void:
     and ints(last_of(taken, "feed", "viewable").get("viewable")) == feed_viewable(0.0, 150) and of(taken, "feed", "end").is_empty()),
     "feed/top/scrollToOffset(0) brings the first window back and unmounts the end")
   var animated: Variant = js("scrollToEndAnimated('A-feed')")
-  await settle(6)
-  value["animated"] = animated
-  check((animated is String and str(animated).contains("animated: false") and is_equal_approx(offset("A", "feed"), 0.0)
-    and of(take(), "feed", "scroll").is_empty()), "feed/animated/scrollToEnd() keeps RN's animated default and fails visibly: no animated scrolling")
+  var immediate := offset("A", "feed")
+  var immediate_motion := int(number(scroll("A", "feed").get("motion")))
+  var observed_offsets: Array[float] = []
+  var observation_started := Time.get_ticks_usec()
+  var animated_target := FEED_HEADER + 150.0 * FEED_ROW + FEED_FOOTER - FEED_VISIBLE
+  while Time.get_ticks_usec() - observation_started < 2_000_000 and offset("A", "feed") < animated_target:
+    await process_frame
+    observed_offsets.append(offset("A", "feed"))
+  await quiet("A", "feed")
+  var animated_events := take()
+  var animated_end := offset("A", "feed")
+  value["animated"] = {"result": animated, "immediate": immediate, "motion": immediate_motion,
+    "observedOffsets": observed_offsets, "final": animated_end, "events": animated_events}
+  check((animated == null and is_equal_approx(immediate, 0.0) and immediate_motion == 2
+    and observed_offsets.any(func(at: float) -> bool: return at > immediate and at < animated_target)
+    and is_equal_approx(animated_end, animated_target)
+    and not of(animated_events, "feed", "scroll").is_empty()),
+    "feed/animated/scrollToEnd() honors RN's animated default, advances across frames, and reaches the end")
 
 func shelf_case() -> void:
   var before := rendered("A", "shelf")
-  await drag(rect("A", "shelf").position + Vector2(300, 25), Vector2(-180, 0))
+  var shelf_rect := rect("A", "shelf")
+  var drag_origin := shelf_rect.get_center()
+  var scroll_trace: Array = []
+  touch(drag_origin, true)
+  await settle(3)
+  scroll_trace.append(scroll("A", "shelf"))
+  for step in range(1, 7):
+    move(drag_origin + Vector2(-180.0 * step / 6.0, 0))
+    await settle(2)
+    scroll_trace.append(scroll("A", "shelf"))
+  var drag_terminal := drag_origin + Vector2(-180, 0)
+  var stationary_since := Time.get_ticks_usec()
+  while Time.get_ticks_usec() - stationary_since < 350_000:
+    move(drag_terminal)
+    await process_frame
+  touch(drag_terminal, false)
+  await settle(4)
   await quiet("A", "shelf")
   var taken := take()
-  var value := stage("shelf/drag", ["shelf"], {"events": taken, "before": before})
+  var value := stage("shelf/drag", ["shelf"], {"events": taken, "before": before,
+    "viewport": shelf_rect, "dragOrigin": drag_origin, "dragEnd": drag_origin + Vector2(-180, 0),
+    "scrollTrace": scroll_trace})
   var at := offset("A", "shelf")
   var state: Dictionary = value.offsets.shelf
   check((is_equal_approx(at, 180.0) and int(number(state.get("begins"))) == 1 and int(number(state.get("ends"))) == 1
@@ -546,14 +601,27 @@ func stop_case() -> void:
   application.call("stop")
   await settle()
   var stopped := native(application)
+  stopped["surfaces"] = {"A": native(surfaces.A), "B": native(surfaces.B)}
   stages["afterStop"] = stopped
   var errors: Variant = stopped.get("errors", [])
+  var routing: Dictionary = stopped.get("pointerRouting", {})
+  var processor: Dictionary = stopped.get("pointerProcessor", {})
   check((stopped.get("stopped") == true and int(number(stopped.get("rootCount"))) == 0 and int(number(stopped.get("pendingTimers"))) == 0
-    and int(number(stopped.get("pendingAnimationFrames"))) == 0 and errors is Array and errors.is_empty()),
+    and int(number(stopped.get("pendingAnimationFrames"))) == 0 and int(number(stopped.get("pendingRootRetirements"))) == 0
+    and int(number(stopped.get("pendingWork"))) == 0 and int(number(stopped.get("modalRuntimeMembers"))) == 0
+    and stopped.get("windowListener") == false and int(number(routing.get("active"))) == 0
+    and int(number(routing.get("contacts"))) == 0 and int(number(routing.get("stored"))) == 0
+    and int(number(routing.get("suppressed"))) == 0 and int(number(processor.get("active"))) == 0
+    and int(number(processor.get("activeCapture"))) == 0 and int(number(processor.get("pendingCapture"))) == 0
+    and errors is Array and errors.is_empty()),
     "stop/Stop retires both roots without timers or runtime errors")
   for root_name: String in surfaces:
     var final_root := native(surfaces[root_name])
-    check((int(number(final_root.get("nativeTags"))) == 0 and int(number(final_root.get("creates"))) == int(number(final_root.get("deletes"), -2))),
+    var pointer: Dictionary = final_root.get("pointer", {})
+    check((int(number(final_root.get("nativeTags"))) == 0 and int(number(final_root.get("retiringTags"))) == 0
+      and int(number(pointer.get("activePointers"))) == 0 and int(number(pointer.get("activeTouches"))) == 0
+      and int(number(pointer.get("takenPointers"))) == 0
+      and int(number(final_root.get("creates"))) == int(number(final_root.get("deletes"), -2))),
       "stop/Root " + root_name + " balances its native Controls")
 
 func _initialize() -> void:
@@ -602,7 +670,7 @@ func run() -> void:
     "expectedOriginalFailures": normative, "expectedPrecedingSdkFailures": preceding_sdk,
     "allowOriginalNegative": allow_original_negative, "negativeObserved": negative, "allCurrentAssertionsPassed": failed.is_empty(),
     "scope": {"actualNativeInput": true, "publicFacadeImports": true, "productionBundle": true, "twoRoots": true,
-      "animatedScrolling": false, "momentumEvents": false, "stickyHeaders": false, "refreshControl": false,
+      "animatedScrolling": true, "momentumEvents": false, "stickyHeaders": false, "refreshControl": false,
       "nestedLists": false, "hardwareCertified": false}}
   var file := FileAccess.open("res://build/virtualized-list-report.json", FileAccess.WRITE)
   if not check(file != null, "report/The virtualized-list report can be saved"):

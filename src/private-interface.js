@@ -47,19 +47,17 @@ function createPublicInstance(tag, viewConfig, handle, ownerDocument) {
           end,
         ]);
     },
-    scrollTo({ x = 0, y = 0, animated = false } = {}) {
-      if (animated || !Number.isFinite(x) || !Number.isFinite(y))
-        throw new Error(
-          "Godot scrollTo requires finite coordinates and animated: false",
-        );
+    scrollTo({ x = 0, y = 0, animated = true } = {}) {
+      if (!Number.isFinite(x) || !Number.isFinite(y) || typeof animated !== "boolean")
+        throw new Error("scrollTo requires finite coordinates and a boolean animated option");
       const node = currentNode(handle);
-      if (node) nativeFabricUIManager.dispatchCommand(node, "scrollTo", [x, y]);
+      if (node) nativeFabricUIManager.dispatchCommand(node, "scrollTo", [x, y, animated]);
     },
-    scrollToEnd({ animated = false } = {}) {
-      if (animated)
-        throw new Error("Godot animated scrolling is not implemented");
+    scrollToEnd({ animated = true } = {}) {
+      if (typeof animated !== "boolean")
+        throw new Error("scrollToEnd requires a boolean animated option");
       const node = currentNode(handle);
-      if (node) nativeFabricUIManager.dispatchCommand(node, "scrollToEnd", []);
+      if (node) nativeFabricUIManager.dispatchCommand(node, "scrollToEnd", [animated]);
     },
     isFocused() {
       return godotMetrics(tag)?.focused ?? false;

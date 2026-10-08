@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 4,
+  "status": "root-reviewed-local-source-inventory; hosted-ci-and-review-pending",
+  "sourceCommit": "18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c",
+  "workingTree": "clean before documentation curation; only docs/evidence/scroll-view and dashboard GF14 metadata are in scope here",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "sha256": "fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9",
+    "buildReceiptPath": "build/scroll-view-root/performance-integration-18d3478/native-sdk-build.json",
+    "buildReceiptSha256": "d9e833f98f5ffa26b28a1d8c0d539bdb8d73515d03ec00c188559bce258a6b4c"
+  },
+  "nativeBuildPins": {
+    "count": 136,
+    "trackedPaths": 136,
+    "allWorkingBytesMatchReceipt": true,
+    "allTrackedPathsMatchGitHead": true,
+    "dependencyOnlyPaths": [],
+    "repositoryMap": "source-pins-18d3478-repository.json",
+    "inputsReceipt": {
+      "path": "build/scroll-view-root/performance-integration-18d3478/native-sdk-inputs.json",
+      "sha256": "305c118d3f4e452d16af45473b760d6a064f9058268153b585bcfaa15264bdb9",
+      "verification": "sourceSha256 map has 136 paths and matches the native subset of the repository canonical map; all tracked pins also match Git 18d3478."
+    }
+  },
+  "canonicalMaps": {
+    "repository": {
+      "path": "source-pins-18d3478-repository.json",
+      "sha256": "04e83796d577f8fff109637faae0a06b0d71b3fc0f1c661af5e54bc4d973577a",
+      "count": 211,
+      "lineCount": 221
+    },
+    "originalReactNative": {
+      "path": "source-pins-18d3478-react-native.json",
+      "sha256": "89620fff0a7610d98ee45792915e5f838228c3103369358be93c9cc5d63960ed",
+      "count": 353,
+      "lineCount": 363
+    },
+    "originalVirtualizedList": {
+      "path": "source-pins-18d3478-virtualized-lists.json",
+      "sha256": "10ca08bab0fbb1a71c0dfce8041327c325f3400d8218d55b63a048b7bab2ed66",
+      "count": 15,
+      "lineCount": 25
+    },
+    "thirdParty": {
+      "path": "source-pins-18d3478-third-party.json",
+      "sha256": "fcf299414086c72b74b4932d99ec80ff51869f12fcdd6de0deaecd9a636960f7",
+      "count": 159,
+      "lineCount": 169
+    }
+  },
+  "hashBasis": {
+    "path": "source-pins-18d3478-hash-basis.json",
+    "sha256": "5172e0428994fae8fd62a250b3e52ebcfa7650746de39b890435eeaca4234e6a",
+    "lineCount": 37,
+    "recordedSourcePaths": 283,
+    "computedAfterExecutionPaths": 455
+  },
+  "declaredProducerGroups": {
+    "scrollView": {
+      "path": "source-pins-18d3478-scroll-view-group.json",
+      "sha256": "65c51efe476e566d8fb638e2dc32784e982fd15de115052490531f5e865e5ad0",
+      "lineCount": 433,
+      "counts": {
+        "declared": {
+          "repository": 18,
+          "originalReactNative": 6,
+          "originalVirtualizedList": 0,
+          "thirdParty": 0
+        },
+        "metafileSupplemental": {
+          "repository": 30,
+          "originalReactNative": 315,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "scrollView",
+            "inputCount": 397
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14-probe-bundle.json",
+        "sha256": "0fdd2b7dafb7645d9fdb3b715da6832ed33b1cc1f0acfaffa5bf000591733246"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14-report.json",
+        "sha256": "cf267248d151f2fdf395fdb3b8e8479ea351d5221a50a2ac80c5b9a0aae60331",
+        "checks": 33
+      }
+    },
+    "modalScrollView": {
+      "path": "source-pins-18d3478-modal-wheel-group.json",
+      "sha256": "9202d97e32a31577d5520d5236b7672bf74806c3589718af193f45c2b3b168c8",
+      "lineCount": 432,
+      "counts": {
+        "declared": {
+          "repository": 17,
+          "originalReactNative": 10,
+          "originalVirtualizedList": 0,
+          "thirdParty": 0
+        },
+        "metafileSupplemental": {
+          "repository": 30,
+          "originalReactNative": 311,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "modalScrollView",
+            "inputCount": 397
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal-probe-bundle.json",
+        "sha256": "137f6773dcbf8cb1e67e8fd110c1c6fbf5b067b13fde8e965943e385f40064c4"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal-report.json",
+        "sha256": "158b84d910e154c8f4462320ffdac481d0ec322a3d8860c3d3b6f722d175e7b2",
+        "checks": 13
+      }
+    },
+    "pointerClick": {
+      "path": "source-pins-18d3478-pointer-click-group.json",
+      "sha256": "74b53e3b3e9acee0d927f6e3b9c1525a63833aeb67311ad1960b6d4bfa7b7dd5",
+      "lineCount": 469,
+      "counts": {
+        "declared": {
+          "repository": 23,
+          "originalReactNative": 23,
+          "originalVirtualizedList": 0,
+          "thirdParty": 0
+        },
+        "metafileSupplemental": {
+          "repository": 28,
+          "originalReactNative": 307,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "pointerClick:disabled",
+            "inputCount": 399
+          },
+          {
+            "name": "pointerClick:imperative-only",
+            "inputCount": 399
+          },
+          {
+            "name": "pointerClick:internal-only",
+            "inputCount": 399
+          },
+          {
+            "name": "pointerClick:enabled",
+            "inputCount": 399
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/pointer-click/pointer-click-bundles.json",
+        "sha256": "a4690e268df4ae878106de34a5f9eaa5bffa8649a90e8ed4de5b43bb84fc0bf0"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/pointer-click/pointer-click-report.json",
+        "sha256": "1a5b6a61ee2b1291290ed09f8445dca25aa14decdffb4771a93b1e1b46fb6ff0",
+        "checks": 91
+      }
+    },
+    "virtualizedList": {
+      "path": "source-pins-18d3478-virtualized-list-group.json",
+      "sha256": "7a31b2768663fc100d214d0a8997cc8efe063662cbb4d9a81590a57c6029dbf2",
+      "lineCount": 441,
+      "counts": {
+        "declared": {
+          "repository": 21,
+          "originalReactNative": 17,
+          "originalVirtualizedList": 13,
+          "thirdParty": 0
+        },
+        "metafileSupplemental": {
+          "repository": 28,
+          "originalReactNative": 310,
+          "originalVirtualizedList": 2,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "virtualizedList",
+            "inputCount": 397
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-current-bundle.json",
+        "sha256": "e002dfe3f2e3908ecfc6f03ecf617f532e65740bcf637cf4474bf9384e3584a6"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-current-report.json",
+        "sha256": "7c500b24c030847f305d41d6ac5147c7bceed919b048b22f3b1719f97b5ebba0",
+        "checks": 44
+      }
+    },
+    "osContracts": {
+      "path": "source-pins-18d3478-os-contracts-group.json",
+      "sha256": "1f780d8e41448455f42f291098ec7bf232b147737799afe90d0ccb922f85446e",
+      "lineCount": 441,
+      "counts": {
+        "declared": {
+          "repository": 11,
+          "originalReactNative": 34,
+          "originalVirtualizedList": 0,
+          "thirdParty": 0
+        },
+        "metafileSupplemental": {
+          "repository": 31,
+          "originalReactNative": 301,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "osContracts",
+            "inputCount": 398
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-probe-bundle.json",
+        "sha256": "cba52fb4367679b4dfdb02da3a7bb67b580070764bc5fed3339fd7e2a2f6476d"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-current-report.json",
+        "sha256": "5ff380341807d5c4daa13b789344f35c7fadf127bef5c3d0e982cf16dfcde2b1",
+        "checks": 37
+      }
+    },
+    "performance": {
+      "path": "source-pins-18d3478-performance-group.json",
+      "sha256": "1b4bf5dbd07de2c0eea32754072a12fb95843030d67d91c80a89e40ae203d9d1",
+      "lineCount": 441,
+      "counts": {
+        "declared": {
+          "repository": 16,
+          "originalReactNative": 5,
+          "originalVirtualizedList": 0,
+          "thirdParty": 1
+        },
+        "metafileSupplemental": {
+          "repository": 34,
+          "originalReactNative": 320,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        },
+        "bundleInputs": [
+          {
+            "name": "performance",
+            "inputCount": 532
+          }
+        ]
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/performance-final/performance-probe-bundle.json",
+        "sha256": "e513c2818ad01a71448e7ea45ffbb6142292fe9b4674d5bfdf9ee5724e0e03f6"
+      },
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/performance-final/performance-current-report.json",
+        "sha256": "a8bb101f0b65d6229bc65d708020f8bf35f0df788b94ab399cbd2f78b9e18c65",
+        "checks": 43
+      }
+    }
+  },
+  "metafileSupplementalImports": {
+    "groups": {
+      "scrollView": {
+        "path": "source-pins-18d3478-scroll-view-group.json",
+        "sha256": "65c51efe476e566d8fb638e2dc32784e982fd15de115052490531f5e865e5ad0",
+        "counts": {
+          "repository": 30,
+          "originalReactNative": 315,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        }
+      },
+      "modalScrollView": {
+        "path": "source-pins-18d3478-modal-wheel-group.json",
+        "sha256": "9202d97e32a31577d5520d5236b7672bf74806c3589718af193f45c2b3b168c8",
+        "counts": {
+          "repository": 30,
+          "originalReactNative": 311,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        }
+      },
+      "pointerClick": {
+        "path": "source-pins-18d3478-pointer-click-group.json",
+        "sha256": "74b53e3b3e9acee0d927f6e3b9c1525a63833aeb67311ad1960b6d4bfa7b7dd5",
+        "counts": {
+          "repository": 28,
+          "originalReactNative": 307,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        }
+      },
+      "virtualizedList": {
+        "path": "source-pins-18d3478-virtualized-list-group.json",
+        "sha256": "7a31b2768663fc100d214d0a8997cc8efe063662cbb4d9a81590a57c6029dbf2",
+        "counts": {
+          "repository": 28,
+          "originalReactNative": 310,
+          "originalVirtualizedList": 2,
+          "thirdParty": 0
+        }
+      },
+      "osContracts": {
+        "path": "source-pins-18d3478-os-contracts-group.json",
+        "sha256": "1f780d8e41448455f42f291098ec7bf232b147737799afe90d0ccb922f85446e",
+        "counts": {
+          "repository": 31,
+          "originalReactNative": 301,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        }
+      },
+      "performance": {
+        "path": "source-pins-18d3478-performance-group.json",
+        "sha256": "1b4bf5dbd07de2c0eea32754072a12fb95843030d67d91c80a89e40ae203d9d1",
+        "counts": {
+          "repository": 34,
+          "originalReactNative": 320,
+          "originalVirtualizedList": 15,
+          "thirdParty": 0
+        }
+      }
+    },
+    "distinctRepositoryPathCount": 94,
+    "limitation": "Supplemental metafile inputs are recorded separately and are not added to the native pin count or producer declared pin counts."
+  },
+  "sdkPackage": {
+    "path": "build/scroll-view-root/performance-integration-18d3478/native-sdk",
+    "manifestPath": "build/scroll-view-root/performance-integration-18d3478/native-sdk/manifest.json",
+    "receiptPath": "build/scroll-view-root/performance-integration-18d3478/native-sdk/receipt.json",
+    "fileRecordCount": 2713,
+    "status": "verified locally by root; no ABI/runtime certification claim",
+    "claims": {
+      "adapterLinked": false,
+      "adapterLoaded": false,
+      "runtimeExecuted": false,
+      "runtimeIdentityVerified": false,
+      "abiCertified": false
+    }
+  },
+  "limits": [
+    "Local macOS host and mounted probes only; no hosted CI claim.",
+    "No mobile hardware or refresh-rate certification.",
+    "The SDK metadata records a host/build; it does not certify an external adapter ABI or physical binary equivalence."
+  ],
+  "historicalFullInventory": {
+    "path": "build/scroll-view-root/documentation-curation-18d3478/source-pins-18d3478-full-precompression.json",
+    "sha256": "ccc05e6c3e09b82975624fbeb79f8805585402efff2d86cb4544e368d71f637e"
+  },
+  "sourcePathLists": {
+    "scrollView": {
+      "path": "source-pins-18d3478-scroll-view-group.json",
+      "sha256": "65c51efe476e566d8fb638e2dc32784e982fd15de115052490531f5e865e5ad0"
+    },
+    "modalScrollView": {
+      "path": "source-pins-18d3478-modal-wheel-group.json",
+      "sha256": "9202d97e32a31577d5520d5236b7672bf74806c3589718af193f45c2b3b168c8"
+    },
+    "pointerClick": {
+      "path": "source-pins-18d3478-pointer-click-group.json",
+      "sha256": "74b53e3b3e9acee0d927f6e3b9c1525a63833aeb67311ad1960b6d4bfa7b7dd5"
+    },
+    "virtualizedList": {
+      "path": "source-pins-18d3478-virtualized-list-group.json",
+      "sha256": "7a31b2768663fc100d214d0a8997cc8efe063662cbb4d9a81590a57c6029dbf2"
+    },
+    "osContracts": {
+      "path": "source-pins-18d3478-os-contracts-group.json",
+      "sha256": "1f780d8e41448455f42f291098ec7bf232b147737799afe90d0ccb922f85446e"
+    },
+    "performance": {
+      "path": "source-pins-18d3478-performance-group.json",
+      "sha256": "1b4bf5dbd07de2c0eea32754072a12fb95843030d67d91c80a89e40ae203d9d1"
+    }
+  }
+}

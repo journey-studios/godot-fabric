@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "status": "independently-verified-local-final-integrated",
+  "scope": "GF-14 desktop slice; hosted CI and CodeRabbit acceptance remain open",
+  "executedAt": "2026-10-08T04:00:39.598Z",
+  "current": {
+    "negative": false,
+    "hostSha256": "bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe",
+    "buildReceiptSha256": "a3bd2e88322cc60e748096f6740c9e017671a9b733836e82b83c1545f4c12af5",
+    "bundleSha256": "29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b",
+    "probeSha256": "3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915",
+    "bundleReceiptSha256": "05c89cc2ceb473af20a2f8d6103a6ecaf9fcb63c4abd52dc53237f6674dd7d30",
+    "compiledNativePins": {
+      "native/application_runtime.cpp": "6428a09c2292606ef7141feed93712e7c526d0145d930f584505e2c7fddec2e9",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "bundleProducerPins": {
+      "native/application_runtime.cpp": "6428a09c2292606ef7141feed93712e7c526d0145d930f584505e2c7fddec2e9",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "frameworkPinCount": 16,
+    "frameworksIdenticalToPreIntegration": true,
+    "execution": {
+      "code": 0,
+      "signal": null,
+      "timeout": false
+    },
+    "checks": 28,
+    "failures": [],
+    "reportSha256": "34e8f4c81ca82115d307a12fdebeafcbfc9680a226038c402cdc209b26e0ec81",
+    "logSha256": "4afd5ed6ece2d4a78a46acf08a15697f11335918648cdca94a8857d6ffa77cb3",
+    "fullCleanup": true,
+    "executedAt": "2026-10-08T03:56:27.740Z",
+    "rawArtifacts": "build/scroll-view-root/interruption-bbb683e2e7f3-1791431779756"
+  },
+  "preceding": {
+    "negative": true,
+    "hostSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
+    "buildReceiptSha256": "76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c",
+    "bundleSha256": "29f2c9282fd7f59c137afe225447f5a26b901979d4c115e7498961eda6b6005b",
+    "probeSha256": "3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915",
+    "bundleReceiptSha256": "05c89cc2ceb473af20a2f8d6103a6ecaf9fcb63c4abd52dc53237f6674dd7d30",
+    "compiledNativePins": {
+      "native/application_runtime.cpp": "196856d792f3a31fbbb97e13d574d23622b85d342fb0093d840627ccbac162cb",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "b73bc8328146e663b6cd23e413912e4ae726b8a9b737339a3ff41ed82f1f1cd9",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "bundleProducerPins": {
+      "native/application_runtime.cpp": "6428a09c2292606ef7141feed93712e7c526d0145d930f584505e2c7fddec2e9",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "frameworkPinCount": 16,
+    "frameworksIdenticalToPreIntegration": true,
+    "execution": {
+      "code": 1,
+      "signal": null,
+      "timeout": false
+    },
+    "checks": 28,
+    "failures": [
+      "wheel replacement retires a claimed pan once before later pointer movement and Up",
+      "contentOffset replacement retires a claimed pan once before later pointer movement and Up"
+    ],
+    "reportSha256": "3f32608d068695e28e8801b748d59eac1182f2b28b64f9e0e7c0f1e7670c9904",
+    "logSha256": "e5e787b3432c466aea2c56ca8ea5b0abdae8cd16e826ff30c98766e87bc20dfe",
+    "fullCleanup": true,
+    "executedAt": "2026-10-08T03:56:27.565Z",
+    "rawArtifacts": "build/scroll-view-root/interruption-4f28ed0f9dae-1791431779756"
+  },
+  "sameBundleAndProbe": true,
+  "diagonal": {
+    "vertical": {
+      "release": {
+        "x": 80,
+        "y": 150
+      },
+      "transverseVelocity": 0,
+      "target": 272.250244140625,
+      "settled": {
+        "x": 80,
+        "y": 272.250235240921
+      },
+      "fabric": {
+        "x": 80,
+        "y": 272.250244140625
+      },
+      "paint": {
+        "x": -80,
+        "y": -272.250244140625
+      },
+      "events": [
+        "begin",
+        "end",
+        "momentumBegin",
+        "momentumEnd"
+      ],
+      "completed": true,
+      "preceding": {
+        "release": {
+          "x": 80,
+          "y": 150
+        },
+        "transverseVelocity": 0,
+        "settled": {
+          "x": 80,
+          "y": 270.537011380481
+        }
+      }
+    },
+    "horizontal": {
+      "release": {
+        "x": 150,
+        "y": 70
+      },
+      "transverseVelocity": 0,
+      "target": 268.966796875,
+      "settled": {
+        "x": 268.966781717912,
+        "y": 70
+      },
+      "fabric": {
+        "x": 268.966796875,
+        "y": 70
+      },
+      "paint": {
+        "x": -268.966796875,
+        "y": -70
+      },
+      "events": [
+        "begin",
+        "end",
+        "momentumBegin",
+        "momentumEnd"
+      ],
+      "completed": true,
+      "preceding": {
+        "release": {
+          "x": 150,
+          "y": 70
+        },
+        "transverseVelocity": 0,
+        "settled": {
+          "x": 269.445767265111,
+          "y": 70
+        }
+      }
+    }
+  },
+  "interruption": {
+    "wheel": {
+      "claimedOffset": 130,
+      "endOffset": 130,
+      "replacementOffset": 178,
+      "endBeforeReplacement": true,
+      "endsAdded": 1,
+      "retiredBeforeMoveAndUp": true,
+      "fabricY": 178,
+      "paintY": -178,
+      "events": [
+        "begin",
+        "end"
+      ],
+      "preceding": {
+        "stillClaimedAfterReplacement": true,
+        "endDelayedUntilUp": true,
+        "endOffset": 178
+      }
+    },
+    "contentOffset": {
+      "claimedOffset": 130,
+      "endOffset": 130,
+      "replacementOffset": 260,
+      "endBeforeReplacement": true,
+      "endsAdded": 1,
+      "retiredBeforeMoveAndUp": true,
+      "fabricY": 260,
+      "paintY": -260,
+      "events": [
+        "begin",
+        "end"
+      ],
+      "preceding": {
+        "stillClaimedAfterReplacement": true,
+        "endDelayedUntilUp": true,
+        "endOffset": 260
+      }
+    }
+  },
+  "neutralOptions": {
+    "mounted": true,
+    "logical": {
+      "x": 12,
+      "y": 24
+    },
+    "fabric": {
+      "x": 12,
+      "y": 24
+    },
+    "paint": {
+      "x": -12,
+      "y": -24
+    },
+    "errors": []
+  },
+  "orientation": {
+    "claimedBeforeChange": true,
+    "canceledAtChange": true,
+    "eventsAtChange": [
+      "begin",
+      "end"
+    ],
+    "eventsAfterUp": [
+      "begin",
+      "end"
+    ],
+    "duplicateEnd": false,
+    "precedingAlsoCancelsAtChange": true
+  },
+  "lists": {
+    "checks": 44,
+    "positiveOracle": "passed",
+    "positiveReportSha256": "9da47215795cf184cc1481dafffa5f2be78b74c445d348d71cf1613ade95abbd",
+    "shelf": {
+      "logicalX": 180,
+      "fabricX": 180,
+      "paintX": -180,
+      "beginDrag": 1,
+      "endDrag": 1,
+      "momentumBegin": 0,
+      "momentumEnd": 0
+    },
+    "sabotage": {
+      "checks": 44,
+      "failures": [
+        "mount/feed/The first window renders initialNumToRender items, RN's overscan, the header and the footer",
+        "mount/feed/The first viewable items are those at least half visible",
+        "feed/wheel/onViewableItemsChanged reports the items at least half visible, with exact changes"
+      ],
+      "reportSha256": "e693f4f617b658ce77404fec86f4dcc551fd7c054740fbdd72594fb7c659505f",
+      "forcedGreenOracle": "rejected"
+    }
+  },
+  "graphics": {
+    "checks": 4,
+    "receiptSha256": "bb5a51d4d27502f84df24b31bfc2bc8ff7b02102b19fcf1cf3526f01c2670feb",
+    "capturesVerified": 4,
+    "hostAndBundleMatch": true,
+    "independentPixels": {
+      "capture": "captures/horizontal-pan-clipped.png",
+      "inside": {
+        "point": [
+          554,
+          109
+        ],
+        "rgb": [
+          29,
+          78,
+          216
+        ]
+      },
+      "outside": {
+        "point": [
+          680,
+          109
+        ],
+        "rgb": [
+          245,
+          248,
+          250
+        ]
+      },
+      "method": "Root independently read PNG pixels and inspected the rendered fractional and clipped frames"
+    }
+  },
+  "historicalEvidence": "root-independent.json retains the earlier 22-check pair; root-integrated.json retains 25 checks with the three diagonal/orientation negative controls. This final 28-check pair isolates the two interruption defects on 4f28.",
+  "limitations": [
+    "macOS desktop Godot 4.7.2; no physical touch hardware or mobile export certification",
+    "Full GF-14 contract and RN differential parity remain open",
+    "Build receipt identifies compiled inputs; it does not certify the external SDK adapter ABI"
+  ],
+  "accessibilityRegression": {
+    "checks": 80,
+    "oracle": "independently-passed",
+    "reportSha256": "9944e0cf652256647b1cbfb414926e3457c26be938892bddd2d911b38de2dae1",
+    "hostSha256": "bbb683e2e7f3d0b9855ded93d547d50ffc4bf7bb3166f36d11ae2e430d3935fe",
+    "scope": "Headless metadata and host action path; no OS tree or hardware certification"
+  }
+}

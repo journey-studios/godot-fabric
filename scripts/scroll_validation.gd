@@ -1,8 +1,28 @@
 extends "res://scripts/pointer_validation.gd"
 
-func run_action(name: String, args := "") -> void:
+func run_action(name: String, args := "", settle_frames := 4) -> void:
   surface.evaluate("GodotApp.run('" + name + "'" + ("," + args if args else "") + ")")
-  await frames(4)
+  await frames(settle_frames)
+
+func wait_for_scroll_progress(from_y: float, to_y: float) -> bool:
+  var deadline := Time.get_ticks_msec() + 3000
+  while Time.get_ticks_msec() < deadline:
+    var current := offset()
+    if current > from_y + 0.5 and current < to_y - 0.5:
+      return true
+    if abs(current - to_y) <= 0.5:
+      return false
+    await frames(1)
+  return false
+
+func wait_for_scroll_offset(target: float) -> bool:
+  var deadline := Time.get_ticks_msec() + 5000
+  while Time.get_ticks_msec() < deadline:
+    var scroll: Dictionary = node("inventory").scroll
+    if abs(scroll.y - target) <= 0.5 and scroll.motion == 0 and abs(scroll.fabricY - target) <= 0.5 and abs(scroll.contentY + scroll.y) <= 0.5:
+      return true
+    await frames(1)
+  return false
 
 func event_count(type: String) -> int:
   return react().events.filter(func(event): return event.type == type).size()
@@ -38,8 +58,8 @@ func editing_checks() -> void:
   verify(not node("item-1").is_empty() and node("inventory").scroll.maxY > 0, "Clearing filter restores the scrollable inventory through React reconciliation")
 
 func native_gui_checks() -> void:
-  var scroll_control: ScrollContainer = surface.find_child("inventory", true, false)
-  verify(scroll_control.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Native scroll container cannot start a competing GUI pan recognizer")
+  var scroll_control: Control = surface.find_child("inventory", true, false)
+  verify(scroll_control.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Native scroll control cannot start a competing GUI pan recognizer")
   if DisplayServer.get_name() == "headless":
     return
   await run_action("nativeProbe", "true")
@@ -68,11 +88,11 @@ func capture(name: String) -> void:
 
 func mount_checks() -> void:
   var control: Control = surface.find_child("inventory", true, false)
-  verify(control is ScrollContainer, "Fabric ScrollView mounts a real Godot ScrollContainer")
+  verify(control.clip_contents, "Fabric ScrollView clips its original React Native content")
   verify(node("inventory").scroll.contentHeight == 48 * 48, "Yoga supplies all 48 inventory row frames without shrinking")
-  verify(node("inventory").height == node("inventory").fabricHeight, "Native scroll viewport keeps the committed Yoga height")
-  verify(node("inventory-content").height == node("inventory-content").fabricHeight, "Native content keeps the committed Yoga height")
-  verify(react().content[0] == node("inventory-content").width and react().content[1] == 2304, "Content layout notification reports Yoga content size")
+  verify(node("inventory").height == node("inventory").fabricHeight and node("categories").height == 48 and node("categories").fabricHeight == 48, "Scroll and category viewports keep their committed Yoga heights")
+  verify(node("item-47").y == 47 * 48 and node("item-47").height == node("item-47").fabricHeight, "Original RN child frames retain the full Yoga content extent")
+  verify(react().content[0] == node("inventory").scroll.contentWidth and react().content[1] == node("inventory").scroll.contentHeight, "Content layout notification reports the mounted native scroll extent")
   await capture("initial")
 
 func pointer_checks() -> void:
@@ -92,9 +112,14 @@ func pointer_checks() -> void:
   await wait_js("GodotApp.stats().events.some(event => event.type === 'Out:0')", 2)
   await frames(3)
   verify(event_count("Out:0") == 1 and node("item-0").opacity == 1, "Upstream termination cancels Pressability and native pressed style")
-  verify(data().pointer.responder == node("inventory").tag and data().pointer.blockNative, "Scroll responder blocks native gesture handling after transfer")
+  var active_scroll: Dictionary = node("inventory").scroll
+  verify(active_scroll.candidateClaimed and active_scroll.candidatePointer > 0 and data().pointerRouting.active == 1, "Native scroll owner takes the routed pointer after canceling the child responder")
+  var momentum_begins: int = active_scroll.momentumBegins
   await wheel(at("inventory"))
-  verify(offset() == 40, "Wheel input cannot move content during a responder-owned drag")
+  verify(offset() == 88 and not node("inventory").scroll.dragging and event_count("End") == 1, "Wheel input interrupts a responder-owned drag before applying its scroll delta")
+  await mouse("move", start + Vector2(0, -55))
+  var after_wheel: Dictionary = node("inventory").scroll
+  verify(offset() == 88 and not after_wheel.candidate and event_count("End") == 1 and after_wheel.momentumBegins == momentum_begins, "Held pointer movement after wheel cannot resume the retired drag or emit momentum")
   await capture("drag")
   await mouse("end", start + Vector2(0, -40))
   await get_tree().create_timer(0.45).timeout
@@ -123,21 +148,67 @@ func ref_and_wheel_checks() -> void:
   await run_action("offset", "-100")
   verify(offset() == 0, "Negative ref offset clamps to the upper boundary")
   await run_action("propOffset", "0")
-  await run_action("unsupported")
-  verify(react().unsupported.contains("animated: false") and offset() == 0, "Animated ref requests fail explicitly without moving content")
+  await run_action("animateOffset", "120", 0)
+  var offset_progressed := await wait_for_scroll_progress(0, 120)
+  verify(offset_progressed, "scrollTo without an animated option follows the RN animated default")
+  var offset_settled := await wait_for_scroll_offset(120)
+  var offset_scroll: Dictionary = node("inventory").scroll
+  verify(offset_settled and abs(offset_scroll.fabricY - 120) <= 0.5 and abs(offset_scroll.contentY + offset_scroll.y) <= 0.5 and data().errors.is_empty(), "Default animated scrollTo settles in Fabric state and painted content without runtime errors")
+  await run_action("offset", "0")
+  await run_action("animateEnd", "", 0)
+  var end_target: float = node("inventory").scroll.maxY
+  var end_progressed := await wait_for_scroll_progress(0, end_target)
+  verify(end_progressed, "scrollToEnd without an animated option follows the RN animated default")
+  var end_settled := await wait_for_scroll_offset(end_target)
+  var end_scroll: Dictionary = node("inventory").scroll
+  verify(end_settled and abs(end_scroll.fabricY - end_target) <= 0.5 and abs(end_scroll.contentY + end_scroll.y) <= 0.5 and data().errors.is_empty(), "Default animated scrollToEnd settles in Fabric state and painted content")
+  await run_action("offset", "0")
   await run_action("horizontal", "180")
   verify(node("categories").scroll.x == 180 and node("categories").scroll.fabricX == 180 and node("categories").scroll.y == 0, "A second horizontal consumer updates Fabric state on its own axis")
   await wheel(at("categories"), MOUSE_BUTTON_WHEEL_RIGHT)
   verify(node("categories").scroll.x == 228, "Horizontal wheel respects the horizontal native content axis")
 
 func refusal_and_disable_checks() -> void:
-  await run_action("lock", "true")
+  await run_action("offset", "0")
+  await run_action("noncancelable", "true")
   await run_action("clear")
   var start := at("item-0")
+  var begins_before: int = event_count("Begin")
+  var ends_before: int = event_count("End")
+  var momentum_begins_before: int = node("inventory").scroll.momentumBegins
+  var momentum_ends_before: int = node("inventory").scroll.momentumEnds
   await mouse("start", start)
   await mouse("move", start + Vector2(0, -20))
-  verify(event_count("Reject") == 1 and offset() == 0 and data().pointer.responder == node("item-0").tag, "Noncancelable Pressability rejects parent scroll takeover")
+  await wait_js("GodotApp.stats().events.some(event => event.type === 'Out:0')", 2)
+  var native_takeover: Dictionary = node("inventory").scroll
+  verify(offset() == 20 and native_takeover.candidateClaimed and event_count("Begin") == begins_before + 1 and event_count("Out:0") == 1, "Native scroll pan can cancel a noncancelable Pressability child without a JS responder request")
+  verify(event_count("Press:0") == 0, "Canceled noncancelable child does not produce a Press action")
+  var stationary := start + Vector2(0, -20)
+  await mouse("move", stationary)
+  await get_tree().create_timer(0.30).timeout
   await mouse("end", start + Vector2(0, -20))
+  await get_tree().create_timer(0.15).timeout
+  var native_settled: Dictionary = node("inventory").scroll
+  verify(event_count("Begin") == begins_before + 1 and event_count("End") == ends_before + 1 and native_settled.momentumBegins == momentum_begins_before and native_settled.momentumEnds == momentum_ends_before, "Stationary release closes native takeover once without inventing momentum")
+  var native_pointer_routing: Dictionary = data().pointerRouting
+  verify(event_count("Press:0") == 0 and event_count("Long:0") == 0 and not native_settled.candidate and data().pointer.activeTouches == 0 and data().pointer.responder == 0 and native_pointer_routing.active == 0, "Native takeover release suppresses later child actions and clears its pointer route")
+
+  await run_action("offset", "0")
+  await run_action("lock", "true")
+  await run_action("noncancelable", "false")
+  await run_action("clear")
+  start = at("item-0")
+  begins_before = event_count("Begin")
+  ends_before = event_count("End")
+  await mouse("start", start)
+  await mouse("move", start + Vector2(0, -20))
+  var blocked_scroll: Dictionary = node("inventory").scroll
+  var blocked_pointer: Dictionary = data().pointer
+  verify(offset() == 0 and event_count("Begin") == begins_before and not blocked_scroll.candidateClaimed and blocked_pointer.responder == node("item-0").tag and blocked_pointer.blockNative, "blockNativeResponder keeps a held Pressability child ahead of native scroll pan")
+  await mouse("end", start + Vector2(0, -20))
+  await wait_js("GodotApp.stats().events.some(event => event.type === 'Press:0')", 2)
+  var released_pointer: Dictionary = data().pointer
+  verify(event_count("Press:0") == 1 and event_count("End") == ends_before and released_pointer.activeTouches == 0 and released_pointer.responder == 0 and not released_pointer.blockNative, "Blocked child receives Press and releases native responder authority cleanly")
   await run_action("lock", "false")
   await run_action("enable", "false")
   await run_action("clear")
@@ -180,7 +251,7 @@ func resize_checks() -> void:
   await run_action("end")
   get_window().size = Vector2i(620, 900)
   await frames(8)
-  verify(node("inventory").width == 572 and node("inventory-content").width == 572 and node("inventory-content").fabricWidth == 572, "Native resize relayouts scroll viewport and content through Yoga")
+  verify(node("inventory").width == 572 and node("inventory").scroll.contentWidth == 572 and node("item-0").width == 572 and node("item-0").fabricWidth == 572, "Native resize relayouts scroll viewport and original RN child through Yoga")
   verify(node("inventory").scroll.y == node("inventory").scroll.maxY and node("inventory").scroll.fabricY == offset(), "Growing viewport clamps the native offset and updates Fabric state")
   verify(node("inventory").id == scroll_id, "Responsive relayout preserves the native scroll instance")
   await capture("narrow")

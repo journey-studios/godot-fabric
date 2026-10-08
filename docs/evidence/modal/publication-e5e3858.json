@@ -1,0 +1,41 @@
+{
+  "runId": 37713213836,
+  "artifactId": 11522945741,
+  "artifactSha256": "cfa35932e031e1f0041b222fd70f3c0355f7970ff1917a3e883ac96a27a47314",
+  "dataRef": "e5e38581ae52604fd127f8c6e76fda8e9af20e15",
+  "uploadedJsonEqualsCommittedJsonExceptPublication": true,
+  "publication": {
+    "ref": "e5e38581ae52604fd127f8c6e76fda8e9af20e15",
+    "commit": "e5e38581ae52604fd127f8c6e76fda8e9af20e15",
+    "inMain": false,
+    "at": "2026-10-08T01:30:03.527Z"
+  },
+  "publicSiteVerified": true,
+  "verifiedAt": "2026-10-08T01:40:36.901773+00:00",
+  "url": "https://journey-studios.github.io/godot-fabric/",
+  "publicJsonEqualsCommittedJsonExceptPublication": true,
+  "publicJsonSha256": "584256e4c4f053688796c0539e00b4e8af3d3a593e87e4dd11299d0958042496",
+  "screenshot": {
+    "path": "docs/evidence/modal/dashboard-public-e5e3858.jpg",
+    "sha256": "0d4eb52e6a2b43f3684997bd78cb65a495d42627fa478e0ef5803a253a494602",
+    "shows": [
+      "publication e5e3858 (outside main)",
+      "24/156 checkpoints",
+      "0/39 full items",
+      "15.4%",
+      "GF-14 implementation focus"
+    ]
+  },
+  "observedPropagation": {
+    "initialPublicRead": "old main data (23/156), last modified 2026-10-08T01:21:10Z",
+    "newPublicRead": "exact e5e3858 after deployment propagation",
+    "noWorkflowOrProductionChangeForCache": true
+  },
+  "earlierInvalidReferenceAttempt": {
+    "runId": 37713180004,
+    "conclusion": "FAILURE",
+    "deploy": "SKIPPED",
+    "reason": "incorrect data_ref supplied by root; retried with exact published commit"
+  },
+  "acceptanceBoundary": "Only the first GF-18 desktop slice is accepted; GF-14 and all full item, mobile and contract checkpoints remain open."
+}

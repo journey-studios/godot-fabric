@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "scenario": "gf14-scroll-view-graphical-capture",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "displayServer": "macOS",
+  "renderer": "gl_compatibility",
+  "command": "Godot --path <checkout> --windowed --script res://build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-probe.gd",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "expectedSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "beforeSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "afterSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "unchanged": true
+  },
+  "buildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8",
+    "unchanged": true,
+    "recordedHostMatches": true
+  },
+  "bundle": {
+    "path": "build/scroll-view-gf14-probe.js",
+    "expectedSha256": "d602ae817b148d52df824be5c96adbedbfd6a78ee47c59d58ff54d264a0a8b25",
+    "beforeSha256": "d602ae817b148d52df824be5c96adbedbfd6a78ee47c59d58ff54d264a0a8b25",
+    "afterSha256": "d602ae817b148d52df824be5c96adbedbfd6a78ee47c59d58ff54d264a0a8b25",
+    "unchanged": true
+  },
+  "bundleReceipt": {
+    "path": "build/scroll-view-gf14-probe-bundle.json",
+    "sha256": "511c84288188d9f3b0ad26b72967fd22cf860b15158a4ae87a9fcb8ca35edf87",
+    "unchanged": true
+  },
+  "probe": {
+    "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-probe.gd",
+    "sha256": "b2a6ebe4076cdd59a5ead35c2b7609ecb3d58afa40c54c6ccfd5130c77aaa906"
+  },
+  "runner": {
+    "canonicalSource": {
+      "path": "scripts/scroll-view-graphics.mjs",
+      "sha256": "b92a862e2d7bc5953998108b7826a07f18ff9f84a5ab107896c544a589313fe6"
+    },
+    "executedCopy": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-runner.mjs",
+      "sha256": "e9fc8c9efc9cb3593065549e68e7421117b709e9d3d3a60fbe2598f5ebaa2a50",
+      "preservedIdenticalCopy": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-runner-executed-copy.mjs",
+      "preservedIdenticalCopySha256": "e9fc8c9efc9cb3593065549e68e7421117b709e9d3d3a60fbe2598f5ebaa2a50"
+    },
+    "invocation": {
+      "command": "node build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-runner.mjs",
+      "source": "the runner invocation recorded in this task session",
+      "hashVerifiedFromPreservedBytes": true
+    }
+  },
+  "report": {
+    "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-report.json",
+    "sha256": "fac6ed9e4639d21feb1f641c669c70b296fa16d7f69c2b150ed9fd1a3e0f2539"
+  },
+  "checks": [
+    {
+      "name": "initial frame contains both mounted roots at expected viewport size",
+      "passed": true,
+      "viewport": "(840, 420)",
+      "maxY": 590
+    },
+    {
+      "name": "fractional paint and RN measurement remain aligned at 13.25 px",
+      "passed": true,
+      "offsetY": 13.25,
+      "fabricY": 13.25,
+      "paintedContentY": -13.25,
+      "measuredRowY": 10.75
+    },
+    {
+      "name": "horizontal pan paints inside the viewport and clips blue content outside it",
+      "passed": true,
+      "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
+      "offsetX": 540,
+      "fabricX": 540,
+      "paintedContentX": -540,
+      "pixelInsideViewport": "(0.1137, 0.3059, 0.8471, 1.0)",
+      "pixelOutsideViewport": "(0.9608, 0.9725, 0.9804, 1.0)"
+    },
+    {
+      "name": "both roots and all pointer/runtime ownership are empty after stop",
+      "passed": true,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "pendingCapture": 0
+        },
+        "surfaces": [
+          {
+            "nativeTags": 0,
+            "retiringTags": 0,
+            "activePointers": 0,
+            "activeTouches": 0,
+            "takenPointers": 0
+          },
+          {
+            "nativeTags": 0,
+            "retiringTags": 0,
+            "activePointers": 0,
+            "activeTouches": 0,
+            "takenPointers": 0
+          }
+        ]
+      }
+    }
+  ],
+  "captures": [
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/captures/initial.png",
+      "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
+      "bytes": 13524
+    },
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/captures/fractional-13_25.png",
+      "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
+      "bytes": 12671
+    },
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/captures/horizontal-pan-clipped.png",
+      "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
+      "bytes": 12669
+    },
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/captures/cleanup.png",
+      "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
+      "bytes": 2205
+    }
+  ],
+  "log": {
+    "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics.log",
+    "sha256": "757df2875980a72fee2c077a4a8599e94c59c01245c26366a3e1142303c8cd05"
+  },
+  "limitations": [
+    "Godot macOS windowed run only; no physical hardware touch or mobile-export claim."
+  ],
+  "provenanceCorrection": {
+    "priorReceiptHadCanonicalSourceHashUnderExecutedCopyPath": true,
+    "correctionRecordedAfterExecution": true,
+    "capturesWereNotRerun": true
+  }
+}
