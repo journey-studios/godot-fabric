@@ -90,7 +90,10 @@ file(GLOB MOUNT_INTERNAL CONFIGURE_DEPENDS "${RN}/react/renderer/mounting/intern
 file(GLOB_RECURSE YOGA CONFIGURE_DEPENDS "${RN}/yoga/yoga/*.cpp")
 list(FILTER YOGA EXCLUDE REGEX "/tests/")
 list(APPEND SOURCES ${MOUNT_INTERNAL} ${YOGA})
-list(APPEND SOURCES "${RN}/react/renderer/textlayoutmanager/platform/cxx/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
+# Godot's own platform TextLayoutManager replaces RN's portable `cxx` one, header
+# and source together: it adds the virtual measureLines behind onTextLayout and
+# the Yoga baseline (see text_platform/).
+list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
 # RN's generated core-component Props/EventEmitters/ShadowNodes (the package's
 # codegen output). The host registers only the shared non-Android Switch and
 # the generated ActivityIndicatorView descriptors.
@@ -119,7 +122,7 @@ target_include_directories(fabric_core PUBLIC
   "${RN}/react/renderer/components/scrollview/platform/cxx"
   "${RN}/react/renderer/components/text/platform/cxx"
   "${RN}/react/renderer/components/switch/iosswitch"
-  "${RN}/react/renderer/textlayoutmanager/platform/cxx"
+  "${CMAKE_CURRENT_SOURCE_DIR}/text_platform"
   "${RN}/react/renderer/graphics/platform/cxx"
   "${RN}/react/utils/platform/cxx"
   "${RN}/runtimeexecutor/platform/cxx"

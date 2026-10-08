@@ -67,9 +67,14 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   source gaps reproduced with 119 original-ref checks; current-parent correction
   passes 102 checks/variant. Native integration and responder controls remain pending.
 
+- [Text layout](text-layout.md): RN's `measureLines` through a Godot platform
+  `TextLayoutManager`, so `onTextLayout` and the Yoga baseline come from the one
+  shaped paragraph the host measures and paints; the font-table oracle, the
+  measured tolerance and the platform divergences.
+
 ## Useful next experiments
 
-- Text baseline and onTextLayout, then span interaction and explicit font invalidation.
+- Span interaction and explicit font invalidation (Text's baseline and `onTextLayout` are done: see [Text layout](text-layout.md)).
 - Keyboard focus/navigation and system IME, with real OS input proof.
 - Virtualized lists with 10,000 records, using frame-time and Hermes memory profiles.
 - Platform-specific builds and tests before advertising Windows/Linux/mobile support.

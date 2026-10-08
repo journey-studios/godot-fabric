@@ -156,6 +156,18 @@ jobs:
             build/frame-clock-current.log
             build/frame-clock-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:text-layout
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-text-layout
+          path: |
+            build/text-layout-report.json
+            build/text-layout-current-report.json
+            build/text-layout-comparison.json
+            build/text-layout-current.log
+            build/text-layout-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:networking
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

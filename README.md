@@ -30,6 +30,14 @@ React Native Chart Kit. The [TSX form](examples/form/README.md) uses the narrowe
 public types and native editing/activation. Mobile keyboard/IME contracts and
 complete React Native props remain open.
 
+The [text layout example](examples/text-layout/README.md) draws what Text's
+`onTextLayout` reports (each visible line's box and baseline) over the paragraphs
+the host measured and painted, and aligns a row by `alignItems: 'baseline'`; both
+come from the lines of that one shaped paragraph. The
+[research](docs/research/text-layout.md) records the font-table oracle, the
+measured tolerance and the controls; span press and selection, font scaling,
+bidi/emoji and font fallback remain open.
+
 The [View geometry example](examples/view/README.md) exercises original public
 View/Fabric ordering, rectangular overflow and four solid border colors through
 real input targets and renderer pixels. The later
@@ -671,6 +679,7 @@ npm run test:pointers:interest          # original Map query and native View poi
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
+npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

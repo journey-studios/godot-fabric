@@ -27,6 +27,8 @@ function fixture(t) {
   write(root, 'native/adapter_registry.h', '#pragma once\n#include "turbo_module_registry.h"\n');
   write(root, 'native/adapter_loader.h', '#pragma once\n#include "adapter_registry.h"\n');
   write(root, 'native/turbo_module_registry.h', '#pragma once\n');
+  write(root, 'native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h', '#pragma once\n');
+  write(root, 'native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp', '// fixture only\n');
   write(root, 'native/adapter_registry.cpp', '// fixture only\n');
   write(root, 'native/godot-profile.json', '{"enabled_classes":["Control","Button"]}');
   const buildDir = path.join(root, '.deps/build');
@@ -110,6 +112,9 @@ test('dry package has original combination shape, SPI headers and shared importe
   assert.equal(combination.nativeDependencies.length, 3);
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/adapter_registry.h')));
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/turbo_module_registry.h')));
+  // The platform TextLayoutManager the host compiles in place of RN's portable one: an adapter's include path
+  // reaches it as include/sdk/text_platform.
+  assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h')));
   assert.ok(!manifest.files.some(entry => entry.path.includes('wslay')),
     'private framing headers are hashed inputs, not part of the adapter SDK');
   assert.ok(fs.existsSync(path.join(value.out, 'include/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h')));
