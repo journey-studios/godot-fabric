@@ -1,0 +1,292 @@
+{
+  "format": "godot-fabric.device-services-execution/v1",
+  "executedAt": "2026-10-07",
+  "implementationCommit": "71d708c37be48478607f08528a5e300dc51ee0b0",
+  "executedTreeSha": "55db8994779364303910028fa88dc5a4a83befdf",
+  "sourceState": "working tree clean and equal to the implementation commit's tree when every command below ran; the evidence files were added afterwards and are not inputs",
+  "baseCommit": "e88b5bbbf41071d10a85413d47c06da3392d0d40",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (examples)"
+    ]
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The device-services step and the native-device-services artifact of .github/workflows/contracts.yml have not run on hosted CI yet. Everything below is local macOS arm64 evidence."
+  },
+  "hosts": {
+    "previousSha256": "aebbddcd791e52f2e8cdf325d4111c90bbc406ac2b256ed3bb27f3383f70a413",
+    "previousSourceCommit": "e88b5bbbf41071d10a85413d47c06da3392d0d40",
+    "currentSha256": "147df0b3de565ad300c7a2d1620bf977e8c6aa9e45b6f5baf52facd1861b82cb",
+    "restoredSha256": "147df0b3de565ad300c7a2d1620bf977e8c6aa9e45b6f5baf52facd1861b82cb",
+    "restoredEqualsCurrent": true
+  },
+  "nativeCore": {
+    "command": ".deps/build/device_services_core_test",
+    "result": "DEVICE_SERVICES_CORE_PASSED",
+    "alsoRunBy": "npm run test:device-services"
+  },
+  "productProbe": {
+    "command": "npm run test:device-services",
+    "suite": "1/1 subtests passed",
+    "applications": {
+      "A": "validation backend: every backend function replaced by a recording Callable; two roots",
+      "R": "real Godot backend: only open_url replaced by a failing stand-in; one root"
+    },
+    "checks": 65,
+    "normativeChecks": 52,
+    "launchChecks": 2,
+    "launchNormativeChecks": 1,
+    "allCurrentAssertionsPassed": true,
+    "oracle": {
+      "stepsReplayed": {
+        "A": 39,
+        "R": 4
+      },
+      "linksAccepted": 6,
+      "checkedWithEveryProbeCheckMarkedPassed": true
+    },
+    "launchProcessArgument": "--uri=godotfabric://launch/initial?from=args&n=1 (first run); no --uri= (second run)",
+    "hostSha256": "147df0b3de565ad300c7a2d1620bf977e8c6aa9e45b6f5baf52facd1861b82cb",
+    "bundleSha256": "40614c07c44ba5466d8de6583c047667fba3bacd12c6939e5a261d660f2812c9",
+    "rawReportSha256": "a883fc2f6773e37e0f99c468c2e8c4df978c574844bdcbee50dc32c0eb9b7414",
+    "launchRawReportSha256": "595067eb89b430c63d9ec7ff71ea324ecc3a0cdf17340b417b10199d395d657e",
+    "elapsedMs": 8992
+  },
+  "negativeControls": {
+    "previousHost": {
+      "command": "node tests/device-services-native.test.mjs --allow-original-negative (the host preserved from main installed in addons/)",
+      "sourceCommit": "e88b5bbbf41071d10a85413d47c06da3392d0d40",
+      "hostSha256": "aebbddcd791e52f2e8cdf325d4111c90bbc406ac2b256ed3bb27f3383f70a413",
+      "checks": 65,
+      "passed": 13,
+      "failed": 52,
+      "launchChecks": 2,
+      "launchFailed": 1,
+      "failedEqualsNormative": true,
+      "exitCode": 0,
+      "expectedFailureObserved": true,
+      "firstReadFailures": {
+        "Clipboard": "'Clipboard' could not be found (getEnforcing)",
+        "Vibration": "'Vibration' could not be found (getEnforcing)",
+        "Linking": "loads; openURL fails with nullthrows (Got unexpected null)",
+        "deliver_url": "absent on the host"
+      },
+      "rawReportSha256": "c599f4c1c5b7bbbee348c627a40a1d6b9677cdb53e51ee93c347b2cfdc2c68d7",
+      "launchRawReportSha256": "9be923f683c3611d187293ab02034e61b3150d91e7996ea3b1c0f2ed9e1e43d8"
+    },
+    "sabotages": {
+      "duplicate-url": {
+        "command": "node tests/device-services-native.test.mjs --sabotage=duplicate-url",
+        "what": "emits Linking's url event twice for each link, as a host that emitted it once per root would with two roots",
+        "file": "native/device_services.cpp",
+        "checks": 65,
+        "failed": 5,
+        "failedChecks": [
+          "deep-link/deliver_url reaches the listeners of both roots exactly once each, in subscription order",
+          "deep-link/Each url event carries exactly {url}",
+          "deep-link/Two links delivered back to back arrive in order at every listener",
+          "deep-link/A removed subscription (removed twice) stops receiving links and the others still do",
+          "deep-link/Unmounting root A keeps the device services and the links for root B"
+        ],
+        "oracleRejection": "deep-link-one: link events",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "7870332c3dda03498d45cfd377e56bebfc691e5c06ea2e30b00dd0017b0af202",
+        "sabotagedSourceSha256": "25d5f49833fe063e315dd6efad0d9ffe6e3c3d8a7642730711f358a9f6bb7e8a",
+        "rawReportSha256": "8f41284763bd24dfaedf4eb106999fd699294456ed1e454134098123de423ca5"
+      },
+      "stale-clipboard": {
+        "command": "node tests/device-services-native.test.mjs --sabotage=stale-clipboard",
+        "what": "answers getString with the first text it read and never asks the platform again",
+        "file": "native/device_services.cpp",
+        "checks": 65,
+        "failed": 9,
+        "failedChecks": [
+          "clipboard/Multibyte text, an astral emoji and a combining mark survive the round trip",
+          "clipboard/Line breaks, including CRLF and a trailing blank line, survive the round trip",
+          "clipboard/The empty string is a value: an empty clipboard resolves '' and not null",
+          "clipboard/A second write replaces the first",
+          "clipboard/A change made outside the application is what getString reads next",
+          "clipboard/Every getString asks the platform, so a second outside change shows too",
+          "clipboard/A set followed by a get in the same JavaScript turn reads the new text",
+          "clipboard/An unavailable clipboard reaches no backend read or write, and the clipboard works once it is available again",
+          "deep-link/Unmounting root A keeps the device services and the links for root B"
+        ],
+        "oracleRejection": "clipboard-unicode/get",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "88c64ebed95190e857fa67b84e0197340314bb56c1281ac82bcf4f68a1d9050f",
+        "sabotagedSourceSha256": "0d2f17abe33b359f951fa741ef78c01fafd9767504eefbe53e953efb31af2a0e",
+        "rawReportSha256": "a320460b3965ce9bb4ea5688b9d6c105e207c9f3d8d9f52259b5433bf0c5a165"
+      },
+      "command": "node scripts/device-services-sabotage.mjs",
+      "genuineSourcesRestored": true,
+      "genuineHostRestored": true,
+      "genuineHostSha256": "147df0b3de565ad300c7a2d1620bf977e8c6aa9e45b6f5baf52facd1861b82cb",
+      "genuineSourceSha256": {
+        "native/device_services.cpp": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b"
+      },
+      "rawReceiptSha256": "3f20ba1b83590c9afc178b78bb68eb83fe6d01ac85f062535e0a5c267b08c564"
+    },
+    "comparisonSha256": "3cab5e13f39ffe63280a7d1d27fab56dab41c341a1b082631e20865e9d79d464"
+  },
+  "exampleValidation": {
+    "headless": {
+      "command": "npm run example -- device-services --headless",
+      "checks": 16,
+      "passed": 16,
+      "displayServer": "headless",
+      "reportSha256": "ac99c5740361893cdb1d274f5c37183fe4206537fd3a80a3ba7495377cbf4667"
+    },
+    "native": {
+      "command": "npm run example -- device-services --check",
+      "checks": 16,
+      "passed": 16,
+      "displayServer": "macOS",
+      "godot": "4.7.2-stable (official)",
+      "reactNative": "0.87.1",
+      "reportSha256": "9e2da6872dafaff439a3f05a92f1fd9c97ea7e197ac8196502da1a426bd09f08"
+    },
+    "graphical": {
+      "command": "npm run example -- device-services --capture",
+      "checks": 23,
+      "passed": 23,
+      "displayServer": "macOS",
+      "godot": "4.7.2-stable (official)",
+      "reactNative": "0.87.1",
+      "renderer": "fabric",
+      "captureCount": 7,
+      "reportSha256": "9b8394d91d210584f4a294a18e2dbcda62b7d6bed9edb3d710da1eca1203a19b",
+      "captures": [
+        {
+          "file": "device-services-initial.png",
+          "sha256": "975285a3c60708d452f81c71aa60b566207dd82885b1875ddb381f1fb376500a",
+          "width": 900,
+          "height": 680,
+          "shows": "Antes de qualquer botão: a tela com os seis estados em branco e o log do backend de validação vazio."
+        },
+        {
+          "file": "device-services-copied.png",
+          "sha256": "9fd2c62012df4a55e3ab928f29e1f68d89c3285651c2ca98373803ef37c0b859",
+          "width": 900,
+          "height": 680,
+          "shows": "Depois de Copy: a amostra com acentos e emoji no pasteboard de validação, e `set ...` no log nativo."
+        },
+        {
+          "file": "device-services-pasted.png",
+          "sha256": "458ef972c8bd097336e99461e2fa960fe81f260aab35bb7aa4c6f50300c81a4b",
+          "width": 900,
+          "height": 680,
+          "shows": "Depois de Paste: o texto lido é o que o Copy escreveu, emoji incluído."
+        },
+        {
+          "file": "device-services-opened.png",
+          "sha256": "9411a8cb13cb38182792da6c020d732e95c9907318de2436cfcbfed0746abef9",
+          "width": 900,
+          "height": 680,
+          "shows": "Depois de uma mudança fora da aplicação, de outro Paste e de Open URL: o backend recebeu a URL exata uma vez."
+        },
+        {
+          "file": "device-services-deep-link.png",
+          "sha256": "fc46f99e4d6b632327ad79d262e97f2df086bf1a522c701da612ca8da5d461f8",
+          "width": 900,
+          "height": 680,
+          "shows": "Depois de dois cliques reais no botão nativo Deep link: dois links numerados, em ordem, cada um ouvido uma vez."
+        },
+        {
+          "file": "device-services-vibrated.png",
+          "sha256": "bbfba9f75509f97de2ffd1af51b8ce74302a8321047aaf4050fcd1ab6e78e964",
+          "width": 900,
+          "height": 680,
+          "shows": "Depois de Vibrate: `Vibrated for 150 ms` e `vibrate 150` no log do backend."
+        },
+        {
+          "file": "device-services-failures.png",
+          "sha256": "e048e68414ba2317fbea12fa3b09c2710e5ecd3612a4855f197d1422178e4f71",
+          "width": 900,
+          "height": 680,
+          "shows": "Os caminhos de falha: Copy e Paste com `E_CLIPBOARD_UNAVAILABLE` e o openURL de um backend que recusa com `Unable to open URL: ...`."
+        }
+      ]
+    },
+    "backends": "every platform backend replaced by a recording stand-in; no real URL opened, no real pasteboard touched, no real vibration",
+    "nativeButton": "the Deep link button is a native Godot Button that calls FabricApplication.deliver_url; the surface's input is suspended for its real click"
+  },
+  "regressions": {
+    "networking": {
+      "command": "npm run test:networking",
+      "result": "1/1 subtests, NETWORKING_PASSED: 100"
+    },
+    "websocket": {
+      "command": "npm run test:websocket",
+      "result": "4/4 subtests, WEBSOCKET_PASSED: 95"
+    },
+    "contracts": {
+      "command": "npm run test:contracts",
+      "result": "exit 0: 281 Node tests, 13 Python tests, test:parity and test:dashboard inside"
+    },
+    "typeCheck": {
+      "command": "npm run type-check",
+      "result": "exit 0"
+    },
+    "static": {
+      "command": "npm run check:static",
+      "result": "No issues found"
+    },
+    "publication": {
+      "command": "npm run check:publication",
+      "result": "passed"
+    },
+    "note": "run on the tree of the implementation commit before the evidence files were added"
+  },
+  "sourcePins": {
+    "tests/device-services-fixture.jsx": "73da24e8533be680d25c51b87dc7f6accb83dd84653dda336e395a62e856acbe",
+    "tests/device-services-probe.gd": "3a1cf8b414b78645805bc12b738508dd78bac9009090883007c97ea8b94b1694",
+    "tests/device-services-native.test.mjs": "835f5e8e354790c6cb772150964c826311f2bfbffecc1a2576f2214fa42bde89",
+    "tests/device-services-oracle.mjs": "5675e02f89458852a63e89b62a7be3b0ebad279dcd709fddc6c2c9e9c42101d2",
+    "scripts/device-services-bundle.mjs": "95300e22847017f4a28388af34fe9dc3b026e67adf2c733673ca50c2622254a5",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/device-services.js": "c8c77c2877d947b4b5a901b9eee4d403ff364d30e63c7c164ccf2494cea2caa6",
+    "src/react-native-platform.jsx": "be7761769b964b7d6878cb0dec8482036fbc7c665db680f952c1a86bae290de7",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/device_services.h": "01e5ac09983f821602fc828e6aec11e374cfa6635e2828c061c50be4a0b3bd40",
+    "native/device_services.cpp": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b",
+    "native/device_services_core.h": "e78e359827d67d8436e4c86476fb342ea6c4d1fc622e8ec0b1358f8b0288b0d9",
+    "native/device_services_core_test.cpp": "3410d829e4d899b81c915b878effba6cea5cc0aab153c60938f0d2e9fbfa700f",
+    "native/godot_device_backend.h": "3a57b370eb9bc1d47b36c615a1c9c90b265351b8801cb131b314a50884d0d109",
+    "native/godot_device_backend.cpp": "a2562eecd247fd04e841ea4b9ddce78d1dd0e094e81ecc689f4386f100985f06",
+    "native/stoppable_invoker.h": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+    "native/fabric_application.cpp": "211c0dec8b8851313c013f0f98e15ff3edf963841c35ca7ab50fc68eb0a7494c",
+    "native/fabric_application.h": "87eb529fadd1da60993dd78e43d461d3ed76786f086fa7fd558cb5e093d5d957",
+    "native/application_runtime.cpp": "687d1dfde5f20224c902adffa86840a0089eea48bd26c9249b732d6593997577",
+    "native/application_runtime.h": "12e463590d3b682073c50d628fb70dc17c006bd8f7d1221924703111e6f9af02",
+    "native/CMakeLists.txt": "a78cae970050aff33910a6642d712dcedfed16a3e7e900b91ef520186f7a89c4"
+  },
+  "decisions": [
+    "Linking follows iOS's LinkingManager, the contract Linking.js takes when Platform.OS is godot; Clipboard and Vibration use their neutral specs.",
+    "A deep link before the runtime exists, or before JS has read Linking, is accepted (deliver_url returns true), counted as unobserved and not buffered.",
+    "getInitialURL reads the first valid --uri=<url>: invalid values are skipped, one pair of quotes is removed.",
+    "StoppableInvoker is one template in native/stoppable_invoker.h, used by the networking modules and the device services.",
+    "The probe runs two applications (a validation backend and Godot's real one) and a second process without --uri=.",
+    "The example's Deep link button is a native Godot Button, because deliver_url is a native entry point.",
+    "The compatibility audit's Clipboard, Linking and Vibration entries are updated to environment_or_utility_subset."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI is pending and other export targets are separate.",
+    "canOpenURL answers by scheme: Godot has no API to ask which handlers are installed.",
+    "openURL is synchronous (OS.shell_open) and cannot be cancelled; on macOS the engine reports OK for any URL it is given.",
+    "Godot has no vibration cancel or capability query; vibrateByPattern throws if called directly and RN's repeating pattern is not stopped by cancel().",
+    "Deep links while the application runs exist only through FabricApplication.deliver_url; the engine emits no event.",
+    "The suite replaces every backend that could open a URL, touch the real pasteboard or vibrate: those real effects are not exercised. Only the headless clipboard, the silent desktop vibration and the launch argument are exercised against the real Godot backend.",
+    "Alert, Share, Settings and BackHandler, mobile deep-link plugins, Windows and Linux are outside this slice.",
+    "This slice is the first of GF-23; it does not complete GF-23. Only GF-23's first-slice checkpoint (slice) closes: no whole GF, other checkpoint, weight or denominator closes."
+  ]
+}

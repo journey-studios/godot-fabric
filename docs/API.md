@@ -28,7 +28,8 @@ TouchableOpacity); Switch and ActivityIndicator; RN's original lists (FlatList,
 SectionList, VirtualizedList and VirtualizedSectionList); Animated, Easing,
 useAnimatedValue and useAnimatedValueXY; PanResponder; the environment modules
 (AppState, Appearance, useColorScheme, Dimensions, PixelRatio, useWindowDimensions,
-Platform, StyleSheet, AccessibilityInfo and I18nManager); and the native-module
+Platform, StyleSheet, AccessibilityInfo and I18nManager); the device services (Linking,
+Clipboard and Vibration); and the native-module
 entrypoints (AppRegistry, RootTagContext, NativeModules, NativeEventEmitter,
 TurboModuleRegistry, UIManager, findNodeHandle and the codegen helpers). Image,
 ImageBackground, KeyboardAvoidingView, RefreshControl and StatusBar are exported
@@ -62,6 +63,7 @@ from planned RN compatibility.
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | AppState and Appearance | [RN's original AppState](evidence/app-state/README.md), fed by the Godot application lifecycle: focus loss is `inactive`, a pause is `background`, `change`, `focus`, `blur` and `memoryWarning` are sent, the roots of an application share one state and stop sends nothing. [RN's original Appearance and useColorScheme](evidence/appearance/README.md), fed by Godot's system theme: `getColorScheme`, `addChangeListener`, `setColorScheme` overrides that win over the system and `unspecified` following it again, a change event only when the effective scheme changes, one theme callback shared by every application | Minimizing or hiding a desktop window sends no Godot notification; real OS focus and theme changes on each system, resume with pending timers or network, accent colors, `PlatformColor`/`DynamicColorIOS`, per-window themes and Godot mobile exports remain open |
+| Device services | [RN's original Linking, Clipboard (legacy) and Vibration](../examples/device-services/README.md) over three C++ TurboModules (`LinkingManager` with iOS's contract, `Clipboard`, `Vibration`) and Godot's `OS.shell_open`, `DisplayServer` clipboard and `Input.vibrate_handheld`: `openURL`, `canOpenURL`, `getInitialURL`, the `url` event that `FabricApplication.deliver_url` delivers once to every listener of every root, `getString` and `setString`, `vibrate` and the patterns RN's own JavaScript schedules; every platform call can be replaced by a validation backend ([record](evidence/device-services/README.md), [research](research/device-services.md)) | Godot cannot ask which handlers are installed, so `canOpenURL` resolves `true` for any URL with a scheme; `openURL` is synchronous and cannot be cancelled; `openSettings` and `sendIntent` reject; a clipboard-less display server (headless) rejects `getString` and throws from `setString` with `E_CLIPBOARD_UNAVAILABLE`; a vibration cannot be cancelled in Godot, `vibrateByPattern` throws if called directly and RN's repeating pattern is not cancelled by `cancel()`, as in RN; Alert, Share, Settings and BackHandler, mobile deep-link plugins, Windows/Linux and real-device behavior remain open |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
 
@@ -76,8 +78,8 @@ project source with strict TypeScript. Third-party declaration bodies use
 `skipLibCheck`; the upstream contract inventory still checks their source hashes
 and signatures. Positive consumer assignments and negative unsupported-prop
 fixtures run in CI. AppRegistry's registration subset and RootTagContext are
-also typed, and so are the exports declared from RN's own types: AppState,
-Appearance and useColorScheme, the four lists, Animated, Easing and the two
+also typed, and so are the exports declared from RN's own types: AppState, Linking,
+Clipboard, Vibration, Appearance and useColorScheme, the four lists, Animated, Easing and the two
 animated-value hooks, NativeModules, NativeEventEmitter, TurboModuleRegistry, the
 codegen helpers, findNodeHandle and a UIManager measurement subset. Pressable,
 ScrollView, TouchableWithoutFeedback, TouchableHighlight, PanResponder, Platform,
@@ -638,6 +640,42 @@ Closing while CONNECTING fails the attempt, unlike Android's module no-op; failu
 from OkHttp. Cancellation sends 1001 best-effort, with an immediate TCP drop possible when
 input remains unread. Godot Android WebSocket runtime is untested. A Web export needs a
 browser-specific WebSocket transport; browser WebSocket behavior is outside this proof.
+
+### Device services
+
+`Linking`, `Clipboard` and `Vibration` are RN's original modules, exported from `react-native`
+through lazy getters (`src/device-services.js`): importing `react-native` constructs none of
+them, and a host without the native modules fails only where an API is first read. One
+`DeviceServices` per `FabricApplication` (`native/device_services.{h,cpp}`) installs three C++
+TurboModules in the application's registry: `LinkingManager` (the iOS contract, which is what
+`Linking.js` uses when `Platform.OS` is `"godot"`), `Clipboard` and `Vibration`. The platform calls
+sit behind a backend struct (`native/device_services_core.h`); the default is Godot's
+(`native/godot_device_backend.cpp`) and a validation run replaces any of it through the
+application's `validation_device_services` meta, a Dictionary of Callables. The modules are created
+by the first read of their API; a stop makes retained methods throw `E_MODULE_DISPOSED`
+synchronously and drops every queued event and settlement. The [research
+note](research/device-services.md) has the contract and its sources.
+
+| API | Supported | Rejected, and how |
+| --- | --- | --- |
+| `Linking.openURL(url)` | Resolves `true` after `OS.shell_open` returns `OK` for an absolute URL with an RFC 3986 scheme | A non-string or `''` throws RN's own invariant (`Invalid URL: ...`) before any native call; a string without a scheme, or a backend that refuses, rejects `Unable to open URL: <url>`; the scheme-less string never reaches the backend |
+| `Linking.canOpenURL(url)` | `true` for a URL with a scheme and at least one character after the colon, `false` otherwise, never asking the platform | The same invariant for a non-string or `''` |
+| `Linking.getInitialURL()` | The first valid `--uri=<url>` of `OS.get_cmdline_user_args()`, then of `OS.get_cmdline_args()`, one pair of quotes removed; `null` without one; stable for the application | Throws `E_MODULE_DISPOSED` after a stop |
+| `Linking.addEventListener('url', listener)` | `{url}` once per link, to every listener of every root, in subscription order, from `FabricApplication.deliver_url(url)` | `deliver_url` returns `false` and emits nothing for a string without a scheme and after a stop |
+| `Linking.openSettings()` | none | Rejects `Unable to open app settings: unavailable on Godot` |
+| `Linking.sendIntent(...)` | none | Rejects `Unsupported` in RN's JavaScript outside Android |
+| `Clipboard.getString()` | The text, `''` for an empty clipboard, read from the platform on every call | Rejects `E_CLIPBOARD_UNAVAILABLE` where the DisplayServer has no clipboard (headless) |
+| `Clipboard.setString(text)` | Returns nothing; multibyte text and line breaks survive | `setString(undefined)` or a non-string fails at the bridge; throws `E_CLIPBOARD_UNAVAILABLE` without a clipboard. RN prints its deprecation notice once on the first read of `Clipboard` |
+| `Vibration.vibrate(ms)` | `vibrate()` is 400 ms; a finite, non-negative number goes to `Input.vibrate_handheld` (a silent no-op on desktop); an array is scheduled by RN's JavaScript, one `vibrate(400)` per step | A pattern that is neither number nor array throws RN's own error; a negative or non-finite number throws `E_ARGUMENT` |
+| `Vibration.cancel()` | Reaches the native module; Godot has nothing to cancel, so it is a no-op | RN's repeating pattern is not stopped by it, and a later `vibrate()` is ignored while it runs: RN's own behavior |
+| `vibrateByPattern` on the native module | none: RN's JavaScript never calls it with this platform | Throws `E_UNSUPPORTED` |
+
+`FabricApplication.deliver_url(url: String) -> bool` is the entry point of a deep link that reaches
+the running application; a mobile plugin or a launcher script would call it. A link delivered before
+JavaScript has read `Linking` is accepted and reaches no listener. The headless engine has no
+clipboard, so the real backend rejects there; every test and example application replaces the
+backend, so nothing opens a real URL or touches the real pasteboard. Alert, Share, Settings and
+BackHandler are not implemented, and `canOpenURL` cannot know which handlers are installed.
 
 Native runtime acceptance currently targets macOS arm64. The experimental
 [iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;

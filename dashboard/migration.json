@@ -8,11 +8,11 @@
     "focusSequence": "5",
     "focusTitle": "GF-11 Text: primeira fatia (onTextLayout e baseline do Yoga) com evidência em 4a82231; CI hospedada pendente."
   },
-  "updatedAt": "2026-10-08T02:06:47.722+00:00",
+  "updatedAt": "2026-10-08T02:37:03.732+00:00",
   "source": {
     "commit": "4a822310decfaddee34204f3d09094c291ac2c9f",
     "url": "https://github.com/journey-studios/godot-fabric/commit/4a822310decfaddee34204f3d09094c291ac2c9f",
-    "scope": "Text layout: a fatia foi executada na implementação 8e3e435 (76 checks headless, host anterior com 5 falhas normativas, sabotagens com 4, 3 e 9, exemplo com 18/32 checks) e a evidência está registrada em 4a82231; o merge da main (Modal, #51) em 18f62b9 repetiu os 76 checks com os controles refeitos. A CI hospedada do passo native-text-layout está pendente. GF-11 segue parcial, com só o checkpoint slice fechado (24/156 checkpoints e 0/39 itens completos)."
+    "scope": "Text layout: a fatia foi executada na implementação 8e3e435 (76 checks headless, host anterior com 5 falhas normativas, sabotagens com 4, 3 e 9, exemplo com 18/32 checks) e a evidência está registrada em 4a82231; o merge da main com o Modal (#51), em 18f62b9, e o da main com o GF-23 (#55, 585ca1b) repetiram os 76 checks com os controles refeitos. A CI hospedada do passo native-text-layout está pendente. GF-11 segue parcial, com só o checkpoint slice fechado (25/156 checkpoints e 0/39 itens completos)."
   },
   "phases": [
     {
@@ -2132,7 +2132,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "Shared device services",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers",
       "dependencies": [
         "GF-07",
@@ -2141,14 +2141,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Linking, Clipboard (o legado) e Vibration originais do RN lidos pelo import público react-native sobre três TurboModules C++ do host (LinkingManager no contrato do iOS, que é o que o Linking.js toma com Platform.OS \"godot\", Clipboard e Vibration), criados no primeiro uso por um DeviceServices por FabricApplication e encerrados no stop: métodos retidos lançam E_MODULE_DISPOSED de forma síncrona, deliver_url devolve false e nada enfileirado chega ao JS (StoppableInvoker compartilhado com o networking). Os módulos chamam OS.shell_open, a área de transferência do DisplayServer e Input.vibrate_handheld por uma struct de backend que a meta validation_device_services substitui função a função; o núcleo puro (regra de scheme da RFC 3986, argumentos --uri= e contadores) tem teste C++ próprio. canOpenURL responde pelo scheme (o Godot não consulta handlers instalados); openURL rejeita 'Unable to open URL: <url>' sem chamar o backend para uma string sem scheme e com a mesma mensagem quando o backend recusa; openSettings rejeita sempre; getInitialURL lê o --uri= do processo; FabricApplication.deliver_url entrega um link à aplicação em execução, uma vez a todos os ouvintes de todas as roots, em ordem. Sem clipboard no DisplayServer (o engine headless) getString rejeita e setString lança E_CLIPBOARD_UNAVAILABLE; vibrate aceita duração finita e não negativa, cancel chega ao backend (o Godot não tem o que cancelar) e vibrateByPattern lança E_UNSUPPORTED; o repeat do RN não é cancelável por cancel() e o host o deixa como o RN o tem. 65 checks headless em duas aplicações do mesmo bundle (backend de validação com duas roots e o backend real do Godot, em que só open_url é um substituto que recusa) e 2 num segundo processo sem --uri=, com um oráculo independente que refaz cada passo pelas regras do RN; o host anterior (e88b5bb) falha exatamente 52 de 65 e 1 de 2; as sabotagens retidas (url emitido duas vezes e getString com cache obsoleto) falham 5 e 9 checks, rejeitadas pelo oráculo. Exemplo: 16 headless, 16 com o renderer nativo e 23 com sete capturas macOS, com todo backend substituído (nada abre URL real, toca o pasteboard real ou vibra). Na árvore da implementação (71d708c) passam contracts (281 Node e 13 Python), networking (100) e WebSocket (95); depois do merge com a main (Modal, 7e2df46) passam de novo contracts (283 Node e 13 Python), test:modal, device services com os controles refeitos no host anterior preservado, análise estática e scan de publicação. Evidência fixada em ba0a63f (implementação 71d708c). Abertos: Alert, Share, Settings e BackHandler (dependem da decisão V2-D30 e do Modal do GF-18), plugins mobile de deep link (GF-34 e GF-35), Windows e Linux (GF-32 e GF-33), openURL cancelável, canOpenURL por handlers instalados, padrões e cancelamento de vibração por plugin de plataforma e comportamento real do sistema (browser, pasteboard e vibração reais nunca são exercitados). A CI hospedada do passo novo está pendente. Esta fatia não completa o GF-23: só o checkpoint slice fecha; contrato, paridade e alvos seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Device services: 65 + 2 checks headless, host anterior com 52/65 e 1/2 falhas normativas e duas sabotagens retidas rejeitadas pelo oráculo (implementação 71d708c; CI hospedada pendente)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ba0a63f7d697fef7eaab7951e3b211a49b58f635/docs/evidence/device-services/README.md"
+            },
+            {
+              "label": "Device services: recibo de execução, hashes, capturas e resultados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ba0a63f7d697fef7eaab7951e3b211a49b58f635/docs/evidence/device-services/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -5436,6 +5445,15 @@
       ],
       "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
+    },
+    {
+      "id": "device-services-first-slice-f3571fd",
+      "at": "2026-10-08T02:06:52.660442+00:00",
+      "taskIds": [
+        "GF-23"
+      ],
+      "message": "Primeira fatia do GF-23 com evidência local: Linking, Clipboard e Vibration originais do RN sobre três TurboModules C++ e um backend substituível. 65 checks headless em duas aplicações e 2 num processo sem --uri=, com oráculo independente; o host anterior falha exatamente 52/65 e 1/2, as sabotagens url duplicado e getString com cache obsoleto falham 5 e 9; o exemplo passa 16 headless, 16 gráficos e 23 com sete capturas. Só o checkpoint slice do GF-23 fecha; CI hospedada pendente e sem PR aberta. Abertos: Alert, Share, Settings, BackHandler, deep link mobile, Windows e Linux.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/ba0a63f7d697fef7eaab7951e3b211a49b58f635"
     }
   ]
 }

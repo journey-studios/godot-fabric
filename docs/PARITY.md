@@ -58,14 +58,17 @@ per-target acceptance; pending V2 decisions retain their status.
 
 ## Subsequent checkpoint — 2026-10-06
 
-The public facade now exports **39 names awaiting differential certification and 5
+The public facade now exports **44 names awaiting differential certification and 5
 explicit placeholders** (Image, ImageBackground, KeyboardAvoidingView,
-RefreshControl and StatusBar) and omits 53 of the 97 root values, as
-`npm run parity:status` counts them. The [live status board](compatibility/BASELINE.md)
+RefreshControl and StatusBar) and omits 48 of the 97 root values, as
+`npm run parity:status` counts them; Linking, Clipboard and Vibration (the first slice of
+GF-23) and Modal and SafeAreaView (the Modal slice) are the five names added to the 39 and
+subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
-remain the 2026-10-01 snapshot (4 usable components, 9 environment names, 14
-unavailable names and 70 missing), and must not be read as current counts.
+remain the 2026-10-01 snapshot, except the three GF-23 entries now updated (4 usable
+components, 12 environment names, 14 unavailable names and 67 missing), and must not be
+read as current counts.
 
 Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
 source, each with retained negative controls and a hosted CI run that repeated its
@@ -100,8 +103,13 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   for pinned head `422c2ee` ([receipt](evidence/websocket/hosted-ci.json)). The hosted parity job's
   13 `core-ui-v2` Android/iOS cases are not WebSocket differential or Godot mobile runtime proof;
   later PR-head changes require new green CI).
-  They are globals, not names of the `react-native` root: the facade's counts above do not
-  change, and RN's `Networking` export stays among the missing 53.
+  They are globals, not names of the `react-native` root: they do not move the facade's counts,
+  and RN's `Networking` export stays among the missing 48.
+- **Device services:** the original [Linking, Clipboard and Vibration](evidence/device-services/README.md)
+  over three native TurboModules and Godot's `OS.shell_open`, clipboard and `Input.vibrate_handheld`
+  (GF-23's first slice; a headless probe in two applications with an independent oracle, the
+  preceding host as the control and two retained sabotages; its hosted CI run is pending). Alert,
+  Share, Settings and BackHandler, mobile deep-link plugins and real-device behavior stay open.
 
 None of these is an original-native differential: the 13-case core-ui-v2
 comparison with iOS and Android remains the only one. They complete no GF item
@@ -167,9 +175,9 @@ explain the scope.
 | Current public facade classification | Count | Meaning |
 | --- | ---: | --- |
 | Usable component subset | 4 | View, Text, Pressable, ScrollView; none certifies its complete upstream contract |
-| Environment/utility subset | 9 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions |
+| Environment/utility subset | 12 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration |
 | Exported but unavailable | 14 | TextInput, Image/ImageBackground, Switch, touchables, ActivityIndicator, StatusBar, FlatList, VirtualizedList, KeyboardAvoidingView, PanResponder, useColorScheme throw when used |
-| Missing public export | 70 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
+| Missing public export | 67 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
 
 The inventory assigns **84 exports to 1.0** and **13 experimental/unstable
 exports to post-1.0 review**. These are scope assignments, not promises already

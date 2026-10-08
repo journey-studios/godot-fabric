@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
@@ -123,6 +123,29 @@ void appState; void blurEvent;
 AppState.addEventListener("change", (state: number) => { void state; });
 // @ts-expect-error unknown AppState events are rejected
 AppState.addEventListener("suspend", () => {});
+
+// Linking, Clipboard and Vibration are the original pinned modules.
+const initialURL: Promise<string | null | undefined> = Linking.getInitialURL();
+const canOpen: Promise<boolean> = Linking.canOpenURL("https://example.com");
+const opened: Promise<void> = Linking.openURL("https://example.com");
+const urlSubscription = Linking.addEventListener("url", (event: { url: string }) => { void event.url; });
+urlSubscription.remove();
+void initialURL; void canOpen; void opened;
+// @ts-expect-error openURL takes a string
+Linking.openURL(42);
+// @ts-expect-error Linking only emits url events
+Linking.addEventListener("focus", () => {});
+const clipboardText: Promise<string> = Clipboard.getString();
+Clipboard.setString("copied");
+void clipboardText;
+// @ts-expect-error setString takes a string
+Clipboard.setString(1);
+Vibration.vibrate();
+Vibration.vibrate(250);
+Vibration.vibrate([0, 100, 50, 100], false);
+Vibration.cancel();
+// @ts-expect-error a vibration pattern is a number or an array of numbers
+Vibration.vibrate("long");
 
 // Appearance and useColorScheme are the original pinned modules.
 const scheme: ColorSchemeName | null = Appearance.getColorScheme();
