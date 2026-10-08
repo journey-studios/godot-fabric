@@ -30,6 +30,10 @@ const unsupportedProps = new Set([
   "minimumZoomScale",
   "nestedScrollEnabled",
   "onScrollToTop",
+  "onKeyboardDidShow",
+  "onKeyboardDidHide",
+  "onKeyboardWillShow",
+  "onKeyboardWillHide",
   "overScrollMode",
   "pagingEnabled",
   "pinchGestureEnabled",
@@ -38,6 +42,9 @@ const unsupportedProps = new Set([
   "scrollToOverflowEnabled",
   "scrollsToTop",
   "scrollIndicatorInsets",
+  "scrollPerfTag",
+  "scrollsChildToFocus",
+  "removeClippedSubviews",
   "snapToAlignment",
   "snapToInterval",
   "snapToOffsets",
@@ -49,6 +56,7 @@ const unsupportedProps = new Set([
 
 function isRequested(name, value) {
   if (value == null) return false;
+  if (name === "removeClippedSubviews") return value !== false;
   if (name === "stickyHeaderIndices" || name === "snapToOffsets")
     return !Array.isArray(value) || value.length > 0;
   return true;

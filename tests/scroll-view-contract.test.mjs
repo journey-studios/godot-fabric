@@ -16,6 +16,18 @@ test("the public ScrollView rejects native features the host cannot honor", () =
     assert.throws(() => prepareScrollViewProps({[name]: name === "snapToOffsets" ? [20] : true}),
       new RegExp(`Godot ScrollView ${name} is not implemented`));
   }
+  const unsupportedValues = [
+    ["scrollPerfTag", "probe-perf"],
+    ["scrollsChildToFocus", true],
+    ...["onKeyboardWillShow", "onKeyboardDidShow", "onKeyboardWillHide", "onKeyboardDidHide"]
+      .map(name => [name, () => {}]),
+  ];
+  for (const [name, value] of unsupportedValues)
+    assert.throws(() => prepareScrollViewProps({[name]: value}),
+      new RegExp(`Godot ScrollView ${name} is not implemented`));
+  assert.throws(() => prepareScrollViewProps({removeClippedSubviews: true}),
+    /Godot ScrollView removeClippedSubviews is not implemented/);
+  assert.equal(prepareScrollViewProps({removeClippedSubviews: false}).removeClippedSubviews, false);
   assert.throws(() => prepareScrollViewProps({onRefresh() {}}), /refreshControl is not implemented/);
   assert.throws(() => prepareScrollViewProps({refreshing: true}), /refreshControl is not implemented/);
   assert.throws(() => prepareScrollViewProps({contentOffset: {x: 0, y: Infinity}}), /finite x\/y coordinates/);

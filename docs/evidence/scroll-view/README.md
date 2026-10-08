@@ -9,13 +9,13 @@ runtime cleanup.
 
 | Run | Result | Scope |
 | --- | ---: | --- |
-| Mounted GF-14 probe | 22/22 | Godot 4.7.2, headless, original RN component |
+| Mounted GF-14 probe | 25/25 | Godot 4.7.2, headless, original RN component |
 | VirtualizedList consumer regression | 44/44 | Existing names and offsets retained, including shelf x=180 |
 | ScrollView contract/native node tests | 3/3 | Public rejection and component-specific Fabric config |
 | Type check | passed | `tsc-rs` Godot configuration |
 | Native ScrollMotion tests | 44 checks | Release coordinate, frame-partitioned decay, stale velocity, throttle and bounds |
 
-The mounted probe observes a fractional offset of 13.25 consistently in native
+The integrated mounted probe observes a fractional offset of 13.25 consistently in native
 state, Fabric state, painted content position and RN DOM measurement. Its
 horizontal second root receives `horizontal=true`, pans to a measured x offset,
 and completes BeginDrag, EndDrag, MomentumBegin and MomentumEnd in order. The
@@ -23,6 +23,14 @@ list regression preserves the historical 180 px shelf offset with matching
 logical/Fabric offset and painted content translation. The report also checks
 that stopping the app retires roots, tags, contacts, captures, routes and pending
 work.
+
+The vertical diagonal drag releases at `(80, 150)` and the horizontal diagonal
+drag releases at `(150, 70)`. EndDrag records those exact points, the transverse
+velocity is zero, Fabric state and painted content preserve the transverse
+offset, and each lifecycle is `BeginDrag`, `EndDrag`, `MomentumBegin`,
+`MomentumEnd`. The settled active-axis offset agrees with the measured momentum
+target. Changing orientation during a claimed gesture cancels that gesture
+before the new axis is installed.
 
 Both mounted ScrollViews overflow in both axes. Horizontal `scrollToEnd(false)`
 reaches x=540 while retaining y=35; vertical `scrollToEnd(false)` reaches y=590
@@ -33,12 +41,12 @@ The following identities bind the result to its inputs:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| Loaded `addons/fabric_godot.dylib` | `60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb` |
-| `.deps/build/native-sdk-build.json` | `ddfc16a3ec85196f2c5e93e80970cc4459eed449388c52d3c6505862ae47ff7f` |
-| Mounted probe bundle | `899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a` |
-| GDScript probe source | `07c8fc292734ff5244f7a5e732f10fbffc42569e1170934457e7b6bc63f0a131` |
-| Mounted report | `340c8c9fc1f546b3a09e3b643bb18f92ff8b9b82a060f3466b22aa62912cb6ef` |
-| Mounted log | `e7e161fe10742ab55579e03c5c6373ea96d0f422e2f3647f1de2648e712ee004` |
+| Loaded `addons/fabric_godot.dylib` | `4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445` |
+| `.deps/build/native-sdk-build.json` | `76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c` |
+| Mounted probe bundle | `c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec` |
+| GDScript probe source | `c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988` |
+| Mounted report | `925ba5e2dd87f03dc4c15137aff3bb27f18819dad2a70d283369b6b659bff1ae` |
+| Mounted log | `6e0a8f1ff517aa8ff78ebddd9b6eaf5d5f6a847819a96403a77fad9230131279` |
 
 The build record's host digest matches the loaded library and remained stable
 during the probe. All eight compiled native source pins in the receipt match
@@ -49,14 +57,23 @@ probe and wrapper sources, plus RN's original ScrollView, command codegen,
 native component, registry and view-config sources. `receipt.json` gives the
 compact machine-readable identities and results.
 
-The root-owned [independent receipt](root-independent.json) records an isolated
-repeat of the final 22-check bundle with identical inputs on the current host
-and the preceding host built from merged commit `7e2df46`. The current host
-passes 22/22 with no engine or Fabric errors. The preceding host fails 18 checks
-with exactly 11 expected old command-protocol errors; those failures include
-diagnostic differences and cascading command failures, not 18 independent bugs.
-Both hosts retire roots, tags, contacts, captures, routes and pending work. The
-earlier 94841/20-check comparison remains frozen under ignored `build/`.
+The root-owned [independent receipt](root-independent.json) is preserved as
+pre-integration evidence for the earlier 22-check bundle and hosts built before
+Device Services integration. It is not a repeat of this 25-check integrated
+host. Its original artifacts remain under ignored
+`build/scroll-view-pre-integration-60fa18/`; this receipt records the integrated
+host and current sources.
+
+The root then repeated the integrated 25-check bundle in two isolated projects.
+The current host passes 25/25. The preceding `60fa18ed` host executes the same
+bundle and probe and fails exactly the two diagonal-axis checks and orientation
+cancellation, with no unrelated error or cleanup failure. The
+[integrated independent receipt](root-integrated.json) derives release
+coordinates, transverse velocity, settled target, Fabric state, paint and event
+order from the reports rather than relying only on their check flags. It also
+independently verifies the current list oracle, forced-green sabotage rejection
+and all four graphical artifacts. This closes the local review; hosted CI and
+CodeRabbit acceptance remain open.
 
 ## Windowed graphical capture
 
@@ -96,7 +113,9 @@ rejects the report even if its check flags are forced to “passed”. The posit
 [negative receipt](sabotage-receipt.json) records hashes and failed checks.
 
 The reproducible gates are `npm run test:scroll-view`, `npm run test:lists`,
-`npm run type-check`, and `.deps/build/scroll_motion_test`. The mounted report
+`node --test scripts/scroll-view-list-sabotage.mjs`, `npm run type-check`,
+`npm run test:text-layout`, `npm run test:modules`, `npm run test:device-services`,
+and `.deps/build/scroll_motion_test`. The mounted report
 and its raw log/bundle are retained under the ignored `build/` tree. Pixel
 clipping is checked in the separate graphical lane above; hardware touch, a
 refresh-rate matrix, mobile exports and full RN parity remain future work.

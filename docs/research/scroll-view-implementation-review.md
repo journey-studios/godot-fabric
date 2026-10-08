@@ -189,3 +189,59 @@ bug counts. Both runs stop without a crash, pending work, roots, tags, pointer
 routes, contacts or captures. The durable independent receipt pins original
 report bytes separately from the normalized root copy. Hosted acceptance stays
 open until CI and CodeRabbit approve the integrated PR.
+
+## Diagonal pan boundary found during integration
+
+The integrated source review found another native-owner defect: candidate
+selection checks the configured axis, but drag and release pass the full pointer
+vector to the motion model. With both axes overflowing, a vertical-dominant
+delta (-30,-50) from offset (100,100) yields (130,150) and velocity (600,1000);
+horizontal-dominant (-50,-30) yields (150,130) and (1000,600). A straight gesture
+cannot expose this cross-axis movement and momentum. Normalize motion input to
+the selected axis while retaining the initial transverse coordinate, including
+the release coordinate. An orientation change during a held gesture must retire
+the current drag through the existing cancellation owner before accepting the
+new orientation. The preceding 22-check evidence remains valid for its stated
+cases, but cannot approve this boundary or the integrated host. Mounted diagonal,
+release, momentum and orientation controls are required before PR publication.
+
+## Integrated local review completed
+
+The final source projects movement and release into the configured axis in the
+existing native offset helper. It adds no second gesture flag or compatibility
+mode. An orientation change cancels through the existing owner before the new
+props are installed. The identity projection at gesture start and a nullable
+release fallback were removed: both obscured invariants without adding behavior.
+
+The root independently runs bundle `c879de5c` and probe `c1e7b821` against current
+host `4f28ed0f` and retained preceding host `60fa18ed`, in isolated projects with
+the same 16 framework binaries. Current execution passes all 25 checks; preceding
+execution fails exactly vertical diagonal, horizontal diagonal and orientation
+replacement. Both terminate with zero roots, tags, contacts, captures, routes,
+timers and pending work. The logs reject unrelated engine, script and Fabric
+errors. All eight current compiled native source pins match the tested sources.
+
+Independent report derivation verifies vertical release `(80,150)` with x
+velocity zero and settled x=80; horizontal release `(150,70)` with y velocity
+zero and settled y=70. Active-axis settled offsets agree with the reported
+momentum targets, Fabric and painted translation. Each sequence completes one
+BeginDrag, EndDrag, MomentumBegin and MomentumEnd. Orientation replacement ends
+the claimed drag at the change, and later Up does not emit another EndDrag.
+The preceding host instead changes transverse release coordinates to 110 and
+100, emits transverse velocity and retains the claimed drag at orientation
+replacement. These controls expose the diagnosed defects without accepting
+unrelated failures.
+
+The public boundary now rejects valid scrollPerfTag, scrollsChildToFocus,
+keyboard callbacks and removeClippedSubviews=true rather than silently ignoring
+them. The false clipping opt-out remains accepted. The root also independently
+derives the final 44-check list oracle, shelf offsets `(180,180,-180)`, and the
+three exact sabotage failures; forcing their check flags green still fails the
+independent feed-window oracle. All four graphical receipt artifacts match their
+recorded bytes and final host/bundle, and the root inspected the rendered clipping
+and empty cleanup frame.
+
+See [the integrated independent receipt](../evidence/scroll-view/root-integrated.json).
+The thermo-nuclear local structural and behavioral review is satisfied for this
+desktop slice. Final publication, CI and CodeRabbit review are still required;
+no GF-14 checkpoint or full-contract acceptance follows from local evidence alone.

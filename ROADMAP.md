@@ -2068,7 +2068,7 @@ paint, Fabric state, pan and momentum. The desktop host preserves the transverse
 offset on `scrollToEnd`, following the pinned Android axis policy. A component
 specific registered config retains `horizontal` in Fabric create/diff payloads.
 
-Local evidence includes 22 mounted checks repeated independently against current
+Local evidence includes 25 mounted checks repeated independently against current
 and preceding hosts with identical inputs, the unchanged 44-check list oracle,
 44 native motion checks, four windowed macOS captures and a retained onLayout
 sabotage rejected by the oracle. Roots, tags, captures, contacts and pending work
@@ -2077,6 +2077,12 @@ and [the receipts and captures](docs/evidence/scroll-view/README.md). Hosted CI 
 CodeRabbit acceptance remain open; no GF-14 checkpoint is accepted yet. Full
 props/events, nested scroll, refresh, paging/snap, bounce/zoom, keyboard behavior,
 hardware input, broad RN differential parity and mobile exports remain open.
+
+Diagonal gestures preserve their transverse offset through release and momentum;
+orientation replacement cancels the claimed gesture once through the native
+owner. The preceding host fails exactly those three new controls. The earlier
+22-check pre-integration comparison remains separately labeled historical
+evidence. Public options without a Godot implementation are explicitly rejected.
 
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
 

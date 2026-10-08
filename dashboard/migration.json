@@ -5,14 +5,14 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "6",
-    "focusTitle": "GF-14: revisão thermo-nuclear local concluída; integração e PR pendentes"
+    "focusSequence": "5",
+    "focusTitle": "GF-14: revisão local concluída; PR e CI/CodeRabbit em preparação"
   },
-  "updatedAt": "2026-10-08T03:04:07.169129+00:00",
+  "updatedAt": "2026-10-08T03:29:22.784832+00:00",
   "source": {
-    "commit": "ebff3ec44a92b081686bb551cb28bcecfb01c14a",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/ebff3ec44a92b081686bb551cb28bcecfb01c14a",
-    "scope": "GF-14: prova local do ScrollView original 22/22, listas 44/44 e quatro capturas. Integração e CI/CodeRabbit pendentes; nenhum novo checkpoint aceito. GF-18 mantém primeira fatia Modal desktop aceita na PR #51. Integração preserva os avanços GF-11 e GF-23 da main; host integrado ainda será validado."
+    "commit": "a6cc5b94531d162214574d3a4a382b9edf32320c",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/a6cc5b94531d162214574d3a4a382b9edf32320c",
+    "scope": "Main integrada com GF-11, GF-18 e GF-23 preservados: 26/156 checkpoints, 0/39 itens. GF-14 passou a repetição independente integrada e revisão thermo-nuclear; publicação e aceite hospedado ainda pendentes."
   },
   "phases": [
     {
@@ -1632,7 +1632,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos.",
+      "note": "Fatia desktop revisada localmente: ScrollView original RN 0.87.1 com um owner nativo para offsets fracionários, pan/momentum, cancelamento, Fabric e pintura. Principal repetiu 25/25 checks no host integrado; controle anterior executou os mesmos inputs e reproduziu exatamente três defeitos diagonal/orientação. Listas 44/44, oráculo de sabotagem rejeitado mesmo com flags verdes e quatro capturas verificadas. scrollToEnd preserva eixo transversal; diagonal e soltura têm velocidade transversal zero. CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3520,6 +3520,23 @@
   ],
   "activity": [
     {
+      "id": "gf14-integrated-root-review-20261008",
+      "at": "2026-10-08T03:29:22.784832+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "Fatia desktop revisada localmente: ScrollView original RN 0.87.1 com um owner nativo para offsets fracionários, pan/momentum, cancelamento, Fabric e pintura. Principal repetiu 25/25 checks no host integrado; controle anterior executou os mesmos inputs e reproduziu exatamente três defeitos diagonal/orientação. Listas 44/44, oráculo de sabotagem rejeitado mesmo com flags verdes e quatro capturas verificadas. scrollToEnd preserva eixo transversal; diagonal e soltura têm velocidade transversal zero. CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware, paridade RN e exports mobile continuam abertos."
+    },
+    {
+      "id": "gf14-diagonal-pan-review-20261008",
+      "at": "2026-10-08T03:11:21.894800+00:00",
+      "taskIds": [
+        "GF-14"
+      ],
+      "message": "A revisão principal reproduziu pan diagonal alterando o eixo transversal: vertical (100,100)→(130,150), horizontal→(150,130), com momentum transversal indevido. Build integrado interrompido antes do relink; host/provas 60fa18 preservados. Um Luna corrige no owner nativo e amplia os controles, sem marcar aceite."
+    },
+    {
       "id": "gf14-local-axis-proof-20261008",
       "at": "2026-10-08T03:02:37.570129+00:00",
       "taskIds": [
@@ -3527,24 +3544,6 @@
         "GF-15"
       ],
       "message": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos."
-    },
-    {
-      "id": "device-services-first-slice-f3571fd",
-      "at": "2026-10-08T02:06:52.660442+00:00",
-      "taskIds": [
-        "GF-23"
-      ],
-      "message": "Primeira fatia do GF-23 com evidência local: Linking, Clipboard e Vibration originais do RN sobre três TurboModules C++ e um backend substituível. 65 checks headless em duas aplicações e 2 num processo sem --uri=, com oráculo independente; o host anterior falha exatamente 52/65 e 1/2, as sabotagens url duplicado e getString com cache obsoleto falham 5 e 9; o exemplo passa 16 headless, 16 gráficos e 23 com sete capturas. Só o checkpoint slice do GF-23 fecha; CI hospedada pendente e sem PR aberta. Abertos: Alert, Share, Settings, BackHandler, deep link mobile, Windows e Linux.",
-      "url": "https://github.com/journey-studios/godot-fabric/commit/ba0a63f7d697fef7eaab7951e3b211a49b58f635"
-    },
-    {
-      "id": "text-layout-first-slice-20261007",
-      "at": "2026-10-08T02:06:47.722+00:00",
-      "taskIds": [
-        "GF-11"
-      ],
-      "message": "Primeira fatia do GF-11 (Text and fonts): onTextLayout e o baseline do Yoga passam a vir das linhas do parágrafo que o host mede e pinta, por um TextLayoutManager de plataforma do Godot com measureLines. 76 checks headless confrontados com as tabelas dos TTFs empacotados por um oráculo independente (tolerância ±1 px; o desvio medido é de no máximo 0,576 px com o arredondamento do FreeType, e a escala crua erra até 1,484 px); o host anterior falha exatamente 5 checks e as três sabotagens retidas falham 4, 3 e 9, todas rejeitadas pelo oráculo; exemplo com 18 checks headless e 32 gráficos e duas capturas. A CI hospedada do passo novo está pendente. Só o checkpoint slice do GF-11 fecha; nenhum item completo, peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
     },
     {
       "id": "modal-final-109e6fd-desktop-slice",
@@ -3557,11 +3556,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/pull/51"
     },
     {
-      "id": "agent-board-parallel-20261008",
-      "at": "2026-10-08T00:43:16.000Z",
-      "taskIds": [],
-      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
+      "id": "text-layout-first-slice-20261007",
+      "at": "2026-10-08T02:06:47.722+00:00",
+      "taskIds": [
+        "GF-11"
+      ],
+      "message": "Primeira fatia do GF-11 (Text and fonts): onTextLayout e o baseline do Yoga passam a vir das linhas do parágrafo que o host mede e pinta, por um TextLayoutManager de plataforma do Godot com measureLines. 76 checks headless confrontados com as tabelas dos TTFs empacotados por um oráculo independente (tolerância ±1 px; o desvio medido é de no máximo 0,576 px com o arredondamento do FreeType, e a escala crua erra até 1,484 px); o host anterior falha exatamente 5 checks e as três sabotagens retidas falham 4, 3 e 9, todas rejeitadas pelo oráculo; exemplo com 18 checks headless e 32 gráficos e duas capturas. A CI hospedada do passo novo está pendente. Só o checkpoint slice do GF-11 fecha; nenhum item completo, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
     },
     {
       "id": "modal-hosted-bee7b40-global-timeout",
@@ -3592,15 +3593,6 @@
       ],
       "message": "CI 37698981563 falhou em test:transforms:guards antes de executar Modal. Os 61 guards e 25 checks de input passam, mas ERROR det == 0 reprova corretamente o log. Root reproduziu a mesma falha no host 45ba095b; causa e correção em investigação no único Luna. Merge permanece pendente; checkpoints, pesos e denominadores preservados.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37698981563"
-    },
-    {
-      "id": "modal-coderabbit-corrections-f95a3e2",
-      "at": "2026-10-07T22:51:55.974532+00:00",
-      "taskIds": [
-        "GF-18"
-      ],
-      "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
-      "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
     },
     {
       "id": "websocket-main-hosted-ci-and-pages-20261007",
@@ -3777,6 +3769,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/7d05dce2f663726fc303b3fafea1776d6301960b/docs/evidence/networking/README.md"
     },
     {
+      "id": "root-retirement-hosted-ci-receipt-20261006",
+      "at": "2026-10-06T21:05:45.062343-03:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI da retirada independente de roots: a CI no head b5dafc8 (run 37163024271), a fonte da fatia mais o pin do dashboard, passou nos cinco jobs, e o job nativo roda as oito lanes headless de root do runtime de adapters (o workflow e o runner desse commit as incluem). O recibo docs/evidence/view/preceding-ci.json registra só os jobs e não audita o artefato; as lanes gráficas, com capturas e pixels, seguem locais. A nota do GF-28 deixa de dizer que a CI da fatia está pendente. Nenhum checkpoint, GF, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4420688eb008c7c634f091d468a10653aaa4dd6e/docs/evidence/view/preceding-ci.json"
+    },
+    {
       "id": "frame-clock-hosted-ci-and-pages-20261006",
       "at": "2026-10-06T22:54:57.831566+00:00",
       "taskIds": [
@@ -3827,15 +3828,6 @@
       ],
       "message": "CI hospedada do Appearance: o push da main em 1607044 (run 37408741652) passou nos cinco jobs na primeira tentativa e repetiu os 79 checks do estado depois da revisão com IDs idênticos aos fixados; o oráculo independente aceita o relatório baixado e os checks que o host anterior e o host antes do callback compartilhado falham passam. 22 das 72 entradas rastreadas diferem de a402a1f por commits de revisão e da main. Pages 37408741641 implantou exatamente os dados de 1607044.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/169611d7c2cff905edebb8c07a4f3ee0b1037194/docs/evidence/appearance/hosted-ci.json"
-    },
-    {
-      "id": "root-retirement-hosted-ci-receipt-20261006",
-      "at": "2026-10-06T21:05:45.062343-03:00",
-      "taskIds": [
-        "GF-28"
-      ],
-      "message": "CI da retirada independente de roots: a CI no head b5dafc8 (run 37163024271), a fonte da fatia mais o pin do dashboard, passou nos cinco jobs, e o job nativo roda as oito lanes headless de root do runtime de adapters (o workflow e o runner desse commit as incluem). O recibo docs/evidence/view/preceding-ci.json registra só os jobs e não audita o artefato; as lanes gráficas, com capturas e pixels, seguem locais. A nota do GF-28 deixa de dizer que a CI da fatia está pendente. Nenhum checkpoint, GF, peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/4420688eb008c7c634f091d468a10653aaa4dd6e/docs/evidence/view/preceding-ci.json"
     },
     {
       "id": "frame-clock-local-verified-20261006",
@@ -3947,6 +3939,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/d2fed26e1efa6c79c261ecbd14d1f40257037baa/docs/evidence/appearance/README.md"
     },
     {
+      "id": "appearance-local-verified-20261005",
+      "at": "2026-10-05T23:33:49.007688+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "Appearance e useColorScheme do tema do sistema: 67 headless. Os módulos originais do RN, lidos pelo import público, recebem o tema do DisplayServer pelo Callable registrado no callback de tema do sistema e o override de setColorScheme; duas roots re-renderizam o mesmo esquema. Override light/dark vence, unspecified/auto voltam ao sistema, sem modo escuro começa em light, valor desconhecido falha com E_ARGUMENT e o evento só sai quando o efetivo muda. Host anterior falha exatamente 45; host que emite a cada callback falha 17 e o oráculo rejeita. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/80d79da4c3d05e3d677292dec175a03497b27d0c/docs/evidence/appearance/README.md"
+    },
+    {
       "id": "pointer-capture-notifications-local-verified-20261005",
       "at": "2026-10-06T00:47:35.512294+00:00",
       "taskIds": [
@@ -3984,15 +3985,6 @@
       ],
       "message": "CI hospedada do AppState: o push da main em 8f80fed (run 37382633328) passou nos cinco jobs depois de reexecutar o reference-android, que caiu ao baixar o emulador; o artefato repetiu os 75 checks com IDs e bundle idênticos e 70 entradas iguais à implementação 7087679. Pages 37382633232 implantou exatamente os dados de 8f80fed.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328"
-    },
-    {
-      "id": "appearance-local-verified-20261005",
-      "at": "2026-10-05T23:33:49.007688+00:00",
-      "taskIds": [
-        "GF-21"
-      ],
-      "message": "Appearance e useColorScheme do tema do sistema: 67 headless. Os módulos originais do RN, lidos pelo import público, recebem o tema do DisplayServer pelo Callable registrado no callback de tema do sistema e o override de setColorScheme; duas roots re-renderizam o mesmo esquema. Override light/dark vence, unspecified/auto voltam ao sistema, sem modo escuro começa em light, valor desconhecido falha com E_ARGUMENT e o evento só sai quando o efetivo muda. Host anterior falha exatamente 45; host que emite a cada callback falha 17 e o oráculo rejeita. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/80d79da4c3d05e3d677292dec175a03497b27d0c/docs/evidence/appearance/README.md"
     },
     {
       "id": "shared-touches-local-verified-20261005",
@@ -4193,18 +4185,6 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
     },
     {
-      "id": "pointer-move-view-local-verified-20261005",
-      "at": "2026-10-05T16:44:32.533664+00:00",
-      "taskIds": [
-        "GF-06",
-        "GF-07",
-        "GF-08",
-        "GF-13"
-      ],
-      "message": "View pointermove nativo: 219 headless (135 saudáveis + 84 de faults de Move) e 243 viewport/20 pixels; o host anterior com o mesmo bundle falha exatamente 45 checks normativos. Listeners no alvo e no pai (fases 2, 3 e 1), drags e mouse sem botão entregam 1 move trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false. Falhas de lookup de Move ficam limitadas: 1 diagnóstico por causa distinta, até 16, repetições contadas. Controles de host anterior 8/12/3 refeitos. Document pointermove fica habilitado sem certificação. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
-    },
-    {
       "id": "pointer-up-fault-hosted-ci-and-pages-20261005",
       "at": "2026-10-05T16:29:15.033360+00:00",
       "taskIds": [
@@ -4216,6 +4196,18 @@
       ],
       "message": "CI hospedada dos faults de View Up: run 37330669524 (01d3add, checkout fa37a92) repetiu 240 checks e run 37332057453 (b02ab93, checkout 3265374) repetiu 296, com IDs, bundles e estágios idênticos aos locais, IDs de alocação da segunda aplicação só renomeados um-para-um e 81/82 entradas iguais às implementações f9a3b25/6b3554c. Pages 37329106287, 37331641273 e 37333111502 implantaram exatamente os dados da main em 988af3c, 84a95ab e add4486.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37332057453"
+    },
+    {
+      "id": "pointer-move-view-local-verified-20261005",
+      "at": "2026-10-05T16:44:32.533664+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "View pointermove nativo: 219 headless (135 saudáveis + 84 de faults de Move) e 243 viewport/20 pixels; o host anterior com o mesmo bundle falha exatamente 45 checks normativos. Listeners no alvo e no pai (fases 2, 3 e 1), drags e mouse sem botão entregam 1 move trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false. Falhas de lookup de Move ficam limitadas: 1 diagnóstico por causa distinta, até 16, repetições contadas. Controles de host anterior 8/12/3 refeitos. Document pointermove fica habilitado sem certificação. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
     },
     {
       "id": "pointer-up-resolver-fault-local-verified-20261005",
@@ -5029,186 +5021,6 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
     },
     {
-      "id": "focus-command-hosted-artifact-and-ios-recovery-9564076",
-      "at": "2026-10-04T05:17:34.490023+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
-    },
-    {
-      "id": "focus-pinned-receipt-links-20261004",
-      "at": "2026-10-04T05:05:28.189094+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Links de checkpoint fixados nos recibos pós-pin0d7c731/ffcc027, que registram a comparação dos hashes com implementações3b09b37/877c529. Preserva provas, estados e denominador; nenhuma conclusão adicionada.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
-    },
-    {
-      "id": "focus-command-guards-pages-observed-20261004",
-      "at": "2026-10-04T05:03:09.984744+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Pagesmanual37178662152 concluiu build/deploy; JSON públicoffcc027 comparado ao commit com complemento877c529 fora do main. CI nova registrada em snapshot; sucesso de publicação não fecha paridade/runtime completo.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152"
-    },
-    {
-      "id": "focus-command-guards-source-pin-20261004",
-      "at": "2026-10-04T05:01:00.195143+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Complemento877c529 corresponde às9 fontes/fixtures/configs registradas; fontes do runtime e do exemplo de foco inalteradas.112checks/40owners e207Node/13Python executados; CI nova e publicação permanecem passos separados. Nenhum novo checkpoint concluído.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
-    },
-    {
-      "id": "focus-command-guards-local-20261004",
-      "at": "2026-10-04T04:58:20.144403+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Complemento nativo112checks/40owners passou:8args inválidos preservam foco/State/eventos e comandos válidos recuperam; duas raízes+app independente,readonly/refs antigas e nove registros limpos. CI configurada; resultado hospedado separado. Captura documentada como investigação de fonte,sem nova decisão/checkpoint.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
-    },
-    {
-      "id": "focus-ci-complete-20261004",
-      "at": "2026-10-04T04:54:34.303777+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "CI37177820811 em1699e5c passou os cinco jobs: contracts,native-cold-start,reference-ios,reference-android,parity-comparison. Snapshot pendente anterior preservado; referências limitadas não fecham foco mobile, ports Godot ou aceite integral. Nenhum checkpoint/peso/denominador alterado.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811"
-    },
-    {
-      "id": "focus-pages-observed-20261004",
-      "at": "2026-10-04T04:43:02.613088+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Pagesmanual37177743564 concluiu build/deploy; JSON público0d7c731 comparado ao commit com fonte3b09b37 fora do main. CI da nova fatia permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Foco local e publicação não fecham o aceite integral, mobile ou hardware/IME.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177743564"
-    },
-    {
-      "id": "focus-source-pin-20261004",
-      "at": "2026-10-04T04:41:23.855941+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Commit3b09b37 corresponde às13 fontes JS/fixture executadas,47 entradas nativas e duas capturas. Host6abafb9, comandos originais e foco real comprovados; publicação e CI são passos separados. Nenhum novo checkpoint concluído.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
-    },
-    {
-      "id": "focus-local-proof-20261004",
-      "at": "2026-10-04T04:40:00.173589+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-12"
-      ],
-      "message": "Foco original RN + LineEdit real passou175/189,12pixels/duas capturas, com lifetimes e reentrância. Mesmo fixture falha23/160 no host anterior e11/175 sem elegibilidade nativa. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Não adiciona checkpoints: denominador156 e18 checkpoints concluídos preservados; GF-08/GF-12 seguem abertos. Pin e publicação seguem passos separados.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
-    },
-    {
-      "id": "tree-pages-observed-20261004",
-      "at": "2026-10-04T03:49:27.081644+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-10"
-      ],
-      "message": "Pagesmanual37175019378 concluiu build/deploy; JSON públicoa012f9e foi comparado ao commit, fonte31d08ac fora do main. CI37175002603: contracts passou, outras lanes em andamento no snapshot. Prova local e publicação não fecham a paridade completa ou alvos.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378"
-    },
-    {
-      "id": "tree-source-pin-20261004",
-      "at": "2026-10-04T03:45:51.675526+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-10"
-      ],
-      "message": "Commit31d08ac corresponde às 12 fontes executadas e às 47 fontes do host nativo inalterado. Provas, limites e duas capturas fixados em URL imutável. Publicação do JSON e CI seguem passos separados; nenhum novo checkpoint concluído.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
-    },
-    {
-      "id": "tree-local-proof-20261004",
-      "at": "2026-10-04T03:42:35.828149+00:00",
-      "taskIds": [
-        "GF-08",
-        "GF-10"
-      ],
-      "message": "Árvore/IDs com RN original passou 89/99; quatro frames independentes e oito pixels fixos comprovam a ordem visual. Controle anterior falha 25/89 com o mesmo host. Regressões 206Node/13Python,10nativos,19exemplos/1308,17adapters/318; timeout gráfico inicial preservado e fixture de captura preparado antes do novo sucesso. Próximos: foco/TextInputState e comandos. Sem novo checkpoint concluído ou aceite fechado.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
-    },
-    {
-      "id": "transforms-ci-complete-20261004",
-      "at": "2026-10-04T02:59:46.504092+00:00",
-      "taskIds": [
-        "GF-07",
-        "GF-08",
-        "GF-10",
-        "GF-13"
-      ],
-      "message": "CI5885331: contracts, native-cold-start, reference-ios, reference-android e parity-comparison passaram no run37171931529. Esta é evidência hospedada da fatia; o oráculo limitado não fecha a paridade completa ou os ports Godot mobile. Próximo avanço: métodos de HostInstance e comandos nativos públicos.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529"
-    },
-    {
-      "id": "transforms-pages-observed-20261004",
-      "at": "2026-10-04T02:47:17.886674+00:00",
-      "taskIds": [
-        "GF-07",
-        "GF-08",
-        "GF-10",
-        "GF-13"
-      ],
-      "message": "Deploy manual37171971971 concluiu build/deploy e JSON público5885331 foi comparado ao commit, fonte6e5db7b fora do main. CI37171931529: contracts passou, outras lanes em andamento/comparação pendente; receipt preserva snapshot sem declarar aceites integrais.",
-      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171971971"
-    },
-    {
-      "id": "transforms-source-pin-20261004",
-      "at": "2026-10-04T02:43:28.310088+00:00",
-      "taskIds": [
-        "GF-07",
-        "GF-08",
-        "GF-10",
-        "GF-13"
-      ],
-      "message": "Commit de implementação6e5db7b corresponde exatamente às fontes nativas/fixtures executadas e SDK42ee5c7; provas e três fotos publicáveis fixadas em URL imutável. CI de transforms e deploy seguem etapas separadas, sem conclusão integral dos GF.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
-    },
-    {
-      "id": "transforms-final-validation-20261004",
-      "at": "2026-10-04T02:39:50.421120+00:00",
-      "taskIds": [
-        "GF-07",
-        "GF-08",
-        "GF-10",
-        "GF-13"
-      ],
-      "message": "Fonte/host final42ee5c7 conferidos: transforms309/345+33pixels, math40932, rejeições61/input25, controles65/68/9. Regressões205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Evidências/fotos e roadmap registrados; commit/push/deploy seguem na mesma PR14. Todos os aceites completos/diferenciais/alvos continuam pendentes.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
-    },
-    {
-      "id": "transforms-local-proof-20261004",
-      "at": "2026-10-04T02:35:27.787597+00:00",
-      "taskIds": [
-        "GF-07",
-        "GF-08",
-        "GF-10",
-        "GF-13"
-      ],
-      "message": "Comprovados transforms2D309/345+33pixels, math40932, rejeições61 e input25; controles anteriores65/68 e intermediário9/25. Último binário compilado com guards de inversa/consumo e teardown de Create rejeitado. Regressão final e commit/publicação em preparação, sem novos checkpoints done.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
-    },
-    {
       "id": "coordinates-ci-green-f40831e-b1732fb",
       "at": "2026-10-04T02:01:53.222939+00:00",
       "taskIds": [
@@ -5489,6 +5301,211 @@
       ],
       "message": "HUD/Inventory compartilham aplicação com props, estado e cleanup. Fatia 2A documentada; registro pela data da evidência.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/shared-roots/README.md"
+    },
+    {
+      "id": "transforms-local-proof-20261004",
+      "at": "2026-10-04T02:35:27.787597+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Comprovados transforms2D309/345+33pixels, math40932, rejeições61 e input25; controles anteriores65/68 e intermediário9/25. Último binário compilado com guards de inversa/consumo e teardown de Create rejeitado. Regressão final e commit/publicação em preparação, sem novos checkpoints done.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "transforms-final-validation-20261004",
+      "at": "2026-10-04T02:39:50.421120+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Fonte/host final42ee5c7 conferidos: transforms309/345+33pixels, math40932, rejeições61/input25, controles65/68/9. Regressões205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Evidências/fotos e roadmap registrados; commit/push/deploy seguem na mesma PR14. Todos os aceites completos/diferenciais/alvos continuam pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+    },
+    {
+      "id": "transforms-source-pin-20261004",
+      "at": "2026-10-04T02:43:28.310088+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Commit de implementação6e5db7b corresponde exatamente às fontes nativas/fixtures executadas e SDK42ee5c7; provas e três fotos publicáveis fixadas em URL imutável. CI de transforms e deploy seguem etapas separadas, sem conclusão integral dos GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+    },
+    {
+      "id": "transforms-pages-observed-20261004",
+      "at": "2026-10-04T02:47:17.886674+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Deploy manual37171971971 concluiu build/deploy e JSON público5885331 foi comparado ao commit, fonte6e5db7b fora do main. CI37171931529: contracts passou, outras lanes em andamento/comparação pendente; receipt preserva snapshot sem declarar aceites integrais.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171971971"
+    },
+    {
+      "id": "transforms-ci-complete-20261004",
+      "at": "2026-10-04T02:59:46.504092+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "CI5885331: contracts, native-cold-start, reference-ios, reference-android e parity-comparison passaram no run37171931529. Esta é evidência hospedada da fatia; o oráculo limitado não fecha a paridade completa ou os ports Godot mobile. Próximo avanço: métodos de HostInstance e comandos nativos públicos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529"
+    },
+    {
+      "id": "tree-local-proof-20261004",
+      "at": "2026-10-04T03:42:35.828149+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Árvore/IDs com RN original passou 89/99; quatro frames independentes e oito pixels fixos comprovam a ordem visual. Controle anterior falha 25/89 com o mesmo host. Regressões 206Node/13Python,10nativos,19exemplos/1308,17adapters/318; timeout gráfico inicial preservado e fixture de captura preparado antes do novo sucesso. Próximos: foco/TextInputState e comandos. Sem novo checkpoint concluído ou aceite fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-source-pin-20261004",
+      "at": "2026-10-04T03:45:51.675526+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Commit31d08ac corresponde às 12 fontes executadas e às 47 fontes do host nativo inalterado. Provas, limites e duas capturas fixados em URL imutável. Publicação do JSON e CI seguem passos separados; nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-pages-observed-20261004",
+      "at": "2026-10-04T03:49:27.081644+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Pagesmanual37175019378 concluiu build/deploy; JSON públicoa012f9e foi comparado ao commit, fonte31d08ac fora do main. CI37175002603: contracts passou, outras lanes em andamento no snapshot. Prova local e publicação não fecham a paridade completa ou alvos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378"
+    },
+    {
+      "id": "focus-local-proof-20261004",
+      "at": "2026-10-04T04:40:00.173589+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Foco original RN + LineEdit real passou175/189,12pixels/duas capturas, com lifetimes e reentrância. Mesmo fixture falha23/160 no host anterior e11/175 sem elegibilidade nativa. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Não adiciona checkpoints: denominador156 e18 checkpoints concluídos preservados; GF-08/GF-12 seguem abertos. Pin e publicação seguem passos separados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-source-pin-20261004",
+      "at": "2026-10-04T04:41:23.855941+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Commit3b09b37 corresponde às13 fontes JS/fixture executadas,47 entradas nativas e duas capturas. Host6abafb9, comandos originais e foco real comprovados; publicação e CI são passos separados. Nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-pages-observed-20261004",
+      "at": "2026-10-04T04:43:02.613088+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Pagesmanual37177743564 concluiu build/deploy; JSON público0d7c731 comparado ao commit com fonte3b09b37 fora do main. CI da nova fatia permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Foco local e publicação não fecham o aceite integral, mobile ou hardware/IME.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177743564"
+    },
+    {
+      "id": "focus-ci-complete-20261004",
+      "at": "2026-10-04T04:54:34.303777+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "CI37177820811 em1699e5c passou os cinco jobs: contracts,native-cold-start,reference-ios,reference-android,parity-comparison. Snapshot pendente anterior preservado; referências limitadas não fecham foco mobile, ports Godot ou aceite integral. Nenhum checkpoint/peso/denominador alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811"
+    },
+    {
+      "id": "focus-command-guards-local-20261004",
+      "at": "2026-10-04T04:58:20.144403+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Complemento nativo112checks/40owners passou:8args inválidos preservam foco/State/eventos e comandos válidos recuperam; duas raízes+app independente,readonly/refs antigas e nove registros limpos. CI configurada; resultado hospedado separado. Captura documentada como investigação de fonte,sem nova decisão/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-guards-source-pin-20261004",
+      "at": "2026-10-04T05:01:00.195143+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Complemento877c529 corresponde às9 fontes/fixtures/configs registradas; fontes do runtime e do exemplo de foco inalteradas.112checks/40owners e207Node/13Python executados; CI nova e publicação permanecem passos separados. Nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-guards-pages-observed-20261004",
+      "at": "2026-10-04T05:03:09.984744+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Pagesmanual37178662152 concluiu build/deploy; JSON públicoffcc027 comparado ao commit com complemento877c529 fora do main. CI nova registrada em snapshot; sucesso de publicação não fecha paridade/runtime completo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152"
+    },
+    {
+      "id": "focus-pinned-receipt-links-20261004",
+      "at": "2026-10-04T05:05:28.189094+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Links de checkpoint fixados nos recibos pós-pin0d7c731/ffcc027, que registram a comparação dos hashes com implementações3b09b37/877c529. Preserva provas, estados e denominador; nenhuma conclusão adicionada.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-hosted-artifact-and-ios-recovery-9564076",
+      "at": "2026-10-04T05:17:34.490023+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+    },
+    {
+      "id": "modal-coderabbit-corrections-f95a3e2",
+      "at": "2026-10-07T22:51:55.974532+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
+    },
+    {
+      "id": "agent-board-parallel-20261008",
+      "at": "2026-10-08T00:43:16.000Z",
+      "taskIds": [],
+      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
+    },
+    {
+      "id": "device-services-first-slice-f3571fd",
+      "at": "2026-10-08T02:06:52.660442+00:00",
+      "taskIds": [
+        "GF-23"
+      ],
+      "message": "Primeira fatia do GF-23 com evidência local: Linking, Clipboard e Vibration originais do RN sobre três TurboModules C++ e um backend substituível. 65 checks headless em duas aplicações e 2 num processo sem --uri=, com oráculo independente; o host anterior falha exatamente 52/65 e 1/2, as sabotagens url duplicado e getString com cache obsoleto falham 5 e 9; o exemplo passa 16 headless, 16 gráficos e 23 com sete capturas. Só o checkpoint slice do GF-23 fecha; CI hospedada pendente e sem PR aberta. Abertos: Alert, Share, Settings, BackHandler, deep link mobile, Windows e Linux.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/ba0a63f7d697fef7eaab7951e3b211a49b58f635"
     }
   ]
 }

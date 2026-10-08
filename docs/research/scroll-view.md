@@ -23,6 +23,10 @@ velocity, momentum, responder-mediated cancellation and Android's
 at the public boundary. Bounce, paging, zoom, sticky headers, refresh controls,
 indicator customization, nested or multitouch scrolling, hardware/refresh-rate
 behavior and mobile exports remain unsupported or unverified.
+The contract rejects valid requests that this desktop host cannot honor,
+including `scrollPerfTag`, `scrollsChildToFocus`, keyboard lifecycle callbacks,
+and `removeClippedSubviews={true}`; explicitly disabling clipped-subview
+removal remains supported.
 For `scrollToEnd`, desktop follows the pinned Android command's axis policy:
 vertical mode reaches the bottom while preserving x, and horizontal mode reaches
 the right edge while preserving y. This is verified with both dimensions

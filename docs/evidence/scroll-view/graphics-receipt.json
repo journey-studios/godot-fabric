@@ -18,27 +18,28 @@
   "command": "Godot --path <checkout> --windowed --script res://tests/scroll-view-graphics-probe.gd",
   "host": {
     "path": "addons/fabric_godot.dylib",
-    "expectedSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
-    "beforeSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
-    "afterSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
+    "expectedSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
+    "beforeSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
+    "afterSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
     "unchanged": true
   },
   "buildReceipt": {
     "path": ".deps/build/native-sdk-build.json",
-    "sha256": "ddfc16a3ec85196f2c5e93e80970cc4459eed449388c52d3c6505862ae47ff7f",
+    "sha256": "76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c",
     "unchanged": true,
     "recordedHostMatches": true
   },
   "bundle": {
     "path": "build/scroll-view-gf14-probe.js",
-    "expectedSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
-    "beforeSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
-    "afterSha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a",
+    "expectedSha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec",
+    "beforeSha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec",
+    "afterSha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec",
     "unchanged": true
   },
   "bundleReceipt": {
     "path": "build/scroll-view-gf14-probe-bundle.json",
-    "sha256": "72709ce3a3c303449a096d77254d1a86864fa8842e23e9dc92e6d3d440f96248"
+    "sha256": "266fa9134d0a2db80e30d5acc871b049045ba5dd2ec0b873e9e5630fd6700f6e",
+    "unchanged": true
   },
   "probe": {
     "path": "tests/scroll-view-graphics-probe.gd",
@@ -46,11 +47,11 @@
   },
   "runner": {
     "path": "scripts/scroll-view-graphics.mjs",
-    "sha256": "7e64271e39396f13f54da6f23b1879916c3f026458984eedc93e73a95c1967c9"
+    "sha256": "b92a862e2d7bc5953998108b7826a07f18ff9f84a5ab107896c544a589313fe6"
   },
   "report": {
     "path": "build/scroll-view-graphics-report.json",
-    "sha256": "78db6f833b6b8d5565b043bd5f0f67e5378303414f4fbea760cb4b85599fab02"
+    "sha256": "ced475c8418869a84db32ea3f983e8d4953561421da7ea686fdf82a348e3825e"
   },
   "checks": [
     {
@@ -71,9 +72,9 @@
       "name": "horizontal pan paints inside the viewport and clips blue content outside it",
       "passed": true,
       "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
-      "offsetX": 236.015278810533,
-      "fabricX": 236.015274047852,
-      "paintedContentX": -236.015274047852,
+      "offsetX": 234.209255928505,
+      "fabricX": 234.209259033203,
+      "paintedContentX": -234.209259033203,
       "pixelInsideViewport": "(0.1137, 0.3059, 0.8471, 1.0)",
       "pixelOutsideViewport": "(0.9608, 0.9725, 0.9804, 1.0)"
     },
@@ -140,7 +141,7 @@
   ],
   "log": {
     "path": "build/scroll-view-graphics.log",
-    "sha256": "96fa02e98b2f6820578cc10031d6e45c836c845792eec54ce10f54e97139c6c4"
+    "sha256": "df4918c8e624f858c899a2a9869e79cd0ba7b1cea8c3e538bf985f28eda3289f"
   },
   "limitations": [
     "Godot macOS windowed run only; no physical hardware touch or mobile-export claim."

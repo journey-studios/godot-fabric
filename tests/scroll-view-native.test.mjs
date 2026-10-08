@@ -83,6 +83,9 @@ test("original RN ScrollView commands and pan use one mounted Fabric offset", as
     "horizontal scrollToEnd reaches right edge and preserves vertical offset",
     "second Fabric root pans horizontally and leaves the vertical root unchanged",
     "vertical scrollToEnd reaches bottom and preserves horizontal offset",
+    "vertical diagonal pan and new release coordinate preserve x and have zero cross-axis momentum",
+    "horizontal diagonal pan and new release coordinate preserve y and have zero cross-axis momentum",
+    "orientation replacement cancels the claimed pan once before the axis changes",
     "active animated scroll is canceled when content is removed and clamps to zero"];
   assert.deepEqual(report.checks.map(row => row.name), expectedChecks, "fixed GF-14 check inventory");
   assert.ok(report.cleanup, "both Fabric roots and native tags are removed");

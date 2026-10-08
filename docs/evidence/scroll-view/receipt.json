@@ -15,8 +15,8 @@
     ".deps/build/scroll_motion_test"
   ],
   "mountedProbe": {
-    "passed": 22,
-    "total": 22,
+    "passed": 25,
+    "total": 25,
     "cleanup": true,
     "checkNames": [
       "original ScrollView mounts with content extent, default indicator, and RN Context",
@@ -40,33 +40,40 @@
       "horizontal scrollToEnd reaches right edge and preserves vertical offset",
       "second Fabric root pans horizontally and leaves the vertical root unchanged",
       "vertical scrollToEnd reaches bottom and preserves horizontal offset",
+      "vertical diagonal pan and new release coordinate preserve x and have zero cross-axis momentum",
+      "horizontal diagonal pan and new release coordinate preserve y and have zero cross-axis momentum",
+      "orientation replacement cancels the claimed pan once before the axis changes",
       "active animated scroll is canceled when content is removed and clamps to zero"
     ],
     "files": {
       "host": {
         "path": "addons/fabric_godot.dylib",
-        "sha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb"
+        "sha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445"
       },
       "buildReceipt": {
         "path": ".deps/build/native-sdk-build.json",
-        "sha256": "ddfc16a3ec85196f2c5e93e80970cc4459eed449388c52d3c6505862ae47ff7f",
+        "sha256": "76ad3f1aeb9b0e617d75751429b01d49c05ef3647f9df9d73d8f9d1786ef2f1c",
         "stableDuringProbe": true
       },
       "bundle": {
         "path": "build/scroll-view-gf14-probe.js",
-        "sha256": "899981449f04fba383d0fabf0c169cb81b1448aa7831a9911009baf6b1a6de6a"
+        "sha256": "c879de5c9bb1490b2a4f1c68b9523df77c89ae11a0916c1fcc2da42bb4e5d6ec"
       },
       "probe": {
         "path": "tests/scroll-view-probe.gd",
-        "sha256": "07c8fc292734ff5244f7a5e732f10fbffc42569e1170934457e7b6bc63f0a131"
+        "sha256": "c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988"
       },
       "report": {
         "path": "build/scroll-view-gf14-report.json",
-        "sha256": "340c8c9fc1f546b3a09e3b643bb18f92ff8b9b82a060f3466b22aa62912cb6ef"
+        "sha256": "925ba5e2dd87f03dc4c15137aff3bb27f18819dad2a70d283369b6b659bff1ae"
       },
       "log": {
         "path": "build/scroll-view-gf14.log",
-        "sha256": "e7e161fe10742ab55579e03c5c6373ea96d0f422e2f3647f1de2648e712ee004"
+        "sha256": "6e0a8f1ff517aa8ff78ebddd9b6eaf5d5f6a847819a96403a77fad9230131279"
+      },
+      "bundleReceipt": {
+        "path": "build/scroll-view-gf14-probe-bundle.json",
+        "sha256": "266fa9134d0a2db80e30d5acc871b049045ba5dd2ec0b873e9e5630fd6700f6e"
       }
     },
     "hostStableDuringProbe": true,
@@ -74,7 +81,7 @@
     "compiledSourcePinsMatch": true,
     "compiledSourcePins": {
       "native/application_runtime.cpp": {
-        "sha256": "e809164d7ba5e7d8dd320f7831960525b43f1a3f69b509fcc9e043e2d5300734",
+        "sha256": "196856d792f3a31fbbb97e13d574d23622b85d342fb0093d840627ccbac162cb",
         "matchesBuildReceipt": true
       },
       "native/pointer_adapter.cpp": {
@@ -86,7 +93,7 @@
         "matchesBuildReceipt": true
       },
       "native/scroll_adapter.cpp": {
-        "sha256": "e8522d484a118df4b932af60599b0b2bf6dcedb71b19b7a7d5fa48cfbf490835",
+        "sha256": "b73bc8328146e663b6cd23e413912e4ae726b8a9b737339a3ff41ed82f1f1cd9",
         "matchesBuildReceipt": true
       },
       "native/scroll_adapter.h": {
@@ -98,7 +105,7 @@
         "matchesBuildReceipt": true
       },
       "native/scroll_offset.h": {
-        "sha256": "1d21b643b8138fe676cd115457a062794fa564c8b918ed0a0e25ce178343630e",
+        "sha256": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
         "matchesBuildReceipt": true
       },
       "native/scroll_throttle.h": {
@@ -107,23 +114,23 @@
       }
     },
     "wrapperSources": {
-      "tests/scroll-view-fixture.jsx": "7db5fc387975f3fae144cd0a2e00374571b231fb7603753ad47b932bb6a89bd9",
-      "tests/scroll-view-probe.gd": "07c8fc292734ff5244f7a5e732f10fbffc42569e1170934457e7b6bc63f0a131",
-      "tests/scroll-view-native.test.mjs": "ac9d5fec0d3a9facf32e5258ed9340a4721e48cf853ec2738ed8203e327b36ff",
+      "tests/scroll-view-fixture.jsx": "ee3a7ac8000a8a96d0a48d975f9da6542070d7c27efb034d6550cd1b3f998f7d",
+      "tests/scroll-view-probe.gd": "c1e7b8210e0b2209c5208a7724bb0c0a442ec1df02fd36fe8a4f9649c65e8988",
+      "tests/scroll-view-native.test.mjs": "7910eead6e061436f03ab3ca21f743dc77a3f9cd2eff0e6405b529617dfdedb9",
       "scripts/scroll-view-bundle.mjs": "545aa978e838a5186f183b5639f7f4fc2e229e2ce56a5c67a7f36261642450d0",
       "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
       "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
-      "src/scroll-view-contract.mjs": "7419df5232c008f5dc12963da395b2498cd81116a830b1fc3998aa1fb737ee79",
-      "src/react-native-platform.jsx": "68377c5dc3fba648f836ae2262b452b5d54ba06fc77a0226482c56f32d2a26ca",
-      "types/react-native.ts": "e2bb530ca82aba46a90ee4f9dad2c6d2006ea8c1c1b619e77a479cf0bc2a174f",
-      "tests/types/consumer.tsx": "e2e9119820228e9538b26de0fe984ba82ce2844771d66060ffdb35457936f946",
-      "native/application_runtime.cpp": "e809164d7ba5e7d8dd320f7831960525b43f1a3f69b509fcc9e043e2d5300734",
+      "src/scroll-view-contract.mjs": "e1d8a9f543cc4a0eb834d605468dd3a990be3b91ad94360ac6110d0db1dc04db",
+      "src/react-native-platform.jsx": "ba6dbcdbab5ce090d7d5a02f30e91bb9d34b60b3cd5cb25e80dbed5156fa5965",
+      "types/react-native.ts": "702c9ce6ad49651fac9ea461791fd1ff8866459fef1d1e1c720de33551e8df47",
+      "tests/types/consumer.tsx": "aa83d8250ddcf37e3715234ab32adbcab8cf6b2ff1406733f47e13d8651cd079",
+      "native/application_runtime.cpp": "196856d792f3a31fbbb97e13d574d23622b85d342fb0093d840627ccbac162cb",
       "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
       "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
-      "native/scroll_adapter.cpp": "e8522d484a118df4b932af60599b0b2bf6dcedb71b19b7a7d5fa48cfbf490835",
+      "native/scroll_adapter.cpp": "b73bc8328146e663b6cd23e413912e4ae726b8a9b737339a3ff41ed82f1f1cd9",
       "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
       "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
-      "native/scroll_offset.h": "1d21b643b8138fe676cd115457a062794fa564c8b918ed0a0e25ce178343630e",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
       "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
     },
     "originalReactNativeSources": {
@@ -140,6 +147,37 @@
       "vertical": "reach bottom while preserving x",
       "horizontal": "reach right edge while preserving y",
       "iosParityClaimed": false
+    },
+    "diagonalPan": {
+      "vertical": {
+        "release": {
+          "x": 80,
+          "y": 150
+        },
+        "crossAxisVelocity": 0,
+        "settledOffsetY": 271.850128173828,
+        "sequence": [
+          "begin",
+          "end",
+          "momentumBegin",
+          "momentumEnd"
+        ]
+      },
+      "horizontal": {
+        "release": {
+          "x": 150,
+          "y": 70
+        },
+        "crossAxisVelocity": 0,
+        "settledOffsetX": 270.057037353516,
+        "sequence": [
+          "begin",
+          "end",
+          "momentumBegin",
+          "momentumEnd"
+        ]
+      },
+      "orientationChangeCancelsClaimedPan": true
     }
   },
   "virtualizedListRegression": {
@@ -150,16 +188,16 @@
     "shelfPaintedContentX": -180,
     "files": {
       "virtualized-list-current-report.json": {
-        "sha256": "293d9debb3d2cff79fe14632678e5c34834363692f4d0b4cf21f37c8f72f9556"
+        "sha256": "4efaa1a68c8171cdba207f8ddf985ab25830089514f3a4e409a40dcd2a87fc3b"
       },
       "virtualized-list-current-bundle.json": {
-        "sha256": "6c739ef54a635bccae21545b9d6b01bf0e23c0977af062b900a3e96cdfdfe6f4"
+        "sha256": "b107a607746be8a58a8e32762c8bbdb2c44c8c93b28e13ad7fd9e144f978f6d5"
       },
       "virtualized-list-current.js": {
-        "sha256": "ddc4a032837c9465a549346f7f83160ad634c197549b655ee87820b9fe16f41b"
+        "sha256": "c79455ede63656262fc7c42632839296e679fc5c6710f6493be1441fbc506367"
       },
       "virtualized-list-current.log": {
-        "sha256": "3e7369514e844fd0a1cba2f996bbe025c0ceeea988b42f14b1f8e71af1b7dc0d"
+        "sha256": "8f6d867c97394cc9a4e864e28970ff9e22578dd655ce7c1acb8b01cde55adb91"
       }
     }
   },
@@ -167,7 +205,9 @@
     "scrollViewContractAndNativeTests": "3/3 passed",
     "typeCheck": "passed",
     "scrollMotionNativeChecks": "44 passed",
-    "windowedCapture": "4/4 passed; separate macOS windowed pixel/clipping proof"
+    "windowedCapture": "4/4 passed; separate macOS windowed pixel/clipping proof",
+    "textNativeModules": "76 checks passed",
+    "deviceServices": "passed"
   },
   "limits": [
     "Mounted functional probe is headless; the separate capture is Godot macOS windowed rendering.",

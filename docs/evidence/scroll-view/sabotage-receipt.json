@@ -7,9 +7,9 @@
     "reactNative": "0.87.1",
     "displayServer": "headless"
   },
-  "hostSha256": "60fa18ed776235675efb9fe6ad145f65ab5f091055ac8cad1696f8b84734c7bb",
+  "hostSha256": "4f28ed0f9daee007a9f59a03cada5a96ebc566fcf6418b2eb466fdb50de63445",
   "bundle": {
-    "sha256": "5035da318a94ff2fe7013d8a532585ff374935ef7cc6dc181b87ca1416de6c7f",
+    "sha256": "faf35ca182f25c9c115ac1837fadbf1fb0773f0297597abb7970f1b22b381f08",
     "sabotage": "remove onLayout forwarding to the original RN ScrollView",
     "copiedSourceSha256": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9"
   },
@@ -31,9 +31,9 @@
     "reason": "RN oracle rejects the feed initial-window mismatch: indices 10-16 are missing."
   },
   "artifacts": {
-    "reportSha256": "9bc925684b298dcb8f99ee28add231c7dcbd3ca6d3c4302f1c0d4f4bf688c839",
-    "logSha256": "18bb82e09349291a02df7e41df26a2c261a7873e962f65508fc7bee3be6fe803",
-    "bundleReceiptSha256": "b0d97a8c0d301c7e0a0f59dd954caffc84aeaef14172420cc3df0ff477e91703",
+    "reportSha256": "68700c8dd4060c7304a4c043f7a22c20d8d8fd85471c711d6aa5fd482ccd73cd",
+    "logSha256": "e7a33bff6f411fac7567f1eb12409103be69ea14a6aa53d596d4c8bae9866895",
+    "bundleReceiptSha256": "aed4fa8cc67539cdd3dc5d6dd77cd5cca99551f7c94dea8465839012266de1a3",
     "launcherSha256": "b360a13814e8386fc6a1a549d82d2e1e86af184014c4fe3cdf66f6a05e687034"
   },
   "note": "The retained sabotage is generated only in an isolated build/ copy. The preserved positive 44-check report remains separate."

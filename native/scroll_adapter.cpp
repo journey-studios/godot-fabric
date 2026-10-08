@@ -40,6 +40,8 @@ void ScrollAdapter::apply(const rn::ShadowView &shadow) {
     throw std::runtime_error("ScrollView scrollEventThrottle requires a finite non-negative number");
   const auto next_emitter = std::static_pointer_cast<const rn::ScrollViewEventEmitter>(shadow.eventEmitter);
   if (emitter_ != next_emitter && motion_.active()) cancel();
+  const bool orientation_changed = props_ && props_->horizontal != next->horizontal;
+  if (orientation_changed && (candidate_ || motion_.active())) cancel();
   const bool offset_changed = !props_ || props_->contentOffset != next->contentOffset;
   const bool disabling = props_ && props_->scrollEnabled && !next->scrollEnabled;
   props_ = next;
@@ -228,7 +230,7 @@ void ScrollAdapter::begin_pan(int pointer_id, ScrollPoint local, double now) {
 }
 void ScrollAdapter::update_pan(int pointer_id, ScrollPoint local, double now) {
   if (!candidate_ || candidate_->pointer_id != pointer_id || !candidate_->claimed) return;
-  const auto next = motion_.drag(local, now, maximum());
+  const auto next = motion_.drag(scroll_gesture_point(local, candidate_->origin, props_->horizontal), now, maximum());
   if (auto *mounted_content = content()) mounted_content->set_position(gd(scroll_content_position(content_origin_, next)));
   update_indicators();
   sample();
@@ -236,10 +238,11 @@ void ScrollAdapter::update_pan(int pointer_id, ScrollPoint local, double now) {
 void ScrollAdapter::finish_pan(int pointer_id, ScrollPoint local, double now, bool canceled) {
   if (!candidate_ || candidate_->pointer_id != pointer_id) return;
   const bool claimed = candidate_->claimed;
+  const auto release_point = scroll_gesture_point(local, candidate_->origin, props_->horizontal);
   candidate_.reset();
   if (!claimed) return;
   ScrollPoint velocity{};
-  if (!canceled) velocity = motion_.finish_drag(local, now, maximum());
+  if (!canceled) velocity = motion_.finish_drag(release_point, now, maximum());
   else motion_.cancel();
   if (auto *mounted_content = content()) mounted_content->set_position(gd(scroll_content_position(content_origin_, motion_.offset())));
   update_indicators();

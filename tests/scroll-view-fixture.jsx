@@ -11,7 +11,7 @@ let scrollRef;
 let setRowsVisible;
 let setTinyViewport;
 let firstRowRef;
-const secondaryState = {events: []};
+const secondaryState = {events: [], end: null};
 globalThis.ScrollViewFixture = {
   snapshot: () => JSON.parse(JSON.stringify(state)),
   scrollConfig: () => {
@@ -60,7 +60,9 @@ function ScrollViewFixture() {
       onScroll={event => state.events.push({type: "scroll", x: event.nativeEvent.contentOffset.x, y: event.nativeEvent.contentOffset.y})}
       onScrollBeginDrag={event => state.events.push({type: "begin", y: event.nativeEvent.contentOffset.y})}
       onScrollEndDrag={event => state.events.push({type: "end", y: event.nativeEvent.contentOffset.y,
-        target: event.nativeEvent.targetContentOffset.y, velocity: event.nativeEvent.velocity.y})}
+        x: event.nativeEvent.contentOffset.x, target: event.nativeEvent.targetContentOffset.y,
+        targetX: event.nativeEvent.targetContentOffset.x, velocity: event.nativeEvent.velocity.y,
+        velocityX: event.nativeEvent.velocity.x})}
       onMomentumScrollBegin={() => state.events.push({type: "momentumBegin"})}
       onMomentumScrollEnd={() => state.events.push({type: "momentumEnd"})}>
       {rowsVisible && Array.from({length: 20}, (_, index) => <Pressable key={index} ref={index === 0 ? firstRow : null}
@@ -77,16 +79,23 @@ AppRegistry.registerComponent("ScrollViewFixture", () => ScrollViewFixture);
 
 function SecondaryScrollViewFixture() {
   const ref = useRef(null);
+  const [horizontal, setHorizontal] = useState(true);
   useEffect(() => { globalThis.SecondaryScrollViewFixture = {
     command: (method, args) => ref.current?.[method](...args),
-    reset: () => { secondaryState.events = []; },
+    reset: () => { secondaryState.events = []; secondaryState.end = null; },
+    setHorizontal,
     snapshot: () => JSON.parse(JSON.stringify(secondaryState)),
   }; }, []);
-  return <ScrollView ref={ref} testID="secondary-scroll" horizontal
+  return <ScrollView ref={ref} testID="secondary-scroll" horizontal={horizontal}
     style={{position: "absolute", left: 24, top: 24, width: 220, height: 170}}
     contentContainerStyle={{width: 760, height: 760}}
     onScrollBeginDrag={() => secondaryState.events.push("begin")}
-    onScrollEndDrag={() => secondaryState.events.push("end")}
+    onScrollEndDrag={event => {
+      secondaryState.end = {x: event.nativeEvent.contentOffset.x, y: event.nativeEvent.contentOffset.y,
+        velocityX: event.nativeEvent.velocity.x, velocityY: event.nativeEvent.velocity.y,
+        targetX: event.nativeEvent.targetContentOffset.x, targetY: event.nativeEvent.targetContentOffset.y};
+      secondaryState.events.push("end");
+    }}
     onMomentumScrollBegin={() => secondaryState.events.push("momentumBegin")}
     onMomentumScrollEnd={() => secondaryState.events.push("momentumEnd")}>
     <View style={{width: 760, height: 760, backgroundColor: "#1d4ed8"}} />

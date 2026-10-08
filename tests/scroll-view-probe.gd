@@ -63,6 +63,17 @@ func drag(from: Vector2, to: Vector2, target_surface: Control = null, test_id: S
   await wait_for_scroll_idle(target_surface, test_id)
   await settle(2)
 
+func diagonal_drag(from: Vector2, last_move: Vector2, release: Vector2,
+    target_surface: Control = null, test_id: String = "scroll") -> void:
+  touch(from, true)
+  await settle(2)
+  for index in range(1, 5):
+    move(from.lerp(last_move, float(index) / 4.0))
+    await settle(2)
+  touch(release, false)
+  await wait_for_scroll_idle(target_surface, test_id)
+  await settle(2)
+
 func wait_for_scroll_idle(target_surface: Control = null, test_id: String = "scroll",
     timeout_ms: int = 3000, max_frames: int = 240) -> Dictionary:
   var started := Time.get_ticks_msec()
@@ -330,6 +341,97 @@ func run() -> void:
     "vertical scrollToEnd reaches bottom and preserves horizontal offset", vertical_end)
   command("scrollTo", [{"x": 0, "y": 0, "animated": false}])
   await settle(3)
+
+  command("scrollTo", [{"x": 80, "y": 100, "animated": false}])
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  var vertical_before_diagonal := native_scroll()
+  await diagonal_drag(Vector2(150, 145), Vector2(135, 115), Vector2(120, 95))
+  var vertical_diagonal := native_scroll()
+  var vertical_diagonal_events: Array = react().get("events", [])
+  var vertical_end_events := vertical_diagonal_events.filter(func(row: Dictionary) -> bool: return row.get("type") == "end")
+  var vertical_diagonal_end: Dictionary = vertical_end_events[0] if not vertical_end_events.is_empty() else {}
+  var vertical_lifecycle := vertical_diagonal_events.filter(func(row: Dictionary) -> bool:
+    return ["begin", "end", "momentumBegin", "momentumEnd"].has(row.get("type")))
+  var vertical_lifecycle_types: Array = vertical_lifecycle.map(func(row: Dictionary) -> String: return String(row.get("type", "")))
+  check(is_equal_approx(float(vertical_diagonal.get("x", -1)), 80.0)
+      and is_equal_approx(float(vertical_diagonal.get("y", -1)), float(vertical_diagonal_end.get("target", -2)))
+      and is_equal_approx(float(vertical_diagonal_end.get("x", -1)), 80.0)
+      and is_equal_approx(float(vertical_diagonal_end.get("y", -1)), 150.0)
+      and is_equal_approx(float(vertical_diagonal.get("fabricX", -1)), 80.0)
+      and is_equal_approx(float(vertical_diagonal.get("fabricY", -1)), float(vertical_diagonal.get("y", -2)))
+      and is_equal_approx(float(vertical_diagonal.get("contentX", 1)), -80.0)
+      and is_equal_approx(float(vertical_diagonal.get("contentY", 1)), -float(vertical_diagonal.get("y", -2)))
+      and absf(float(vertical_diagonal_end.get("velocity", 0))) > 12.0
+      and is_zero_approx(float(vertical_diagonal_end.get("velocityX", 1)))
+      and vertical_lifecycle_types == ["begin", "end", "momentumBegin", "momentumEnd"]
+      and int(vertical_diagonal.get("begins", 0)) == int(vertical_before_diagonal.get("begins", -1)) + 1
+      and int(vertical_diagonal.get("ends", 0)) == int(vertical_before_diagonal.get("ends", -1)) + 1
+      and int(vertical_diagonal.get("momentumBegins", 0)) == int(vertical_before_diagonal.get("momentumBegins", -1)) + 1
+      and int(vertical_diagonal.get("momentumEnds", 0)) == int(vertical_before_diagonal.get("momentumEnds", -1)) + 1,
+    "vertical diagonal pan and new release coordinate preserve x and have zero cross-axis momentum",
+    {"before": vertical_before_diagonal, "after": vertical_diagonal, "end": vertical_diagonal_end,
+      "events": vertical_diagonal_events})
+
+  app.call("evaluate", "SecondaryScrollViewFixture.command('scrollTo',[{x:100,y:70,animated:false}])")
+  app.call("evaluate", "SecondaryScrollViewFixture.reset()")
+  await settle(3)
+  var horizontal_diagonal_rect := mounted_rect(secondary_surface, "secondary-scroll")
+  var horizontal_diagonal_origin := horizontal_diagonal_rect.get_center()
+  var horizontal_before_diagonal := native_scroll(secondary_surface, "secondary-scroll")
+  await diagonal_drag(horizontal_diagonal_origin, horizontal_diagonal_origin + Vector2(-25, -15),
+      horizontal_diagonal_origin + Vector2(-50, -30), secondary_surface, "secondary-scroll")
+  var horizontal_diagonal := native_scroll(secondary_surface, "secondary-scroll")
+  var horizontal_diagonal_events: Dictionary = JSON.parse_string(app.call("evaluate", "JSON.stringify(SecondaryScrollViewFixture.snapshot())"))
+  var horizontal_diagonal_end: Dictionary = horizontal_diagonal_events.get("end", {})
+  var horizontal_lifecycle: Array = horizontal_diagonal_events.get("events", [])
+  check(is_equal_approx(float(horizontal_diagonal.get("x", -1)), float(horizontal_diagonal_end.get("targetX", -2)))
+      and is_equal_approx(float(horizontal_diagonal.get("y", -1)), 70.0)
+      and is_equal_approx(float(horizontal_diagonal_end.get("x", -1)), 150.0)
+      and is_equal_approx(float(horizontal_diagonal_end.get("y", -1)), 70.0)
+      and is_equal_approx(float(horizontal_diagonal.get("fabricX", -1)), float(horizontal_diagonal.get("x", -2)))
+      and is_equal_approx(float(horizontal_diagonal.get("fabricY", -1)), 70.0)
+      and is_equal_approx(float(horizontal_diagonal.get("contentX", 1)), -float(horizontal_diagonal.get("x", -2)))
+      and is_equal_approx(float(horizontal_diagonal.get("contentY", 1)), -70.0)
+      and float(horizontal_diagonal_end.get("velocityX", 0)) > 12.0
+      and is_zero_approx(float(horizontal_diagonal_end.get("velocityY", 1)))
+      and horizontal_lifecycle == ["begin", "end", "momentumBegin", "momentumEnd"]
+      and int(horizontal_diagonal.get("begins", 0)) == int(horizontal_before_diagonal.get("begins", -1)) + 1
+      and int(horizontal_diagonal.get("ends", 0)) == int(horizontal_before_diagonal.get("ends", -1)) + 1
+      and int(horizontal_diagonal.get("momentumBegins", 0)) == int(horizontal_before_diagonal.get("momentumBegins", -1)) + 1
+      and int(horizontal_diagonal.get("momentumEnds", 0)) == int(horizontal_before_diagonal.get("momentumEnds", -1)) + 1,
+    "horizontal diagonal pan and new release coordinate preserve y and have zero cross-axis momentum",
+    {"before": horizontal_before_diagonal, "after": horizontal_diagonal,
+      "end": horizontal_diagonal_end, "events": horizontal_diagonal_events})
+
+  app.call("evaluate", "SecondaryScrollViewFixture.command('scrollTo',[{x:200,y:90,animated:false}])")
+  app.call("evaluate", "SecondaryScrollViewFixture.reset()")
+  await settle(3)
+  var orientation_rect := mounted_rect(secondary_surface, "secondary-scroll")
+  var orientation_origin := orientation_rect.get_center()
+  var orientation_before := native_scroll(secondary_surface, "secondary-scroll")
+  touch(orientation_origin, true)
+  await settle(2)
+  move(orientation_origin + Vector2(-18, -2))
+  await settle(3)
+  var orientation_during_drag := native_scroll(secondary_surface, "secondary-scroll")
+  app.call("evaluate", "SecondaryScrollViewFixture.setHorizontal(false)")
+  await settle(8)
+  var orientation_after_change := native_scroll(secondary_surface, "secondary-scroll")
+  var orientation_events_at_change: Dictionary = JSON.parse_string(app.call("evaluate", "JSON.stringify(SecondaryScrollViewFixture.snapshot())"))
+  touch(orientation_origin + Vector2(-18, -2), false)
+  await settle(3)
+  var orientation_events_after_up: Dictionary = JSON.parse_string(app.call("evaluate", "JSON.stringify(SecondaryScrollViewFixture.snapshot())"))
+  check(int(orientation_during_drag.get("begins", 0)) == int(orientation_before.get("begins", -1)) + 1
+      and orientation_after_change.get("horizontal") == false and not orientation_after_change.get("dragging", true)
+      and int(orientation_after_change.get("motion", -1)) == 0
+      and int(orientation_after_change.get("ends", 0)) == int(orientation_before.get("ends", -1)) + 1
+      and orientation_events_at_change.get("events", []) == ["begin", "end"]
+      and orientation_events_after_up.get("events", []) == ["begin", "end"],
+    "orientation replacement cancels the claimed pan once before the axis changes",
+    {"before": orientation_before, "during": orientation_during_drag, "afterChange": orientation_after_change,
+      "eventsAtChange": orientation_events_at_change, "eventsAfterUp": orientation_events_after_up})
+  app.call("evaluate", "SecondaryScrollViewFixture.setHorizontal(true)")
+  await settle(8)
 
   command("scrollTo", [{"x": 0, "y": 120, "animated": true}])
   await settle(2)
