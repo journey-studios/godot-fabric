@@ -7,7 +7,7 @@ export const SHARED_PATHS = [
   // Plan, manifests and CI wiring.
   "ROADMAP.md", "README.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json",
   // Docs and evidence.
-  "docs/API.md", "docs/NATIVE_MODULES.md", "docs/PARITY.md", "docs/compatibility/BASELINE.md", "docs/compatibility/react-native-0.87.1.json", "docs/evidence/README.md",
+  "docs/API.md", "docs/NATIVE_MODULES.md", "docs/NATIVE_EXTENSIONS.md", "docs/PARITY.md", "docs/compatibility/BASELINE.md", "docs/compatibility/react-native-0.87.1.json", "docs/evidence/README.md", "docs/research/README.md",
   // Examples.
   "examples/README.md", "examples/entry.jsx", "examples/catalog.json",
   // Native hubs.

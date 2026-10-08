@@ -164,7 +164,7 @@ Regras:
   `README.md`, `package.json`, `docs/API.md`, `examples/entry.jsx`,
   `native/register.cpp`, `native/fabric_application.cpp`,
   `src/react-native-platform.jsx`, `types/react-native.ts`,
-  `tests/types/consumer.tsx` e outros. A lista completa (30 caminhos) é
+  `tests/types/consumer.tsx` e outros. A lista completa (32 caminhos) é
   `SHARED_PATHS` em `dashboard/agents.mjs`, a fonte única; o painel a mostra na
   linha da regra. Eles nunca são exclusivos: ficam fora de toda área. Reservá-los
   é aceito, mas ignorado, com o aviso `shared-area` (tire-os das áreas no
