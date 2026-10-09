@@ -24,7 +24,10 @@ import {createTurnLane, machine, loadAverage} from "./frontier-turn-lane.mjs";
 // intervals, and repeated, up to MAX_ATTEMPTS times for the same slot. If a slot exhausts its attempts the lane stops: the receipt is written with presented:
 // false, status "not presented: <reason>" and NO frame-time statistic (summary is null, and nothing of the rejected attempts is printed as a frame time), and the
 // process exits with EXIT_NOT_PRESENTED (3), which is neither success nor a crash, so that nothing downstream mistakes it for a result. A complete lane exits 0.
-// The receipt is checked by verifyGraphicsReceipt before it is written. Run with:
+// The receipt is checked by verifyGraphicsReceipt before it is written. As in the baseline, the probe puts its window in front of the others and above them
+// before it measures and counts the frames in which the engine could not draw it (tests/window-presence.gd, docs/research/windowed-presence.md); the count is in
+// every attempt and the reason of a run refused as undrawn says what the engine said of the window (a run in which it never said it could not draw stays open).
+// The rule of validity is unchanged. Run with:
 //   caffeinate -d node scripts/frontier-turn-graphics.mjs
 const EXIT_NOT_PRESENTED = 3;
 const MAX_ATTEMPTS = 3;
@@ -115,7 +118,7 @@ try {
   // The raw data: every interval of every accepted run. The clicks as [round, step, id, frames to the panels, injection, time to the panels, time to the first drawn
   // frame (microseconds, null when none was seen), the intervals of the frames of the click]; the turns as [round, id, the frames as [phase, interval, nodes,
   // snapshots, end of the turn], the host's pump, JS, mount and layout milliseconds over the turn].
-  const rawOf = report => ({run: report.run, attempt: report.attempt, idleIntervalsUsec: report.stages.idle.intervalsUsec, idleDraws: report.stages.idle.draws,
+  const rawOf = report => ({run: report.run, attempt: report.attempt, presence: report.stages.presence ?? null, idleIntervalsUsec: report.stages.idle.intervalsUsec, idleDraws: report.stages.idle.draws,
     clicks: report.stages.rounds.flatMap(row => row.steps.map(record => [record.round, record.step, record.id, record.frames, record.flushUsec, record.latencyUsec,
       record.drawUsec, record.frameUsec])),
     turns: report.stages.rounds.flatMap(row => row.steps.filter(record => record.kind === "turn").map(record => [record.round, record.id,
@@ -130,11 +133,13 @@ try {
       percentiles: "nearest rank over the raw intervals of one run",
       acrossRuns: "median and interquartile range (nearest-rank quartiles) of each run's statistic",
       validity: "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle reference (the median of the half-sums of consecutive pairs of the idle intervals) is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      presence: "the baseline's, imported: the window is put in front of the others and above them before the first measurement (tests/window-presence.gd) and every process frame records whether the engine could draw it (window_can_draw()); each attempt carries undrawableFrames, of sampledFrames, the raw runs the spans of those frames, and the reason of a run refused for not drawing says what the engine said of the window, and a run in which window_can_draw() was never false stays open (no cause is concluded). The rule of validity does not read it",
       discarded: "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"},
     machine: {...machine(), displays: displays()}, provenance: first.stages.provenance, attempts: attempts.map(({raw: _raw, ...each}) => each),
     nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))), bundleSha256: prepared.bundleSha256, probeSha256: prepared.probeSha256,
-    checks: reports[0]?.checks ?? null, capturesChecks: shots.checks, captures, summary, turnFrames, raw, rejectedAttempts,
-    limitations: ["Godot macOS windowed run with synthetic events through the viewport on the validation device; no hardware pointer or touch screen, no mobile export.",
+    checks: reports[0]?.checks ?? null, capturesChecks: shots.checks, capturesPresence: shots.stages.presence ?? null, captures, summary, turnFrames, raw, rejectedAttempts,
+    limitations: ["Putting the window in front and above the others does not make a display show it: a display that is asleep or locked, or a window the system keeps on another Space, is still not drawn, and the receipt then counts the frames the engine could not draw (undrawableFrames).",
+"Godot macOS windowed run with synthetic events through the viewport on the validation device; no hardware pointer or touch screen, no mobile export.",
       "One machine, one display and one vsync mode (the project default, read back from the window); a frame time with the vsync disabled was not measured.",
       "The intervals are of process frames. With the vsync on they come in clusters (the engine runs ahead of the display and blocks on it), so a missed frame is not read from them; missed frames with the vsync on need presentation timestamps this engine does not give."],
     loadAverageAtTheEnd: loadAverage()};
@@ -143,7 +148,8 @@ try {
   const line = (name, value) => `${name.padEnd(26)}${value}`;
   console.log(JSON.stringify({presented, status: receipt.status, displayServer: first.stages.provenance.displayServer, renderer: first.stages.provenance.renderingMethod,
     adapter: first.stages.provenance.adapter, vsync: first.stages.provenance.vsyncModeName, refreshRate: first.stages.provenance.refreshRate, accepted: reports.length,
-    attempts: attempts.length, captures: captures.map(capture => capture.path)}, null, 2));
+    attempts: attempts.length, undrawableFrames: attempts.map(attempt => `${attempt.slot}.${attempt.attempt}: ${attempt.undrawableFrames} of ${attempt.sampledFrames}`),
+    captures: captures.map(capture => capture.path)}, null, 2));
   if (presented) {
     for (const run of summary.runs) {
       console.log(line(`run ${run.run} idle (ms)`, `p50 ${run.idleFrameMs.p50}  p95 ${run.idleFrameMs.p95}  p99 ${run.idleFrameMs.p99}  max ${run.idleFrameMs.max}`));
