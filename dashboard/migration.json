@@ -4544,6 +4544,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md"
     },
     {
+      "id": "milestone-0-5-exit-guards-dispatch-6e556f6",
+      "at": "2026-10-09T14:56:39.000Z",
+      "taskIds": [],
+      "message": "A guarda X9/X10 da CI passa a rodar também numa execução manual (workflow_dispatch, que a #88 introduz), comparando com o merge-base da main num fetch só; pull request e push seguem com o primeiro pai. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e556f61473d65786fa96933accc5040ec660ce2/docs/research/milestone-exit-guards.md"
+    },
+    {
       "id": "milestone-0-5-v05-06-turno-cb50b97",
       "at": "2026-10-09T13:37:48.000Z",
       "taskIds": [],
