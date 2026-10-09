@@ -21,7 +21,14 @@ export const CONTRACTS_JOBS = {
     "reference-ios",
   ],
 };
+// Since the native suites became opt-in, a push of main lists the dispatch's eight jobs and skips these five (the cold build, the three suite
+// jobs that restore its host and the parity comparison that needs the cold build). A skipped job has no log, so a receipt of such a run proves
+// only what the other jobs ran: it is valid for a slice with no native step and no native artifact.
+export const OPT_IN_JOBS = ["native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"];
 const PAGES_JOBS = ["build", "deploy"];
+
+// The step of the `contracts` job that runs the milestone exit guards. The API names the step; its log group is headed by the first line of its script.
+export const GUARD_STEP = { name: "Milestone exit guards (X9 and X10)", header: 'Run case "$EVENT_NAME" in', marker: "MILESTONE_GUARDS_CHECK_PASSED" };
 
 const isSha1 = (value) => typeof value === "string" && /^[0-9a-f]{40}$/.test(value);
 const isSha256 = (value) => typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
@@ -100,6 +107,24 @@ function checkArtifact(label, entry, descriptor, problems) {
   }
 }
 
+// The guard step exists in the `contracts` job from #87 on. A slice that the table marks with `guard` must show it passed, with the line it prints
+// and the base it compared against; an older slice must not have a record of a step its run did not have.
+function checkGuardStep(slice, step, label, problems) {
+  if (slice.guard !== true) {
+    if (step !== undefined) {
+      problems.push(`${label}: the table does not expect the milestone guards step`);
+    }
+    return;
+  }
+  const line = step?.markers?.find((marker) => marker.startsWith(GUARD_STEP.marker));
+  if (step?.step !== GUARD_STEP.name || step.conclusion !== "success" || !isCount(step.number) || !isTime(step.startedAt) || !isTime(step.completedAt)) {
+    problems.push(`${label}: the milestone guards step did not succeed`);
+  }
+  if (!line || !isSha1(step?.base) || !line.includes(`--base ${step.base}`)) {
+    problems.push(`${label}: the milestone guards step has no ${GUARD_STEP.marker} line for its base`);
+  }
+}
+
 function checkHostedCi(slice, ci, problems) {
   const label = `${slice.folder}: hosted-ci.json`;
   if (ci.schemaVersion !== 1 || ci.scenario !== slice.folder || ci.repository !== REPOSITORY) {
@@ -112,27 +137,41 @@ function checkHostedCi(slice, ci, problems) {
   if (!isSha1(run.headSha) || !run.headSha.startsWith(slice.squash)) {
     problems.push(`${label}: the run's head ${run.headSha} is not the squash ${slice.squash} of #${slice.pr}`);
   }
-  const expectedJobs = Object.hasOwn(CONTRACTS_JOBS, run.event) ? CONTRACTS_JOBS[run.event] : null;
+  const jobs = Array.isArray(run.jobs) ? run.jobs : [];
+  // A push that skipped the opt-in native jobs lists the dispatch's eight jobs; any other skipped job, or a skipped job of another event, is refused below.
+  const skipped = jobs.filter((job) => job.conclusion === "skipped").map((job) => job.name).sort();
+  const optIn = skipped.length > 0 && run.event === "push";
+  let expectedJobs = Object.hasOwn(CONTRACTS_JOBS, run.event) ? CONTRACTS_JOBS[run.event] : null;
+  if (optIn) {
+    expectedJobs = CONTRACTS_JOBS.workflow_dispatch;
+  }
   if (!expectedJobs || run.branch !== "main" || run.workflow !== "Contracts" || run.status !== "completed" || run.conclusion !== "success" || run.attemptCount !== 1) {
     problems.push(`${label}: the run is not a completed, successful, first-attempt Contracts push or dispatch of main`);
   }
   if (run.mergedPullRequest !== `${REPOSITORY_URL}/pull/${slice.pr}`) {
     problems.push(`${label}: the merged pull request is not #${slice.pr}`);
   }
-  const jobs = Array.isArray(run.jobs) ? run.jobs : [];
+  if (skipped.length > 0 && (!optIn || JSON.stringify(skipped) !== JSON.stringify(OPT_IN_JOBS))) {
+    problems.push(`${label}: only a push may skip jobs, and exactly the opt-in native ones (${OPT_IN_JOBS.join(", ")}), not ${skipped.join(", ")}`);
+  }
+  if (optIn && (slice.nativeSteps.length > 0 || slice.artifacts.length > 0)) {
+    problems.push(`${label}: a run that skipped the native jobs cannot prove the native steps or artifacts of the table`);
+  }
   if (expectedJobs && JSON.stringify(jobs.map((job) => job.name).sort()) !== JSON.stringify(expectedJobs)) {
     problems.push(`${label}: the jobs are not ${expectedJobs.join(", ")}`);
   }
   for (const job of jobs) {
-    if (job.status !== "completed" || job.conclusion !== "success") {
+    if (job.status !== "completed" || (job.conclusion !== "success" && job.conclusion !== "skipped")) {
       problems.push(`${label}: job ${job.name} is ${job.status}/${job.conclusion}, not completed/success`);
     }
     if (job.headSha !== run.headSha || job.runAttempt !== 1 || !isCount(job.databaseId) || !isTime(job.startedAt) || !isTime(job.completedAt)) {
       problems.push(`${label}: job ${job.name} has another head, another attempt or no id and times`);
     }
   }
+  // A skipped job has no log, so it has no checkout either.
   const checkouts = run.jobCheckouts ?? {};
-  if (JSON.stringify(Object.keys(checkouts).sort()) !== JSON.stringify(expectedJobs) || Object.values(checkouts).some((sha) => sha !== run.headSha)) {
+  const checkedOut = expectedJobs?.filter((name) => !skipped.includes(name)) ?? null;
+  if (JSON.stringify(Object.keys(checkouts).sort()) !== JSON.stringify(checkedOut) || Object.values(checkouts).some((sha) => sha !== run.headSha)) {
     problems.push(`${label}: not every job checked out the squash`);
   }
   const pull = ci.pullRequest ?? {};
@@ -171,6 +210,7 @@ function checkHostedCi(slice, ci, problems) {
   if (contracts.steps?.["check:publication"]?.passed !== true) {
     problems.push(`${label}: check:publication did not report passed`);
   }
+  checkGuardStep(slice, contracts.steps?.["milestone-guards"], label, problems);
   const sliceTests = contracts.sliceContractTests ?? [];
   if (JSON.stringify(sliceTests.map((entry) => entry.file)) !== JSON.stringify(slice.contractTests)) {
     problems.push(`${label}: the contract test files are not those of the table`);

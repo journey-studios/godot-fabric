@@ -20,6 +20,9 @@ const FOLDERS = [
   "frontier-soak",
   "frontier-scope",
   "civ-lite-ui",
+  "frontier-turn",
+  "milestone-exit-guards",
+  "idle-reference",
 ];
 
 // The check reads committed files only. A PATH without `gh` proves that it asks GitHub nothing.
@@ -28,7 +31,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 20 receipts that a test may break without touching the committed ones.
+// A copy of the 26 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -58,10 +61,10 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the ten Frontier slices are coherent, offline", () => {
+test("the committed receipts of the thirteen Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 10 slices, 20 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 13 slices, 26 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
 });
 
@@ -230,6 +233,117 @@ test("the slice's own steps, tests and activity entry are required", () => {
     rmSync(path.join(copy, "frontier-soak", "publication.json"));
     assertRejected(runCheck(copy), /frontier-soak\/publication\.json does not exist/);
   });
+});
+
+// Since the native suites became opt-in, a push of main lists the dispatch's eight jobs and skips five of them, and a skipped job has no log. The committed
+// receipt of idle-reference is such a push. Only a slice with no native step and no native artifact can be judged from it.
+const OPT_IN_JOBS = ["native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"];
+
+function asSkippedPush(receipt) {
+  const native = receipt.run.jobs.find((job) => job.name === "native-cold-start");
+  for (const name of ["native-suites-frontier", "native-suites-input", "native-suites-runtime"]) {
+    receipt.run.jobs.push({ ...native, name, databaseId: native.databaseId + receipt.run.jobs.length });
+  }
+  for (const job of receipt.run.jobs.filter((candidate) => OPT_IN_JOBS.includes(candidate.name))) {
+    job.conclusion = "skipped";
+    delete receipt.run.jobCheckouts[job.name];
+  }
+}
+
+test("a skipped native job is accepted only on a push, for exactly the opt-in jobs, and only for a slice with no native step", () => {
+  const committed = read(evidence, "idle-reference", "hosted-ci.json");
+  assert.deepEqual(
+    committed.run.jobs.filter((job) => job.conclusion === "skipped").map((job) => job.name),
+    OPT_IN_JOBS,
+    "the committed receipt of idle-reference is the push that skipped the native jobs",
+  );
+  assert.deepEqual(committed.run.nativeSteps, {});
+  assert.deepEqual(committed.artifacts, {});
+  assert.equal(committed.run.referenceParity.comparison, null);
+  assert.deepEqual(Object.keys(committed.run.jobCheckouts), ["contracts", "reference-android", "reference-ios"]);
+  // The same shape, for a slice that has a native step and an artifact, proves neither.
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", asSkippedPush),
+    /frontier-soak: hosted-ci\.json: a run that skipped the native jobs cannot prove the native steps or artifacts of the table/,
+  );
+  // A job that ran cannot be among the skipped ones, and a job outside the opt-in five cannot be skipped.
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "native-suites-input").conclusion = "success";
+    }),
+    /idle-reference: hosted-ci\.json: only a push may skip jobs, and exactly the opt-in native ones/,
+  );
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "reference-ios").conclusion = "skipped";
+      delete receipt.run.jobCheckouts["reference-ios"];
+    }),
+    /idle-reference: hosted-ci\.json: only a push may skip jobs, and exactly the opt-in native ones/,
+  );
+  // A dispatch runs every job: nothing is skipped there.
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.event = "workflow_dispatch";
+    }),
+    /idle-reference: hosted-ci\.json: only a push may skip jobs, and exactly the opt-in native ones/,
+  );
+  // A skipped job ran no checkout: one recorded for it contradicts the skip.
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.jobCheckouts["native-cold-start"] = receipt.run.headSha;
+    }),
+    /idle-reference: hosted-ci\.json: not every job checked out the squash/,
+  );
+});
+
+test("the milestone guards step is required where the table says so, with its line and its base, and refused where it does not", () => {
+  const guard = read(evidence, "milestone-exit-guards", "hosted-ci.json").run.contractsJob.steps["milestone-guards"];
+  assert.equal(guard.step, "Milestone exit guards (X9 and X10)");
+  assert.match(guard.markers[0], /^MILESTONE_GUARDS_CHECK_PASSED: against \w+ \(--base [0-9a-f]{40}\); X9 clean, X10 clean$/);
+  assertRejected(
+    mutate("milestone-exit-guards", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.steps["milestone-guards"].markers = [];
+    }),
+    /milestone-exit-guards: hosted-ci\.json: the milestone guards step has no MILESTONE_GUARDS_CHECK_PASSED line for its base/,
+  );
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.steps["milestone-guards"].base = "0".repeat(40);
+    }),
+    /idle-reference: hosted-ci\.json: the milestone guards step has no MILESTONE_GUARDS_CHECK_PASSED line for its base/,
+  );
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.steps["milestone-guards"].conclusion = "failure";
+    }),
+    /idle-reference: hosted-ci\.json: the milestone guards step did not succeed/,
+  );
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      delete receipt.run.contractsJob.steps["milestone-guards"];
+    }),
+    /idle-reference: hosted-ci\.json: the milestone guards step did not succeed/,
+  );
+  // The run of #83 had no such step: a receipt that records one describes another run.
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.steps["milestone-guards"] = guard;
+    }),
+    /frontier-soak: hosted-ci\.json: the table does not expect the milestone guards step/,
+  );
+  // With no native step, the contract tests are the whole of what a receipt proves about the slice's code.
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.sliceContractTests.pop();
+    }),
+    /idle-reference: hosted-ci\.json: the contract test files are not those of the table/,
+  );
+  assertRejected(
+    mutate("milestone-exit-guards", "hosted-ci.json", (receipt) => {
+      receipt.run.contractsJob.sliceContractTests[0].passed -= 1;
+    }),
+    /milestone-exit-guards: hosted-ci\.json: not every test of tests\/milestone-guards\.test\.mjs passed in the contracts job/,
+  );
 });
 
 test("an artifact that is gone is recorded as such, never as a verified digest", () => {

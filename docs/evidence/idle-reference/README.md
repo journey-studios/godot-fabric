@@ -168,9 +168,43 @@ Os dois fazem parte do `npm run test:contracts`.
 - **Nada aqui é um tempo de quadro.** Os intervalos são de quadros de processo (com o vsync ligado vêm em aglomerados), não imagens que o display mostrou, e não se lê nenhum "quadro perdido" deles. Nenhum orçamento nasce desta página.
 - **Nenhuma medição comparativa rodou** (`execucao` aberto) e o `congelado` do V05-06 segue sendo um ato posterior e único.
 
-> **CI hospedada pendente.** Os testes `tests/frontier-baseline-graphics.test.mjs`, `tests/frontier-turn-graphics.test.mjs` e `tests/frontier-comparison-protocol.test.mjs` fazem parte do `npm run test:contracts`, que o job `contracts` de `contracts.yml` roda em Node,
-> e esse job ainda não rodou sobre `237b171` na CI hospedada. Os jobs nativos agora só rodam sob demanda (despacho do workflow) e esta fatia não depende deles: não muda C++, e a faixa janelada nunca roda na CI. Tudo o que esta página registra é
-> evidência local, em macOS arm64. Nenhum critério fecha com ela.
+## CI hospedada e Pages
+
+O push da `main` em `9f55644` (o squash do #94, que carrega `237b171` e as correções da revisão; run
+[37960884650](https://github.com/journey-studios/godot-fabric/actions/runs/37960884650) do workflow Contracts) passou na primeira
+tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min), `reference-android` (6 min) e
+`reference-ios` (7 min). Os outros cinco jobs do run (`native-cold-start`, `native-suites-frontier`, `native-suites-input`,
+`native-suites-runtime` e `parity-comparison`) aparecem como **skipped**: desde o #88 os jobs nativos só rodam num despacho do
+workflow, e esta fatia não depende deles (não muda C++, e a faixa janelada nunca roda na CI). O [recibo](hosted-ci.json), escrito por
+`scripts/hosted-receipts.mjs` a partir da API do GitHub e dos logs e conferido sem rede pelo `--check` do mesmo script, registra esses
+cinco como `skipped` e não como falha, e só os aceita porque a linha da fatia não tem passo nativo nem artefato. Um job pulado não tem
+log: o recibo não tem checkout nem comparação de paridade deles, e prova o que os três jobs que rodaram fazem:
+
+- **O checkout.** Os três jobs usaram `9f55644`. A árvore do head do PR (`be34540`, 7 commits) **não** é a do squash, porque o #93 entrou
+  na `main` depois que o head se bifurcou: as 66 diferenças de caminho são exatamente os 66 caminhos que a `main` mudou desde então, e o
+  recibo as lista.
+- **O passo da guarda.** "Milestone exit guards (X9 and X10)" (passo 5 do job `contracts`, menos de 1 s) passou num `push` e imprimiu
+  `MILESTONE_GUARDS_CHECK_PASSED: against e108e9d31f43 (--base e108e9d31f43f24f0c049c3454a41efe417e797b); X9 clean, X10 clean`. A base é o
+  pai do squash (o #93), que o recibo confere com a API, e o X9 se aplicou (o PR acrescenta `milestone-0-5-idle-reference-490ba8c`) e
+  saiu limpo: esta fatia não mexe na 1.0.
+- **Os testes.** `npm run test:contracts` (passo 6, 2 min) passou com 7, 43 e 435 testes de Node e 13 de Python, `# fail 0`. O recibo
+  confere, pelo nome e no log do job `contracts`, os testes de nível superior de três arquivos: `tests/frontier-baseline-graphics.test.mjs`
+  (16 de 16, a regra de ritmo pela referência), `tests/frontier-comparison-protocol.test.mjs` (17 de 17, o protocolo e a emenda) e
+  `tests/frontier-baseline-heap.test.mjs` (10 de 10, que importa o oráculo do baseline que a fatia muda). Os 13 de
+  `tests/frontier-turn-graphics.test.mjs`, que também cobrem a regra, rodaram no mesmo job e são do recibo do [#86](../frontier-turn/hosted-ci.json).
+  `check:static` e `check:publication` também passaram.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37960884718](https://github.com/journey-studios/godot-fabric/actions/runs/37960884718), 16:41:08 a 16:41:47Z, `build` e `deploy` em
+success, 43 testes do painel). O deployment 6966005640 está em success, o artefato `github-pages` (id 11631313885, SHA-256
+`d6e1002e…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash (SHA-256 `d996e162…`) e a entrada de atividade `milestone-0-5-idle-reference-490ba8c`. Um push
+seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**Continua só local** a faixa janelada, e **continuam fora do repositório** os recibos brutos de 2026-10-09 de que a reanálise parte
+(aqui só estão os números derivados e os hashes; os intervalos de 2026-10-08 já estavam no repositório). A regra nova segue sem ter
+rodado numa execução real da faixa janelada, porque ela nunca roda na CI. O recibo hospedado confirma que os testes da regra e do
+protocolo passam num runner, e nenhum critério fecha com ele.
 
 ## Reproduzindo
 

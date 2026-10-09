@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
-import { CONTRACTS_JOBS, checkReceipts } from "./hosted-receipts-check.mjs";
+import { CONTRACTS_JOBS, GUARD_STEP, OPT_IN_JOBS, checkReceipts } from "./hosted-receipts-check.mjs";
 import { REPOSITORY, REPOSITORY_URL, SLICES } from "./hosted-receipts-slices.mjs";
 
 // Hosted receipts of the 0.5 Frontier slices that already reached main.
@@ -282,8 +282,9 @@ function runFacts(runId) {
   if (run.run_attempt !== 1 || jobs.some((job) => job.run_attempt !== 1)) {
     throw new Error(`run ${runId} has more than one attempt; the receipt format records one`);
   }
+  // A skipped job never ran and GitHub keeps no log for it: the API answers 404.
   const logs = new Map();
-  for (const job of jobs) {
+  for (const job of jobs.filter((candidate) => candidate.conclusion !== "skipped")) {
     logs.set(job.name, parseLog(ghBuffer(`repos/${REPOSITORY}/actions/jobs/${job.id}/logs`)));
   }
   return { run, jobs, logs };
@@ -291,7 +292,7 @@ function runFacts(runId) {
 
 function checkoutsOf(jobs, logs, squash) {
   const checkouts = {};
-  for (const job of [...jobs].sort((a, b) => a.name.localeCompare(b.name))) {
+  for (const job of jobs.filter((candidate) => logs.has(candidate.name)).sort((a, b) => a.name.localeCompare(b.name))) {
     const shas = checkoutShas(logs.get(job.name));
     if (shas.length === 0 || shas.some((sha) => sha !== squash)) {
       throw new Error(`job ${job.name} did not check out ${squash}: ${shas.join(", ") || "no checkout"}`);
@@ -373,7 +374,18 @@ function contractTestRecord(file, squash, lines) {
   return { file, tests: names.length, passed: passed.length, topLevel: names };
 }
 
-function contractsRecord(slice, squash, job, lines) {
+// The step that runs the milestone exit guards compared the tree with its base, which on a push is the parent of the squash.
+function guardRecord(job, lines, squashParent) {
+  const result = stepResult(stepSection(lines, GUARD_STEP.header));
+  const line = result.markers.find((marker) => marker.startsWith(GUARD_STEP.marker));
+  const base = /--base ([0-9a-f]{40})\b/.exec(line ?? "")?.[1];
+  if (base !== squashParent) {
+    throw new Error(`the milestone guards step compared with ${base ?? "no base"}, not with the squash's parent ${squashParent}`);
+  }
+  return { ...stepRecord(job, GUARD_STEP.name), markers: result.markers, base };
+}
+
+function contractsRecord(slice, squash, squashParent, job, lines) {
   const test = stepRecord(job, "Run npm run test:contracts");
   const section = stepSection(lines, "Run npm run test:contracts");
   const result = stepResult(section);
@@ -381,6 +393,7 @@ function contractsRecord(slice, squash, job, lines) {
   const scan = stepSection(lines, "Run npm run check:publication").join("\n");
   return {
     steps: {
+      ...(slice.guard ? { "milestone-guards": guardRecord(job, lines, squashParent) } : {}),
       "test:contracts": {
         ...test,
         tap: result.tap,
@@ -401,7 +414,7 @@ function contractsRecord(slice, squash, job, lines) {
 
 // The one native job that ran a step or uploaded an artifact: a dispatched run splits the suites between jobs.
 function nativeJobOf(jobs, logs, label, holds) {
-  const holders = jobs.filter((job) => job.name.startsWith("native-") && holds(job, logs.get(job.name)));
+  const holders = jobs.filter((job) => job.name.startsWith("native-") && logs.has(job.name) && holds(job, logs.get(job.name)));
   if (holders.length !== 1) {
     throw new Error(`${label} is in ${holders.length} native jobs of the run, not in one`);
   }
@@ -412,15 +425,19 @@ function hostedCiReceipt(slice, workDir) {
   const facts = runFacts(slice.contractsRun);
   const { run, jobs, logs } = facts;
   const squash = run.head_sha;
-  // Since the native suites became opt-in, a push of main skips them: the receipt needs the Contracts run
-  // dispatched on main while it was still at the squash (gh workflow run contracts.yml --ref main).
+  // Since the native suites became opt-in, a push of main skips them: a slice with a native step needs the Contracts run
+  // dispatched on main while it was still at the squash (gh workflow run contracts.yml --ref main). A slice with no native
+  // step and no native artifact is judged from the push itself, whose skipped native jobs are recorded as skipped.
   if (!squash.startsWith(slice.squash) || !Object.hasOwn(CONTRACTS_JOBS, run.event) || run.head_branch !== "main" || run.name !== "Contracts") {
     throw new Error(`${slice.folder}: run ${slice.contractsRun} is not a Contracts push or dispatch of main at ${slice.squash}`);
   }
-  if (run.status !== "completed" || run.conclusion !== "success" || jobs.some((job) => job.conclusion !== "success")) {
-    throw new Error(`${slice.folder}: run ${slice.contractsRun} did not succeed in every job (a push skips the native jobs; dispatch the run)`);
+  const withoutNative = run.event === "push" && slice.nativeSteps.length === 0 && slice.artifacts.length === 0;
+  const skippedOnPurpose = (job) => job.conclusion === "skipped" && withoutNative && OPT_IN_JOBS.includes(job.name);
+  if (run.status !== "completed" || run.conclusion !== "success" || jobs.some((job) => job.conclusion !== "success" && !skippedOnPurpose(job))) {
+    throw new Error(`${slice.folder}: run ${slice.contractsRun} did not succeed in every job (a push skips the native jobs; dispatch the run, or use a slice with no native step)`);
   }
   const pullRequest = pullRequestRecord(slice, squash);
+  const squashParent = slice.guard ? ghJson(`repos/${REPOSITORY}/git/commits/${squash}`).parents[0].sha : null;
   const nativeSteps = {};
   for (const wanted of slice.nativeSteps) {
     const name = `Run npm run ${wanted.script}`;
@@ -434,11 +451,12 @@ function hostedCiReceipt(slice, workDir) {
     const uploader = nativeJobOf(jobs, logs, `the upload of ${descriptor.name}`, (job, lines) => uploadFromLog(lines, descriptor.name) !== null);
     artifacts[descriptor.key] = artifactRecord(descriptor, runArtifacts, logs.get(uploader.name), workDir, slice.contractsRun);
   }
-  const parity = logs.get("parity-comparison").find((line) => line.startsWith("PARITY_COMPARISON_PASSED"));
+  // The parity comparison needs the cold build, so a run that skipped the native jobs has no comparison to read.
+  const parity = logs.get("parity-comparison")?.find((line) => line.startsWith("PARITY_COMPARISON_PASSED"));
   const receipt = {
     schemaVersion: 1,
     scenario: slice.folder,
-    status: "verified-completed-hosted-workflow-and-slice-artifacts",
+    status: slice.artifacts.length > 0 ? "verified-completed-hosted-workflow-and-slice-artifacts" : "verified-completed-hosted-workflow-and-slice-contract-tests",
     at: new Date().toISOString(),
     repository: REPOSITORY,
     run: {
@@ -456,7 +474,7 @@ function hostedCiReceipt(slice, workDir) {
       updatedAt: run.updated_at,
       jobs: jobs.map(jobRecord).sort((a, b) => a.name.localeCompare(b.name)),
       jobCheckouts: checkoutsOf(jobs, logs, squash),
-      contractsJob: contractsRecord(slice, squash, jobs.find((job) => job.name === "contracts"), logs.get("contracts")),
+      contractsJob: contractsRecord(slice, squash, squashParent, jobs.find((job) => job.name === "contracts"), logs.get("contracts")),
       referenceParity: { comparison: parity ?? null },
       nativeSteps,
     },
