@@ -1000,6 +1000,17 @@ five jobs in the first attempt) repeated the 34 checks in each of three processe
 ([hosted receipt](frontier-soak/hosted-ci.json), [publication](frontier-soak/publication.json)); the timings, heap and memory
 numbers above are local.
 
+The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
+1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
+changed `done`, weight or status and for a changed note, label or evidence) and X10 (frozen tail: no new `pointer-*`, EventTarget, Document or hover slice, and
+no change to GF-13 outside V05-02). `scripts/milestone-guards.mjs --check` is the guard of a pull request, a step of `contracts.yml` that fetches only the
+commit it compares with; `--audit` walks the 28 first-parent commits from `c0f3702` (#60) to `bf00341`, 15 of which add a 0.5 entry, and writes a
+[receipt](milestone-exit-guards/audit.json) that `--audit --verify` judges again with no git. The audit finds X10 clean in all 28 and X9 clean in 14 of the 15,
+with one violation, `b0e40aa` (#74): it merged the hosted CI and Pages receipts of #69 into GF-27's note and `slice` evidence, with no `done`, weight or status
+moved. It is recorded as a known violation for the user to judge, not waved through. The tests run on synthetic documents and throwaway repositories
+(35 checks), so they need no history; the hosted CI of the guard step is pending. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
+milestone does, by running the audit again. A new folder with a neutral name can still hide a slice; it is listed, not failed.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

@@ -3,7 +3,7 @@
   "rules": {
     "x9": "A change that adds a milestone-0-5-* activity entry leaves tasks, phases, sequences, releaseChecklist, integrationChecklist and decisions equal in depth to its parent's. Both classes of change count: moves-1.0 (done, status, weight, a checkpoint or item added or removed, any other field) and text-or-evidence (note, label, evidence).",
     "x10": "No new evidence folder directly under docs/evidence, no new note directly under docs/research and no new file under tests or scripts whose name matches the tail pattern, unless it is world-input*; no activity entry with GF-13 in taskIds; no change to the GF-13 task unless the change delivers V05-02. A file added inside an evidence folder that is not itself a slice is not one: it is only listed.",
-    "tailPattern": "(^|[-_/])(pointer|event-?target|document|hover) (flags i)",
+    "tailPattern": "(^|[-_/])(pointer|event[-_]?target|document|hover) (flags i)",
     "allowed": "a path segment that matches ^world-input (flags i)"
   },
   "range": {
@@ -12,23 +12,23 @@
       "sha": "c0f3702d69d4da4bc518ea32586320f8e01aed2c"
     },
     "to": {
-      "requested": "origin/main",
-      "sha": "8b7a5e676cb3472a377eff08d71efc17548101ae"
+      "requested": "bf00341",
+      "sha": "bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7"
     },
     "comparedWith": "the first parent of each commit"
   },
   "summary": {
-    "commits": 27,
+    "commits": 28,
     "withMilestoneEntries": 15,
     "x9": {
       "clean": 14,
-      "notApplicable": 12,
+      "notApplicable": 13,
       "violations": [
         "b0e40aa"
       ]
     },
     "x10": {
-      "clean": 27,
+      "clean": 28,
       "violations": []
     },
     "tailSlices": {
@@ -1297,6 +1297,36 @@
       },
       "x9": {
         "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7",
+      "short": "bf00341",
+      "parent": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+      "subject": "feat(dashboard): Guard the 0.5 exit criteria X9 and X10 in CI",
+      "pr": null,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
         "items": []
       },
       "x10": {

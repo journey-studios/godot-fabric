@@ -3,7 +3,7 @@
 Status: implemented and run locally (Node and git only; no native code). Neither criterion is
 closed by this work: X9 and X10 say "during the 0.5", so they close when the milestone does, by running the
 audit again over the whole history. Until then this is a guard on every pull request, and a receipt of
-the history so far.
+the history so far. The [evidence record](../evidence/milestone-exit-guards/README.md) pins this execution.
 
 The criteria, verbatim from `dashboard/migration.json`, `milestones[0].exit`:
 
@@ -93,9 +93,11 @@ Two more conditions, both about GF-13 (Input, Pressability and touchables): **no
 
 ## The audit of the history
 
-As of `8b7a5e6` (#85), `c0f3702` (#60) to `8b7a5e6`: 27 first-parent commits, 15 of which add a `milestone-0-5-*` entry. The 12 that
-do not are deliveries of GF-xx or records of them (they change `tasks`, which is their job) and X9 does not apply to them.
-The committed receipt ends at the commit it names in `range.to`, which may be later than this table.
+As of `bf00341` (the commit that implements this guard, on top of `8b7a5e6`, #85), `c0f3702` (#60) to `bf00341`: 28 first-parent
+commits, 15 of which add a `milestone-0-5-*` entry. The 13 that do not are deliveries of GF-xx or records of them (they change
+`tasks`, which is their job), and `bf00341` itself (no entry, no change to the 1.0); X9 does not apply to them. The committed
+receipt ends at the commit it names in `range.to`, which is the one this table ends at, and the audit has to be run again for a
+later one.
 
 | Commit | PR | `milestone-0-5-*` entry added | X9 | X10 |
 |---|---|---|---|---|
@@ -115,7 +117,9 @@ The committed receipt ends at the commit it names in `range.to`, which may be la
 | `82f5f43` | #84 | `milestone-0-5-v05-10-protocol-draft` | clean | clean |
 | `8b7a5e6` | #85 | `milestone-0-5-hosted-receipts-70cf43b` | clean | clean |
 
-X10 is clean in all 27 commits: no new slice (allowed or not) opened under `docs/evidence`, `docs/research`,
+The one commit after those, `bf00341`, adds no entry (X9 `not-applicable`, X10 clean).
+
+X10 is clean in all 28 commits: no new slice (allowed or not) opened under `docs/evidence`, `docs/research`,
 `tests` or `scripts`; no `activity` entry for GF-13; GF-13 equal in depth from the parent of `c0f3702` to the end.
 `native/pointer_adapter.*` and `tests/pointer-click-*` were modified, not added, and the guard looks at additions.
 
