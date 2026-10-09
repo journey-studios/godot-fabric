@@ -851,8 +851,32 @@ the replay's steps 0 to 45, the end of a turn (every frame, then held at an AI p
 judges what it saw with 143 checks of the probe and 0 findings, rejects 23 mutated copies of the report, the HUD of `5e1f6a1` fails in
 five categories, and eight retained sabotages are rejected. The lane found that the World came back behind the HUD's layer after the
 menu (fixed) and that the old HUD's spacer, flattened by Fabric, never swallowed a click. Eight captures, local macOS arm64, no C++;
-the dialog is not yet a blocking `Modal` (slice 2), the hover was exercised with synthetic events, and the **hosted CI run and the Pages
-publication are pending**. The record is pinned at `38d3182`.
+the hover was exercised with synthetic events. The record is pinned at `38d3182`. Hosted run 37891490943 (the push of main `622102e`, five jobs in the
+first attempt) repeated the HUD lane's 143 probe checks, with the report byte for byte the local one, and the consumer's 165 native checks over ten cycles, and
+Pages published main's data with `matriz` and `mapa` closed ([hosted receipt](civ-lite-ui/hosted-ci.json), [publication](civ-lite-ui/publication.json));
+the captures, the causal control and the sabotages stay local.
+
+The same record has a second part, slice 2a of V05-05 (criterion `overlays`), pinned at `1810828` (the sources are those of `12b6c83`, `8ba2a35` and the soak oracle's adjustment; the merge of main into the branch is `b3d835e`): by the user's decision of 2026-10-09 the game's
+event is a queue of three (the state, the rules, a 77-step replay, and the golden and trace hashes `cb7ab974…` and `ed43495…`, recomputed at every
+step by the independent oracle), and the city screen and the event dialog are blocking `Modal`s. With either open, 100 left clicks, 100 right
+clicks and 100 wheel ticks on the map reach the World 0 times, and 100 of 100 once it is closed; the dialog shows the game's "n of 3" and mounts each
+event as a subtree of its own, a HUD remounted with the second event at the head shows "2 of 3" in its first frame, and a new session has no queue until
+its own turn 5. The probe reads a `Modal`'s nodes from the host's snapshot, since they are children of the Modal's own window. 144 checks of the HUD
+probe and 26 of the overlay probe, judged by two independent oracles that reject 27 and 20 mutated reports; two causal controls fail exactly their groups,
+twelve sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four captures of the overlays were read. No check name of the probes
+carries a count that depends on the pace, and the lane refuses one that does. The merge of main brought in the soak of PR #83, whose oracle had written the one
+event as a fact: it now expects the three answers of turn 5, with nothing relaxed. Local macOS arm64; this part is not on main yet, so it has no hosted run,
+`estabilidade` is open, and the engine's error when quitting with a `Modal` open is a task of its own.
+
+The [Frontier scope record](frontier-scope/README.md) is V05-04 (criteria `manifesto`, `tipos` and `props`): the twelve names the HUD imports are decided in
+`docs/compatibility/scope-0.5.json`, and one policy module decides each of the 880 props RN 0.87.1 declares for its seven components (433 supported, 325 ignored
+with a reason and 122 refused with `Godot <Component> does not implement <prop>`), checked on every mount and every update. A native lane drives every case in the
+real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change fails exactly 22 of its 177 checks, and six retained
+sabotages are rejected; no screenshot, since the slice has no visual output, and two open items (the 26 ScrollView props that refuse even RN's default, and the host
+crash that removing the check from the ScrollView exposes). Hosted run 37842839329 (the push of main `b0e40aa`, five jobs in the first attempt) repeated the 13 tests of
+`tests/scope-0.5.test.mjs`, the 5 of `test:scroll-view` and the lane's `SCOPE_PASSED: 181`, and the Pages build and deployment of that push passed, but the deployed
+`migration.json` was not compared, because the run's `github-pages` artifact has expired and no longer exists ([hosted receipt](frontier-scope/hosted-ci.json),
+[publication](frontier-scope/publication.json)); the causal control and the sabotages stay local. The record is pinned at `e33817e`.
 
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and

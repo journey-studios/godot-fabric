@@ -83,7 +83,8 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 - [Frontier's context-driven HUD](frontier-hud.md): the table of panels each of the seven contexts mounts, the one store at
   module scope that talks to the game, the `frontier.hover` state Godot publishes for the tile under the pointer, the map's
   click and hover in `_unhandled_input` and the order of the World against the HUD's layer, with the lane that judges them and
-  what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD).
+  what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD); then the blocking `Modal` overlays, the
+  queue of three events the HUD works through ("n of 3", a subtree for each event) and how the probe reads a Modal's nodes from the host snapshot.
 
 ## Useful next experiments
 

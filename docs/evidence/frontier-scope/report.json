@@ -717,7 +717,7 @@
     "A hover prop on the Pressable fails with 'Godot Pressable does not implement onHoverIn/onHoverOut', the text of every refusal, and no longer with 'hover events are not implemented yet'"
   ],
   "limits": [
-    "The run is local, macOS arm64 and headless; there is no hosted CI run and no Pages publication yet",
+    "The execution this record describes is local, macOS arm64 and headless; the hosted CI run and the Pages publication of main b0e40aa (the squash of PR #74) are recorded in hosted-ci.json and publication.json (see hostedCI); the Pages artifact had expired, so the deployed migration.json was not compared",
     "No screenshot: the slice has no visual output, and no pixel is compared",
     "Nothing was compared with an iOS device or simulator; the decisions follow RN's pinned sources, not a differential",
     "The retained scroll sabotage ends in a host crash, so the cases after the 40th ScrollView refusal were not driven under it",
@@ -746,5 +746,56 @@
       "parityInventory": "8113 contracts, 97 public values"
     },
     "dashboard": "dashboard/migration.json was not touched (git status shows no change to it)"
+  },
+  "hostedCI": {
+    "status": "verified",
+    "run": 37842839329,
+    "attempts": 1,
+    "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/74",
+    "receipt": "hosted-ci.json",
+    "pages": 37842839320,
+    "publication": "publication.json",
+    "generatedBy": "scripts/hosted-receipts.mjs (the receipts are checked offline by its --check, in tests/hosted-receipts.test.mjs)",
+    "nativeSteps": {
+      "test:scope-0.5": {
+        "step": 118,
+        "conclusion": "success",
+        "markers": []
+      },
+      "test:scroll-view": {
+        "step": 28,
+        "conclusion": "success",
+        "markers": []
+      }
+    },
+    "nodeContractTests": [
+      7,
+      43,
+      334
+    ],
+    "artifacts": {
+      "native-scope-0.5": {
+        "id": 11581397662,
+        "zipSha256": "1b259af8221abcf96ab0fefdc273e30f38bf3ef8afef28ab5b0cdd0193b538df",
+        "zipSizeBytes": 600687
+      }
+    },
+    "pagesArtifactAvailable": false,
+    "pagesDeployedJsonCompared": false,
+    "scopeJsLane": {
+      "file": "tests/scope-0.5.test.mjs",
+      "tests": 13,
+      "passedInTheContractsJob": 13
+    },
+    "pagesFinding": [
+      "the deployment succeeded, but its github-pages artifact is no longer retrievable, so the deployed migration.json was not compared with the committed bytes"
+    ],
+    "notRunHosted": [
+      "the causal control on the SDK of e1c7a39 (node tests/scope-0.5-native.test.mjs --previous)",
+      "the six retained sabotages (node scripts/scope-sabotage.mjs)",
+      "the reproduction of the ScrollView host crash (scripts/scope-scroll-crash.mjs)",
+      "the comparison of the hosted check ids and of the repository oracle with the report (the receipt records that the step passed and the artifact it uploaded)"
+    ]
   }
 }

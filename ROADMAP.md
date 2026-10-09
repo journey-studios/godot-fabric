@@ -650,9 +650,13 @@ props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored wi
 case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
 fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
 [record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
-visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
-that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
-No 1.0 checkpoint, weight or denominator moves.
+visual output). The hosted CI run of main `b0e40aa` (the squash of #74, run 37842839329) passed its five jobs on the first
+attempt, with the 13 tests of the scope test, the 5 of `test:scroll-view` and the lane's `SCOPE_PASSED: 181`
+([receipt](docs/evidence/frontier-scope/hosted-ci.json)); the Pages run 37842839320 built and deployed that commit, but its
+artifact has expired, so the deployed `migration.json` was not compared
+([receipt](docs/evidence/frontier-scope/publication.json)). The causal control and the retained sabotages stay local. It lists two
+open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision) and the host crash that removing the check
+from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-05, criteria `matriz` and `mapa`: the HUD is now driven by the context Godot derives. One store at module scope
 is the only module that talks to the game; six panels (the turn and resources bar, the unit's actions, the tile card, the city
@@ -662,9 +666,25 @@ spinner while the turn is processed, with End turn enabled by the game's own act
 which Godot publishes as the state `frontier.hover` (the registry holds 15 bindings), and a click on the map selects through the
 World's `_unhandled_input`. An independent oracle judges the lane, the HUD of the previous commit fails it in actions, content,
 input, panels and phase, and eight retained sabotages are rejected; the lane also found a World that came back behind the HUD's layer
-after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures; the
-hosted CI run and the Pages publication are pending. The `overlays` and `estabilidade` criteria of V05-05 remain open (the dialog is
-a panel, not yet a blocking `Modal`), and no 1.0 checkpoint, weight or denominator moves.
+after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures. The
+hosted CI run of main `622102e` (the squash of #82, run 37891490943) passed its five jobs on the first attempt, with the HUD lane's 143 probe
+checks, the report byte for byte the local one, and the consumer's 165 native checks
+([receipt](docs/evidence/civ-lite-ui/hosted-ci.json)), and the Pages run 37891490845 deployed that commit's dashboard data with
+`matriz` and `mapa` closed ([receipt](docs/evidence/civ-lite-ui/publication.json)); the captures, the causal control and the retained
+sabotages stay local.
+
+**Progress.** V05-05, criterion `overlays` (slice 2a): by the user's decision of 2026-10-09 the game's event is a queue of three (the
+state, the rules and a 77-step replay with new golden and trace hashes, `cb7ab974…` and `ed43495…`, which the independent oracle
+recomputed at every step), and the city screen and the event dialog are blocking `Modal`s: with either open, 100 left clicks, 100
+right clicks and 100 wheel ticks on the map reach the World 0 times, and 100 of 100 once it is closed. The dialog shows the game's
+"n of 3" and mounts each event as a subtree of its own, a HUD remounted with the second event at the head shows "2 of 3" in its
+first frame, and a new session has no queue until its own turn 5. Two causal controls (the previous HUD and the previous game with its HUD)
+fail exactly their groups, twelve retained sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four
+captures of the overlays were read, and no check name of the probes carries a count that depends on the pace (the lane refuses one that
+does). The merge of main brought in the soak of #83, whose oracle had written the one event as a fact; it now expects the three answers of
+turn 5, with nothing relaxed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence; this slice is not on main yet,
+so it has no hosted run. The `estabilidade` criterion of V05-05 remains open, the engine logs an error when the application quits with a
+`Modal` open (a task of its own), and no 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
 panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720

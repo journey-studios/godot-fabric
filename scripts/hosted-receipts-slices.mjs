@@ -104,4 +104,35 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-06-soak-b77178a",
   },
+  {
+    folder: "frontier-scope",
+    pr: 74,
+    squash: "b0e40aa",
+    contractsRun: 37842839329,
+    pagesRun: 37842839320,
+    nativeSteps: [
+      { script: "test:scope-0.5", expect: "tap" },
+      { script: "test:scroll-view", expect: "tap" },
+    ],
+    artifacts: [{ key: "scope", name: "native-scope-0.5" }],
+    contractTests: ["tests/scope-0.5.test.mjs"],
+    activity: "milestone-0-5-v05-04-scope-1b9f120",
+  },
+  {
+    folder: "civ-lite-ui",
+    pr: 82,
+    squash: "622102e",
+    contractsRun: 37891490943,
+    pagesRun: 37891490845,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-matriz-mapa-096a018",
+  },
 ];
