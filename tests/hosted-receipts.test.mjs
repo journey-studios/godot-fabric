@@ -324,6 +324,44 @@ test("the milestone guards step is required where the table says so, with its li
     }),
     /idle-reference: hosted-ci\.json: the milestone guards step did not succeed/,
   );
+  // The whole line is judged, not its prefix: the verdicts, the 12 digits of `against` (the start of the base) and the end of the line.
+  const guardLineProblem = /idle-reference: hosted-ci\.json: the milestone guards step has no MILESTONE_GUARDS_CHECK_PASSED line for its base/;
+  const withGuardLine = (change) =>
+    mutate("idle-reference", "hosted-ci.json", (receipt) => {
+      const step = receipt.run.contractsJob.steps["milestone-guards"];
+      step.markers = change(step.markers[0]);
+    });
+  assertRejected(
+    withGuardLine((line) => [line.replace("X9 clean", "X9 violated")]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [line.replace("X10 clean", "X10 violated")]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [line.replace("X10 clean", "X10 not-applicable")]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [line.replace(/against [0-9a-f]{12}/, "against 1adcdb3c89b9")]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [`${line}; X9 violated`]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [`${line} `]),
+    guardLineProblem,
+  );
+  assertRejected(
+    withGuardLine((line) => [line, line]),
+    guardLineProblem,
+  );
+  // X9 is not-applicable when the push adds no 0.5 entry, and that line passes.
+  const notApplicable = withGuardLine((line) => [line.replace("X9 clean", "X9 not-applicable")]);
+  assert.equal(notApplicable.status, 0, notApplicable.stderr);
   // The run of #83 had no such step: a receipt that records one describes another run.
   assertRejected(
     mutate("frontier-soak", "hosted-ci.json", (receipt) => {

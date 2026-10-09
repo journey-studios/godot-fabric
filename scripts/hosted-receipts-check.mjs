@@ -107,6 +107,10 @@ function checkArtifact(label, entry, descriptor, problems) {
   }
 }
 
+// The whole line the guard prints when it passes: it names the base by its first 12 hex digits and by the full SHA, and its verdicts are the
+// ones that do not fail the step. X9 is not-applicable when the push adds no 0.5 entry; a violation never reaches this line.
+const guardLine = (base) => new RegExp(`^${GUARD_STEP.marker}: against ${base.slice(0, 12)} \\(--base ${base}\\); X9 (?:clean|not-applicable), X10 clean$`);
+
 // The guard step exists in the `contracts` job from #87 on. A slice that the table marks with `guard` must show it passed, with the line it prints
 // and the base it compared against; an older slice must not have a record of a step its run did not have.
 function checkGuardStep(slice, step, label, problems) {
@@ -116,12 +120,12 @@ function checkGuardStep(slice, step, label, problems) {
     }
     return;
   }
-  const line = step?.markers?.find((marker) => marker.startsWith(GUARD_STEP.marker));
   if (step?.step !== GUARD_STEP.name || step.conclusion !== "success" || !isCount(step.number) || !isTime(step.startedAt) || !isTime(step.completedAt)) {
     problems.push(`${label}: the milestone guards step did not succeed`);
   }
-  if (!line || !isSha1(step?.base) || !line.includes(`--base ${step.base}`)) {
-    problems.push(`${label}: the milestone guards step has no ${GUARD_STEP.marker} line for its base`);
+  const lines = Array.isArray(step?.markers) ? step.markers.filter((marker) => marker.startsWith(GUARD_STEP.marker)) : [];
+  if (!isSha1(step?.base) || lines.length !== 1 || !guardLine(step.base).test(lines[0])) {
+    problems.push(`${label}: the milestone guards step has no ${GUARD_STEP.marker} line for its base, ending in X9 clean or not-applicable and X10 clean`);
   }
 }
 
