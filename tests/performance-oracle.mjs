@@ -46,6 +46,22 @@ export function nearestRank(values, percent) {
 export const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
 export const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
 
+// The rule that every harness of the Frontier slices judges a level at rest by (the live heap, the resident memory): the steady readings, in the order they were taken, are
+// split into a first and a last half of floor(n/2) of them (the one in the middle of an odd count belongs to neither), and the median of the last half, by nearest rank,
+// less the median of the first may be at most `limit`, inclusive. A few off-level readings do not move a median and a leak raises it as it raises the rest. The caller
+// says what a failure is called: `fill` when there are not two halves, `read` when a reading is not a positive number, and `exceeded` for the growth over the limit, given
+// {half, firstMedian, lastMedian, growth}; the extras of each caller (floors, bands, units) stay with it. Returns {half, firstMedian, lastMedian, growth}.
+export function growthOfHalves(steady, limit, {fill, read, exceeded}) {
+  const half = Math.floor(steady.length / 2);
+  assert.ok(half >= 1, fill);
+  assert.ok(steady.every(value => value > 0), read);
+  const firstMedian = nearestRank(steady.slice(0, half), 50);
+  const lastMedian = nearestRank(steady.slice(steady.length - half), 50);
+  const growth = lastMedian - firstMedian;
+  assert.ok(growth <= limit, exceeded({half, firstMedian, lastMedian, growth}));
+  return {half, firstMedian, lastMedian, growth};
+}
+
 function finiteAndNotNegative(value, label) {
   if (typeof value === "number") {
     assert.ok(Number.isFinite(value) && value >= 0, `${label}: ${value} is not a finite, non-negative number`);

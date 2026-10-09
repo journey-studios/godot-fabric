@@ -337,6 +337,17 @@ jobs:
             build/frontier-soak-comparison.json
             build/frontier-soak-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frontier-turn
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-turn
+          path: |
+            build/frontier-turn-current-report.json
+            build/frontier-turn-current.log
+            build/frontier-turn-comparison.json
+            build/frontier-turn/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:websocket
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
