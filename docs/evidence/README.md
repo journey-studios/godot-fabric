@@ -1019,6 +1019,20 @@ and seven captures (one for each context) of the real HUD over the real map are 
 frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded), the previous-host control does not apply since no
 C++ changed, and hosted CI is **pending**.
 
+The [idle reference record](idle-reference/README.md), pinned at `237b171`, records the fix of a defect in the validity rule of the windowed lane that the presented executions of 2026-10-09 exposed, and the dated
+amendment of the pre-registered protocol of the final comparison (V05-10) that used the same reference. With the vsync on at 120 Hz the 600 idle intervals of a window the display presents come in two alternating groups
+(about 300 under 4.17 ms and about 300 of 12 ms or more, two neighbours adding up to about 16.67 ms), so the **median** falls in one group or the other by a few samples: one presented attempt of the baseline was
+refused as `unpaced` for a median of 4.136 ms against the 4.167 ms required (a mean of 8.333 ms, 5,106 of 5,110 frames drawn), the accepted runs of the turn had medians of 4.42 to 13.18 ms, and in one run 242 of 360 click frames were
+"above twice the idle median" only because the median was in the low group. The rule is now the **median of the half-sums of consecutive pairs** of the idle intervals (the same threshold, half of the refresh period read back):
+8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the
+half-sums, which the mean would not survive. The record compares the median, the mean and the half-sum median over the 24 raw attempts of the three receipts of 2026-10-09 (kept outside the repository, by SHA-256) and of the baseline's
+record: the mean and the half-sum median give the same verdict on all 24, and the new rule would change one verdict, the refused attempt, which it would accept. The receipts recorded before are **not reclassified** (they were judged by
+the median, and `verifyGraphicsReceipt` still judges a receipt by the rule it was written under), and the new rule applies from the next execution on. The summary now counts the frames above twice the idle median (as before)
+**and** above twice the idle reference, and the protocol of V05-10 is amended for it (`amendments[0]`, 2026-10-09, **no comparative measurement before it**; the pin of the protocol moves from `8dd7779d…` to `6e58144e…`, and a change
+of the protocol without an entry in `amendments` and a new pin now fails its test). The slice measures nothing of the game and **closes no criterion**. The new rule has not yet run in a real windowed execution, the turn's script
+(`scripts/frontier-turn-graphics.mjs`, owned by the open P8 slice) still prints the count by the median until a later change, `docs/research/frontier-turn.md` still describes the old rule, the tests run in Node (16 for the lane, 17 for
+the protocol), and hosted CI is **pending**.
+
 The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
 1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
 changed `done`, weight or status and for a changed note, label or evidence) and X10 (frozen tail: no new `pointer-*`, EventTarget, Document or hover slice, and
