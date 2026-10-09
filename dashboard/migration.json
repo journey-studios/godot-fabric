@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T21:51:26.000Z",
+  "updatedAt": "2026-10-09T01:44:08.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -3571,8 +3571,13 @@
             {
               "id": "autoridade",
               "label": "turn.end aceito sobrevive ao fechamento da tela e job.finished chega 1x; uma regra mutada no Godot muda a HUD sem alterar JS; rajadas de fim de turno medidas contra 64 tarefas e 128 eventos por fase",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): turn.end (frontier.end_turn) aceito como job e rodado uma fase por frame pelo node persistente GameServices; job.finished (frontier.turn_ended) entregue 1 vez, com a tela desmontada no frame seguinte ao aceite e com o menu aberto; uma regra mutada no GDScript (os pontos de movimento do Settler) muda a HUD com o mesmo bundle JS e o mesmo host; cada fase cabe num pump de 64 tarefas e 128 eventos, e o caso de estresse com 150 assinantes extras drena em ceil(eventos / 128) pumps, sem perda e em ordem; 11 sabotagens dos serviços e 5 do consumidor rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md"
+                }
+              ]
             }
           ]
         },
@@ -4340,6 +4345,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-03-autoridade-5ee0127",
+      "at": "2026-10-09T01:44:08.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério autoridade, com evidência local: o fim de turno virou um job aceito. O frontier.end_turn (o turn.end do critério) é registrado com a resposta acceptance e devolve {ok, code, text, job}, e o node persistente GameServices roda o turno com o próprio _process, uma fase por frame, nunca no World nem na superfície: o snapshot sai no aceite e depois de cada uma das seis fases (sete snapshots em sete frames seguidos, o último em repouso com o turno que começa e o novo campo last_job igual ao job), e o frontier.turn_ended (o job.finished do critério) sai uma vez com {turn, phases, job}, entre o sexto e o sétimo. O resultado de todos os métodos passou a ser {ok, code, text, job}, com job 0 fora do end_turn aceito, e o schema, os tipos TS e a paridade foram atualizados nos dois sentidos. Dos 15 jobs do probe, a assinatura em escopo de módulo da aplicação recebeu o turn_ended de cada um uma única vez e em ordem, e o finished_jobs do node guarda 1 para cada; o terceiro rodou com a superfície desmontada no frame seguinte ao aceite (rootCount 0 o tempo todo) e o primeiro snapshot do painel remontado veio em repouso, turno 4, last_job 3; dez chamadas mandadas durante um job foram todas recusadas com turn_in_progress sem iniciar job; e nos dez ciclos do consumidor um End turn apertado no mesmo frame do Menu terminou com o menu aberto, uma vez, com o World fora da árvore. Uma lane de regra roda o probe duas vezes com o mesmo bundle JS e o mesmo host, uma no rules.gd genuíno e outra com os pontos de movimento do Settler mutados de 2 para 0 por guardSources e restaurados byte a byte, e muda exatamente o que a regra prevê no snapshot que o JavaScript recebe (moves e max_moves do Settler e enabled, reason e reason_text do found_city). Cada frame de cada job coube num pump do registro, de 64 tarefas e 128 eventos (no máximo 10 tarefas, com as dez chamadas, e 3 eventos) e não deixou nada pendente; com 150 assinantes extras do snapshot uma publicação de 152 eventos drenou em 2 pumps (128 e 24), sem perda e em ordem FIFO, e um job que correu mais que o pump drenou 1065 eventos em 9 pumps. 1058 checks do probe em cada uma de duas execuções, test:frontier-services 11 de 11, 165 checks nativos e dez ciclos no test:consumer:civ-lite, e o hash dourado e o de trilha do P3 intactos. 11 sabotagens dos serviços (quatro novas: double-finish, job-dies-with-screen, sync-end-turn e stale-snapshot) e 5 do consumidor (uma nova: job-dies-with-menu) são rejeitadas pela razão por que foram quebradas, e os fontes voltam byte a byte. Não há C++ e o controle com host anterior não se aplica. Só headless, os cliques são sintéticos e a HUD jogável continua sendo a do V05-05; o finished_jobs guarda os últimos 256 jobs; o new_game abandona um job em andamento, sem turn_ended. CI hospedada (test:frontier-services e test:consumer:civ-lite) e Pages pendentes. Isto fecha o último critério do V05-03: replay, servicos, consumidor e autoridade estão todos done. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md"
+    },
     {
       "id": "milestone-0-5-v05-03-consumidor-b9a40cb",
       "at": "2026-10-08T21:51:26.000Z",
