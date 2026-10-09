@@ -49,6 +49,9 @@ const CLAIM_POINT := Vector2(230.0, 300.0)
 const MAX_STEPS := 24
 const FRAME_LIMIT := 600
 const JOB_SNAPSHOTS := 7
+# What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the twelve methods (one for each
+# intent, `new_game` and `open_menu`). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82) and is a count, not a rule of this soak.
+const BINDINGS := 15
 # How long Hermes' tracker may take to report a promise rejected with no handler (2000 ms for an Error, as the `promise` library does; see the fixture's
 # control), and a little more.
 const TRACKER_DELAY_MS := 2300
@@ -472,8 +475,8 @@ func check_scene() -> void:
     "scene/The HUD mounts in a Surface that takes no pointer (IGNORE), in a layer after the world")
   check(Sampler.number(scene_state.hudProcessMode) == Sampler.number(scene_state.alwaysMode),
     "scene/The HUD's layer keeps processing while the tree is paused (PROCESS_MODE_ALWAYS)")
-  check(stages.base.registry.subscriptions >= 1 and stages.base.registry.bindings == 14 and Sampler.number(stages.base.epoch) == 1.0,
-    "scene/The registry holds the 14 bindings of the game and the session is the first")
+  check(stages.base.registry.subscriptions >= 1 and stages.base.registry.bindings == BINDINGS and Sampler.number(stages.base.epoch) == 1.0,
+    "scene/The registry holds the %d bindings of the game and the session is the first" % BINDINGS)
 
 func check_turns() -> void:
   var turns: Array = stages.turns

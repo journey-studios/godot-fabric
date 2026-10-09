@@ -24,7 +24,10 @@ import {CLAIM_POINT, CONTEXTS, EXECUTIONS, GARRISON_CAP, PANEL_SHAPE, PANEL_TOGG
 const sha256 = text => createHash("sha256").update(text).digest("hex");
 const median = values => nearestRank(values, 50);
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
-const BINDINGS = 14;
+// What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the twelve methods (one for each
+// intent, `new_game` and `open_menu`). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82); the soak asserts the count the node
+// registers, it does not depend on what the services are.
+const BINDINGS = 15;
 
 // The nodes of the heavy panel from its shape: a root, a header and two nodes a chip (the View and its Text).
 const PANEL_NODES = 2 + 2 * PANEL_SHAPE.chips;
@@ -250,7 +253,7 @@ function verifyErrors(stages) {
   assert.equal(faults.handlers.rejectionTracker, true, "with Hermes' tracker watching (the runtime has no ErrorUtils: the host's own error list is the other watch)");
   assert.equal(control.rejections, 1, "The tracker sees an unhandled rejection when there is one (the control after the soak): zero is not blindness");
   const base = stages.base.registry;
-  assert.deepEqual([base.bindings, base.errors], [BINDINGS, 0], "The registry holds the 14 bindings of the game and no error");
+  assert.deepEqual([base.bindings, base.errors], [BINDINGS, 0], `The registry holds the ${BINDINGS} bindings of the game and no error`);
   assert.ok(base.subscriptions >= 2, "with the application's two connections");
   const registries = [stages.base.light.registry, ...lightReadings(stages).map(reading => reading.registry), ...stages.turns.map(row => row.rest.registry)];
   registries.forEach(registry => {

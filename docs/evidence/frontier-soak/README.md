@@ -4,6 +4,13 @@
 > `3bb51d6`) e o recibo [`execution.json`](execution.json) os fixa. Os comandos rodaram nesta ordem e em sequência, com a árvore limpa (todo fonte rastreado
 > igual ao do commit); os arquivos desta pasta e os documentos que apontam para eles estavam no working tree, sem commit, e não são entrada de nenhum comando.
 > A nota de pesquisa e este registro dizem os mesmos números.
+>
+> **Depois do registro, sobre a main com o #82.** O merge `a27156b` traz o P8 V05-05 slice 1 (#82), que registra no nó do jogo o estado `frontier.hover` (o cartão do tile
+> sob o ponteiro): o registro de serviços passa de **14 para 15 bindings**. Rodado sobre `a27156b`, o soak reprovou um único check, o que conta os bindings (`scene/The registry holds the 14 bindings…`,
+> com 15 no registro), e nada mais se moveu: o mesmo hash final e da trilha (`a35c55f2…`, `fe9d4f36…`), o mesmo heap em repouso (2.117.320 e 2.443.832 bytes, crescimento 0), as mesmas
+> contagens de views nativas, 0 erros, a mesma pausa, e 2 subscrições. É uma contagem e não uma regra: a expectativa do probe e do oráculo passou de 14 para 15 (`BINDINGS`, comentada nos dois), e a suíte
+> passa de novo em `a27156b` com a expectativa trocada (34/34 em cada execução, 67,7, 67,2 e 67,3 s; `test:frontier-services` 11/11; `type-check` limpo). Os números, os `sourcePins` e as tabelas deste
+> registro continuam os de `dd67671` (nesse commit a contagem era 14, e as linhas "2 e 14" abaixo dizem 14); as sabotagens não foram rodadas de novo, porque só a contagem mudou.
 
 Esta fatia fecha o critério `soak` do V05-06 do marco 0.5 Frontier (pacote P6): o jogo Frontier jogado por 100 turnos, em 3 execuções, em 3 processos Godot, pelos serviços
 tipados, por um jogador roteirizado e um HUD React Native que abre e fecha todo turno um painel de 100 nós nativos. A pergunta tem quatro partes: é o mesmo jogo todas as vezes

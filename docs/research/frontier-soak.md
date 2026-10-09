@@ -86,7 +86,7 @@ collection, 100 a run. The checks hold at any pace of the machine; the probe has
 | Hermes heap at rest | `heapAtRest` (imported): the median of the last 49 of the 98 steady turns less the median of the first 49 is at most 2,048 bytes, after a forced collection; the first 2 turns are the warm-up | the GF-30 limit |
 | Resident memory | the median of the last half of the steady turns less the median of the first is at most **48 MiB (49,152 KB)**; recorded every turn | a coarse guard, see below |
 | Unhandled errors | the application's and the registry's `errors` are 0 at every reading; JavaScript's tracker of unhandled rejections saw 0; no `FABRIC_ERROR` in the log | exact |
-| Subscriptions | the registry holds 2 subscriptions (the application's) and 14 bindings at every reading | exact |
+| Subscriptions | the registry holds 2 subscriptions (the application's) and 15 bindings at every reading (14 when the soak was pinned at `dd67671`; the pointer's state `frontier.hover` of V05-05 slice 1, #82, made it 15, and nothing else of the soak moved) | exact |
 | The job | every turn's job published seven snapshots in seven consecutive frames and one `turn_ended` between the sixth and the seventh; the ids rise by one | exact |
 
 The pinned run, in the three executions (the strategy the panel is closed with, the seconds each took, the hash of the game after turn 100 and the heap and resident memory at rest as the medians of the first and last half of the steady turns):
