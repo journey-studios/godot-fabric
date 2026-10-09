@@ -53,6 +53,15 @@ dispatched run adds five jobs:
   and input jobs do not run it, so they import the project the same way first.
 - `parity-comparison` compares the Godot, iOS and Android reports.
 
+In the first dispatched run (37936787624, 2026-10-09), `native-cold-start`
+took 6.5 minutes, the setup 4 of them and packing the 321 MB artifact 48
+seconds. The suite jobs took 25.6 (runtime), 20.7 (frontier) and 22.4 (input)
+minutes, each spending about a minute restoring the host and importing the
+project. The single job they replace took 60 to 69 minutes, so the run needs
+about 32 minutes when runners are free, for 75 minutes of runner time instead
+of 69. That run took 63 minutes in all, because the input job waited 31
+minutes for a macOS runner while other pull requests ran the old single job.
+
 Each suite still runs alone on its runner, and its artifact keeps its name. The
 hosted receipts of a slice (`scripts/hosted-receipts.mjs`) need a dispatched run
 of `main` at the slice's squash commit, because a push no longer runs the
