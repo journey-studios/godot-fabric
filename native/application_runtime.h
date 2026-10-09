@@ -38,6 +38,10 @@ class ApplicationRuntime {
   std::string status();
   void report_error(const std::string &message);
   bool input(int surface_id, const godot::Ref<godot::InputEvent> &event);
+  // Whether React Native's hit test finds a View of this Surface at the event's point (a mouse button, the wheel
+  // included, or a touch). It routes nothing to JS: FabricSurface::_unhandled_input uses it to keep from the Godot world
+  // the pointer that belongs to the HUD.
+  bool claims(int surface_id, const godot::Ref<godot::InputEvent> &event);
   void cancel(int surface_id);
   void activate(int surface_id, int tag);
   void change(int surface_id, const godot::String &text, int tag);

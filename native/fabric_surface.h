@@ -13,6 +13,7 @@ class FabricSurface : public godot::Control {
   ~FabricSurface() override;
   void _ready() override;
   void _input(const godot::Ref<godot::InputEvent> &event) override;
+  void _unhandled_input(const godot::Ref<godot::InputEvent> &event) override;
   void _notification(int what);
   void _exit_tree() override;
   godot::String evaluate(const godot::String &source);

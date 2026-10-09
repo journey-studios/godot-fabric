@@ -900,6 +900,32 @@ recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
 mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
 
+The [world input a2 record](world-input-a2/README.md) is the second slice of the same spike (V05-02, go/no-go no. 1):
+it closes the six gaps that slice 1 measured (a hit slop, a `Text` with `onPress`, the gaps of a ScrollView, and the
+wheel over the HUD, over a ScrollView and over an overlay in the tree) with one rule, the one of React Native on a phone:
+**what the hit test of React Native finds at the event's point is the HUD's, and the rest is the world's.** In
+`_unhandled_input`, after the GUI, `FabricSurface` calls the new `ApplicationRuntime::claims` and marks the event handled
+when it finds a View; it covers the mouse button (the wheel and its release included), the screen touch and the mouse Godot
+emulates from a touch, and leaves motion and drag alone. `hit_test`, `apply_pointer_filters`, `input()` and `wheel()` do not
+change, and the Controls of Godot's GUI that React Native mounts (`Switch`, `Button`, `LineEdit`) keep their events because the
+claim runs after the GUI. The record pins the implementation `0486727` on the red `9727ceb` (the checks that need the rule,
+made before it) over main `c8de44b`. 91 headless checks (50 normative: 31 of a1 and 19 of a2) run in the same two topologies
+with the independent oracle. The controls are three hosts: the host with a1 only (`28cc9f14`) fails exactly the 19 checks of a2,
+the host before a1 fails 41 (the 31 of slice 1 and the 10 wheel checks of a2; the nine click, tap and emulated-mouse checks
+hold there because its STOP Surface hides them), and the a2 host (`cc8aa3c5`) passes; **the pre-a1 host is a rebuild** on the
+current main with the constructor's `IGNORE` removed, because slice 1's binary (`79f68b1d`) was kept in a worktree that no longer
+exists. Five retained sabotages are rejected, each on named checks: `surface-stop` (31), `views-ignore` (5: the `Switch` and
+the hover, since the claim now hides the Views from the world), `unhandled-off` (19), `claim-all` (35, a host rebuilt from the
+broken source) and `before-gui` (2, the native `Switch` never gets its click, which proves the claim has to run after the GUI).
+The record cites the Godot 4.7.2 lines that make the Surface's `_unhandled_input` run before the world's (reverse tree order,
+`scene_tree.cpp:1461`) and a witness node in the probe that proves it on the live scene. A local windowed lane (32 checks,
+N = 100, the six gaps, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) passed, but the display was asleep,
+so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle median 0.776 ms): it makes no frame-time or
+presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
+byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
+not supported, the pointer reaches no phone or hardware pointer yet, and hosted CI is **pending**. The record does not decide
+the go/no-go; it gives the reading for slice 3, which does.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

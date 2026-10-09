@@ -53,14 +53,17 @@ func set_overlay(kind: String, visible: bool) -> bool:
   app.call("evaluate", "WorldInputProbe.show('%s', %s)" % [kind, "true" if visible else "false"])
   return await wait_for(func() -> bool: return overlay_open(kind) == visible)
 
-# A part is one interaction at a point: a click, a right click, a wheel tick (press and release of
-# the wheel button) or a tap, on a region of the HUD or of the world.
+# A part is one interaction at a point, on a region of the HUD or of the world: a click, a right click, a wheel tick
+# (press and release of the wheel button), a tap, the mouse Godot emulates from a touch on its own ("emulated": a left
+# press and release with device -1), a bare pointer motion, or a drag (a touch, a ScreenDrag and the release).
 static func part(region: String, input: String, at: Vector2, panel := "hud") -> Dictionary:
   return {"region": region, "input": input, "at": [at.x, at.y], "panel": panel}
 
 # What the world hears of an input delivered n times, by stream: the mouse button's press and release, or a touch
-# as ScreenTouch and as the mouse Godot emulates from it.
+# as ScreenTouch and as the mouse Godot emulates from it. The motion and the drag are not buttons: they have no stream.
 static func stream_of(input: String, n: int) -> Dictionary:
+  if input == "emulated":
+    return {"emulated/press/1": n, "emulated/release/1": n}
   if input == "left":
     return {"mouse/press/1": n, "mouse/release/1": n}
   if input == "right":
@@ -75,8 +78,9 @@ func motion(at: Vector2) -> void:
   event.global_position = at
   Input.parse_input_event(event)
 
-func button_event(at: Vector2, button: int, pressed: bool) -> void:
+func button_event(at: Vector2, button: int, pressed: bool, device := 0) -> void:
   var event := InputEventMouseButton.new()
+  event.device = device
   event.position = at
   event.global_position = at
   event.button_index = button
@@ -91,11 +95,34 @@ func touch_event(at: Vector2, pressed: bool) -> void:
   event.pressed = pressed
   Input.parse_input_event(event)
 
+func drag_event(at: Vector2) -> void:
+  var event := InputEventScreenDrag.new()
+  event.index = 0
+  event.position = at
+  event.relative = Vector2(1, 0)
+  Input.parse_input_event(event)
+
 func inject(item: Dictionary) -> void:
   var at := Vector2(item.at[0], item.at[1])
   if item.input == "touch":
     touch_event(at, true)
     touch_event(at, false)
+    return
+  if item.input == "drag":
+    touch_event(at, true)
+    drag_event(at + Vector2(1, 0))
+    touch_event(at, false)
+    return
+  if item.input == "motion":
+    # Delivered on its own: consecutive motions in one flush are accumulated into a single event.
+    motion(at)
+    Input.flush_buffered_events()
+    return
+  if item.input == "emulated":
+    # The mouse Godot emulates from a touch, on its own: the pointer adapter ignores device -1, the world does not.
+    motion(at)
+    button_event(at, MOUSE_BUTTON_LEFT, true, InputEvent.DEVICE_ID_EMULATION)
+    button_event(at, MOUSE_BUTTON_LEFT, false, InputEvent.DEVICE_ID_EMULATION)
     return
   var button := MOUSE_BUTTON_LEFT
   if item.input == "right":
@@ -143,7 +170,8 @@ func run(parts: Array, n: int) -> Dictionary:
     for item: Dictionary in parts:
       inject(item)
   Input.flush_buffered_events()
-  return {"parts": parts, "n": n, "world": observe(), "rn": rn_counts(), "tiles": tiles(), "motion": world.count("InputEventMouseMotion")}
+  return {"parts": parts, "n": n, "world": observe(), "rn": rn_counts(), "tiles": tiles(), "motion": world.count("InputEventMouseMotion"),
+    "drag": world.count("InputEventScreenDrag")}
 
 # The control under the pointer after it moves to a point.
 func hovered(at: Vector2) -> Control:

@@ -556,12 +556,27 @@ independent oracle; the
 [evidence record](https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md)
 has the numbers. In `milestones` the criteria `vermelho`, `politica` and `sabotagem`
 are done and `iphone` is not: the events are synthetic, with no hardware pointer or
-touch screen and no iPhone run, which waits for the device package. What remains of
-V05-02 is slice 2, variant (a2), for what the minimal policy leaves open (a hit slop, a
-`Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD or a tree
-overlay, which still reach the map as well as React Native), which the merge of PR #58
-has unblocked, and the go/no-go decision of slice 3. Hosted CI for the slice is pending. No 1.0
-number moves.
+touch screen and no iPhone run, which waits for the device package. Slice 2 (next
+paragraph) closed the gaps this slice left open; the go/no-go decision of slice 3 remains. Hosted CI for the
+slice is pending. No 1.0 number moves.
+
+**Progress.** V05-02 has its second slice, variant (a2). One rule closes the six gaps the
+first slice measured: at the unhandled stage, after the GUI, `FabricSurface` marks a mouse
+button (the wheel included), a touch or the mouse Godot emulates from it as handled when
+React Native's hit test finds a View at the point, as a phone decides who gets a touch by
+geometry, `pointerEvents` and `hitSlop` and never by whether a handler exists. A hit slop, a
+`Text` with `onPress` and the gap of a ScrollView (by click, tap and emulated mouse), and the
+wheel over the HUD, a ScrollView and an open tree overlay, reached the map as well as React
+Native on the host of the first slice and reach it 0 times out of 100 now, with React Native
+hearing its handlers as before. The host with only the first policy fails exactly the 19
+checks that need the rule, the host before it fails 41, and five retained sabotages are
+rejected on named checks (one of them, a claim made before the GUI, takes the native `Switch`
+its clicks); the
+[evidence record](https://github.com/journey-studios/godot-fabric/blob/af941dde794db9ed40595d006977445b6646e9fc/docs/evidence/world-input-a2/README.md)
+has the numbers. The windowed lane ran with the display asleep, so its frames were unpaced:
+its counts stand and it makes no frame-time claim. Pointer motion, hover and drag are not
+claimed and the `iphone` criterion stays open, so no criterion changes. Slice 3 decides the
+go/no-go. Hosted CI for both slices is pending. No 1.0 number moves.
 
 **Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
 GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
