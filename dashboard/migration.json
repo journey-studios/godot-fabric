@@ -13,7 +13,7 @@
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "scope": "P8 V05-05 do marco 0.5, critério overlays: a fila de três eventos real no jogo (decisão do usuário de 2026-10-09) e a tela da cidade e o diálogo como Modals bloqueantes na HUD do Frontier, com evidência local em 67c3f16 (probes e oráculos independentes, dois controles, doze sabotagens e doze capturas), mais os recibos hospedados canônicos do #74 e do #82. CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": ""
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/93"
   },
   "phases": [
     {
