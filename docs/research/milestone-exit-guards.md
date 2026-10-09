@@ -167,8 +167,10 @@ one commit more than the shallow checkout and `base` is `HEAD^`, the **first par
 - on a `workflow_dispatch` (a manual run of the workflow), the step makes one fetch,
   `git fetch --no-tags --unshallow origin main:refs/remotes/origin/main`, which deepens the history the checkout already has
   and brings `origin/main`, and nothing else of the remote; then it runs `--check` with no `--base`. The base is then the merge-base of `HEAD` and `origin/main`, the rule a local run
-  uses, so a dispatched branch is judged by what it changed and not by what main added after it started. Dispatched on
-  main itself, the merge-base is `HEAD` and the guard passes;
+  uses, so a dispatched branch is judged by what it changed and not by what main added after it started. That holds only
+  when the two share an ancestor: if they share none, `--check` falls back to the tip of `origin/main`, and the comparison
+  then includes what main changed, so the guard can fail for a reason the branch did not cause. Dispatched on main
+  itself, the merge-base is `HEAD` and the guard passes;
 - any other event: the step fails with a message.
 
 On a `pull_request` and a `push` the step does not depend on history. `actions/checkout` is shallow (depth 1), so the step

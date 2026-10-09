@@ -796,7 +796,8 @@ test("the contracts workflow runs the guard on every event it has, fetching the 
   // Three branches. pull_request|push: the base is the first parent of HEAD in both events, the base branch of GitHub's
   // synthetic merge commit on a pull request (the payload's base.sha can differ from it when the base branch moved), the
   // parent of the pushed commit on a push. workflow_dispatch: the history and origin/main are fetched in one fetch and the
-  // guard runs with no --base, so it compares with the merge-base of HEAD and origin/main. Any other event fails.
+  // guard runs with no --base, so it compares with the merge-base of HEAD and origin/main (the tip of origin/main when they
+  // share no ancestor). Any other event fails.
   const caseStart = step.indexOf("          case \"$EVENT_NAME\" in\n");
   const caseEnd = step.indexOf("          esac");
   assert.ok(caseStart > 0 && caseEnd > caseStart, "the step has no case over the event");

@@ -23,7 +23,7 @@ jobs:
       # takes the first parent of HEAD as the base. HEAD is the commit the event checked out (GITHUB_SHA): on a pull request
       # GitHub's synthetic merge commit, whose first parent is the base branch as the merge was made (the payload's base.sha
       # can differ from it when the base branch has moved or the ref was regenerated), and on a push the pushed commit.
-      # On a workflow_dispatch the step fetches the history and origin/main in one fetch, and compares with their merge-base (no --base).
+      # On a workflow_dispatch the step fetches the history and origin/main in one fetch, and compares with their merge-base (no --base), or with the tip of origin/main when they share no ancestor.
       # An event with no base fails the step; it never skips it.
       - name: Milestone exit guards (X9 and X10)
         env:
