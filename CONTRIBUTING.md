@@ -44,8 +44,8 @@ dispatched run adds five jobs:
   it runs its share of the suites in their original order:
   - `native-suites-runtime`: the examples, runtime, list, text, networking,
     image, modal and WebSocket suites, then the consumer lanes;
-  - `native-suites-frontier`: the Frontier baseline, game, services, soak and
-    turn;
+  - `native-suites-frontier`: the Frontier baseline, game, services, soak,
+    turn and the CPU-time instrument's self-check;
   - `native-suites-input`: the module, focus, pointer, event, responder and
     accessibility suites.
 

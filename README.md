@@ -581,6 +581,12 @@ presented (exit code 3, no frame-time statistic), and with the display on it **w
 and none of either reached 100 ms. Those are intervals between process frames, not frames the display showed, and no limit comes from them. That closes the `turno` criterion; the baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and `congelado` stay open, as do hosted CI and the Pages publication of the turn.
 [Evidence](docs/evidence/frontier-turn/README.md) ([the presented windowed lane](docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)); [research](docs/research/frontier-turn.md).
 
+The [CPU-time instrument](docs/research/cpu-time-instrument.md) (V05-10, the preparation of the `execucao` criterion, `npm run test:cpu-time-instrument`) is the one reading of the main thread's CPU time per
+process frame that the final comparison will use in all three arms: a `Node` that depends on neither React Native nor the Fabric host and stamps the clock at the engine's hooks, adding the physics,
+process, setup and render terms, which all end before the frame is presented. It stamps the clock because Godot's `Performance.TIME_PROCESS` is a once-a-second maximum that includes the wait for the display.
+A lab probe checks it against a busy loop of 2, 5, 10 and 20 ms to within 10% (headless in the suite, and once in a window locally, where the render term is aligned to the draw six frames earlier), an
+independent oracle recomputes it from the raw stamps, and three retained sabotages are rejected. The threshold `cpu-time-instrument` is not frozen and no comparative measurement has run.
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -924,6 +930,7 @@ npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-tu
 npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
 npm run test:frontier-soak               # Frontier played for 100 turns in three processes: one game (same hashes), steady nodes, heap and memory, a pause that keeps the HUD alive, unmounting against hiding a panel; sabotages: node scripts/frontier-soak-sabotage.mjs
 npm run test:frontier-turn               # Frontier as a provisioned consumer, clicked through its seven contexts and four turns a round: panels per click, one phase a frame, native views, heap and memory per transition; sabotages: node scripts/frontier-turn-sabotage.mjs; local windowed lane: npm run bench:frontier-turn-graphics
+npm run test:cpu-time-instrument      # the CPU-time instrument against a busy loop of 2, 5, 10 and 20 ms, headless, with an independent oracle; sabotages: node scripts/cpu-time-instrument-sabotage.mjs; local windowed lane: npm run bench:cpu-time-instrument-graphics
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
