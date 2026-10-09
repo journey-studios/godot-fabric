@@ -19,6 +19,11 @@ extends SceneTree
 # hosts. --sabotage runs them on a deliberately broken host and expects failures.
 # --replay=<report.json> evaluates the checks on a report that was recorded before, without
 # running the application.
+#
+# The readings (the engine's counts next to the host's performance section after a forced collection of Hermes' heap)
+# are the shared sampler's (tests/performance-sampler.gd), which the baseline on the pointer spike's scene also takes
+# (tests/frontier-baseline-probe.gd).
+const Sampler := preload("res://tests/performance-sampler.gd")
 const SIZE := Vector2(400, 340)
 const WORKLOADS := ["idle", "forms", "chart", "list"]
 const COMPONENTS := {"idle": "PerformanceIdle", "forms": "PerformanceForms", "chart": "PerformanceChart", "list": "PerformanceList"}
@@ -37,17 +42,13 @@ const BURNS := 3
 const STABLE_FRAMES := 6
 const FRAME_LIMIT := 3000
 const APPLICATION_NAME := "PerformanceApplication"
-const COLLECT_META := "validation_collect_garbage_on_status"
-const SAMPLES_META := "validation_performance_samples"
-# Where each duration series sits in the host's section, so that a reading can drop the sample windows.
-const SERIES_PATHS := [["pump"], ["phases", "js"], ["phases", "mount"], ["phases", "layout"], ["surfaces", "start"], ["surfaces", "retire"]]
 
 # The shape of a recorded report, as far as evaluate() indexes it: every field some check, or readings(), reads by its name or
 # takes as a Dictionary or an Array. A replay refuses a report that does not match it (PERFORMANCE_REPLAY_INCOMPLETE, status 2),
 # where indexing what the report lacks would abort the script. A shape is a type name ("number", "string", "bool", "dictionary"
 # for a Dictionary of any content, "any" for any value that is there), a Dictionary of the keys that must be present, each with its
 # shape, ["each", shape] for an Array whose items all have the shape, or ["pair", shape] for an Array of exactly two. What the checks
-# read inside the host's performance section they read through dig() and get(), which tolerate its absence (a host with no section
+# read inside the host's performance section they read through Sampler.dig() and get(), which tolerate its absence (a host with no section
 # is the point of the old-host control), so the section is only a Dictionary here.
 const READING := {"godot": {"nodes": "number", "nodeMonitor": "number", "orphans": "number"},
   "host": {"rootCount": "number", "pendingRootRetirements": "number"}, "performance": "dictionary"}
@@ -69,10 +70,10 @@ const REPORT_SHAPE := {
 var allow_original_negative := false
 var sabotage := false
 var application: Node
+var sampler: Sampler
 var checks: Array = []
 var stages: Dictionary = {}
 var expected_original_failures: Array = []
-var origin_usec := 0
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -86,39 +87,9 @@ func section_check(condition: bool, name: String) -> bool:
   expected_original_failures.append(name)
   return check(condition, name)
 
-func number(value: Variant, fallback: float = -1.0) -> float:
-  return float(value) if value is float or value is int else fallback
-
 func settle(count: int = 8) -> void:
   for index in range(count):
     await process_frame
-
-func set_flag(name: String, on: bool) -> void:
-  if on:
-    application.set_meta(name, true)
-  elif application.has_meta(name):
-    application.remove_meta(name)
-
-# The application's snapshot. A reading asks for a full collection of Hermes' heap before it is taken and, when it keeps
-# the windows, for the samples the percentiles come from; every other read of the snapshot gets neither.
-func snapshot_text(collecting: bool = false, samples: bool = false) -> String:
-  set_flag(COLLECT_META, collecting)
-  set_flag(SAMPLES_META, samples)
-  var text: String = application.call("snapshot")
-  set_flag(COLLECT_META, false)
-  set_flag(SAMPLES_META, false)
-  return text
-
-func parsed(text: String) -> Dictionary:
-  var value: Variant = JSON.parse_string(text)
-  return value if value is Dictionary else {}
-
-func app_state(collecting: bool = false, samples: bool = false) -> Dictionary:
-  return parsed(snapshot_text(collecting, samples))
-
-func surface_state(node: Control) -> Dictionary:
-  var value: Variant = JSON.parse_string(node.call("snapshot"))
-  return value if value is Dictionary else {}
 
 func js(expression: String) -> Variant:
   return JSON.parse_string(application.call("evaluate", "JSON.stringify(PerformanceProbe." + expression + ")"))
@@ -126,53 +97,13 @@ func js(expression: String) -> Variant:
 func act(expression: String) -> void:
   application.call("evaluate", "PerformanceProbe." + expression + ";")
 
-func rss_kb() -> int:
-  var output: Array = []
-  var status := OS.execute("ps", ["-o", "rss=", "-p", str(OS.get_process_id())], output)
-  return int(str(output[0]).strip_edges()) if status == 0 and output.size() > 0 else -1
-
-func dig(value: Variant, path: Array) -> Variant:
-  var current: Variant = value
-  for key: String in path:
-    if not current is Dictionary or not current.has(key):
-      return null
-    current = current[key]
-  return current
-
-func without_windows(perf: Dictionary) -> Dictionary:
-  var copy: Dictionary = perf.duplicate(true)
-  for path: Array in SERIES_PATHS:
-    var series: Variant = dig(copy, path)
-    if series is Dictionary:
-      series.erase("windowMs")
-  return copy
-
-# One reading, taken between two Godot frames, so that no pump is running: what the engine holds
-# (the nodes of the SceneTree, Godot's own node, orphan and object monitors, its static memory and the
-# process' resident memory) and what the host reports, its performance section after a full
-# collection of Hermes' heap. Windows are the samples the percentiles come from; the readings in
-# between leave them out.
-func sample(windows: bool = false) -> Dictionary:
-  var state := app_state(true, windows)
-  var perf: Dictionary = state.get("performance", {})
-  var errors: Array = state.get("errors", [])
-  return {"frame": Engine.get_process_frames(), "ms": (Time.get_ticks_usec() - origin_usec) / 1000.0,
-    "godot": {"nodes": get_node_count(), "nodeMonitor": number(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),
-      "orphans": number(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)),
-      "objects": number(Performance.get_monitor(Performance.OBJECT_COUNT)),
-      "staticMemory": OS.get_static_memory_usage(), "staticPeak": OS.get_static_memory_peak_usage(), "rssKb": rss_kb()},
-    "host": {"rootCount": number(state.get("rootCount")), "pendingRootRetirements": number(state.get("pendingRootRetirements")),
-      "pendingWork": number(state.get("pendingWork")), "pendingTimers": number(state.get("pendingTimers")),
-      "errors": errors.size()},
-    "performance": perf if windows else without_windows(perf)}
-
 func surface_row(node: Control) -> Dictionary:
-  var state := surface_state(node)
-  return {"state": str(state.get("state", "")), "commits": number(state.get("commits")), "creates": number(state.get("creates")),
-    "deletes": number(state.get("deletes")), "updates": number(state.get("updates")), "mountReports": number(state.get("mountReports")),
-    "nativeTags": number(state.get("nativeTags")), "retiringTags": number(state.get("retiringTags")),
-    "rootCount": number(state.get("rootCount")), "liveRoots": number(dig(state, ["performance", "counters", "liveRoots"])),
-    "retiredRoots": number(dig(state, ["performance", "counters", "retiredRoots"]))}
+  var state := Sampler.surface_state(node)
+  return {"state": str(state.get("state", "")), "commits": Sampler.number(state.get("commits")), "creates": Sampler.number(state.get("creates")),
+    "deletes": Sampler.number(state.get("deletes")), "updates": Sampler.number(state.get("updates")), "mountReports": Sampler.number(state.get("mountReports")),
+    "nativeTags": Sampler.number(state.get("nativeTags")), "retiringTags": Sampler.number(state.get("retiringTags")),
+    "rootCount": Sampler.number(state.get("rootCount")), "liveRoots": Sampler.number(Sampler.dig(state, ["performance", "counters", "liveRoots"])),
+    "retiredRoots": Sampler.number(Sampler.dig(state, ["performance", "counters", "retiredRoots"]))}
 
 # Frames until the surface has mounted and nothing more happens for it. Returns the frames waited,
 # or -1 if it never settled.
@@ -181,7 +112,7 @@ func wait_mounted(node: Control) -> int:
   var stable := 0
   for frame in range(FRAME_LIMIT):
     await process_frame
-    var state := surface_state(node)
+    var state := Sampler.surface_state(node)
     var key := JSON.stringify([state.get("state"), state.get("commits"), state.get("creates"), state.get("deletes"),
       state.get("updates"), state.get("mountReports"), state.get("pendingWork"), state.get("pendingTimers"),
       state.get("pendingAnimationFrames")])
@@ -196,8 +127,8 @@ func wait_mounted(node: Control) -> int:
 func wait_retired() -> int:
   for frame in range(FRAME_LIMIT):
     await process_frame
-    var state := app_state()
-    if int(number(state.get("rootCount"))) == 0 and int(number(state.get("pendingRootRetirements"))) == 0:
+    var state := sampler.app_state()
+    if int(Sampler.number(state.get("rootCount"))) == 0 and int(Sampler.number(state.get("pendingRootRetirements"))) == 0:
       return frame + 1
   return -1
 
@@ -216,12 +147,12 @@ func add_surface(workload: String) -> Control:
 # One cycle of a workload: mount its root, wait until it settles, read, unmount it, wait until the host
 # has retired it, read what the surface reports of its own end and read again with nothing mounted.
 func run_cycle(workload: String, index: int) -> Dictionary:
-  var before := sample()
+  var before := sampler.sample()
   var started := Time.get_ticks_usec()
   var node := add_surface(workload)
   var mount_frames: int = await wait_mounted(node)
   var mount_ms := (Time.get_ticks_usec() - started) / 1000.0
-  var mounted := sample()
+  var mounted := sampler.sample()
   var mounted_surface := surface_row(node)
   started = Time.get_ticks_usec()
   root.remove_child(node)
@@ -230,7 +161,7 @@ func run_cycle(workload: String, index: int) -> Dictionary:
   var retired_surface := surface_row(node)
   node.free()
   await settle(2)
-  var after := sample()
+  var after := sampler.sample()
   return {"index": index, "before": before, "mounted": mounted, "after": after, "mountedSurface": mounted_surface,
     "retiredSurface": retired_surface, "mountFrames": mount_frames, "unmountFrames": unmount_frames,
     "mountWallMs": mount_ms, "unmountWallMs": unmount_ms}
@@ -239,8 +170,8 @@ func run_soak(workload: String) -> void:
   var cycles: Array = []
   for index in range(CYCLES):
     cycles.append(await run_cycle(workload, index))
-  stages["workloads"][workload] = {"component": COMPONENTS[workload], "cycles": cycles, "final": sample(true)}
-  print("PERFORMANCE_SOAK " + workload + ": " + str(cycles.size()) + " cycles, Hermes heap after the last " + str(int(heap_of(cycles.back().after))) + " bytes")
+  stages["workloads"][workload] = {"component": COMPONENTS[workload], "cycles": cycles, "final": sampler.sample(true)}
+  print("PERFORMANCE_SOAK " + workload + ": " + str(cycles.size()) + " cycles, Hermes heap after the last " + str(int(Sampler.heap_of(cycles.back().after))) + " bytes")
 
 # The probe keeps every reading it takes, and what they hold grows Godot's static memory cycle by cycle
 # (about 60 KB per cycle here, with no surface mounted at all). A control that takes the same readings
@@ -248,7 +179,7 @@ func run_soak(workload: String) -> void:
 func run_control() -> void:
   var rows: Array = []
   for index in range(CYCLES):
-    rows.append({"index": index, "before": sample(), "mounted": sample(), "after": sample()})
+    rows.append({"index": index, "before": sampler.sample(), "mounted": sampler.sample(), "after": sampler.sample()})
   stages["control"] = {"cycles": rows}
 
 # A game ends its application and may read its snapshot any number of times: a stopped runtime has one state. Stops it (twice,
@@ -258,13 +189,13 @@ func run_control() -> void:
 func run_stopped() -> void:
   application.call("stop")
   await settle(4)
-  var first := snapshot_text()
+  var first := sampler.snapshot_text()
   application.call("stop")
-  var second := snapshot_text()
-  var third := snapshot_text(true, true)
-  var fourth := snapshot_text(true, true)
-  var state := parsed(first)
-  stages["stopped"] = {"stopped": state.get("stopped", false) == true, "rootCount": number(state.get("rootCount")), "bytes": first.length(),
+  var second := sampler.snapshot_text()
+  var third := sampler.snapshot_text(true, true)
+  var fourth := sampler.snapshot_text(true, true)
+  var state := Sampler.parsed(first)
+  stages["stopped"] = {"stopped": state.get("stopped", false) == true, "rootCount": Sampler.number(state.get("rootCount")), "bytes": first.length(),
     "plain": [first.sha256_text(), second.sha256_text()], "withMetas": [third.sha256_text(), fourth.sha256_text()]}
 
 func run_load() -> void:
@@ -279,12 +210,12 @@ func run_load() -> void:
 # The heap source answers to what JS holds: a reading after a collection with nothing retained, one
 # with RETAIN_OBJECTS objects retained and one after they are released.
 func run_heap_source() -> void:
-  var rest := sample()
+  var rest := sampler.sample()
   var retained_count: Variant = js("retain()")
-  var retained := sample()
+  var retained := sampler.sample()
   var released_count: Variant = js("release()")
-  var released := sample()
-  stages["heapSource"] = {"retainedObjects": number(retained_count), "releasedObjects": number(released_count),
+  var released := sampler.sample()
+  stages["heapSource"] = {"retainedObjects": Sampler.number(retained_count), "releasedObjects": Sampler.number(released_count),
     "rest": rest, "retained": retained, "released": released}
 
 # JS busy for a while inside a timer, as the host runs it in the JS phase of a pump.
@@ -293,7 +224,7 @@ func run_burns() -> void:
   js("take()")
   for index in range(BURNS):
     var label := "burn-" + str(index)
-    var before := sample()
+    var before := sampler.sample()
     act("burn('" + label + "', " + str(BURN_MS) + ")")
     var ran := -1.0
     for frame in range(FRAME_LIMIT):
@@ -302,18 +233,18 @@ func run_burns() -> void:
       if notes is Array:
         for note: Dictionary in notes:
           if note.get("kind") == "burn" and note.get("label") == label:
-            ran = number(note.get("ranMs"))
+            ran = Sampler.number(note.get("ranMs"))
       if ran >= 0.0:
         break
     await settle(2)
-    stages["burn"].append({"label": label, "requestedMs": BURN_MS, "ranMs": ran, "before": before, "after": sample()})
+    stages["burn"].append({"label": label, "requestedMs": BURN_MS, "ranMs": ran, "before": before, "after": sampler.sample()})
 
 # Whether every duration series of the section has all of these keys.
 func every_series_has(perf: Dictionary, keys: Array) -> bool:
   if perf.is_empty():
     return false
-  for path: Array in SERIES_PATHS:
-    var series: Variant = dig(perf, path)
+  for path: Array in Sampler.SERIES_PATHS:
+    var series: Variant = Sampler.dig(perf, path)
     if not series is Dictionary:
       return false
     for key: String in keys:
@@ -323,8 +254,8 @@ func every_series_has(perf: Dictionary, keys: Array) -> bool:
 
 # Whether any duration series of the section has this key.
 func some_series_has(perf: Dictionary, key: String) -> bool:
-  for path: Array in SERIES_PATHS:
-    var series: Variant = dig(perf, path)
+  for path: Array in Sampler.SERIES_PATHS:
+    var series: Variant = Sampler.dig(perf, path)
     if series is Dictionary and series.has(key):
       return true
   return false
@@ -332,10 +263,10 @@ func some_series_has(perf: Dictionary, key: String) -> bool:
 # What the snapshot weighs, and what it holds, without the validation_performance_samples meta (what every other reader of
 # the snapshot gets) and with it (what this probe asks for to recompute the percentiles).
 func run_windows() -> void:
-  var plain_text := snapshot_text()
-  var sampled_text := snapshot_text(false, true)
-  var plain: Dictionary = parsed(plain_text).get("performance", {})
-  var sampled: Dictionary = parsed(sampled_text).get("performance", {})
+  var plain_text := sampler.snapshot_text()
+  var sampled_text := sampler.snapshot_text(false, true)
+  var plain: Dictionary = Sampler.parsed(plain_text).get("performance", {})
+  var sampled: Dictionary = Sampler.parsed(sampled_text).get("performance", {})
   var aggregates := ["count", "rejected", "totalMs", "maxMs", "p50Ms", "p95Ms", "p99Ms"]
   stages["windows"] = {
     "withoutMeta": {"aggregates": every_series_has(plain, aggregates), "samples": some_series_has(plain, "windowMs"),
@@ -344,35 +275,15 @@ func run_windows() -> void:
       "performanceBytes": JSON.stringify(sampled).length(), "snapshotBytes": sampled_text.length()}}
   print("PERFORMANCE_SNAPSHOT: " + JSON.stringify(stages["windows"]))
 
-func engine_properties() -> Dictionary:
-  var value: Variant = js("engine()")
-  return value if value is Dictionary else {}
-
-func provenance() -> Dictionary:
-  var engine := engine_properties()
-  var properties: Dictionary = engine.get("properties", {}) if engine.get("properties") is Dictionary else {}
-  return {"godot": Engine.get_version_info().string, "godotHash": Engine.get_version_info().hash, "hermes": str(properties.get("OSS Release Version", "")),
-    "hermesProperties": properties, "architecture": Engine.get_architecture_name(), "os": OS.get_name(),
-    "displayServer": DisplayServer.get_name(), "renderingDriver": RenderingServer.get_current_rendering_driver_name(),
-    "renderingMethod": RenderingServer.get_current_rendering_method(), "processor": OS.get_processor_name(),
-    "processorCount": OS.get_processor_count()}
-
 # -------------------------------------------------------------------- what the checks read
-func perf_of(reading: Dictionary) -> Dictionary:
-  var value: Variant = reading.get("performance", {})
-  return value if value is Dictionary else {}
-
-func heap_of(reading: Dictionary) -> float:
-  return number(dig(perf_of(reading), ["hermes", "heap", "hermes_allocatedBytes"]))
-
 func collections_of(reading: Dictionary) -> float:
-  return number(dig(perf_of(reading), ["hermes", "heap", "hermes_numCollections"]))
+  return Sampler.number(Sampler.dig(Sampler.perf_of(reading), ["hermes", "heap", "hermes_numCollections"]))
 
 func counter(reading: Dictionary, name: String) -> float:
-  return number(dig(perf_of(reading), ["counters", name]))
+  return Sampler.number(Sampler.dig(Sampler.perf_of(reading), ["counters", name]))
 
 func series(reading: Dictionary, path: Array) -> Dictionary:
-  var value: Variant = dig(perf_of(reading), path)
+  var value: Variant = Sampler.dig(Sampler.perf_of(reading), path)
   return value if value is Dictionary else {}
 
 # Every reading of the run, in the order they were taken.
@@ -410,17 +321,17 @@ func check_provenance() -> void:
     "provenance/The report names the versions of Godot and Hermes, the architecture, the operating system and the driver")
 
 func check_section() -> void:
-  var base := perf_of(stages.baseline)
-  var heap: Variant = dig(base, ["hermes", "heap"])
+  var base := Sampler.perf_of(stages.baseline)
+  var heap: Variant = Sampler.dig(base, ["hermes", "heap"])
   section_check(not base.is_empty() and base.has("counters") and base.has("hermes") and base.has("pump") and base.has("phases")
     and base.has("surfaces") and base.get("windowSize") is float,
     "section/The application reports a performance section with counters, Hermes' heap, the pump, its phases and the surfaces")
-  section_check(heap is Dictionary and number(heap.get("hermes_allocatedBytes")) > 0.0
-    and dig(base, ["hermes", "collectedBeforeReading"]) == true and dig(base, ["hermes", "source"]) == "jsi::Instrumentation::getHeapInfo",
+  section_check(heap is Dictionary and Sampler.number(heap.get("hermes_allocatedBytes")) > 0.0
+    and Sampler.dig(base, ["hermes", "collectedBeforeReading"]) == true and Sampler.dig(base, ["hermes", "source"]) == "jsi::Instrumentation::getHeapInfo",
     "section/Hermes' heap is read through the instrumentation after a collection and counts live bytes")
   var all_numbers := true
   for reading: Dictionary in readings():
-    all_numbers = all_numbers and not perf_of(reading).is_empty() and finite_and_not_negative(perf_of(reading))
+    all_numbers = all_numbers and not Sampler.perf_of(reading).is_empty() and finite_and_not_negative(Sampler.perf_of(reading))
   section_check(all_numbers, "section/Every number of every reading is finite and not negative")
 
 func check_windows() -> void:
@@ -428,18 +339,18 @@ func check_windows() -> void:
   var plain: Dictionary = windows.withoutMeta
   var sampled: Dictionary = windows.withMeta
   section_check(plain.aggregates and not plain.samples and sampled.aggregates and sampled.samples
-    and number(plain.performanceBytes) > 0.0 and number(plain.performanceBytes) < number(sampled.performanceBytes),
+    and Sampler.number(plain.performanceBytes) > 0.0 and Sampler.number(plain.performanceBytes) < Sampler.number(sampled.performanceBytes),
     "section/Without the validation_performance_samples meta the section reports aggregates and no samples, and with it the samples too")
 
 func check_heap_source() -> void:
   var source: Dictionary = stages.heapSource
   var floor_bytes := RETAIN_OBJECTS * RETAIN_MIN_BYTES_PER_OBJECT
-  var rest := heap_of(source.rest)
-  var retained := heap_of(source.retained)
-  var released := heap_of(source.released)
-  section_check(number(source.retainedObjects) == RETAIN_OBJECTS and retained - rest >= floor_bytes,
+  var rest := Sampler.heap_of(source.rest)
+  var retained := Sampler.heap_of(source.retained)
+  var released := Sampler.heap_of(source.released)
+  section_check(Sampler.number(source.retainedObjects) == RETAIN_OBJECTS and retained - rest >= floor_bytes,
     "heap/Retaining JS objects raises the collected heap by at least what they hold")
-  section_check(number(source.releasedObjects) == RETAIN_OBJECTS and retained - released >= floor_bytes,
+  section_check(Sampler.number(source.releasedObjects) == RETAIN_OBJECTS and retained - released >= floor_bytes,
     "heap/Releasing them lowers it again by at least that much")
   section_check(collections_of(source.rest) > 0.0 and collections_of(source.retained) > collections_of(source.rest)
     and collections_of(source.released) > collections_of(source.retained),
@@ -449,12 +360,12 @@ func check_burn() -> void:
   var ok: bool = stages.burn.size() == BURNS
   var accounted := true
   for entry: Dictionary in stages.burn:
-    var ran := number(entry.ranMs)
-    var js_delta := number(series(entry.after, ["phases", "js"]).get("totalMs")) - number(series(entry.before, ["phases", "js"]).get("totalMs"))
-    var pump_delta := number(series(entry.after, ["pump"]).get("totalMs")) - number(series(entry.before, ["pump"]).get("totalMs"))
+    var ran := Sampler.number(entry.ranMs)
+    var js_delta := Sampler.number(series(entry.after, ["phases", "js"]).get("totalMs")) - Sampler.number(series(entry.before, ["phases", "js"]).get("totalMs"))
+    var pump_delta := Sampler.number(series(entry.after, ["pump"]).get("totalMs")) - Sampler.number(series(entry.before, ["pump"]).get("totalMs"))
     var phases := 0.0
     for name: String in ["js", "mount", "layout"]:
-      phases += number(series(entry.after, ["phases", name]).get("totalMs")) - number(series(entry.before, ["phases", name]).get("totalMs"))
+      phases += Sampler.number(series(entry.after, ["phases", name]).get("totalMs")) - Sampler.number(series(entry.before, ["phases", name]).get("totalMs"))
     accounted = accounted and ran >= BURN_MS and js_delta >= ran - 1e-6 and js_delta <= pump_delta + 1e-6 and phases <= pump_delta + 1e-6
   section_check(ok and accounted, "pump/A JS turn busy for a while is accounted to the JS phase, inside the pump that ran it, and the phases add up to no more than the pumps")
 
@@ -464,7 +375,7 @@ func check_invariants() -> void:
   var monotonic := true
   var previous: Dictionary = {}
   for reading: Dictionary in readings():
-    var perf := perf_of(reading)
+    var perf := Sampler.perf_of(reading)
     # A host with no section has nothing to hold these of: no reading passes them by being empty.
     inside = inside and not perf.is_empty()
     tree = tree and not perf.is_empty()
@@ -473,19 +384,19 @@ func check_invariants() -> void:
     var phases := 0.0
     for name: String in ["js", "mount", "layout"]:
       var phase := series(reading, ["phases", name])
-      phases += number(phase.get("totalMs"))
-      inside = inside and number(phase.get("count")) <= number(pump.get("count")) and number(phase.get("totalMs")) <= number(phase.get("maxMs")) * number(phase.get("count")) + 1e-9
-    inside = inside and phases <= number(pump.get("totalMs")) * (1.0 + 1e-12) + 1e-9
+      phases += Sampler.number(phase.get("totalMs"))
+      inside = inside and Sampler.number(phase.get("count")) <= Sampler.number(pump.get("count")) and Sampler.number(phase.get("totalMs")) <= Sampler.number(phase.get("maxMs")) * Sampler.number(phase.get("count")) + 1e-9
+    inside = inside and phases <= Sampler.number(pump.get("totalMs")) * (1.0 + 1e-12) + 1e-9
     var counters: Variant = perf.get("counters", {})
-    tree = tree and counters is Dictionary and number(counters.get("creates")) - number(counters.get("deletes")) == number(counters.get("nativeViews")) and number(counters.get("nativeViews")) >= 0.0
+    tree = tree and counters is Dictionary and Sampler.number(counters.get("creates")) - Sampler.number(counters.get("deletes")) == Sampler.number(counters.get("nativeViews")) and Sampler.number(counters.get("nativeViews")) >= 0.0
     if not previous.is_empty():
       for name: String in ["commits", "creates", "deletes", "updates"]:
         monotonic = monotonic and counter(reading, name) >= counter(previous, name)
-      for path: Array in SERIES_PATHS:
+      for path: Array in Sampler.SERIES_PATHS:
         var now := series(reading, path)
         var then := series(previous, path)
-        monotonic = monotonic and number(now.get("count")) >= number(then.get("count")) and number(now.get("totalMs")) >= number(then.get("totalMs"))
-        monotonic = monotonic and number(now.get("maxMs")) >= number(then.get("maxMs"))
+        monotonic = monotonic and Sampler.number(now.get("count")) >= Sampler.number(then.get("count")) and Sampler.number(now.get("totalMs")) >= Sampler.number(then.get("totalMs"))
+        monotonic = monotonic and Sampler.number(now.get("maxMs")) >= Sampler.number(then.get("maxMs"))
       monotonic = monotonic and collections_of(reading) >= collections_of(previous)
     previous = reading
   section_check(inside, "invariants/At every reading the phases add up to no more than the pump, and none has more samples than the pump")
@@ -504,9 +415,9 @@ func check_unmount_notification() -> void:
       var mounted: Dictionary = cycle.mountedSurface
       var retired: Dictionary = cycle.retiredSurface
       seen += 1
-      agree = agree and number(mounted.liveRoots) >= 1.0 and mounted.liveRoots == mounted.rootCount \
+      agree = agree and Sampler.number(mounted.liveRoots) >= 1.0 and mounted.liveRoots == mounted.rootCount \
         and mounted.retiredRoots == counter(cycle.before, "retiredRoots") \
-        and number(retired.liveRoots) >= 0.0 and retired.liveRoots == retired.rootCount \
+        and Sampler.number(retired.liveRoots) >= 0.0 and retired.liveRoots == retired.rootCount \
         and retired.retiredRoots == counter(cycle.after, "retiredRoots")
   section_check(agree and seen == WORKLOADS.size() * CYCLES, "unmount/The notification of a root's unmount agrees with the application on its live and retired roots")
 
@@ -514,7 +425,7 @@ func check_stopped() -> void:
   var stopped: Dictionary = stages.stopped
   var plain: Array = stopped.plain
   var with_metas: Array = stopped.withMetas
-  check(stopped.stopped and number(stopped.rootCount) == 0.0 and plain[0] == plain[1] and with_metas[0] == with_metas[1],
+  check(stopped.stopped and Sampler.number(stopped.rootCount) == 0.0 and plain[0] == plain[1] and with_metas[0] == with_metas[1],
     "stop/Two readings of the stopped application's snapshot are identical, with and without the validation metas")
 
 func check_soak(workload: String) -> void:
@@ -535,7 +446,7 @@ func check_soak(workload: String) -> void:
     var retired: Dictionary = cycle.retiredSurface
     surfaces_clean = surfaces_clean and mounted.state == "mounted" and mounted.nativeTags > 0.0 and mounted.creates - mounted.deletes == mounted.nativeTags \
       and retired.state == "unmounted" and retired.nativeTags == 0.0 and retired.creates == retired.deletes and retired.creates == mounted.creates \
-      and number(cycle.mountFrames) > 0.0 and number(cycle.unmountFrames) > 0.0
+      and Sampler.number(cycle.mountFrames) > 0.0 and Sampler.number(cycle.unmountFrames) > 0.0
     host_clean = host_clean and counter(after, "nativeViews") == 0.0 and counter(after, "liveRoots") == 0.0 \
       and counter(after, "creates") - counter(after, "deletes") == 0.0 and after.host.rootCount == 0.0 and after.host.pendingRootRetirements == 0.0
     var created := counter(cycle.after, "creates") - counter(cycle.before, "creates")
@@ -551,14 +462,14 @@ func check_soak(workload: String) -> void:
   section_check(same_views, workload + "/Every cycle creates, and then deletes, the same number of native views, with at least one commit")
   # Bounded in the steady state: from the first steady cycle on, the live heap at rest never rises more than the limit above
   # the first steady cycle's. Judged on the readings, whatever the pace.
-  var rest: Array = cycles.map(func(cycle: Dictionary) -> float: return heap_of(cycle.after))
+  var rest: Array = cycles.map(func(cycle: Dictionary) -> float: return Sampler.heap_of(cycle.after))
   var steady: Array = rest.slice(WARMUP_CYCLES)
   section_check(cycles.size() == CYCLES and not steady.is_empty() and float(steady[0]) > 0.0
     and float(steady.max()) - float(steady[0]) <= HEAP_GROWTH_LIMIT_BYTES,
     workload + "/The live heap after each steady cycle stays within " + str(HEAP_GROWTH_LIMIT_BYTES) + " bytes of the first steady cycle's")
   var final: Dictionary = soak.final
-  section_check(number(series(final, ["phases", "mount"]).get("count")) > 0.0 and number(series(final, ["phases", "layout"]).get("count")) > 0.0
-    and number(series(final, ["phases", "layout"]).get("totalMs")) > 0.0 and number(series(final, ["surfaces", "retire"]).get("count")) >= CYCLES,
+  section_check(Sampler.number(series(final, ["phases", "mount"]).get("count")) > 0.0 and Sampler.number(series(final, ["phases", "layout"]).get("count")) > 0.0
+    and Sampler.number(series(final, ["phases", "layout"]).get("totalMs")) > 0.0 and Sampler.number(series(final, ["surfaces", "retire"]).get("count")) >= CYCLES,
     workload + "/The mount and layout phases saw its commits, and the host timed each surface's retirement")
 
 # What the soak left of Hermes' heap, as an observation: the bytes live after each cycle's
@@ -568,7 +479,7 @@ func observe_heap() -> void:
   var observed := {}
   for workload: String in WORKLOADS:
     var cycles: Array = stages.workloads[workload].cycles
-    var rest: Array = cycles.map(func(cycle: Dictionary) -> float: return heap_of(cycle.after))
+    var rest: Array = cycles.map(func(cycle: Dictionary) -> float: return Sampler.heap_of(cycle.after))
     var steady: Array = rest.slice(WARMUP_CYCLES)
     var steps := 0.0
     for index in range(1, steady.size()):
@@ -591,7 +502,7 @@ func observe_memory() -> void:
     var first: Dictionary = steady[0].after.godot
     var last: Dictionary = steady.back().after.godot
     var steps := maxi(steady.size() - 1, 1)
-    observed[name] = {"staticBytesPerCycle": (number(last.staticMemory) - number(first.staticMemory)) / steps,
+    observed[name] = {"staticBytesPerCycle": (Sampler.number(last.staticMemory) - Sampler.number(first.staticMemory)) / steps,
       "rssKbFirst": first.rssKb, "rssKbLast": last.rssKb}
     print("PERFORMANCE_MEMORY " + name + ": " + JSON.stringify(observed[name]))
   stages["observedMemory"] = observed
@@ -619,36 +530,6 @@ func _initialize() -> void:
       return
   call_deferred("run_probe")
 
-# Whether a value has a shape (see REPORT_SHAPE).
-func matches(value: Variant, shape: Variant) -> bool:
-  if shape is String:
-    match shape:
-      "number":
-        return value is int or value is float
-      "string":
-        return value is String
-      "bool":
-        return value is bool
-      "dictionary":
-        return value is Dictionary
-      _:
-        return true
-  if shape is Array:
-    if not value is Array or (shape[0] == "pair" and value.size() != 2):
-      return false
-    for item: Variant in value:
-      if not matches(item, shape[1]):
-        return false
-    return true
-  if shape is Dictionary:
-    if not value is Dictionary:
-      return false
-    for key: String in shape.keys():
-      if not value.has(key) or not matches(value[key], shape[key]):
-        return false
-    return true
-  return false
-
 # Judges a report recorded before, without the application: the readings it holds are all the checks read.
 func replay_probe(path: String) -> void:
   var file := FileAccess.open(path, FileAccess.READ)
@@ -664,7 +545,7 @@ func replay_probe(path: String) -> void:
     return
   var report: Dictionary = parsed
   var recorded: Variant = report.get("stages", {})
-  if not matches(recorded, REPORT_SHAPE):
+  if not Sampler.matches(recorded, REPORT_SHAPE):
     push_error("PERFORMANCE_REPLAY_INCOMPLETE: " + path)
     quit(2)
     return
@@ -677,8 +558,8 @@ func replay_probe(path: String) -> void:
 
 func run_probe() -> void:
   root.size = Vector2i(440, 360)
-  origin_usec = Time.get_ticks_usec()
   application = ClassDB.instantiate("FabricApplication")
+  sampler = Sampler.new(self, application, "PerformanceProbe")
   application.name = APPLICATION_NAME
   application.set("bundle_path", "res://build/performance-probe.js")
   root.add_child(application)
@@ -689,8 +570,8 @@ func run_probe() -> void:
   # The first mount loads the bundle. The baseline is taken after it, with nothing mounted: the nodes,
   # orphans and native views every cycle has to come back to.
   await run_load()
-  stages["provenance"] = provenance()
-  stages["baseline"] = sample(true)
+  stages["provenance"] = sampler.provenance()
+  stages["baseline"] = sampler.sample(true)
   await run_heap_source()
   await run_burns()
   for workload: String in WORKLOADS:

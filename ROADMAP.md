@@ -638,6 +638,18 @@ visual output); the hosted CI run and the Pages publication are pending. It list
 that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
 No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
+panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720
+steady swaps (nodes, creations and deletions, one swap per click, no click reaches the map, a round ends at the base, the
+heap at rest within the GF-30 limit), the host mounts the panel inside the click's flush (0 frames), an independent oracle
+recomputes the numbers and four retained sabotages are rejected. A swap that creates 100 nodes costs 9.2 ms of CPU at the
+median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms); the limits for CPU, heap, nodes and latency are a proposal,
+not a frozen budget. The windowed lane refused its run because the display was not presenting the window, so **no frame time
+is pinned and `baseline` stays open** until a presented run, and `turno`, `soak` and `congelado` are open too. The
+[record](https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

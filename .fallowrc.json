@@ -63,6 +63,7 @@
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
     "tests/performance-fixture.jsx",
+    "tests/frontier-baseline-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",
     "tests/text-style-fixture.jsx",
