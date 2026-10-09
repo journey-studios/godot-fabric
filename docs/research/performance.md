@@ -22,7 +22,9 @@ unit test (`.deps/build/performance_metrics_test`) over synthetic times.
 The readings of the soak (the engine's counts next to the host's section after a forced collection of Hermes' heap, the
 resident memory, the provenance and the replay's shape check) are taken by `tests/performance-sampler.gd`, which the
 [performance baseline on the Frontier HUD's scene](frontier-baseline.md) (V05-06, `npm run test:frontier-baseline`) takes
-too, and whose oracle imports this one's percentile helpers. The extraction changed no check and no field of the report.
+too, and whose oracle imports this one's percentile helpers. The extraction changed no check and no field of the report. The
+[100-turn soak of the Frontier game](frontier-soak.md) (V05-06, `npm run test:frontier-soak`) is the third consumer: it takes one reading at rest per
+turn with the same sampler and judges the heap with the baseline's median-of-halves rule over this note's 2,048-byte limit.
 
 ## What RN measures, and where this host reads the same thing
 
