@@ -5,6 +5,11 @@
 > com os dois grupos de intervalos, na regra de ritmo da faixa janelada do V05-06 e na referência do desfecho secundário do protocolo do V05-10. O recibo [`comparison.json`](comparison.json) guarda as 24 tentativas
 > analisadas, os hashes dos recibos de entrada e os SHA-256 dos sete arquivos que o commit muda. Os arquivos desta pasta e os documentos que apontam para ela foram escritos depois e não são entrada de nenhum comando.
 >
+> **A redação da emenda do protocolo foi corrigida duas vezes depois, na revisão do pull request e antes de chegar à main.** Em `237b171` a regra do JSON dizia que os `x[0..n-1]` da referência ociosa eram "os tempos de CPU" dos quadros ociosos nos dois usos, mas a cláusula de ritmo compara
+> a referência com o período de atualização, e a faixa janelada grava e o oráculo calcula **os intervalos decorridos entre quadros de processo**. A regra agora diz que a referência é **da mesma grandeza dos quadros com que é comparada**: o tempo de CPU por quadro (o instrumento do desfecho primário) no desfecho
+> secundário do comparativo, e os intervalos entre quadros de processo na cláusula de ritmo. É a mesma emenda, com um pin só: o de `237b171` era `6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0`, a redação intermediária (só intervalos) teve `b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f` e o atual é `8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb`. Nenhum número desta página mudou:
+> eles vêm do código e dos recibos, não dessa redação. Os `sourcePins` do [`comparison.json`](comparison.json) seguem sendo os blobs de `237b171`, e os três arquivos do protocolo (o JSON, a nota e o teste) foram corrigidos depois.
+>
 > **Os recibos brutos de 2026-10-09 não estão no repositório.** Só números derivados e hashes foram guardados. Os intervalos de 2026-10-08 já estão em
 > [`../frontier-baseline/windowed-raw.json`](../frontier-baseline/windowed-raw.json).
 
@@ -116,13 +121,15 @@ de ritmo gravados no recibo, e a contagem de 242 do run 3 do turno, antes de esc
 
 O protocolo pré-registrado ([`frontier-comparison-protocol.json`](https://github.com/journey-studios/godot-fabric/blob/237b171df846b7acf76da534730e47961a0a36e3/docs/research/frontier-comparison-protocol.json), nota
 [`frontier-comparison-protocol.md`](../../research/frontier-comparison-protocol.md#amendments)) usava a mediana ociosa no desfecho secundário "quadros acima de 2× a mediana ociosa" e na cláusula de ritmo da regra de invalidação `not-presented`. Pela emenda
-de **2026-10-09** (`amendments[0]` do JSON), a referência ociosa é a mediana das meias-somas de pares consecutivos, o id do desfecho vira `frames-above-twice-idle-reference`, e cinco textos do JSON mudam (`idleReference.rule`, o desfecho, o passo `idle` do
+de **2026-10-09** (`amendments[0]` do JSON), a referência ociosa é a mediana das meias-somas de pares consecutivos dos valores por quadro dos 600 quadros ociosos, **na mesma grandeza dos quadros com que é comparada**: o tempo de CPU por quadro no desfecho secundário (o rótulo segue em tempo de CPU) e os intervalos decorridos entre quadros de processo na cláusula de ritmo, o id do desfecho vira `frames-above-twice-idle-reference`, e cinco textos do JSON mudam (`idleReference.rule`, o desfecho, o passo `idle` do
 script, a regra `not-presented` e `preRegistration.amendments`). **Nenhuma medição comparativa rodou antes** (`measurementsBefore: 0`), então nenhuma execução foi feita sob o texto antigo e nenhuma precisa ser refeita.
 
 | Estado do protocolo | SHA-256 (forma canônica, sem `frozenValue` e `frozenAt`) |
 | --- | --- |
 | pré-registro (commit `82f5f43`, sem emendas) | `8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c` |
-| com a emenda de 2026-10-09 | `6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0` |
+| com a emenda de 2026-10-09, na redação final (a que chega à main) | `8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb` |
+| a primeira redação, em `237b171` (os `x` eram "tempos de CPU" nos dois usos); nunca chegou à main | `6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0` |
+| a redação intermediária (os `x` eram os intervalos nos dois usos); nunca chegou à main | `b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f` |
 
 O teste `tests/frontier-comparison-protocol.test.mjs` guarda um pin por número de emendas: mudar o protocolo sem uma entrada em `amendments`, ou uma entrada sem o pin, ou uma entrada com `measurementsBefore` diferente de 0 enquanto o critério `execucao` do V05-10 está
 aberto, falha.
@@ -156,8 +163,8 @@ Os dois fazem parte do `npm run test:contracts`.
   verdadeiros porque os campos antigos foram mantidos. O resumo de um recibo novo do turno já traz `aboveTwiceIdleReference` (o oráculo é compartilhado); o script passa a imprimir a contagem pela referência num PR posterior, depois do merge do P8.
 - **A nota do turno ainda descreve a regra antiga.** `docs/research/frontier-turn.md` (a leitura "Reading the idle median" e a lista do que foi medido, nas linhas 329 e 391) segue dizendo que a regra de validade pede que a mediana ociosa chegue a metade do
   período. É a verdade do que foi gravado em 2026-10-09; será ajustada depois do P8, junto do script. A explicação da referência está na [nota do baseline](../../research/frontier-baseline.md) e aqui.
-- **A emenda do protocolo muda também a cláusula de ritmo da regra `not-presented`.** Além do desfecho secundário que a motivou, para que o protocolo não prescreva a mediana quando o código usa a referência. O protocolo define a referência sobre o tempo de CPU
-  dos 600 quadros ociosos e a faixa janelada, sobre os intervalos entre quadros; a estatística é a mesma nos dois.
+- **A emenda do protocolo muda também a cláusula de ritmo da regra `not-presented`.** Além do desfecho secundário que a motivou, para que o protocolo não prescreva a mediana quando o código usa a referência. A referência do comparativo (o desfecho secundário) é sobre o **tempo de CPU por quadro**, a mesma grandeza dos quadros que ela mede, e a do ritmo (a faixa janelada e a cláusula `not-presented`) é sobre os **intervalos entre quadros de processo**, que é onde o vsync
+  faz os dois grupos; a meia-soma de pares serve às duas porque é robusta aos grupos e a um tranco isolado e, numa série sem grupos, dá praticamente a mediana.
 - **Nada aqui é um tempo de quadro.** Os intervalos são de quadros de processo (com o vsync ligado vêm em aglomerados), não imagens que o display mostrou, e não se lê nenhum "quadro perdido" deles. Nenhum orçamento nasce desta página.
 - **Nenhuma medição comparativa rodou** (`execucao` aberto) e o `congelado` do V05-06 segue sendo um ato posterior e único.
 

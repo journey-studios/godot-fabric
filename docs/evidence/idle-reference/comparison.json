@@ -769,7 +769,13 @@
     "date": "2026-10-09",
     "measurementsBefore": 0,
     "preRegisteredPin": "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
-    "pinAfterTheAmendment": "6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0"
+    "pinAfterTheAmendment": "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb",
+    "correction": {
+      "pinInCommit237b171": "6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0",
+      "intermediatePin": "b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f",
+      "what": "The wording of the amendment was corrected twice on review of the pull request, before the amendment reached main, so it is one amendment with one pin (pinAfterTheAmendment). The first wording (commit 237b171) called the values of the idle reference 'CPU times' for both uses; the second called them the elapsed intervals between process frames for both; the final one says that the reference is of the same quantity as what it is compared with: the CPU time per frame for the secondary outcome of the comparison, the elapsed intervals between process frames for the pacing clause of the not-presented rule. The primary outcome, the CPU time per frame, does not change.",
+      "sourcePinsBelow": "the blobs of commit 237b171, which analysed the attempts; the protocol's JSON, note and test were corrected afterwards"
+    }
   },
   "sourcePins": [
     {

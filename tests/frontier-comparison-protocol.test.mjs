@@ -21,11 +21,15 @@ const migration = JSON.parse(read("dashboard/migration.json"));
 // the later freeze may fill. Changing anything else in the JSON is an amendment: it is listed in the research note and as an entry of the `amendments`
 // of the JSON, and a pin is added here in the same commit. PINS[n] is the hash of the protocol that carries n amendments:
 //  - PINS[0]: the pre-registration (commit 82f5f43, #84), made before any comparative measurement. That file had no `amendments` list.
-//  - PINS[1]: the amendment of 2026-10-09, `amendments[0]`: the idle reference is the median of the half-sums of consecutive pairs and no longer the
-//    median (docs/research/frontier-comparison-protocol.md, "Amendments"). No comparative measurement had run (`measurementsBefore: 0`).
+//  - PINS[1]: the amendment of 2026-10-09, `amendments[0]`: the idle reference is the median of the half-sums of consecutive pairs of the per-frame values of the
+//    600 idle frames, in the same quantity as the frames it is compared with: the CPU time per frame for the secondary outcome, the elapsed intervals between
+//    process frames for the pacing clause of `not-presented` (docs/research/frontier-comparison-protocol.md, "Amendments"). No comparative measurement had run
+//    (`measurementsBefore: 0`). The entry was reworded twice on review before it reached main, so it is one amendment with one pin: its first wording (commit 237b171,
+//    pin 6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0) called the values "CPU times" for both uses, and the second (pin
+//    b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f) called them the intervals for both.
 const PINS = [
   "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
-  "6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0"
+  "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb"
 ];
 const PINNED_SHA256 = PINS[protocol.amendments.length];
 const FREEZE_KEYS = ["frozenValue", "frozenAt"];
@@ -444,7 +448,15 @@ test("an amendment says what changed, why, the text it replaces and that no comp
   assert.equal(protocol.amendments[0].measurementsBefore, 0);
   assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
   assert.doesNotMatch(JSON.stringify(protocol.idleReference), /idle median/, "and the protocol no longer says it");
-  assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs/);
+  assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs of the per-frame values/);
+  // The reference is of the same quantity as what it is compared with, each in its use: the CPU time per frame for the secondary outcome (the instrument of the
+  // primary outcome) and the elapsed intervals between process frames for the pacing clause of `not-presented`.
+  assert.match(protocol.idleReference.rule, /secondary outcome 'frames above twice the idle reference' the values are the CPU time per frame, read by the instrument of the primary outcome \(thresholds\.cpu-time-instrument\)/);
+  assert.match(protocol.idleReference.rule, /pacing clause of the not-presented rule the values are the elapsed intervals between process frames/);
+  const secondary = protocol.secondaryOutcomes.find(outcome => outcome.id === "frames-above-twice-idle-reference");
+  assert.match(secondary.label, /^Frames of a window whose CPU time is above twice the run's idle reference \(the median of the half-sums of consecutive pairs of the CPU time per frame of the idle window\)$/);
+  assert.match(protocol.invalidation.find(rule => rule.id === "not-presented").rule, /half-sums of consecutive pairs of the elapsed intervals between process frames of the idle window/);
+  assert.match(protocol.primaryOutcome.quantity, /CPU time of the main thread/, "and the primary outcome does not change");
   for (const [index, amendment] of protocol.amendments.entries()) {
     const section = doc.slice(doc.indexOf("\n## Amendments\n"), doc.indexOf("\n## Reproducing\n"));
     assert.ok(section.includes(amendment.date) && section.includes(PINS[index + 1]), `the research note lists the amendment of ${amendment.date} with its pin`);
