@@ -371,6 +371,13 @@ export function graphicsRunOf(report, {withTurns = true} = {}) {
     config: {...stages.config, nativeNodes}, swaps: records, idle: stages.idle, frames: stages.frames, aborted: stages.aborted, checks: report.checks};
 }
 
+// The run whose build, window and viewport the receipt of the windowed lane carries as its own: the first accepted run; when no run was accepted, the last
+// attempt that was rejected (a windowed run that read its window back, so the receipt still says what display it met); and only when no windowed attempt was
+// made at all, the run of the captures, which is not a measurement and is no part of what the receipt claims.
+export function graphicsReceiptSource({accepted, attempts, captures}) {
+  return accepted[0] ?? attempts.findLast(attempt => attempt.raw !== undefined)?.raw ?? captures;
+}
+
 // Quartiles by nearest rank, the baseline's: with five runs the median is the third value and the range between the second and the fourth.
 const quartiles = values => ({median: nearestRank(values, 50), q1: nearestRank(values, 25), q3: nearestRank(values, 75),
   iqr: nearestRank(values, 75) - nearestRank(values, 25), min: Math.min(...values), max: Math.max(...values)});

@@ -161,7 +161,7 @@ Os números não são fixados no oráculo (o HUD do V05-05 vai mudá-los): ele e
 Cada linha é uma série de uma leitura por rodada (32), tomada depois do passo, com 30 quadros ociosos e coleta forçada do heap do Hermes. O heap é a mediana das 30 rodadas estáveis; o crescimento é a regra do baseline (`heapAtRest`, importada): a mediana das 15 últimas rodadas menos a das 15 primeiras, limite de 2.048 bytes;
 a memória residente é a regra frouxa do soak (`rssGrowthAtRest`, importada) sobre as mesmas metades, limite de 48 MiB (49.152 KB). Ambas são a mesma função, `growthOfHalves` de `tests/performance-oracle.mjs`.
 
-| Série (a leitura em repouso depois do passo) | Views nativas | Heap em repouso (bytes, mediana estável) | Crescimento entre as medianas | Maior degrau (bytes) | RSS p50 (MB) | RSS mín a máx (MB) | Diferença entre as medianas (MB) |
+| Série (a leitura em repouso depois do passo) | Views nativas | Heap em repouso (bytes, mediana estável) | Crescimento entre as medianas | Maior degrau (bytes) | RSS p50 (MiB) | RSS mín a máx (MiB) | Diferença entre as medianas (MiB) |
 | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
 | `start` | 14 | 2.175.808 | 128 | 1.784 | 197,0 | 137,8 a 204,8 | -57,6 |
 | `map-stack` | 26 | 2.244.944 | 128 | 1.784 | 197,0 | 137,8 a 204,9 | -57,6 |
@@ -182,14 +182,14 @@ a memória residente é a regra frouxa do soak (`rssGrowthAtRest`, importada) so
 | `answer-event` | 14 | 2.177.904 | 128 | 1.328 | 197,0 | 137,8 a 204,8 | -58,1 |
 
 - **O heap ficou plano ao byte quando as listas limitadas do HUD encheram, e toda série cresceu 128 bytes entre as medianas** (a mediana inicial 2.175.680 e a final 2.175.808 para o início de uma rodada; o limite é 2.048). O contexto dá o nível: o heap guarda as fibras dos painéis, então sobe com as views nativas
-  (2,17 MB com as 14 da barra, 2,34 MB com as 42 da cidade).
+  (2,07 MiB com as 14 da barra, 2,23 MiB com as 42 da cidade).
 - **A rampa.** O heap do início da rodada foi 2.125.960 bytes na rodada 0 e 2.166.752 na rodada 1 (as primeiras renderizações de cada painel), depois subiu 2.760, 1.784, 1.296, 1.040, 1.040, 992 bytes nas rodadas seguintes e ficou em 2.175.680 da rodada 9 à 14. `consumers/civ-lite/ui/telemetry.ts` guarda as últimas 64 respostas, fases e épocas
   que o HUD viu (`KEPT = 64`), o HUD faz 10 chamadas por rodada (320 na execução, todas respondidas) e 64 respostas são 6,4 rodadas: a rampa termina onde essas listas enchem (uma leitura dos números, não isolada). A regra passa porque a mediana das 15 primeiras rodadas estáveis já está no platô; **um HUD cujas listas limitadas
-  levassem mais de uns doze rodadas para encher reprovaria a regra numa execução sem vazamento**, e o aquecimento (2 rodadas) é o do baseline, não escolhido para este HUD. Os degraus de +128 bytes na 16ª rodada e de +256 na 32ª têm o tamanho de 16 e 32 entradas de 8 bytes (uma lista que ganha uma entrada por rodada e dobra o armazenamento: consistente, não isolado).
-- **A memória residente andou em dezenas de MB e caiu**, como em todo harness do repositório. As 17 séries vão de 137,7 a 205,0 MB; a diferença entre as medianas das metades é de
-  -58,1 a -57,6 MB, e **-57,8 MB para a execução lida em ordem** (510 leituras estáveis, metades de 255), contra os 48 MiB que a regra permite (ela limita uma subida, e esta é uma queda).
-  O processo ficou em 193,0 a 204,8 MB nas primeiras 21 rodadas, subindo 0,5 a 0,6 MB por rodada, e caiu para 137,8 MB na rodada 22 (o sistema comprimindo o processo, como o soak viu; não isolado), de onde subiu de novo no mesmo ritmo; a memória estática do Godot
-  (as leituras do próprio probe, 546 delas) foi de 29,0 para 48,7 MB, 0,6 MB por rodada, que é o ritmo dessa subida. A regra é uma guarda grosseira, **cega a um vazamento de menos de uns 3 MiB por rodada** (45 MiB nas 15 rodadas entre as medianas;
+  levassem mais de umas doze rodadas para encher reprovaria a regra numa execução sem vazamento**, e o aquecimento (2 rodadas) é o do baseline, não escolhido para este HUD. Os degraus de +128 bytes na 16ª rodada e de +256 na 32ª têm o tamanho de 16 e 32 entradas de 8 bytes (uma lista que ganha uma entrada por rodada e dobra o armazenamento: consistente, não isolado).
+- **A memória residente andou em dezenas de MiB e caiu**, como em todo harness do repositório. As 17 séries vão de 137,7 a 205,0 MiB; a diferença entre as medianas das metades é de
+  -58,1 a -57,6 MiB, e **-57,8 MiB para a execução lida em ordem** (510 leituras estáveis, metades de 255), contra os 48 MiB que a regra permite (ela limita uma subida, e esta é uma queda).
+  O processo ficou em 193,0 a 204,8 MiB nas primeiras 21 rodadas, subindo 0,5 a 0,6 MiB por rodada, e caiu para 137,8 MiB na rodada 22 (o sistema comprimindo o processo, como o soak viu; não isolado), de onde subiu de novo no mesmo ritmo; a memória estática do Godot
+  (as leituras do próprio probe, 546 delas) foi de 27,6 para 46,4 MiB, 0,6 MiB por rodada, que é o ritmo dessa subida. A regra é uma guarda grosseira, **cega a um vazamento de menos de uns 3 MiB por rodada** (45 MiB nas 15 rodadas entre as medianas;
   o oráculo mostra que 3 MiB por rodada passa e 4 MiB reprova). O detector de vazamento é o heap.
 
 ## Erros
@@ -236,6 +236,8 @@ a 120 Hz, mas **nada deu ritmo ao laço**: um quadro ocioso levou uns 0,6 ms. A 
 Os intervalos crus das três tentativas estão no recibo da faixa (`rejectedAttempts`, 0,9 MB; o SHA-256 `70a16c2340088532…` está no recibo desta página e o arquivo **não foi guardado** nesta pasta) e **não são tempos de quadro**: são o custo de CPU de um quadro de processo num laço que nenhum display freia. Nenhuma estatística deles aparece como resultado. O recibo da faixa tem `presented: false`, `summary: null` e `turnFrames: null`.
 A execução só de capturas, que não mede nada e não depende do ritmo do laço, passou.
 
+O recibo fixado em `116a72f` foi gravado com `scenario: "frontier-turn-captures"` e a proveniência da execução de capturas; a correção da revisão do PR #86 passa a gravar `scenario: "frontier-turn-graphics"` com a proveniência da última tentativa rejeitada. O status, as medianas ociosas e o código de saída 3 não mudam.
+
 ## Capturas
 
 Uma imagem do quadro desenhado por contexto, a primeira vez em que cada um aparece, de uma execução que não mede nada (`--lane=captures`), do HUD real sobre o mapa real (1080 × 600, `gl_compatibility`), com os hashes no recibo:
@@ -271,7 +273,7 @@ Na de `stack` o ponteiro está sobre o tile (6, 8), que tem o Settler e o Warrio
 - **O HUD é o trabalho em andamento do V05-05** (barra, ações, tile, cidade, pesquisa e diálogo como painéis posicionados; sem Modal, pilha de overlays, imagens, rolagem, entrada de texto ou animação além do spinner), e o percurso é um caminho fixo pelos turnos 1 a 5 de um cenário: não é uma economia que cresce,
   uma sessão longa (o soak tem os seus 100 turnos) nem os orçamentos de 64 tarefas e 128 eventos (o caso de estresse dos serviços). Os números são os desse HUD e mudam quando ele muda; as regras exatas comparam cada contexto consigo mesmo.
 - Os 2 quadros do clique até o painel são uma observação e uma explicação que cabe na estrutura; os bombeamentos não foram rastreados dentro dos quadros. O host reporta o bombeamento e as fases de JS, montagem e layout como totais correntes e as últimas 128 amostras, **não por quadro**.
-- A regra do heap é a do baseline e é cega ao que o aquecimento não terminou (as listas limitadas do HUD encheram por uns seis rodadas), e há 17 séries, então a chance de uma reprovar só por ruído é maior que a do baseline (grosseiramente 1% para as 17). A do RSS é uma tendência grosseira sobre 15 rodadas.
+- A regra do heap é a do baseline e é cega ao que o aquecimento não terminou (as listas limitadas do HUD encheram por umas seis rodadas), e há 17 séries, então a chance de uma reprovar só por ruído é maior que a do baseline (grosseiramente 1% para as 17). A do RSS é uma tendência grosseira sobre 15 rodadas.
 - O rastreador de rejeições do Hermes reporta de um timer; o probe espera 2,3 s antes de ler a contagem e o controle é um `TypeError`. O probe instala os handlers depois que o bundle rodou: um erro lançado enquanto o bundle é avaliado só é visto pelo `errors` do host.
 - O sampler do GF-30 é **copiado** para o projeto provisionado (o lane copia `tests/performance-sampler.gd`) em vez de carregado de `res://tests/`, que um projeto provisionado não tem; são os mesmos bytes (o hash está no recibo).
 - O host anterior não se aplica (nenhum C++ mudou). Os documentos de compatibilidade (`docs/compatibility/react-native-0.87.1.json`, `BASELINE.md`), `docs/API.md`, `docs/NATIVE_MODULES.md` e `docs/PARITY.md` não se aplicam: a fatia não acrescenta nome RN, API pública nem módulo nativo.

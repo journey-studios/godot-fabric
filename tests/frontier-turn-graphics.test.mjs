@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {UNPACED, graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt} from "./frontier-baseline-oracle.mjs";
 import {CLICK_FRAME_LIMIT, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
-import {graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
+import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
 
 // The windowed lane of the turn on synthetic runs (no Godot, no display): the validity rule is the baseline's, imported, and what this file shows is that the
 // turn's runs fit it. A frame time exists only if a display presents the window: a run whose window did not draw, or whose idle frame median is under half of
@@ -167,6 +167,27 @@ test("a lane that was not presented reports no frame-time statistic, and keeps w
   const dropped = structuredClone(receipt);
   dropped.rejectedAttempts.pop();
   assert.throws(() => verifyGraphicsReceipt(dropped), /accepted or rejected/);
+});
+
+test("the receipt takes its build, window and viewport from an accepted run, else from the last rejected attempt, else from the captures", () => {
+  const captures = syntheticReport({run: 0, refreshRate: 30});
+  captures.scenario = "frontier-turn-captures";
+  const rejected = [60, 90, 144].map((refreshRate, index) => syntheticReport({run: index + 1, idleUsec: UNPACED_IDLE_USEC, refreshRate}));
+  const attemptOf = (report, valid) => ({slot: report.run, attempt: report.run, valid, reason: valid ? null : UNPACED, ...(valid ? {} : {raw: report})});
+  const refused = rejected.map(report => attemptOf(report, false));
+  const accepted = presentedReports();
+
+  assert.equal(graphicsReceiptSource({accepted, attempts: [...refused, ...accepted.map(report => attemptOf(report, true))], captures}), accepted[0],
+    "a run that was accepted speaks for the lane, whatever was rejected before it");
+  assert.equal(graphicsReceiptSource({accepted: [], attempts: refused, captures}), rejected[2], "with none accepted, the last attempt that was rejected speaks for it");
+  assert.equal(graphicsReceiptSource({accepted: [], attempts: refused, captures}).stages.provenance.refreshRate, 144, "and so does its window, read back");
+  assert.equal(graphicsReceiptSource({accepted: [], attempts: [], captures}), captures, "the captures speak only when no windowed run was made");
+  assert.notEqual(graphicsReceiptSource({accepted: [], attempts: refused, captures}).scenario, captures.scenario, "never the captures when a windowed run exists");
+
+  const source = graphicsReceiptSource({accepted: [], attempts: refused, captures});
+  const receipt = {...receiptOf({accepted: [], rejected, presented: false}), provenance: source.stages.provenance};
+  verifyGraphicsReceipt(receipt);
+  assert.equal(receipt.provenance.refreshRate, 144, "a receipt that was not presented carries the display that rejected the attempts, and verifies");
 });
 
 test("a lane that claims to be presented has all its runs and their statistics", () => {

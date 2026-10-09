@@ -6,7 +6,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt} from "../tests/frontier-baseline-oracle.mjs";
 import {GAME_CONTEXTS, GRAPHICS_RUNS, IDLE_FRAMES, STEADY_ROUNDS, WARMUP_ROUNDS} from "../tests/frontier-turn-cases.mjs";
-import {graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun} from "../tests/frontier-turn-oracle.mjs";
+import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun} from "../tests/frontier-turn-oracle.mjs";
 import {createTurnLane, machine, loadAverage} from "./frontier-turn-lane.mjs";
 
 // The windowed lane of the turn, local only (a real window, the native renderer and a display; CI has none): the provisioned Frontier game in a real window,
@@ -110,7 +110,7 @@ try {
 
   const summary = presented ? summarizeGraphicsRuns(reports.map(report => graphicsRunOf(report, {withTurns: false}))) : null;
   const turnFrames = presented ? summarizeTurnFrames(reports) : null;
-  const first = reports[0] ?? shots;
+  const first = graphicsReceiptSource({accepted: reports, attempts, captures: shots});
   // The raw data: every interval of every accepted run. The clicks as [round, step, id, frames to the panels, injection, time to the panels, time to the first drawn
   // frame (microseconds, null when none was seen), the intervals of the frames of the click]; the turns as [round, id, the frames as [phase, interval, nodes,
   // snapshots, end of the turn], the host's pump, JS, mount and layout milliseconds over the turn].
@@ -122,7 +122,7 @@ try {
       [record.turn.host.pumpMs, record.turn.host.jsMs, record.turn.host.mountMs, record.turn.host.layoutMs]]))});
   const raw = reports.map(rawOf);
   const rejectedAttempts = attempts.filter(each => each.raw !== undefined).map(each => ({...each, raw: rawOf(each.raw)}));
-  const receipt = {format: "godot-fabric.frontier-turn-graphics/v1", scenario: first.scenario, godot: first.godot, presented,
+  const receipt = {format: "godot-fabric.frontier-turn-graphics/v1", scenario: "frontier-turn-graphics", godot: first.godot, presented,
     status: presented ? "presented" : `not presented: ${stopped.reason} (slot ${stopped.slot}, ${MAX_ATTEMPTS} attempts)`,
     command: "Godot --path <the provisioned consumer> --windowed -s res://turn_probe/frontier-turn-runner.gd -- --lane=windowed --run=<n>",
     protocol: {runs: GRAPHICS_RUNS, maxAttempts: MAX_ATTEMPTS, warmupRounds: WARMUP_ROUNDS, rounds: STEADY_ROUNDS, idleFrames: IDLE_FRAMES, viewport: first.stages.scene.viewport,
