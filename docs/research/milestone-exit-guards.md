@@ -155,8 +155,8 @@ it is never added to `KNOWN` by the agent that found it. Registration is by `act
 
 ## The CI step
 
-`.github/workflows/contracts.yml`, job `contracts`, runs `node scripts/milestone-guards.mjs --check --base "$base"`
-after `npm ci`. For a `pull_request` and for a `push` alike, `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` brings
+`.github/workflows/contracts.yml`, job `contracts`, runs the guard after `npm ci`: `node scripts/milestone-guards.mjs --check --base "$base"`
+for a `pull_request` and a `push`, and `node scripts/milestone-guards.mjs --check` for a `workflow_dispatch`. For a `pull_request` and for a `push` alike, `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` brings
 one commit more than the shallow checkout and `base` is `HEAD^`, the **first parent** of the commit the event checked out:
 
 - on a `pull_request`, `GITHUB_SHA` is GitHub's synthetic merge commit (`refs/pull/N/merge`), and its first parent is the
@@ -164,12 +164,21 @@ one commit more than the shallow checkout and `base` is `HEAD^`, the **first par
   `pull_request.base.sha` is not used: it can differ from that parent when the base branch has moved or the merge ref was
   regenerated, and the guard would then compare the pull request's tree with commits that are not its own;
 - on a `push` (to main), `GITHUB_SHA` is the pushed commit and `base` is its parent;
+- on a `workflow_dispatch` (a manual run of the workflow), the step makes one fetch,
+  `git fetch --no-tags --unshallow origin main:refs/remotes/origin/main`, which deepens the history the checkout already has
+  and brings `origin/main`, and nothing else of the remote; then it runs `--check` with no `--base`. The base is then the merge-base of `HEAD` and `origin/main`, the rule a local run
+  uses, so a dispatched branch is judged by what it changed and not by what main added after it started. That holds only
+  when the two share an ancestor: if they share none, `--check` falls back to the tip of `origin/main`, and the comparison
+  then includes what main changed, so the guard can fail for a reason the branch did not cause. Dispatched on main
+  itself, the merge-base is `HEAD` and the guard passes;
 - any other event: the step fails with a message.
 
-It does not depend on history. `actions/checkout` is shallow (depth 1), so the step fetches one commit more, by SHA, and
-`--check` reads the base's `dashboard/migration.json` and file list with `git show` and `git ls-tree`, never `git log`.
-The base is never a merge-base in CI (a shallow checkout has none), and it is always explicit. The step has no `if:`
-and no `continue-on-error`, and `tests/milestone-guards.test.mjs` pins that and the choice of the first parent. The test
+On a `pull_request` and a `push` the step does not depend on history. `actions/checkout` is shallow (depth 1), so the step
+fetches one commit more, by SHA, and `--check` reads the base's `dashboard/migration.json` and file list with `git show` and
+`git ls-tree`, never `git log`. The base there is explicit and never a merge-base, because a shallow checkout has none. A
+`workflow_dispatch` is the one event that fetches history, since its merge-base needs it. The step has no `if:` and no
+`continue-on-error`, and `tests/milestone-guards.test.mjs` pins that, the three branches, the one fetch of the dispatch
+branch, that it passes no `--base` there, and the choice of the first parent. The test
 itself needs no history either: the pure comparisons run on synthetic documents, `--check` and `--audit` run on
 throwaway git repositories it creates, and the committed receipt is verified with `--audit --verify`, with no git. Only
 the full `--audit` over the real history is local.

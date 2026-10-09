@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T14:06:23.000Z",
+  "updatedAt": "2026-10-09T14:56:39.000Z",
   "source": {
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
@@ -4617,6 +4617,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-exit-guards-dispatch-6e556f6",
+      "at": "2026-10-09T14:56:39.000Z",
+      "taskIds": [],
+      "message": "A guarda X9/X10 da CI passa a rodar também numa execução manual (workflow_dispatch, que a #88 introduz), comparando com o merge-base da main num fetch só; pull request e push seguem com o primeiro pai. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e556f61473d65786fa96933accc5040ec660ce2/docs/research/milestone-exit-guards.md"
+    },
     {
       "id": "milestone-0-5-v05-05-overlays-67c3f16",
       "at": "2026-10-09T14:06:23.000Z",
