@@ -26,6 +26,8 @@ extends Node
 #   --rounds=<n>                        steady rounds, for a quick look (the oracle refuses any other number than the cases')
 #   --sabotage                          a retained sabotage runs this probe: a failed check is the rejection, not an error
 const Sampler := preload("performance-sampler.gd")
+# The window of the windowed lanes, put in front of the others and above them, and the frames in which the engine could not draw it counted (docs/research/windowed-presence.md).
+const Presence := preload("window-presence.gd")
 # The template's own validation, in the provisioned project: the table of contexts to panels, the panels, the device the Surface hears, the size of the viewport and the map's
 # geometry are written there and nowhere else, and the probe reads them from it.
 const HudValidation := preload("res://hud_validation.gd")
@@ -132,6 +134,7 @@ var turn_ended_seen := 0
 var turn_ended_last: Dictionary = {}
 # The time of every frame the windowed lane drew.
 var draw_stamps: Array = []
+var presence: Presence
 
 func check(condition: bool, label: String) -> bool:
   checks.append({"name": label, "passed": condition})
@@ -555,6 +558,8 @@ func run() -> void:
   hud.set_meta("validation_input_device", DEVICE)
   var windowed := lane != "headless"
   if windowed:
+    presence = Presence.new(get_tree())
+    await presence.open()
     DisplayServer.window_set_size(SIZE)
     RenderingServer.frame_post_draw.connect(note_draw)
   # A headless window is 64x64 and the HUD is laid out for the game's 1080x600 (hud_validation.gd does the same).
@@ -582,6 +587,7 @@ func run() -> void:
     if stages["aborted"] != null:
       break
   if windowed:
+    stages["presence"] = presence.close()
     RenderingServer.frame_post_draw.disconnect(note_draw)
   stages["frames"] = {"processed": Engine.get_process_frames(), "drawn": draw_stamps.size()}
   # The tracker reports a rejection from a timer, not at the rejection: wait for it, then read the count.
@@ -826,6 +832,7 @@ func check_windowed() -> void:
   check(int(info.vsyncMode) >= 0 and int(info.vsyncMode) < VSYNC_NAMES.size() and float(info.refreshRate) > 0.0,
     "vsync/The vsync mode and the refresh rate of the screen are read back from the window")
   check(stages.has("idle") and stages.idle.intervalsUsec.size() == IDLE_FRAMES, "idle/The idle window took its frames")
+  check(bool(stages.presence.windowed) and bool(stages.presence.opened.alwaysOnTop), "presence/The window was put in front of the others and above them before the first measurement")
 
 func finish() -> void:
   finished = true

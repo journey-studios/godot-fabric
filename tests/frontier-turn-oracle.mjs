@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
 import {nearestRank, round, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
-import {heapAtRest} from "./frontier-baseline-oracle.mjs";
+import {heapAtRest, verifyPresence} from "./frontier-baseline-oracle.mjs";
 import {RSS_GROWTH_LIMIT_KB} from "./frontier-soak-cases.mjs";
 import {rssGrowthAtRest} from "./frontier-soak-oracle.mjs";
 import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GAME_CONTEXTS, HUD_CONNECTIONS, IDLE_FRAMES, MARKERS, HUD_PANELS, MODAL_CONTEXTS, PHASES, REST_FRAMES, STEADY_ROUNDS, STABLE_FRAMES, STEPS,
@@ -392,6 +392,11 @@ export function verifyTurnGraphicsRun(report) {
   assert.ok(stages.idle.intervalsUsec.every(value => Number.isInteger(value) && value > 0), "and each was timed");
   assert.ok(report.checks.length > 0 && report.checks.every(check => check.passed), "Every check of the run passed");
   assert.equal(new Set(report.checks.map(check => check.name)).size, report.checks.length);
+  // The window's presence (tests/window-presence.gd) is newer than the receipts: a run recorded before it has none. Its structure is the baseline's; whether the
+  // engine could draw the window does not decide the run's validity.
+  if (stages.presence !== undefined) {
+    verifyPresence(stages.presence, `run ${report.run}`);
+  }
 }
 
 // The run in the shape the baseline's validity and statistics read (scripts/frontier-baseline-graphics.mjs): the clicks as `swaps`, the transitions of the
@@ -405,7 +410,8 @@ export function graphicsRunOf(report, {withTurns = true} = {}) {
     nativeNodes[record.to] = record.rest.surface.nativeTags;
   }
   return {scenario: report.scenario, run: report.run, godot: report.godot, provenance: stages.provenance, viewport: stages.scene.viewport,
-    config: {...stages.config, nativeNodes}, swaps: records, idle: stages.idle, frames: stages.frames, aborted: stages.aborted, checks: report.checks};
+    config: {...stages.config, nativeNodes}, swaps: records, idle: stages.idle, frames: stages.frames, aborted: stages.aborted, checks: report.checks,
+    ...(stages.presence === undefined ? {} : {presence: stages.presence})};
 }
 
 // The run whose build, window and viewport the receipt of the windowed lane carries as its own: the first accepted run; when no run was accepted, the last

@@ -176,7 +176,8 @@ measures what only a window has: the interval between consecutive process frames
    (`verifyGraphicsReceipt`) and the statistics across runs (`summarizeGraphicsRuns`) refuse an unpaced run; both are tested on synthetic runs in
    `tests/frontier-baseline-graphics.test.mjs`, which is part of `npm run test:contracts`. Every interval of every accepted run is in the receipt (`raw`), so anyone can apply another
    rule to the same data. An outlier run stays in and shows in the range. (An earlier execution of this code had a run in which the window drew after 16 of 360 steady clicks, and a
-   later one drew throughout with no display pacing it: the pacing check was added after it.)
+   later one drew throughout with no display pacing it: the pacing check was added after it.) Since V05-06 (GF-30) the probe puts its window in front of the others and above them and records, for every process frame, whether
+   the engine could draw it, so that an `undrawn` reason says what the engine said of the window; the rule above is unchanged ([the windowed presence](windowed-presence.md)).
 8. **The map's own pointer events**: a window on a display also gets the motion of the real pointer, which is the map's whenever it is over the map, so the windowed
    probe judges the presses, releases and touches that reach the world (none may) and records the other events. (An earlier execution had two swaps
    with two motion events each.)

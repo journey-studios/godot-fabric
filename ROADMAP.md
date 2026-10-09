@@ -834,6 +834,21 @@ open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db17
 other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** V05-06, the windowed lanes of the baseline and of the turn: the window they measure in is now put where the system has no
+reason to stop drawing it, and the frames in which the engine could not draw it are recorded. The finding: on macOS an occluded window
+makes the engine skip the draw (`window_can_draw()` reads the flag that the window delegate clears, `Main::iteration` does not call
+`RenderingServer::draw`, `frame_post_draw` never fires, and the loop sleeps 6.9 ms a frame), which is the signature of the `undrawn`
+refusals of 2026-10-09 (a mean idle interval of 6.900 ms where the idle window drew no frame). A small helper puts the window in front of
+the others and above them and counts, for every process frame, the frames the engine could not draw: each attempt of the receipts carries
+`undrawableFrames`, and the reason of an `undrawn` refusal says what the engine said of the window (a run in which it never said it could not draw
+stays open, with no cause concluded). The validity rule is unchanged and no
+recorded receipt changes its verdict. Both windowed lanes ran once each on the implementation commit and were presented at the first
+attempt of all five slots, with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379 in the turn, with nobody at the Mac:
+the runs show that the helper opens a window the engine can draw, not that it beats interference, and a locked or asleep display is not
+covered. The `baseline` criterion stays open; a later delivery closes it with the receipt of the baseline run. The
+[record](https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md)
+is local macOS arm64 evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
