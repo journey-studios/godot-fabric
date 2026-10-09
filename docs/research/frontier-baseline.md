@@ -208,6 +208,33 @@ The presented frame time needs an awake, unlocked display: run the lane again an
 The captures of each panel (`frontier-baseline-panel-empty.png`, `-units.png`, `-city.png` and `-research.png`, 800 x 600 PNGs in [the evidence record](../evidence/frontier-baseline/README.md), hashed in its receipt) are
 of the frame as drawn, from a separate run that measures nothing, with pixel checks that the bar is over the map, each panel is where the HUD puts it, and the base comes back after them.
 
+### The windowed attempts of 2026-10-09: not presented
+
+After the record above, the baseline's windowed lane (`node scripts/frontier-baseline-graphics.mjs`, the main's scripts, unchanged) ran **twice** on commit `e6a271d364a27f73acf995ed846c78eed055dde0`, whose tree (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) is identical to the main commit `1adcdb3`, with the user present and the display on, on the same machine
+(Apple M3 Pro, "Color LCD" at 120 Hz, an 800 x 600 window, `gl_compatibility`, the vsync read back `enabled`). **Both ended as not presented** (`presented: false`, exit code 3, `summary: null`, no frame-time statistic): slot 3 used up its three attempts both times. **The windowed baseline stays pending** and so does the `baseline` criterion; the budget rows that depend on it are as they were.
+The raw receipts are not committed; the [evidence record](../evidence/frontier-baseline/README.md#tentativas-janeladas-de-2026-10-09-não-apresentadas) has every attempt, and their hashes are:
+
+| Attempt | Receipt | SHA-256 | Status | Slots accepted | Attempts |
+| --- | --- | --- | --- | --- | ---: |
+| A | 735,913 bytes | `bada551e3014ae950cb5c2ef80e8997752fdd730184099424ed2545d587b49e1` | `not presented: unpaced: the display is not presenting (slot 3, 3 attempts)` | 1 and 2 | 8 (2 accepted, 5 `undrawn`, 1 `unpaced`) |
+| B | 453,863 bytes | `c03a9f46cf35379eb6eabc3e86e8a0960f7d52d40745db23ae4b4fcdeb2f02c4` | `not presented: undrawn: the window did not draw throughout (slot 3, 3 attempts)` | 1 and 2 | 5 (2 accepted, 3 `undrawn`) |
+
+The three attempts of slot 3 (verdict, idle median in ms, frames drawn of process frames):
+
+| Receipt | First | Second | Third |
+| --- | --- | --- | --- |
+| A | `undrawn`, 6.700, 4,245 of 5,241 | `undrawn`, 6.893, 182 of 5,774 | `unpaced`, 4.136, 5,106 of 5,110 |
+| B | `undrawn`, 6.516, 3,845 of 5,282 | `undrawn`, 5.211, 2,970 of 5,396 | `undrawn`, 6.882, 90 of 5,771 |
+
+What the numbers show, and no more:
+
+- In the eight `undrawn` rejections the window stopped drawing for part of the run (90 to 4,245 frames drawn of 5,241 to 5,778 process frames of an attempt), and in four of them (A1, A4, A7, B5) the idle window drew no frame at all (601 draws in the other nine attempts of A and B), with a mean idle interval of 6.900 ms against
+  8.324 to 8.459 ms, about one refresh period (8.333 ms), in the rest. The cause was not isolated and is not proven.
+- The one-minute load average stood between 6.2 and 8.0 around A's attempts and between 5.6 and 10.9 around B's: the Mac was loaded.
+- Attempt A8 was rejected as `unpaced` for an idle median of 4.136 ms, **0.031 ms under** the 4.167 ms required, with a mean of 8.333 ms and 5,106 of 5,110 frames drawn: its 600 idle intervals split into 300 under 4.167 ms and 300 of 12 ms or more, none between, and the median is the last of the short ones. The idle intervals of the nine attempts that drew
+  fall mostly in the same two groups (243 to 300 under 4.167 ms and 290 to 300 of 12 ms or more) and two neighbours add up to 16.65 to 16.68 ms at the median, which is also what the turn's windowed lane saw ([the windowed result of the turn](frontier-turn.md#the-windowed-result-presented-2026-10-09)). The rule is the baseline's own (`graphicsRunValidity`) and it was not touched.
+- The four captures of attempt A were written and measure nothing; no frame-time statistic of A or of B is a result.
+
 ## The heap at rest
 
 The live heap of Hermes at rest (the base shown, after a forced collection and 30 idle frames) was **2,032,000 bytes in the steady state in both processes**, which is 71,552 bytes over
