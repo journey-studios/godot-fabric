@@ -244,12 +244,12 @@ test("a run of the turn's probe carries the window's presence, and a refusal for
   verifyTurnGraphicsRun(syntheticReport());
   const covered = validity(syntheticReport({drawn: false, presence: presenceOf(2400)}));
   assert.equal(covered.valid, false);
-  assert.match(covered.reason, /^undrawn: .*the window could not draw: window_can_draw\(\) was false in 2400 of 5000 sampled frames, in 1 span\)$/);
+  assert.match(covered.reason, /^undrawn: .*\(window_can_draw\(\) was false in 2400 of 5000 sampled frames, in 1 span: .*read from the spans\)$/);
   assert.equal(covered.undrawableFrames, 2400);
   assert.equal(covered.sampledFrames, 5000);
   const capable = validity(syntheticReport({drawn: false, presence: presenceOf(0)}));
   assert.equal(capable.valid, false, "a window the engine could draw that was not drawn is refused all the same");
-  assert.match(capable.reason, /^undrawn: .*the engine could draw: window_can_draw\(\) was never false in the 5000 sampled frames\)$/);
+  assert.match(capable.reason, /^undrawn: .*\(window_can_draw\(\) was never false in the 5000 sampled frames: the engine believed it could draw, and the cause is open\)$/);
   assert.equal(validity(syntheticReport({drawn: false})).reason, "undrawn: the window did not draw throughout", "and a run without the presence has the plain reason");
   assert.equal(validity(syntheticReport({presence: presenceOf(30)})).valid, true, "the rule does not read the presence: a run that drew is valid");
   const malformed = syntheticReport({presence: presenceOf(112)});
@@ -268,6 +268,29 @@ test("a receipt of the turn keeps the count of each attempt and the presence of 
   const unsaid = structuredClone(receipt);
   unsaid.attempts[0].reason = "undrawn: the window did not draw throughout";
   assert.throws(() => verifyGraphicsReceipt(unsaid), /was refused for not drawing and its reason says what the engine said/);
+  const before = structuredClone(receipt);
+  for (const attempt of before.attempts) {
+    delete attempt.undrawableFrames;
+    delete attempt.sampledFrames;
+    attempt.reason = "undrawn: the window did not draw throughout";
+  }
+  verifyGraphicsReceipt(before);
+});
+
+test("a receipt of the turn binds the count of each attempt to the presence of its raw run", () => {
+  const rejected = [1, 2, 3].map(attempt => syntheticReport({run: attempt, drawn: false, presence: presenceOf(2400)}));
+  const attempts = rejected.map((report, index) => ({slot: 1, attempt: 100 + index, ...validity(report)}));
+  const receipt = {presented: false, status: `not presented: ${attempts.at(-1).reason} (slot 1, 3 attempts)`, provenance: {refreshRate: 120}, attempts, raw: [], summary: null,
+    rejectedAttempts: attempts.map((attempt, index) => ({...attempt, raw: rawOf(rejected[index])}))};
+  verifyGraphicsReceipt(receipt);
+  const zero = structuredClone(receipt);
+  zero.attempts[0].undrawableFrames = 0;
+  assert.equal(zero.rejectedAttempts[0].raw.presence.undrawableFrames, 2400);
+  assert.throws(() => verifyGraphicsReceipt(zero), /Attempt 100 says 0 frames the engine could not draw and its raw run says 2400/);
+  const sampled = structuredClone(receipt);
+  sampled.attempts[2].sampledFrames = 4000;
+  assert.throws(() => verifyGraphicsReceipt(sampled), /Attempt 102 says 4000 sampled frames and its raw run says 5000/);
+  // A receipt whose attempts carry no count (the turn's earlier one) is not asked for one.
   const before = structuredClone(receipt);
   for (const attempt of before.attempts) {
     delete attempt.undrawableFrames;

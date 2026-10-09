@@ -13,7 +13,7 @@ extends SceneTree
 # Every exact count of the headless lane holds here too.
 #
 # The window is put in front of the others and above them before anything is measured, and the frames in which the engine could not draw it are counted
-# (tests/window-presence.gd, docs/research/windowed-presence.md): a run that did not draw then says whether the window was the cause. That count is recorded
+# (tests/window-presence.gd, docs/research/windowed-presence.md): a run that did not draw then says what the engine said of the window. That count is recorded
 # and not judged here.
 #
 # --run=<n> names the run's file. --captures makes the run that saves one image per panel and measures nothing.

@@ -238,14 +238,17 @@ test("a run refused for not drawing says whether the engine could draw the windo
   const covered = graphicsRunValidity(syntheticRun({drawn: false, presence: presenceOf(112)}));
   assert.equal(covered.valid, false);
   assert.equal(covered.drew, false);
-  assert.equal(covered.reason, "undrawn: the window did not draw throughout (the window could not draw: window_can_draw() was false in 112 of 5000 sampled frames, in 1 span)");
+  assert.equal(covered.reason, "undrawn: the window did not draw throughout (window_can_draw() was false in 112 of 5000 sampled frames, in 1 span: the engine does not draw in those frames, "
+    + "and whether they account for the missing draws is read from the spans)", "the reason states the count and names no cause");
   assert.equal(covered.undrawableFrames, 112, "the count is in the validity, and so in the attempt of the receipt");
   assert.equal(covered.sampledFrames, 5000);
   const spans = [[300, 40, 2_400_000, 2_700_000], [900, 60, 6_000_000, 6_400_000]];
-  assert.match(graphicsRunValidity(syntheticRun({drawn: false, presence: presenceOf(100, {spans})})).reason, /false in 100 of 5000 sampled frames, in 2 spans\)$/);
+  assert.match(graphicsRunValidity(syntheticRun({drawn: false, presence: presenceOf(100, {spans})})).reason, /false in 100 of 5000 sampled frames, in 2 spans: /);
   const capable = graphicsRunValidity(syntheticRun({drawn: false, presence: presenceOf(0)}));
   assert.equal(capable.valid, false, "a window the engine could draw that was not drawn is refused all the same");
-  assert.equal(capable.reason, "undrawn: the window did not draw throughout (the engine could draw: window_can_draw() was never false in the 5000 sampled frames)");
+  assert.equal(capable.reason, "undrawn: the window did not draw throughout (window_can_draw() was never false in the 5000 sampled frames: the engine believed it could draw, and the cause is open)",
+    "a run whose every sample says the engine could draw is left open, and the reason does not say the draw was skipped");
+  assert.doesNotMatch(capable.reason, /skipped|occlu|could not draw/, "and names no cause");
   assert.equal(capable.undrawableFrames, 0);
   assert.equal(undrawnReason(undefined), "undrawn: the window did not draw throughout");
 });
@@ -327,4 +330,43 @@ test("a receipt recorded before the presence has no count and verifies as it alw
   }
   verifyGraphicsReceipt(refused);
   assert.match(refused.status, /^not presented: undrawn: the window did not draw throughout \(slot 1/, "with the plain reason, which says nothing of the window");
+});
+
+test("the count of each attempt is the one of the presence of its own raw run, accepted or rejected", () => {
+  const accepted = presentedRuns().map(run => ({...run, presence: presenceOf(4)}));
+  const acceptedReceipt = receiptOf({accepted, presented: true});
+  verifyGraphicsReceipt(acceptedReceipt);
+  const rejected = [1, 2, 3].map(attempt => syntheticRun({run: attempt, drawn: false, presence: presenceOf(attempt === 1 ? 0 : 2400)}));
+  const rejectedReceipt = receiptOf({accepted: [], rejected, presented: false});
+  verifyGraphicsReceipt(rejectedReceipt);
+
+  // The attempt says 0 where its raw run says 2,400: refused, and so is the other way round.
+  const zero = structuredClone(rejectedReceipt);
+  zero.attempts[1].undrawableFrames = 0;
+  assert.equal(zero.rejectedAttempts[1].raw.presence.undrawableFrames, 2400);
+  assert.throws(() => verifyGraphicsReceipt(zero), /Attempt 101 says 0 frames the engine could not draw and its raw run says 2400/);
+  const inflated = structuredClone(rejectedReceipt);
+  inflated.attempts[0].undrawableFrames = 17;
+  assert.throws(() => verifyGraphicsReceipt(inflated), /Attempt 100 says 17 frames the engine could not draw and its raw run says 0/);
+  // The count of an accepted attempt is bound to its run in `raw` the same way, and so are the frames sampled.
+  const acceptedZero = structuredClone(acceptedReceipt);
+  acceptedZero.attempts[2].undrawableFrames = 0;
+  assert.throws(() => verifyGraphicsReceipt(acceptedZero), /Attempt 3 says 0 frames the engine could not draw and its raw run says 4/);
+  const sampled = structuredClone(acceptedReceipt);
+  sampled.attempts[0].sampledFrames = 4999;
+  assert.throws(() => verifyGraphicsReceipt(sampled), /Attempt 1 says 4999 sampled frames and its raw run says 5000/);
+  // An attempt that carries a count while its raw run holds no presence is refused too.
+  const orphan = structuredClone(rejectedReceipt);
+  orphan.rejectedAttempts[1].raw.presence = null;
+  assert.throws(() => verifyGraphicsReceipt(orphan), /Attempt 101 carries a count of the frames the engine could not draw and its raw run holds no presence/);
+  // A receipt recorded before the presence has neither side, and an attempt without the count is not asked for one.
+  const before = structuredClone(rejectedReceipt);
+  for (const attempt of before.attempts) {
+    delete attempt.undrawableFrames;
+    delete attempt.sampledFrames;
+  }
+  for (const attempt of before.rejectedAttempts) {
+    delete attempt.raw.presence;
+  }
+  verifyGraphicsReceipt(before);
 });

@@ -29,7 +29,7 @@ import {ensureGodotBinary} from "./godot-binary.mjs";
 //
 // The probe puts its window in front of the others and above them before it measures, and records for every process frame whether the engine could draw
 // it (tests/window-presence.gd, docs/research/windowed-presence.md): on macOS the engine does not draw a window that is occluded. The count (undrawableFrames, of
-// sampledFrames) is in every attempt, and the reason of a run refused as undrawn says whether the window could not draw. The rule of validity is unchanged.
+// sampledFrames) is in every attempt, and the reason of a run refused as undrawn says what the engine said of the window (a run in which it never said it could not draw stays open). The rule of validity is unchanged.
 // What the helper cannot do is make a display that is asleep or locked present the window, so keep the display awake and the Mac unlocked. Run with:
 //   caffeinate -d node scripts/frontier-baseline-graphics.mjs
 const EXIT_NOT_PRESENTED = 3;
@@ -144,7 +144,7 @@ const receipt = {format: "godot-fabric.frontier-baseline-graphics/v2", scenario:
     viewport: first.viewport, percentiles: "nearest rank over the raw intervals of one run",
     acrossRuns: "median and interquartile range (nearest-rank quartiles) of each run's statistic",
     validity: "a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle reference (the median of the half-sums of consecutive pairs of the idle intervals) is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
-    presence: "the window is put in front of the others and above them before the first measurement (tests/window-presence.gd), and every process frame records whether the engine could draw it (window_can_draw()): each attempt carries undrawableFrames, of sampledFrames, and the raw runs the spans of those frames; the reason of a run refused for not drawing says whether the window could not draw. The rule of validity does not read it",
+    presence: "the window is put in front of the others and above them before the first measurement (tests/window-presence.gd), and every process frame records whether the engine could draw it (window_can_draw()): each attempt carries undrawableFrames, of sampledFrames, and the raw runs the spans of those frames; the reason of a run refused for not drawing says what the engine said of the window, and a run in which window_can_draw() was never false stays open (no cause is concluded). The rule of validity does not read it",
     discarded: "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"},
   machine, provenance: first.provenance, attempts: attempts.map(({raw: _raw, ...each}) => each),
   nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))),

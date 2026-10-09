@@ -30,7 +30,10 @@ Read from the tag `4.7.2-stable` (the commit `ed1daf0bf` of the official binary)
 | Who calls the iteration | `platform/macos/os_macos.mm` 1132-1150 | `Main::iteration()` runs in a `kCFRunLoopBeforeWaiting` observer of the main run loop. |
 
 Three things follow, and the data of the 2026-10-09 attempts agree with them.
-- **A run that is not drawn is a run the engine did not try to draw**, not a run it drew badly: no `frame_post_draw`, no frame counted, and the process frames kept ticking, which is why a run could finish and be refused afterwards.
+- **A frame the engine could not draw is a frame it did not try to draw**, not one it drew badly: no `frame_post_draw`, no frame counted, and the process frames kept ticking, which is why a run could finish and be refused afterwards.
+  This holds for the frames in which `window_can_draw()` was false and for no others. A refusal as `undrawn` is attributed to the window only where the helper's record supports it: `undrawableFrames` greater than 0, and
+  its `spans` (process frames, and microseconds from the start of the sampling) falling where the draws are missing, that is, in the idle window or in the frames after the clicks that had no drawn frame. A run refused as `undrawn`
+  whose every sample says `window_can_draw() == true` stays **open**: nothing in its record says that the engine skipped `RenderingServer::draw` in the frames that were not drawn, and its cause is for an investigation, not for this note.
 - **A loop that cannot draw has a signature**: an interval of 6.9 ms. In the attempts of 2026-10-09 the idle window of four of the baseline's (A1, A4, A7, B5) and of one of the turn's (run 1, attempt 2) drew no frame at all, and
   their mean idle interval is 6.900 to 6.901 ms and their pair half-sum median 6.897 to 6.902 ms (the table of ["The idle reference"](frontier-baseline.md#the-idle-reference-three-statistics-over-the-raw-intervals-of-2026-10-09)),
   which is the 6,900 us of `low_processor_mode_sleep_usec` and not a display's period (8.333 ms at 120 Hz, the mean of the attempts that drew). The attempts that drew part of their frames lie in between. This is consistent
@@ -73,9 +76,11 @@ Headless there is no window to present: `open()` returns `{"windowed": false}` a
   `undrawableFrames`, `spanCount`, `spans`, `canDrawAtEnd`. The oracle checks its structure and that it adds up (`verifyPresence` in `tests/frontier-baseline-oracle.mjs`): a count of the sampled frames, spans that add up to it.
 - **Each attempt of the receipt carries `undrawableFrames` and `sampledFrames`** (from `graphicsRunValidity`), the raw runs and rejected attempts carry the `presence` with the spans, and the receipt carries the captures run's
   as `capturesPresence`. The console prints the count of each attempt.
-- **A refusal for not drawing says why** (`undrawnReason`): `undrawn: the window did not draw throughout (the window could not draw: window_can_draw() was false in 2400 of 5000 sampled frames, in 3 spans)`, or, when the engine
-  could draw in every sampled frame, `(the engine could draw: window_can_draw() was never false in the 5000 sampled frames)`, which says that the window was not the cause as the engine sees it and the display is the suspect.
-  A run recorded without the presence keeps the plain reason. `verifyGraphicsReceipt` requires a receipt that refuses an attempt as `undrawn` and carries its count to say it.
+- **A refusal for not drawing says what the engine said of the window** (`undrawnReason`): `undrawn: the window did not draw throughout (window_can_draw() was false in 2400 of 5000 sampled frames, in 3 spans: the engine does not draw in
+  those frames, and whether they account for the missing draws is read from the spans)`, or, when the engine could draw in every sampled frame, `(window_can_draw() was never false in the 5000 sampled frames: the engine believed it could draw,
+  and the cause is open)`. The reason states the count and does not name the cause: that the window was occluded is the reading of the first case, and the second is left for investigation.
+  A run recorded without the presence keeps the plain reason. `verifyGraphicsReceipt` requires a receipt that refuses an attempt as `undrawn` and carries its count to say it, and requires the count of each attempt to be the one of the
+  `presence` of its own raw run (the accepted run in `raw`, or the rejected attempt's `raw`), so that an attempt cannot say 0 where its record says 2,400.
 - **The rule of validity is the same.** `valid` is still `drew && paced`; the presence never decides it. A run in which 30 frames could not be drawn and every click and nine in ten of the idle frames were is valid, and a run
   that did not draw is refused whatever the engine said.
 - **The receipts already recorded** have none of this and verify as they always did: the checks of the count are made only when an attempt carries it.
@@ -120,7 +125,9 @@ The helper makes the window one the system has no reason to hide. It does not ma
   asleep; wake it and unlock the Mac first.
 - Expect a window of 800 x 600 floating over the other windows for the minutes the lane takes (the baseline's five slots and its captures). It is meant to be seen; it does not need to be used, and the user does not have to stay
   away from the Mac now, but a Space switch or a full-screen application that covers the lane's Space will still make runs `undrawn`.
-- Read a refusal by its reason: **`the window could not draw`** is the screen or the Space, look at what the system was showing; **`the engine could draw`** with an `undrawn` verdict means the engine believed it drew and
-  `frame_post_draw` did not tell, look at the display; **`unpaced`** is a display that does not pace the loop (off, locked). The lane still repeats a slot up to three times and then ends as not presented, as before.
+- Read a refusal by its reason: **`window_can_draw() was false in N of M sampled frames`** is the engine saying it could not draw in those frames, which on macOS is the system calling the window occluded (the screen or the Space: look at what
+  the system was showing), and the spans tell whether they are the frames that were not drawn; **`window_can_draw() was never false`** with an `undrawn` verdict is **open**: the engine believed it could draw and the frames were not drawn
+  all the same, and what happened is for an investigation, not something the record settles; **`unpaced`** is a display that does not pace the loop (off, locked). The lane still repeats a slot up to three times and then ends as not
+  presented, as before.
 - A receipt with `undrawableFrames` greater than 0 in an *accepted* run is not wrong: the run drew where it counted, but some frames of it did not. Those frames are in `spans`, and a reader who wants the strictest run can look
   for runs with 0.

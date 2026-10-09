@@ -7,9 +7,9 @@
 
 Esta fatia é o achado do **V05-06 (GF-30)** do marco 0.5 Frontier: as faixas janeladas do [baseline](../../research/frontier-baseline.md) e do [turno](../../research/frontier-turn.md) recusaram corrida após corrida como `undrawn` enquanto o usuário usava o Mac
 ([as tentativas de 2026-10-09](../frontier-baseline/README.md#tentativas-janeladas-de-2026-10-09-não-apresentadas)), e nada no recibo dizia por quê. A [pesquisa](../../research/windowed-presence.md) lê o motivo na fonte do Godot 4.7.2: no macOS o engine **não desenha uma janela que o sistema diz
-ocluída** (`godot_window_delegate.mm` 387-393 limpa `is_visible`; `window_can_draw` o devolve; `main/main.cpp` 5080-5097 pula o `RenderingServer::draw`, e com ele o `frame_post_draw`; o laço passa a dormir 6,9 ms por quadro). A fatia põe a janela da faixa à frente das outras e acima delas
+ocluída** (`godot_window_delegate.mm` 387-393 limpa `is_visible`; `window_can_draw` o devolve; `main/main.cpp` 5080-5097 pula o `RenderingServer::draw`, e com ele o `frame_post_draw`, **nos quadros em que `window_can_draw()` é falso**; o laço passa a dormir 6,9 ms por quadro). Isso explica os quadros que o helper conta como não desenháveis; uma execução `undrawn` em que todas as amostras dizem `window_can_draw() == true` **fica em aberto**, sem concluir que o draw foi pulado. A fatia põe a janela da faixa à frente das outras e acima delas
 ([`tests/window-presence.gd`](../../../tests/window-presence.gd): `Window.always_on_top` e `DisplayServer.window_move_to_foreground`) e **grava, a cada quadro de processo, se o engine podia desenhá-la** (`window_can_draw()`): cada tentativa do recibo ganha `undrawableFrames` (de `sampledFrames`), os recibos brutos ganham os trechos
-desses quadros, e o motivo de uma recusa `undrawn` diz se a janela não podia desenhar. **A regra de validade não mudou** (`drew && paced`), nenhum recibo antigo muda de veredito e **nenhum critério, peso ou denominador do 1.0 muda**: o critério `baseline` continua aberto, e esta página não é a entrega que o fecha.
+desses quadros, e o motivo de uma recusa `undrawn` diz o que o engine disse da janela (em quantos quadros `window_can_draw()` foi falso, ou que nunca foi, caso em que a causa fica em aberto). **A regra de validade não mudou** (`drew && paced`), nenhum recibo antigo muda de veredito e **nenhum critério, peso ou denominador do 1.0 muda**: o critério `baseline` continua aberto, e esta página não é a entrega que o fecha.
 
 Todo link de código abaixo está fixado no commit [`1bc3a3c`](https://github.com/journey-studios/godot-fabric/commit/1bc3a3cc7d5d1a160f2158a87a5f8c623b504130). Cada fonte executada, listada em `sourcePins` do recibo (11 arquivos), tem o mesmo SHA-256 que o blob desse commit: a árvore estava limpa nos três momentos acima.
 
@@ -89,6 +89,9 @@ Os recibos brutos **não são commitados** (são grandes, e `docs/evidence/**/*-
 
 Os fontes executados (`sourcePins`, o mesmo SHA-256 que o blob de `1bc3a3c`): `tests/window-presence.gd` `0ee6ce5f…`, `tests/frontier-baseline-graphics-probe.gd` `dae47afe…`, `tests/frontier-baseline-swap.gd` `31c9e6ce…`, `tests/frontier-baseline-oracle.mjs` `a55e1d85…`, `scripts/frontier-baseline-graphics.mjs` `c974c68b…`,
 `tests/frontier-turn-probe.gd` `b750a1e2…`, `tests/frontier-turn-runner.gd` `35f93244…`, `tests/performance-sampler.gd` `1c0020bc…`, `tests/frontier-turn-oracle.mjs` `0cad0833…`, `scripts/frontier-turn-graphics.mjs` `63e514f7…` e `scripts/frontier-turn-lane.mjs` `e8dd315d…` (inteiros no `execution.json`).
+
+**Depois da execução**, a revisão do PR mudou, sem tocar no que as faixas medem: comentários de `tests/window-presence.gd` e dos scripts, o texto do motivo de uma recusa `undrawn` (que agora diz quantos quadros tiveram `window_can_draw()` falso e não nomeia causa; uma execução em que ele nunca foi falso fica em aberto) e o `verifyGraphicsReceipt`, que passou a exigir que a contagem de cada tentativa seja a do `presence` do seu recibo
+bruto. Os dois recibos de `1bc3a3c` continuam aceitos pelo `verifyGraphicsReceipt` novo, e os `sourcePins` acima seguem sendo os do commit executado.
 
 ## O que isto mostra, e o que não mostra
 

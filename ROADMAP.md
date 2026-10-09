@@ -840,7 +840,8 @@ makes the engine skip the draw (`window_can_draw()` reads the flag that the wind
 `RenderingServer::draw`, `frame_post_draw` never fires, and the loop sleeps 6.9 ms a frame), which is the signature of the `undrawn`
 refusals of 2026-10-09 (a mean idle interval of 6.900 ms where the idle window drew no frame). A small helper puts the window in front of
 the others and above them and counts, for every process frame, the frames the engine could not draw: each attempt of the receipts carries
-`undrawableFrames`, and the reason of an `undrawn` refusal says whether the window could not draw. The validity rule is unchanged and no
+`undrawableFrames`, and the reason of an `undrawn` refusal says what the engine said of the window (a run in which it never said it could not draw
+stays open, with no cause concluded). The validity rule is unchanged and no
 recorded receipt changes its verdict. Both windowed lanes ran once each on the implementation commit and were presented at the first
 attempt of all five slots, with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379 in the turn, with nobody at the Mac:
 the runs show that the helper opens a window the engine can draw, not that it beats interference, and a locked or asleep display is not

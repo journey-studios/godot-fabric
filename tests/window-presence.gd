@@ -10,7 +10,9 @@ extends RefCounted
 # above them (Window.always_on_top, the floating level), and waits for the engine to say that it can draw. It changes nothing else: the window keeps
 # its title bar and is never made borderless, and no window flag that refuses the focus is set. Then, at every process frame, the helper reads
 # DisplayServer.window_can_draw() and counts the frames in which the engine could not draw, with the spans of those frames, so that a run which
-# did not draw says whether the window was the cause. close() stops the sampling and returns the record the probe writes in its report.
+# did not draw says what the engine said of the window. The engine does not draw in a frame where the flag is false, so such frames can account for missing
+# draws, where their spans meet them; a run that did not draw while the flag was true in every sampled frame is left open, with no cause concluded.
+# close() stops the sampling and returns the record the probe writes in its report.
 #
 # Nothing here judges: the validity of a run is the oracle's (graphicsRunValidity in tests/frontier-baseline-oracle.mjs) and does not read this.
 # Headless there is no window to present: open() returns {"windowed": false} and nothing is sampled.

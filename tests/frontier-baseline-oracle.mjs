@@ -320,22 +320,25 @@ export function idleReference(intervals) {
 // An invalid run is kept in the receipt, with its reason and its raw intervals, and repeated; no statistic of it is ever reported as a frame time.
 // The rule does not read the window's presence (tests/window-presence.gd): a run that did not draw is refused whatever the engine said of the window. The
 // count of the frames in which the engine could not draw it (undrawableFrames, of sampledFrames) is recorded with the validity, and the reason of an undrawn
-// refusal says whether the window was the cause (undrawnReason).
+// refusal says what the engine said of the window (undrawnReason).
 export const UNPACED = "unpaced: the display is not presenting";
 const UNDRAWN = "undrawn: the window did not draw throughout";
 
-// Why a run that did not draw did not, as far as the engine says: the frames in which it could not draw the window (window_can_draw() was false, which on
-// macOS is the system saying the window is occluded: docs/research/windowed-presence.md), or that it could draw in every frame sampled and the frames were not
-// drawn all the same. A run recorded before the presence has no such count and its reason is the plain one. The reason explains the refusal and never decides it.
+// What the engine said of the window in a run that did not draw: the frames in which it could not draw it (window_can_draw() was false, which on macOS is the
+// system saying the window is occluded: docs/research/windowed-presence.md), or that it never said so. The count is stated and no cause is: the engine does not
+// draw in the frames where the flag is false, but whether those frames are the ones that were not drawn is read from the spans, and a run in which the flag was
+// never false is left open, with nothing said of why it was not drawn. A run recorded before the presence has no such count and its reason is the plain one.
+// The reason explains the refusal and never decides it.
 export function undrawnReason(presence) {
   if (presence === undefined || presence === null) {
     return UNDRAWN;
   }
   if (presence.undrawableFrames > 0) {
     const spans = `${presence.spanCount} span${presence.spanCount === 1 ? "" : "s"}`;
-    return `${UNDRAWN} (the window could not draw: window_can_draw() was false in ${presence.undrawableFrames} of ${presence.sampledFrames} sampled frames, in ${spans})`;
+    return `${UNDRAWN} (window_can_draw() was false in ${presence.undrawableFrames} of ${presence.sampledFrames} sampled frames, in ${spans}: the engine does not draw in those frames, `
+      + "and whether they account for the missing draws is read from the spans)";
   }
-  return `${UNDRAWN} (the engine could draw: window_can_draw() was never false in the ${presence.sampledFrames} sampled frames)`;
+  return `${UNDRAWN} (window_can_draw() was never false in the ${presence.sampledFrames} sampled frames: the engine believed it could draw, and the cause is open)`;
 }
 
 export function graphicsRunValidity(run) {
@@ -376,13 +379,21 @@ export function verifyGraphicsReceipt(receipt) {
     assert.ok(attempt.raw != null && attempt.raw.idleIntervalsUsec.length > 0, "and keeps its raw intervals");
   }
   // The window's presence is newer than the receipts: the attempts and runs recorded before it have none, and are judged as they always were. When an attempt
-  // carries the count of the frames the engine could not draw, it is a count of the frames sampled, and a refusal for not drawing says what the engine said.
+  // carries the count of the frames the engine could not draw, it is a count of the frames sampled, it is the count of the presence of its own raw run (the
+  // accepted run in `raw` or the rejected attempt's `raw`, by the attempt's number), and a refusal for not drawing says what the engine said.
+  const rawOfAttempt = attempt => receipt.rejectedAttempts.find(rejected => rejected.attempt === attempt.attempt)?.raw ?? receipt.raw.find(raw => raw.attempt === attempt.attempt);
   for (const attempt of receipt.attempts) {
     if (attempt.undrawableFrames === undefined || attempt.undrawableFrames === null) {
       continue;
     }
     assert.ok(Number.isInteger(attempt.undrawableFrames) && attempt.undrawableFrames >= 0 && attempt.undrawableFrames <= attempt.sampledFrames,
       `Attempt ${attempt.attempt}: the frames the engine could not draw are a count of the sampled ones`);
+    const presence = rawOfAttempt(attempt)?.presence;
+    assert.ok(presence !== undefined && presence !== null, `Attempt ${attempt.attempt} carries a count of the frames the engine could not draw and its raw run holds no presence`);
+    assert.equal(attempt.undrawableFrames, presence.undrawableFrames,
+      `Attempt ${attempt.attempt} says ${attempt.undrawableFrames} frames the engine could not draw and its raw run says ${presence.undrawableFrames}`);
+    assert.equal(attempt.sampledFrames, presence.sampledFrames,
+      `Attempt ${attempt.attempt} says ${attempt.sampledFrames} sampled frames and its raw run says ${presence.sampledFrames}`);
     if (attempt.valid === false && typeof attempt.reason === "string" && attempt.reason.startsWith("undrawn")) {
       assert.match(attempt.reason, /window_can_draw\(\)/, `Attempt ${attempt.attempt} was refused for not drawing and its reason says what the engine said of the window`);
     }
