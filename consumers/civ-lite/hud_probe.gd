@@ -1,9 +1,10 @@
 extends Node
 
-# What the two HUD probes share (hud_validation.gd and overlay_validation.gd, each run by tests/civ-lite-ui-native.test.mjs with its own
-# flag): reading the HUD's tree as the native host reports it, waiting for state, pushing real pointer events through the viewport,
-# and the report. A probe drives the real game scene and writes what the HUD showed as raw observations, which the lane's oracle judges
-# again on its own; it decides nothing the HUD should decide. The HUD is read from the host's snapshot (`hud.call("snapshot")`), not from
+# What the three HUD probes share (hud_validation.gd, overlay_validation.gd and stability_validation.gd, each run by
+# tests/civ-lite-ui-native.test.mjs with its own flag): reading the HUD's tree as the native host reports it, waiting for state, playing
+# the replay through the services, pushing real pointer events through the viewport (single ones and bursts), and the report. A probe
+# drives the real game scene and writes what the HUD showed as raw observations, which the lane's oracle judges again on its own; it
+# decides nothing the HUD should decide. The HUD is read from the host's snapshot (`hud.call("snapshot")`), not from
 # the scene tree: the Controls of a Modal are children of the Modal's own Window, which `hud.find_child` does not reach.
 #
 #   --capture    saves the screenshots of a headed run
@@ -17,6 +18,8 @@ const DEVICE := 1001
 const WAIT_FRAMES := 90
 const MAP_ORIGIN := Vector2(24, 24)
 const MAP_TILE := 24
+# Real pointer events of one kind that a burst pushes at the map: what an overlay must keep from the World.
+const CLICKS := 100
 const PANELS := ["hud-bar", "hud-actions", "hud-tile", "hud-city", "hud-research", "hud-dialog"]
 const TABLE := {
   "none": ["hud-bar"],
@@ -107,7 +110,7 @@ func rendered_actions(seen: Dictionary) -> Array:
   var rows: Array = []
   for entry: Dictionary in seen.nodes:
     var id: String = entry.testID
-    if not id.begins_with("hud-actions-") or id.ends_with("-label") or id.ends_with("-reason") or id == "hud-actions-title":
+    if not id.begins_with("hud-actions-") or id.ends_with("-label") or id.ends_with("-reason") or id.ends_with("-icon") or id == "hud-actions-title":
       continue
     rows.append({"key": id.trim_prefix("hud-actions-"), "label": text_of(seen, id + "-label"), "enabled": not entry.disabled,
       "reason": text_of(seen, id + "-reason"), "x": entry.rect[0], "y": entry.rect[1]})
@@ -177,6 +180,23 @@ func settle() -> bool:
   return reached and shows(game_snapshot())
 
 
+# One step of the replay played through the services, waiting for the job when it is an end turn that the game accepted.
+func play_step(index: int) -> void:
+  var move: Dictionary = Replay.STEPS[index]
+  var result: Dictionary = services.callv(move.intent, move.args)
+  if move.intent == "end_turn" and int(result.ok) == 1:
+    await wait_until(func() -> bool: return int(services.job) == 0)
+
+
+# A fresh game played through the services up to the step, waiting for the jobs of the end turns, and the HUD caught up.
+func play_to(step: int) -> void:
+  services.new_game()
+  await settle()
+  for index in range(step + 1):
+    await play_step(index)
+  await settle()
+
+
 func hud_stats() -> Dictionary:
   var text: String = application.call("evaluate", "JSON.stringify(FrontierHud.stats())")
   var value: Variant = JSON.parse_string(text)
@@ -241,6 +261,11 @@ func rect_of(id: String) -> Array:
   return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 
 
+# How many calls the game's methods have counted, all together.
+func total_calls() -> int:
+  return int(services.callbacks.values().reduce(func(total: int, count: int) -> int: return total + count, 0))
+
+
 func heard_now() -> Dictionary:
   var node := world()
   return node.heard.duplicate() if node != null else {}
@@ -256,6 +281,47 @@ func press(id: String) -> bool:
 
 func tile_centre(x: int, y: int) -> Vector2:
   return MAP_ORIGIN + Vector2(x, y) * MAP_TILE + Vector2(MAP_TILE, MAP_TILE) * 0.5
+
+
+# Real pointer events of one kind over the map, `count` of them on tiles that cycle through it, all pushed before a frame passes: the
+# World hears them in `_unhandled_input` or does not, and nothing in the HUD needs a frame to decide that.
+func burst(kind: String, count: int) -> Dictionary:
+  var before := heard_now()
+  var selects_before := int(services.callbacks.get("select_tile", 0))
+  var selection_before: Dictionary = game_snapshot().selection.duplicate()
+  for index in range(count):
+    var point := tile_centre(2 + index % 20, 2 + int(index / 20.0) % 12)
+    var motion := InputEventMouseMotion.new()
+    motion.device = DEVICE
+    motion.position = point
+    motion.global_position = point
+    get_viewport().push_input(motion, true)
+    for down in [true, false]:
+      var event := InputEventMouseButton.new()
+      event.device = DEVICE
+      event.position = point
+      event.global_position = point
+      event.button_index = {"left": MOUSE_BUTTON_LEFT, "right": MOUSE_BUTTON_RIGHT, "wheel": MOUSE_BUTTON_WHEEL_UP}[kind]
+      event.pressed = down
+      get_viewport().push_input(event, true)
+  await frames(4)
+  return {"kind": kind, "count": count, "heardBefore": before, "heardAfter": heard_now(), "selectCalls": int(services.callbacks.get("select_tile", 0)) - selects_before,
+    "selectionBefore": selection_before, "selectionAfter": game_snapshot().selection.duplicate()}
+
+
+func bursts() -> Array:
+  var rows: Array = []
+  for kind in ["left", "right", "wheel"]:
+    rows.append(await burst(kind, CLICKS))
+  return rows
+
+
+func reached(row: Dictionary) -> bool:
+  return int(row.heardAfter.buttons) - int(row.heardBefore.buttons) == 2 * int(row.count)
+
+
+func silent(row: Dictionary) -> bool:
+  return row.heardAfter == row.heardBefore and row.selectCalls == 0 and row.selectionAfter == row.selectionBefore
 
 
 func capture_to(file: String) -> bool:

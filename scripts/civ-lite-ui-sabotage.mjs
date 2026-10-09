@@ -31,6 +31,16 @@ import {guardSources} from "./sabotage-sources.mjs";
 //  dialog-unkeyed     the dialog is not keyed by the event's id: the three events are one subtree that updates in place, so the Control
 //                     of the dialog is the same one every time.
 //
+// The five of the stability lane (V05-05 `estabilidade`) run its probe alone, or only its static scan, and the oracle's categories are theirs:
+//  close-leaks-connection  the store opens a connection to the snapshot every time the game is asked to clear the selection (the call Close and
+//                     Escape make) and never lets it go: a listener leak, one registry subscription and one HUD connection more each time.
+//  modal-stays-mounted  the city screen's Modal is gated on the city existing and not on the context: once the city is founded its Window stays
+//                     open, empty, after the screen is closed (a Window leak, which also keeps the map blocked).
+//  focus-grabbed      a Control under the overlay (the World's) takes the focus when the city screen or the dialog opens: the overlay's Window
+//                     is no longer the only place the focus is.
+//  icon-missing       an icon points at an asset that is not there: its Image fails to load and draws nothing.
+//  import-outside-manifest  the HUD imports TextInput, a name the 0.5 manifest leaves out; nothing runs it, only the static scan sees it.
+//
 // A variant whose run leaves no observed.json (a crash, a failed assertion that came first) is recorded as nothing observed and is not
 // rejected. Run with:
 //   node scripts/civ-lite-ui-sabotage.mjs
@@ -81,6 +91,23 @@ const variants = [
   {name: "disabled-ignored", file: `${template}/ui/hud/kit.tsx`,
     find: "  return <Pressable testID={id} disabled={!enabled} onPress={onPress}\n",
     replace: "  return <Pressable testID={id} onPress={onPress}\n"},
+  {name: "close-leaks-connection", file: `${template}/ui/store.ts`,
+    find: "export function send(...call: FrontierCall): Promise<FrontierResult | null> {\n  return record(call[0], callFrontier(...call));\n}\n",
+    replace: "export function send(...call: FrontierCall): Promise<FrontierResult | null> {\n  if (call[0] === FRONTIER_CLEAR_SELECTION) {\n"
+      + "    hold(GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, () => {}));\n  }\n  return record(call[0], callFrontier(...call));\n}\n"},
+  {name: "modal-stays-mounted", file: `${template}/ui/hud/hud.tsx`,
+    find: "    {panels.includes(\"city\") || panels.includes(\"research\") ? <Overlay id=\"hud-city-overlay\" onRequestClose={closeSelection}>\n",
+    replace: "    {snapshot.city.present === 1 ? <Overlay id=\"hud-city-overlay\" onRequestClose={closeSelection}>\n"},
+  {name: "focus-grabbed", file: `${template}/world/world.gd`,
+    find: "func _on_snapshot_changed(_snapshot: Dictionary) -> void:\n  queue_redraw()\n",
+    replace: "var _grabber: Control\n\n\nfunc _on_snapshot_changed(_snapshot: Dictionary) -> void:\n  queue_redraw()\n  if _snapshot.context == \"city\" or _snapshot.context == \"dialog\":\n"
+      + "    if _grabber == null:\n      _grabber = Control.new()\n      _grabber.focus_mode = Control.FOCUS_ALL\n      add_child(_grabber)\n    _grabber.grab_focus()\n"},
+  {name: "icon-missing", file: `${template}/ui/hud/icons.ts`,
+    find: "import food from \"../icons/food.png\";\n",
+    replace: "const food = { uri: \"res://icons/missing.png\", width: 32, height: 32 };\n"},
+  {name: "import-outside-manifest", file: `${template}/ui/hud/kit.tsx`,
+    find: "import { Image, Pressable, Text, View } from \"react-native\";\n",
+    replace: "import { Image, Pressable, Text, TextInput, View } from \"react-native\";\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];

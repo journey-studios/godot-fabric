@@ -74,7 +74,7 @@ function renderedActions(observed) {
   const rows = [];
   for (const entry of observed.nodes) {
     const id = entry.testID;
-    if (!entry.visible || !id.startsWith("hud-actions-") || id === "hud-actions-title" || id.endsWith("-label") || id.endsWith("-reason")) {
+    if (!entry.visible || !id.startsWith("hud-actions-") || id === "hud-actions-title" || id.endsWith("-label") || id.endsWith("-reason") || id.endsWith("-icon")) {
       continue;
     }
     rows.push({key: id.slice("hud-actions-".length), label: textOf(observed, `${id}-label`) ?? "", enabled: !entry.disabled,

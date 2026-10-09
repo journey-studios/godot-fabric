@@ -556,6 +556,48 @@
         "docs/research/app-state.md",
         "docs/evidence/app-state/README.md"
       ]
+    },
+    {
+      "name": "AppRegistry",
+      "decision": "supported",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "AppRegistry",
+        "status": "missing_public_export",
+        "target": "1_0",
+        "roadmap": "GF-07",
+        "evidence": [
+          "src/react-native-platform.jsx"
+        ]
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit records a missing public export; AppRegistry has been exported by src/react-native-platform.jsx since the shared-roots slice (docs/evidence/shared-roots/README.md): registerComponent and getAppKeys over RN's original AppRegistryImpl, which is how the HUD registers its component"
+      },
+      "facade": [
+        "src/app-registry.js"
+      ],
+      "runtime": "RN's original AppRegistryImpl behind a frozen facade that validates the key and the provider",
+      "props": null,
+      "subset": {
+        "members": [
+          "registerComponent",
+          "getAppKeys"
+        ],
+        "registerComponent": "a nonempty string key and a function that gives the component; a section is refused (`Godot AppRegistry does not implement sections`), and so is a key already registered or reserved",
+        "reason": "the HUD's entry point: consumers/civ-lite/ui/index.tsx registers `FrontierHUD` with it, and the application mounts the component by that key",
+        "limits": [
+          "runApplication, registerRunnable, registerConfig and the other members of RN's module are not part of the subset"
+        ]
+      },
+      "evidence": [
+        "src/app-registry.js",
+        "tests/shared-application-native.test.mjs",
+        "tests/platform-seams.test.mjs",
+        "docs/evidence/shared-roots/README.md"
+      ]
     }
   ],
   "notInTheManifest": {

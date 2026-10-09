@@ -56,7 +56,7 @@ test("shared files only warn when 2+ agents change them", () => {
   for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", ...appended]) {
     assert.ok(SHARED_PATHS.includes(shared), shared);
   }
-  assert.equal(SHARED_PATHS.length, 35);
+  assert.equal(SHARED_PATHS.length, 37);
   assert.equal(new Set(SHARED_PATHS).size, SHARED_PATHS.length, "no duplicates");
   // Outside any area, changing them from two agents is only a shared warning.
   for (const file of appended) {
