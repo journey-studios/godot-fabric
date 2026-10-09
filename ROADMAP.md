@@ -849,6 +849,20 @@ covered. The `baseline` criterion stays open; a later delivery closes it with th
 [record](https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md)
 is local macOS arm64 evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-06, criterion `baseline`, closed: the windowed lane of the baseline was presented. On 2026-10-09, on commit
+`1bc3a3c` with a clean tree, the local lane (`caffeinate -d node scripts/frontier-baseline-graphics.mjs`) was presented by the
+display: five of five runs were accepted at the first attempt, with the vsync on at 120 Hz, exit code 0 and 0 of 25,469 sampled
+frames the engine could not draw. At the median across the runs, the frame of a swap that creates 0, 50, 75 or 100 nodes has a p50
+of 3.7, 8.4, 11.2 and 13.1 ms and a p95 of 13.7, 11.1, 14.1 and 16.6 ms, and none of the 1,800 swap frames or the 3,000 idle
+intervals reached 100 ms. The proposal, by the rule written beforehand (the median across the five runs plus three times the
+interquartile range, up to 0.5 ms), puts the swap frame's p95 at 14.0, 12.5, 20.0 and 17.0 ms by nodes created, and it is not
+frozen. The Mac was loaded by other agents (load average 5.4 to 6.8 on 11 logical cores) and nobody used it, so the numbers are
+pessimistic; `congelado` remains open and may ask for a run on a quiet machine, as do the hosted CI run and the Pages publication
+of this record. With the headless half recorded earlier, the `baseline` criterion has the two pieces of evidence it asks for. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/191533a44e93ab98f745c4adfbdb2b614e1a0656/docs/evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or denominator
+moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

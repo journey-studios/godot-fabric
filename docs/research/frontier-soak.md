@@ -221,7 +221,7 @@ reading, a rise of exactly the 2,048-byte limit, a resident memory that falls by
 ## Limitations and open
 
 - One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites, so the durations are not a best case. The durations are the CPU cost of work on a loop nothing
-  paces and are not frame times; the presented frame time is the baseline's windowed lane, still pending. Only the exact counts are asked of a hosted runner.
+  paces and are not frame times; the presented frame time is the baseline's windowed lane, which was pending when this note was written and was presented on 2026-10-09 (`1bc3a3c`; see [the windowed baseline: presented](frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c)). Only the exact counts are asked of a hosted runner.
 - Synthetic events through `Input.parse_input_event`; no hardware pointer, no touch screen, no iPhone, no mobile export. The pause is `SceneTree.paused`, not the application's lifecycle (the background of a phone).
 - The HUD is a fixture, not the Frontier HUD (V05-05 is open): one heavy panel of one shape (100 nodes of `View` and `Text`), no images, scroll views, text inputs or animations. The player is one fixed rule over a game that
   stops changing after turn 14: it exercises the turn's job, the services and a changing snapshot for 100 turns, not an economy that keeps growing, and not the 64-task and 128-event budgets (the services' stress case does).
