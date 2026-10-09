@@ -638,6 +638,18 @@ visual output); the hosted CI run and the Pages publication are pending. It list
 that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
 No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-05, criteria `matriz` and `mapa`: the HUD is now driven by the context Godot derives. One store at module scope
+is the only module that talks to the game; six panels (the turn and resources bar, the unit's actions, the tile card, the city
+screen, research and the dialog) are mounted by that context alone, and over the replay's seven covering steps the visible
+testIDs match the table with no extra panel and the actions listed are the snapshot's but End turn. The bar shows the phase and a
+spinner while the turn is processed, with End turn enabled by the game's own action; the tile card shows the tile under the pointer,
+which Godot publishes as the state `frontier.hover` (the registry holds 15 bindings), and a click on the map selects through the
+World's `_unhandled_input`. An independent oracle judges the lane, the HUD of the previous commit fails it in actions, content,
+input, panels and phase, and eight retained sabotages are rejected; the lane also found a World that came back behind the HUD's layer
+after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures; the
+hosted CI run and the Pages publication are pending. The `overlays` and `estabilidade` criteria of V05-05 remain open (the dialog is
+a panel, not yet a blocking `Modal`), and no 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
