@@ -272,13 +272,26 @@ export function verifyGraphicsRun(run) {
   assert.equal(new Set(run.checks.map(check => check.name)).size, run.checks.length);
 }
 
+// The idle reference of the windowed lane: the median of the half-sums of consecutive pairs of the idle intervals x[0..n-1], that is the median
+// of (x[i] + x[i+1]) / 2 for i from 0 to n - 2, nearest rank. With the vsync on at 120 Hz the intervals of a presented window come in two groups
+// that alternate (about 300 under 4.17 ms and about 300 of 12 ms or more: docs/research/frame-clock.md), so the median of the intervals falls in one
+// group or the other by a few samples (a presented attempt had 4.136 ms, 0.031 ms under the threshold), while two neighbours add up to about one
+// refresh period and every pair's half-sum is about 8.33 ms. In a loop that nothing paces a half-sum is about 0.6 ms, and a single stall moves only
+// two of them, which the mean would not survive. Adopted on 2026-10-09 (docs/research/frontier-baseline.md, "The idle reference"); the receipts
+// recorded before it were judged by the median and are not judged again (see verifyGraphicsReceipt). Fewer than two intervals have no reference (0).
+export function idleReference(intervals) {
+  return nearestRank(intervals.slice(1).map((value, index) => (intervals[index] + value) / 2), 50);
+}
+
 // A window that the system does not present is not a measurement of a displayed application, in two ways, and a run has to survive both:
 //  - the window does not draw (covered by other windows, or the display asleep): a frame has to have been drawn after every click of the
 //    steady rounds and in at least nine of ten frames of the idle window;
 //  - the window draws but no display paces the loop (the display off or showing the lock screen: the vsync mode still reads back enabled
-//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the median interval of the idle window has to be at
-//    least half of the refresh period that the window read back. A presented window at 120 Hz idles at about 7.8 ms and an unpaced one at about
-//    0.5 ms, against a threshold of 4.17 ms.
+//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the idle reference (the median of the half-sums of
+//    consecutive pairs of the idle intervals, see idleReference) has to be at least half of the refresh period that the window read back. A
+//    presented window at 120 Hz has a reference of about 8.3 ms and an unpaced one of about 0.6 ms, against a threshold of 4.17 ms.
+// The median of the idle intervals is still recorded (idleMedianMs), as a record and not as the judge; minimumIdleMedianMs is kept, with the value
+// of minimumIdleReferenceMs, for the receipts and the tests that already read it.
 // An invalid run is kept in the receipt, with its reason and its raw intervals, and repeated; no statistic of it is ever reported as a frame time.
 export const UNPACED = "unpaced: the display is not presenting";
 const UNDRAWN = "undrawn: the window did not draw throughout";
@@ -287,13 +300,15 @@ export function graphicsRunValidity(run) {
   const drew = undrawnSwaps === 0 && run.idle.draws >= 0.9 * run.idle.frames;
   const idle = run.idle.intervalsUsec.map(value => value / 1000);
   const idleMedianMs = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
   const periodMs = run.provenance.refreshRate > 0 ? 1000 / run.provenance.refreshRate : null;
-  const minimumIdleMedianMs = periodMs === null ? null : periodMs / 2;
-  const paced = minimumIdleMedianMs !== null && idleMedianMs >= minimumIdleMedianMs;
+  const minimumIdleReferenceMs = periodMs === null ? null : periodMs / 2;
+  const paced = minimumIdleReferenceMs !== null && idleReferenceMs >= minimumIdleReferenceMs;
   return {valid: drew && paced, drew, paced, reason: !drew ? UNDRAWN : !paced ? UNPACED : null, undrawnSwaps, idleDraws: run.idle.draws,
     idleFrames: run.idle.frames, processFrames: run.frames.processed, drawnFrames: run.frames.drawn, idleMedianMs: round(idleMedianMs, 3),
-    idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
-    minimumIdleMedianMs: minimumIdleMedianMs === null ? null : round(minimumIdleMedianMs, 3)};
+    idleReferenceMs: round(idleReferenceMs, 3), idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
+    minimumIdleMedianMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3),
+    minimumIdleReferenceMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3)};
 }
 
 // The receipt of the windowed lane (scripts/frontier-baseline-graphics.mjs), judged from what it carries: an accepted run that no display paced
@@ -302,10 +317,15 @@ export function verifyGraphicsReceipt(receipt) {
   assert.equal(typeof receipt.presented, "boolean", "The receipt says whether the lane was presented");
   const period = receipt.provenance.refreshRate > 0 ? 1000 / receipt.provenance.refreshRate : null;
   assert.ok(period !== null, "The receipt carries the refresh rate that the window read back");
+  // A receipt is judged by the rule it was written under. The attempts of one written since 2026-10-09 carry idleReferenceMs, and its accepted runs
+  // are judged by the idle reference; the ones recorded before (the pinned receipts, which are not regenerated) have none and were judged by the median
+  // of the idle intervals, so they are judged by it again and nothing already recorded is reclassified.
+  const byReference = receipt.attempts.some(attempt => attempt.idleReferenceMs !== undefined);
   for (const raw of receipt.raw) {
-    const idleMedian = nearestRank(raw.idleIntervalsUsec.map(value => value / 1000), 50);
-    assert.ok(idleMedian >= period / 2,
-      `Run ${raw.run} is accepted but unpaced: its idle frame median is ${round(idleMedian, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
+    const idle = raw.idleIntervalsUsec.map(value => value / 1000);
+    const [statistic, name] = byReference ? [idleReference(idle), "idle reference (the median of the half-sums of consecutive pairs)"] : [nearestRank(idle, 50), "idle frame median"];
+    assert.ok(statistic >= period / 2,
+      `Run ${raw.run} is accepted but unpaced: its ${name} is ${round(statistic, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
   }
   for (const attempt of receipt.rejectedAttempts) {
     assert.ok(typeof attempt.reason === "string" && attempt.reason.length > 0, "A rejected attempt says why");
@@ -315,6 +335,13 @@ export function verifyGraphicsReceipt(receipt) {
   if (receipt.presented) {
     assert.equal(receipt.raw.length, GRAPHICS_RUNS, "A presented lane has all its runs");
     assert.ok(receipt.summary != null && receipt.summary.runs.length === GRAPHICS_RUNS, "and their statistics");
+    // The count above twice the idle reference is newer than the receipts: when a run carries it, it is a count of the window's samples.
+    for (const run of receipt.summary.runs) {
+      for (const frames of [run.idleFrameMs, run.swapFrameMs]) {
+        assert.ok(frames.aboveTwiceIdleReference === undefined || (Number.isInteger(frames.aboveTwiceIdleReference) && frames.aboveTwiceIdleReference >= 0
+          && frames.aboveTwiceIdleReference <= frames.samples), `Run ${run.run}: the frames above twice the idle reference are a count of its samples`);
+      }
+    }
     assert.equal(receipt.status, "presented");
   } else {
     assert.equal(receipt.summary, null, "A lane that was not presented reports no frame-time statistic");
@@ -323,18 +350,24 @@ export function verifyGraphicsReceipt(receipt) {
 }
 
 // The statistics of one run, from its raw intervals: the idle window and the frames that took a click, with the frames above twice the idle
-// median and above 100 ms (the counts the final comparison V05-10 asks for). No "missed frame" is read from them: on a display with the vsync on
-// the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at 120 Hz), so an interval longer than the
-// refresh period is not an image the display showed twice.
+// median (aboveTwiceIdleMedian, as it has always been counted), the frames above twice the idle reference (aboveTwiceIdleReference: the count that
+// the amended protocol of the final comparison V05-10 uses) and the frames above 100 ms. The count by the median depends on the group the median
+// falls in (242 of the 360 clicks of a presented run of the turn were "above twice the idle median" only because the median was in the low group),
+// the count by the reference does not. scripts/frontier-baseline-graphics.mjs and scripts/frontier-turn-graphics.mjs both print the two counts, the one by the
+// median and the one by the reference. No "missed frame" is
+// read from them: on a display with the vsync on the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at
+// 120 Hz), so an interval longer than the refresh period is not an image the display showed twice.
 function summarizeGraphicsRun(run) {
   const steady = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS);
   const toMs = values => values.map(value => value / 1000);
   const idle = toMs(run.idle.intervalsUsec);
   const swapFrames = toMs(steady.map(swap => swap.frameUsec[0]));
   const idleMedian = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
   const frame = values => ({samples: values.length, p50: round(nearestRank(values, 50), 3), p95: round(nearestRank(values, 95), 3),
     p99: round(nearestRank(values, 99), 3), max: round(Math.max(...values), 3),
-    aboveTwiceIdleMedian: values.filter(value => value > 2 * idleMedian).length, above100ms: values.filter(value => value > 100).length});
+    aboveTwiceIdleMedian: values.filter(value => value > 2 * idleMedian).length,
+    aboveTwiceIdleReference: values.filter(value => value > 2 * idleReferenceMs).length, above100ms: values.filter(value => value > 100).length});
   const byCreated = {};
   for (const swap of steady) {
     (byCreated[run.config.nativeNodes[swap.to]] ??= []).push(swap.frameUsec[0] / 1000);
@@ -357,11 +390,11 @@ export function summarizeGraphicsRuns(runs) {
   assert.equal(runs.length, GRAPHICS_RUNS, "The execution has its runs");
   for (const run of runs) {
     const validity = graphicsRunValidity(run);
-    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle median ${validity.idleMedianMs} ms, at least ${validity.minimumIdleMedianMs} ms wanted)`);
+    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle reference ${validity.idleReferenceMs} ms, at least ${validity.minimumIdleReferenceMs} ms wanted; idle median ${validity.idleMedianMs} ms, recorded)`);
   }
   const summaries = runs.map(summarizeGraphicsRun);
   const across = pick => quartiles(summaries.map(pick));
-  const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "above100ms"].map(key => [key, across(summary => summary[name][key])]));
+  const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "aboveTwiceIdleReference", "above100ms"].map(key => [key, across(summary => summary[name][key])]));
   return {runs: summaries, across: {idleFrameMs: frame("idleFrameMs"), swapFrameMs: frame("swapFrameMs"),
     injectionMsP50: across(summary => summary.injectionMs.p50), clickToNodesMsP50: across(summary => summary.clickToNodesMs.p50),
     clickToDrawMsP50: summaries.every(summary => summary.clickToDrawMs !== null) ? across(summary => summary.clickToDrawMs.p50) : null,

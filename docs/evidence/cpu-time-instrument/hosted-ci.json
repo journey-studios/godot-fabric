@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "scenario": "cpu-time-instrument",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-09T19:05:01.157Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37977034583,
+    "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/97",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T18:58:46Z",
+    "updatedAt": "2026-10-09T19:04:06Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113977828819,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:49Z",
+        "completedAt": "2026-10-09T19:01:00Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977828819"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113977830298,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:47Z",
+        "completedAt": "2026-10-09T18:58:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977830298"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113977830318,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:47Z",
+        "completedAt": "2026-10-09T18:58:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977830318"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113977830466,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:47Z",
+        "completedAt": "2026-10-09T18:58:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977830466"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113977830592,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:47Z",
+        "completedAt": "2026-10-09T18:58:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977830592"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113979904852,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T19:04:06Z",
+        "completedAt": "2026-10-09T19:04:06Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113979904852"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113977828561,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:49Z",
+        "completedAt": "2026-10-09T19:04:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977828561"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113977828963,
+        "runAttempt": 1,
+        "headSha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+        "startedAt": "2026-10-09T18:58:53Z",
+        "completedAt": "2026-10-09T19:03:28Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37977034583/job/113977828963"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+      "reference-android": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+      "reference-ios": "c57f9f62c26ea33e639e45a8499c215f5bb68f23"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T18:59:02Z",
+          "completedAt": "2026-10-09T18:59:03Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 7fb27e12a473 (--base 7fb27e12a4730869a7a4acac915908648f94d9ab); X9 clean, X10 clean"
+          ],
+          "base": "7fb27e12a4730869a7a4acac915908648f94d9ab"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T18:59:03Z",
+          "completedAt": "2026-10-09T19:00:56Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 456,
+              "suites": 0,
+              "pass": 456,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T19:00:56Z",
+          "completedAt": "2026-10-09T19:00:57Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T19:00:57Z",
+          "completedAt": "2026-10-09T19:00:57Z",
+          "passed": true,
+          "files": 1914
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/cpu-time-instrument.test.mjs",
+          "tests": 19,
+          "passed": 19,
+          "topLevel": [
+            "The oracle's constants are the probe's and the instrument's",
+            "The median of an even count is the mean of the two middle values",
+            "The oracle accepts the report of an instrument that reads CPU time, headless",
+            "The oracle accepts the report of a window that a display presented, and the render term lands six draws after its draw",
+            "Each load is judged to within 10% of its target, the boundary belonging to the accepted side",
+            "An instrument that reads the interval between frames and not the CPU time is refused by the CPU rule first",
+            "An instrument that reads the engine's once-a-second monitor as the frame's process time is refused: it repeats and it disagrees with its own stamps",
+            "A busy loop that ran outside the measured frame is not seen, and the 10% rule says so",
+            "A load that did not run what was asked is refused by the field truth",
+            "A frame without a sample is refused, whether the columns are short or the instrument says it missed one",
+            "The experiment is pinned: a different tolerance, schedule or lane is refused",
+            "The instrument's terms are what its stamps give: a total that is not the sum, or a process term that is not the clock difference, is refused",
+            "The engine's own monitor is the cross-check: an instrument over what the engine counted for the second is refused",
+            "A headless run that drew something is refused",
+            "A window that no display paced is not a measurement: nothing is judged but the arithmetic, and the answer says why",
+            "A window whose draw runs on a render thread is refused: the render term is not the main thread's",
+            "A render term whose lag is not the instrument's is refused, and so is one that does not answer the render load",
+            "A drawn frame whose render reading had not arrived is not a sample of the measured blocks",
+            "The windowed lane replays a recorded report in a checkout with no build/, and its receipt does not pass the replaying machine off as the measurement's"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 97,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/97",
+    "title": "feat(perf): Measure the main thread's CPU time per frame for the final comparison",
+    "headSha": "f83a598ae64754e6eee43a581c5b0475bc2af470",
+    "baseSha": "7fb27e12a4730869a7a4acac915908648f94d9ab",
+    "squashMergeCommit": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+    "squashCommitSubject": "feat(perf): Measure the main thread's CPU time per frame for the final comparison (#97)",
+    "mergedAt": "2026-10-09T18:58:43Z",
+    "headTreeSha": "4a60d0376e24c62e7d62c48bd5db8df3b8717046",
+    "mainTreeSha": "4a60d0376e24c62e7d62c48bd5db8df3b8717046",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 5,
+    "commits": [
+      {
+        "sha": "e38615da6ad7f9ca774e2ef8c46de33707c1b427",
+        "subject": "feat(perf): Measure the main thread's CPU time per frame for the final comparison"
+      },
+      {
+        "sha": "dad0db177f52a5ac710f52e7486073b6e354f185",
+        "subject": "docs(perf): Pin the CPU-time instrument's evidence to e38615d"
+      },
+      {
+        "sha": "67bf62e4a5444e0ff8229a39faae603af89edc93",
+        "subject": "docs(dashboard): Record the final comparison's CPU-time instrument"
+      },
+      {
+        "sha": "a32ca1e9fb11fb9f9fbed951fffa61fe441794c7",
+        "subject": "fix(perf): Say the instrument reads elapsed time, and keep replays honest"
+      },
+      {
+        "sha": "f83a598ae64754e6eee43a581c5b0475bc2af470",
+        "subject": "fix(perf): Label a replay host's OS from its own platform"
+      }
+    ],
+    "changedFiles": 18,
+    "additions": 3006,
+    "deletions": 5
+  },
+  "artifacts": {},
+  "findings": []
+}

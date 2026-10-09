@@ -56,7 +56,7 @@ others are descriptive: their medians, interquartile ranges and 95% intervals ar
 | Outcome | Unit | Arms | Observed | Verdict, floor of the margin |
 | --- | --- | --- | --- | --- |
 | p50 and p99 of the CPU time per frame, per window | ms | A, B, C | per execution | descriptive |
-| Frames above twice the run's idle median, and above 100 ms | count and share of the window | A, B, C | per execution | descriptive |
+| Frames above twice the run's idle reference, and above 100 ms | count and share of the window | A, B, C | per execution | descriptive |
 | Click to panel latency | frames | B, C | per execution (median of the measured clicks) | yes, floor 1 frame |
 | Resident memory (RSS) | MB | A, B, C | per execution (end of the run, and the maximum kept) | yes |
 | Hermes live heap after a forced collection, and the Fabric native views | bytes and nodes | C | per execution | descriptive |
@@ -69,7 +69,9 @@ others are descriptive: their medians, interquartile ranges and 95% intervals ar
 ## The active windows
 
 Four windows are measured apart. A frame is a process frame of the main loop. The idle reference is 600 consecutive frames after the boot with the map and the HUD still
-and nothing injected (the baseline's idle window); its median is the run's idle median.
+and nothing injected (the baseline's idle window). **The run's idle reference is the median (nearest rank) of the half-sums of the consecutive pairs of the per-frame values of those frames**, `median((x[i] + x[i+1]) / 2)` for `i` from 0 to `n - 2`,
+**in the same quantity as the frames it is compared with**: the CPU time per frame (the primary outcome's instrument) for the secondary outcome "frames above twice the idle reference", and the elapsed intervals between process frames, as the windowed lane records them, for
+the pacing check of the presented lane (`not-presented`). It is not the median of the values: see [Amendments](#amendments).
 
 | Window | Starts at | Ends at | Warm-up | Measured |
 | --- | --- | --- | ---: | ---: |
@@ -103,7 +105,7 @@ Each arm runs 12 times and 4 times in each position of a block. Position is bala
 **The script of an execution:**
 
 1. `boot`: starts the process and reads the time to the interactive HUD (B and C) from the engine's clock.
-2. `idle`: 600 frames with nothing injected, for the idle median.
+2. `idle`: 600 frames with nothing injected; their CPU time per frame gives the idle reference of the secondary outcome, and the elapsed intervals between their process frames give the pacing check of the presented lane.
 3. `replay`: the 12-turn replay; its golden hash must match; its frames are kept in the raw data and belong to no window.
 4. `soak`: 100 turns of scripted End Turn intents; the windows `ai-phase` and `event-burst`.
 5. `context-switches`: 24 warm-up and 50 measured consecutive selection intents through the seven contexts (none, tile, Settler, Warrior, stack of two units, city, dialog).
@@ -185,7 +187,7 @@ otherwise, and the report says it is one observation per arm and supports a desc
 
   Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date.
 - **Arm B** (`braco-b`) does not exist, and its time-box has no length yet.
-- **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`.
+- **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`. The instrument and its self-check are written in [cpu-time-instrument.md](cpu-time-instrument.md); the threshold stays unfrozen here.
 - **Missed frames with the vsync on** need presentation timestamps that Godot does not give; the band is N/A until an instrument exists.
 - **The iPhone** depends on the GO or NO-GO of V05-09. With a GO, the same measurements run with the same windows and statistics, the effective refresh rate is recorded, and if the vsync cannot be disabled there the `unlimited` lane is N/A and the CPU time per frame
   and the headroom against the refresh period with the vsync on are the outcome. With a NO-GO the comparison covers macOS only.
@@ -196,7 +198,7 @@ otherwise, and the report says it is one observation per arm and supports a desc
 | Rule | Condition | Action |
 | --- | --- | --- |
 | `load` | the 1-minute load average above the written limit before or after the execution | redo |
-| `not-presented` | in the `presented` lane, the window did not draw throughout (a frame drawn after every measured intent and in at least nine of ten frames of the idle window) or the loop was not paced (the idle median is under half of the refresh period read back) | reject with the reason, keep the raw data, redo |
+| `not-presented` | in the `presented` lane, the window did not draw throughout (a frame drawn after every measured intent and in at least nine of ten frames of the idle window) or the loop was not paced (the idle reference, the median of the half-sums of consecutive pairs of the elapsed intervals between process frames of the idle window, is under half of the refresh period read back) | reject with the reason, keep the raw data, redo |
 | `not-the-registered-build` | a Debug build, or a binary, package or script whose hash differs from the registered one, or a seed that is not the registered one | reject, redo |
 | `other-game` | the golden hash of the 12-turn replay or the final hash of the soak differs from the registered one | reject, redo; a repeat in one arm stops the campaign |
 | `errors` | an unhandled JavaScript error, a script error or an error in Godot's log, a crash, or an exit code that is not 0 | reject, redo |
@@ -221,19 +223,45 @@ The report is reproducible and structured in this order. It is written even when
 
 ## The pin
 
-The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at every depth, no whitespace) **without the `frozenValue` and `frozenAt` fields**:
+The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at every depth, no whitespace) **without the `frozenValue` and `frozenAt` fields**, for the number of amendments the file carries. It has one pin per state:
 
 ```
-8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c
+8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c   the pre-registration: no amendments (commit 82f5f43)
+8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb   one amendment: 2026-10-09, the idle reference
 ```
 
 The freeze may fill those two fields of the entries of `thresholds` and nothing else, and the test requires it: no other object may carry them (a freeze field elsewhere would escape the hash), the value and the date are filled together, all the thresholds are frozen
-or none is, and on one date. Anything else that changes in the JSON, even a letter, changes the hash and fails the test. That is on purpose: changing the protocol after its pre-registration must be a decision somebody makes by editing the pin, in the same commit, with the reason
-written in the next section. The pin is a tripwire and not a signature: it proves the file is the one the test was written for, and the commit that holds both is what fixes the date.
+or none is, and on one date. Anything else that changes in the JSON, even a letter, changes the hash and fails the test. That is on purpose: changing the protocol after its pre-registration must be a decision somebody makes, in the same commit, with **an entry in the `amendments` list of
+the JSON, a new pin in the test and the reason written in the next section**. The test refuses a change without its entry (the hash of the file no longer is the one pinned for its number of entries), an entry without its pin, and an entry whose `measurementsBefore` is not 0 while the `execucao` criterion
+of V05-10 (the comparative executions) has not run. The pin is a tripwire and not a signature: it proves the file is the one the test was written for, and the commit that holds both is what fixes the date.
 
 ## Amendments
 
-None. Changes made after the pre-registration are listed here with their date, commit and reason, and no execution made under the previous text is mixed with the new one.
+Changes made after the pre-registration are listed here with their date, commit and reason, and no execution made under the previous text is mixed with the new one. Each is also an entry of the `amendments` list of the JSON (`date`, `what`, `why`, `before`, `measurementsBefore`).
+
+### 2026-10-09: the idle reference is the median of the half-sums of consecutive pairs
+
+**Commit:** the one that adds this section, the entry in the JSON and the second pin of the test (the commit is what fixes the date). **Comparative measurements before it: 0**, so no execution is made under the previous text and none needs to be redone. **Pin after it:** `8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb` (the pre-registered one was `8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c`).
+
+**What changes.** The idle reference of a run is the median (nearest rank) of the half-sums of the consecutive pairs of the per-frame values of the 600 idle frames, `median((x[i] + x[i+1]) / 2)` for `i` from 0 to `n - 2`, in the same quantity as the frames it is compared with, in place of the median of those values.
+For the secondary outcome "frames above twice the idle reference" (which was "frames above twice the idle median"; its id is now `frames-above-twice-idle-reference`) the values are the **CPU time per frame**, read by the primary outcome's instrument (`cpu-time-instrument`), so the outcome compares a CPU time with a CPU time and its label stays in
+CPU time. For the pacing clause of the `not-presented` rule, which compares the reference with half of the refresh period, the values are the **elapsed intervals between process frames**, as the windowed lane records them and its oracle computes. Five texts of the JSON change: `idleReference.rule`, the id and
+label of that outcome, the `idle` step of the script, the `not-presented` rule and `preRegistration.amendments` (which now names the list). The thresholds, the primary outcome, the windows, the hypotheses, the statistics and the decision rule are the same.
+
+**Why.** The V05-06 windowed baseline found that, with the vsync on at 120 Hz, the 600 idle intervals of a window the display presents come in two groups that alternate: about 300 under 4.17 ms and about 300 of 12 ms or more, so two neighbours add up to about 16.67 ms and the mean is about 8.33 ms.
+The median falls in one group or the other by a few samples:
+
+- one presented attempt of the baseline was refused as unpaced with a median of 4.136 ms against the 4.167 ms required, with a mean of 8.333 ms and 5,106 of 5,110 frames drawn;
+- the five accepted runs of the turn had medians from 4.421 to 13.177 ms, and in its run 3 (median 4.421 ms) 242 of 360 click frames were "above twice the idle median" only because the median was in the low group.
+
+The median of the half-sums of pairs was between 8.327 and 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, is about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the half-sums, which the mean would not survive. The comparison
+of the three statistics over every attempt is in [the baseline's note](frontier-baseline.md) and in the evidence of the change (`docs/evidence/idle-reference/`), and the same statistic is the pacing rule of the windowed lane from the next execution on (the receipts recorded before it were judged by the median and are not judged again).
+
+**The quantity.** The two alternating groups are an effect of the elapsed intervals between process frames with the vsync on, not of the CPU time; the median of the half-sums of pairs is robust to them and to an isolated stall and, in a series with no groups, is practically its median (6.888 against 6.901 ms in a uniform loop of the baseline's receipt A,
+0.704 against 0.706 ms in an unpaced one of 2026-10-08), so the same statistic serves both quantities. The pre-registered text defined the idle median over the CPU time of the idle frames and compared the same idle median with half of the refresh period, which is a quantity of intervals; the amendment names, for each use, the quantity that is compared.
+The entry was reworded twice on review of the pull request, before the amendment reached main, so it is one amendment with one pin: its first wording (commit `237b171`, pin `6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0`) said "CPU times" for both uses, and the second (pin `b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f`) said the intervals for both. The primary outcome, the CPU time per frame read by one instrument, does not change.
+
+**What it replaces.** In `idleReference.rule`: "the median CPU time of those frames is the run's idle median, the reference of the frames above twice the idle median". In the outcome: "Frames of a window whose CPU time is above twice the run's idle median". In the script: "the idle median". In `not-presented`: "the idle median is under half of the refresh period read back".
 
 ## Reproducing
 

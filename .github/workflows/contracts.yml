@@ -654,6 +654,16 @@ jobs:
             build/frontier-turn-comparison.json
             build/frontier-turn/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:cpu-time-instrument
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-cpu-time-instrument
+          path: |
+            build/cpu-time-instrument-current-report.json
+            build/cpu-time-instrument-current.log
+            build/cpu-time-instrument-comparison.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
   # The module, focus, pointer, event, responder and accessibility suites.
   native-suites-input:
     if: github.event_name == 'workflow_dispatch'

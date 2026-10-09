@@ -814,6 +814,44 @@ evidence it asks for. The baseline's own windowed lane was not presented in its 
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** V05-06, the windowed lane's pacing rule: a run is now judged by an idle reference that does not swing with the display's
+clusters. With the vsync on at 120 Hz, the 600 idle intervals of a presented window come in two alternating groups (about 300 under
+4.17 ms and 300 of 12 ms or more), so the median fell in one group or the other: a presented attempt of the baseline was refused as
+`unpaced` for a median of 4.136 ms against the 4.167 ms required (mean 8.333 ms), and the accepted runs of the turn had medians of
+4.42 to 13.18 ms. The reference is the median of the half-sums of consecutive pairs of intervals, with the same threshold (half of
+the refresh period read back): 8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, and about
+0.6 ms in the unpaced ones. Over the 24 raw attempts of the three receipts of that day and of 2026-10-08, the mean and the new
+reference agree on every verdict and only the refused attempt would change, to accepted. No recorded receipt is reclassified, and the
+rule applies from the next execution on, which has not run yet. The pre-registered protocol of the final comparison (V05-10, criterion
+`protocolo`) took the same reference by a dated amendment, with no comparative measurement before it. No criterion changes: the
+windowed part of `baseline`, `congelado` and `execucao` stay open, the turn's script and note still describe the median until
+after the P8 slice, and the hosted CI run is pending. The
+[record](https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md) is local macOS arm64
+evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of three more 0.5 slices already on main are recorded: the turn (#86, V05-06
+`turno`), the exit guards (#87) and the idle reference (#94). For each, the push of main at its squash commit passed the Contracts
+workflow on the first attempt and its Pages run built and deployed. The push of #86 still ran the native job, so its receipt holds
+`test:frontier-turn` and the digest of the artifact `native-frontier-turn`; #87 and #94 are slices of contracts only, so their
+receipts hold the guard step (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean) and the slice's contract tests. The push of #94
+came after the native suites became opt-in, so its five native jobs are recorded as skipped, accepted only because that slice has no
+native step. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/README.md)
+links the two receipts of each. The windowed lane, the captures, the sabotages and the audit of X9 and X10 stay local, X9 and X10
+stay open, and no criterion changes state. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, preparation of criterion `execucao`: the CPU-time instrument of the final comparison is chosen and checked against a
+load of known duration, before any comparative measurement. Godot's `Performance.TIME_PROCESS` could not be the per-frame reading: at the
+source and in the binary it is a maximum assigned once a second, and with the vsync on it holds the wait for the display (about 15 ms for
+an idle 120 Hz window, where the instrument reads 0.08 ms). The instrument stamps `Time.get_ticks_usec` at the engine's hooks and adds the
+physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives six
+draws later and is aligned by draw index. In a lab scene a busy loop of 2, 5, 10 and 20 ms is read to within 0.2% headless and to within 1.5%
+in a window that the display presented at 120 Hz, an independent oracle recomputes it from the raw stamps, and three retained sabotages are
+rejected. The threshold `cpu-time-instrument` stays unfrozen, no arm has run, and the `execucao`, `protocolo` and `braco-b` criteria stay
+open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md) is local macOS arm64 evidence on a Mac shared with
+other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

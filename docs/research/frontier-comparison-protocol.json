@@ -20,8 +20,17 @@
     "measurementsBeforeThisFile": "none: the file is committed before any comparative measurement",
     "pin": "tests/frontier-comparison-protocol.test.mjs holds the SHA-256 of this file without the frozenValue and frozenAt fields",
     "freeze": "a later act fills only the frozenValue and frozenAt of the entries of `thresholds`, once, together with the `congelado` criterion of V05-06 and before the first comparative execution; nothing else of this file changes and the pin does not move",
-    "amendments": "any other change is an amendment: it is listed with its date, commit and reason in the Amendments section of the research note, the pin in the test is changed on purpose in the same commit, and no execution made under the previous text is mixed with the new one"
+    "amendments": "any other change is an amendment: it is listed with its date, commit and reason in the Amendments section of the research note and as an entry of the top-level `amendments` list (date, what, why, the text it replaces and the comparative measurements made before it), the pin in the test is changed on purpose in the same commit, and no execution made under the previous text is mixed with the new one"
   },
+  "amendments": [
+    {
+      "date": "2026-10-09",
+      "what": "The idle reference of a run, which the secondary outcome 'frames above twice the idle reference' counts against and the pacing clause of the `not-presented` rule compares with half of the refresh period, is the median (nearest rank) of the half-sums of the consecutive pairs of the per-frame values of the 600 idle frames, median((x[i] + x[i+1]) / 2) for i from 0 to n - 2, in the same quantity as the frames it is compared with (the CPU time per frame for the secondary outcome, the elapsed intervals between process frames for the pacing clause), in place of the median of those values. Five texts change: idleReference.rule, the id and label of the secondary outcome (frames-above-twice-idle-median becomes frames-above-twice-idle-reference), the idle step of the script, the not-presented invalidation rule and preRegistration.amendments, which now names this list. The thresholds, the primary outcome, the windows, the hypotheses, the statistics and the decision rule do not change.",
+      "why": "The V05-06 windowed baseline found that, with the vsync on at 120 Hz, the 600 idle intervals of a window the display presents come in two alternating groups: about 300 under 4.17 ms and about 300 of 12 ms or more, two neighbours adding up to about 16.67 ms and the mean being about 8.33 ms. The median falls in one group or the other by a few samples. One presented attempt of the baseline was refused as unpaced with a median of 4.136 ms against the 4.167 ms required, with a mean of 8.333 ms and 5,106 of 5,110 frames drawn; the five accepted runs of the turn had medians from 4.421 to 13.177 ms, and in its run 3 (median 4.421 ms) 242 of 360 click frames were above twice the idle median only because the median was in the low group. The median of the half-sums of consecutive pairs was between 8.327 and 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, is about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the half-sums, which the mean would not survive. The two alternating groups are an effect of the intervals between process frames with the vsync on, not of the CPU time; the median of the half-sums of pairs is robust to them and to an isolated stall and, in a series with no groups, is practically its median (6.888 against 6.901 ms in a uniform loop, 0.704 against 0.706 ms in an unpaced one), so the same statistic serves both quantities. The pre-registered text defined the idle median over the CPU time of the idle frames and compared the same idle median with half of the refresh period, which is a quantity of intervals; the amendment names, for each use, the quantity that is compared. The primary outcome, the CPU time per frame, does not change. The table is in docs/research/frontier-baseline.md and the evidence in docs/evidence/idle-reference/.",
+      "before": "idleReference.rule: \"after the boot, 600 consecutive frames with the map and the HUD still and nothing injected; the median CPU time of those frames is the run's idle median, the reference of the frames above twice the idle median\". Secondary outcome: id \"frames-above-twice-idle-median\", label \"Frames of a window whose CPU time is above twice the run's idle median\". runs.script, step idle: \"600 frames with nothing injected: the idle median\". Invalidation rule not-presented: \"... or the loop was not paced (the idle median is under half of the refresh period read back)\". preRegistration.amendments: \"any other change is an amendment: it is listed with its date, commit and reason in the Amendments section of the research note, the pin in the test is changed on purpose in the same commit, and no execution made under the previous text is mixed with the new one\".",
+      "measurementsBefore": 0
+    }
+  ],
   "arms": [
     {
       "id": "A",
@@ -120,7 +129,7 @@
   ],
   "idleReference": {
     "frames": 600,
-    "rule": "after the boot, 600 consecutive frames with the map and the HUD still and nothing injected; the median CPU time of those frames is the run's idle median, the reference of the frames above twice the idle median"
+    "rule": "after the boot, 600 consecutive frames with the map and the HUD still and nothing injected; the run's idle reference is the median (nearest rank) of the half-sums of the consecutive pairs of the per-frame values x[0..n-1] of those 600 frames, median((x[i] + x[i+1]) / 2) for i from 0 to n - 2, in the same quantity as the frames it is compared with: for the secondary outcome 'frames above twice the idle reference' the values are the CPU time per frame, read by the instrument of the primary outcome (thresholds.cpu-time-instrument); for the pacing clause of the not-presented rule the values are the elapsed intervals between process frames, as the windowed lane records them"
   },
   "primaryOutcome": {
     "id": "cpu-time-p95",
@@ -159,8 +168,8 @@
       "verdict": false
     },
     {
-      "id": "frames-above-twice-idle-median",
-      "label": "Frames of a window whose CPU time is above twice the run's idle median",
+      "id": "frames-above-twice-idle-reference",
+      "label": "Frames of a window whose CPU time is above twice the run's idle reference (the median of the half-sums of consecutive pairs of the CPU time per frame of the idle window)",
       "unit": "count and share of the window's frames",
       "arms": ["A", "B", "C"],
       "observation": "per execution",
@@ -283,7 +292,7 @@
     "process": "each execution is a fresh process that runs the script below once; no two executions overlap",
     "script": [
       {"step": "boot", "does": "starts the process and reads the time to the interactive HUD (B and C) from the engine's clock"},
-      {"step": "idle", "does": "600 frames with nothing injected: the idle median"},
+      {"step": "idle", "does": "600 frames with nothing injected: their CPU time per frame gives the idle reference of the secondary outcome, and the elapsed intervals between their process frames give the pacing check of the presented lane"},
       {"step": "replay", "does": "the 12-turn replay; its golden hash must match; its frames are kept in the raw data and belong to no window"},
       {"step": "soak", "does": "100 turns of scripted End Turn intents; the windows ai-phase and event-burst"},
       {"step": "context-switches", "does": "24 warm-up and 50 measured consecutive selection intents through the seven contexts; the window context-switches"},
@@ -449,7 +458,7 @@
     },
     {
       "id": "not-presented",
-      "rule": "in the presented lane, the window did not draw throughout (a frame drawn after every measured intent and in at least nine of ten frames of the idle window) or the loop was not paced (the idle median is under half of the refresh period read back)",
+      "rule": "in the presented lane, the window did not draw throughout (a frame drawn after every measured intent and in at least nine of ten frames of the idle window) or the loop was not paced (the idle reference, the median of the half-sums of consecutive pairs of the elapsed intervals between process frames of the idle window, is under half of the refresh period read back)",
       "action": "reject with the reason, keep the raw data and redo"
     },
     {

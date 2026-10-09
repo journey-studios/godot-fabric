@@ -4089,6 +4089,10 @@
                 {
                   "label": "Evidência local (macOS arm64, janela apresentada, 120 Hz): 5 de 5 vagas aceitas em 8 tentativas (3 rejeitadas como undrawn, nenhuma sem ritmo) com vsync ligado; primeiro quadro de um clique com p95 de 12,98 ms (mediana entre as execuções) e nenhum de 100 ms ou mais; quadros do turno com p95 por fase de 12,8 a 14,1 ms e nenhum de 100 ms ou mais em 4.800; o recibo bruto não é commitado (SHA-256 db86eb08…)",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/frontier-turn/hosted-ci.json"
                 }
               ]
             },
@@ -4707,6 +4711,41 @@
       "taskIds": [],
       "message": "Recibos de CI hospedada e de Pages do #93, a fatia 2a do V05-05 (critério overlays, a fila de três eventos e os Modals bloqueantes), já na main como e108e9d, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check. Como um push da main não roda mais as suítes nativas, o recibo vem do Contracts disparado à mão na main em e108e9d (run 37958818671, evento workflow_dispatch), que passou nos oito jobs na primeira tentativa, todos com o checkout do squash: nos passos test:civ-lite-ui (144 checks da probe da HUD e 26 da de overlays, os dois controles pulados pelo clone raso) e test:consumer:civ-lite (165 checks nativos), ambos no job native-suites-runtime, e os artefatos civ-lite-ui e independent-civ-lite-consumer conferem com o digest da API; os relatórios hospedados, baixados e julgados de novo fora da CI pelos oráculos independentes da lane, têm 0 checks falhos e 0 achados. O Pages (run 37958764277, o push de e108e9d) implantou o migration.json com os mesmos bytes do commitado e a entrada de atividade da fatia. Por haver um recibo por pasta, este par fica em docs/evidence/civ-lite-ui/overlays/, ao lado do da fatia 1 (#82). As capturas, os controles causais e as sabotagens seguem só locais. Nenhum done, critério ou número da 1.0 muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/overlays/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-3-93323aa",
+      "at": "2026-10-09T19:08:41.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedado e de Pages do #97 (o instrumento de tempo de CPU do V05-10): o run Contracts do push da main em c57f9f6 passou, com o teste de contrato (19 de 19) e a guarda X9 e X10 limpa, e com os jobs nativos pulados; por isso o passo nativo test:cpu-time-instrument segue só local, assim como as faixas headless e janelada. O Pages publicou os dados da main no mesmo squash. O CONTRIBUTING passou a dizer quando um recibo pode usar o push: uma fatia sem passo nativo usa o push no squash, e uma com passo nativo precisa de workflow_dispatch na main enquanto ela estiver no squash. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/93323aa0ea454888f46d0da89c40f790ba956586/docs/evidence/cpu-time-instrument/hosted-ci.json"
+    },
+    {
+      "id": "milestone-0-5-v05-10-cpu-instrument-dad0db1",
+      "at": "2026-10-09T18:32:09.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, preparação do critério execucao: o instrumento de tempo de CPU por quadro do comparativo final foi escolhido e verificado. Ele não lê o Performance.TIME_PROCESS (um máximo atribuído uma vez por segundo, que guarda a espera do display), e sim carimbos de Time.get_ticks_usec nos ganchos do engine, somando os termos de física, processo, setup e render que terminam antes do quadro ser apresentado, sem a espera do display. Contra uma carga sintética de duração conhecida, as cargas de 2, 5, 10 e 20 ms foram lidas dentro de 0,2% na faixa headless e dentro de 1,5% numa janela apresentada a 120 Hz, um oráculo independente recalcula tudo dos carimbos brutos e 3 sabotagens retidas são rejeitadas. O limiar cpu-time-instrument segue sem congelar e nenhum braço rodou: o critério execucao e as medições comparativas seguem abertos. É evidência local em macOS arm64, numa máquina dividida com outros agentes (carga entre 5,5 e 9,9), com a CI hospedada e o Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-2-13f50b1",
+      "at": "2026-10-09T17:14:51.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de mais três fatias do marco 0.5 já na main, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check: frontier-turn (#86, run 37935936175 no squash 1adcdb3, o V05-06 turno, com o passo nativo), milestone-exit-guards (#87, run 37945060216 no squash 333181d, as guardas X9 e X10) e idle-reference (#94, run 37960884650 no squash 9f55644, a referência ociosa da faixa janelada). Cada run é o push da main no squash, na primeira tentativa. No #86 o push ainda rodou o job nativo (5 jobs em success, checkout do squash em todos), e o recibo fixa o passo test:frontier-turn (1 teste, 0 falhas), o FRONTIER_TURN_PASSED: 23 dos logs do artefato native-frontier-turn, que confere com o digest da API, e os 13 testes de tests/frontier-turn-graphics.test.mjs no job contracts. O #87 e o #94 são fatias só de contratos: o recibo de cada um fixa o passo da guarda (MILESTONE_GUARDS_CHECK_PASSED, X9 e X10 limpos, com a base igual ao pai do squash) e os testes da fatia no job contracts (36 de tests/milestone-guards.test.mjs no #87; 16, 17 e 10 dos três arquivos da regra de ritmo e do protocolo no #94). O push do #94 veio depois do #88, então só rodaram contracts, reference-android e reference-ios, e os 5 jobs nativos aparecem como skipped no recibo, aceitos só porque a linha da fatia não tem passo nativo nem artefato. O Pages dos três runs (37935936238, 37945060177 e 37960884718) implantou o migration.json do squash, com os mesmos bytes do commitado e a entrada de atividade da fatia. A faixa janelada, as capturas, as sabotagens, a auditoria X9 e X10 e os recibos brutos de 2026-10-09 seguem só locais ou fora do repositório. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/README.md"
+    },
+    {
+      "id": "milestone-0-5-turn-idle-reference-01d6351",
+      "at": "2026-10-09T16:48:23.000Z",
+      "taskIds": [],
+      "message": "O script e a nota do turno (V05-06) passam a imprimir e descrever a faixa janelada pela referência ociosa do #94: as duas contagens de quadros de clique (acima de 2× a referência e acima de 2× a mediana), as recusas de tentativa pela referência e o texto de validade do recibo. A execução apresentada de 2026-10-09 segue julgada pela mediana e não é reclassificada. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/01d6351a6cfa1b0f3d28848a343184396369d771/docs/research/frontier-turn.md"
+    },
+    {
+      "id": "milestone-0-5-idle-reference-490ba8c",
+      "at": "2026-10-09T15:58:48.000Z",
+      "taskIds": [],
+      "message": "A faixa janelada do V05-06 passa a julgar o ritmo pela referência ociosa, a mediana das meias-somas de pares consecutivos dos intervalos ociosos, com o mesmo limiar (metade do período de atualização lido de volta), e não mais pela mediana dos intervalos (implementação em 237b171, evidência fixada em 490ba8c). O achado, das execuções de 2026-10-09: com o vsync ligado a 120 Hz os 600 intervalos ociosos de uma janela apresentada formam dois grupos que alternam (cerca de 300 abaixo de 4,17 ms e 300 de 12 ms ou mais), e a mediana cai num grupo ou no outro. A tentativa A8 do baseline foi recusada como unpaced com mediana de 4,136 ms contra os 4,167 ms exigidos (média de 8,333 ms, 5.106 de 5.110 quadros desenhados), as execuções aceitas do turno tiveram medianas de 4,421 a 13,177 ms e, no run 3 do turno, 242 de 360 quadros de clique estavam acima de 2× a mediana só porque ela caiu no grupo baixo; a meia-soma de pares ficou entre 8,327 e 8,342 ms nas 16 tentativas desse dia com dois grupos, em 0,704 a 0,710 ms nas três tentativas sem ritmo de 2026-10-08 e dá 0 acima de 2× a referência no run 3. Nas 24 tentativas analisadas a média e a meia-soma dão o mesmo veredito e só a A8 mudaria, de unpaced para aceita; a meia-soma foi a escolhida porque um tranco isolado mexe em duas delas e não na mediana. O resumo passa a contar os quadros acima de 2× a mediana (como antes) e acima de 2× a referência. O protocolo do V05-10 recebeu a emenda datada de 2026-10-09 (a referência ociosa do desfecho secundário e da cláusula de ritmo; o pin passa de 8dd7779d para 8833e54e), com measurementsBefore 0: nenhuma medição comparativa rodou antes. Nenhum recibo foi reclassificado: os gravados seguem julgados pela mediana, e a regra vale da próxima execução em diante, que ainda não rodou. A fatia não fecha critério (a parte janelada do baseline, o congelado e a execucao seguem abertos); o script do turno e a nota frontier-turn.md ainda descrevem a mediana até depois do P8, e a CI hospedada está pendente. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md"
     },
     {
       "id": "milestone-0-5-exit-guards-dispatch-6e556f6",

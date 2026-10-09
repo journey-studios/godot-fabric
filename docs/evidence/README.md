@@ -1052,8 +1052,27 @@ a p95 of 12.98 ms (median across the runs) and none of 1,800 reached 100 ms, and
 (4.4 to 13.2 ms across the runs) is unstable because the idle intervals fall in two alternating groups whose mean is one refresh period, so the p95 and the mean are what to read. The raw receipt is not committed (SHA-256 `db86eb08…`)
 and seven captures (one for each context) of the real HUD over the real map are kept. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` stays open, and `congelado` is a later, single act
 (this record proposes no bound). The clicks are synthetic, the HUD is V05-05's work in progress, the two
-frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded), the previous-host control does not apply since no
-C++ changed, and hosted CI is **pending**.
+frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded) and the previous-host control does not apply since no
+C++ changed. Hosted run 37935936175 (the push of main `1adcdb3`, five jobs in the first attempt) repeated the 23 headless checks, and the 13 tests of the windowed lane's judgement ran in the `contracts` job,
+and Pages published main's data ([hosted receipt](frontier-turn/hosted-ci.json), [publication](frontier-turn/publication.json)); the windowed lane, the captures and the sabotages never run in hosted CI, so the frame
+times and the timings, heap and memory numbers above are local.
+
+The [idle reference record](idle-reference/README.md), pinned at `237b171`, records the fix of a defect in the validity rule of the windowed lane that the presented executions of 2026-10-09 exposed, and the dated
+amendment of the pre-registered protocol of the final comparison (V05-10) that used the same reference. With the vsync on at 120 Hz the 600 idle intervals of a window the display presents come in two alternating groups
+(about 300 under 4.17 ms and about 300 of 12 ms or more, two neighbours adding up to about 16.67 ms), so the **median** falls in one group or the other by a few samples: one presented attempt of the baseline was
+refused as `unpaced` for a median of 4.136 ms against the 4.167 ms required (a mean of 8.333 ms, 5,106 of 5,110 frames drawn), the accepted runs of the turn had medians of 4.42 to 13.18 ms, and in one run 242 of 360 click frames were
+"above twice the idle median" only because the median was in the low group. The rule is now the **median of the half-sums of consecutive pairs** of the idle intervals (the same threshold, half of the refresh period read back):
+8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the
+half-sums, which the mean would not survive. The record compares the median, the mean and the half-sum median over the 24 raw attempts of the three receipts of 2026-10-09 (kept outside the repository, by SHA-256) and of the baseline's
+record: the mean and the half-sum median give the same verdict on all 24, and the new rule would change one verdict, the refused attempt, which it would accept. The receipts recorded before are **not reclassified** (they were judged by
+the median, and `verifyGraphicsReceipt` still judges a receipt by the rule it was written under), and the new rule applies from the next execution on. The summary now counts the frames above twice the idle median (as before)
+**and** above twice the idle reference, and the protocol of V05-10 is amended for it (`amendments[0]`, 2026-10-09, **no comparative measurement before it**; the pin of the protocol moves from `8dd7779d…` to `8833e54e…`, and a change
+of the protocol without an entry in `amendments` and a new pin now fails its test). The reference is of the same quantity as what it is compared with: the CPU time per frame for the comparison's secondary outcome, and the elapsed intervals between process frames, which is what the lane records, for the pacing check (the wording of the amendment was corrected twice on review before it reached main). The slice measures nothing of the game and **closes no criterion**. The new rule has not yet run in a real windowed execution, the turn's script
+(`scripts/frontier-turn-graphics.mjs`, owned by the open P8 slice) still prints the count by the median until a later change, `docs/research/frontier-turn.md` still describes the old rule, the tests run in Node (16 for the lane, 17 for
+the protocol). Hosted run 37960884650 (the push of main `9f55644`) ran the three jobs that a push has run since the native suites became opt-in, in the first attempt, and skipped
+the five native ones, which this slice does not depend on (no C++ changed, and the windowed lane never runs in hosted CI): its receipt records them as skipped, accepted only because the slice has no native step, and shows the
+guard step, the three contract test files (16, 17 and 10 tests) and the `contracts` job passing, and Pages published main's data ([hosted receipt](idle-reference/hosted-ci.json),
+[publication](idle-reference/publication.json)); the raw receipts of 2026-10-09 stay outside the repository.
 
 The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
 1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
@@ -1064,8 +1083,21 @@ pushed commit on a push); `--audit` walks the 28 first-parent commits from `c0f3
 [receipt](milestone-exit-guards/audit.json) that `--audit --verify` judges again with no git. The audit finds X10 clean in all 28 and X9 clean in 14 of the 15,
 with one violation, `b0e40aa` (#74): it merged the hosted CI and Pages receipts of #69 into GF-27's note and `slice` evidence, with no `done`, weight or status
 moved. It is recorded as a known violation for the user to judge, not waved through. The tests run on synthetic documents and throwaway repositories
-(35 checks), so they need no history; the hosted CI of the guard step is pending. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
+(35 checks, 36 at the squash), so they need no history. Hosted run 37945060216 (the push of main `333181d`, five jobs in the first attempt) ran the guard step on a push,
+against the parent of the squash (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean), and the 36 tests in the `contracts` job; Pages published main's data ([hosted receipt](milestone-exit-guards/hosted-ci.json),
+[publication](milestone-exit-guards/publication.json)); the pull-request and manual-dispatch branches of the step and the audit stay local. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
 milestone does, by running the audit again. A new folder with a neutral name can still hide a slice; it is listed, not failed.
+
+The [CPU-time instrument record](cpu-time-instrument/README.md), pinned at `e38615d`, records the preparation of the `execucao` criterion of V05-10: the one reading of the main thread's CPU time per process frame
+that the final comparison will use in all three arms, checked against a busy loop of known duration before any comparative measurement. The instrument (`tests/cpu-time-instrument.gd`) does **not** read
+`Performance.TIME_PROCESS`, which at the source and in the binary is a maximum assigned once a second that includes the wait for the display (in an idle 120 Hz window it reads about 15 ms where the instrument reads 0.08 ms):
+it stamps `Time.get_ticks_usec` at the engine's hooks and adds the physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives 6 draws later and is aligned by draw
+index. In the lab (an empty tree, a node that burns 2, 5, 10 and 20 ms in a block of 200 frames, idle blocks between) the four loads are read to within 0.16% headless (10 of 10 checks of the probe; the independent oracle accepts the raw report
+and the engine's own monitor agrees with the instrument's series) and to within 1.5% in a window the display presented on 2026-10-09 (120 Hz, vsync on, one run, exit code 0), where a render pulse of 30,000 rectangles lands at
+lag 6 with a gain of 1.07 ms and at most 0.012 ms at every other lag. Three retained sabotages (the interval between frames for the CPU time, the load outside the measured frame, the engine's monitor for the CPU time) are rejected by the
+probe and by the oracle, each for its own rule, and the sources come back byte for byte. **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`); the clock is monotonic elapsed time and not the thread's
+CPU time, the Mac was shared with other agents (the 1-minute load average stood between 5.5 and 9.9, above the protocol's 2.0 for a comparative execution), the render term was exercised only in a lab scene, and the arms
+and the iPhone are open. The step is in the `native-suites-frontier` job of `contracts.yml`, which only runs on manual dispatch, so the push of main at `c57f9f6` (#97) skipped it. That push's jobs passed (the contract tests, 19 of 19, and the milestone guard), and Pages published main's data ([hosted receipt](cpu-time-instrument/hosted-ci.json), [publication](cpu-time-instrument/publication.json)); the headless and windowed lanes and the sabotages stay local, and the windowed lane never runs in hosted CI.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

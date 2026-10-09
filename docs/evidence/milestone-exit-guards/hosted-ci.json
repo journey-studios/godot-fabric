@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "scenario": "milestone-exit-guards",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-09T17:06:19.493Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37945060216,
+    "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/87",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T14:33:27Z",
+    "updatedAt": "2026-10-09T15:49:55Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113869079205,
+        "runAttempt": 1,
+        "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+        "startedAt": "2026-10-09T14:33:31Z",
+        "completedAt": "2026-10-09T14:36:44Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216/job/113869079205"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113869079384,
+        "runAttempt": 1,
+        "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+        "startedAt": "2026-10-09T14:39:24Z",
+        "completedAt": "2026-10-09T15:49:32Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216/job/113869079384"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113901764304,
+        "runAttempt": 1,
+        "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+        "startedAt": "2026-10-09T15:49:35Z",
+        "completedAt": "2026-10-09T15:49:55Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216/job/113901764304"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113869079264,
+        "runAttempt": 1,
+        "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+        "startedAt": "2026-10-09T14:33:31Z",
+        "completedAt": "2026-10-09T14:39:42Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216/job/113869079264"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113869078828,
+        "runAttempt": 1,
+        "headSha": "333181d4a0687b01c046c351759182136409b7f8",
+        "startedAt": "2026-10-09T14:53:41Z",
+        "completedAt": "2026-10-09T15:01:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37945060216/job/113869078828"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "333181d4a0687b01c046c351759182136409b7f8",
+      "native-cold-start": "333181d4a0687b01c046c351759182136409b7f8",
+      "parity-comparison": "333181d4a0687b01c046c351759182136409b7f8",
+      "reference-android": "333181d4a0687b01c046c351759182136409b7f8",
+      "reference-ios": "333181d4a0687b01c046c351759182136409b7f8"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T14:33:51Z",
+          "completedAt": "2026-10-09T14:33:51Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 1adcdb3c89b9 (--base 1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f); X9 clean, X10 clean"
+          ],
+          "base": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T14:33:51Z",
+          "completedAt": "2026-10-09T14:36:39Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 422,
+              "suites": 0,
+              "pass": 422,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T14:36:39Z",
+          "completedAt": "2026-10-09T14:36:40Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T14:36:40Z",
+          "completedAt": "2026-10-09T14:36:41Z",
+          "passed": true,
+          "files": 1884
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/milestone-guards.test.mjs",
+          "tests": 36,
+          "passed": 36,
+          "topLevel": [
+            "X9: a change that adds a 0.5 entry and leaves the 1.0 alone is clean",
+            "X9: without a 0.5 entry it does not apply, even when a GF delivery changes the 1.0",
+            "X9: an entry whose id is not milestone-0-5-* does not make a change a 0.5 change",
+            "X9: a changed note violates, as text",
+            "X9: evidence and labels are text, and a changed checkpoint reports the checkpoint's path",
+            "X9: done, status and weight move the 1.0",
+            "X9: a new GF, checkpoint, checklist item or decision moves the 1.0, and so does removing one",
+            "X9: any field that is not note, label or evidence counts as a move, and so does a reordering",
+            "X9: milestones, source, updatedAt and activity are not part of the 1.0",
+            "X9: a list with a repeated id is compared whole, so a change in it cannot pass as no change",
+            "KNOWN holds the one violation the history has, with the reason",
+            "the audit accepts exactly the violations in KNOWN, no more, no fewer",
+            "X10: the tail pattern matches the names of the frozen slices and nothing else",
+            "X10: a new evidence folder whose name matches the tail is a slice that violates",
+            "X10: world-input* is allowed, and a name that does not match is no slice at all",
+            "X10: a file added inside an evidence folder that is not a slice is not one, and is listed",
+            "X10: a new research note, test or script whose name matches the tail violates",
+            "X10: a new loose file under docs/evidence is judged by its name; a name already in the base is not new",
+            "X10: no activity entry for GF-13, and no change to GF-13 unless the change delivers V05-02",
+            "--check passes on this tree against HEAD",
+            "--check passes on a tree that only adds a 0.5 entry, and says X9 is clean",
+            "--check fails on a base whose 1.0 differs, for the right reason",
+            "--check fails on a new frozen-tail slice, whether it is untracked or committed, and names it",
+            "--check judges GF-13 as the audit does",
+            "--check without a resolvable base fails with a message and never passes",
+            "--check with no --base compares with the merge-base of HEAD and origin/main",
+            "--check against the real dashboard with a base that has older 1.0 text fails on exactly that text",
+            "--audit walks a throwaway history, compares each commit with its parent and fails on what KNOWN does not list",
+            "--audit refuses a start with no parent and a start that is not on the first-parent line of the end",
+            "the committed audit receipt verifies offline: its violations are exactly the ones in KNOWN",
+            "the committed receipt holds only data derived from git, with no local path",
+            "a receipt that no longer follows from its own data is refused",
+            "--audit --verify refuses a receipt file that was edited",
+            "git runs without the variables that locate a repository",
+            "the arguments are strict",
+            "the contracts workflow runs the guard on every event it has, fetching the base, and never skips it"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 87,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/87",
+    "title": "feat(dashboard): Guard the 0.5 exit criteria X9 and X10 in CI",
+    "headSha": "b0cf3269fa7b57008f6d89bc4faf13da356be500",
+    "baseSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+    "squashMergeCommit": "333181d4a0687b01c046c351759182136409b7f8",
+    "squashCommitSubject": "feat(dashboard): Guard the 0.5 exit criteria X9 and X10 in CI (#87)",
+    "mergedAt": "2026-10-09T14:33:24Z",
+    "headTreeSha": "422226b065f248076ebe6a8a0cb535ac7b122815",
+    "mainTreeSha": "422226b065f248076ebe6a8a0cb535ac7b122815",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 5,
+    "commits": [
+      {
+        "sha": "bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7",
+        "subject": "feat(dashboard): Guard the 0.5 exit criteria X9 and X10 in CI"
+      },
+      {
+        "sha": "b02e2a531ca548b95496a7e9fb3f04165ec78d97",
+        "subject": "docs(dashboard): Pin the 0.5 exit guards' audit to bf00341"
+      },
+      {
+        "sha": "453fae2300c7daa69f13a74f60dbed295aacb2ce",
+        "subject": "docs(dashboard): Record the 0.5 exit guards (X9 and X10 stay open)"
+      },
+      {
+        "sha": "3eba4416ce64fc5e026e0eadd24290fba6709c9f",
+        "subject": "fix(dashboard): Take the merge's first parent as the guard's base"
+      },
+      {
+        "sha": "b0cf3269fa7b57008f6d89bc4faf13da356be500",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/milestone-exit-guards"
+      }
+    ],
+    "changedFiles": 12,
+    "additions": 3194,
+    "deletions": 6
+  },
+  "artifacts": {},
+  "findings": []
+}
