@@ -1,6 +1,6 @@
 # The windowed lanes and the window the system does not show: why a run is not drawn, and what the lane does about it
 
-Status: the mechanism is read at the source of official Godot 4.7.2 and the helper is exercised in the baseline's windowed lane (local, not in CI); the lane's code, receipts and tests carry the change.
+Status: the mechanism is read at the source of official Godot 4.7.2 and the helper was run once in each of the baseline's and the turn's windowed lanes (local, not in CI), both presented, with the user away; the lanes' code, receipts and tests carry the change.
 This is the finding of the 0.5 Frontier milestone's V05-06 (GF-30): on 2026-10-09 the windowed lanes of the [baseline](frontier-baseline.md) and of the [turn](frontier-turn.md) refused run after run as `undrawn`
 while the user was working on the Mac, and nothing in the receipts said why. This note reads why at the engine's source, makes the lane's window one the system has no reason to stop drawing, and records for
 every process frame whether the engine could draw it, so that a refusal says what the engine knew. **It changes no validity rule, no budget and no criterion**: a run that did not draw is refused whatever
@@ -54,7 +54,7 @@ the probe, `scripts/frontier-turn-lane.mjs`). `open()` runs once, before the fir
    depend on the application being activated.
 2. **`DisplayServer.window_move_to_foreground()`** (`display_server_macos.mm` 2675-2694; `DisplayServer.xml` 2358-2363): `activateIgnoringOtherApps:YES`, then `makeKeyAndOrderFront:`. It puts the window in front of the windows of
    its own application and asks for the application to be active. Whether the system honors the activation of a process that a script started in the background is the system's decision (the call is the engine's and AppKit
-   has been narrowing what such activation does), which is why the floating level is the first step and not an extra.
+   has been narrowing what such activation does), which is why the floating level is the first step and not an extra. In the validation runs the window was left focused in eight of ten.
 3. **It changes nothing else.** The window keeps its title bar and is not made borderless (setting the flag orders the window out, restyles it and orders it in again, `display_server_macos.mm` 2492-2546), no flag that refuses the focus is set
    (`WINDOW_FLAG_NO_FOCUS`), and the focus is asked for once, here. The user can still move, minimize or close the window.
 4. **It waits for the engine to say it can draw**: up to 3 s, for 12 process frames in a row in which `window_can_draw()` is true. The flag starts as `true` (`display_server_macos.h` 138) and a window ordered in behind others
@@ -80,18 +80,24 @@ Headless there is no window to present: `open()` returns `{"windowed": false}` a
   that did not draw is refused whatever the engine said.
 - **The receipts already recorded** have none of this and verify as they always did: the checks of the count are made only when an attempt carries it.
 
-## The validation run (2026-10-09, one execution)
+## The validation runs (2026-10-09, at `1bc3a3c`, one execution of each lane)
 
-The baseline's windowed lane ran **once**, as `caffeinate -d node scripts/frontier-baseline-graphics.mjs`, on the Apple M3 Pro with the built-in "Color LCD" (120 Hz), macOS 26.6.2, official Godot 4.7.2 over `gl_compatibility`, a 800 x 600
-window, in about four minutes. The receipt (`build/frontier-baseline-graphics.json`, 438,023 bytes, SHA-256 `6cf08c41ba6b9e5a5774b0ffd1318ab2bf6eff3518696dfe2f41c70f1066874a`, not committed) says `presented`: **five of five slots
-accepted at their first attempt, none rejected**, with `undrawableFrames` of **0 in each** (0 of 25,337 sampled frames: 4,990, 5,030, 5,121, 5,117 and 5,079; the captures run, 0 of 60). Each run's `opened` read the window back with
-`alwaysOnTop` true and `canDraw` true after the minimum 12 frames (86 to 94 ms), and `canDrawAtEnd` was true in all of them. Drawn frames were 4,987, 5,027, 5,118, 5,114 and 5,076 of 5,003 to 5,134 process frames, idle references
-8.332 to 8.340 ms, and the one-minute load average stood between 5.6 and 9.8 around the runs.
+Both windowed lanes ran **once each**, in this order, on the commit `1bc3a3c` with a clean tree (`git status` empty before the first, between the two and after the second), as `caffeinate -d node scripts/frontier-baseline-graphics.mjs` and
+`caffeinate -d node scripts/frontier-turn-graphics.mjs`, on the Apple M3 Pro with the built-in "Color LCD" (120 Hz), macOS 26.6.2, official Godot 4.7.2 over `gl_compatibility`. The [evidence record](../evidence/windowed-presence/README.md) pins them to the commit, with the tables of every attempt.
+- **The baseline** (800 x 600, about four minutes; receipt SHA-256 `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`, not committed): `presented`, exit code 0, **five of five slots accepted at their first attempt, none rejected**,
+  `undrawableFrames` **0 in each** (0 of 25,469 sampled frames: 5,120, 5,112, 5,082, 5,085 and 5,070; the captures run, 0 of 60), idle references 8.334 to 8.339 ms.
+- **The turn** (1080 x 600, about eleven minutes; receipt SHA-256 `8dd6ec9cf4776a8026c3056c337da9a9bb7c811b6b529f05c1ecee3ca111e90f`, not committed), the **first live execution of the turn's path with the helper**: `presented`, exit code 0, **five of five slots accepted at their first
+  attempt, none rejected**, `undrawableFrames` **0 in each** (0 of 68,379 sampled frames: 13,696, 13,689, 13,657, 13,643 and 13,694; the captures run, 0 of 421), idle references 8.333 to 8.341 ms.
+- **In all ten runs** `opened` read the window back with `alwaysOnTop` true and `canDraw` true after the minimum 12 frames (33 to 164 ms), and `canDrawAtEnd` was true. `focused` was **false in two of the ten** (runs 3 and 5 of the baseline): `window_move_to_foreground` had not left the window
+  focused there, and the window drew all the same, which fits the floating level being the first step of the helper and not an extra.
 
-What this shows, and what it does not. It shows the helper opens a window the engine can draw in a real run, that the record is written and verified (`verifyGraphicsReceipt` ran on the receipt before it was written), and that the lane,
-which earlier the same day never closed its slot 3 (six attempts: five refused as `undrawn`, one as `unpaced`), closed all five slots. It does **not** show that the helper overcomes interference: the system's idle time for keyboard and pointer was 5,470 s before the run and 5,743 s after
-it, so nobody touched the Mac during it, and there was no moment at which the window could have been covered. Whether a window in front and above keeps drawing while the user works, switches Space or covers it with a floating
-window is not answered by this run; the next windowed run with the user present will, in `undrawableFrames` and in the reason of a refusal. The [evidence record](../evidence/windowed-presence/README.md) pins this execution to its commit.
+What this shows, and what it does not. It shows the helper opens a window the engine can draw in a real run, in both lanes, that the record is written and verified (`verifyGraphicsReceipt` ran on each receipt before it was written), and that the lanes, the baseline of which earlier the same
+day never closed its slot 3 (six attempts: five refused as `undrawn`, one as `unpaced`), closed all ten slots. It does **not** show that the helper overcomes interference: the input devices' idle time (`HIDIdleTime`) grew by as many seconds as the clock did from before the first lane to after the second
+(19:56:43Z to 20:11:37Z), so nobody touched the keyboard or the pointer, and there was no moment at which anything could have covered the window. It does not show either that the helper is what changed the outcome, because the user's presence changed too. Whether a window in front and above keeps drawing while the user
+works, switches Space or covers it with a floating window is not answered by these runs; the next windowed run with the user present will, in `undrawableFrames` and in the reason of a refusal.
+
+**The exploratory execution.** Before the commit, the baseline's lane ran once on the working tree, while a comment of `tests/window-presence.gd` was edited in the middle of it (the file had two texts, equal in code, during the execution). It is **not** the evidence: it ran on code that no commit holds. It saw the same, `presented` with five of five slots at the
+first attempt and 0 of 25,337 sampled frames undrawable (receipt SHA-256 `6cf08c41…`, 438,023 bytes), and nobody at the Mac then either (the idle time was 5,470 s before and 5,743 s after).
 
 ## What can still keep the lane from being presented
 
