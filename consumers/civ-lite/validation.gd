@@ -1,8 +1,10 @@
 extends Node
 
 # The consumer's own validation, run with `-- --validate` (scripts/consumer-civ-lite-check.mjs does): ten cycles of
-#   (a) New game pressed on the HUD,                       (b) three intents of the roteiro through the HUD,
-#   (c) the scene reloaded (the World dropped, a new one),  (d) the menu opened from the HUD,
+#   (a) New game pressed on the HUD,                       (b) three intents of the roteiro through the HUD, the last of them
+#                                                              the end of the turn, which is a job: it waits for the job to finish,
+#   (c) the scene reloaded (the World dropped, a new one),  (d) the end of a turn and the menu pressed in the same frame: the
+#                                                              job finishes with the menu open and the World stays out of the tree,
 #   (e) New game pressed in the menu, back to the game.
 # After each cycle, once the state it waited for has arrived (never a duration: a frame count is only the limit of a wait),
 # it measures what a leak would grow: the nodes of the tree, the orphan nodes, the registry's bindings and subscriptions, its
@@ -15,6 +17,10 @@ extends Node
 
 const CYCLES := 10
 const BINDINGS := 14
+# What the HUD sees of a turn that is processed: the phase of each snapshot as it changes, from the turn at rest to the turn at rest.
+const PHASES_SEEN := ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"]
+# The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game.
+const CALLS_PER_CYCLE := 7
 # New game (a), the reload (c) and New game in the menu (e): the epoch rises by this many in a cycle.
 const NEW_GAMES_PER_CYCLE := 3
 const REPORT := "res://civ-lite-report.json"
@@ -61,7 +67,8 @@ func hud_stats() -> Dictionary:
   var text: String = application.call("evaluate", "JSON.stringify(FrontierHud.stats())")
   var value: Variant = JSON.parse_string(text)
   return value if value is Dictionary else {"subscriptions": -1, "problems": ["FrontierHud is missing"], "problemCount": 1, "results": [],
-    "resultCount": 0, "snapshots": 0, "epoch": -1, "epochs": [], "epochCount": 0, "turn": 0, "context": "", "screen": "", "calls": 0}
+    "resultCount": 0, "snapshots": 0, "epoch": -1, "epochs": [], "epochCount": 0, "turn": 0, "context": "", "screen": "", "calls": 0,
+    "phase": "", "phaseCount": 0, "phases": [], "lastJob": -1}
 
 
 func hud_epoch() -> int:
@@ -149,6 +156,30 @@ func press(id: String) -> bool:
     get_viewport().push_input(event, true)
     await frames(2)
   return true
+
+
+# Presses buttons in one frame: every click goes into the viewport before any frame passes, so that the calls the HUD makes land in
+# the same pump of the registry, in the order of the buttons.
+func press_together(ids: Array) -> bool:
+  var found := true
+  for id: String in ids:
+    var control: Control = hud.find_child(id, true, false)
+    if control == null:
+      found = false
+      continue
+    var motion := InputEventMouseMotion.new()
+    motion.device = 1001
+    motion.position = control.get_global_rect().get_center()
+    get_viewport().push_input(motion, true)
+    for down in [true, false]:
+      var event := InputEventMouseButton.new()
+      event.device = 1001
+      event.position = motion.position
+      event.button_index = MOUSE_BUTTON_LEFT
+      event.pressed = down
+      get_viewport().push_input(event, true)
+  await frames(2)
+  return found
 
 
 # The HUD sends an intent with the function its buttons use, and the game answers it: one more result.
@@ -301,20 +332,38 @@ func run_cycle(cycle: int) -> void:
   await wait_until(func() -> bool: return button_ready("action-end_turn") and text("hud-context").begins_with("Context: settler"))
   if capture and cycle == 1:
     await capture_game()
+  # The end of the turn is a job: the game accepts it with an id, the HUD sees the turn go through its phases, and the job
+  # finishes by itself. Nothing is pressed until the HUD has the turn at rest again with last_job = the job.
+  var phases_start := int(hud_stats().phaseCount)
+  var answered_before := int(hud_stats().resultCount)
   var ended := await press("action-end_turn")
-  await wait_until(func() -> bool: return int(hud_stats().turn) == 2 and text("hud-turn").begins_with("Turn 2"))
+  await wait_until(func() -> bool: return int(hud_stats().resultCount) > answered_before)
+  var job_results: Array = hud_stats().results
+  var job_id := int(job_results.back().job) if not job_results.is_empty() else 0
+  await wait_until(func() -> bool: return job_id > 0 and int(hud_stats().lastJob) == job_id and int(hud_stats().turn) == 2 and text("hud-turn").begins_with("Turn 2"))
+  var stats_after_job := hud_stats()
+  var phases_of_job: Array = tail(stats_after_job.phases, int(stats_after_job.phaseCount) - phases_start)
   # (c) The scene reloaded: the World out of the tree and freed, a new one, a new game (the epoch rises).
   var reloaded_from := world()
   var reloaded_id := reloaded_from.get_instance_id() if reloaded_from != null else 0
   services.reload_world()
   await wait_until(func() -> bool: return world() != null and world().get_instance_id() != reloaded_id and fresh_game_shown())
-  # (d) The menu, opened from the HUD: the World leaves the tree, the HUD shows the menu and lets go of the snapshot.
+  # (d) The end of a turn and the menu, pressed in the same frame: the World leaves the tree, the HUD shows the menu and lets go of
+  # the snapshot, and the job the game accepted goes on and finishes with the menu open. The World stays out until a new game.
   var menu_from := world()
   var menu_id := menu_from.get_instance_id() if menu_from != null else 0
-  var opened := await press("hud-menu")
+  var job_with_menu := int(services.next_job)
+  var turn_with_menu := int(services.game.state.turn)
+  var finished_before := int(services.finished_jobs.size())
+  var opened := await press_together(["action-end_turn", "hud-menu"])
   await wait_until(func() -> bool: return hud_stats().screen == "menu" and world() == null and button_ready("menu-new-game"))
   await wait_until(func() -> bool: return int(hud_stats().subscriptions) == 0, CLEANUP_FRAMES)
+  await wait_until(func() -> bool: return services.job == 0 and int(services.finished_jobs.get(job_with_menu, 0)) >= 1)
+  await frames(CLEANUP_FRAMES)
   var in_menu := {"screen": hud_stats().screen, "world": world() != null, "hudSubscriptions": int(hud_stats().subscriptions)}
+  var job_with_menu_report := {"job": job_with_menu, "finished": int(services.finished_jobs.get(job_with_menu, 0)), "running": int(services.job),
+    "turnBefore": turn_with_menu, "turnAfter": int(services.game.state.turn), "nextJob": int(services.next_job), "world": world() != null,
+    "finishedTotalBefore": finished_before, "finishedTotalAfter": int(services.finished_jobs.size())}
   if capture and cycle == 1:
     check(await capture_to("civ-lite-menu.png"), "Capture saved: the menu, with no World behind it")
   # (e) New game, pressed in the menu: the World is back, the HUD is on the game again with the new epoch.
@@ -328,6 +377,7 @@ func run_cycle(cycle: int) -> void:
   row["epochStart"] = epoch_start
   row["epochsSeen"] = epochs_seen_since(seen_start)
   row["menu"] = in_menu
+  row["jobs"] = {"pressed": job_id, "phasesSeen": phases_of_job, "withMenu": job_with_menu_report}
   row["freed"] = [not is_instance_valid(instance_from_id(reloaded_id)), not is_instance_valid(instance_from_id(menu_id))]
   var stats := hud_stats()
   var cycle_results: Array = tail(stats.results, int(stats.resultCount) - results_start)
@@ -335,9 +385,19 @@ func run_cycle(cycle: int) -> void:
   series.append(row)
   var runtime_errors: Array = state().errors
 
-  check(pressed_new and selected and moved and ended and opened and started and cycle_results.size() == 6
+  check(pressed_new and selected and moved and ended and opened and started and cycle_results.size() == CALLS_PER_CYCLE
     and cycle_results.all(func(result: Dictionary) -> bool: return int(result.ok) == 1),
-    label + ": the six calls of the cycle (new game, three intents, open menu, new game) were made by the HUD and the game accepted them")
+    label + ": the seven calls of the cycle (new game, three intents, end turn, open menu, new game) were made by the HUD and the game accepted them")
+  # The calls in the order the game accepted them: new game, select, move, end turn (b), end turn (d), menu, new game.
+  var end_turn_results: Array = cycle_results.filter(func(result: Dictionary) -> bool: return result.id == "frontier.end_turn")
+  check(end_turn_results.size() == 2 and job_id > 0 and int(end_turn_results[0].job) == job_id and phases_of_job == PHASES_SEEN
+    and int(stats_after_job.lastJob) == job_id and int(services.finished_jobs.get(job_id, 0)) == 1,
+    label + ": the end of the turn pressed on the HUD was a job (accepted with an id): the HUD saw it go through every phase to rest, with last_job = the job, and the game finished it once")
+  check(end_turn_results.size() == 2 and int(end_turn_results[1].job) == job_with_menu and int(job_with_menu_report.finished) == 1 and job_with_menu_report.running == 0
+    and job_with_menu_report.turnAfter == job_with_menu_report.turnBefore + 1 and job_with_menu_report.nextJob == job_with_menu + 1 and not job_with_menu_report.world
+    and job_with_menu_report.finishedTotalAfter == job_with_menu_report.finishedTotalBefore + 1
+    and in_menu.hudSubscriptions == 0,
+    label + ": the end of the turn pressed in the same frame as the menu finished with the menu open: once, the turn advanced, the World stayed out of the tree and the HUD held no connection")
   check(in_menu.screen == "menu" and in_menu.world == false and in_menu.hudSubscriptions == 0,
     label + ": in the menu the HUD showed it, the scene had no World and the HUD held no connection")
   check(row.freed == [true, true], label + ": the two Worlds the cycle dropped (the reload's and the menu's) are freed")

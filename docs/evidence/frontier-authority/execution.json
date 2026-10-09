@@ -1,0 +1,2234 @@
+{
+  "format": "godot-fabric.frontier-authority-execution/v1",
+  "executedAt": "2026-10-08",
+  "criterion": "V05-03 autoridade",
+  "implementationCommit": "d0c7096f02543912224e5fc49ffb0168e2d7e0be",
+  "executedTreeSha": "6c4915876b1d2f61618f050f2d6b10260bc72833",
+  "baseMainCommit": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file outside the ignored build/, addons/, .deps/ and node_modules/, when every command below ran (git status --porcelain empty before the first and after the last); the evidence files were added afterwards and are not inputs",
+  "nameMapping": {
+    "turn.end": "frontier.end_turn",
+    "job.finished": "frontier.turn_ended"
+  },
+  "environment": {
+    "platform": "macOS 26.6.2 arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "node": "v22.23.3",
+    "npm": "10.9.9",
+    "reactNative": "0.87.1",
+    "modes": [
+      "headless"
+    ],
+    "note": "The bundles run in the actual Hermes of a FabricApplication with the real services TurboModule, headless; the presses of the consumer are synthetic mouse events pushed into the viewport; no renderer capture exists or is claimed."
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:frontier-services and test:consumer:civ-lite steps of .github/workflows/contracts.yml have not run on hosted CI for this commit, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below equal the blobs of the implementation commit. They certify the GDScript, the TypeScript, the JavaScript fixture, the tests and the oracle that ran, not a native binary: the host the root project loads is the one built on this machine from main's native sources, and no check of this slice changes or compares it."
+  },
+  "nativeCode": {
+    "changed": false,
+    "note": "This slice adds no C++ and touches neither native/, src/ nor sdk/. The root project and the provisioned consumer load the extension at startup, as they do for every suite.",
+    "hostSha256": "9b1cc1b73d99649a10624d8eaf9beb407e8b51cdf321cced7fc3a758954f020c"
+  },
+  "previousHost": {
+    "applicable": false,
+    "reason": "The slice has no native code: there is no previous binary to compare, and the previous SDK does not apply either, because the slice exports nothing from src/ or sdk/."
+  },
+  "commands": [
+    {
+      "command": "node scripts/frontier-services-sabotage.mjs",
+      "exit": 0,
+      "elapsedSeconds": 254.08,
+      "printed": [
+        "controlStatus: 0",
+        "11 variants, every runStatus 0, every rejected"
+      ]
+    },
+    {
+      "command": "npm run test:frontier-services",
+      "exit": 0,
+      "elapsedSeconds": 27.79,
+      "printed": [
+        "# tests 11",
+        "# pass 11",
+        "# fail 0"
+      ],
+      "note": "tests/frontier-services-native.test.mjs (the probe in 2 processes, the oracle and the rule lane twice), then tests/frontier-services-parity.test.mjs (10 subtests)"
+    },
+    {
+      "command": "node scripts/consumer-civ-lite-sabotage.mjs",
+      "exit": 0,
+      "elapsedSeconds": 205.7,
+      "printed": [
+        "controlStatus: 0",
+        "5 variants, every runStatus 0, every rejected"
+      ]
+    },
+    {
+      "command": "npm run test:consumer:civ-lite",
+      "exit": 0,
+      "elapsedSeconds": 32.3,
+      "printed": [
+        "CONSUMER_CHECK_PASSED: civ-lite: 20 build/ownership checks; 165 native checks; 10 cycles"
+      ]
+    },
+    {
+      "command": "npm run test:civ-lite-game",
+      "exit": 0,
+      "elapsedSeconds": 2.04,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    }
+  ],
+  "regressions": [
+    {
+      "command": "npm run type-check",
+      "exit": 0,
+      "elapsedSeconds": 0.455,
+      "printed": [],
+      "note": "tsc-rs prints nothing but its command line; exit 0 means no diagnostic"
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "elapsedSeconds": 0.356,
+      "printed": [
+        "✓ No issues found (0.14s)"
+      ]
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "elapsedSeconds": 0.571,
+      "printed": [
+        "\"passed\": true,",
+        "\"files\": 1766,"
+      ],
+      "note": "counted on the implementation commit, before the evidence files were added"
+    }
+  ],
+  "productProbe": {
+    "command": "Godot --path . --headless --script res://tests/frontier-services-probe.gd",
+    "executions": 2,
+    "checksPerExecution": 1058,
+    "marker": "FRONTIER_SERVICES_PASSED: 1058",
+    "allCurrentAssertionsPassed": true,
+    "observedSha256": "718ed168a233b3cca47c95c980ed6e1172e9be280338a087d34d255cbf4d79e6",
+    "executionsObserveTheSame": true,
+    "bundleSha256": "5df6014653829e791cf348b454128f21fa0b34b501b33d280ba82de14a2be468",
+    "displayServer": "headless",
+    "ruleLaneChecks": {
+      "genuine": 11,
+      "mutated": 11
+    },
+    "scene": "a GameServices node (consumers/civ-lite/services/game_services.gd) with a child Application stand-in that builds the FabricApplication and emits runtime_available, a FabricSurface and a Meter node that reads the registry in the middle of each frame; the bundle is tests/frontier-services-fixture.jsx"
+  },
+  "registered": [
+    {
+      "name": "frontier.snapshot",
+      "kind": "state",
+      "response": null
+    },
+    {
+      "name": "frontier.turn_ended",
+      "kind": "signal",
+      "response": null
+    },
+    {
+      "name": "frontier.select_tile",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "integer",
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.select_unit",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.clear_selection",
+      "kind": "method",
+      "response": "completion",
+      "args": []
+    },
+    {
+      "name": "frontier.move_unit",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "integer",
+        "integer",
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.found_city",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.fortify",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.set_production",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "string",
+        "integer"
+      ]
+    },
+    {
+      "name": "frontier.set_research",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "string"
+      ]
+    },
+    {
+      "name": "frontier.resolve_event",
+      "kind": "method",
+      "response": "completion",
+      "args": [
+        "string"
+      ]
+    },
+    {
+      "name": "frontier.end_turn",
+      "kind": "method",
+      "response": "acceptance",
+      "args": []
+    },
+    {
+      "name": "frontier.new_game",
+      "kind": "method",
+      "response": "completion",
+      "args": []
+    },
+    {
+      "name": "frontier.open_menu",
+      "kind": "method",
+      "response": "completion",
+      "args": []
+    }
+  ],
+  "bindings": 14,
+  "roteiro": {
+    "steps": 73,
+    "accepted": 43,
+    "refused": 30,
+    "turns": 12,
+    "snapshotsPublished": 115,
+    "snapshotsOfTheTwelveJobs": 84,
+    "turnEndedPublished": 12,
+    "finalHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "goldenHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "traceHash": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+    "finalHashIsGolden": true,
+    "acceptedEndTurnSteps": [
+      16,
+      31,
+      34,
+      44,
+      58,
+      60,
+      63,
+      65,
+      68,
+      69,
+      70,
+      72
+    ],
+    "refusedEndTurn": [
+      {
+        "step": 47,
+        "code": "event_pending",
+        "job": 0,
+        "response": "acceptance"
+      }
+    ],
+    "actionsSentBack": 146,
+    "refusals": {
+      "nothing_selected": 1,
+      "out_of_bounds": 1,
+      "no_moves_left": 1,
+      "not_adjacent": 1,
+      "cannot_fortify": 1,
+      "not_a_settler": 1,
+      "impassable_terrain": 1,
+      "not_your_unit": 1,
+      "unknown_unit": 2,
+      "already_fortified": 1,
+      "no_city": 1,
+      "tech_required": 4,
+      "unknown_item": 1,
+      "bad_slot": 1,
+      "research_out_of_order": 1,
+      "already_researching": 1,
+      "unknown_tech": 1,
+      "not_enough_moves": 1,
+      "event_pending": 3,
+      "unknown_choice": 1,
+      "no_event": 1,
+      "tech_known": 1,
+      "already_queued": 1,
+      "already_built": 1
+    }
+  },
+  "p3Replay": {
+    "executions": 3,
+    "goldenHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "traceHash": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+    "byteIdentical": true,
+    "note": "npm run test:civ-lite-game: the game's own replay, which still uses the synchronous end_turn, leaves the same two hashes"
+  },
+  "jobFrames": {
+    "note": "job 1 of the roteiro, with the surface mounted (two snapshot subscribers: the application's and the panel's, and one of turn_ended); F0 is the frame the call was accepted in",
+    "job": 1,
+    "frames": [
+      {
+        "frame": "F0",
+        "snapshotPhase": "ai_plan",
+        "tasksRun": 1,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 0,
+        "pendingTasksBeforePump": 1,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F1",
+        "snapshotPhase": "ai_move",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F2",
+        "snapshotPhase": "production",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F3",
+        "snapshotPhase": "growth",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F4",
+        "snapshotPhase": "research",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F5",
+        "snapshotPhase": "refresh",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F6",
+        "snapshotPhase": "idle",
+        "tasksRun": 0,
+        "eventsSent": 3,
+        "pendingEventsBeforePump": 3,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      }
+    ],
+    "progress": [
+      {
+        "phase": "ai_plan",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "ai_move",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "production",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "growth",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "research",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "refresh",
+        "turn": 1,
+        "last_job": 0
+      },
+      {
+        "phase": "idle",
+        "turn": 2,
+        "last_job": 1
+      }
+    ],
+    "turnEnded": {
+      "job": 1,
+      "phases": [
+        {
+          "events": 1,
+          "name": "ai_plan",
+          "tasks": 1
+        },
+        {
+          "events": 1,
+          "name": "ai_move",
+          "tasks": 1
+        },
+        {
+          "events": 0,
+          "name": "production",
+          "tasks": 0
+        },
+        {
+          "events": 0,
+          "name": "growth",
+          "tasks": 0
+        },
+        {
+          "events": 0,
+          "name": "research",
+          "tasks": 0
+        },
+        {
+          "events": 1,
+          "name": "refresh",
+          "tasks": 3
+        }
+      ],
+      "turn": 2
+    },
+    "gameFrames": [
+      {
+        "kind": "snapshot",
+        "phase": "ai_plan",
+        "job": null
+      },
+      {
+        "kind": "snapshot",
+        "phase": "ai_move",
+        "job": null
+      },
+      {
+        "kind": "snapshot",
+        "phase": "production",
+        "job": null
+      },
+      {
+        "kind": "snapshot",
+        "phase": "growth",
+        "job": null
+      },
+      {
+        "kind": "snapshot",
+        "phase": "research",
+        "job": null
+      },
+      {
+        "kind": "snapshot",
+        "phase": "refresh",
+        "job": null
+      },
+      {
+        "kind": "turn_ended",
+        "phase": null,
+        "job": 1
+      },
+      {
+        "kind": "snapshot",
+        "phase": "idle",
+        "job": null
+      }
+    ]
+  },
+  "jobFramesWithTheScreenClosed": {
+    "job": 3,
+    "frames": [
+      {
+        "frame": "F0",
+        "snapshotPhase": "ai_plan",
+        "tasksRun": 1,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 0,
+        "pendingTasksBeforePump": 1,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F1",
+        "snapshotPhase": "ai_move",
+        "tasksRun": 0,
+        "eventsSent": 1,
+        "pendingEventsBeforePump": 1,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F2",
+        "snapshotPhase": "production",
+        "tasksRun": 0,
+        "eventsSent": 1,
+        "pendingEventsBeforePump": 1,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F3",
+        "snapshotPhase": "growth",
+        "tasksRun": 0,
+        "eventsSent": 1,
+        "pendingEventsBeforePump": 1,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F4",
+        "snapshotPhase": "research",
+        "tasksRun": 0,
+        "eventsSent": 1,
+        "pendingEventsBeforePump": 1,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F5",
+        "snapshotPhase": "refresh",
+        "tasksRun": 0,
+        "eventsSent": 1,
+        "pendingEventsBeforePump": 1,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      },
+      {
+        "frame": "F6",
+        "snapshotPhase": "idle",
+        "tasksRun": 0,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 0,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      }
+    ],
+    "progress": [
+      {
+        "phase": "ai_plan",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "ai_move",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "production",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "growth",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "research",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "refresh",
+        "turn": 3,
+        "last_job": 2
+      },
+      {
+        "phase": "idle",
+        "turn": 4,
+        "last_job": 3
+      }
+    ]
+  },
+  "scenarios": {
+    "mounted": {
+      "jobs": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "note": "the roteiro's accepted end_turn steps with the surface mounted; each waited for before the next step",
+      "eachJob": {
+        "accepted": "{ok: 1, code: ok, text: '', job: N}, response acceptance",
+        "snapshots": 7,
+        "consecutiveFrames": true,
+        "turnEndedForJob": 1,
+        "lastJobAtRest": "N"
+      }
+    },
+    "unmountedAfterAcceptance": {
+      "job": 3,
+      "unmountedAtStep": 34,
+      "phaseAtUnmount": "ai_plan",
+      "rootCountsDuringJob": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "finishedAtUnmount": 0,
+      "finishedCount": 1,
+      "turnEndedForJobAfterRemount": 1,
+      "turnAtUnmount": 3,
+      "turnAfterJob": 4,
+      "firstPanelSnapshotAfterRemount": {
+        "last_job": 3,
+        "phase": "idle",
+        "turn": 4
+      },
+      "bindingsBefore": 14,
+      "bindingsRemounted": 14,
+      "generation": "1",
+      "sameNodeAndGame": true,
+      "nodeAnswersAStepWithNoSurface": 35,
+      "hashAfterJobEqualsReference": true,
+      "panel": {
+        "cleanups": 1,
+        "connected": true,
+        "error": null,
+        "mounts": 2,
+        "readyCount": 2
+      }
+    },
+    "calls_during_job": {
+      "job": 13,
+      "phaseWhenSent": "ai_move",
+      "calls": [
+        {
+          "call": "frontier.select_tile",
+          "args": [
+            6,
+            8
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.select_unit",
+          "args": [
+            1
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.clear_selection",
+          "args": [],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.move_unit",
+          "args": [
+            1,
+            7,
+            8
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.found_city",
+          "args": [
+            1
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.fortify",
+          "args": [
+            2
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.set_production",
+          "args": [
+            "warrior",
+            0
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.set_research",
+          "args": [
+            "alphabet"
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.resolve_event",
+          "args": [
+            "welcome"
+          ],
+          "response": "completion",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        },
+        {
+          "call": "frontier.end_turn",
+          "args": [],
+          "response": "acceptance",
+          "ok": 0,
+          "code": "turn_in_progress",
+          "job": 0
+        }
+      ],
+      "snapshotsPublished": 7,
+      "turnEndedEmitted": 1,
+      "hashEqualsReference": true,
+      "frameWithTheCalls": {
+        "frame": "F2",
+        "snapshotPhase": "production",
+        "tasksRun": 10,
+        "eventsSent": 2,
+        "pendingEventsBeforePump": 2,
+        "pendingTasksBeforePump": 10,
+        "pendingTasksAfterPump": 0,
+        "pendingEventsAfterPump": 0
+      }
+    },
+    "consumerEndTurnAndMenuInTheSameFrame": {
+      "cycles": 10,
+      "jobsPressedAndWithMenu": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          9,
+          10
+        ],
+        [
+          11,
+          12
+        ],
+        [
+          13,
+          14
+        ],
+        [
+          15,
+          16
+        ],
+        [
+          17,
+          18
+        ],
+        [
+          19,
+          20
+        ]
+      ],
+      "allFinishedOnce": true,
+      "allWithTheMenuOpenAndNoWorld": true,
+      "turnAdvancedOnEveryOne": true,
+      "finishedTotalGrewByOne": true,
+      "phasesTheHudSawForThePressedJob": [
+        "ai_plan",
+        "ai_move",
+        "production",
+        "growth",
+        "research",
+        "refresh",
+        "idle"
+      ]
+    }
+  },
+  "exactlyOnce": {
+    "jobsAccepted": 15,
+    "turnEndedLog": [
+      {
+        "job": 1,
+        "turn": 2
+      },
+      {
+        "job": 2,
+        "turn": 3
+      },
+      {
+        "job": 3,
+        "turn": 4
+      },
+      {
+        "job": 4,
+        "turn": 5
+      },
+      {
+        "job": 5,
+        "turn": 6
+      },
+      {
+        "job": 6,
+        "turn": 7
+      },
+      {
+        "job": 7,
+        "turn": 8
+      },
+      {
+        "job": 8,
+        "turn": 9
+      },
+      {
+        "job": 9,
+        "turn": 10
+      },
+      {
+        "job": 10,
+        "turn": 11
+      },
+      {
+        "job": 11,
+        "turn": 12
+      },
+      {
+        "job": 12,
+        "turn": 13
+      },
+      {
+        "job": 13,
+        "turn": 2
+      },
+      {
+        "job": 14,
+        "turn": 3
+      },
+      {
+        "job": 15,
+        "turn": 4
+      }
+    ],
+    "finishedJobs": {
+      "1": 1,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1,
+      "8": 1,
+      "9": 1,
+      "10": 1,
+      "11": 1,
+      "12": 1,
+      "13": 1,
+      "14": 1,
+      "15": 1
+    },
+    "nextJob": 16,
+    "running": 0,
+    "lastJobInTheFinalSnapshotOfEachRoteiroJob": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "lastJobBeforeTheJobFinishes": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      [
+        11,
+        11,
+        11,
+        11,
+        11,
+        11
+      ]
+    ],
+    "note": "turn_ended is received by the application's module-scope subscription, which does not go away with the root; finished_jobs is the node's own count by id"
+  },
+  "ruleLane": {
+    "mutation": {
+      "name": "settler-moves",
+      "file": "consumers/civ-lite/game/rules.gd",
+      "find": "  \"settler\": {\"name\": \"Settler\", \"moves\": 2},\n",
+      "replace": "  \"settler\": {\"name\": \"Settler\", \"moves\": 0},\n"
+    },
+    "genuine": {
+      "bundleSha256": "5df6014653829e791cf348b454128f21fa0b34b501b33d280ba82de14a2be468",
+      "nativeHostSha256": "9b1cc1b73d99649a10624d8eaf9beb407e8b51cdf321cced7fc3a758954f020c",
+      "node": "v22.23.3",
+      "rulesSha256": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+      "settlerMoves": 2
+    },
+    "mutated": {
+      "bundleSha256": "5df6014653829e791cf348b454128f21fa0b34b501b33d280ba82de14a2be468",
+      "nativeHostSha256": "9b1cc1b73d99649a10624d8eaf9beb407e8b51cdf321cced7fc3a758954f020c",
+      "node": "v22.23.3",
+      "rulesSha256": "5b593b141e0f5ad932578a19400869a97b6c54970b9af404460344640dcbe0fd",
+      "settlerMoves": 0
+    },
+    "bundleIdentical": true,
+    "nativeHostIdentical": true,
+    "rulesDiffer": true,
+    "stateHashes": [
+      {
+        "observation": "initial",
+        "genuine": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e",
+        "mutated": "4126fff9b164a7f5eb7e38a81c9325329abc5212f5675977cf134bccc827a56a"
+      },
+      {
+        "observation": "select the stack",
+        "genuine": "291ec186a43202d8093a7a002d4b539fabd8818c61da8e0b118d5ef0d2b61c11",
+        "mutated": "9590652c08c05ff5c60ddf2d619a990e4473bde982042624e64e8dbc59e7d1e3"
+      },
+      {
+        "observation": "select the Settler",
+        "genuine": "1c8382f72df65c341a549e72e558541158237fdaafea3e9848154e565178ef47",
+        "mutated": "dd56dc7704877c4e40b46618a7c6619b343fd0a4dca9b7731bc4f4ad6ff10ad9"
+      },
+      {
+        "observation": "move the Settler into the forest",
+        "genuine": "5784622d7389726e2d0b68b5c722598adfba55918dd164f52a8eb9fd2f26ea63",
+        "mutated": "dd56dc7704877c4e40b46618a7c6619b343fd0a4dca9b7731bc4f4ad6ff10ad9"
+      }
+    ],
+    "differences": {
+      "initial": [],
+      "select_tile": [
+        {
+          "path": "tile.units[0].max_moves",
+          "from": 2,
+          "to": 0
+        },
+        {
+          "path": "tile.units[0].moves",
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "select_unit": [
+        {
+          "path": "actions[0].enabled",
+          "from": 1,
+          "to": 0
+        },
+        {
+          "path": "actions[0].reason",
+          "from": "",
+          "to": "no_moves_left"
+        },
+        {
+          "path": "actions[0].reason_text",
+          "from": "",
+          "to": "The unit has no movement points left."
+        },
+        {
+          "path": "tile.units[0].max_moves",
+          "from": 2,
+          "to": 0
+        },
+        {
+          "path": "tile.units[0].moves",
+          "from": 2,
+          "to": 0
+        }
+      ],
+      "move_unit": {
+        "genuine": {
+          "code": "ok",
+          "job": 0,
+          "ok": 1,
+          "text": ""
+        },
+        "mutated": {
+          "code": "no_moves_left",
+          "job": 0,
+          "ok": 0,
+          "text": "The unit has no movement points left."
+        }
+      }
+    },
+    "moveUnit": {
+      "genuine": {
+        "code": "ok",
+        "job": 0,
+        "ok": 1,
+        "text": ""
+      },
+      "mutated": {
+        "code": "no_moves_left",
+        "job": 0,
+        "ok": 0,
+        "text": "The unit has no movement points left."
+      }
+    },
+    "checks": {
+      "genuine": 11,
+      "mutated": 11
+    }
+  },
+  "bursts": {
+    "budgets": {
+      "tasksPerPump": 64,
+      "eventsPerPump": 128
+    },
+    "realSubscribers": {
+      "note": "the application's snapshot and turn_ended subscriptions and the panel's snapshot subscription (when mounted); the registry's counters, apart from the game's own in turn_ended.phases",
+      "perFrameOfTheJob": [
+        {
+          "frame": "F0",
+          "jobs": 13,
+          "maxRegistryTasks": 1,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 0,
+          "maxPendingAfterPump": 0,
+          "gamePhase": null,
+          "maxGameTasks": null,
+          "maxGameEvents": null
+        },
+        {
+          "frame": "F1",
+          "jobs": 13,
+          "maxRegistryTasks": 0,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 2,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "ai_plan",
+          "maxGameTasks": 1,
+          "maxGameEvents": 1
+        },
+        {
+          "frame": "F2",
+          "jobs": 13,
+          "maxRegistryTasks": 10,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 2,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "ai_move",
+          "maxGameTasks": 1,
+          "maxGameEvents": 1
+        },
+        {
+          "frame": "F3",
+          "jobs": 13,
+          "maxRegistryTasks": 0,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 2,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "production",
+          "maxGameTasks": 5,
+          "maxGameEvents": 1
+        },
+        {
+          "frame": "F4",
+          "jobs": 13,
+          "maxRegistryTasks": 0,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 2,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "growth",
+          "maxGameTasks": 4,
+          "maxGameEvents": 1
+        },
+        {
+          "frame": "F5",
+          "jobs": 13,
+          "maxRegistryTasks": 0,
+          "maxRegistryEvents": 2,
+          "maxPendingEventsBeforePump": 2,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "research",
+          "maxGameTasks": 5,
+          "maxGameEvents": 1
+        },
+        {
+          "frame": "F6",
+          "jobs": 13,
+          "maxRegistryTasks": 0,
+          "maxRegistryEvents": 3,
+          "maxPendingEventsBeforePump": 3,
+          "maxPendingAfterPump": 0,
+          "gamePhase": "refresh",
+          "maxGameTasks": 5,
+          "maxGameEvents": 2
+        }
+      ],
+      "jobsMeasured": 13
+    },
+    "stress": {
+      "extraSubscribers": 150,
+      "snapshotSubscribers": 152,
+      "eventsPerPublication": 152,
+      "isolated": {
+        "job": 14,
+        "publications": [
+          {
+            "label": "accepted",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "ai_plan",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "ai_move",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "production",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "growth",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "research",
+            "events": 152,
+            "pumps": [
+              128,
+              24
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          },
+          {
+            "label": "refresh",
+            "events": 153,
+            "pumps": [
+              128,
+              25
+            ],
+            "frames": 2,
+            "tasksRun": 0,
+            "pendingAfter": 0
+          }
+        ],
+        "publicationsEachSubscriberReceivedAfterItsInitialValue": 7,
+        "arrivalsInFifoOrder": true,
+        "totalArrivals": 1050
+      },
+      "free": {
+        "job": 15,
+        "events": 1065,
+        "pumps": [
+          128,
+          128,
+          128,
+          128,
+          128,
+          128,
+          128,
+          128,
+          41
+        ],
+        "backlogAtTheStartOfEachFrame": [
+          152,
+          176,
+          200,
+          224,
+          248,
+          272,
+          297,
+          169,
+          41,
+          0
+        ],
+        "publicationsEachSubscriberReceivedAfterItsInitialValue": 14,
+        "includesTheIsolatedJob": true,
+        "totalArrivals": 1050
+      }
+    }
+  },
+  "consumer": {
+    "cycles": 10,
+    "nativeChecks": 165,
+    "checksReported": 165,
+    "baseline": {
+      "connections": 2,
+      "hudSubscriptions": 1,
+      "nodes": 21,
+      "orphans": 0,
+      "subscriptions": 1
+    },
+    "series": [
+      {
+        "cycle": 1,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 4,
+        "hudEpoch": 4,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 1,
+        "jobWithMenu": 2,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 2,
+          "finishedTotalBefore": 1,
+          "job": 2,
+          "nextJob": 3,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#1",
+          "frontier.end_turn#2",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 2,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 7,
+        "hudEpoch": 7,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 3,
+        "jobWithMenu": 4,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 4,
+          "finishedTotalBefore": 3,
+          "job": 4,
+          "nextJob": 5,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#3",
+          "frontier.end_turn#4",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 3,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 10,
+        "hudEpoch": 10,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 5,
+        "jobWithMenu": 6,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 6,
+          "finishedTotalBefore": 5,
+          "job": 6,
+          "nextJob": 7,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#5",
+          "frontier.end_turn#6",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 4,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 13,
+        "hudEpoch": 13,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 7,
+        "jobWithMenu": 8,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 8,
+          "finishedTotalBefore": 7,
+          "job": 8,
+          "nextJob": 9,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#7",
+          "frontier.end_turn#8",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 5,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 16,
+        "hudEpoch": 16,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 9,
+        "jobWithMenu": 10,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 10,
+          "finishedTotalBefore": 9,
+          "job": 10,
+          "nextJob": 11,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#9",
+          "frontier.end_turn#10",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 6,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 19,
+        "hudEpoch": 19,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 11,
+        "jobWithMenu": 12,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 12,
+          "finishedTotalBefore": 11,
+          "job": 12,
+          "nextJob": 13,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#11",
+          "frontier.end_turn#12",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 7,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 22,
+        "hudEpoch": 22,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 13,
+        "jobWithMenu": 14,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 14,
+          "finishedTotalBefore": 13,
+          "job": 14,
+          "nextJob": 15,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#13",
+          "frontier.end_turn#14",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 8,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 25,
+        "hudEpoch": 25,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 15,
+        "jobWithMenu": 16,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 16,
+          "finishedTotalBefore": 15,
+          "job": 16,
+          "nextJob": 17,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#15",
+          "frontier.end_turn#16",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 9,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 28,
+        "hudEpoch": 28,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 17,
+        "jobWithMenu": 18,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 18,
+          "finishedTotalBefore": 17,
+          "job": 18,
+          "nextJob": 19,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#17",
+          "frontier.end_turn#18",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      },
+      {
+        "cycle": 10,
+        "nodes": 21,
+        "orphans": 0,
+        "bindings": 14,
+        "subscriptions": 1,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 31,
+        "hudEpoch": 31,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "jobPressed": 19,
+        "jobWithMenu": 20,
+        "phasesSeen": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "withMenu": {
+          "finished": 1,
+          "finishedTotalAfter": 20,
+          "finishedTotalBefore": 19,
+          "job": 20,
+          "nextJob": 21,
+          "running": 0,
+          "turnAfter": 2,
+          "turnBefore": 1,
+          "world": false
+        },
+        "callsOfTheCycle": [
+          "frontier.new_game",
+          "frontier.select_unit",
+          "frontier.move_unit",
+          "frontier.end_turn#19",
+          "frontier.end_turn#20",
+          "frontier.open_menu",
+          "frontier.new_game"
+        ]
+      }
+    ],
+    "bundleSha256": "b72044c0164bcb36ec4d2d3b515e6e92b54af25a66557f7143c27b0c37088463"
+  },
+  "sabotages": {
+    "services": [
+      {
+        "name": "schema-drift",
+        "file": "consumers/civ-lite/services/schema.gd",
+        "find": "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR, \"reason_text\": STR}}\n",
+        "replace": "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR}}\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 2,
+        "firstFailedCheck": "registration: the bundle's first connections, made as it evaluated, were ready: no E_SERVICE_MISSING, no other error",
+        "oracle": "registration: the bundle's own connections, made as it evaluated, were not ready ([{\"code\":\"E_SERVICE_SCHEMA\",\"connection\":\"snapshot\",\"message\":\"E_SERVICE_SCHEMA: DTO does not match the exact declared schema\"}])",
+        "parity": [
+          "frontier.snapshot.actions[].reason_text: declared in TypeScript, missing from Godot's schema"
+        ],
+        "registrationErrors": [
+          {
+            "code": "E_SERVICE_SCHEMA",
+            "connection": "snapshot",
+            "message": "E_SERVICE_SCHEMA: DTO does not match the exact declared schema"
+          }
+        ],
+        "sourceSha256": "184dee343248bd0b34baa3d728cf12b7d79c4fec67662c610701b6a778e526b4"
+      },
+      {
+        "name": "late-register",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "func _enter_tree() -> void:\n  $Application.runtime_available.connect(_bind_services)\n",
+        "replace": "var _late_runtime: Node\n\n\nfunc _enter_tree() -> void:\n  $Application.runtime_available.connect(func(runtime: Node) -> void: _late_runtime = runtime)\n\n\nfunc _ready() -> void:\n  _bind_services(_late_runtime)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 2,
+        "firstFailedCheck": "registration: the bundle's first connections, made as it evaluated, were ready: no E_SERVICE_MISSING, no other error",
+        "oracle": "registration: the bundle's own connections, made as it evaluated, were not ready ([{\"code\":\"E_SERVICE_MISSING\",\"connection\":\"snapshot\",\"message\":\"E_SERVICE_MISSING: No binding existed when connection was requested\"},{\"code\":\"E_SERVICE_MISSING\",\"connection\":\"turn_ended\",\"message\":\"E_SERVICE_MISSING: No binding existed when connection was requested\"}])",
+        "parity": [],
+        "registrationErrors": [
+          {
+            "code": "E_SERVICE_MISSING",
+            "connection": "snapshot",
+            "message": "E_SERVICE_MISSING: No binding existed when connection was requested"
+          },
+          {
+            "code": "E_SERVICE_MISSING",
+            "connection": "turn_ended",
+            "message": "E_SERVICE_MISSING: No binding existed when connection was requested"
+          }
+        ],
+        "sourceSha256": "e3e0dd34ea37b201a121c58cee93ca5337e8d358184be36d4cdbf04c664c573d"
+      },
+      {
+        "name": "silent-intent",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  return _intent(\"found_city\", game.found_city(unit_id))\n",
+        "replace": "  _count(\"found_city\")\n  return _plain(game.found_city(unit_id))\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 9,
+        "firstFailedCheck": "step 18 found_city[1] publishes the snapshot once if accepted and never if refused",
+        "oracle": "step 18 found_city(1): an accepted intent publishes exactly one snapshot",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "310b7a39f67b66b60ee8a1bc353d6cb8bfd03babc7f01cc7ed8d8a7ca419a937"
+      },
+      {
+        "name": "frozen-epoch",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  epoch += 1\n  game = Game.new(Rules.SEED, epoch)\n",
+        "replace": "  game = Game.new(Rules.SEED, epoch)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 4,
+        "firstFailedCheck": "epoch: new_game 1 raises the epoch to 2",
+        "oracle": "new_game 1: the epoch rises strictly",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "d6d8b2cb25591ef947edd60ebdff2d0d91bfdb353de1de89b37484c78042b1d0"
+      },
+      {
+        "name": "emit-on-refusal",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  if result.ok == 1:\n    snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n",
+        "replace": "  snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 35,
+        "firstFailedCheck": "step 00 clear_selection[] publishes the snapshot once if accepted and never if refused",
+        "oracle": "step 0 clear_selection(): a refused intent publishes nothing",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "5c2c8c32b1e1a34f7514910d9ee2e06be9e7d8b231d80c4c99bbb30050d2816d"
+      },
+      {
+        "name": "action-args-drift",
+        "file": "consumers/civ-lite/game/snapshot.gd",
+        "find": "    actions.append(action(\"found_city\", \"Found city\", [unit_id], Intents.check_found_city(state, unit_id)))\n",
+        "replace": "    actions.append(action(\"found_city\", \"Found city\", [], Intents.check_found_city(state, unit_id)))\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 7,
+        "firstFailedCheck": "step 03 select_unit[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "oracle": "step 3 select_unit(1): the action found_city carries as many arguments as its method (1)",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "f70389a12ba49402f7e2297f8d73c643f2b906e74ca9350a9478b1d8e2d5ecbd"
+      },
+      {
+        "name": "turn-ended-order",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  turn_ended.emit(summary)\n  snapshot_changed.emit(game.snapshot())\n",
+        "replace": "  snapshot_changed.emit(game.snapshot())\n  turn_ended.emit(summary)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 13,
+        "firstFailedCheck": "step 16 end_turn[] turn_ended comes before the snapshot of the turn that begins, and after that of the last phase",
+        "oracle": "step 16 end_turn(): turn_ended comes after the snapshot of the last phase and before the snapshot of the turn that begins",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "e34ee07f8f3572f80769154dea8fb5007f31c784d93855e7cb6c837672c0e6d0"
+      },
+      {
+        "name": "double-finish",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  turn_ended.emit(summary)\n",
+        "replace": "  turn_ended.emit(summary)\n  turn_ended.emit(summary)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 41,
+        "firstFailedCheck": "step 16 end_turn[] ends a turn exactly when an end_turn is accepted",
+        "oracle": "step 16 end_turn(): turn_ended is emitted exactly once per accepted end_turn, and by nothing else",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "f1274165692bc6526dafcccae8f9f5f94ac0b629f2def5c53cb5d1dd77d70b48"
+      },
+      {
+        "name": "job-dies-with-screen",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "func _process(_delta: float) -> void:\n  advance_job()\n",
+        "replace": "func _process(_delta: float) -> void:\n  var runtime := get_node_or_null(\"Application/Runtime\")\n  if job != 0 and runtime != null and int(JSON.parse_string(runtime.call(\"snapshot\")).get(\"rootCount\", 0)) == 0:\n    _abandon_job()\n    return\n  advance_job()\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 329,
+        "firstFailedCheck": "persistence: the surface was closed with the job accepted and not run (phase ai_plan), and the job went on with rootCount 0",
+        "oracle": "step 34 end_turn(): an accepted end_turn publishes exactly the seven snapshots of its job",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "c812a8ce02c4e750de468bc8466850fee73198b665d404ff9ea9f7be64f0bbd3"
+      },
+      {
+        "name": "sync-end-turn",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  snapshot_changed.emit(game.snapshot())\n  return _plain(started, job)\n",
+        "replace": "  snapshot_changed.emit(game.snapshot())\n  var accepted := job\n  while job != 0:\n    advance_job()\n  return _plain(started, accepted)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 33,
+        "firstFailedCheck": "step 16 end_turn[] the node ran one phase a frame: its seven snapshots were published in seven consecutive frames",
+        "oracle": "step 16 end_turn(): the node ran one phase a frame: its seven snapshots were published in seven consecutive frames",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "c13aba291ef09bf1553d70248009253302833900379118831ed539d18f3efb65"
+      },
+      {
+        "name": "stale-snapshot",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  if ran.done == 0:\n    snapshot_changed.emit(game.snapshot())\n    return\n",
+        "replace": "  if ran.done == 0:\n    if ran.name != \"growth\":\n      snapshot_changed.emit(game.snapshot())\n    return\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 79,
+        "firstFailedCheck": "step 16 end_turn[] publishes the seven snapshots of its job if accepted and none if refused",
+        "oracle": "step 16 end_turn(): an accepted end_turn publishes exactly the seven snapshots of its job",
+        "parity": [],
+        "registrationErrors": [],
+        "sourceSha256": "13a43a3da66f1538d0e824e287ad3d16e9527daab3be0f330c9f5183f521398e"
+      }
+    ],
+    "consumer": [
+      {
+        "name": "hud-leak",
+        "file": "consumers/civ-lite/ui/index.tsx",
+        "find": "    return () => release(connection);\n",
+        "replace": "    return () => {};\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 39,
+        "firstFailedCheck": "cycle 1: the end of the turn pressed in the same frame as the menu finished with the menu open: once, the turn advanced, the World stayed out of the tree and the HUD held no connection",
+        "finalSeries": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 0,
+          "bindings": 14,
+          "subscriptions": 11,
+          "connections": 2,
+          "hudSubscriptions": 11,
+          "epoch": 31,
+          "hudEpoch": 31,
+          "jobs": [
+            19,
+            20
+          ]
+        },
+        "logLines": [],
+        "failedCheckNames": [
+          "the end of the turn pressed in the same frame as the menu finished with the menu open: once, the turn advanced, the World stayed out of the tree and the HUD held no connection",
+          "in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "the baseline is a fresh game on the game screen: one HUD subscription, the registry's connection and the World's",
+          "the registry's subscriptions are the first cycle's (2)",
+          "the connections the HUD holds are the first cycle's (2)"
+        ]
+      },
+      {
+        "name": "orphan",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  remove_child(world)\n  world.queue_free()\n",
+        "replace": "  remove_child(world)\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 19,
+        "firstFailedCheck": "cycle 1: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+        "finalSeries": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 20,
+          "bindings": 14,
+          "subscriptions": 1,
+          "connections": 2,
+          "hudSubscriptions": 1,
+          "epoch": 31,
+          "hudEpoch": 31,
+          "jobs": [
+            19,
+            20
+          ]
+        },
+        "logLines": [],
+        "failedCheckNames": [
+          "the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "the orphan nodes are the first cycle's (2)"
+        ]
+      },
+      {
+        "name": "epoch-reset",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "func reload_world() -> Dictionary:\n  _drop_world()\n  return new_game()\n",
+        "replace": "func reload_world() -> Dictionary:\n  _drop_world()\n  epoch = 0\n  return new_game()\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 21,
+        "firstFailedCheck": "cycle 1: the epoch rose by exactly the 3 new games of the cycle: 1 to 2",
+        "finalSeries": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 0,
+          "bindings": 14,
+          "subscriptions": 1,
+          "connections": 2,
+          "hudSubscriptions": 1,
+          "epoch": 2,
+          "hudEpoch": 2,
+          "jobs": [
+            19,
+            20
+          ]
+        },
+        "logLines": [],
+        "failedCheckNames": [
+          "the epoch rose by exactly the 3 new games of the cycle: 1 to 2",
+          "the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "The epoch only rose across the ten cycles: 1, then 3 per cycle, to 2 in Godot and in the HUD"
+        ]
+      },
+      {
+        "name": "no-facade",
+        "file": "consumers/civ-lite/main.tscn",
+        "find": "fabric_api=ExtResource(\"2\")\n",
+        "replace": "",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 3,
+        "firstFailedCheck": "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK",
+        "finalSeries": null,
+        "logLines": [
+          "ERROR: FABRIC_ERROR: GameServices has no fabric_api; the scene's owner injects the facade script (godot_fabric.gd), so no service was registered"
+        ],
+        "failedCheckNames": [
+          "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK",
+          "The node registered the state, the signal and the 12 methods while the application entered the tree: 14 bindings",
+          "The public TSX HUD connected to the snapshot of epoch 1 with one subscription"
+        ]
+      },
+      {
+        "name": "job-dies-with-menu",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "func _process(_delta: float) -> void:\n  advance_job()\n",
+        "replace": "func _process(_delta: float) -> void:\n  if world_scene != null and get_node_or_null(WORLD_NAME) == null:\n    _abandon_job()\n    return\n  advance_job()\n",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 10,
+        "firstFailedCheck": "cycle 1: the end of the turn pressed in the same frame as the menu finished with the menu open: once, the turn advanced, the World stayed out of the tree and the HUD held no connection",
+        "finalSeries": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 0,
+          "bindings": 14,
+          "subscriptions": 1,
+          "connections": 2,
+          "hudSubscriptions": 1,
+          "epoch": 31,
+          "hudEpoch": 31,
+          "jobs": [
+            19,
+            20
+          ]
+        },
+        "logLines": [],
+        "failedCheckNames": [
+          "the end of the turn pressed in the same frame as the menu finished with the menu open: once, the turn advanced, the World stayed out of the tree and the HUD held no connection"
+        ]
+      }
+    ]
+  },
+  "executedSourceSha256": {
+    ".github/workflows/contracts.yml": "d7ffaa07e7484a235d25992ae1d6b3e89abad6640892ffc6104473692c2dcd8e",
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+    "consumers/civ-lite/game/game.gd": "e6a8c0be66263a9e45e5c76ffa740c562243ed566c37b18e7cadbae9e9d19afc",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/snapshot.gd": "d401c103fd1a91dea8c08f8fe7a02760ea29b01c849a623e5fc443a5390f08db",
+    "consumers/civ-lite/game/turn.gd": "0a5fc0523e0e94d4d42190a770b95a55ca851adfce62abe608150ecb0c99ba05",
+    "consumers/civ-lite/game/world.gd": "d2be82b34262bfe3f6c6b257037163ce0e5e2937639fd6a1ba1c2bdf21b0a3d6",
+    "consumers/civ-lite/services/game_services.gd": "50242f1ea8f9c05fbf49ba99457b467f08ae8cd43f0afef9f732fd7fe2193cc1",
+    "consumers/civ-lite/services/schema.gd": "fb000b3055319d8b15636c9f0af0f4d2fa05d313520ab1829c2d510085e84533",
+    "consumers/civ-lite/ui/frontier-types.ts": "ae189d7c3aed35e620e5943e4de6bb146f5896983cf3a57832a56985ad2c8c60",
+    "consumers/civ-lite/ui/index.tsx": "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346",
+    "consumers/civ-lite/validation.gd": "a22c68e01397b10894235fae231d02275cc844b7e96cb8720c1d915adfd01bd1",
+    "package.json": "507a4fd8dac6e7022e9b15561fab7afda381b7e15c8986419f8f0b75dae89284",
+    "scripts/consumer-civ-lite-check.mjs": "2f74b8e4ec924672263ea54c67dc6e9ac59e445c92751709c389b8a83076b9f9",
+    "scripts/consumer-civ-lite-sabotage.mjs": "3a37492fab9f8eebd5fd8750d9232518aef933b2f62fdf3c6e7a84ed013ac5eb",
+    "scripts/frontier-services-bundle.mjs": "079073d4cacfbb7ae07240f77ffa35a332a6e4b81a9f51a768d5eba75621dd87",
+    "scripts/frontier-services-sabotage.mjs": "5dbaaf69529afb1b840e2851c7fa054e858b5ab81284e97c34544901452dce3a",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "sdk/addon/godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "src/godot-fabric.js": "dd6bc4004ba89e2417bdf3a937ee01dc72eed8078615fffc6bd128dccf7baf79",
+    "src/react-native-platform.jsx": "f7720d6ce52cfbfdb60439ec9631f94dac3681492f93951cc0e4ad516897b776",
+    "tests/civ-lite-game-native.test.mjs": "e2d563c0f2b4d177c72f4677c87fca99bedcacc7dbd63129758e0918f204c260",
+    "tests/frontier-services-fixture.jsx": "2c7d67fb67843579e67d7a22bc674107405f6e1d19969c5b9c385930945ef714",
+    "tests/frontier-services-native.test.mjs": "934910e8d6bd6d492f538ac1ff10dffdc1f0f61d9d1bd0e0de69a9cf32cbf3c8",
+    "tests/frontier-services-oracle.mjs": "9771bd2d7153ecc249c1776b8183ef5d676fbf31183c2e8e3fe3becd14d638fc",
+    "tests/frontier-services-parity.test.mjs": "d6af0f0dcbd5eb313c23dbc242fc5c8672f7be9ff986ac426b9156761f7bf2ff",
+    "tests/frontier-services-probe.gd": "0465477a203e8ce7d8c18f688b6064c3a67fb0f4cf7888dc8b6473b40d83febc",
+    "tests/types/frontier-services.tsx": "b2701912f2182f165705d8a377bf0427c8ab07bcd55977e87621fee100a9caff"
+  },
+  "committedBlobs": {
+    ".github/workflows/contracts.yml": "66b3126a427879844ab04b72b421d251050133b4",
+    "consumers/civ-lite/game/canon.gd": "e98ed6db581d0fac90ba09c03f79b7f52f959475",
+    "consumers/civ-lite/game/context.gd": "2652ecfef3bfbab3bb74ed321a7771288d21f46d",
+    "consumers/civ-lite/game/economy.gd": "eb2f16ed3502c85c70eac63af412bca2aa5356b5",
+    "consumers/civ-lite/game/game.gd": "35ebc9d8b462b71932e006380fc807315d49ff86",
+    "consumers/civ-lite/game/intents.gd": "71c06a3309b0106b91cbbcb3541dcb3359290e36",
+    "consumers/civ-lite/game/prng.gd": "9d188b41d61c7826e468f60c423a00d3d0a106d5",
+    "consumers/civ-lite/game/replay.gd": "13331aa690ad94750c35f575c2dd2ef7c2e46c06",
+    "consumers/civ-lite/game/rules.gd": "bd50021bccc1c94ac6f2199a3acbb7825b2bff19",
+    "consumers/civ-lite/game/snapshot.gd": "a7c7405f75ab06c5b6a3094763482f9a5e1a2e9f",
+    "consumers/civ-lite/game/turn.gd": "2e03b88fa944a7f63d036386125681b093958f72",
+    "consumers/civ-lite/game/world.gd": "7089136040394f08e7bbbdda55aa118c99dd0ab4",
+    "consumers/civ-lite/services/game_services.gd": "e2d991d8a122477530c372312e318f67eb00bb69",
+    "consumers/civ-lite/services/schema.gd": "ac5295cabb3d113f36bc76b54ed153c796439bdc",
+    "consumers/civ-lite/ui/frontier-types.ts": "cd8b4cfa7490e4245c819f6c69e9bbe7b0576b9d",
+    "consumers/civ-lite/ui/index.tsx": "51f85c84f781ce0fcb29df80506a6d639dac0c54",
+    "consumers/civ-lite/validation.gd": "921dd3bd14a8f0b1bf600c0fab6e25afe7b2a946",
+    "package.json": "5d866950ac7be6ad8e43c4c2b4aa33a4676e066a",
+    "scripts/consumer-civ-lite-check.mjs": "27ed0b26f044b699d72cc89c10097095a14fedbc",
+    "scripts/consumer-civ-lite-sabotage.mjs": "9b354c60b20caad6cdcc9ae66d999faedb3fc117",
+    "scripts/frontier-services-bundle.mjs": "5a3812a6195e876398e800f76968552fd34ecc82",
+    "scripts/frontier-services-sabotage.mjs": "01efe8142ce5e4e16d8319be5dc7d80c18f43677",
+    "scripts/native-probe-bundle.mjs": "5ca13d88791a06db6adfb6f661d42c3291f858da",
+    "sdk/addon/godot_fabric.gd": "64cce633c0842e63c70d81a108cddcea735fcf99",
+    "sdk/toolchain/platform-plugin.mjs": "c529790df1e6d5390ea6028d7d423662b162c6cf",
+    "src/godot-fabric.js": "247eac60fc03e7212e9893ed02af01c29901eafe",
+    "src/react-native-platform.jsx": "c1b99968bb0d3092104f23d407c343174b90a979",
+    "tests/civ-lite-game-native.test.mjs": "16651ab4c5fde1b39624c0632406dd340511e8dc",
+    "tests/frontier-services-fixture.jsx": "2ea2e8c44df7dd96ac852b64b679bbc11131aab0",
+    "tests/frontier-services-native.test.mjs": "4d059279e0e5d80d527fa006612cb8cb4f885115",
+    "tests/frontier-services-oracle.mjs": "1188a63134f0091d6483fdc24020a8053e9bdb33",
+    "tests/frontier-services-parity.test.mjs": "40d708ce21a7345305a5771a6b97e2862e9a0764",
+    "tests/frontier-services-probe.gd": "181f7ea25e46a5c9a133169b0344cdc685b669dc",
+    "tests/types/frontier-services.tsx": "11f862a303f25d5862176b060d93d2c22d4f83f0"
+  },
+  "sourcesEqualCommittedBlobs": true,
+  "limits": [
+    "Only headless, and no HUD: the playable HUD is V05-05; no capture exists or is claimed.",
+    "The presses of the consumer are synthetic: mouse events pushed into the viewport by validation.gd (End turn and Menu in the same frame both go in before a frame passes), not a person on a window.",
+    "The calls made while a job runs and the 150 extra subscribers are probe fixtures; the stress cases are a measure of the registry's budgets, not a policy for backlog.",
+    "finished_jobs is bounded to the last 256 jobs; the probe and the ten cycles stay far below that (15 and 20 jobs).",
+    "new_game abandons a job in progress: nothing finishes it and no turn_ended fires for it. There is no cancel method, and a job does not survive a new application (D22 and D23 are pending).",
+    "The job follows the game's clock: it stops while the tree is paused.",
+    "The rule lane mutates one constant (the Settler's movement points, 2 to 0) and compares what JavaScript received; it does not mutate other rules.",
+    "The probe measures the registry's pump per frame; the game's own tasks and events in turn_ended.phases are a different count and are kept apart.",
+    "Hosted CI and the Pages publication are pending."
+  ]
+}

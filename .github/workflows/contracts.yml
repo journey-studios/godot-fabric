@@ -319,6 +319,9 @@ jobs:
             build/frontier-services-report.json
             build/frontier-services-current-*-report.json
             build/frontier-services-current-*.log
+            build/frontier-services-rule-*-report.json
+            build/frontier-services-rule-*.log
+            build/frontier-services-mutation.json
             build/frontier-services-summary.json
             build/frontier-services-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}

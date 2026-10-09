@@ -13,12 +13,15 @@ import { createHarness, hash } from "./consumer-harness.mjs";
 const capture = process.argv.includes("--capture");
 const sabotageArgument = process.argv.find(argument => argument.startsWith("--sabotage="));
 const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice("--sabotage=".length);
-// What validation.gd counts: 6 before the cycles, 10 in the first cycle (it has no cycle to compare with) and 14 in each of the nine
+// What validation.gd counts: 6 before the cycles, 12 in the first cycle (it has no cycle to compare with) and 16 in each of the nine
 // others, then 3 after them. The headed run adds the three of its captures.
 const CYCLES = 10;
 const NEW_GAMES_PER_CYCLE = 3;
 const BINDINGS = 14;
-const nativeChecks = 6 + 10 + 9 * 14 + 3;
+// The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
+const CALLS_PER_CYCLE = 7;
+const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
+const nativeChecks = 6 + 12 + 9 * 16 + 3;
 const graphicalChecks = nativeChecks + 3;
 // What a sabotaged run must fail, and the series that shows it. Each pattern names a check of validation.gd.
 const SABOTAGES = {
@@ -26,6 +29,7 @@ const SABOTAGES = {
   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
   "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the state, the signal and the 12 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+  "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
 
@@ -40,6 +44,7 @@ const read = async (...names) => JSON.parse(await readFile(path.join(project, ..
 const rows = series => series.map(row => ({
   cycle: row.cycle, nodes: row.nodes, orphans: row.orphans, bindings: row.bindings, subscriptions: row.subscriptions,
   connections: row.connections, hudSubscriptions: row.hudSubscriptions, epoch: row.epoch, hudEpoch: row.hudEpoch,
+  jobs: row.jobs === undefined ? null : [row.jobs.pressed, row.jobs.withMenu.job],
 }));
 try {
   await harness.provision();
@@ -118,8 +123,18 @@ try {
       && JSON.stringify(row.epochsSeen) === JSON.stringify([row.epoch - 2, row.epoch - 1, row.epoch])),
     "The epoch rises by exactly the three new games of each cycle, strictly, and the HUD and Godot agree on it");
     verify(series.every(row => row.freed.every(Boolean) && row.menu.screen === "menu" && row.menu.world === false && row.menu.hudSubscriptions === 0
-      && row.results.length === 6 && row.results.every(result => result.ok === 1)),
+      && row.results.length === CALLS_PER_CYCLE && row.results.every(result => result.ok === 1)),
     "Every cycle went to the menu with no World and no HUD connection, freed the Worlds it dropped, and every call was accepted");
+    // The end of a turn is a job (docs/research/frontier-consumer.md): the HUD pressed one, saw it through every phase to rest, and a
+    // second one pressed in the same frame as the menu finished with the menu open. The ids are the node's, two a cycle.
+    verify(series.every(row => row.jobs.pressed === 2 * row.cycle - 1 && row.jobs.withMenu.job === 2 * row.cycle
+      && JSON.stringify(row.jobs.phasesSeen) === JSON.stringify(PHASES_SEEN)
+      && row.results.filter(result => result.id === "frontier.end_turn").map(result => result.job).join() === `${row.jobs.pressed},${row.jobs.withMenu.job}`),
+    "Every cycle's end of turn was a job accepted with the node's next id, seen by the HUD through every phase");
+    verify(series.every(row => row.jobs.withMenu.finished === 1 && row.jobs.withMenu.running === 0 && row.jobs.withMenu.world === false
+      && row.jobs.withMenu.turnAfter === row.jobs.withMenu.turnBefore + 1 && row.jobs.withMenu.nextJob === row.jobs.withMenu.job + 1
+      && row.jobs.withMenu.finishedTotalAfter === row.jobs.withMenu.finishedTotalBefore + 1),
+    "Every cycle's job pressed in the same frame as the menu finished once with the menu open, and the World did not come back");
 
     if (capture) {
       const graphical = await harness.runtime("graphical", { headed: true, marker: /CIVLITE_VALIDATION_PASSED/, report: "civ-lite-report.json", expectedChecks: graphicalChecks });

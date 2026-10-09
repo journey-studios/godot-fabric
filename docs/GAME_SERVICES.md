@@ -92,6 +92,13 @@ to `completion`. A method registered with `{response: "acceptance"}` may return 
 job identifier while game work continues; completion and cancellation are
 explicit game signals/methods. Removing UI does not cancel an accepted game job.
 
+Frontier's `frontier.end_turn` is an example of an accepted job
+([research](research/frontier-services.md)): it answers `{ok, code, text, job}`
+on acceptance, the persistent node advances the turn one phase per frame, and
+`frontier.turn_ended` finishes that job once, whether or not a screen is open.
+The probe measures each phase of such a job against the pump's budgets
+(`pendingHostTasks`, `pendingEvents`, `hostTasksRun`, `eventsSent`).
+
 ## DTO and schema boundary
 
 Supported DTO values are null, booleans, finite numbers, strings, dense arrays
