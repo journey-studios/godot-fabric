@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T13:37:48.000Z",
+  "updatedAt": "2026-10-09T15:58:48.000Z",
   "source": {
     "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
@@ -4536,6 +4536,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-idle-reference-490ba8c",
+      "at": "2026-10-09T15:58:48.000Z",
+      "taskIds": [],
+      "message": "A faixa janelada do V05-06 passa a julgar o ritmo pela referência ociosa, a mediana das meias-somas de pares consecutivos dos intervalos ociosos, com o mesmo limiar (metade do período de atualização lido de volta), e não mais pela mediana dos intervalos (implementação em 237b171, evidência fixada em 490ba8c). O achado, das execuções de 2026-10-09: com o vsync ligado a 120 Hz os 600 intervalos ociosos de uma janela apresentada formam dois grupos que alternam (cerca de 300 abaixo de 4,17 ms e 300 de 12 ms ou mais), e a mediana cai num grupo ou no outro. A tentativa A8 do baseline foi recusada como unpaced com mediana de 4,136 ms contra os 4,167 ms exigidos (média de 8,333 ms, 5.106 de 5.110 quadros desenhados), as execuções aceitas do turno tiveram medianas de 4,421 a 13,177 ms e, no run 3 do turno, 242 de 360 quadros de clique estavam acima de 2× a mediana só porque ela caiu no grupo baixo; a meia-soma de pares ficou entre 8,327 e 8,342 ms nas 16 tentativas desse dia com dois grupos, em 0,704 a 0,710 ms nas três tentativas sem ritmo de 2026-10-08 e dá 0 acima de 2× a referência no run 3. Nas 24 tentativas analisadas a média e a meia-soma dão o mesmo veredito e só a A8 mudaria, de unpaced para aceita; a meia-soma foi a escolhida porque um tranco isolado mexe em duas delas e não na mediana. O resumo passa a contar os quadros acima de 2× a mediana (como antes) e acima de 2× a referência. O protocolo do V05-10 recebeu a emenda datada de 2026-10-09 (a referência ociosa do desfecho secundário e da cláusula de ritmo; o pin passa de 8dd7779d para 6e58144e), com measurementsBefore 0: nenhuma medição comparativa rodou antes. Nenhum recibo foi reclassificado: os gravados seguem julgados pela mediana, e a regra vale da próxima execução em diante, que ainda não rodou. A fatia não fecha critério (a parte janelada do baseline, o congelado e a execucao seguem abertos); o script do turno e a nota frontier-turn.md ainda descrevem a mediana até depois do P8, e a CI hospedada está pendente. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md"
+    },
     {
       "id": "milestone-0-5-v05-06-turno-cb50b97",
       "at": "2026-10-09T13:37:48.000Z",

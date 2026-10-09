@@ -775,6 +775,21 @@ evidence it asks for. The baseline's own windowed lane was not presented in its 
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** V05-06, the windowed lane's pacing rule: a run is now judged by an idle reference that does not swing with the display's
+clusters. With the vsync on at 120 Hz, the 600 idle intervals of a presented window come in two alternating groups (about 300 under
+4.17 ms and 300 of 12 ms or more), so the median fell in one group or the other: a presented attempt of the baseline was refused as
+`unpaced` for a median of 4.136 ms against the 4.167 ms required (mean 8.333 ms), and the accepted runs of the turn had medians of
+4.42 to 13.18 ms. The reference is the median of the half-sums of consecutive pairs of intervals, with the same threshold (half of
+the refresh period read back): 8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, and about
+0.6 ms in the unpaced ones. Over the 24 raw attempts of the three receipts of that day and of 2026-10-08, the mean and the new
+reference agree on every verdict and only the refused attempt would change, to accepted. No recorded receipt is reclassified, and the
+rule applies from the next execution on, which has not run yet. The pre-registered protocol of the final comparison (V05-10, criterion
+`protocolo`) took the same reference by a dated amendment, with no comparative measurement before it. No criterion changes: the
+windowed part of `baseline`, `congelado` and `execucao` stay open, the turn's script and note still describe the median until
+after the P8 slice, and the hosted CI run is pending. The
+[record](https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md) is local macOS arm64
+evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
