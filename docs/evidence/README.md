@@ -970,9 +970,9 @@ views plus a constant, with no orphan, and the views follow the HUD's state exac
 bytes by the baseline's median-of-halves rule; the resident memory is judged loosely (48 MiB between the medians of the halves, a coarse guard over a
 within-run band of 34 to 137 MB); no error goes unhandled, with a control that shows the tracker can see one. A game paused at turn 50 holds its accepted
 job at its first phase for 60 frames while a click still reaches the HUD's handler, because the HUD's layer is `PROCESS_MODE_ALWAYS`. The written decision
-between mounting and hiding a 100-node panel, from the numbers: hiding is not cheaper in CPU as a whole (the sum is inside the run-to-run noise), it has a
-shorter tail on the open (p95 11.3 against 18.8 ms) and a slower close, and it keeps 100 native nodes and 326,512 bytes of heap, so the recommendation for
-the V05-05 HUD (not applied) is to unmount by default. Four retained sabotages (a connection never removed, a player that decides by chance, a HUD layer
+between mounting and hiding a 100-node panel, from the numbers: no consistent CPU advantage was observed for either (the sum of an open and a close changes sign
+between rounds on a shared machine, so it is inconclusive); what was stable is that hiding has a shorter tail on the open (p95 11.3 against 18.8 ms) and a close
+about twice as costly, and that it keeps 100 native nodes and 326,512 bytes of heap, so the recommendation for the V05-05 HUD (not applied) is to unmount by default. Four retained sabotages (a connection never removed, a player that decides by chance, a HUD layer
 that pauses with the game, a "hidden" panel that is `display: none`) are rejected by the probe and by the oracle, each for the reason it was written for,
 and the oracle rejects 29 changes of a recorded report; the previous-host control does not apply, since no C++ changed. The 101 node updates of a hide
 toggle are unexplained, the clicks are synthetic, the machine was shared with other agents (load average recorded, timings vary by tens of percent),

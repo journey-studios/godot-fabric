@@ -167,17 +167,20 @@ A closed panel does not, in either strategy: with `pointerEvents="none"` on its 
 
 **What the numbers say.**
 
-- Hiding is **not cheaper in CPU, taken as a whole**. It saves 5.2 ms at the median on the open (the mount of 100 nodes is gone) and pays 3.7 ms more on the close; opening and closing once costs 17.9 ms hidden against 19.4 ms unmounted
-  in the pinned run, and 14.3 against 12.1, 15.2 against 16.2 and 18.0 against 21.8 in the earlier ones: the sum is inside the run-to-run noise, and the sign of the difference changed. The host updates all 101 nodes of the panel each time
-  it is toggled (the counters above; the cause is not investigated here), so the cost of a toggle follows the panel's size, as the mount's does.
-- What hiding buys, in all four runs, is a **shorter tail on the open**, the click that the player waits for: the p95 of opening is 11.3 ms against 18.8 in the pinned run (10.2 against 18.1, 10.6 against 20.2 and 10.8 against 20.7 before).
-  Mounting 100 nodes has a tail (the maximum was 27.4 ms in A and 12.1 in B in the pinned run) and updating a mounted panel has much less of one. The close is the other way round, in all four runs: 8.9 ms against 5.2 at the median in the
-  pinned run.
+- **No consistent CPU advantage for either strategy was observed; the whole-cycle comparison is inconclusive.** Hiding saves 5.2 ms at the median on the open (the mount of 100 nodes is gone) and pays 3.7 ms more on the close; opening and
+  closing once costs 17.9 ms hidden against 19.4 ms unmounted in the pinned run, and 14.3 against 12.1, 15.2 against 16.2 and 18.0 against 21.8 in the earlier ones: the sum is inside the run-to-run noise of a shared machine and the sign of the
+  difference changed between runs, so the data neither show that hiding is cheaper nor that it is not. The host updates all 101 nodes of the panel each time it is toggled (the counters above; the cause is not investigated here), so the cost
+  of a toggle follows the panel's size, as the mount's does.
+- What was stable in all four runs, on the CPU side, is two asymmetries. Hiding has a **shorter tail on the open**, the click that the player waits for: the p95 of opening is 11.3 ms against 18.8 in the pinned run (10.2 against 18.1, 10.6 against
+  20.2 and 10.8 against 20.7 before); mounting 100 nodes has a tail (the maximum was 27.4 ms in A and 12.1 in B in the pinned run) and updating a mounted panel has much less of one. And hiding has a **close about twice as costly**: 8.9 ms against 5.2
+  at the median in the pinned run, 1.7 to 2.7 times in the four.
 - What it costs is **memory that never goes back**: 100 native nodes, 326,512 bytes of live heap (the panel's fibers; the JavaScript tree stays) and the same again for every panel kept hidden, for as long as the screen lives.
 - The soak's open of this panel (p50 14.2 ms, p95 18.8 in the pinned run) is longer than the baseline's for the same 100 nodes (p50 9.2, p95 12.4) at the median in three of the four runs and in the tail in all four, with a bigger HUD around it and on a
   loaded Mac: the baseline's proposed bound for it (16 ms at p95) would not hold here. That is an observation for the freeze, not a result of this slice.
 
-**Decision (a recommendation for the HUD of V05-05, which this slice does not change): unmount by default and hide a panel only when all three hold.**
+**Decision (a recommendation for the HUD of V05-05, which this slice does not change): unmount by default and hide a panel only when all three hold.** The default rests on what was stable in every run and does not depend on the inconclusive CPU
+sum: a hidden panel keeps its 100 native views and 326,512 bytes of live heap for as long as the screen lives, and an unmounted one keeps none. What hiding offers in return (the shorter open tail) is what the three conditions weigh against that
+cost, together with its close that is about twice as costly.
 
 1. **Size.** The panel is on the order of 100 native nodes or more. A 50-node panel mounts in 5.1 to 6.2 ms at the median (baseline), and there is no tail worth 50 permanent nodes.
 2. **Frequency and latency.** It is opened often and on the click that the player is waiting for, so that the p95 of its open matters more than the memory and than the slower close (which can wait for a frame). A panel opened once or

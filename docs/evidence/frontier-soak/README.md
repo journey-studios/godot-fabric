@@ -154,11 +154,11 @@ As quatro rodadas deste código (as três anteriores não ficam fixadas), A abri
 | anterior 3 | 16,7 / 20,7 ms | 5,1 ms | 9,2 / 10,8 ms | 8,8 ms |
 | **fixada** | **14,2 / 18,8 ms** | **5,2 ms** | **9,0 / 11,3 ms** | **8,9 ms** |
 
-Os tempos andam em dezenas de por cento de uma rodada para outra, na máquina compartilhada; só valem como conclusão as diferenças que se mantiveram nas quatro:
+Os tempos andam em dezenas de por cento de uma rodada para outra, na máquina compartilhada; só valem como conclusão as diferenças que se mantiveram nas quatro, e a soma de abrir e fechar não é uma delas:
 
-- Ocultar **não é mais barato na soma de abrir e fechar** (17,9 ms oculto contra 19,4 desmontado aqui; 14,3 contra 12,1, 15,2 contra 16,2 e 18,0 contra 21,8 nas anteriores: o sinal da diferença mudou).
-- Ocultar dá uma **cauda menor na abertura** (p95 de 11,3 contra 18,8 ms aqui; de 10,2 a 10,8 contra 18,1 a 20,7 nas outras) e um **fechamento mais caro** (8,9 contra 5,2 ms aqui), nas quatro.
-- Ocultar **segura memória que não volta**: 100 nós nativos e 326.512 bytes de heap por painel mantido oculto.
+- **Não se observou vantagem de CPU consistente para nenhuma das estratégias na soma de abrir e fechar; a comparação é inconclusiva** (17,9 ms oculto contra 19,4 desmontado aqui; 14,3 contra 12,1, 15,2 contra 16,2 e 18,0 contra 21,8 nas anteriores: o sinal da diferença mudou entre as rodadas, então os dados não mostram que ocultar seja mais barato nem que não seja).
+- Ocultar dá uma **cauda menor na abertura** (p95 de 11,3 contra 18,8 ms aqui; de 10,2 a 10,8 contra 18,1 a 20,7 nas outras) e um **fechamento cerca do dobro mais caro** (8,9 contra 5,2 ms aqui; de 1,7 a 2,7 vezes nas quatro), em todas as rodadas.
+- Ocultar **segura memória que não volta**: 100 nós nativos e 326.512 bytes de heap por painel mantido oculto. É nisso, e não na soma de CPU, que o padrão de desmontar se apoia.
 - O host atualiza os 101 nós do painel a cada toggle do oculto (os contadores acima); a causa não foi investigada.
 
 **Decisão (uma recomendação para o HUD do V05-05, que esta fatia não muda): desmontar por padrão; ocultar um painel só quando as três condições valem.**

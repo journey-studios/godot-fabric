@@ -684,9 +684,11 @@ trail of 100 turn hashes, the native views follow the HUD's state exactly in eve
 not grow (within the GF-30 limit, by the baseline's median-of-halves rule), the resident memory is held by a coarse 48 MiB guard
 because it moves by tens of MB, and no JavaScript error goes unhandled. A game paused at turn 50 holds its accepted job at its first
 phase while the HUD still answers a click, which needs the HUD's layer to be `PROCESS_MODE_ALWAYS` (a recommendation for the V05-05
-scene, not applied). From the numbers, hiding a 100-node panel is not cheaper in CPU as a whole, gives a shorter tail on the open
-and a slower close, and keeps 100 nodes and 326,512 bytes of heap, so the recommendation for the HUD is to unmount by default. An
-independent oracle recomputes the report and four retained sabotages are rejected. The
+scene, not applied). From the numbers, no consistent CPU advantage was observed for hiding a 100-node panel over unmounting it (the
+cost of opening and closing once changes sign between rounds on a shared machine, so that comparison is inconclusive); what was stable
+is that hiding has a smaller tail on the open and a close about twice as costly, and that a hidden panel keeps its 100 native views and
+326,512 bytes of heap, so the recommendation for the HUD is to unmount by default. An independent oracle recomputes the report and four
+retained sabotages are rejected. The
 [record](https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md)
 is local macOS arm64 evidence, headless, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
 publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0

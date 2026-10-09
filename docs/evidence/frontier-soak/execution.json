@@ -1075,7 +1075,7 @@
     "Three executions of 100 turns end in the same game: the same final hash and the same trail of 100 turn hashes, whichever way the heavy panel is closed.",
     "The live heap at rest was flat to the byte once the game stopped changing (turn 14): 2,117,320 bytes with unmounting and 2,443,832 with hiding, growth 0 between the medians of the halves.",
     "The pause holds the accepted job at its first phase while the HUD answers; it does so only because the HUD's CanvasLayer is PROCESS_MODE_ALWAYS (the pause-kills-ui sabotage makes it pausable and the click never reaches the handler).",
-    "Hiding a 100-node panel is not cheaper in CPU as a whole (the sum of the open and the close is inside the run-to-run noise), has a shorter tail on the open, a slower close, and keeps 100 nodes and 326,512 bytes of heap.",
+    "No consistent CPU advantage was observed for either strategy over a whole open and close (the sum changes sign between rounds on a shared machine, so that comparison is inconclusive); what was stable in every round is that hiding a 100-node panel has a shorter tail on the open and a close about twice as costly (1.7 to 2.7 times), and keeps 100 nodes and 326,512 bytes of heap.",
     "The host updates all 101 nodes of a hidden panel when its root's opacity and pointerEvents change (101 updates a toggle); the cause is not explained.",
     "Hermes' tracker of unhandled rejections reports from a timer and not at the rejection, so the soak waits 2.3 s before reading the count and its control is a TypeError."
   ],
