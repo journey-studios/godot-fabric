@@ -13,7 +13,7 @@
     "commit": "4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
     "url": "https://github.com/journey-studios/godot-fabric/commit/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
     "scope": "P8 V05-05 do marco 0.5, critério estabilidade (a fatia 2b, o último dos quatro, e com ele o item completo): 20 aberturas e fechamentos de cada overlay sem vazar nós, listeners nem Windows, foco restaurado, 0 de 100 cliques ao mundo sob o overlay, varredura da HUD contra o manifesto 0.5 e seis ícones por Image, com evidência local em 4ffdb6e (probe e oráculo independentes, controle sobre e108e9d, dezessete sabotagens e sete capturas), mais os recibos hospedados canônicos do #93 (a fatia 2a). CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": ""
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/100"
   },
   "phases": [
     {
