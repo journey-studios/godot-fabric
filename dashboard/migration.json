@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T05:04:17.000Z",
+  "updatedAt": "2026-10-09T05:38:34.000Z",
   "source": {
-    "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
-    "scope": "P5 V05-04 do marco 0.5: manifesto de escopo dos 12 nomes do React Native que a HUD do Frontier importa e política única de props (src/prop-scope.mjs) para View, Text, Pressable, Image, Modal, ActivityIndicator e ScrollView, com evidência local em 1b9f120 (lane JS, lane nativa, controle causal sobre e1c7a39 e seis sabotagens). Também traz os recibos de CI e Pages do #69 (GF-27). CI hospedada e Pages deste PR pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/74"
+    "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
+    "scope": "P8 V05-05 do marco 0.5, critérios matriz e mapa: a HUD do Frontier guiada pelo contexto do Godot (seis painéis por contexto, barra com spinner na fase da IA, ações com motivo, cartão do tile e o estado frontier.hover), com evidência local em 096a018 (probe e oráculo independente, controle sobre 5e1f6a1, oito sabotagens e oito capturas). CI hospedada e Pages deste PR pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/82"
   },
   "phases": [
     {
@@ -3732,14 +3732,136 @@
             {
               "id": "matriz",
               "label": "Store por escopo de módulo e switch de contexto: matriz de testIDs passando para os 7 contextos, sem painel extra",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das 32 fontes da fatia, dos relatórios, das capturas e do host, o controle, as sabotagens, os limites e os itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "Contexto none: só a barra",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/none.png"
+                },
+                {
+                  "label": "Contexto tile: barra e cartão do tile",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/tile.png"
+                },
+                {
+                  "label": "Contexto settler: barra, ações (Fortify desabilitada com o motivo do jogo) e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/settler.png"
+                },
+                {
+                  "label": "Contexto warrior: barra, ações e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/warrior.png"
+                },
+                {
+                  "label": "Contexto stack: barra, um select_unit por unidade e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/stack.png"
+                },
+                {
+                  "label": "Contexto city: barra, tela da cidade e pesquisa",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/city.png"
+                },
+                {
+                  "label": "Contexto dialog: barra e diálogo do evento, com End turn desabilitado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/dialog.png"
+                },
+                {
+                  "label": "O switch de contexto: a tabela contexto para painéis, decidida só pelo contexto (panelsOf)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/hud.tsx"
+                },
+                {
+                  "label": "O store em escopo de módulo: o único módulo que fala com o jogo (useSyncExternalStore, conexões que seguem os leitores, send e sendAction tipados)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/store.ts"
+                },
+                {
+                  "label": "A lane: provisiona o consumidor, roda a probe headless e julga com o oráculo, o controle e as mutações",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-native.test.mjs"
+                },
+                {
+                  "label": "O oráculo independente: a tabela, o formato de cada painel e a geometria do mapa, sem os veredictos da probe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-oracle.mjs"
+                },
+                {
+                  "label": "A probe da HUD (-- --validate-hud): os passos 0 a 45 do replay pelos serviços, a fase da IA e o input real",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/hud_validation.gd"
+                },
+                {
+                  "label": "As 8 sabotagens retidas (city-by-data, actions-reversed, spinner-always, end-turn-by-phase, spacer, hover-unpublished, world-behind-hud, disabled-ignored)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: a tabela, o store, o hover, o input do mapa e a ordem do World, com arquivo e linha",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                }
+              ]
             },
             {
               "id": "mapa",
               "label": "Barra de turno e recursos (End Turn desabilitado com spinner na fase da IA), ações da unidade com motivo da ação desabilitada e cartão de tile (hover vem do Godot)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das 32 fontes da fatia, dos relatórios, das capturas e do host, o controle, as sabotagens, os limites e os itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "Fase da IA: spinner girando e End turn desabilitado com o motivo do jogo",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/ai-phase.png"
+                },
+                {
+                  "label": "Cartão do tile selecionado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/tile.png"
+                },
+                {
+                  "label": "Ações da unidade com o motivo da ação desabilitada (Fortify do Settler)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/settler.png"
+                },
+                {
+                  "label": "A barra: turno, fase, recursos, End turn (a ação end_turn do jogo, com o motivo) e o spinner enquanto a fase não é idle",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/bar.tsx"
+                },
+                {
+                  "label": "O painel de ações: exatamente snapshot.actions menos end_turn, com enabled e reason_text",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/actions.tsx"
+                },
+                {
+                  "label": "O cartão do tile: o tile sob o ponteiro (hover do Godot) ou o selecionado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/tile.tsx"
+                },
+                {
+                  "label": "O mapa é do Godot: clique em _unhandled_input chama o select_tile do jogo, e o ponteiro publica o hover",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/world/world.gd"
+                },
+                {
+                  "label": "O estado frontier.hover: o cartão do tile sob o ponteiro, um estado à parte (15 bindings; snapshot e hashes intocados)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/services/game_services.gd"
+                },
+                {
+                  "label": "A lane: a fase da IA quadro a quadro, o job segurado em ai_plan e o input real (clique, hover, toque em ação habilitada e desabilitada)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-native.test.mjs"
+                },
+                {
+                  "label": "O oráculo independente do mapa e da fase da IA",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-oracle.mjs"
+                },
+                {
+                  "label": "As 8 sabotagens retidas, entre elas spacer, hover-unpublished, spinner-always e world-behind-hud",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: a barra, o serviço de hover e o caminho do input do mapa",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                }
+              ]
             },
             {
               "id": "overlays",
@@ -4376,6 +4498,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-05-matriz-mapa-096a018",
+      "at": "2026-10-09T05:38:34.000Z",
+      "taskIds": [],
+      "message": "V05-05 do marco 0.5, critérios matriz e mapa, com evidência local: a HUD do Frontier passa a ser guiada pelo contexto que o Godot deriva. Um store em escopo de módulo (useSyncExternalStore) é o único módulo que fala com o jogo, com a telemetria da validação à parte; seis painéis (barra, ações, cartão do tile, cidade, pesquisa e diálogo) são montados só pelo contexto, e nos 7 passos do replay que cobrem os contextos (2, 3, 9, 18, 32, 33 e 45) o conjunto exato de testIDs visíveis bate com a tabela, sem painel extra, e a lista de ações é a de snapshot.actions menos end_turn (o unit.available_actions do critério não existe, e o End turn fica na barra). A barra mostra turno, fase e recursos, e o End turn é a ação end_turn do jogo, com o motivo dela e um spinner enquanto a fase não é idle; com o job segurado em ai_plan, um toque no End turn desabilitado não faz chamada. O mapa é do Godot: um clique real em um tile seleciona pelo select_tile do jogo em _unhandled_input, e o ponteiro sobre o mapa é publicado como o estado frontier.hover (15 bindings; o snapshot e os hashes não mudam), que o cartão do tile mostra. A probe headless tem 143 checks e o oráculo independente não acha nada (e rejeita 23 cópias mutadas do relatório); a HUD de 5e1f6a1 falha em actions, content, input, panels e phase (135 checks); 8 sabotagens são rejeitadas pela probe e pelo oráculo; oito capturas mostram os 7 contextos e a fase da IA; e test:consumer:civ-lite (165 checks nativos), test:frontier-services (11 de 11) e test:civ-lite-game passam. A lane achou e corrigiu um World que voltava atrás da camada da HUD depois do menu, e mostrou que o spacer da HUD anterior era achatado pelo Fabric e nunca engoliu cliques. Só macOS arm64: o diálogo ainda não é Modal, o hover foi exercitado com eventos sintéticos e o AppRegistry entra no manifesto do 0.5 pelo PR do P9; CI hospedada e Pages pendentes. Os critérios overlays e estabilidade do V05-05 seguem abertos. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+    },
     {
       "id": "milestone-0-5-exit-x3-x4-x5",
       "at": "2026-10-09T05:04:17.000Z",

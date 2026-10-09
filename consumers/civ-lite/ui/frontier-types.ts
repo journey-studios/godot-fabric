@@ -226,6 +226,7 @@ export interface FrontierResult {
 }
 
 export const FRONTIER_SNAPSHOT = "frontier.snapshot";
+export const FRONTIER_HOVER = "frontier.hover";
 export const FRONTIER_TURN_ENDED = "frontier.turn_ended";
 export const FRONTIER_SELECT_TILE = "frontier.select_tile";
 export const FRONTIER_SELECT_UNIT = "frontier.select_unit";
@@ -240,9 +241,14 @@ export const FRONTIER_END_TURN = "frontier.end_turn";
 export const FRONTIER_NEW_GAME = "frontier.new_game";
 export const FRONTIER_OPEN_MENU = "frontier.open_menu";
 
-/** The state the node publishes: connect to it for the snapshot now and after every accepted intent. */
+/**
+ * The states the node publishes: connect to `frontier.snapshot` for the snapshot now and after every accepted intent, and to
+ * `frontier.hover` for the card of the tile under the pointer. The pointer is the World's (Godot hears it, over the map) and
+ * is no part of the game, so the snapshot does not carry it: `present` is 0 while the pointer is over no tile.
+ */
 export interface FrontierStates {
   readonly "frontier.snapshot": FrontierSnapshot;
+  readonly "frontier.hover": TileCard;
 }
 
 /** The signals the node emits, as the tuple of arguments each carries. */

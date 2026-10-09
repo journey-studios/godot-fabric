@@ -116,6 +116,14 @@ func context() -> String:
   return Context.derive(state)
 
 
+# The card of one tile, the DTO of the snapshot's `tile`: frontier.hover publishes it for the tile under the pointer. It reads the
+# state and changes nothing, and the pointer is no part of the state or of its hash.
+func tile_card(x: int, y: int) -> Dictionary:
+  var card := Snapshot.tile_card(state, x, y)
+  Snapshot.freeze(card)
+  return card
+
+
 # The canonical serialization of the state, or "" if it holds anything the game's data may not hold.
 func serialize() -> String:
   return Canon.encode(state)

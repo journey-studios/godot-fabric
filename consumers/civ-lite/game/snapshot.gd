@@ -99,9 +99,13 @@ static func _unit_card(unit: Dictionary) -> Dictionary:
 
 
 static func _tile(state: Dictionary) -> Dictionary:
-  var x := int(state.sel.x)
-  var y := int(state.sel.y)
-  if x < 0:
+  return tile_card(state, int(state.sel.x), int(state.sel.y))
+
+
+# The card of one tile: the selected tile's in the snapshot, and the tile under the pointer in frontier.hover (the pointer is the
+# World's and is outside the state). A coordinate outside the map is the absent card.
+static func tile_card(state: Dictionary, x: int, y: int) -> Dictionary:
+  if not World.in_bounds(x, y):
     return {"present": 0, "x": -1, "y": -1, "terrain": -1, "terrain_name": "", "food": 0, "production": 0, "science": 0, "move_cost": 0,
       "city": 0, "units": []}
   var terrain_id := World.terrain_at(state, x, y)

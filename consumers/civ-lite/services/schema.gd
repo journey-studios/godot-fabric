@@ -38,6 +38,13 @@ const SNAPSHOT := {"object": {"version": INT, "epoch": INT, "last_job": INT, "tu
   "selection": SELECTION, "resources": RESOURCES, "actions": {"array": ACTION}, "tile": TILE_CARD, "city": CITY_SCREEN,
   "research": RESEARCH, "dialog": DIALOG}}
 
+# --- The pointer --------------------------------------------------------------------------------------------------
+
+# `frontier.hover`: the card of the tile under the pointer, the same DTO as the snapshot's `tile`, with `present` 0 while the
+# pointer is over no tile. The World publishes it as a state of its own: the pointer is not part of the game, so the snapshot, its
+# emission rule and the hashes are the same with or without it.
+const HOVER := TILE_CARD
+
 # --- The end of a turn ---------------------------------------------------------------------------------------------
 
 const TURN_PHASE := {"object": {"name": STR, "tasks": INT, "events": INT}}
