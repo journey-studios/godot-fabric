@@ -208,6 +208,62 @@ The presented frame time needs an awake, unlocked display: run the lane again an
 The captures of each panel (`frontier-baseline-panel-empty.png`, `-units.png`, `-city.png` and `-research.png`, 800 x 600 PNGs in [the evidence record](../evidence/frontier-baseline/README.md), hashed in its receipt) are
 of the frame as drawn, from a separate run that measures nothing, with pixel checks that the bar is over the map, each panel is where the HUD puts it, and the base comes back after them.
 
+### The idle reference: three statistics over the raw intervals of 2026-10-09
+
+The pacing check of protocol item 7 judges a run by the **median** of its 600 idle intervals. With the vsync on at 120 Hz those intervals come in two groups that alternate (the clusters of
+[the frame-clock note](frame-clock.md)): about half of them are under 4.17 ms and about half are 12 ms or more, so two neighbours add up to about one period (16.67 ms) and the mean is about 8.33 ms.
+The median falls in one group or the other by a few samples. One windowed attempt of the baseline was refused as `unpaced` with a median of 4.136 ms (4.167 ms required) while the display
+presented the window (a mean of 8.333 ms, 5,106 of 5,110 frames drawn), and the accepted runs of the turn had medians from 4.42 to 13.18 ms.
+
+Three candidates for the reference, over the same 600 intervals `x[0..n-1]` of every attempt the three receipts of 2026-10-09 hold (accepted and rejected) and of the three unpaced attempts of 2026-10-08
+that [the baseline's record](../evidence/frontier-baseline/windowed-raw.json) keeps raw: the **median** (nearest rank, the current rule), the **mean**, and the **median of the pair half-sums**,
+`median((x[i] + x[i+1]) / 2)` for `i` from 0 to n - 2. The threshold is the same for all three: half of the refresh period that the window read back, 4.167 ms at 120 Hz.
+
+| Receipt | Run, attempt | Judged as | Median (ms) | Mean (ms) | Pair half-sum median (ms) | Below / at or above half a period | Largest (ms) |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Turn, presented | 1, 1 | undrawn | 4.475 | 8.329 | 8.331 | 298 / 302 | 15.4 |
+| Turn, presented | 1, 2 | undrawn | 6.874 | 6.900 | 6.902 | 0 / 600 | 7.8 |
+| Turn, presented | 1, 3 | accepted | 13.177 | 8.356 | 8.331 | 299 / 301 | 18.4 |
+| Turn, presented | 2, 4 | accepted | 8.495 | 8.601 | 8.331 | 285 / 315 | 52.9 |
+| Turn, presented | 3, 5 | accepted | 4.421 | 8.341 | 8.338 | 298 / 302 | 16.7 |
+| Turn, presented | 4, 6 | accepted | 8.130 | 8.339 | 8.335 | 292 / 308 | 17.6 |
+| Turn, presented | 5, 7 | undrawn | 4.777 | 8.338 | 8.332 | 297 / 303 | 21.3 |
+| Turn, presented | 5, 8 | accepted | 12.678 | 8.631 | 8.342 | 289 / 311 | 17.0 |
+| Baseline A | 1, 1 | undrawn | 6.888 | 6.900 | 6.901 | 0 / 600 | 7.8 |
+| Baseline A | 1, 2 | accepted | 4.665 | 8.334 | 8.335 | 292 / 308 | 15.9 |
+| Baseline A | 2, 3 | undrawn | 4.643 | 8.336 | 8.332 | 294 / 306 | 15.4 |
+| Baseline A | 2, 4 | undrawn | 6.894 | 6.900 | 6.900 | 0 / 600 | 7.7 |
+| Baseline A | 2, 5 | accepted | 11.772 | 8.386 | 8.327 | 286 / 314 | 16.6 |
+| Baseline A | 3, 6 | undrawn | 6.700 | 8.334 | 8.334 | 298 / 302 | 17.0 |
+| Baseline A | 3, 7 | undrawn | 6.893 | 6.900 | 6.900 | 0 / 600 | 7.8 |
+| Baseline A | 3, 8 | unpaced | **4.136 (under 4.167)** | 8.333 | 8.333 | 300 / 300 | 16.3 |
+| Baseline B | 1, 1 | accepted | 11.548 | 8.459 | 8.338 | 243 / 357 | 16.8 |
+| Baseline B | 2, 2 | accepted | 5.177 | 8.333 | 8.332 | 290 / 310 | 15.4 |
+| Baseline B | 3, 3 | undrawn | 6.516 | 8.352 | 8.332 | 259 / 341 | 20.4 |
+| Baseline B | 3, 4 | undrawn | 5.211 | 8.324 | 8.331 | 274 / 326 | 18.3 |
+| Baseline B | 3, 5 | undrawn | 6.882 | 6.901 | 6.897 | 0 / 600 | 8.1 |
+| Baseline, 2026-10-08 | 1, 1 | unpaced | 0.704 (under 4.167) | 0.725 | 0.706 | 598 / 2 | 4.7 |
+| Baseline, 2026-10-08 | 1, 2 | unpaced | 0.708 (under 4.167) | 0.705 | 0.710 | 599 / 1 | 4.5 |
+| Baseline, 2026-10-08 | 1, 3 | unpaced | 0.704 (under 4.167) | 0.719 | 0.704 | 598 / 2 | 4.4 |
+
+The receipts of 2026-10-09 are kept outside the repository; these are the SHA-256 of the files the table was computed from: the turn's
+`db86eb0816f036add015022ffab74187c8debab0dc218e2bc81e4dad723cdbb5`, the baseline's attempt A `bada551e3014ae950cb5c2ef80e8997752fdd730184099424ed2545d587b49e1` and its attempt B
+`c03a9f46cf35379eb6eabc3e86e8a0960f7d52d40745db23ae4b4fcdeb2f02c4`. The 2026-10-08 rows are `windowed-raw.json` of the baseline's record
+(`2673a645ba67d291f1f254860fcc6422cf1723c116f4bb166be6a1e4df4c99b0`). The intervals are the idle window's, in the order they were taken.
+
+What the table says (observation only: **it changes no verdict and no receipt**, and the rule of protocol item 7 above is the current rule until the implementation of the new reference lands):
+
+- **The median is the unstable statistic.** Among the 16 attempts of 2026-10-09 whose idle intervals came in the two groups (the other five, at about 6.9 ms, are a uniform loop at a different pace, and all three
+  statistics accept them), the median runs from 4.136 to 13.177 ms and one of them is under the threshold, while the mean runs from 8.324 to 8.631 ms and the pair half-sum median from 8.327 to 8.342 ms.
+  The attempt that was refused (baseline A, run 3, attempt 8) is exactly the one with the clusters split 300 / 300: its pairs all mix a short and a long interval (599 of 599).
+- **The pair half-sum median would have accepted that attempt** (8.333 ms against 4.167), and the drawn-frames check, which that attempt passed (5,106 of 5,110 drawn), would have been the only one left to decide. It leaves every other
+  attempt of 2026-10-09 as it was judged for pacing, and refuses the three unpaced attempts of 2026-10-08 (0.704 to 0.710 ms).
+- **The mean and the pair half-sum median give the same verdict on all 24 attempts.** They differ in robustness and not in these data: one hitch moves the mean (the turn's run 2 has a 52.9 ms interval and a mean of
+  8.601 ms against 8.331 for the half-sum median), and it moves only two pair half-sums. A loop that nothing paces (about 0.6 ms a frame) with a single stall of 2.1 s or more would have a mean over 4.167 ms and a
+  half-sum median of about 0.6 ms: that is a synthetic case for the implementation to test, since no receipt has it.
+- **No attempt shows the half-sum failing where the mean does not.** Only one of the 16 attempts with two groups alternates strictly (baseline A, run 3, attempt 8: 599 of 599 pairs mix a short and a long interval); in the other 15,
+  between 485 and 596 of the 599 pairs do, and the half-sum median stayed within 8.327 and 8.342 ms regardless.
+
 ## The heap at rest
 
 The live heap of Hermes at rest (the base shown, after a forced collection and 30 idle frames) was **2,032,000 bytes in the steady state in both processes**, which is 71,552 bytes over
