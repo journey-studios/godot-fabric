@@ -199,6 +199,47 @@ test("X9: milestones, source, updatedAt and activity are not part of the 1.0", (
   assert.equal(inspectOnePointZero(base, head).changes.length, 0);
 });
 
+test("X9: a list with a repeated id is compared whole, so a change in it cannot pass as no change", () => {
+  const base = baseDocument();
+
+  // A copy of an existing checkpoint added to the list that has it: by id it would collapse to the last one.
+  const copied = withEntry(base);
+  const checkpoints = task(copied, "GF-01").checkpoints;
+  checkpoints.push(clone(checkpoints[0]));
+  const added = verdictsOf(base, copied);
+  assert.equal(added.x9.verdict, "violation");
+  assert.deepEqual(added.x9.items, ["tasks[GF-01].checkpoints"]);
+  assert.deepEqual(
+    added.record.onePointZero.changes.map((change) => [change.field, change.change, change.class, change.before, change.after]),
+    [["checkpoints", "changed", "moves-1.0", "array(1)", "array(2)"]],
+  );
+
+  // The id repeated on both sides, and the item that changed is not the last one.
+  const repeated = clone(base);
+  task(repeated, "GF-01").checkpoints = [
+    { id: "slice", label: "First", done: false, evidence: [] },
+    { id: "slice", label: "Second", done: false, evidence: [] },
+  ];
+  repeated.releaseChecklist.push({ id: "RC-01", label: "Again", done: false, evidence: [] });
+  assert.equal(verdictsOf(repeated, withEntry(repeated)).x9.verdict, "clean", "the same lists, unchanged, are no change");
+  const changed = withEntry(repeated);
+  task(changed, "GF-01").checkpoints[0].done = true;
+  changed.releaseChecklist[0].done = true;
+  const outcome = verdictsOf(repeated, changed);
+  assert.deepEqual(outcome.x9.items, ["releaseChecklist", "tasks[GF-01].checkpoints"]);
+  assert.ok(outcome.record.onePointZero.changes.every((change) => change.change === "changed" && change.class === "moves-1.0"));
+
+  // A repeated id on one side only is compared whole too.
+  const oneSided = withEntry(base);
+  oneSided.decisions.push({ id: "D01", title: "Again", status: "approved" });
+  assert.deepEqual(verdictsOf(base, oneSided).x9.items, ["decisions"]);
+
+  // Lists whose ids are distinct still report the item.
+  const distinct = withEntry(base);
+  task(distinct, "GF-01").checkpoints[0].done = true;
+  assert.deepEqual(verdictsOf(base, distinct).x9.items, ["tasks[GF-01].checkpoints[slice].done"]);
+});
+
 // ---------------------------------------------------------------------------------------------
 // KNOWN and the comparison with it.
 
@@ -752,10 +793,13 @@ test("the contracts workflow runs the guard on every event it has, fetching the 
   const start = job.indexOf("      - name: Milestone exit guards (X9 and X10)\n");
   assert.ok(start > 0, "the contracts job has no milestone guards step");
   const step = job.slice(start, job.indexOf("\n      - ", start + 10));
-  assert.match(step, /^ {10}PULL_REQUEST_BASE_SHA: \$\{\{ github\.event\.pull_request\.base\.sha \}\}$/m);
-  assert.match(step, /^ {14}git fetch --no-tags --depth=1 origin "\$base"$/m);
+  // The base is the first parent of HEAD in both events: the base branch of GitHub's synthetic merge commit on a pull
+  // request (the payload's base.sha can differ from it when the base branch moved), the parent of the pushed commit on a push.
+  assert.match(step, /^ {12}pull_request\|push\)$/m, "one branch for both events");
   assert.match(step, /^ {14}git fetch --no-tags --depth=2 origin "\$GITHUB_SHA"$/m);
   assert.match(step, /^ {14}base="\$\(git rev-parse HEAD\^\)"$/m);
+  assert.doesNotMatch(step, /base\.sha|PULL_REQUEST_BASE_SHA|--depth=1/, "the payload's base is not the base");
+  assert.equal(step.split("git rev-parse HEAD^").length - 1, 1, "the base is taken in one place");
   assert.match(step, /^ {14}echo ".*" >&2\n {14}exit 1$/m, "an event with no base fails");
   assert.match(step, /^ {10}node scripts\/milestone-guards\.mjs --check --base "\$base"$/m);
   assert.doesNotMatch(step, /^ {8}(if|continue-on-error):/m, "the step is not conditional");

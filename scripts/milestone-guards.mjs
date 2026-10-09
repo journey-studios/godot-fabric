@@ -67,7 +67,10 @@ const PATH_SPECS = ["docs/evidence", "docs/research", "tests", "scripts"];
 // Pure comparison of two dashboard/migration.json documents and of the files a change adds.
 
 const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-const isKeyed = (list) => Array.isArray(list) && list.every((item) => isObject(item) && typeof item.id === "string");
+// A list that can be compared item by item: objects that each carry a string id, and no id twice. With a repeated id the
+// items by id would collapse to the last one, and a copy added to the list would pass as no change; a list like that is
+// compared as one value instead, which fails closed.
+const isKeyed = (list) => Array.isArray(list) && list.every((item) => isObject(item) && typeof item.id === "string") && new Set(list.map((item) => item.id)).size === list.length;
 const byPath = (left, right) => (left.path < right.path ? -1 : left.path > right.path ? 1 : 0);
 const unique = (values) => [...new Set(values)];
 
@@ -97,8 +100,8 @@ function entry(location, field, change, before, after) {
   return { section: location.section, id: location.owner, path: location.path, field, change, class: classifyChange(field, change), before: describe(before), after: describe(after) };
 }
 
-// Objects are compared field by field, lists of objects with an `id` item by item (tasks, checkpoints, checklist items,
-// decisions) and everything else as one value. The note, label and evidence fields are always one value.
+// Objects are compared field by field, lists of objects with a distinct `id` item by item (tasks, checkpoints, checklist
+// items, decisions) and everything else as one value. The note, label and evidence fields are always one value.
 function diffValue(before, after, location, field, out) {
   if (isDeepStrictEqual(before, after)) {
     return;

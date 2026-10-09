@@ -736,7 +736,7 @@ captures, the previous-host controls and the sabotages stay local, and no criter
 denominator moves.
 
 **Progress.** Exit criteria X9 and X10 of the 0.5 now have guards that run, and neither is closed. The PR guard
-(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that fetches only the commit it compares with)
+(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that compares the tree with the first parent of `HEAD`)
 fails a pull request that adds a `milestone-0-5-*` entry and also changes `tasks`, `phases`, `sequences`, the checklists or
 `decisions` (a changed note or evidence counts, not only `done`, weight or status), that opens a new `pointer-*`,
 EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The audit of the history from `c0f3702` covers

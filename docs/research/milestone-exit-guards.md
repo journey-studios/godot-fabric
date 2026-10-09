@@ -51,7 +51,10 @@ entry whose id starts with `milestone-0-5-`** and changes anything in `tasks`, `
 
 The comparison is in depth. The lists are matched by `id` (tasks, checkpoints, checklist items, decisions,
 phases, sequences), so a change is reported by the path of what changed, like `tasks[GF-27].note` or
-`tasks[GF-01].checkpoints[slice].done`. Each change is classified:
+`tasks[GF-01].checkpoints[slice].done`. A list is matched by `id` only if its ids are distinct on **both** sides; a list
+that repeats an id (a checkpoint copied into the list that has it, say) would collapse to its last item and hide the
+change, so it is compared as one value and reported as a `moves-1.0` change of the list (`tasks[GF-01].checkpoints`).
+Each change is classified:
 
 | Class | Which changes |
 |---|---|
@@ -153,20 +156,23 @@ it is never added to `KNOWN` by the agent that found it. Registration is by `act
 ## The CI step
 
 `.github/workflows/contracts.yml`, job `contracts`, runs `node scripts/milestone-guards.mjs --check --base "$base"`
-after `npm ci`, with a base that depends on the event:
+after `npm ci`. For a `pull_request` and for a `push` alike, `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` brings
+one commit more than the shallow checkout and `base` is `HEAD^`, the **first parent** of the commit the event checked out:
 
-- `pull_request`: `base` is `github.event.pull_request.base.sha`, fetched with `git fetch --no-tags --depth=1 origin "$base"`;
-- `push` (to main): `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` brings one commit more and `base` is `HEAD^`;
+- on a `pull_request`, `GITHUB_SHA` is GitHub's synthetic merge commit (`refs/pull/N/merge`), and its first parent is the
+  base branch as the merge was made, which is what the pull request's tree really differs from. The payload's
+  `pull_request.base.sha` is not used: it can differ from that parent when the base branch has moved or the merge ref was
+  regenerated, and the guard would then compare the pull request's tree with commits that are not its own;
+- on a `push` (to main), `GITHUB_SHA` is the pushed commit and `base` is its parent;
 - any other event: the step fails with a message.
 
-It does not depend on history. `actions/checkout` is shallow (depth 1), so the step fetches only the one commit it
-compares with, by SHA, and `--check` reads that commit's `dashboard/migration.json` and file list with
-`git show` and `git ls-tree`, never `git log`. The base is never a merge-base in CI (a shallow checkout has none);
-on a `pull_request` the checked-out tree is GitHub's merge commit, so its difference from the base SHA is exactly
-the pull request. The step has no `if:` and no `continue-on-error`, and `tests/milestone-guards.test.mjs` pins
-that. The test itself needs no history either: the pure comparisons run on synthetic documents, `--check` and
-`--audit` run on throwaway git repositories it creates, and the committed receipt is verified with `--audit
---verify`, with no git. Only the full `--audit` over the real history is local.
+It does not depend on history. `actions/checkout` is shallow (depth 1), so the step fetches one commit more, by SHA, and
+`--check` reads the base's `dashboard/migration.json` and file list with `git show` and `git ls-tree`, never `git log`.
+The base is never a merge-base in CI (a shallow checkout has none), and it is always explicit. The step has no `if:`
+and no `continue-on-error`, and `tests/milestone-guards.test.mjs` pins that and the choice of the first parent. The test
+itself needs no history either: the pure comparisons run on synthetic documents, `--check` and `--audit` run on
+throwaway git repositories it creates, and the committed receipt is verified with `--audit --verify`, with no git. Only
+the full `--audit` over the real history is local.
 
 ## Limits, so that nobody reads more into the guard than it does
 

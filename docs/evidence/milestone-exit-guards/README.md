@@ -15,6 +15,13 @@ não muda nenhum checkpoint, GF, peso ou denominador da 1.0. A segunda metade do
 > executados (o script, o teste, o passo do `contracts.yml`, o `scripts/git-environment.mjs` e o `package.json`) são os desse commit, sem diferença no working tree. A
 > auditoria lê só objetos do git, até `bf00341`, e não depende do working tree; o `audit.json`, esta página, a nota de pesquisa e o índice de evidência foram
 > escritos depois dela, sem commit, e não são entrada de nenhum comando.
+>
+> **Depois do registro, na revisão do PR #87.** O CodeRabbit apontou duas falhas, e as duas procediam. (1) O passo do `contracts.yml` tomava a base de `github.event.pull_request.base.sha`; num `pull_request` o
+> `GITHUB_SHA` é o merge sintético, cujo primeiro pai pode não ser esse SHA se a main avançou ou o ref foi refeito, e a guarda compararia a árvore do PR com commits alheios. O passo passou a usar o primeiro pai do `HEAD`
+> nos dois eventos (veja "A guarda de PR"). (2) A comparação por `id` guardava só o último item de cada `id`, e uma cópia acrescentada de um checkpoint existente passava como "sem mudança"; agora uma lista só é
+> comparada item a item se os `id` são distintos nos dois lados, e senão é comparada inteira (classe `moves-1.0`), de modo que a guarda falha fechada. A auditoria não mudou: nenhuma lista do histórico repete `id`, e
+> `--audit --to bf00341` com o script corrigido reproduz o `audit.json` byte a byte (SHA-256 abaixo). O teste passou de 35 para 36 checks (o caso do `id` repetido, que falha no `isKeyed` antigo), e os números da tabela
+> abaixo são os de `bf00341`.
 
 Todo link de código abaixo está fixado em `bf00341`.
 
@@ -42,7 +49,8 @@ npm run type-check && npm run check:static && npm run check:publication && npm r
 
 > **CI hospedada pendente.** O passo "Milestone exit guards (X9 and X10)" do job `contracts` de `contracts.yml` e o teste `tests/milestone-guards.test.mjs`,
 > dentro de `test:contracts`, ainda não rodaram na CI hospedada. Tudo o que esta página registra é evidência local, em macOS arm64. O passo foi reproduzido
-> localmente num clone raso (profundidade 1) para os eventos `push` e `pull_request`, para um evento sem base e para um SHA de base vazio, mas isso não é a CI. Esta
+> localmente, na forma corrigida (primeiro pai), em clones rasos (profundidade 1): num `pull_request` sobre um merge criado com `git merge --no-ff` cujo primeiro pai não é o `base.sha` do payload
+> (a guarda passa com `X9 clean, X10 clean`, e o passo antigo, com o `base.sha`, reprovaria o PR por uma nota que a main mudou), num `push` e num evento sem base (o passo falha com mensagem), mas isso não é a CI. Esta
 > entrega não fecha checkpoint, GF, peso, denominador nem as saídas X9 e X10.
 
 ## As regras
@@ -109,17 +117,19 @@ em `insideFolders` desse commit (`folder: "new"`) e não são fatia.
 ## A guarda de PR
 
 O [`contracts.yml`](https://github.com/journey-studios/godot-fabric/blob/bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7/.github/workflows/contracts.yml) roda, no job `contracts`, depois do `npm ci` e antes do `test:contracts`,
-`node scripts/milestone-guards.mjs --check --base "$base"`, com a base conforme o evento:
+`node scripts/milestone-guards.mjs --check --base "$base"`. Em um `pull_request` e em um `push`, `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` traz um commit a mais que o checkout raso e a
+`base` é `HEAD^`, o **primeiro pai** do commit que o evento baixou:
 
-- `pull_request`: `base` é `github.event.pull_request.base.sha`, buscado com `git fetch --no-tags --depth=1 origin "$base"`;
-- `push` na main: `git fetch --no-tags --depth=2 origin "$GITHUB_SHA"` traz um commit a mais e `base` é `HEAD^`;
-- qualquer outro evento: o passo falha com uma mensagem. O passo não tem `if:` nem `continue-on-error`, e o teste fixa isso.
+- num `pull_request`, o `GITHUB_SHA` é o commit de merge sintético do GitHub (`refs/pull/N/merge`), e o primeiro pai dele é a branch base como o merge foi feito, que é aquilo de que a árvore do PR de fato difere.
+  O `pull_request.base.sha` do payload não é usado: ele pode ser outro quando a main avançou ou o ref do merge foi refeito, e a guarda compararia a árvore do PR com commits alheios;
+- num `push` na main, o `GITHUB_SHA` é o commit enviado e a `base` é o pai dele;
+- qualquer outro evento: o passo falha com uma mensagem. O passo não tem `if:` nem `continue-on-error`, e o teste fixa isso e a escolha do primeiro pai.
 
-Ela não depende de histórico. O checkout é raso, o passo busca só o commit com que compara, por SHA, e o `--check` lê o `dashboard/migration.json` e a lista de arquivos desse commit com `git show` e `git ls-tree`,
-nunca `git log`. Num `pull_request` a árvore é o commit de merge do GitHub, então a diferença para o SHA da base é exatamente o PR. O teste também não precisa de histórico: as funções puras rodam sobre JSON
+Ela não depende de histórico. O checkout é raso, o passo busca um commit a mais, por SHA, e o `--check` lê o `dashboard/migration.json` e a lista de arquivos da base com `git show` e `git ls-tree`,
+nunca `git log`. O teste também não precisa de histórico: as funções puras rodam sobre JSON
 sintético, `--check` e `--audit` rodam em repositórios descartáveis que o próprio teste cria, e o recibo commitado é verificado com `--audit --verify`. Só a auditoria completa sobre o histórico real é local.
 O [script](https://github.com/journey-studios/godot-fabric/blob/bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7/scripts/milestone-guards.mjs) e o
-[teste](https://github.com/journey-studios/godot-fabric/blob/bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7/tests/milestone-guards.test.mjs) estão fixados no mesmo commit.
+[teste](https://github.com/journey-studios/godot-fabric/blob/bf00341d6c50eddd9795d9b9b5ccf2b5f91989b7/tests/milestone-guards.test.mjs) fixados em `bf00341` têm a forma anterior à correção da revisão (o passo lia o `base.sha` do payload no `pull_request`).
 
 ## Limites
 
