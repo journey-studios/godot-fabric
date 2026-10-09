@@ -59,4 +59,6 @@ const METHOD_ARGS := {
   "resolve_event": [STR],
   "end_turn": [],
   "new_game": [],
+  # Not a rule of the game: the scene drops its World (game_services.gd). It is here so that HUD and scene share one list.
+  "open_menu": [],
 }

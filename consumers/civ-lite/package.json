@@ -1,0 +1,10 @@
+{
+  "name": "godot-fabric-civ-lite-consumer",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "19.2.3",
+    "react-native": "0.87.1"
+  }
+}

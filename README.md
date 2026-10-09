@@ -589,7 +589,10 @@ contexts and refuses invalid intents with a reason, judged by an independent ora
 (`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The second package, the persistent `GameServices`
 node, publishes the snapshot and takes the intents as typed services with an epoch, with hand-written TypeScript types
 checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-services/README.md), [research](docs/research/frontier-services.md)).
-The consumer project, the authority under bursts, the HUD, the export and the devices are open, and so is hosted CI.
+The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
+scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
+epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
+The authority under bursts, the playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
@@ -879,6 +882,7 @@ npm run test:runtime                     # native deadline budget and callback e
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
+npm run test:consumer:civ-lite -- --capture    # Frontier provisioned as a consumer, ten cycles with no leak and a monotonic epoch; sabotages: node scripts/consumer-civ-lite-sabotage.mjs
 npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer

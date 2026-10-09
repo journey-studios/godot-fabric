@@ -33,7 +33,7 @@ const TASK_LIMIT = 64;
 const EVENT_LIMIT = 128;
 const NODE_LIMIT = 10000;
 const DEPTH_LIMIT = 32;
-const BINDINGS = 13;
+const BINDINGS = 14;
 const NEW_GAMES = 3;
 const PREFIX = "frontier.";
 
@@ -349,7 +349,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
   `registration: the bundle's own connections, made as it evaluated, were not ready (${JSON.stringify(registration?.application.errors)})`);
   assert.equal(registration.snapshots, 1, "registration: the first connection received exactly the initial snapshot");
   assert.deepEqual(diffRegistrations(types.registrations, report.registered), [], "registration: the schemas Godot registered are not the TypeScript types'");
-  assert.equal(report.registered.length, BINDINGS, "registration: one state, one signal and one method per intent");
+  assert.equal(report.registered.length, BINDINGS, "registration: one state, one signal and one method per service");
   assert.equal(report.native.gameServices.bindings, BINDINGS, "registration: the registry holds every binding");
   assert.deepEqual(report.native.errors, [], "the application reports no error");
 

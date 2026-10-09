@@ -1,0 +1,815 @@
+{
+  "format": "godot-fabric.frontier-consumer-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "b0509db210eae4aa944d053ba51e8cdbb87c56d3",
+  "implementationTreeSha": "7da779952ea29025af0ff84592bdac8300117f43",
+  "baseMainCommit": "75a85ad6ea877eae85d1a55214097eac416f6680",
+  "executedCommit": "029416fd3067e1d6c147dac44cd670be5110e337",
+  "executedTreeSha": "704b324b0865be42ce5d5410eb233acc6c27c2f6",
+  "executedCommitParents": [
+    "b0509db210eae4aa944d053ba51e8cdbb87c56d3",
+    "b0e40aa21fcab67cfa01b77e27117c895a30c886"
+  ],
+  "mergedMainCommit": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+  "mergeNote": "The commands ran on the merge of origin/main (b0e40aa, which adds PR #74, the prop-scope policy of the 0.5 HUD components) into the implementation commit. The merge touches none of the slice's own files (consumers/civ-lite/, scripts/consumer-civ-lite-*.mjs, docs/research/frontier-consumer.md, the frontier-services tests and tsconfig.godot.json are byte-identical to the implementation commit's) and only adds main's hunks to package.json, .fallowrc.json and .github/workflows/contracts.yml. The policy therefore applied to the HUD: no prop of View, Text or Pressable was refused.",
+  "sliceFilesChangedByMerge": [],
+  "hubFiles": {
+    "package.json": {
+      "blobAtImplementation": "238b4d25af7e39cc2e2fca4e2dd232d842d56f1b",
+      "blobAtMerge": "8a4f050ff104a6f0402591c903d6cd5c82f374f1",
+      "changedByMerge": true
+    },
+    "tsconfig.godot.json": {
+      "blobAtImplementation": "24c8034572f30a84fdbf014a5f80053c1760253e",
+      "blobAtMerge": "24c8034572f30a84fdbf014a5f80053c1760253e",
+      "changedByMerge": false
+    },
+    ".fallowrc.json": {
+      "blobAtImplementation": "2d615f39797b3faf47b8db94cf5857b5a550207e",
+      "blobAtMerge": "5a0accf8f48a5e876ddff81e78c34d3dd811ff25",
+      "changedByMerge": true
+    },
+    ".github/workflows/contracts.yml": {
+      "blobAtImplementation": "f644b9bcc5a0ea73866480b807d5804156ea4fee",
+      "blobAtMerge": "d292c99e4564db92a6e2054060eec1c138449e43",
+      "changedByMerge": true
+    }
+  },
+  "sourceState": "working tree clean and equal to the merge commit's tree, with no untracked file outside the ignored build/, addons/, .deps/, .godot/ and node_modules/, when every command below ran (git status --porcelain empty before the first and after the last); the evidence files were added afterwards and are not inputs",
+  "environment": {
+    "platform": "macOS 26.6.2 arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "node": "v22.23.3",
+    "npm": "10.9.9",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "typeChecker": {
+      "name": "tsc-rs",
+      "version": "0.1.0",
+      "typescriptVersion": "7.1.0-dev",
+      "platformPackage": "@tsc-rs/darwin-arm64",
+      "executableSha256": "3a2736e002cdeaa7a7514adb9c5b2f367021fd8253d1fdfb4058f135ead04b49"
+    },
+    "modes": [
+      "headless",
+      "headed (a window on the local display, for the captures)"
+    ],
+    "note": "The HUD runs in the Hermes of a FabricApplication, inside a project provisioned by the addon, with a restricted PATH (/usr/bin:/bin) and the addon's private Node."
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:consumer:civ-lite step and the independent-civ-lite-consumer artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below equal the blobs of the merge commit (and, for the slice's own files, of the implementation commit). They certify the GDScript, the TSX, the scripts, the tests and the oracle that ran, not a native binary: the host is the one built on this machine from main's native sources, and no check of this slice changes or compares it."
+  },
+  "nativeCode": {
+    "changed": false,
+    "note": "This slice adds no C++ and touches neither native/, src/ nor sdk/.",
+    "hostSha256": "a06edfbc56171e085bf12642ca40fa614881f768d38ab4e78d380b5ddeda84d1",
+    "provisionedAddonNativeSha256": "a06edfbc56171e085bf12642ca40fa614881f768d38ab4e78d380b5ddeda84d1"
+  },
+  "previousHost": {
+    "applicable": false,
+    "reason": "The slice has no native code: there is no previous binary to compare, and the previous SDK does not apply either, because the slice exports nothing from src/ or sdk/."
+  },
+  "provisioning": {
+    "template": "consumers/civ-lite",
+    "command": "node scripts/create-consumer.mjs --template civ-lite <new directory> (called by the check)",
+    "addonManifest": {
+      "sourceCommit": "029416fd3067e1d6c147dac44cd670be5110e337",
+      "sourceDirty": false,
+      "godot": "4.7.2",
+      "react": "19.2.3",
+      "react-native": "0.87.1",
+      "node": "22.23.3",
+      "nativeSha256": "a06edfbc56171e085bf12642ca40fa614881f768d38ab4e78d380b5ddeda84d1",
+      "lockfileSha256": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5"
+    },
+    "globalNode": "spawnSync('node') under PATH=/usr/bin:/bin gives ENOENT",
+    "editor": "godot --headless --editor -- --godot-fabric-build-check printed CONSUMER_EDITOR_BUILD_PASSED, with no ERROR: line",
+    "offlineBuild": "the addon's own builder, run by the private Node under sandbox-exec with the network denied, gave the same bundle",
+    "bundleSha256": "eff2977774bf79de2a3d98145b2220c6dcac0d4e133597147808a0cd0354e38e",
+    "buildAndOwnershipChecks": {
+      "plain": 18,
+      "withCapture": 19,
+      "names": [
+        "Consumer cannot find global Node",
+        "The provisioned project is the template plus the addon, with no laboratory directory",
+        "The project enables the addon's plugin and names its application Resource",
+        "The scene injects the addon's facade and no script of the project names a path to the laboratory SDK or the global class",
+        "The scene's root is the GameServices node, with the Application, the World and a HUD surface under it",
+        "The HUD is public TSX: it imports only react, react-native, @godot-fabric/runtime and its own types",
+        "The provisioned guide links the research note at the provisioned revision",
+        "Editor build preserves the project lockfile",
+        "The consumer executes its bundle once, for ten cycles",
+        "The report holds one measurement for each of the ten cycles",
+        "Nodes (21), orphans (0), subscriptions (1), snapshot_changed connections (2) and HUD connections (1) are the first cycle's after every cycle",
+        "Every cycle ends with the 14 bindings, nothing pending and exactly one World",
+        "The epoch rises by exactly the three new games of each cycle, strictly, and the HUD and Godot agree on it",
+        "Every cycle went to the menu with no World and no HUD connection, freed the Worlds it dropped, and every call was accepted",
+        "The headed run also ran the ten cycles",
+        "The bundle has no laboratory, examples or SDK-checkout source, and no project dependency",
+        "The bundle is built from the project's own TSX: the HUD and the types of the services",
+        "The provisioned build works with network denied and no global Node, and gives the same bundle",
+        "Building and running preserve the project lockfile"
+      ]
+    },
+    "nativeChecks": 145,
+    "graphicalChecks": 148
+  },
+  "commands": [
+    {
+      "command": "npm run test:consumer:civ-lite -- --capture",
+      "exit": 0,
+      "elapsedMs": 45024,
+      "printed": [
+        "CONSUMER_CHECK_PASSED: civ-lite: 19 build/ownership checks; 145 native checks; 10 cycles"
+      ],
+      "note": "provisions the template, builds it in the editor, runs the ten cycles headless and headed (a window on the local display), builds again with the network denied, and saves the two captures"
+    },
+    {
+      "command": "node scripts/consumer-civ-lite-sabotage.mjs",
+      "exit": 0,
+      "elapsedMs": 197472,
+      "printed": [
+        "controlStatus: 0",
+        "4 variants, every runStatus 0, every one rejected"
+      ],
+      "note": "provisions and runs each broken template, restores the source byte for byte after each, then runs the plain check as the control"
+    },
+    {
+      "command": "npm run test:frontier-services",
+      "exit": 0,
+      "elapsedMs": 17970,
+      "printed": [
+        "# tests 8",
+        "# pass 8",
+        "# fail 0"
+      ],
+      "note": "tests/frontier-services-native.test.mjs (the probe in 2 processes and the oracle), then tests/frontier-services-parity.test.mjs"
+    },
+    {
+      "command": "npm run test:consumer",
+      "exit": 0,
+      "elapsedMs": 115936,
+      "printed": [
+        "CONSUMER_CHECK_PASSED: 30 build/ownership checks; 40 native checks"
+      ],
+      "note": "the minimal consumer, which runs under the same prop-scope policy"
+    },
+    {
+      "command": "npm run test:civ-lite-game",
+      "exit": 0,
+      "elapsedMs": 2066,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "npm run type-check",
+      "exit": 0,
+      "elapsedMs": 309,
+      "printed": [],
+      "note": "tsc-rs prints nothing but its command line; exit 0 means no diagnostic"
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "elapsedMs": 387,
+      "printed": [
+        "✓ No issues found (0.14s)"
+      ]
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "elapsedMs": 791,
+      "printed": [
+        "\"passed\": true,",
+        "\"files\": 1741,"
+      ],
+      "note": "counted on the merge commit, before the evidence files were added"
+    }
+  ],
+  "cycles": {
+    "count": 10,
+    "newGamesPerCycle": 3,
+    "bindings": 14,
+    "baseline": {
+      "connections": 2,
+      "hudSubscriptions": 1,
+      "nodes": 21,
+      "orphans": 0,
+      "subscriptions": 1
+    },
+    "series": [
+      {
+        "cycle": 1,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 4,
+        "hudEpoch": 4,
+        "epochsSeen": [
+          2,
+          3,
+          4
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 2,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 7,
+        "hudEpoch": 7,
+        "epochsSeen": [
+          5,
+          6,
+          7
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 3,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 10,
+        "hudEpoch": 10,
+        "epochsSeen": [
+          8,
+          9,
+          10
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 4,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 13,
+        "hudEpoch": 13,
+        "epochsSeen": [
+          11,
+          12,
+          13
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 5,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 16,
+        "hudEpoch": 16,
+        "epochsSeen": [
+          14,
+          15,
+          16
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 6,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 19,
+        "hudEpoch": 19,
+        "epochsSeen": [
+          17,
+          18,
+          19
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 7,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 22,
+        "hudEpoch": 22,
+        "epochsSeen": [
+          20,
+          21,
+          22
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 8,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 25,
+        "hudEpoch": 25,
+        "epochsSeen": [
+          23,
+          24,
+          25
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 9,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 28,
+        "hudEpoch": 28,
+        "epochsSeen": [
+          26,
+          27,
+          28
+        ],
+        "worlds": 1
+      },
+      {
+        "cycle": 10,
+        "nodes": 21,
+        "orphans": 0,
+        "objects": 1614,
+        "bindings": 14,
+        "subscriptions": 1,
+        "pendingHostTasks": 0,
+        "pendingEvents": 0,
+        "connections": 2,
+        "hudSubscriptions": 1,
+        "epoch": 31,
+        "hudEpoch": 31,
+        "epochsSeen": [
+          29,
+          30,
+          31
+        ],
+        "worlds": 1
+      }
+    ],
+    "headedEqualsHeadlessOn": [
+      "cycle",
+      "nodes",
+      "orphans",
+      "bindings",
+      "subscriptions",
+      "pendingHostTasks",
+      "pendingEvents",
+      "connections",
+      "hudSubscriptions",
+      "epoch",
+      "hudEpoch",
+      "epochsSeen",
+      "worlds"
+    ],
+    "objectCountNote": "OBJECT_COUNT is recorded and not asserted: headless it is the same in every cycle, headed it settles over the first cycles",
+    "objectCountHeaded": [
+      1613,
+      1616,
+      1618,
+      1618,
+      1617,
+      1617,
+      1618,
+      1618,
+      1618,
+      1618
+    ],
+    "errors": {
+      "beforeStop": [],
+      "bundleEvaluations": 1
+    }
+  },
+  "checkCounts": {
+    "native": 145,
+    "graphical": 148,
+    "beforeCycles": 6,
+    "firstCycle": 10,
+    "otherCycles": 14,
+    "afterCycles": 3,
+    "captures": 3
+  },
+  "sabotages": {
+    "count": 4,
+    "controlStatus": 0,
+    "sourcesRestoredByteForByte": true,
+    "variants": [
+      {
+        "name": "hud-leak",
+        "file": "consumers/civ-lite/ui/index.tsx",
+        "find": "    return () => release(connection);\n",
+        "replace": "    return () => {};\n",
+        "sourceSha256": "9d67f9daf34ad0a110760524145a61bec39b66391fec1e03b7c24b4c997090c0",
+        "command": "node scripts/consumer-civ-lite-check.mjs --sabotage=hud-leak",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 29,
+        "firstFailedCheck": "cycle 1: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+        "failedCheckNames": [
+          "cycle 1: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 1: the baseline is a fresh game on the game screen: one HUD subscription, the registry's connection and the World's",
+          "cycle 2: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 2: the registry's subscriptions are the first cycle's (2)",
+          "cycle 2: the connections the HUD holds are the first cycle's (2)",
+          "cycle 3: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 3: the registry's subscriptions are the first cycle's (2)",
+          "cycle 3: the connections the HUD holds are the first cycle's (2)",
+          "cycle 4: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 4: the registry's subscriptions are the first cycle's (2)",
+          "cycle 4: the connections the HUD holds are the first cycle's (2)",
+          "cycle 5: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 5: the registry's subscriptions are the first cycle's (2)",
+          "cycle 5: the connections the HUD holds are the first cycle's (2)",
+          "cycle 6: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 6: the registry's subscriptions are the first cycle's (2)",
+          "cycle 6: the connections the HUD holds are the first cycle's (2)",
+          "cycle 7: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 7: the registry's subscriptions are the first cycle's (2)",
+          "cycle 7: the connections the HUD holds are the first cycle's (2)",
+          "cycle 8: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 8: the registry's subscriptions are the first cycle's (2)",
+          "cycle 8: the connections the HUD holds are the first cycle's (2)",
+          "cycle 9: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 9: the registry's subscriptions are the first cycle's (2)",
+          "cycle 9: the connections the HUD holds are the first cycle's (2)",
+          "cycle 10: in the menu the HUD showed it, the scene had no World and the HUD held no connection",
+          "cycle 10: the registry's subscriptions are the first cycle's (2)",
+          "cycle 10: the connections the HUD holds are the first cycle's (2)"
+        ],
+        "finalCycle": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 0,
+          "bindings": 14,
+          "subscriptions": 11,
+          "connections": 2,
+          "hudSubscriptions": 11,
+          "epoch": 31,
+          "hudEpoch": 31
+        },
+        "logLines": []
+      },
+      {
+        "name": "orphan",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  remove_child(world)\n  world.queue_free()\n",
+        "replace": "  remove_child(world)\n",
+        "sourceSha256": "71a18b40ce8828d6e610089d7bb049b9fa87c4e21a97456ded1e35201935becc",
+        "command": "node scripts/consumer-civ-lite-check.mjs --sabotage=orphan",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 19,
+        "firstFailedCheck": "cycle 1: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+        "failedCheckNames": [
+          "cycle 1: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 2: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 2: the orphan nodes are the first cycle's (2)",
+          "cycle 3: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 3: the orphan nodes are the first cycle's (2)",
+          "cycle 4: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 4: the orphan nodes are the first cycle's (2)",
+          "cycle 5: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 5: the orphan nodes are the first cycle's (2)",
+          "cycle 6: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 6: the orphan nodes are the first cycle's (2)",
+          "cycle 7: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 7: the orphan nodes are the first cycle's (2)",
+          "cycle 8: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 8: the orphan nodes are the first cycle's (2)",
+          "cycle 9: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 9: the orphan nodes are the first cycle's (2)",
+          "cycle 10: the two Worlds the cycle dropped (the reload's and the menu's) are freed",
+          "cycle 10: the orphan nodes are the first cycle's (2)"
+        ],
+        "finalCycle": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 20,
+          "bindings": 14,
+          "subscriptions": 1,
+          "connections": 2,
+          "hudSubscriptions": 1,
+          "epoch": 31,
+          "hudEpoch": 31
+        },
+        "logLines": []
+      },
+      {
+        "name": "epoch-reset",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "func reload_world() -> Dictionary:\n  _drop_world()\n  return new_game()\n",
+        "replace": "func reload_world() -> Dictionary:\n  _drop_world()\n  epoch = 0\n  return new_game()\n",
+        "sourceSha256": "66431770f018a5444aee96c81d49a03027c8e428bf346a182d1ee6b48601ab70",
+        "command": "node scripts/consumer-civ-lite-check.mjs --sabotage=epoch-reset",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 21,
+        "firstFailedCheck": "cycle 1: the epoch rose by exactly the 3 new games of the cycle: 1 to 2",
+        "failedCheckNames": [
+          "cycle 1: the epoch rose by exactly the 3 new games of the cycle: 1 to 2",
+          "cycle 1: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 2: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 2: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 3: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 3: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 4: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 4: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 5: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 5: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 6: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 6: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 7: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 7: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 8: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 8: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 9: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 9: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "cycle 10: the epoch rose by exactly the 3 new games of the cycle: 2 to 2",
+          "cycle 10: the HUD's epoch is Godot's, and the HUD saw the epochs rise one new game at a time",
+          "The epoch only rose across the ten cycles: 1, then 3 per cycle, to 2 in Godot and in the HUD"
+        ],
+        "finalCycle": {
+          "cycle": 10,
+          "nodes": 21,
+          "orphans": 0,
+          "bindings": 14,
+          "subscriptions": 1,
+          "connections": 2,
+          "hudSubscriptions": 1,
+          "epoch": 2,
+          "hudEpoch": 2
+        },
+        "logLines": []
+      },
+      {
+        "name": "no-facade",
+        "file": "consumers/civ-lite/main.tscn",
+        "find": "fabric_api=ExtResource(\"2\")\n",
+        "replace": "",
+        "sourceSha256": "c428373438a10401535d2b63d11f3083775ab53c2678d930c7a9a1501cfa114d",
+        "command": "node scripts/consumer-civ-lite-check.mjs --sabotage=no-facade",
+        "runStatus": 0,
+        "rejected": true,
+        "failedChecks": 3,
+        "firstFailedCheck": "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK",
+        "failedCheckNames": [
+          "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK",
+          "The node registered the state, the signal and the 12 methods while the application entered the tree: 14 bindings",
+          "The public TSX HUD connected to the snapshot of epoch 1 with one subscription"
+        ],
+        "finalCycle": null,
+        "logLines": [
+          "ERROR: FABRIC_ERROR: GameServices has no fabric_api; the scene's owner injects the facade script (godot_fabric.gd), so no service was registered"
+        ]
+      }
+    ]
+  },
+  "droppedSabotage": {
+    "name": "world-leak",
+    "was": "the World drops its subscription without calling stop() when it leaves the tree",
+    "why": "That leak cannot happen: Godot 4.7.2 drops a connection whose target is a freed Node by itself, lambdas made inside a Node included. Only a lambda made by a RefCounted outlives its object, and the first design of the World wrapped its handler in such an object (a RefCounted `Subscription`) for no purpose but to make the sabotage possible. The World now connects a plain method and disconnects it explicitly in _exit_tree, and the per-cycle count of the connections of snapshot_changed stays as a guard.",
+    "experiment": {
+      "engine": "Godot 4.7.2 official, headless, a throwaway script that is not in the repository",
+      "connected": [
+        "a Node's method",
+        "a lambda made inside a Node",
+        "a lambda made inside a RefCounted",
+        "a RefCounted's method"
+      ],
+      "output": [
+        "connections before free: 3",
+        "connections after node frees: 1",
+        "remaining: <anonymous lambda>(self lambda)",
+        "orphans: 1.0 nodes: 2"
+      ],
+      "reading": "the RefCounted method's connection went with its object when its last reference did, both Node connections went with the nodes, and only the lambda made by the RefCounted stayed; a removed node that is not freed is an orphan and is not in get_node_count()"
+    }
+  },
+  "captures": [
+    {
+      "file": "frontier-consumer-game.png",
+      "sha256": "4104be42c39bfc52235b09bf33e9bffc8de90bba16344badefd7a20e88ad0ee0",
+      "bytes": 31480,
+      "size": "1080x600",
+      "shows": "the game: the map with the Settler selected after its move, and the HUD with the actions and the reason of the disabled ones",
+      "importFile": "frontier-consumer-game.png.import",
+      "importSha256": "3746c1a28f3a5c1c26f471219ce6b029703c257d02bf2a2af7d7521ee3d26809"
+    },
+    {
+      "file": "frontier-consumer-menu.png",
+      "sha256": "3dd48d41aabbc4d5bdc58b15270c6a9eecf1ba0015eb68dc33facb8e56f08790",
+      "bytes": 8931,
+      "size": "1080x600",
+      "shows": "the menu: no World behind it, and the HUD's New game",
+      "importFile": "frontier-consumer-menu.png.import",
+      "importSha256": "71119baf7cf62b40dc7ffd11e1c041a4cbf7c384e5187993c2470e8d632f4a07"
+    }
+  ],
+  "regressions": [
+    {
+      "command": "npm run type-check",
+      "exit": 0
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "marker": "No issues found"
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "marker": {
+        "files": 1741,
+        "failures": 0
+      }
+    },
+    {
+      "command": "npm run test:civ-lite-game",
+      "exit": 0,
+      "marker": "1/1"
+    }
+  ],
+  "executedSourceSha256": {
+    "consumers/civ-lite/.gitignore": "f669ee65c218f0a59b440be68ea05f86efc25fb1b5290ac4325ffdcbcaa63ce1",
+    "consumers/civ-lite/README.md": "33370e0c942971e770f4b27c5484671b6a6245728f3435448d37584f8c122b97",
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+    "consumers/civ-lite/game/game.gd": "39c866648510f47090b5b9b0268c756cb230510bc92cc938c59c67869c004c44",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/snapshot.gd": "8238e8d7ae74c77f1072cd82e732617cd2729d0744bc9b7494ea1fe275728603",
+    "consumers/civ-lite/game/turn.gd": "0a5fc0523e0e94d4d42190a770b95a55ca851adfce62abe608150ecb0c99ba05",
+    "consumers/civ-lite/game/world.gd": "d2be82b34262bfe3f6c6b257037163ce0e5e2937639fd6a1ba1c2bdf21b0a3d6",
+    "consumers/civ-lite/main.tscn": "b37fb5f26067cae14daa93a8b7f7286cf00fce7f5c11ecf698eb8a2cbf1911fd",
+    "consumers/civ-lite/package-lock.json": "3435f151006f59aa8dedcc623d2a0c932254222d5653632744602a39b3deac06",
+    "consumers/civ-lite/package.json": "f570a27248f00d9e57ed9fbee7ac20ccfcb7cf42961e28039f135d89fbc5f594",
+    "consumers/civ-lite/project.godot": "2c14d1d443cae6708c9f1eee098e96edc6a7a2e6005b35f5a4ab7e11bec266fa",
+    "consumers/civ-lite/services/game_services.gd": "7afef0a619baacf6739fe6f06ef201c232e026f21d0ebafe21598bb1dd654698",
+    "consumers/civ-lite/services/schema.gd": "11d6ad2fed86216050865a36040c473874bb2249649fff78168526bebbb41aa3",
+    "consumers/civ-lite/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "consumers/civ-lite/ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+    "consumers/civ-lite/ui/frontier-types.ts": "ff5b3ecae43dc59fed638183dab703427df1aef92d79ad76967af2605e37a9e9",
+    "consumers/civ-lite/ui/index.tsx": "231095332bced22a38e58e6f78c63472be8f5efb4535f954ce64e82e280e42b4",
+    "consumers/civ-lite/validation.gd": "b3a3d3f55dac10f36a6203ea7dabec02fd1d87654e1c534b006a95a4fc6e1620",
+    "consumers/civ-lite/world/world.gd": "4856c83597505a8159ffde21a97cb2a2f3bfaa9f8f8507eaf61efe7bc31ec47d",
+    "consumers/civ-lite/world/world.tscn": "b8a771ebfc0e1fbc7099e61cb9ffb2a596724afbe99c90566e655948554525a9",
+    "scripts/consumer-civ-lite-check.mjs": "127820c85908030decb4d5544b1e86d3c615917aab379f1e6358a2251a023b4c",
+    "scripts/consumer-civ-lite-sabotage.mjs": "13481761695083f18b215a12e3d4636856c0a195955030e3763561bfe083b09d",
+    "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+    "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+    "scripts/pack-addon.mjs": "b7f9e7e5209283aa9ac0e401652dd40ae15a88d998dca4bdbbe8fef01e269485",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/consumer-check.mjs": "171d35f49cdedd359eae4ef9d916cf8f6f1108f5901bc6937a4b317ed249b29d",
+    "scripts/frontier-services-bundle.mjs": "079073d4cacfbb7ae07240f77ffa35a332a6e4b81a9f51a768d5eba75621dd87",
+    "scripts/frontier-services-sabotage.mjs": "75987aa8ac6616a851c537d40d27235038aa8648a0a2fe7f3ad9c06acf324d2d",
+    "tests/frontier-services-fixture.jsx": "38d6ebb70334cca9cad4b057fdb8ab4371daa73ef607a88afb758d7368a441dc",
+    "tests/frontier-services-probe.gd": "6dd0407504e8c57abdec219ad0ce48fbfa4fa518fe3cfef9b068b72c58675ccb",
+    "tests/frontier-services-native.test.mjs": "358bebb638a1362617709c4f45e91d93c915a4a7d919c209e331cf477954ef56",
+    "tests/frontier-services-oracle.mjs": "6f17634325734e5740e09d06951b45db4271593453576c8b8af49bcd47e0f6ca",
+    "tests/frontier-services-parity.test.mjs": "02a3499a28b746ebebed9c88830b13c4cd46c04215fa28e179ec67024b869f6c",
+    "tests/types/frontier-services.tsx": "938cb59b5f7900614f6b965d6fe72373f6ac4a2c39e81c6862a662559d69930a",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2",
+    "sdk/addon/godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+    "sdk/addon/application_resource.gd": "1c02b968903d490dcd51f21de2ebc9de9339f5b647f47e0a1bc791f0e586ad95",
+    "src/prop-scope.mjs": "90b9376208b362bd7f36c09dbb0fc634c92d3718f6939f0107cf0c2b4a0b3984",
+    "package.json": "f0e13bf2208094d66573575244008223cb7cb6363d9059dbd2a9a4ff6ddbefa7",
+    "tsconfig.godot.json": "ac3f432bca69bfa5cf18039a7c28733c0af1e6d897dc1326e8f8c64112802e87",
+    ".fallowrc.json": "031567976f3eaa2fab44ae56e923ef526b9953c3f488514a5d2eff3eaf3e53fd",
+    ".github/workflows/contracts.yml": "fc326ae3dceb091d2536ac1f66213b0f461e28407140d324b0774f7c759a154a"
+  },
+  "committedBlobsAtMerge": {
+    "consumers/civ-lite/.gitignore": "3dd9de56c2c46d3463fa00c8dfbff1dd4b54e623",
+    "consumers/civ-lite/README.md": "d49dc5be18135ed75cd71975a328abb29634c6eb",
+    "consumers/civ-lite/game/canon.gd": "e98ed6db581d0fac90ba09c03f79b7f52f959475",
+    "consumers/civ-lite/game/context.gd": "2652ecfef3bfbab3bb74ed321a7771288d21f46d",
+    "consumers/civ-lite/game/economy.gd": "eb2f16ed3502c85c70eac63af412bca2aa5356b5",
+    "consumers/civ-lite/game/game.gd": "ebe797989178a19c3e4e31867a2d933aee4c7e18",
+    "consumers/civ-lite/game/intents.gd": "71c06a3309b0106b91cbbcb3541dcb3359290e36",
+    "consumers/civ-lite/game/prng.gd": "9d188b41d61c7826e468f60c423a00d3d0a106d5",
+    "consumers/civ-lite/game/replay.gd": "13331aa690ad94750c35f575c2dd2ef7c2e46c06",
+    "consumers/civ-lite/game/rules.gd": "bd50021bccc1c94ac6f2199a3acbb7825b2bff19",
+    "consumers/civ-lite/game/snapshot.gd": "4a963d843bec031064930ae6c916b3e8aaa297d7",
+    "consumers/civ-lite/game/turn.gd": "2e03b88fa944a7f63d036386125681b093958f72",
+    "consumers/civ-lite/game/world.gd": "7089136040394f08e7bbbdda55aa118c99dd0ab4",
+    "consumers/civ-lite/main.tscn": "dc6ecc6de01afc0764522d19c8f89a54415ef4ba",
+    "consumers/civ-lite/package-lock.json": "ff78f04ce5004c1ac1d376f718f3bd4030ea7c92",
+    "consumers/civ-lite/package.json": "4c61aab559558f37b18d250f2f81bf5e9ac00ceb",
+    "consumers/civ-lite/project.godot": "01a38309af961be2a5c6fd2e6cd32ad8559fb7df",
+    "consumers/civ-lite/services/game_services.gd": "0a2b3b00ca2d1e2f285e2af29913922046cac1a4",
+    "consumers/civ-lite/services/schema.gd": "8b5f67a48e1d30ea51fe86974a1ee1e1a15f7612",
+    "consumers/civ-lite/tsconfig.json": "c17a3b3e3f29d63d26aa7674f126ccc1527deb2b",
+    "consumers/civ-lite/ui/application.tres": "17bf73061e605594e2fb613d246b46901e7c35a0",
+    "consumers/civ-lite/ui/frontier-types.ts": "fd471927cdfa560bcca853351a2529d0c6fad662",
+    "consumers/civ-lite/ui/index.tsx": "0fb865968de6662528e1ccf7f61bd88da0f62b74",
+    "consumers/civ-lite/validation.gd": "044f8d01d41c36c2ed68827012060f7254e60b9a",
+    "consumers/civ-lite/world/world.gd": "e4e6306a6208bb2a10e260ffcfd2b46db563fb09",
+    "consumers/civ-lite/world/world.tscn": "e3ac5536a4316424872222305806e2b0db89843f",
+    "scripts/consumer-civ-lite-check.mjs": "47ee9fbf1ab8bf374fd8f9fe29419c8770d6849c",
+    "scripts/consumer-civ-lite-sabotage.mjs": "e06eb4f92cc1e745627f5a1779f6d72603f51f84",
+    "scripts/consumer-harness.mjs": "9a29be129fe77d2c8506c614b3e851a97185731b",
+    "scripts/create-consumer.mjs": "4c16eb88c349042742cd295e337a000149d20733",
+    "scripts/pack-addon.mjs": "f399eb810a739c4880412c31b8f5bdac8c86800f",
+    "scripts/sabotage-sources.mjs": "0186a4bdd4f624be5e403834688cacb8ed9355d4",
+    "scripts/consumer-check.mjs": "435fcf428635cc9f9eba5adb0c48086c7127541d",
+    "scripts/frontier-services-bundle.mjs": "5a3812a6195e876398e800f76968552fd34ecc82",
+    "scripts/frontier-services-sabotage.mjs": "30f0e9eb91e40985aa08c0fd737d96c402fe5516",
+    "tests/frontier-services-fixture.jsx": "bf86a17a0ed17fffff821d65218e12c3579d875c",
+    "tests/frontier-services-probe.gd": "2702efbbb6b1512328c97b9ce16a38d257544fab",
+    "tests/frontier-services-native.test.mjs": "be8f38f5ef890f8dac2c8a3504500cc1c7fc8285",
+    "tests/frontier-services-oracle.mjs": "4a6504182bd8432aa40a85f4ba909d2cb6c753d9",
+    "tests/frontier-services-parity.test.mjs": "8cc8d25f816878730c10ef96cb56f85ed24ff498",
+    "tests/types/frontier-services.tsx": "d3877049861f11cff89056bab5633fe6ffe652c9",
+    "sdk/addon/application_node.gd": "2863644f35604b6449677b330a097b10a4b0f480",
+    "sdk/addon/godot_fabric.gd": "64cce633c0842e63c70d81a108cddcea735fcf99",
+    "sdk/addon/application_resource.gd": "92027733474f2d690f9c626ff8a393f6194c6530",
+    "src/prop-scope.mjs": "97d472a5f019b902ac12f3aa81bb9a2b68386ccc",
+    "package.json": "8a4f050ff104a6f0402591c903d6cd5c82f374f1",
+    "tsconfig.godot.json": "24c8034572f30a84fdbf014a5f80053c1760253e",
+    ".fallowrc.json": "5a0accf8f48a5e876ddff81e78c34d3dd811ff25",
+    ".github/workflows/contracts.yml": "d292c99e4564db92a6e2054060eec1c138449e43"
+  },
+  "sourcesEqualCommittedBlobs": true,
+  "editedAfterTheRuns": {
+    "files": [
+      "README.md",
+      "consumers/civ-lite/README.md",
+      "docs/evidence/README.md",
+      "docs/research/frontier-consumer.md"
+    ],
+    "note": "After the commands ran, these four files only gained links to this record (and, in docs/evidence/README.md, its index entry). consumers/civ-lite/README.md is read by the check only to rewrite its ../../ links, and the SHA-256 above is the one it had when it ran."
+  },
+  "limits": [
+    "The HUD is the minimal service HUD (the turn, the context, the actions with their reasons, Menu and New game), not the playable one: that is V05-05 and V05-08. The scenery draws the map and takes no input.",
+    "The presses are synthetic: a mouse down and up pushed through the viewport on the centre of each Pressable's control, headless and headed, and the HUD's own send() for select_unit and move_unit; no user and no device pressed anything.",
+    "The headed run is local, on one macOS machine, on the local display; hosted CI runs the headless check and has not run it yet.",
+    "The criterion `autoridade` stays open: a job that survives closing the screen and bursts against the 64 tasks and 128 events a phase are not measured, and end_turn is one synchronous GDScript call.",
+    "D22 and D23 are out: nothing here recreates the application, so the HUD never reconnects to a new one.",
+    "The cycles measure nodes, orphans, bindings, subscriptions, pending work, connections and the epoch; they do not measure time, frame cost or memory, and OBJECT_COUNT is recorded, not asserted.",
+    "The previous-host control does not apply: there is no C++.",
+    "Hosted CI for test:consumer:civ-lite and the Pages publication are pending."
+  ]
+}
