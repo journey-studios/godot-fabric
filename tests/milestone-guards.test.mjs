@@ -793,15 +793,33 @@ test("the contracts workflow runs the guard on every event it has, fetching the 
   const start = job.indexOf("      - name: Milestone exit guards (X9 and X10)\n");
   assert.ok(start > 0, "the contracts job has no milestone guards step");
   const step = job.slice(start, job.indexOf("\n      - ", start + 10));
-  // The base is the first parent of HEAD in both events: the base branch of GitHub's synthetic merge commit on a pull
-  // request (the payload's base.sha can differ from it when the base branch moved), the parent of the pushed commit on a push.
-  assert.match(step, /^ {12}pull_request\|push\)$/m, "one branch for both events");
-  assert.match(step, /^ {14}git fetch --no-tags --depth=2 origin "\$GITHUB_SHA"$/m);
-  assert.match(step, /^ {14}base="\$\(git rev-parse HEAD\^\)"$/m);
+  // Three branches. pull_request|push: the base is the first parent of HEAD in both events, the base branch of GitHub's
+  // synthetic merge commit on a pull request (the payload's base.sha can differ from it when the base branch moved), the
+  // parent of the pushed commit on a push. workflow_dispatch: the history and origin/main are fetched in one fetch and the
+  // guard runs with no --base, so it compares with the merge-base of HEAD and origin/main (the tip of origin/main when they
+  // share no ancestor). Any other event fails.
+  const caseStart = step.indexOf("          case \"$EVENT_NAME\" in\n");
+  const caseEnd = step.indexOf("          esac");
+  assert.ok(caseStart > 0 && caseEnd > caseStart, "the step has no case over the event");
+  const cases = step.slice(caseStart, caseEnd);
+  const pushBranch = cases.slice(cases.indexOf("            pull_request|push)\n"), cases.indexOf("            workflow_dispatch)\n"));
+  const dispatchBranch = cases.slice(cases.indexOf("            workflow_dispatch)\n"), cases.indexOf("            *)\n"));
+  const otherBranch = cases.slice(cases.indexOf("            *)\n"));
+  assert.equal(cases.match(/^ {12}\S[^\n]*\)$/gm)?.length, 3, "three branches: pull_request|push, workflow_dispatch and *");
+  assert.match(pushBranch, /^ {14}git fetch --no-tags --depth=2 origin "\$GITHUB_SHA"$/m);
+  assert.match(pushBranch, /^ {14}base="\$\(git rev-parse HEAD\^\)"$/m);
+  assert.match(pushBranch, /^ {14}node scripts\/milestone-guards\.mjs --check --base "\$base"$/m);
+  // One fetch, limited to main: --unshallow deepens the history the checkout already has, and the refspec keeps the other
+  // branches of the remote out of the clone.
+  assert.equal(dispatchBranch.split("git fetch").length - 1, 1, "a dispatch makes one fetch");
+  assert.match(dispatchBranch, /^ {14}git fetch --no-tags --unshallow origin main:refs\/remotes\/origin\/main$/m, "a dispatch fetches the history and main, and only main");
+  assert.match(dispatchBranch, /^ {14}node scripts\/milestone-guards\.mjs --check$/m, "a dispatch runs the guard with no --base");
+  assert.ok(dispatchBranch.indexOf("git fetch") < dispatchBranch.indexOf("node scripts/"), "the fetch comes before the guard");
+  assert.doesNotMatch(dispatchBranch, /--base|HEAD\^|\$base/, "a dispatch never passes a base");
+  assert.match(otherBranch, /^ {14}echo ".*" >&2\n {14}exit 1\n {14};;$/m, "an event with no base fails");
+  assert.equal(step.split("node scripts/milestone-guards.mjs --check").length - 1, 2, "the guard runs once per branch that has a base");
   assert.doesNotMatch(step, /base\.sha|PULL_REQUEST_BASE_SHA|--depth=1/, "the payload's base is not the base");
-  assert.equal(step.split("git rev-parse HEAD^").length - 1, 1, "the base is taken in one place");
-  assert.match(step, /^ {14}echo ".*" >&2\n {14}exit 1$/m, "an event with no base fails");
-  assert.match(step, /^ {10}node scripts\/milestone-guards\.mjs --check --base "\$base"$/m);
+  assert.equal(step.split("git rev-parse HEAD^").length - 1, 1, "the first parent is taken in one place");
   assert.doesNotMatch(step, /^ {8}(if|continue-on-error):/m, "the step is not conditional");
   assert.doesNotMatch(step, /\|\| true|\|\| echo/, "its failure is not swallowed");
   assert.ok(job.indexOf("npm run test:contracts") > start, "the guard runs before the suites");
