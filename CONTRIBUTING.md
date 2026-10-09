@@ -35,8 +35,11 @@ dispatched run adds five jobs:
   `.godot`, `node_modules` and `build`) as the `native-host` artifact, kept one
   day. It then runs `test:cold` and `parity:godot` on that cold build.
 - Three suite jobs start when it ends. Each one checks out the same commit and
-  restores `native-host`. It checks that a rebuild of `fabric_godot` changes no
-  byte of the host or of its receipt, and that the host matches
+  restores `native-host`. A configured CMake tree cannot move, so it first
+  checks that `.deps/build` was configured at this job's workspace path (GitHub's
+  macOS runners use the same one for every job). It then checks that a rebuild
+  of `fabric_godot` changes no byte of the host or of its receipt, and that the
+  host matches
   `.deps/build/native-sdk-build.json` and this checkout's native sources. Then
   it runs its share of the suites in their original order:
   - `native-suites-runtime`: the examples, runtime, list, text, networking,

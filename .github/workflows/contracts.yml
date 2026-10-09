@@ -128,6 +128,13 @@ jobs:
           # of the pointer suites rebuilds nothing, as it did when one job ran every suite.
           git ls-files -z | xargs -0 touch -h -t 200001010000
           tar -xzf "$RUNNER_TEMP/native-host/native-host.tar.gz"
+          # A configured CMake tree holds absolute paths and cannot move. GitHub's macOS runners check every job of
+          # this repository out at the same path; stop before any build if this one differs.
+          configured=$(sed -n 's/^CMAKE_HOME_DIRECTORY:INTERNAL=//p' .deps/build/CMakeCache.txt)
+          if [ "$configured" != "$(pwd -P)/native" ]; then
+            echo "::error::native-cold-start configured .deps/build for $configured, not for $(pwd -P)/native"
+            exit 1
+          fi
           host() { shasum -a 256 addons/fabric_godot.dylib .deps/build/native-sdk-build.json; }
           built=$(host)
           .deps/python/bin/cmake --build .deps/build --target fabric_godot --parallel 4
