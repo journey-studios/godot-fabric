@@ -682,9 +682,27 @@ first frame, and a new session has no queue until its own turn 5. Two causal con
 fail exactly their groups, twelve retained sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four
 captures of the overlays were read, and no check name of the probes carries a count that depends on the pace (the lane refuses one that
 does). The merge of main brought in the soak of #83, whose oracle had written the one event as a fact; it now expects the three answers of
-turn 5, with nothing relaxed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence; this slice is not on main yet,
-so it has no hosted run. The `estabilidade` criterion of V05-05 remains open, the engine logs an error when the application quits with a
-`Modal` open (a task of its own), and no 1.0 checkpoint, weight or denominator moves.
+turn 5, with nothing relaxed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence. The slice reached main as `e108e9d` (the squash of
+#93), and the Contracts run dispatched on main at that commit (run 37958818671, the eight jobs on the first attempt) repeated the HUD lane's 144 and 26 probe
+checks and the consumer's 165 native checks, with both hosted reports judged again, outside the CI, by the independent oracles with no finding
+([receipt](docs/evidence/civ-lite-ui/overlays/hosted-ci.json)); the Pages run 37958764277 deployed that commit's dashboard data with `overlays` closed
+([receipt](docs/evidence/civ-lite-ui/overlays/publication.json)). The engine logs an error when the application quits with a `Modal` open (a task of its own),
+and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-05, criterion `estabilidade` (slice 2b), the last of its four, so the item is complete: each overlay is opened and closed twenty times by real
+input, the city screen 20 times by a click and Close and 20 by a click and Escape, and the event dialog 20 times from a new game played to turn 5 and answered by
+three real presses (60 answers), and after every close, at rest (no pending work, no tag retiring, every Image settled), the nodes, orphans and `Window`s of the tree,
+the native views, the pointer routes, the registry's subscriptions and pending work, the HUD's connections and the signal's connections are the first cycle's, exactly;
+the Hermes heap at rest follows the baseline's rule (-1,296, -1,296 and +128 bytes between the medians, against 2,048), and the engine's objects stay within one.
+Focus is what this host can measure: the root viewport's focus owner after a close is the one before the open, and while an overlay is open its Window is the one
+exclusive Modal Window and no Control under it has the focus; Escape closes the city screen through `clear_selection` and does nothing on the dialog. In the first
+and the last cycle of each screen, 100 left clicks, 100 right clicks and 100 wheel ticks reach the World 0 times. A scan of the HUD against the 0.5 manifest, written on
+the syntax tree and reading the manifest (which now decides `AppRegistry`), refuses a name, a prop or a member the manifest does not allow, and the icons are six original
+32x32 PNGs drawn by a generator and shown by `Image` in the bar, the actions, the tile card and the city screen, which is inside a Modal's Window: all of them drew, in
+every opening. The lane (a third probe with 41 checks, an oracle that rejects 38 mutated reports, 14 cases of the scan: 13 changes found and one let through) fails the previous HUD only on the icons, and
+five new sabotages join the twelve (17, all rejected). A first review found a real flake, a screen declared at rest while its Images were still loading, and the rest is
+now a state that includes them; the lane passed three runs in a row after it. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with seven
+captures; this slice is not on main yet, so it has no hosted run, and no 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
 panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720

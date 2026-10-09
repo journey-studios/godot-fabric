@@ -136,4 +136,23 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-05-matriz-mapa-096a018",
   },
+  // The second slice of the HUD, in a folder of its own inside the first one's: a folder holds one pair of receipts. Its contractsRun is the
+  // Contracts run dispatched on main at the squash (a push skips the native suites), and its native steps ran in the job native-suites-runtime.
+  {
+    folder: "civ-lite-ui/overlays",
+    pr: 93,
+    squash: "e108e9d",
+    contractsRun: 37958818671,
+    pagesRun: 37958764277,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-overlays-67c3f16",
+  },
 ];

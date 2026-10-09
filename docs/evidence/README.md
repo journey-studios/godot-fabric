@@ -865,8 +865,20 @@ its own turn 5. The probe reads a `Modal`'s nodes from the host's snapshot, sinc
 probe and 26 of the overlay probe, judged by two independent oracles that reject 27 and 20 mutated reports; two causal controls fail exactly their groups,
 twelve sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four captures of the overlays were read. No check name of the probes
 carries a count that depends on the pace, and the lane refuses one that does. The merge of main brought in the soak of PR #83, whose oracle had written the one
-event as a fact: it now expects the three answers of turn 5, with nothing relaxed. Local macOS arm64; this part is not on main yet, so it has no hosted run,
-`estabilidade` is open, and the engine's error when quitting with a `Modal` open is a task of its own.
+event as a fact: it now expects the three answers of turn 5, with nothing relaxed. Local macOS arm64. This part reached main as `e108e9d` (the squash of PR #93): the
+Contracts run dispatched on main at that commit (run 37958818671, eight jobs, first attempt) repeated the HUD lane's 144 and 26 probe checks and the consumer's 165 native
+checks, with both hosted reports judged again outside the CI by the independent oracles with no finding ([hosted receipt](civ-lite-ui/overlays/hosted-ci.json)), and Pages
+published main's data with `overlays` closed ([publication](civ-lite-ui/overlays/publication.json); [the page](civ-lite-ui/overlays/README.md)). The engine's error when
+quitting with a `Modal` open is a task of its own.
+
+The record has a third part, slice 2b of V05-05 (criterion `estabilidade`, the last of the item, so V05-05 is complete), pinned at `0a0deca`: each overlay is opened and
+closed twenty times by real input (the city screen 20 times by a click and Close and 20 by a click and Escape; the event dialog 20 times from a new game played to turn 5 and
+answered by three presses, 60 answers), and after every close, at rest, the tree's nodes, orphans and `Window`s, the native views, the pointer routes, the registry's
+subscriptions, the HUD's connections and the signal's are the first cycle's, exactly, with the Hermes heap flat by the baseline's rule; focus (the root viewport's owner
+restored, the Modal's Window the one exclusive one while open, Escape closing the city and doing nothing on the dialog) and 0 of 100 clicks of each kind under the overlay in
+the first and the last cycle; a scan of the HUD against the 0.5 manifest, which now decides `AppRegistry`; and six original icons shown by `Image`, inside a Modal's Window too.
+A third probe of 41 checks, an oracle that rejects 38 mutated reports, a scan that finds 13 changes of a copy of the sources, a control (`e108e9d`) that fails only the icons,
+and 17 sabotages (5 new) rejected; seven captures were read. Local macOS arm64; this part is not on main yet, so it has no hosted run.
 
 The [Frontier scope record](frontier-scope/README.md) is V05-04 (criteria `manifesto`, `tipos` and `props`): the twelve names the HUD imports are decided in
 `docs/compatibility/scope-0.5.json`, and one policy module decides each of the 880 props RN 0.87.1 declares for its seven components (433 supported, 325 ignored

@@ -1,4 +1,4 @@
-# Frontier's context-driven HUD (V05-05, criteria `matriz`, `mapa` and `overlays`)
+# Frontier's context-driven HUD (V05-05, criteria `matriz`, `mapa`, `overlays` and `estabilidade`)
 
 The first slice of milestone 0.5's fifth item puts the HUD in the hands of the game's context. Godot already derives one of
 seven contexts from the state (`consumers/civ-lite/game/context.gd:17-31`) and publishes it in the snapshot; this slice makes the
@@ -6,7 +6,8 @@ React Native HUD mount exactly the panels that context calls for, shows the turn
 there, and makes the map the World's: a click on a tile selects it in GDScript, and the pointer over the map is published as a
 state of its own so that the tile card can show it. The record of the runs, the receipt and the captures are
 [docs/evidence/civ-lite-ui/](../evidence/civ-lite-ui/README.md). A second slice (2a, below) makes the city screen and the event dialog
-blocking `Modal` overlays and turns the game's event into a queue of three that the HUD works through.
+blocking `Modal` overlays and turns the game's event into a queue of three that the HUD works through, and a third (2b, at the end) opens and
+closes each overlay twenty times, scans the HUD against the 0.5 manifest and draws its icons with `Image`: it closes `estabilidade`, the last criterion.
 
 The criteria this slice covers, from `milestones[0]`, item V05-05:
 
@@ -15,8 +16,8 @@ The criteria this slice covers, from `milestones[0]`, item V05-05:
 - `mapa`: the turn and resources bar (End turn disabled, with a spinner, during the AI's phase), the unit's actions with the
   reason a disabled one gives, and the tile card (the hover comes from Godot).
 
-`overlays` (blocking overlays, the event queue of three, remount order) is slice 2a, below. `estabilidade` (20 open/close cycles, focus,
-a capture for each context in the final form, the API scan, icons) is still open. Slice 1 rendered the city, research and dialog panels
+`overlays` (blocking overlays, the event queue of three, remount order) is slice 2a, below. `estabilidade` (20 open/close cycles, focus, a
+capture for each context in the final form, the API scan, icons) is slice 2b, at the end. Slice 1 rendered the city, research and dialog panels
 in their contexts so that the matrix is complete, with the dialog as a positioned panel; slice 2a turns the city screen and the dialog
 into `Modal` overlays.
 
@@ -191,19 +192,20 @@ panel says and the geometry of the map, never from the probe's verdicts.
 
 ## Imports
 
-The HUD imports `AppRegistry` (member `registerComponent`), `View`, `Text`, `Pressable` and `ActivityIndicator` from
+(Slice 2b adds `Image`, and the scan below: it reads this list against the manifest on every run.) The HUD imports `AppRegistry` (member `registerComponent`), `View`, `Text`, `Pressable` and `ActivityIndicator` from
 `react-native`, `useSyncExternalStore` from `react`, and `GodotFabric.connect` and `GodotFabric.call` (in `store.ts` only) from
 `@godot-fabric/runtime`. The props are `testID`, `style`, `pointerEvents="box-none"`, `key`, `disabled`, `onPress`, and `size` and
 `color` of the `ActivityIndicator`; no `onHoverIn`, no right click and no `ScrollView`. Since slice 2a it also imports `Modal`
 (`ui/hud/overlay.tsx` only), with `testID`, `visible`, `transparent`, `animationType="none"`, `presentationStyle="overFullScreen"` and
 `onRequestClose`: the manifest supports the first four and the last, and accepts exactly those two values for the two it otherwise refuses
-(`animationType` takes `none`; `presentationStyle` takes `overFullScreen` and `fullScreen`). The 0.5 scope manifest decides every name
-but `AppRegistry`, which is not one of its twelve; its coverage comes with the P9 branch.
+(`animationType` takes `none`; `presentationStyle` takes `overFullScreen` and `fullScreen`). The 0.5 scope manifest decided every name but
+`AppRegistry` until slice 2b, which added it (supported, with the members `registerComponent` and `getAppKeys`: it is the HUD's entry point) and
+made the lane read the HUD against the manifest, so that a name the manifest does not decide fails the lane (see "The scan against the manifest").
 
 ## Not in this slice
 
-- 20 open/close cycles without a leak, focus restoration, a capture for each context in its final form, the API scan and icons by
-  `Image` (`estabilidade`): the rest of slice 2.
+- (Slice 2b did the rest of `estabilidade`: 20 open/close cycles without a leak, focus restoration, a capture for each context in its final
+  form, the API scan and the icons by `Image`; see the last section.)
 - The hover was exercised with synthetic events through the viewport (and in a headed run, which saves the captures); no physical
   mouse. iOS and typed text are out of scope. The event queue is the one change to a game rule: it is slice 2a's (below).
 - Hosted CI runs the lane headless only; the captures are a local, headed run.
@@ -301,3 +303,129 @@ event. The tables of measurements in `frontier-turn.md` are those of that tour (
 
 The rules that compare a context with itself, the frames of the turn and the heap and resident-memory bounds are unchanged. On the new tour every click shows its panels in 2 frames and every End turn in 8, and the contexts hold 14 (`none`), 18 (`tile`), 24 (`warrior`), 26 (`stack`), 27 (`settler`), 28 (`dialog`) and 47 (`city`)
 native views.
+
+## Slice 2b: stability, the scan and the icons (criterion `estabilidade`)
+
+The last criterion of V05-05 reads: open and close each screen 20 times without leaking nodes or listeners, focus restored and 0 of 100 clicks reach the
+world under an overlay; captures of the macOS build per context; a scan with no forbidden API; icons by `Image`, or by glyphs if the `Image` is not enough.
+The record is [docs/evidence/civ-lite-ui/](../evidence/civ-lite-ui/README.md) ("Fatia 2b"). Slice 2b has no C++: everything below is measured on the host
+of slice 2a.
+
+### The third probe: `-- --validate-stability`
+
+`consumers/civ-lite/stability_validation.gd` (with `stability_judge.gd`, the checks the probe makes of itself, split off to stay under 600 lines; both
+extend `hud_probe.gd`, which also took the helpers of the overlay probe that the new one reuses) runs, in one project, after the other two:
+
+- **The city screen, 20 cycles of two rounds.** A real click on the city's tile (7, 8) opens it, a real press on its Close closes it; a second real click
+  opens it and Escape closes it through `onRequestClose`, which is the game's `clear_selection` (one call each, in every round). That is 40 openings.
+- **The event dialog, 20 cycles.** `new_game`, the replay's intents through the services up to turn 5 (the end of turn that raises the three events),
+  then the three events answered by real presses: 60 answers. The Modal is mounted once and stays until the third answer, so the cycle is measured at four
+  rests (the dialog open, after each of the three answers) and each has the first cycle's numbers as its baseline. Escape on the open dialog reaches the Modal's
+  Window (a `window_input` connection counts it) and changes nothing: the same event, no call, the same state hash, the Modal still open.
+- **Icons.** The Images each of four contexts mounts (`none`, `stack`, `settler`, `city`): see below.
+
+**A measure is of a screen at rest, and rest is a state.** `come_to_rest` waits, with a limit of frames that is only the ceiling of the wait, for the state a
+screen is judged in, in two readings running with the same signature: no pending work, timers, animation frames, host tasks or events; no pointer
+contact active or suppressed; no tag retiring; as many presented Modals and `Window`s as the screen has; no orphan node; the host's views, tags and nodes
+the same count; and **every Image settled** (loaded and drawn, or failed with its error). The last condition is the one that the first review of the slice
+found missing: a screen whose Modal had just opened was declared at rest while the decode of its five icons, on a worker, had not finished, and the lane
+failed on a slower run (`"status": "loading"`, `"loads": 0`). Nothing in a measure is waited for by a count of frames any more: the padding frames of the
+first version were replaced by the quiescence of the signature. After the wait the probe reads the host with the Hermes heap collected first
+(`validation_collect_garbage_on_status`, set on the application only around that read).
+
+**What is compared.** After every close (and while open) the probe records the SceneTree's nodes, orphans and `Window`s, the host's native views and tags and
+the nodes of its snapshot, the pointer routes (`pointerRouting.stored`, `suppressed`, `contacts`, `active`, `hoverPointers`) and the pointer processor, the
+registry's bindings, subscriptions and pending tasks and events, the HUD's store subscriptions, the connections of `snapshot_changed` and of `hover_changed`,
+and the pending work. Each of them equals the first cycle's value of its series, exactly, and the independent oracle (`tests/civ-lite-stability-oracle.mjs`)
+also states what a screen at rest holds without looking at cycle 1 (15 bindings, the HUD's two subscriptions, no orphan, no pending work, no route of
+the pointer active or suppressed, the Windows the game had before), so that a leak that began before the baseline is not the baseline. After a close the HUD
+is what it was before the open (nodes, views, Windows), and what the round created it deleted (`creates` minus `deletes` is the same on both sides).
+
+**Two findings about what the host counts.**
+
+- `modalRuntimeMembers` is not the number of open Modals. It counts the runtimes that are members of the modal stack
+  (`native/modal_window_stack.h`, `runtime_count`), which is 1 for as long as the application runs, with a Modal open or not. A Modal that is open is a
+  node of kind `modal` with a `modalWindow` in the host's snapshot and a `Window` in the SceneTree; the probe counts those and checks that the members stay at 1.
+- The engine's object count (`OBJECT_COUNT`) is not exact from cycle to cycle: it has a jitter of one object, and the 300 input events a burst pushes
+  stay alive for about a hundred frames after it. It is therefore not in the exact comparison; the probe waits (by state) for the count to return to its value
+  before the burst, and the oracle judges it on the rests after a close by the same rule as the heap with a limit of one object.
+
+**The heap.** The rule is the one of the performance baseline (`tests/frontier-baseline-heap.test.mjs`, reused through `heapAtRest`): leave out the first two
+rounds, and the median of the last half of the steady ones may not be more than 2,048 bytes above the median of the first half. It is judged on the 20 rests after
+a Close, the 20 after an Escape and the 20 after the third answer. The HUD's own telemetry (`FrontierHud.stats`) keeps the last 64 results, so it grows
+until it holds 64; the probe fills it before the first measure (70 calls, then two that the game accepts so that the bar does not show a stale refusal), and the
+oracle requires the 64 entries, because otherwise the heap would rise by the telemetry's growth, which is bounded and is not a leak.
+
+**Focus, as this host can measure it.** React Native's focus is out of scope (the 0.5 manifest says no View takes keyboard focus), and nothing in the host
+restores a Control's focus when a Modal closes (`native/modal_window_stack.cpp` only `grab_focus`es the top exclusive Window when it opens). "Focus restored"
+therefore means:
+
+1. the root viewport's `gui_get_focus_owner()` after every close is the value it had before the open (null in every cycle);
+2. while an overlay is open, exactly one Modal `Window` is exclusive and visible (the top of the stack, and the only one), the root viewport has no focus
+   owner, and no node of the snapshot outside that Window reports `focused`;
+3. Escape on the city screen closes it, Escape on the dialog does nothing.
+
+Whether the root Window itself has the operating system's focus, and whether the Modal's Window has it, are recorded but not judged: they depend on the user's
+desktop during a headed run.
+
+**0 of 100 under the overlay, again.** In the first and in the last cycle of each screen, with the overlay open, 100 left clicks, 100 right clicks and 100 wheel
+ticks pushed at the map reach the World 0 times and select nothing (`hud_probe.gd` `bursts`, now shared with the overlay probe).
+
+### The scan against the manifest
+
+`tests/civ-lite-hud-scan.mjs` parses the HUD (`index.tsx` and `hud/*`) with the TypeScript compiler API and reads `docs/compatibility/scope-0.5.json`, never a copy:
+
+- every name imported from `react-native` must be one of the manifest's `names`, and a name that its `outOfScope` prose or `notInTheManifest` leaves out
+  (`TextInput`, `Keyboard`, `FlatList`, ...) is refused with the sentence that says so; a default or namespace import, a re-export, a `require` and a dynamic
+  import are refused because they hide which names are used; a type-only import is erased by the build and is not a name;
+- every prop of a JSX element of one of those components must be one the manifest supports for it; a refused prop passes only with a value its `accepts`
+  lists (`animationType="none"`), an ignored prop is refused because it changes nothing here, and a prop that RN does not declare for the component
+  (`onContextMenu`, `onAuxClick`) is refused as unknown; a spread cannot be checked and is refused; `children` of an `Image` is refused;
+- every member read of a name that has a `subset.members` list (`AppRegistry.registerComponent`) must be in it.
+
+The lane runs it on every provisioned project and proves it can fail with 13 changes of a copy of the sources (a `FlatList`, a `TextInput`, a `Keyboard`
+import; a name the manifest does not decide; a namespace import; a `require`; `onHoverIn`, `onContextMenu` and `onMouseEnter`; `animationType="slide"`;
+children of an `Image`; a spread; `AppRegistry.runApplication`) and one that it must let through (a type-only import): 14 cases. The hand-written patterns of the lane
+(hooks, listeners, talking to the game) stay: the manifest lists none of those. `AppRegistry` was added to the manifest with the subset it has
+(`src/app-registry.js`).
+
+### Icons by `Image`
+
+Six 32x32 PNGs, original art drawn from shapes by `scripts/civ-lite-icons.mjs` (settler, warrior, city, food, production, science), live in
+`consumers/civ-lite/ui/icons/`; the generator writes the PNGs with stored (uncompressed) zlib blocks, so the bytes depend on nothing but its source, and the lane
+requires the committed files to be what it draws. `ui/hud/icons.ts` imports each as an asset (`ui/assets.d.ts` declares `*.png`, as the libraries consumer does;
+the asset plugin registers the file and copies it beside the bundle) and `Icon` in `ui/hud/kit.tsx` draws it with an `Image`. They are in the bar (the three
+resources), the actions (the unit of a `select_unit` or a `fortify`, the city for `found_city`), the tile card (each unit and the city) and the city screen (its
+title and each production item), which is **inside the Modal's Window**: an `Image` there loads and draws like any other (`image.counters.errors == 0`,
+`status: "loaded"`, `drawn` a dictionary, `loads == 1`), in every one of the 40 openings. No glyph was needed. The oracle derives which icons each context must mount
+and which asset each is from the game's own snapshot, not from the HUD. Icon testIDs end in `-icon` and are left out of the lists of actions in both the probe and the
+oracle.
+
+### The lane of slice 2b
+
+`npm run test:civ-lite-ui` adds the third probe (41 checks; 49 in the headed run, which adds seven captures and the comparison of the last cycle's pictures with
+the first's), the oracle with 38 mutated reports rejected, and the 14 cases of the scan (13 changes found, 1 let through). The causal control is `e108e9d` (the HUD and the game of slice 2a, with
+the manifest of that commit): its scan finds `AppRegistry` and nothing else, and its probe fails exactly the three checks about icons, because it has none; it leaks
+nothing. Five sabotages join the twelve, all rejected with the sources restored byte for byte: `close-leaks-connection` (the store opens a connection on every
+`clear_selection` and keeps it: leak and heap), `modal-stays-mounted` (the city's Modal gated on the city existing: a Window that stays and blocks the map),
+`focus-grabbed` (a Control of the World takes the focus when an overlay opens: focus), `icon-missing` (an asset that is not there: the Image fails with its error,
+not by timeout) and `import-outside-manifest` (a `TextInput` import: only the scan sees it).
+
+The captures of the headed run: the bar, the actions and the city screen with their icons, and the city screen and the dialog in the first and the last cycle. The
+city screen's two are the same bytes. The dialog's differ only in the first row of the bar, because that game's epoch is 6 in the first cycle and 25 in the last,
+and the digits move what is to their right; the probe compares the two pictures in the engine, pixel by pixel, with that row masked, and finds none different.
+
+### The turn lane after the icons
+
+The icons add native views to every context (three in the bar, then those of the actions, the tile card and the city screen), so the native-view counts that
+`docs/research/frontier-turn.md` records for the 19-click tour are not the ones of the current HUD. Read from the report of the turn lane on `0a0deca`: `none` 14 → 17,
+`tile` 18 → 21, `warrior` 24 → 30, `stack` 26 → 33, `settler` 27 → 34, `dialog` 28 → 31 and `city` 47 → 55 (the eight of the city are the three of the bar and the five icons inside the
+Modal). The lane judges a context against itself and passes, and whoever runs it again re-records the tables.
+
+### Limits
+
+- Local macOS arm64; the hosted run of this slice exists only after it is on main. Hosted CI runs the lane headless, without controls (a shallow clone), captures or sabotages.
+- The heap's noise on a hosted runner was not observed; the rule is the baseline's, which tolerates the band seen there. The engine's object count has a limit of one.
+- Escape was pressed as a key event through the viewport (the way `tests/modal-host-probe.gd` does), not by a physical keyboard.
+- Focus is what the host can say (above); React Native focus does not exist in the 0.5.
+- The icons are drawn for this app: they say nothing about image formats the host refuses (GIF) or about network images, which are out of the 0.5.

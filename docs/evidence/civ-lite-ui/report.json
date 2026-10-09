@@ -599,7 +599,7 @@
       ],
       "onlyIn": "consumers/civ-lite/ui/store.ts"
     },
-    "manifestCoverage": "AppRegistry is not one of the twelve names of docs/compatibility/scope-0.5.json; its coverage comes with the P9 branch (docs/compatibility/scope-0.5.json and tests/scope-0.5.test.mjs are not touched by this slice)"
+    "manifestCoverage": "AppRegistry was not one of the twelve names of docs/compatibility/scope-0.5.json when this slice was recorded; slice 2b added it to the manifest (supported, members registerComponent and getAppKeys) and made the lane read the HUD against the manifest on every run (see slice2b.manifestScan)"
   },
   "findings": [
     {
@@ -2346,5 +2346,2205 @@
       "the causal control on the HUD of 5e1f6a1 (a shallow checkout does not have the commit; the lane says so)",
       "the eight retained sabotages of the HUD and the five of the consumer"
     ]
+  },
+  "slice2b": {
+    "status": "verified-local-headless-and-headed-causal-control-retained-sabotages-and-regressions",
+    "at": "2026-10-09T20:14:35Z",
+    "item": "V05-05",
+    "criteria": [
+      "estabilidade"
+    ],
+    "criteriaNote": "the last of the four criteria of V05-05, so the item is complete by derivation; this record sets no done flag (the dashboard does, in the commit that pins it)",
+    "sliceBaseCommit": "e108e9d",
+    "executionBaseCommit": "0a0decaf87548b2515101e27ac62ccf6cfc370f2",
+    "implementationCommit": "0a0decaf87548b2515101e27ac62ccf6cfc370f2",
+    "pinnedCommit": "0a0decaf87548b2515101e27ac62ccf6cfc370f2",
+    "pinnedCommitUrl": "https://github.com/journey-studios/godot-fabric/commit/0a0decaf87548b2515101e27ac62ccf6cfc370f2",
+    "executedTreeSha": "a0defa5d541b44f113f4071fc5f7dee54a8a479c",
+    "executedTreeEqualsPinnedCommitTree": true,
+    "dirtyBeforeFirstCommand": [],
+    "dirtyAfterLastCommand": [
+      " M ROADMAP.md",
+      " M docs/evidence/README.md",
+      " M docs/evidence/civ-lite-ui/README.md",
+      " M docs/research/frontier-hud.md",
+      " M scripts/hosted-receipts-slices.mjs",
+      " M tests/hosted-receipts.test.mjs",
+      "?? docs/evidence/civ-lite-ui/overlays/"
+    ],
+    "documentsEditedDuringExecution": "the tree was clean when the first command ran; the files modified or added by the time the last one ended are the documents of this record (README, research note, ROADMAP, index, this report, the captures) and the hosted receipts of PR #93 with their rows and test (scripts/hosted-receipts-slices.mjs, tests/hosted-receipts.test.mjs), none of which any lane of the batch executes or reads",
+    "sourceDirtyDuringExecution": false,
+    "environment": {
+      "godot": "4.7.2.stable.official.ed1daf0bf",
+      "reactNative": "0.87.1",
+      "react": "19.2.3",
+      "node": "v22.23.3",
+      "platform": "macOS arm64",
+      "displayServer": {
+        "lane": "headless",
+        "captures": "macOS window"
+      },
+      "nativeHostSha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da"
+    },
+    "hostBinary": {
+      "file": "addons/fabric_godot.dylib",
+      "sha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da",
+      "bytes": 6716720,
+      "note": "the slice has no C++: the host is the one of slice 2a and of slice 1 (SHA-256 258d1821…084da), built from main 5e1f6a1 and unchanged"
+    },
+    "commands": [
+      {
+        "command": "node tests/civ-lite-ui-native.test.mjs --control --capture",
+        "exit": 0,
+        "seconds": 279,
+        "startedAt": "2026-10-09T19:41:39Z",
+        "result": "passed"
+      },
+      {
+        "command": "node scripts/civ-lite-ui-sabotage.mjs",
+        "exit": 0,
+        "seconds": 926,
+        "startedAt": "2026-10-09T19:46:19Z",
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:consumer:civ-lite",
+        "exit": 0,
+        "seconds": 35,
+        "startedAt": "2026-10-09T20:01:45Z",
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:frontier-turn",
+        "exit": 0,
+        "seconds": 243,
+        "startedAt": "2026-10-09T20:02:20Z",
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:frontier-soak",
+        "exit": 0,
+        "seconds": 202,
+        "startedAt": "2026-10-09T20:06:23Z",
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:frontier-services",
+        "exit": 0,
+        "seconds": 27,
+        "startedAt": "2026-10-09T20:09:45Z",
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:civ-lite-ui",
+        "exit": 0,
+        "seconds": 210,
+        "startedAt": "2026-10-09T20:10:13Z",
+        "result": "passed"
+      }
+    ],
+    "commandsOrder": "the lane with the controls and the captures first, then the sabotages, the regressions and, last, the plain lane: the sabotage lane and the plain lane write the same files under build/, so the files this record hashes are those of the last plain run, except the ones only the headed run writes (the captures, graphical.json, overlays-graphical.json, stability-graphical.json), which are the first run's",
+    "lane": {
+      "probes": {
+        "hud": {
+          "checksHeadless": 144,
+          "checksHeaded": 152
+        },
+        "overlays": {
+          "checksHeadless": 26,
+          "checksHeaded": 30
+        },
+        "stability": {
+          "checksHeadless": 41,
+          "checksHeaded": 49
+        }
+      },
+      "oracleMutations": {
+        "hud": 27,
+        "overlays": 20,
+        "stability": 38,
+        "scan": 14
+      },
+      "oracleFindings": 0,
+      "scan": {
+        "manifestNames": 13,
+        "mutations": [
+          {
+            "name": "FlatList is imported",
+            "kind": "import"
+          },
+          {
+            "name": "TextInput is imported",
+            "kind": "import"
+          },
+          {
+            "name": "Keyboard is imported",
+            "kind": "import"
+          },
+          {
+            "name": "a name the manifest does not decide is imported",
+            "kind": "import"
+          },
+          {
+            "name": "react-native is imported as a namespace",
+            "kind": "import"
+          },
+          {
+            "name": "react-native is required",
+            "kind": "import"
+          },
+          {
+            "name": "a Pressable gets a hover handler",
+            "kind": "prop"
+          },
+          {
+            "name": "a Pressable gets a right-click handler",
+            "kind": "prop"
+          },
+          {
+            "name": "a View gets a mouse-enter handler",
+            "kind": "prop"
+          },
+          {
+            "name": "the Modal slides in",
+            "kind": "prop"
+          },
+          {
+            "name": "an Image is given children",
+            "kind": "prop"
+          },
+          {
+            "name": "a View takes a spread of props",
+            "kind": "prop"
+          },
+          {
+            "name": "AppRegistry runs an application",
+            "kind": "member"
+          },
+          {
+            "name": "a type-only import of a type the manifest does not decide is not a name",
+            "kind": "clean"
+          }
+        ],
+        "findingsOnTheHud": 0
+      },
+      "stabilityMutations": [
+        {
+          "name": "a city cycle leaves a node behind",
+          "category": "leak"
+        },
+        {
+          "name": "a Window stays open after a close",
+          "category": "leak"
+        },
+        {
+          "name": "a native view is not released",
+          "category": "leak"
+        },
+        {
+          "name": "a connection of the registry is not released",
+          "category": "leak"
+        },
+        {
+          "name": "the HUD holds a third connection while the screen is open",
+          "category": "leak"
+        },
+        {
+          "name": "the signal keeps a connection of a freed World",
+          "category": "leak"
+        },
+        {
+          "name": "a route of the pointer stays stored after a close",
+          "category": "leak"
+        },
+        {
+          "name": "a suppressed pointer is left",
+          "category": "leak"
+        },
+        {
+          "name": "work is still pending at rest",
+          "category": "leak"
+        },
+        {
+          "name": "a node is orphaned",
+          "category": "leak"
+        },
+        {
+          "name": "what a cycle created it did not delete",
+          "category": "leak"
+        },
+        {
+          "name": "the Modal is remounted between two answers of the dialog",
+          "category": "leak"
+        },
+        {
+          "name": "the heap grows by 400 bytes a cycle",
+          "category": "heap"
+        },
+        {
+          "name": "the engine's objects grow by two a cycle",
+          "category": "heap"
+        },
+        {
+          "name": "a heap was read before a collection",
+          "category": "heap"
+        },
+        {
+          "name": "the telemetry's lists were not filled",
+          "category": "heap"
+        },
+        {
+          "name": "the focus after a close is not the one before the open",
+          "category": "focus"
+        },
+        {
+          "name": "a Control under the dialog has the focus while it is open",
+          "category": "focus"
+        },
+        {
+          "name": "a Control under the city screen reports itself focused",
+          "category": "focus"
+        },
+        {
+          "name": "two Windows are exclusive",
+          "category": "focus"
+        },
+        {
+          "name": "the overlay's Window is not exclusive",
+          "category": "focus"
+        },
+        {
+          "name": "a click reached the world under the city screen in the last cycle",
+          "category": "blocking"
+        },
+        {
+          "name": "a wheel tick selected a tile under the dialog",
+          "category": "blocking"
+        },
+        {
+          "name": "the burst was not pushed in the last cycle",
+          "category": "blocking"
+        },
+        {
+          "name": "Escape on the dialog answered the event",
+          "category": "escape"
+        },
+        {
+          "name": "Escape on the dialog did not reach its Window",
+          "category": "escape"
+        },
+        {
+          "name": "Escape on the city screen did not clear the selection",
+          "category": "escape"
+        },
+        {
+          "name": "an icon of the bar failed to draw",
+          "category": "icons"
+        },
+        {
+          "name": "an icon of the bar is missing",
+          "category": "icons"
+        },
+        {
+          "name": "the Images were read before they settled",
+          "category": "icons"
+        },
+        {
+          "name": "an Image was still loading when the screen was called at rest",
+          "category": "icons"
+        },
+        {
+          "name": "an item's icon is not in the Modal's window",
+          "category": "icons"
+        },
+        {
+          "name": "the granary shows another asset",
+          "category": "icons"
+        },
+        {
+          "name": "an action's icon is not its unit's",
+          "category": "icons"
+        },
+        {
+          "name": "the city screen's icons did not draw in the last cycle",
+          "category": "icons"
+        },
+        {
+          "name": "a cycle of the city screen is missing",
+          "category": "coverage"
+        },
+        {
+          "name": "the dialog's events were answered out of order",
+          "category": "coverage"
+        },
+        {
+          "name": "the city screen was not opened by a real click",
+          "category": "coverage"
+        }
+      ],
+      "checkNamesDependOnPace": false
+    },
+    "stability": {
+      "cycles": {
+        "cityRounds": 40,
+        "cityCycles": 20,
+        "dialogCycles": 20,
+        "dialogAnswers": 60
+      },
+      "method": "a measure waits for the screen to come to rest by state (no pending work, timers, animation frames, host tasks or events; no active or suppressed pointer contact; no tag retiring; as many presented Modals and Windows as the screen has; no orphan; native views, tags and snapshot nodes in equal number; every Image settled) in two readings with the same signature, with a limit of frames as the ceiling, and reads the host with the Hermes heap collected first",
+      "baseline": "the first cycle of each series; the oracle also states the absolute facts of a screen at rest (15 bindings, 2 HUD subscriptions, no orphan, nothing pending, no pointer route active or suppressed, the Windows the game had before)",
+      "base": {
+        "nodes": 28,
+        "orphans": 0,
+        "objects": 1634,
+        "windows": 0,
+        "nativeViews": 17,
+        "nativeTags": 17,
+        "subscriptions": 2,
+        "hudSubscriptions": 2,
+        "connections": 2,
+        "hoverConnections": 2,
+        "bindings": 15,
+        "pointerStored": 0,
+        "pointerSuppressed": 0,
+        "pendingWork": 0,
+        "modalNodes": 0,
+        "modalMembers": 1,
+        "heap": 2265680
+      },
+      "series": {
+        "city.close.before": {
+          "nodes": {
+            "cycle1": 28,
+            "cycle20": 28
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1646,
+            "cycle20": 1644
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "nativeTags": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2297928,
+            "cycle20": 2293752
+          }
+        },
+        "city.close.open": {
+          "nodes": {
+            "cycle1": 67,
+            "cycle20": 67
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1794,
+            "cycle20": 1793
+          },
+          "windows": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "nativeViews": {
+            "cycle1": 55,
+            "cycle20": 55
+          },
+          "nativeTags": {
+            "cycle1": 55,
+            "cycle20": 55
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2524768,
+            "cycle20": 2523088
+          }
+        },
+        "city.close.after": {
+          "nodes": {
+            "cycle1": 28,
+            "cycle20": 28
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1645,
+            "cycle20": 1645
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "nativeTags": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2297856,
+            "cycle20": 2295048
+          }
+        },
+        "city.escape.before": {
+          "nodes": {
+            "cycle1": 28,
+            "cycle20": 28
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1644,
+            "cycle20": 1644
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "nativeTags": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2296800,
+            "cycle20": 2293992
+          }
+        },
+        "city.escape.open": {
+          "nodes": {
+            "cycle1": 67,
+            "cycle20": 67
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1793,
+            "cycle20": 1793
+          },
+          "windows": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "nativeViews": {
+            "cycle1": 55,
+            "cycle20": 55
+          },
+          "nativeTags": {
+            "cycle1": 55,
+            "cycle20": 55
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2525824,
+            "cycle20": 2523016
+          }
+        },
+        "city.escape.after": {
+          "nodes": {
+            "cycle1": 28,
+            "cycle20": 28
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1645,
+            "cycle20": 1645
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "nativeTags": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2296576,
+            "cycle20": 2293768
+          }
+        },
+        "dialog.before": {
+          "nodes": {
+            "cycle1": 44,
+            "cycle20": 44
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1707,
+            "cycle20": 1710
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 33,
+            "cycle20": 33
+          },
+          "nativeTags": {
+            "cycle1": 33,
+            "cycle20": 33
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2400408,
+            "cycle20": 2400936
+          }
+        },
+        "dialog.open": {
+          "nodes": {
+            "cycle1": 43,
+            "cycle20": 43
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1697,
+            "cycle20": 1700
+          },
+          "windows": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "nativeViews": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "nativeTags": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2378440,
+            "cycle20": 2378272
+          }
+        },
+        "dialog.answer1": {
+          "nodes": {
+            "cycle1": 43,
+            "cycle20": 43
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1700,
+            "cycle20": 1701
+          },
+          "windows": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "nativeViews": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "nativeTags": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2385240,
+            "cycle20": 2385096
+          }
+        },
+        "dialog.answer2": {
+          "nodes": {
+            "cycle1": 43,
+            "cycle20": 43
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1701,
+            "cycle20": 1702
+          },
+          "windows": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "nativeViews": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "nativeTags": {
+            "cycle1": 31,
+            "cycle20": 31
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2385464,
+            "cycle20": 2385392
+          }
+        },
+        "dialog.answer3": {
+          "nodes": {
+            "cycle1": 28,
+            "cycle20": 28
+          },
+          "orphans": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "objects": {
+            "cycle1": 1648,
+            "cycle20": 1649
+          },
+          "windows": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "nativeViews": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "nativeTags": {
+            "cycle1": 17,
+            "cycle20": 17
+          },
+          "subscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hudSubscriptions": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "connections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "hoverConnections": {
+            "cycle1": 2,
+            "cycle20": 2
+          },
+          "bindings": {
+            "cycle1": 15,
+            "cycle20": 15
+          },
+          "pointerStored": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pointerSuppressed": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "pendingWork": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalNodes": {
+            "cycle1": 0,
+            "cycle20": 0
+          },
+          "modalMembers": {
+            "cycle1": 1,
+            "cycle20": 1
+          },
+          "heap": {
+            "cycle1": 2298000,
+            "cycle20": 2298000
+          }
+        }
+      },
+      "exactEqualityFields": [
+        "nodes",
+        "orphans",
+        "windows",
+        "nativeViews",
+        "nativeTags",
+        "subscriptions",
+        "hudSubscriptions",
+        "connections",
+        "hoverConnections",
+        "bindings",
+        "pointerStored",
+        "pointerSuppressed",
+        "pendingWork",
+        "modalNodes",
+        "modalMembers"
+      ],
+      "allSeriesExactlyEqualToCycle1": true,
+      "afterCloseEqualsBeforeOpen": true,
+      "createdEqualsDeletedPerRound": true,
+      "heap": {
+        "cityClose": {
+          "cycle1": 2297856,
+          "cycle20": 2295048,
+          "min": 2295048,
+          "max": 2297856,
+          "medianFirstHalf": 2296920,
+          "medianLastHalf": 2295624,
+          "growthBytes": -1296,
+          "limitBytes": 2048,
+          "series": [
+            2297856,
+            2297640,
+            2297496,
+            2297352,
+            2297208,
+            2297064,
+            2296920,
+            2296776,
+            2296632,
+            2296488,
+            2296344,
+            2296200,
+            2296056,
+            2295912,
+            2295768,
+            2295624,
+            2295480,
+            2295336,
+            2295192,
+            2295048
+          ]
+        },
+        "cityEscape": {
+          "cycle1": 2296576,
+          "cycle20": 2293768,
+          "min": 2293768,
+          "max": 2296576,
+          "medianFirstHalf": 2295640,
+          "medianLastHalf": 2294344,
+          "growthBytes": -1296,
+          "limitBytes": 2048,
+          "series": [
+            2296576,
+            2296360,
+            2296216,
+            2296072,
+            2295928,
+            2295784,
+            2295640,
+            2295496,
+            2295352,
+            2295208,
+            2295064,
+            2294920,
+            2294776,
+            2294632,
+            2294488,
+            2294344,
+            2294200,
+            2294056,
+            2293912,
+            2293768
+          ]
+        },
+        "dialogLastAnswer": {
+          "cycle1": 2298000,
+          "cycle20": 2298000,
+          "min": 2297872,
+          "max": 2298848,
+          "medianFirstHalf": 2297872,
+          "medianLastHalf": 2298000,
+          "growthBytes": 128,
+          "limitBytes": 2048,
+          "series": [
+            2298000,
+            2298848,
+            2298632,
+            2298480,
+            2298280,
+            2298064,
+            2297872,
+            2297872,
+            2297872,
+            2297872,
+            2297872,
+            2298000,
+            2298000,
+            2298000,
+            2298000,
+            2298000,
+            2298000,
+            2298000,
+            2298000,
+            2298000
+          ]
+        }
+      },
+      "objects": {
+        "cityClose": {
+          "min": 1645,
+          "max": 1646,
+          "medianFirstHalf": 1646,
+          "medianLastHalf": 1646,
+          "limit": 1
+        },
+        "cityEscape": {
+          "min": 1645,
+          "max": 1645,
+          "medianFirstHalf": 1645,
+          "medianLastHalf": 1645,
+          "limit": 1
+        },
+        "dialogLastAnswer": {
+          "min": 1648,
+          "max": 1649,
+          "medianFirstHalf": 1649,
+          "medianLastHalf": 1649,
+          "limit": 1
+        }
+      },
+      "telemetryFilled": {
+        "filled": true,
+        "kept": 64
+      },
+      "modalRuntimeMembers": "counts the runtimes in the modal stack (native/modal_window_stack.h, runtime_count): 1 for as long as the application runs, not the number of open Modals",
+      "focus": {
+        "definition": "the root viewport's gui_get_focus_owner() after a close is the one before the open (0, none, in every cycle); while an overlay is open exactly one Modal Window is exclusive and visible, the root viewport has no focus owner and no node of the snapshot outside that Window reports focused; OS-level window focus is recorded, not judged",
+        "rootOwnerAlways": 0,
+        "modalWindowsWhileOpen": 1,
+        "focusedControlsOutsideTheModal": 0
+      },
+      "escape": {
+        "city": "one clear_selection call per closing, in all 40 rounds (20 by Close, 20 by Escape)",
+        "dialog": "in all 20 cycles the Modal Window heard the Escape once (window_input) and the same event stayed at the head, no call was made, the state hash did not change and the Modal stayed open"
+      },
+      "blocking": {
+        "cycles": [
+          1,
+          20
+        ],
+        "perKind": 100,
+        "kinds": [
+          "left",
+          "right",
+          "wheel"
+        ],
+        "reachedTheWorld": 0,
+        "selectCalls": 0
+      },
+      "icons": {
+        "contexts": [
+          {
+            "context": "none",
+            "images": 3,
+            "inModalWindow": 0
+          },
+          {
+            "context": "stack",
+            "images": 7,
+            "inModalWindow": 0
+          },
+          {
+            "context": "settler",
+            "images": 7,
+            "inModalWindow": 0
+          },
+          {
+            "context": "city",
+            "images": 8,
+            "inModalWindow": 5
+          }
+        ],
+        "everyOpeningOfTheCityScreenDrewAll": true,
+        "openingsChecked": 40
+      }
+    },
+    "iconAssets": {
+      "generator": {
+        "file": "scripts/civ-lite-icons.mjs",
+        "sha256": "56f792b86dfdb1b2d9675e4da770d095ab29564ba30f7340ca1f14429af39605",
+        "determinism": "PNGs with stored zlib blocks: the bytes depend only on the script"
+      },
+      "files": {
+        "settler": {
+          "file": "consumers/civ-lite/ui/icons/settler.png",
+          "sha256": "861be6d3025ca2ccd9dc0af060ff3a9678d8d687d834a364c69d7e5055e07971",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        },
+        "warrior": {
+          "file": "consumers/civ-lite/ui/icons/warrior.png",
+          "sha256": "1a630c4fd1a09ed5d00d6f3b0e418ce25d52c32c2edb797370f856b3baa0ca1c",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        },
+        "city": {
+          "file": "consumers/civ-lite/ui/icons/city.png",
+          "sha256": "7b4a7d6da50c681310fd04ede93957d2c32d998b8b4851cf70de7bb955e8b657",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        },
+        "food": {
+          "file": "consumers/civ-lite/ui/icons/food.png",
+          "sha256": "dcfe35ef6f23b1ba33c03e7e7adb1df18c26355fc4980312faf3a78378e345e9",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        },
+        "production": {
+          "file": "consumers/civ-lite/ui/icons/production.png",
+          "sha256": "94a15ffab55fe07d5e76f078d71a859b23fd67bf2dc8fb87d1f72e0f22999359",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        },
+        "science": {
+          "file": "consumers/civ-lite/ui/icons/science.png",
+          "sha256": "233129e8cb4d2463cd065e5e3d37fe5f533499e1b89583e343bf4acca6dd8e15",
+          "bytes": 4196,
+          "width": 32,
+          "height": 32
+        }
+      },
+      "committedEqualToGeneratorOutput": true,
+      "declaration": "consumers/civ-lite/ui/assets.d.ts",
+      "source": "original art drawn from shapes; no third-party image"
+    },
+    "manifestScan": {
+      "manifest": "docs/compatibility/scope-0.5.json",
+      "manifestSha256": "a80baa6fef325776ed2e8552c0c053f63a88e8315b8133d76c323f70f32bdcc0",
+      "namesNow": 13,
+      "addedByTheSlice": "AppRegistry (supported; members registerComponent and getAppKeys; the HUD's entry point; the audit row is stale)",
+      "scanner": "tests/civ-lite-hud-scan.mjs (TypeScript syntax tree; reads the manifest, never a copy)",
+      "findingsOnTheHud": 0,
+      "cleanCases": 1,
+      "sharedPathsAdded": [
+        "docs/compatibility/scope-0.5.json",
+        "tests/scope-0.5.test.mjs"
+      ],
+      "cases": 14,
+      "changesFound": 13
+    },
+    "reports": {
+      "headless": {
+        "file": "build/civ-lite-ui/headless.json",
+        "sha256": "9a05942197f07dfbf69014ac4e6e66f7b7c2aacd5b1685e3218539814ff5e618",
+        "bytes": 1129666
+      },
+      "graphical": {
+        "file": "build/civ-lite-ui/graphical.json",
+        "sha256": "8a2a56cd3abf172b71b572666badfc36d09d727c23cfa6964039ef697128b5e5",
+        "bytes": 1130348
+      },
+      "overlays": {
+        "file": "build/civ-lite-ui/overlays.json",
+        "sha256": "221a22831eaaef2f03479f72e42a169c877fd45e248a0798044d6ea11fba468c",
+        "bytes": 88206
+      },
+      "overlaysGraphical": {
+        "file": "build/civ-lite-ui/overlays-graphical.json",
+        "sha256": "3ade914284982647fb25873f929f3987d8268715b5885431d9dcb8d26c1ea606",
+        "bytes": 86515
+      },
+      "stability": {
+        "file": "build/civ-lite-ui/stability.json",
+        "sha256": "2f1309348f6d6cc3eb994d6430dc575b5f3d3f96981c5fd32853424933acc2b5",
+        "bytes": 509498,
+        "checks": 41
+      },
+      "stabilityGraphical": {
+        "file": "build/civ-lite-ui/stability-graphical.json",
+        "sha256": "65045e0d0d8d12b5c330e4d7419ed714bc3f12d8923c57e630f35726825fcf63",
+        "bytes": 510666
+      },
+      "stabilitySeries": {
+        "file": "build/civ-lite-ui/stability-series.json",
+        "sha256": "d3f6064dbf475d71e1eb169f99fa84784bd15c6f75aa45d6a579836e2d7a6f6a",
+        "bytes": 179625
+      },
+      "stabilityControlObserved": {
+        "file": "build/civ-lite-ui/stability-control-observed.json",
+        "sha256": "f30eae089a39e0bf8ba3db09d5de34c916527d79828ad2100c609cdf122d1ca5",
+        "bytes": 3267
+      },
+      "stabilityControl": {
+        "file": "build/civ-lite-stability-control/control.json",
+        "sha256": "bc598e3a982e3813c200b71f9705840625dcb0fbe1172fa0e9e8f1e934a94fb3",
+        "bytes": 369545
+      },
+      "summary": {
+        "file": "build/civ-lite-ui/summary.json",
+        "sha256": "aa87ae303e7cb7c44db203aad7d1fe696558b4dd0128375598cae06f4f2604fa",
+        "bytes": 19690,
+        "note": "the file of the last (plain) run"
+      },
+      "summaryOfTheHeadedRun": {
+        "file": "build/civ-lite-ui/summary.json (as the first run of the batch left it; the plain run overwrote it)",
+        "sha256": "b222c97bd8b9197bcca364a902391f307259b975e00f8f3c2d3c2371c51e9604",
+        "bytes": 23105
+      },
+      "sabotageReceipt": {
+        "file": "build/civ-lite-ui-sabotage.json",
+        "sha256": "7757c368ef65e85a36c642a2f0bf3c08642fd4f51c51435cb205d9ec94598ed7",
+        "bytes": 25553
+      }
+    },
+    "causalControl": {
+      "commit": "e108e9d",
+      "source": "git archive of consumers/civ-lite/{game,services,ui} at e108e9d into build/civ-lite-stability-previous/ (the HUD with no icons)",
+      "archiveSha256": "bae501d5e49abc36f0b7bf9150ddff9c3daabf4a1d88fe10bfff217596d07a40",
+      "sameHost": true,
+      "probeFailedChecks": [
+        "Icons: every Image the HUD mounted in the none, stack, settler and city contexts is visible and drew once loaded, with no error",
+        "Icons: the city screen's icon and its production items' icons are Images inside the Modal's window, and they drew",
+        "Icons: the bar has its three resource icons in every context, and the actions and the tile card add theirs"
+      ],
+      "categories": [
+        "icons"
+      ],
+      "findingCounts": {
+        "icons": 44
+      },
+      "scan": {
+        "against": "e108e9d",
+        "findings": [
+          "index.tsx: AppRegistry is in neither `names` nor `outOfScope` of the manifest: the HUD may not use it until the manifest decides it"
+        ],
+        "againstThisSlice": 0
+      },
+      "imagesMounted": [
+        {
+          "context": "none",
+          "images": 0
+        },
+        {
+          "context": "stack",
+          "images": 0
+        },
+        {
+          "context": "settler",
+          "images": 0
+        },
+        {
+          "context": "city",
+          "images": 0
+        }
+      ],
+      "leaks": {
+        "cyclesRun": 60,
+        "categoriesOtherThanIcons": []
+      },
+      "meaning": "the previous HUD fails the icon checks and the scan against its own manifest (AppRegistry), and nothing else: it does not leak, so the sabotages are what breaks the lane; skipped on a shallow clone"
+    },
+    "retainedSabotages": {
+      "format": "godot-fabric.civ-lite-ui-sabotage/v1",
+      "receipt": {
+        "file": "build/civ-lite-ui-sabotage.json",
+        "sha256": "7757c368ef65e85a36c642a2f0bf3c08642fd4f51c51435cb205d9ec94598ed7"
+      },
+      "count": 17,
+      "newInSlice2b": [
+        "close-leaks-connection",
+        "modal-stays-mounted",
+        "focus-grabbed",
+        "icon-missing",
+        "import-outside-manifest"
+      ],
+      "restoredEqualsGenuine": true,
+      "sourceSha256": {
+        "genuine": {
+          "consumers/civ-lite/ui/hud/hud.tsx": "d971fb943511c7bf7d5e96b8976b2ea7c685c148f2fee3b56ac49f241b150953",
+          "consumers/civ-lite/ui/hud/actions.tsx": "16ff6675bcbed90d0ed426f21878035baa500a77f1051c710ede384885715c45",
+          "consumers/civ-lite/ui/hud/bar.tsx": "6bed72040ee98d6c6a9c057c1a40195c381e54f12fcf027ab148996e95d694eb",
+          "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+          "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+          "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+          "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+          "consumers/civ-lite/ui/hud/kit.tsx": "9eed665bf1d44f5604f1daf4f830756486a0232fb5d61e66ab2bd88500a06431",
+          "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+          "consumers/civ-lite/ui/hud/icons.ts": "131a3d2c62d0c36f12c771ca00d40a78401b1a19d3fa5d5555bb79cd4a22546d"
+        },
+        "restored": {
+          "consumers/civ-lite/ui/hud/hud.tsx": "d971fb943511c7bf7d5e96b8976b2ea7c685c148f2fee3b56ac49f241b150953",
+          "consumers/civ-lite/ui/hud/actions.tsx": "16ff6675bcbed90d0ed426f21878035baa500a77f1051c710ede384885715c45",
+          "consumers/civ-lite/ui/hud/bar.tsx": "6bed72040ee98d6c6a9c057c1a40195c381e54f12fcf027ab148996e95d694eb",
+          "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+          "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+          "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+          "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+          "consumers/civ-lite/ui/hud/kit.tsx": "9eed665bf1d44f5604f1daf4f830756486a0232fb5d61e66ab2bd88500a06431",
+          "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+          "consumers/civ-lite/ui/hud/icons.ts": "131a3d2c62d0c36f12c771ca00d40a78401b1a19d3fa5d5555bb79cd4a22546d"
+        }
+      },
+      "controlStatus": 0,
+      "variants": [
+        {
+          "name": "city-by-data",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "sourceSha256": "9615691bf1a0dfb9360d332513ee72c3d21233a6f46d292fefc9bd497d1d839d",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 23,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "blocking",
+            "map",
+            "panels",
+            "queue",
+            "remount"
+          ],
+          "findings": [
+            "[panels] step 29 (select_unit): the HUD did not catch up with the game's snapshot before its wait ran out",
+            "[panels] step 29 (select_unit, warrior): the visible panels: [\"bar\",\"actions\",\"tile\",\"city\"], expected [\"bar\",\"actions\",\"tile\"]",
+            "[panels] step 29 (select_unit, warrior): hud-city-icon is shown and belongs to the city panel, which the warrior context does not mount"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "actions-reversed",
+          "file": "consumers/civ-lite/ui/hud/actions.tsx",
+          "sourceSha256": "088353107cf11a13032b9cd7b9361cefada7737bec9a4f391f132dcd3ade7d43",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 26,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "actions",
+            "panels"
+          ],
+          "findings": [
+            "[panels] step 2 (select_tile): the HUD did not catch up with the game's snapshot before its wait ran out",
+            "[actions] step 2 (select_tile, stack): the actions panel: [{\"key\":\"clear_selection\",\"label\":\"Clear selection\",\"enabled\":true,\"reason\":\"\"},{\"key\":\"select_unit-2\",\"label\":\"Select Warrior\",\"enabled\":true,\"reason\":\"\"},{\"key\":\"select_unit-1\",\"label\":\"Sele",
+            "[panels] step 3 (select_unit): the HUD did not catch up with the game's snapshot before its wait ran out"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "spinner-always",
+          "file": "consumers/civ-lite/ui/hud/bar.tsx",
+          "sourceSha256": "1d3e5d9c65145609e11f07ae5004c87e1f679dcf179eb460b5e039f4b8bf105f",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 49,
+          "firstFailedCheck": "Step 0 (clear_selection): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+          "categories": [
+            "bar",
+            "phase"
+          ],
+          "findings": [
+            "[bar] step 0 (clear_selection, none): the spinner is shown exactly while the phase is not idle: true, expected false",
+            "[bar] step 1 (select_tile, none): the spinner is shown exactly while the phase is not idle: true, expected false",
+            "[bar] step 2 (select_tile, stack): the spinner is shown exactly while the phase is not idle: true, expected false"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "end-turn-by-phase",
+          "file": "consumers/civ-lite/ui/hud/bar.tsx",
+          "sourceSha256": "0eac932a36f554226c7dd941bda353d643ecc0796342a37b6f778750a4f12cc7",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "Step 44 (end_turn): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+          "categories": [
+            "bar"
+          ],
+          "findings": [
+            "[bar] step 44 (end_turn, dialog): End turn is visible, disabled exactly when the game's end_turn action is, and labelled: [true,false,\"End turn\"], expected [true,true,\"End turn\"]",
+            "[bar] step 44 (end_turn, dialog): the reason End turn gives: undefined, expected \"A decision is waiting. Resolve the event first.\"",
+            "[bar] step 45 (select_tile, dialog): End turn is visible, disabled exactly when the game's end_turn action is, and labelled: [true,false,\"End turn\"], expected [true,true,\"End turn\"]"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "spacer",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "sourceSha256": "60d84651c613b8a6d8dfd7c71bd10df60dca45d1603032f794bead12a59bf1ae",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 14,
+          "firstFailedCheck": "No Control of the HUD in the tree that stops the pointer covers the map: [\"step 0 hud-spacer\", \"step 1 hud-spacer\", \"step 2 hud-spacer\", \"step 3 hud-spacer\", \"step 4 hud-spacer\", \"step 5 hud-spacer\", \"step 6 hud-spacer\", \"step 7 hud-spacer\", \"step 8 hud-spacer\", \"step 9 hud-spacer\", \"step 10 hud-spacer\", \"step 11 hud-spacer\", \"step 12 hud-spacer\", \"step 13 hud-spacer\", \"step 14 hud-spacer\", \"step 15 hud-spacer\", \"step 16 hud-spacer\", \"step 17 hud-spacer\", \"step 18 hud-spacer\", \"step 19 hud-spacer\", \"step 20 hud-spacer\", \"step 21 hud-spacer\", \"step 22 hud-spacer\", \"step 23 hud-spacer\", \"step 24 hud-spacer\", \"step 25 hud-spacer\", \"step 26 hud-spacer\", \"step 27 hud-spacer\", \"step 28 hud-spacer\", \"step 29 hud-spacer\", \"step 30 hud-spacer\", \"step 31 hud-spacer\", \"step 32 hud-spacer\", \"step 33 hud-spacer\", \"step 34 hud-spacer\", \"step 35 hud-spacer\", \"step 36 hud-spacer\", \"step 37 hud-spacer\", \"step 38 hud-spacer\", \"step 39 hud-spacer\", \"step 40 hud-spacer\", \"step 41 hud-spacer\", \"step 42 hud-spacer\", \"step 43 hud-spacer\", \"step 44 hud-spacer\", \"step 45 hud-spacer\"]",
+          "categories": [
+            "blocking",
+            "input",
+            "map",
+            "panels"
+          ],
+          "findings": [
+            "[panels] step 0 (clear_selection, none): hud-spacer belongs to no panel",
+            "[map] step 0 (clear_selection, none): a Control in the tree that stops the pointer (hud-spacer) covers a tile of the map",
+            "[panels] step 1 (select_tile, none): hud-spacer belongs to no panel"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "hover-unpublished",
+          "file": "consumers/civ-lite/world/world.gd",
+          "sourceSha256": "118d488976ba1c8307eecba74872359a469fab6c707fb348a295fcd73dc24e15",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "The pointer over tile (12, 4) published the hover and the tile card shows it; the selection did not move",
+          "categories": [
+            "input"
+          ],
+          "findings": [
+            "[input] the card after the click, the pointer still over the tile: \"Selected · (9, 8) Plain\", expected \"Pointer · (9, 8) Plain\"",
+            "[input] the pointer at [324,132] is over tile [12,4]: the hover was {\"city\":0,\"food\":0,\"move_cost\":0,\"present\":0,\"production\":0,\"science\":0,\"terrain\":-1,\"terrain_name\":\"\",\"units\":[],\"x\":-1,\"y\":-1} and the card \"Selected · (9, 8) Plain\"",
+            "[input] the node published 0 hover cards"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "world-behind-hud",
+          "file": "consumers/civ-lite/services/game_services.gd",
+          "sourceSha256": "81d3e55db9dfdbd5027d60319e6ec693cd5e033ce79bcdad055cf76fe9f34369",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "Through the menu and back, the World returned ahead of the HUD's layer in the tree",
+          "categories": [
+            "input"
+          ],
+          "findings": [
+            "[input] click-on-panels-after-menu: a click or a tick of the wheel on hud-tile reached the World or moved the selection: {\"heardAfter\":{\"buttons\":2,\"motions\":1},\"heardAfterWheel\":{\"buttons\":4,\"motions\":1},\"heardBefore\":{\"buttons\":2,\"motions\":1},\"pa",
+            "[input] click-on-panels-after-menu: a click or a tick of the wheel on hud-bar reached the World or moved the selection: {\"heardAfter\":{\"buttons\":4,\"motions\":1},\"heardAfterWheel\":{\"buttons\":6,\"motions\":1},\"heardBefore\":{\"buttons\":4,\"motions\":1},\"pan",
+            "[input] after the menu the World must be back, ahead of the HUD's layer (6 against 1): {\"actions\":[],\"back\":true,\"callbacks\":{\"clear_selection\":2,\"end_turn\":6,\"fortify\":4,\"found_city\":4,\"move_unit\":9,\"new_game\":4,\"open_menu\":1,\"select_tile\":10,\"sel"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "queue-out-of-order",
+          "file": "consumers/civ-lite/game/intents.gd",
+          "sourceSha256": "4f108a288bfb62f44d82038ebdd164de20de1ebafcfaef9b212703812eeebeb0",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 8,
+          "firstFailedCheck": "The dialog showed the three events in the game's order, one at a time: [\"wanderers\", \"wanderers\", \"wanderers\"]",
+          "categories": [
+            "newgame",
+            "queue",
+            "remount"
+          ],
+          "findings": [
+            "[queue] the dialog showed the events in the order of the table: [\"wanderers\",\"wanderers\",\"wanderers\"], expected [\"wanderers\",\"traders\",\"scholar\"]",
+            "[queue] round 1 (wanderers): a real press on the pick answers the head once: [\"welcome\",true,false,true,1], expected [\"welcome\",true,true,true,1]",
+            "[queue] round 1 (wanderers): the game's queue and the answers it recorded after: [[\"traders\",\"scholar\"],[{\"choice\":\"welcome\",\"id\":\"wanderers\"}]], expected [[\"wanderers\",\"traders\"],[{\"choice\":\"welcome\",\"id\":\"wanderers\"}]]"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "position-in-js",
+          "file": "consumers/civ-lite/ui/hud/dialog.tsx",
+          "sourceSha256": "b2a00822e0ad4667f0eabba3b6dabcc1a8878c04c9941c16bf432f89bb4f8976",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 1,
+          "firstFailedCheck": "The game counted the queue as 1 of 3, 2 of 3 and 3 of 3, and the HUD showed the position the game gave",
+          "categories": [
+            "queue"
+          ],
+          "findings": [
+            "[queue] round 2 (traders): after the press the next event is the head, in the game and in the HUD: [\"dialog\",\"scholar\",3,3,true,\"2 of 3\",\"A scholar asks for shelter\"], expected [\"dialog\",\"scholar\",3,3,true,\"3 of 3\",\"A scholar asks for shelter\"]",
+            "[queue] round 2 (traders): frame 5 of the change shows \"2 of 3\" \"A scholar asks for shelter\", which is neither this event nor the next",
+            "[queue] round 2 (traders): frame 6 of the change shows \"2 of 3\" \"A scholar asks for shelter\", which is neither this event nor the next"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "city-in-tree",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "sourceSha256": "5271fa46f972ee6d017e84bb592968c58c64ba93f1c335b79259f6c31a514272",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 5,
+          "firstFailedCheck": "The Modal covers the whole map in every step of the city and dialog contexts and in no step of the others: [\"step 18 (city)\", \"step 19 (city)\", \"step 20 (city)\", \"step 21 (city)\", \"step 22 (city)\", \"step 23 (city)\", \"step 24 (city)\", \"step 25 (city)\", \"step 26 (city)\", \"step 27 (city)\", \"step 28 (city)\", \"step 35 (city)\"]",
+          "categories": [
+            "blocking",
+            "map",
+            "panels",
+            "remount"
+          ],
+          "findings": [
+            "[panels] step 18 (found_city, city): the city panel is in the tree, and the city context says the other",
+            "[panels] step 18 (found_city, city): the research panel is in the tree, and the city context says the other",
+            "[map] step 18 (found_city, city): the overlay must block the whole map exactly in the city and dialog contexts (blocks: false, expected true)"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "dialog-unkeyed",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "sourceSha256": "4601556e213ebe017ca19468f4adc8aa2ff738938b1d8e4a2a6652bcc981d8f9",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 1,
+          "firstFailedCheck": "Each event of the queue was a subtree of its own: the dialog's Control was a new one every time",
+          "categories": [
+            "queue"
+          ],
+          "findings": [
+            "[queue] each event must be a subtree of its own, a new Control every time: [52445578893,52445578893,52445578893]"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "disabled-ignored",
+          "file": "consumers/civ-lite/ui/hud/kit.tsx",
+          "sourceSha256": "14981f82e121f8346631c135b1578ece835715dbbcf5d43381127df240128581",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 18,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "actions",
+            "bar",
+            "content",
+            "input",
+            "panels",
+            "phase"
+          ],
+          "findings": [
+            "[panels] step 3 (select_unit): the HUD did not catch up with the game's snapshot before its wait ran out",
+            "[actions] step 3 (select_unit, settler): the actions panel: [{\"key\":\"found_city-1\",\"label\":\"Found city\",\"enabled\":true,\"reason\":\"\"},{\"key\":\"fortify-1\",\"label\":\"Fortify\",\"enabled\":true,\"reason\":\"Settlers cannot fortify.\"},{\"key\":\"clear_selection\",\"lab",
+            "[panels] step 4 (move_unit): the HUD did not catch up with the game's snapshot before its wait ran out"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "close-leaks-connection",
+          "file": "consumers/civ-lite/ui/store.ts",
+          "sourceSha256": "dce57629de1400c98070ba0476145deb0e6ac295681950c558c7c6bcf1230012",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 6,
+          "firstFailedCheck": "City (close, after): the pointer routes, the registry's subscriptions and pending work, the HUD's connections and the signal's are the first cycle's",
+          "categories": [
+            "heap",
+            "leak"
+          ],
+          "findings": [
+            "[leak] city cycle 1 (close), before: a screen at rest with its overlay closed holds subscriptions 4, expected 2; hudSubscriptions 4, expected 2",
+            "[leak] city cycle 1 (close), open: a screen at rest with its overlay open holds subscriptions 4, expected 2; hudSubscriptions 4, expected 2",
+            "[leak] city cycle 1 (close), after: a screen at rest with its overlay closed holds subscriptions 5, expected 2; hudSubscriptions 5, expected 2"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "modal-stays-mounted",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "sourceSha256": "376982ff1245ac22169d097bd175ca99d5c51c814f21f927901e69546f45c3ff",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 15,
+          "firstFailedCheck": "City: the screen was opened by a real click on its tile and closed by a real press on Close, and by Escape, in every cycle",
+          "categories": [
+            "coverage",
+            "escape",
+            "focus",
+            "icons",
+            "leak"
+          ],
+          "findings": [
+            "[coverage] city cycle 1 (close): the screen must be opened by a real click on its tile and closed by a real press (Close) or by Escape: {\"opened\":false,\"pressed\":false,\"closed\":true}",
+            "[coverage] city cycle 1 (close): the game's contexts around the screen are none, city, none: [\"none\",\"none\",\"none\"]",
+            "[escape] city cycle 1 (close): Close must ask the game once to clear the selection: 0"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "focus-grabbed",
+          "file": "consumers/civ-lite/world/world.gd",
+          "sourceSha256": "54e24bca679c617bebd5db8c90fe045e36586c4e55c3099f7075a2bf89ffd02e",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "City: while the screen is open its Window is the one exclusive Modal Window and no Control under it has the focus",
+          "categories": [
+            "focus"
+          ],
+          "findings": [
+            "[focus] city cycle 1 (close): while open no Control under the overlay may have the focus: {\"root\":47764735550,\"focused\":[]}",
+            "[focus] city cycle 1 (escape): while open no Control under the overlay may have the focus: {\"root\":47764735550,\"focused\":[]}",
+            "[focus] city cycle 2 (close): while open no Control under the overlay may have the focus: {\"root\":47764735550,\"focused\":[]}"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "icon-missing",
+          "file": "consumers/civ-lite/ui/hud/icons.ts",
+          "sourceSha256": "b73a95ac9e48f76265aae78d6f63c37acaa814ad313e7764cc128ece83b27186",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "Icons: every Image the HUD mounted in the none, stack, settler and city contexts is visible and drew once loaded, with no error",
+          "categories": [
+            "icons"
+          ],
+          "findings": [
+            "[icons] icons in the none context: hud-bar-food-icon must be visible and have drawn once loaded with no error: {\"drawn\":false,\"draws\":2,\"error\":\"Could not find image res://icons/missing.png (no such file)\",\"errors\":1,\"height\":18,\"loads\":0,\"modal\":f",
+            "[icons] icons in the none context: hud-bar-food-icon must draw food.png, it drew res://icons/missing.png",
+            "[icons] icons in the stack context: hud-bar-food-icon must be visible and have drawn once loaded with no error: {\"drawn\":false,\"draws\":2,\"error\":\"Could not find image res://icons/missing.png (no such file)\",\"errors\":1,\"height\":18,\"loads\":0,\"modal\":"
+          ],
+          "rejected": true
+        },
+        {
+          "name": "import-outside-manifest",
+          "file": "consumers/civ-lite/ui/hud/kit.tsx",
+          "sourceSha256": "d89d49e68c22b083f476813e98b7f0539f9aeaf6ec04eefd14d581e1ad13328e",
+          "runStatus": 0,
+          "observed": true,
+          "failedChecks": 1,
+          "firstFailedCheck": "hud/kit.tsx: TextInput is out of the 0.5 scope: TextInput, Keyboard, KeyboardAvoidingView and the IME: typed text and the virtual keyboard are out of the 0.5 (ROADMAP.md, `Out of the 0.5`)",
+          "categories": [
+            "import"
+          ],
+          "findings": [
+            "[import] hud/kit.tsx: TextInput is out of the 0.5 scope: TextInput, Keyboard, KeyboardAvoidingView and the IME: typed text and the virtual keyboard are out of the 0.5 (ROADMAP.md, `Out of the 0.5`)"
+          ],
+          "rejected": true
+        }
+      ]
+    },
+    "screenshots": {
+      "count": 7,
+      "files": {
+        "bar": {
+          "file": "docs/evidence/civ-lite-ui/stability-bar.png",
+          "sha256": "09ff0d5317aecc5c97d54f2c75bd5f4e0e56f06514e75ecd878a5e0dcda1dfa7",
+          "bytes": 18063,
+          "matchesLaneOutput": true
+        },
+        "actions": {
+          "file": "docs/evidence/civ-lite-ui/stability-actions.png",
+          "sha256": "b0bf126308c05e824d125e206f518a4d87b6552875a068336aceff8ee2d4bcb2",
+          "bytes": 41277,
+          "matchesLaneOutput": true
+        },
+        "city": {
+          "file": "docs/evidence/civ-lite-ui/stability-city.png",
+          "sha256": "afa1a4865cb2c57767a5f4ca4a4da809ede76cdf8f45de1cc9d2799796e08c3d",
+          "bytes": 72481,
+          "matchesLaneOutput": true
+        },
+        "city-1": {
+          "file": "docs/evidence/civ-lite-ui/stability-city-1.png",
+          "sha256": "5e633d6375db2c19e7cbc0834d1162c9767437e5727cee8240458cde255cb27a",
+          "bytes": 72510,
+          "matchesLaneOutput": true
+        },
+        "city-20": {
+          "file": "docs/evidence/civ-lite-ui/stability-city-20.png",
+          "sha256": "5e633d6375db2c19e7cbc0834d1162c9767437e5727cee8240458cde255cb27a",
+          "bytes": 72510,
+          "matchesLaneOutput": true
+        },
+        "dialog-1": {
+          "file": "docs/evidence/civ-lite-ui/stability-dialog-1.png",
+          "sha256": "8d7494a9e45e6267f7b344369a0f82ac77907d6013d610a4699e8e52649ccb95",
+          "bytes": 37306,
+          "matchesLaneOutput": true
+        },
+        "dialog-20": {
+          "file": "docs/evidence/civ-lite-ui/stability-dialog-20.png",
+          "sha256": "ae8f6b528b074ecbaf4de7d7d63d4559a34ba7e741bc5dcd0d22a114688265c2",
+          "bytes": 37299,
+          "matchesLaneOutput": true
+        }
+      },
+      "readBeforeCiting": true,
+      "drift": {
+        "differ": [],
+        "masked": {
+          "city": [
+            33,
+            525,
+            544,
+            26
+          ],
+          "dialog": [
+            33,
+            525,
+            553,
+            26
+          ]
+        },
+        "same": true,
+        "sameBytes": {
+          "city": true,
+          "dialog": false
+        }
+      },
+      "note": "the PNGs are the ones the headed run (node tests/civ-lite-ui-native.test.mjs --control --capture) saved; the city screen in the first and the last cycle is the same file byte for byte, and the dialog differs only in the first row of the bar, where that game's epoch (6 and 25) is: the probe compared the two pictures in the engine, pixel by pixel, with that row masked, and found none different"
+    },
+    "review": {
+      "finding": "a first lane run of the reviewer failed twice (city cycles 13 and 14): the screen was declared at rest while the five icons of the Modal were still loading (status loading, loads 0)",
+      "cause": "the rest was the host's pending work, the retiring tags and the Modals, plus padding frames; the decode of an Image runs on a worker at the machine's pace",
+      "fix": "the rest is the state the oracle judges, in two readings with the same signature, and includes every Image settled; the padding frames and the frame count of the Escape wait were removed",
+      "afterTheFix": "three lane runs in a row passed, and icon-missing is rejected by the Image's error status, not by a timeout",
+      "reproducedLocally": false
+    },
+    "regressions": {
+      "consumer": {
+        "command": "npm run test:consumer:civ-lite",
+        "seconds": 35,
+        "result": "passed"
+      },
+      "frontier-turn": {
+        "command": "npm run test:frontier-turn",
+        "seconds": 243,
+        "result": "passed"
+      },
+      "frontier-soak": {
+        "command": "npm run test:frontier-soak",
+        "seconds": 202,
+        "result": "passed"
+      },
+      "frontier-services": {
+        "command": "npm run test:frontier-services",
+        "seconds": 27,
+        "result": "passed"
+      }
+    },
+    "implementationPins": {
+      "sourcePins": {
+        ".github/workflows/contracts.yml": "afd85d675aa5e40c97e58622df8ed89d10a6d8265d1c1708153b589316c9c187",
+        "consumers/civ-lite/README.md": "60c0bb1367a4563d15cbbf91466e8292199b4a75bf5768b5925b6a95239996a1",
+        "consumers/civ-lite/hud_probe.gd": "0a3a7c4f209742d2eb685d582ecabf8d5d4ca9ff130bcfb4b0bfed5bc5e8a2ae",
+        "consumers/civ-lite/main.tscn": "8ab249dd08407002b7889fce1f0e9a9e58e858c6e241f50c639fc1af4363cc4b",
+        "consumers/civ-lite/overlay_validation.gd": "b9444635908f02f5b28cf23b2e098d817c20560460f2a305bae2691176885ac3",
+        "consumers/civ-lite/stability_judge.gd": "325c2b8c3fff215d6f5c6eeba1ee64fc271515fddc66632002f4e2883912e20e",
+        "consumers/civ-lite/stability_validation.gd": "0b6dce4762fdd898336536e44c5451ee4e9aed517fae1735459f2245e4131a66",
+        "consumers/civ-lite/ui/assets.d.ts": "8a53fa8b8d0713ffec4b57b034da2ba5f1f2da7d8a458814efe55fc23a998841",
+        "consumers/civ-lite/ui/hud/actions.tsx": "16ff6675bcbed90d0ed426f21878035baa500a77f1051c710ede384885715c45",
+        "consumers/civ-lite/ui/hud/bar.tsx": "6bed72040ee98d6c6a9c057c1a40195c381e54f12fcf027ab148996e95d694eb",
+        "consumers/civ-lite/ui/hud/city.tsx": "bb680e749aabd08520eba48fbc49b09ba4bb4c5b209e82f0215e103bbd6826fa",
+        "consumers/civ-lite/ui/hud/hud.tsx": "d971fb943511c7bf7d5e96b8976b2ea7c685c148f2fee3b56ac49f241b150953",
+        "consumers/civ-lite/ui/hud/icons.ts": "131a3d2c62d0c36f12c771ca00d40a78401b1a19d3fa5d5555bb79cd4a22546d",
+        "consumers/civ-lite/ui/hud/kit.tsx": "9eed665bf1d44f5604f1daf4f830756486a0232fb5d61e66ab2bd88500a06431",
+        "consumers/civ-lite/ui/hud/tile.tsx": "db8929903e92ac14b64e568189a19353a5a5085b7081c8dab3f673fd51efd5bd",
+        "consumers/civ-lite/ui/icons/city.png": "7b4a7d6da50c681310fd04ede93957d2c32d998b8b4851cf70de7bb955e8b657",
+        "consumers/civ-lite/ui/icons/food.png": "dcfe35ef6f23b1ba33c03e7e7adb1df18c26355fc4980312faf3a78378e345e9",
+        "consumers/civ-lite/ui/icons/production.png": "94a15ffab55fe07d5e76f078d71a859b23fd67bf2dc8fb87d1f72e0f22999359",
+        "consumers/civ-lite/ui/icons/science.png": "233129e8cb4d2463cd065e5e3d37fe5f533499e1b89583e343bf4acca6dd8e15",
+        "consumers/civ-lite/ui/icons/settler.png": "861be6d3025ca2ccd9dc0af060ff3a9678d8d687d834a364c69d7e5055e07971",
+        "consumers/civ-lite/ui/icons/warrior.png": "1a630c4fd1a09ed5d00d6f3b0e418ce25d52c32c2edb797370f856b3baa0ca1c",
+        "dashboard/agents.mjs": "3918723ba559c144a0f9d2301c6badc70f0043eb81b6c4311b223a99065098e2",
+        "docs/compatibility/scope-0.5.json": "a80baa6fef325776ed2e8552c0c053f63a88e8315b8133d76c323f70f32bdcc0",
+        "scripts/civ-lite-icons.mjs": "56f792b86dfdb1b2d9675e4da770d095ab29564ba30f7340ca1f14429af39605",
+        "scripts/civ-lite-ui-sabotage.mjs": "d8124d503bee19b92ff720d0cb6a99c31cd422c9fdc8c2fbed629ffa07df8939",
+        "scripts/consumer-civ-lite-check.mjs": "f51ab0cff1d03ebb67afb7021844b7d0d84fbada04a908723d9d4452a4fd76cf",
+        "tests/agents-board.test.mjs": "0a6492eb29c3c88bcbb412674fb8727fc58346f1a853323ccd2f7a60f6acb6f7",
+        "tests/civ-lite-hud-scan.mjs": "4413df826fc1ba9afa2782782280f9598359ac14a27da8705d737edffe933681",
+        "tests/civ-lite-stability-oracle.mjs": "8a55afa33cbed6b8179df829781a05ddedd1714d89eb3a7efc8a4ff6a2f0151b",
+        "tests/civ-lite-ui-native.test.mjs": "1aa7d20eee5fadca71ee16a8c9494590db5a881c82167bc0e9dc50331d54c726",
+        "tests/civ-lite-ui-oracle.mjs": "3c234d844906ccbb611777270c1cac061768009218bfac83dd1f388527f6d6bd",
+        "tests/scope-0.5.test.mjs": "7a25b59b7469854fd32b98b7f66254e08deb450c5e4ea886c3f77f4b94aa4d72"
+      },
+      "verificationSourcePins": {
+        "consumers/civ-lite/.gitignore": "51571c5cfce2ad2301f0f0d537a81365632f35a7aafe1c430d2eafe311bb0042",
+        "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+        "consumers/civ-lite/game/context.gd": "128837b7601033df43ece7ddecd565c39b814499d33cd2903451d577b504f2f0",
+        "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+        "consumers/civ-lite/game/game.gd": "70686c9bfce989f698e20921e735e6d722ca51a0fc8b3528e1ede9c311c31a66",
+        "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+        "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+        "consumers/civ-lite/game/replay.gd": "d5860674f32ef31f2cf89938ae2a026bd344c270458d51c77d9dfea402d60196",
+        "consumers/civ-lite/game/rules.gd": "d6e8535e3172a68f78ad6ffba0986b321e97b8490fda471ac71726ad6b354732",
+        "consumers/civ-lite/game/snapshot.gd": "13822f595d13cf07a411a7cb8a947f4b6c04bcc84b508aa7c6399850769a6698",
+        "consumers/civ-lite/game/turn.gd": "b71d9b264d5b47c9dfc23b84ffacb351c6a6429d6fe351711114e2759e560e58",
+        "consumers/civ-lite/game/world.gd": "a670f786b5e15853583ccceab6d8eaf9d870257e00cb3789304867faa8a1674d",
+        "consumers/civ-lite/hud_validation.gd": "f40e0558855c79a29e3dfcc57c7843c674cee8a951b036813d643e69a1d97ea5",
+        "consumers/civ-lite/package-lock.json": "3435f151006f59aa8dedcc623d2a0c932254222d5653632744602a39b3deac06",
+        "consumers/civ-lite/package.json": "f570a27248f00d9e57ed9fbee7ac20ccfcb7cf42961e28039f135d89fbc5f594",
+        "consumers/civ-lite/project.godot": "2c14d1d443cae6708c9f1eee098e96edc6a7a2e6005b35f5a4ab7e11bec266fa",
+        "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+        "consumers/civ-lite/services/schema.gd": "3fdf0b674da1873699a7416117e2135ece8fe43ecd3bd7ceacdcb4f40e73f5ca",
+        "consumers/civ-lite/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+        "consumers/civ-lite/ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+        "consumers/civ-lite/ui/frontier-types.ts": "88cd8878bfc706f2d489a1c956681f0e0629f3e0341b2f405cdfeb273285a23d",
+        "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+        "consumers/civ-lite/ui/hud/overlay.tsx": "37e420e3379fde87fcf81f02e69bbf66f732bb99b10c1085fe1131f26d5e1599",
+        "consumers/civ-lite/ui/hud/research.tsx": "2f36696e0f4d72a92db17b9e04493787ebd5d1d089f97363ca276d6cd2c157c5",
+        "consumers/civ-lite/ui/index.tsx": "40687f9a1aea3f1a4961fd3526a43b12394858c944ffb2636430666be01fa1fc",
+        "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+        "consumers/civ-lite/ui/telemetry.ts": "9c14435b6c0772d64510f9dfdd0849473e3cf5ec2dd954b0c25d57b4901f7fd3",
+        "consumers/civ-lite/validation.gd": "1a6d906850f0aab92649d7b4c64844dc60daffffea803ee28a060629630d7a63",
+        "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+        "consumers/civ-lite/world/world.tscn": "b8a771ebfc0e1fbc7099e61cb9ffb2a596724afbe99c90566e655948554525a9",
+        "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+        "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+        "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+        "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+        "scripts/scope-manifest.mjs": "28c0ee702fe3706699d02842213587b712a641ab270bb477c9beafad29f6126b",
+        "tests/civ-lite-game-native.test.mjs": "c34a841d57827786d7d3082da659f3ea03c0d63021fbadc07848e225c5d9cdda",
+        "tests/civ-lite-game-oracle.mjs": "54fe5343e14c877ad0ef77dd2e90433606fe628607fbbb01162d968cf4f7e041",
+        "tests/civ-lite-game-probe.gd": "007d911e17550b0849826347330bb86787d338c7929f92bcc54e1720b2126680",
+        "tests/civ-lite-overlay-oracle.mjs": "3032b28a4daa8d79a1dbe277b849e92f67b199a44bbadad77c7459773e81439b",
+        "tests/frontier-baseline-cases.mjs": "3a4539a305fd40b0dcecacd9c4ee318432aba1f058c5c58563598f9df2977e81",
+        "tests/frontier-baseline-heap-series.mjs": "21cba29ccc0991690d97cfdd127650524a2244ef847b06057457b0806bcaa7c0",
+        "tests/frontier-baseline-oracle.mjs": "d6f0615be435bc9cd44bf852899b1a18019745200f66d11221cb0d5552c9d56b",
+        "tests/performance-cases.mjs": "05a3f24b9e295bc9cbb24a34a08901e2bb3a97949b3dbd4128533d76bc654105",
+        "tests/performance-oracle.mjs": "c2c9a248042b6f082a426dd8cedec77b3e8f184fd5f4b46d364e53d1a525314a",
+        "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+      },
+      "method": "every pin is the SHA-256 of git show <pinnedCommit>:<path>; the file in the tree the lanes ran from has the same SHA-256 for every source",
+      "sourcePinCount": 32,
+      "verificationSourcePinCount": 45,
+      "mismatches": [],
+      "executedFromTheCommittedTree": true,
+      "pinnedAgainst": "the files the slice changed (e108e9d to 0a0deca) and the files of the template, the oracles and the harness that the lanes execute"
+    },
+    "limits": [
+      "local macOS arm64; the hosted run of this slice exists only after it is on main (the hosted run of the slice before, #93, is in docs/evidence/civ-lite-ui/overlays/)",
+      "the hosted lane runs headless, with no controls (a shallow clone), captures or sabotages",
+      "the heap's noise on a hosted runner was not observed: the rule is the baseline's, which tolerates the band seen there; the engine's object count has a limit of one",
+      "Escape was a key event pushed through the viewport, not a physical keyboard; the blocking was measured with events pushed through the viewport, not a physical mouse or touch",
+      "focus is what the host can say; React Native focus does not exist in the 0.5",
+      "the reviewer's flake was not reproduced on the development machine, not even with 40 busy loops: the fix comes from the log and from what the host reports, and is validated by three consecutive runs",
+      "the native-view tables of docs/research/frontier-turn.md are those of the HUD with no icons",
+      "no 1.0 checkpoint, weight or denominator moves, and no exit criterion of the milestone is closed by this record"
+    ],
+    "openItems": [
+      "the hosted run and the Pages of this slice, after the merge",
+      "the engine error when the application quits with a Modal open (the host's)",
+      "the tables of docs/research/frontier-turn.md, re-recorded on the HUD with icons",
+      "the rest of milestone 0.5 (V05-06 onwards and the final comparison)"
+    ],
+    "hostedReceiptsOfSlice2a": {
+      "folder": "docs/evidence/civ-lite-ui/overlays",
+      "generatedBy": "scripts/hosted-receipts.mjs --write --slice civ-lite-ui/overlays (the row of #93 in scripts/hosted-receipts-slices.mjs), checked offline by --check and tests/hosted-receipts.test.mjs",
+      "pullRequest": 93,
+      "squash": "e108e9d",
+      "contractsRun": {
+        "id": 37958818671,
+        "event": "workflow_dispatch",
+        "note": "a push of main no longer runs the native suites (the push run 37958764264 skipped five jobs), so the receipt is of the Contracts run dispatched on main at the squash",
+        "jobs": {
+          "contracts": "success",
+          "native-cold-start": "success",
+          "native-suites-frontier": "success",
+          "native-suites-input": "success",
+          "native-suites-runtime": "success",
+          "parity-comparison": "success",
+          "reference-android": "success",
+          "reference-ios": "success"
+        }
+      },
+      "nativeSteps": {
+        "test:civ-lite-ui": {
+          "job": "native-suites-runtime",
+          "step": 59,
+          "conclusion": "success",
+          "markers": [
+            "# CIVLITE_UI_LANE_PASSED: 144 + 26 probe checks; 27 + 20 oracle mutations; controls not run and not run"
+          ]
+        },
+        "test:consumer:civ-lite": {
+          "job": "native-suites-runtime",
+          "step": 58,
+          "conclusion": "success",
+          "markers": [
+            "CONSUMER_CHECK_PASSED: civ-lite: 20 build/ownership checks; 165 native checks; 10 cycles"
+          ]
+        }
+      },
+      "artifacts": {
+        "ui": {
+          "id": 11632248250,
+          "zipSha256": "d1ddfc1cfafbb9e2d6d16c90e0061a0451306acb474b05ccfc6503f85a456fa9",
+          "fileCount": 7
+        },
+        "consumer": {
+          "id": 11632323830,
+          "zipSha256": "e7a2b30a6d9d07752d33d438010ca42091b1a58c672e0c3aa350aa94d26bc7e5",
+          "fileCount": 10
+        }
+      },
+      "hostedReportsJudgedAgainOutsideTheCI": {
+        "headless.json": {
+          "sha256": "e9f922bf29cd7f7e817e8645ffc2ca46fea7aec052ff188743e52ba4dc065046",
+          "checks": 144,
+          "failed": 0,
+          "oracleFindings": 0
+        },
+        "overlays.json": {
+          "sha256": "665f46a499acf6ff9cc7bc032f6c6ec4e0b31cc40ed95471e12771d1a102cc67",
+          "checks": 26,
+          "failed": 0,
+          "oracleFindings": 0
+        }
+      },
+      "pages": {
+        "run": 37958764277,
+        "deployment": 6965648139,
+        "deployedArtifactId": 11631065962,
+        "migrationJsonBytesEqualCommitted": true,
+        "activity": "milestone-0-5-v05-05-overlays-67c3f16"
+      },
+      "receipts": {
+        "hosted-ci.json": "8e68c9e5248e8e80af929aa604ecc5a2c159019bb529f4cb95ad5d6c51ee6ee8",
+        "publication.json": "578f0c4c560efa730227ef53bf80533a4578ff198c59d8c723ba082632cda564"
+      },
+      "rowAddedToTheTest": "tests/hosted-receipts.test.mjs: the folder civ-lite-ui/overlays, 11 slices and 22 receipts"
+    },
+    "gates": {
+      "ranAt": "2026-10-09T20:18:44Z",
+      "meaning": "Gates that read documents and sources, on the tree that holds this record: the commit 0a0deca plus the documents of this record, the captures, the receipts of PR #93 with their row and test, and dashboard/migration.json (the URLs that point at this record carry the placeholder PINB, and the ones that point at the receipts PIND, until the commits that hold them exist)",
+      "steps": {
+        "check-publication": "passed",
+        "check-static": "passed",
+        "type-check": "passed",
+        "test-dashboard": "passed",
+        "test-contracts": "passed",
+        "hosted-receipts-check": "passed",
+        "hosted-receipts-tests": "passed",
+        "milestone-guards-origin-main": "passed",
+        "milestone-guards-e108e9d": "passed"
+      },
+      "counts": {
+        "contractsNodeTests": [
+          7,
+          43,
+          424
+        ],
+        "contractsPythonTests": 13,
+        "dashboardTests": 43,
+        "staticAnalysis": "fallow: no issues",
+        "publicationScan": "1919 files, no failures",
+        "hostedReceiptsCheck": "HOSTED_RECEIPTS_CHECK_PASSED: 11 slices, 22 receipts",
+        "hostedReceiptsTests": "8 of 8 (tests/hosted-receipts.test.mjs, also in test:contracts)",
+        "milestoneGuards": "MILESTONE_GUARDS_CHECK_PASSED: X9 clean, X10 clean, against origin/main (decc2ad0eec6) and against e108e9d"
+      },
+      "seconds": {
+        "test-contracts": 95
+      }
+    }
   }
 }
