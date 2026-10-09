@@ -237,8 +237,8 @@ variants in the parity test).
 Every frame of every job fit in one pump: the largest pump of the 12 roteiro jobs ran 1 task and sent 3 events, and left nothing
 pending, against the budgets of 64 and 128. With ten calls sent while the job runs (job 13), the frame that carries them ran 10
 tasks and sent 2 events (their results are resolved in the tasks, which do not count as events), and left nothing pending. That
-is the real subscribers of the probe. The game's own counters in `turn_ended.phases` are at most 5 tasks and 2 events a phase
-in the roteiro.
+is the real subscribers of the probe. The game's own counters in `turn_ended.phases` are at most 5 tasks and 4 events a phase
+in the roteiro (4 is the `refresh` of turn 4: the turn start and the three events the queue raises; it was 2 with the one event).
 
 The stress case adds 150 module-scope subscribers of `frontier.snapshot` (so a publication holds 152 events, more than 128; the
 publication of the last phase holds 153 with `turn_ended`). The pumps are counted as pumps, not as time:

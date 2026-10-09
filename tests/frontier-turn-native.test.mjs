@@ -111,13 +111,9 @@ const REJECTED = {
   "answers-uncounted": [stages => {
     stages.published.callbacks.resolve_event -= 1;
   }, ["turns"]],
-  "map-click-under-a-modal": [stages => {
-    stages.config.steps[indexOf("map-city")].from = "city";
-  }, ["config"]],
-  "city-without-close": [stages => {
-    stages.config.steps[indexOf("close-city")].target = "hud-bar-end-turn";
-  }, ["config"]],
-  "answers-out-of-order": [stages => {
+  // A report whose steps are not the cases' fails the config rule (the steps the probe ran are compared with the cases first). The rules of the tour itself (nothing under a
+  // Modal, the Close after the city, the answers in the order of the queue) are judged on mutated copies of the steps, directly, in tests/frontier-turn-graphics.test.mjs.
+  "steps-not-the-cases": [stages => {
     const [first, second] = [indexOf("answer-event-1"), indexOf("answer-event-2")];
     [stages.config.steps[first].target, stages.config.steps[second].target] = [stages.config.steps[second].target, stages.config.steps[first].target];
   }, ["config"]],

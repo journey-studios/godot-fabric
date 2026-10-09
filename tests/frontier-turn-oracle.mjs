@@ -73,7 +73,7 @@ function verifyConfig(report) {
 // The tour against the contract of the Modals and of the queue, with nothing read from the probe: the dialog's steps are the three events answered in the order of the
 // table, each with the first choice of its head, and each leads to the head that follows (the End turn of the fourth turn to the first); no click of the map or of the bar is
 // made in a context that holds a Modal open, and each time the city screen opens the next click is its Close.
-function verifyTourOfTheQueue(steps) {
+export function verifyTourOfTheQueue(steps) {
   const answers = steps.filter(step => step.kind === "dialog");
   assert.deepEqual(answers.map(step => step.target), EVENT_QUEUE.map(event => `hud-dialog-choice-${event.choices[0]}`), "The tour answers the three events in the order of the queue, each with its first choice");
   const heads = steps.filter(step => step.head !== undefined);

@@ -222,8 +222,9 @@ it), then its own checks as listed.
 
 `end_turn` runs these six phases in order. A phase reports the `tasks` it ran and the `events` it emitted; the authority
 criterion of the services slice measures end-of-turn bursts against a ceiling of **64 tasks and 128 events a phase**. This
-slice only guarantees the phases exist, are deterministic and stay below the ceiling (at most 5 tasks and 2 events in the
-roteiro). `FrontierGame.advance_phase()` exposes the slicing for the frame-budget measurement; this slice does not measure
+slice only guarantees the phases exist, are deterministic and stay below the ceiling (at most 5 tasks and 4 events in the
+roteiro: the events are the `refresh` of turn 4, which emits the turn start and the three events it raises, and the tasks are the units it refills, the tiles a phase works
+and the faction's one; before the queue of three events the most was 2). `FrontierGame.advance_phase()` exposes the slicing for the frame-budget measurement; this slice does not measure
 time.
 
 | Phase | What it does | Tasks |

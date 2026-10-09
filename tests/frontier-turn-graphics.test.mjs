@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {UNPACED, graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt} from "./frontier-baseline-oracle.mjs";
 import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
-import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
+import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTourOfTheQueue, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
 
 // The windowed lane of the turn on synthetic runs (no Godot, no display): the validity rule is the baseline's, imported, and what this file shows is that the
 // turn's runs fit it. A frame time exists only if a display presents the window: a run whose window did not draw, or whose idle frame median is under half of
@@ -204,4 +204,28 @@ test("a lane that claims to be presented has all its runs and their statistics",
   receipt.status = "presented";
   receipt.summary = null;
   assert.throws(() => verifyGraphicsReceipt(receipt), /all its runs/);
+});
+
+// The rules of the tour itself, on mutated copies of the cases' steps and not through a report (a report whose steps differ from the cases fails the oracle's config rule before these
+// rules run on it): the tour the oracle accepts is the cases', and each copy breaks one rule and is refused with the message of that rule.
+const tourWith = change => {
+  const steps = structuredClone(STEPS);
+  change(steps, id => steps.find(step => step.id === id));
+  return steps;
+};
+
+test("the tour of the queue and the Modals: the cases' steps are accepted, and each rule has a mutation that only it refuses", () => {
+  verifyTourOfTheQueue(STEPS);
+  // Nothing is clicked on the map or on the bar while a Modal is open.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("map-city").from = "city"; })), /no click of the map or of the bar while a Modal is open \(city\)/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("end-turn-1").from = "dialog"; })), /no click of the map or of the bar while a Modal is open \(dialog\)/);
+  // Each time the city screen opens the next click is its Close.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("close-city").target = "hud-bar-end-turn"; })), /the city screen opens and the next click is its Close/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith(steps => steps.splice(steps.findIndex(step => step.id === "close-city-again"), 1))), /the city screen opens and the next click is its Close/);
+  // The answers are the three events in the order of the queue, each with its first choice, and each leads to the head that follows.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => {
+    [step("answer-event-1").target, step("answer-event-2").target] = [step("answer-event-2").target, step("answer-event-1").target];
+  })), /answers the three events in the order of the queue/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-1").head = "host"; })), /names the first choice of the head it leads to/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-3").to = "dialog"; })), /the last answer closes the dialog/);
 });

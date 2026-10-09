@@ -373,6 +373,7 @@ fixa são os da última corrida simples.
 | `npm run test:civ-lite-game` | passou, com os hashes novos (`cb7ab974…` e `ed43495…`), idênticos em três processos, e o oráculo concorda em 77 passos | 3 s |
 | `node tests/civ-lite-ui-native.test.mjs --control --capture` (a lane `test:civ-lite-ui`, com os dois controles e as capturas) | **144 checks** da probe da HUD (152 janelada) e **26** da probe de overlays (30 janelada), os dois oráculos com 0 achados, **27 + 20** mutações dos oráculos rejeitadas, os dois controles falham | 142 s |
 | `node scripts/frontier-soak-sabotage.mjs` (depois do lote, com o oráculo do soak ajustado) | **4 de 4** sabotagens do soak rejeitadas, cada uma pelo texto que o script espera; restauradas; a corrida genuína passa | 614 s |
+
 Os gates que leem documentos (`check:publication`, `check:static`, `test:dashboard`, `test:contracts`) e o `type-check` rodaram depois, na árvore que tem
 estes registros; o recibo guarda o resultado.
 
