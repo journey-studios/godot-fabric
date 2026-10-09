@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T10:12:11.000Z",
+  "updatedAt": "2026-10-09T11:09:05.000Z",
   "source": {
     "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
@@ -4561,6 +4561,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-turno-headless-e2ee6d8",
+      "at": "2026-10-09T11:09:05.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério turno, faixa headless, com evidência local: o turno do Frontier foi medido no consumidor civ-lite provisionado (template, HUD e cena intocados), por 32 rodadas de 16 cliques reais pelo viewport que passam pelos sete contextos, com o dialog aberto pelo End turn do quarto turno. Todo clique faz uma única chamada ao jogo e mostra os painéis do contexto 2 quadros depois da injeção nos 480 cliques estáveis (8 num End turn; registrado contra um teto, nunca fixado); o turno com a IA fatiada roda uma fase por quadro, na ordem do serviço, publica um snapshot em cada um dos sete quadros e o turn_ended uma vez, nos 128 turnos (120 estáveis); as views nativas e os nós da SceneTree são os mesmos toda vez que um contexto volta (14, 18, 24, 24, 26, 27 e 42 views, mais 10 nós da cena) e não há nó órfão nas 546 leituras; o heap vivo em repouso das 17 séries cresce 128 bytes entre as medianas das metades (limite do GF-30 de 2.048), pela regra do baseline, que agora é a mesma função da regra de RSS do soak (growthOfHalves); nenhum erro nem rejeição sem tratamento. Quatro sabotagens retidas (um quadro que roda duas fases, um nó deixado por cada clique, um clique entregue longe do alvo, um HUD que guarda 64 números por renderização) são rejeitadas pelo probe e pelo oráculo, cada uma pela regra para a qual foi escrita, duas delas feitas na cópia provisionada e nunca no template, e o oráculo rejeita 22 alterações de um relatório gravado. A faixa janelada NÃO foi apresentada pelo display (apagado, ocioso havia 11,6 h): as três tentativas foram rejeitadas como unpaced (quadro ocioso de 0,6 ms contra o mínimo de 4,167 ms), com presented false, código de saída 3 e nenhuma estatística de quadro; por isso o tempo de quadro apresentado está pendente e o critério turno segue aberto, junto com o congelado, a CI hospedada e o Pages. Só headless e macOS arm64, com cliques sintéticos, o HUD do V05-05 ainda em andamento e uma máquina compartilhada; o controle com host anterior não se aplica: não há C++. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e2ee6d83b392692775400e73db364b3243b47df9/docs/evidence/frontier-turn/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-70cf43b",
       "at": "2026-10-09T10:12:11.000Z",
