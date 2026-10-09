@@ -750,6 +750,17 @@ is local macOS arm64 evidence, with synthetic clicks, on a machine shared with o
 publication are pending. `turno`, `baseline` (the presented frame time) and `congelado` remain open. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** Exit criteria X9 and X10 of the 0.5 now have guards that run, and neither is closed. The PR guard
+(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that compares the tree with the first parent of `HEAD`)
+fails a pull request that adds a `milestone-0-5-*` entry and also changes `tasks`, `phases`, `sequences`, the checklists or
+`decisions` (a changed note or evidence counts, not only `done`, weight or status), that opens a new `pointer-*`,
+EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The audit of the history from `c0f3702` covers
+28 first-parent commits, 15 of them with a 0.5 entry: X10 is clean and GF-13 is equal in depth, and X9 has one known exception,
+#74, which changed the note and the evidence of GF-27 without moving a `done`, a weight or a status. The
+[evidence](https://github.com/journey-studios/godot-fabric/blob/b02e2a531ca548b95496a7e9fb3f04165ec78d97/docs/evidence/milestone-exit-guards/README.md)
+pins the audit, its receipt and the rules. The hosted CI of the guard step is pending, and X9 and X10 stay open until the 0.5
+ends, when the audit runs again. No 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-06, criterion `turno`, closed: the windowed lane of the turn was presented. On 2026-10-09, with the display on,
 the local lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) ran on a tree identical to main `1adcdb3`, with the
 baseline's validity rule imported: five of five runs were accepted in eight attempts (three were rejected as `undrawn`, none as
