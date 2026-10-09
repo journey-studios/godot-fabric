@@ -3504,10 +3504,6 @@
                 {
                   "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/world-input/hosted-ci.json"
-                },
-                {
-                  "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
                 }
               ]
             },
@@ -3518,10 +3514,6 @@
               "evidence": [
                 {
                   "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente naquele registro",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
-                },
-                {
-                  "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
                 }
               ]
@@ -3559,10 +3551,6 @@
                 {
                   "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-game/hosted-ci.json"
-                },
-                {
-                  "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
                 }
               ]
             },
@@ -3578,10 +3566,6 @@
                 {
                   "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-services/hosted-ci.json"
-                },
-                {
-                  "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
                 }
               ]
             },
