@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Runs the native suites too (native-cold-start and the jobs after it); see the note above native-cold-start.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -44,19 +46,29 @@ jobs:
       - run: npm run check:publication
       # Native setup is macOS arm64 only. This lane does not certify the
       # GDExtension, graphical rendering or other platform support.
+  # The native suites take over an hour of macOS runner time, so they run only when the workflow is
+  # dispatched: Actions -> Contracts -> Run workflow, or `gh workflow run contracts.yml --ref <branch>`.
+  # A pull request or a push of main skips the four native jobs and parity-comparison, which needs one of them.
+  #
+  # native-cold-start builds the native host from scratch and uploads the built workspace as `native-host`;
+  # test:cold and parity:godot then run on that cold build. When it ends, the three native-suites-* jobs
+  # restore `native-host` on a checkout of the same commit, check the host against its build receipt and split
+  # the suites between them, each keeping their original order, artifacts and if-no-files-found policies.
+  # A suite still runs alone on its runner, so no oracle depends on the split. The single job this replaces
+  # took 50-69 minutes; CONTRIBUTING.md#hosted-ci has the times of the split.
   native-cold-start:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-15
-    # Cold dependency builds and native/headed suites took about 46 minutes.
-    # Keep a bounded global budget without changing individual probe deadlines.
-    # The job runs every native suite one after another and took 50-56 minutes
-    # before the civ-lite consumer lane; 90 leaves headroom until it is split.
-    timeout-minutes: 90
+    # The cold dependency build takes about 5 minutes. Keep a bounded budget per job without changing
+    # individual probe deadlines.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
-      - name: Install pinned official Godot
+      - &install-godot
+        name: Install pinned official Godot
         run: |
           test "$(uname -m)" = arm64
           mkdir -p .deps/godot
@@ -84,6 +96,77 @@ jobs:
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk
       - run: npm run sdk:native:verify -- --sdk build/native-sdk
+      # Everything setup, the codegen compile and the SDK pack wrote outside git, except the Godot install that
+      # every job repeats. tar keeps the frameworks' symlinks, the file modes and the modification times the
+      # restored build tree is judged current by.
+      - name: Pack the built workspace for the suite jobs
+        run: tar -czf "$RUNNER_TEMP/native-host.tar.gz" --exclude .deps/godot --exclude .deps/godot.zip .deps .godot addons build node_modules
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-host
+          path: ${{ runner.temp }}/native-host.tar.gz
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+      - run: npm run test:cold
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-cold-start
+          path: |
+            build/cold-start.json
+            build/cold-*.log
+          if-no-files-found: warn
+      - run: npm run parity:godot
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: parity-godot
+          path: build/parity-godot.json
+          if-no-files-found: error
+      # No dependency/build cache is restored: this job checks a cold install.
+  # The examples, runtime, list, text, networking, image, modal and WebSocket suites, then the consumer lanes.
+  native-suites-runtime:
+    if: github.event_name == 'workflow_dispatch'
+    needs: native-cold-start
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - *install-godot
+      - &download-native-host
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: native-host
+          path: ${{ runner.temp }}/native-host
+      - &restore-native-host
+        name: Restore the native host and check it against its build receipt
+        run: |
+          # The checkout is newer than the restored build tree. Date the tracked files back so that make finds
+          # every object current, as in the job that compiled them: then the cmake --build of test:websocket and
+          # of the pointer suites rebuilds nothing, as it did when one job ran every suite.
+          git ls-files -z | xargs -0 touch -h -t 200001010000
+          tar -xzf "$RUNNER_TEMP/native-host/native-host.tar.gz"
+          # A configured CMake tree holds absolute paths and cannot move. GitHub's macOS runners check every job of
+          # this repository out at the same path; stop before any build if this one differs.
+          configured=$(sed -n 's/^CMAKE_HOME_DIRECTORY:INTERNAL=//p' .deps/build/CMakeCache.txt)
+          if [ "$configured" != "$(pwd -P)/native" ]; then
+            echo "::error::native-cold-start configured .deps/build for $configured, not for $(pwd -P)/native"
+            exit 1
+          fi
+          host() { shasum -a 256 addons/fabric_godot.dylib .deps/build/native-sdk-build.json; }
+          built=$(host)
+          .deps/python/bin/cmake --build .deps/build --target fabric_godot --parallel 4
+          if [ "$(host)" != "$built" ]; then
+            echo "::error::the restored build tree was not current: the host or its receipt changed"
+            exit 1
+          fi
+          # SDK_HOST_SOURCE_MISMATCH / SDK_HOST_BINARY_MISMATCH: the receipt names this checkout's native sources,
+          # the host and its frameworks.
+          node --input-type=module -e 'const {verifyAddonNativeInputs} = await import("./scripts/pack-addon.mjs"); await verifyAddonNativeInputs(); console.log("NATIVE_HOST_RECEIPT_PASSED")'
+          npm run sdk:native:verify -- --sdk build/native-sdk
       - run: npm run test:adapters:native -- --sdk build/native-sdk --out build/adapter-registry
       - run: npm run test:adapters:loader -- --sdk build/native-sdk --out build/adapter-loader
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -133,7 +216,6 @@ jobs:
       - name: Verify ScrollView motion core
         run: .deps/build/scroll_motion_test
       - run: npm run test:application
-      - run: npm run test:modules
       - run: npm run test:app-state
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -220,19 +302,6 @@ jobs:
             build/performance-comparison.json
             build/performance-current.log
             build/performance-probe-bundle.json
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:frontier-baseline
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-frontier-baseline
-          path: |
-            build/frontier-baseline-report.json
-            build/frontier-baseline-current-report.json
-            build/frontier-baseline-current-2-report.json
-            build/frontier-baseline-comparison.json
-            build/frontier-baseline-current.log
-            build/frontier-baseline-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:text-layout
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -321,54 +390,6 @@ jobs:
             build/os-contracts-current.log
             build/os-contracts-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:civ-lite-game
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-civ-lite-game
-          path: |
-            build/civ-lite-game-report.json
-            build/civ-lite-game-run-*-report.json
-            build/civ-lite-game-run-*.log
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:frontier-services
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-frontier-services
-          path: |
-            build/frontier-services-report.json
-            build/frontier-services-current-*-report.json
-            build/frontier-services-current-*.log
-            build/frontier-services-rule-*-report.json
-            build/frontier-services-rule-*.log
-            build/frontier-services-mutation.json
-            build/frontier-services-summary.json
-            build/frontier-services-probe-bundle.json
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:frontier-soak
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-frontier-soak
-          path: |
-            build/frontier-soak-report.json
-            build/frontier-soak-current-*-report.json
-            build/frontier-soak-current-*.log
-            build/frontier-soak-comparison.json
-            build/frontier-soak-probe-bundle.json
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:frontier-turn
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-frontier-turn
-          path: |
-            build/frontier-turn-current-report.json
-            build/frontier-turn-current.log
-            build/frontier-turn-comparison.json
-            build/frontier-turn/*.log
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:websocket
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -449,6 +470,246 @@ jobs:
             build/modal-discriminators-probe.js
             build/modal-discriminators-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:consumer
+      - run: npm run test:consumer:libraries
+      - run: npm run test:consumer:civ-lite
+      - run: npm run test:civ-lite-ui
+      - name: Original Codegen adapter in a provisioned independent consumer
+        run: |
+          ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
+          "$ADAPTER_TOOL_NODE" scripts/adapter-runtime-check.mjs --sdk build/native-sdk --out build/adapter-runtime
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-adapter-runtime
+          path: |
+            build/adapter-runtime/report.json
+            build/adapter-runtime/headless.json
+            build/adapter-runtime/reentrant-stop.json
+            build/adapter-runtime/reentrant-raf.json
+            build/adapter-runtime/reentrant-timer.json
+            build/adapter-runtime/root-*.json
+            build/adapter-runtime/external-appearance.json
+            build/adapter-runtime/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-consumer
+          path: |
+            build/consumer/*.json
+            build/consumer/*.log
+            build/consumer/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-libraries-consumer
+          path: |
+            build/consumer-libraries/*.json
+            build/consumer-libraries/*.log
+            build/consumer-libraries/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-civ-lite-consumer
+          path: |
+            build/consumer-civ-lite/*.json
+            build/consumer-civ-lite/*.log
+            build/consumer-civ-lite/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: civ-lite-ui
+          path: |
+            build/civ-lite-ui/*.json
+            build/civ-lite-ui/*.log
+            build/civ-lite-ui-control/*.json
+            build/civ-lite-ui-control/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - name: Derive the locked official macOS arm64 export template
+        run: |
+          EXPORT_TEMPLATES_URL=$(node -p "require('./dependencies.json').godot.export_templates.url")
+          EXPORT_TEMPLATES_BYTES=$(node -p "require('./dependencies.json').godot.export_templates.bytes")
+          curl --fail --location --retry 2 --max-time 180 --max-filesize "$EXPORT_TEMPLATES_BYTES" "$EXPORT_TEMPLATES_URL" -o .deps/godot-export-templates.tpz
+          python3 scripts/macos-template.py --archive .deps/godot-export-templates.tpz --out .deps/macos-arm64-template.zip > build/macos-template-derivation.json
+      - name: Export, sign and execute the relocated macOS consumer with rejection controls
+        env:
+          MACOS_EXPORT_TEMPLATE: ${{ github.workspace }}/.deps/macos-arm64-template.zip
+        run: npm run test:export:macos
+      - name: Preserve the verified macOS application bundle
+        shell: bash
+        run: |
+          shopt -s nullglob
+          apps=(build/macos-export-native-positive-*/Verified.app)
+          if [[ ${#apps[@]} -ne 1 ]]; then
+            printf 'Expected exactly one Verified.app, found %s\n' "${#apps[@]}" >&2
+            exit 1
+          fi
+          app="${apps[0]}"
+          if [[ ! -d "$app" || -L "$app" || ! -f "$app/Contents/Info.plist" ]]; then
+            printf 'Verified.app is missing or invalid: %s\n' "$app" >&2
+            exit 1
+          fi
+          parent="${app%/*}"
+          name="${app##*/}"
+          archive="$parent/$name.tar.gz"
+          if [[ -e "$archive" || -L "$archive" ]]; then
+            printf 'Refusing to overwrite archive: %s\n' "$archive" >&2
+            exit 1
+          fi
+          tar -czf "$archive" -C "$parent" "$name"
+          tar -tzf "$archive" | grep -Fx "$name/Contents/Info.plist" >/dev/null
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-macos-export
+          path: |
+            build/macos-template-derivation.json
+            build/macos-export-*/receipt.json
+            build/macos-export-*/sdk-manifest.json
+            build/macos-export-*/build-report.json
+            build/macos-export-*/app.js
+            build/macos-export-*/*.log
+            build/macos-export-*/runtime-*.json
+            build/macos-export-*/*.png
+            build/macos-export-native-*/report.json
+            build/macos-export-native-positive-*/Verified.app.tar.gz
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-shared-application
+          path: |
+            build/examples/headless/shared.json
+            build/shared-application.log
+            build/shared-application-report.json
+            build/shared-clock-report.json
+            build/shared-clock.log
+            build/shared-failures-report.json
+            build/shared-failures.log
+            build/legacy-application-report.json
+            build/legacy-application.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-runtime
+          path: |
+            build/examples/headless/runtime.json
+            build/runtime-errors-report.json
+            build/runtime-errors.log
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-examples-headless
+          path: build/examples/headless/*.json
+          if-no-files-found: error
+  # The Frontier suites: baseline, game, services, soak and turn.
+  native-suites-frontier:
+    if: github.event_name == 'workflow_dispatch'
+    needs: native-cold-start
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - *install-godot
+      - *download-native-host
+      - *restore-native-host
+      # In the single job, test:examples imported the project before every suite after it; it runs in
+      # native-suites-runtime now. Suites that mount bold or styled text load the imported fonts
+      # (native/paragraph_layout.cpp), test:modules among them, so import the project first, as scripts/check.mjs does.
+      - &import-project
+        name: Import the project as test:examples does
+        run: |
+          python3 scripts/extension_startup.py
+          status=0
+          "$GODOT_BIN" --path . --headless --editor --import > build/editor.log 2>&1 || status=$?
+          cat build/editor.log
+          if [ "$status" -ne 0 ] || grep -Eq 'SCRIPT ERROR|^ERROR:|Program crashed|FABRIC_ERROR' build/editor.log; then
+            exit 1
+          fi
+      - run: npm run test:frontier-baseline
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-baseline
+          path: |
+            build/frontier-baseline-report.json
+            build/frontier-baseline-current-report.json
+            build/frontier-baseline-current-2-report.json
+            build/frontier-baseline-comparison.json
+            build/frontier-baseline-current.log
+            build/frontier-baseline-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:civ-lite-game
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-civ-lite-game
+          path: |
+            build/civ-lite-game-report.json
+            build/civ-lite-game-run-*-report.json
+            build/civ-lite-game-run-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frontier-services
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-services
+          path: |
+            build/frontier-services-report.json
+            build/frontier-services-current-*-report.json
+            build/frontier-services-current-*.log
+            build/frontier-services-rule-*-report.json
+            build/frontier-services-rule-*.log
+            build/frontier-services-mutation.json
+            build/frontier-services-summary.json
+            build/frontier-services-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frontier-soak
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-soak
+          path: |
+            build/frontier-soak-report.json
+            build/frontier-soak-current-*-report.json
+            build/frontier-soak-current-*.log
+            build/frontier-soak-comparison.json
+            build/frontier-soak-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frontier-turn
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-turn
+          path: |
+            build/frontier-turn-current-report.json
+            build/frontier-turn-current.log
+            build/frontier-turn-comparison.json
+            build/frontier-turn/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+  # The module, focus, pointer, event, responder and accessibility suites.
+  native-suites-input:
+    if: github.event_name == 'workflow_dispatch'
+    needs: native-cold-start
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - *install-godot
+      - *download-native-host
+      - *restore-native-host
+      - *import-project
+      - run: npm run test:modules
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -802,158 +1063,6 @@ jobs:
             build/services-lifetime-report.json
             build/services-lifetime.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - run: npm run test:consumer
-      - run: npm run test:consumer:libraries
-      - run: npm run test:consumer:civ-lite
-      - run: npm run test:civ-lite-ui
-      - name: Derive the locked official macOS arm64 export template
-        run: |
-          EXPORT_TEMPLATES_URL=$(node -p "require('./dependencies.json').godot.export_templates.url")
-          EXPORT_TEMPLATES_BYTES=$(node -p "require('./dependencies.json').godot.export_templates.bytes")
-          curl --fail --location --retry 2 --max-time 180 --max-filesize "$EXPORT_TEMPLATES_BYTES" "$EXPORT_TEMPLATES_URL" -o .deps/godot-export-templates.tpz
-          python3 scripts/macos-template.py --archive .deps/godot-export-templates.tpz --out .deps/macos-arm64-template.zip > build/macos-template-derivation.json
-      - name: Export, sign and execute the relocated macOS consumer with rejection controls
-        env:
-          MACOS_EXPORT_TEMPLATE: ${{ github.workspace }}/.deps/macos-arm64-template.zip
-        run: npm run test:export:macos
-      - name: Preserve the verified macOS application bundle
-        shell: bash
-        run: |
-          shopt -s nullglob
-          apps=(build/macos-export-native-positive-*/Verified.app)
-          if [[ ${#apps[@]} -ne 1 ]]; then
-            printf 'Expected exactly one Verified.app, found %s\n' "${#apps[@]}" >&2
-            exit 1
-          fi
-          app="${apps[0]}"
-          if [[ ! -d "$app" || -L "$app" || ! -f "$app/Contents/Info.plist" ]]; then
-            printf 'Verified.app is missing or invalid: %s\n' "$app" >&2
-            exit 1
-          fi
-          parent="${app%/*}"
-          name="${app##*/}"
-          archive="$parent/$name.tar.gz"
-          if [[ -e "$archive" || -L "$archive" ]]; then
-            printf 'Refusing to overwrite archive: %s\n' "$archive" >&2
-            exit 1
-          fi
-          tar -czf "$archive" -C "$parent" "$name"
-          tar -tzf "$archive" | grep -Fx "$name/Contents/Info.plist" >/dev/null
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-macos-export
-          path: |
-            build/macos-template-derivation.json
-            build/macos-export-*/receipt.json
-            build/macos-export-*/sdk-manifest.json
-            build/macos-export-*/build-report.json
-            build/macos-export-*/app.js
-            build/macos-export-*/*.log
-            build/macos-export-*/runtime-*.json
-            build/macos-export-*/*.png
-            build/macos-export-native-*/report.json
-            build/macos-export-native-positive-*/Verified.app.tar.gz
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - name: Original Codegen adapter in a provisioned independent consumer
-        run: |
-          ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
-          "$ADAPTER_TOOL_NODE" scripts/adapter-runtime-check.mjs --sdk build/native-sdk --out build/adapter-runtime
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-adapter-runtime
-          path: |
-            build/adapter-runtime/report.json
-            build/adapter-runtime/headless.json
-            build/adapter-runtime/reentrant-stop.json
-            build/adapter-runtime/reentrant-raf.json
-            build/adapter-runtime/reentrant-timer.json
-            build/adapter-runtime/root-*.json
-            build/adapter-runtime/external-appearance.json
-            build/adapter-runtime/logs/*.log
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: independent-consumer
-          path: |
-            build/consumer/*.json
-            build/consumer/*.log
-            build/consumer/*-bundle.js
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: independent-libraries-consumer
-          path: |
-            build/consumer-libraries/*.json
-            build/consumer-libraries/*.log
-            build/consumer-libraries/*-bundle.js
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: independent-civ-lite-consumer
-          path: |
-            build/consumer-civ-lite/*.json
-            build/consumer-civ-lite/*.log
-            build/consumer-civ-lite/*-bundle.js
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: civ-lite-ui
-          path: |
-            build/civ-lite-ui/*.json
-            build/civ-lite-ui/*.log
-            build/civ-lite-ui-control/*.json
-            build/civ-lite-ui-control/*.log
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-shared-application
-          path: |
-            build/examples/headless/shared.json
-            build/shared-application.log
-            build/shared-application-report.json
-            build/shared-clock-report.json
-            build/shared-clock.log
-            build/shared-failures-report.json
-            build/shared-failures.log
-            build/legacy-application-report.json
-            build/legacy-application.log
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: native-runtime
-          path: |
-            build/examples/headless/runtime.json
-            build/runtime-errors-report.json
-            build/runtime-errors.log
-          if-no-files-found: error
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: native-examples-headless
-          path: build/examples/headless/*.json
-          if-no-files-found: error
-      - run: npm run test:cold
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-cold-start
-          path: |
-            build/cold-start.json
-            build/cold-*.log
-          if-no-files-found: warn
-      - run: npm run parity:godot
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: parity-godot
-          path: build/parity-godot.json
-          if-no-files-found: error
-      # No dependency/build cache is restored: this job checks a cold install.
   reference-ios:
     runs-on: macos-26
     timeout-minutes: 30
