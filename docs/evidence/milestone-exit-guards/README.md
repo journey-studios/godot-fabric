@@ -23,6 +23,8 @@ não muda nenhum checkpoint, GF, peso ou denominador da 1.0. A segunda metade do
 > `--audit --to bf00341` com o script corrigido reproduz o `audit.json` byte a byte (SHA-256 abaixo). O teste passou de 35 para 36 checks (o caso do `id` repetido, que falha no `isKeyed` antigo), e os números da tabela
 > abaixo são os de `bf00341`.
 
+> **Depois do registro: execução manual.** O passo da guarda ganhou o ramo `workflow_dispatch`: num despacho manual ele busca o histórico e a `main` e roda `--check` sem `--base`, então a base é o merge-base de `HEAD` com `origin/main`, e não a ponta da main (salvo quando os dois não têm ancestral comum: aí a base é a ponta de `origin/main`). Reproduzido em clones rasos de profundidade 1 de um remoto de teste (a branch acrescenta uma entrada do 0.5, e a main, que avançou, mudou uma nota do 1.0): o despacho sai com `MILESTONE_GUARDS_CHECK_PASSED: against 333181d4a068 (the merge-base of HEAD and origin/main); X9 clean, X10 clean`; a mesma árvore contra a ponta de `origin/main` falha em `tasks[GF-01].note`; e um evento sem base falha com mensagem. Nenhum recibo, SHA ou número desta página mudou, e isto não é uma execução da CI hospedada.
+
 Todo link de código abaixo está fixado em `bf00341`.
 
 | Lane executada | Resultado | Observação |
@@ -142,6 +144,6 @@ O [script](https://github.com/journey-studios/godot-fabric/blob/bf00341d6c50eddd
 - **Só acréscimos contam para os nomes.** Um `native/pointer_adapter.cpp` modificado não é fatia nova; o que o V05-02 precisa é permitido pelo líder, e a guarda não opina sobre quanto de um arquivo existente pode mudar.
 - **O X9 precisa da entrada.** Um PR que muda a 1.0 e não acrescenta entrada `milestone-0-5-*` é uma entrega de GF e não é julgado. Uma mudança do 0.5 registrada só em `milestones`, sem entrada em `activity`, também não; o
   registro é por `activity`.
-- **Sem base não há veredito.** Sem `--base`, a base é o merge-base de `HEAD` com `origin/main` (uma branch atrasada não é culpada pelo que a main acrescentou) e, sem merge-base, `origin/main`; se nenhuma resolve, o
-  comando falha com uma mensagem. Na CI a base é sempre explícita.
+- **Sem base não há veredito.** Sem `--base`, a base é o merge-base de `HEAD` com `origin/main` (uma branch atrasada não é culpada pelo que a main acrescentou) quando os dois têm ancestral comum; se não têm, a base é a ponta de `origin/main`, e a comparação pode incluir o que a main mudou. Se nenhuma resolve, o
+  comando falha com uma mensagem. Na CI, a base é explícita no `pull_request` e no `push` (o primeiro pai de `HEAD`); no `workflow_dispatch` é o merge-base de `HEAD` com `origin/main`, depois de buscar o histórico e a main, com a mesma ressalva: sem ancestral comum, cai na ponta de `origin/main`.
 - **O `--check` lê o working tree**, com a lista de arquivos do índice do git mais os não rastreados (os ignorados não contam); o resultado é o mesmo antes e depois do commit.
