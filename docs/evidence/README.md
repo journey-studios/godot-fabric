@@ -948,6 +948,23 @@ that depend on it are **pending**; the rejected attempts are kept as raw data, f
 only an unpinned reference. The clicks are synthetic, the machine was shared with other agents (load average recorded), there are no
 presentation timestamps (missed frames with the vsync stay open) and hosted CI is **pending**.
 
+The [Frontier soak record](frontier-soak/README.md), pinned at `dd67671`, records the `soak` criterion of V05-06 (package P6) and leaves `turno` and
+`congelado` open. A scripted player plays the Frontier game for 100 turns, through the typed services and a React Native HUD that opens and closes a
+100-node panel every turn, in three headless Godot processes (about 67 seconds each): all 34 checks of each hold, and the three games end in the same
+final hash (`a35c55f2…`) with the same trail of 100 turn hashes, whichever way the panel is closed. At every reading the SceneTree holds the host's native
+views plus a constant, with no orphan, and the views follow the HUD's state exactly (16 at rest with nothing selected, 18, 20, 22 and 23 in the other contexts,
++100 when the panel is kept hidden); the live heap at rest is flat to the byte (2,117,320 bytes, or 2,443,832 with the hidden panel) within GF-30's 2,048
+bytes by the baseline's median-of-halves rule; the resident memory is judged loosely (48 MiB between the medians of the halves, a coarse guard over a
+within-run band of 34 to 137 MB); no error goes unhandled, with a control that shows the tracker can see one. A game paused at turn 50 holds its accepted
+job at its first phase for 60 frames while a click still reaches the HUD's handler, because the HUD's layer is `PROCESS_MODE_ALWAYS`. The written decision
+between mounting and hiding a 100-node panel, from the numbers: hiding is not cheaper in CPU as a whole (the sum is inside the run-to-run noise), it has a
+shorter tail on the open (p95 11.3 against 18.8 ms) and a slower close, and it keeps 100 native nodes and 326,512 bytes of heap, so the recommendation for
+the V05-05 HUD (not applied) is to unmount by default. Four retained sabotages (a connection never removed, a player that decides by chance, a HUD layer
+that pauses with the game, a "hidden" panel that is `display: none`) are rejected by the probe and by the oracle, each for the reason it was written for,
+and the oracle rejects 29 changes of a recorded report; the previous-host control does not apply, since no C++ changed. The 101 node updates of a hide
+toggle are unexplained, the clicks are synthetic, the machine was shared with other agents (load average recorded, timings vary by tens of percent),
+the `PROCESS_MODE_ALWAYS` recommendation for the V05-05 scene is not applied, and hosted CI is **pending**.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

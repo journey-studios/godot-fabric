@@ -3,7 +3,8 @@
 Status: implemented and executed locally on macOS arm64 (Apple M3 Pro, the headless display server) against pinned RN 0.87.1, Hermes 250829098.0.17 and official Godot 4.7.2, for the
 `soak` criterion of V05-06 in the 0.5 Frontier milestone. It plays the Frontier game for 100 turns in three Godot processes through the typed services, and decides between unmounting
 a heavy panel and keeping it hidden, from the numbers. The `turno` and `congelado` criteria of V05-06 are open (see [What is left](#what-is-left)), and so are hosted CI and the Pages
-publication. The slice changes no C++ and no HUD of the game: the decision is a recommendation for V05-05, written here and not applied.
+publication. The slice changes no C++ and no HUD of the game: the decision is a recommendation for V05-05, written here and not applied. The [evidence record](../evidence/frontier-soak/README.md) pins the execution, the numbers
+and the sabotages at commit `dd67671`.
 
 ## The question
 
@@ -92,21 +93,21 @@ The pinned run, in the three executions (the strategy the panel is closed with, 
 
 | Execution | Strategy | Seconds | Final hash | Heap, first / last half (bytes) | Resident memory, first / last half (KB) |
 | ---: | --- | ---: | --- | ---: | ---: |
-| 1 | unmount | 67.2 | `a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598` | 2,117,320 / 2,117,320 | 146,272 / 156,400 |
-| 2 | hide | 66.7 | the same | 2,443,832 / 2,443,832 | 173,024 / 171,600 |
-| 3 | unmount | 67.5 | the same | 2,117,320 / 2,117,320 | 152,208 / 153,456 |
+| 1 | unmount | 67.0 | `a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598` | 2,117,320 / 2,117,320 | 204,384 / 107,856 |
+| 2 | hide | 66.6 | the same | 2,443,832 / 2,443,832 | 186,160 / 170,400 |
+| 3 | unmount | 66.9 | the same | 2,117,320 / 2,117,320 | 194,384 / 156,864 |
 
 The trail hash (the SHA-256 of the 100 turn hashes, one per line) is `fe9d4f367b796b2743118aa37755c92541e88d5a7155ed0ac0d24eefd0b16e0f` in all three, and so is the hash of every turn. The game ends at turn 101 with the one city
 (size 3, the three buildings), six units of the player and the scripted faction's Warrior, 333 events logged.
 
-**The resident memory** moves by tens of MB and falls as well as rises (GF-30 saw 90 to 188 MB across its soaks), so it cannot be an exact limit. Within one execution here the resident memory of the steady turns spans a band
-of 43 to 110 MB (142 to 185, 162 to 238 and 131 to 240 MB in the three executions of the pinned run), and the medians of the two halves differ by **+10.1**, -1.4 and +1.2 MB (in the run before, -0.6, +5.4 and -2.4; and in a
-development run, where the OS compressed the process as it went, the resident memory fell from about 240 to 156 MB). The rule asks of the last half only that it be at most **48 MiB** above the first; it judges a trend and not a level,
-and it is a coarse guard: **the heap rule is the leak detector**, and the resident memory is there to catch what the heap cannot see (native memory that grows while the JavaScript heap does not). The limit was first 16 MiB; the
-largest half-to-half rise seen locally was +10.1 MB, which a hosted runner's noise could pass, and a check must not depend on a runner's noise, so it was raised to 48 MiB. Within a run the resident memory spans 43 to 110 MB (and 66 to 137 MB in a third run, made after the limit was raised, where the medians of the halves differed by -84.3, +2.3 and -12.7 MB on a busier machine); a sustained leak
-of about 1 MiB a turn over the 49 turns that lie between the two medians (about 49 MiB) still fails; a finer leak does not, and belongs to the heap rule (which judges the JavaScript heap, not native memory, so a native leak under
-1 MiB a turn is not seen by either). The measure includes the probe's own bookkeeping (Godot's static memory grew from 27.2 to 36.8 MB in the run, the readings the probe keeps, recorded and not judged). A rise of exactly the limit passes,
-one KB more fails, a rise of 30 MiB passes and a synthetic ramp of 1 MiB a turn fails, all tested on synthetic series.
+**The resident memory** moves by tens of MB and falls as well as rises (GF-30 saw 90 to 188 MB across its soaks), so it cannot be an exact limit. Within one execution of the pinned run the resident memory of the steady turns spans a band
+of 136, 34 and 89 MB (104 to 240, 162 to 195 and 152 to 241 MB), and the medians of the two halves differ by **-96.5, -15.8 and -37.5 MB**: it fell in all three, as it did in the development runs where the OS compressed the process as it went.
+Over the four runs of this code that were made, with 12 executions in all, the half-to-half difference went from -96.5 to **+10.1 MB** (the other runs: +10.1, -1.4 and +1.2; -0.6, +5.4 and -2.4; -84.3, +2.3 and -12.7), and the band within a run from 34 to 137 MB. The
+rule asks of the last half only that it be at most **48 MiB** above the first; it judges a trend and not a level, and it is a coarse guard: **the heap rule is the leak detector**, and the resident memory is there to catch what the
+heap cannot see (native memory that grows while the JavaScript heap does not). The limit was first 16 MiB; the largest rise seen locally was +10.1 MB, which a hosted runner's noise could pass, and a check must not depend on a
+runner's noise, so it was raised to 48 MiB. A sustained leak of about 1 MiB a turn over the 49 turns that lie between the two medians (about 49 MiB) still fails; a finer leak does not, and belongs to the heap rule (which judges the JavaScript
+heap, not native memory, so a native leak under 1 MiB a turn is not seen by either). The measure includes the probe's own bookkeeping (Godot's static memory grew from 27.2 to 36.8 MB in the run, the readings the probe keeps, recorded and
+not judged). A rise of exactly the limit passes, one KB more fails, a rise of 30 MiB passes and a synthetic ramp of 1 MiB a turn fails, all tested on synthetic series.
 
 **The heap** was flat to the byte once the game stopped changing: 2,117,320 bytes at rest from turn 14 to turn 100 in the unmounting executions and 2,443,832 in the hiding one (growth 0 between the medians of the halves).
 Two things were learned to get there. First, the heap at rest has a **step the first time the marker is clicked** (1,744 bytes with unmounting and 2,360 with hiding, in development runs of a first version that did not warm it
@@ -136,8 +137,15 @@ for V05-05, who owns that scene; this slice does not touch it.
 The same 100-node panel opens and closes once a turn, by a real click on its button, in the city context, in two ways: **A (unmount)** renders it only while it is open; **B (hide)** keeps it mounted and, closed, gives its root
 `opacity: 0` and `pointerEvents="none"`. (`display: "none"` mounts no node on this host, so it would be A under another name; the `leaky-hide` sabotage is exactly that.) Three executions, A, B, A; every number
 is the median over the 98 steady turns of an execution, and over the two of A. The CPU is the time of the click's injection and flush, where the host handles the pointer event, React renders and commits and the host
-mounts (as in the baseline), on an unpaced headless loop: **the CPU cost of the work and not a frame time**, on a Mac with other agents' suites running. The durations move by tens of percent from one run to the next (the run before this one,
-of the same code, measured A at 9.4 ms for the open and 2.7 for the close and B at 7.0 and 7.3; the table is the pinned run), so only the differences that held in both are conclusions.
+mounts (as in the baseline), on an unpaced headless loop: **the CPU cost of the work and not a frame time**, on a Mac with other agents' suites running. The durations move by tens of percent from one run to the next, so the table is the
+pinned run ([evidence](../evidence/frontier-soak/README.md)) and only the differences that held in every run are conclusions. The four runs of this code that were made:
+
+| Run | A open, p50 / p95 | A close, p50 | B open, p50 / p95 | B close, p50 |
+| --- | ---: | ---: | ---: | ---: |
+| earlier 1 | 9.4 / 18.1 ms | 2.7 ms | 7.0 / 10.2 ms | 7.3 ms |
+| earlier 2 | 12.4 / 20.2 ms | 3.8 ms | 7.9 / 10.6 ms | 7.4 ms |
+| earlier 3 | 16.7 / 20.7 ms | 5.1 ms | 9.2 / 10.8 ms | 8.8 ms |
+| **pinned** | **14.2 / 18.8 ms** | **5.2 ms** | **9.0 / 11.3 ms** | **8.9 ms** |
 
 | | A: unmount | B: hide |
 | --- | ---: | ---: |
@@ -145,11 +153,11 @@ of the same code, measured A at 9.4 ms for the open and 2.7 for the close and B 
 | Native views, panel open | 118 | 118 |
 | Open: host nodes created / deleted / updated | 100 / 0 / 1 | 0 / 0 / 101 |
 | Close: host nodes created / deleted / updated | 0 / 100 / 1 | 0 / 0 / 101 |
-| Open, CPU of the click, p50 / p95 / max | 12.4 / 20.2 / 100.6 ms | 7.9 / 10.6 / 11.6 ms |
-| Close, CPU of the click, p50 / p95 / max | 3.8 / 6.0 / 9.6 ms | 7.4 / 10.8 / 15.3 ms |
-| Open and close, p50 added | 16.2 ms | 15.2 ms |
+| Open, CPU of the click, p50 / p95 / max | 14.2 / 18.8 / 27.4 ms | 9.0 / 11.3 / 12.1 ms |
+| Close, CPU of the click, p50 / p95 / max | 5.2 / 6.4 / 7.3 ms | 8.9 / 11.5 / 12.0 ms |
+| Open and close, p50 added | 19.4 ms | 17.9 ms |
 | Live heap at rest, panel closed | 2,117,320 bytes | 2,443,832 bytes (**+326,512**) |
-| Resident memory at rest, median of the steady turns (a noise band of 43 to 110 MB in a run) | 156 and 153 MB | 172 MB |
+| Resident memory at rest, median of the steady turns (a noise band of 34 to 137 MB in a run) | 156 and 157 MB | 172 MB |
 | The world hears a click where the closed panel stands | 100 of 100 turns | 100 of 100 turns |
 | The world hears a click where the open panel stands | 0 of 100 | 0 of 100 |
 
@@ -159,15 +167,15 @@ A closed panel does not, in either strategy: with `pointerEvents="none"` on its 
 
 **What the numbers say.**
 
-- Hiding is **not cheaper in CPU, taken as a whole**. It saves 4.5 ms at the median on the open (the mount of 100 nodes is gone; 2.4 ms in the run before) and pays 3.6 ms more on the close (4.6 before); opening and closing once costs
-  15.2 ms hidden against 16.2 ms unmounted here, 14.3 against 12.1 before and 18.0 against 21.8 in a third run (open 16.7 / 20.7 ms and close 5.1 / 6.5 for A; open 9.2 / 10.8 and close 8.8 / 10.3 for B, on a busier machine): the sum is inside the
-  run-to-run noise, and the sign of the difference changed. The host updates all 101 nodes of the panel each time it is toggled (the counters
-  above; the cause is not investigated here), so the cost of a toggle follows the panel's size, as the mount's does.
-- What hiding buys, in all three runs, is a **shorter tail on the open**, the click that the player waits for: the p95 of opening is 10.6 ms against 20.2 (10.2 against 18.1 before and 10.8 against 20.7 in the third). Mounting 100 nodes has a tail (the maximum was 100.6 ms in A, a
-  single outlier on a loaded machine, and 11.6 in B) and updating a mounted panel has much less of one. The close is the other way round, in all three runs: 7.4 ms against 3.8 at the median (8.8 against 5.1 in the third).
+- Hiding is **not cheaper in CPU, taken as a whole**. It saves 5.2 ms at the median on the open (the mount of 100 nodes is gone) and pays 3.7 ms more on the close; opening and closing once costs 17.9 ms hidden against 19.4 ms unmounted
+  in the pinned run, and 14.3 against 12.1, 15.2 against 16.2 and 18.0 against 21.8 in the earlier ones: the sum is inside the run-to-run noise, and the sign of the difference changed. The host updates all 101 nodes of the panel each time
+  it is toggled (the counters above; the cause is not investigated here), so the cost of a toggle follows the panel's size, as the mount's does.
+- What hiding buys, in all four runs, is a **shorter tail on the open**, the click that the player waits for: the p95 of opening is 11.3 ms against 18.8 in the pinned run (10.2 against 18.1, 10.6 against 20.2 and 10.8 against 20.7 before).
+  Mounting 100 nodes has a tail (the maximum was 27.4 ms in A and 12.1 in B in the pinned run) and updating a mounted panel has much less of one. The close is the other way round, in all four runs: 8.9 ms against 5.2 at the median in the
+  pinned run.
 - What it costs is **memory that never goes back**: 100 native nodes, 326,512 bytes of live heap (the panel's fibers; the JavaScript tree stays) and the same again for every panel kept hidden, for as long as the screen lives.
-- The soak's open of this panel (p50 12.4 ms, p95 20.2; 9.4 and 18.1 in the run before) is longer in the tail, in both runs, than the baseline's for the same 100 nodes (p50 9.2, p95 12.4), with a bigger HUD around it and on a loaded Mac: the
-  baseline's proposed bound for it (16 ms at p95) would not hold here. That is an observation for the freeze, not a result of this slice.
+- The soak's open of this panel (p50 14.2 ms, p95 18.8 in the pinned run) is longer than the baseline's for the same 100 nodes (p50 9.2, p95 12.4) at the median in three of the four runs and in the tail in all four, with a bigger HUD around it and on a
+  loaded Mac: the baseline's proposed bound for it (16 ms at p95) would not hold here. That is an observation for the freeze, not a result of this slice.
 
 **Decision (a recommendation for the HUD of V05-05, which this slice does not change): unmount by default and hide a panel only when all three hold.**
 
@@ -204,7 +212,7 @@ reading, a rise of exactly the 2,048-byte limit, a resident memory that falls by
 
 - **`turno`** (V05-06): the latency of a click to its panel, the frame time in a turn with the sliced AI, and the heap, resident memory and native nodes per transition **on the game's consumer** are not measured here. This slice
   runs the turn's job and a panel's click, not the playable HUD.
-- **`congelado`** (V05-06): the freeze of the thresholds. The soak records but does not propose a bound; the open of the 100-node panel (p95 20.2 ms in the pinned run, 18.1 in the one before) is an input to it.
+- **`congelado`** (V05-06): the freeze of the thresholds. The soak records but does not propose a bound; the open of the 100-node panel (p95 18.8 ms in the pinned run, 18.1 to 20.7 in the three before) is an input to it.
 - V05-05's HUD takes the decision above and the finding about the process mode of its layer; this slice changes neither `consumers/civ-lite/ui/` nor its scene.
 
 ## Limitations and open
@@ -219,7 +227,7 @@ reading, a rise of exactly the 2,048-byte limit, a resident memory that falls by
   thrown where the host cannot see it. The control proves the tracker can see a rejection; it does not prove there is no other kind of failure.
 - Why the host updates all 101 nodes of a hidden panel when its root's `opacity` and `pointerEvents` change, and whether a cheaper way to hide one exists (one prop at a time, another structure), is open: the soak measured the
   strategy it was given (both props, which the map needs) and not its alternatives, and a cheaper hide would move the decision above.
-- The resident-memory rule is a coarse trend (48 MiB over a band of 43 to 110 MB) and blind to a slow leak, native included, under about 1 MiB a turn; it is what a hosted runner's noise allows, not a claim that the process does not grow.
+- The resident-memory rule is a coarse trend (48 MiB over a band of 34 to 137 MB) and blind to a slow leak, native included, under about 1 MiB a turn; it is what a hosted runner's noise allows, not a claim that the process does not grow.
 - Hosted CI is pending: the suite is in the native job of `contracts.yml` and takes about 3.5 minutes locally (about 67 seconds an execution).
 - The compatibility documents (`docs/compatibility/react-native-0.87.1.json`, `BASELINE.md`), `docs/API.md`, `docs/NATIVE_MODULES.md` and `docs/PARITY.md` do not apply: the slice adds no RN name, public API or native module.
 - The previous-host control does not apply: nothing in C++ changed. The four retained sabotages are the control.

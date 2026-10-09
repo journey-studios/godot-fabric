@@ -1,0 +1,1153 @@
+{
+  "format": "godot-fabric.frontier-soak-execution/v1",
+  "executedAt": "2026-10-09",
+  "implementationCommit": "dd6767182bbf02d0c0de579fadf632bdeda7f8e1",
+  "executedTreeSha": "5d14a1faeb22a24e8bac3b53a252315e12e4d089",
+  "baseCommit": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+  "sourceState": "every tracked source equal to the implementation commit's when each command below ran (git status clean); the evidence files and the documents that point at them were in the working tree, uncommitted, and are not inputs of any command",
+  "slice": "V05-06 soak: 100 turns of the Frontier game in three Godot processes through the typed services, a pause that keeps the HUD alive, and the decision between unmounting and hiding a heavy panel",
+  "criterion": "soak: the final hash and the trail of 100 turn hashes are identical in three executions; native nodes and orphans are exact by context; the heap at rest is within the GF-30 limit by the median of the halves and the resident memory within 48 MiB by the same rule; 0 unhandled errors; a paused game keeps the HUD alive; the choice between mounting and hiding a panel is written from the numbers",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64"
+    },
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "hermes": "250829098.0.17",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "mode": "headless (the headless display server, opengl3 named)",
+    "displayServer": "headless",
+    "renderingDriver": "opengl3",
+    "processor": "Apple M3 Pro"
+  },
+  "loadAverage": [
+    {
+      "command": "npm run test:frontier-soak",
+      "before": "{ 3.58 5.74 7.85 }",
+      "after": "{ 4.58 5.39 7.26 }",
+      "seconds": 204.3,
+      "note": "three executions of 100 turns, one after the other (67.0, 66.6 and 66.9 seconds), then the oracle and the negatives"
+    },
+    {
+      "command": "node scripts/frontier-soak-sabotage.mjs",
+      "before": "{ 5.33 5.53 7.27 }",
+      "after": "{ 2.04 3.25 5.23 }",
+      "seconds": 586.1,
+      "note": "its last step is a run of the genuine source (66.7, 66.3 and 67.6 seconds), which passed"
+    }
+  ],
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:frontier-soak step and the native-frontier-soak artifact of .github/workflows/contracts.yml have not run on hosted CI; this is local evidence on macOS arm64."
+  },
+  "previousHost": {
+    "status": "not applicable",
+    "reason": "the slice changes no C++: there is no host to compare it with; the four retained sabotages are the control"
+  },
+  "hosts": {
+    "nativeHostSha256": "c5475bffc38b27fd2a50fc549f8444bba9b9377587cbdb475e4be38a7ea81407",
+    "note": "the host of main as built by npm run setup in this worktree; the slice does not change it"
+  },
+  "commands": {
+    "order": [
+      "npm run test:frontier-soak",
+      "node scripts/frontier-soak-sabotage.mjs"
+    ],
+    "soak": "npm run test:frontier-soak (node --test --test-concurrency=1 tests/frontier-soak-native.test.mjs): the probe in one Godot process per execution (--strategy=unmount, hide, unmount), the oracle on each raw report and on the three together, and the oracle's report-level negatives",
+    "sabotage": "node scripts/frontier-soak-sabotage.mjs: four variants (five processes), the sources restored byte for byte, and a last run of the genuine source"
+  },
+  "soak": {
+    "suite": "1/1 subtests passed",
+    "executions": [
+      {
+        "number": 1,
+        "strategy": "unmount",
+        "seconds": 67,
+        "checks": 34,
+        "allCurrentAssertionsPassed": true,
+        "finalHash": "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598"
+      },
+      {
+        "number": 2,
+        "strategy": "hide",
+        "seconds": 66.6,
+        "checks": 34,
+        "allCurrentAssertionsPassed": true,
+        "finalHash": "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598"
+      },
+      {
+        "number": 3,
+        "strategy": "unmount",
+        "seconds": 66.9,
+        "checks": 34,
+        "allCurrentAssertionsPassed": true,
+        "finalHash": "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598"
+      }
+    ],
+    "turns": 100,
+    "warmupTurns": 2,
+    "finalHash": "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598",
+    "trailHash": "fe9d4f367b796b2743118aa37755c92541e88d5a7155ed0ac0d24eefd0b16e0f",
+    "trailHashRule": "the SHA-256 of the 100 turn hashes, each followed by a newline",
+    "turnHashes": [
+      "90282bbb8244b93f0202b5873ee49b9bd4ba0024b7977d8ef28c7c5165d643aa",
+      "92f20bdc45b0245e9908d30504af3e62ed8fd4d42a88685506b9b522921fe237",
+      "02799fea6c690fbe4f55a1c6f37936a8719acae1ba610497820c6c49a424301c",
+      "758e8c975c4e4ac6013e42958ff97b04d93468183870b4540978e25fe057ae50",
+      "e009d0900f8e05adfede12e1e3ae72aaed9288d820f3e646c0d26e37e673d37e",
+      "aa7880fd217c09a8281db91fae1bee313c0b6a7c9ce26dc4ed1fb0d20bb9c5de",
+      "8586b63886fcf61d70531370814a39357967a41f0a06654f3957db1a6e4aff29",
+      "cd5b0e6a15739321e17deae2e5db98df53e107de58e9a65c0df47993c72e99e9",
+      "e67a554c1046be2e787d9073fa34d3764dcf1201417b087c41a7c5246d9bb87f",
+      "46a0b5438545518826772d12a508c20cfc31d64a6f6f890e24d4caa0a30933a8",
+      "ae256dd1d87319c6b1830a3967f101b9e8a389a7384ffc9fd5a6d24b7155f209",
+      "9bc06dbffc33d4475cfeecd5d20d010aab93bf506ade11d2e80f5da6c93a1ce1",
+      "e8e574e3b7ebd9fb567066052385c72c51716681838a4886d59013a152dd8ce9",
+      "430182983aba4514d010d8fb067bec24258cb6d8a3cd21ef2fa3d540f7fe9d95",
+      "a77a676c0ccfa077ed77a3bcc24e0b0d4bff59bb30b06be3e02f6f73e7dc9c86",
+      "353069e400167a61ebffdb7ba5078e4e597707d60ce2239f2549537d950cf0e3",
+      "fb0a5fd0e6279caa9a402241e2cc1e0a38a517ed52e7243b5446ea3c6497702d",
+      "489f4155cbf3bf1fa7cc3047ee715dbb5a9ce6392b7d01a5b7eafd1b440a86f4",
+      "45ef5f28b579cef0fa9cd3036249075f4c7830e3bb4128515db2c25c5a73dad7",
+      "4e9794e2ced97d730f803111685d012d17a7ffc0c25e3150bd8132dc55bafa17",
+      "0809d4a349f9814bd4ddf0358d99e4846bfe5761e19e6726b0e8c284cc2cf22a",
+      "69024712f39adeb1d36ddece9f2a1f10dcd9b35c481ab2614dc5b72d1c06b8bf",
+      "dc96ca52ad92639c992b17808d4b07bf45e438ca70e89633932804d4c8fabe7d",
+      "b02f42a973e091a0994a35429af4b410768ca8397e6758977d387617d0ff7c09",
+      "3cf679c226f1471514af879c2471bdeeb11d4e4c9cabbea83bf7855d5e328568",
+      "79c7c89760432bdc8fca293824fc88ac264a4ee94fa1eb60605053a1461aa590",
+      "f23c62e2a7290508b53745733bf71cd8efe1d3a1921aaec0547e41d5416230c2",
+      "2ae3e183eeb4eb0ec5b458a2e2004259c5cc96a49a7a8394d18228c8a32e6330",
+      "c79d83306f40f3bcc68cfa543a67ced6680db4c942bcbab97ce11005f89a2413",
+      "ab8733bbaa634250abc0bb547aa13851d839d3863894f00f0a25e7fa28e46db4",
+      "cb3dd677a7c6fe6625dea3d7b94bbc6ade8fb5686b2405e7c4998f190c62e8c1",
+      "8c8cfbd69684849339ef0fe69b62d00a3a42e13f7489bb6cc21e00c1ad85361e",
+      "773d93295db15af581752be4333a4413adda3ee3923c2c5014e191f3a3f27dc5",
+      "cc918456d3565194143b32fa2a5b71d6aa6c84ba9c06e32af3f1e7e0ad65a332",
+      "e5857c8e2c287da7a2d98273e92be35762a8e367ad2788dce519e2b918e286e1",
+      "b68e208ce0285514ceddc01681a4bb1993f2d9a0d8ee0c866839cf7cf94fd7b7",
+      "547f4c349ad74285477a0cb57f4dab6ab6201498dc5668751a17b076eee274a3",
+      "f9bb70602a3f23fdb9d877297b96c0e458b407681b3ef309556cb8c24aeb55ae",
+      "81efa8179d5b0fae912c5febeefab270ada52218ede1c4ac785462d5f42bbde6",
+      "977fece12aee31abd693e814bb9a13a036287ed7b1065167918adf919a6d5988",
+      "1a2dc1bc55a76cc8104c0516430ee1412a4a588b21e4aec9c6c1ba4ae22374b6",
+      "6e31cf11f6669a4358b568f33bd33a1b4390e6e183485cc5c94e0877b21a9adb",
+      "430f3cddfbed74282337bf9a999f6d4deaf7c7bbc993f25cd8af89ddf28df8d2",
+      "01e45c9606e912675621d4d8928246b39d2038ddac7bab76fc801845ed2b90d2",
+      "b03f95e738683bea1b07400066118f740af67a6844876adcf64252d8738a20ed",
+      "e6f4709d275f97bf86e3be2c7d2aece639643792770bfd911d6e009f69a8be9c",
+      "fde3018fdbce18dd96a63249e8474d822855a5bc30a868ccc8cbeb618397860b",
+      "f001319bd701f6986c80a4027f6feed915e2e8c7212c9bc9e288d9e6e9e40eaa",
+      "780db61ad3b8078b18595d26b084ff87fd72542c80705b956d4eef72516eb2d8",
+      "84babb3c4d530ef3f6278f406967a5af227ea42655a2158a3466b304ff1c1ff3",
+      "1885e2b08f602708255546a1feed29da4ee1fcc287907d3d8b26325b6edd24ae",
+      "035a448d8b95f37e818c8936b146e33de6ed4da0675fe47db2356a0420cbeb49",
+      "8ef8daeb70e35435e4744f14fe8b620030d5ddaa0c4c6cdce84e793ffbc3d790",
+      "d12e168372d1914274114faf43fe4063427df6d1fbcaae2a58c67d440ba68900",
+      "bc5aa85d8a4bf8746da5f5103f699a87bc834b0cc7746af160ed9e2e19c58d88",
+      "4dc0f598408d2468aa53db41435c1ad32ef7007f5c00aa7d07a29c78ba7b224d",
+      "3a96ecc59c6c1cae753a5a74d3c9f88791b29822894568a197b1db9ff1f7bdc7",
+      "48ab1f5bc0adffa35404805253fcc3efab834a578d8fca074a4f3784291b722a",
+      "6c75b15d6605fa2557ce9fce05acd4a1ed8e40d5ef40505397fe0d479500444d",
+      "7b0663208e14b5c962e925feb92966f70c426ca8a0100de1df0c2859a4a318a9",
+      "716deddb20c3f0d65a81b5a132a1b9a60241b4383670b5dc8c647e3e57d7f99a",
+      "ca6f68364f9b0f5efd02a571c594dc7bd25b221da9140888bb6cebe6aaeec5d5",
+      "658dcc539cec20d8b734010fe43f53a9d383c57047794203a35bd10f9303f587",
+      "2864b39303e838bd2af8c7fa96c304c1927faa37912e5b4d26cfa1f8d2ee1c15",
+      "b93788660b9cddb9bcf483dd8717cc4ce2f92dfeb2adee939c46c84c49d281bb",
+      "00c094c08981bc9b492c77b1ee851a5ae25d66173c1d5a9a2c2f48def7e56c94",
+      "1f05bbb631e1dad3888e9aceeb1a9efff815d24215226c3df778c5f22e85eaa2",
+      "d9f076db675fa32938e8d37ec4808ab90426e3fdee264114cc892a121dda7e76",
+      "79d3cf78c047eb74cedf0497a0845935b4d3db47050d332727ed56212df98574",
+      "2cc4dc5a067e945cfbea125b2a33f4572d663237eb3cd4e8a016c25ab0d4aac4",
+      "93ce4b9407ec17f554c7351e08eb3f7e337ca149c27f1593d54e914496d0a0e2",
+      "691244dcd1b12db3274acdd8991a626167cef6573701393aea535111e05f0a72",
+      "28f3196fe4900d70bca109a46076befdad8ab53bbced8305c0260ad1d19ab9fb",
+      "fafc4a798a8a4dce28207c808f5d563523913831fde04eb13b0cc1ec7af940af",
+      "634a226fb8383ed4f3380796e52fce9a1e02222e23d394f9aea06fd50b736348",
+      "7e6a5353fab7644825211d5d9e08c6498f86f77792ecec062a7b1bda3944a1a3",
+      "193ad740e95cd74ba5bfd08b4edaffc9288cbee2cdfd6407ead8bdecbaffd677",
+      "3d65e1397cc20195fadb96bfebec1a2ffdb54444cbddb413636d191b885cf37d",
+      "c55bce4afde493204f44c68a070a138fe5e143b2bdc0a46ac90790cabc04d966",
+      "909a50c30a5c1c13e03e10867b317450acfff5ca10f78220ddfc5564e57930a8",
+      "fa8f40a472feae51c25fbe6f4fa66cda767062940607c42251c6c78971fb213b",
+      "50dadea118dbec504d218ceb8bc39c6f82c78843a37e72b05d185ecf66fcf45e",
+      "a90ba34a5b258292badea9dab4092aed24131a252ef2c2a6506bdc1f232d479c",
+      "48c82ac14eff2b383fbc3b2f5a975dcd0352e25be2af42918209dc11743220d9",
+      "c551762ffbf053d1c7df9b1e00534c604b80ecfc1961f3d83b419a15a9be2844",
+      "ed00bf9b899c7800acd8fd449ec62225e38e68abdb7b569dd51c8132f3cac5d3",
+      "33914f4850af176e1e03ee602270a119b41f4675a021d3a63bbbc4f12f30a079",
+      "bf1ddd2556ef9933f93a3a8b45dfd2139f5085bb125f1ae0e68b11d7e3b2cdc2",
+      "84c85b3a053412c6d47e3018b4068af005a1e447f735f95c1c6df20ed8188cce",
+      "19da5424a085e91d98e2694c2b087780384221a9b42f092ccef55a810970c748",
+      "2708bb94b016f18a6d858d46535ac87cff662ef9af3649aed34cdbdf2447dc48",
+      "b15f2686ca56112eed9f616bade424ca4e1a71409693176a613128f0c7557f6b",
+      "d8e48539c5607f7129e0913ddc55e31ae0db42379d0f4d116848dfef8d41e4ff",
+      "36901121205db3f391fd1ded453b7618d25831a91307dfd7a94070bc515af11a",
+      "a82ee71c7ca71f972a0a654b437d5e0674a017570790c0ac672d2d080d971aaf",
+      "5ff9277c9683e881f54140a2793d75594e2c28a253523d28066996d41db19bf2",
+      "4fb6ababc10d2d5e3f49cb7439eb7d7878f12d558c1b413f1e4aeb70acc8b201",
+      "86cadd99bbf5c412d8f058d9bd233e1290da0f3a5df058de34c37f0eaaa57308",
+      "ce3e61576accbc7afa7f63ee86c80cae316d57316829fd69abd91f3aa2e04832",
+      "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598"
+    ],
+    "sameGameInEveryExecution": true,
+    "decisionsPerExecution": 427,
+    "decisionsById": {
+      "select_tile": 201,
+      "select_unit": 7,
+      "found_city": 1,
+      "set_research": 3,
+      "set_production": 8,
+      "fortify": 6,
+      "clear_selection": 100,
+      "end_turn": 100,
+      "resolve_event": 1
+    },
+    "snapshotsReceivedByJavaScript": 1028,
+    "turnEndedReceived": 100,
+    "gameAtTheEnd": {
+      "turn": 101,
+      "lastJob": 100,
+      "epoch": 1,
+      "finishedJobs": 100
+    },
+    "readingsPerExecution": {
+      "light": 529,
+      "atRest": 100
+    },
+    "bundleSha256": "01e99429e6f60b607eb96bc46988784d0b2048b58103f14f13699b1800b3fed7",
+    "hostSha256": "c5475bffc38b27fd2a50fc549f8444bba9b9377587cbdb475e4be38a7ea81407",
+    "summaries": [
+      {
+        "strategy": "unmount",
+        "nativeViewsByContext": {
+          "none": [
+            16
+          ],
+          "stack": [
+            22
+          ],
+          "settler": [
+            22
+          ],
+          "city": [
+            18,
+            118
+          ],
+          "warrior": [
+            20
+          ],
+          "tile": [
+            18
+          ],
+          "dialog": [
+            23
+          ]
+        },
+        "heapAtRest": {
+          "firstHalfMedianBytes": 2117320,
+          "lastHalfMedianBytes": 2117320,
+          "growthBytes": 0,
+          "limitBytes": 2048,
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "floorOfFirstHalf": 2109424,
+          "largestStepBytes": 34584
+        },
+        "residentMemory": {
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "firstMedianKb": 204384,
+          "lastMedianKb": 107856,
+          "growthKb": -96528,
+          "limitKb": 49152,
+          "minKb": 104480,
+          "maxKb": 240448,
+          "bandKb": 135968,
+          "medianKb": 155712
+        },
+        "errors": {
+          "subscriptions": 2,
+          "handlers": {
+            "errorUtils": false,
+            "rejectionTracker": true
+          }
+        },
+        "pause": {
+          "turn": 50,
+          "frames": 60,
+          "pumps": 60,
+          "phase": "ai_plan",
+          "clicks": 2,
+          "markerShown": true
+        },
+        "turnMs": {
+          "p50": 613.1,
+          "p95": 803.3,
+          "max": 1181.9
+        },
+        "readings": {
+          "light": 529,
+          "rests": 100
+        },
+        "panel": {
+          "open": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 14.217,
+              "p95": 18.858,
+              "max": 27.43
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 14.114,
+              "p95": 18.718,
+              "max": 27.147
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 10.47,
+              "p95": 12.993,
+              "max": 15.65
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 2.758,
+              "p95": 5.017,
+              "max": 14.797
+            },
+            "created": 100,
+            "updated": 1
+          },
+          "close": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 5.09,
+              "p95": 6.534,
+              "max": 7.328
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 4.631,
+              "p95": 5.879,
+              "max": 6.817
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 3.071,
+              "p95": 4.219,
+              "max": 5.331
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 1.072,
+              "p95": 1.64,
+              "max": 1.864
+            },
+            "deleted": 100,
+            "updated": 1
+          },
+          "nativeClosed": 18,
+          "nativeOpen": 118,
+          "claims": {
+            "turns": 100,
+            "closedPressesWorldHeard": 1,
+            "openPressesWorldHeard": 0
+          }
+        }
+      },
+      {
+        "strategy": "hide",
+        "nativeViewsByContext": {
+          "none": [
+            116
+          ],
+          "stack": [
+            122
+          ],
+          "settler": [
+            122
+          ],
+          "city": [
+            118
+          ],
+          "warrior": [
+            120
+          ],
+          "tile": [
+            118
+          ],
+          "dialog": [
+            123
+          ]
+        },
+        "heapAtRest": {
+          "firstHalfMedianBytes": 2443832,
+          "lastHalfMedianBytes": 2443832,
+          "growthBytes": 0,
+          "limitBytes": 2048,
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "floorOfFirstHalf": 2435936,
+          "largestStepBytes": 34128
+        },
+        "residentMemory": {
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "firstMedianKb": 186160,
+          "lastMedianKb": 170400,
+          "growthKb": -15760,
+          "limitKb": 49152,
+          "minKb": 161776,
+          "maxKb": 195296,
+          "bandKb": 33520,
+          "medianKb": 172048
+        },
+        "errors": {
+          "subscriptions": 2,
+          "handlers": {
+            "errorUtils": false,
+            "rejectionTracker": true
+          }
+        },
+        "pause": {
+          "turn": 50,
+          "frames": 60,
+          "pumps": 60,
+          "phase": "ai_plan",
+          "clicks": 2,
+          "markerShown": true
+        },
+        "turnMs": {
+          "p50": 609.2,
+          "p95": 798.7,
+          "max": 1147.9
+        },
+        "readings": {
+          "light": 529,
+          "rests": 100
+        },
+        "panel": {
+          "open": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 8.992,
+              "p95": 11.341,
+              "max": 12.1
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 8.768,
+              "p95": 10.923,
+              "max": 11.945
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 2.742,
+              "p95": 3.349,
+              "max": 4.065
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 5.694,
+              "p95": 7.422,
+              "max": 8.197
+            },
+            "created": 0,
+            "updated": 101
+          },
+          "close": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 8.919,
+              "p95": 11.458,
+              "max": 12.007
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 8.411,
+              "p95": 10.86,
+              "max": 11.329
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 2.697,
+              "p95": 3.323,
+              "max": 3.661
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 5.291,
+              "p95": 7.538,
+              "max": 8.009
+            },
+            "deleted": 0,
+            "updated": 101
+          },
+          "nativeClosed": 118,
+          "nativeOpen": 118,
+          "claims": {
+            "turns": 100,
+            "closedPressesWorldHeard": 1,
+            "openPressesWorldHeard": 0
+          }
+        }
+      },
+      {
+        "strategy": "unmount",
+        "nativeViewsByContext": {
+          "none": [
+            16
+          ],
+          "stack": [
+            22
+          ],
+          "settler": [
+            22
+          ],
+          "city": [
+            18,
+            118
+          ],
+          "warrior": [
+            20
+          ],
+          "tile": [
+            18
+          ],
+          "dialog": [
+            23
+          ]
+        },
+        "heapAtRest": {
+          "firstHalfMedianBytes": 2117320,
+          "lastHalfMedianBytes": 2117320,
+          "growthBytes": 0,
+          "limitBytes": 2048,
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "floorOfFirstHalf": 2109424,
+          "largestStepBytes": 34584
+        },
+        "residentMemory": {
+          "steadyTurns": 98,
+          "halfTurns": 49,
+          "firstMedianKb": 194384,
+          "lastMedianKb": 156864,
+          "growthKb": -37520,
+          "limitKb": 49152,
+          "minKb": 151760,
+          "maxKb": 240624,
+          "bandKb": 88864,
+          "medianKb": 157280
+        },
+        "errors": {
+          "subscriptions": 2,
+          "handlers": {
+            "errorUtils": false,
+            "rejectionTracker": true
+          }
+        },
+        "pause": {
+          "turn": 50,
+          "frames": 60,
+          "pumps": 60,
+          "phase": "ai_plan",
+          "clicks": 2,
+          "markerShown": true
+        },
+        "turnMs": {
+          "p50": 614.5,
+          "p95": 807.8,
+          "max": 1149.5
+        },
+        "readings": {
+          "light": 529,
+          "rests": 100
+        },
+        "panel": {
+          "open": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 14.235,
+              "p95": 18.803,
+              "max": 25.737
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 14.096,
+              "p95": 18.557,
+              "max": 25.488
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 10.271,
+              "p95": 14.219,
+              "max": 18.168
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 2.786,
+              "p95": 4.97,
+              "max": 6.46
+            },
+            "created": 100,
+            "updated": 1
+          },
+          "close": {
+            "flushMs": {
+              "samples": 98,
+              "p50": 5.199,
+              "p95": 6.347,
+              "max": 6.642
+            },
+            "pumpMs": {
+              "samples": 98,
+              "p50": 4.665,
+              "p95": 5.748,
+              "max": 5.961
+            },
+            "jsMs": {
+              "samples": 98,
+              "p50": 3.172,
+              "p95": 4.065,
+              "max": 4.602
+            },
+            "mountMs": {
+              "samples": 98,
+              "p50": 1.063,
+              "p95": 1.645,
+              "max": 2.061
+            },
+            "deleted": 100,
+            "updated": 1
+          },
+          "nativeClosed": 18,
+          "nativeOpen": 118,
+          "claims": {
+            "turns": 100,
+            "closedPressesWorldHeard": 1,
+            "openPressesWorldHeard": 0
+          }
+        }
+      }
+    ],
+    "errorHandlerControl": {
+      "rejectionsSeenByTheTrackerBeforeTheControl": 0,
+      "globalErrors": 0,
+      "controlRejectionsSeen": 1,
+      "handlers": {
+        "errorUtils": false,
+        "rejectionTracker": true
+      },
+      "note": "the runtime has no ErrorUtils; the tracker of unhandled rejections is the JavaScript watch and the host's own error list is the other"
+    },
+    "pauseAtTurn50": {
+      "job": 50,
+      "phaseBefore": "ai_plan",
+      "phaseDuring": "ai_plan",
+      "framesHeld": 60,
+      "pumpsDuring": 60,
+      "snapshotsPublishedDuringPause": 1,
+      "turnEndedDuringPause": 0,
+      "clicksBefore": 2,
+      "clicksAfterFirst": 3,
+      "clicksAfterSecond": 4,
+      "markerShown": true,
+      "markerGone": true,
+      "finishedAfterResume": true,
+      "snapshotFramesOfTheJob": [
+        4583,
+        4661,
+        4662,
+        4663,
+        4664,
+        4665,
+        4666,
+        4666
+      ]
+    },
+    "decision": {
+      "unmount": {
+        "executions": 2,
+        "nativeNodesClosed": 18,
+        "nativeNodesOpen": 118,
+        "heapAtRestBytes": 2117320,
+        "heapPerExecution": [
+          2117320,
+          2117320
+        ],
+        "open": {
+          "flushMs": {
+            "samples": 196,
+            "p50": 14.235,
+            "p95": 18.803,
+            "max": 27.43
+          },
+          "created": 100,
+          "updated": 1
+        },
+        "close": {
+          "flushMs": {
+            "samples": 196,
+            "p50": 5.169,
+            "p95": 6.365,
+            "max": 7.328
+          },
+          "deleted": 100,
+          "updated": 1
+        },
+        "perExecution": [
+          {
+            "open": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 14.217,
+                "p95": 18.858,
+                "max": 27.43
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 14.114,
+                "p95": 18.718,
+                "max": 27.147
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 10.47,
+                "p95": 12.993,
+                "max": 15.65
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 2.758,
+                "p95": 5.017,
+                "max": 14.797
+              },
+              "created": 100,
+              "updated": 1
+            },
+            "close": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 5.09,
+                "p95": 6.534,
+                "max": 7.328
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 4.631,
+                "p95": 5.879,
+                "max": 6.817
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 3.071,
+                "p95": 4.219,
+                "max": 5.331
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 1.072,
+                "p95": 1.64,
+                "max": 1.864
+              },
+              "deleted": 100,
+              "updated": 1
+            }
+          },
+          {
+            "open": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 14.235,
+                "p95": 18.803,
+                "max": 25.737
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 14.096,
+                "p95": 18.557,
+                "max": 25.488
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 10.271,
+                "p95": 14.219,
+                "max": 18.168
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 2.786,
+                "p95": 4.97,
+                "max": 6.46
+              },
+              "created": 100,
+              "updated": 1
+            },
+            "close": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 5.199,
+                "p95": 6.347,
+                "max": 6.642
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 4.665,
+                "p95": 5.748,
+                "max": 5.961
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 3.172,
+                "p95": 4.065,
+                "max": 4.602
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 1.063,
+                "p95": 1.645,
+                "max": 2.061
+              },
+              "deleted": 100,
+              "updated": 1
+            }
+          }
+        ],
+        "claim": {
+          "turns": 100,
+          "closedPressesWorldHeard": 1,
+          "openPressesWorldHeard": 0
+        },
+        "rssMedianKb": [
+          155712,
+          157280
+        ]
+      },
+      "hide": {
+        "executions": 1,
+        "nativeNodesClosed": 118,
+        "nativeNodesOpen": 118,
+        "heapAtRestBytes": 2443832,
+        "heapPerExecution": [
+          2443832
+        ],
+        "open": {
+          "flushMs": {
+            "samples": 98,
+            "p50": 8.992,
+            "p95": 11.341,
+            "max": 12.1
+          },
+          "created": 0,
+          "updated": 101
+        },
+        "close": {
+          "flushMs": {
+            "samples": 98,
+            "p50": 8.919,
+            "p95": 11.458,
+            "max": 12.007
+          },
+          "deleted": 0,
+          "updated": 101
+        },
+        "perExecution": [
+          {
+            "open": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 8.992,
+                "p95": 11.341,
+                "max": 12.1
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 8.768,
+                "p95": 10.923,
+                "max": 11.945
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 2.742,
+                "p95": 3.349,
+                "max": 4.065
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 5.694,
+                "p95": 7.422,
+                "max": 8.197
+              },
+              "created": 0,
+              "updated": 101
+            },
+            "close": {
+              "flushMs": {
+                "samples": 98,
+                "p50": 8.919,
+                "p95": 11.458,
+                "max": 12.007
+              },
+              "pumpMs": {
+                "samples": 98,
+                "p50": 8.411,
+                "p95": 10.86,
+                "max": 11.329
+              },
+              "jsMs": {
+                "samples": 98,
+                "p50": 2.697,
+                "p95": 3.323,
+                "max": 3.661
+              },
+              "mountMs": {
+                "samples": 98,
+                "p50": 5.291,
+                "p95": 7.538,
+                "max": 8.009
+              },
+              "deleted": 0,
+              "updated": 101
+            }
+          }
+        ],
+        "claim": {
+          "turns": 100,
+          "closedPressesWorldHeard": 1,
+          "openPressesWorldHeard": 0
+        },
+        "rssMedianKb": [
+          172048
+        ]
+      },
+      "panelNodes": 100,
+      "heapCostOfHiddenBytes": 326512
+    },
+    "oracle": {
+      "independent": "derives the HUD's native views from the state, the jobs and the turns from the game's phases, the hashes from the serializations and the heap and resident-memory rules from the raw readings",
+      "reportLevelNegatives": 29,
+      "rejectedOnARecordedReport": 25,
+      "forkedExecutionsRejected": 3,
+      "hiddenPanelHoldsNoMoreNodesRejected": 1,
+      "acceptedAsNotALeak": [
+        "heap-blip",
+        "heap-at-limit",
+        "rss-falls",
+        "rss-rises-30-mib",
+        "rss-at-limit"
+      ],
+      "negatives": {
+        "leaked-node": "rest of turn 41: the SceneTree holds the host's native views plus the constant",
+        "orphan": "turn 41 select_tile: and Godot counts no orphan beyond the base's",
+        "native-drift": "turn 41 select_tile: the HUD holds the native views its state gives (context tile, 2 actions, panel closed)",
+        "hide-counted-unmounted": "turn 1 panel closed: the HUD holds the native views its state gives (context city, 2 actions, panel closed)",
+        "heap-grew": "The live heap at rest rose 3000 bytes from the median of the first half (49 rounds) of the steady rounds to the median of the last, over the limit of 2048",
+        "heap-one-over": "The live heap at rest rose 2049 bytes from the median of the first half (49 rounds) of the steady rounds to the median of the last, over the limit of 2048",
+        "heap-leak": "The live heap at rest rose 9800 bytes from the median of the first half (49 rounds) of the steady rounds to the median of the last, over the limit of 2048",
+        "rss-grew": "The resident memory rose 53248 KB from the median of the first half (49 turns) of the steady turns to the median of the last, over the limit of 49152",
+        "rss-one-over": "The resident memory rose 49153 KB from the median of the first half (49 turns) of the steady turns to the median of the last, over the limit of 49152",
+        "rss-ramp": "The resident memory rose 50176 KB from the median of the first half (49 turns) of the steady turns to the median of the last, over the limit of 49152",
+        "refused-intent": "turn 11: the game accepted set_production(library,0) (turn_in_progress)",
+        "unhandled-rejection": "and no promise was rejected with no handler",
+        "blind-handler": "The tracker sees an unhandled rejection when there is one (the control after the soak): zero is not blindness",
+        "subscription-leak": "The registry holds the same subscriptions at every reading: a connection never removed would grow them",
+        "job-twice": "turn 21: seven snapshots and one turn_ended",
+        "phase-advanced-in-pause": "and the job did not advance a phase",
+        "ui-dead-in-pause": "The HUD answered while the game was paused: each click reached its handler once",
+        "marker-never-shown": "React changed its state and the marker was a native node, and went",
+        "pause-too-short": "for 60 frames",
+        "no-warm-up": "The marker's code was warmed up in a warm-up turn, so the steady heap does not see a first use",
+        "closed-panel-claims": "turn 21: the panel closed again does not claim the map, however it was closed",
+        "open-panel-leaks-click": "turn 21: the open panel claims the map: the world hears no press",
+        "hash-forged": "turn 31: the hash is the SHA-256 of the canonical serialization",
+        "aborted": "The soak ran every turn: nothing aborted it",
+        "hidden-panel-deletes": "turn 6: opening and closing a mounted panel creates and deletes no node",
+        "final-hash-forked": "rejected",
+        "trail-forked": "rejected",
+        "turn-forked": "rejected",
+        "hidden-holds-no-nodes": "rejected"
+      }
+    }
+  },
+  "sabotages": [
+    {
+      "name": "listener-leak",
+      "file": "tests/frontier-soak-fixture.jsx",
+      "edits": [
+        {
+          "find": "  counts.turnEnded += 1;\n",
+          "replace": "  counts.turnEnded += 1;\n  GodotFabric.connect(FRONTIER_SNAPSHOT, () => {});\n"
+        }
+      ],
+      "sourceSha256": "d197d0dfbcea01aeca40e7cd93dc89e499733896017e2b6e65e420eee0e6dec6",
+      "rejected": true,
+      "runStatus": 0,
+      "processes": 1,
+      "probeFailures": [
+        "heap/The live heap at rest, by the median of the last half of the steady turns, is within 2048 bytes of the first half's",
+        "services/The registry holds the same number of subscriptions at every reading (a connection that is never removed would grow it)"
+      ],
+      "oracleRejection": "The live heap at rest rose 335128 bytes from the median of the first half (49 rounds) of the steady rounds to the median of the last, over the limit of 2048"
+    },
+    {
+      "name": "nondeterministic-player",
+      "file": "tests/frontier-soak-fixture.jsx",
+      "edits": [
+        {
+          "find": "takes(\"production\") && s.city.queue.length === 0",
+          "replace": "takes(\"production\") && s.city.queue.length === 0 && Math.random() < 0.5"
+        }
+      ],
+      "sourceSha256": "d15e133b134777b3a61933c6474269cbfedd57e379d3fa0c81240a4b6fab00b2",
+      "rejected": true,
+      "runStatus": 0,
+      "processes": 2,
+      "probeFailures": [],
+      "oracleRejection": "Execution 2: the final hash is the first's"
+    },
+    {
+      "name": "pause-kills-ui",
+      "file": "tests/frontier-soak-probe.gd",
+      "edits": [
+        {
+          "find": "hud.process_mode = Node.PROCESS_MODE_ALWAYS",
+          "replace": "hud.process_mode = Node.PROCESS_MODE_PAUSABLE"
+        }
+      ],
+      "sourceSha256": "0e964f83f83e391037256e4478c44a131db882d9bc675aca847377414053d478",
+      "rejected": true,
+      "runStatus": 0,
+      "processes": 1,
+      "probeFailures": [
+        "scene/The HUD's layer keeps processing while the tree is paused (PROCESS_MODE_ALWAYS)",
+        "pause/The HUD answers while the game is paused: a click reaches the handler, React changes its state and the native node appears and goes"
+      ],
+      "oracleRejection": "The HUD answered while the game was paused: each click reached its handler once"
+    },
+    {
+      "name": "leaky-hide",
+      "file": "tests/frontier-soak-fixture.jsx",
+      "edits": [
+        {
+          "find": "opacity: hidden ? 0 : 1,",
+          "replace": "display: hidden ? \"none\" : \"flex\","
+        }
+      ],
+      "sourceSha256": "ce73a31fe5ed11b087ce51526971b8d47cc02d1f99d8568c03c8cac3ff28c2f1",
+      "rejected": true,
+      "runStatus": 0,
+      "processes": 1,
+      "probeFailures": [
+        "panel/Opening the panel creates and deletes no native node",
+        "panel/Closing the panel keeps its nodes (it is invisible, not gone)"
+      ],
+      "oracleRejection": "base: the HUD holds the native views its state gives (context none, 1 actions, panel closed)"
+    }
+  ],
+  "sabotageSources": {
+    "genuine": {
+      "tests/frontier-soak-fixture.jsx": "2466e7e89e9cab3baf70d8e295d71902077ec088d7eea91ad34346bd0d693200",
+      "tests/frontier-soak-probe.gd": "f63f878f7fb1106ac566be521c33c27c20c2f284e7e4a178a620462e33127c4e"
+    },
+    "restored": {
+      "tests/frontier-soak-fixture.jsx": "2466e7e89e9cab3baf70d8e295d71902077ec088d7eea91ad34346bd0d693200",
+      "tests/frontier-soak-probe.gd": "f63f878f7fb1106ac566be521c33c27c20c2f284e7e4a178a620462e33127c4e"
+    },
+    "restoredEqualsGenuine": true,
+    "genuineRunStatus": 0,
+    "genuineRunExecutionSeconds": [
+      66.7,
+      66.3,
+      67.6
+    ]
+  },
+  "findings": [
+    "Three executions of 100 turns end in the same game: the same final hash and the same trail of 100 turn hashes, whichever way the heavy panel is closed.",
+    "The live heap at rest was flat to the byte once the game stopped changing (turn 14): 2,117,320 bytes with unmounting and 2,443,832 with hiding, growth 0 between the medians of the halves.",
+    "The pause holds the accepted job at its first phase while the HUD answers; it does so only because the HUD's CanvasLayer is PROCESS_MODE_ALWAYS (the pause-kills-ui sabotage makes it pausable and the click never reaches the handler).",
+    "Hiding a 100-node panel is not cheaper in CPU as a whole (the sum of the open and the close is inside the run-to-run noise), has a shorter tail on the open, a slower close, and keeps 100 nodes and 326,512 bytes of heap.",
+    "The host updates all 101 nodes of a hidden panel when its root's opacity and pointerEvents change (101 updates a toggle); the cause is not explained.",
+    "Hermes' tracker of unhandled rejections reports from a timer and not at the rejection, so the soak waits 2.3 s before reading the count and its control is a TypeError."
+  ],
+  "decisions": {
+    "mountOrHide": "unmount by default; hide only a panel of about 100 nodes or more that is opened often on the click the player waits for, and at most one or two at a time, with pointerEvents none on its root and a body that does not depend on whether it is shown",
+    "appliedToTheHud": false,
+    "note": "a recommendation for V05-05, which owns consumers/civ-lite/; this slice does not change it"
+  },
+  "limitations": [
+    "Local macOS arm64 evidence, headless only; hosted CI is pending.",
+    "The events are synthetic, delivered through Input.parse_input_event: no hardware pointer, no real touch screen, no iPhone, no mobile export.",
+    "One machine under load from other agents (the load average is recorded before and after each command): the durations vary by tens of percent from one run to the next, and are the CPU cost of work on a loop nothing paces, not frame times.",
+    "The 101 node updates of a hide toggle are not explained, and whether a cheaper way to hide a panel exists is open.",
+    "The recommendation that the HUD layer of the V05-05 scene be PROCESS_MODE_ALWAYS (consumers/civ-lite/main.tscn's HUDLayer sets none) is not applied: another owner.",
+    "The resident memory is judged loosely (48 MiB between the medians of the halves, within a run band of 34 to 137 MB over the runs made) and the heap rule judges the JavaScript heap only: a native leak under about 1 MiB a turn is not seen by either.",
+    "The HUD is a fixture and the player one fixed rule over a game that stops changing after turn 14; the turno and congelado criteria of V05-06 stay open."
+  ],
+  "sourcePins": {
+    "tests/frontier-soak-fixture.jsx": "2466e7e89e9cab3baf70d8e295d71902077ec088d7eea91ad34346bd0d693200",
+    "tests/frontier-soak-cases.mjs": "7aa170f5f8319d43cb15fae872ab16d5f65020837fa3ae70bd30bcc67070111e",
+    "tests/frontier-soak-probe.gd": "f63f878f7fb1106ac566be521c33c27c20c2f284e7e4a178a620462e33127c4e",
+    "tests/frontier-soak-oracle.mjs": "1a88b1ade0d10cab1347e3553c8aa22be55c877975d56428b28bba044d1738ad",
+    "tests/frontier-soak-native.test.mjs": "51d44e5baf13b055e297b124ec7fc848e722a100bb77aa49af626a773f8b63a8",
+    "tests/frontier-baseline-cases.mjs": "3a4539a305fd40b0dcecacd9c4ee318432aba1f058c5c58563598f9df2977e81",
+    "tests/frontier-baseline-oracle.mjs": "e71eaac22f9d90da9ad2023157e0d3f85e1b92b2e83dc3c44a884555d07732cc",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/performance-cases.mjs": "05a3f24b9e295bc9cbb24a34a08901e2bb3a97949b3dbd4128533d76bc654105",
+    "tests/performance-oracle.mjs": "107a4fd97be118c2a4b8f15979e4c5301b6e80317a19ca84e7f84b9c1933e3e1",
+    "tests/world-input-driver.gd": "ec07dd93a3a23b1a9d520fbc0aac7b21977dfb55e345748084568d1f29345574",
+    "examples/world-input/world.gd": "69c1ac89627a51f1fe1c5e2b147798ad0e207d27e23c96144f72b22b1aebef65",
+    "examples/world-input/world.tscn": "1d3201d629de93b098fa9006b698218d106ad2652cf75420cf26ec296a401a02",
+    "scripts/frontier-soak-bundle.mjs": "525fd8505a30103aa3819dacf9cb9c2ff3deb3fd0f628f253561276fc30be814",
+    "scripts/frontier-soak-sabotage.mjs": "9f718986c35afdb1e260b1bdedd2239df6e38ee1cd356a032b32b5010c9b7084",
+    "scripts/frontier-baseline-bundle.mjs": "0745c598db17b9883570650f18e10ecd3aa934068bf0b6e676e891bfaaa6bde6",
+    "scripts/frontier-services-bundle.mjs": "079073d4cacfbb7ae07240f77ffa35a332a6e4b81a9f51a768d5eba75621dd87",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "consumers/civ-lite/ui/frontier-types.ts": "4422dd6345b9b443033bbe318991ee7c88b8842cd51dc98dbf05876237f2fef9",
+    "src/godot-fabric.js": "dd6bc4004ba89e2417bdf3a937ee01dc72eed8078615fffc6bd128dccf7baf79",
+    "src/react-native-platform.jsx": "f7720d6ce52cfbfdb60439ec9631f94dac3681492f93951cc0e4ad516897b776",
+    "sdk/addon/godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+    "consumers/civ-lite/game/game.gd": "f7293c86db713e0d40c90270858f50db59f7e7d53fa85b94d977f27ce39b084e",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/snapshot.gd": "d401c103fd1a91dea8c08f8fe7a02760ea29b01c849a623e5fc443a5390f08db",
+    "consumers/civ-lite/game/turn.gd": "0a5fc0523e0e94d4d42190a770b95a55ca851adfce62abe608150ecb0c99ba05",
+    "consumers/civ-lite/game/world.gd": "d2be82b34262bfe3f6c6b257037163ce0e5e2937639fd6a1ba1c2bdf21b0a3d6",
+    "consumers/civ-lite/services/game_services.gd": "84feae3470daabbef0e2fb751cffd934c72a3f50abd25a4f242fe5746fb244d5",
+    "consumers/civ-lite/services/schema.gd": "fb000b3055319d8b15636c9f0af0f4d2fa05d313520ab1829c2d510085e84533",
+    "native/fabric_surface.h": "d7f15c2a22b9f75a348290ac3db540984f9cb6442d905629a3dbf3be3a0c1723",
+    "native/fabric_surface.cpp": "054ccf769e34075760cdf7d3a7bb2f97fb275d028d515e15e085f0548c62c051",
+    "native/application_runtime.cpp": "cb5ae4780c5598dcdae5cdc8c70cae8cde01a3680e131e020287a6685bdd9983",
+    "native/application_runtime.h": "d88303dc5563f3f2f4d8a8d38d022d32cb846cb7aea0a10d85f56f793b5878f2",
+    "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+    "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+    "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77",
+    "native/performance_metrics_test.cpp": "2e7dd0cc2a5ae0e4f152f79e72f027dec1250913b9eb3e9a94e724d4c6a4e670",
+    "native/fabric_application.cpp": "73def9bf38c3bf67a6711264100c150ed406c465744b617b0c08ff83bc73b97b",
+    "native/CMakeLists.txt": "2c9ac84915b2ac83e877f56ab18ed9c05d4f6bd8311b7da2253c9608f00741bf",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/TurboModule/TurboModuleRegistry.js": "433e760b8dde773c9f5aaa8832d06f58fe758e83966b2377bb4f240d62820195",
+    "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/TouchTargetHelper.kt": "36888e9275fd171278aa32acdd17096a53591550aa8c69075e3fc4c9662cd569",
+    "ReactCommon/react/nativemodule/webperformance/NativePerformance.cpp": "ec191f7d8960be06c6d011d8ee5f0ed03719659b2129ef70036bb14ee5830c6b"
+  }
+}

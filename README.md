@@ -569,6 +569,7 @@ headless Godot processes through the typed services, with a scripted player and 
 in the same hash and have the same trail of 100 turn hashes, the native views return to the same count in each context, the live heap at rest and the resident memory stay within their
 rules, no JavaScript error goes unhandled, a paused game keeps the HUD answering while its accepted job waits, and the research note decides between unmounting and hiding a panel from the measured
 numbers (a recommendation for the V05-05 HUD, not a change to it); four retained sabotages are rejected and the hosted CI run is pending.
+[Evidence](docs/evidence/frontier-soak/README.md); [research](docs/research/frontier-soak.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
