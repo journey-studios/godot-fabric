@@ -757,7 +757,9 @@ centre that yields one production too many) fail 6, 1, 13 and 3 probe checks, an
 the `prng` one also gives three different hashes in three processes. The previous-host control does not apply: there is no
 native code. `type-check`, `check:static`, `check:publication`, `test:contracts` and all 35 examples pass on the same commit
 (`4b86a7b`). The snapshot is a written and checked contract, not yet a service: the services, the HUD, the export and the
-devices are open, and the **hosted CI run (`native-civ-lite-game`) and the Pages publication are pending**. The record is
+devices are open. Hosted run 37815810524 (the push of main `e1c7a39`, five jobs in the first attempt) repeated the suite with
+634 checks in three processes and the same golden hash, and Pages published main's data
+([hosted receipt](frontier-game/hosted-ci.json), [publication](frontier-game/publication.json)). The record is
 pinned at `4b86a7b`: the current suite has 634 checks (629 there) and seven retained sabotages (the four above and three more,
 failing 5, 4 and 1 probe checks) because the review of PR #70 made the scripted faction wait for the player's city as well as for
 the player's units (before, a Warrior finished in a city on its route was born on top of the faction's), added three turns built
@@ -785,8 +787,75 @@ TypeScript types. 965 checks in each of two executions; seven retained sabotages
 intent, a frozen epoch, a refusal that publishes, an action without its arguments, `turn_ended` after the snapshot) fail 2, 2, 9,
 4, 29, 7 and 12 probe checks and the oracle rejects each. The previous-host control does not apply: there is no native code.
 Headless only, with no HUD and no capture; the probe uses an application stand-in instead of the provisioned node, the facade is
-reached by `preload`, `consumidor` and `autoridade` are open, and the **hosted CI run (`native-frontier-services`) and the Pages
-publication are pending**. The record is pinned at `75c4c0f`.
+reached by `preload`, `consumidor` and `autoridade` are open. Hosted run 37840069134 (the push of main `75a85ad`, five jobs in the
+first attempt) repeated the 965 checks in two processes and the 8 tests of `test:frontier-services`, and Pages published main's
+data, which holds the same data as the committed file in a different serialization
+([hosted receipt](frontier-services/hosted-ci.json), [publication](frontier-services/publication.json)). The record is pinned at `75c4c0f`.
+
+The [Frontier consumer record](frontier-consumer/README.md) is the third package of the 0.5 milestone (V05-03, criterion
+`consumidor`, tied to GF-07): `consumers/civ-lite/` becomes a consumer project provisioned by the addon like `consumers/minimal`,
+with its own `project.godot`, scene, application Resource, manifest and lockfile. Its scene's root is the persistent `GameServices`
+node, with the `Application`, a scenery (`World`, which draws the 24x16 map and decides no rule) and a full-screen HUD surface
+under it, so reloading the scenery, going to the menu and starting a game never recreate the application, the registry or the
+epoch; the node names no path to the SDK (`fabric_api` is injected by the scene: the addon's `godot_fabric.gd`, or the SDK source
+in the laboratory's probe) and fails loud without it. The HUD is the smallest that serves the services, public TSX over `View`,
+`Text` and `Pressable`, inside the 0.5 prop scope. Provisioned with no global Node (`spawnSync("node")` gives `ENOENT`), built by
+the editor plugin (`CONSUMER_EDITOR_BUILD_PASSED`, no `ERROR:`, the lockfile untouched) and rebuilt to the same bundle with the
+network denied, with 19 build and ownership checks and **145 native checks** (148 with the captures). Ten cycles of New game,
+three intents through the HUD, a scenery reload, the menu and New game from the menu end every time with 21 nodes, 0 orphans,
+14 bindings, 1 subscription, 2 connections on `snapshot_changed` and 1 held by the HUD, nothing pending and no error, while the
+epoch rises by exactly 3 per cycle, 4 to 31, in Godot and in the HUD, and the two Worlds a cycle drops are freed. Four retained
+sabotages (the HUD's effect keeps its connection, the dropped World is not freed, a reload zeroes the epoch, the scene does not
+inject the facade) fail 29, 19, 21 and 3 checks and are rejected for the reason they were broken; a fifth, a World that forgets to
+disconnect, was dropped because the engine drops the connection of a freed Node by itself (the record shows the experiment). The
+services gained one method, `frontier.open_menu`, so they hold 14 bindings and not 13; the P4 probe, oracle and parity moved with
+that count and nothing else, and the `test:frontier-services` suite and its seven sabotages still pass. All of it ran on the merge
+`029416f` of the implementation commit `b0509db` with main's `b0e40aa` (PR #74's prop-scope policy), which touches none of the
+slice's files, and the minimal consumer still passes its 30 and 40. Two headed captures (the game and the menu, 1080x600) are in
+the record. The previous-host control does not apply: there is no native code. The HUD is the minimal service HUD and not the
+playable one (V05-05), the presses are synthetic, `autoridade` is open. Hosted run 37864357395 (the push of main `c8de44b`, five
+jobs in the first attempt) repeated the headless check, 18 build and ownership checks and 145 native checks over ten cycles, and
+Pages published main's data ([hosted receipt](frontier-consumer/hosted-ci.json), [publication](frontier-consumer/publication.json));
+the windowed run and the captures stay local. The record is pinned at `b0509db`.
+
+The [Frontier authority record](frontier-authority/README.md) closes the criterion `autoridade` of V05-03 (tied to GF-25), on
+the services and the consumer above, with no C++. The dashboard's `turn.end` is `frontier.end_turn` and its `job.finished` is
+`frontier.turn_ended`. `frontier.end_turn` is registered to answer on acceptance, with the id of a job, and the persistent
+`GameServices` node advances the turn one phase per frame in its own `_process`, never in the World or a surface: the snapshot is
+published at the acceptance and after each of the six phases (seven in seven consecutive frames, the last at rest with
+`last_job` = the job), and `turn_ended` goes out once, between the sixth and the seventh. Every method now answers
+`{ok, code, text, job}`, with `job` 0 unless an accepted `end_turn` started one. Fifteen jobs in the probe: the application's own
+module-scope subscription received `turn_ended` for each, once and in order, and the node's `finished_jobs` holds 1 for each; the
+third job ran with the surface closed in the frame after the acceptance (`rootCount` 0 throughout) and the remounted root's first
+snapshot was at rest, turn 4, `last_job` 3; ten calls sent while a job ran were refused with `turn_in_progress` and started no
+job; and in the consumer's ten cycles an End turn pressed in the same frame as the menu finished with the menu open, once, with
+the World out of the tree. A rule lane runs the probe twice with the same bundle and host, once on the genuine `rules.gd` and
+once with the Settler's movement points mutated from 2 to 0, and exactly the fields the rule predicts change in the snapshot
+JavaScript receives (the Settler's `moves` and `max_moves`, and `found_city`'s `enabled`, `reason` and `reason_text`). Every
+frame of every job fit in one pump of the registry's 64 tasks and 128 events (at most 10 tasks, with ten calls sent, and 3
+events) and left nothing pending; with 150 more subscribers of the snapshot a publication of 152 events drained in 2 pumps (128
+and 24) with no loss and in order, and a job that outran the pump drained 1065 events in 9 pumps. The tests: 1058 probe checks in
+each of two executions, 11/11 in `test:frontier-services`, 165 native checks and ten cycles in `test:consumer:civ-lite`, and the
+P3 golden and trace hashes unchanged. Eleven retained sabotages of the services (four new: `double-finish`,
+`job-dies-with-screen`, `sync-end-turn`, `stale-snapshot`) and five of the consumer (one new, `job-dies-with-menu`) are all
+rejected, and the sources are restored byte for byte. Headless only, with synthetic presses and no playable HUD (V05-05);
+`finished_jobs` is bounded to 256; a `new_game` abandons a job in progress and no `turn_ended` fires for it; the previous-host
+control does not apply. Hosted run 37880395525 (the push of main `5e1f6a1`, five jobs in the first attempt) repeated the 1058
+checks of the services in two processes and the 11 tests of `test:frontier-services`, and the 165 native checks and ten cycles of
+the consumer, and Pages published main's data ([hosted receipt](frontier-authority/hosted-ci.json),
+[publication](frontier-authority/publication.json)). The record is pinned at `d0c7096`.
+
+The [Frontier HUD record](civ-lite-ui/README.md) is the first slice of V05-05 (criteria `matriz` and `mapa`): the HUD mounts, for
+each of the seven contexts the game derives, exactly the panels the context calls for (the turn and resources bar with a spinner
+during the AI's phase, the unit's actions with the game's reasons, the tile card, the city screen, research and the dialog), through
+one store at module scope that is the only module talking to the game. The pointer over the map is Godot's: a click selects through
+the World's `_unhandled_input` and the tile under the pointer is published as the state `frontier.hover` (15 bindings). A probe plays
+the replay's steps 0 to 45, the end of a turn (every frame, then held at an AI phase) and real pointer events; an independent oracle
+judges what it saw with 143 checks of the probe and 0 findings, rejects 23 mutated copies of the report, the HUD of `5e1f6a1` fails in
+five categories, and eight retained sabotages are rejected. The lane found that the World came back behind the HUD's layer after the
+menu (fixed) and that the old HUD's spacer, flattened by Fabric, never swallowed a click. Eight captures, local macOS arm64, no C++;
+the dialog is not yet a blocking `Modal` (slice 2), the hover was exercised with synthetic events, and the **hosted CI run and the Pages
+publication are pending**. The record is pinned at `38d3182`.
 
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
@@ -853,7 +922,86 @@ layout on a real window (the per-panel layout runs headless only) and keeps four
 ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
 recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
-mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
+mobile export and no iPhone (the `iphone` criterion stays open). Hosted run 37853001783 (the push of main `7ef63ed`, five jobs in
+the first attempt) repeated the 66 headless checks. The Pages build and deployment of that push passed, but the deployed
+`migration.json` was not verified, because the run's `github-pages` artifact has expired and no longer exists
+([hosted receipt](world-input/hosted-ci.json), [publication](world-input/publication.json)); the windowed lane and the
+previous-host control stay local.
+
+The [world input a2 record](world-input-a2/README.md) is the second slice of the same spike (V05-02, go/no-go no. 1):
+it closes the six gaps that slice 1 measured (a hit slop, a `Text` with `onPress`, the gaps of a ScrollView, and the
+wheel over the HUD, over a ScrollView and over an overlay in the tree) with one rule, the one of React Native on a phone:
+**what the hit test of React Native finds at the event's point is the HUD's, and the rest is the world's.** In
+`_unhandled_input`, after the GUI, `FabricSurface` calls the new `ApplicationRuntime::claims` and marks the event handled
+when it finds a View; it covers the mouse button (the wheel and its release included), the screen touch and the mouse Godot
+emulates from a touch, and leaves motion and drag alone. `hit_test`, `apply_pointer_filters`, `input()` and `wheel()` do not
+change, and the Controls of Godot's GUI that React Native mounts (`Switch`, `Button`, `LineEdit`) keep their events because the
+claim runs after the GUI. The record pins the implementation `0486727` on the red `9727ceb` (the checks that need the rule,
+made before it) over main `c8de44b`. 91 headless checks (50 normative: 31 of a1 and 19 of a2) run in the same two topologies
+with the independent oracle. The controls are three hosts: the host with a1 only (`28cc9f14`) fails exactly the 19 checks of a2,
+the host before a1 fails 41 (the 31 of slice 1 and the 10 wheel checks of a2; the nine click, tap and emulated-mouse checks
+hold there because its STOP Surface hides them), and the a2 host (`cc8aa3c5`) passes; **the pre-a1 host is a rebuild** on the
+current main with the constructor's `IGNORE` removed, because slice 1's binary (`79f68b1d`) was kept in a worktree that no longer
+exists. Five retained sabotages are rejected, each on named checks: `surface-stop` (31), `views-ignore` (5: the `Switch` and
+the hover, since the claim now hides the Views from the world), `unhandled-off` (19), `claim-all` (35, a host rebuilt from the
+broken source) and `before-gui` (2, the native `Switch` never gets its click, which proves the claim has to run after the GUI).
+The record cites the Godot 4.7.2 lines that make the Surface's `_unhandled_input` run before the world's (reverse tree order,
+`scene_tree.cpp:1461`) and a witness node in the probe that proves it on the live scene. A local windowed lane (32 checks,
+N = 100, the six gaps, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) passed, but the display was asleep,
+so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle median 0.776 ms): it makes no frame-time or
+presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
+byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
+not supported, and the pointer reaches no phone or hardware pointer yet. Hosted run 37874901247 (the push of main `2a3f4b0`, five
+jobs in the first attempt) repeated the 91 headless checks, and Pages published main's data
+([hosted receipt](world-input-a2/hosted-ci.json), [publication](world-input-a2/publication.json)); the windowed lane and the
+controls stay local. The record does not decide
+the go/no-go; it gives the reading for slice 3, which does. Slice 3 decided the spike: GO for the desktop (macOS), with the
+`iphone` criterion open; see the [decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3).
+
+The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the headless part of the `baseline` criterion of
+V05-06 (package P6) and leaves its frame time **pending**. It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
+75 or 100 native nodes, costs on the pointer spike's scene, extending GF-30's harness (its sampler is shared, and the 43 checks of the soak
+are unchanged). Headless, in two Godot processes of 384 swaps each (30 steady swaps for every ordered pair of the four panels, the click made
+by the V05-02 injection), 19 checks per process hold exactly: after every swap the SceneTree, the host and the Surface hold the base's 12
+native nodes plus the new panel's, the swap creates the new panel's nodes and deletes the old one's, a click swaps once and never reaches
+the map, a round ends at the base, and the live heap at rest (2,032,000 bytes) stays within GF-30's 2,048 bytes from the first steady
+rounds to the last (judged at 346146d on the floor of five-round windows; a hosted run showed a noise band of 2,376 bytes that this window did not
+survive, and the gate now compares the medians of the two halves of the steady rounds, see the record's "Registro fixado"); an independent
+oracle recomputes it all and the percentiles. Four retained sabotages (a panel kept mounted, a heap read without the forced collection, the
+buttons made `pointerEvents="none"`, the panel without its `key`) are rejected, and the first `leaky-panel` (`display: none`) was not,
+because a hidden View adds no node; the previous-host control does not apply, since no C++ changed. What a swap costs is recorded and never
+judged: the host mounts the panel inside the flush of the click (0 frames after it in all 720 steady swaps), and a swap that creates 100
+nodes takes 9.2 ms of CPU at the median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms; earlier runs on a more loaded machine gave 11 to 12 ms at the median, not pinned). The proposed limits (the CPU time of a swap by nodes created, the heap
+a panel holds, the frames to the panel) are a **PROPOSTA, not frozen** (`congelado` is a later, single act; `turno` and `soak` are open
+too). **No frame time is pinned**: the local windowed lane (not part of hosted CI) now refuses a run that the display did not pace, and with
+the display off it rejected all three attempts as unpaced (an idle frame of 0.7 ms against the 4.17 ms required), ended with
+`presented: false`, exit code 3 and no frame-time statistic, so the frame time of a presented window (vsync on, 120 Hz) and the budget rows
+that depend on it are **pending**; the rejected attempts are kept as raw data, four captures are kept, and an earlier presented run is
+only an unpinned reference. The clicks are synthetic, the machine was shared with other agents (load average recorded), there are no
+presentation timestamps (missed frames with the vsync stay open). Hosted run 37884924042 (the push of main `3bb51d6`, five jobs in
+the first attempt) repeated the 19 headless checks, and the 18 tests of the windowed lane's judgement and the heap series ran in the
+`contracts` job, and Pages published main's data ([hosted receipt](frontier-baseline/hosted-ci.json),
+[publication](frontier-baseline/publication.json)); the windowed lane itself never runs in hosted CI.
+
+The [Frontier soak record](frontier-soak/README.md), pinned at `dd67671`, records the `soak` criterion of V05-06 (package P6) and leaves `turno` and
+`congelado` open. A scripted player plays the Frontier game for 100 turns, through the typed services and a React Native HUD that opens and closes a
+100-node panel every turn, in three headless Godot processes (about 67 seconds each): all 34 checks of each hold, and the three games end in the same
+final hash (`a35c55f2…`) with the same trail of 100 turn hashes, whichever way the panel is closed. At every reading the SceneTree holds the host's native
+views plus a constant, with no orphan, and the views follow the HUD's state exactly (16 at rest with nothing selected, 18, 20, 22 and 23 in the other contexts,
++100 when the panel is kept hidden); the live heap at rest is flat to the byte (2,117,320 bytes, or 2,443,832 with the hidden panel) within GF-30's 2,048
+bytes by the baseline's median-of-halves rule; the resident memory is judged loosely (48 MiB between the medians of the halves, a coarse guard over a
+within-run band of 34 to 137 MB); no error goes unhandled, with a control that shows the tracker can see one. A game paused at turn 50 holds its accepted
+job at its first phase for 60 frames while a click still reaches the HUD's handler, because the HUD's layer is `PROCESS_MODE_ALWAYS`. The written decision
+between mounting and hiding a 100-node panel, from the numbers: no consistent CPU advantage was observed for either (the sum of an open and a close changes sign
+between rounds on a shared machine, so it is inconclusive); what was stable is that hiding has a shorter tail on the open (p95 11.3 against 18.8 ms) and a close
+about twice as costly, and that it keeps 100 native nodes and 326,512 bytes of heap, so the recommendation for the V05-05 HUD (not applied) is to unmount by default. Four retained sabotages (a connection never removed, a player that decides by chance, a HUD layer
+that pauses with the game, a "hidden" panel that is `display: none`) are rejected by the probe and by the oracle, each for the reason it was written for,
+and the oracle rejects 29 changes of a recorded report; the previous-host control does not apply, since no C++ changed. The 101 node updates of a hide
+toggle are unexplained, the clicks are synthetic, the machine was shared with other agents (load average recorded, timings vary by tens of percent),
+the `PROCESS_MODE_ALWAYS` recommendation for the V05-05 scene is not applied. Hosted run 37904776515 (the push of main `a49f851`,
+five jobs in the first attempt) repeated the 34 checks in each of three processes, and Pages published main's data
+([hosted receipt](frontier-soak/hosted-ci.json), [publication](frontier-soak/publication.json)); the timings, heap and memory
+numbers above are local.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-authority",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:57:57.250Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37880395525,
+    "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/79",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T03:41:06Z",
+    "updatedAt": "2026-10-09T04:32:32Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113658525157,
+        "runAttempt": 1,
+        "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+        "startedAt": "2026-10-09T03:41:10Z",
+        "completedAt": "2026-10-09T03:44:14Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525/job/113658525157"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113658525102,
+        "runAttempt": 1,
+        "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+        "startedAt": "2026-10-09T03:41:15Z",
+        "completedAt": "2026-10-09T04:31:57Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525/job/113658525102"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113670779386,
+        "runAttempt": 1,
+        "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+        "startedAt": "2026-10-09T04:32:11Z",
+        "completedAt": "2026-10-09T04:32:31Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525/job/113670779386"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113658524923,
+        "runAttempt": 1,
+        "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+        "startedAt": "2026-10-09T03:41:09Z",
+        "completedAt": "2026-10-09T03:47:13Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525/job/113658524923"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113658525120,
+        "runAttempt": 1,
+        "headSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+        "startedAt": "2026-10-09T03:41:14Z",
+        "completedAt": "2026-10-09T03:46:09Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37880395525/job/113658525120"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "native-cold-start": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "parity-comparison": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "reference-android": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "reference-ios": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T03:41:27Z",
+          "completedAt": "2026-10-09T03:44:11Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 334,
+              "suites": 0,
+              "pass": 334,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T03:44:11Z",
+          "completedAt": "2026-10-09T03:44:12Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T03:44:12Z",
+          "completedAt": "2026-10-09T03:44:12Z",
+          "passed": true,
+          "files": 1776
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-services": {
+        "step": "Run npm run test:frontier-services",
+        "number": 54,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T03:57:51Z",
+        "completedAt": "2026-10-09T03:58:40Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 11,
+              "suites": 0,
+              "pass": 11,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "Frontier's services play the 12-turn roteiro to the golden hash, and an independent oracle agrees",
+            "the dump is of this tree: the report was made from the sources the types and the schemas are in now",
+            "the TypeScript types and the schemas Godot registered declare the same names, fields and types",
+            "a field more or less, or a type that differs, on either side fails the parity and names the field",
+            "a name registered on one side only, or of another kind, fails the parity",
+            "the extractor reads the convention and refuses what the schema language cannot say",
+            "end_turn is registered to answer on acceptance and every other method on completion",
+            "the validator the oracle uses rejects a snapshot with a field more or less or of another type",
+            "an action is a call: the oracle rejects one whose args are not its method's arguments, or that was not accepted when enabled",
+            "a job is judged: the oracle rejects one that skipped a phase, ran in one frame, finished twice, was accepted with the wrong id, or left work pending",
+            "the rule lane's oracle accepts what the mutation predicts and rejects anything else"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      },
+      "test:consumer:civ-lite": {
+        "step": "Run npm run test:consumer:civ-lite",
+        "number": 127,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T04:28:44Z",
+        "completedAt": "2026-10-09T04:29:37Z",
+        "result": {
+          "tap": [],
+          "tests": [],
+          "failedTests": [],
+          "markers": [
+            "CONSUMER_CHECK_PASSED: civ-lite: 20 build/ownership checks; 165 native checks; 10 cycles"
+          ]
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 79,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/79",
+    "title": "feat(frontier): Run the end of the turn as an accepted job delivered once (V05-03 autoridade)",
+    "headSha": "d60b682dfcb126f22e664b75defd9110cbcb6f1c",
+    "baseSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+    "squashMergeCommit": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+    "squashCommitSubject": "feat(frontier): Run the end of the turn as an accepted job delivered once (#79)",
+    "mergedAt": "2026-10-09T03:41:03Z",
+    "headTreeSha": "76168ec8ce2557ad6aeacc17a3cc49da9a584aec",
+    "mainTreeSha": "76168ec8ce2557ad6aeacc17a3cc49da9a584aec",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 5,
+    "commits": [
+      {
+        "sha": "d0c7096f02543912224e5fc49ffb0168e2d7e0be",
+        "subject": "feat(frontier): Run the end of the turn as an accepted job delivered once"
+      },
+      {
+        "sha": "5ee0127a63686b30c65c34f06bae619111413aaf",
+        "subject": "docs(frontier): Record the turn authority slice"
+      },
+      {
+        "sha": "999b78647d186774bc922cf348b5c0e5992ee83b",
+        "subject": "docs(roadmap): Record the 0.5 V05-03 authority criterion"
+      },
+      {
+        "sha": "e9f1cf018b2984b49bbfa54e87fdf9773424f5de",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-authority"
+      },
+      {
+        "sha": "d60b682dfcb126f22e664b75defd9110cbcb6f1c",
+        "subject": "docs(frontier): Say the turn job advances one phase per frame"
+      }
+    ],
+    "changedFiles": 29,
+    "additions": 4058,
+    "deletions": 188
+  },
+  "artifacts": {
+    "services": {
+      "available": true,
+      "id": 11594662093,
+      "name": "native-frontier-services",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 144860,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "aba0e8e6297e2ce5f2015497ebdcc4adf992d6f0f47bfe4fc4f4456780a4c3a6",
+      "apiDigest": "sha256:aba0e8e6297e2ce5f2015497ebdcc4adf992d6f0f47bfe4fc4f4456780a4c3a6",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "aba0e8e6297e2ce5f2015497ebdcc4adf992d6f0f47bfe4fc4f4456780a4c3a6",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T03:58:42Z",
+      "expiresAt": "2027-01-07T03:41:07Z",
+      "fileCount": 12,
+      "files": {
+        "frontier-services-current-1-report.json": "49a8f96be732f81b85ca148e29e75be823bde07597f128cff5d5e31e5f8546e1",
+        "frontier-services-current-1.log": "78d00a60d4fa9ae9495b058daaac72b719034fe464d3fedd49adac44b1979b16",
+        "frontier-services-current-2-report.json": "49a8f96be732f81b85ca148e29e75be823bde07597f128cff5d5e31e5f8546e1",
+        "frontier-services-current-2.log": "9ad86976a4817454eda96d7771008a7a52bfa298e5f5fbd9a5da61277a853b9f",
+        "frontier-services-mutation.json": "268d66c32cd729136532943970636a8578b9885e3fd12e65bc8579c337b96fcc",
+        "frontier-services-probe-bundle.json": "2013fb12f6eb071c23e54ed0eba72b990d7daec042d93c71568352a29a9646c3",
+        "frontier-services-report.json": "e329fda71bfec094134804aae9ecba695cee1b02ba986dee6e65b617f4eaebe7",
+        "frontier-services-rule-genuine-1-report.json": "37ba5a67eb5ec5d4dd8df010f605a444f981e36c193f53fd95b9024ad9188446",
+        "frontier-services-rule-genuine-1.log": "a0e7af671778b0c3bc8ec4c1cbd6fca3b2f69b8a985ac2285867799896d10d3b",
+        "frontier-services-rule-mutated-1-report.json": "db4609172fe7c87370f4515bf79b7e6f59b6993abe26a8b29d5c7062238d1606",
+        "frontier-services-rule-mutated-1.log": "26239cf6ffc172d2e352a8052a53fddc359f8da352b585ef4e7dab705af4b6d6",
+        "frontier-services-summary.json": "7f2db5232e73bc8eafff107a473bc590a38852340e6319f6e5570e525e535abb"
+      },
+      "markers": [
+        {
+          "file": "frontier-services-current-1.log",
+          "line": "FRONTIER_SERVICES_PASSED: 1058"
+        },
+        {
+          "file": "frontier-services-current-1.log",
+          "line": "FRONTIER_SERVICES_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "frontier-services-current-2.log",
+          "line": "FRONTIER_SERVICES_PASSED: 1058"
+        },
+        {
+          "file": "frontier-services-current-2.log",
+          "line": "FRONTIER_SERVICES_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "frontier-services-rule-genuine-1.log",
+          "line": "FRONTIER_SERVICES_RULE_LANE_PASSED: 11"
+        },
+        {
+          "file": "frontier-services-rule-mutated-1.log",
+          "line": "FRONTIER_SERVICES_RULE_LANE_PASSED: 11"
+        }
+      ]
+    },
+    "consumer": {
+      "available": true,
+      "id": 11595591744,
+      "name": "independent-civ-lite-consumer",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 267539,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "e170e17896ff172d2c2f37419cb83f9aba61c4f7c401748e6f38c0862cb8d3a8",
+      "apiDigest": "sha256:e170e17896ff172d2c2f37419cb83f9aba61c4f7c401748e6f38c0862cb8d3a8",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "e170e17896ff172d2c2f37419cb83f9aba61c4f7c401748e6f38c0862cb8d3a8",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T04:31:05Z",
+      "expiresAt": "2027-01-07T03:41:07Z",
+      "fileCount": 10,
+      "files": {
+        "baseline-bundle.js": "b72044c0164bcb36ec4d2d3b515e6e92b54af25a66557f7143c27b0c37088463",
+        "bundle-report.json": "3021109437c2eca4b45779e35dead7aa2437b207653e89ca96a8008a3198484a",
+        "editor-cold.log": "a1f7f327f8e3bc2e2c4bf8799b8623929cf37cea8afd41d2de8da76d83683515",
+        "headless.json": "17856818b8e801e977f308b52b795fc3aed937bc59a310fbf073ef3f74dd4931",
+        "headless.log": "92df9d72dd6d6352d72c6a25be9678b45ed3445665d10698e6609bc41afe4c20",
+        "offline.log": "5a4c88036abd3bbe5af95ac285e7df4a9f3b273e4bc3f4334353526d97241617",
+        "provision.log": "494032132bb0cecb07e25f0cc966ff11afa11cef23672bec70a7a65293bcc33e",
+        "report.json": "e475565d9ca53d84ca09629b8e427185b9c9225a3e2175592314ffd9b095b88f",
+        "sdk-manifest.json": "8a6df3aa582af62d1d733a7cfd4bd35f35d348fbab68de699d45b0d81d9ae614",
+        "series.json": "643ea0aa83db7875823ca33a6534d0c2cbac2d400dbe3ae62483c1011f5f9425"
+      },
+      "markers": [
+        {
+          "file": "editor-cold.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "headless.log",
+          "line": "CIVLITE_VALIDATION_PASSED"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

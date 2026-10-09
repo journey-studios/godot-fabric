@@ -496,9 +496,12 @@ headless probe counts bursts of 100 events delivered by one flush, so no count d
 two topologies (one full-screen Surface, and one Surface per panel; the overlay checks and a local windowed
 lane with captures on a real macOS window use the full-screen one only) with an independent oracle; the host that
 predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
-a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the map as well
-as React Native: they are recorded and left to the second slice of the spike. Hardware pointers, a real touch
-screen and mobile exports are open, and so is hosted CI. [Evidence](docs/evidence/world-input/README.md); [research](docs/research/world-input.md).
+a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD, a ScrollView or an overlay reached
+the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
+Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
+(the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
+The third slice decided the spike: GO for the desktop (macOS), with the `iphone` criterion open ([decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3)).
+Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline
@@ -550,6 +553,25 @@ memory are recorded with their provenance and never judged; target-device budget
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
 
+The [Frontier HUD baseline](examples/frontier-baseline/README.md) (V05-06, criterion `baseline`) extends that harness to
+the pointer spike's scene: a React Native HUD over the Godot map whose panel, a tree of 50, 75 or 100 native nodes, is
+replaced by a real click on a button of the bar. Headless, in two processes, every swap leaves the SceneTree and the host
+with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
+reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
+independent oracle recomputes it all. A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 ms at p95 (headless, pinned run), more than a 120 Hz period (8.33 ms).
+The CPU and heap limits are a proposal, not a frozen budget. **No frame time is pinned**: the local windowed lane
+(`node scripts/frontier-baseline-graphics.mjs`) refuses a run that no display paced and, with the display off, ended as
+not presented (exit code 3, no frame-time statistic), so the frame time of a presented window is pending. The
+lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
+[Evidence](docs/evidence/frontier-baseline/README.md); [research](docs/research/frontier-baseline.md).
+
+The [Frontier soak](docs/research/frontier-soak.md) (V05-06, criterion `soak`, `npm run test:frontier-soak`) plays the game for 100 turns in three
+headless Godot processes through the typed services, with a scripted player and a React Native HUD that opens and closes a 100-node panel every turn: the three games end
+in the same hash and have the same trail of 100 turn hashes, the native views return to the same count in each context, the live heap at rest and the resident memory stay within their
+rules, no JavaScript error goes unhandled, a paused game keeps the HUD answering while its accepted job waits, and the research note decides between unmounting and hiding a panel from the measured
+numbers (a recommendation for the V05-05 HUD, not a change to it); four retained sabotages are rejected and the hosted CI run is pending.
+[Evidence](docs/evidence/frontier-soak/README.md); [research](docs/research/frontier-soak.md).
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -577,7 +599,13 @@ contexts and refuses invalid intents with a reason, judged by an independent ora
 (`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The second package, the persistent `GameServices`
 node, publishes the snapshot and takes the intents as typed services with an epoch, with hand-written TypeScript types
 checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-services/README.md), [research](docs/research/frontier-services.md)).
-The consumer project, the authority under bursts, the HUD, the export and the devices are open, and so is hosted CI.
+The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
+scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
+epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
+The end of a turn is then an accepted job that the node advances one phase per frame and finishes once, whether or not a screen is open,
+with a rule mutated in Godot changing the HUD with the same JavaScript bundle and every phase of a turn measured against the
+registry's 64 tasks and 128 events (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-authority/README.md), [research](docs/research/frontier-services.md)).
+The playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
@@ -869,6 +897,7 @@ npm run test:runtime                     # native deadline budget and callback e
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
+npm run test:consumer:civ-lite -- --capture    # Frontier provisioned as a consumer, ten cycles with no leak and a monotonic epoch; sabotages: node scripts/consumer-civ-lite-sabotage.mjs
 npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer
@@ -879,12 +908,14 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:frontier-baseline           # the Frontier HUD's panel swaps by a real click over the pointer spike's scene: exact node counts, oracle; sabotages: node scripts/frontier-baseline-sabotage.mjs
 npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
-npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-soak               # Frontier played for 100 turns in three processes: one game (same hashes), steady nodes, heap and memory, a pause that keeps the HUD alive, unmounting against hiding a panel; sabotages: node scripts/frontier-soak-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

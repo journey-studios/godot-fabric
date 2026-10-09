@@ -15,9 +15,18 @@ import ts from "typescript";
 //     with the state the report serialized (turn, phase, selection, stocks);
 //   - every action in every snapshot is a call: `frontier.<id>` takes exactly the arguments the action carries, and sent
 //     back as they are on a copy of the reference game each enabled action was accepted and each disabled one refused;
-//   - every method answered the uniform {ok, code, text}, with a code from the game's table and its text, and a refused
+//   - every method answered the uniform {ok, code, text, job}, with a code from the game's table and its text, and a refused
 //     intent published nothing; an accepted one published exactly one snapshot; revisions only rose with those;
-//   - an accepted end_turn emitted exactly one turn_ended, before that turn's snapshot, with the six phases in order;
+//   - end_turn is an accepted job: it answers on acceptance, with the id of the job (1, 2, 3 ... for the accepted ones, 0 when
+//     refused), and the job goes on in the node, advancing one phase per frame: seven snapshots in seven consecutive frames (the first phase
+//     at acceptance, then one after each of the six phases, which show the turn's progress and end at rest), and exactly one
+//     turn_ended with that job, after the snapshot of the last phase and before the snapshot of the turn that begins, whose
+//     `last_job` is the job; every frame of a job fits in one pump (64 tasks, 128 events) and leaves nothing pending;
+//   - the job outlives the screen: closed in the frame after the acceptance, it finished with no root, once, and the
+//     application's own subscription received its turn_ended once, also after the remount;
+//   - every call made while a job runs was refused with turn_in_progress and started no job;
+//   - the registry's budgets under 150 more subscribers: a publication of more than 128 events drains in ceil(events / 128)
+//     pumps, every subscriber receives exactly one snapshot per publication, in the order they were queued;
 //   - the epoch of the roteiro's snapshots is 1 and each new_game raised it by 1, back to the initial state, and the
 //     epoch is outside the state (no `epoch` key) and outside the hash;
 //   - SHA-256 of each reported serialization is its hash, the final one is the golden hash, and the hashes of the steps
@@ -28,13 +37,17 @@ import ts from "typescript";
 export const TYPES_FILE = "consumers/civ-lite/ui/frontier-types.ts";
 
 const ROTEIRO_STEPS = 73;
+const UNMOUNT_AFTER_TURNS = 3;
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
 const TASK_LIMIT = 64;
 const EVENT_LIMIT = 128;
 const NODE_LIMIT = 10000;
 const DEPTH_LIMIT = 32;
-const BINDINGS = 13;
+const BINDINGS = 15;
 const NEW_GAMES = 3;
+const JOB_SNAPSHOTS = 7;
+const STRESS_SUBSCRIBERS = 150;
+const DURING_JOB_CALLS = 10;
 const PREFIX = "frontier.";
 
 // The refusal codes and their texts: the table of docs/research/frontier-game.md.
@@ -330,6 +343,201 @@ function measure(value, depth = 0) {
   return {nodes, depth: deepest};
 }
 
+// --- A job ----------------------------------------------------------------------------------------------------------
+
+const sum = list => list.reduce((total, value) => total + value, 0);
+const range = (from, to) => Array.from({length: to - from + 1}, (_, position) => from + position);
+
+// Judges what the probe kept of one end-of-turn job: what JavaScript saw (a snapshot per phase, the old turn and the old
+// last_job until it finished), the frame each snapshot was published in on the Godot side, and what the registry held before
+// and after the pump of each of those frames. `ended` and `turnEndedSeq` are the signal JavaScript received.
+function verifyJob(job, {where, jobId, turnBefore, lastJobBefore, turnEndedSeq, duringCalls = 0}) {
+  assert.equal(job.id, jobId, `${where}: the record is of the job the acceptance answered`);
+  assert.deepEqual(job.progress.map(entry => entry.phase), [...PHASES, "idle"], `${where}: JavaScript saw the turn go through every phase and arrive at rest`);
+  assert.deepEqual(job.progress.map(entry => entry.turn), [...Array(PHASES.length).fill(turnBefore), turnBefore + 1],
+    `${where}: the snapshots show the old turn until the job finishes, and then the turn that begins`);
+  assert.deepEqual(job.progress.map(entry => entry.last_job), [...Array(PHASES.length).fill(lastJobBefore), jobId],
+    `${where}: last_job is the previous job until this one finishes, and then this one`);
+  job.progress.slice(1).forEach((entry, position) => {
+    assert.equal(entry.revision, job.progress[position].revision + 1, `${where}: one revision per snapshot, none skipped`);
+    assert.ok(entry.seq > job.progress[position].seq, `${where}: the snapshots arrive in order`);
+  });
+  assert.ok(job.progress[PHASES.length - 1].seq < turnEndedSeq && turnEndedSeq < job.progress[PHASES.length].seq,
+    `${where}: turn_ended comes after the snapshot of the last phase and before the snapshot of the turn that begins`);
+
+  // The node on the Godot side: one phase per frame, and turn_ended once, in the frame of the last phase, ahead of its snapshot.
+  assert.deepEqual(job.rows.map(row => row.kind), [...Array(PHASES.length).fill("snapshot"), "turn_ended", "snapshot"],
+    `${where}: the node published a snapshot for each phase, then turn_ended once, then the snapshot of the turn that begins`);
+  const published = job.rows.filter(row => row.kind === "snapshot");
+  assert.deepEqual(published.map(row => row.phase), [...PHASES, "idle"], `${where}: the node's snapshots are of the phases in order`);
+  assert.deepEqual(published.map(row => row.frame), range(published[0].frame, published[0].frame + PHASES.length),
+    `${where}: the node ran one phase a frame: its seven snapshots were published in seven consecutive frames`);
+  const ended = job.rows.find(row => row.kind === "turn_ended");
+  assert.deepEqual([ended.job, ended.turn, ended.frame], [jobId, turnBefore + 1, published.at(-1).frame],
+    `${where}: turn_ended finishes the job in the frame of the last phase`);
+
+  // The registry: one pump per frame is enough. The tasks and events here are the registry's (calls run, signals sent), and
+  // not the game's own counters that turn_ended reports for each phase.
+  assert.equal(job.pumps.length, JOB_SNAPSHOTS, `${where}: the registry was read for each of the seven frames`);
+  job.pumps.forEach((pump, position) => {
+    const frame = `${where}, frame ${pump.frame} (${pump.phase})`;
+    assert.equal(pump.frame, published[position].frame, `${frame}: the pump is of the frame of the snapshot`);
+    assert.ok(Object.keys(pump.before).length === 4 && Object.keys(pump.after).length === 4, `${frame}: the registry was read before and after the pump`);
+    assert.deepEqual([pump.after.pendingHostTasks, pump.after.pendingEvents], [0, 0], `${frame}: the pump left nothing pending`);
+    assert.ok(pump.after.hostTasksRun - pump.before.hostTasksRun <= TASK_LIMIT, `${frame}: at most 64 tasks`);
+    assert.ok(pump.after.eventsSent - pump.before.eventsSent <= EVENT_LIMIT && pump.before.pendingEvents <= EVENT_LIMIT, `${frame}: at most 128 events`);
+    assert.ok(pump.after.eventsSent - pump.before.eventsSent >= 1, `${frame}: the pump delivered the publication`);
+  });
+  assert.equal(job.finishedCount, 1, `${where}: the game finished the job exactly once`);
+
+  // The calls a HUD made while the job ran: refused by the game's own rule, none of them a job.
+  assert.equal(job.attempts.length, duringCalls, `${where}: ${duringCalls} calls were made while the job ran`);
+  if (duringCalls > 0) {
+    assert.notEqual(job.phaseAtAttempts, "idle", `${where}: they were sent with the turn in progress`);
+    for (const attempt of job.attempts) {
+      assert.equal(attempt.state, "resolved", `${where}: ${attempt.label} was answered`);
+      assert.equal(attempt.response, attempt.method === `${PREFIX}end_turn` ? "acceptance" : "completion", `${where}: ${attempt.label} answered on its own response`);
+      assert.deepEqual(attempt.value, {ok: 0, code: "turn_in_progress", text: REFUSALS.turn_in_progress, job: 0},
+        `${where}: ${attempt.label} was refused with turn_in_progress and started no job`);
+    }
+    assert.ok(job.pumps.some(pump => pump.after.hostTasksRun - pump.before.hostTasksRun >= duringCalls), `${where}: the calls were run by the registry in a frame of the job`);
+  }
+}
+
+// The registry's budgets under STRESS_SUBSCRIBERS more subscribers of the snapshot, with the application's own and the panel's.
+// A publication then holds more than 128 events: it drains in ceil(events / 128) pumps (counted as pumps, never as time), no
+// subscriber loses one, and they arrive in the order they were queued. Once with each phase published on its own, once with the
+// node's own driver, one phase per frame, outrunning the pump.
+function verifyStress(stress, {firstJob}) {
+  assert.equal(stress.subscribers, STRESS_SUBSCRIBERS, "the stress case has 150 more subscribers");
+  const perPublication = STRESS_SUBSCRIBERS + 1 + (stress.panelConnected ? 1 : 0);
+  assert.ok(perPublication > EVENT_LIMIT, "stress: a publication holds more than 128 events");
+  const base = stress.initialRevision;
+  const arrivalsOf = (from, to) => range(from, to).flatMap(revision => range(0, STRESS_SUBSCRIBERS - 1).map(subscriber => [subscriber, revision]));
+
+  const isolated = stress.isolated;
+  assert.deepEqual([isolated.job, isolated.accepted.ok, isolated.accepted.job], [firstJob, 1, firstJob], "stress: the job driven a phase at a time was accepted with its id");
+  assert.deepEqual(isolated.drains.map(drain => drain.label), ["accepted", ...PHASES], "stress: the publications are the acceptance and each of the six phases");
+  isolated.drains.forEach((drain, position) => {
+    const where = `stress, publication ${drain.label}`;
+    // The last one also carries turn_ended: one more subscription, one more event.
+    assert.equal(drain.generated, perPublication + (position === JOB_SNAPSHOTS - 1 ? 1 : 0), `${where}: one event for each subscriber`);
+    assert.ok(drain.generated > EVENT_LIMIT, `${where}: more events than one pump sends`);
+    assert.equal(sum(drain.pumps), drain.generated, `${where}: every event was sent`);
+    assert.ok(drain.pumps.every(sent => sent <= EVENT_LIMIT), `${where}: no pump sent more than 128`);
+    assert.equal(drain.pumps.length, Math.ceil(drain.generated / EVENT_LIMIT), `${where}: it drained in ceil(${drain.generated} / 128) pumps`);
+    assert.deepEqual([drain.pendingAfter, drain.pendingTasksAfter, drain.tasksRun, drain.eventsSent], [0, 0, 0, drain.generated], `${where}: nothing left pending`);
+  });
+  assert.equal(isolated.received.length, STRESS_SUBSCRIBERS);
+  isolated.received.forEach((entries, subscriber) => {
+    const where = `stress, subscriber ${subscriber}`;
+    assert.deepEqual(entries.map(entry => entry[0]), range(base, base + JOB_SNAPSHOTS), `${where}: its initial value and one snapshot for each publication, none lost, none repeated`);
+    assert.deepEqual(entries.slice(1).map(entry => entry[2]), [...PHASES, "idle"], `${where}: the phases in order`);
+    const turnBefore = entries[0][1];
+    assert.deepEqual(entries.slice(1).map(entry => entry[1]), [...Array(PHASES.length).fill(turnBefore), turnBefore + 1], `${where}: the turn advances with the last one`);
+    assert.deepEqual(entries.slice(1).map(entry => entry[3]), [...Array(PHASES.length).fill(firstJob - 1), firstJob], `${where}: last_job becomes the job with the last one`);
+  });
+  assert.deepEqual(isolated.arrivals, arrivalsOf(base + 1, base + JOB_SNAPSHOTS), "stress: the deliveries arrived in the order they were queued (FIFO), publication by publication");
+
+  const free = stress.free;
+  const total = JOB_SNAPSHOTS * perPublication + 1;
+  assert.deepEqual([free.job, free.accepted.ok, free.accepted.job], [firstJob + 1, 1, firstJob + 1], "stress: the job driven by the node was accepted with the next id");
+  assert.equal(free.eventsSent, total, "stress: the node's own driver published seven snapshots and one turn_ended, and every event was sent");
+  assert.equal(sum(free.pumps), total, "stress: the pumps sent every event");
+  assert.ok(free.pumps.every(sent => sent <= EVENT_LIMIT), "stress: no pump sent more than 128");
+  assert.equal(free.pumps.length, Math.ceil(total / EVENT_LIMIT), `stress: a job that outran the pump drained in ceil(${total} / 128) pumps`);
+  assert.equal(free.pending[0], perPublication, "stress: the acceptance left one publication waiting");
+  assert.ok(Math.max(...free.pending) > EVENT_LIMIT && free.pending.at(-1) === 0, "stress: the backlog grew beyond one pump while the job ran, and drained completely");
+  free.received.forEach((entries, subscriber) => {
+    const where = `stress, subscriber ${subscriber}, with the node's driver`;
+    assert.deepEqual(entries.map(entry => entry[0]), range(base, base + 2 * JOB_SNAPSHOTS), `${where}: one snapshot for each publication, none lost, none repeated`);
+    assert.deepEqual(entries.slice(1 + JOB_SNAPSHOTS).map(entry => entry[2]), [...PHASES, "idle"], `${where}: the phases in order`);
+    assert.equal(entries.at(-1)[3], firstJob + 1, `${where}: last_job becomes the job with the last one`);
+  });
+  assert.deepEqual(free.arrivals, arrivalsOf(base + JOB_SNAPSHOTS + 1, base + 2 * JOB_SNAPSHOTS), "stress: with the node's driver the deliveries still arrived in the order they were queued");
+  return {subscribers: STRESS_SUBSCRIBERS, perPublication, isolatedPumps: isolated.drains.map(drain => drain.pumps), freeEvents: total, freePumps: free.pumps, freePending: free.pending};
+}
+
+// --- The rule lane ---------------------------------------------------------------------------------------------------
+
+// Every path at which two JSON trees differ, as {path, from, to}.
+function differences(left, right, where = "") {
+  const object = value => value !== null && typeof value === "object";
+  if (!object(left) || !object(right) || Array.isArray(left) !== Array.isArray(right)) {
+    return left === right ? [] : [{path: where, from: left, to: right}];
+  }
+  const keys = [...new Set([...Object.keys(left), ...Object.keys(right)])].sort((a, b) => (Array.isArray(left) ? Number(a) - Number(b) : a < b ? -1 : 1));
+  return keys.flatMap(key => differences(left[key], right[key], Array.isArray(left) ? `${where}[${key}]` : where === "" ? key : `${where}.${key}`));
+}
+
+// The same first intents of the game on the genuine rules and on rules with one constant mutated, read from the snapshots
+// JavaScript received. The only thing that differs is what Godot decided: the same bundle ran in both. The expected
+// differences are derived here from the genuine snapshots and the one constant, and must be exactly what changed: the
+// Settler's card (moves and max_moves) wherever it is shown, and found_city, which the game's own rule turns off with
+// no_moves_left once the Settler has none.
+export function verifyRuleLane(genuine, mutated, {genuineMoves, mutatedMoves, typesText, bundleSha256, genuineRulesSha256, mutatedRulesSha256}) {
+  assert.notEqual(genuineMoves, mutatedMoves, "the mutation changes the Settler's movement points");
+  assert.equal(mutatedMoves, 0, "the mutation takes the Settler's movement points to 0, so that found_city is turned off from the start");
+  assert.deepEqual(bundleSha256.genuine, bundleSha256.mutated, "the JavaScript bundle is the same in both runs: it contains no .gd");
+  assert.notEqual(genuineRulesSha256, mutatedRulesSha256, "rules.gd is not the same in both runs");
+  const snapshotSchema = extractFrontierSchemas(typesText).registrations.find(entry => entry.name === `${PREFIX}snapshot`).value;
+  for (const [label, report] of [["genuine", genuine], ["mutated", mutated]]) {
+    assert.equal(report.scenario, "frontier-services-rule-lane", `${label}: the report is the rule lane's`);
+    assert.equal(report.sabotage, false);
+    assert.equal(report.ruleLane.rows.length, 4, `${label}: the lane ran four observations`);
+    assert.equal(report.native.errors.length, 0, `${label}: the application reports no error`);
+    report.ruleLane.rows.forEach(row => conforms(JSON.parse(row.snapshot), snapshotSchema, `${label}: ${row.name}`));
+  }
+  assert.equal(genuine.ruleLane.settlerMoves, genuineMoves, "the genuine run played the genuine constant");
+  assert.equal(mutated.ruleLane.settlerMoves, mutatedMoves, "the mutated run played the mutated constant");
+  assert.deepEqual(genuine.ruleLane.rows.map(row => [row.name, row.method, row.args]), mutated.ruleLane.rows.map(row => [row.name, row.method, row.args]),
+    "both runs sent the same intents");
+  const [initial, stack, settler, moved] = genuine.ruleLane.rows.map(row => JSON.parse(row.snapshot));
+  const [initialMutated, stackMutated, settlerMutated, movedMutated] = mutated.ruleLane.rows.map(row => JSON.parse(row.snapshot));
+
+  // Nothing of the Settler is shown before it is selected: the first snapshot is the same, though the state is not.
+  assert.deepEqual(differences(initial, initialMutated), [], "the initial snapshot shows nothing of the Settler's points: it is the same in both runs");
+  genuine.ruleLane.rows.forEach((row, position) => assert.notEqual(row.hash, mutated.ruleLane.rows[position].hash,
+    `${row.name}: the state is not the same in both runs: Godot changed`));
+
+  const unit = (snapshot) => snapshot.tile.units.findIndex(card => card.kind === "settler");
+  const settlerCard = unit(stack);
+  assert.ok(settlerCard >= 0 && unit(stackMutated) === settlerCard, "the Settler is on the stack the player selected");
+  const card = `tile.units[${settlerCard}]`;
+  assert.deepEqual(differences(stack, stackMutated), [
+    {path: `${card}.max_moves`, from: genuineMoves, to: mutatedMoves},
+    {path: `${card}.moves`, from: genuineMoves, to: mutatedMoves},
+  ], "selecting the stack: the Settler's card shows the points, and only it differs");
+
+  const foundCity = settler.actions.findIndex(action => action.id === "found_city");
+  assert.ok(foundCity >= 0 && settler.actions[foundCity].enabled === 1 && settler.actions[foundCity].reason === "", "genuine: found_city is enabled for a Settler with points");
+  assert.deepEqual(settlerMutated.actions[foundCity], {id: "found_city", label: "Found city", args: [1], enabled: 0, reason: "no_moves_left", reason_text: REFUSALS.no_moves_left},
+    "mutated: found_city is turned off by the game's rule with no_moves_left");
+  assert.deepEqual(differences(settler, settlerMutated), [
+    {path: `actions[${foundCity}].enabled`, from: 1, to: 0},
+    {path: `actions[${foundCity}].reason`, from: "", to: "no_moves_left"},
+    {path: `actions[${foundCity}].reason_text`, from: "", to: REFUSALS.no_moves_left},
+    {path: `${card}.max_moves`, from: genuineMoves, to: mutatedMoves},
+    {path: `${card}.moves`, from: genuineMoves, to: mutatedMoves},
+  ],
+  "selecting the Settler: found_city, its reason and the Settler's card are all that differ, exactly as the rule predicts");
+
+  // The intent the rule decides: the same move is accepted with points and refused without.
+  const [, , , moving] = genuine.ruleLane.rows;
+  const [, , , refusedMove] = mutated.ruleLane.rows;
+  assert.deepEqual(moving.result, {ok: 1, code: "ok", text: "", job: 0}, "genuine: the Settler enters the forest");
+  assert.deepEqual(refusedMove.result, {ok: 0, code: "no_moves_left", text: REFUSALS.no_moves_left, job: 0}, "mutated: the same move is refused by the game's rule");
+  assert.deepEqual(movedMutated, settlerMutated, "mutated: a refused move changes nothing in the snapshot");
+  assert.equal(mutated.ruleLane.rows[3].hash, mutated.ruleLane.rows[2].hash, "mutated: a refused move changes nothing in the state");
+  assert.notEqual(moved.selection.x, settler.selection.x, "genuine: the accepted move changed the selection");
+  assert.equal(moved.actions.find(action => action.id === "found_city").reason, "no_moves_left", "genuine: after the forest the Settler has no points left, and found_city says so");
+  return {
+    differences: {initial: differences(initial, initialMutated), select_tile: differences(stack, stackMutated), select_unit: differences(settler, settlerMutated)},
+    moveUnit: {genuine: moving.result, mutated: refusedMove.result},
+    refusedMove: refusedMove.result.code, bundleSha256: bundleSha256.genuine, genuineRulesSha256, mutatedRulesSha256,
+  };
+}
+
 // --- The report ----------------------------------------------------------------------------------------------------
 
 // Throws on the first thing the report cannot justify; answers what it counted otherwise.
@@ -349,7 +557,10 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
   `registration: the bundle's own connections, made as it evaluated, were not ready (${JSON.stringify(registration?.application.errors)})`);
   assert.equal(registration.snapshots, 1, "registration: the first connection received exactly the initial snapshot");
   assert.deepEqual(diffRegistrations(types.registrations, report.registered), [], "registration: the schemas Godot registered are not the TypeScript types'");
-  assert.equal(report.registered.length, BINDINGS, "registration: one state, one signal and one method per intent");
+  assert.equal(report.registered.length, BINDINGS, "registration: one state, one signal and one method per service");
+  assert.deepEqual(report.registered.filter(entry => entry.kind === "method").map(entry => [entry.name, entry.response]).sort((a, b) => (a[0] < b[0] ? -1 : 1)),
+    [...methods.keys()].sort().map(name => [name, name === `${PREFIX}end_turn` ? "acceptance" : "completion"]),
+    "registration: end_turn is registered to answer on acceptance, and every other method on completion");
   assert.equal(report.native.gameServices.bindings, BINDINGS, "registration: the registry holds every binding");
   assert.deepEqual(report.native.errors, [], "the application reports no error");
 
@@ -363,6 +574,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
   let revision = null;
   let generation = null;
   let turn = 1;
+  let jobs = 0;
   let lastSnapshotSeq = 0;
   const hashes = [];
   const largest = {nodes: 0, depth: 0, step: -1};
@@ -373,10 +585,13 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     assert.equal(result.state, "resolved", `${where}: the call was answered`);
     assert.equal(result.method, `${PREFIX}${step.intent}`, `${where}: it called the service of its intent`);
     assert.deepEqual(result.args, step.args, `${where}: it sent the roteiro's arguments`);
-    assert.equal(result.response, "completion", `${where}: a method answers on completion`);
+    assert.equal(result.response, step.intent === "end_turn" ? "acceptance" : "completion",
+      `${where}: end_turn answers on acceptance and every other method on completion`);
     conforms(result.value, resultSchema, `${where} result`);
     const answer = result.value;
     assert.ok(answer.ok === 0 || answer.ok === 1, `${where}: ok is 0 or 1`);
+    const takesTurn = step.intent === "end_turn" && answer.ok === 1;
+    assert.equal(answer.job, takesTurn ? jobs + 1 : 0, `${where}: an accepted end_turn answers the next job id (${jobs + 1}) and every other call, and a refused end_turn, answers job 0`);
     assert.equal(answer.code, step.expectedCode, `${where}: the roteiro expects ${step.expectedCode}`);
     if (answer.ok === 1) {
       assert.deepEqual([answer.code, answer.text], ["ok", ""], `${where}: an accepted intent answers ok and no text`);
@@ -386,9 +601,10 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
       refusals[answer.code] = (refusals[answer.code] ?? 0) + 1;
     }
 
-    // What was published: a refused intent changed nothing and published nothing; an accepted one, one snapshot.
-    const takesTurn = step.intent === "end_turn" && answer.ok === 1;
-    assert.equal(step.snapshotsEmitted, answer.ok, `${where}: ${answer.ok === 1 ? "an accepted intent publishes exactly one snapshot" : "a refused intent publishes nothing"}`);
+    // What was published: a refused intent changed nothing and published nothing; an accepted one, one snapshot, and an
+    // accepted end_turn the seven snapshots of its job.
+    assert.equal(step.snapshotsEmitted, takesTurn ? JOB_SNAPSHOTS : answer.ok,
+      `${where}: ${takesTurn ? "an accepted end_turn publishes exactly the seven snapshots of its job" : answer.ok === 1 ? "an accepted intent publishes exactly one snapshot" : "a refused intent publishes nothing"}`);
     assert.equal(step.turnEndedEmitted, takesTurn ? 1 : 0, `${where}: turn_ended is emitted exactly once per accepted end_turn, and by nothing else`);
 
     // The snapshot JavaScript holds.
@@ -398,6 +614,8 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     conforms(received, snapshotSchema, `${where} snapshot`);
     assert.equal(received.version, 1, `${where}: DTO version`);
     assert.equal(received.epoch, 1, `${where}: the first session has epoch 1 at every step`);
+    assert.equal(received.last_job, takesTurn ? jobs + 1 : jobs, `${where}: last_job is the last job that finished`);
+    assert.equal(received.phase, "idle", `${where}: the roteiro waits for the job, so every step is seen at rest`);
     assert.equal(received.context, step.context, `${where}: the context the roteiro expects`);
     // The HUD's contract: an action is a call. `frontier.<id>` takes exactly the positional arguments the action carries,
     // by the schema the TypeScript types declare, so a caller needs no knowledge of which intent takes what; and each
@@ -429,7 +647,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     // The snapshot against the state the report serialized, which is the game's.
     const state = JSON.parse(step.serialization);
     assert.equal(step.serialization, canonical(state), `${where}: the state's serialization is canonical`);
-    assert.ok(!("epoch" in state), `${where}: the epoch is not in the state`);
+    assert.ok(!("epoch" in state) && !("last_job" in state), `${where}: the epoch and the last job are not in the state`);
     assert.deepEqual([received.turn, received.phase], [state.turn, state.phase], `${where}: the snapshot is of the state's turn and phase`);
     assert.deepEqual(received.selection, {x: state.sel.x, y: state.sel.y, unit: state.sel.unit}, `${where}: the snapshot's selection is the state's`);
     assert.deepEqual([received.resources.food.stock, received.resources.production.stock, received.resources.science.stock],
@@ -455,15 +673,21 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     }
     if (takesTurn) {
       turns += 1;
+      jobs += 1;
       conforms(step.turnEnded, turnEndedSchema, `${where} turn_ended`);
       assert.deepEqual(step.turnEnded.phases.map(phase => phase.name), PHASES, `${where}: turn_ended lists the six phases in their order`);
+      // The tasks and events of a phase are the game's own counters (what the phase did to the state); the registry's are
+      // counted apart, in the pumps of the job below.
       assert.ok(step.turnEnded.phases.every(phase => phase.tasks <= TASK_LIMIT && phase.events <= EVENT_LIMIT), `${where}: every phase is within 64 tasks and 128 events`);
       assert.equal(step.turnEnded.turn, turn + 1, `${where}: turn_ended carries the turn that begins`);
       assert.equal(step.turnEnded.turn, received.turn, `${where}: turn_ended agrees with the snapshot of the turn that begins`);
-      assert.ok(step.turnEndedSeq < step.snapshotSeq, `${where}: turn_ended comes before the snapshot of the turn that begins`);
+      assert.equal(step.turnEnded.job, answer.job, `${where}: turn_ended finishes the job the acceptance answered`);
+      assert.equal(step.turnEndedEmitted, 1, `${where}: the job finished exactly once`);
+      verifyJob(step.job, {where, jobId: answer.job, turnBefore: turn, lastJobBefore: jobs - 1, turnEndedSeq: step.turnEndedSeq});
       turn += 1;
     } else {
       assert.equal(received.turn, turn, `${where}: the turn only moves with an accepted end_turn`);
+      assert.deepEqual(step.job, {}, `${where}: a call that starts no job reports none`);
     }
   });
   assert.equal(turns, 12, "the roteiro ends 12 turns");
@@ -490,7 +714,8 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     epoch = entry.epoch;
     assert.equal(received.epoch, entry.epoch, `${where}: the snapshot carries the epoch`);
     assert.equal(entry.jsSnapshot, entry.godotSnapshot, `${where}: the snapshot JavaScript holds is the node's`);
-    assert.deepEqual(entry.result, {ok: 1, code: "ok", text: ""}, `${where}: accepted with the uniform result`);
+    assert.deepEqual(entry.result, {ok: 1, code: "ok", text: "", job: 0}, `${where}: accepted with the uniform result, and no job`);
+    assert.equal(received.last_job, 0, `${where}: a new game has finished no job`);
     assert.deepEqual([entry.snapshotsEmitted, entry.turnEndedEmitted, entry.callbacksDelta], [1, 0, 1], `${where}: one snapshot, no turn_ended, one callback`);
     assert.equal(entry.hash, report.initialHash, `${where}: the state is the scenario's initial one: the epoch is outside the hash`);
     assert.deepEqual([received.turn, received.context, received.selection.x], [1, "none", -1], `${where}: the snapshot is of a fresh game`);
@@ -518,7 +743,9 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
 
   // Persistence across an unmounted surface.
   const kept = report.persistence;
-  assert.deepEqual(kept.unmounted, kept.before, "unmounting the surface changed nothing the node owns");
+  const owned = persisted => ({bindings: persisted.bindings, generation: persisted.generation, epoch: persisted.epoch, sameNode: persisted.sameNode,
+    sameGame: persisted.sameGame, registered: persisted.registered});
+  assert.deepEqual(owned(kept.unmounted), owned(kept.before), "unmounting the surface changed nothing the node owns");
   assert.equal(kept.before.bindings, BINDINGS, "the registry held every binding before the unmount");
   assert.equal(kept.remounted.bindings, BINDINGS, "and after the remount");
   assert.deepEqual([kept.remounted.registered, kept.remounted.epoch, kept.remounted.sameNode, kept.remounted.sameGame], [BINDINGS, 1, true, true],
@@ -528,11 +755,46 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
     "the remounted root's first value is the snapshot the step played with no surface left");
   assert.notEqual(kept.moved.hash, kept.before.hash, "a step played with no surface at all changed the game");
   assert.ok(kept.panel.connected && kept.panel.mounts === 2 && kept.panel.cleanups === 1 && kept.panel.error === null, "the panel mounted twice and cleaned up once");
+  // The job that outlived the screen: the third accepted end_turn, with the surface closed in the frame after the acceptance.
+  const unmountedStep = report.steps.filter(step => step.intent === "end_turn" && step.result.value.ok === 1)[UNMOUNT_AFTER_TURNS - 1];
+  const survivor = kept.job;
+  assert.equal(survivor.id, unmountedStep.result.value.job, "the job the surface was closed during is the third job");
+  assert.deepEqual(survivor.id, UNMOUNT_AFTER_TURNS, "...and its id is 3");
+  assert.equal(survivor.phaseAtUnmount, "ai_plan", "the screen was closed with the job accepted and its first phase not yet run");
+  assert.equal(survivor.finishedAtUnmount, 0, "the job had not finished when the screen was closed");
+  assert.ok(survivor.rootCounts.length >= 2 && survivor.rootCounts.every(count => count === 0), "the application held no root while the job ran");
+  assert.equal(survivor.finishedCount, 1, "the game finished the job exactly once");
+  assert.equal(survivor.turnEndedForJob, 1, "the application's own subscription received turn_ended for the job exactly once, with the remount");
+  assert.equal(survivor.turnAfterJob, survivor.turnAtUnmount + 1, "the job advanced the turn with no screen");
+  assert.deepEqual(survivor.firstPanel, {phase: "idle", turn: survivor.turnAtUnmount + 1, last_job: survivor.id},
+    "the remounted root's first snapshot is at rest, in the advanced turn, with last_job = the job");
+  assert.deepEqual(unmountedStep.turnEnded.job, survivor.id, "turn_ended finished that job");
+
+  // The job lane: a job that is sent every kind of call while it runs, and the registry's budgets under many subscribers. The game
+  // is the live one after the last new game: the turn is 1, and no job has finished in it.
+  const burst = report.jobLane.burst;
+  const burstJob = jobs + 1;
+  assert.deepEqual([burst.result.response, burst.result.value.ok, burst.result.value.job], ["acceptance", 1, burstJob], "the burst job was accepted with the next id");
+  verifyJob(burst.job, {where: "the burst job", jobId: burstJob, turnBefore: 1, lastJobBefore: 0, turnEndedSeq: burst.turnEndedSeq, duringCalls: DURING_JOB_CALLS});
+  assert.deepEqual(burst.turnEnded.job, burstJob, "the burst job's turn_ended finishes it");
+  jobs += 1;
+  const stressed = verifyStress(report.jobLane.stress, {firstJob: jobs + 1});
+  jobs += 2;
+
+  // Every job the application was told about, once, in order; the game finished each of them once, and none is left.
+  assert.equal(report.jobs.expected, jobs, "the probe accepted the jobs it expected");
+  assert.deepEqual(report.jobs.turnEndedLog.map(entry => entry.job), range(1, jobs), "the application's own subscription received turn_ended for each job, once, in order");
+  const acceptedSteps = report.steps.filter(step => step.intent === "end_turn" && step.result.value.ok === 1);
+  acceptedSteps.forEach((step, position) => assert.deepEqual({turn: report.jobs.turnEndedLog[position].turn, phases: report.jobs.turnEndedLog[position].phases, job: report.jobs.turnEndedLog[position].job},
+    step.turnEnded, `job ${position + 1}: the log holds the turn_ended the step saw`));
+  assert.deepEqual(report.jobs.finished, Object.fromEntries(range(1, jobs).map(id => [String(id), 1])), "the game finished each job exactly once");
+  assert.deepEqual([report.jobs.next, report.jobs.running], [jobs + 1, 0], "the node's next id follows the last, and no job is left running");
 
   // Limits.
   assert.deepEqual([report.limits.maxNodes, report.limits.maxDepth], [largest.nodes, largest.depth], "the reported limits are what the snapshots measure");
   assert.ok(largest.nodes < NODE_LIMIT && largest.depth < DEPTH_LIMIT, "the largest snapshot is inside the transport's limits");
 
   return {steps: report.steps.length, accepted, refused: report.steps.length - accepted, refusals, turns, epochs: report.epochs.map(entry => entry.epoch),
-    finalHash: report.finalHash, largest, violations: report.violations.length, registrations: report.registered.length, actionsSentBack, hashes};
+    finalHash: report.finalHash, largest, violations: report.violations.length, registrations: report.registered.length, actionsSentBack, hashes,
+    jobs, stress: stressed};
 }

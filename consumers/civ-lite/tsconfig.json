@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": [],
+    "paths": {
+      "@godot-fabric/runtime": ["./addons/godot_fabric/types/godot-fabric.ts"],
+      "react": ["./addons/godot_fabric/toolchain/node_modules/@types/react"],
+      "react/*": ["./addons/godot_fabric/toolchain/node_modules/@types/react/*"],
+      "react-native": ["./addons/godot_fabric/types/react-native.ts"],
+      "react-native/*": ["./addons/godot_fabric/toolchain/node_modules/react-native/types_generated/*"]
+    },
+    "moduleSuffixes": [".godot", ".native", ""]
+  },
+  "include": ["ui/**/*.ts", "ui/**/*.tsx"]
+}

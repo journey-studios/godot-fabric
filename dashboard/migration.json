@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T23:51:02.819Z",
+  "updatedAt": "2026-10-09T10:12:11.000Z",
   "source": {
-    "commit": "5596acb1cf975ff470acf531c0843fef19706e70",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/5596acb1cf975ff470acf531c0843fef19706e70",
-    "scope": "Prova local V05-07 no produtor limpo 5596acb: export macOS arm64 14/14 sem skips, consumidor 40/43, seis controles e auditoria local 285/285. Os 220 pins do SDK e as três capturas coincidem com a evidência C anterior. CI/revisão finais seguem pendentes; critérios e denominadores da 1.0 não mudaram.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
+    "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
+    "scope": "P8 V05-05 do marco 0.5, critérios matriz e mapa: a HUD do Frontier guiada pelo contexto do Godot (seis painéis por contexto, barra com spinner na fase da IA, ações com motivo, cartão do tile e o estado frontier.hover), com evidência local em 096a018 (probe e oráculo independente, controle sobre 5e1f6a1, oito sabotagens e oito capturas). CI hospedada e Pages deste PR pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/82"
   },
   "phases": [
     {
@@ -3498,6 +3498,14 @@
               "done": true,
               "evidence": [
                 {
+                  "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/world-input/hosted-ci.json"
+                },
+                {
                   "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
                 }
@@ -3508,6 +3516,10 @@
               "label": "Sabotagem (Surface em STOP) rejeitada pelo oráculo; roda da tela e clique direito no mundo funcionam; toque no HUD gera 0 eventos de mouse emulado no mundo (variante ScreenTouch com emulate_mouse_from_touch ligado)",
               "done": true,
               "evidence": [
+                {
+                  "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                },
                 {
                   "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
@@ -3541,6 +3553,14 @@
               "done": true,
               "evidence": [
                 {
+                  "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-game/hosted-ci.json"
+                },
+                {
                   "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
                 }
@@ -3552,6 +3572,14 @@
               "done": true,
               "evidence": [
                 {
+                  "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-services/hosted-ci.json"
+                },
+                {
                   "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
                 }
@@ -3560,14 +3588,32 @@
             {
               "id": "consumidor",
               "label": "Consumidor civ-lite provisionado pelo addon (TSX público, sem Node global) abrindo no editor; 10 ciclos novo jogo, recarregar cenário e menu sem vazar listeners ou nós, com epoch monotônico",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): o consumidor civ-lite provisionado pelo addon, com TSX público, sem Node global, build offline e aberto pelo editor; 10 ciclos de novo jogo, recarga do cenário e menu com nós, órfãos, bindings, assinaturas e conexões na linha de base e epoch estritamente crescente; 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-consumer/hosted-ci.json"
+                }
+              ]
             },
             {
               "id": "autoridade",
               "label": "turn.end aceito sobrevive ao fechamento da tela e job.finished chega 1x; uma regra mutada no Godot muda a HUD sem alterar JS; rajadas de fim de turno medidas contra 64 tarefas e 128 eventos por fase",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): turn.end (frontier.end_turn) aceito como job e rodado uma fase por frame pelo node persistente GameServices; job.finished (frontier.turn_ended) entregue 1 vez, com a tela desmontada no frame seguinte ao aceite e com o menu aberto; uma regra mutada no GDScript (os pontos de movimento do Settler) muda a HUD com o mesmo bundle JS e o mesmo host; cada fase cabe num pump de 64 tarefas e 128 eventos, e o caso de estresse com 150 assinantes extras drena em ceil(eventos / 128) pumps, sem perda e em ordem; 11 sabotagens dos serviços e 5 do consumidor rejeitadas; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-authority/hosted-ci.json"
+                }
+              ]
             }
           ]
         },
@@ -3722,14 +3768,136 @@
             {
               "id": "matriz",
               "label": "Store por escopo de módulo e switch de contexto: matriz de testIDs passando para os 7 contextos, sem painel extra",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das 32 fontes da fatia, dos relatórios, das capturas e do host, o controle, as sabotagens, os limites e os itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "Contexto none: só a barra",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/none.png"
+                },
+                {
+                  "label": "Contexto tile: barra e cartão do tile",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/tile.png"
+                },
+                {
+                  "label": "Contexto settler: barra, ações (Fortify desabilitada com o motivo do jogo) e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/settler.png"
+                },
+                {
+                  "label": "Contexto warrior: barra, ações e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/warrior.png"
+                },
+                {
+                  "label": "Contexto stack: barra, um select_unit por unidade e cartão",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/stack.png"
+                },
+                {
+                  "label": "Contexto city: barra, tela da cidade e pesquisa",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/city.png"
+                },
+                {
+                  "label": "Contexto dialog: barra e diálogo do evento, com End turn desabilitado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/dialog.png"
+                },
+                {
+                  "label": "O switch de contexto: a tabela contexto para painéis, decidida só pelo contexto (panelsOf)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/hud.tsx"
+                },
+                {
+                  "label": "O store em escopo de módulo: o único módulo que fala com o jogo (useSyncExternalStore, conexões que seguem os leitores, send e sendAction tipados)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/store.ts"
+                },
+                {
+                  "label": "A lane: provisiona o consumidor, roda a probe headless e julga com o oráculo, o controle e as mutações",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-native.test.mjs"
+                },
+                {
+                  "label": "O oráculo independente: a tabela, o formato de cada painel e a geometria do mapa, sem os veredictos da probe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-oracle.mjs"
+                },
+                {
+                  "label": "A probe da HUD (-- --validate-hud): os passos 0 a 45 do replay pelos serviços, a fase da IA e o input real",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/hud_validation.gd"
+                },
+                {
+                  "label": "As 8 sabotagens retidas (city-by-data, actions-reversed, spinner-always, end-turn-by-phase, spacer, hover-unpublished, world-behind-hud, disabled-ignored)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: a tabela, o store, o hover, o input do mapa e a ordem do World, com arquivo e linha",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                }
+              ]
             },
             {
               "id": "mapa",
               "label": "Barra de turno e recursos (End Turn desabilitado com spinner na fase da IA), ações da unidade com motivo da ação desabilitada e cartão de tile (hover vem do Godot)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das 32 fontes da fatia, dos relatórios, das capturas e do host, o controle, as sabotagens, os limites e os itens abertos",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "Fase da IA: spinner girando e End turn desabilitado com o motivo do jogo",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/ai-phase.png"
+                },
+                {
+                  "label": "Cartão do tile selecionado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/tile.png"
+                },
+                {
+                  "label": "Ações da unidade com o motivo da ação desabilitada (Fortify do Settler)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/settler.png"
+                },
+                {
+                  "label": "A barra: turno, fase, recursos, End turn (a ação end_turn do jogo, com o motivo) e o spinner enquanto a fase não é idle",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/bar.tsx"
+                },
+                {
+                  "label": "O painel de ações: exatamente snapshot.actions menos end_turn, com enabled e reason_text",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/actions.tsx"
+                },
+                {
+                  "label": "O cartão do tile: o tile sob o ponteiro (hover do Godot) ou o selecionado",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/ui/hud/tile.tsx"
+                },
+                {
+                  "label": "O mapa é do Godot: clique em _unhandled_input chama o select_tile do jogo, e o ponteiro publica o hover",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/world/world.gd"
+                },
+                {
+                  "label": "O estado frontier.hover: o cartão do tile sob o ponteiro, um estado à parte (15 bindings; snapshot e hashes intocados)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/consumers/civ-lite/services/game_services.gd"
+                },
+                {
+                  "label": "A lane: a fase da IA quadro a quadro, o job segurado em ai_plan e o input real (clique, hover, toque em ação habilitada e desabilitada)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-native.test.mjs"
+                },
+                {
+                  "label": "O oráculo independente do mapa e da fase da IA",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/tests/civ-lite-ui-oracle.mjs"
+                },
+                {
+                  "label": "As 8 sabotagens retidas, entre elas spacer, hover-unpublished, spinner-always e world-behind-hud",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: a barra, o serviço de hover e o caminho do input do mapa",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                }
+              ]
             },
             {
               "id": "overlays",
@@ -3776,8 +3944,17 @@
             {
               "id": "soak",
               "label": "Soak de 100 turnos em 3 execuções: hash final idêntico, nós e RSS estáveis, 0 erros JS não tratados; pausa do jogo mantém a UI viva; decisão escrita entre montar e desmontar ou manter oculto, com base nos números",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): 100 turnos em 3 execuções (unmount, hide, unmount) com o mesmo hash final e a mesma trilha de 100 hashes de turno; nós nativos exatos por contexto (16 a 23, mais 100 com o painel oculto) e 0 órfãos; heap em repouso sem crescimento (2.117.320 bytes, dentro dos 2.048 do GF-30 pela mediana das metades) e RSS dentro da guarda de 48 MiB; 0 erros JS não tratados, com o controle do handler; o jogo pausado no turno 50 mantém o job parado em ai_plan e a UI viva (o clique chega ao handler porque a camada do HUD é PROCESS_MODE_ALWAYS); a decisão entre montar e ocultar um painel de 100 nós, com números (desmontar por padrão: sem vantagem de CPU consistente na soma de abrir e fechar, que é inconclusiva, mas ocultar dá cauda menor na abertura, fecha cerca do dobro mais caro e segura 100 nós e 326.512 bytes de heap); 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-soak/hosted-ci.json"
+                }
+              ]
             },
             {
               "id": "congelado",
@@ -4016,20 +4193,51 @@
         {
           "id": "X3",
           "label": "Input mundo contra HUD: 100/100 cliques no vazio chegam ao mundo 1x e 0/100 à HUD; 100/100 em Pressable ativam 1x e 0/100 ao mundo; com overlay aberto 0/100 chegam ao mundo",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "V05-02 fatia 1: 100/100 cliques no vazio chegam ao mundo 1x, 0/100 em Pressable, 0/100 com overlay ou Modal aberto; o host anterior falha exatamente 31; 2 sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md"
+            },
+            {
+              "label": "V05-02 fatia 2 (a2): as 6 lacunas fechadas, 91 checks, a1 falha 19, 5 sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md"
+            },
+            {
+              "label": "Decisão GO no desktop macOS; iPhone pendente (V05-02 `iphone`)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3"
+            }
+          ]
         },
         {
           "id": "X4",
           "label": "Autoridade no Godot: 0 regras de jogo em JS; uma ação desabilitada no Godot muda a HUD sem alterar JS",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Regras só em GDScript; 13 serviços tipados com paridade TS; a HUD envia ações como chamadas, sem regras em JS",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/75a85ad6ea877eae85d1a55214097eac416f6680/docs/evidence/frontier-services/README.md"
+            },
+            {
+              "label": "Lane de regra: uma constante mutada em rules.gd muda o snapshot da HUD (found_city desabilitado com no_moves_left) com o bundle JS idêntico",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md"
+            }
+          ]
         },
         {
           "id": "X5",
           "label": "Sessão e ciclo de vida: 10 ciclos sem vazamento, epoch monotônico, turn.end aceito sobrevive ao fechamento de tela",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "10 ciclos de novo jogo, recarga de cenário e menu, com nós, órfãos, bindings e assinaturas na linha de base e epoch estritamente crescente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c8de44b3caa12a82009e55a059e2ce3da68f9485/docs/evidence/frontier-consumer/README.md"
+            },
+            {
+              "label": "turn.end (frontier.end_turn) aceito como job sobrevive ao fechamento da tela e do menu; job.finished chega uma vez",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md"
+            }
+          ]
         },
         {
           "id": "X6",
@@ -4354,6 +4562,76 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-hosted-receipts-70cf43b",
+      "at": "2026-10-09T10:12:11.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages das 8 fatias do marco 0.5 já na main registrados em docs/evidence (hosted-ci.json e publication.json de cada uma, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check): frontier-game (#70, run 37815810524 no squash e1c7a39), world-input (#71, 37853001783, 7ef63ed), frontier-services (#73, 37840069134, 75a85ad), frontier-consumer (#76, 37864357395, c8de44b), frontier-baseline (#77, 37884924042, 3bb51d6), world-input-a2 (#78, 37874901247, 2a3f4b0), frontier-authority (#79, 37880395525, 5e1f6a1) e frontier-soak (#83, 37904776515, a49f851). Cada run é o push da main no squash, com os 5 jobs em success na primeira tentativa e todos com checkout do squash. Os recibos fixam os passos npm de cada fatia no job nativo com a linha de resultado do log (TAP ou marcador), os artefatos com id, tamanho, SHA-256 igual ao digest da API e ao log de upload e o SHA-256 de cada arquivo, e, no Pages, o run do push, o deployment em success, o artefato github-pages e o migration.json implantado. Dois achados: o artefato github-pages do Pages do #71 (run 37853001775) expirou e já não existe (a API devolve 404), então o migration.json implantado dele não foi comparado e o recibo diz isso; e o migration.json implantado do #73 (run 37840069193) tem os mesmos dados do commitado, em outra serialização (o Pages reserializa com dois espaços e o arquivo commitado estava com a indentação fora dessa forma). A faixa janelada, as capturas, os controles com host anterior e as sabotagens seguem só locais. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-10-protocol-draft",
+      "at": "2026-10-09T07:37:32.000Z",
+      "taskIds": [],
+      "message": "Protocolo do comparativo final do marco 0.5 (V05-10, critério protocolo) pré-registrado antes de qualquer medição, sem rodar nenhum braço: os três braços (A sem HUD como controle de custo, B com a HUD nativa do Godot, C com a HUD React Native); as hipóteses H1 (C menos A), H2 (B menos A) e H3 (C contra B, com a nula \"C não é melhor que B\"); o desfecho primário, o tempo de CPU por quadro no p95 em cada uma das 4 janelas ativas (fase da IA, rajada de eventos de fim de turno, 50 trocas de contexto e o estresse com log de 200 linhas e lista de produção de 100 itens); 12 execuções por braço em quadrado latino fixo (ABC, CAB e BCA repetidos 4 vezes); o bootstrap percentil de 95% com 10.000 reamostras e semente fixa; Holm sobre as 4 janelas do H3; e a regra de decisão com margem max(10% da mediana de B, 0,5 ms) e as categorias ganho, neutro, custo e inconclusivo. O JSON legível por máquina tem o SHA-256 fixado em 8dd7779d… (sem os campos frozenValue e frozenAt) por um teste Node que entra no test:contracts, de modo que mudar o protocolo depois exige mudar o teste de propósito. Nada foi medido e nenhum resultado é afirmado. Os limiares que dependem da baseline janelada do V05-06 (o instrumento do tempo de CPU e 4 orçamentos absolutos) ficam como fórmula com frozenValue nulo e serão congelados juntos com o critério congelado do V05-06; por isso o critério protocolo do V05-10 segue aberto e nenhum critério muda. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/789c35f83b64feb4ccc07c37cac5975f833df2dd/docs/research/frontier-comparison-protocol.md"
+    },
+    {
+      "id": "milestone-0-5-v05-06-soak-b77178a",
+      "at": "2026-10-09T06:33:58.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério soak, com evidência local: o Frontier jogado por 100 turnos em 3 execuções, em 3 processos Godot, pelos serviços tipados. Um jogador roteirizado no fixture JS decide só pelo snapshot que recebe (sem Math.random nem Date): funda a cidade, ajusta pesquisa e produção, seleciona a cidade, fortifica, seleciona um tile vazio, limpa a seleção e termina o turno; das 427 decisões por execução o jogo aceita as 427, e o exército é limitado a 6 unidades para que o estado do jogo seja limitado e o heap meça o runtime. O HUD abre e fecha todo turno, por clique real, o painel de pesquisa de 100 nós, desmontando-o (A) ou mantendo-o montado com opacity 0 e pointerEvents none (B). As três execuções (A, B, A) terminam no mesmo hash final (a35c55f2…) e na mesma trilha de 100 hashes de turno (fe9d4f36…), e o oráculo independente recalcula o SHA-256 de cada serialização. Os nós nativos são exatos por contexto (16 sem seleção, 18, 20, 22 e 23, mais 100 com o painel oculto) e voltam à mesma contagem toda vez que o contexto volta, com 0 órfãos e a SceneTree igual às views nativas mais uma constante. O heap em repouso não cresce (2.117.320 bytes, 2.443.832 com o painel oculto), pela regra da mediana das metades do baseline sobre o limite de 2.048 bytes do GF-30; o RSS é julgado por uma guarda grosseira de 48 MiB entre as medianas das metades (subiu no máximo 10,1 MB e caiu até 96,5 MB nas quatro rodadas feitas), porque anda em dezenas de MB. 0 erros JS não tratados, com um controle que mostra que o rastreador de rejeições do Hermes vê uma quando há. A pausa no turno 50 prende o job aceito em ai_plan por 60 quadros, sem snapshot nem turn_ended, enquanto a aplicação bombeia e um clique ainda chega ao handler e monta um nó nativo, porque a camada do HUD é PROCESS_MODE_ALWAYS (a sabotagem que a torna pausável mata o clique); a HUDLayer de consumers/civ-lite/main.tscn não define o modo, e essa recomendação para o V05-05 não foi aplicada. A decisão, com números: não se observou vantagem de CPU consistente de ocultar um painel de 100 nós sobre desmontá-lo (a soma de abrir e fechar muda de sinal entre as rodadas, numa máquina compartilhada, então a comparação é inconclusiva); o que se manteve é uma cauda menor na abertura (p95 de 11,3 contra 18,8 ms) e um fechamento cerca do dobro mais caro, e que o painel oculto segura 100 nós e 326.512 bytes de heap, que é onde a recomendação de desmontar por padrão se apoia; o painel oculto com pointerEvents none não reivindica o mapa; a recomendação é desmontar por padrão e ocultar só um painel de uns 100 nós aberto com frequência no clique que o jogador espera, um ou dois por vez. Quatro sabotagens (um connect nunca removido, um jogador que decide ao acaso, uma camada do HUD que pausa com o jogo, um painel oculto que é display none) são rejeitadas pelo probe e pelo oráculo, cada uma pelo motivo para o qual foi escrita, e o oráculo rejeita 29 alterações de um relatório gravado. O controle com host anterior não se aplica: não há C++. Só headless e macOS arm64, com cliques sintéticos, numa máquina compartilhada em que os tempos variam em dezenas de por cento; as 101 atualizações por toggle do painel oculto não estão explicadas; sobre a main com o #82 o registro tem 15 bindings e não 14 (o estado frontier.hover) e a suíte passa com essa contagem. Os critérios baseline, turno e congelado do V05-06 seguem como estavam; CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-05-matriz-mapa-096a018",
+      "at": "2026-10-09T05:38:34.000Z",
+      "taskIds": [],
+      "message": "V05-05 do marco 0.5, critérios matriz e mapa, com evidência local: a HUD do Frontier passa a ser guiada pelo contexto que o Godot deriva. Um store em escopo de módulo (useSyncExternalStore) é o único módulo que fala com o jogo, com a telemetria da validação à parte; seis painéis (barra, ações, cartão do tile, cidade, pesquisa e diálogo) são montados só pelo contexto, e nos 7 passos do replay que cobrem os contextos (2, 3, 9, 18, 32, 33 e 45) o conjunto exato de testIDs visíveis bate com a tabela, sem painel extra, e a lista de ações é a de snapshot.actions menos end_turn (o unit.available_actions do critério não existe, e o End turn fica na barra). A barra mostra turno, fase e recursos, e o End turn é a ação end_turn do jogo, com o motivo dela e um spinner enquanto a fase não é idle; com o job segurado em ai_plan, um toque no End turn desabilitado não faz chamada. O mapa é do Godot: um clique real em um tile seleciona pelo select_tile do jogo em _unhandled_input, e o ponteiro sobre o mapa é publicado como o estado frontier.hover (15 bindings; o snapshot e os hashes não mudam), que o cartão do tile mostra. A probe headless tem 143 checks e o oráculo independente não acha nada (e rejeita 23 cópias mutadas do relatório); a HUD de 5e1f6a1 falha em actions, content, input, panels e phase (135 checks); 8 sabotagens são rejeitadas pela probe e pelo oráculo; oito capturas mostram os 7 contextos e a fase da IA; e test:consumer:civ-lite (165 checks nativos), test:frontier-services (11 de 11) e test:civ-lite-game passam. A lane achou e corrigiu um World que voltava atrás da camada da HUD depois do menu, e mostrou que o spacer da HUD anterior era achatado pelo Fabric e nunca engoliu cliques. Só macOS arm64: o diálogo ainda não é Modal, o hover foi exercitado com eventos sintéticos e o AppRegistry entra no manifesto do 0.5 pelo PR do P9; CI hospedada e Pages pendentes. Os critérios overlays e estabilidade do V05-05 seguem abertos. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+    },
+    {
+      "id": "milestone-0-5-exit-x3-x4-x5",
+      "at": "2026-10-09T05:04:17.000Z",
+      "taskIds": [],
+      "message": "Critérios de saída X3, X4 e X5 do marco 0.5 cumpridos no desktop macOS, com evidência executada. X3 (input mundo contra HUD): as fatias 1 e 2 do V05-02 mostram 100/100 cliques no vazio chegando ao mundo 1x, 0/100 em Pressable e 0/100 com overlay ou Modal aberto, com as seis lacunas fechadas e 91 checks, e a decisão GO no desktop; o iPhone segue pendente (V05-02 iphone). X4 (autoridade no Godot): regras só em GDScript, 13 serviços tipados com paridade TS e a HUD enviando ações como chamadas, e uma constante mutada em rules.gd muda o snapshot da HUD com o bundle JS idêntico. X5 (sessão e ciclo de vida): 10 ciclos de novo jogo, recarga de cenário e menu, com nós, órfãos, bindings e assinaturas na linha de base e epoch estritamente crescente, e turn.end aceito como job sobrevive ao fechamento da tela e do menu, com job.finished entregue uma vez. Evidência local em macOS arm64; CI hospedada e Pages não conferidas nesta entrega. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3"
+    },
+    {
+      "id": "milestone-0-5-v05-02-decision-09ec1e0",
+      "at": "2026-10-09T04:04:28.000Z",
+      "taskIds": [],
+      "message": "Terceira e última fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5), a decisão, escrita sobre as evidências das fatias 1 e 2 e sem nova execução: GO para a premissa de uma HUD React Native sobre um mundo Godot na mesma janela, no desktop macOS arm64 (Godot 4.7.2, RN 0.87.1), com a política a1 (a FabricSurface com MOUSE_FILTER_IGNORE por padrão) mais a regra a2 (no _unhandled_input, depois do GUI, a Surface marca o evento como tratado quando o hit test do RN acha uma View). Os números que sustentam o GO: o vazio chega ao mundo 100 de 100 (clique esquerdo, clique direito, roda e toque) com 0 para os handlers da HUD; um Pressable aciona 100 vezes e 0 chegam ao mundo; com um overlay na árvore ou um Modal aberto 0 de 100 chegam ao mundo; as seis lacunas da a1 (hitSlop, Text com onPress, vão de ScrollView, roda sobre a HUD, sobre um ScrollView e sobre o overlay) passam de 100 para 0 no mundo; o Switch nativo do GUI segue alternando 100 vezes por clique e por toque; a ordem do unhandled é conferida contra o código do Godot 4.7.2 e por uma testemunha na cena viva; o host só com a a1 falha exatamente os 19 checks da a2, o host anterior à a1 falha 41 e as sabotagens (cinco na fatia 2) são rejeitadas pelo probe e pelo oráculo independente. O custo é um default de construtor, um método público e um override, sem reescrever o pipeline de ponteiro. Não bloqueiam o GO: o movimento, o hover e o arrasto sobre a HUD, que ficam fora da regra e fora deste spike; um release longe do press; uma HUD antes do mundo na árvore, que não é suportada e vira regra de cena (a CanvasLayer da HUD depois do mundo, a raiz e todo container que cobre o mapa com pointerEvents box-none, o mundo ouvindo _unhandled_input e os Controls nativos de GUI intactos); e a faixa janelada sem ritmo (a tela dormia), cujas contagens não dependem de ritmo e que não alega tempo de quadro. Segue aberto, e depende do usuário, o critério iphone (P7): toque real e multitoque num iPhone, porque os eventos são sintéticos e não há ponteiro de hardware, tela de toque nem export móvel; este GO não diz nada sobre o telefone. Nenhum critério muda. As contagens são evidência local em macOS arm64 e a CI hospedada das duas fatias segue pendente. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3"
+    },
+    {
+      "id": "milestone-0-5-v05-03-autoridade-5ee0127",
+      "at": "2026-10-09T01:44:08.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério autoridade, com evidência local: o fim de turno virou um job aceito. O frontier.end_turn (o turn.end do critério) é registrado com a resposta acceptance e devolve {ok, code, text, job}, e o node persistente GameServices roda o turno com o próprio _process, uma fase por frame, nunca no World nem na superfície: o snapshot sai no aceite e depois de cada uma das seis fases (sete snapshots em sete frames seguidos, o último em repouso com o turno que começa e o novo campo last_job igual ao job), e o frontier.turn_ended (o job.finished do critério) sai uma vez com {turn, phases, job}, entre o sexto e o sétimo. O resultado de todos os métodos passou a ser {ok, code, text, job}, com job 0 fora do end_turn aceito, e o schema, os tipos TS e a paridade foram atualizados nos dois sentidos. Dos 15 jobs do probe, a assinatura em escopo de módulo da aplicação recebeu o turn_ended de cada um uma única vez e em ordem, e o finished_jobs do node guarda 1 para cada; o terceiro rodou com a superfície desmontada no frame seguinte ao aceite (rootCount 0 o tempo todo) e o primeiro snapshot do painel remontado veio em repouso, turno 4, last_job 3; dez chamadas mandadas durante um job foram todas recusadas com turn_in_progress sem iniciar job; e nos dez ciclos do consumidor um End turn apertado no mesmo frame do Menu terminou com o menu aberto, uma vez, com o World fora da árvore. Uma lane de regra roda o probe duas vezes com o mesmo bundle JS e o mesmo host, uma no rules.gd genuíno e outra com os pontos de movimento do Settler mutados de 2 para 0 por guardSources e restaurados byte a byte, e muda exatamente o que a regra prevê no snapshot que o JavaScript recebe (moves e max_moves do Settler e enabled, reason e reason_text do found_city). Cada frame de cada job coube num pump do registro, de 64 tarefas e 128 eventos (no máximo 10 tarefas, com as dez chamadas, e 3 eventos) e não deixou nada pendente; com 150 assinantes extras do snapshot uma publicação de 152 eventos drenou em 2 pumps (128 e 24), sem perda e em ordem FIFO, e um job que correu mais que o pump drenou 1065 eventos em 9 pumps. 1058 checks do probe em cada uma de duas execuções, test:frontier-services 11 de 11, 165 checks nativos e dez ciclos no test:consumer:civ-lite, e o hash dourado e o de trilha do P3 intactos. 11 sabotagens dos serviços (quatro novas: double-finish, job-dies-with-screen, sync-end-turn e stale-snapshot) e 5 do consumidor (uma nova: job-dies-with-menu) são rejeitadas pela razão por que foram quebradas, e os fontes voltam byte a byte. Não há C++ e o controle com host anterior não se aplica. Só headless, os cliques são sintéticos e a HUD jogável continua sendo a do V05-05; o finished_jobs guarda os últimos 256 jobs; o new_game abandona um job em andamento, sem turn_ended. CI hospedada (test:frontier-services e test:consumer:civ-lite) e Pages pendentes. Isto fecha o último critério do V05-03: replay, servicos, consumidor e autoridade estão todos done. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-02-pointer-a2-af941dd",
+      "at": "2026-10-09T01:36:34.000Z",
+      "taskIds": [],
+      "message": "Segunda fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5) com evidência local: a variante a2 fecha as seis lacunas que a política a1 deixou com uma regra só, a do React Native num telefone. No estágio _unhandled_input, depois do GUI, a FabricSurface marca o evento como tratado quando o hit test do RN (ApplicationRuntime::claims, que respeita pointerEvents, hitSlop, recorte e visibilidade) acha uma View no ponto: vale para o botão do mouse (a roda e o release da roda incluídos), o toque e o mouse que o Godot emula dele; hit_test, apply_pointer_filters, input() e wheel() não mudam e os Controls do GUI (Switch, Button, LineEdit) não perdem nada. A ordem do unhandled (a Surface antes do mundo, porque o Godot chama o grupo em ordem inversa da árvore: viewport.cpp 3489-3553 e 3620-3634, scene_tree.cpp 1430-1502, laço em 1461) é conferida na cena viva por um nó testemunha. As seis lacunas a N=100: o hitSlop, o Text com onPress e o vão de ScrollView (clique, toque e mouse emulado: antes chegavam 100 de 100 ao mundo além do RN, agora 0, e o RN ouve o handler 100 vezes e o emulado nunca), e a roda sobre o HUD, sobre um ScrollView e sobre o overlay na árvore aberto (antes 100 press e 100 release no mundo, ou só o release sobre o ScrollView, agora 0). 91 checks headless em duas topologias, 50 normativos (31 da a1 e 19 da a2), com o oráculo independente. Controles: o host com só a a1 falha exatamente os 19 da a2 e o host anterior à a1 falha 41 (os 31 da fatia 1 e 10 da roda; o binário da fatia 1 se perdeu, e o controle é uma reconstrução da main atual sem o IGNORE do construtor). Cinco sabotagens rejeitadas pelo probe e pelo oráculo, cada uma em checks nomeados: surface-stop (31), views-ignore (5, o Switch e o hover), unhandled-off (19), claim-all (35, host recompilado da fonte quebrada) e before-gui (2, o Switch nativo deixa de receber o clique e o toque, o que prova que a regra tem de rodar depois do GUI). Faixa janelada local no macOS (N=100, as seis lacunas, 32 checks, todos passam, cinco capturas, e a captura depois das lacunas é idêntica byte a byte à do quadro intocado): a tela estava dormindo, o V-Sync lido de volta é enabled a 120 Hz mas a mediana ociosa é 0,776 ms, então os quadros rodaram sem ritmo; as contagens são exatas em rajadas e valem, e a faixa não faz alegação de tempo de quadro nem de apresentação. Segue aberto: o movimento, o hover e o arrasto não são reivindicados (sobre a folga do hitSlop o mundo ainda ouve 20 de 20 movimentos e o arrasto que começa ali), um release longe do press, o HUD antes do mundo na árvore, e o critério iphone (P7), porque os eventos são sintéticos, sem ponteiro de hardware, tela de toque real nem export móvel. É a fatia 2 de 3: o go/no-go é da fatia 3. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/af941dde794db9ed40595d006977445b6646e9fc/docs/evidence/world-input-a2/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-06-baseline-headless-ebfe8a0",
+      "at": "2026-10-09T01:13:32.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério baseline, só a faixa headless e com evidência local (macOS arm64, pinada em ebfe8a0 sobre a implementação de 346146d): na cena de prova do V05-02, um clique real num botão da barra troca o painel por uma árvore de 50, 75 ou 100 nós nativos, em dois processos Godot, com 12 trocas por volta, 2 voltas de aquecimento e 30 estáveis (720 trocas estáveis). A medição sai do amostrador compartilhado do GF-30 (tests/performance-sampler.gd, extraído do performance-probe sem duplicá-lo): contagens do motor, heap do Hermes depois de coleta forçada, RSS e proveniência. Os invariantes exatos passam nas 720 trocas: os nós depois de uma troca são os da base mais os do painel novo, cada troca cria os nós do painel novo e apaga os do antigo, um clique troca uma vez e nunca chega ao mapa, a volta termina na base e o heap em repouso fica dentro do limite do GF-30 (julgado sobre o piso de janelas de 5 voltas); o host monta o painel dentro do flush do clique, 0 quadros depois. Um oráculo independente recalcula tamanhos e percentis, e quatro sabotagens retidas são rejeitadas (leaky-panel com opacidade 0, no-gc, world-leak e no-key); display none não monta nó, então não serve de vazamento. Custo de CPU da troca no laço headless, mediana e p95 sobre 180 trocas por tamanho: 2,2 e 3,2 ms (só apaga), 5,9 e 8,6 ms (cria 50 nós), 7,7 e 10,6 ms (75) e 9,2 e 12,4 ms (100), de modo que uma troca de 100 nós custa mais que o período de 8,33 ms de uma tela de 120 Hz. A PROPOSTA de orçamento, não congelada, traz CPU por troca de 4,5, 11,0, 13,5 e 16,0 ms (p95 vezes 1,25, arredondado para cima a 0,5 ms), heap por painel de 320.000, 410.000 e 510.000 bytes, e nós e latência exatos (0 quadros). A faixa janelada, só local, foi recusada pela nova regra de execução pareada: a tela não apresentava a janela (quadro ocioso de 0,70 ms contra os 4,17 ms exigidos), as três tentativas foram rejeitadas como unpaced, a lane saiu com código 3 e o recibo tem presented false, sem tempo de quadro. O critério baseline continua aberto até uma execução janelada apresentada; turno, soak e congelado continuam abertos. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md"
+    },
+    {
+      "id": "macos-export-symlink-review-5596acb",
+      "at": "2026-10-08T23:51:02.819Z",
+      "taskIds": [],
+      "message": "V05-07: acompanhamento local de contenção de symlinks no produtor 5596acb; export 14/14, consumidor 40/43, seis controles e auditoria local 285/285. CI/revisão finais e o escopo ampliado permanecem separados; nenhum critério ou denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
+    },
+    {
       "id": "milestone-0-5-p2-containment-review-881a711",
       "at": "2026-10-08T23:19:38.019Z",
       "taskIds": [
@@ -4368,6 +4646,13 @@
       "taskIds": [],
       "message": "P2, critérios plugin e assinatura: produtor local 29969eb passou 13/13 testes nativos e o app assinado/relocado passou os mesmos 40/43 checks. As três capturas físicas 540×300 mostram o canvas lógico 1080×600 a scale 0.5 e são idênticas à execução editável independente. Root verificou 220 pins SDK, o tar local em 280 checks e a baseline em 24 checks. Contratos: 395 Node PASS + 1 skip explícito e 23 Python PASS; static/publication PASS. Evidências e falhas anteriores preservadas por hashes; o remount antigo continua sem causa comprovada. A CI anterior 7c6a4f8 está vermelha; nova CI e revisão pendentes. Replay do jogo, perfil limpo, segundo Mac/VM e critérios de saída continuam abertos. Nenhum done, checkpoint, peso ou denominador da 1.0 mudou.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-03-consumidor-b9a40cb",
+      "at": "2026-10-08T21:51:26.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério consumidor, com evidência local: o consumers/civ-lite virou um projeto consumidor provisionado pelo addon, como o consumers/minimal (project.godot, main.tscn, ui/application.tres, ui/index.tsx, validation.gd, package.json e lockfile, tsconfig). A cena tem como raiz o node persistente GameServices, com a Application do addon, o World (um cenário pequeno que desenha o mapa 24x16 e não decide regra) e uma superfície de HUD em tela cheia, de modo que recarregar o cenário, ir ao menu e começar um jogo nunca recriam a aplicação, o registro nem o epoch. O GameServices deixou de apontar para o caminho res://sdk do laboratório: a fachada é injetada pela cena (fabric_api, o godot_fabric.gd do addon no main.tscn e o fonte do SDK no probe do laboratório) e, sem ela, o registro falha alto com FABRIC_ERROR. A HUD é mínima, em TSX público (View, Text e Pressable, dentro do escopo de props do 0.5), com conexão ao snapshot que se desfaz ao sair da tela, ações com enabled e reason_text, e os botões Menu e Novo jogo. Os serviços ganharam um método, frontier.open_menu, que não é regra do jogo (derruba o World, não muda estado nem epoch): são 14 vínculos, um estado, um sinal e 12 métodos, e o probe, o oráculo e a paridade do P4 mudaram só a contagem (test:frontier-services 8 de 8 e as 7 sabotagens dele seguem passando). Provisionado sem Node global (spawnSync de node dá ENOENT), construído pelo plugin do editor (CONSUMER_EDITOR_BUILD_PASSED, sem ERROR, lockfile intacto) e reconstruído com a rede negada no mesmo bundle: 19 checks de build e posse e 145 nativos (148 com as capturas). Dez ciclos de novo jogo, três intenções pela HUD, recarga do cenário, menu e novo jogo no menu terminam sempre com 21 nós, 0 órfãos, 14 bindings, 1 assinatura, 2 conexões em snapshot_changed e 1 da HUD, nada pendente e nenhum erro, e o epoch sobe exatamente 3 por ciclo, de 4 a 31, igual no Godot e na HUD; os dois World que o ciclo solta são liberados. 4 sabotagens retidas (a HUD que não solta a conexão, o World solto e não liberado, a recarga que zera o epoch e a cena sem a fachada) falham 29, 19, 21 e 3 checks e são rejeitadas pela razão por que foram quebradas; uma quinta, o World que não desconecta, foi descartada porque o motor derruba sozinho a conexão de um Node liberado. Tudo rodou no merge do commit de implementação com a main que traz a política prop-scope do #74, sem recusa de prop; duas capturas janeladas (o jogo e o menu) estão no registro. Não há C++ e o controle com host anterior não se aplica. A HUD é a mínima de serviço, e não a jogável do V05-05; os cliques são sintéticos; o critério autoridade do V05-03 segue aberto. CI hospedada (test:consumer:civ-lite e o artefato independent-civ-lite-consumer) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md"
     },
     {
       "id": "library-consumer-main-hosted-ci-and-pages-20261008",
@@ -4423,6 +4708,24 @@
       "taskIds": [],
       "message": "V05-03 do marco 0.5, critério replay, com evidência local: as regras e o cenário do Frontier, o jogo de referência, rodam em GDScript puro com o Godot como autoridade (mapa 24x16 de semente fixa, Settler e Warrior com movimento por pontos, uma cidade com fila de produção, pesquisa em lista, um evento bloqueante e uma facção roteirizada), só com inteiros, PRNG próprio (PCG32 conferido contra as saídas publicadas), serialização canônica e SHA-256. O roteiro de 12 turnos e 73 intenções (43 aceitas e 30 recusadas com código e texto, sem mudar o estado) termina no mesmo hash dourado, e o hash de trilha fixa o estado de cada passo, em 9 execuções de 629 checks (3 rodadas de 3 processos, relatórios byte-idênticos). Os 7 contextos são cobertos, um oráculo independente em Node recalcula as regras, o mapa e o PCG32, e 4 sabotagens retidas são rejeitadas. O snapshot que a HUD vai projetar está documentado campo a campo, mas ainda não é um serviço: os critérios servicos, consumidor e autoridade do V05-03 seguem abertos. CI hospedada (native-civ-lite-game) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
+    },
+    {
+      "id": "library-consumer-first-slice-fc0f428",
+      "at": "2026-10-08T14:00:05.627Z",
+      "taskIds": [
+        "GF-27"
+      ],
+      "message": "Primeira fatia do GF-27 com evidência local: o NativeWind 4.2.7 (className em View, Text, Image e Pressable, active:, modo escuro manual por Appearance.setColorScheme e estado retido) e o LineChart do Chart Kit 7.0.4 (v2) rodam num consumer independente, com package.json e package-lock.json próprios (react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-svg 15.15.5), construído só pelo SDK público. O construtor aceita o peer opcional que o css-interop nomeia em peerDependenciesMeta, compila a entrada Tailwind do projeto com o Tailwind, o preset e o compilador do próprio SDK a partir de godotFabric.tailwind (um tailwind.config.* é recusado: o SDK nunca roda JavaScript do projeto), carrega o doctor.native.js por uma regra estreita de JSX e oferece className nos tipos só a quem opta. A lane JS passa 13 testes e a nativa, 19 checks de build e instalação e 46 nativos (58 com o renderizador), com eventos reais de ponteiro e 4 capturas; o consumer minimal segue com 30 e 40; o mesmo consumer falha no SDK da main em react-native-safe-area-context e em E_ADAPTER_SELECTION, e a sabotagem retida da regra de peer opcional é rejeitada. Abertos: className em TextInput, o tema do sistema, fontScale e rem, a expansão do SVG, os outros gráficos, as portas P2 e a CI hospedada desta fatia. Só o checkpoint da primeira fatia do GF-27 fecha; nenhum peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c4dc8548e48f7e73837a224ff0a7c2ca8947d425/docs/evidence/library-consumer/README.md"
+    },
+    {
+      "id": "images-visual-main-hosted-ci-and-pages-20261008",
+      "at": "2026-10-08T14:00:05.627Z",
+      "taskIds": [
+        "GF-16"
+      ],
+      "message": "CI hospedada dos efeitos de imagem: o push da main em 9c5d0eb (squash de #66, run 37773373567) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:images-visual (1 de 1 ok) e o artefato repete os 53 checks headless com IDs idênticos aos do relatório commitado e o bundle que o postReview registra (9e2b7e03…); o oráculo independente aceita o relatório baixado, e os 40, 2, 3, 8 e 2 checks que o controle e as sabotagens locais falham existem e passam. Dos 181 pins rastreados, 168 têm em 9c5d0eb os bytes de 6c221e8, 3 são os arquivos da revisão, com os SHA-256 do postReview, e 10 vieram com os merges de #59 e #62; nenhum difere entre b5471d9 e o run. Pages 37773373621 implantou exatamente os dados de 9c5d0eb.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/984d64127ee3dfde7de9ed0f32a2cc494c7f4a70/docs/evidence/images-visual/hosted-ci.json"
     },
     {
       "id": "accessibility-announcements-slice-2b-1491f34",
@@ -6653,31 +6956,6 @@
       ],
       "message": "HUD/Inventory compartilham aplicação com props, estado e cleanup. Fatia 2A documentada; registro pela data da evidência.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/shared-roots/README.md"
-    },
-    {
-      "id": "library-consumer-first-slice-fc0f428",
-      "at": "2026-10-08T14:00:05.627Z",
-      "taskIds": [
-        "GF-27"
-      ],
-      "message": "Primeira fatia do GF-27 com evidência local: o NativeWind 4.2.7 (className em View, Text, Image e Pressable, active:, modo escuro manual por Appearance.setColorScheme e estado retido) e o LineChart do Chart Kit 7.0.4 (v2) rodam num consumer independente, com package.json e package-lock.json próprios (react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-svg 15.15.5), construído só pelo SDK público. O construtor aceita o peer opcional que o css-interop nomeia em peerDependenciesMeta, compila a entrada Tailwind do projeto com o Tailwind, o preset e o compilador do próprio SDK a partir de godotFabric.tailwind (um tailwind.config.* é recusado: o SDK nunca roda JavaScript do projeto), carrega o doctor.native.js por uma regra estreita de JSX e oferece className nos tipos só a quem opta. A lane JS passa 13 testes e a nativa, 19 checks de build e instalação e 46 nativos (58 com o renderizador), com eventos reais de ponteiro e 4 capturas; o consumer minimal segue com 30 e 40; o mesmo consumer falha no SDK da main em react-native-safe-area-context e em E_ADAPTER_SELECTION, e a sabotagem retida da regra de peer opcional é rejeitada. Abertos: className em TextInput, o tema do sistema, fontScale e rem, a expansão do SVG, os outros gráficos, as portas P2 e a CI hospedada desta fatia. Só o checkpoint da primeira fatia do GF-27 fecha; nenhum peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/c4dc8548e48f7e73837a224ff0a7c2ca8947d425/docs/evidence/library-consumer/README.md"
-    },
-    {
-      "id": "images-visual-main-hosted-ci-and-pages-20261008",
-      "at": "2026-10-08T14:00:05.627Z",
-      "taskIds": [
-        "GF-16"
-      ],
-      "message": "CI hospedada dos efeitos de imagem: o push da main em 9c5d0eb (squash de #66, run 37773373567) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:images-visual (1 de 1 ok) e o artefato repete os 53 checks headless com IDs idênticos aos do relatório commitado e o bundle que o postReview registra (9e2b7e03…); o oráculo independente aceita o relatório baixado, e os 40, 2, 3, 8 e 2 checks que o controle e as sabotagens locais falham existem e passam. Dos 181 pins rastreados, 168 têm em 9c5d0eb os bytes de 6c221e8, 3 são os arquivos da revisão, com os SHA-256 do postReview, e 10 vieram com os merges de #59 e #62; nenhum difere entre b5471d9 e o run. Pages 37773373621 implantou exatamente os dados de 9c5d0eb.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/984d64127ee3dfde7de9ed0f32a2cc494c7f4a70/docs/evidence/images-visual/hosted-ci.json"
-    },
-    {
-      "id": "macos-export-symlink-review-5596acb",
-      "at": "2026-10-08T23:51:02.819Z",
-      "taskIds": [],
-      "message": "V05-07: acompanhamento local de contenção de symlinks no produtor 5596acb; export 14/14, consumidor 40/43, seis controles e auditoria local 285/285. CI/revisão finais e o escopo ampliado permanecem separados; nenhum critério ou denominador mudou.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
     }
   ]
 }

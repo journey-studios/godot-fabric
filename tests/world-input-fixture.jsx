@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {AppRegistry, Modal, Pressable, ScrollView, Text, View} from "react-native";
+import {AppRegistry, Modal, Pressable, ScrollView, Switch, Text, View} from "react-native";
 
 // The React Native HUD of the pointer spike, drawn over a Godot world. Each handler
 // counts into one global, so that the probe can say, from JavaScript's side and
@@ -9,8 +9,9 @@ import {AppRegistry, Modal, Pressable, ScrollView, Text, View} from "react-nativ
 //
 // WorldInputHud is the full-screen root of topology (a): a bar with a Pressable and a
 // handler of its own, a plain panel with no handler, a ScrollView, a tree overlay
-// and a Modal (both start closed), and the controls where the minimal policy still
-// lets the world hear a press that React Native also takes (a hit slop, a Text with
+// and a Modal (both start closed), a Switch (a Control of the Godot GUI that lives on the
+// GUI's own events, which the Surface must never take from it), and the controls where
+// the GUI alone lets the world hear a press that React Native also takes (a hit slop, a Text with
 // onPress, the gaps of a ScrollView). WorldInputPanel is the root of topology (b),
 // one Surface for each panel.
 const counts = {};
@@ -40,6 +41,7 @@ const area = (left, top, width, height, extra = {}) => ({position: "absolute", l
 function WorldInputHud({name = "hud"}) {
   const [tree, setTree] = useState(false);
   const [modal, setModal] = useState(false);
+  const [on, setOn] = useState(false);
   setters.tree = setTree;
   setters.modal = setModal;
   // Everything painted below is a region React Native owns; the rest of the root is the world's.
@@ -55,6 +57,11 @@ function WorldInputHud({name = "hud"}) {
             style={{width: 280, height: 400, backgroundColor: "#556633"}} />
         </ScrollView>
       </View>
+      <Switch testID="native-switch" value={on} style={area(620, 20, 51, 31)}
+        onValueChange={value => {
+          setOn(value);
+          hit(name, "switchChange");
+        }} />
       <Pressable testID="slop-button" hitSlop={20} onPress={() => hit(name, "slopPress")}
         style={area(500, 100, 60, 40, {backgroundColor: "#aa6666"})} />
       <Text testID="float-text" onPress={() => hit(name, "textPress")}

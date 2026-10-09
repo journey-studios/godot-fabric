@@ -163,10 +163,34 @@ byte com `git show`. O recibo lista cada SHA-256 e cada blob. **O recibo de font
 prova o GDScript, o teste e o oráculo que rodaram nesta máquina, e o `fabric_godot.dylib` que o projeto raiz carrega ao
 abrir foi construído aqui a partir dos fontes nativos da main (`486b3bf6…`) e nenhum check o exercita.
 
-> **CI hospedada e Pages pendentes.** O passo `npm run test:civ-lite-game` e o artefato `native-civ-lite-game` do workflow
-> `contracts.yml` ainda não rodaram na CI hospedada, e nada foi publicado no Pages. Tudo o que esta página registra é
-> evidência local, em macOS arm64. Este registro cobre o critério `replay` do V05-03; os critérios `servicos`, `consumidor` e
-> `autoridade`, os demais itens do 0.5 e todo número da 1.0 seguem como estavam.
+## CI hospedada e Pages
+
+O push da `main` em `e1c7a39` (o squash do #70, run
+[37815810524](https://github.com/journey-studios/godot-fabric/actions/runs/37815810524) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (2 min), `reference-android` (6 min), `reference-ios` (8 min),
+`native-cold-start` (53 min) e `parity-comparison` (21 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `e1c7a39`, e a árvore do head do PR (`4d3428e`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:civ-lite-game` (passo 50, 3 s) passou: `# tests 1`, `# pass 1`, `# fail 0`, o teste
+  do replay de 12 turnos em três processos com o oráculo independente. O job `contracts` passou `npm run test:contracts` (7,
+  43 e 321 testes de Node e 13 de Python), `check:static` e `check:publication`.
+- **O artefato.** `native-civ-lite-game` (id 11568151521, 50.093 bytes, SHA-256 `22e06ce8…`, igual ao digest da API e ao do
+  log de upload) tem 7 arquivos, e o recibo fixa o SHA-256 de cada um. Os três processos imprimem `CIV_LITE_GAME_PASSED: 634`
+  e o hash dourado `275b7c61…`, o da página, e os três relatórios de execução têm o mesmo SHA-256 (`05f1d98a…`). Os 634
+  checks são os da suíte atual, a que o aviso do topo descreve; os 629 e os 9 relatórios de 338.700 bytes são do registro
+  fixado em `4b86a7b`, local.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37815810532](https://github.com/journey-studios/godot-fabric/actions/runs/37815810532), build e deploy em success, 43 testes
+do painel). O deployment 6942154159 está em success, o artefato `github-pages` (id 11566513463, SHA-256 `5880d632…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-03-replay-c2e4501`. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: as 9 execuções, as sabotagens retidas e o recibo de fonte em `4b86a7b`. Este registro cobre o critério
+`replay` do V05-03; os critérios `servicos`, `consumidor` e `autoridade`, os demais itens do 0.5 e todo número da 1.0 seguem
+como estavam.
 
 ## Limites e abertos
 

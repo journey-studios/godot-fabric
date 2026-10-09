@@ -25,7 +25,7 @@ assert.ok([null, "leak", "heap", "phase"].includes(sabotage), "Unknown sabotage:
 const lane = allowOriginalNegative ? "original" : sabotage === null ? "current" : `sabotage-${sabotage}`;
 const digest = value => createHash("sha256").update(value).digest("hex");
 const sorted = values => [...values].sort();
-const probeSources = ["tests/performance-fixture.jsx", "tests/performance-cases.mjs", "tests/performance-probe.gd",
+const probeSources = ["tests/performance-fixture.jsx", "tests/performance-cases.mjs", "tests/performance-probe.gd", "tests/performance-sampler.gd",
   "tests/performance-native.test.mjs", "tests/performance-oracle.mjs", "scripts/performance-bundle.mjs",
   "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx", "src/svg.jsx", "sdk/toolchain/platform-plugin.mjs",
   ".deps/hermes/destroot/include/jsi/instrumentation.h", ...performanceNativeProducers];

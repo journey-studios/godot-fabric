@@ -80,6 +80,11 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   to the same value in three processes, the state and the snapshot (DTO) the HUD projects, and the seven contexts the game
   derives. No React and no native code; the services, the HUD and the export are the next packages.
 
+- [Frontier's context-driven HUD](frontier-hud.md): the table of panels each of the seven contexts mounts, the one store at
+  module scope that talks to the game, the `frontier.hover` state Godot publishes for the tile under the pointer, the map's
+  click and hover in `_unhandled_input` and the order of the World against the HUD's layer, with the lane that judges them and
+  what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD).
+
 ## Useful next experiments
 
 - Span interaction and explicit font invalidation (Text's baseline and `onTextLayout` are done: see [Text layout](text-layout.md)).

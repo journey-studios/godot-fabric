@@ -142,8 +142,10 @@ Derived from the state by one pure function (`context.gd`), in this precedence. 
 | 6 | `stack` | the selected tile holds two or more of the player's units and none is selected | unit actions (one per unit), tile card |
 | 7 | `tile` | any other selected tile | tile card |
 
-The turn and resources bar is always there; the panels column above is the mapping for the HUD slice to confirm, not a
-rule of this slice. Selecting a tile with the city selects the city even when units stand in it (the city screen lists
+The turn and resources bar is always there. The panels column above is the mapping the HUD slice (V05-05, `matriz`) confirmed
+and implemented without change: `consumers/civ-lite/ui/hud/hud.tsx` mounts exactly these panels for each context and decides
+nothing else, and the matrix of testIDs over the replay's covering steps judges it (see [frontier-hud.md](frontier-hud.md)); the
+actions panel lists `snapshot.actions` but `end_turn`, which lives on the bar. Selecting a tile with the city selects the city even when units stand in it (the city screen lists
 its garrison); selecting a tile with exactly one of the player's units selects that unit; a stack or an empty tile
 selects the tile alone, and `select_unit` picks a unit out of a stack or out of the city. `clear_selection` closes whatever is
 selected (the tile card, the city screen, a unit's actions) and returns to `none` at any moment of the turn; a turn also ends
@@ -229,7 +231,7 @@ time.
 
 ## The snapshot (DTO)
 
-`FrontierGame.snapshot()` builds it from the state and the session's `epoch`. It is **immutable** (every Dictionary and
+`FrontierGame.snapshot()` builds it from the state, the session's `epoch` and the session's `last_job`. It is **immutable** (every Dictionary and
 Array is read-only, recursively) and a function of its inputs: React can keep it. It holds integers and strings only; a
 flag is `0` or `1`. **Every section is always present**: an absent thing has `present` or `open` at `0`, zeros, and empty
 lists, so the TypeScript mirror needs no optional fields. Types below are `int`, `string`, `T[]`, or the named object.
@@ -240,6 +242,7 @@ lists, so the TypeScript mirror needs no optional fields. Types below are `int`,
 | --- | --- | --- |
 | `version` | int | DTO version, `1`. |
 | `epoch` | int | The session's epoch, set by whoever owns the session and not part of the state or the hash. |
+| `last_job` | int | The id of the last end-of-turn job the session's owner finished, `0` for none; like the epoch, set by the owner and not part of the state or the hash (the services' node drives the turn as a job: [frontier-services.md](frontier-services.md)). |
 | `turn` | int | The turn number. |
 | `phase` | string | `"idle"`, or the phase a turn being processed is at. |
 | `context` | string | One of the seven contexts. |

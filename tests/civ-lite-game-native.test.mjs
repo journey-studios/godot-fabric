@@ -47,7 +47,7 @@ const ACTION = {id: "string", label: "string", args: ["int"], enabled: "int", re
 const UNIT_CARD = {id: "int", owner: "int", kind: "string", name: "string", moves: "int", max_moves: "int", fortified: "int"};
 const CHECKED = {enabled: "int", reason: "string", reason_text: "string"};
 const SNAPSHOT_SHAPE = {
-  version: "int", epoch: "int", turn: "int", phase: "string", context: "string",
+  version: "int", epoch: "int", last_job: "int", turn: "int", phase: "string", context: "string",
   selection: {x: "int", y: "int", unit: "int"},
   resources: {food: {stock: "int", rate: "int"}, production: {stock: "int", rate: "int"}, science: {stock: "int", rate: "int"}},
   actions: [ACTION],
