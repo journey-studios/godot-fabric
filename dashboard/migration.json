@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T21:51:26.000Z",
+  "updatedAt": "2026-10-09T01:13:32.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -4340,6 +4340,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-baseline-headless-ebfe8a0",
+      "at": "2026-10-09T01:13:32.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério baseline, só a faixa headless e com evidência local (macOS arm64, pinada em ebfe8a0 sobre a implementação de 346146d): na cena de prova do V05-02, um clique real num botão da barra troca o painel por uma árvore de 50, 75 ou 100 nós nativos, em dois processos Godot, com 12 trocas por volta, 2 voltas de aquecimento e 30 estáveis (720 trocas estáveis). A medição sai do amostrador compartilhado do GF-30 (tests/performance-sampler.gd, extraído do performance-probe sem duplicá-lo): contagens do motor, heap do Hermes depois de coleta forçada, RSS e proveniência. Os invariantes exatos passam nas 720 trocas: os nós depois de uma troca são os da base mais os do painel novo, cada troca cria os nós do painel novo e apaga os do antigo, um clique troca uma vez e nunca chega ao mapa, a volta termina na base e o heap em repouso fica dentro do limite do GF-30 (julgado sobre o piso de janelas de 5 voltas); o host monta o painel dentro do flush do clique, 0 quadros depois. Um oráculo independente recalcula tamanhos e percentis, e quatro sabotagens retidas são rejeitadas (leaky-panel com opacidade 0, no-gc, world-leak e no-key); display none não monta nó, então não serve de vazamento. Custo de CPU da troca no laço headless, mediana e p95 sobre 180 trocas por tamanho: 2,2 e 3,2 ms (só apaga), 5,9 e 8,6 ms (cria 50 nós), 7,7 e 10,6 ms (75) e 9,2 e 12,4 ms (100), de modo que uma troca de 100 nós custa mais que o período de 8,33 ms de uma tela de 120 Hz. A PROPOSTA de orçamento, não congelada, traz CPU por troca de 4,5, 11,0, 13,5 e 16,0 ms (p95 vezes 1,25, arredondado para cima a 0,5 ms), heap por painel de 320.000, 410.000 e 510.000 bytes, e nós e latência exatos (0 quadros). A faixa janelada, só local, foi recusada pela nova regra de execução pareada: a tela não apresentava a janela (quadro ocioso de 0,70 ms contra os 4,17 ms exigidos), as três tentativas foram rejeitadas como unpaced, a lane saiu com código 3 e o recibo tem presented false, sem tempo de quadro. O critério baseline continua aberto até uma execução janelada apresentada; turno, soak e congelado continuam abertos. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md"
+    },
     {
       "id": "milestone-0-5-v05-03-consumidor-b9a40cb",
       "at": "2026-10-08T21:51:26.000Z",
