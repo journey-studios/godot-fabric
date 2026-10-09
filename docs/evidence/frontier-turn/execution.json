@@ -2046,6 +2046,962 @@
     ],
     "note": "no attempt was presented by the display (an idle frame of about 0.6 ms against the 4.167 ms required): the lane ended with presented false, no frame-time statistic and exit code 3; the rejected attempts are raw CPU cost of a loop that no display paced and are not results"
   },
+  "windowedPresented": {
+    "note": "A second run of the windowed lane, made after the run pinned under `windowed` (which is kept as it was: the display was off and the lane ended as not presented). This one ran with the user present and the display on, on a tree identical to the main commit that merged PR #86, and the lane was presented. The raw receipt is not committed (its hash is here); the numbers below are the receipt's own, copied from it, with the counts of the raw intervals that the receipt does not summarize.",
+    "executedAt": "2026-10-09",
+    "ranAtCommit": "e6a271d364a27f73acf995ed846c78eed055dde0",
+    "mainCommit": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+    "treeSha": "669f2d8f9739a1fc4189092828fad2bc1d24a386",
+    "treeEqualToMain": true,
+    "conditions": "the user present and the display on; the Mac loaded by other agents' suites (load average 4.27 to 14.44 around the attempts)",
+    "command": "caffeinate -d node scripts/frontier-turn-graphics.mjs",
+    "presented": true,
+    "status": "presented",
+    "godot": "4.7.2-stable (official)",
+    "protocol": {
+      "runs": 5,
+      "maxAttempts": 3,
+      "warmupRounds": 2,
+      "rounds": 30,
+      "idleFrames": 600,
+      "viewport": [
+        1080,
+        600
+      ],
+      "percentiles": "nearest rank over the raw intervals of one run",
+      "acrossRuns": "median and interquartile range (nearest-rank quartiles) of each run's statistic",
+      "validity": "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      "discarded": "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"
+    },
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "provenance": {
+      "displayServer": "macOS",
+      "renderingMethod": "gl_compatibility",
+      "renderingDriver": "opengl3",
+      "adapter": "Apple M3 Pro",
+      "vsync": "enabled",
+      "refreshRate": 120,
+      "windowSize": [
+        1080,
+        600
+      ],
+      "screenSize": [
+        3024,
+        1964
+      ],
+      "screenScale": 2,
+      "hermes": "250829098.0.17"
+    },
+    "nativeHostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+    "bundleSha256": "8f750693b191e8cfc729487d0b75b8a347dcdd01be83a12336f4873ed7d91427",
+    "probeSha256": {
+      "tests/frontier-turn-runner.gd": "e58f1f912df3fe7b0da0197a69f48c67aa6836e62bf201ae3a6a942935082481",
+      "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b",
+      "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+    },
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 35,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 12022,
+        "drawnFrames": 11251,
+        "idleMedianMs": 4.475,
+        "idleMeanMs": 8.329,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 9.78 7.41 6.49 }",
+          "after": "{ 6.65 7.04 6.45 }",
+          "seconds": 103.7
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 2,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 480,
+        "idleDraws": 0,
+        "idleFrames": 600,
+        "processFrames": 11737,
+        "drawnFrames": 78,
+        "idleMedianMs": 6.874,
+        "idleMeanMs": 6.9,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 6.65 7.04 6.45 }",
+          "after": "{ 7.96 7.23 6.57 }",
+          "seconds": 85.4
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 3,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11988,
+        "drawnFrames": 11970,
+        "idleMedianMs": 13.177,
+        "idleMeanMs": 8.356,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 7.96 7.23 6.57 }",
+          "after": "{ 8.31 7.86 6.90 }",
+          "seconds": 105.7
+        }
+      },
+      {
+        "slot": 2,
+        "attempt": 4,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 12022,
+        "drawnFrames": 12022,
+        "idleMedianMs": 8.495,
+        "idleMeanMs": 8.601,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 8.31 7.86 6.90 }",
+          "after": "{ 8.25 7.99 7.06 }",
+          "seconds": 105.1
+        }
+      },
+      {
+        "slot": 3,
+        "attempt": 5,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11871,
+        "drawnFrames": 11871,
+        "idleMedianMs": 4.421,
+        "idleMeanMs": 8.341,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 8.25 7.99 7.06 }",
+          "after": "{ 5.27 7.05 6.80 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "slot": 4,
+        "attempt": 6,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11961,
+        "drawnFrames": 11961,
+        "idleMedianMs": 8.13,
+        "idleMeanMs": 8.339,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.27 7.05 6.80 }",
+          "after": "{ 5.02 6.52 6.63 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "slot": 5,
+        "attempt": 7,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 214,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11836,
+        "drawnFrames": 7168,
+        "idleMedianMs": 4.777,
+        "idleMeanMs": 8.338,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.02 6.52 6.63 }",
+          "after": "{ 4.27 5.90 6.37 }",
+          "seconds": 96.5
+        }
+      },
+      {
+        "slot": 5,
+        "attempt": 8,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11930,
+        "drawnFrames": 11922,
+        "idleMedianMs": 12.678,
+        "idleMeanMs": 8.631,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 4.27 5.90 6.37 }",
+          "after": "{ 14.44 8.28 7.20 }",
+          "seconds": 106.9
+        }
+      }
+    ],
+    "attemptsSummary": {
+      "accepted": 5,
+      "rejected": 3,
+      "rejectedAs": "undrawn",
+      "unpaced": 0,
+      "secondsInTheAttempts": 811.1,
+      "loadAverageAtTheEnd": "{ 12.98 8.18 7.17 }"
+    },
+    "runs": [
+      {
+        "run": 1,
+        "attempt": 3,
+        "idleMs": {
+          "p50": 13.177,
+          "mean": 8.356,
+          "p95": 14.419,
+          "p99": 14.677,
+          "max": 18.382
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 299,
+          "betweenHalfPeriodAnd12ms": 0,
+          "atLeast12ms": 301,
+          "meanOfTheShort": 2.738,
+          "meanOfTheLong": 13.936,
+          "shortToLong": 298,
+          "longToShort": 298,
+          "neighboursInTheSameMode": 3,
+          "medianSumOfTwoNeighboursMs": 16.661
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 10.394,
+          "p95": 12.48,
+          "p99": 13.206,
+          "max": 26.263,
+          "above100ms": 0,
+          "above16_67ms": 1,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.625,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 26.763,
+          "p95": 34.806,
+          "p99": 40.945
+        },
+        "injectionMsP50": 0.523,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 57.088,
+            "p95": 67.843,
+            "max": 145.771
+          },
+          "frames": 960,
+          "above16_67ms": 9,
+          "above33_33ms": 4,
+          "above100ms": 0,
+          "maxMs": 78.155
+        },
+        "loadAverage": {
+          "before": "{ 7.96 7.23 6.57 }",
+          "after": "{ 8.31 7.86 6.90 }",
+          "seconds": 105.7
+        }
+      },
+      {
+        "run": 2,
+        "attempt": 4,
+        "idleMs": {
+          "p50": 8.495,
+          "mean": 8.601,
+          "p95": 16.089,
+          "p99": 20.215,
+          "max": 52.903
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 285,
+          "betweenHalfPeriodAnd12ms": 25,
+          "atLeast12ms": 290,
+          "meanOfTheShort": 2.066,
+          "meanOfTheLong": 15.071,
+          "shortToLong": 284,
+          "longToShort": 284,
+          "neighboursInTheSameMode": 31,
+          "medianSumOfTwoNeighboursMs": 16.662
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.53,
+          "p95": 12.984,
+          "p99": 13.797,
+          "max": 16.221,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.467,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 23.731,
+          "p95": 29.836,
+          "p99": 38.005
+        },
+        "injectionMsP50": 0.518,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 52.808,
+            "p95": 66.582,
+            "max": 73.806
+          },
+          "frames": 960,
+          "above16_67ms": 4,
+          "above33_33ms": 0,
+          "above100ms": 0,
+          "maxMs": 19.838
+        },
+        "loadAverage": {
+          "before": "{ 8.31 7.86 6.90 }",
+          "after": "{ 8.25 7.99 7.06 }",
+          "seconds": 105.1
+        }
+      },
+      {
+        "run": 3,
+        "attempt": 5,
+        "idleMs": {
+          "p50": 4.421,
+          "mean": 8.341,
+          "p95": 15.006,
+          "p99": 15.202,
+          "max": 16.703
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 298,
+          "betweenHalfPeriodAnd12ms": 2,
+          "atLeast12ms": 300,
+          "meanOfTheShort": 2.598,
+          "meanOfTheLong": 14.073,
+          "shortToLong": 298,
+          "longToShort": 298,
+          "neighboursInTheSameMode": 3,
+          "medianSumOfTwoNeighboursMs": 16.675
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.689,
+          "p95": 13.162,
+          "p99": 13.488,
+          "max": 15.417,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 17.45,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 28.198,
+          "p95": 37.327,
+          "p99": 38.077
+        },
+        "injectionMsP50": 0.64,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 56.796,
+            "p95": 69.082,
+            "max": 169.495
+          },
+          "frames": 960,
+          "above16_67ms": 4,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 94.111
+        },
+        "loadAverage": {
+          "before": "{ 8.25 7.99 7.06 }",
+          "after": "{ 5.27 7.05 6.80 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "run": 4,
+        "attempt": 6,
+        "idleMs": {
+          "p50": 8.13,
+          "mean": 8.339,
+          "p95": 15.083,
+          "p99": 15.381,
+          "max": 17.63
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 292,
+          "betweenHalfPeriodAnd12ms": 14,
+          "atLeast12ms": 294,
+          "meanOfTheShort": 2.661,
+          "meanOfTheLong": 14.003,
+          "shortToLong": 292,
+          "longToShort": 292,
+          "neighboursInTheSameMode": 15,
+          "medianSumOfTwoNeighboursMs": 16.67
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.585,
+          "p95": 13.483,
+          "p99": 13.755,
+          "max": 14.047,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 16.346,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 28.156,
+          "p95": 37.21,
+          "p99": 38.482
+        },
+        "injectionMsP50": 0.531,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 56.652,
+            "p95": 67.581,
+            "max": 93.047
+          },
+          "frames": 960,
+          "above16_67ms": 1,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 34.202
+        },
+        "loadAverage": {
+          "before": "{ 5.27 7.05 6.80 }",
+          "after": "{ 5.02 6.52 6.63 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "run": 5,
+        "attempt": 8,
+        "idleMs": {
+          "p50": 12.678,
+          "mean": 8.631,
+          "p95": 15.617,
+          "p99": 16.729,
+          "max": 16.985
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 289,
+          "betweenHalfPeriodAnd12ms": 1,
+          "atLeast12ms": 310,
+          "meanOfTheShort": 2.605,
+          "meanOfTheLong": 14.238,
+          "shortToLong": 289,
+          "longToShort": 289,
+          "neighboursInTheSameMode": 21,
+          "medianSumOfTwoNeighboursMs": 16.683
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 10.556,
+          "p95": 12.61,
+          "p99": 14.613,
+          "max": 22.8,
+          "above100ms": 0,
+          "above16_67ms": 3,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.926,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 27.457,
+          "p95": 36.75,
+          "p99": 44.313
+        },
+        "injectionMsP50": 0.628,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 57.232,
+            "p95": 73.303,
+            "max": 136.085
+          },
+          "frames": 960,
+          "above16_67ms": 7,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 86.548
+        },
+        "loadAverage": {
+          "before": "{ 4.27 5.90 6.37 }",
+          "after": "{ 14.44 8.28 7.20 }",
+          "seconds": 106.9
+        }
+      }
+    ],
+    "across": {
+      "clicks": {
+        "idleFrameMs": {
+          "p50": {
+            "median": 8.495,
+            "q1": 8.13,
+            "q3": 12.678,
+            "iqr": 4.548,
+            "min": 4.421,
+            "max": 13.177
+          },
+          "p95": {
+            "median": 15.083,
+            "q1": 15.006,
+            "q3": 15.617,
+            "iqr": 0.6110000000000007,
+            "min": 14.419,
+            "max": 16.089
+          },
+          "p99": {
+            "median": 15.381,
+            "q1": 15.202,
+            "q3": 16.729,
+            "iqr": 1.5269999999999992,
+            "min": 14.677,
+            "max": 20.215
+          },
+          "max": {
+            "median": 17.63,
+            "q1": 16.985,
+            "q3": 18.382,
+            "iqr": 1.397000000000002,
+            "min": 16.703,
+            "max": 52.903
+          },
+          "aboveTwiceIdleMedian": {
+            "median": 1,
+            "q1": 0,
+            "q3": 12,
+            "iqr": 12,
+            "min": 0,
+            "max": 300
+          },
+          "above100ms": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "swapFrameMs": {
+          "p50": {
+            "median": 11.53,
+            "q1": 10.556,
+            "q3": 11.585,
+            "iqr": 1.0290000000000017,
+            "min": 10.394,
+            "max": 11.689
+          },
+          "p95": {
+            "median": 12.984,
+            "q1": 12.61,
+            "q3": 13.162,
+            "iqr": 0.5520000000000014,
+            "min": 12.48,
+            "max": 13.483
+          },
+          "p99": {
+            "median": 13.755,
+            "q1": 13.488,
+            "q3": 13.797,
+            "iqr": 0.30900000000000105,
+            "min": 13.206,
+            "max": 14.613
+          },
+          "max": {
+            "median": 16.221,
+            "q1": 15.417,
+            "q3": 22.8,
+            "iqr": 7.383000000000001,
+            "min": 14.047,
+            "max": 26.263
+          },
+          "aboveTwiceIdleMedian": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 242
+          },
+          "above100ms": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "injectionMsP50": {
+          "median": 0.531,
+          "q1": 0.523,
+          "q3": 0.628,
+          "iqr": 0.10499999999999998,
+          "min": 0.518,
+          "max": 0.64
+        },
+        "clickToNodesMsP50": {
+          "median": 15.926,
+          "q1": 15.625,
+          "q3": 16.346,
+          "iqr": 0.7210000000000001,
+          "min": 15.467,
+          "max": 17.45
+        },
+        "clickToDrawMsP50": {
+          "median": 27.457,
+          "q1": 26.763,
+          "q3": 28.156,
+          "iqr": 1.3929999999999971,
+          "min": 23.731,
+          "max": 28.198
+        },
+        "clickToDrawMsP95": {
+          "median": 36.75,
+          "q1": 34.806,
+          "q3": 37.21,
+          "iqr": 2.4040000000000035,
+          "min": 29.836,
+          "max": 37.327
+        },
+        "vsync": [
+          "enabled"
+        ],
+        "refreshRate": [
+          120
+        ]
+      },
+      "turn": {
+        "byPhase": [
+          {
+            "phase": "ai_plan",
+            "p50": {
+              "median": 5.456,
+              "q1": 2.849,
+              "q3": 5.832,
+              "iqr": 2.9829999999999997,
+              "min": 2.224,
+              "max": 6.144
+            },
+            "p95": {
+              "median": 12.791,
+              "q1": 12.484,
+              "q3": 13.327,
+              "iqr": 0.843,
+              "min": 12.398,
+              "max": 13.377
+            },
+            "max": {
+              "median": 18.052,
+              "q1": 15.159,
+              "q3": 34.536,
+              "iqr": 19.377000000000002,
+              "min": 13.566,
+              "max": 94.111
+            }
+          },
+          {
+            "phase": "ai_move",
+            "p50": {
+              "median": 7.908,
+              "q1": 7.872,
+              "q3": 8.019,
+              "iqr": 0.14700000000000024,
+              "min": 6.817,
+              "max": 12.599
+            },
+            "p95": {
+              "median": 13.701,
+              "q1": 13.473,
+              "q3": 13.961,
+              "iqr": 0.48799999999999955,
+              "min": 13.263,
+              "max": 14.65
+            },
+            "max": {
+              "median": 23.71,
+              "q1": 22.931,
+              "q3": 34.202,
+              "iqr": 11.270999999999997,
+              "min": 16.013,
+              "max": 78.155
+            }
+          },
+          {
+            "phase": "production",
+            "p50": {
+              "median": 7.144,
+              "q1": 6.955,
+              "q3": 7.631,
+              "iqr": 0.6760000000000002,
+              "min": 3.89,
+              "max": 7.68
+            },
+            "p95": {
+              "median": 14.134,
+              "q1": 14.095,
+              "q3": 14.403,
+              "iqr": 0.30799999999999983,
+              "min": 13.569,
+              "max": 14.705
+            },
+            "max": {
+              "median": 19.17,
+              "q1": 15.49,
+              "q3": 20.167,
+              "iqr": 4.677000000000001,
+              "min": 15.087,
+              "max": 29.734
+            }
+          },
+          {
+            "phase": "growth",
+            "p50": {
+              "median": 7.698,
+              "q1": 7.574,
+              "q3": 7.783,
+              "iqr": 0.20900000000000052,
+              "min": 6.386,
+              "max": 12.8
+            },
+            "p95": {
+              "median": 13.785,
+              "q1": 13.671,
+              "q3": 13.911,
+              "iqr": 0.2400000000000002,
+              "min": 13.288,
+              "max": 14.303
+            },
+            "max": {
+              "median": 14.835,
+              "q1": 14.555,
+              "q3": 15.08,
+              "iqr": 0.5250000000000004,
+              "min": 14.382,
+              "max": 15.72
+            }
+          },
+          {
+            "phase": "research",
+            "p50": {
+              "median": 6.559,
+              "q1": 5.91,
+              "q3": 7.784,
+              "iqr": 1.8739999999999997,
+              "min": 4.046,
+              "max": 7.785
+            },
+            "p95": {
+              "median": 13.718,
+              "q1": 13.568,
+              "q3": 13.845,
+              "iqr": 0.277000000000001,
+              "min": 13.205,
+              "max": 14.524
+            },
+            "max": {
+              "median": 14.979,
+              "q1": 14.739,
+              "q3": 16.386,
+              "iqr": 1.6469999999999985,
+              "min": 14.418,
+              "max": 35.62
+            }
+          },
+          {
+            "phase": "refresh",
+            "p50": {
+              "median": 7.802,
+              "q1": 7.354,
+              "q3": 7.868,
+              "iqr": 0.5140000000000002,
+              "min": 6.956,
+              "max": 12.754
+            },
+            "p95": {
+              "median": 13.904,
+              "q1": 13.667,
+              "q3": 14.054,
+              "iqr": 0.38700000000000045,
+              "min": 13.426,
+              "max": 14.695
+            },
+            "max": {
+              "median": 18.747,
+              "q1": 15.89,
+              "q3": 26.481,
+              "iqr": 10.591000000000001,
+              "min": 15.129,
+              "max": 86.548
+            }
+          },
+          {
+            "phase": "idle",
+            "p50": {
+              "median": 6.133,
+              "q1": 5.73,
+              "q3": 7.77,
+              "iqr": 2.039999999999999,
+              "min": 4.391,
+              "max": 8.116
+            },
+            "p95": {
+              "median": 13.825,
+              "q1": 13.429,
+              "q3": 13.889,
+              "iqr": 0.4599999999999991,
+              "min": 13.172,
+              "max": 14.609
+            },
+            "max": {
+              "median": 15.031,
+              "q1": 14.465,
+              "q3": 19.838,
+              "iqr": 5.373000000000001,
+              "min": 14.25,
+              "max": 21.252
+            }
+          }
+        ],
+        "busyMs": {
+          "p50": {
+            "median": 56.796,
+            "q1": 56.652,
+            "q3": 57.088,
+            "iqr": 0.43599999999999994,
+            "min": 52.808,
+            "max": 57.232
+          },
+          "p95": {
+            "median": 67.843,
+            "q1": 67.581,
+            "q3": 69.082,
+            "iqr": 1.5009999999999906,
+            "min": 66.582,
+            "max": 73.303
+          },
+          "max": {
+            "median": 136.085,
+            "q1": 93.047,
+            "q3": 145.771,
+            "iqr": 52.72399999999999,
+            "min": 73.806,
+            "max": 169.495
+          }
+        }
+      }
+    },
+    "counts": {
+      "steadyClicksOutsideEndTurn": 1800,
+      "clickFirstFrameAboveTwoRefreshPeriods": 4,
+      "clickFirstFrameAboveFourRefreshPeriods": 0,
+      "clickFirstFrameAbove100ms": 0,
+      "turnFrames": 4800,
+      "turnFramesAboveTwoRefreshPeriods": 25,
+      "turnFramesAboveFourRefreshPeriods": 7,
+      "turnFramesAbove100ms": 0,
+      "steadyClicksByFramesToThePanels": {
+        "otherClick:2": 1799,
+        "endTurn:8": 600,
+        "otherClick:1": 1
+      },
+      "refreshPeriodMs": 8.333
+    },
+    "captures": {
+      "identicalToTheHeadlessCaptures": true,
+      "sha256": {
+        "context-city.png": "3b5e11112457434fc9617aee4704c96723c6b2af1611b767710435b01b2d35f5",
+        "context-dialog.png": "2c49788c474f3f4e6d7a78f0b082db1c8a639e6040c5767efa3cefa2cc1a2468",
+        "context-none.png": "20d09cb50280d2eef25f7038b00748d6185cb5b0803612a05f20fd932c5e8b34",
+        "context-settler.png": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+        "context-stack.png": "765d6a18fc0a5b00eb4fa1ad46479458d16a2050a59cbebcb23cf4b7f9d8e583",
+        "context-tile.png": "ad60018e4b62a7b627f70a73492f9e87020c0bca6087ebdde82463c4d38140c2",
+        "context-warrior.png": "b115bee3c902fa8ffb41c882b59d0315d02df8c90823b882456f760816c7ccf1"
+      }
+    },
+    "receipt": {
+      "file": "build/frontier-turn-graphics.json (not kept: 2.3 MB, the raw intervals of the five accepted runs and the three rejected attempts)",
+      "sha256": "db86eb0816f036add015022ffab74187c8debab0dc218e2bc81e4dad723cdbb5",
+      "bytes": 2380876,
+      "verified": "verifyGraphicsReceipt of tests/frontier-baseline-oracle.mjs passes on it; the idle, click-frame and turn-phase statistics of the five runs, recomputed from the raw intervals by nearest rank, equal the receipt's"
+    },
+    "findings": [
+      "The lane was presented: 5 of 5 runs accepted in 8 attempts, the vsync read back `enabled` at 120 Hz (a refresh period of 8.333 ms); 3 attempts were rejected as undrawn (35, 480 and 214 steady clicks without a drawn frame after them; 11,251, 78 and 7,168 drawn frames of 12,022, 11,737 and 11,836 process frames) and none as unpaced",
+      "The first frame of a click took 11.53 ms at the median of the five runs' p50 (10.39 to 11.69), p95 12.98 (12.48 to 13.48), p99 13.76 (13.21 to 14.61) and at most 16.22 (14.05 to 26.26); 4 of 1,800 were above two refresh periods (16.67 ms), none above four, none at 100 ms or more",
+      "From the injection to the first frame drawn after it took 27.46 ms at the median of the p50 (23.73 to 28.20) and 36.75 at the median of the p95 (29.84 to 37.33); the panels showed after 2 frames in 1,799 of the 1,800 clicks outside End turn (1 frame in one, run 2 round 13) and after 8 in all 600 End turns",
+      "A turn is eight frames (the seven of the job and one for the HUD to catch up), in the order of the service, a snapshot in each of the seven and `turn_ended` once, in all 600 steady turns; its seven frames took 56.80 ms at the median of the p50 (52.81 to 57.23), 67.84 at the median of the p95 (66.58 to 73.30) and 136.09 at the median of the maximum (73.81 to 169.50); the p95 of one phase's frame is 12.79 to 14.13 ms; 25 of 4,800 turn frames were above 16.67 ms, 7 above 33.33 and none at 100 ms or more (the largest 94.11 ms, ai_plan, run 3)",
+      "The idle median of the accepted runs was 4.421 to 13.177 ms against a refresh period of 8.333 ms; in every run the 600 idle intervals fall in two groups that alternate (285 to 299 below 4.167 ms, 290 to 310 of 12 ms or more, 0 to 25 between; two neighbours sum to 16.66 to 16.68 ms at the median) and their mean is 8.34 to 8.63 ms, one refresh period, so the median depends on a few samples while the mean and the p95 (14.42 to 16.09 ms) do not",
+      "The intervals are of process frames, not of frames the display showed; the vsync was on, so a missed frame is not read from them. One machine, one display, synthetic clicks on the validation device, the HUD of V05-05 as it was on the main commit, and no frame-time limit is proposed"
+    ]
+  },
   "findings": [
     "A click shows the panels of its context 2 frames after the injection in all 480 steady clicks (8 for an End turn: the seven frames of the job and one for the HUD to catch up); the frames are recorded and the oracle fixes only a ceiling (10 and 40)",
     "The end of a turn runs one phase in each of seven frames, in the order of the service, publishes a snapshot in each and turn_ended once in the frame of the last phase, in all 120 steady turns (128 with the warm-up); the ids of the 128 jobs rise by one",
