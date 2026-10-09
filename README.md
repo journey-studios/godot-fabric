@@ -572,6 +572,14 @@ rules, no JavaScript error goes unhandled, a paused game keeps the HUD answering
 numbers (a recommendation for the V05-05 HUD, not a change to it); four retained sabotages are rejected and the hosted CI run is pending.
 [Evidence](docs/evidence/frontier-soak/README.md); [research](docs/research/frontier-soak.md).
 
+The [Frontier turn](docs/research/frontier-turn.md) (V05-06, criterion `turno`, `npm run test:frontier-turn`) measures the game as a consumer has it: the `civ-lite` template provisioned into a project of its own, its
+HUD and scene untouched, driven by real pointer clicks (16 a round, 32 rounds, all seven contexts, the dialog opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows the panels of its context
+(2 frames, and 10 to 14 ms of CPU headless, in the pinned run; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and `turn_ended` once, the native views, SceneTree nodes
+and orphans come back to the same count every time a context does, and the heap at rest and the resident memory stay within the GF-30 and soak rules in all 17 series; four retained sabotages (two of them in the provisioned copy, never in the template) are
+rejected, each for its own rule, and an independent oracle recomputes it all. **No presented frame time is pinned**: the local windowed lane (`npm run bench:frontier-turn-graphics`) refuses a run that no display paced and, with the display off, ended as not
+presented (exit code 3, no frame-time statistic), so the criterion stays open, as do `congelado`, hosted CI and the Pages publication.
+Evidence: pending; [research](docs/research/frontier-turn.md).
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -914,6 +922,7 @@ npm run test:text-style                  # fontStyle italic and textDecorationLi
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
 npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
 npm run test:frontier-soak               # Frontier played for 100 turns in three processes: one game (same hashes), steady nodes, heap and memory, a pause that keeps the HUD alive, unmounting against hiding a panel; sabotages: node scripts/frontier-soak-sabotage.mjs
+npm run test:frontier-turn               # Frontier as a provisioned consumer, clicked through its seven contexts and four turns a round: panels per click, one phase a frame, native views, heap and memory per transition; sabotages: node scripts/frontier-turn-sabotage.mjs; local windowed lane: npm run bench:frontier-turn-graphics
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
