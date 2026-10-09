@@ -8,7 +8,7 @@ export const worldInputNativeProducers = ["native/fabric_surface.h", "native/fab
 
 export function bundleWorldInputProbe() {
   return bundleNativeProbe({name: "world-input", entryPoint: "tests/world-input-fixture.jsx",
-    sources: ["tests/world-input-fixture.jsx", "tests/world-input-probe.gd", "tests/world-input-driver.gd",
+    sources: ["tests/world-input-fixture.jsx", "tests/world-input-probe.gd", "tests/world-input-driver.gd", "tests/world-input-order-witness.gd",
       "tests/world-input-graphics-probe.gd", "tests/world-input-native.test.mjs",
       "tests/world-input-oracle.mjs", "examples/world-input/world.gd", "examples/world-input/world.tscn",
       "examples/world-input/scene.tscn", "examples/world-input/panels.tscn", "scripts/world-input-bundle.mjs",

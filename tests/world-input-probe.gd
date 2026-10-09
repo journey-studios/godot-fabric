@@ -18,15 +18,22 @@ extends SceneTree
 # does not depend on the pace of the runner. Frames are waited only until a condition holds,
 # for a scene to mount and for an overlay or a Modal to open or close.
 #
-# A normative check needs the policy (the Surface does not take the pointer of the empty
-# area): the host that predates it must fail exactly these. The others hold on both hosts.
-# The informative rows (the gaps of the minimal policy) record what was measured and never
-# pass or fail.
+# The pointer reaches exactly one side, by the rule of React Native on a phone: what the hit test of React Native finds
+# (a View of the Surface with a tag, hitSlop and pointerEvents honored) is the HUD's, and the rest is the world's. A
+# check is normative in one of two ways, and a host that lacks the rule fails exactly the checks that need it:
+#  - a1: the Surface does not take the pointer of the empty area (MOUSE_FILTER_IGNORE). The host before it fails these.
+#  - a2: a hit slop, a Text with onPress, the gaps of a ScrollView, and the wheel over the HUD, over a ScrollView and over
+#    an overlay in the tree belong to React Native alone: the Surface claims them in _unhandled_input. The host with only
+#    a1 fails these, and so does the host before a1 where the GUI does not hide them.
+# The others hold on every host. The informative rows (the pointer motion and the drag, which the rule leaves alone)
+# record what was measured and never pass or fail.
 #
-# --allow-original-negative runs on the preceding host. --sabotage=surface-stop forces the
-# Surfaces back to MOUSE_FILTER_STOP; --sabotage=views-ignore gives every Control of the
-# Views MOUSE_FILTER_IGNORE: the probe and the oracle must both reject them.
+# --allow-original-negative runs on the host before a1 and --allow-a1-negative on the host with a1 only. --sabotage=<name>
+# breaks the current host on purpose from the scene (surface-stop forces the Surfaces back to MOUSE_FILTER_STOP;
+# views-ignore gives every Control of the Views MOUSE_FILTER_IGNORE; unhandled-off keeps the Surfaces from receiving
+# _unhandled_input): the probe and the oracle must both reject them.
 const Driver := preload("res://tests/world-input-driver.gd")
+const Witness := preload("res://tests/world-input-order-witness.gd")
 const SCENES := {"a": "res://examples/world-input/scene.tscn", "b": "res://examples/world-input/panels.tscn"}
 const SIZE := Vector2i(800, 600)
 const FULL := 100
@@ -48,6 +55,26 @@ const SLOP := Vector2(490, 120)
 const TEXT := Vector2(520, 212)
 const SCROLL_GAP := Vector2(550, 400)
 const OVERLAY_BUTTON := Vector2(350, 320)
+# A Switch at (620,20)-(671,51): a native Control of the Godot GUI, which takes its clicks and taps in _gui_input.
+const SWITCH := Vector2(645, 35)
+# The places where the HUD owns a pointer that the GUI would let through (a Surface at IGNORE and no Control that stops it): a
+# hit slop (L1), a Text with onPress (L2), the gap of a ScrollView in a box-none wrapper (L3). Each is where the hit test of React
+# Native finds a View, and the handler is the one that hears it. The wheel is aimed at them too.
+const GAP_PLACES := [
+  {"id": "hit-slop", "label": "L1 hit slop", "region": "slop", "at": SLOP, "handler": "slopPress"},
+  {"id": "text-onpress", "label": "L2 Text onPress", "region": "text", "at": TEXT, "handler": "textPress"},
+  {"id": "scroll-gap", "label": "L3 ScrollView gap", "region": "scroll-gap", "at": SCROLL_GAP, "handler": "wrapDown"},
+]
+# The wheel over the HUD: a bar, a plain panel and a Pressable (L4), a ScrollView (L5), and the gap places (L4).
+const WHEEL_PLACES := [
+  {"id": "bar", "label": "L4 bar", "region": "bar", "at": BAR},
+  {"id": "plain", "label": "L4 plain panel", "region": "plain", "at": PLAIN},
+  {"id": "button", "label": "L4 Pressable", "region": "button", "at": BUTTON},
+  {"id": "scroll", "label": "L5 ScrollView", "region": "scroll-button", "at": SCROLL_BUTTON},
+  {"id": "hit-slop", "label": "L4 hit slop", "region": "slop", "at": SLOP},
+  {"id": "text-onpress", "label": "L4 Text", "region": "text", "at": TEXT},
+  {"id": "scroll-gap", "label": "L4 ScrollView gap", "region": "scroll-gap", "at": SCROLL_GAP},
+]
 # Topology (b): the left Surface is (0,0)-(400,600), the right one (400,0)-(800,600).
 const PANEL_BUTTON := {"left": Vector2(70, 40), "right": Vector2(470, 40)}
 const PANEL_BAR := {"left": Vector2(300, 70), "right": Vector2(700, 70)}
@@ -55,7 +82,9 @@ const PANEL_VOID := {"left": Vector2(200, 400), "right": Vector2(600, 400)}
 
 var checks: Array = []
 var expected_original_failures: Array = []
+var expected_a1_failures: Array = []
 var allow_original_negative := false
+var allow_a1_negative := false
 var sabotage := ""
 var topologies := {}
 var topology := ""
@@ -73,9 +102,17 @@ func check(condition: bool, name: String) -> bool:
     push_error("FABRIC_CHECK_FAILED: " + name)
   return condition
 
-# A normative check needs the policy: the preceding host fails exactly these.
+# A normative check of a1 needs the policy of the Surface: the host before a1 fails exactly these, and the host with a1 passes.
 func normative(condition: bool, name: String) -> bool:
   expected_original_failures.append(name)
+  return check(condition, name)
+
+# A normative check of a2 needs the Surface's claim: the host with only a1 fails exactly these. The host before a1 fails them too,
+# unless its Surface (STOP) hides the case from the world anyway (a click, a tap and the emulated mouse in a gap place).
+func normative_a2(condition: bool, name: String, holds_before_a1 := false) -> bool:
+  expected_a1_failures.append(name)
+  if not holds_before_a1:
+    expected_original_failures.append(name)
   return check(condition, name)
 
 # A check on what an input does with the empty area. The GUI stops a click, a touch and a drag at a Control with
@@ -98,6 +135,10 @@ func apply_sabotage() -> void:
   elif sabotage == "views-ignore":
     for control: Control in root.find_children("*", "Control", true, false):
       control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+  elif sabotage == "unhandled-off":
+    # The Surface keeps its _input but no longer hears the unhandled stage, so it cannot claim anything there.
+    for surface: Control in surfaces:
+      surface.set_process_unhandled_input(false)
 
 # ---- the scene ----
 func mount(which: String) -> void:
@@ -121,6 +162,26 @@ func mount(which: String) -> void:
       "mouseFilter": surface.mouse_filter})
   topologies[which] = section
   check(reached and camera.is_current(), which + "/setup: the scene mounts and its Camera2D is current")
+  await order_check(PANEL_VOID.left if which == "b" else VOID)
+
+# The Surface's claim only works if a node of the HUD's layer hears _unhandled_input before the world does. A witness stands
+# where the Surface stands (the HUD's CanvasLayer, after the world) and records, for each mouse button event it hears, how
+# many events the world had heard: the oracle derives that the world had not heard this one yet. The wheel is aimed at the
+# empty area because every host lets it through to the unhandled stage.
+func order_check(at: Vector2) -> void:
+  var witness: Witness = Witness.new()
+  witness.world = world
+  scene.get_node("Hud").add_child(witness)
+  var row := driver.run([Driver.part("void", "wheel", at, "left" if topology == "b" else "hud")], 1)
+  var indices: Array = []
+  for index in range(world.received.size()):
+    if world.received[index][0] == "InputEventMouseButton":
+      indices.append(index)
+  section["order"] = {"at": [at.x, at.y], "heard": witness.heard.duplicate(), "worldIndices": indices, "world": row.world}
+  check(not indices.is_empty() and witness.heard == indices,
+    topology + "/order: a node of the HUD's layer hears _unhandled_input before the world does, so the Surface can claim first")
+  witness.queue_free()
+  await settle(2)
 
 func teardown() -> void:
   app.call("stop")
@@ -137,6 +198,17 @@ func burst(id: String, parts: Array, n: int, extra := {}, into := "rows") -> Dic
   row.id = topology + "/" + id
   row.merge(extra)
   section[into].append(row)
+  return row
+
+# A burst whose handler hears the GUI's own events (a Switch toggles in _gui_input and the runtime emits its change from
+# there, not from the pointer route): the last of them can reach JavaScript after the flush returns. The burst waits, for a
+# bounded number of frames, until the handler has counted n, and reads the HUD's counters then.
+func burst_gui(id: String, parts: Array, n: int, handler: String) -> Dictionary:
+  var row := driver.run(parts, n)
+  await driver.wait_for(func() -> bool: return int(driver.rn_counts().get(handler, 0)) >= n)
+  row.rn = driver.rn_counts()
+  row.id = topology + "/" + id
+  section.rows.append(row)
   return row
 
 func hover(id: String, region: String, at: Vector2) -> Dictionary:
@@ -166,8 +238,7 @@ func set_overlay(kind: String, visible: bool) -> bool:
   return reached
 
 func overlay_cycle(kind: String) -> void:
-  # The tree overlay is also measured with the wheel, below, among the gaps: its wheel presses still reach the world.
-  var inputs := ["left", "right", "touch"] if kind == "tree" else ["left", "right", "wheel", "touch"]
+  var inputs := ["left", "right", "wheel", "touch"]
   for phase in ["closed", "open", "closed-again"]:
     if phase != "closed":
       var changed := await set_overlay(kind, phase == "open")
@@ -176,24 +247,45 @@ func overlay_cycle(kind: String) -> void:
       var region := "covered" if phase == "open" else "void"
       var row := burst("%s/%s/%s" % [kind, phase, input], [Driver.part(region, input, VOID)], FULL, {"overlay": kind, "phase": phase})
       if phase == "open":
-        check(hud_none(row), "a/%s overlay open: %d %s inputs reach neither the world nor the HUD's handlers" % [kind, FULL, input])
+        var name := "a/%s overlay open: %d %s inputs reach neither the world nor the HUD's handlers" % [kind, FULL, input]
+        if kind == "tree" and input == "wheel":
+          # L6: the GUI passes a wheel tick through the overlay's STOP Control (force_pass_scroll_events), so on the host with a1 only
+          # the world hears it. The Modal is a window of its own and keeps the wheel from the world on every host.
+          normative_a2(hud_none(row), name)
+        else:
+          check(hud_none(row), name)
       else:
         pointer_check(input, taps(row, input, FULL), "a/%s overlay %s: %d of %d %s inputs reach the world and none reaches the HUD (positive control)" % [kind, phase, FULL, FULL, input])
     if phase == "open":
       var button := burst(kind + "/open/button", [Driver.part(kind + "-button", "left", OVERLAY_BUTTON)], FULL, {"overlay": kind, "phase": phase})
       check(button.world.is_empty() and button.rn == {"hud/" + kind + "Press": FULL},
         "a/%s overlay open: its Pressable is pressed %d times and none reaches the world" % [kind, FULL])
-      if kind == "tree":
-        burst("tree/open/wheel", [Driver.part("covered", "wheel", VOID)], SMALL, {"overlay": kind, "phase": phase}, "gaps")
 
-func gaps_a() -> void:
-  # What the minimal policy leaves open: the control is a hit slop or a Text (the View's Control is IGNORE or too small)
-  # or a gap of a ScrollView, and the world hears a press that React Native also takes. Measured, never judged.
-  burst("gap/hit-slop", [Driver.part("slop", "left", SLOP)], SMALL, {}, "gaps")
-  burst("gap/text-onpress", [Driver.part("text", "left", TEXT)], SMALL, {}, "gaps")
-  burst("gap/scroll-gap", [Driver.part("scroll-gap", "left", SCROLL_GAP)], SMALL, {}, "gaps")
-  burst("gap/wheel-over-hud", [Driver.part("hud", "wheel", BAR)], SMALL, {}, "gaps")
-  burst("gap/wheel-over-scroll", [Driver.part("scroll", "wheel", SCROLL_BUTTON)], SMALL, {}, "gaps")
+# The gaps of a1, closed by a2: a click, a tap and the mouse Godot emulates from it on a hit slop, a Text with onPress and the
+# gap of a ScrollView (L1-L3) belong to React Native, which hears the click and the tap once (the emulated mouse never, it ignores
+# device -1) and leaves the world none of the three; the wheel over the HUD, a ScrollView and the same places (L4, L5) is nobody's
+# to the world either. The host with only a1 lets all of these through to the world as well. The Surface of the host before a1
+# (STOP) hides the click, the tap and the emulated mouse in these places, but not the wheel.
+func closed_gaps_a() -> void:
+  for place: Dictionary in GAP_PLACES:
+    var handled: Dictionary = {"hud/" + place.handler: FULL}
+    for input: String in ["left", "touch"]:
+      var row := burst("gap/%s/%s" % [place.id, input], [Driver.part(place.region, input, place.at)], FULL)
+      normative_a2(row.world.is_empty() and row.rn == handled,
+        "a/%s: %d %s inputs reach the handler %d times and none reaches the world" % [place.label, FULL, input, FULL], true)
+    var emulated := burst("gap/%s/emulated" % place.id, [Driver.part(place.region, "emulated", place.at)], FULL)
+    normative_a2(hud_none(emulated), "a/%s: %d emulated mouse clicks reach neither the world nor a handler" % [place.label, FULL], true)
+  for place: Dictionary in WHEEL_PLACES:
+    var row := burst("wheel/%s" % place.id, [Driver.part(place.region, "wheel", place.at)], FULL)
+    normative_a2(hud_none(row), "a/%s: %d wheel ticks reach neither the world nor the HUD's handlers" % [place.label, FULL])
+
+# What the rule of a2 leaves alone: the pointer motion and a drag. Over a View with a Control that stops the pointer (the bar) the
+# GUI keeps both from the world; over a place the GUI lets through (a hit slop) the world still hears the motion, and the drag that
+# starts there (its touch is claimed, the drag is not). Measured, never judged.
+func open_cases_a() -> void:
+  for place: Dictionary in [{"id": "bar", "region": "bar", "at": BAR}, {"id": "hit-slop", "region": "slop", "at": SLOP}]:
+    for input: String in ["motion", "drag"]:
+      burst("open/%s-over-%s" % [input, place.id], [Driver.part(place.region, input, place.at)], SMALL, {}, "gaps")
 
 func topology_a() -> void:
   await mount("a")
@@ -219,6 +311,11 @@ func topology_a() -> void:
   check(hud_none(plain), "a/plain panel: 100 clicks on a panel with no handler reach neither the world nor a handler")
   var scroll := burst("scroll-button/left", [Driver.part("scroll-button", "left", SCROLL_BUTTON)], FULL)
   check(scroll.world.is_empty() and scroll.rn == {"hud/scrollPress": FULL}, "a/ScrollView: 100 clicks on its Pressable press it 100 times and none reaches the world")
+  # A Switch lives on the GUI's own events: the Surface's claim comes after the GUI, so a click and a tap toggle it once each.
+  for input: String in ["left", "touch"]:
+    var toggled := await burst_gui("switch/" + input, [Driver.part("switch", input, SWITCH)], FULL, "hud/switchChange")
+    check(toggled.world.is_empty() and toggled.rn == {"hud/switchChange": FULL},
+      "a/native Switch: %d %s inputs toggle the Godot GUI's Switch %d times and none reaches the world" % [FULL, input, FULL])
   var alternating := burst("alternating", [Driver.part("button", "left", BUTTON), Driver.part("void", "left", VOID)], FULL)
   normative(alternating.world == Driver.stream_of("left", FULL) and alternating.rn == {"hud/press": FULL, "hud/barDown": FULL},
     "a/alternating: 100 Pressable presses and 100 empty-area clicks, each reaching only its owner")
@@ -232,7 +329,8 @@ func topology_a() -> void:
   check(over_hud != null and over_hud["class"] != "FabricSurface", "a/hover: a control of the HUD is the hovered one over the HUD, not the Surface")
   await overlay_cycle("tree")
   await overlay_cycle("modal")
-  gaps_a()
+  closed_gaps_a()
+  open_cases_a()
   await teardown()
 
 # ---- topology (b) ----
@@ -252,6 +350,8 @@ func topology_b() -> void:
         "b/%s panel: %d %s inputs press the Pressable %d times and none reaches the world" % [side, SMALL, input, SMALL])
     var bar := burst("bar/%s/left" % side, [Driver.part("bar", "left", PANEL_BAR[side], side)], SMALL)
     check(bar.world.is_empty() and bar.rn == {side + "/barDown": SMALL}, "b/%s panel: %d clicks on the bar reach its handler and not the world" % [side, SMALL])
+    var bar_wheel := burst("bar/%s/wheel" % side, [Driver.part("bar", "wheel", PANEL_BAR[side], side)], SMALL)
+    normative_a2(hud_none(bar_wheel), "b/%s panel: %d wheel ticks on the bar reach neither the world nor the HUD" % [side, SMALL])
     normative(hover("void/" + side, "void", empty).hovered == null, "b/%s panel: gui_get_hovered_control() is null over the map" % side)
     var over_hud: Variant = hover("button/" + side, "button", PANEL_BUTTON[side]).hovered
     check(over_hud != null and over_hud["class"] != "FabricSurface", "b/%s panel: a control of the HUD is the hovered one over the HUD" % side)
@@ -267,6 +367,8 @@ func run() -> void:
   for argument in OS.get_cmdline_user_args():
     if argument == "--allow-original-negative":
       allow_original_negative = true
+    elif argument == "--allow-a1-negative":
+      allow_a1_negative = true
     elif argument.begins_with("--sabotage="):
       sabotage = argument.get_slice("=", 1)
   root.size = SIZE
@@ -279,9 +381,12 @@ func finish() -> void:
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()
+  var expected_a1 := expected_a1_failures.duplicate()
   observed.sort()
   expected.sort()
+  expected_a1.sort()
   var original_negative_observed := allow_original_negative and observed == expected and not failures.is_empty()
+  var a1_negative_observed := allow_a1_negative and observed == expected_a1 and not failures.is_empty()
   var sabotage_observed := sabotage != "" and not failures.is_empty()
   var report := {"scenario": "native-world-input", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "viewport": [SIZE.x, SIZE.y],
@@ -289,6 +394,7 @@ func finish() -> void:
     "emulatingMouseFromTouch": Input.is_emulating_mouse_from_touch(), "full": FULL, "small": SMALL,
     "topologies": topologies, "checks": checks, "expectedOriginalFailures": expected_original_failures,
     "allowOriginalNegative": allow_original_negative, "originalNegativeObserved": original_negative_observed,
+    "expectedA1Failures": expected_a1_failures, "allowA1Negative": allow_a1_negative, "a1NegativeObserved": a1_negative_observed,
     "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"actualGodotInputPipeline": true, "syntheticEventsThroughInputParse": true, "hardwareInputCertified": false,
       "realTouchscreenCertified": false, "mobileExportsCertified": false}}
@@ -301,13 +407,15 @@ func finish() -> void:
   output.close()
   for topology_name: String in topologies:
     for gap: Dictionary in topologies[topology_name].gaps:
-      print("WORLD_INPUT_GAP: %s world=%s rn=%s" % [gap.id, JSON.stringify(gap.world), JSON.stringify(gap.rn)])
+      print("WORLD_INPUT_GAP: %s world=%s rn=%s motion=%d drag=%d" % [gap.id, JSON.stringify(gap.world), JSON.stringify(gap.rn), gap.motion, gap.drag])
   if original_negative_observed:
     print("WORLD_INPUT_ORIGINAL_NEGATIVE: " + str(failures.size()))
+  elif a1_negative_observed:
+    print("WORLD_INPUT_A1_NEGATIVE: " + str(failures.size()))
   elif sabotage_observed:
     print("WORLD_INPUT_SABOTAGE_REJECTED: " + str(failures.size()))
   elif failures.is_empty():
     print("WORLD_INPUT_PASSED: " + str(checks.size()))
   else:
     print("WORLD_INPUT_FAILED")
-  quit(0 if failures.is_empty() or original_negative_observed or sabotage_observed else 1)
+  quit(0 if failures.is_empty() or original_negative_observed or a1_negative_observed or sabotage_observed else 1)
