@@ -2055,6 +2055,8 @@
     "treeEqualToMain": true,
     "conditions": "the user present and the display on; the Mac loaded by other agents' suites (load average 4.27 to 14.44 around the attempts)",
     "command": "caffeinate -d node scripts/frontier-turn-graphics.mjs",
+    "exitCode": 0,
+    "seconds": 851,
     "presented": true,
     "status": "presented",
     "godot": "4.7.2-stable (official)",

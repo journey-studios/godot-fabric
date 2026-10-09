@@ -576,9 +576,10 @@ The [Frontier turn](docs/research/frontier-turn.md) (V05-06, criterion `turno`, 
 HUD and scene untouched, driven by real pointer clicks (16 a round, 32 rounds, all seven contexts, the dialog opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows the panels of its context
 (2 frames, and 10 to 14 ms of CPU headless, in the pinned run; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and `turn_ended` once, the native views, SceneTree nodes
 and orphans come back to the same count every time a context does, and the heap at rest and the resident memory stay within the GF-30 and soak rules in all 17 series; four retained sabotages (two of them in the provisioned copy, never in the template) are
-rejected, each for its own rule, and an independent oracle recomputes it all. **No presented frame time is pinned**: the local windowed lane (`npm run bench:frontier-turn-graphics`) refuses a run that no display paced and, with the display off, ended as not
-presented (exit code 3, no frame-time statistic), so the criterion stays open, as do `congelado`, hosted CI and the Pages publication.
-[Evidence](docs/evidence/frontier-turn/README.md); [research](docs/research/frontier-turn.md).
+rejected, each for its own rule, and an independent oracle recomputes it all. The local windowed lane (`npm run bench:frontier-turn-graphics`) refuses a run that no display paced: with the display off it ended as not
+presented (exit code 3, no frame-time statistic), and with the display on it **was presented** on 2026-10-09 (5 of 5 runs accepted, vsync on, 120 Hz, exit code 0): the first frame of a click has a p95 of 12.98 ms (median across the runs) and the frames of a turn a p95 per phase of 12.8 to 14.1 ms,
+and none of either reached 100 ms. Those are intervals between process frames, not frames the display showed, and no limit comes from them. That closes the `turno` criterion; the baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and `congelado` stay open, as do hosted CI and the Pages publication of the turn.
+[Evidence](docs/evidence/frontier-turn/README.md) ([the presented windowed lane](docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)); [research](docs/research/frontier-turn.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
