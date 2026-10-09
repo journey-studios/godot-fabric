@@ -11,7 +11,8 @@ close `autoridade`, and it does not depend on D22 or D23 (below). `autoridade` i
 ([frontier-services.md](frontier-services.md), "The turn is a job"), and since the end of a turn became a job the cycles here
 exercise it too: the HUD's End turn is a job it sees through every phase, and a job started in the same frame as the menu finishes
 with the menu open. The record of the runs, with the receipt and the two captures, is
-[docs/evidence/frontier-consumer/](../evidence/frontier-consumer/README.md); hosted CI for this lane is pending.
+[docs/evidence/frontier-consumer/](../evidence/frontier-consumer/README.md); the jobs of the cycles are in the
+[authority record](../evidence/frontier-authority/README.md) (commit `d0c7096`); hosted CI for this lane is pending.
 
 ```sh
 npm run test:consumer:civ-lite            # provisions, builds in the editor, runs the ten cycles, builds offline

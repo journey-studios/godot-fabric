@@ -3,8 +3,8 @@
 Status: implemented and executed locally on macOS arm64 against pinned RN 0.87.1 and official Godot 4.7.2 (headless), for
 the criteria `servicos` and `autoridade` of V05-03. The [evidence record](../evidence/frontier-services/README.md) pins the local
 runs of `servicos` at commit `75c4c0f`. `autoridade` (the end of a turn as an accepted job, in "The turn is a job" below) was
-added to the same node afterwards, and its evidence record is made after the commit that implements it; hosted CI for
-`npm run test:frontier-services` is pending.
+added to the same node afterwards, and its [evidence record](../evidence/frontier-authority/README.md) pins the local runs at
+commit `d0c7096`; hosted CI for `npm run test:frontier-services` is pending.
 
 The second package of the 0.5 milestone exposes the Frontier game ([research](frontier-game.md), rules in GDScript, already on
 `main`) to a React Native HUD through the typed game services the repository already has

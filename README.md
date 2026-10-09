@@ -582,7 +582,7 @@ scenery in its scene, and runs ten cycles of new game, intents, scene reload and
 epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
 The end of a turn is then an accepted job that the node runs a phase a frame and finishes once, whether or not a screen is open,
 with a rule mutated in Godot changing the HUD with the same JavaScript bundle and every phase of a turn measured against the
-registry's 64 tasks and 128 events (`npm run test:frontier-services`; [research](docs/research/frontier-services.md)).
+registry's 64 tasks and 128 events (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-authority/README.md), [research](docs/research/frontier-services.md)).
 The playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
