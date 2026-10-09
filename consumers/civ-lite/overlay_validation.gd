@@ -262,7 +262,7 @@ func judge_remount(first: Dictionary, remounted: Dictionary, rest: Array, city: 
   check(remounted.hud.shown and remounted.hud.modal and remounted.hud.position == "2 of 3" and remounted.hud.title == second.title and remounted.hud.text == second.text,
     "The remounted HUD shows the second event, 2 of 3, in the Modal's window")
   check(remounted.samples.all(func(sample: Dictionary) -> bool: return not sample.shown or sample.title == second.title),
-    "From the mount until it settled the HUD showed no event but the second (%d frames observed)" % remounted.samples.size())
+    "From the mount until it settled the HUD showed no event but the second")
   check(rest.size() == 2 and rest[0].dialog.id == second.id and rest[1].dialog.id == EVENT_IDS[2] and rest[1].after.context == "none"
     and rest[1].after.events.queue.is_empty() and rest.all(func(row: Dictionary) -> bool: return row.pressed and row.moved and row.resolveCalls == 1),
     "After the remount the queue went on, by real presses, to the third event and to the end")

@@ -75,6 +75,14 @@ const lane = sabotage === null ? "civ-lite-ui" : `civ-lite-ui-sabotage-${sabotag
 const sourcesUnder = (directory, prefix = "") => readdirSync(directory, {withFileTypes: true}).flatMap(entry => entry.isDirectory()
   ? sourcesUnder(path.join(directory, entry.name), `${prefix}${entry.name}/`) : /\.tsx?$/.test(entry.name) ? [`${prefix}${entry.name}`] : []);
 
+// A check's name is its identity: a hosted run is compared with the committed one by the digest of the names. So no name may carry a count of
+// what was observed (frames, snapshots, cards) or a time, which depend on the machine's pace: those counts are in the report's data. And the
+// names a headed run shares with the headless one (all but the captures) are the same, in the same order.
+const PACE_IN_A_NAME = /\b\d+ (frames?|snapshots?|cards?|samples?|published|observed|ms|milliseconds?|seconds?)\b/i;
+const namesOf = report => report.checks.map(check => check.name);
+const assertNamesDoNotDependOnPace = (label, report) => assert.deepEqual(namesOf(report).filter(name => PACE_IN_A_NAME.test(name)), [], `${label}: no check name carries a count that depends on the pace`);
+const assertSameNamesAsHeadless = (label, headed, headless) => assert.deepEqual(namesOf(headed).filter(name => !name.startsWith("Capture saved: ")), namesOf(headless), `${label}: the headed run has the checks of the headless one, with the same names`);
+
 // One probe run on a provisioned project: the log and the report it wrote, both kept in build/<lane>/.
 async function probe(harness, label, {mode = "hud", headed = false, expectFailures = false} = {}) {
   const {flag, report: reportFile} = PROBES[mode];
@@ -225,6 +233,7 @@ if (sabotage === null) {
     assert.match(log, /CIVLITE_UI_PASSED/);
     assert.deepEqual(failedChecks(report), [], "every check of the probe passed");
     assert.equal(report.checks.length, EXPECTED_CHECKS, "the probe ran the checks it is built of");
+    assertNamesDoNotDependOnPace("the HUD probe", report);
     verify(report.checks.length > 0 && report.displayServer === "headless", `The probe ran ${report.checks.length} checks headless and every one passed`);
     assertHudReport(report);
     verify(true, "The independent oracle accepts the run: the panels of the seven contexts, the actions, the bar, the turn, the pointer");
@@ -256,6 +265,7 @@ if (sabotage === null) {
     assert.match(overlays.log, /CIVLITE_OVERLAYS_PASSED/);
     assert.deepEqual(failedChecks(overlays.report), [], "every check of the overlay probe passed");
     assert.equal(overlays.report.checks.length, EXPECTED_OVERLAY_CHECKS, "the overlay probe ran the checks it is built of");
+    assertNamesDoNotDependOnPace("the overlay probe", overlays.report);
     assertOverlayReport(overlays.report);
     verify(true, `The overlay probe ran ${overlays.report.checks.length} checks and the independent oracle accepts them: the queue of three in order, the remount, the blocking Modals`);
     assert.deepEqual(judgeOverlayReport(overlays.report), []);
@@ -335,6 +345,7 @@ if (sabotage === null) {
       assert.match(headedLog, /CIVLITE_UI_PASSED/);
       assert.deepEqual(failedChecks(headed), [], "every check of the headed run passed");
       assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed run adds the eight captures");
+      assertSameNamesAsHeadless("the HUD probe", headed, report);
       assertHudReport(headed);
       const captures = {};
       for (const stage of CAPTURES) {
@@ -351,6 +362,7 @@ if (sabotage === null) {
       assert.match(overlaysLog, /CIVLITE_OVERLAYS_PASSED/);
       assert.deepEqual(failedChecks(overlaysHeaded), [], "every check of the headed overlay run passed");
       assert.equal(overlaysHeaded.checks.length, overlays.report.checks.length + OVERLAY_CAPTURES.length, "the headed overlay run adds its four captures");
+      assertSameNamesAsHeadless("the overlay probe", overlaysHeaded, overlays.report);
       assertOverlayReport(overlaysHeaded);
       summary.overlayCaptures = {};
       for (const stage of OVERLAY_CAPTURES) {

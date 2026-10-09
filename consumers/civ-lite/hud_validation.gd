@@ -175,10 +175,10 @@ func run_phase() -> void:
   report["phase"] = {"published": published, "free": free_job, "held": held}
   check(published.any(func(entry: Dictionary) -> bool: return AI_PHASES.has(entry.phase)), "The job published a snapshot at an AI phase")
   check(published.all(func(entry: Dictionary) -> bool: return entry.phase == "idle" or (int(entry.endTurnEnabled) == 0 and entry.endTurnReason == "turn_in_progress")),
-    "Every snapshot published while the turn is processed has End turn disabled with turn_in_progress (%d published)" % published.size())
+    "Every snapshot published while the turn is processed has End turn disabled with turn_in_progress")
   check(free_job.pressed and free_job.finished and free_job.settled and free_job.turnAfter == turn_before + 1, "End turn pressed on the HUD ran a job to rest and the turn advanced")
   check(free_samples.all(func(entry: Dictionary) -> bool: return entry.spinner == (entry.phase != "idle") and entry.endTurnDisabled == (entry.phase != "idle")),
-    "In every frame of the job the spinner is shown and End turn is disabled exactly while the phase is not idle (%d frames observed)" % free_samples.size())
+    "In every frame of the job the spinner is shown and End turn is disabled exactly while the phase is not idle")
   check(not idle_before.spinner and not idle_before.endTurnDisabled, "At rest before the job the spinner is not shown and End turn is enabled")
   check(held.sample.spinner and held.sample.animating and held.sample.endTurnDisabled and AI_PHASES.has(phase_held) and held.sample.phase == phase_held,
     "Held at %s: the bar shows that phase, the spinner is spinning and End turn is disabled" % phase_held)
@@ -293,7 +293,7 @@ func run_input() -> void:
   report["hoverPublished"] = hover_log
   judge_input(steps)
   check(hover_log.size() > 1 and range(1, hover_log.size()).all(func(index: int) -> bool: return hover_log[index] != hover_log[index - 1]),
-    "The node published the hover as a change each time and never the same card twice running (%d cards)" % hover_log.size())
+    "The node published the hover as a change each time and never the same card twice running")
 
 
 # A left click and then a tick of the wheel on a panel's own area: what the World heard and what was selected, before and after each. The
