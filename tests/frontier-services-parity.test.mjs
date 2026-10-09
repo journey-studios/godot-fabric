@@ -4,7 +4,7 @@ import {readFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {conforms, diffRegistrations, diffSchema, extractFrontierSchemas, TYPES_FILE, verifyFrontierServicesReport} from "./frontier-services-oracle.mjs";
+import {conforms, diffRegistrations, diffSchema, extractFrontierSchemas, TYPES_FILE, verifyFrontierServicesReport, verifyRuleLane} from "./frontier-services-oracle.mjs";
 
 // Parity of the Godot schemas and the TypeScript types, in both directions. The TypeScript side is read from the
 // hand-written consumers/civ-lite/ui/frontier-types.ts with the TypeScript compiler API and converted to the registry's
@@ -53,9 +53,14 @@ test("the TypeScript types and the schemas Godot registered declare the same nam
   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
   assert.deepEqual(at(snapshot, ["actions", "[]", "args"]), {array: "integer"}, "an action's args are the intent's positional arguments, integers");
   assert.equal(at(snapshot, ["epoch"]), "integer");
-  assert.deepEqual(named(typescript.registrations, "frontier.turn_ended").args, [{object: {turn: "integer", phases: {array: {object: {name: "string", tasks: "integer", events: "integer"}}}}}]);
+  assert.equal(at(snapshot, ["last_job"]), "integer", "the snapshot carries the last job that finished");
+  assert.deepEqual(named(typescript.registrations, "frontier.turn_ended").args,
+    [{object: {turn: "integer", phases: {array: {object: {name: "string", tasks: "integer", events: "integer"}}}, job: "integer"}}]);
   assert.deepEqual(named(typescript.registrations, "frontier.set_production").args, ["string", "integer"]);
-  assert.deepEqual(named(typescript.registrations, "frontier.end_turn").result, {object: {ok: "integer", code: "string", text: "string"}});
+  // One result for every method: the job a call started is 0 for all but an accepted end_turn.
+  assert.deepEqual(named(typescript.registrations, "frontier.end_turn").result, {object: {ok: "integer", code: "string", text: "string", job: "integer"}});
+  assert.deepEqual(typescript.registrations.filter(entry => entry.kind === "method").map(entry => entry.result),
+    Array(12).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
 });
 
 // Each case changes one thing at a path and says what the comparison must report. `side` is the side that is changed.
@@ -92,6 +97,16 @@ const mutations = [
     expected: {godot: "frontier.select_tile result.text: declared in TypeScript, missing from Godot's schema", typescript: "frontier.select_tile result.text: registered by Godot, missing from the TypeScript types"}},
   {name: "a result field added", target: "frontier.end_turn", change: value => { value.result.object.turn = "integer"; },
     expected: {godot: "frontier.end_turn result.turn: registered by Godot, missing from the TypeScript types", typescript: "frontier.end_turn result.turn: declared in TypeScript, missing from Godot's schema"}},
+  {name: "the result's job removed", target: "frontier.end_turn", change: value => delete value.result.object.job,
+    expected: {godot: "frontier.end_turn result.job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.end_turn result.job: registered by Godot, missing from the TypeScript types"}},
+  {name: "the result's job removed from a method that starts no job", target: "frontier.select_unit", change: value => delete value.result.object.job,
+    expected: {godot: "frontier.select_unit result.job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.select_unit result.job: registered by Godot, missing from the TypeScript types"}},
+  {name: "the snapshot's last_job removed", target: "frontier.snapshot", change: value => delete at(value, []).object.last_job,
+    expected: {godot: "frontier.snapshot.last_job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.snapshot.last_job: registered by Godot, missing from the TypeScript types"}},
+  {name: "the signal's job removed", target: "frontier.turn_ended", change: value => delete value.args[0].object.job,
+    expected: {godot: "frontier.turn_ended(arguments)[0].job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.turn_ended(arguments)[0].job: registered by Godot, missing from the TypeScript types"}},
+  {name: "the job's type swapped", target: "frontier.end_turn", change: value => { value.result.object.job = "string"; },
+    expected: {godot: "frontier.end_turn result.job: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.end_turn result.job: TypeScript declares \"string\", Godot registers \"integer\""}},
 ];
 
 test("a field more or less, or a type that differs, on either side fails the parity and names the field", () => {
@@ -143,6 +158,11 @@ test("the extractor reads the convention and refuses what the schema language ca
   assert.ok(diffRegistrations(bare.registrations, report.registered).includes("frontier.snapshot.epoch: TypeScript declares \"number\", Godot registers \"integer\""));
 });
 
+test("end_turn is registered to answer on acceptance and every other method on completion", () => {
+  assert.deepEqual(report.registered.filter(entry => entry.kind === "method").map(entry => [entry.name, entry.response]).sort((a, b) => (a[0] < b[0] ? -1 : 1)),
+    typescript.registrations.filter(entry => entry.kind === "method").map(entry => [entry.name, entry.name === "frontier.end_turn" ? "acceptance" : "completion"]));
+});
+
 test("the validator the oracle uses rejects a snapshot with a field more or less or of another type", () => {
   const snapshotSchema = named(typescript.registrations, "frontier.snapshot").value;
   const received = JSON.parse(report.steps[16].jsSnapshot);
@@ -187,4 +207,78 @@ test("an action is a call: the oracle rejects one whose args are not its method'
   const unsent = clone(report);
   unsent.steps[2].actionsTried.pop();
   assert.throws(() => verifyFrontierServicesReport(unsent, hashes), /step 2 select_tile\(6, 8\): every action of the snapshot was sent back/);
+});
+
+test("a job is judged: the oracle rejects one that skipped a phase, ran in one frame, finished twice, was accepted with the wrong id, or left work pending", () => {
+  const hashes = {goldenHash: report.finalHash, traceHash: digest(report.steps.map(step => step.hash).join("\n")), typesText};
+  verifyFrontierServicesReport(report, hashes);
+  const first = report.steps.findIndex(step => step.intent === "end_turn" && step.result.value.ok === 1);
+  const variants = [
+    ["a phase's snapshot never published", mutant => { mutant.steps[first].job.progress.splice(3, 1); }, /JavaScript saw the turn go through every phase/],
+    ["last_job set before the job finished", mutant => { mutant.steps[first].job.progress[2].last_job = 1; }, /last_job is the previous job until this one finishes/],
+    ["the six phases in one frame", mutant => { mutant.steps[first].job.rows.filter(row => row.kind === "snapshot").forEach(row => { row.frame = 100; }); }, /seven consecutive frames/],
+    ["a job that finished twice", mutant => { mutant.steps[first].turnEndedEmitted = 2; }, /turn_ended is emitted exactly once per accepted end_turn/],
+    ["the game counted the job twice", mutant => { mutant.steps[first].job.finishedCount = 2; }, /the game finished the job exactly once/],
+    ["an acceptance with the wrong id", mutant => { mutant.steps[first].result.value.job = 7; }, /answers the next job id/],
+    ["an end_turn that answered on completion", mutant => { mutant.steps[first].result.response = "completion"; }, /answers on acceptance/],
+    ["a refused end_turn that started a job", mutant => { mutant.steps.find(step => step.intent === "end_turn" && step.result.value.ok === 0).result.value.job = 5; }, /answers job 0/],
+    ["a pump that left events pending", mutant => { mutant.steps[first].job.pumps[2].after.pendingEvents = 3; }, /the pump left nothing pending/],
+    ["a pump over the event budget", mutant => { mutant.steps[first].job.pumps[2].after.eventsSent += 200; }, /at most 128 events/],
+    ["a pump over the task budget", mutant => { mutant.steps[first].job.pumps[2].after.hostTasksRun += 100; }, /at most 64 tasks/],
+    ["a call accepted while the job ran", mutant => { mutant.jobLane.burst.job.attempts[0].value = {ok: 1, code: "ok", text: "", job: 0}; }, /refused with turn_in_progress/],
+    ["a root held while the screen was closed", mutant => { mutant.persistence.job.rootCounts[1] = 1; }, /held no root/],
+    ["a screen closed after the job had run", mutant => { mutant.persistence.job.phaseAtUnmount = "production"; }, /first phase not yet run/],
+    ["a job received twice after the remount", mutant => { mutant.persistence.job.turnEndedForJob = 2; }, /received turn_ended for the job exactly once/],
+    ["a remounted root at the wrong job", mutant => { mutant.persistence.job.firstPanel.last_job = 2; }, /first snapshot is at rest/],
+    ["a delivery out of order", mutant => { const arrivals = mutant.jobLane.stress.isolated.arrivals; [arrivals[3], arrivals[4]] = [arrivals[4], arrivals[3]]; }, /\(FIFO\)/],
+    ["a subscriber that lost a snapshot", mutant => { mutant.jobLane.stress.isolated.received[5].splice(3, 1); }, /none lost, none repeated/],
+    ["a drain in more pumps than its events take", mutant => { mutant.jobLane.stress.isolated.drains[2].pumps = [100, 28, 24]; }, /drained in ceil\(152 \/ 128\) pumps/],
+    ["a backlog that never grew", mutant => { mutant.jobLane.stress.free.pending = mutant.jobLane.stress.free.pending.map(() => 0); }, /the acceptance left one publication waiting/],
+    ["a job lost from the log", mutant => { mutant.jobs.turnEndedLog.splice(4, 1); }, /received turn_ended for each job, once, in order/],
+  ];
+  for (const [name, change, pattern] of variants) {
+    const mutant = clone(report);
+    change(mutant);
+    assert.throws(() => verifyFrontierServicesReport(mutant, hashes), pattern, name);
+  }
+});
+
+test("the rule lane's oracle accepts what the mutation predicts and rejects anything else", async () => {
+  const genuine = JSON.parse(await readFile(path.join(root, "build/frontier-services-rule-genuine-1-report.json"), "utf8"));
+  const mutated = JSON.parse(await readFile(path.join(root, "build/frontier-services-rule-mutated-1-report.json"), "utf8"));
+  const bundle = genuine.provenance.bundle.bundle.sha256;
+  const options = {genuineMoves: 2, mutatedMoves: 0, typesText, bundleSha256: {genuine: bundle, mutated: bundle},
+    genuineRulesSha256: genuine.provenance.bundle.sources["consumers/civ-lite/game/rules.gd"], mutatedRulesSha256: mutated.provenance.bundle.sources["consumers/civ-lite/game/rules.gd"]};
+  const result = verifyRuleLane(genuine, mutated, options);
+  assert.equal(result.refusedMove, "no_moves_left");
+  assert.equal(result.bundleSha256, bundle);
+  const variants = [
+    ["the bundle changed", () => [genuine, mutated, {...options, bundleSha256: {genuine: bundle, mutated: bundle.replace(/^./, "0")}}], /the JavaScript bundle is the same in both runs/],
+    ["the rules are the same", () => [genuine, mutated, {...options, mutatedRulesSha256: options.genuineRulesSha256}], /rules.gd is not the same in both runs/],
+    ["something else changed in the snapshot", () => {
+      const other = clone(mutated);
+      const snapshot = JSON.parse(other.ruleLane.rows[2].snapshot);
+      snapshot.resources.food.stock += 1;
+      other.ruleLane.rows[2].snapshot = JSON.stringify(snapshot);
+      return [genuine, other, options];
+    }, /found_city, its reason and the Settler's card are all that differ/],
+    ["the rule did not change the snapshot", () => {
+      const other = clone(mutated);
+      other.ruleLane.rows[2].snapshot = genuine.ruleLane.rows[2].snapshot;
+      return [genuine, other, options];
+    }, /found_city is turned off by the game's rule with no_moves_left/],
+    ["the mutated move was accepted", () => {
+      const other = clone(mutated);
+      other.ruleLane.rows[3].result = genuine.ruleLane.rows[3].result;
+      return [genuine, other, options];
+    }, /the same move is refused by the game's rule/],
+    ["the state was the same", () => {
+      const other = clone(mutated);
+      other.ruleLane.rows[1].hash = genuine.ruleLane.rows[1].hash;
+      return [genuine, other, options];
+    }, /the state is not the same in both runs/],
+  ];
+  for (const [name, build, pattern] of variants) {
+    assert.throws(() => verifyRuleLane(...build()), pattern, name);
+  }
 });

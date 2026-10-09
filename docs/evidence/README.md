@@ -809,6 +809,30 @@ the record. The previous-host control does not apply: there is no native code. T
 playable one (V05-05), the presses are synthetic, `autoridade` is open, and the **hosted CI run (`test:consumer:civ-lite`) and
 the Pages publication are pending**. The record is pinned at `b0509db`.
 
+The [Frontier authority record](frontier-authority/README.md) closes the criterion `autoridade` of V05-03 (tied to GF-25), on
+the services and the consumer above, with no C++. The dashboard's `turn.end` is `frontier.end_turn` and its `job.finished` is
+`frontier.turn_ended`. `frontier.end_turn` is registered to answer on acceptance, with the id of a job, and the persistent
+`GameServices` node advances the turn one phase per frame in its own `_process`, never in the World or a surface: the snapshot is
+published at the acceptance and after each of the six phases (seven in seven consecutive frames, the last at rest with
+`last_job` = the job), and `turn_ended` goes out once, between the sixth and the seventh. Every method now answers
+`{ok, code, text, job}`, with `job` 0 unless an accepted `end_turn` started one. Fifteen jobs in the probe: the application's own
+module-scope subscription received `turn_ended` for each, once and in order, and the node's `finished_jobs` holds 1 for each; the
+third job ran with the surface closed in the frame after the acceptance (`rootCount` 0 throughout) and the remounted root's first
+snapshot was at rest, turn 4, `last_job` 3; ten calls sent while a job ran were refused with `turn_in_progress` and started no
+job; and in the consumer's ten cycles an End turn pressed in the same frame as the menu finished with the menu open, once, with
+the World out of the tree. A rule lane runs the probe twice with the same bundle and host, once on the genuine `rules.gd` and
+once with the Settler's movement points mutated from 2 to 0, and exactly the fields the rule predicts change in the snapshot
+JavaScript receives (the Settler's `moves` and `max_moves`, and `found_city`'s `enabled`, `reason` and `reason_text`). Every
+frame of every job fit in one pump of the registry's 64 tasks and 128 events (at most 10 tasks, with ten calls sent, and 3
+events) and left nothing pending; with 150 more subscribers of the snapshot a publication of 152 events drained in 2 pumps (128
+and 24) with no loss and in order, and a job that outran the pump drained 1065 events in 9 pumps. The tests: 1058 probe checks in
+each of two executions, 11/11 in `test:frontier-services`, 165 native checks and ten cycles in `test:consumer:civ-lite`, and the
+P3 golden and trace hashes unchanged. Eleven retained sabotages of the services (four new: `double-finish`,
+`job-dies-with-screen`, `sync-end-turn`, `stale-snapshot`) and five of the consumer (one new, `job-dies-with-menu`) are all
+rejected, and the sources are restored byte for byte. Headless only, with synthetic presses and no playable HUD (V05-05);
+`finished_jobs` is bounded to 256; a `new_game` abandons a job in progress and no `turn_ended` fires for it; the previous-host
+control does not apply, and the **hosted CI run and the Pages publication are pending**. The record is pinned at `d0c7096`.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,

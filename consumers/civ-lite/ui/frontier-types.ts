@@ -173,8 +173,13 @@ export interface FrontierSnapshot {
   readonly version: Int;
   /** The session's epoch: 1, and 1 higher after every `new_game`. A snapshot of an older epoch is from a finished game. */
   readonly epoch: Int;
+  /**
+   * The id of the last end-of-turn job that finished, 0 for none. A HUD that connects after the job was accepted learns
+   * from it that the job is over, without a replay of `frontier.turn_ended`.
+   */
+  readonly last_job: Int;
   readonly turn: Int;
-  /** "idle", or the phase a turn being processed is at. */
+  /** "idle", or the phase a turn being processed is at: the snapshot shows the turn's progress, one phase per frame. */
   readonly phase: string;
   /** One of the seven contexts: none, tile, settler, warrior, stack, city, dialog. */
   readonly context: string;
@@ -196,19 +201,28 @@ export type TurnPhase = {
   readonly events: Int;
 };
 
-/** What `frontier.turn_ended` carries: the turn that begins, and what each phase of the one that ended did. */
+/**
+ * What `frontier.turn_ended` carries: the turn that begins, what each phase of the one that ended did and the job it
+ * finishes (the `job` the acceptance of `frontier.end_turn` answered). It arrives once per job.
+ */
 export type FrontierTurnEnded = {
   readonly turn: Int;
   readonly phases: TurnPhase[];
+  readonly job: Int;
 };
 
 // --- Methods -------------------------------------------------------------------------------------------------------
 
-/** What every method answers: `ok` is 0 or 1, `code` is "ok" or the refusal code, `text` is what the HUD shows. */
+/**
+ * What every method answers: `ok` is 0 or 1, `code` is "ok" or the refusal code, `text` is what the HUD shows and `job` is
+ * the id of the job the call started. Only an accepted `frontier.end_turn` starts one (its answer is the acceptance, and
+ * `frontier.turn_ended` finishes the job); every other method, and a refused end_turn, answers 0.
+ */
 export interface FrontierResult {
   readonly ok: Int;
   readonly code: string;
   readonly text: string;
+  readonly job: Int;
 }
 
 export const FRONTIER_SNAPSHOT = "frontier.snapshot";
@@ -247,6 +261,7 @@ export interface FrontierMethods {
   readonly "frontier.set_production": [item_id: string, slot: Int];
   readonly "frontier.set_research": [tech_id: string];
   readonly "frontier.resolve_event": [choice_id: string];
+  /** Answers on acceptance: `job` is the turn's job, and the turn goes on in Godot until `frontier.turn_ended` finishes it. */
   readonly "frontier.end_turn": [];
   readonly "frontier.new_game": [];
   /** Not a rule of the game: the scene drops its World. The HUD shows the menu; a `new_game` brings the World back. */

@@ -615,6 +615,18 @@ is local macOS arm64 evidence, with synthetic presses and a HUD that is not the 
 the hosted CI run and the Pages publication are pending. The `autoridade` criterion of V05-03
 remains open, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `autoridade`: the end of a turn is now an accepted job.
+`frontier.end_turn` answers on acceptance with a job id, the persistent `GameServices` node runs
+the turn one phase per frame, and `frontier.turn_ended` finishes the job once, across an unmounted
+screen and across the menu. A rule mutated in GDScript changes the HUD while the JavaScript
+bundle stays the same, and every phase fits the registry's 64 tasks and 128 events, with a
+150-subscriber stress case that drains in order and without loss. Eleven sabotages of the
+services and five of the consumer are rejected. The
+[record](https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md)
+is local macOS arm64 evidence, with synthetic presses and without the playable HUD; the hosted
+CI run and the Pages publication are pending. All four criteria of V05-03 are now done, and no
+1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-04: the twelve names the HUD imports are decided in
 [`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
 props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
