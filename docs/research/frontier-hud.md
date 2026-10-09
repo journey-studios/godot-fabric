@@ -92,7 +92,7 @@ context, where the game disables End turn with `event_pending` while the phase i
 - **No effect, ref or listener in the HUD.** No panel holds a `useEffect`, a ref used as an event target or an `addEventListener`,
   and none imports the runtime. The lane scans the sources for it (`tests/civ-lite-ui-native.test.mjs`).
 - **Telemetry is not the store's.** What the validation reads (`FrontierHud.stats()` and `FrontierHud.send`) is
-  `consumers/civ-lite/ui/telemetry.ts`, which the store tells what it received and sent through five narrow calls
+  `consumers/civ-lite/ui/telemetry.ts`, which the store tells what it received and sent through six narrow calls
   (`observe.snapshot`, `.hover`, `.call`, `.result`, `.problem`, `.screen`: `telemetry.ts:31-72`) and which installs the global
   (`telemetry.ts:84-90`, `store.ts:187-190`). A copy of the HUD can delete it with one import.
 
