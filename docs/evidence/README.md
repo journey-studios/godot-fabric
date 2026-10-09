@@ -924,7 +924,8 @@ so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle media
 presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
 byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
 not supported, the pointer reaches no phone or hardware pointer yet, and hosted CI is **pending**. The record does not decide
-the go/no-go; it gives the reading for slice 3, which does.
+the go/no-go; it gives the reading for slice 3, which does. Slice 3 decided the spike: GO for the desktop (macOS), with the
+`iphone` criterion open; see the [decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3).
 
 The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the headless part of the `baseline` criterion of
 V05-06 (package P6) and leaves its frame time **pending**. It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
