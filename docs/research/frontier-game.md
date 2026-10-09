@@ -388,8 +388,9 @@ The **oracle** (`tests/civ-lite-game-oracle.mjs`) judges the raw report and trus
 re-parses each serialization and proves it canonical (sorted keys, integers only), recomputes SHA-256 from it, and
 recomputes in Node what the game computed: map bounds and frame; the counts of cities, units and ids; non-negative
 resources; the monotonic turn; every move against its own cost table; the whole end of a turn (yields, production,
-growth, research, the faction's route, the refresh) from the serialization before it; the research order; the event
-raised once and resolved once; the context derived again from the serialization. It also re-derives the PRNG in
+growth, research, the faction's route, the refresh) from the serialization before it; the research order; the three events
+raised together, once, on turn 5, in the order of the table, and each answered once, in the order of the queue, with a choice of its own event (the answered ones and the waiting ones
+are always all three, in the table's order, or none); the context derived again from the serialization. It also re-derives the PRNG in
 `BigInt`: PCG's reference outputs, the generator's state after the number of draws the game says it made, and the map the
 generator must have drawn from the seed. Every refusal is justified by the state before it, and every accepted intent must
 leave exactly the state the oracle computes. In every state, the roteiro's and the three built turns', it also requires that
