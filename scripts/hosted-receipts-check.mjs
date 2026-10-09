@@ -208,14 +208,14 @@ function checkPublication(slice, pub, ci, problems) {
     problems.push(`${label}: the deployed artifact is not github-pages`);
   }
   if (artifact.available === false) {
-    if (pub.status !== "verified-deployment-artifact-unavailable" || typeof artifact.reason !== "string" || !isSha256(artifact.uploadLogDigest) || pub.findings?.length === 0) {
+    if (pub.status !== "verified-deployment-artifact-unavailable" || typeof artifact.reason !== "string" || !isSha256(artifact.uploadLogDigest) || !Array.isArray(pub.findings) || pub.findings.length === 0) {
       problems.push(`${label}: an unavailable artifact is not recorded as such, with the upload log digest and a finding`);
     }
     return;
   }
   // A committed file that is not in the Pages build's own serialization is a finding, not a failure.
   const bytesEqual = artifact.migrationJsonSha256 === pub.committedMigrationJsonSha256;
-  if (pub.status !== "verified" || pub.findings?.length !== (bytesEqual ? 0 : 1)) {
+  if (pub.status !== "verified" || !Array.isArray(pub.findings) || pub.findings.length !== (bytesEqual ? 0 : 1)) {
     problems.push(`${label}: the status or the findings contradict an available artifact`);
   }
   if (!isCount(artifact.id) || !isSha256(artifact.zipSha256)) {

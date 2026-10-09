@@ -200,6 +200,25 @@ test("an artifact that is gone is recorded as such, never as a verified digest",
     }),
     /frontier-game: publication\.json: an unavailable artifact is not recorded as such/,
   );
+  // A receipt that calls its artifact unavailable must say why in `findings`: no array is not "no finding".
+  assertRejected(
+    mutate("world-input", "publication.json", (receipt) => {
+      delete receipt.findings;
+    }),
+    /world-input: publication\.json: an unavailable artifact is not recorded as such/,
+  );
+  assertRejected(
+    mutate("world-input", "publication.json", (receipt) => {
+      receipt.findings = [];
+    }),
+    /world-input: publication\.json: an unavailable artifact is not recorded as such/,
+  );
+  assertRejected(
+    mutate("frontier-soak", "publication.json", (receipt) => {
+      delete receipt.findings;
+    }),
+    /frontier-soak: publication\.json: the status or the findings contradict an available artifact/,
+  );
 });
 
 test("each evidence page links its two receipts and the index links them too", () => {

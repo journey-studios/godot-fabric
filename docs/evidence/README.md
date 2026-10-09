@@ -920,9 +920,10 @@ ScrollView and the wheel over the HUD or a tree overlay still reach the world as
 recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
 mobile export and no iPhone (the `iphone` criterion stays open). Hosted run 37853001783 (the push of main `7ef63ed`, five jobs in
-the first attempt) repeated the 66 headless checks, and Pages deployed main's data, though its `github-pages` artifact no longer
-exists, so the deployed file was not compared ([hosted receipt](world-input/hosted-ci.json),
-[publication](world-input/publication.json)); the windowed lane and the previous-host control stay local.
+the first attempt) repeated the 66 headless checks. The Pages build and deployment of that push passed, but the deployed
+`migration.json` was not verified, because the run's `github-pages` artifact has expired and no longer exists
+([hosted receipt](world-input/hosted-ci.json), [publication](world-input/publication.json)); the windowed lane and the
+previous-host control stay local.
 
 The [world input a2 record](world-input-a2/README.md) is the second slice of the same spike (V05-02, go/no-go no. 1):
 it closes the six gaps that slice 1 measured (a hit slop, a `Text` with `onPress`, the gaps of a ScrollView, and the
