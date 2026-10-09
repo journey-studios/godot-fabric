@@ -678,6 +678,64 @@ is pinned and `baseline` stays open** until a presented run, and `turno`, `soak`
 is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** V05-06, criterion `soak`: the Frontier game is played for 100 turns in three headless Godot processes, through the
+typed services, by a scripted player that decides only from the snapshot, with a React Native HUD that opens and closes a 100-node
+panel every turn (unmounted in two executions, kept hidden in the third). The three games end in the same final hash and the same
+trail of 100 turn hashes, the native views follow the HUD's state exactly in every context with no orphan, the live heap at rest does
+not grow (within the GF-30 limit, by the baseline's median-of-halves rule), the resident memory is held by a coarse 48 MiB guard
+because it moves by tens of MB, and no JavaScript error goes unhandled. A game paused at turn 50 holds its accepted job at its first
+phase while the HUD still answers a click, which needs the HUD's layer to be `PROCESS_MODE_ALWAYS` (a recommendation for the V05-05
+scene, not applied). From the numbers, no consistent CPU advantage was observed for hiding a 100-node panel over unmounting it (the
+cost of opening and closing once changes sign between rounds on a shared machine, so that comparison is inconclusive); what was stable
+is that hiding has a smaller tail on the open and a close about twice as costly, and that a hidden panel keeps its 100 native views and
+326,512 bytes of heap, so the recommendation for the HUD is to unmount by default. An independent oracle recomputes the report and four
+retained sabotages are rejected. The
+[record](https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md)
+is local macOS arm64 evidence, headless, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
+publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0
+checkpoint, weight or denominator moves.
+
+**Progress.** Exit criteria X3, X4 and X5 of the 0.5 are met on the macOS desktop, on local
+evidence. X3, input in the world against the HUD, rests on the
+[first](https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md)
+and [second](https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md)
+pointer slices and the
+[go/no-go decision](https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3),
+with the iPhone run still open. X4, authority in Godot, rests on the
+[typed services](https://github.com/journey-studios/godot-fabric/blob/75a85ad6ea877eae85d1a55214097eac416f6680/docs/evidence/frontier-services/README.md),
+with no rules in JavaScript, and on the
+[rule lane](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+where a constant mutated in `rules.gd` changes the HUD while the JavaScript bundle stays
+identical. X5, session and lifecycle, rests on the
+[ten consumer cycles](https://github.com/journey-studios/godot-fabric/blob/c8de44b3caa12a82009e55a059e2ce3da68f9485/docs/evidence/frontier-consumer/README.md)
+and on the
+[accepted turn job](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+which survives closing the screen and the menu. Hosted CI and Pages are not claimed here.
+No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, criterion `protocolo`, first step: the protocol of the final comparison is pre-registered before
+any measurement, with no arm run. It fixes the three arms (A without a HUD as the cost control, B with a native Godot HUD, C
+with the RN HUD), the hypotheses, the primary outcome (the p95 CPU time per frame in four active windows: the AI phase, the
+end-of-turn event burst, 50 context switches and a stress case), 12 executions per arm in a fixed Latin square, a 95%
+percentile bootstrap with 10,000 resamples and a fixed seed, a Holm guard over the four windows of the C against B question,
+and a decision rule with a margin of the larger of 10% of B's median and 0.5 ms and the verdicts gain, neutral, cost and
+inconclusive. The [protocol](https://github.com/journey-studios/godot-fabric/blob/789c35f83b64feb4ccc07c37cac5975f833df2dd/docs/research/frontier-comparison-protocol.md) is also a JSON whose SHA-256
+a Node test pins, so changing it later takes changing the test on purpose. The numbers that depend on the windowed baseline
+of V05-06 (the CPU-time instrument and four absolute budgets) are formulas with null values, so the criterion closes only
+when they are frozen together with `congelado`; it stays open and no criterion changes. Nothing is measured and no result is
+claimed. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the eight 0.5 slices already on main are recorded. For each of
+PRs #70, #71, #73, #76, #77, #78, #79 and #83, the push of main at its squash commit passed all five jobs of the Contracts
+workflow on the first attempt, and its Pages run built and deployed. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md)
+links two receipts per slice, written by `scripts/hosted-receipts.mjs` and checked offline by its `--check`: the run, the
+slice's own steps with the result lines of their logs and the artifacts with their digests, and the deployment with the
+published `migration.json`. Two findings: the Pages artifact of #71 no longer exists, so its deployed `migration.json` was not
+compared, and the one of #73 holds the same data as the committed file in another serialization. The windowed lanes, the
+captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

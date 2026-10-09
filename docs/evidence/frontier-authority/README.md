@@ -245,10 +245,37 @@ SHA-256 e cada blob. **O recibo de fonte não certifica o build hospedado**: ele
 o oráculo que rodaram nesta máquina, e o `fabric_godot.dylib` que o projeto raiz e o consumidor carregam foi construído aqui a partir dos
 fontes nativos da main (`9b1cc1b7…`); esta fatia não o altera nem o compara.
 
-> **CI hospedada e Pages pendentes.** Os passos `npm run test:frontier-services` e `npm run test:consumer:civ-lite` e os artefatos
-> `native-frontier-services` e `independent-civ-lite-consumer` do workflow `contracts.yml` ainda não rodaram na CI hospedada para
-> este commit, e nada foi publicado no Pages. Tudo o que esta página registra é evidência local, em macOS arm64. Este registro cobre
-> o critério `autoridade` do V05-03; os demais itens do 0.5 e todo número da 1.0 seguem como estavam.
+## CI hospedada e Pages
+
+O push da `main` em `5e1f6a1` (o squash do #79, run
+[37880395525](https://github.com/journey-studios/godot-fabric/actions/runs/37880395525) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (5 min),
+`native-cold-start` (51 min) e `parity-comparison` (20 s). O [recibo](hosted-ci.json) confere o run, o PR e os dois artefatos
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `5e1f6a1`, e a árvore do head do PR (`d60b682`) é a árvore do squash.
+- **Os serviços.** `npm run test:frontier-services` (passo 54, 49 s) passou: `# tests 11`, `# pass 11`, `# fail 0`, os onze
+  testes que o recibo lista (o roteiro pelos serviços, a paridade dos tipos, `end_turn` registrado para responder na
+  aceitação, o job julgado pelo oráculo e a lane de regra). O artefato `native-frontier-services` (id 11594662093, 144.860
+  bytes, SHA-256 `aba0e8e6…`, igual ao digest da API e ao do log de upload) tem 12 arquivos, e os dois processos imprimem
+  `FRONTIER_SERVICES_PASSED: 1058` e o hash dourado `275b7c61…`, com os dois relatórios de mesmo SHA-256 (`49a8f96b…`); a lane
+  de regra imprime `FRONTIER_SERVICES_RULE_LANE_PASSED: 11`.
+- **O consumidor.** `npm run test:consumer:civ-lite` (passo 127, 53 s) passou e imprime `CONSUMER_CHECK_PASSED: civ-lite: 20
+  build/ownership checks; 165 native checks; 10 cycles`. O artefato `independent-civ-lite-consumer` (id 11595591744, 267.539
+  bytes, SHA-256 `e170e178…`, igual ao digest da API e ao do log de upload) tem 10 arquivos, com o log do build no editor
+  (`CONSUMER_EDITOR_BUILD_PASSED`) e o da validação headless (`CIVLITE_VALIDATION_PASSED`).
+- **O job `contracts`.** Passou `npm run test:contracts` (7, 43 e 334 testes de Node e 13 de Python), `check:static` e
+  `check:publication`.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37880395524](https://github.com/journey-studios/godot-fabric/actions/runs/37880395524), build e deploy em success, 43 testes
+do painel). O deployment 6952388482 está em success, o artefato `github-pages` (id 11593973851, SHA-256 `370a334f…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-03-autoridade-5ee0127`. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: as onze sabotagens retidas dos serviços e as cinco do consumidor e o recibo de fonte em `d0c7096`. Este registro cobre o critério `autoridade` do V05-03; os demais itens do 0.5 e todo número da 1.0 seguem como
+estavam.
 
 ## Limites e abertos
 
@@ -266,4 +293,5 @@ fontes nativos da main (`9b1cc1b7…`); esta fatia não o altera nem o compara.
 - Os contadores de tarefas e eventos de `turn_ended.phases` são do jogo; os do registro são outra contagem, e as duas estão
   registradas separadas.
 - O controle com host anterior não se aplica: não há C++.
-- A CI hospedada e a publicação no Pages estão pendentes.
+- A CI hospedada repete os 1058 checks dos serviços, os 165 nativos do consumidor e os dez ciclos (seção "CI hospedada e
+  Pages"); as sabotagens retidas e o recibo de fonte seguem só locais.

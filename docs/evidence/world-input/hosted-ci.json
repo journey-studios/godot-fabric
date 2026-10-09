@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "scenario": "world-input",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:56:36.648Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37853001783,
+    "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/71",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-08T22:21:58Z",
+    "updatedAt": "2026-10-08T23:12:16Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113570407847,
+        "runAttempt": 1,
+        "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+        "startedAt": "2026-10-08T22:22:02Z",
+        "completedAt": "2026-10-08T22:24:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783/job/113570407847"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113570408133,
+        "runAttempt": 1,
+        "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+        "startedAt": "2026-10-08T22:22:08Z",
+        "completedAt": "2026-10-08T23:11:45Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783/job/113570408133"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113586887949,
+        "runAttempt": 1,
+        "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+        "startedAt": "2026-10-08T23:11:49Z",
+        "completedAt": "2026-10-08T23:12:16Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783/job/113586887949"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113570408076,
+        "runAttempt": 1,
+        "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+        "startedAt": "2026-10-08T22:22:01Z",
+        "completedAt": "2026-10-08T22:27:23Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783/job/113570408076"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113570408069,
+        "runAttempt": 1,
+        "headSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+        "startedAt": "2026-10-08T22:22:07Z",
+        "completedAt": "2026-10-08T22:28:31Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37853001783/job/113570408069"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "native-cold-start": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "parity-comparison": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "reference-android": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "reference-ios": "7ef63ed64a8994846dc29e1a4fff52134ded8469"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T22:22:17Z",
+          "completedAt": "2026-10-08T22:24:25Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 334,
+              "suites": 0,
+              "pass": 334,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T22:24:25Z",
+          "completedAt": "2026-10-08T22:24:26Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T22:24:26Z",
+          "completedAt": "2026-10-08T22:24:26Z",
+          "passed": true,
+          "files": 1748
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:world-input": {
+        "step": "Run npm run test:world-input",
+        "number": 48,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T22:38:25Z",
+        "completedAt": "2026-10-08T22:38:31Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "a click on the empty area of the HUD reaches the Godot world once, and a Pressable never does"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 71,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/71",
+    "title": "feat(world-input): Let the HUD's empty area pass the pointer to the Godot world (P1 V05-02 slice 1)",
+    "headSha": "c48c7af6a8691d6782036a7c398396baee27749b",
+    "baseSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+    "squashMergeCommit": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+    "squashCommitSubject": "feat(world-input): Let the HUD's empty area pass the pointer to the Godot world (#71)",
+    "mergedAt": "2026-10-08T22:21:55Z",
+    "headTreeSha": "31407df7079692d94858c58ecfcba744a6a0ebdf",
+    "mainTreeSha": "31407df7079692d94858c58ecfcba744a6a0ebdf",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 12,
+    "commits": [
+      {
+        "sha": "2fef3548518e9529b7738ed22500372f737dbd79",
+        "subject": "test(world-input): Prove a click on an empty HUD area never reaches the map"
+      },
+      {
+        "sha": "0d754f20e90829c38aa4a7079cb70737a100fcc1",
+        "subject": "feat(world-input): Let the HUD's empty area pass the pointer to the world"
+      },
+      {
+        "sha": "03f039ade0bed6b7dcdd7991d504d057c16006c6",
+        "subject": "docs(world-input): Record the pointer spike's first slice"
+      },
+      {
+        "sha": "db27104cfe34e36079fe24285062bedd25ee48fd",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "eb77aecc12eb9f92521205a9649ec4c23ca67566",
+        "subject": "docs(roadmap): Record the 0.5 V05-02 pointer criteria"
+      },
+      {
+        "sha": "30b3b3171ac054382ea51896048291bd0a422c4f",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "0e82dceb844a7336ddd313ec11f97b6efe82d993",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "24a39a1e8be4958de714293fe388b4f09467d449",
+        "subject": "docs(world-input): Limit the windowed claim to the full-screen layout"
+      },
+      {
+        "sha": "d64defab41c2c364ab4ec9c4922669a91ca6e699",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "ddefdcd38dd4333e1c47cfc10f11cc1a8b99b7b9",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "000a7512c6fe11487c56e89dba512501ac70d416",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      },
+      {
+        "sha": "c48c7af6a8691d6782036a7c398396baee27749b",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/world-input"
+      }
+    ],
+    "changedFiles": 33,
+    "additions": 3153,
+    "deletions": 13
+  },
+  "artifacts": {
+    "worldInput": {
+      "available": true,
+      "id": 11583755593,
+      "name": "native-world-input",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 19465,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "f1f10b541a6a67783acc42a5d63dfe9ae03801d1f05d03f9def4d53d3657864a",
+      "apiDigest": "sha256:f1f10b541a6a67783acc42a5d63dfe9ae03801d1f05d03f9def4d53d3657864a",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "f1f10b541a6a67783acc42a5d63dfe9ae03801d1f05d03f9def4d53d3657864a",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-08T22:38:32Z",
+      "expiresAt": "2027-01-06T22:21:59Z",
+      "fileCount": 5,
+      "files": {
+        "world-input-comparison.json": "7960a6523208164bb6ee4eeea2441962db27f2625418376a12301ec6a52e854c",
+        "world-input-current-report.json": "e4435ba45ada8671098376355205cf5c00035164c452b131cb17c572e418d98f",
+        "world-input-current.log": "a2ce51e69ad621735e13be5802a1182ef76560a59f455f13a7066205541d33d3",
+        "world-input-probe-bundle.json": "fb38588f6cef516ed4ddf2032f90f5cb2445d26af1669aae75be0039b238bd73",
+        "world-input-report.json": "8241089de19965732f9842f63d6ee64e84488035f29feede3d9da117e88b52a3"
+      },
+      "markers": [
+        {
+          "file": "world-input-current.log",
+          "line": "WORLD_INPUT_PASSED: 66"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

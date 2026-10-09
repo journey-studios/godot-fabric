@@ -213,10 +213,33 @@ scripts, os testes e o oráculo que rodaram nesta máquina, e o `fabric_godot.dy
 carregam foi construído aqui a partir dos fontes nativos da main (`a06edfbc…`, o mesmo nos dois); esta fatia não o altera nem o
 compara.
 
-> **CI hospedada e Pages pendentes.** O passo `npm run test:consumer:civ-lite` e o artefato `independent-civ-lite-consumer` do
-> workflow `contracts.yml` ainda não rodaram na CI hospedada, e nada foi publicado no Pages. Tudo o que esta página registra é
-> evidência local, em macOS arm64. Este registro cobre o critério `consumidor` do V05-03; o critério `autoridade`, os demais
-> itens do 0.5 e todo número da 1.0 seguem como estavam.
+## CI hospedada e Pages
+
+O push da `main` em `c8de44b` (o squash do #76, run
+[37864357395](https://github.com/journey-studios/godot-fabric/actions/runs/37864357395) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (6 min),
+`native-cold-start` (52 min) e `parity-comparison` (26 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `c8de44b`, e a árvore do head do PR (`283c544`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:consumer:civ-lite` (passo 127, 32 s) passou e imprime `CONSUMER_CHECK_PASSED: civ-lite:
+  18 build/ownership checks; 145 native checks; 10 cycles`, as contagens sem as capturas que o aviso do topo registra. O job
+  `contracts` passou `npm run test:contracts` (7, 43 e 334 testes de Node e 13 de Python), `check:static` e
+  `check:publication`.
+- **O artefato.** `independent-civ-lite-consumer` (id 11589042648, 266.468 bytes, SHA-256 `634bd7c3…`, igual ao digest da API
+  e ao do log de upload) tem 10 arquivos, e o recibo fixa o SHA-256 de cada um. O log do build no editor imprime
+  `CONSUMER_EDITOR_BUILD_PASSED` e o da validação headless, `CIVLITE_VALIDATION_PASSED`.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37864357291](https://github.com/journey-studios/godot-fabric/actions/runs/37864357291), build e deploy em success, 43 testes
+do painel). O deployment 6949827276 está em success, o artefato `github-pages` (id 11586638969, SHA-256 `7eb6f8e1…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-03-consumidor-b9a40cb`. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: a execução janelada com as duas capturas (148 checks), as quatro sabotagens retidas e o recibo de fonte
+em `b0509db`. Este registro cobre o critério `consumidor` do V05-03; o critério `autoridade`, os demais itens do 0.5 e todo
+número da 1.0 seguem como estavam.
 
 ## Limites e abertos
 
@@ -224,7 +247,8 @@ compara.
   do V05-08; o cenário desenha o mapa e não recebe entrada.
 - Os cliques são **sintéticos**: o mouse apertado e solto pela viewport no centro do controle de cada `Pressable`, headless e
   janelado, e a função `send()` da própria HUD para `select_unit` e `move_unit`. Nenhuma pessoa e nenhum dispositivo clicou.
-- A execução janelada é local, numa máquina macOS, na tela local; a CI hospedada roda o check headless e ainda não o rodou.
+- A execução janelada é local, numa máquina macOS, na tela local; a CI hospedada rodou o check headless (seção "CI hospedada e
+  Pages").
 - O critério `autoridade` segue aberto: um job que sobrevive ao fechamento da tela e rajadas contra os orçamentos de 64
   tarefas e 128 eventos por fase não foram medidos; o `end_turn` é uma chamada síncrona de GDScript.
 - D22 e D23 ficam de fora: nada aqui recria a aplicação, de modo que a HUD nunca se reconecta a uma nova.
@@ -233,4 +257,5 @@ compara.
 - O 12º método, `frontier.open_menu`, não é uma regra do jogo: derruba o `World`, não muda estado, não publica snapshot e deixa
   o epoch; com ele os serviços têm **14 bindings** (um estado, um sinal e 12 métodos), e não 13.
 - O controle com host anterior não se aplica: não há C++.
-- A CI hospedada e a publicação no Pages estão pendentes.
+- A CI hospedada repete o check headless (18 de build e posse, 145 nativos e os dez ciclos); as capturas, a execução janelada
+  e as sabotagens seguem só locais.
