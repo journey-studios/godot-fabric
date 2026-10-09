@@ -16,6 +16,7 @@ export const SHARED_PATHS = [
   "src/react-native-platform.jsx", "src/platform-environment.js", "types/react-native.ts",
   // Scripts and tests every slice extends.
   "scripts/sabotage-sources.mjs", "tests/types/consumer.tsx", "tests/platform-seams.test.mjs",
+  "scripts/hosted-receipts-slices.mjs", "scripts/hosted-receipts.mjs", "tests/hosted-receipts.test.mjs",
 ];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;
