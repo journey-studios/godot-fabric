@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T05:38:34.000Z",
+  "updatedAt": "2026-10-09T06:33:58.000Z",
   "source": {
     "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
@@ -3908,8 +3908,13 @@
             {
               "id": "soak",
               "label": "Soak de 100 turnos em 3 execuções: hash final idêntico, nós e RSS estáveis, 0 erros JS não tratados; pausa do jogo mantém a UI viva; decisão escrita entre montar e desmontar ou manter oculto, com base nos números",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): 100 turnos em 3 execuções (unmount, hide, unmount) com o mesmo hash final e a mesma trilha de 100 hashes de turno; nós nativos exatos por contexto (16 a 23, mais 100 com o painel oculto) e 0 órfãos; heap em repouso sem crescimento (2.117.320 bytes, dentro dos 2.048 do GF-30 pela mediana das metades) e RSS dentro da guarda de 48 MiB; 0 erros JS não tratados, com o controle do handler; o jogo pausado no turno 50 mantém o job parado em ai_plan e a UI viva (o clique chega ao handler porque a camada do HUD é PROCESS_MODE_ALWAYS); a decisão entre montar e ocultar um painel de 100 nós, com números (desmontar por padrão: ocultar não é mais barato na soma de abrir e fechar, dá cauda menor na abertura, fecha mais devagar e segura 100 nós e 326.512 bytes de heap); 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md"
+                }
+              ]
             },
             {
               "id": "congelado",
@@ -4467,6 +4472,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-soak-b77178a",
+      "at": "2026-10-09T06:33:58.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério soak, com evidência local: o Frontier jogado por 100 turnos em 3 execuções, em 3 processos Godot, pelos serviços tipados. Um jogador roteirizado no fixture JS decide só pelo snapshot que recebe (sem Math.random nem Date): funda a cidade, ajusta pesquisa e produção, seleciona a cidade, fortifica, seleciona um tile vazio, limpa a seleção e termina o turno; das 427 decisões por execução o jogo aceita as 427, e o exército é limitado a 6 unidades para que o estado do jogo seja limitado e o heap meça o runtime. O HUD abre e fecha todo turno, por clique real, o painel de pesquisa de 100 nós, desmontando-o (A) ou mantendo-o montado com opacity 0 e pointerEvents none (B). As três execuções (A, B, A) terminam no mesmo hash final (a35c55f2…) e na mesma trilha de 100 hashes de turno (fe9d4f36…), e o oráculo independente recalcula o SHA-256 de cada serialização. Os nós nativos são exatos por contexto (16 sem seleção, 18, 20, 22 e 23, mais 100 com o painel oculto) e voltam à mesma contagem toda vez que o contexto volta, com 0 órfãos e a SceneTree igual às views nativas mais uma constante. O heap em repouso não cresce (2.117.320 bytes, 2.443.832 com o painel oculto), pela regra da mediana das metades do baseline sobre o limite de 2.048 bytes do GF-30; o RSS é julgado por uma guarda grosseira de 48 MiB entre as medianas das metades (subiu no máximo 10,1 MB e caiu até 96,5 MB nas quatro rodadas feitas), porque anda em dezenas de MB. 0 erros JS não tratados, com um controle que mostra que o rastreador de rejeições do Hermes vê uma quando há. A pausa no turno 50 prende o job aceito em ai_plan por 60 quadros, sem snapshot nem turn_ended, enquanto a aplicação bombeia e um clique ainda chega ao handler e monta um nó nativo, porque a camada do HUD é PROCESS_MODE_ALWAYS (a sabotagem que a torna pausável mata o clique); a HUDLayer de consumers/civ-lite/main.tscn não define o modo, e essa recomendação para o V05-05 não foi aplicada. A decisão, com números: ocultar um painel de 100 nós não é mais barato na soma de abrir e fechar (a diferença muda de sinal entre as rodadas), dá uma cauda menor na abertura (p95 de 11,3 contra 18,8 ms) e um fechamento mais lento, e segura 100 nós e 326.512 bytes de heap; o painel oculto com pointerEvents none não reivindica o mapa; a recomendação é desmontar por padrão e ocultar só um painel de uns 100 nós aberto com frequência no clique que o jogador espera, um ou dois por vez. Quatro sabotagens (um connect nunca removido, um jogador que decide ao acaso, uma camada do HUD que pausa com o jogo, um painel oculto que é display none) são rejeitadas pelo probe e pelo oráculo, cada uma pelo motivo para o qual foi escrita, e o oráculo rejeita 29 alterações de um relatório gravado. O controle com host anterior não se aplica: não há C++. Só headless e macOS arm64, com cliques sintéticos, numa máquina compartilhada em que os tempos variam em dezenas de por cento; as 101 atualizações por toggle do painel oculto não estão explicadas; sobre a main com o #82 o registro tem 15 bindings e não 14 (o estado frontier.hover) e a suíte passa com essa contagem. Os critérios baseline, turno e congelado do V05-06 seguem como estavam; CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md"
+    },
     {
       "id": "milestone-0-5-v05-05-matriz-mapa-096a018",
       "at": "2026-10-09T05:38:34.000Z",

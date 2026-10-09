@@ -677,6 +677,21 @@ is pinned and `baseline` stays open** until a presented run, and `turno`, `soak`
 is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** V05-06, criterion `soak`: the Frontier game is played for 100 turns in three headless Godot processes, through the
+typed services, by a scripted player that decides only from the snapshot, with a React Native HUD that opens and closes a 100-node
+panel every turn (unmounted in two executions, kept hidden in the third). The three games end in the same final hash and the same
+trail of 100 turn hashes, the native views follow the HUD's state exactly in every context with no orphan, the live heap at rest does
+not grow (within the GF-30 limit, by the baseline's median-of-halves rule), the resident memory is held by a coarse 48 MiB guard
+because it moves by tens of MB, and no JavaScript error goes unhandled. A game paused at turn 50 holds its accepted job at its first
+phase while the HUD still answers a click, which needs the HUD's layer to be `PROCESS_MODE_ALWAYS` (a recommendation for the V05-05
+scene, not applied). From the numbers, hiding a 100-node panel is not cheaper in CPU as a whole, gives a shorter tail on the open
+and a slower close, and keeps 100 nodes and 326,512 bytes of heap, so the recommendation for the HUD is to unmount by default. An
+independent oracle recomputes the report and four retained sabotages are rejected. The
+[record](https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md)
+is local macOS arm64 evidence, headless, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
+publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0
+checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
