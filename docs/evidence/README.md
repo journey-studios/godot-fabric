@@ -1040,8 +1040,10 @@ a p95 of 12.98 ms (median across the runs) and none of 1,800 reached 100 ms, and
 (4.4 to 13.2 ms across the runs) is unstable because the idle intervals fall in two alternating groups whose mean is one refresh period, so the p95 and the mean are what to read. The raw receipt is not committed (SHA-256 `db86eb08…`)
 and seven captures (one for each context) of the real HUD over the real map are kept. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` stays open, and `congelado` is a later, single act
 (this record proposes no bound). The clicks are synthetic, the HUD is V05-05's work in progress, the two
-frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded), the previous-host control does not apply since no
-C++ changed, and hosted CI is **pending**.
+frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded) and the previous-host control does not apply since no
+C++ changed. Hosted run 37935936175 (the push of main `1adcdb3`, five jobs in the first attempt) repeated the 23 headless checks, and the 13 tests of the windowed lane's judgement ran in the `contracts` job,
+and Pages published main's data ([hosted receipt](frontier-turn/hosted-ci.json), [publication](frontier-turn/publication.json)); the windowed lane, the captures and the sabotages never run in hosted CI, so the frame
+times and the timings, heap and memory numbers above are local.
 
 The [idle reference record](idle-reference/README.md), pinned at `237b171`, records the fix of a defect in the validity rule of the windowed lane that the presented executions of 2026-10-09 exposed, and the dated
 amendment of the pre-registered protocol of the final comparison (V05-10) that used the same reference. With the vsync on at 120 Hz the 600 idle intervals of a window the display presents come in two alternating groups
@@ -1055,7 +1057,10 @@ the median, and `verifyGraphicsReceipt` still judges a receipt by the rule it wa
 **and** above twice the idle reference, and the protocol of V05-10 is amended for it (`amendments[0]`, 2026-10-09, **no comparative measurement before it**; the pin of the protocol moves from `8dd7779d…` to `8833e54e…`, and a change
 of the protocol without an entry in `amendments` and a new pin now fails its test). The reference is of the same quantity as what it is compared with: the CPU time per frame for the comparison's secondary outcome, and the elapsed intervals between process frames, which is what the lane records, for the pacing check (the wording of the amendment was corrected twice on review before it reached main). The slice measures nothing of the game and **closes no criterion**. The new rule has not yet run in a real windowed execution, the turn's script
 (`scripts/frontier-turn-graphics.mjs`, owned by the open P8 slice) still prints the count by the median until a later change, `docs/research/frontier-turn.md` still describes the old rule, the tests run in Node (16 for the lane, 17 for
-the protocol), and hosted CI is **pending**.
+the protocol). Hosted run 37960884650 (the push of main `9f55644`) ran the three jobs that a push has run since the native suites became opt-in, in the first attempt, and skipped
+the five native ones, which this slice does not depend on (no C++ changed, and the windowed lane never runs in hosted CI): its receipt records them as skipped, accepted only because the slice has no native step, and shows the
+guard step, the three contract test files (16, 17 and 10 tests) and the `contracts` job passing, and Pages published main's data ([hosted receipt](idle-reference/hosted-ci.json),
+[publication](idle-reference/publication.json)); the raw receipts of 2026-10-09 stay outside the repository.
 
 The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
 1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
@@ -1066,7 +1071,9 @@ pushed commit on a push); `--audit` walks the 28 first-parent commits from `c0f3
 [receipt](milestone-exit-guards/audit.json) that `--audit --verify` judges again with no git. The audit finds X10 clean in all 28 and X9 clean in 14 of the 15,
 with one violation, `b0e40aa` (#74): it merged the hosted CI and Pages receipts of #69 into GF-27's note and `slice` evidence, with no `done`, weight or status
 moved. It is recorded as a known violation for the user to judge, not waved through. The tests run on synthetic documents and throwaway repositories
-(35 checks), so they need no history; the hosted CI of the guard step is pending. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
+(35 checks, 36 at the squash), so they need no history. Hosted run 37945060216 (the push of main `333181d`, five jobs in the first attempt) ran the guard step on a push,
+against the parent of the squash (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean), and the 36 tests in the `contracts` job; Pages published main's data ([hosted receipt](milestone-exit-guards/hosted-ci.json),
+[publication](milestone-exit-guards/publication.json)); the pull-request and manual-dispatch branches of the step and the audit stay local. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
 milestone does, by running the audit again. A new folder with a neutral name can still hide a slice; it is listed, not failed.
 
 The source was compiled and executed independently on **macOS arm64** using

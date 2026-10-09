@@ -10,6 +10,8 @@ export const REPOSITORY_URL = `https://github.com/${REPOSITORY}`;
 // since: a push no longer runs them) and the Pages run of the push, the npm steps of the native jobs that exercise the slice
 // (judged by the TAP summary or by a marker line), the artifacts those steps upload, the Node test
 // files of the `contracts` job that belong to the slice and the activity entry of the dashboard data.
+// A slice with no native step has `nativeSteps: []` and `artifacts: []`: its Contracts run proves its contract tests and, when
+// `guard` is true, the step "Milestone exit guards (X9 and X10)" that the `contracts` job has run since #87.
 export const SLICES = [
   {
     folder: "frontier-game",
@@ -135,5 +137,44 @@ export const SLICES = [
     ],
     contractTests: [],
     activity: "milestone-0-5-v05-05-matriz-mapa-096a018",
+  },
+  {
+    folder: "frontier-turn",
+    pr: 86,
+    squash: "1adcdb3",
+    contractsRun: 37935936175,
+    pagesRun: 37935936238,
+    nativeSteps: [{ script: "test:frontier-turn", expect: "tap" }],
+    artifacts: [{ key: "turn", name: "native-frontier-turn" }],
+    contractTests: ["tests/frontier-turn-graphics.test.mjs"],
+    activity: "milestone-0-5-v05-06-turno-headless-e2ee6d8",
+  },
+  {
+    folder: "milestone-exit-guards",
+    pr: 87,
+    squash: "333181d",
+    contractsRun: 37945060216,
+    pagesRun: 37945060177,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/milestone-guards.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-exit-guards-b02e2a5",
+  },
+  {
+    folder: "idle-reference",
+    pr: 94,
+    squash: "9f55644",
+    contractsRun: 37960884650,
+    pagesRun: 37960884718,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-baseline-graphics.test.mjs",
+      "tests/frontier-comparison-protocol.test.mjs",
+      "tests/frontier-baseline-heap.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-idle-reference-490ba8c",
   },
 ];

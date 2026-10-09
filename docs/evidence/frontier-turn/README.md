@@ -62,8 +62,37 @@ npm run test:frontier-turn                                 # a suíte, 192 s; ro
 caffeinate -d node scripts/frontier-turn-graphics.mjs      # a faixa janelada, 90 s, saiu com 3: não apresentada
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:frontier-turn` e o artefato `native-frontier-turn` do workflow `contracts.yml` ainda não rodaram na CI hospedada. Tudo o que esta página registra
-> é evidência local, em macOS arm64. As sabotagens e a faixa janelada nunca rodam na CI.
+## CI hospedada e Pages
+
+O push da `main` em `1adcdb3` (o squash do #86, run
+[37935936175](https://github.com/journey-studios/godot-fabric/actions/runs/37935936175) do workflow Contracts) passou nos cinco
+jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (9 min),
+`native-cold-start` (69 min) e `parity-comparison` (24 s). Foi um dos últimos pushes que rodou o job nativo: desde o #88 ele só roda
+sob demanda. O [recibo](hosted-ci.json), escrito por `scripts/hosted-receipts.mjs` a partir da API do GitHub, dos logs e do artefato
+baixado e conferido sem rede pelo `--check` do mesmo script, registra o run, o PR e o artefato:
+
+- **O checkout.** Todos os jobs usaram `1adcdb3`, e a árvore do head do PR (`669f2d8`, 6 commits) é a árvore do squash.
+- **O passo da fatia.** `npm run test:frontier-turn` (passo 60, 8 min) passou: `# tests 1`, `# pass 1`, `# fail 0`, o teste único da
+  suíte headless, que joga as 32 rodadas no projeto provisionado. O job `contracts` passou `npm run test:contracts` (7, 43 e 386 testes
+  de Node e 13 de Python), `check:static` e `check:publication`. Os 13 testes de `tests/frontier-turn-graphics.test.mjs`, que julgam
+  a regra da faixa janelada sem Godot e sem display, estão entre os de Node, e o recibo os confere pelo nome no log do job.
+- **O artefato.** `native-frontier-turn` (id 11621327149, 214.328 bytes, SHA-256 `c2bc690b…`, igual ao digest da API e ao do log de
+  upload) tem 6 arquivos, e o recibo fixa o SHA-256 de cada um. Os logs dele imprimem `FRONTIER_TURN_PASSED: 23`, os 23 checks do probe
+  desta página, e `CONSUMER_EDITOR_BUILD_PASSED`, o build do HUD pelo plugin do editor. O recibo guarda a duração do passo e nenhuma
+  medição do probe: os milissegundos, o heap e a memória residente desta página são os da máquina local, e o run hospedado só
+  confirma que os 23 checks passam num runner.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37935936238](https://github.com/journey-studios/godot-fabric/actions/runs/37935936238), 13:18:44 a 13:19:22Z, `build` e `deploy` em
+success, 43 testes do painel). O deployment 6961671149 está em success, o artefato `github-pages` (id 11618496919, SHA-256
+`61692b2a…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash (SHA-256 `957b53ef…`) e a entrada de atividade `milestone-0-5-v05-06-turno-headless-e2ee6d8`. Um
+push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**Continua só local** a faixa janelada, inclusive a execução apresentada de 2026-10-09: ela precisa de uma janela do macOS com o display
+aceso e nunca roda na CI, e é dela o tempo de quadro com o vsync ligado. Também seguem locais as capturas, as quatro sabotagens e o recibo
+de fonte em `116a72f`. O recibo hospedado é do squash `1adcdb3`; o que ele confirma é a suíte headless e a regra que julga a janela, não
+as medidas.
 
 ## O que a execução faz
 
@@ -378,4 +407,4 @@ Na de `stack` o ponteiro está sobre o tile (6, 8), que tem o Settler e o Warrio
 - O rastreador de rejeições do Hermes reporta de um timer; o probe espera 2,3 s antes de ler a contagem e o controle é um `TypeError`. O probe instala os handlers depois que o bundle rodou: um erro lançado enquanto o bundle é avaliado só é visto pelo `errors` do host.
 - O sampler do GF-30 é **copiado** para o projeto provisionado (o lane copia `tests/performance-sampler.gd`) em vez de carregado de `res://tests/`, que um projeto provisionado não tem; são os mesmos bytes (o hash está no recibo).
 - O host anterior não se aplica (nenhum C++ mudou). Os documentos de compatibilidade (`docs/compatibility/react-native-0.87.1.json`, `BASELINE.md`), `docs/API.md`, `docs/NATIVE_MODULES.md` e `docs/PARITY.md` não se aplicam: a fatia não acrescenta nome RN, API pública nem módulo nativo.
-- **CI hospedada e publicação no Pages pendentes**: o passo da suíte está no job nativo do `contracts.yml` e leva uns 3 minutos localmente.
+- **A CI hospedada e o Pages rodaram sobre o squash `1adcdb3`** (seção "CI hospedada e Pages"): a suíte headless (23 checks) passou num runner em 8 minutos, contra uns 3 localmente, e a faixa janelada, as capturas e as sabotagens seguem só locais.
