@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T01:44:08.000Z",
+  "updatedAt": "2026-10-09T04:04:28.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -4345,6 +4345,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-02-decision-09ec1e0",
+      "at": "2026-10-09T04:04:28.000Z",
+      "taskIds": [],
+      "message": "Terceira e última fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5), a decisão, escrita sobre as evidências das fatias 1 e 2 e sem nova execução: GO para a premissa de uma HUD React Native sobre um mundo Godot na mesma janela, no desktop macOS arm64 (Godot 4.7.2, RN 0.87.1), com a política a1 (a FabricSurface com MOUSE_FILTER_IGNORE por padrão) mais a regra a2 (no _unhandled_input, depois do GUI, a Surface marca o evento como tratado quando o hit test do RN acha uma View). Os números que sustentam o GO: o vazio chega ao mundo 100 de 100 (clique esquerdo, clique direito, roda e toque) com 0 para os handlers da HUD; um Pressable aciona 100 vezes e 0 chegam ao mundo; com um overlay na árvore ou um Modal aberto 0 de 100 chegam ao mundo; as seis lacunas da a1 (hitSlop, Text com onPress, vão de ScrollView, roda sobre a HUD, sobre um ScrollView e sobre o overlay) passam de 100 para 0 no mundo; o Switch nativo do GUI segue alternando 100 vezes por clique e por toque; a ordem do unhandled é conferida contra o código do Godot 4.7.2 e por uma testemunha na cena viva; o host só com a a1 falha exatamente os 19 checks da a2, o host anterior à a1 falha 41 e as sabotagens (cinco na fatia 2) são rejeitadas pelo probe e pelo oráculo independente. O custo é um default de construtor, um método público e um override, sem reescrever o pipeline de ponteiro. Não bloqueiam o GO: o movimento, o hover e o arrasto sobre a HUD, que ficam fora da regra e fora deste spike; um release longe do press; uma HUD antes do mundo na árvore, que não é suportada e vira regra de cena (a CanvasLayer da HUD depois do mundo, a raiz e todo container que cobre o mapa com pointerEvents box-none, o mundo ouvindo _unhandled_input e os Controls nativos de GUI intactos); e a faixa janelada sem ritmo (a tela dormia), cujas contagens não dependem de ritmo e que não alega tempo de quadro. Segue aberto, e depende do usuário, o critério iphone (P7): toque real e multitoque num iPhone, porque os eventos são sintéticos e não há ponteiro de hardware, tela de toque nem export móvel; este GO não diz nada sobre o telefone. Nenhum critério muda. As contagens são evidência local em macOS arm64 e a CI hospedada das duas fatias segue pendente. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3"
+    },
     {
       "id": "milestone-0-5-v05-03-autoridade-5ee0127",
       "at": "2026-10-09T01:44:08.000Z",

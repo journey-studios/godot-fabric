@@ -586,7 +586,7 @@ is pressed once and never reaches it, and nothing reaches it with an overlay or 
 at the cost of a constructor default, one public method and one override, with no rewrite of
 the pointer pipeline. Motion, hover and drag over the HUD, a release away from its press, a HUD
 placed before the world in the tree and the unpaced windowed lane do not block the GO; the
-[decision](docs/research/world-input.md#decision-slice-3) gives each its owner and lists the
+[decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3) gives each its owner and lists the
 rules a scene keeps (the HUD's layer after the world, a `box-none` root and containers, a
 world that listens in `_unhandled_input`, and Godot's GUI Controls untouched). The `iphone`
 criterion stays open: it needs a real touch screen and a second finger, so it waits for the
