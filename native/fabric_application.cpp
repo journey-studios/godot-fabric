@@ -5,6 +5,7 @@
 #include "device_services.h"
 #include "accessibility_info.h"
 #include "godot_device_backend.h"
+#include "modal_window_stack.h"
 #include "system_appearance.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include "fabric_surface.h"
@@ -253,7 +254,10 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
   }
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
-void FabricApplication::_exit_tree() { stop(); }
+void FabricApplication::_exit_tree() {
+  fabric_godot::ModalWindowStack::TreeExitScope tree_exit;
+  stop();
+}
 void FabricApplication::system_theme_changed() { appearance->system_changed(); }
 // The headless DisplayServer drops the Callable it is handed, so validation
 // calls this copy of it as DisplayServer would; empty before registration.

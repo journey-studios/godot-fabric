@@ -497,3 +497,27 @@ The reviewed implementation is published as `dd66069` in PR #51. Root verifies
 all 33 executed producer pins against its Git blobs. The
 [source publication receipt](../evidence/modal/reviewed-source-publication.json)
 records local approval separately from pending implementation CI/CodeRabbit.
+
+## Teardown with an open Modal
+
+Godot calls `_exit_tree` while a parent is removing children: `SceneTree.quit`
+removes the root's subtree, a scene change removes the old scene from the root,
+and freeing an ancestor removes it from its parent. FabricApplication stops its
+runtime from `_exit_tree`, and stopping destroys every open Modal. The owner
+Window of those Modals is often the parent that is busy, so `remove_child` of
+the retired Window was rejected with "Parent node is busy adding/removing
+children". The Frontier HUD overlay probe avoided the error by ending in a state
+with no Modal. `_exit_tree` of FabricApplication and FabricSurface now holds
+`ModalWindowStack::TreeExitScope`. Inside it, `destroy` still revokes the entry,
+hides the Window and queues its free. The hidden Window stays under its owner
+until the queued free, or on quit the owner's own deletion, detaches it.
+Outside a tree exit, the immediate detach that visibility and focus callbacks
+rely on is unchanged.
+
+`tests/modal-teardown-native.test.mjs` runs `tests/modal-teardown-probe.gd` in
+three processes: quit, scene change and freed owner. In each one the Modal is
+open and exclusive when its scene leaves the tree. On the previous host each run
+logs exactly one busy-parent ERROR, and the test fails all three. On this host
+no run logs an ERROR. The scene-change and freed-owner runs also observe the
+application stopped without runtime errors and the retired Window freed. The
+test runs in `test:modal`.
