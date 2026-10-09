@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T13:31:13.000Z",
+  "updatedAt": "2026-10-09T13:37:48.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -3922,8 +3922,17 @@
             {
               "id": "turno",
               "label": "Latência clique até painel, tempo de quadro em turno com IA fatiada, heap Hermes, RSS e nós nativos por transição, no consumidor do jogo",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless): o consumidor civ-lite provisionado (template, HUD e cena intocados), 32 rodadas de 16 cliques reais pelos sete contextos; todo clique mostra os painéis do contexto em 2 quadros (8 num End turn) com uma única chamada ao jogo; o turno da IA fatiada roda uma fase por quadro, um snapshot em cada e o turn_ended uma vez; nós nativos exatos por contexto (14 a 42 views) e 0 órfãos; heap em repouso com +128 bytes nas 17 séries (limite de 2.048 do GF-30) e RSS dentro da guarda do soak; 4 sabotagens retidas rejeitadas, cada uma pela sua regra",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/e2ee6d83b392692775400e73db364b3243b47df9/docs/evidence/frontier-turn/README.md"
+                },
+                {
+                  "label": "Evidência local (macOS arm64, janela apresentada, 120 Hz): 5 de 5 vagas aceitas em 8 tentativas (3 rejeitadas como undrawn, nenhuma sem ritmo) com vsync ligado; primeiro quadro de um clique com p95 de 12,98 ms (mediana entre as execuções) e nenhum de 100 ms ou mais; quadros do turno com p95 por fase de 12,8 a 14,1 ms e nenhum de 100 ms ou mais em 4.800; o recibo bruto não é commitado (SHA-256 db86eb08…)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09"
+                }
+              ]
             },
             {
               "id": "soak",
@@ -4553,6 +4562,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-turno-cb50b97",
+      "at": "2026-10-09T13:37:48.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério turno, FECHADO com as duas faixas. A faixa headless (evidência fixada em e2ee6d8, no consumidor civ-lite provisionado, com template, HUD e cena intocados) tem os cliques mostrando os painéis em 2 quadros, o turno da IA fatiada com uma fase por quadro, nós nativos exatos por contexto, heap com +128 bytes nas 17 séries e as 4 sabotagens rejeitadas. A faixa janelada FOI apresentada em 2026-10-09, com a tela acesa, sobre a main 1adcdb3 (a árvore do commit onde rodou é idêntica à dela): 5 de 5 vagas aceitas em 8 tentativas (3 rejeitadas como undrawn, nenhuma sem ritmo), vsync ligado a 120 Hz e código de saída 0; o primeiro quadro de um clique tem p50 de 11,53, p95 de 12,98, p99 de 13,76 e máximo de 16,22 ms (mediana entre as execuções) e nenhum dos 1.800 chegou a 100 ms; os quadros do turno, oito por turno, têm p95 por fase de 12,8 a 14,1 ms, os sete do trabalho somam 56,8 ms no p50 e 67,8 ms no p95, e nenhum dos 4.800 chegou a 100 ms (o maior, 94,1 ms). A mediana ociosa variou de 4,4 a 13,2 ms entre as execuções porque os intervalos ociosos formam dois grupos que alternam (a média é de 8,34 a 8,63 ms, um período de atualização): o p95 e a média é que são estáveis, e isso está registrado como limitação. São intervalos entre quadros de processo e não quadros mostrados, e nenhum limite nem linha de orçamento sai daqui. As duas tentativas janeladas do baseline no mesmo dia NÃO foram apresentadas (a vaga 3 esgotou as tentativas nas duas), por isso baseline e congelado seguem abertos, junto com a CI hospedada e o Pages do turno, ainda sem recibo. Os recibos brutos das faixas janeladas não são commitados, só os hashes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09"
+    },
     {
       "id": "milestone-0-5-p2-symlink-parent-6c2169a",
       "at": "2026-10-09T13:31:13.000Z",
@@ -5257,6 +5273,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/7d05dce2f663726fc303b3fafea1776d6301960b/docs/evidence/networking/README.md"
     },
     {
+      "id": "root-retirement-hosted-ci-receipt-20261006",
+      "at": "2026-10-06T21:05:45.062343-03:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI da retirada independente de roots: a CI no head b5dafc8 (run 37163024271), a fonte da fatia mais o pin do dashboard, passou nos cinco jobs, e o job nativo roda as oito lanes headless de root do runtime de adapters (o workflow e o runner desse commit as incluem). O recibo docs/evidence/view/preceding-ci.json registra só os jobs e não audita o artefato; as lanes gráficas, com capturas e pixels, seguem locais. A nota do GF-28 deixa de dizer que a CI da fatia está pendente. Nenhum checkpoint, GF, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4420688eb008c7c634f091d468a10653aaa4dd6e/docs/evidence/view/preceding-ci.json"
+    },
+    {
       "id": "frame-clock-hosted-ci-and-pages-20261006",
       "at": "2026-10-06T22:54:57.831566+00:00",
       "taskIds": [
@@ -5307,15 +5332,6 @@
       ],
       "message": "CI hospedada do Appearance: o push da main em 1607044 (run 37408741652) passou nos cinco jobs na primeira tentativa e repetiu os 79 checks do estado depois da revisão com IDs idênticos aos fixados; o oráculo independente aceita o relatório baixado e os checks que o host anterior e o host antes do callback compartilhado falham passam. 22 das 72 entradas rastreadas diferem de a402a1f por commits de revisão e da main. Pages 37408741641 implantou exatamente os dados de 1607044.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/169611d7c2cff905edebb8c07a4f3ee0b1037194/docs/evidence/appearance/hosted-ci.json"
-    },
-    {
-      "id": "root-retirement-hosted-ci-receipt-20261006",
-      "at": "2026-10-06T21:05:45.062343-03:00",
-      "taskIds": [
-        "GF-28"
-      ],
-      "message": "CI da retirada independente de roots: a CI no head b5dafc8 (run 37163024271), a fonte da fatia mais o pin do dashboard, passou nos cinco jobs, e o job nativo roda as oito lanes headless de root do runtime de adapters (o workflow e o runner desse commit as incluem). O recibo docs/evidence/view/preceding-ci.json registra só os jobs e não audita o artefato; as lanes gráficas, com capturas e pixels, seguem locais. A nota do GF-28 deixa de dizer que a CI da fatia está pendente. Nenhum checkpoint, GF, peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/4420688eb008c7c634f091d468a10653aaa4dd6e/docs/evidence/view/preceding-ci.json"
     },
     {
       "id": "frame-clock-local-verified-20261006",

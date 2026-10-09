@@ -1,10 +1,10 @@
 # The turn on the Frontier game as a consumer has it: clicks to panels, the sliced AI's frames, and the heap, memory and native nodes of each transition
 
 Status: implemented and executed locally on macOS arm64 (Apple M3 Pro) against pinned RN 0.87.1, Hermes 250829098.0.17 and official Godot 4.7.2, headless for the exact counts and the CPU durations with their
-provenance and in a real window (local, not in CI) for the presented frame time; **the windowed attempt was not presented by the display**, so that lane ended as not presented with no frame-time statistic, and the presented frame time of the turn
-is **pending** (see [The windowed lane](#the-windowed-lane)). This is the `turno` criterion of the 0.5 Frontier milestone's V05-06: the click to the panel, the frames of a turn with the sliced AI, and the Hermes heap, resident memory and native nodes of each
-transition, on the game's consumer. The criterion is **not closed** by this slice (the presented frame time is part of it, as it is of `baseline`), and the windowed part of `baseline` and `congelado` stay open (see [What is left](#what-is-left)).
-The slice changes no C++ and no file of the template (`consumers/civ-lite`), so there is no preceding host to run it on; the control is the four retained sabotages. The [evidence record](../evidence/frontier-turn/README.md) pins the execution at `116a72f`; hosted CI and the Pages publication are pending.
+provenance and in a real window (local, not in CI) for the presented frame time. **The windowed lane was run twice**: the first time (pinned at `116a72f`) the display was off and the lane ended as not presented with no frame-time statistic; the second time, on the main commit `1adcdb3` with the display on, it **was presented**
+(5 of 5 runs accepted, vsync on, 120 Hz) and the presented frame time of the turn is pinned (see [The windowed lane](#the-windowed-lane)). This is the `turno` criterion of the 0.5 Frontier milestone's V05-06: the click to the panel, the frames of a turn with the sliced AI, and the Hermes heap, resident memory and native nodes of each
+transition, on the game's consumer. With the headless and the windowed evidence the criterion has what it asks for; its record is an `activity` of the dashboard, apart from this note, and the windowed part of `baseline` and `congelado` stay open (see [What is left](#what-is-left)).
+The slice changes no C++ and no file of the template (`consumers/civ-lite`), so there is no preceding host to run it on; the control is the four retained sabotages. The [evidence record](../evidence/frontier-turn/README.md) pins the headless execution at `116a72f` and the windowed one at `1adcdb3`; hosted CI and the Pages publication are pending.
 
 ## The question
 
@@ -249,9 +249,99 @@ or injected), the frames that took a **click**, and **every frame of a turn**, w
    and the script exits with code 3, which is neither success (0) nor a crash. The unit tests of the validity and of the receipt on synthetic runs of the turn's shape (`tests/frontier-turn-graphics.test.mjs`, part of `npm run test:contracts`) show that a run that no display paced is refused, and so is a receipt that carries one.
 7. The windowed probe's clicks are on the validation device, which the HUD's Surface hears and the real pointer is not (`native/application_runtime.cpp:2091`); the World still hears the real pointer's motion over the map, so the windowed lane records what the World heard (`worldEvents`, `worldClicks`) and judges the one call each click made to the game, not the World's counts (the headless lane judges those).
 
-### The windowed result: not presented
+### The windowed result: presented (2026-10-09)
 
-**No frame time is pinned.** The lane ran once on the pinned code with `caffeinate -d`, while the Mac had been idle for about 11.6 hours (`HIDIdleTime`) and its display was off or showing the lock screen. Every attempt drew (`frame_post_draw` fired after every one of the 11,473 to 11,488 process frames
+The lane ran again after PR #86 was merged, with the user present and the display on, and **was presented**: `presented: true`, 5 of 5 runs accepted in 8 attempts, the vsync read back `enabled` at 120 Hz (a refresh period of 8.333 ms). It is a later execution than the one pinned at `116a72f` (below, kept as history); the
+[evidence record](../evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09) pins it, with the receipt's `windowedPresented` block.
+
+**Where it ran.** On commit `e6a271d364a27f73acf995ed846c78eed055dde0`, whose tree (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) is identical to the main commit `1adcdb3` that merged PR #86, so the code measured is `1adcdb3`'s; the native host (`497e4f95…`), the HUD bundle (`8f750693…`) and the probe, runner and sampler have the
+SHA-256 of the pinned record. macOS 26.6.2 arm64 on an Apple M3 Pro, the built-in "Color LCD" (1512 x 982 points, 3024 x 1964 pixels, scale 2), a 1080 x 600 window, `gl_compatibility` over `opengl3`, official Godot 4.7.2. The Mac was not idle: the one-minute load average stood between 4.27 and 14.44 around the attempts.
+The raw receipt (`build/frontier-turn-graphics.json`, 2,380,876 bytes) is not committed; its SHA-256 is `db86eb0816f036add015022ffab74187c8debab0dc218e2bc81e4dad723cdbb5`. `verifyGraphicsReceipt` accepts it, and the idle, click-frame and turn-phase statistics of the five runs, recomputed from the raw intervals by nearest rank, are the receipt's.
+
+Three attempts were **rejected as `undrawn`** (the window did not draw throughout) and none as `unpaced`; each was repeated and all five slots closed:
+
+| Slot | Attempt | Verdict | Idle median (ms) | Required (ms) | Frames drawn | Of the 480 steady clicks, none drawn after | Load average before | after |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 1 | rejected: `undrawn` | 4.475 | 4.167 | 11,251 of 12,022 | 35 | `{ 9.78 7.41 6.49 }` | `{ 6.65 7.04 6.45 }` |
+| 1 | 2 | rejected: `undrawn` | 6.874 | 4.167 | 78 of 11,737 | 480 | `{ 6.65 7.04 6.45 }` | `{ 7.96 7.23 6.57 }` |
+| 1 | 3 | **accepted** | 13.177 | 4.167 | 11,970 of 11,988 | 0 | `{ 7.96 7.23 6.57 }` | `{ 8.31 7.86 6.90 }` |
+| 2 | 4 | **accepted** | 8.495 | 4.167 | 12,022 of 12,022 | 0 | `{ 8.31 7.86 6.90 }` | `{ 8.25 7.99 7.06 }` |
+| 3 | 5 | **accepted** | 4.421 | 4.167 | 11,871 of 11,871 | 0 | `{ 8.25 7.99 7.06 }` | `{ 5.27 7.05 6.80 }` |
+| 4 | 6 | **accepted** | 8.130 | 4.167 | 11,961 of 11,961 | 0 | `{ 5.27 7.05 6.80 }` | `{ 5.02 6.52 6.63 }` |
+| 5 | 7 | rejected: `undrawn` | 4.777 | 4.167 | 7,168 of 11,836 | 214 | `{ 5.02 6.52 6.63 }` | `{ 4.27 5.90 6.37 }` |
+| 5 | 8 | **accepted** | 12.678 | 4.167 | 11,922 of 11,930 | 0 | `{ 4.27 5.90 6.37 }` | `{ 14.44 8.28 7.20 }` |
+
+The eight attempts took 811 s. In attempt 2 the idle window drew no frame at all (601 draws in each of the other seven) and its mean idle interval was 6.900 ms, that of a loop with no display (the 6.7 to 7.4 ms floor of the headless lane); in the other seven it was 8.329 to 8.631 ms.
+The raw intervals of the three rejected attempts are in the receipt (`rejectedAttempts`) and **none of their statistics enters the tables below**.
+
+**Idle window, by accepted run** (600 intervals each; the last three columns count the intervals by size):
+
+| Run (attempt) | p50 (ms) | mean (ms) | p95 (ms) | p99 (ms) | max (ms) | under 4.167 ms | 4.167 to 12 ms | 12 ms or more |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 (3) | 13.177 | 8.356 | 14.419 | 14.677 | 18.382 | 299 | 0 | 301 |
+| 2 (4) | 8.495 | 8.601 | 16.089 | 20.215 | 52.903 | 285 | 25 | 290 |
+| 3 (5) | 4.421 | 8.341 | 15.006 | 15.202 | 16.703 | 298 | 2 | 300 |
+| 4 (6) | 8.130 | 8.339 | 15.083 | 15.381 | 17.630 | 292 | 14 | 294 |
+| 5 (8) | 12.678 | 8.631 | 15.617 | 16.729 | 16.985 | 289 | 1 | 310 |
+
+**Clicks, by accepted run** (360 a run: the clicks outside End turn in the 30 steady rounds; the interval is that of the first process frame after the injection, and "to the panels" and "to the first drawn frame" count from the injection):
+
+| Run | first frame p50 (ms) | p95 | p99 | max | 100 ms or more | above 16.67 ms | to the panels p50 | to the first drawn frame p50 | p95 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 10.394 | 12.480 | 13.206 | 26.263 | 0 | 1 | 15.625 | 26.763 | 34.806 |
+| 2 | 11.530 | 12.984 | 13.797 | 16.221 | 0 | 0 | 15.467 | 23.731 | 29.836 |
+| 3 | 11.689 | 13.162 | 13.488 | 15.417 | 0 | 0 | 17.450 | 28.198 | 37.327 |
+| 4 | 11.585 | 13.483 | 13.755 | 14.047 | 0 | 0 | 16.346 | 28.156 | 37.210 |
+| 5 | 10.556 | 12.610 | 14.613 | 22.800 | 0 | 3 | 15.926 | 27.457 | 36.750 |
+
+**Across the runs** (the median, the interquartile range by nearest rank and the extremes of the five per-run statistics; the injection took 0.531 ms at the p50, 0.518 to 0.640):
+
+| Statistic | Median (ms) | Q1 to Q3 | Min to max |
+| --- | ---: | --- | --- |
+| first frame of a click, p50 | 11.530 | 10.556 to 11.585 | 10.394 to 11.689 |
+| first frame of a click, p95 | 12.984 | 12.610 to 13.162 | 12.480 to 13.483 |
+| first frame of a click, p99 | 13.755 | 13.488 to 13.797 | 13.206 to 14.613 |
+| first frame of a click, max | 16.221 | 15.417 to 22.800 | 14.047 to 26.263 |
+| click to the panels, p50 | 15.926 | 15.625 to 16.346 | 15.467 to 17.450 |
+| click to the first drawn frame, p50 | 27.457 | 26.763 to 28.156 | 23.731 to 28.198 |
+| click to the first drawn frame, p95 | 36.750 | 34.806 to 37.210 | 29.836 to 37.327 |
+| idle, p50 | 8.495 | 8.130 to 12.678 | 4.421 to 13.177 |
+| idle, p95 | 15.083 | 15.006 to 15.617 | 14.419 to 16.089 |
+
+**The frames of the turn, by phase** (120 steady turns a run, 8 frames each: the seven of the job, in the rows below, and one for the HUD to catch up; the phase is the one the game was in at the end of the frame, as in the headless table: the first frame is the one that accepts the turn and the seventh ends the job).
+The median across the runs of each run's statistic, the extremes in parentheses:
+
+| Phase | p50 (ms) | p95 (ms) | max (ms) |
+| --- | --- | --- | --- |
+| `ai_plan` | 5.456 (2.224 to 6.144) | 12.791 (12.398 to 13.377) | 18.052 (13.566 to 94.111) |
+| `ai_move` | 7.908 (6.817 to 12.599) | 13.701 (13.263 to 14.650) | 23.710 (16.013 to 78.155) |
+| `production` | 7.144 (3.890 to 7.680) | 14.134 (13.569 to 14.705) | 19.170 (15.087 to 29.734) |
+| `growth` | 7.698 (6.386 to 12.800) | 13.785 (13.288 to 14.303) | 14.835 (14.382 to 15.720) |
+| `research` | 6.559 (4.046 to 7.785) | 13.718 (13.205 to 14.524) | 14.979 (14.418 to 35.620) |
+| `refresh` | 7.802 (6.956 to 12.754) | 13.904 (13.426 to 14.695) | 18.747 (15.129 to 86.548) |
+| `idle` | 6.133 (4.391 to 8.116) | 13.825 (13.172 to 14.609) | 15.031 (14.250 to 21.252) |
+
+The seven frames of a turn's job, added together: a p50 of **56.796 ms** (52.808 to 57.232), a p95 of **67.843 ms** (66.582 to 73.303) and a maximum of 136.085 ms (73.806 to 169.495). Seven refresh periods add up to 58.333 ms; the headless lane, with no display to brake the loop, took 44.7 ms at the p50 for the same seven frames.
+
+**What is counted.** Of the 1,800 first frames of a click, 4 were above 16.67 ms (two refresh periods), none above 33.33 ms and none at 100 ms or more; of the 4,800 frames of the turns, 25 were above 16.67 ms, 7 above 33.33 ms and **none at 100 ms or more** (the largest, 94.111 ms, was an `ai_plan` of run 3). The panels showed after 2 frames in 1,799 of the 1,800 clicks
+(after 1 in an `answer-event` of run 2, round 13) and after 8 in all 600 End turns; in all 600 turns the order was `ai_plan`, `ai_move`, `production`, `growth`, `research`, `refresh`, with a snapshot in each of the seven frames of the job and `turn_ended` once.
+
+**Reading the idle median, 4.421 to 13.177 ms, from the numbers.** The refresh period is 8.333 ms and the validity rule asks only that the idle median reach half of it (4.167 ms). The 600 intervals of a run are not a central value with noise: they fall in **two groups**, 285 to 299 intervals under 4.167 ms (mean 2.1 to 2.7 ms) and 290 to 310 of
+12 ms or more (mean 13.9 to 15.1 ms), with 0 to 25 between them, and the groups **alternate**: a short interval is followed by a longer one 284 to 298 times in a run, and two short ones in a row occur 0 to 1 times. Two neighbouring intervals add up to 16.66 to 16.68 ms at the median, **two refresh periods**, and the mean of the 600 is 8.34 to 8.63 ms, **one refresh period**.
+With nearly half of the intervals in each group, the median falls in one group or the other on a few samples (299 of 600 under the cut in run 1, 298 in run 3, 285 in run 2), which is why it runs from 4.4 to 13.2 ms; the p95 (14.4 to 16.1 ms) and the mean are the stable numbers of the idle window. This is the pattern that the [frame-clock note](frame-clock.md) measured with the vsync on, two clusters about 3 ms and 13 ms apart, but this
+execution does not isolate the cause. Run 3 passed the rule with 4.421 ms against the required 4.167 ms (0.254 ms of margin) and a mean of 8.341 ms. The click and turn statistics have the same shape: the p50 of a phase ran from 2.2 to 12.8 ms between runs, and its p95 from 12.4 to 14.7 ms. What the numbers show with confidence is that the loop ran at one frame a refresh period on average, that the long
+intervals sit under two refresh periods at the p95 and p99 (12.4 to 14.7 ms for a click or a phase), and that the frames above two periods are rare (4 of 1,800 and 25 of 4,800) and none reached 100 ms.
+
+**What this does not say.** The intervals are of **process** frames and not of frames the display showed: with the vsync on they come in clusters, so a missed frame is not read from them (it would need presentation timestamps that Godot does not give). One machine, one display, one vsync mode (the project's default), a loaded Mac, synthetic clicks through the viewport on the validation device,
+no hardware pointer, touch screen or iPhone, and the HUD of V05-05 as it stood on `1adcdb3`. No frame-time limit and no budget row comes from this execution: the freeze (`congelado`) is a later, single act.
+
+The seven captures of this execution's captures run are, byte for byte, the seven of the pinned record (the same SHA-256).
+
+### The first windowed execution (`116a72f`): not presented (history)
+
+This is the first execution of the lane, with the display off, as the record pinned it at `116a72f`; the presented execution is the one above.
+
+**No frame time was pinned by it.** The lane ran on the pinned code with `caffeinate -d`, while the Mac had been idle for about 11.6 hours (`HIDIdleTime`) and its display was off or showing the lock screen. Every attempt drew (`frame_post_draw` fired after every one of the 11,473 to 11,488 process frames
 of an attempt, and 601 times in the 600 frames of the idle window) and the vsync mode read back `enabled` at 120 Hz on the built-in display ("Color LCD", 1512 x 982 points, 3024 x 1964 pixels, 120 Hz, scale 2; a 1080 x 600 window, `gl_compatibility`, adapter "Apple M3 Pro"), but **no display paced the loop**: an idle
 frame took about 0.6 ms against the 4.167 ms that the validity rule requires. The three attempts of slot 1 were **rejected as unpaced**, the lane stopped, and the receipt says `presented: false`, carries no frame-time statistic and exits with code 3. Nothing was forced.
 
@@ -262,7 +352,7 @@ frame took about 0.6 ms against the 4.167 ms that the validity rule requires. Th
 | 1 | 3 | 0.589 | 4.167 | 11,473 of 11,473 | unpaced: the display is not presenting |
 
 The raw intervals of the three attempts are kept in the receipt (`build/frontier-turn-graphics.json`, `rejectedAttempts`) and are **not frame times**: they are the CPU cost of a process frame in a loop no display brakes. Nothing of them is a result here, and no budget row starts from them.
-The presented frame time of the turn needs an awake, unlocked display: run the lane again and it will check that the loop was paced. The captures run, which measures nothing and does not need a display to pace the loop, passed: it saved one image of the frame as drawn for each of the seven contexts
+The presented frame time of the turn needed an awake, unlocked display, which the execution above had. The captures run, which measures nothing and does not need a display to pace the loop, passed: it saved one image of the frame as drawn for each of the seven contexts
 (`context-none.png`, `-tile.png`, `-settler.png`, `-warrior.png`, `-stack.png`, `-city.png` and `-dialog.png`, 1080 x 600 PNGs, hashed in the receipt), taken the first time each context shows, of the real HUD over the real map (in the city one the Aurora city's two panels over the map; in the dialog one turn 5 with the event waiting, End turn disabled with the game's reason).
 
 ## The retained sabotages
@@ -288,18 +378,19 @@ that is blind), and in nine ways that it must accept (a single transient of 2,05
 
 ## What is left
 
-- **`baseline`** (V05-06), the windowed part: the frame time of a presented window is still **pending**. No display presented the window in either lane (the baseline's and this one), and the two lanes check the pacing on their own; running
-  `node scripts/frontier-baseline-graphics.mjs` and `caffeinate -d npm run bench:frontier-turn-graphics` on an awake, unlocked display is what closes them. This slice does not touch the baseline's files.
+- **`baseline`** (V05-06), the windowed part: the frame time of a presented window is still **pending** for the baseline's own lane. This lane was presented on 2026-10-09 (above); the baseline's two windowed attempts of the same day were not (slot 3 used up its attempts both times, see
+  [the baseline note](frontier-baseline.md#the-windowed-attempts-of-2026-10-09-not-presented)), and the two lanes check the pacing on their own. Running `node scripts/frontier-baseline-graphics.mjs` again on an awake, unlocked display is what closes it. This slice does not touch the baseline's files.
 - **`congelado`** (V05-06): the freeze of the thresholds, one act, later, by the principal. This note records and proposes no bound. The inputs it adds to the freeze are the click to the panels (2 frames and 10 to 14 ms of CPU, headless), the turn (eight frames, seven of them the job's) and the heap and native views per context.
-- The criterion `turno` is **not closed** by this slice: the presented frame time of the turn is part of it, as it is of `baseline`, and the windowed lane ended as not presented. Its record is an `activity` and not `done: true`; it closes when the lane runs presented, with the receipt next to the headless evidence.
+- The criterion `turno` now has the evidence it asks for, the headless one (the exact counts and the CPU durations) and the windowed one (the presented frame time of the turn, pinned above). Its record is an `activity` of the dashboard and not part of this note, and it is not `done: true` here.
 - The HUD that is measured is the one on `main` at the pinned commit (V05-05 is still adding overlays and a Modal dialog): the numbers are that HUD's, and the exact rules compare each context with itself, so they keep holding when the HUD changes and only its numbers move.
 
 ## Limitations and open
 
-- One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites (load average 1.5 to 4.1), so the durations are not a best case. They are the CPU cost of work on a loop that nothing paces and are **not frame times**; the presented frame time is the windowed lane's, still pending. Only the exact
+- One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites (load average 1.5 to 4.1 in the headless lane, 4.3 to 14.4 around the windowed attempts of 2026-10-09), so the durations are not a best case. The headless ones are the CPU cost of work on a loop that nothing paces and are **not frame times**; the presented frame time is the windowed lane's. Only the exact
   counts are asked of a hosted runner.
-- **The frame time of a presented window (vsync on, 120 Hz) is PENDING**: no windowed attempt was presented by the display (the Mac had been idle for 11.6 hours, the display off or locked), the lane rejected all three attempts as unpaced and ended with `presented: false`, exit code 3 and no frame-time statistic. No frame time of a click, of a phase of the turn or of an idle frame is claimed, and no budget starts from this slice.
-  Missed frames with the vsync on are not read either (they need presentation timestamps that Godot does not give).
+- **The frame time of a presented window (vsync on, 120 Hz)** is measured, and it is the interval between **process** frames, which with the vsync on come in clusters (about 3 ms and 13 ms apart): it is not the interval between images the display showed, and the idle median is unstable (4.4 to 13.2 ms over five runs, for a distribution of two groups
+  whose mean is one refresh period), so the p95 and the mean are what to read (see [the windowed result](#the-windowed-result-presented-2026-10-09)). Missed frames with the vsync on are not read (they need presentation timestamps that Godot does not give). The validity rule, the baseline's, reads that median and was not changed here. No budget starts from this slice.
+  The first execution (the display off) had no frame-time statistic and claims none.
 - Synthetic events through the viewport on the validation device; no hardware pointer or touch screen, no iPhone, no mobile export. The numbers are macOS, arm64, Compatibility renderer.
 - **The HUD is V05-05's work in progress** (bar, actions, tile, city, research and dialog as positioned panels): no Modal, no overlay stack, no images, no scroll views, no text input, no animation but the spinner. The numbers are that HUD's and move when it does; every exact rule compares a context with itself.
 - **The tour is one fixed path** through turns 1 to 5 of one scenario (a Settler founds a city, a Warrior is selected, four turns end with an empty production queue, one event is answered): the game's state stays small and the army does not grow; it is not an economy that keeps growing, a long session (the soak's 100 turns are) or the services' 64-task and 128-event budgets (the services' stress case).
