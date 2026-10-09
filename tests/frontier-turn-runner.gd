@@ -1,7 +1,7 @@
 extends SceneTree
 
 # The runner of the turn lane (V05-06, criterion `turno`). scripts/frontier-turn-lane.mjs provisions the Frontier template as a consumer project,
-# builds its HUD with the addon's editor plugin, and only then copies this file, frontier-turn-probe.gd and performance-sampler.gd into the
+# builds its HUD with the addon's editor plugin, and only then copies this file, frontier-turn-probe.gd, performance-sampler.gd and window-presence.gd into the
 # provisioned copy, under res://turn_probe/. It runs
 #
 #   godot --path <project> --headless -s res://turn_probe/frontier-turn-runner.gd -- --lane=headless
