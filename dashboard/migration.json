@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T15:58:48.000Z",
+  "updatedAt": "2026-10-09T16:48:23.000Z",
   "source": {
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
@@ -4617,6 +4617,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-turn-idle-reference-01d6351",
+      "at": "2026-10-09T16:48:23.000Z",
+      "taskIds": [],
+      "message": "O script e a nota do turno (V05-06) passam a imprimir e descrever a faixa janelada pela referência ociosa do #94: as duas contagens de quadros de clique (acima de 2× a referência e acima de 2× a mediana), as recusas de tentativa pela referência e o texto de validade do recibo. A execução apresentada de 2026-10-09 segue julgada pela mediana e não é reclassificada. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/01d6351a6cfa1b0f3d28848a343184396369d771/docs/research/frontier-turn.md"
+    },
     {
       "id": "milestone-0-5-idle-reference-490ba8c",
       "at": "2026-10-09T15:58:48.000Z",
