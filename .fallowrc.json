@@ -70,6 +70,7 @@
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/frontier-services-fixture.jsx",
+    "tests/frontier-soak-fixture.jsx",
     "tests/accessibility-info-fixture.jsx",
     "tests/layout-animation-fixture.jsx",
     "tests/os-contracts-fixture.jsx",
