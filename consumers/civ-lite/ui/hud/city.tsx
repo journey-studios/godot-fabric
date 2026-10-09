@@ -1,12 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 import { send } from "../store";
-import { FRONTIER_SET_PRODUCTION } from "../frontier-types";
+import { FRONTIER_CLEAR_SELECTION, FRONTIER_SET_PRODUCTION } from "../frontier-types";
 import type { CityScreen, FrontierSnapshot } from "../frontier-types";
 import { Choice, COLORS, Heading, Line, Panel, Reason } from "./kit";
 
 // The city screen: what the city is, what it builds and what it can be told to build. Each item carries the game's own `enabled` and
-// `reason_text`; pressing one puts it in the slot the snapshot's items were checked for, the first free one or the last.
+// `reason_text`; pressing one puts it in the slot the snapshot's items were checked for, the first free one or the last. It is shown in an
+// overlay (hud.tsx), so it has a Close of its own: the game's `clear_selection`, the same call as Escape.
 
 const slotFor = (city: CityScreen) => Math.min(city.queue.length, city.queue_max - 1);
 
@@ -14,7 +15,10 @@ export function City({ snapshot }: { snapshot: FrontierSnapshot }) {
   const city = snapshot.city;
   const food = snapshot.resources.food.stock;
   return <Panel id="hud-city" style={{ width: 440 }}>
-    <Heading id="hud-city-title">{city.present === 1 ? `${city.name} · size ${city.size}/${city.max_size}` : "No city yet"}</Heading>
+    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+      <Heading id="hud-city-title">{city.present === 1 ? `${city.name} · size ${city.size}/${city.max_size}` : "No city yet"}</Heading>
+      <Choice id="hud-city-close" label="Close" color={COLORS.neutral} enabled onPress={() => { void send(FRONTIER_CLEAR_SELECTION, []); }} />
+    </View>
     <Line id="hud-city-rates" color={COLORS.resource}>
       {`Food ${food}/${city.food_needed} (+${city.food_rate}) · Production +${city.production_rate} · Science +${city.science_rate}`}
     </Line>

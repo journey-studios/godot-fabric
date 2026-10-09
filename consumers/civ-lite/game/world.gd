@@ -1,6 +1,6 @@
 extends RefCounted
 
-# The scenario (the 24x16 map from the fixed seed, the units, the empty city, research and event slots) and the
+# The scenario (the 24x16 map from the fixed seed, the units, the empty city, research and the empty event queue) and the
 # queries every other rule shares. The state is one Dictionary of integers, strings, arrays and dictionaries; see
 # docs/research/frontier-game.md for the field-by-field model.
 
@@ -29,7 +29,7 @@ static func new_state(seed_value: int) -> Dictionary:
   state["cities"] = []
   state["res"] = {"food": 0, "production": 0, "science": 0}
   state["research"] = {"done": 0, "current": ""}
-  state["event"] = {"id": Rules.EVENT_ID, "pending": 0, "resolved": 0, "choice": ""}
+  state["events"] = {"queue": [], "resolved": []}
   state["ai"] = {"unit": 3, "step": 0, "tx": Rules.ROUTE[0][0], "ty": Rules.ROUTE[0][1]}
   state["sel"] = {"x": -1, "y": -1, "unit": 0}
   state["log"] = []

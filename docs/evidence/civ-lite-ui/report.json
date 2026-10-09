@@ -94,7 +94,7 @@
       }
     },
     "readBeforeCiting": true,
-    "note": "the PNGs are the ones the headed run (node tests/civ-lite-ui-native.test.mjs --capture) saved; summary.json of that run was overwritten by the plain run the sabotage script ends with, and the hashes are those of the files, identical to the first run"
+    "note": "the PNGs are the ones the headed run (node tests/civ-lite-ui-native.test.mjs --capture) saved; summary.json of that run was overwritten by the plain run the sabotage script ends with, and the hashes are those of the files, identical to the first run. The hashes here are those of the PNGs pinned at 096a018; slice 2a regenerated the same names (six byte-identical, city and dialog changed because they are Modals now) and records both sets under slice2a.screenshots."
   },
   "commands": [
     {
@@ -625,7 +625,7 @@
     }
   ],
   "limits": [
-    "The run is local, macOS arm64: the lane headless and the captures in a macOS window; there is no hosted CI run and no Pages publication yet",
+    "The execution this record describes is local, macOS arm64: the lane headless and the captures in a macOS window; the hosted CI run and the Pages publication of main 622102e (the squash of PR #82) are recorded in hosted-ci.json and publication.json (see hostedCI)",
     "The dialog is a positioned panel, not yet a blocking Modal: overlays, the event queue of three, remount order and estabilidade are slice 2",
     "The hover was exercised with synthetic events through the viewport (device 1001) in both modes; no physical mouse, no touch",
     "Hosted CI runs the lane headless only and skips the control on a shallow clone; the captures are a local run",
@@ -723,5 +723,1628 @@
       "publicationScan": "1801 files, no failures (run again with this report in the tree)"
     },
     "dashboard": "dashboard/migration.json was not touched (git status shows no change to it)"
+  },
+  "slice2a": {
+    "status": "verified-local-headless-and-headed-two-causal-controls-retained-sabotages-and-regressions",
+    "at": "2026-10-09T14:04:23Z",
+    "item": "V05-05",
+    "criteria": [
+      "overlays"
+    ],
+    "criteriaNote": "the criterion overlays (blocking overlays, the event queue of three, remount order); no done flag is set by this record",
+    "decision": {
+      "date": "2026-10-09",
+      "by": "the user",
+      "meaning": "the queue of three events is real in the game (state, rules, replay and hashes), not a HUD-side list; the ceiling of the game changed from one blocking event to a queue of three"
+    },
+    "sliceBaseCommit": "622102e",
+    "executionBaseCommit": "181082868e8374cd83d0cd51d795e6900953fc4f",
+    "implementationCommit": "181082868e8374cd83d0cd51d795e6900953fc4f",
+    "pinnedCommit": "181082868e8374cd83d0cd51d795e6900953fc4f",
+    "pinnedCommitUrl": "https://github.com/journey-studios/godot-fabric/commit/181082868e8374cd83d0cd51d795e6900953fc4f",
+    "implementationCommits": [
+      "12b6c83669ee6fe07a6318329dea7430cb98e7d9",
+      "8ba2a35",
+      "181082868e8374cd83d0cd51d795e6900953fc4f"
+    ],
+    "mergeCommit": "b3d835e62b609f746d78317bea850cf45779f141",
+    "mergedMainCommit": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+    "commitsNote": "the sources are those of 12b6c83 (the queue and the overlays), 8ba2a35 (the check names) and 1810828 (the oracle of the soak); every SHA-256 below is the blob in 1810828, which is b3d835e (the merge of main 8b7a5e6, PRs #83 to #85, into the branch, with nothing changed in native/ or consumers/civ-lite/) plus the oracle of the soak and the note in docs/research/frontier-soak.md",
+    "executedTreeSha": "6e2f5fdbf6d782460d17563b5df4035e4a24a811",
+    "executedTreeEqualsPinnedCommitTree": true,
+    "executedTreeNote": "the batch ran on b3d835e (tree 9c8ddfea5bd7cbcd628699e7b1234d585326f2c5) with tests/frontier-soak-oracle.mjs modified in the working tree; 1810828 was committed afterwards with exactly those bytes, so the tree the batch executed is the tree of 1810828 (its one other change, docs/research/frontier-soak.md, is a document that no lane reads)",
+    "sourceDirtyDuringExecution": false,
+    "sourceDirtyDuringExecutionNote": "the run was on a tree identical to the one committed afterwards as 1810828: the only modified file, tests/frontier-soak-oracle.mjs, has the same SHA-256 in the working tree the batch ran on and in 1810828",
+    "dirtyBeforeFirstCommand": [
+      " M tests/frontier-soak-oracle.mjs"
+    ],
+    "dirtyAfterLastCommand": [
+      " M tests/frontier-soak-oracle.mjs"
+    ],
+    "soakOracle": {
+      "file": "tests/frontier-soak-oracle.mjs",
+      "sha256AtThePinnedCommit": "1559b2efdab444db8eb9830ad9db53494845384ddc6c79bf8df173953a9f9ba8",
+      "sha256InTheTreeTheBatchRan": "1559b2efdab444db8eb9830ad9db53494845384ddc6c79bf8df173953a9f9ba8",
+      "committedIn": "181082868e8374cd83d0cd51d795e6900953fc4f",
+      "equalToTheRunTree": true
+    },
+    "documentsEditedDuringExecution": "the tree had one modified file when the first command ran, tests/frontier-soak-oracle.mjs (the oracle of the soak, adjusted to the queue of three events: see mergeRegression), committed afterwards as 1810828 with the same bytes; the documents of this record were written after the batch. None is an input of a lane (the lanes read the template, the scripts and the tests); the gates that read documents ran afterwards (gates)",
+    "environment": {
+      "godot": "4.7.2.stable.official.ed1daf0bf",
+      "godotNote": "official 4.7.2-stable",
+      "reactNative": "0.87.1",
+      "react": "19.2.3",
+      "node": "v22.23.3",
+      "platform": "macOS arm64 26.6.2",
+      "displayServer": {
+        "lane": "headless",
+        "captures": "macOS window"
+      },
+      "nativeHostSha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da"
+    },
+    "hostBinary": {
+      "file": "addons/fabric_godot.dylib",
+      "sha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da",
+      "bytes": 6716720,
+      "note": "the slice has no C++: the host is the one of slice 1, built from main 5e1f6a1 and unchanged (the merge of main touched nothing in native/); the same host ran every lane and both controls"
+    },
+    "game": {
+      "events": [
+        {
+          "id": "wanderers",
+          "title": "Wanderers at the gate",
+          "choices": [
+            {
+              "id": "welcome",
+              "effect": "food +6 plus a draw of 4 from the game PRNG (+6 to +9)"
+            },
+            {
+              "id": "turn_away",
+              "effect": "production +4"
+            }
+          ]
+        },
+        {
+          "id": "traders",
+          "title": "Traders at the crossroads",
+          "choices": [
+            {
+              "id": "buy_grain",
+              "effect": "food +3"
+            },
+            {
+              "id": "buy_tools",
+              "effect": "production +3"
+            }
+          ]
+        },
+        {
+          "id": "scholar",
+          "title": "A scholar asks for shelter",
+          "choices": [
+            {
+              "id": "host",
+              "effect": "science +3"
+            },
+            {
+              "id": "send_on",
+              "effect": "food +2"
+            }
+          ]
+        }
+      ],
+      "queue": {
+        "raisedAtTurn": 5,
+        "raisedTogether": true,
+        "order": [
+          "wanderers",
+          "traders",
+          "scholar"
+        ],
+        "resolve": "resolve_event answers only the head and only with its own choices; another event's choice is unknown_choice; the next event becomes the head",
+        "context": "dialog while the queue is not empty",
+        "dialogFields": "index (1-based) and count are the game's, the HUD shows \"n of 3\""
+      },
+      "replay": {
+        "steps": 77,
+        "accepted": 45,
+        "refused": 32,
+        "previousSteps": 73,
+        "previousAccepted": 43,
+        "previousRefused": 30,
+        "stepsBeforeTheDialogCoveringStepAreUnchanged": true,
+        "coveringSteps": {
+          "city": 18,
+          "dialog": 45,
+          "none": 33,
+          "settler": 3,
+          "stack": 2,
+          "tile": 32,
+          "warrior": 9
+        }
+      },
+      "hashes": {
+        "golden": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "trace": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+        "previousGolden": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+        "previousTrace": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+        "fixedIn": "tests/civ-lite-game-native.test.mjs",
+        "identicalInThreeProcesses": true,
+        "derivation": "tests/civ-lite-game-oracle.mjs, written apart in Node (PCG32 with BigInt and the table of events), recomputes the state after each of the 77 steps and agreed with the game at every step before the two hashes were re-pinned; the lane judges every state regardless of the hashes",
+        "report": {
+          "file": "build/civ-lite-game-report.json",
+          "sha256": "f2cd6f714b9fb946f6f3083acea1f0f2ac6c7d417865820e76f989b50d761b2b"
+        }
+      },
+      "prngDraws": 385,
+      "prngDrawsNote": "unchanged: 384 for the map and one for the wanderers' gift",
+      "oracle": {
+        "accepted": true,
+        "contexts": [
+          "city",
+          "dialog",
+          "none",
+          "settler",
+          "stack",
+          "tile",
+          "warrior"
+        ]
+      },
+      "byteIdenticalAcrossExecutions": true
+    },
+    "commands": [
+      {
+        "command": "node scripts/civ-lite-ui-sabotage.mjs",
+        "exit": 0,
+        "seconds": 819,
+        "result": "passed"
+      },
+      {
+        "command": "node scripts/civ-lite-game-sabotage.mjs",
+        "exit": 0,
+        "seconds": 15,
+        "result": "passed"
+      },
+      {
+        "command": "node scripts/frontier-services-sabotage.mjs",
+        "exit": 0,
+        "seconds": 271,
+        "result": "passed"
+      },
+      {
+        "command": "node scripts/consumer-civ-lite-sabotage.mjs",
+        "exit": 0,
+        "seconds": 197,
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:frontier-soak",
+        "exit": 0,
+        "seconds": 207,
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:frontier-services",
+        "exit": 0,
+        "seconds": 36,
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:consumer:civ-lite",
+        "exit": 0,
+        "seconds": 42,
+        "result": "passed"
+      },
+      {
+        "command": "npm run test:civ-lite-game",
+        "exit": 0,
+        "seconds": 3,
+        "result": "passed"
+      },
+      {
+        "command": "node tests/civ-lite-ui-native.test.mjs --control --capture",
+        "exit": 0,
+        "seconds": 142,
+        "result": "passed"
+      }
+    ],
+    "commandsOrder": "the sabotage lanes first and the plain lanes last: both write the same files under build/, so the files this record hashes are the ones of the final plain run",
+    "lane": {
+      "hud": {
+        "probeChecksHeadless": 144,
+        "probeChecksHeaded": 152,
+        "stepsPlayed": 46,
+        "covering": {
+          "city": 18,
+          "dialog": 45,
+          "none": 33,
+          "settler": 3,
+          "stack": 2,
+          "tile": 32,
+          "warrior": 9
+        },
+        "oracleFindings": 0,
+        "oracleMutations": 27,
+        "framesObservedInTheJob": 15,
+        "publishedPhases": [
+          "ai_plan",
+          "ai_move",
+          "production",
+          "growth",
+          "research",
+          "refresh",
+          "idle"
+        ],
+        "mutations": [
+          {
+            "name": "a panel the context mounts is missing",
+            "category": "panels"
+          },
+          {
+            "name": "a panel the context does not mount is shown",
+            "category": "panels"
+          },
+          {
+            "name": "an unowned testID is mounted",
+            "category": "panels"
+          },
+          {
+            "name": "the actions are listed in another order",
+            "category": "actions"
+          },
+          {
+            "name": "a disabled action is shown enabled",
+            "category": "actions"
+          },
+          {
+            "name": "a reason is not the game's",
+            "category": "actions"
+          },
+          {
+            "name": "the spinner is shown at rest",
+            "category": "bar"
+          },
+          {
+            "name": "End turn is enabled while the game says it is not",
+            "category": "bar"
+          },
+          {
+            "name": "a resource is not the snapshot's",
+            "category": "bar"
+          },
+          {
+            "name": "a Control in the tree that stops the pointer covers the map",
+            "category": "map"
+          },
+          {
+            "name": "the overlay of the dialog does not block the map",
+            "category": "map"
+          },
+          {
+            "name": "a Modal's window is open in a context that has no overlay",
+            "category": "map"
+          },
+          {
+            "name": "the city screen is in the tree and not in the Modal",
+            "category": "panels"
+          },
+          {
+            "name": "the tile card says another tile",
+            "category": "content"
+          },
+          {
+            "name": "the dialog's position is not the game's",
+            "category": "content"
+          },
+          {
+            "name": "the dialog's choice is not the game's",
+            "category": "content"
+          },
+          {
+            "name": "a frame of the job shows the spinner at an idle phase",
+            "category": "phase"
+          },
+          {
+            "name": "the disabled End turn asked the game",
+            "category": "phase"
+          },
+          {
+            "name": "no snapshot was published at an AI phase",
+            "category": "phase"
+          },
+          {
+            "name": "a click selected another tile than the one under it",
+            "category": "input"
+          },
+          {
+            "name": "the hover is not the tile under the pointer",
+            "category": "input"
+          },
+          {
+            "name": "a click on a panel reached the World",
+            "category": "input"
+          },
+          {
+            "name": "a tick of the wheel on a panel reached the World",
+            "category": "input"
+          },
+          {
+            "name": "the node published the same hover card twice running",
+            "category": "input"
+          },
+          {
+            "name": "a bar that forgot the game's reason",
+            "category": "bar"
+          },
+          {
+            "name": "a press on a disabled action asked the game",
+            "category": "input"
+          },
+          {
+            "name": "the World came back behind the HUD's layer",
+            "category": "input"
+          }
+        ]
+      },
+      "overlays": {
+        "probeChecksHeadless": 26,
+        "probeChecksHeaded": 30,
+        "oracleFindings": 0,
+        "oracleMutations": 20,
+        "clicksPerKind": 100,
+        "rounds": [
+          [
+            "wanderers",
+            1,
+            3,
+            "welcome"
+          ],
+          [
+            "traders",
+            2,
+            3,
+            "buy_tools"
+          ],
+          [
+            "scholar",
+            3,
+            3,
+            "send_on"
+          ]
+        ],
+        "summary": {
+          "checks": 26,
+          "rounds": [
+            [
+              "wanderers",
+              1,
+              3,
+              "welcome"
+            ],
+            [
+              "traders",
+              2,
+              3,
+              "buy_tools"
+            ],
+            [
+              "scholar",
+              3,
+              3,
+              "send_on"
+            ]
+          ],
+          "remountFrames": 5,
+          "mutations": [
+            {
+              "name": "the dialog showed the events out of order",
+              "category": "queue"
+            },
+            {
+              "name": "the HUD's position is not the game's",
+              "category": "queue"
+            },
+            {
+              "name": "the HUD says another event's words",
+              "category": "queue"
+            },
+            {
+              "name": "another intent was accepted while an event waited",
+              "category": "queue"
+            },
+            {
+              "name": "a refused intent changed the state",
+              "category": "queue"
+            },
+            {
+              "name": "a press answered the head twice",
+              "category": "queue"
+            },
+            {
+              "name": "the game recorded the answers out of order",
+              "category": "queue"
+            },
+            {
+              "name": "a frame between two heads showed a third event",
+              "category": "queue"
+            },
+            {
+              "name": "two events shared a subtree",
+              "category": "queue"
+            },
+            {
+              "name": "the dialog is in the tree and not in the Modal",
+              "category": "queue"
+            },
+            {
+              "name": "the remounted HUD shows the first event",
+              "category": "remount"
+            },
+            {
+              "name": "a frame after the mount flashed another event",
+              "category": "remount"
+            },
+            {
+              "name": "the game lost its queue while the Surface was unmounted",
+              "category": "remount"
+            },
+            {
+              "name": "the city screen came back in the tree",
+              "category": "remount"
+            },
+            {
+              "name": "a click reached the world under the city overlay",
+              "category": "blocking"
+            },
+            {
+              "name": "a wheel tick selected a tile under the dialog",
+              "category": "blocking"
+            },
+            {
+              "name": "the clicks do not reach the world after the overlay closed",
+              "category": "blocking"
+            },
+            {
+              "name": "a Pressable in the overlay does nothing",
+              "category": "blocking"
+            },
+            {
+              "name": "the new session kept the queue",
+              "category": "newgame"
+            },
+            {
+              "name": "the new session did not raise its own events",
+              "category": "newgame"
+            }
+          ]
+        }
+      }
+    },
+    "overlays": {
+      "blocking": {
+        "meaning": "real input pushed through the viewport on the map: 100 left clicks, 100 right clicks and 100 wheel ticks, counted by the World itself (its own heard counters) and by the game (select_tile calls)",
+        "measured": {
+          "cityOpen": {
+            "left": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "right": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "wheel": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            }
+          },
+          "cityAfter": {
+            "left": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 100,
+              "selectionMoved": true
+            },
+            "right": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "wheel": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            }
+          },
+          "dialogOpen": {
+            "left": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "right": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "wheel": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 0,
+              "motionsTheWorldHeard": 0,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            }
+          },
+          "dialogAfter": {
+            "left": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 100,
+              "selectionMoved": true
+            },
+            "right": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            },
+            "wheel": {
+              "sent": 100,
+              "buttonEventsTheWorldHeard": 200,
+              "motionsTheWorldHeard": 100,
+              "selectTileCalls": 0,
+              "selectionMoved": false
+            }
+          }
+        }
+      },
+      "remount": {
+        "meaning": "with the second event at the head the Surface was unmounted and mounted again: the game kept its queue, and the first frame of the new HUD was already \"2 of 3\"",
+        "framesObservedUntilItSettled": 5,
+        "framesObservedNote": "the invariant is per frame (no frame showed an event but the second); the number of frames depends on the runner and is not asserted"
+      },
+      "newSession": {
+        "meaning": "a new game started with the second event at the head: the new session has no queue, no dialog and no Modal until its own turn 5, when it raises its own three and the HUD shows 1 of 3"
+      },
+      "modalWindowReading": "a Modal's Controls are children of the Modal's own Window, so the probe reads the HUD through the host snapshot (hud.call(\"snapshot\")) and instance_from_id, never find_child (hud_probe.gd)"
+    },
+    "reports": {
+      "headless": {
+        "file": "build/civ-lite-ui/headless.json",
+        "sha256": "5369527a43de403896a6665abadc7dd6f7d74f2a2137b2f8c1b3edba6e7fbd91",
+        "bytes": 961462,
+        "checks": 144,
+        "passed": 144,
+        "failed": 0,
+        "checkNameDigest": "7cf45f6d0192dcd87196f7cdb2889e6a801bd35ab817afeb3e8f066b39ef2b50",
+        "displayServer": "headless"
+      },
+      "graphical": {
+        "file": "build/civ-lite-ui/graphical.json",
+        "sha256": "f1b2ebb803f1569ecef19d4bdd9af4113b63b9848d938c6d68ca50f7d2f46083",
+        "bytes": 962144,
+        "checks": 152,
+        "passed": 152,
+        "failed": 0,
+        "checkNameDigest": "773c68d511013c7a9fd4606a62198fc7bd69d9e250722725cbed9156d2ef48f9",
+        "displayServer": "macOS"
+      },
+      "control": {
+        "file": "build/civ-lite-ui-control/control.json",
+        "sha256": "680b26e3271f315df2b4a729dd1f55feb1b5b44295f656ea61071accd78d906a",
+        "bytes": 581658,
+        "checks": 144,
+        "passed": 8,
+        "failed": 136,
+        "checkNameDigest": "f3733552153dca2f3b1a76313769b1d9a69ada20562206b1fc719ed5b0c32bb9",
+        "displayServer": "headless",
+        "expectedToFail": true
+      },
+      "controlObserved": {
+        "file": "build/civ-lite-ui/control-observed.json",
+        "sha256": "802f0174aeafd1616754811436d6deb84b6a3d303461538c07cc0dc3c06c4730"
+      },
+      "overlays": {
+        "file": "build/civ-lite-ui/overlays.json",
+        "sha256": "29ef7d1d69ebc56b9f9aac07e7b93823f48ea03ca7edd910005e9589485162ce",
+        "bytes": 88206,
+        "checks": 26,
+        "passed": 26,
+        "failed": 0,
+        "checkNameDigest": "d6fb0a4bc304485502461fb8e372b53c55a9efa940756f478f06c4059dd7267b",
+        "displayServer": "headless"
+      },
+      "overlaysGraphical": {
+        "file": "build/civ-lite-ui/overlays-graphical.json",
+        "sha256": "d938094e94eb2d406ac621f704fe37cc908cda0a28793aec7431ff116913213f",
+        "bytes": 86515,
+        "checks": 30,
+        "passed": 30,
+        "failed": 0,
+        "checkNameDigest": "175a27cac0fbe6638cb0194563e19de7e8e949d7c1f564f759fa880e125e19bc",
+        "displayServer": "macOS"
+      },
+      "overlaysControl": {
+        "file": "build/civ-lite-overlays-control/overlays-control.json",
+        "sha256": "e951fcf20de26357b41c985205223e71901b72d2289d61f771d9a81318f6dd78",
+        "bytes": 72475,
+        "checks": 26,
+        "passed": 8,
+        "failed": 18,
+        "checkNameDigest": "d1b75b411808b6319e7d004e1065d6f09fb4b4cde2661b2e9931ab039b5ccfcd",
+        "displayServer": "headless",
+        "expectedToFail": true
+      },
+      "overlaysControlObserved": {
+        "file": "build/civ-lite-ui/overlays-control-observed.json",
+        "sha256": "92f72f019018a2b43621c3a0a29aadf87849b2460275bdfcdbf50e9eff82ab8c"
+      },
+      "summary": {
+        "file": "build/civ-lite-ui/summary.json",
+        "sha256": "13abbf91ee9d69ca59b4e4e813b9e04f29b4620995b40bf002b211b0962eda33"
+      }
+    },
+    "causalControls": {
+      "hud": {
+        "commit": "5e1f6a1",
+        "source": "git show 5e1f6a1:consumers/civ-lite/ui/index.tsx into build/civ-lite-ui-previous/index.tsx",
+        "sha256": "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346",
+        "sameHost": true,
+        "categories": [
+          "actions",
+          "content",
+          "input",
+          "map",
+          "panels",
+          "phase"
+        ],
+        "findingCounts": {
+          "actions": 25,
+          "content": 98,
+          "input": 16,
+          "map": 14,
+          "panels": 578,
+          "phase": 374
+        },
+        "failedChecks": 136
+      },
+      "gameAndUi": {
+        "commit": "622102e",
+        "source": "git archive of consumers/civ-lite/{game,services,ui} at 622102e into build/civ-lite-overlays-previous/ (one event, panels in the tree, no Modal)",
+        "archiveSha256": "c54adc76c87700d5f141af414c3c6feef1a522210e2738651e106a13441f1ed5",
+        "passedChecks": [
+          "The HUD mounted for the game's first snapshot",
+          "Each dialog offered the head's own choices",
+          "After the third answer the queue is empty, the context leaves the dialog and the Modal is gone",
+          "Between two heads the HUD showed the old event or the next one and never another",
+          "From the mount until it settled the HUD showed no event but the second",
+          "With the city screen closed, 100 of 100 left clicks reach the World again (and each selects), and so do the right clicks and the wheel",
+          "With the queue answered, 100 of 100 left clicks reach the World again, and so do the right clicks and the wheel",
+          "The new session has no queue, no dialog and no Modal until its own turn 5"
+        ],
+        "sameHost": true,
+        "categories": [
+          "blocking",
+          "newgame",
+          "queue",
+          "remount"
+        ],
+        "findingCounts": {
+          "blocking": 9,
+          "newgame": 3,
+          "queue": 33,
+          "remount": 8
+        },
+        "failedChecks": 18
+      },
+      "skippedOnShallowClone": true
+    },
+    "retainedSabotages": {
+      "format": "godot-fabric.civ-lite-ui-sabotage/v1",
+      "receipt": {
+        "file": "build/civ-lite-ui-sabotage.json",
+        "sha256": "ada065bc84014c6bfa241b634bf6971be5d936c29336d8670e72adead9ae6b12"
+      },
+      "count": 12,
+      "newInSlice2a": [
+        "queue-out-of-order",
+        "position-in-js",
+        "city-in-tree",
+        "dialog-unkeyed"
+      ],
+      "sourceSha256": {
+        "genuine": {
+          "consumers/civ-lite/ui/hud/hud.tsx": "f41563962c6a2a0bb489078bc160457a8e5cf70a1b2424cb60107f92829dff2e",
+          "consumers/civ-lite/ui/hud/actions.tsx": "6894339ad8a8aa0ecdd15a0aed024cf1b573636b1670c2c518090889e834192d",
+          "consumers/civ-lite/ui/hud/bar.tsx": "0171f343cc98b8a4df27b69c09b960312b31377fd5cae1ea6b55595a3f613fba",
+          "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+          "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+          "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+          "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+          "consumers/civ-lite/ui/hud/kit.tsx": "ca38cf34ee335c7c3e24d200095f99a2a9b2443dfd0ef7b96937aae50c5f1807"
+        },
+        "restored": {
+          "consumers/civ-lite/ui/hud/hud.tsx": "f41563962c6a2a0bb489078bc160457a8e5cf70a1b2424cb60107f92829dff2e",
+          "consumers/civ-lite/ui/hud/actions.tsx": "6894339ad8a8aa0ecdd15a0aed024cf1b573636b1670c2c518090889e834192d",
+          "consumers/civ-lite/ui/hud/bar.tsx": "0171f343cc98b8a4df27b69c09b960312b31377fd5cae1ea6b55595a3f613fba",
+          "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+          "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+          "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+          "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+          "consumers/civ-lite/ui/hud/kit.tsx": "ca38cf34ee335c7c3e24d200095f99a2a9b2443dfd0ef7b96937aae50c5f1807"
+        }
+      },
+      "restoredEqualsGenuine": true,
+      "controlStatus": 0,
+      "variants": [
+        {
+          "name": "city-by-data",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "find": "    {panels.includes(\"city\") || panels.includes(\"research\") ? <Overlay id=\"hud-city-overlay\" onRequestClose={closeSelection}>\n      <View pointerEvents=\"box-none\" style={{ position: \"absolute\", left: 616, top: 24, width: 440, gap: 8 }}>\n        {panels.includes(\"city\") ? <City snapshot={snapshot} /> : null}\n        {panels.includes(\"research\") ? <Research snapshot={snapshot} /> : null}\n      </View>\n    </Overlay> : null}\n",
+          "replace": "    {snapshot.city.present === 1 ? <Overlay id=\"hud-city-overlay\" onRequestClose={closeSelection}>\n      <View pointerEvents=\"box-none\" style={{ position: \"absolute\", left: 616, top: 24, width: 440, gap: 8 }}>\n        {snapshot.city.present === 1 ? <City snapshot={snapshot} /> : null}\n        {panels.includes(\"research\") ? <Research snapshot={snapshot} /> : null}\n      </View>\n    </Overlay> : null}\n",
+          "sourceSha256": "3a118b380e2211291ee26c0ddd4bfc1240058cfb55df3e3d2913b99fa10113e0",
+          "rejected": true,
+          "failedChecks": 23,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "blocking",
+            "map",
+            "panels",
+            "queue",
+            "remount"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-city-by-data/observed.json",
+            "sha256": "6e412186e12b1703695e06014f4d00905ef3c902e8f4f34ffbcec4dadfe892ee"
+          }
+        },
+        {
+          "name": "actions-reversed",
+          "file": "consumers/civ-lite/ui/hud/actions.tsx",
+          "find": "    {actions.filter(action => action.id !== \"end_turn\").map(action => {\n",
+          "replace": "    {[...actions].reverse().filter(action => action.id !== \"end_turn\").map(action => {\n",
+          "sourceSha256": "5d1860e6faea9b70445be65995e718881dfbdd629f41d5c2b546acbc4db7883c",
+          "rejected": true,
+          "failedChecks": 26,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "actions",
+            "panels"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-actions-reversed/observed.json",
+            "sha256": "4b28e8608dd6694994aade3b6f5db398131a4bc93f6507ad394a67e896feb6bd"
+          }
+        },
+        {
+          "name": "spinner-always",
+          "file": "consumers/civ-lite/ui/hud/bar.tsx",
+          "find": "      {snapshot.phase === \"idle\" ? null : <ActivityIndicator testID=\"hud-turn-spinner\" size=\"small\" color={COLORS.accent} />}\n",
+          "replace": "      <ActivityIndicator testID=\"hud-turn-spinner\" size=\"small\" color={COLORS.accent} />\n",
+          "sourceSha256": "7f5b812778a4b9cff04ae7422b49daa42245cc732d27f975cf93048dc21e29fe",
+          "rejected": true,
+          "failedChecks": 49,
+          "firstFailedCheck": "Step 0 (clear_selection): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+          "categories": [
+            "bar",
+            "phase"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-spinner-always/observed.json",
+            "sha256": "8e790a2991f368eef3f7cf1db974d0bade3dc681c203e8bd71878963f5c04961"
+          }
+        },
+        {
+          "name": "end-turn-by-phase",
+          "file": "consumers/civ-lite/ui/hud/bar.tsx",
+          "find": "  const enabled = endTurn !== undefined && endTurn.enabled === 1;\n",
+          "replace": "  const enabled = snapshot.phase === \"idle\";\n",
+          "sourceSha256": "093d436fed9d988e6d085233885bf652cf2d92b62b0135092c8cbf5887d1b5ad",
+          "rejected": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "Step 44 (end_turn): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+          "categories": [
+            "bar"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-end-turn-by-phase/observed.json",
+            "sha256": "80d0443c795ca47b705b1f152922176372b51a52b1a9e1caaf3e0073c04037f3"
+          }
+        },
+        {
+          "name": "spacer",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "find": "    <Bar snapshot={snapshot} answer={answer} />\n",
+          "replace": "    <View testID=\"hud-spacer\" style={{ position: \"absolute\", left: 0, top: 0, width: 616, height: 512 }} />\n    <Bar snapshot={snapshot} answer={answer} />\n",
+          "sourceSha256": "b31ccd473c3b51f15fd3f5bcd6a8a41eecab781a39782c16714a2220cafc1fd1",
+          "rejected": true,
+          "failedChecks": 14,
+          "firstFailedCheck": "No Control of the HUD in the tree that stops the pointer covers the map: [\"step 0 hud-spacer\", \"step 1 hud-spacer\", \"step 2 hud-spacer\", \"step 3 hud-spacer\", \"step 4 hud-spacer\", \"step 5 hud-spacer\", \"step 6 hud-spacer\", \"step 7 hud-spacer\", \"step 8 hud-spacer\", \"step 9 hud-spacer\", \"step 10 hud-spacer\", \"step 11 hud-spacer\", \"step 12 hud-spacer\", \"step 13 hud-spacer\", \"step 14 hud-spacer\", \"step 15 hud-spacer\", \"step 16 hud-spacer\", \"step 17 hud-spacer\", \"step 18 hud-spacer\", \"step 19 hud-spacer\", \"step 20 hud-spacer\", \"step 21 hud-spacer\", \"step 22 hud-spacer\", \"step 23 hud-spacer\", \"step 24 hud-spacer\", \"step 25 hud-spacer\", \"step 26 hud-spacer\", \"step 27 hud-spacer\", \"step 28 hud-spacer\", \"step 29 hud-spacer\", \"step 30 hud-spacer\", \"step 31 hud-spacer\", \"step 32 hud-spacer\", \"step 33 hud-spacer\", \"step 34 hud-spacer\", \"step 35 hud-spacer\", \"step 36 hud-spacer\", \"step 37 hud-spacer\", \"step 38 hud-spacer\", \"step 39 hud-spacer\", \"step 40 hud-spacer\", \"step 41 hud-spacer\", \"step 42 hud-spacer\", \"step 43 hud-spacer\", \"step 44 hud-spacer\", \"step 45 hud-spacer\"]",
+          "categories": [
+            "blocking",
+            "input",
+            "map",
+            "panels"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-spacer/observed.json",
+            "sha256": "a6afcb712067a5085db61164cc58f5a86392d215d2be0abeec10b63f60740e53"
+          }
+        },
+        {
+          "name": "hover-unpublished",
+          "file": "consumers/civ-lite/world/world.gd",
+          "find": "    services.set_hover(tile.x, tile.y)\n",
+          "replace": "    pass\n",
+          "sourceSha256": "118d488976ba1c8307eecba74872359a469fab6c707fb348a295fcd73dc24e15",
+          "rejected": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "The pointer over tile (12, 4) published the hover and the tile card shows it; the selection did not move",
+          "categories": [
+            "input"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-hover-unpublished/observed.json",
+            "sha256": "ecfe32530539fc301e205599f74f7e92bc74d73445ecdb3a898c281cdbbbdbc3"
+          }
+        },
+        {
+          "name": "world-behind-hud",
+          "file": "consumers/civ-lite/services/game_services.gd",
+          "find": "  for child in get_children():\n    if child is CanvasLayer:\n      move_child(world, child.get_index())\n      break\n",
+          "replace": "",
+          "sourceSha256": "81d3e55db9dfdbd5027d60319e6ec693cd5e033ce79bcdad055cf76fe9f34369",
+          "rejected": true,
+          "failedChecks": 2,
+          "firstFailedCheck": "Through the menu and back, the World returned ahead of the HUD's layer in the tree",
+          "categories": [
+            "input"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-world-behind-hud/observed.json",
+            "sha256": "41fa9a4f555af98e028d89602b5b72d9a20a3653887da283a2034b4353f3a7e7"
+          }
+        },
+        {
+          "name": "queue-out-of-order",
+          "file": "consumers/civ-lite/game/intents.gd",
+          "find": "  state.events.queue.remove_at(0)\n",
+          "replace": "  state.events.queue.pop_back()\n",
+          "sourceSha256": "4f108a288bfb62f44d82038ebdd164de20de1ebafcfaef9b212703812eeebeb0",
+          "rejected": true,
+          "failedChecks": 8,
+          "firstFailedCheck": "The dialog showed the three events in the game's order, one at a time: [\"wanderers\", \"wanderers\", \"wanderers\"]",
+          "categories": [
+            "newgame",
+            "queue",
+            "remount"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-queue-out-of-order/observed.json",
+            "sha256": "2596c0aa2c3b7689596a9379067508c919b227cfc45f496cea6d7f982f4e12ca"
+          }
+        },
+        {
+          "name": "position-in-js",
+          "file": "consumers/civ-lite/ui/hud/dialog.tsx",
+          "find": "{`${dialog.index} of ${dialog.count}`}",
+          "replace": "{`${dialog.id === \"wanderers\" ? 1 : 2} of ${dialog.count}`}",
+          "sourceSha256": "b2a00822e0ad4667f0eabba3b6dabcc1a8878c04c9941c16bf432f89bb4f8976",
+          "rejected": true,
+          "failedChecks": 1,
+          "firstFailedCheck": "The game counted the queue as 1 of 3, 2 of 3 and 3 of 3, and the HUD showed the position the game gave",
+          "categories": [
+            "queue"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-position-in-js/observed.json",
+            "sha256": "4b4bb2605dfec0e9e3999be9f8a0f3933239fc840de11790e458a05a1b59ed9b"
+          }
+        },
+        {
+          "name": "city-in-tree",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "find": "    {panels.includes(\"city\") || panels.includes(\"research\") ? <Overlay id=\"hud-city-overlay\" onRequestClose={closeSelection}>\n      <View pointerEvents=\"box-none\" style={{ position: \"absolute\", left: 616, top: 24, width: 440, gap: 8 }}>\n        {panels.includes(\"city\") ? <City snapshot={snapshot} /> : null}\n        {panels.includes(\"research\") ? <Research snapshot={snapshot} /> : null}\n      </View>\n    </Overlay> : null}\n",
+          "replace": "    {panels.includes(\"city\") || panels.includes(\"research\") ? <View testID=\"hud-city-overlay\" pointerEvents=\"box-none\" style={{ flex: 1 }}>\n      <View pointerEvents=\"box-none\" style={{ position: \"absolute\", left: 616, top: 24, width: 440, gap: 8 }}>\n        {panels.includes(\"city\") ? <City snapshot={snapshot} /> : null}\n        {panels.includes(\"research\") ? <Research snapshot={snapshot} /> : null}\n      </View>\n    </View> : null}\n",
+          "sourceSha256": "3792108472d7a90b0f41ed18b287bd19de4a863a04842a38850b10e6b3bd5779",
+          "rejected": true,
+          "failedChecks": 5,
+          "firstFailedCheck": "The Modal covers the whole map in every step of the city and dialog contexts and in no step of the others: [\"step 18 (city)\", \"step 19 (city)\", \"step 20 (city)\", \"step 21 (city)\", \"step 22 (city)\", \"step 23 (city)\", \"step 24 (city)\", \"step 25 (city)\", \"step 26 (city)\", \"step 27 (city)\", \"step 28 (city)\", \"step 35 (city)\"]",
+          "categories": [
+            "blocking",
+            "map",
+            "panels",
+            "remount"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-city-in-tree/observed.json",
+            "sha256": "faa478ab93465945a761724910a4dab9b689964f72aaa239f733835cbfc8689f"
+          }
+        },
+        {
+          "name": "dialog-unkeyed",
+          "file": "consumers/civ-lite/ui/hud/hud.tsx",
+          "find": "<Dialog key={snapshot.dialog.id} dialog={snapshot.dialog} />",
+          "replace": "<Dialog dialog={snapshot.dialog} />",
+          "sourceSha256": "8905c1c511662bd44b84d40095231966828a7073302925aa697b556adc238ac0",
+          "rejected": true,
+          "failedChecks": 1,
+          "firstFailedCheck": "Each event of the queue was a subtree of its own: the dialog's Control was a new one every time",
+          "categories": [
+            "queue"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-dialog-unkeyed/observed.json",
+            "sha256": "0784fe0860c7e0605692e0d54e52d89194f36192f81d1d14e120e6541c89ebb3"
+          }
+        },
+        {
+          "name": "disabled-ignored",
+          "file": "consumers/civ-lite/ui/hud/kit.tsx",
+          "find": "  return <Pressable testID={id} disabled={!enabled} onPress={onPress}\n",
+          "replace": "  return <Pressable testID={id} onPress={onPress}\n",
+          "sourceSha256": "a74c6bf741077c8107bade6965e2cc34a2e17e7206175556937c451cd04b0952",
+          "rejected": true,
+          "failedChecks": 18,
+          "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+          "categories": [
+            "actions",
+            "bar",
+            "content",
+            "input",
+            "panels",
+            "phase"
+          ],
+          "observed": {
+            "file": "build/civ-lite-ui-sabotage-disabled-ignored/observed.json",
+            "sha256": "eeef48f4d652f73a1493de6b32324c3610f9e0052765223b7242875fe7fe79c3"
+          }
+        }
+      ]
+    },
+    "gameSabotages": {
+      "format": "godot-fabric.civ-lite-game-sabotage/v1",
+      "receipt": {
+        "file": "build/civ-lite-game-sabotage.json",
+        "sha256": "e603de8d51ca1c8ec92ef4cfaa76b82c30c668c7b883cd786b05b8bfa0ee405a"
+      },
+      "count": 8,
+      "newInSlice2a": [
+        "events-out-of-order"
+      ],
+      "restoredEqualsGenuine": true,
+      "variants": [
+        {
+          "name": "prng",
+          "file": "consumers/civ-lite/game/prng.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": true,
+            "executionsDiffer": true,
+            "oracleRejects": true,
+            "sourceScanFinds": true
+          }
+        },
+        {
+          "name": "canon",
+          "file": "consumers/civ-lite/game/canon.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": true,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "rule",
+          "file": "consumers/civ-lite/game/rules.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": true,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "economy",
+          "file": "consumers/civ-lite/game/rules.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": true,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "ai-ignores-block",
+          "file": "consumers/civ-lite/game/turn.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": false,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "ai-city",
+          "file": "consumers/civ-lite/game/turn.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": false,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "events-out-of-order",
+          "file": "consumers/civ-lite/game/intents.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": true,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        },
+        {
+          "name": "ai-wrong-event",
+          "file": "consumers/civ-lite/game/turn.gd",
+          "rejections": {
+            "probeChecksFailed": true,
+            "goldenHashDiffers": false,
+            "executionsDiffer": false,
+            "oracleRejects": true,
+            "sourceScanFinds": false
+          }
+        }
+      ]
+    },
+    "servicesSabotages": {
+      "receipt": {
+        "file": "build/frontier-services-sabotage.json",
+        "sha256": "597c1066fe1758c0be1c671ca4b9f5b4f91ae8bf04c1aaef26aca934ebff3511"
+      },
+      "count": 11,
+      "restoredEqualsGenuine": true,
+      "controlStatus": 0,
+      "variants": [
+        {
+          "name": "schema-drift",
+          "rejected": true,
+          "failedChecks": 2
+        },
+        {
+          "name": "late-register",
+          "rejected": true,
+          "failedChecks": 2
+        },
+        {
+          "name": "silent-intent",
+          "rejected": true,
+          "failedChecks": 9
+        },
+        {
+          "name": "frozen-epoch",
+          "rejected": true,
+          "failedChecks": 4
+        },
+        {
+          "name": "emit-on-refusal",
+          "rejected": true,
+          "failedChecks": 37
+        },
+        {
+          "name": "action-args-drift",
+          "rejected": true,
+          "failedChecks": 7
+        },
+        {
+          "name": "turn-ended-order",
+          "rejected": true,
+          "failedChecks": 13
+        },
+        {
+          "name": "double-finish",
+          "rejected": true,
+          "failedChecks": 41
+        },
+        {
+          "name": "job-dies-with-screen",
+          "rejected": true,
+          "failedChecks": 355
+        },
+        {
+          "name": "sync-end-turn",
+          "rejected": true,
+          "failedChecks": 33
+        },
+        {
+          "name": "stale-snapshot",
+          "rejected": true,
+          "failedChecks": 79
+        }
+      ]
+    },
+    "consumerSabotages": {
+      "format": "godot-fabric.consumer-civ-lite-sabotage/v1",
+      "receipt": {
+        "file": "build/consumer-civ-lite-sabotage.json",
+        "sha256": "eaa352a34f9a37b4ebcf4dd1d739c6c002180179ed8db5d1b36e51bd6ee2cca2"
+      },
+      "restoredEqualsGenuine": true,
+      "controlStatus": 0,
+      "variants": [
+        {
+          "name": "hud-leak",
+          "rejected": true,
+          "failedChecks": 39
+        },
+        {
+          "name": "orphan",
+          "rejected": true,
+          "failedChecks": 19
+        },
+        {
+          "name": "epoch-reset",
+          "rejected": true,
+          "failedChecks": 21
+        },
+        {
+          "name": "no-facade",
+          "rejected": true,
+          "failedChecks": 3
+        },
+        {
+          "name": "job-dies-with-menu",
+          "rejected": true,
+          "failedChecks": 10
+        }
+      ]
+    },
+    "screenshots": {
+      "count": 12,
+      "regeneratedWithSameNames": [
+        "none",
+        "tile",
+        "settler",
+        "warrior",
+        "stack",
+        "city",
+        "dialog",
+        "ai-phase"
+      ],
+      "new": [
+        "overlay-city",
+        "overlay-dialog-1",
+        "overlay-dialog-2-remounted",
+        "overlay-dialog-3"
+      ],
+      "files": {
+        "none": {
+          "file": "docs/evidence/civ-lite-ui/none.png",
+          "sha256": "bbe6b3ee23f9d1d2946c1302477353b96ef5e3f1dc5384a4aa5573b790ee6f5f",
+          "bytes": 17389,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "bbe6b3ee23f9d1d2946c1302477353b96ef5e3f1dc5384a4aa5573b790ee6f5f",
+          "sameBytesAs096a018": true
+        },
+        "tile": {
+          "file": "docs/evidence/civ-lite-ui/tile.png",
+          "sha256": "53fb05ee6181f4032004750aa9682abebbd43395f0e49dd13c0994edc03f0785",
+          "bytes": 25807,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "53fb05ee6181f4032004750aa9682abebbd43395f0e49dd13c0994edc03f0785",
+          "sameBytesAs096a018": true
+        },
+        "settler": {
+          "file": "docs/evidence/civ-lite-ui/settler.png",
+          "sha256": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+          "bytes": 38191,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+          "sameBytesAs096a018": true
+        },
+        "warrior": {
+          "file": "docs/evidence/civ-lite-ui/warrior.png",
+          "sha256": "6ea19858f64dac55447fea811a64084e63120058fdd0758a6b0e6453d90b485d",
+          "bytes": 31757,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "6ea19858f64dac55447fea811a64084e63120058fdd0758a6b0e6453d90b485d",
+          "sameBytesAs096a018": true
+        },
+        "stack": {
+          "file": "docs/evidence/civ-lite-ui/stack.png",
+          "sha256": "7deaf5aa356596132462b37ed53a123428792ff28bc2eeda3d178541b3e8c35f",
+          "bytes": 36503,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "7deaf5aa356596132462b37ed53a123428792ff28bc2eeda3d178541b3e8c35f",
+          "sameBytesAs096a018": true
+        },
+        "city": {
+          "file": "docs/evidence/civ-lite-ui/city.png",
+          "sha256": "3244152979060971b3b8c7a88320e9e31548591dfb8184a4f3128ed9d01beaa5",
+          "bytes": 68839,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "c95729b24e64f50c370fdca2e0637781977c16f9474e1c636136772513616e17",
+          "sameBytesAs096a018": false
+        },
+        "dialog": {
+          "file": "docs/evidence/civ-lite-ui/dialog.png",
+          "sha256": "c8351a8e69a31d9532700f2526225144c5e3bc30c14b19af8bfa817d3313c072",
+          "bytes": 36150,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "23b6c5ed2372a97d27cef7555b2b343dc5c9a3ec0741aa9ca41f19c0032a7897",
+          "sameBytesAs096a018": false
+        },
+        "ai-phase": {
+          "file": "docs/evidence/civ-lite-ui/ai-phase.png",
+          "sha256": "852c2a4c30f79c7aefab28865dd190f363c116acb29878865ed9f1cea3f8e05c",
+          "bytes": 20083,
+          "matchesLaneOutput": true,
+          "sha256At096a018": "852c2a4c30f79c7aefab28865dd190f363c116acb29878865ed9f1cea3f8e05c",
+          "sameBytesAs096a018": true
+        },
+        "overlay-city": {
+          "file": "docs/evidence/civ-lite-ui/overlay-city.png",
+          "sha256": "5e6f9fde79960df6887819999cd778818f26a9f6a52f9c5dd59aaa8711f99d59",
+          "bytes": 70333,
+          "matchesLaneOutput": true
+        },
+        "overlay-dialog-1": {
+          "file": "docs/evidence/civ-lite-ui/overlay-dialog-1.png",
+          "sha256": "c8351a8e69a31d9532700f2526225144c5e3bc30c14b19af8bfa817d3313c072",
+          "bytes": 36150,
+          "matchesLaneOutput": true,
+          "sameBytesAsDialog": true
+        },
+        "overlay-dialog-2-remounted": {
+          "file": "docs/evidence/civ-lite-ui/overlay-dialog-2-remounted.png",
+          "sha256": "80bcd1aa7f6620c086a680775469033e9bff2641377588c0cecfcde0b8e27b88",
+          "bytes": 35864,
+          "matchesLaneOutput": true
+        },
+        "overlay-dialog-3": {
+          "file": "docs/evidence/civ-lite-ui/overlay-dialog-3.png",
+          "sha256": "40d7e474fad490c47235f7a83957a394ebd51ea58aca5a3adb1579c589d3a0bb",
+          "bytes": 36658,
+          "matchesLaneOutput": true
+        }
+      },
+      "readBeforeCiting": true,
+      "note": "the PNGs are the ones the headed run (node tests/civ-lite-ui-native.test.mjs --control --capture) saved. Six of the eight regenerated captures are byte-identical to the ones pinned at 096a018 (no overlay is in those contexts); city and dialog changed because they are Modals now (the map and the bar are dimmed behind them). overlay-dialog-1 is the same picture as dialog"
+    },
+    "implementationPins": {
+      "sourcePins": {
+        ".github/workflows/contracts.yml": "03a62fcac94f72e8103731a385abaf22d728853acdf1ba348491acfcd65a8098",
+        "ROADMAP.md": "77ede45332f613c04330dcb0e79cb240f187818f6f7b5a59a4b42c0ec9dc0a90",
+        "consumers/civ-lite/.gitignore": "51571c5cfce2ad2301f0f0d537a81365632f35a7aafe1c430d2eafe311bb0042",
+        "consumers/civ-lite/README.md": "4b3cfd68286adefbbd6e8ab93f7063588ad2c74aa7ef6fe175640b8085ec67ae",
+        "consumers/civ-lite/game/context.gd": "128837b7601033df43ece7ddecd565c39b814499d33cd2903451d577b504f2f0",
+        "consumers/civ-lite/game/intents.gd": "9b8a4904cfcba276f89db63288f2e4dcf94f8479324237d2be6957bbf97cc0cb",
+        "consumers/civ-lite/game/replay.gd": "d5860674f32ef31f2cf89938ae2a026bd344c270458d51c77d9dfea402d60196",
+        "consumers/civ-lite/game/rules.gd": "d6e8535e3172a68f78ad6ffba0986b321e97b8490fda471ac71726ad6b354732",
+        "consumers/civ-lite/game/snapshot.gd": "13822f595d13cf07a411a7cb8a947f4b6c04bcc84b508aa7c6399850769a6698",
+        "consumers/civ-lite/game/turn.gd": "b71d9b264d5b47c9dfc23b84ffacb351c6a6429d6fe351711114e2759e560e58",
+        "consumers/civ-lite/game/world.gd": "a670f786b5e15853583ccceab6d8eaf9d870257e00cb3789304867faa8a1674d",
+        "consumers/civ-lite/hud_probe.gd": "fa754cf67e4104ff04b6c34223176825e0f7920194d95dc4964af37b368c39b1",
+        "consumers/civ-lite/hud_validation.gd": "f40e0558855c79a29e3dfcc57c7843c674cee8a951b036813d643e69a1d97ea5",
+        "consumers/civ-lite/main.tscn": "2c55661709fd8b3b8f1762274cb0974a5592a51616ce0243e7ed65632fd70600",
+        "consumers/civ-lite/overlay_validation.gd": "4df8faab3694a84178f430722b62deb3c8cb9acfb1a430cee5b36801dba08e79",
+        "consumers/civ-lite/services/schema.gd": "3fdf0b674da1873699a7416117e2135ece8fe43ecd3bd7ceacdcb4f40e73f5ca",
+        "consumers/civ-lite/ui/frontier-types.ts": "88cd8878bfc706f2d489a1c956681f0e0629f3e0341b2f405cdfeb273285a23d",
+        "consumers/civ-lite/ui/hud/actions.tsx": "6894339ad8a8aa0ecdd15a0aed024cf1b573636b1670c2c518090889e834192d",
+        "consumers/civ-lite/ui/hud/city.tsx": "67ce9e561277231db40756171817bf38d706c7ab62c1e408e9e855806ae59c33",
+        "consumers/civ-lite/ui/hud/dialog.tsx": "1e14abc5c1428eebc4ef160e519d78d664d347165a062ca7ca979fc1fc98ba81",
+        "consumers/civ-lite/ui/hud/hud.tsx": "f41563962c6a2a0bb489078bc160457a8e5cf70a1b2424cb60107f92829dff2e",
+        "consumers/civ-lite/ui/hud/overlay.tsx": "37e420e3379fde87fcf81f02e69bbf66f732bb99b10c1085fe1131f26d5e1599",
+        "docs/research/frontier-game.md": "a255592af73cc1f1d1be2cfcf92f9e5ee72759f97833974a66f70c52f828115c",
+        "docs/research/frontier-services.md": "012429f99adeeec1f8669e302f5f627296df00327e9244b83daed19388f58baa",
+        "scripts/civ-lite-game-sabotage.mjs": "e27300ef06f44034ec290c3809d0696f7206c5a50b70f03497514c07a8b2d48d",
+        "scripts/civ-lite-ui-sabotage.mjs": "7a505506e8a8e13121e570c64e370325b0d380e3b0f15aef596fc63acfa81fb1",
+        "scripts/consumer-civ-lite-check.mjs": "66b4c086a60a4ce602554b9ce8df1379d2f28a157456b69f1cff10b355aa49b2",
+        "tests/civ-lite-game-native.test.mjs": "c34a841d57827786d7d3082da659f3ea03c0d63021fbadc07848e225c5d9cdda",
+        "tests/civ-lite-game-oracle.mjs": "54fe5343e14c877ad0ef77dd2e90433606fe628607fbbb01162d968cf4f7e041",
+        "tests/civ-lite-overlay-oracle.mjs": "3032b28a4daa8d79a1dbe277b849e92f67b199a44bbadad77c7459773e81439b",
+        "tests/civ-lite-ui-native.test.mjs": "a79ff654431992f0ae80ed4913b077150780584690dd915207594246474371cf",
+        "tests/civ-lite-ui-oracle.mjs": "194d8c65d95b238be351150d2a1893ebd893a1b9763304a92e93e6caf301934b",
+        "tests/frontier-services-native.test.mjs": "b1aaa71d7770da1f03cf6b8b998d5c0a5ff0506de9a565a9d02e58b932f48cdc",
+        "tests/frontier-services-oracle.mjs": "0d76e931846f9e95195bb4448dd9cf72b86f3ca34d1e5829d207a383d66481bb",
+        "tests/frontier-services-parity.test.mjs": "8de17e59831eeb6f35bd277e25507c13846ae08240a697aac93491b7be688815"
+      },
+      "verificationSourcePins": {
+        "consumers/civ-lite/game/game.gd": "70686c9bfce989f698e20921e735e6d722ca51a0fc8b3528e1ede9c311c31a66",
+        "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+        "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+        "consumers/civ-lite/ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+        "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+        "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+        "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+        "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+        "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+        "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+        "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+        "package.json": "90b54f37dec38141691af032427d616d4538809ebe7f117e23ae5c30811686a5",
+        ".fallowrc.json": "ca152e04cb11df0d4faaf87ab5daa90041a66dc181fe894705cd409844ee0244",
+        "tests/frontier-soak-probe.gd": "3ecad6dd27a6645e38250106e4feb74c6ee9efa12132318b49197304790643c7",
+        "tests/frontier-soak-fixture.jsx": "2466e7e89e9cab3baf70d8e295d71902077ec088d7eea91ad34346bd0d693200",
+        "tests/frontier-soak-native.test.mjs": "51d44e5baf13b055e297b124ec7fc848e722a100bb77aa49af626a773f8b63a8",
+        "scripts/frontier-soak-sabotage.mjs": "9f718986c35afdb1e260b1bdedd2239df6e38ee1cd356a032b32b5010c9b7084",
+        "tests/frontier-soak-oracle.mjs": "1559b2efdab444db8eb9830ad9db53494845384ddc6c79bf8df173953a9f9ba8"
+      },
+      "method": "every pin is the SHA-256 of git show <pinnedCommit>:<path>; the file in the tree the lanes ran from has the same SHA-256 for every source (mismatches is empty); a document may have been edited after the commit (documentsEditedAfterTheCommit), and no lane reads a document",
+      "sourcePinCount": 35,
+      "verificationSourcePinCount": 18,
+      "mismatches": [],
+      "executedFromTheCommittedTree": true,
+      "documentsEditedAfterTheCommit": [
+        "ROADMAP.md"
+      ],
+      "pinnedAgainst": "the files the slice changed (622102e to 12b6c83, and 12b6c83 to 8ba2a35), read at the pinned commit 1810828"
+    },
+    "mergeRegression": {
+      "merge": "b3d835e62b609f746d78317bea850cf45779f141",
+      "mainCommit": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+      "broughtIn": [
+        "#83: the soak of 100 turns of the Frontier game with the HUD alive (test:frontier-soak)",
+        "#84: the pre-registered protocol of V05-10",
+        "#85: the canonical generator and checker of the hosted receipts"
+      ],
+      "touchedNothingIn": [
+        "native/",
+        "consumers/civ-lite/"
+      ],
+      "soak": {
+        "lane": "npm run test:frontier-soak",
+        "whyItNeededAdjusting": "the soak plays the civ-lite game for 100 turns with a fixed player, and its oracle (tests/frontier-soak-oracle.mjs) wrote the one event as a fact of the game: one resolve_event, once, in the routine, and state.event.resolved",
+        "firstRunOnTheMerge": {
+          "exit": 1,
+          "seconds": 202,
+          "failure": "turn 5: resolve_event(buy_grain) is a step of the routine, once and in its order",
+          "cause": "the game now raises three events together when turn 5 begins, and the player (the fixture answers the head of the queue with its first choice while the dialog is open) makes three resolve_event calls; the oracle also read the removed state.event"
+        },
+        "change": {
+          "file": "tests/frontier-soak-oracle.mjs",
+          "sha256": "1559b2efdab444db8eb9830ad9db53494845384ddc6c79bf8df173953a9f9ba8",
+          "committedSha256": "1559b2efdab444db8eb9830ad9db53494845384ddc6c79bf8df173953a9f9ba8",
+          "committedIn": "181082868e8374cd83d0cd51d795e6900953fc4f",
+          "whatItDoes": "turn 5 must open with exactly three resolve_event calls, in the dialog context, answering wanderers with welcome, traders with buy_grain and scholar with host (the table of the queue is written again in the oracle, not read from the game); no other turn has one; the state after turn 4 holds the three ids in the queue, and from turn 5 on the game records the three answers in that order with the queue empty",
+          "relaxed": "nothing: the checks that stay (every call accepted, once and in its order for the rest of the routine, the job ids, the hashes recomputed from the serialization and identical in three executions) are untouched, and two exact checks replace the weaker ones",
+          "notChanged": [
+            "the probe",
+            "the fixture",
+            "the cases",
+            "the sabotage script"
+          ]
+        },
+        "afterTheChange": {
+          "exit": 0,
+          "seconds": 207,
+          "executions": 3,
+          "turns": 100,
+          "finalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+          "trailHash": "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b",
+          "previousFinalHash": "a35c55f2def40a3bc6e78ac762ff47aaf27459a4fd0fdc7095dc5107c88de598",
+          "previousTrailHash": "fe9d4f367b796b2743118aa37755c92541e88d5a7155ed0ac0d24eefd0b16e0f",
+          "hashesMoved": "the final and trail hashes moved because the game state moved (three events); the oracle recomputes each turn hash from the serialization and compares the three executions",
+          "report": {
+            "file": "build/frontier-soak-report.json",
+            "sha256": "f490efb60c48fc3d0bd3c079302e137c198863446376c9f0349283dd76d438c4"
+          }
+        },
+        "soakSabotages": {
+          "format": "godot-fabric.frontier-soak-sabotage/v1",
+          "ranAfterTheBatch": true,
+          "seconds": 614,
+          "genuineRunStatus": 0,
+          "restoredEqualsGenuine": true,
+          "variants": [
+            {
+              "name": "listener-leak",
+              "file": "tests/frontier-soak-fixture.jsx",
+              "rejected": true,
+              "oracleRejection": "The live heap at rest rose 337480 bytes from the median of the first half (49 rounds) of the steady rounds to the median of the last, over the limit of 2048",
+              "probeFailures": [
+                "heap/The live heap at rest, by the median of the last half of the steady turns, is within 2048 bytes of the first half's",
+                "services/The registry holds the same number of subscriptions at every reading (a connection that is never removed would grow it)"
+              ]
+            },
+            {
+              "name": "nondeterministic-player",
+              "file": "tests/frontier-soak-fixture.jsx",
+              "rejected": true,
+              "oracleRejection": "Execution 2: the final hash is the first's",
+              "probeFailures": []
+            },
+            {
+              "name": "pause-kills-ui",
+              "file": "tests/frontier-soak-probe.gd",
+              "rejected": true,
+              "oracleRejection": "The HUD answered while the game was paused: each click reached its handler once",
+              "probeFailures": [
+                "scene/The HUD's layer keeps processing while the tree is paused (PROCESS_MODE_ALWAYS)",
+                "pause/The HUD answers while the game is paused: a click reaches the handler, React changes its state and the native node appears and goes"
+              ]
+            },
+            {
+              "name": "leaky-hide",
+              "file": "tests/frontier-soak-fixture.jsx",
+              "rejected": true,
+              "oracleRejection": "base: the HUD holds the native views its state gives (context none, 1 actions, panel closed)",
+              "probeFailures": [
+                "panel/Opening the panel creates and deletes no native node",
+                "panel/Closing the panel keeps its nodes (it is invisible, not gone)"
+              ]
+            }
+          ]
+        }
+      },
+      "otherRegressionLanes": {
+        "test:civ-lite-game": "passed",
+        "test:frontier-services": "passed",
+        "test:consumer:civ-lite": "passed",
+        "test:civ-lite-ui": "passed (the lane of this record)"
+      }
+    },
+    "checkNames": {
+      "fixedIn": "8ba2a35",
+      "problem": "four check names carried a count that depends on the pace of the machine: \"(N frames observed)\" in the overlay probe, and \"(N published)\", \"(N frames observed)\" and \"(N cards)\" in the HUD probe; the digest of the names is what a hosted run is compared by",
+      "fix": "the names are fixed and the counts stay in the report data (phase.published, phase.free.samples, hoverPublished, remount.remounted.samples)",
+      "enforcedBy": "tests/civ-lite-ui-native.test.mjs: assertNamesDoNotDependOnPace (no name of a probe carries a count of frames, snapshots, cards, samples or time) and assertSameNamesAsHeadless (the names a headed run shares with the headless one are the same, in order)",
+      "digests": {
+        "hud": {
+          "checks": 144,
+          "checkNameDigest": "7cf45f6d0192dcd87196f7cdb2889e6a801bd35ab817afeb3e8f066b39ef2b50"
+        },
+        "hudHeaded": {
+          "checks": 152,
+          "checkNameDigest": "773c68d511013c7a9fd4606a62198fc7bd69d9e250722725cbed9156d2ef48f9"
+        },
+        "overlays": {
+          "checks": 26,
+          "checkNameDigest": "d6fb0a4bc304485502461fb8e372b53c55a9efa940756f478f06c4059dd7267b"
+        },
+        "overlaysHeaded": {
+          "checks": 30,
+          "checkNameDigest": "175a27cac0fbe6638cb0194563e19de7e8e949d7c1f564f759fa880e125e19bc"
+        },
+        "hudControl": {
+          "checks": 144,
+          "checkNameDigest": "f3733552153dca2f3b1a76313769b1d9a69ada20562206b1fc719ed5b0c32bb9"
+        },
+        "overlaysControl": {
+          "checks": 26,
+          "checkNameDigest": "d1b75b411808b6319e7d004e1065d6f09fb4b4cde2661b2e9931ab039b5ccfcd"
+        }
+      },
+      "pacedNamesInTheFinalReports": [],
+      "identicalAcrossRuns": "three runs of the lane on 8ba2a35 (two with --control, one with --control --capture) gave the same digest for the six reports (the HUD and overlay reports, headless and headed, and the two controls), and the final run, on the tree of 1810828 (b3d835e plus the oracle of the soak), gave the same six digests again",
+      "controls": {
+        "hud": {
+          "checks": 144,
+          "namesEqualTheGenuineRuns": 96,
+          "theOthersEmbedTheValueObserved": true
+        },
+        "overlays": {
+          "checks": 26,
+          "namesEqualTheGenuineRuns": 25,
+          "theOthersEmbedTheValueObserved": true
+        },
+        "note": "the names that differ in a control are the ones that embed the value observed (the panels a step showed, the list of heads); they differ only when the check fails, which is the diagnosis and not the pace"
+      }
+    },
+    "gates": {
+      "ranAt": "2026-10-09T14:00:48Z",
+      "meaning": "Gates that read documents and sources, on the tree that holds this record: the commit 1810828 (the merge b3d835e plus the oracle of the soak), the two new rows of scripts/hosted-receipts-slices.mjs and their subject fix in scripts/hosted-receipts.mjs, tests/hosted-receipts.test.mjs, the receipts of PR #74 and PR #82 (docs/evidence/frontier-scope and docs/evidence/civ-lite-ui), the documents of this record, and dashboard/migration.json (the URLs that point at the receipts carry the placeholder PIN82 until the commit that adds them exists).",
+      "steps": {
+        "check-publication": "passed",
+        "check-static": "passed",
+        "type-check": "passed",
+        "test-dashboard": "passed",
+        "test-contracts": "passed"
+      },
+      "seconds": {
+        "check-publication": 1,
+        "check-static": 0,
+        "type-check": 0,
+        "test-dashboard": 16,
+        "test-contracts": 99
+      },
+      "counts": {
+        "contractsNodeTests": [
+          7,
+          43,
+          373
+        ],
+        "contractsPythonTests": 13,
+        "dashboardTests": 43,
+        "staticAnalysis": "fallow: no issues",
+        "publicationScan": "1870 files, no failures",
+        "hostedReceiptsCheck": "HOSTED_RECEIPTS_CHECK_PASSED: 10 slices, 20 receipts",
+        "hostedReceiptsTests": "7 of 7 (tests/hosted-receipts.test.mjs, also in test:contracts)"
+      },
+      "note": "the gates ran on this tree before the pin was changed from b3d835e to 1810828; the change touched only documents and this record"
+    }
+  },
+  "hostedCI": {
+    "status": "verified",
+    "run": 37891490943,
+    "attempts": 1,
+    "headSha": "622102e210a8136af6add7d8007a435b41f3c242",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/82",
+    "receipt": "hosted-ci.json",
+    "pages": 37891490845,
+    "publication": "publication.json",
+    "generatedBy": "scripts/hosted-receipts.mjs (the receipts are checked offline by its --check, in tests/hosted-receipts.test.mjs)",
+    "nativeSteps": {
+      "test:civ-lite-ui": {
+        "step": 130,
+        "conclusion": "success",
+        "markers": [
+          "# CIVLITE_UI_LANE_PASSED: 143 probe checks; 23 oracle mutations; control not run"
+        ]
+      },
+      "test:consumer:civ-lite": {
+        "step": 129,
+        "conclusion": "success",
+        "markers": [
+          "CONSUMER_CHECK_PASSED: civ-lite: 20 build/ownership checks; 165 native checks; 10 cycles"
+        ]
+      }
+    },
+    "nodeContractTests": [
+      7,
+      43,
+      352
+    ],
+    "artifacts": {
+      "civ-lite-ui": {
+        "id": 11601295686,
+        "zipSha256": "050ae9fc501ed22f10fe70351ae1889120502aa18e616aac95910bf89727f988",
+        "zipSizeBytes": 24448
+      },
+      "independent-civ-lite-consumer": {
+        "id": 11601525058,
+        "zipSha256": "106fddca238f4fab35af76a7629525858178c6a010d10eaeae61437f91bc78d3",
+        "zipSizeBytes": 270220
+      }
+    },
+    "pagesArtifactAvailable": true,
+    "pagesDeployedJsonCompared": true,
+    "hostedReportEqualsTheLocalReport": {
+      "file": "civ-lite-ui/headless.json",
+      "sha256": "529c6e21db2386973575847897d94cd2f921cfeef0d7578b02ae1af50b10c644",
+      "equalsReportsHeadlessSha256": true
+    },
+    "nodeContractTestsNote": "the report records 334 in the last run of 38d3182; PR #77 added two test files (8 + 10 tests) to test:contracts before the squash, 334 + 18 = 352",
+    "notRunHosted": [
+      "the eight captures and the headed run",
+      "the causal control on the HUD of 5e1f6a1 (a shallow checkout does not have the commit; the lane says so)",
+      "the eight retained sabotages of the HUD and the five of the consumer"
+    ]
   }
 }

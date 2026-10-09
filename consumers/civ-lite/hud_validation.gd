@@ -1,14 +1,15 @@
-extends Node
+extends "res://hud_probe.gd"
 
 # The HUD lane's probe, run with `-- --validate-hud` (tests/civ-lite-ui-native.test.mjs does): it drives the real game scene and
 # writes what the HUD showed as raw observations, which tests/civ-lite-ui-oracle.mjs judges again on its own. It decides nothing
 # the HUD should decide: the context, the actions and the phase it compares with come from the services, and what it compares them
 # with is the HUD's tree as the native host reports it (testID, text, position, whether a Control stops the pointer, whether a
-# Pressable is disabled).
+# Pressable is disabled). The helpers it shares with the overlay probe are in hud_probe.gd.
 #
 #   matrix   the replay's steps 0 to 45 played through the services on a fresh game, the HUD observed after each (the seven covering
-#            steps are the contexts): the panels it shows, the actions it lists and the bar. The state it waits for is what the game
-#            published; a wait that reaches its limit is a failed check, and what was seen is recorded either way.
+#            steps are the contexts): the panels it shows, the actions it lists and the bar, and whether an overlay blocks the map
+#            exactly in the two contexts that have one. The state it waits for is what the game published; a wait that reaches its
+#            limit is a failed check, and what was seen is recorded either way.
 #   phase    End turn pressed on the HUD: every frame of the job observed (the spinner, the button and the phase text must agree),
 #            then a second job held at its first phase, where the spinner, the disabled End turn and its reason are looked at and a
 #            press on the disabled End turn changes nothing.
@@ -17,277 +18,26 @@ extends Node
 #            disabled one is not, and all of it again after a trip through the menu (the World comes back ahead of the HUD).
 #
 #   --capture    saves one PNG per context and one during the AI phase (a headed run)
-#   --sabotage   a retained sabotage or the control runs this scene: a failed check is the rejection, not an error
 
-const Replay := preload("game/replay.gd")
-
-const REPORT := "res://civ-lite-ui-report.json"
-const SIZE := Vector2i(1080, 600)
-const DEVICE := 1001
-# The limit of a wait for state, in frames. A wait that reaches it is a failed check, not a pause.
-const WAIT_FRAMES := 90
 const LAST_STEP := 45
-const MAP_ORIGIN := Vector2(24, 24)
-const MAP_TILE := 24
-const PANELS := ["hud-bar", "hud-actions", "hud-tile", "hud-city", "hud-research", "hud-dialog"]
-const TABLE := {
-  "none": ["hud-bar"],
-  "tile": ["hud-bar", "hud-tile"],
-  "settler": ["hud-bar", "hud-actions", "hud-tile"],
-  "warrior": ["hud-bar", "hud-actions", "hud-tile"],
-  "stack": ["hud-bar", "hud-actions", "hud-tile"],
-  "city": ["hud-bar", "hud-city", "hud-research"],
-  "dialog": ["hud-bar", "hud-dialog"],
-}
 # The steps of the roteiro that cover each context (docs/research/frontier-game.md).
 const COVERING := {"stack": 2, "settler": 3, "warrior": 9, "city": 18, "tile": 32, "none": 33, "dialog": 45}
 const AI_PHASES := ["ai_plan", "ai_move"]
 
-var checks: Array = []
-var report: Dictionary = {}
-var sabotage := false
-var capture := false
-var services: Node
-var application: Node
-var hud: Control
 var recording := false
 var samples: Array = []
 
 
-func check(condition: bool, message: String) -> bool:
-  checks.append({"name": message, "passed": condition})
-  if not condition and not sabotage:
-    push_error("CONSUMER_CHECK_FAILED: " + message)
-  return condition
+func flag() -> String:
+  return "--validate-hud"
 
 
-# --- Reading the HUD ------------------------------------------------------------------------------------------------
-
-# Every Control the host mounted for the HUD that has a testID, with its text, its place on screen, whether it stops the pointer and
-# whether it is disabled; and, apart, every Control that stops the pointer, testID or not.
-func observe() -> Dictionary:
-  var tree: Dictionary = JSON.parse_string(hud.call("snapshot"))
-  var nodes: Array = []
-  var stoppers: Array = []
-  for entry: Dictionary in tree.nodes:
-    var control := instance_from_id(int(entry.id)) as Control
-    if control == null:
-      continue
-    var rect := control.get_global_rect()
-    var stops := control.mouse_filter == Control.MOUSE_FILTER_STOP
-    var access: Dictionary = entry.get("accessibility", {})
-    var descriptor: Dictionary = access.get("descriptor", {})
-    var activity: Dictionary = entry.get("activity", {})
-    if stops:
-      stoppers.append({"testID": entry.testID, "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y]})
-    if entry.testID != "":
-      nodes.append({"testID": entry.testID, "kind": entry.kind, "visible": control.is_visible_in_tree(), "text": entry.get("nativeText", ""),
-        "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "stops": stops, "disabled": bool(descriptor.get("disabled", false)),
-        "animating": bool(activity.get("animating", false))})
-  return {"nodes": nodes, "stoppers": stoppers}
+func report_path() -> String:
+  return "res://civ-lite-ui-report.json"
 
 
-func find_node(seen: Dictionary, id: String) -> Dictionary:
-  for entry: Dictionary in seen.nodes:
-    if entry.testID == id:
-      return entry
-  return {}
-
-
-func text_of(seen: Dictionary, id: String) -> String:
-  return find_node(seen, id).get("text", "")
-
-
-func shown(seen: Dictionary, id: String) -> bool:
-  var entry := find_node(seen, id)
-  return not entry.is_empty() and entry.visible
-
-
-func panels_shown(seen: Dictionary) -> Array:
-  return PANELS.filter(func(id: String) -> bool: return shown(seen, id))
-
-
-# The Pressables of the actions panel, in the order they are drawn: the testID holds the action's id and arguments.
-func rendered_actions(seen: Dictionary) -> Array:
-  var rows: Array = []
-  for entry: Dictionary in seen.nodes:
-    var id: String = entry.testID
-    if not id.begins_with("hud-actions-") or id.ends_with("-label") or id.ends_with("-reason") or id == "hud-actions-title":
-      continue
-    rows.append({"key": id.trim_prefix("hud-actions-"), "label": text_of(seen, id + "-label"), "enabled": not entry.disabled,
-      "reason": text_of(seen, id + "-reason"), "x": entry.rect[0], "y": entry.rect[1]})
-  rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
-  return rows.map(func(row: Dictionary) -> Dictionary: return {"key": row.key, "label": row.label, "enabled": row.enabled, "reason": row.reason})
-
-
-# What the game says the actions panel lists: the snapshot's actions but End turn, which lives on the bar.
-func expected_actions(snapshot: Dictionary) -> Array:
-  var rows: Array = []
-  for action: Dictionary in snapshot.actions:
-    if action.id == "end_turn":
-      continue
-    var key: String = action.id
-    for argument in action.args:
-      key += "-" + str(int(argument))
-    rows.append({"key": key, "label": action.label, "enabled": int(action.enabled) == 1, "reason": "" if int(action.enabled) == 1 else action.reason_text})
-  return rows
-
-
-# The HUD shows the state of the snapshot: its panels, its actions, its turn and phase.
-func shows(snapshot: Dictionary) -> bool:
-  var seen := observe()
-  var expected: Array = TABLE.get(snapshot.context, [])
-  return (panels_shown(seen) == expected and text_of(seen, "hud-bar-turn") == "Turn %d · epoch %d" % [int(snapshot.turn), int(snapshot.epoch)]
-    and text_of(seen, "hud-bar-phase") == snapshot.phase and (not expected.has("hud-actions") or rendered_actions(seen) == expected_actions(snapshot)))
-
-
-# End turn is the game's `end_turn` action: disabled exactly when the game says it is, with the game's reason beside it; the spinner is there
-# exactly while the phase is not idle.
-func bar_matches(seen: Dictionary, snapshot: Dictionary) -> bool:
-  var end_turn: Dictionary = snapshot.actions.filter(func(action: Dictionary) -> bool: return action.id == "end_turn")[0]
-  var enabled := int(end_turn.enabled) == 1
-  var button := find_node(seen, "hud-bar-end-turn")
-  return (not button.is_empty() and button.visible and button.disabled == (not enabled)
-    and text_of(seen, "hud-bar-end-turn-reason") == ("" if enabled else end_turn.reason_text)
-    and shown(seen, "hud-turn-spinner") == (snapshot.phase != "idle"))
-
-
-func game_snapshot() -> Dictionary:
-  return services.game.snapshot()
-
-
-func world() -> Node:
-  return services.get_node_or_null("World")
-
-
-# --- Waiting: for state, with a frame count only as the limit --------------------------------------------------------
-
-func frames(count: int) -> void:
-  for index in range(count):
-    await get_tree().process_frame
-
-
-func wait_until(condition: Callable, limit: int = WAIT_FRAMES) -> bool:
-  for index in range(limit):
-    if condition.call():
-      return true
-    await get_tree().process_frame
-  return condition.call()
-
-
-# The HUD has caught up with the game: it shows the snapshot the services hold now, and keeps showing it.
-func settle() -> bool:
-  var reached := await wait_until(func() -> bool: return shows(game_snapshot()))
-  await frames(3)
-  return reached and shows(game_snapshot())
-
-
-func hud_stats() -> Dictionary:
-  var text: String = application.call("evaluate", "JSON.stringify(FrontierHud.stats())")
-  var value: Variant = JSON.parse_string(text)
-  return value if value is Dictionary else {}
-
-
-# --- The pointer ----------------------------------------------------------------------------------------------------
-
-func move_to(point: Vector2) -> void:
-  var motion := InputEventMouseMotion.new()
-  motion.device = DEVICE
-  motion.position = point
-  motion.global_position = point
-  get_viewport().push_input(motion, true)
-  await frames(2)
-
-
-# One tick of the wheel: the mouse button event Godot makes of it, pressed and released.
-func wheel_at(point: Vector2) -> void:
-  await move_to(point)
-  for down in [true, false]:
-    var event := InputEventMouseButton.new()
-    event.device = DEVICE
-    event.position = point
-    event.global_position = point
-    event.button_index = MOUSE_BUTTON_WHEEL_UP
-    event.pressed = down
-    event.factor = 1.0
-    get_viewport().push_input(event, true)
-    await frames(2)
-
-
-func click_at(point: Vector2) -> void:
-  await move_to(point)
-  for down in [true, false]:
-    var event := InputEventMouseButton.new()
-    event.device = DEVICE
-    event.position = point
-    event.global_position = point
-    event.button_index = MOUSE_BUTTON_LEFT
-    event.pressed = down
-    get_viewport().push_input(event, true)
-    await frames(2)
-
-
-func centre_of(id: String) -> Vector2:
-  var control: Control = hud.find_child(id, true, false)
-  return control.get_global_rect().get_center() if control != null else Vector2(-1, -1)
-
-
-# A point inside a panel's border and padding, where it has no child: a click there is a click on the panel itself.
-func corner_of(id: String) -> Vector2:
-  var control: Control = hud.find_child(id, true, false)
-  return control.get_global_rect().position + Vector2(4, 4) if control != null else Vector2(-1, -1)
-
-
-func rect_of(id: String) -> Array:
-  var control: Control = hud.find_child(id, true, false)
-  if control == null:
-    return [0, 0, 0, 0]
-  var rect := control.get_global_rect()
-  return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
-
-
-func heard_now() -> Dictionary:
-  var node := world()
-  return node.heard.duplicate() if node != null else {}
-
-
-func press(id: String) -> bool:
-  var control: Control = hud.find_child(id, true, false)
-  if control == null:
-    return false
-  await click_at(control.get_global_rect().get_center())
-  return true
-
-
-func tile_centre(x: int, y: int) -> Vector2:
-  return MAP_ORIGIN + Vector2(x, y) * MAP_TILE + Vector2(MAP_TILE, MAP_TILE) * 0.5
-
-
-func capture_to(file: String) -> bool:
-  await RenderingServer.frame_post_draw
-  var image := get_viewport().get_texture().get_image()
-  return image.save_png("res://" + file) == OK
-
-
-# --- The run --------------------------------------------------------------------------------------------------------
-
-func _ready() -> void:
-  var user_args := OS.get_cmdline_user_args()
-  if not user_args.has("--validate-hud"):
-    return
-  sabotage = user_args.has("--sabotage")
-  capture = user_args.has("--capture")
-  services = get_parent()
-  application = services.get_node_or_null("Application/Runtime")
-  hud = services.get_node_or_null("HUDLayer/HUD")
-  if application == null or hud == null:
-    push_error("CONSUMER_CHECK_FAILED: the scene has no running application or HUD")
-    get_tree().quit(0 if sabotage else 1)
-    return
-  hud.set_meta("validation_input_device", DEVICE)
-  # A headless run has a 64x64 window; the HUD is laid out for the game's 1080x600.
-  get_tree().root.size = SIZE
-  run()
+func marker() -> String:
+  return "CIVLITE_UI"
 
 
 func _process(_delta: float) -> void:
@@ -295,36 +45,10 @@ func _process(_delta: float) -> void:
     samples.append(sample())
 
 
-func run() -> void:
-  # Whatever HUD is mounted shows something with a testID once it has the first snapshot; what it shows is judged below.
-  var connected := await wait_until(func() -> bool: return not observe().nodes.is_empty())
-  check(connected, "The HUD mounted for the game's first snapshot")
-  report = {"schemaVersion": 1, "displayServer": DisplayServer.get_name(), "capture": capture, "sabotage": sabotage, "viewport": [SIZE.x, SIZE.y],
-    "map": {"origin": [MAP_ORIGIN.x, MAP_ORIGIN.y], "tile": MAP_TILE, "columns": 24, "rows": 16}}
-  if connected:
-    await run_matrix()
-    await run_phase()
-    await run_input()
-  finish()
-
-
-func finish() -> void:
-  report["checks"] = checks
-  var output := FileAccess.open(REPORT, FileAccess.WRITE)
-  if output == null:
-    push_error("CONSUMER_CHECK_FAILED: cannot write " + REPORT)
-    get_tree().quit(1)
-    return
-  output.store_string(JSON.stringify(report, "  ") + "\n")
-  output.close()
-  var failures := checks.filter(func(entry: Dictionary) -> bool: return not entry.passed)
-  if failures.is_empty():
-    print("CIVLITE_UI_PASSED")
-  elif sabotage:
-    print("CIVLITE_UI_REJECTED: %d" % failures.size())
-  else:
-    print("CIVLITE_UI_FAILED")
-  get_tree().quit(0 if failures.is_empty() or sabotage else 1)
+func run_probe() -> void:
+  await run_matrix()
+  await run_phase()
+  await run_input()
 
 
 # --- Matrix: the seven contexts ------------------------------------------------------------------------------------
@@ -363,13 +87,24 @@ func run_matrix() -> void:
     if expected.has("hud-actions"):
       check(rendered_actions(row.observed) == expected_actions(row.snapshot),
         "Step %d (%s): the actions panel lists the snapshot's actions but End turn, in order, with their enabled flags and reasons" % [row.index, row.intent])
-  # The map is the World's: nothing of the HUD that stops the pointer covers a tile.
+  # The map is the World's, except under an overlay. Nothing of the HUD that is in the tree and stops the pointer covers a tile, in any
+  # context; and the Modal's Window, which holds the city screen and the dialog, covers the whole map exactly in the two contexts that
+  # have an overlay: that is what blocks the pointer there.
   var map_rect := Rect2(MAP_ORIGIN, Vector2(24, 16) * MAP_TILE)
   var covering_map: Array = []
-  for stopper: Dictionary in rows[LAST_STEP].observed.stoppers:
-    if Rect2(stopper.rect[0], stopper.rect[1], stopper.rect[2], stopper.rect[3]).intersects(map_rect):
-      covering_map.append(stopper.testID)
-  check(covering_map.is_empty(), "No Control of the HUD that stops the pointer covers the map: %s" % [covering_map])
+  var wrong_blocking: Array = []
+  for row: Dictionary in rows:
+    var blocks := false
+    for stopper: Dictionary in row.observed.stoppers:
+      var rect := Rect2(stopper.rect[0], stopper.rect[1], stopper.rect[2], stopper.rect[3])
+      if stopper.modal:
+        blocks = blocks or rect.encloses(map_rect)
+      elif rect.intersects(map_rect):
+        covering_map.append("step %d %s" % [row.index, stopper.testID])
+    if blocks != (row.snapshot.context in ["city", "dialog"]):
+      wrong_blocking.append("step %d (%s)" % [row.index, row.snapshot.context])
+  check(covering_map.is_empty(), "No Control of the HUD in the tree that stops the pointer covers the map: %s" % [covering_map])
+  check(wrong_blocking.is_empty(), "The Modal covers the whole map in every step of the city and dialog contexts and in no step of the others: %s" % [wrong_blocking])
 
 
 # --- Phase: the turn the game processes ------------------------------------------------------------------------------
@@ -440,10 +175,10 @@ func run_phase() -> void:
   report["phase"] = {"published": published, "free": free_job, "held": held}
   check(published.any(func(entry: Dictionary) -> bool: return AI_PHASES.has(entry.phase)), "The job published a snapshot at an AI phase")
   check(published.all(func(entry: Dictionary) -> bool: return entry.phase == "idle" or (int(entry.endTurnEnabled) == 0 and entry.endTurnReason == "turn_in_progress")),
-    "Every snapshot published while the turn is processed has End turn disabled with turn_in_progress (%d published)" % published.size())
+    "Every snapshot published while the turn is processed has End turn disabled with turn_in_progress")
   check(free_job.pressed and free_job.finished and free_job.settled and free_job.turnAfter == turn_before + 1, "End turn pressed on the HUD ran a job to rest and the turn advanced")
   check(free_samples.all(func(entry: Dictionary) -> bool: return entry.spinner == (entry.phase != "idle") and entry.endTurnDisabled == (entry.phase != "idle")),
-    "In every frame of the job the spinner is shown and End turn is disabled exactly while the phase is not idle (%d frames observed)" % free_samples.size())
+    "In every frame of the job the spinner is shown and End turn is disabled exactly while the phase is not idle")
   check(not idle_before.spinner and not idle_before.endTurnDisabled, "At rest before the job the spinner is not shown and End turn is enabled")
   check(held.sample.spinner and held.sample.animating and held.sample.endTurnDisabled and AI_PHASES.has(phase_held) and held.sample.phase == phase_held,
     "Held at %s: the bar shows that phase, the spinner is spinning and End turn is disabled" % phase_held)
@@ -558,7 +293,7 @@ func run_input() -> void:
   report["hoverPublished"] = hover_log
   judge_input(steps)
   check(hover_log.size() > 1 and range(1, hover_log.size()).all(func(index: int) -> bool: return hover_log[index] != hover_log[index - 1]),
-    "The node published the hover as a change each time and never the same card twice running (%d cards)" % hover_log.size())
+    "The node published the hover as a change each time and never the same card twice running")
 
 
 # A left click and then a tick of the wheel on a panel's own area: what the World heard and what was selected, before and after each. The

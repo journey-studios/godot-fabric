@@ -10,10 +10,10 @@
   },
   "updatedAt": "2026-10-09T14:56:39.000Z",
   "source": {
-    "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
-    "scope": "P8 V05-05 do marco 0.5, critérios matriz e mapa: a HUD do Frontier guiada pelo contexto do Godot (seis painéis por contexto, barra com spinner na fase da IA, ações com motivo, cartão do tile e o estado frontier.hover), com evidência local em 096a018 (probe e oráculo independente, controle sobre 5e1f6a1, oito sabotagens e oito capturas). CI hospedada e Pages deste PR pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/82"
+    "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
+    "scope": "P8 V05-05 do marco 0.5, critério overlays: a fila de três eventos real no jogo (decisão do usuário de 2026-10-09) e a tela da cidade e o diálogo como Modals bloqueantes na HUD do Frontier, com evidência local em 67c3f16 (probes e oráculos independentes, dois controles, doze sabotagens e doze capturas), mais os recibos hospedados canônicos do #74 e do #82. CI hospedada e Pages desta fatia pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/93"
   },
   "phases": [
     {
@@ -3405,7 +3405,7 @@
         }
       ],
       "scope": [
-        "Jogo de referência Frontier, com regras, nomes e arte originais (só o padrão de interação do Civilization 2 é emprestado): mapa 24x16 de semente fixa, 2 unidades (Settler e Warrior), 1 cidade com 3 a 5 itens de produção, pesquisa em lista, 1 evento ou diálogo e IA roteirizada mínima.",
+        "Jogo de referência Frontier, com regras, nomes e arte originais (só o padrão de interação do Civilization 2 é emprestado): mapa 24x16 de semente fixa, 2 unidades (Settler e Warrior), 1 cidade com 3 a 5 itens de produção, pesquisa em lista, uma fila de 3 eventos bloqueantes, cada um um diálogo respondido em ordem (decisão do usuário de 2026-10-09: a fila é real no jogo) e IA roteirizada mínima.",
         "6 painéis de HUD contextuais em React Native: barra de turno e recursos, ações da unidade, cartão de tile, tela da cidade, pesquisa e diálogo de evento, em 7 contextos (nenhum, tile, Settler, Warrior, pilha de 2 unidades, cidade, diálogo).",
         "Replay determinístico de 12 turnos com hash dourado e soak de 100 turnos, no editor, no .app macOS e, se houver GO, no iPhone.",
         "Alvos: .app macOS arm64 exportado e um iPhone arm64 físico, paisagem, Release assinado. Primeiro o macOS completo; o mobile vem depois."
@@ -3623,7 +3623,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64, headless): o manifesto decide os 12 nomes e cada uma das 880 props que o RN declara para os 7 componentes (433 suportadas, 325 ignoradas com motivo, 122 recusadas); CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64, headless): o manifesto decide os 12 nomes e cada uma das 880 props que o RN declara para os 7 componentes (433 suportadas, 325 ignoradas com motivo, 122 recusadas); CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
                 },
                 {
@@ -3645,6 +3645,10 @@
                 {
                   "label": "Gerador do manifesto: `node scripts/scope-manifest.mjs --write` e `--check`",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/scripts/scope-manifest.mjs"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/frontier-scope/hosted-ci.json"
                 }
               ]
             },
@@ -3654,7 +3658,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64, headless): tipos de View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions e StyleSheet em types/react-native.ts, com 433 positivos e 121 negativos no guarda de tipos; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64, headless): tipos de View, Pressable, ScrollView, Modal, Platform, Dimensions, useWindowDimensions e StyleSheet em types/react-native.ts, com 433 positivos e 121 negativos no guarda de tipos; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
                 },
                 {
@@ -3684,6 +3688,10 @@
                 {
                   "label": "Teste \"os tipos e as tabelas concordam\": uma prop suportada compila e uma recusada não",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/tests/scope-0.5.test.mjs"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/frontier-scope/hosted-ci.json"
                 }
               ]
             },
@@ -3693,7 +3701,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64, headless): cada prop recusada falha, e cada ignorada deixa o host como a linha de base, no mount e no update; 181 checks nativos, o SDK anterior falha 22 de 177 e 6 sabotagens são rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64, headless): cada prop recusada falha, e cada ignorada deixa o host como a linha de base, no mount e no update; 181 checks nativos, o SDK anterior falha 22 de 177 e 6 sabotagens são rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/docs/evidence/frontier-scope/README.md"
                 },
                 {
@@ -3723,6 +3731,10 @@
                 {
                   "label": "As seis sabotagens retidas, cada uma rejeitada",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/scripts/scope-sabotage.mjs"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/frontier-scope/hosted-ci.json"
                 }
               ]
             }
@@ -3755,7 +3767,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
                 },
                 {
@@ -3817,6 +3829,10 @@
                 {
                   "label": "Pesquisa: a tabela, o store, o hover, o input do mapa e a ordem do World, com arquivo e linha",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/hosted-ci.json"
                 }
               ]
             },
@@ -3826,7 +3842,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): a HUD guiada pelo contexto do Godot, com a probe de 143 checks e o oráculo independente sem achados, o controle sobre 5e1f6a1 e 8 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
                 },
                 {
@@ -3880,14 +3896,79 @@
                 {
                   "label": "Pesquisa: a barra, o serviço de hover e o caminho do input do mapa",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/research/frontier-hud.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/hosted-ci.json"
                 }
               ]
             },
             {
               "id": "overlays",
               "label": "Tela da cidade com lista de produção, pesquisa em lista e diálogo de evento como overlays bloqueantes (Modal do GF-18, já na main só para desktop; se não servir no iPhone, overlay na árvore); fila de 3 eventos em ordem, inclusive com remontagem",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): a fila de 3 eventos é do jogo (replay de 77 passos, hashes dourado cb7ab974… e de trilha ed43495… recalculados pelo oráculo independente) e a tela da cidade e o diálogo são Modals bloqueantes: com um aberto, 0 de 100 cliques esquerdos, 0 de 100 direitos e 0 de 100 giros da roda no mapa chegam ao mundo, e 100 de 100 depois de fechado; a remontagem com o 2º evento na cabeça mostra \"2 of 3\" no primeiro quadro e uma sessão nova não tem fila; probes de 144 e 26 checks, dois oráculos independentes, dois controles causais e 12 sabotagens da HUD (4 novas) rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das fontes da fatia no commit pinado, dos relatórios, das capturas e do host, os controles, as sabotagens, o ajuste do soak, os limites e os itens abertos (bloco slice2a)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "A tela da cidade como overlay (Modal), com o mapa e a barra escurecidos atrás",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/overlay-city.png"
+                },
+                {
+                  "label": "O diálogo do primeiro evento da fila, 1 of 3, centralizado num Modal",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/overlay-dialog-1.png"
+                },
+                {
+                  "label": "O diálogo 2 of 3 logo depois de a Surface ser desmontada e montada de novo, com o jogo guardando a fila",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/overlay-dialog-2-remounted.png"
+                },
+                {
+                  "label": "O diálogo do terceiro evento, 3 of 3",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/overlay-dialog-3.png"
+                },
+                {
+                  "label": "O overlay: um Modal transparente e escurecido que cobre a janela, com o que o Escape faz em cada um",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/ui/hud/overlay.tsx"
+                },
+                {
+                  "label": "O switch de contexto: a cidade e o diálogo montados em overlays e o diálogo com a chave do evento, uma subárvore nova a cada evento",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/ui/hud/hud.tsx"
+                },
+                {
+                  "label": "O diálogo, com a posição \"n of 3\" que o jogo dá (index e count), nunca calculada na HUD",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/ui/hud/dialog.tsx"
+                },
+                {
+                  "label": "A tabela de três eventos do jogo (Rules.EVENTS) e as escolhas de cada um",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/game/rules.gd"
+                },
+                {
+                  "label": "A fila: resolve_event responde só à cabeça e só com uma escolha dela, e o próximo evento passa a ser a cabeça",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/game/intents.gd"
+                },
+                {
+                  "label": "A probe de overlays (-- --validate-overlays): a fila por toques reais, a remontagem, o bloqueio com 100 cliques de cada tipo e a sessão nova",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/consumers/civ-lite/overlay_validation.gd"
+                },
+                {
+                  "label": "O oráculo independente dos overlays: a fila, a remontagem, o bloqueio e a sessão nova, sem os veredictos da probe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/tests/civ-lite-overlay-oracle.mjs"
+                },
+                {
+                  "label": "As 12 sabotagens retidas da HUD (as 8 da fatia 1 e queue-out-of-order, position-in-js, city-in-tree e dialog-unkeyed)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: os overlays, a fila de três eventos, a leitura dos nós de um Modal pelo snapshot do host e a regra dos nomes de check",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/research/frontier-hud.md"
+                }
+              ]
             },
             {
               "id": "estabilidade",
@@ -4542,6 +4623,20 @@
       "taskIds": [],
       "message": "A guarda X9/X10 da CI passa a rodar também numa execução manual (workflow_dispatch, que a #88 introduz), comparando com o merge-base da main num fetch só; pull request e push seguem com o primeiro pai. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/6e556f61473d65786fa96933accc5040ec660ce2/docs/research/milestone-exit-guards.md"
+    },
+    {
+      "id": "milestone-0-5-v05-05-overlays-67c3f16",
+      "at": "2026-10-09T14:06:23.000Z",
+      "taskIds": [],
+      "message": "V05-05 do marco 0.5, critério overlays, com evidência local: por decisão do usuário de 2026-10-09 a fila de três eventos (wanderers, traders e scholar, levantados juntos no turno 5) é real no jogo: o estado guarda a fila e as respostas, resolve_event responde só à cabeça e só com uma escolha dela, o snapshot traz o index e o count, o replay tem 77 passos e o hash dourado passou a cb7ab974… e o de trilha a ed43495…, recalculados passo a passo pelo oráculo independente. A tela da cidade com a pesquisa e o diálogo são Modals bloqueantes: com um aberto, 100 cliques esquerdos, 100 direitos e 100 giros da roda no mapa chegam ao mundo 0 vezes, e 100 de 100 depois de fechado; o diálogo mostra o \"n of 3\" do jogo e monta cada evento como uma subárvore própria, a HUD remontada com o segundo evento na cabeça mostra \"2 of 3\" já no primeiro quadro e uma sessão nova só tem fila no seu turno 5. A probe lê os nós de um Modal pelo snapshot do host, porque ficam na janela própria dele. 144 checks da probe da HUD e 26 da de overlays, dois oráculos independentes (27 e 20 mutações rejeitadas), dois controles causais que falham exatamente nos seus grupos, 12 sabotagens da HUD (4 novas) e 8 do jogo (1 nova) rejeitadas, e quatro capturas dos overlays. Nenhum nome de check das probes carrega contagem que dependa do ritmo, e a lane trava isso. O merge da main trouxe o soak do #83, e o oráculo dele passou a esperar as três respostas do turno 5, sem relaxar nada. Os recibos hospedados canônicos do #74 (V05-04) e do #82 (a fatia 1 do V05-05) entram no mesmo commit; o artefato do Pages do #74 expirou e o migration.json implantado dele não foi comparado. Só macOS arm64: o Escape não foi pressionado, a fatia ainda não está na main e não tem CI hospedada, e o erro do motor ao sair com um Modal aberto é uma tarefa à parte. O critério estabilidade do V05-05 segue aberto. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-74-82",
+      "at": "2026-10-09T13:48:28.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de mais duas fatias do marco 0.5 já na main, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check: frontier-scope (#74, run 37842839329 no squash b0e40aa, o V05-04) e civ-lite-ui (#82, run 37891490943 no squash 622102e, a HUD do V05-05, critérios matriz e mapa). Cada run é o push da main no squash, com os 5 jobs em success na primeira tentativa e o checkout do squash em todos. No #74 passaram os 13 testes de tests/scope-0.5.test.mjs no job contracts, os 5 de test:scroll-view e o SCOPE_PASSED: 181 do passo test:scope-0.5, e o artefato native-scope-0.5 confere com o digest da API. No #82 passaram o test:civ-lite-ui (143 checks da probe da HUD, cujo headless.json hospedado tem o mesmo SHA-256 do relatório local, com o controle pulado pelo clone raso) e o test:consumer:civ-lite (165 checks nativos), e os artefatos civ-lite-ui e independent-civ-lite-consumer conferem com o digest da API. O Pages (runs 37842839320 e 37891490845) implantou o migration.json dos dois squashes; o do #82 tem os mesmos bytes do commitado e a entrada de atividade da fatia, e o artefato github-pages do #74 já expirou, então o migration.json implantado dele não foi comparado (ficam o deployment e o digest do log de upload). As capturas, os controles causais e as sabotagens seguem só locais. Nenhum done, critério ou número da 1.0 muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/README.md"
     },
     {
       "id": "milestone-0-5-v05-06-turno-cb50b97",

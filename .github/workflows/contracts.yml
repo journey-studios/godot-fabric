@@ -533,6 +533,8 @@ jobs:
             build/civ-lite-ui/*.log
             build/civ-lite-ui-control/*.json
             build/civ-lite-ui-control/*.log
+            build/civ-lite-overlays-control/*.json
+            build/civ-lite-overlays-control/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

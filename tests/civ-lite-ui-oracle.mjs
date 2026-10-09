@@ -13,7 +13,9 @@
 //   bar          the bar shows the turn, the phase and the three resources, End turn is the `end_turn` action (enabled by the game's
 //                flag, with its reason) and the spinner is there exactly while the phase is not idle
 //   content      the tile card, the city screen, the research panel and the dialog say what their part of the snapshot says
-//   map          no Control that stops the pointer and no panel covers a tile of the map
+//   map          nothing of the tree that stops the pointer and no in-tree panel covers a tile of the map; the Modal's window covers the
+//                whole map exactly in the city and dialog contexts, the two that have an overlay (the city screen with the research
+//                list, and the event dialog, which are in the Modal's window and the other panels are not)
 //   phase        every published snapshot of a turn in progress disables End turn; every frame of the job shows spinner and disabled
 //                End turn exactly while the phase is not idle and only phases the game published; held at an AI phase the spinner
 //                spins and a press on the disabled End turn asks nothing of the game; released, the turn is at rest again
@@ -48,6 +50,7 @@ function nodeOf(observed, id) {
 }
 const shown = (observed, id) => nodeOf(observed, id)?.visible === true;
 const textOf = (observed, id) => nodeOf(observed, id)?.text;
+const rectCovers = (outer, inner) => outer[0] <= inner[0] && outer[1] <= inner[1] && outer[0] + outer[2] >= inner[0] + inner[2] && outer[1] + outer[3] >= inner[1] + inner[3];
 const rectOverlaps = (a, b) => a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3];
 const inside = (point, rect) => point[0] >= rect[0] && point[0] < rect[0] + rect[2] && point[1] >= rect[1] && point[1] < rect[1] + rect[3];
 
@@ -60,6 +63,8 @@ function panelOf(testID) {
   return PANEL_NAMES.find(name => testID === panelId(name) || testID.startsWith(`${panelId(name)}-`)) ?? null;
 }
 const NOT_PANELS = ["hud-root", "hud-connecting"];
+// The panels that live in the Modal's window: the contexts that have an overlay, and what each shows there.
+const OVERLAY_PANELS = {city: ["city", "research"], dialog: ["dialog"]};
 
 // The key the HUD names an action's Pressable by: the id and the arguments, joined.
 const actionKey = action => [action.id, ...action.args].join("-");
@@ -152,16 +157,29 @@ export function judgeHudReport(report) {
         fail("panels", `${label}: ${entry.testID} is shown and belongs to the ${owner} panel, which the ${snapshot.context} context does not mount`);
       }
     }
+    const overlayPanels = OVERLAY_PANELS[snapshot.context] ?? [];
     for (const name of PANEL_NAMES) {
       const entry = nodeOf(seen, panelId(name));
-      if (entry !== undefined && entry.visible && rectOverlaps(entry.rect, mapRect)) {
+      if (entry === undefined || !entry.visible) {
+        continue;
+      }
+      // An overlay's panels are in the Modal's window and every other panel is in the tree.
+      if (entry.modal !== overlayPanels.includes(name)) {
+        fail("panels", `${label}: the ${name} panel is ${entry.modal ? "in the Modal's window" : "in the tree"}, and the ${snapshot.context} context says the other`);
+      }
+      if (!entry.modal && rectOverlaps(entry.rect, mapRect)) {
         fail("map", `${label}: the ${name} panel covers a tile of the map`);
       }
     }
     for (const stopper of seen.stoppers) {
-      if (rectOverlaps(stopper.rect, mapRect)) {
-        fail("map", `${label}: a Control that stops the pointer (${stopper.testID === "" ? "no testID" : stopper.testID}) covers a tile of the map`);
+      if (!stopper.modal && rectOverlaps(stopper.rect, mapRect)) {
+        fail("map", `${label}: a Control in the tree that stops the pointer (${stopper.testID === "" ? "no testID" : stopper.testID}) covers a tile of the map`);
       }
+    }
+    // The Modal's window is what blocks the map: it covers all of it in the contexts that have an overlay and exists in no other.
+    const blocks = seen.stoppers.some(stopper => stopper.modal && rectCovers(stopper.rect, mapRect));
+    if (blocks !== (overlayPanels.length > 0) || (overlayPanels.length === 0 && seen.stoppers.some(stopper => stopper.modal))) {
+      fail("map", `${label}: the overlay must block the whole map exactly in the city and dialog contexts (blocks: ${blocks}, expected ${overlayPanels.length > 0})`);
     }
     // The bar.
     if (shown(seen, "hud-bar")) {
@@ -211,6 +229,9 @@ export function judgeHudReport(report) {
         `Garrison: ${city.garrison.length === 0 ? "none" : city.garrison.map(unit => `${unit.kind} #${unit.id}`).join(", ")}`], `${label}: the city screen`);
       same("content", city.queue.map(entry => textOf(seen, `hud-city-queue-${entry.slot}`)),
         city.queue.map(entry => `${entry.slot + 1}. ${entry.label} ${entry.stock}/${entry.cost}`), `${label}: the city's queue`);
+      if (!shown(seen, "hud-city-close") || nodeOf(seen, "hud-city-close").disabled) {
+        fail("content", `${label}: the city screen's Close must be shown and enabled`);
+      }
       same("content", renderedRows(seen, "hud-city-item-", city.items.map(item => item.id)),
         expectedRows(city.items, item => `${item.label} (${item.cost})`), `${label}: the city's items`);
     }
@@ -225,7 +246,8 @@ export function judgeHudReport(report) {
     }
     if (expectedPanels.includes("dialog")) {
       const dialog = snapshot.dialog;
-      same("content", [textOf(seen, "hud-dialog-title"), textOf(seen, "hud-dialog-text")], [dialog.title, dialog.text], `${label}: the dialog`);
+      same("content", [textOf(seen, "hud-dialog-position"), textOf(seen, "hud-dialog-title"), textOf(seen, "hud-dialog-text")],
+        [`${dialog.index} of ${dialog.count}`, dialog.title, dialog.text], `${label}: the dialog`);
       same("content", dialog.choices.map(choice => [textOf(seen, `hud-dialog-choice-${choice.id}-label`), textOf(seen, `hud-dialog-choice-${choice.id}-detail`),
         nodeOf(seen, `hud-dialog-choice-${choice.id}`)?.disabled]), dialog.choices.map(choice => [choice.label, choice.detail, false]), `${label}: the dialog's choices`);
     }

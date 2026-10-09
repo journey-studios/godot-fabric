@@ -21,8 +21,8 @@ project loads only `game/` and `services/` from it. The research note is
   node for the game's own `select_tile`, and the mouse over the map tells the node which tile is under it (`frontier.hover`). It listens
   in `_unhandled_input`, so it has to stay ahead of the HUD's layer in the tree (the node keeps it there).
 - `HUDLayer/HUD`: a full-screen `FabricSurface` rendering `ui/index.tsx`.
-- `Validation` and `HudValidation`: the project's own validations, inert unless the game runs with `-- --validate` or
-  `-- --validate-hud`.
+- `Validation`, `HudValidation` and `OverlayValidation`: the project's own validations, inert unless the game runs with `-- --validate`,
+  `-- --validate-hud` or `-- --validate-overlays`.
 
 The application, the registry, the bindings and the epoch belong to the root, so going to the menu, starting a game or
 reloading the scenery never recreates them: the epoch only rises.
@@ -46,7 +46,12 @@ decides (`ui/hud/hud.tsx`):
 | `dialog` | bar, dialog |
 
 The panels are `ui/hud/{bar,actions,tile,city,research,dialog}.tsx`, with the testIDs `hud-bar`, `hud-actions`, `hud-tile`, `hud-city`,
-`hud-research` and `hud-dialog`. They are positioned boxes, so the map around them is the World's. The bar shows the turn, the phase,
+`hud-research` and `hud-dialog`. The bar, the actions and the tile card are positioned boxes in the tree, so the map around them is the
+World's. The city screen with the research list, and the event dialog, are blocking Modals (`ui/hud/overlay.tsx`): the host opens a Modal
+as a window of its own, exclusive while it is on top, so while one is open nothing under it, the map included, hears the pointer. Escape
+closes the city screen (the game's `clear_selection`, as its Close button does) and does nothing on the dialog, because the event has to be
+answered. The game holds a queue of three events, raised together on turn 5: the dialog shows the head, "1 of 3", and each answer brings the
+next, each in a subtree of its own. The bar shows the turn, the phase,
 the three resources, End turn (enabled by the game's `end_turn` action, with a spinner while the phase is not `idle`) and the way to
 the menu; the actions panel lists the snapshot's actions but End turn, each with the game's `reason_text` when disabled; the tile card
 shows the tile under the pointer while it is over the map and the selected tile otherwise.
@@ -68,7 +73,8 @@ mirror of the registered schemas, which `tests/frontier-services-parity.test.mjs
 - `services/`: `game_services.gd` owns a session and its `epoch` and publishes the snapshot and the intents as typed services;
   `schema.gd` is the one GDScript source of every schema it registers. See
   [docs/research/frontier-services.md](../../docs/research/frontier-services.md).
-- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_validation.gd`: the scene, the HUD and the validations described above.
+- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_probe.gd`, `hud_validation.gd`, `overlay_validation.gd`: the scene, the HUD and the
+  validations described above (`hud_probe.gd` is what the two HUD probes share).
 
 ## Validation
 
@@ -82,6 +88,7 @@ first cycle's. In a provisioned project:
 godot --path . --headless --editor -- --godot-fabric-build-check     # builds ui/index.tsx with the addon's private toolchain
 godot --path . --headless -- --validate                               # the ten cycles; writes civ-lite-report.json
 godot --path . --headless -- --validate-hud                           # the panels of the seven contexts, the turn and the pointer; writes civ-lite-ui-report.json
+godot --path . --headless -- --validate-overlays                      # the queue of three events, the remount and the blocking Modals; writes civ-lite-overlay-report.json
 ```
 
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global

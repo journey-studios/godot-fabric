@@ -237,8 +237,8 @@ variants in the parity test).
 Every frame of every job fit in one pump: the largest pump of the 12 roteiro jobs ran 1 task and sent 3 events, and left nothing
 pending, against the budgets of 64 and 128. With ten calls sent while the job runs (job 13), the frame that carries them ran 10
 tasks and sent 2 events (their results are resolved in the tasks, which do not count as events), and left nothing pending. That
-is the real subscribers of the probe. The game's own counters in `turn_ended.phases` are at most 5 tasks and 2 events a phase
-in the roteiro.
+is the real subscribers of the probe. The game's own counters in `turn_ended.phases` are at most 5 tasks and 4 events a phase
+in the roteiro (4 is the `refresh` of turn 4: the turn start and the three events the queue raises; it was 2 with the one event).
 
 The stress case adds 150 module-scope subscribers of `frontier.snapshot` (so a publication holds 152 events, more than 128; the
 publication of the last phase holds 153 with `turn_ended`). The pumps are counted as pumps, not as time:
@@ -271,7 +271,7 @@ What proves it:
   of the reference session (never the live one, so the roteiro's states stay as they are). The call must name a registered
   method that takes that many arguments; it must be accepted exactly when the action is enabled and refused with the action's
   `reason` otherwise. The oracle checks each action's `args` against the method's argument schema derived from the TypeScript
-  tuples, and the reported results, at all 73 steps.
+  tuples, and the reported results, at all 77 steps (73 until the queue of three events of 2026-10-09).
 
 The snapshot is not part of the state, so the golden hash and the trace hash did not change; `npm run test:civ-lite-game` shows
 the same two hashes.
@@ -376,21 +376,23 @@ process, which the services never touch, plays the same steps and is the referen
 - **Registration before the mount.** The bundle's own connections, made as it evaluates, were ready with no error (a late
   registration answers `E_SERVICE_MISSING` there); the first connection received the initial snapshot of epoch 1; the registry
   held the 14 bindings (15 since the hover state of 2026-10-09; see the update in "The node and its lifecycle").
-- **Round trip.** At all 73 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
+- **Round trip.** At all 77 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
   reference session's.
-- **Actions are calls.** At all 73 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
+- **Actions are calls.** At all 77 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
   with its own `args` and nothing else, on a copy of the reference session (the live one is never touched, so the roteiro's
   hashes are intact). It names a registered method that takes that many arguments, is accepted exactly when it is enabled and is
   refused with its `reason` otherwise.
-- **The roteiro through the services.** 73 steps: 43 accepted and 30 refused. Each answer is the uniform
+- **The roteiro through the services.** 77 steps: 45 accepted and 32 refused (73, 43 and 30 until the queue of three events of 2026-10-09). Each answer is the uniform
   `{ok, code, text, job}` and has the roteiro's code; `end_turn` answers on acceptance. The 24 refusal codes the roteiro plays
   reach JavaScript with `ok: 0`, the same code and the same text, and publish nothing. Each of the 12 accepted `end_turn` was a job:
   seven snapshots through the six phases, one a frame, and one `turn_ended` with the six phases in order (`ai_plan`, `ai_move`,
   `production`, `growth`, `research`, `refresh`) and the job, before the snapshot of the turn that begins, which carries
   `last_job`. The probe waits for each job before the next step. The state of the node is the reference's at every step, and the
   final hash is the P3 golden hash
-  `275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29`; the hashes of all 73 steps make the P3 trace hash
-  `fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8`.
+  `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d`; the hashes of all 77 steps make the P3 trace hash
+  `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e`. (The package's own run, which the record under
+  `docs/evidence/frontier-services/` keeps, had 73 steps and the hashes `275b7c61…` and `fba99004…`: the queue of three events of 2026-10-09 added four
+  steps to turn 5 and moved both hashes; see [frontier-game.md](frontier-game.md), "The replay".)
 - **Persistence.** The surface is unmounted in the frame after the node accepted the third `end_turn`, with the job's first phase
   not yet run: the panel's connection is removed, the root is gone, and the registry still holds 14 bindings (15 since 2026-10-09) under the same
   registration generation (`"1"`), the same node and game and the same epoch. The job goes on with no root and finishes once

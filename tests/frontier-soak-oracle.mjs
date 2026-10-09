@@ -95,6 +95,11 @@ function verifyConfig(report) {
 // the event if one blocks the game, the research and the production if they are empty, the city, the first unfortified unit and its fortifying,
 // an empty tile, clearing the selection and the end of the turn. The first turn also founds the city on the start tile.
 const ROUTINE = ["resolve_event", "set_research", "set_production", "city", "select_unit", "fortify", "tile", "clear_selection", "end_turn"];
+// The game raises three events together when turn 5 begins (the queue of 2026-10-09: wanderers, traders, scholar, in that order) and the
+// player answers the head with the first choice of its event, as many times as the dialog is open. So turn 5 opens with exactly these three
+// calls, each made in the dialog context (the third while the scholar still waits), and the game records them in this order.
+const EVENT_TURN_INDEX = 4;
+const EVENT_ANSWERS = [{id: "wanderers", choice: "welcome"}, {id: "traders", choice: "buy_grain"}, {id: "scholar", choice: "host"}];
 const CITY = START_TILE;
 const NEIGHBOR = {x: START_TILE.x - 1, y: START_TILE.y};
 
@@ -132,16 +137,20 @@ function verifyDecisions(row, index) {
       `${label}: the Settler founds the city on the start tile`);
     preamble = 3;
   }
-  let last = -1;
-  row.decisions.slice(preamble).forEach(decision => {
+  // On the turn the events are raised the three answers come first, each once; the routine goes on from there, after the event step.
+  const answers = index === EVENT_TURN_INDEX ? EVENT_ANSWERS.length : 0;
+  let last = answers > 0 ? ROUTINE.indexOf("resolve_event") : -1;
+  row.decisions.slice(preamble + answers).forEach(decision => {
     const step = stepOf(decision);
     const rank = ROUTINE.indexOf(step);
     assert.ok(rank > last, `${label}: ${decision.id}(${decision.args}) is a step of the routine, once and in its order`);
     last = rank;
   });
-  const first = row.decisions[preamble];
-  if (index === 4) {
-    assert.deepEqual([first.id, first.context], ["resolve_event", "dialog"], `${label}: the event that blocks the game is the first thing resolved`);
+  if (index === EVENT_TURN_INDEX) {
+    assert.deepEqual(row.decisions.slice(preamble, preamble + answers).map(decision => [decision.id, decision.args, decision.context]),
+      EVENT_ANSWERS.map(answer => ["resolve_event", [answer.choice], "dialog"]),
+      `${label}: the three events that block the game are the first things resolved, each with the first choice of the head of the queue`);
+    assert.ok(row.decisions.slice(preamble + answers).every(decision => decision.id !== "resolve_event"), `${label}: and no event is left waiting after them`);
   } else {
     assert.ok(row.decisions.every(decision => decision.id !== "resolve_event"), `${label}: no event is waiting`);
   }
@@ -280,7 +289,9 @@ function verifyGame(stages) {
     assert.deepEqual([state.cities[0].x, state.cities[0].y], [START_TILE.x, START_TILE.y], `turn ${index + 1}: on the start tile`);
     assert.ok(state.units.filter(unit => unit.owner === 1).length <= GARRISON_CAP, `turn ${index + 1}: the player keeps at most ${GARRISON_CAP} units, so the state is bounded`);
     assert.ok(state.log.length <= 32, `turn ${index + 1}: and the log is capped`);
-    assert.equal(state.event.resolved, index + 1 >= 5 ? 1 : 0, `turn ${index + 1}: the event is resolved from turn 5 on`);
+    assert.deepEqual(state.events.resolved, index >= EVENT_TURN_INDEX ? EVENT_ANSWERS : [], `turn ${index + 1}: the three events are answered, in the order of the queue, from turn 5 on`);
+    assert.deepEqual(state.events.queue, index === EVENT_TURN_INDEX - 1 ? EVENT_ANSWERS.map(answer => answer.id) : [],
+      `turn ${index + 1}: the queue holds the three events only in the state turn 5 begins from`);
   });
   assert.equal(new Set(hashes).size, TURNS, "No two turns left the game in the same state");
   assert.equal(stages.game.hash, hashes.at(-1), "The final hash is the last turn's");

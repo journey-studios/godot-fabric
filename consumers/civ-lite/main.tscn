@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://services/game_services.gd" id="1"]
 [ext_resource type="Script" path="res://addons/godot_fabric/godot_fabric.gd" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://world/world.tscn" id="5"]
 [ext_resource type="Script" path="res://validation.gd" id="6"]
 [ext_resource type="Script" path="res://hud_validation.gd" id="7"]
+[ext_resource type="Script" path="res://overlay_validation.gd" id="8"]
 
 [node name="GameServices" type="Node"]
 script=ExtResource("1")
@@ -35,3 +36,6 @@ script=ExtResource("6")
 
 [node name="HudValidation" type="Node" parent="."]
 script=ExtResource("7")
+
+[node name="OverlayValidation" type="Node" parent="."]
+script=ExtResource("8")

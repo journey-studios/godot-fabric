@@ -60,6 +60,7 @@ const withRss = (stages, level, perRound) => stages.rounds.forEach((row, round) 
   rest.reading.godot.rssKb = level + perRound * Math.max(0, round - WARMUP_ROUNDS);
 }));
 const turnOf = (stages, round = 5, step = 12) => stages.rounds[round].steps[step];
+const indexOf = id => STEPS.findIndex(step => step.id === id);
 const lastHalf = Math.floor(STEADY_ROUNDS / 2);
 // A rise in the last half of the steady rounds, to show where the resident-memory limit is.
 const withRssRise = (stages, rise) => stages.rounds.forEach((row, round) => restsOf(stages, round).forEach(rest => {
@@ -91,6 +92,31 @@ const REJECTED = {
   "map-lost": [stages => {
     stages.rounds[9].steps[0].worldClicks = 0;
   }, ["clicks"]],
+  // The queue of three events and the Modals: the dialog's position and choices are the event the step leads to, the Window of a Modal is exact, the calls are counted by intent
+  // and the tour is judged against the contract (nothing under a Modal, the Close after the city, the answers in order).
+  "wrong-position": [stages => {
+    stages.rounds[9].steps[indexOf("answer-event-2")].dialog.position = "1 of 3";
+  }, ["clicks"]],
+  "wrong-event": [stages => {
+    stages.rounds[9].steps[indexOf("answer-event-1")].dialog.choices = ["hud-dialog-choice-turn_away", "hud-dialog-choice-welcome"];
+  }, ["clicks"]],
+  "dialog-left-open": [stages => {
+    stages.rounds[9].steps[indexOf("answer-event-3")].dialog = {choices: ["hud-dialog-choice-host", "hud-dialog-choice-send_on"], position: "3 of 3"};
+  }, ["clicks"]],
+  "modal-window-missing": [stages => {
+    const {godot} = stages.rounds[9].steps[indexOf("found-city")].rest.reading;
+    godot.nodes -= 1;
+    godot.nodeMonitor -= 1;
+  }, ["rests"]],
+  "answers-uncounted": [stages => {
+    stages.published.callbacks.resolve_event -= 1;
+  }, ["turns"]],
+  // A report whose steps are not the cases' fails the config rule (the steps the probe ran are compared with the cases first). The rules of the tour itself (nothing under a
+  // Modal, the Close after the city, the answers in the order of the queue) are judged on mutated copies of the steps, directly, in tests/frontier-turn-graphics.test.mjs.
+  "steps-not-the-cases": [stages => {
+    const [first, second] = [indexOf("answer-event-1"), indexOf("answer-event-2")];
+    [stages.config.steps[first].target, stages.config.steps[second].target] = [stages.config.steps[second].target, stages.config.steps[first].target];
+  }, ["config"]],
   "aborted": [stages => {
     stages.aborted = {round: 3, step: 4, id: STEPS[4].id};
   }, ["shape"]],

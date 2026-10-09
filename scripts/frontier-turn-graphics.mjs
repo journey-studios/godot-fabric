@@ -10,7 +10,7 @@ import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGra
 import {createTurnLane, machine, loadAverage} from "./frontier-turn-lane.mjs";
 
 // The windowed lane of the turn, local only (a real window, the native renderer and a display; CI has none): the provisioned Frontier game in a real window,
-// GRAPHICS_RUNS runs in separate processes, each with WARMUP_ROUNDS rounds of the tour thrown away and STEADY_ROUNDS measured (16 clicks and four turns in each round),
+// GRAPHICS_RUNS runs in separate processes, each with WARMUP_ROUNDS rounds of the tour thrown away and STEADY_ROUNDS measured (19 clicks and four turns in each round),
 // the intervals between consecutive process frames in an idle window, in the frames that took a click and in every frame of a turn (the phases of the sliced
 // AI), the vsync mode and refresh rate read back from the window, the load of the system before and after every run, and one capture per context. The receipt
 // keeps every raw interval, so that the percentiles are recomputed from the data and nothing is discarded; the statistics across runs are the median and the

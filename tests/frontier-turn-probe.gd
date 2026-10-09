@@ -5,9 +5,11 @@ extends Node
 # frontier-turn-runner.gd. Nothing of the template or of its HUD is changed: the probe drives the real scene with real pointer events through
 # the viewport, on the device of the validation (consumers/civ-lite/hud_validation.gd does the same), and reads what the HUD mounted.
 #
-# A round is a tour of 16 clicks over a new game (prepared through the services, not measured): a tile of the map, the buttons of the actions
-# panel, the End turn of the bar four times and the answer to the event. It visits all seven contexts of the game, and every transition is one
-# click. For each click the probe records the frames and the time from the injection to the moment the HUD shows the panels of the context the
+# A round is a tour of 19 clicks over a new game (prepared through the services, not measured): a tile of the map, the buttons of the actions
+# panel, the Close of the city screen, the End turn of the bar four times and the answers to the three events of the queue. It visits all seven
+# contexts of the game, and every transition is one click. The city screen and the event dialog are blocking Modals (consumers/civ-lite/ui/hud/overlay.tsx):
+# their Controls are children of the Modal's own Window, which `hud.find_child` does not reach, so the probe finds what the HUD mounted and where to click in the
+# Surface's snapshot, as consumers/civ-lite/hud_probe.gd does, and no click on the map or on the bar is made while one is open (the Modal would take it). For each click the probe records the frames and the time from the injection to the moment the HUD shows the panels of the context the
 # click leads to, the intent the click made and whether the map heard it. After REST_FRAMES idle frames it takes a reading at rest with the shared
 # sampler (tests/performance-sampler.gd, the GF-30 reading): the engine's counts, the host's native views, the resident memory and Hermes' heap
 # after a forced collection. The End turn clicks also record every frame of the turn: the phase, the interval between frames, the snapshots and
@@ -67,13 +69,16 @@ const STEPS := [
   {"id": "map-stack-third", "kind": "map", "tile": [6, 8], "from": "tile", "to": "stack", "intent": "select_tile"},
   {"id": "select-settler-again", "kind": "action", "target": "hud-actions-select_unit-1", "from": "stack", "to": "settler", "intent": "select_unit"},
   {"id": "found-city", "kind": "action", "target": "hud-actions-found_city-1", "from": "settler", "to": "city", "intent": "found_city"},
-  {"id": "map-tile-again", "kind": "map", "tile": [9, 8], "from": "city", "to": "tile", "intent": "select_tile"},
-  {"id": "map-city", "kind": "map", "tile": [6, 8], "from": "tile", "to": "city", "intent": "select_tile"},
-  {"id": "end-turn-1", "kind": "turn", "target": "hud-bar-end-turn", "from": "city", "to": "none", "intent": "end_turn"},
+  {"id": "close-city", "kind": "overlay", "target": "hud-city-close", "from": "city", "to": "none", "intent": "clear_selection"},
+  {"id": "map-city", "kind": "map", "tile": [6, 8], "from": "none", "to": "city", "intent": "select_tile"},
+  {"id": "close-city-again", "kind": "overlay", "target": "hud-city-close", "from": "city", "to": "none", "intent": "clear_selection"},
+  {"id": "end-turn-1", "kind": "turn", "target": "hud-bar-end-turn", "from": "none", "to": "none", "intent": "end_turn"},
   {"id": "end-turn-2", "kind": "turn", "target": "hud-bar-end-turn", "from": "none", "to": "none", "intent": "end_turn"},
   {"id": "end-turn-3", "kind": "turn", "target": "hud-bar-end-turn", "from": "none", "to": "none", "intent": "end_turn"},
-  {"id": "end-turn-4", "kind": "turn", "target": "hud-bar-end-turn", "from": "none", "to": "dialog", "intent": "end_turn"},
-  {"id": "answer-event", "kind": "dialog", "target": "hud-dialog-choice-welcome", "from": "dialog", "to": "none", "intent": "resolve_event"},
+  {"id": "end-turn-4", "kind": "turn", "target": "hud-bar-end-turn", "from": "none", "to": "dialog", "intent": "end_turn", "head": "welcome"},
+  {"id": "answer-event-1", "kind": "dialog", "target": "hud-dialog-choice-welcome", "from": "dialog", "to": "dialog", "intent": "resolve_event", "head": "buy_grain"},
+  {"id": "answer-event-2", "kind": "dialog", "target": "hud-dialog-choice-buy_grain", "from": "dialog", "to": "dialog", "intent": "resolve_event", "head": "host"},
+  {"id": "answer-event-3", "kind": "dialog", "target": "hud-dialog-choice-host", "from": "dialog", "to": "none", "intent": "resolve_event"},
 ]
 # The unhandled errors of the JavaScript side, which the host does not see: a global handler, where the runtime has one, and Hermes' tracker of
 # promises rejected with no handler. The control is one rejection that nobody handles, so that "no rejection" can be told from "cannot see one".
@@ -179,23 +184,54 @@ func hud_stats() -> Dictionary:
   return out
 
 # ------------------------------------------------------------------------------------------------ what the HUD mounted
+# What the HUD holds, by testID, as the host reports it in the Surface's snapshot: the Control of each and the text the host drew in it. A Modal's Controls are children
+# of the Modal's own Window, which `hud.find_child` does not reach, so the Controls are resolved from the snapshot's instance ids (consumers/civ-lite/hud_probe.gd does the
+# same). One read of the snapshot serves every question a frame asks.
+func mounted() -> Dictionary:
+  var out := {}
+  for entry: Dictionary in Sampler.surface_state(hud).get("nodes", []):
+    var test_id := str(entry.get("testID", ""))
+    if test_id == "":
+      continue
+    var control := instance_from_id(int(entry.id)) as Control
+    if control != null and control.is_inside_tree() and not control.is_queued_for_deletion():
+      out[test_id] = {"control": control, "text": str(entry.get("nativeText", ""))}
+  return out
+
 func is_mounted(id: String) -> bool:
-  var node: Node = hud.find_child(id, true, false)
-  return node != null and node.is_inside_tree() and not node.is_queued_for_deletion()
+  return mounted().has(id)
+
+func panels_in(seen: Dictionary) -> Array:
+  return PANELS.filter(func(id: String) -> bool: return seen.has(id))
 
 func panels_mounted() -> Array:
-  return PANELS.filter(func(id: String) -> bool: return is_mounted(id))
+  return panels_in(mounted())
 
 # The HUD shows a context: exactly its panels, and, for the contexts that mount the same panels, only its own marker.
-func shows(context: String) -> bool:
+func shows_in(seen: Dictionary, context: String) -> bool:
   var expected: Array = TABLE[context]
   for id: String in PANELS:
-    if is_mounted(id) != expected.has(id):
+    if seen.has(id) != expected.has(id):
       return false
   for other: String in MARKERS.keys():
-    if is_mounted(MARKERS[other]) != (other == context):
+    if seen.has(MARKERS[other]) != (other == context):
       return false
   return true
+
+func shows(context: String) -> bool:
+  return shows_in(mounted(), context)
+
+# The dialog of the queue as the HUD shows it: the choices it holds (the Pressables, by testID) and the position it says ("1 of 3"), empty when there is none.
+func dialog_reading(seen: Dictionary) -> Dictionary:
+  var choices: Array = seen.keys().filter(func(id: String) -> bool: return id.begins_with("hud-dialog-choice-") and not id.ends_with("-detail") and not id.ends_with("-label"))
+  choices.sort()
+  return {"choices": choices, "position": str(seen["hud-dialog-position"].text) if seen.has("hud-dialog-position") else ""}
+
+# A step that opens an event shows the choices of that event and no other: the event the queue has at its head after the click.
+func head_shown(step: Dictionary, seen: Dictionary) -> bool:
+  if not step.has("head"):
+    return true
+  return dialog_reading(seen).choices.has("hud-dialog-choice-" + str(step.head))
 
 func game_context() -> String:
   return str(services.game.snapshot().context)
@@ -271,8 +307,8 @@ func tile_centre(x: int, y: int) -> Vector2:
 func point_of(step: Dictionary) -> Vector2:
   if step.kind == "map":
     return tile_centre(int(step.tile[0]), int(step.tile[1]))
-  var control: Control = hud.find_child(step.target, true, false)
-  return control.get_global_rect().get_center() if control != null else Vector2(-1, -1)
+  var seen := mounted()
+  return seen[step.target].control.get_global_rect().get_center() if seen.has(step.target) else Vector2(-1, -1)
 
 func move_to(point: Vector2) -> void:
   var motion := InputEventMouseMotion.new()
@@ -341,12 +377,13 @@ func first_after(moment: int) -> int:
 
 # The End turn of a step is accepted at once and the game goes on, one phase per frame: the click is over when the job has finished, the game
 # is at rest and the HUD shows the context the turn leaves it in (and no spinner).
-func turn_over(step: Dictionary, calls_before: int) -> bool:
+func turn_over(step: Dictionary, calls_before: int, seen: Dictionary) -> bool:
   return (int(services.callbacks.get("end_turn", 0)) > calls_before and int(services.job) == 0 and phase_now() == "idle"
-    and not is_mounted("hud-turn-spinner") and shows(step.to))
+    and not seen.has("hud-turn-spinner") and shows_in(seen, step.to) and head_shown(step, seen))
 
 func arrived_for(step: Dictionary, calls_before: int) -> bool:
-  return turn_over(step, calls_before) if step.kind == "turn" else shows(step.to)
+  var seen := mounted()
+  return turn_over(step, calls_before, seen) if step.kind == "turn" else shows_in(seen, step.to) and head_shown(step, seen)
 
 # Every frame of a turn, from the click until the HUD shows the context the turn leaves the game in: the phase, the interval since the previous
 # frame, the nodes of the tree and what was published in the frame. Nothing heavy is read in them.
@@ -395,7 +432,9 @@ func run_step(round_index: int, index: int) -> Dictionary:
         host_window = sampler.app_state(false, true)
     if arrived_frames >= 0:
       break
-  var shown := panels_mounted()
+  var seen_at_arrival := mounted()
+  var shown := panels_in(seen_at_arrival)
+  var dialog_at_arrival := dialog_reading(seen_at_arrival)
   var context_at_arrival := game_context() if arrived_frames >= 0 else ""
   await settle(TRAILING_FRAMES)
   var drawn := first_after(arrived) if arrived >= 0 else -1
@@ -413,7 +452,7 @@ func run_step(round_index: int, index: int) -> Dictionary:
     "drawUsec": drawn - started if drawn >= 0 else null, "frameUsec": intervals, "callbacks": callbacks_delta,
     "worldEvents": int(heard_after.buttons) - int(heard_before.buttons) + int(heard_after.motions) - int(heard_before.motions),
     "worldClicks": int(heard_after.buttons) - int(heard_before.buttons), "worldMotions": int(heard_after.motions) - int(heard_before.motions),
-    "shown": shown, "contextAtArrival": context_at_arrival, "turn": null}
+    "shown": shown, "dialog": dialog_at_arrival, "contextAtArrival": context_at_arrival, "turn": null}
   if step.kind == "turn":
     record["turn"] = turn_record(turn_frames, light_before, host_window, snapshots_before, ended_before)
   var rest: Dictionary = await at_rest()
@@ -557,7 +596,18 @@ func run() -> void:
   stages["control"] = js("FrontierTurnProbe.controlSeen()")
   stages["captures"] = captured
   stages["published"] = {"snapshots": snapshots_seen, "turnEnded": turn_ended_seen, "callbacks": services.callbacks.duplicate()}
+  await close_overlays()
   finish()
+
+# No Modal is open when the application quits: quitting with a Modal's window mounted logs an engine error (`remove_child` on a root that is already being freed), which
+# is the host's and not what this probe measures. A run that ran to the end has none open (the last click closes the dialog); one that was cut short may, and a new game is
+# what closes it. The published counts were taken before, so this is in no measurement.
+func close_overlays() -> void:
+  if not (panels_mounted().has("hud-city") or panels_mounted().has("hud-dialog")):
+    return
+  services.new_game()
+  await wait_until(func() -> bool: return not (panels_mounted().has("hud-city") or panels_mounted().has("hud-dialog")))
+  await settle(3)
 
 func wait_ms(limit_ms: int) -> void:
   var started := Time.get_ticks_msec()
@@ -635,6 +685,33 @@ func check_clicks() -> void:
   check(world, "click/A click on the map reaches the World (its press and release) and a click on a panel or button does not")
   check(hud_calls, "click/A click on a panel or button is one call of the HUD, and a click on the map is none")
 
+# The queue of three events, as the tour answers it: the End turn of the fourth turn opens the first, each answer leads to the next, and the last one closes the dialog. The
+# events and their choices are the game's table (consumers/civ-lite/game/rules.gd); each arrival must show the choices of the event the step names and the position the game gives it.
+const QUEUE := [{"position": "1 of 3", "choices": ["hud-dialog-choice-turn_away", "hud-dialog-choice-welcome"]},
+  {"position": "2 of 3", "choices": ["hud-dialog-choice-buy_grain", "hud-dialog-choice-buy_tools"]},
+  {"position": "3 of 3", "choices": ["hud-dialog-choice-host", "hud-dialog-choice-send_on"]}]
+const QUEUE_HEADS := {"welcome": 0, "buy_grain": 1, "host": 2}
+# A Modal is a Window of its own in the SceneTree (native/modal_presentation.cpp holds one for each), which no native view of the host stands for: the contexts that mount
+# their panels in one hold that many Windows beyond the host's views and the constant of the base.
+const MODAL_WINDOWS := {"city": 1, "dialog": 1}
+
+func check_queue() -> void:
+  var records := all_records()
+  var shown := records.size() == (WARMUP_ROUNDS + steady_rounds) * STEPS.size()
+  var closed := shown
+  var answered := 0
+  for record: Dictionary in records:
+    var step: Dictionary = STEPS[int(record.step)]
+    if step.has("head"):
+      var event: Dictionary = QUEUE[int(QUEUE_HEADS[step.head])]
+      shown = shown and record.dialog.position == event.position and record.dialog.choices == event.choices
+    elif step.kind == "dialog":
+      closed = closed and record.dialog.position == "" and record.dialog.choices == []
+    if step.kind == "dialog":
+      answered += 1
+  check(shown, "queue/Every step that opens an event of the queue shows its position and its own two choices, in the order of the game's table")
+  check(closed and answered == 3 * (WARMUP_ROUNDS + steady_rounds), "queue/The three answers of every round are real clicks on the dialog's choices, and the last one closes it")
+
 # After REST_FRAMES idle frames the HUD holds the panels of its context and the same native views, nodes and orphans every time the step comes back.
 func check_rests() -> void:
   var series := rest_series()
@@ -661,13 +738,13 @@ func check_rests() -> void:
         and Sampler.number(entry.reading.godot.nodeMonitor) == Sampler.number(first.reading.godot.nodeMonitor)
       orphans = orphans and Sampler.number(entry.reading.godot.orphans) == 0.0
       constant = constant and Sampler.number(entry.reading.godot.nodes) - Sampler.number(counters.nativeViews) \
-        == Sampler.number(base.reading.godot.nodes) - Sampler.number(base.reading.performance.counters.nativeViews)
+        == Sampler.number(base.reading.godot.nodes) - Sampler.number(base.reading.performance.counters.nativeViews) + int(MODAL_WINDOWS.get(entry.context, 0))
   check(complete, "rest/Every series (the start of a round and each step) has a reading at rest in every round")
   check(panels, "rest/At rest the Surface holds the panels of the context the click led to, and the marker of no other")
   check(native, "rest/The native views of a step are the same in every steady round, in the Surface and in the host")
   check(godot, "rest/The SceneTree's nodes and Godot's node monitor come back to the step's count in every steady round")
   check(orphans, "rest/Godot counts no orphan node at rest")
-  check(constant, "rest/The SceneTree holds the host's native views plus a constant, at every rest")
+  check(constant, "rest/The SceneTree holds the host's native views plus a constant, and a Window for each Modal the context holds open, at every rest")
 
 func check_turns() -> void:
   var turns := all_records().filter(func(record: Dictionary) -> bool: return record.kind == "turn")
@@ -736,6 +813,7 @@ func evaluate_headless() -> void:
   check_provenance()
   check_scene()
   check_clicks()
+  check_queue()
   check_rests()
   check_turns()
   check_heap()

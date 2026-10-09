@@ -36,7 +36,7 @@ import ts from "typescript";
 
 export const TYPES_FILE = "consumers/civ-lite/ui/frontier-types.ts";
 
-const ROTEIRO_STEPS = 73;
+const ROTEIRO_STEPS = 77;
 const UNMOUNT_AFTER_TURNS = 3;
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
 const TASK_LIMIT = 64;
@@ -564,7 +564,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
   assert.equal(report.native.gameServices.bindings, BINDINGS, "registration: the registry holds every binding");
   assert.deepEqual(report.native.errors, [], "the application reports no error");
 
-  assert.equal(report.roteiroSteps, ROTEIRO_STEPS, "the roteiro has its 73 steps");
+  assert.equal(report.roteiroSteps, ROTEIRO_STEPS, "the roteiro has its 77 steps");
   assert.equal(report.steps.length, ROTEIRO_STEPS, "every step of the roteiro was played through the services");
 
   const refusals = {};

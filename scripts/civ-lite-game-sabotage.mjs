@@ -33,6 +33,10 @@ import {guardSources} from "./sabotage-sources.mjs";
 //         probe's check of the wait's event fails, and the oracle, which judges the log entries a turn appended against
 //         the events the rules give the faction's phases, rejects it.
 //
+//  events-out-of-order  an answered event leaves the queue by its tail and not by its head: the first event is answered and is
+//         still the head, so the second never comes up. The replay's refusals and contexts at the queue steps do not happen, the
+//         golden hash is lost and the oracle finds the first answer that did not take the head out.
+//
 // There is no host here and nothing to rebuild: the game is plain GDScript. Run with:
 //   node scripts/civ-lite-game-sabotage.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -50,6 +54,7 @@ const variants = [
   {name: "ai-city", file: `${game}/turn.gd`,
     find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
     replace: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty()\n"},
+  {name: "events-out-of-order", file: `${game}/intents.gd`, find: "  state.events.queue.remove_at(0)\n", replace: "  state.events.queue.pop_back()\n"},
   {name: "ai-wrong-event", file: `${game}/turn.gd`, find: "    World.emit(state, \"ai_blocked\", ai.tx, ai.ty)\n",
     replace: "    World.emit(state, \"ai_moved\", ai.tx, ai.ty)\n"},
 ];

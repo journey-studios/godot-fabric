@@ -230,6 +230,11 @@ function explainTreeDifference(headSha, headTreeSha, squashTreeSha, squashParent
   };
 }
 
+// A commit subject is recorded as written, except that this repository's own URL becomes <repository>: a merge commit of the form
+// "Merge branch 'main' of https://github.com/<repository> into <branch>" carries it, and the publication scan refuses the organization's URL
+// when a space follows the name.
+const subjectOf = (message) => message.split("\n")[0].replaceAll(REPOSITORY_URL, "<repository>");
+
 function pullRequestRecord(slice, squash) {
   const { pull, headCommit, squashCommit, commits } = fetchPullRequest(slice, squash);
   const equal = headCommit.tree.sha === squashCommit.tree.sha;
@@ -240,7 +245,7 @@ function pullRequestRecord(slice, squash) {
     headSha: pull.head.sha,
     baseSha: pull.base.sha,
     squashMergeCommit: squash,
-    squashCommitSubject: squashCommit.message.split("\n")[0],
+    squashCommitSubject: subjectOf(squashCommit.message),
     mergedAt: pull.merged_at,
     headTreeSha: headCommit.tree.sha,
     mainTreeSha: squashCommit.tree.sha,
@@ -250,7 +255,7 @@ function pullRequestRecord(slice, squash) {
     record.treeDifference = explainTreeDifference(pull.head.sha, headCommit.tree.sha, squashCommit.tree.sha, squashCommit.parents[0].sha);
   }
   record.commitCount = pull.commits;
-  record.commits = commits.map((commit) => ({ sha: commit.sha, subject: commit.commit.message.split("\n")[0] }));
+  record.commits = commits.map((commit) => ({ sha: commit.sha, subject: subjectOf(commit.commit.message) }));
   record.changedFiles = pull.changed_files;
   record.additions = pull.additions;
   record.deletions = pull.deletions;

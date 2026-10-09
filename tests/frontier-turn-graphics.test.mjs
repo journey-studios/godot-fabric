@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {UNPACED, graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt} from "./frontier-baseline-oracle.mjs";
-import {CLICK_FRAME_LIMIT, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
-import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
+import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
+import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTourOfTheQueue, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
 
 // The windowed lane of the turn on synthetic runs (no Godot, no display): the validity rule is the baseline's, imported, and what this file shows is that the
 // turn's runs fit it. A frame time exists only if a display presents the window: a run whose window did not draw, or whose idle frame median is under half of
@@ -11,6 +11,11 @@ import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGra
 const PRESENTED_IDLE_USEC = 7800;
 const UNPACED_IDLE_USEC = 530;
 const NATIVE = {none: 14, tile: 18, settler: 27, warrior: 24, stack: 26, city: 42, dialog: 24};
+// The dialog as the HUD shows it when a step arrives: the event at the head of the queue the step leads to, with its position, or nothing.
+const dialogOf = step => {
+  const head = EVENT_QUEUE.findIndex(event => event.choices[0] === step.head);
+  return step.to === "dialog" ? {choices: EVENT_QUEUE[head].choices.map(choice => `hud-dialog-choice-${choice}`).sort(), position: `${head + 1} of ${EVENT_QUEUE.length}`} : {choices: [], position: ""};
+};
 
 // The end of a turn as the probe records it: seven frames that advance a phase each and publish a snapshot each, and one more in which the HUD catches up.
 const turnOf = (job, frameUsec) => ({job, snapshots: PHASES.length, turnEnded: 1, finishedJob: 1,
@@ -26,7 +31,7 @@ function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true,
   const rounds = Array.from({length: WARMUP_ROUNDS + STEADY_ROUNDS}, (_, round) => ({round, steps: STEPS.map((step, index) => ({
     round, step: index, id: step.id, kind: step.kind, from: step.from, to: step.to, intent: step.intent, frames: step.kind === "turn" ? 8 : 2, flushUsec: 800,
     latencyUsec: step.kind === "turn" ? 52000 : 9000, drawUsec: drawn ? 11000 : null, frameUsec: [8000, 8000], callbacks: {[step.intent]: 1},
-    worldEvents: step.kind === "map" ? 2 : 0, worldClicks: step.kind === "map" ? 2 : 0, shown: CONTEXT_PANELS[step.to], contextAtArrival: step.to,
+    worldEvents: step.kind === "map" ? 2 : 0, worldClicks: step.kind === "map" ? 2 : 0, shown: CONTEXT_PANELS[step.to], dialog: dialogOf(step), contextAtArrival: step.to,
     rest: {context: step.to, panels: CONTEXT_PANELS[step.to], surface: {nativeTags: NATIVE[step.to]}}, turn: step.kind === "turn" ? turnOf(++job, frameUsec) : null}))}));
   return {scenario: "frontier-turn-graphics", lane: "windowed", run, godot: "4.7.2-stable (official)", checks: [{name: "click/Every click showed", passed: true}],
     stages: {config: {steps: STEPS, warmupRounds: WARMUP_ROUNDS, rounds: STEADY_ROUNDS, idleFrames: IDLE_FRAMES, clickFrameLimit: CLICK_FRAME_LIMIT, turnFrameLimit: TURN_FRAME_LIMIT},
@@ -76,13 +81,16 @@ test("a run that is not a run of the tour in a window is refused", () => {
   const skipped = syntheticReport();
   skipped.stages.rounds[4].steps[12].turn.frames.splice(3, 1);
   assert.throws(() => verifyTurnGraphicsRun(skipped), /one phase in each frame/);
+  const wrongEvent = syntheticReport();
+  wrongEvent.stages.rounds[4].steps[STEPS.findIndex(step => step.id === "answer-event-2")].dialog.position = "1 of 3";
+  assert.throws(() => verifyTurnGraphicsRun(wrongEvent), /the dialog showed the event 3 of the queue/);
   const failedCheck = syntheticReport();
   failedCheck.checks[0].passed = false;
   assert.throws(() => verifyTurnGraphicsRun(failedCheck), /Every check of the run passed/);
 });
 
 test("the turn's frames: a phase in each frame, a snapshot in each, the end once, and the HUD catching up after", () => {
-  const record = syntheticReport().stages.rounds[3].steps[11];
+  const record = syntheticReport().stages.rounds[3].steps[STEPS.findIndex(step => step.id === "end-turn-1")];
   assert.equal(verifyTurnRecord(record, "synthetic").busy.length, PHASES.length);
   const twice = structuredClone(record);
   twice.turn.frames[6].turnEnded = 2;
@@ -196,4 +204,28 @@ test("a lane that claims to be presented has all its runs and their statistics",
   receipt.status = "presented";
   receipt.summary = null;
   assert.throws(() => verifyGraphicsReceipt(receipt), /all its runs/);
+});
+
+// The rules of the tour itself, on mutated copies of the cases' steps and not through a report (a report whose steps differ from the cases fails the oracle's config rule before these
+// rules run on it): the tour the oracle accepts is the cases', and each copy breaks one rule and is refused with the message of that rule.
+const tourWith = change => {
+  const steps = structuredClone(STEPS);
+  change(steps, id => steps.find(step => step.id === id));
+  return steps;
+};
+
+test("the tour of the queue and the Modals: the cases' steps are accepted, and each rule has a mutation that only it refuses", () => {
+  verifyTourOfTheQueue(STEPS);
+  // Nothing is clicked on the map or on the bar while a Modal is open.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("map-city").from = "city"; })), /no click of the map or of the bar while a Modal is open \(city\)/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("end-turn-1").from = "dialog"; })), /no click of the map or of the bar while a Modal is open \(dialog\)/);
+  // Each time the city screen opens the next click is its Close.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("close-city").target = "hud-bar-end-turn"; })), /the city screen opens and the next click is its Close/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith(steps => steps.splice(steps.findIndex(step => step.id === "close-city-again"), 1))), /the city screen opens and the next click is its Close/);
+  // The answers are the three events in the order of the queue, each with its first choice, and each leads to the head that follows.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => {
+    [step("answer-event-1").target, step("answer-event-2").target] = [step("answer-event-2").target, step("answer-event-1").target];
+  })), /answers the three events in the order of the queue/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-1").head = "host"; })), /names the first choice of the head it leads to/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-3").to = "dialog"; })), /the last answer closes the dialog/);
 });
