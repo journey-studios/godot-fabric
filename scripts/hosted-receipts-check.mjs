@@ -5,7 +5,22 @@ import { REPOSITORY, REPOSITORY_URL, SLICES } from "./hosted-receipts-slices.mjs
 // The offline check of the committed hosted receipts. No network: the receipts must agree with the
 // table of slices and with themselves (scripts/hosted-receipts.mjs --check).
 
-const EXPECTED_JOBS = ["contracts", "native-cold-start", "parity-comparison", "reference-android", "reference-ios"];
+// The jobs of the Contracts run a receipt records, by the event that started it. Every push of main ran
+// the one native job until the native suites became opt-in; since then only a dispatched run has them,
+// split between the cold build and the three suite jobs that restore its host (.github/workflows/contracts.yml).
+export const CONTRACTS_JOBS = {
+  push: ["contracts", "native-cold-start", "parity-comparison", "reference-android", "reference-ios"],
+  workflow_dispatch: [
+    "contracts",
+    "native-cold-start",
+    "native-suites-frontier",
+    "native-suites-input",
+    "native-suites-runtime",
+    "parity-comparison",
+    "reference-android",
+    "reference-ios",
+  ],
+};
 const PAGES_JOBS = ["build", "deploy"];
 
 const isSha1 = (value) => typeof value === "string" && /^[0-9a-f]{40}$/.test(value);
@@ -97,15 +112,16 @@ function checkHostedCi(slice, ci, problems) {
   if (!isSha1(run.headSha) || !run.headSha.startsWith(slice.squash)) {
     problems.push(`${label}: the run's head ${run.headSha} is not the squash ${slice.squash} of #${slice.pr}`);
   }
-  if (run.event !== "push" || run.branch !== "main" || run.workflow !== "Contracts" || run.status !== "completed" || run.conclusion !== "success" || run.attemptCount !== 1) {
-    problems.push(`${label}: the run is not a completed, successful, first-attempt Contracts push of main`);
+  const expectedJobs = Object.hasOwn(CONTRACTS_JOBS, run.event) ? CONTRACTS_JOBS[run.event] : null;
+  if (!expectedJobs || run.branch !== "main" || run.workflow !== "Contracts" || run.status !== "completed" || run.conclusion !== "success" || run.attemptCount !== 1) {
+    problems.push(`${label}: the run is not a completed, successful, first-attempt Contracts push or dispatch of main`);
   }
   if (run.mergedPullRequest !== `${REPOSITORY_URL}/pull/${slice.pr}`) {
     problems.push(`${label}: the merged pull request is not #${slice.pr}`);
   }
   const jobs = Array.isArray(run.jobs) ? run.jobs : [];
-  if (JSON.stringify(jobs.map((job) => job.name).sort()) !== JSON.stringify(EXPECTED_JOBS)) {
-    problems.push(`${label}: the jobs are not ${EXPECTED_JOBS.join(", ")}`);
+  if (expectedJobs && JSON.stringify(jobs.map((job) => job.name).sort()) !== JSON.stringify(expectedJobs)) {
+    problems.push(`${label}: the jobs are not ${expectedJobs.join(", ")}`);
   }
   for (const job of jobs) {
     if (job.status !== "completed" || job.conclusion !== "success") {
@@ -116,7 +132,7 @@ function checkHostedCi(slice, ci, problems) {
     }
   }
   const checkouts = run.jobCheckouts ?? {};
-  if (JSON.stringify(Object.keys(checkouts).sort()) !== JSON.stringify(EXPECTED_JOBS) || Object.values(checkouts).some((sha) => sha !== run.headSha)) {
+  if (JSON.stringify(Object.keys(checkouts).sort()) !== JSON.stringify(expectedJobs) || Object.values(checkouts).some((sha) => sha !== run.headSha)) {
     problems.push(`${label}: not every job checked out the squash`);
   }
   const pull = ci.pullRequest ?? {};
@@ -139,6 +155,11 @@ function checkHostedCi(slice, ci, problems) {
   }
   for (const wanted of slice.nativeSteps) {
     checkNativeStep(slice, wanted, ci, problems);
+    // A receipt of the single native job names no job; one of a dispatched run names the job that ran the step.
+    const job = run.nativeSteps?.[wanted.script]?.job ?? "native-cold-start";
+    if (!job.startsWith("native-") || !expectedJobs?.includes(job)) {
+      problems.push(`${slice.folder}: step ${wanted.script} ran in ${job}, not in a native job of the run`);
+    }
   }
   const contracts = run.contractsJob ?? {};
   for (const name of ["test:contracts", "check:static", "check:publication"]) {

@@ -6,7 +6,8 @@ export const REPOSITORY = "journey-studios/godot-fabric";
 export const REPOSITORY_URL = `https://github.com/${REPOSITORY}`;
 
 // One row per slice: the folder of its evidence page, the pull request and its squash commit on main,
-// the Contracts and Pages runs of the push, the npm steps of the native job that exercise the slice
+// the Contracts run of main at the squash (the push until the native suites became opt-in, a dispatch
+// since: a push no longer runs them) and the Pages run of the push, the npm steps of the native jobs that exercise the slice
 // (judged by the TAP summary or by a marker line), the artifacts those steps upload, the Node test
 // files of the `contracts` job that belong to the slice and the activity entry of the dashboard data.
 export const SLICES = [

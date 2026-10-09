@@ -123,7 +123,53 @@ test("a job that is not in success is rejected, in the Contracts run and in the 
     mutate("frontier-baseline", "hosted-ci.json", (receipt) => {
       receipt.run.conclusion = "failure";
     }),
-    /frontier-baseline: hosted-ci\.json: the run is not a completed, successful, first-attempt Contracts push of main/,
+    /frontier-baseline: hosted-ci\.json: the run is not a completed, successful, first-attempt Contracts push or dispatch of main/,
+  );
+});
+
+// Since the native suites became opt-in, a push of main skips them and the receipt comes from a dispatched run, whose
+// native suites are split between the cold build and three suite jobs.
+function asDispatch(receipt) {
+  const native = receipt.run.jobs.find((job) => job.name === "native-cold-start");
+  receipt.run.event = "workflow_dispatch";
+  for (const name of ["native-suites-frontier", "native-suites-input", "native-suites-runtime"]) {
+    receipt.run.jobs.push({ ...native, name, databaseId: native.databaseId + receipt.run.jobs.length });
+    receipt.run.jobCheckouts[name] = receipt.run.headSha;
+  }
+  for (const step of Object.values(receipt.run.nativeSteps)) {
+    step.job = "native-suites-frontier";
+  }
+}
+
+test("a dispatched run with the split native jobs is accepted, a push with them or a step outside them is not", () => {
+  const dispatched = mutate("frontier-soak", "hosted-ci.json", asDispatch);
+  assert.equal(dispatched.status, 0, dispatched.stderr);
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      asDispatch(receipt);
+      receipt.run.event = "push";
+    }),
+    /frontier-soak: hosted-ci\.json: the jobs are not contracts, native-cold-start, parity-comparison, reference-android, reference-ios/,
+  );
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      asDispatch(receipt);
+      receipt.run.jobs = receipt.run.jobs.filter((job) => job.name !== "native-suites-input");
+    }),
+    /frontier-soak: hosted-ci\.json: the jobs are not contracts, native-cold-start, native-suites-frontier, native-suites-input, native-suites-runtime, parity-comparison/,
+  );
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      asDispatch(receipt);
+      receipt.run.nativeSteps["test:frontier-soak"].job = "contracts";
+    }),
+    /frontier-soak: step test:frontier-soak ran in contracts, not in a native job of the run/,
+  );
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      receipt.run.event = "pull_request";
+    }),
+    /frontier-soak: hosted-ci\.json: the run is not a completed, successful, first-attempt Contracts push or dispatch of main/,
   );
 });
 

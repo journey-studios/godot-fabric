@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
-import { checkReceipts } from "./hosted-receipts-check.mjs";
+import { CONTRACTS_JOBS, checkReceipts } from "./hosted-receipts-check.mjs";
 import { REPOSITORY, REPOSITORY_URL, SLICES } from "./hosted-receipts-slices.mjs";
 
 // Hosted receipts of the 0.5 Frontier slices that already reached main.
@@ -399,29 +399,40 @@ function contractsRecord(slice, squash, job, lines) {
   };
 }
 
+// The one native job that ran a step or uploaded an artifact: a dispatched run splits the suites between jobs.
+function nativeJobOf(jobs, logs, label, holds) {
+  const holders = jobs.filter((job) => job.name.startsWith("native-") && holds(job, logs.get(job.name)));
+  if (holders.length !== 1) {
+    throw new Error(`${label} is in ${holders.length} native jobs of the run, not in one`);
+  }
+  return holders[0];
+}
+
 function hostedCiReceipt(slice, workDir) {
   const facts = runFacts(slice.contractsRun);
   const { run, jobs, logs } = facts;
   const squash = run.head_sha;
-  if (!squash.startsWith(slice.squash) || run.event !== "push" || run.head_branch !== "main" || run.name !== "Contracts") {
-    throw new Error(`${slice.folder}: run ${slice.contractsRun} is not the Contracts push of main at ${slice.squash}`);
+  // Since the native suites became opt-in, a push of main skips them: the receipt needs the Contracts run
+  // dispatched on main while it was still at the squash (gh workflow run contracts.yml --ref main).
+  if (!squash.startsWith(slice.squash) || !Object.hasOwn(CONTRACTS_JOBS, run.event) || run.head_branch !== "main" || run.name !== "Contracts") {
+    throw new Error(`${slice.folder}: run ${slice.contractsRun} is not a Contracts push or dispatch of main at ${slice.squash}`);
   }
   if (run.status !== "completed" || run.conclusion !== "success" || jobs.some((job) => job.conclusion !== "success")) {
-    throw new Error(`${slice.folder}: run ${slice.contractsRun} did not succeed in every job`);
+    throw new Error(`${slice.folder}: run ${slice.contractsRun} did not succeed in every job (a push skips the native jobs; dispatch the run)`);
   }
   const pullRequest = pullRequestRecord(slice, squash);
-  const native = jobs.find((job) => job.name === "native-cold-start");
-  const nativeLog = logs.get("native-cold-start");
   const nativeSteps = {};
   for (const wanted of slice.nativeSteps) {
     const name = `Run npm run ${wanted.script}`;
-    const result = stepResult(stepSection(nativeLog, name));
-    nativeSteps[wanted.script] = { ...stepRecord(native, name), result };
+    const native = nativeJobOf(jobs, logs, `step "${name}"`, (job) => job.steps.some((step) => step.name === name));
+    const result = stepResult(stepSection(logs.get(native.name), name));
+    nativeSteps[wanted.script] = { ...(run.event === "push" ? {} : { job: native.name }), ...stepRecord(native, name), result };
   }
   const runArtifacts = ghPages(`repos/${REPOSITORY}/actions/runs/${slice.contractsRun}/artifacts`, "artifacts");
   const artifacts = {};
   for (const descriptor of slice.artifacts) {
-    artifacts[descriptor.key] = artifactRecord(descriptor, runArtifacts, nativeLog, workDir, slice.contractsRun);
+    const uploader = nativeJobOf(jobs, logs, `the upload of ${descriptor.name}`, (job, lines) => uploadFromLog(lines, descriptor.name) !== null);
+    artifacts[descriptor.key] = artifactRecord(descriptor, runArtifacts, logs.get(uploader.name), workDir, slice.contractsRun);
   }
   const parity = logs.get("parity-comparison").find((line) => line.startsWith("PARITY_COMPARISON_PASSED"));
   const receipt = {
