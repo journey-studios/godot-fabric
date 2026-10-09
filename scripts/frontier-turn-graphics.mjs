@@ -17,8 +17,9 @@ import {createTurnLane, machine, loadAverage} from "./frontier-turn-lane.mjs";
 // interquartile range of each run's.
 //
 // A frame time exists only if a display presents the window, and the rule is the baseline's, imported and not copied (tests/frontier-baseline-oracle.mjs): a run
-// is a measurement only if the window drew throughout AND its idle frame median is at least half of the refresh period the window read back (a presented window at
-// 120 Hz idles at about 7.8 ms, an unpaced one at about 0.5 ms: the display off or showing the lock screen, with the vsync still reading back enabled). A run that
+// is a measurement only if the window drew throughout AND its idle reference (the median of the half-sums of consecutive pairs of its idle intervals) is at least half of
+// the refresh period the window read back (a presented window at 120 Hz has a reference of about 8.3 ms, an unpaced one about 0.6 ms: the display off or showing the
+// lock screen, with the vsync still reading back enabled). A run that
 // fails either rule is kept in the receipt under rejectedAttempts, with its reason ("unpaced: the display is not presenting" or "undrawn: ...") and its raw
 // intervals, and repeated, up to MAX_ATTEMPTS times for the same slot. If a slot exhausts its attempts the lane stops: the receipt is written with presented:
 // false, status "not presented: <reason>" and NO frame-time statistic (summary is null, and nothing of the rejected attempts is printed as a frame time), and the
@@ -128,7 +129,7 @@ try {
     protocol: {runs: GRAPHICS_RUNS, maxAttempts: MAX_ATTEMPTS, warmupRounds: WARMUP_ROUNDS, rounds: STEADY_ROUNDS, idleFrames: IDLE_FRAMES, viewport: first.stages.scene.viewport,
       percentiles: "nearest rank over the raw intervals of one run",
       acrossRuns: "median and interquartile range (nearest-rank quartiles) of each run's statistic",
-      validity: "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      validity: "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle reference (the median of the half-sums of consecutive pairs of the idle intervals) is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
       discarded: "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"},
     machine: {...machine(), displays: displays()}, provenance: first.stages.provenance, attempts: attempts.map(({raw: _raw, ...each}) => each),
     nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))), bundleSha256: prepared.bundleSha256, probeSha256: prepared.probeSha256,
@@ -146,14 +147,14 @@ try {
   if (presented) {
     for (const run of summary.runs) {
       console.log(line(`run ${run.run} idle (ms)`, `p50 ${run.idleFrameMs.p50}  p95 ${run.idleFrameMs.p95}  p99 ${run.idleFrameMs.p99}  max ${run.idleFrameMs.max}`));
-      console.log(line(`run ${run.run} click frame (ms)`, `p50 ${run.swapFrameMs.p50}  p95 ${run.swapFrameMs.p95}  p99 ${run.swapFrameMs.p99}  max ${run.swapFrameMs.max}  above 2x idle median ${run.swapFrameMs.aboveTwiceIdleMedian}/${run.swapFrameMs.samples}`));
+      console.log(line(`run ${run.run} click frame (ms)`, `p50 ${run.swapFrameMs.p50}  p95 ${run.swapFrameMs.p95}  p99 ${run.swapFrameMs.p99}  max ${run.swapFrameMs.max}  above 2x idle reference ${run.swapFrameMs.aboveTwiceIdleReference}/${run.swapFrameMs.samples}  above 2x idle median ${run.swapFrameMs.aboveTwiceIdleMedian}/${run.swapFrameMs.samples}`));
     }
     console.log(JSON.stringify({clicks: summary.across, turn: turnFrames.across}, null, 2));
   } else {
     // Nothing of a rejected attempt is printed as a frame time: only why it was rejected.
     console.log("NOT PRESENTED: the lane ends without frame-time numbers. Wake and unlock the display and run it again.");
     for (const attempt of attempts) {
-      console.log(line(`slot ${attempt.slot} attempt ${attempt.attempt}`, `${attempt.valid ? "accepted" : `rejected, ${attempt.reason}`} (idle median ${attempt.idleMedianMs} ms, at least ${attempt.minimumIdleMedianMs} ms wanted)`));
+      console.log(line(`slot ${attempt.slot} attempt ${attempt.attempt}`, `${attempt.valid ? "accepted" : `rejected, ${attempt.reason}`} (idle reference ${attempt.idleReferenceMs} ms, at least ${attempt.minimumIdleReferenceMs} ms wanted; idle median ${attempt.idleMedianMs} ms)`));
     }
     process.exitCode = EXIT_NOT_PRESENTED;
   }
