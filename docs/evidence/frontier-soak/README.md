@@ -56,8 +56,32 @@ npm run test:frontier-soak
 node scripts/frontier-soak-sabotage.mjs
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:frontier-soak` e o artefato `native-frontier-soak` do workflow `contracts.yml` ainda não rodaram na CI hospedada. Tudo o que esta página registra
-> é evidência local, em macOS arm64, headless.
+## CI hospedada e Pages
+
+O push da `main` em `a49f851` (o squash do #83, run
+[37904776515](https://github.com/journey-studios/godot-fabric/actions/runs/37904776515) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (7 min),
+`native-cold-start` (61 min) e `parity-comparison` (28 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `a49f851`, e a árvore do head do PR (`6a10305`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:frontier-soak` (passo 58, 7 min) passou: `# tests 1`, `# pass 1`, `# fail 0`, o teste dos
+  100 turnos jogados três vezes. O job `contracts` passou `npm run test:contracts` (7, 43 e 352 testes de Node e 13 de
+  Python), `check:static` e `check:publication`.
+- **O artefato.** `native-frontier-soak` (id 11605545298, 338.367 bytes, SHA-256 `5333ee66…`, igual ao digest da API e ao do
+  log de upload) tem 9 arquivos, e o recibo fixa o SHA-256 de cada um. Os logs dos três processos imprimem cada um
+  `FRONTIER_SOAK_PASSED: 34`, os 34 checks de cada processo desta página. O recibo guarda a duração do passo e nenhuma
+  medição do probe: o heap, a memória residente e os tempos desta página são os da máquina local, e o run hospedado só
+  confirma que os 34 checks passam num runner.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37904776614](https://github.com/journey-studios/godot-fabric/actions/runs/37904776614), build e deploy em success, 43 testes
+do painel). O deployment 6956313603 está em success, o artefato `github-pages` (id 11604141269, SHA-256 `bb5301eb…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-06-soak-b77178a`. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: as quatro sabotagens retidas, as quatro rodadas de tempos e o recibo de fonte em `dd67671`.
 
 ## O jogo é o mesmo
 
@@ -201,5 +225,6 @@ termina duas vezes; uma fase que avança na pausa; uma UI que não responde; um 
 - O rastreador de rejeições do Hermes reporta de um timer e não na rejeição; o soak espera 2,3 s antes de ler a contagem e o controle é um `TypeError`. O runtime não tem `ErrorUtils`.
 - O HUD é um fixture e o jogador uma regra fixa sobre um jogo que para de mudar no turno 14 (sem o orçamento de 64 tarefas e 128 eventos, que o caso de estresse dos serviços cobre).
 - **`turno` e `congelado`** do V05-06 seguem abertos: a latência clique até painel, o tempo de quadro num turno com IA fatiada e a medição no consumidor do jogo são do `turno`; o congelamento do orçamento é um ato posterior e único.
-- **CI hospedada pendente**.
+- A CI hospedada repete os 34 checks em três processos (seção "CI hospedada e Pages"); os tempos, o heap e a memória medidos
+  são só locais.
 - O host anterior não se aplica (nenhum C++ mudou).

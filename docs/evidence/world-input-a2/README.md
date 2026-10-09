@@ -54,9 +54,31 @@ npm run test:world-input
 node scripts/world-input-graphics.mjs
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:world-input` e o artefato `native-world-input` do workflow
-> `contracts.yml` ainda não rodaram na CI hospedada para esta fatia (nem para a anterior). Tudo o que esta página
-> registra é evidência local, em macOS arm64. Os controles e a faixa janelada não rodam na CI.
+## CI hospedada e Pages
+
+O push da `main` em `2a3f4b0` (o squash do #78, run
+[37874901247](https://github.com/journey-studios/godot-fabric/actions/runs/37874901247) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (10 min),
+`native-cold-start` (50 min) e `parity-comparison` (17 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `2a3f4b0`, e a árvore do head do PR (`e46fca2`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:world-input` (passo 48, 7 s) passou: `# tests 1`, `# pass 1`, `# fail 0`. O job
+  `contracts` passou `npm run test:contracts` (7, 43 e 334 testes de Node e 13 de Python), `check:static` e
+  `check:publication`.
+- **O artefato.** `native-world-input` (id 11592531447, 21.014 bytes, SHA-256 `355bfbfb…`, igual ao digest da API e ao do
+  log de upload) tem 5 arquivos, e o recibo fixa o SHA-256 de cada um. O log dele imprime `WORLD_INPUT_PASSED: 91`, o mesmo
+  número de checks da suíte headless desta página, a1 e a2 juntas.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37874901241](https://github.com/journey-studios/godot-fabric/actions/runs/37874901241), build e deploy em success, 43 testes
+do painel). O deployment 6951492584 está em success, o artefato `github-pages` (id 11591284242, SHA-256 `45a89d12…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-02-pointer-a2-af941dd`. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: os controles com os hosts anteriores, as cinco sabotagens e a faixa janelada (32 checks, sem alegação de
+tempo de quadro). O run da fatia anterior (a1) tem o [recibo próprio](../world-input/hosted-ci.json).
 
 ## Os três hosts
 
@@ -295,7 +317,8 @@ fatia 3.
 
 ## Limites
 
-- Evidência local em macOS arm64; a CI hospedada está pendente.
+- Evidência local em macOS arm64, mais o run hospedado da seção "CI hospedada e Pages", que repete só a suíte headless; os
+  controles com os hosts anteriores e a faixa janelada são só locais.
 - Os eventos são sintéticos, entregues por `Input.parse_input_event`: não há ponteiro de hardware, tela de toque real,
   multitoque (um segundo dedo) nem arrasto real.
 - Nenhum export móvel do Godot e nenhuma execução num iPhone.

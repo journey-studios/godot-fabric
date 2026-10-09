@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-consumer",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:56:54.754Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37864357395,
+    "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/76",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T00:21:31Z",
+    "updatedAt": "2026-10-09T01:13:50Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113607426156,
+        "runAttempt": 1,
+        "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+        "startedAt": "2026-10-09T00:21:36Z",
+        "completedAt": "2026-10-09T00:24:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395/job/113607426156"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113607426190,
+        "runAttempt": 1,
+        "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+        "startedAt": "2026-10-09T00:21:42Z",
+        "completedAt": "2026-10-09T01:13:20Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395/job/113607426190"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113621517621,
+        "runAttempt": 1,
+        "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+        "startedAt": "2026-10-09T01:13:23Z",
+        "completedAt": "2026-10-09T01:13:49Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395/job/113621517621"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113607426092,
+        "runAttempt": 1,
+        "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+        "startedAt": "2026-10-09T00:21:35Z",
+        "completedAt": "2026-10-09T00:27:12Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395/job/113607426092"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113607425900,
+        "runAttempt": 1,
+        "headSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+        "startedAt": "2026-10-09T00:21:38Z",
+        "completedAt": "2026-10-09T00:27:26Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37864357395/job/113607425900"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "native-cold-start": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "parity-comparison": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "reference-android": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "reference-ios": "c8de44b3caa12a82009e55a059e2ce3da68f9485"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T00:22:02Z",
+          "completedAt": "2026-10-09T00:24:52Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 334,
+              "suites": 0,
+              "pass": 334,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T00:24:52Z",
+          "completedAt": "2026-10-09T00:24:52Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T00:24:52Z",
+          "completedAt": "2026-10-09T00:24:53Z",
+          "passed": true,
+          "files": 1766
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:consumer:civ-lite": {
+        "step": "Run npm run test:consumer:civ-lite",
+        "number": 127,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T01:10:59Z",
+        "completedAt": "2026-10-09T01:11:31Z",
+        "result": {
+          "tap": [],
+          "tests": [],
+          "failedTests": [],
+          "markers": [
+            "CONSUMER_CHECK_PASSED: civ-lite: 18 build/ownership checks; 145 native checks; 10 cycles"
+          ]
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 76,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/76",
+    "title": "feat(frontier): Provision civ-lite as an addon consumer with a leak-free lifecycle (V05-03 consumidor)",
+    "headSha": "283c5445db94e22a5cf04be728806f119d57f8e9",
+    "baseSha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+    "squashMergeCommit": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+    "squashCommitSubject": "feat(frontier): Provision civ-lite as an addon consumer with a leak-free lifecycle (#76)",
+    "mergedAt": "2026-10-09T00:21:28Z",
+    "headTreeSha": "0e10924f671f9ce70033e47654d41fe0380a7dec",
+    "mainTreeSha": "0e10924f671f9ce70033e47654d41fe0380a7dec",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 7,
+    "commits": [
+      {
+        "sha": "b0509db210eae4aa944d053ba51e8cdbb87c56d3",
+        "subject": "feat(frontier): Provision civ-lite as an addon consumer with a leak-free lifecycle"
+      },
+      {
+        "sha": "029416fd3067e1d6c147dac44cd670be5110e337",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-consumer"
+      },
+      {
+        "sha": "b9a40cbff4d246bf2318914caf0daaab7b1c1e10",
+        "subject": "docs(frontier): Record the civ-lite consumer slice"
+      },
+      {
+        "sha": "0179a0f5b415e4b38fe83a94b2bb2ce46c6aede8",
+        "subject": "docs(roadmap): Record the 0.5 V05-03 consumer criterion"
+      },
+      {
+        "sha": "1abbf1b3ea0e2adaeb760f4f34e95a06944206ba",
+        "subject": "fix(frontier): Change the HUD screen only on an accepted call"
+      },
+      {
+        "sha": "6a48168e4e9ddca13f7b6fe26659a99f65a2d6de",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-consumer"
+      },
+      {
+        "sha": "283c5445db94e22a5cf04be728806f119d57f8e9",
+        "subject": "ci: Give the native job room for the civ-lite consumer lane"
+      }
+    ],
+    "changedFiles": 35,
+    "additions": 2548,
+    "deletions": 47
+  },
+  "artifacts": {
+    "consumer": {
+      "available": true,
+      "id": 11589042648,
+      "name": "independent-civ-lite-consumer",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 266468,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "634bd7c32116beb5ea82973ef45505227118d73be6d960f5ee620648c9872379",
+      "apiDigest": "sha256:634bd7c32116beb5ea82973ef45505227118d73be6d960f5ee620648c9872379",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "634bd7c32116beb5ea82973ef45505227118d73be6d960f5ee620648c9872379",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T01:12:31Z",
+      "expiresAt": "2027-01-07T00:21:32Z",
+      "fileCount": 10,
+      "files": {
+        "baseline-bundle.js": "00c9545b4782dd5f60fd278fa8e9b7779fac4c6429f60d2532b97afb0b64263a",
+        "bundle-report.json": "f76e194927dd451727d26f48e2015b09c93c32e8bc0b8ff0a0e1b36289a4f7fc",
+        "editor-cold.log": "c39aea6e65165c857402c8378c91ca15dfc68b2a2b81e321878a43ea16b18f64",
+        "headless.json": "7f26f26d149459a18f2dc2274e2e5d92de716bf1dc0976a4d2c2164d856e0bc3",
+        "headless.log": "6289a8a18041ca35238f92b319e2660059ed563585b9aa110d7bea30f933883f",
+        "offline.log": "5fff196a6b21acfc7ca5401b5ecec278becd234d1cd5ac6fea17d751b470eed3",
+        "provision.log": "39f4cf628bc74d989e457b50e21a28ad31904dbc28217a53952679cdda833038",
+        "report.json": "28d5071da6c6002e7edc36e547caf95912a8e7c3ffd66d97decbf945577838be",
+        "sdk-manifest.json": "b1b1f9100465deae673a71f6084cda88b3ae879531955e13b79a71d8610aacb0",
+        "series.json": "c1e271492f9af55add0784e4ef5d04a45aaf65acb353d2e8dca9b3c4cc997791"
+      },
+      "markers": [
+        {
+          "file": "editor-cold.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "headless.log",
+          "line": "CIVLITE_VALIDATION_PASSED"
+        }
+      ]
+    }
+  },
+  "findings": []
+}
