@@ -165,10 +165,16 @@ static func _research(state: Dictionary, rates: Dictionary) -> Dictionary:
   return {"current": current, "known": done, "needed": Rules.TECHS[done].cost if current != "" else 0, "rate": rates.science, "techs": techs}
 
 
+# The dialog is the head of the event queue, read through the table of events. `index` (1-based) and `count` say where it is in
+# the queue the HUD is working through ("1 of 3"): the ones already answered plus this one, and those plus the ones waiting.
 static func _dialog(state: Dictionary) -> Dictionary:
-  if int(state.event.pending) != 1:
-    return {"open": 0, "id": "", "title": "", "text": "", "choices": []}
+  var queue: Array = state.events.queue
+  if queue.is_empty():
+    return {"open": 0, "id": "", "title": "", "text": "", "choices": [], "index": 0, "count": 0}
+  var event: Dictionary = Rules.EVENTS[Rules.event_index(queue[0])]
   var choices := []
-  for choice: Dictionary in Rules.EVENT_CHOICES:
+  for choice: Dictionary in event.choices:
     choices.append({"id": choice.id, "label": choice.label, "detail": choice.detail})
-  return {"open": 1, "id": Rules.EVENT_ID, "title": Rules.EVENT_TITLE, "text": Rules.EVENT_TEXT, "choices": choices}
+  var answered: int = state.events.resolved.size()
+  return {"open": 1, "id": event.id, "title": event.title, "text": event.text, "choices": choices, "index": answered + 1,
+    "count": answered + queue.size()}

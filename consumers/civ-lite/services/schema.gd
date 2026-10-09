@@ -31,7 +31,8 @@ const CITY_SCREEN := {"object": {"present": INT, "name": STR, "x": INT, "y": INT
 const TECH := {"object": {"id": STR, "label": STR, "cost": INT, "state": STR, "enabled": INT, "reason": STR, "reason_text": STR}}
 const RESEARCH := {"object": {"current": STR, "known": INT, "needed": INT, "rate": INT, "techs": {"array": TECH}}}
 const CHOICE := {"object": {"id": STR, "label": STR, "detail": STR}}
-const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}}}
+# `index` and `count` place the dialog in the queue of events being answered: 1-based, "1 of 3"; both 0 while it is closed.
+const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}, "index": INT, "count": INT}}
 # `last_job` is the id of the last end-of-turn job that finished, 0 for none: a HUD that connects late learns from it that the
 # job it was told about is over, without a replay of the signal.
 const SNAPSHOT := {"object": {"version": INT, "epoch": INT, "last_job": INT, "turn": INT, "phase": STR, "context": STR,

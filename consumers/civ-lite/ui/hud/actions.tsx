@@ -11,7 +11,7 @@ import { Choice, Heading, Panel, Reason } from "./kit";
 const actionKey = (action: Action) => [action.id, ...action.args].join("-");
 
 export function Actions({ actions }: { actions: readonly Action[] }) {
-  return <Panel id="hud-actions" style={{ width: 440 }}>
+  return <Panel id="hud-actions" style={{ position: "absolute", left: 616, top: 24, width: 440 }}>
     <Heading id="hud-actions-title">Actions</Heading>
     {actions.filter(action => action.id !== "end_turn").map(action => {
       const key = actionKey(action);

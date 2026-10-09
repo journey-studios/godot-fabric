@@ -466,7 +466,8 @@ to mount. It stays in `consumers/minimal` as a regression and is not edited.
 
 **Ceiling of the game** (a cut enters only if it removes a distinct context):
 24x16 map from a fixed seed; two unit types (Settler, Warrior); one city with three
-to five production items; research as a list; one blocking event or dialog; a
+to five production items; research as a list; a queue of three blocking events, each
+a dialog answered in turn (decision of 2026-10-09: the queue is real in the game); a
 minimal scripted AI; a 12-turn replay with a golden state hash, plus a 100-turn
 soak. Seven contexts: none, tile, Settler, Warrior, stack of two units, city,
 dialog. Six HUD panels: turn and resources bar, unit actions, tile card, city

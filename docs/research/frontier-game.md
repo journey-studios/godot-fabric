@@ -79,7 +79,7 @@ lower-case ASCII.
 | `cities` | object[], 0 or 1 | `name`, `x`, `y`, `size` (1 to 3), `queue` (item ids, at most 3), `buildings` (item ids in completion order). |
 | `res` | object | `food`, `production`, `science`: the stocks, never negative. |
 | `research` | object | `done` (technologies learned, a prefix of the list) and `current` (a technology id, or `""`). |
-| `event` | object | `id`, `pending` (0 or 1), `resolved` (0 or 1), `choice` (`""` or the choice id). |
+| `events` | object | The queue of events: `queue` (event ids, the head first: the ones raised and not yet answered, in the order of the table) and `resolved` (`{id, choice}[]`, the answers in the order they were given). Empty before turn 5; all three are in one or the other from then on. |
 | `ai` | object | `unit` (the faction Warrior's id, 0 if none), `step` (index into the route), `tx`, `ty` (the tile it is walking to). |
 | `sel` | object | The selection: `x`, `y` (`-1` when nothing is selected) and `unit` (a unit id, or 0). |
 | `log` | object[], at most 32 | `seq`, `turn`, `code`, `a`, `b`: the game's events, oldest first. |
@@ -115,8 +115,14 @@ The selection is part of the state because the context is derived from it and th
   its cost. With no technology chosen the science is lost.
 - **Items.** Warrior (unit, 8, no technology); Granary (building, 10, Alphabet, +2 food); Workshop (14, Bronze Working,
   +2 production); Library (16, Writing, +2 science).
-- **Event.** `wanderers` is raised when turn 5 begins. Welcoming them adds `6 + draw(4)` food, a draw from the game's PRNG;
-  turning them away adds 4 production.
+- **Events.** A queue of three, written in the table `Rules.EVENTS`. All three are raised together, in the order of the table, when turn 5
+  begins, once, and the player answers them one at a time: `resolve_event` answers the head with one of **its** choices (a choice of another
+  event is `unknown_choice`), and the next event becomes the head. Each choice adds an amount to one stock. `wanderers` (first): welcoming
+  them adds `6 + draw(4)` food, a draw from the game's PRNG, and turning them away adds 4 production. `traders` (second): `buy_grain` adds 3
+  food and `buy_tools` adds 3 production. `scholar` (third): `host` adds 3 science and `send_on` adds 2 food. Only welcoming the wanderers draws
+  from the PRNG, so the draws are what they were with the one event. The queue is a decision of 2026-10-09 (the user's: the queue of three events
+  is real in the game, not a HUD-side list), which moved the golden and trace hashes below; the ceiling of the game is now "a queue of three
+  blocking events", where it was "one blocking event".
 - **The faction.** Its Warrior walks the closed route
   `(17,8) (18,8) (19,8) (19,9) (19,10) (18,10) (17,10) (17,9)` one step a turn. It **waits where it is** when a unit of the
   player or the player's city is on the next tile of the route, and keeps waiting for as long as that holds (the step does not
@@ -134,7 +140,7 @@ Derived from the state by one pure function (`context.gd`), in this precedence. 
 
 | # | Context | When | Panels the HUD mounts |
 | --- | --- | --- | --- |
-| 1 | `dialog` | an event is pending; it outranks everything and blocks every intent but `resolve_event` | event dialog |
+| 1 | `dialog` | an event waits in the queue; it outranks everything and blocks every intent but `resolve_event` | event dialog |
 | 2 | `settler` | the selected unit is a Settler | unit actions, tile card |
 | 3 | `warrior` | the selected unit is a Warrior | unit actions, tile card |
 | 4 | `none` | nothing is selected | turn and resources bar |
@@ -167,7 +173,7 @@ returns `{"ok": 1, "code": "ok", "text": ""}` plus the fields noted. All argumen
 | `fortify` | `unit_id` | Fortifies a Warrior and ends its movement for the turn. |
 | `set_production` | `item_id`, `slot` | Puts an item in a slot of the queue: slot 0 is what is being built, a slot equal to the queue's length appends. The stock already made is kept. |
 | `set_research` | `tech_id` | Starts the next technology of the list. |
-| `resolve_event` | `choice_id` | Resolves the pending event with one of its choices. |
+| `resolve_event` | `choice_id` | Answers the head of the event queue with one of its own choices; the next event becomes the head. |
 | `end_turn` | none | Runs every phase; the result adds `turn` and `phases` (`name`, `tasks`, `events` for each). |
 
 Two methods slice the turn for a frame budget: `begin_end_turn()` makes the state's `phase` the first phase, and
@@ -176,13 +182,13 @@ last). While a turn is being processed every intent is refused with `turn_in_pro
 
 ### Refusal codes
 
-An intent is checked in this order: the turn (`turn_in_progress`), a pending event (`event_pending`; `resolve_event` skips
+An intent is checked in this order: the turn (`turn_in_progress`), an event waiting in the queue (`event_pending`; `resolve_event` skips
 it), then its own checks as listed.
 
 | Code | Text | Refused when |
 | --- | --- | --- |
 | `turn_in_progress` | The turn is being processed. | any intent while `phase` is not `idle` |
-| `event_pending` | A decision is waiting. Resolve the event first. | any intent but `resolve_event` while the event is pending |
+| `event_pending` | A decision is waiting. Resolve the event first. | any intent but `resolve_event` while an event waits in the queue |
 | `no_turn_job` | No turn is being processed. | `advance_phase` with `phase` idle |
 | `out_of_bounds` | That tile is outside the map. | `select_tile`, `move_unit` outside 24x16 |
 | `nothing_selected` | Nothing is selected. | `clear_selection` with no tile selected |
@@ -209,8 +215,8 @@ it), then its own checks as listed.
 | `tech_known` | That technology is already known. | it is already learned |
 | `research_out_of_order` | Technologies are researched in list order. | it is not the next one |
 | `already_researching` | That technology is already being researched. | it is the current one |
-| `no_event` | There is no event to resolve. | `resolve_event` with nothing pending |
-| `unknown_choice` | That is not one of the choices. | the id is not one of the event's choices |
+| `no_event` | There is no event to resolve. | `resolve_event` with the queue empty |
+| `unknown_choice` | That is not one of the choices. | the id is not one of the head event's choices (a choice of another event included) |
 
 ## Turn phases
 
@@ -227,7 +233,7 @@ time.
 | `production` | adds production, builds the first queued item if paid | tiles worked + 1, or 0 with no city or an empty queue |
 | `growth` | adds food, grows the city if paid | tiles worked + 1, or 0 with no city or at size 3 |
 | `research` | adds science, learns the technology if paid | tiles worked + 1, or 0 with none chosen |
-| `refresh` | refills movement, advances the turn, clears the selection, raises the event | the number of units |
+| `refresh` | refills movement, advances the turn, clears the selection, raises the events (all three, on turn 5) | the number of units |
 
 ## The snapshot (DTO)
 
@@ -252,7 +258,7 @@ lists, so the TypeScript mirror needs no optional fields. Types below are `int`,
 | `tile` | TileCard | The selected tile's card. |
 | `city` | CityScreen | The city screen. |
 | `research` | Research | The research list. |
-| `dialog` | Dialog | The pending event's dialog. |
+| `dialog` | Dialog | The dialog of the event at the head of the queue. |
 
 **Selection**: `x`, `y` (int, `-1` when nothing is selected), `unit` (int, 0 when no unit is selected).
 
@@ -293,20 +299,27 @@ slot a HUD would use: the first free one, or the last when the queue is full.
 none), `rate` and `techs` (Tech[]). **Tech**: `id`, `label`, `cost`, `state` (`"known"`, `"current"`, `"available"` for the
 next one, or `"locked"`), and `enabled`/`reason`/`reason_text`. The stock being spent is `resources.science.stock`.
 
-**Dialog**: `open` (0 or 1), `id`, `title`, `text` and `choices` (`{id, label, detail}[]`), all empty when closed.
+**Dialog**: `open` (0 or 1), `id`, `title`, `text` and `choices` (`{id, label, detail}[]`) of the event at the head of the queue, read through
+the table of events and not from constants, and `index` (1-based) and `count`, where the head is in the queue ("1 of 3": the events answered plus
+this one, and those plus the ones waiting). All empty and 0 when closed.
 
 ## The replay
 
-`replay.gd` is the roteiro: 12 turns and 73 intents (43 accepted, 30 refused on purpose), each with the code and the context
+`replay.gd` is the roteiro: 12 turns and 77 intents (45 accepted, 32 refused on purpose), each with the code and the context
 it must produce. A refused step also proves it changed nothing. The state after the twelfth `end_turn` (turn 13 begins) has
 the **golden hash**, fixed in `tests/civ-lite-game-native.test.mjs`:
 
 ```
-275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29
+cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d
 ```
 
 It changes only when a rule, the map or the roteiro changes the state the replay ends in; the new value is then reviewed, not
-accepted. The generator draws 384 times for the map and once for the wanderers' gift (385 draws in all).
+accepted. The generator draws 384 times for the map and once for the wanderers' gift (385 draws in all). The queue of three events (2026-10-09)
+changed the shape of the state (`event` became `events`) and the roteiro's turn 5, so it moved this hash and the trace hash below; the previous
+values were `275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29` and `fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8`, and the
+records under `docs/evidence/frontier-{game,services,authority}/` keep describing runs that had them. The new values come from the independent oracle,
+which recomputes the state after each of the 77 steps from the table of events and PCG32 written again in Node, and agreed with the game at every step
+before the hashes were re-pinned.
 
 Adding `clear_selection` and four steps that use it (two accepted, `nothing_selected`, and `event_pending` while the dialog is
 open) **did not change the golden hash**: the intent only changes the selection and emits no event, and every `end_turn`
@@ -315,7 +328,7 @@ steps. The test therefore fixes a second hash, the **trace hash**, the SHA-256 o
 line, which pins how the replay got there:
 
 ```
-fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8
+ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e
 ```
 
 The oracle judges every one of those states regardless.
@@ -325,8 +338,8 @@ The oracle judges every one of those states regardless.
 | 1 | a selection is cleared with nothing selected (refused); the stack on the start tile; the Settler walks into the forest and cannot found a city with no points left; refusals for water, adjacency, Settlers fortifying, a Warrior founding, foreign or missing units and a city that does not exist yet; the Warrior fortifies |
 | 2 | the Settler founds the city; production and research are set; refusals for the technology, the item, the slot and the order of the list; the Warrior walks into the city |
 | 3 | an empty tile is selected, then cleared |
-| 4 | the second Warrior walks out; one runs out of points before a hill; two units stack up; turn 5 raises the event |
-| 5 | the event blocks every intent, `clear_selection` included; a wrong choice is refused; welcoming the wanderers; a known technology is refused; research and the queue resume; the city screen is opened and closed |
+| 4 | the second Warrior walks out; one runs out of points before a hill; two units stack up; turn 5 raises the three events |
+| 5 | the events block every intent, `clear_selection` included; a wrong choice, and a choice of the next event, are refused; the queue is answered in order (welcoming the wanderers, buying tools from the traders, sending the scholar on: the context stays `dialog` until the third); a known technology is refused; research and the queue resume; the city screen is opened and closed |
 | 6 to 12 | the city builds a Granary, a Warrior and a Workshop, grows to size 3, learns the whole list, and the Library is queued once Writing is known |
 
 The roteiro refuses with 24 of the codes above. The other four (`city_exists`, `too_close_to_edge`, `tile_occupied`,
@@ -342,7 +355,7 @@ and `no_turn_job` are exercised by slicing a turn by hand.
 | `warrior` | 9: `select_unit(2)` |
 | `city` | 18: `found_city(1)`, which selects the new city |
 | `tile` | 32: `select_tile(9, 8)`, an empty plain |
-| `dialog` | 45: `select_tile(7, 8)`, refused with `event_pending` while the event is open |
+| `dialog` | 45: `select_tile(7, 8)`, refused with `event_pending` while the first event of the queue is the head |
 
 ## Tests
 

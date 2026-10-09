@@ -166,6 +166,10 @@ export interface Dialog {
   readonly title: string;
   readonly text: string;
   readonly choices: readonly Choice[];
+  /** Where this event is in the queue being answered, 1-based ("1 of 3"); 0 while the dialog is closed. */
+  readonly index: Int;
+  /** How many events the queue held when it was raised: the ones answered plus this one and those waiting; 0 while closed. */
+  readonly count: Int;
 }
 
 export interface FrontierSnapshot {
