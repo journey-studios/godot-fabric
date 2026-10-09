@@ -353,8 +353,8 @@ export function verifyGraphicsReceipt(receipt) {
 // median (aboveTwiceIdleMedian, as it has always been counted), the frames above twice the idle reference (aboveTwiceIdleReference: the count that
 // the amended protocol of the final comparison V05-10 uses) and the frames above 100 ms. The count by the median depends on the group the median
 // falls in (242 of the 360 clicks of a presented run of the turn were "above twice the idle median" only because the median was in the low group),
-// the count by the reference does not. scripts/frontier-baseline-graphics.mjs prints both; scripts/frontier-turn-graphics.mjs still prints the one by
-// the median and will print the one by the reference in a later change, after the merge of the P8 slice that owns that script. No "missed frame" is
+// the count by the reference does not. scripts/frontier-baseline-graphics.mjs and scripts/frontier-turn-graphics.mjs both print the two counts, the one by the
+// median and the one by the reference. No "missed frame" is
 // read from them: on a display with the vsync on the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at
 // 120 Hz), so an interval longer than the refresh period is not an image the display showed twice.
 function summarizeGraphicsRun(run) {
