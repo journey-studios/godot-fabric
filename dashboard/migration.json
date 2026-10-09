@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T18:32:09.000Z",
+  "updatedAt": "2026-10-09T19:08:41.000Z",
   "source": {
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
@@ -4621,6 +4621,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-3-93323aa",
+      "at": "2026-10-09T19:08:41.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedado e de Pages do #97 (o instrumento de tempo de CPU do V05-10): o run Contracts do push da main em c57f9f6 passou, com o teste de contrato (19 de 19) e a guarda X9 e X10 limpa, e com os jobs nativos pulados; por isso o passo nativo test:cpu-time-instrument segue só local, assim como as faixas headless e janelada. O Pages publicou os dados da main no mesmo squash. O CONTRIBUTING passou a dizer quando um recibo pode usar o push: uma fatia sem passo nativo usa o push no squash, e uma com passo nativo precisa de workflow_dispatch na main enquanto ela estiver no squash. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/93323aa0ea454888f46d0da89c40f790ba956586/docs/evidence/cpu-time-instrument/hosted-ci.json"
+    },
     {
       "id": "milestone-0-5-v05-10-cpu-instrument-dad0db1",
       "at": "2026-10-09T18:32:09.000Z",
