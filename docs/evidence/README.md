@@ -1085,7 +1085,7 @@ and the engine's own monitor agrees with the instrument's series) and to within 
 lag 6 with a gain of 1.07 ms and at most 0.012 ms at every other lag. Three retained sabotages (the interval between frames for the CPU time, the load outside the measured frame, the engine's monitor for the CPU time) are rejected by the
 probe and by the oracle, each for its own rule, and the sources come back byte for byte. **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`); the clock is monotonic elapsed time and not the thread's
 CPU time, the Mac was shared with other agents (the 1-minute load average stood between 5.5 and 9.9, above the protocol's 2.0 for a comparative execution), the render term was exercised only in a lab scene, and the arms
-and the iPhone are open. The step is in the `native-suites-frontier` job of `contracts.yml`, which only runs on manual dispatch; hosted CI and Pages are pending, and the windowed lane and the sabotages never run there.
+and the iPhone are open. The step is in the `native-suites-frontier` job of `contracts.yml`, which only runs on manual dispatch, so the push of main at `c57f9f6` (#97) skipped it. That push's jobs passed (the contract tests, 19 of 19, and the milestone guard), and Pages published main's data ([hosted receipt](cpu-time-instrument/hosted-ci.json), [publication](cpu-time-instrument/publication.json)); the headless and windowed lanes and the sabotages stay local, and the windowed lane never runs in hosted CI.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

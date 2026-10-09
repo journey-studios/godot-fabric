@@ -160,8 +160,21 @@ A recomendação completa está na [nota de pesquisa](../../research/cpu-time-in
 - **Os braços e o iPhone seguem abertos.** O instrumento ainda não está ligado em A, B nem C (o B nem existe); o iPhone depende do GO ou NO-GO do V05-09; a faixa `unlimited` (vsync desligado) e o modelo de thread de render separada não rodaram (o oráculo recusa o segundo).
 - Quadros perdidos com o vsync ligado seguem abertos, como no protocolo.
 
-> **CI hospedada e Pages pendentes.** O passo `npm run test:cpu-time-instrument` e o artefato `native-cpu-time-instrument` do workflow `contracts.yml` (job `native-suites-frontier`, que só roda sob demanda, em `workflow_dispatch`) ainda não rodaram na CI hospedada, e nada foi publicado no Pages;
-> os dois entram depois do merge. A faixa janelada e as sabotagens nunca rodam lá. Tudo o que esta página registra é evidência local, em macOS arm64. O recibo de fonte (que fixa o SHA-256 de cada fonte executada) não certifica nenhum build nativo, porque a fatia não usa o host.
+## CI hospedada e Pages
+
+O push da `main` em `c57f9f6` (o squash do #97; run [37977034583](https://github.com/journey-studios/godot-fabric/actions/runs/37977034583) do workflow Contracts) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (cerca de 2 minutos), `reference-android` e `reference-ios`. Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**. O [recibo](hosted-ci.json) registra esses cinco como `skipped` e não como falha, e só os aceita porque a linha da fatia não tem passo nativo nem artefato.
+
+**O passo nativo `npm run test:cpu-time-instrument` não rodou na CI hospedada.** Ele está no job `native-suites-frontier` do `contracts.yml`, que só roda sob demanda (`workflow_dispatch`); o push o pulou, e por isso não há artefato `native-cpu-time-instrument` nem passo nativo no recibo. **As faixas headless e janelada seguem como evidência local**, em macOS arm64: a janelada nunca roda na CI, e as sabotagens também não. O recibo de fonte (que fixa o SHA-256 de cada fonte executada) não certifica nenhum build nativo, porque a fatia não usa o host.
+
+O que o run prova, conferido pelo `--check` do script e pelos logs:
+
+- **O checkout.** Os três jobs que rodaram usaram `c57f9f6`. A árvore do head do PR (`f83a598`, 5 commits) é a mesma do squash (`4a60d03`).
+- **O passo da guarda.** "Milestone exit guards (X9 and X10)" (passo 5 do job `contracts`) passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 7fb27e12a473 (--base 7fb27e12…); X9 clean, X10 clean`. A base é o pai do squash.
+- **Os testes.** `npm run test:contracts` (passo 6) passou com 7, 43 e 456 testes de Node e 13 de Python, `# fail 0`. O recibo confere, pelo nome e no log do job `contracts`, os 19 testes de nível superior de `tests/cpu-time-instrument.test.mjs`: 19 de 19. `check:static` e `check:publication` também passaram (1.914 arquivos).
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run [37977034484](https://github.com/journey-studios/godot-fabric/actions/runs/37977034484), `build` e `deploy` em success, 43 testes do painel). O deployment 6968692573 está em success, o artefato `github-pages` (id 11639751731, SHA-256 `8ca7720c…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash (SHA-256 `14511eeb…`) e a entrada de atividade `milestone-0-5-v05-10-cpu-instrument-dad0db1`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+O recibo hospedado confirma que os 19 testes de contrato do oráculo e do instrumento passam num runner. Nenhum critério fecha com ele: `execucao` segue aberto e o limiar `cpu-time-instrument` segue sem congelar.
 
 ## Reproduzindo
 

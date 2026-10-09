@@ -177,4 +177,16 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-idle-reference-490ba8c",
   },
+  {
+    folder: "cpu-time-instrument",
+    pr: 97,
+    squash: "c57f9f6",
+    contractsRun: 37977034583,
+    pagesRun: 37977034484,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/cpu-time-instrument.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-cpu-instrument-dad0db1",
+  },
 ];

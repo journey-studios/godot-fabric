@@ -23,6 +23,7 @@ const FOLDERS = [
   "frontier-turn",
   "milestone-exit-guards",
   "idle-reference",
+  "cpu-time-instrument",
 ];
 
 // The check reads committed files only. A PATH without `gh` proves that it asks GitHub nothing.
@@ -31,7 +32,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 26 receipts that a test may break without touching the committed ones.
+// A copy of the 28 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -61,10 +62,10 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the thirteen Frontier slices are coherent, offline", () => {
+test("the committed receipts of the fourteen Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 13 slices, 26 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 14 slices, 28 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
 });
 
