@@ -433,7 +433,7 @@ A execução gravou as quatro capturas dos painéis (`panel-empty`, `-units`, `-
 | host nativo | `212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e` |
 | bundle do baseline | `7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a` |
 
-A CI hospedada e o Pages deste registro ficam pendentes até o push da `main` que o incorpora; a faixa janelada em si nunca roda na CI.
+O recibo hospedado desta página ([`hosted-ci.json`](hosted-ci.json), do push do #77) cobre a faixa headless; a faixa janelada só roda localmente, e este registro dela não tem recibo hospedado. O push da `main` que incorporar este registro só repete os jobs de contrato.
 
 ## Proposta de orçamento (PROPOSTA, não congelada)
 
