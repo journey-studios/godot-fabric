@@ -131,6 +131,13 @@ test("density_policy screen follows the screen's scale and RN's SafeAreaView fol
     assert.ok(report.stages.filter(stage => stage.scale !== undefined).every(stage => stage.js.dimensions.window.scale === 1));
     assert.ok(report.stages.filter(stage => stage.scale !== undefined).every(stage =>
       Object.values(stage.native.nodes).filter(node => node.testID !== undefined).every(node => node.safeArea === undefined)));
+    // The world group on that host: a click on the empty HUD or in the padding band of a box-none root never reaches the world (the Surface of
+    // main before the pointer spike takes it: 2 scales x 2 roots x 2 points) and nothing pads the SafeAreaView root (2 scales x 2 pointerEvents).
+    // What holds on both hosts holds there too: the mount, the parity of the SafeAreaView with the View, the Pressable and the auto root.
+    const worldFailures = failures.filter(name => name.startsWith("world/"));
+    assert.equal(worldFailures.filter(name => /\/box-none\/(safe|view)\/(void|band)\//.test(name)).length, 8, "the empty area and the band of a box-none root");
+    assert.equal(worldFailures.filter(name => / root pads the HUD by the insets of the seam/.test(name)).length, 4, "the padding of the SafeAreaView root");
+    assert.equal(worldFailures.length, 12, worldFailures.join("\n"));
     assert.ok(oracleRejection(report) != null, "The oracle rejects the previous host");
     return;
   }

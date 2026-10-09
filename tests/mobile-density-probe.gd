@@ -10,6 +10,12 @@ extends SceneTree
 # Every stage waits for the state it expects (never a number of frames), then records what JS measures and what the host holds;
 # tests/mobile-density-oracle.mjs recomputes the padding of every SafeAreaView from those frames and the seams.
 #
+# The world group puts the same HUD over a minimal Godot world (an inner class below: it counts the left presses that reach its
+# _unhandled_input) and clicks the empty area, the padding band and the centre of a Pressable, with a full-screen SafeAreaView and, as
+# the control, a View for a root, each with pointerEvents box-none and auto, at scale 1 and at scale 2 under density_policy "screen".
+# The counts are invariants of the events, not of the pace: N clicks give N to the world and none to the HUD, or N presses and none to
+# the world. Only the pump that follows the burst is waited for, by the host's own frame counter.
+#
 # A check is normative when it needs this slice's host (the policy, the seams, RN's SafeAreaView); the control on the previous
 # host (--allow-original-negative) must fail exactly those. --sabotage runs on a host that was broken on purpose and must fail.
 const WINDOW := Vector2i(1200, 720)
@@ -21,6 +27,19 @@ const INSETS := {"left": 47.0, "top": 20.0, "right": 47.5, "bottom": 21.0}
 const SUB_THRESHOLD := {"left": 47.3, "top": 20.0, "right": 47.5, "bottom": 21.0}
 const MOVED := {"left": 50.0, "top": 24.0, "right": 44.0, "bottom": 30.0}
 const CANVAS_ITEMS := 1
+# The world group: clicks per point, the pointerEvents of the root, and the scales it runs at.
+const CLICKS := 20
+const WORLD_EVENTS := ["box-none", "auto"]
+const WORLD_ROOTS := ["safe", "view"]
+const WORLD_SCALES := [1.0, 2.0]
+
+# The world under the HUD. It listens in _unhandled_input, the last stop of an input event: it hears only what neither the Surface nor a
+# Control of the HUD took. The HUD's Surface has to come after it in the tree, so that Godot calls the Surface first.
+class World extends Node2D:
+  var presses := 0
+  func _unhandled_input(event: InputEvent) -> void:
+    if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+      presses += 1
 
 var application: Node
 var surface: Control
@@ -37,6 +56,7 @@ var original_window: Dictionary = {}
 var held: Dictionary = {}
 var expected_errors: Array = []
 var platform_scale := 1.0
+var world_cases: Array = []
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -179,12 +199,14 @@ func add_application(name: String, policy: Variant) -> void:
     application.set("density_policy", policy)
   root.add_child(application)
 
-func add_surface(name: String, application_name: String) -> void:
+func add_surface(name: String, application_name: String, component := "MobileDensityProbe", props := {}) -> void:
   surface = ClassDB.instantiate("FabricSurface")
   surface.name = name
   surface.size = Vector2(root.get_visible_rect().size)
   surface.set("application_path", NodePath("../" + application_name))
-  surface.set("component_name", "MobileDensityProbe")
+  surface.set("component_name", component)
+  if not props.is_empty():
+    surface.set("initial_props", props)
   root.add_child(surface)
   # Anchored to the window, so that it follows the visible size when the scale changes.
   surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -325,6 +347,120 @@ func stage(name: String, scale: Variant, seam: Variant, expect_scale: float, sca
       "viewportUpdates": native.get("viewportUpdates", -1)},
     "before": before, "after": after, "expectedHeld": expected, "eventsBefore": events_before})
 
+func world_js(expression: String) -> Variant:
+  var text: String = application.call("evaluate", "JSON.stringify(MobileDensityWorld." + expression + ")")
+  return JSON.parse_string(text)
+
+func world_mounted() -> bool:
+  var value: Variant = world_js("frames()")
+  return value is Dictionary and value.has("frames") and value.frames.has("button") and value.frames.has("bar") and value.frames.has("root")
+
+# N left clicks at a point, queued and delivered at once with Input.flush_buffered_events (the way the pointer spike of the world does it),
+# so that no count depends on how many frames went by. The point is in the HUD's points and the event in window pixels.
+func click(at: Vector2, n: int, factor: float) -> void:
+  for index in range(n):
+    for pressed in [true, false]:
+      var event := InputEventMouseButton.new()
+      event.position = at * factor
+      event.global_position = at * factor
+      event.button_index = MOUSE_BUTTON_LEFT
+      event.pressed = pressed
+      event.button_mask = 1 if pressed else 0
+      Input.parse_input_event(event)
+  Input.flush_buffered_events()
+
+# The points of the HUD, in points, by the scale the case asks for: the empty area, the padding band (inside the insets' left band and clear
+# of the bar), and the centre of the Pressable from its measured frame.
+func world_points(requested: float, frames: Dictionary) -> Dictionary:
+  var button: Dictionary = frames.button
+  return {
+    "void": Vector2(350, 250) if requested > 1.0 else Vector2(700, 550),
+    "band": Vector2(10, 150) if requested > 1.0 else Vector2(10, 300),
+    "button": Vector2(float(button.x) + float(button.width) / 2.0, float(button.y) + float(button.height) / 2.0),
+  }
+
+func world_case(requested: float, root_kind: String, events: String) -> void:
+  restore_window()
+  var tree_world := World.new()
+  tree_world.name = "World"
+  root.add_child(tree_world)
+  add_application("WorldApplication", "screen" if requested > 1.0 else null)
+  application.set_meta("validation_safe_area", INSETS)
+  if requested > 1.0:
+    application.set_meta("validation_screen_scale", requested)
+  add_surface("WorldSurface", "WorldApplication", "MobileDensityWorld", {"root": root_kind, "pointerEvents": events})
+  var ready: bool = await wait_for(world_mounted, 30.0, true)
+  var label := "world/scale %d/%s/%s" % [int(requested), root_kind, events]
+  check(ready, label + "/The HUD over the world mounts")
+  var entry := {"requested": requested, "root": root_kind, "events": events, "clicks": CLICKS, "mounted": ready, "points": {}}
+  if ready:
+    # Wait for the scale the case asks for, as Dimensions reports it; the previous host never reaches it and runs at its own.
+    await wait_for(func() -> bool: return is_equal_approx(float(world_js("frames()").window.scale), requested), 5.0)
+    # The SafeAreaView root's State takes the insets on the pumps after the mount: wait for it to hold the seam's left and top band.
+    if root_kind == "safe":
+      await wait_for(func() -> bool:
+        var node: Dictionary = nodes_by_id(native_snapshot()).get("world-root", {})
+        return (node.has("safeArea") and absf(float(node.safeArea.left) - float(INSETS.left)) < 0.01
+          and absf(float(node.safeArea.top) - float(INSETS.top)) < 0.01))
+    var measured: Dictionary = world_js("frames()")
+    var factor := float(measured.window.scale)
+    entry["scale"] = factor
+    entry["window"] = measured.window
+    entry["frames"] = measured.frames
+    var points := world_points(requested, measured.frames)
+    for name: String in points:
+      tree_world.presses = 0
+      world_js("reset()")
+      var pumps := frames_run()
+      click(points[name], CLICKS, factor)
+      # The burst reaches JS on the pumps that follow; two of them are enough for every handler to have run.
+      await wait_for(func() -> bool: return frames_run() >= pumps + 2)
+      entry.points[name] = {"at": [points[name].x, points[name].y], "world": tree_world.presses, "hud": world_js("snapshot()")}
+  world_cases.append(entry)
+  tree_world.queue_free()
+  await remove_application()
+
+func world_group() -> void:
+  for requested: float in WORLD_SCALES:
+    for events: String in WORLD_EVENTS:
+      for root_kind: String in WORLD_ROOTS:
+        await world_case(requested, root_kind, events)
+  for requested: float in WORLD_SCALES:
+    for events: String in WORLD_EVENTS:
+      var safe := world_entry(requested, "safe", events)
+      var plain := world_entry(requested, "view", events)
+      var label := "world/scale %d/%s" % [int(requested), events]
+      if safe.get("points", {}).is_empty() or plain.get("points", {}).is_empty():
+        continue
+      for name: String in ["void", "band", "button"]:
+        var mine: Dictionary = safe.points[name]
+        var control: Dictionary = plain.points[name]
+        check(mine.world == control.world and mine.hud == control.hud, "%s/%s/The SafeAreaView and the View leave the same to the world and to the HUD" % [label, name])
+      # The seam's bands pad the SafeAreaView root and the bar inside it; the View root pads nothing.
+      var offset := Vector2(float(safe.frames.bar.x) - float(plain.frames.bar.x), float(safe.frames.bar.y) - float(plain.frames.bar.y))
+      normative(offset.is_equal_approx(Vector2(float(INSETS.left), float(INSETS.top))) and is_equal_approx(float(plain.frames.bar.x), 0.0),
+        "%s/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not" % label)
+      for root_kind: String in WORLD_ROOTS:
+        var entry := world_entry(requested, root_kind, events)
+        var kind := "%s/%s" % [label, root_kind]
+        var points: Dictionary = entry.points
+        if events == "box-none":
+          normative(points.void.world == CLICKS and points.void.hud.is_empty(), kind + "/void/A click on the empty HUD reaches the world %d times and the HUD none" % CLICKS)
+          normative(points.band.world == CLICKS and points.band.hud.is_empty(), kind + "/band/A click in the padding band reaches the world %d times and the HUD none" % CLICKS)
+          check(points.button.world == 0 and int(points.button.hud.get("press", 0)) == CLICKS,
+            kind + "/button/A click on the Pressable presses it %d times and never reaches the world" % CLICKS)
+        else:
+          # React Native's rule on a phone: the box of a view includes its padding, so a root that takes pointers takes the band too.
+          check(points.void.world == 0 and int(points.void.hud.get("rootDown", 0)) == CLICKS, kind + "/void/The root takes the empty area, so the world hears none")
+          check(points.band.world == 0 and int(points.band.hud.get("rootDown", 0)) == CLICKS, kind + "/band/The box of the root includes its padding band, so the world hears none")
+          check(points.button.world == 0 and int(points.button.hud.get("press", 0)) == CLICKS, kind + "/button/A click on the Pressable presses it %d times and never reaches the world" % CLICKS)
+
+func world_entry(requested: float, root_kind: String, events: String) -> Dictionary:
+  for entry: Dictionary in world_cases:
+    if entry.requested == requested and entry.root == root_kind and entry.events == events:
+      return entry
+  return {}
+
 func screen_case() -> void:
   add_application("ScreenApplication", "bogus")
   # The invalid value is refused with a diagnostic and the policy stays what it was.
@@ -376,6 +512,7 @@ func run_probe() -> void:
   await content_case()
   restore_window()
   await screen_case()
+  await world_group()
   await finish()
 
 func finish() -> void:
@@ -388,7 +525,7 @@ func finish() -> void:
   var original_negative_observed := allow_original_negative and observed == expected and not failures.is_empty()
   var report := {"scenario": "native-mobile-density", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "window": [WINDOW.x, WINDOW.y], "platformScale": platform_scale,
-    "checks": checks, "content": content, "stages": stages, "expectedErrors": expected_errors,
+    "checks": checks, "content": content, "stages": stages, "world": world_cases, "expectedErrors": expected_errors,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": original_negative_observed, "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"densityPolicy": "screen", "safeAreaSeam": "validation_safe_area", "screenScaleSeam": "validation_screen_scale",

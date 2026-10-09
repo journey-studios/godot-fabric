@@ -68,6 +68,54 @@ function MobileDensityProbe() {
 
 AppRegistry.registerComponent("MobileDensityProbe", () => MobileDensityProbe);
 
+// The HUD over a Godot world, with a full-screen root that is a SafeAreaView or, as the control, a View, with pointerEvents "box-none"
+// or "auto". A bar with a handler and a Pressable inside it are the only Views that own a pointer under box-none; the root's own handler
+// hears what bubbles up to it, and under "auto" every pointer of the window. The counters are JS's side of what the HUD heard; the probe
+// counts the world's side. props: root "safe" | "view", pointerEvents "box-none" | "auto".
+const worldCounts = {};
+const worldRefs = {};
+const worldHit = key => {
+  worldCounts[key] = (worldCounts[key] ?? 0) + 1;
+};
+const worldRef = id => node => {
+  if (node) {
+    worldRefs[id] = node;
+  }
+};
+function MobileDensityWorld({root = "safe", pointerEvents = "box-none"}) {
+  const Root = root === "safe" ? SafeAreaView : View;
+  return (
+    <Root testID="world-root" ref={worldRef("root")} pointerEvents={pointerEvents} onPointerDown={() => worldHit("rootDown")} style={{flex: 1}}>
+      <View testID="world-bar" ref={worldRef("bar")} collapsable={false} onPointerDown={() => worldHit("barDown")}
+        style={{width: 300, height: 100, backgroundColor: "#223344"}}>
+        <Pressable testID="world-button" ref={worldRef("button")} onPress={() => worldHit("press")}
+          style={{position: "absolute", left: 20, top: 20, width: 100, height: 40, backgroundColor: "#4466aa"}} />
+      </View>
+    </Root>
+  );
+}
+AppRegistry.registerComponent("MobileDensityWorld", () => MobileDensityWorld);
+globalThis.MobileDensityWorld = {
+  snapshot() {
+    return {...worldCounts};
+  },
+  reset() {
+    for (const key of Object.keys(worldCounts)) {
+      delete worldCounts[key];
+    }
+    return true;
+  },
+  frames() {
+    const out = {};
+    for (const [id, node] of Object.entries(worldRefs)) {
+      node.measureInWindow((x, y, width, height) => {
+        out[id] = {x, y, width, height};
+      });
+    }
+    return {frames: out, window: metrics(Dimensions.get("window"))};
+  },
+};
+
 // Synchronous: measureInWindow calls its callback before it returns.
 globalThis.MobileDensityProbe = {
   snapshot() {

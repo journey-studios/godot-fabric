@@ -14,6 +14,8 @@ const SIDES = ["left", "top", "right", "bottom"];
 const VIEWS = ["hud", "bleed", "nested", "floating", "edge-top", "edge-corner"];
 const HUD_CHILDREN = ["hud-top", "hud-left", "nested", "hud-right", "hud-bottom", "touch-target"];
 const CANVAS_ITEMS = 1;
+// The seam the probe states for every case (tests/mobile-density-probe.gd, INSETS).
+const INSETS = {left: 47, top: 20, right: 47.5, bottom: 21};
 const zeros = () => ({left: 0, top: 0, right: 0, bottom: 0});
 const near = (actual, expected, tolerance = 1e-3) => Math.abs(actual - expected) <= tolerance;
 const sameEdges = (actual, expected, tolerance = 1e-3) => SIDES.every(side => near(actual[side], expected[side], tolerance));
@@ -125,6 +127,69 @@ function judgeCounters(stage, changed, label) {
   }
 }
 
+// The world group: the HUD over a Godot world, judged from the frames that measureInWindow gave, the click points, and the rule of React
+// Native's hit test on a phone, which is not the host's: a pointer belongs to the HUD when it lies in the box of a View that takes it, and to
+// the world otherwise. Under box-none the root takes none, so the View that owns a pointer is the bar (which has a handler) and the
+// Pressable inside it; under auto the root takes every pointer of the window, its padding band included, because the box of a view includes
+// its padding (UIKit's, and so RN's). What the HUD hears is counted by its handlers: a pointer on the Pressable presses it, reaches the bar's
+// handler and bubbles to the root's; one on the bar reaches the bar's and the root's; one under auto in the void reaches the root's only.
+const inRect = (point, frame) => point[0] >= frame.x && point[0] < frame.x + frame.width && point[1] >= frame.y && point[1] < frame.y + frame.height;
+
+function judgeWorld(report) {
+  const cases = report.world;
+  assert.equal(cases.length, 8, "the world group has 2 scales, 2 roots and 2 pointerEvents");
+  const bySlot = new Map();
+  for (const entry of cases) {
+    const label = `world scale ${entry.requested} ${entry.root} ${entry.events}`;
+    assert.ok(entry.mounted && entry.points?.void, `${label}: the HUD over the world mounted and was clicked`);
+    assert.ok(near(entry.scale, entry.requested), `${label}: the window runs at scale ${entry.requested}, not ${entry.scale}`);
+    assert.ok(near(entry.window.width * entry.scale, report.window[0]), `${label}: the window is its pixels over the scale`);
+    const {bar, button} = entry.frames;
+    const window = {x: 0, y: 0, width: entry.window.width, height: entry.window.height};
+    // The padding the seam gives the SafeAreaView root, and none for the View: the bar sits at the insets, or at the origin.
+    const expectedOrigin = entry.root === "safe" ? [pixel(INSETS.left, entry.scale), pixel(INSETS.top, entry.scale)] : [0, 0];
+    assert.ok(near(bar.x, expectedOrigin[0]) && near(bar.y, expectedOrigin[1]), `${label}: the bar is at (${bar.x}, ${bar.y}), the rules give (${expectedOrigin})`);
+    assert.ok(near(button.width, 100) && near(button.height, 40), `${label}: the Pressable keeps its size`);
+    assert.equal(entry.clicks, 20);
+    for (const [name, row] of Object.entries(entry.points)) {
+      const at = row.at;
+      assert.ok(inRect(at, window), `${label}/${name}: the point lies in the window`);
+      const onButton = inRect(at, button);
+      const onBar = inRect(at, bar);
+      assert.equal(name === "button", onButton, `${label}/${name}: only the button point lies on the Pressable`);
+      if (name === "void" || name === "band") {
+        assert.ok(!onBar, `${label}/${name}: the empty points lie clear of the bar`);
+      }
+      const claimed = entry.events === "auto" ? true : onBar;
+      const expectedHud = {};
+      if (claimed) {
+        if (onButton) {
+          expectedHud.press = entry.clicks;
+        }
+        if (onBar) {
+          expectedHud.barDown = entry.clicks;
+        }
+        expectedHud.rootDown = entry.clicks;
+      }
+      assert.equal(row.world, claimed ? 0 : entry.clicks, `${label}/${name}: the world heard ${row.world} of ${entry.clicks} clicks`);
+      assert.deepEqual(row.hud, expectedHud, `${label}/${name}: the HUD heard ${JSON.stringify(row.hud)}, the rule gives ${JSON.stringify(expectedHud)}`);
+    }
+    bySlot.set(`${entry.requested}/${entry.events}/${entry.root}`, entry);
+  }
+  // Parity: a SafeAreaView root leaves the world and the HUD exactly what a View root does, point by point.
+  for (const scale of [1, 2]) {
+    for (const events of ["box-none", "auto"]) {
+      const safe = bySlot.get(`${scale}/${events}/safe`);
+      const plain = bySlot.get(`${scale}/${events}/view`);
+      for (const name of ["void", "band", "button"]) {
+        assert.equal(safe.points[name].world, plain.points[name].world, `scale ${scale} ${events} ${name}: world parity`);
+        assert.deepEqual(safe.points[name].hud, plain.points[name].hud, `scale ${scale} ${events} ${name}: HUD parity`);
+      }
+    }
+  }
+  return {cases: cases.length, points: cases.length * 3};
+}
+
 // Throws on the first difference between a report of the current host and the rules.
 export function verifyMobileDensityReport(report) {
   assert.equal(report.scenario, "native-mobile-density");
@@ -203,7 +268,8 @@ export function verifyMobileDensityReport(report) {
   const cleanup = report.stages.find(stage => stage.name === "cleanup");
   assert.equal(cleanup.native.nativeTags, 0, "cleanup: every native Control was released");
   assert.equal(cleanup.native.displayInsets.views, 0, "cleanup: the host forgot its SafeAreaViews");
-  return {stages: stages.length, views: VIEWS.length, unchangedStages: seen.unchanged, changedViews: [...seen.changed].sort()};
+  const world = judgeWorld(report);
+  return {stages: stages.length, views: VIEWS.length, unchangedStages: seen.unchanged, changedViews: [...seen.changed].sort(), world};
 }
 
 // The first complaint of the oracle about a report whose checks all claim to pass, or null when it accepts it.

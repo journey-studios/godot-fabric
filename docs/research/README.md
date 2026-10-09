@@ -80,6 +80,12 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   to the same value in three processes, the state and the snapshot (DTO) the HUD projects, and the seven contexts the game
   derives. No React and no native code; the services, the HUD and the export are the next packages.
 
+- [Density, safe-area insets and landscape](mobile-density.md): how `Dimensions.scale` was derived and what the
+  `density_policy` property changes (Godot's `canvas_items` stretch against RN's `UIScreen.scale`), RN's own
+  `SafeAreaView` and the UIKit rule this host replicates, `get_display_safe_area` per platform (the macOS fallback is never
+  read), the orientation setting, the x86_64-only simulator, and how a full-screen SafeAreaView lives with the world's
+  pointer policy. The desktop headless lane is executed; the simulator lane is not part of that note yet.
+
 ## Useful next experiments
 
 - Span interaction and explicit font invalidation (Text's baseline and `onTextLayout` are done: see [Text layout](text-layout.md)).
