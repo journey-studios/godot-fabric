@@ -24,7 +24,9 @@ resident memory, the provenance and the replay's shape check) are taken by `test
 [performance baseline on the Frontier HUD's scene](frontier-baseline.md) (V05-06, `npm run test:frontier-baseline`) takes
 too, and whose oracle imports this one's percentile helpers. The extraction changed no check and no field of the report. The
 [100-turn soak of the Frontier game](frontier-soak.md) (V05-06, `npm run test:frontier-soak`) is the third consumer: it takes one reading at rest per
-turn with the same sampler and judges the heap with the baseline's median-of-halves rule over this note's 2,048-byte limit.
+turn with the same sampler and judges the heap with the baseline's median-of-halves rule over this note's 2,048-byte limit. The
+[turn on the Frontier game as a consumer has it](frontier-turn.md) (V05-06, `npm run test:frontier-turn`) is the fourth: the sampler is copied into the provisioned `civ-lite` project and takes one reading at rest
+after each of the 16 real clicks of a round, 32 rounds, and the same heap rule judges each of the 17 series.
 
 ## What RN measures, and where this host reads the same thing
 

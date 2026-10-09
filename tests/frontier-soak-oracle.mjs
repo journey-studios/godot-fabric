@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
-import {nearestRank, round, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
+import {growthOfHalves, nearestRank, round, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
 import {REST_FRAMES, STABLE_FRAMES, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
 import {heapAtRest} from "./frontier-baseline-oracle.mjs";
 import {CLAIM_POINT, CONTEXTS, EXECUTIONS, GARRISON_CAP, PANEL_SHAPE, PANEL_TOGGLE, PAUSE_FRAMES, PAUSE_TOGGLE, PAUSE_TURN, RSS_GROWTH_LIMIT_KB,
@@ -49,16 +49,19 @@ const viewsOf = reading => reading.performance.counters.nativeViews;
 
 // The resident memory at rest, judged by the medians of the two halves of the steady turns as the heap is. It moves by tens of MB within a run
 // (GF-30 saw 90 to 188 MB) and down as well as up, so the rule is loose: the last half may be at most RSS_GROWTH_LIMIT_KB above the first.
-function rssAtRest(rests) {
-  const steady = rests.slice(WARMUP_TURNS).map(entry => entry.reading.godot.rssKb);
-  const half = Math.floor(steady.length / 2);
-  assert.ok(half >= 1 && steady.every(value => value > 0), "The resident memory is read at every steady turn");
-  const firstMedian = median(steady.slice(0, half));
-  const lastMedian = median(steady.slice(steady.length - half));
-  assert.ok(lastMedian - firstMedian <= RSS_GROWTH_LIMIT_KB,
-    `The resident memory rose ${lastMedian - firstMedian} KB from the median of the first half (${half} turns) of the steady turns to the median of the last, over the limit of ${RSS_GROWTH_LIMIT_KB}`);
-  return {steadyTurns: steady.length, halfTurns: half, firstMedianKb: firstMedian, lastMedianKb: lastMedian, growthKb: lastMedian - firstMedian, limitKb: RSS_GROWTH_LIMIT_KB,
+// The rule over the readings in KB (the steady ones, in order), by what the medians of the halves are of: `unit` names a reading in the failure ("turn" here, "round" in the
+// harnesses that read once a round) and `subject` says whose they are, when there are many. The turn's lane (tests/frontier-turn-oracle.mjs) judges its series by this one.
+export function rssGrowthAtRest(steady, {unit = "turn", subject = ""} = {}) {
+  const prefix = subject === "" ? "" : `${subject}: `;
+  const {half, firstMedian, lastMedian, growth} = growthOfHalves(steady, RSS_GROWTH_LIMIT_KB, {fill: `${prefix}The resident memory is read at every steady ${unit}`,
+    read: `${prefix}The resident memory is read at every steady ${unit}`,
+    exceeded: ({half: readings, growth: rose}) => `${prefix}The resident memory rose ${rose} KB from the median of the first half (${readings} ${unit}s) of the steady ${unit}s to the median of the last, over the limit of ${RSS_GROWTH_LIMIT_KB}`});
+  return {steadyTurns: steady.length, halfTurns: half, firstMedianKb: firstMedian, lastMedianKb: lastMedian, growthKb: growth, limitKb: RSS_GROWTH_LIMIT_KB,
     minKb: Math.min(...steady), maxKb: Math.max(...steady), bandKb: Math.max(...steady) - Math.min(...steady), medianKb: median(steady)};
+}
+
+function rssAtRest(rests) {
+  return rssGrowthAtRest(rests.slice(WARMUP_TURNS).map(entry => entry.reading.godot.rssKb));
 }
 
 function verifyProvenance(provenance) {

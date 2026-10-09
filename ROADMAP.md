@@ -754,6 +754,21 @@ slice's own steps with the result lines of their logs and the artifacts with the
 published `migration.json`. Two findings: the Pages artifact of #71 no longer exists, so its deployed `migration.json` was not
 compared, and the one of #73 holds the same data as the committed file in another serialization. The windowed lanes, the
 captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
+
+**Progress.** V05-06, criterion `turno`, headless half only: the Frontier game is measured as a consumer has it, the `civ-lite`
+template provisioned into a project of its own with its HUD and scene untouched, by 32 rounds of 16 real pointer clicks through all
+seven contexts (the dialog is opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows
+the panels of its context two frames after the injection in all 480 steady clicks (eight for an End turn), recorded against a
+ceiling and never fixed; the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and `turn_ended`
+once; the native views and the SceneTree's nodes are the same every time a context comes back, with no orphan; the live heap at
+rest of each of 17 series grows 128 bytes between the medians of the halves (the GF-30 limit is 2,048, by the baseline's rule, which
+is now one function shared with the soak's resident-memory rule); and no error goes unhandled. An independent oracle recomputes the
+report, and four retained sabotages, two of them made in the provisioned copy and never in the template, are rejected. **The
+presented frame time is not measured**: the local windowed lane imports the baseline's validity rule and was not presented by the
+display (it was off), so it ended with no frame-time statistic and exit code 3. The
+[record](https://github.com/journey-studios/godot-fabric/blob/e2ee6d83b392692775400e73db364b3243b47df9/docs/evidence/frontier-turn/README.md)
+is local macOS arm64 evidence, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
+publication are pending. `turno`, `baseline` (the presented frame time) and `congelado` remain open. No 1.0 checkpoint, weight or
 denominator moves.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
