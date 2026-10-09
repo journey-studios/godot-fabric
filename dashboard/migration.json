@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T19:56:44.981Z",
+  "updatedAt": "2026-10-08T21:51:26.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -3560,8 +3560,13 @@
             {
               "id": "consumidor",
               "label": "Consumidor civ-lite provisionado pelo addon (TSX público, sem Node global) abrindo no editor; 10 ciclos novo jogo, recarregar cenário e menu sem vazar listeners ou nós, com epoch monotônico",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): o consumidor civ-lite provisionado pelo addon, com TSX público, sem Node global, build offline e aberto pelo editor; 10 ciclos de novo jogo, recarga do cenário e menu com nós, órfãos, bindings, assinaturas e conexões na linha de base e epoch estritamente crescente; 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md"
+                }
+              ]
             },
             {
               "id": "autoridade",
@@ -4335,6 +4340,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-03-consumidor-b9a40cb",
+      "at": "2026-10-08T21:51:26.000Z",
+      "taskIds": [],
+      "message": "V05-03 do marco 0.5, critério consumidor, com evidência local: o consumers/civ-lite virou um projeto consumidor provisionado pelo addon, como o consumers/minimal (project.godot, main.tscn, ui/application.tres, ui/index.tsx, validation.gd, package.json e lockfile, tsconfig). A cena tem como raiz o node persistente GameServices, com a Application do addon, o World (um cenário pequeno que desenha o mapa 24x16 e não decide regra) e uma superfície de HUD em tela cheia, de modo que recarregar o cenário, ir ao menu e começar um jogo nunca recriam a aplicação, o registro nem o epoch. O GameServices deixou de apontar para o caminho res://sdk do laboratório: a fachada é injetada pela cena (fabric_api, o godot_fabric.gd do addon no main.tscn e o fonte do SDK no probe do laboratório) e, sem ela, o registro falha alto com FABRIC_ERROR. A HUD é mínima, em TSX público (View, Text e Pressable, dentro do escopo de props do 0.5), com conexão ao snapshot que se desfaz ao sair da tela, ações com enabled e reason_text, e os botões Menu e Novo jogo. Os serviços ganharam um método, frontier.open_menu, que não é regra do jogo (derruba o World, não muda estado nem epoch): são 14 vínculos, um estado, um sinal e 12 métodos, e o probe, o oráculo e a paridade do P4 mudaram só a contagem (test:frontier-services 8 de 8 e as 7 sabotagens dele seguem passando). Provisionado sem Node global (spawnSync de node dá ENOENT), construído pelo plugin do editor (CONSUMER_EDITOR_BUILD_PASSED, sem ERROR, lockfile intacto) e reconstruído com a rede negada no mesmo bundle: 19 checks de build e posse e 145 nativos (148 com as capturas). Dez ciclos de novo jogo, três intenções pela HUD, recarga do cenário, menu e novo jogo no menu terminam sempre com 21 nós, 0 órfãos, 14 bindings, 1 assinatura, 2 conexões em snapshot_changed e 1 da HUD, nada pendente e nenhum erro, e o epoch sobe exatamente 3 por ciclo, de 4 a 31, igual no Godot e na HUD; os dois World que o ciclo solta são liberados. 4 sabotagens retidas (a HUD que não solta a conexão, o World solto e não liberado, a recarga que zera o epoch e a cena sem a fachada) falham 29, 19, 21 e 3 checks e são rejeitadas pela razão por que foram quebradas; uma quinta, o World que não desconecta, foi descartada porque o motor derruba sozinho a conexão de um Node liberado. Tudo rodou no merge do commit de implementação com a main que traz a política prop-scope do #74, sem recusa de prop; duas capturas janeladas (o jogo e o menu) estão no registro. Não há C++ e o controle com host anterior não se aplica. A HUD é a mínima de serviço, e não a jogável do V05-05; os cliques são sintéticos; o critério autoridade do V05-03 segue aberto. CI hospedada (test:consumer:civ-lite e o artefato independent-civ-lite-consumer) e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md"
+    },
     {
       "id": "library-consumer-main-hosted-ci-and-pages-20261008",
       "at": "2026-10-08T19:56:44.981Z",

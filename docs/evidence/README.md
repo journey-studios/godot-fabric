@@ -785,6 +785,30 @@ Headless only, with no HUD and no capture; the probe uses an application stand-i
 reached by `preload`, `consumidor` and `autoridade` are open, and the **hosted CI run (`native-frontier-services`) and the Pages
 publication are pending**. The record is pinned at `75c4c0f`.
 
+The [Frontier consumer record](frontier-consumer/README.md) is the third package of the 0.5 milestone (V05-03, criterion
+`consumidor`, tied to GF-07): `consumers/civ-lite/` becomes a consumer project provisioned by the addon like `consumers/minimal`,
+with its own `project.godot`, scene, application Resource, manifest and lockfile. Its scene's root is the persistent `GameServices`
+node, with the `Application`, a scenery (`World`, which draws the 24x16 map and decides no rule) and a full-screen HUD surface
+under it, so reloading the scenery, going to the menu and starting a game never recreate the application, the registry or the
+epoch; the node names no path to the SDK (`fabric_api` is injected by the scene: the addon's `godot_fabric.gd`, or the SDK source
+in the laboratory's probe) and fails loud without it. The HUD is the smallest that serves the services, public TSX over `View`,
+`Text` and `Pressable`, inside the 0.5 prop scope. Provisioned with no global Node (`spawnSync("node")` gives `ENOENT`), built by
+the editor plugin (`CONSUMER_EDITOR_BUILD_PASSED`, no `ERROR:`, the lockfile untouched) and rebuilt to the same bundle with the
+network denied, with 19 build and ownership checks and **145 native checks** (148 with the captures). Ten cycles of New game,
+three intents through the HUD, a scenery reload, the menu and New game from the menu end every time with 21 nodes, 0 orphans,
+14 bindings, 1 subscription, 2 connections on `snapshot_changed` and 1 held by the HUD, nothing pending and no error, while the
+epoch rises by exactly 3 per cycle, 4 to 31, in Godot and in the HUD, and the two Worlds a cycle drops are freed. Four retained
+sabotages (the HUD's effect keeps its connection, the dropped World is not freed, a reload zeroes the epoch, the scene does not
+inject the facade) fail 29, 19, 21 and 3 checks and are rejected for the reason they were broken; a fifth, a World that forgets to
+disconnect, was dropped because the engine drops the connection of a freed Node by itself (the record shows the experiment). The
+services gained one method, `frontier.open_menu`, so they hold 14 bindings and not 13; the P4 probe, oracle and parity moved with
+that count and nothing else, and the `test:frontier-services` suite and its seven sabotages still pass. All of it ran on the merge
+`029416f` of the implementation commit `b0509db` with main's `b0e40aa` (PR #74's prop-scope policy), which touches none of the
+slice's files, and the minimal consumer still passes its 30 and 40. Two headed captures (the game and the menu, 1080x600) are in
+the record. The previous-host control does not apply: there is no native code. The HUD is the minimal service HUD and not the
+playable one (V05-05), the presses are synthetic, `autoridade` is open, and the **hosted CI run (`test:consumer:civ-lite`) and
+the Pages publication are pending**. The record is pinned at `b0509db`.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,

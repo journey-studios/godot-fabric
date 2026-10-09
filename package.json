@@ -40,6 +40,7 @@
     "consumer:create": "node scripts/create-consumer.mjs",
     "test:consumer": "node scripts/consumer-check.mjs",
     "test:consumer:libraries": "node scripts/consumer-libraries-check.mjs",
+    "test:consumer:civ-lite": "node scripts/consumer-civ-lite-check.mjs",
     "test:services": "npm run bundle && node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
     "test:codegen": "node --test tests/codegen.test.mjs",
     "test:codegen:native": "python3 scripts/codegen-native-compile.py --out build/codegen-native-compile",
