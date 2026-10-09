@@ -26,7 +26,12 @@ const turnOf = (job, frameUsec) => ({job, snapshots: PHASES.length, turnEnded: 1
   pumpWindowMs: Array(10).fill(2)});
 
 // A run of the windowed probe, as tests/frontier-turn-probe.gd --lane=windowed writes it.
-function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true, refreshRate = 120, frameUsec = 7000} = {}) {
+// The record of the window's presence as tests/window-presence.gd writes it: `undrawable` frames of 5000 in which the engine could not draw, in one span.
+const presenceOf = undrawable => ({windowed: true, opened: {windowed: true, alwaysOnTop: true, focused: true, mode: 0, canDraw: true, waitedFrames: 12, waitedUsec: 101_000,
+  stableFrames: 12, waitLimitUsec: 3_000_000}, sampledFrames: 5000, undrawableFrames: undrawable, spanCount: undrawable > 0 ? 1 : 0,
+spans: undrawable > 0 ? [[300, undrawable, 2_400_000, 2_400_000 + undrawable * 7000]] : [], canDrawAtEnd: undrawable === 0});
+
+function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true, refreshRate = 120, frameUsec = 7000, presence} = {}) {
   let job = 0;
   const rounds = Array.from({length: WARMUP_ROUNDS + STEADY_ROUNDS}, (_, round) => ({round, steps: STEPS.map((step, index) => ({
     round, step: index, id: step.id, kind: step.kind, from: step.from, to: step.to, intent: step.intent, frames: step.kind === "turn" ? 8 : 2, flushUsec: 800,
@@ -38,10 +43,10 @@ function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true,
       provenance: {godot: "4.7.2-stable (official)", hermes: "250829098.0.17", architecture: "arm64", os: "macOS", displayServer: "macOS", renderingDriver: "metal",
         renderingMethod: "gl_compatibility", processor: "Apple M3 Pro", vsyncMode: 1, vsyncModeName: "enabled", refreshRate},
       scene: {mounted: true}, aborted: null, rounds, idle: {frames: IDLE_FRAMES, intervalsUsec: Array(IDLE_FRAMES).fill(idleUsec), draws: drawn ? IDLE_FRAMES + 1 : 0},
-      frames: {processed: 5000, drawn: drawn ? 4996 : 0}}};
+      frames: {processed: 5000, drawn: drawn ? 4996 : 0}, ...(presence === undefined ? {} : {presence})}};
 }
 
-const rawOf = report => ({run: report.run, attempt: report.run, idleIntervalsUsec: report.stages.idle.intervalsUsec});
+const rawOf = report => ({run: report.run, attempt: report.run, presence: report.stages.presence ?? null, idleIntervalsUsec: report.stages.idle.intervalsUsec});
 
 // A receipt as scripts/frontier-turn-graphics.mjs writes it, from the runs it accepted and the attempts it rejected.
 function receiptOf({accepted, rejected = [], presented}) {
@@ -228,4 +233,46 @@ test("the tour of the queue and the Modals: the cases' steps are accepted, and e
   })), /answers the three events in the order of the queue/);
   assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-1").head = "host"; })), /names the first choice of the head it leads to/);
   assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-3").to = "dialog"; })), /the last answer closes the dialog/);
+});
+
+// ----------------------------------------------------------------------------------------------------- the window's presence (tests/window-presence.gd)
+test("a run of the turn's probe carries the window's presence, and a refusal for not drawing says what the engine said", () => {
+  const withPresence = syntheticReport({presence: presenceOf(112)});
+  verifyTurnGraphicsRun(withPresence);
+  assert.equal(graphicsRunOf(withPresence).presence.undrawableFrames, 112, "the run in the baseline's shape carries it");
+  assert.equal(graphicsRunOf(syntheticReport()).presence, undefined, "a run recorded before it has none");
+  verifyTurnGraphicsRun(syntheticReport());
+  const covered = validity(syntheticReport({drawn: false, presence: presenceOf(2400)}));
+  assert.equal(covered.valid, false);
+  assert.match(covered.reason, /^undrawn: .*the window could not draw: window_can_draw\(\) was false in 2400 of 5000 sampled frames, in 1 span\)$/);
+  assert.equal(covered.undrawableFrames, 2400);
+  assert.equal(covered.sampledFrames, 5000);
+  const capable = validity(syntheticReport({drawn: false, presence: presenceOf(0)}));
+  assert.equal(capable.valid, false, "a window the engine could draw that was not drawn is refused all the same");
+  assert.match(capable.reason, /^undrawn: .*the engine could draw: window_can_draw\(\) was never false in the 5000 sampled frames\)$/);
+  assert.equal(validity(syntheticReport({drawn: false})).reason, "undrawn: the window did not draw throughout", "and a run without the presence has the plain reason");
+  assert.equal(validity(syntheticReport({presence: presenceOf(30)})).valid, true, "the rule does not read the presence: a run that drew is valid");
+  const malformed = syntheticReport({presence: presenceOf(112)});
+  malformed.stages.presence.undrawableFrames = 6000;
+  assert.throws(() => verifyTurnGraphicsRun(malformed), /a count of the sampled ones/);
+});
+
+test("a receipt of the turn keeps the count of each attempt and the presence of the runs", () => {
+  const rejected = [1, 2, 3].map(attempt => syntheticReport({run: attempt, drawn: false, presence: presenceOf(2400)}));
+  const attempts = rejected.map((report, index) => ({slot: 1, attempt: 100 + index, ...validity(report)}));
+  const receipt = {presented: false, status: `not presented: ${attempts.at(-1).reason} (slot 1, 3 attempts)`, provenance: {refreshRate: 120}, attempts, raw: [], summary: null,
+    rejectedAttempts: attempts.map((attempt, index) => ({...attempt, raw: rawOf(rejected[index])}))};
+  verifyGraphicsReceipt(receipt);
+  assert.deepEqual(receipt.attempts.map(attempt => attempt.undrawableFrames), [2400, 2400, 2400]);
+  assert.equal(receipt.rejectedAttempts[0].raw.presence.spans[0][1], 2400);
+  const unsaid = structuredClone(receipt);
+  unsaid.attempts[0].reason = "undrawn: the window did not draw throughout";
+  assert.throws(() => verifyGraphicsReceipt(unsaid), /was refused for not drawing and its reason says what the engine said/);
+  const before = structuredClone(receipt);
+  for (const attempt of before.attempts) {
+    delete attempt.undrawableFrames;
+    delete attempt.sampledFrames;
+    attempt.reason = "undrawn: the window did not draw throughout";
+  }
+  verifyGraphicsReceipt(before);
 });
