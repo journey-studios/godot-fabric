@@ -387,7 +387,7 @@ ticks pushed at the map reach the World 0 times and select nothing (`hud_probe.g
 - any subpath of `react-native` (`react-native/Libraries/...`) is refused, however it is reached: a static import, a re-export, an import type, a `require` or a dynamic
   import.
 
-The lane runs it on every provisioned project and proves it can fail with 13 changes of a copy of the sources (a `FlatList`, a `TextInput`, a `Keyboard`
+The lane runs it on every provisioned project and proves it can fail with 21 changes of a copy of the sources (a `FlatList`, a `TextInput`, a `Keyboard`
 import; a name the manifest does not decide; a namespace import; a `require`; `onHoverIn`, `onContextMenu` and `onMouseEnter`; `animationType="slide"`;
 children of an `Image`; a spread; `AppRegistry.runApplication`; a static import, a re-export, a `require` and a dynamic import of a subpath of `react-native`; `AppRegistry`
 destructured into a member outside the subset or with a rest element, aliased, and passed as an argument: 21 changes in all) and two that it must let through (a type-only import
