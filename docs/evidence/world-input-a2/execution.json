@@ -1,0 +1,1335 @@
+{
+  "format": "godot-fabric.world-input-a2-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "048672798db248d2557e111c83c362269fe52730",
+  "redCommit": "9727ceb81858043d2aaad6d81f0578e15726918f",
+  "baseCommit": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+  "executedTreeSha": "a2e63245d21e4178f76c80174ea2dc9824c52a21",
+  "sourceState": "working tree clean and equal to the implementation commit's tree when every command below ran (git status empty before and after); the evidence files were added afterwards and are not inputs",
+  "slice": "V05-02 pointer spike, slice 2 of 3: variant a2, the Surface claims in _unhandled_input what React Native's hit test finds (go/no-go no. 1 of the 0.5 Frontier milestone)",
+  "previousRecord": {
+    "path": "../world-input/README.md",
+    "implementationCommit": "0d754f20e90829c38aa4a7079cb70737a100fcc1",
+    "note": "slice 1 (the policy a1) stays pinned to its own commit and is not rewritten"
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "macOS": "26.6.2",
+    "device": "Apple M3 Pro",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "godotVersionString": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (windowed lane)"
+    ]
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The world-input step and the native-world-input artifact of .github/workflows/contracts.yml have not run on hosted CI for this slice. Everything below is local macOS arm64 evidence. The controls and the windowed lane do not run on hosted CI."
+  },
+  "hosts": {
+    "a2": {
+      "sha256": "cc8aa3c5691b9e435e4212fd3515fcd1a97ad48229ca93daa339dfe1b627d2ee",
+      "source": "commit 0486727 (main c8de44b plus the claim)",
+      "restoredBytesEqualsGenuine": true,
+      "rebuiltFromRestoredSourcesEqualsGenuine": true
+    },
+    "a1": {
+      "sha256": "28cc9f14d34b0ec1b7e5038f52551a1175ed20010cf4ceceedbef246c0479fc6",
+      "source": "main c8de44b (policy a1, no claim), built by npm run setup before any change",
+      "path": "build/world-input-a1-host/fabric_godot.dylib (local, outside Git)"
+    },
+    "previous": {
+      "sha256": "8bb877385c7c1b73c282ddca2f7bbb12331b5baa271021bb2865465ebc195076",
+      "rebuilt": true,
+      "source": "main c8de44b with only the constructor's set_mouse_filter(MOUSE_FILTER_IGNORE) removed from native/fabric_surface.cpp; the source was restored byte for byte after the build (SHA-256 4b666885... before and after)",
+      "path": "build/world-input-previous-host/fabric_godot.dylib (local, outside Git)",
+      "slice1Sha256": "79f68b1d141146e04d1904d6d54c38f1a7ffc3929a5db15dea0bf47a5f7bef73",
+      "whyItDiffersFromSlice1": "Slice 1's control was built from main 41fbe22 and kept in an isolated worktree that no longer exists, so it could not be reused. The rebuilt control is the same difference from a1 (the constructor's IGNORE) on the current main, so it differs from 79f68b1d in the rest of the code main gained since 41fbe22 (the ScrollView and pointer adapter work, #58, and later)."
+    },
+    "differences": "a1 and a2 differ in native/fabric_surface.{h,cpp} (_unhandled_input) and native/application_runtime.{h,cpp} (claims); a1 and previous differ in the constructor of FabricSurface only"
+  },
+  "rule": {
+    "summary": "At the unhandled stage, after the GUI, FabricSurface marks a mouse button (wheel and wheel release included), a screen touch or the mouse Godot emulates from a touch (device -1) as handled when ApplicationRuntime::claims, which runs physical_hit_test for that Surface at the event's point, finds a View (tag other than 0). Motion and drag are not claimed.",
+    "files": [
+      "native/fabric_surface.h",
+      "native/fabric_surface.cpp",
+      "native/application_runtime.h",
+      "native/application_runtime.cpp"
+    ],
+    "unchanged": [
+      "hit_test",
+      "apply_pointer_filters",
+      "ApplicationRuntime::input",
+      "wheel"
+    ]
+  },
+  "commands": {
+    "order": [
+      "node scripts/world-input-sabotage.mjs",
+      "npm run test:world-input",
+      "node scripts/world-input-graphics.mjs"
+    ],
+    "controls": "node scripts/world-input-sabotage.mjs: builds the genuine host, runs surface-stop, views-ignore and unhandled-off from the scene, swaps in the preserved a1 host (--allow-a1-negative) and the rebuilt previous host (--allow-original-negative), restores the genuine host byte for byte, builds claim-all and before-gui from the broken fabric_surface.cpp one at a time, rebuilds the genuine host from the restored sources and compares it, and ends with a run of the current host. It deletes each variant's report first and counts a missing report as not rejected.",
+    "headless": "npm run test:world-input (node --test tests/world-input-native.test.mjs)",
+    "windowed": "node scripts/world-input-graphics.mjs (Godot --path <checkout> --windowed --script res://tests/world-input-graphics-probe.gd)"
+  },
+  "headlessProbe": {
+    "suite": "1/1 subtests passed",
+    "checks": 91,
+    "normativeChecks": 50,
+    "normativeOfA1": 31,
+    "normativeOfA2": 19,
+    "plainChecks": 41,
+    "allCurrentAssertionsPassed": true,
+    "full": 100,
+    "small": 20,
+    "viewport": [
+      800,
+      600
+    ],
+    "world": {
+      "camera": {
+        "position": [
+          384,
+          256
+        ],
+        "zoom": [
+          2,
+          2
+        ]
+      },
+      "columns": 24,
+      "rows": 16,
+      "tile": 32
+    },
+    "emulatingMouseFromTouch": true,
+    "displayServer": "headless",
+    "oracle": {
+      "a": {
+        "bursts": 57,
+        "hovers": 2,
+        "gaps": 4
+      },
+      "b": {
+        "bursts": 19,
+        "hovers": 4,
+        "gaps": 0
+      },
+      "checks": 91
+    },
+    "hostSha256": "cc8aa3c5691b9e435e4212fd3515fcd1a97ad48229ca93daa339dfe1b627d2ee",
+    "bundleSha256": "18a9c1dff807c804231c4f06b660997b2b2060fdf0a406aa4b1d040f344b19f8",
+    "rawReportSha256": "c79e3cae144aa0335973720e6f22cd2c3f081df9f3f901afcd4c961e6d795513",
+    "switchChecks": [
+      "a/native Switch: 100 left inputs toggle the Godot GUI's Switch 100 times and none reaches the world",
+      "a/native Switch: 100 touch inputs toggle the Godot GUI's Switch 100 times and none reaches the world"
+    ]
+  },
+  "unhandledOrder": {
+    "godotTag": "4.7.2-stable",
+    "lines": {
+      "scene/main/viewport.cpp": "3489-3553 Viewport::push_input (the comment at 3537: _input -> gui input -> _unhandled input; each stage only if !is_input_handled(), 3535, 3540, 3548); 3620-3634 _push_unhandled_input_internal (the unhandled group at 3631-3633)",
+      "scene/main/scene_tree.cpp": "340-355 _update_group_order (Node::Comparator, tree order); 1430-1502 _call_input_pause: the loop `for (int i = gr_node_count - 1; i >= 0; i--)` at 1461 walks the group in reverse tree order, 1462-1464 stops at is_input_handled(), 1495-1497 CALL_INPUT_TYPE_UNHANDLED_INPUT",
+      "scene/main/node.h": "136 struct Comparator (p_b->is_greater_than(p_a))",
+      "scene/main/node.cpp": "255-266 NOTIFICATION_READY: GDVIRTUAL_IS_OVERRIDDEN(_unhandled_input) calls set_process_unhandled_input(true); 177-179 and 1300-1311 the _vp_unhandled_input<viewport id> group"
+    },
+    "reading": "A node later in the tree hears _unhandled_input first and may keep the event from the world: a HUD CanvasLayer after the world has its Surface called before the world. The override enables itself like _input does.",
+    "witness": {
+      "node": "tests/world-input-order-witness.gd, added by the probe to the HUD's CanvasLayer, where the Surface stands",
+      "assertion": "for each mouse button event the witness records how many events the world had heard; the oracle derives that the world had not heard this one yet, so heard equals the indices of the button events in the world's list",
+      "topologies": {
+        "a": {
+          "at": [
+            700,
+            550
+          ],
+          "heard": [
+            1,
+            2
+          ],
+          "world": {
+            "mouse/press/4": 1,
+            "mouse/release/4": 1
+          },
+          "worldIndices": [
+            1,
+            2
+          ]
+        },
+        "b": {
+          "at": [
+            200,
+            400
+          ],
+          "heard": [
+            1,
+            2
+          ],
+          "world": {
+            "mouse/press/4": 1,
+            "mouse/release/4": 1
+          },
+          "worldIndices": [
+            1,
+            2
+          ]
+        }
+      }
+    }
+  },
+  "gaps": {
+    "note": "N = 100 in topology (a), N = 20 for the bar wheel of each panel in (b). a1 is the host with a1 only (the control); a2 is the host with the claim. React Native hears the same on both.",
+    "rows": [
+      {
+        "id": "a/switch/left",
+        "n": 100,
+        "parts": [
+          {
+            "region": "switch",
+            "input": "left",
+            "at": [
+              645,
+              35
+            ]
+          }
+        ],
+        "a1": {
+          "world": {},
+          "rn": {
+            "hud/switchChange": 100
+          },
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/switchChange": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/switch/touch",
+        "n": 100,
+        "parts": [
+          {
+            "region": "switch",
+            "input": "touch",
+            "at": [
+              645,
+              35
+            ]
+          }
+        ],
+        "a1": {
+          "world": {},
+          "rn": {
+            "hud/switchChange": 100
+          },
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/switchChange": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/tree/open/wheel",
+        "n": 100,
+        "parts": [
+          {
+            "region": "covered",
+            "input": "wheel",
+            "at": [
+              700,
+              550
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/hit-slop/left",
+        "n": 100,
+        "parts": [
+          {
+            "region": "slop",
+            "input": "left",
+            "at": [
+              490,
+              120
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/1": 100,
+            "mouse/release/1": 100
+          },
+          "rn": {
+            "hud/slopPress": 100
+          },
+          "tiles": {
+            "13,5": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/slopPress": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/hit-slop/touch",
+        "n": 100,
+        "parts": [
+          {
+            "region": "slop",
+            "input": "touch",
+            "at": [
+              490,
+              120
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100,
+            "touch/press": 100,
+            "touch/release": 100
+          },
+          "rn": {
+            "hud/slopPress": 100
+          },
+          "tiles": {
+            "13,5": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/slopPress": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/hit-slop/emulated",
+        "n": 100,
+        "parts": [
+          {
+            "region": "slop",
+            "input": "emulated",
+            "at": [
+              490,
+              120
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100
+          },
+          "rn": {},
+          "tiles": {
+            "13,5": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/text-onpress/left",
+        "n": 100,
+        "parts": [
+          {
+            "region": "text",
+            "input": "left",
+            "at": [
+              520,
+              212
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/1": 100,
+            "mouse/release/1": 100
+          },
+          "rn": {
+            "hud/textPress": 100
+          },
+          "tiles": {
+            "13,6": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/textPress": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/text-onpress/touch",
+        "n": 100,
+        "parts": [
+          {
+            "region": "text",
+            "input": "touch",
+            "at": [
+              520,
+              212
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100,
+            "touch/press": 100,
+            "touch/release": 100
+          },
+          "rn": {
+            "hud/textPress": 100
+          },
+          "tiles": {
+            "13,6": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/textPress": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/text-onpress/emulated",
+        "n": 100,
+        "parts": [
+          {
+            "region": "text",
+            "input": "emulated",
+            "at": [
+              520,
+              212
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100
+          },
+          "rn": {},
+          "tiles": {
+            "13,6": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/scroll-gap/left",
+        "n": 100,
+        "parts": [
+          {
+            "region": "scroll-gap",
+            "input": "left",
+            "at": [
+              550,
+              400
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/1": 100,
+            "mouse/release/1": 100
+          },
+          "rn": {
+            "hud/wrapDown": 100
+          },
+          "tiles": {
+            "14,9": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/wrapDown": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/scroll-gap/touch",
+        "n": 100,
+        "parts": [
+          {
+            "region": "scroll-gap",
+            "input": "touch",
+            "at": [
+              550,
+              400
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100,
+            "touch/press": 100,
+            "touch/release": 100
+          },
+          "rn": {
+            "hud/wrapDown": 100
+          },
+          "tiles": {
+            "14,9": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {
+            "hud/wrapDown": 100
+          },
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/gap/scroll-gap/emulated",
+        "n": 100,
+        "parts": [
+          {
+            "region": "scroll-gap",
+            "input": "emulated",
+            "at": [
+              550,
+              400
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "emulated/press/1": 100,
+            "emulated/release/1": 100
+          },
+          "rn": {},
+          "tiles": {
+            "14,9": 100
+          }
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/bar",
+        "n": 100,
+        "parts": [
+          {
+            "region": "bar",
+            "input": "wheel",
+            "at": [
+              250,
+              80
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/plain",
+        "n": 100,
+        "parts": [
+          {
+            "region": "plain",
+            "input": "wheel",
+            "at": [
+              400,
+              50
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/button",
+        "n": 100,
+        "parts": [
+          {
+            "region": "button",
+            "input": "wheel",
+            "at": [
+              70,
+              40
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/scroll",
+        "n": 100,
+        "parts": [
+          {
+            "region": "scroll-button",
+            "input": "wheel",
+            "at": [
+              100,
+              200
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/hit-slop",
+        "n": 100,
+        "parts": [
+          {
+            "region": "slop",
+            "input": "wheel",
+            "at": [
+              490,
+              120
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/text-onpress",
+        "n": 100,
+        "parts": [
+          {
+            "region": "text",
+            "input": "wheel",
+            "at": [
+              520,
+              212
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 100,
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "a/wheel/scroll-gap",
+        "n": 100,
+        "parts": [
+          {
+            "region": "scroll-gap",
+            "input": "wheel",
+            "at": [
+              550,
+              400
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/release/4": 100
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "b/bar/left/wheel",
+        "n": 20,
+        "parts": [
+          {
+            "region": "bar",
+            "input": "wheel",
+            "at": [
+              300,
+              70
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 20,
+            "mouse/release/4": 20
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      },
+      {
+        "id": "b/bar/right/wheel",
+        "n": 20,
+        "parts": [
+          {
+            "region": "bar",
+            "input": "wheel",
+            "at": [
+              700,
+              70
+            ]
+          }
+        ],
+        "a1": {
+          "world": {
+            "mouse/press/4": 20,
+            "mouse/release/4": 20
+          },
+          "rn": {},
+          "tiles": {}
+        },
+        "a2": {
+          "world": {},
+          "rn": {},
+          "tiles": {}
+        }
+      }
+    ]
+  },
+  "informativeRows": [
+    {
+      "id": "a/open/motion-over-bar",
+      "n": 20,
+      "world": {},
+      "rn": {},
+      "motion": 0,
+      "drag": 0
+    },
+    {
+      "id": "a/open/drag-over-bar",
+      "n": 20,
+      "world": {},
+      "rn": {
+        "hud/barDown": 20
+      },
+      "motion": 0,
+      "drag": 0
+    },
+    {
+      "id": "a/open/motion-over-hit-slop",
+      "n": 20,
+      "world": {},
+      "rn": {},
+      "motion": 20,
+      "drag": 0
+    },
+    {
+      "id": "a/open/drag-over-hit-slop",
+      "n": 20,
+      "world": {},
+      "rn": {
+        "hud/slopPress": 20
+      },
+      "motion": 20,
+      "drag": 20
+    }
+  ],
+  "controls": {
+    "a1Host": {
+      "command": "node tests/world-input-native.test.mjs --allow-a1-negative (the host preserved from main installed in addons/ by scripts/world-input-sabotage.mjs)",
+      "hostSha256": "28cc9f14d34b0ec1b7e5038f52551a1175ed20010cf4ceceedbef246c0479fc6",
+      "checks": 91,
+      "failed": 19,
+      "passed": 72,
+      "failedEqualsDeclared": true,
+      "exitCode": 0,
+      "a1NegativeObserved": true,
+      "failedChecks": [
+        "a/tree overlay open: 100 wheel inputs reach neither the world nor the HUD's handlers",
+        "a/L1 hit slop: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L2 Text onPress: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L3 ScrollView gap: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L4 bar: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 plain panel: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Pressable: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L5 ScrollView: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 hit slop: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Text: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 ScrollView gap: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "b/left panel: 20 wheel ticks on the bar reach neither the world nor the HUD",
+        "b/right panel: 20 wheel ticks on the bar reach neither the world nor the HUD"
+      ],
+      "rawReportSha256": "6df08045e264034cac3c91544478c35f1482d088ad3979306f75b8945d2dba90",
+      "oracleRejection": "a/tree/open/wheel: what the world heard"
+    },
+    "previousHost": {
+      "command": "node tests/world-input-native.test.mjs --allow-original-negative (the rebuilt host installed in addons/ by scripts/world-input-sabotage.mjs)",
+      "hostSha256": "8bb877385c7c1b73c282ddca2f7bbb12331b5baa271021bb2865465ebc195076",
+      "checks": 91,
+      "failed": 41,
+      "passed": 50,
+      "failedEqualsDeclared": true,
+      "exitCode": 0,
+      "originalNegativeObserved": true,
+      "failedOfSlice1": 31,
+      "failedOfA2": 10,
+      "failedChecks": [
+        "a/surface: the default mouse_filter of the Surface is IGNORE",
+        "a/void: 100 of 100 left presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 of 100 right presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 taps reach the world as ScreenTouch and as the emulated mouse, and none reaches the HUD",
+        "a/camera: the tile clicked is the one the Camera2D's position and zoom 2 give, at three points",
+        "a/alternating: 100 Pressable presses and 100 empty-area clicks, each reaching only its owner",
+        "a/hover: gui_get_hovered_control() is null over the map",
+        "a/tree overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay open: 100 wheel inputs reach neither the world nor the HUD's handlers",
+        "a/tree overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/L4 bar: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 plain panel: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Pressable: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L5 ScrollView: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 hit slop: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Text: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 ScrollView gap: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "b/surfaces: the default mouse_filter of both Surfaces is IGNORE",
+        "b/left panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/left panel: the tile clicked is the one the Camera2D gives",
+        "b/left panel: 20 wheel ticks on the bar reach neither the world nor the HUD",
+        "b/left panel: gui_get_hovered_control() is null over the map",
+        "b/right panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/right panel: the tile clicked is the one the Camera2D gives",
+        "b/right panel: 20 wheel ticks on the bar reach neither the world nor the HUD",
+        "b/right panel: gui_get_hovered_control() is null over the map",
+        "b/alternating: 20 presses of the left panel's Pressable and 20 clicks on the right panel's void, each reaching only its owner"
+      ],
+      "a2ChecksThatHoldThere": [
+        "a/L1 hit slop: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L2 Text onPress: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L3 ScrollView gap: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 emulated mouse clicks reach neither the world nor a handler"
+      ],
+      "rawReportSha256": "40c7e45e0948a2fb09be12253a38393e476c6805443aaa3c54a703a66dd468ea",
+      "oracleRejection": "a: a Surface takes no pointer (IGNORE)"
+    }
+  },
+  "sabotages": {
+    "surface-stop": {
+      "kind": "scene (the probe breaks it, no source or host changes)",
+      "command": "node tests/world-input-native.test.mjs --sabotage=surface-stop",
+      "checks": 91,
+      "failed": 31,
+      "failedChecks": [
+        "a/surface: the default mouse_filter of the Surface is IGNORE",
+        "a/void: 100 of 100 left presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 of 100 right presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 taps reach the world as ScreenTouch and as the emulated mouse, and none reaches the HUD",
+        "a/camera: the tile clicked is the one the Camera2D's position and zoom 2 give, at three points",
+        "a/alternating: 100 Pressable presses and 100 empty-area clicks, each reaching only its owner",
+        "a/hover: gui_get_hovered_control() is null over the map",
+        "a/tree overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "b/surfaces: the default mouse_filter of both Surfaces is IGNORE",
+        "b/left panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/left panel: the tile clicked is the one the Camera2D gives",
+        "b/left panel: gui_get_hovered_control() is null over the map",
+        "b/right panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/right panel: the tile clicked is the one the Camera2D gives",
+        "b/right panel: gui_get_hovered_control() is null over the map",
+        "b/alternating: 20 presses of the left panel's Pressable and 20 clicks on the right panel's void, each reaching only its owner"
+      ],
+      "oracleRejection": "a: a Surface takes no pointer (IGNORE)",
+      "rawReportSha256": "d3dfb75b1203cc6e87489cf7d6127db6109f7134f75c8db3294b9bb4752f76e2",
+      "exitCode": 0
+    },
+    "views-ignore": {
+      "kind": "scene (the probe breaks it, no source or host changes)",
+      "command": "node tests/world-input-native.test.mjs --sabotage=views-ignore",
+      "checks": 91,
+      "failed": 5,
+      "failedChecks": [
+        "a/native Switch: 100 left inputs toggle the Godot GUI's Switch 100 times and none reaches the world",
+        "a/native Switch: 100 touch inputs toggle the Godot GUI's Switch 100 times and none reaches the world",
+        "a/hover: a control of the HUD is the hovered one over the HUD, not the Surface",
+        "b/left panel: a control of the HUD is the hovered one over the HUD",
+        "b/right panel: a control of the HUD is the hovered one over the HUD"
+      ],
+      "oracleRejection": "a/switch/left: what the HUD's handlers heard",
+      "rawReportSha256": "37761d3e745eb00dcafdafb1bcd6c153943266a8bb46f1c1d767798408f794a3",
+      "exitCode": 0
+    },
+    "unhandled-off": {
+      "kind": "scene (the probe breaks it, no source or host changes)",
+      "command": "node tests/world-input-native.test.mjs --sabotage=unhandled-off",
+      "checks": 91,
+      "failed": 19,
+      "failedChecks": [
+        "a/tree overlay open: 100 wheel inputs reach neither the world nor the HUD's handlers",
+        "a/L1 hit slop: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L1 hit slop: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L2 Text onPress: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L2 Text onPress: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L3 ScrollView gap: 100 left inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 touch inputs reach the handler 100 times and none reaches the world",
+        "a/L3 ScrollView gap: 100 emulated mouse clicks reach neither the world nor a handler",
+        "a/L4 bar: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 plain panel: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Pressable: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L5 ScrollView: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 hit slop: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 Text: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "a/L4 ScrollView gap: 100 wheel ticks reach neither the world nor the HUD's handlers",
+        "b/left panel: 20 wheel ticks on the bar reach neither the world nor the HUD",
+        "b/right panel: 20 wheel ticks on the bar reach neither the world nor the HUD"
+      ],
+      "oracleRejection": "a/tree/open/wheel: what the world heard",
+      "rawReportSha256": "e481fecd23d4db1c464a6aa8855e6f525c775c217cebd997096f93fa523484ab",
+      "exitCode": 0
+    },
+    "claim-all": {
+      "kind": "source (the host is rebuilt from the broken fabric_surface.cpp)",
+      "command": "node tests/world-input-native.test.mjs --sabotage=claim-all",
+      "checks": 91,
+      "failed": 35,
+      "failedChecks": [
+        "a/order: a node of the HUD's layer hears _unhandled_input before the world does, so the Surface can claim first",
+        "a/void: 100 of 100 left presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 of 100 right presses and releases reach the world, and none reaches the HUD",
+        "a/void: 100 wheel presses reach the world, and none reaches the HUD",
+        "a/void: 100 taps reach the world as ScreenTouch and as the emulated mouse, and none reaches the HUD",
+        "a/camera: the tile clicked is the one the Camera2D's position and zoom 2 give, at three points",
+        "a/alternating: 100 Pressable presses and 100 empty-area clicks, each reaching only its owner",
+        "a/tree overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 wheel inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 wheel inputs reach the world and none reaches the HUD (positive control)",
+        "a/tree overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 wheel inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 left inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 right inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 wheel inputs reach the world and none reaches the HUD (positive control)",
+        "a/modal overlay closed-again: 100 of 100 touch inputs reach the world and none reaches the HUD (positive control)",
+        "b/order: a node of the HUD's layer hears _unhandled_input before the world does, so the Surface can claim first",
+        "b/left panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 wheel inputs reach the world, and none reaches the HUD",
+        "b/left panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/left panel: the tile clicked is the one the Camera2D gives",
+        "b/right panel void: 20 of 20 left inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 right inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 wheel inputs reach the world, and none reaches the HUD",
+        "b/right panel void: 20 of 20 touch inputs reach the world, and none reaches the HUD",
+        "b/right panel: the tile clicked is the one the Camera2D gives",
+        "b/alternating: 20 presses of the left panel's Pressable and 20 clicks on the right panel's void, each reaching only its owner"
+      ],
+      "oracleRejection": "a/void/left: what the world heard",
+      "rawReportSha256": "42dae7711b138b4e2819b4a707dfc3193534f4608a902c08ffa3d3df3f96b781",
+      "exitCode": 0,
+      "hostSha256": "05bc386355c588134615c3f1653c100146d58d3f13866377eaff5c77438e7c20",
+      "source": {
+        "file": "native/fabric_surface.cpp",
+        "find": "owner->get_runtime()->claims(surface_id, event))",
+        "replace": "(owner->get_runtime()->claims(surface_id, event) || true))",
+        "sourceSha256": "87a220ee502fb1647d3b5a31bec410c6f85df4e43f981685fd4f23191a1b3e0a"
+      }
+    },
+    "before-gui": {
+      "kind": "source (the host is rebuilt from the broken fabric_surface.cpp)",
+      "command": "node tests/world-input-native.test.mjs --sabotage=before-gui",
+      "checks": 91,
+      "failed": 2,
+      "failedChecks": [
+        "a/native Switch: 100 left inputs toggle the Godot GUI's Switch 100 times and none reaches the world",
+        "a/native Switch: 100 touch inputs toggle the Godot GUI's Switch 100 times and none reaches the world"
+      ],
+      "oracleRejection": "a/switch/left: what the HUD's handlers heard",
+      "rawReportSha256": "49ae1f77d8942c05f5708bc2b7fa0c5bf0a8456b147a239e4e0f69a44c38495f",
+      "exitCode": 0,
+      "hostSha256": "c45f0b514fd8e7dcb0b7627d8fbbb99e8e3a39d62988237ad52567704095057e",
+      "source": {
+        "file": "native/fabric_surface.cpp",
+        "find": "owner->get_runtime()->input(surface_id, event))",
+        "replace": "(owner->get_runtime()->input(surface_id, event) || owner->get_runtime()->claims(surface_id, event)))",
+        "sourceSha256": "0aa68a9b0172b34fcc0cd83873368fcce8c6c87ef18408f5698bf467c1334a67"
+      }
+    }
+  },
+  "windowedLane": {
+    "command": "Godot --path <checkout> --windowed --script res://tests/world-input-graphics-probe.gd",
+    "scenario": "native-world-input-graphics",
+    "displayServer": "macOS",
+    "renderer": "gl_compatibility",
+    "adapter": "Apple M3 Pro",
+    "godot": "4.7.2-stable (official)",
+    "viewport": [
+      800,
+      600
+    ],
+    "n": 100,
+    "checks": 32,
+    "passed": 32,
+    "checkNames": [
+      "the scene mounts on the native renderer",
+      "the display server is not headless: macOS",
+      "the Surface takes no pointer (IGNORE)",
+      "the frame shows the bar of the HUD over the map",
+      "100 clicks on the empty area reach the world once each and none reaches the HUD",
+      "the frame shows the tile the empty-area clicks selected",
+      "100 clicks on the Pressable press it 100 times and none reaches the world",
+      "100 taps on the empty area reach the world as ScreenTouch and as the emulated mouse",
+      "100 taps on the Pressable press it 100 times and none reaches the world",
+      "gui_get_hovered_control() is null over the map",
+      "a control of the HUD is the hovered one over the HUD",
+      "L1 hit slop: 100 left inputs reach the handler 100 times and none reaches the world",
+      "L1 hit slop: 100 touch inputs reach the handler 100 times and none reaches the world",
+      "L1 hit slop: 100 emulated mouse clicks reach neither the world nor a handler",
+      "L2 Text onPress: 100 left inputs reach the handler 100 times and none reaches the world",
+      "L2 Text onPress: 100 touch inputs reach the handler 100 times and none reaches the world",
+      "L2 Text onPress: 100 emulated mouse clicks reach neither the world nor a handler",
+      "L3 ScrollView gap: 100 left inputs reach the handler 100 times and none reaches the world",
+      "L3 ScrollView gap: 100 touch inputs reach the handler 100 times and none reaches the world",
+      "L3 ScrollView gap: 100 emulated mouse clicks reach neither the world nor a handler",
+      "L4 wheel over the HUD: 100 ticks on a bar reach neither the world nor a handler",
+      "L5 wheel over a ScrollView: 100 ticks reach neither the world nor a handler (press and release)",
+      "100 rounds over every gap place select no tile: the frame shows no highlight and the world heard nothing",
+      "L6 wheel over the tree overlay: 100 ticks reach neither the world nor a handler",
+      "tree overlay: it opens",
+      "tree overlay open: 100 clicks reach neither the world nor the HUD's handlers",
+      "tree overlay open: its Pressable is pressed 100 times and none reaches the world",
+      "tree overlay closed again: 100 of 100 clicks reach the world",
+      "modal overlay: it opens",
+      "modal overlay open: 100 clicks reach neither the world nor the HUD's handlers",
+      "modal overlay open: its Pressable is pressed 100 times and none reaches the world",
+      "modal overlay closed again: 100 of 100 clicks reach the world"
+    ],
+    "display": {
+      "canDraw": true,
+      "idleFrames": 90,
+      "idleMedianGapMs": 0.776,
+      "maxFps": 0,
+      "pacing": "unpaced",
+      "periodMs": 8.333,
+      "presented": "The frames ran unpaced (the idle median is far below the refresh period, or V-Sync is not on): they were drawn, not presented at the refresh rate. The counts do not depend on the pace and stand; the captures are the viewport's readback.",
+      "refreshRate": 120,
+      "vsyncMode": "enabled"
+    },
+    "pacingReading": "The display was asleep: V-Sync reads back as enabled at 120 Hz (8.333 ms) but the idle median is 0.776 ms, far below the refresh period, so the frames ran unpaced. They were drawn, not presented at the refresh rate. The lane makes no frame-time or presentation claim. The counts are exact on bursts delivered by one flush and do not depend on the pace, and the captures are the viewport's readback.",
+    "nativeHostSha256": "cc8aa3c5691b9e435e4212fd3515fcd1a97ad48229ca93daa339dfe1b627d2ee",
+    "bundleSha256": "18a9c1dff807c804231c4f06b660997b2b2060fdf0a406aa4b1d040f344b19f8",
+    "rawReportSha256": "cc7ff4afbf8041ca0e1bf4af60d8144b54682931b4540f93fdbe90044527eaab",
+    "captures": [
+      {
+        "path": "docs/evidence/world-input-a2/world-input-a2-map-with-hud.png",
+        "sha256": "0183824d354ebbf85edaf73c475e150778cd97fed6782590cf14b0902195ec6e",
+        "bytes": 7295,
+        "fromBuild": "build/world-input-graphics/map-with-hud.png",
+        "buildSha256": "0183824d354ebbf85edaf73c475e150778cd97fed6782590cf14b0902195ec6e"
+      },
+      {
+        "path": "docs/evidence/world-input-a2/world-input-a2-tile-selected.png",
+        "sha256": "1b0af521d3d458219f323c239989a2b3e019545265c752eeaef8555de90ef4ae",
+        "bytes": 7330,
+        "fromBuild": "build/world-input-graphics/tile-selected.png",
+        "buildSha256": "1b0af521d3d458219f323c239989a2b3e019545265c752eeaef8555de90ef4ae"
+      },
+      {
+        "path": "docs/evidence/world-input-a2/world-input-a2-gaps-claimed.png",
+        "sha256": "0183824d354ebbf85edaf73c475e150778cd97fed6782590cf14b0902195ec6e",
+        "bytes": 7295,
+        "fromBuild": "build/world-input-graphics/gaps-claimed.png",
+        "buildSha256": "0183824d354ebbf85edaf73c475e150778cd97fed6782590cf14b0902195ec6e"
+      },
+      {
+        "path": "docs/evidence/world-input-a2/world-input-a2-tree-overlay-open.png",
+        "sha256": "262a9e736db0e1d48edc92119fd92407f4f840aa50536098dcfd60ff4314cfef",
+        "bytes": 7063,
+        "fromBuild": "build/world-input-graphics/tree-overlay-open.png",
+        "buildSha256": "262a9e736db0e1d48edc92119fd92407f4f840aa50536098dcfd60ff4314cfef"
+      },
+      {
+        "path": "docs/evidence/world-input-a2/world-input-a2-modal-overlay-open.png",
+        "sha256": "0a3e965cbc1c33e9e73d6823fb18ba6f18105c1e496e6449e8ce9f6395ba0cd5",
+        "bytes": 7174,
+        "fromBuild": "build/world-input-graphics/modal-overlay-open.png",
+        "buildSha256": "0a3e965cbc1c33e9e73d6823fb18ba6f18105c1e496e6449e8ce9f6395ba0cd5"
+      }
+    ],
+    "capturesNote": "world-input-a2-gaps-claimed.png is byte-identical to world-input-a2-map-with-hud.png: after 700 rounds (100 each of a click and a tap in the slop, on the Text and in the ScrollView gap, and the wheel over the bar) the frame has no highlighted tile, the same as the untouched frame.",
+    "limitations": [
+      "Godot macOS windowed run with synthetic events through Input.parse_input_event; no hardware pointer or touch screen, no mobile export."
+    ]
+  },
+  "regressions": {
+    "implementer": {
+      "note": "run by the implementer, sequentially, on the working tree that became the implementation commit, before it was committed; the pointer to services suites ran before the last comment-only edits and the docs, which touch nothing those suites execute, and test:world-input to check:publication ran after them",
+      "suites": {
+        "test:pointers:processor": "2 pass 2 fail 0",
+        "test:pointers:geometry": "2 pass 2 fail 0",
+        "test:pointers:interest": "1 pass 1 fail 0",
+        "test:pointers:query-faults": "1 pass 1 fail 0",
+        "test:pointers:documents": "1 pass 1 fail 0",
+        "test:pointers:resolver-faults": "1 pass 1 fail 0",
+        "test:pointers:up": "1 pass 1 fail 0",
+        "test:pointers:move": "1 pass 1 fail 0",
+        "test:pointers:documents:up": "1 pass 1 fail 0",
+        "test:pointers:documents:move": "1 pass 1 fail 0",
+        "test:pointers:hover": "1 pass 1 fail 0",
+        "test:pointers:root-path": "1 pass 1 fail 0",
+        "test:pointers:documents:hover": "1 pass 1 fail 0",
+        "test:pointers:click": "1 pass 1 fail 0",
+        "test:pointers:capture": "1 pass 1 fail 0",
+        "test:events:original": "1 pass 1 fail 0",
+        "test:events:ancestry": "1 pass 1 fail 0",
+        "test:events:dispatch": "1 pass 1 fail 0",
+        "test:events:integrated": "1 pass 1 fail 0",
+        "test:responders:pan": "1 pass 1 fail 0",
+        "test:responders:shared-touches": "1 pass 1 fail 0",
+        "test:touchables": "1 pass 1 fail 0",
+        "test:modal": "7 pass 7 fail 0",
+        "test:lists": "1 pass 1 fail 0",
+        "test:scroll-view": "5 pass 5 fail 0",
+        "test:switch": "1 pass 1 fail 0",
+        "test:accessibility": "1 pass 1 fail 0",
+        "test:focus:commands": "1 pass 1 fail 0",
+        "test:services": "2 pass 2 fail 0",
+        "test:world-input": "1 pass 1 fail 0",
+        "test:examples": "36 of 36 examples: acceptance checks passed (headless)",
+        "test:consumer": "CONSUMER_CHECK_PASSED: 30 build/ownership checks; 40 native checks",
+        "test:consumer:libraries": "CONSUMER_LIBRARIES_CHECK_PASSED: 16 build/install checks; 46 native checks",
+        "test:consumer:civ-lite": "CONSUMER_CHECK_PASSED: civ-lite: 18 build/ownership checks; 145 native checks; 10 cycles",
+        "test:contracts": "7 + 43 + 334 Node tests pass, 0 fail; 13 Python tests OK (test:parity and test:dashboard run inside it)",
+        "type-check": "exit 0",
+        "check:static": "No issues found",
+        "check:publication": "passed: true"
+      }
+    },
+    "leader": {
+      "note": "run by the leader on the implementation commit",
+      "suites": [
+        "scripts/world-input-sabotage.mjs",
+        "test:world-input",
+        "test:pointers:click",
+        "test:touchables",
+        "test:modal (7)",
+        "test:scroll-view (5)",
+        "test:switch",
+        "test:consumer:civ-lite",
+        "test:examples (all)",
+        "type-check",
+        "check:static",
+        "check:publication"
+      ]
+    },
+    "notRun": "test:frontier-baseline: the script is not in this base's package.json (package P6 adds it on its own branch)"
+  },
+  "sourcePins": {
+    "tests/world-input-fixture.jsx": "9ac8bf0475f566be3194ee09cd8ec52958f010142ab62faa9da47b6f233c695e",
+    "tests/world-input-probe.gd": "5b92d90f314c982b9dcd93d27ba2f63ec952937c82487a67d6de8c4fc0acfae4",
+    "tests/world-input-driver.gd": "ec07dd93a3a23b1a9d520fbc0aac7b21977dfb55e345748084568d1f29345574",
+    "tests/world-input-order-witness.gd": "169f72de66ffacb90b5098c50cca438025db7c57f816bb2279a8349391f7f250",
+    "tests/world-input-graphics-probe.gd": "88f67014a80dcaf704fd0f5189672cc9535d747329763d779891817cff084c12",
+    "tests/world-input-native.test.mjs": "abf565e99d168330bea262d897938282098fad7cfddc5ed7a9c130d7e655a932",
+    "tests/world-input-oracle.mjs": "5b37e90b7a38c76c114c6afe4d8547c0c5534e8cbfb771c3149b637e084fb023",
+    "examples/world-input/world.gd": "69c1ac89627a51f1fe1c5e2b147798ad0e207d27e23c96144f72b22b1aebef65",
+    "examples/world-input/world.tscn": "1d3201d629de93b098fa9006b698218d106ad2652cf75420cf26ec296a401a02",
+    "examples/world-input/scene.tscn": "36b320779f6ef96746c1ff82ba9663f13487540c13f7f8b291369ad623edf000",
+    "examples/world-input/panels.tscn": "6a87d67c1453021b38181b64efc6ee04b35306fa1aed65210fe663d76155788f",
+    "scripts/world-input-bundle.mjs": "14d0aa2beaa676c460a9edf2f17ef5b330ac6c8f0e8e18b4d5c3caa60e1dd4ad",
+    "scripts/world-input-graphics.mjs": "d53b2e6a3175b30299cbb50930016502cb0cbe5ef7489465e2a18cd2644f2e0a",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "src/react-native-platform.jsx": "f7720d6ce52cfbfdb60439ec9631f94dac3681492f93951cc0e4ad516897b776",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "native/fabric_surface.h": "d7f15c2a22b9f75a348290ac3db540984f9cb6442d905629a3dbf3be3a0c1723",
+    "native/fabric_surface.cpp": "054ccf769e34075760cdf7d3a7bb2f97fb275d028d515e15e085f0548c62c051",
+    "native/application_runtime.cpp": "cb5ae4780c5598dcdae5cdc8c70cae8cde01a3680e131e020287a6685bdd9983",
+    "native/application_runtime.h": "d88303dc5563f3f2f4d8a8d38d022d32cb846cb7aea0a10d85f56f793b5878f2",
+    "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+    "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/TouchTargetHelper.kt": "36888e9275fd171278aa32acdd17096a53591550aa8c69075e3fc4c9662cd569"
+  },
+  "decisions": [
+    "The rule: at the unhandled stage the Surface claims a mouse button, a touch or the emulated mouse when React Native's hit test finds a View at the event's point; the empty area (the box-none root) stays the world's.",
+    "The decision is by hit test and not by handler, as React Native on a phone decides by geometry, pointerEvents and hitSlop (iOS RCTViewComponentView.mm 114-124, 362-368, 772-785; Android TouchTargetHelper.kt 252-270, 327-402).",
+    "The claim runs after the GUI, so the Controls of Godot's GUI that React Native mounts (Button, LineEdit, Switch) keep their events; the before-gui sabotage proves it with the fixture's Switch.",
+    "hit_test, apply_pointer_filters, input() and wheel() are unchanged; a2 adds a public method and an override.",
+    "The Surface relies on the unhandled order: it is called before the world only when the HUD's CanvasLayer comes after the world in the tree. The probe asserts it with a witness.",
+    "Motion and drag are outside the rule and are recorded as informative rows.",
+    "The wheel over a tree overlay is normative from a2 (L6); the Modal holds on every host.",
+    "views-ignore now fails 5 named checks (the Switch click and tap, three hovers) instead of 21: with the claim the hit test still finds a View whose Control is IGNORE."
+  ],
+  "goNoGo": {
+    "reading": "Slice 2 of 3. On the numbers of slices 1 and 2 the pointer reaches exactly one side by the rule of a phone: 0 of 100 leaks in the six gaps, 100 of 100 for the world in the empty area, with the controls and sabotages rejecting every way of getting it wrong, headless in two topologies and in a real macOS window in one. The go/no-go itself is decided in slice 3, which has to weigh what stays open: motion, hover and drag, a HUD before the world, and the lack of a phone or a hardware pointer.",
+    "timeBox": "3 slices: 1 = the policy a1 and what it leaves open; 2 = this one; 3 = the decision."
+  },
+  "open": [
+    "Pointer motion, hover and drag are not claimed: over a place the GUI lets through the world still hears the motion (20 of 20) and a drag that starts there (20 drags and 20 emulated motions, with the touch and its emulated mouse claimed).",
+    "A release away from its press follows the point of the release.",
+    "A HUD placed before the world in the tree, a HUD of several layers, other cameras and several windows are not measured.",
+    "Hardware pointers, a real touch screen, multi-touch and mobile exports; the iphone criterion of V05-02 stays open (package P7)."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI is pending.",
+    "The events are synthetic, delivered through Input.parse_input_event: no hardware pointer, no real touch screen, no multi-touch (a second finger), no real drag.",
+    "No Godot mobile export and no iPhone run.",
+    "The counts are exact and say nothing about latency or frame time. The windowed lane's frames ran unpaced (the display was asleep) and it makes no frame-time claim.",
+    "The scene has the world before the HUD's CanvasLayer in the tree and a Camera2D at (384, 256) with zoom 2; other arrangements are not measured.",
+    "The pre-a1 control is a rebuild on the current main, not the binary of slice 1."
+  ]
+}

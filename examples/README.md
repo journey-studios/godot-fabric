@@ -78,7 +78,8 @@ outside the ordinary launcher catalog while public EventTarget flags remain off.
 
 The [world-input spike](world-input/README.md) puts a React Native HUD over a Godot map: a click on the
 HUD's empty area reaches the map once, a click on a `Pressable` never does, and neither does one under an
-open overlay or `Modal`. It has its own scenes and `npm run test:world-input` command, outside the launcher
+open overlay or `Modal`; what React Native's hit test finds at a point (a hit slop, a `Text`, the gap of a ScrollView, and
+the wheel over the HUD) is the HUD's alone. It has its own scenes and `npm run test:world-input` command, outside the launcher
 catalog, and a local windowed lane on the full-screen scene (`node scripts/world-input-graphics.mjs`).
 
 The [Frontier baseline](frontier-baseline/README.md) is the same scene with a HUD whose panel (50, 75 or 100 native

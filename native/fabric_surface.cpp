@@ -160,6 +160,17 @@ void FabricSurface::_input(const Ref<InputEvent> &event) {
     // after calling the runtime; the independent Viewport is the input owner.
     if (auto *viewport = Object::cast_to<Viewport>(ObjectDB::get_instance(viewport_id))) viewport->set_input_as_handled();
 }
+void FabricSurface::_unhandled_input(const Ref<InputEvent> &event) {
+  // The pointer belongs to exactly one side, by the rule of React Native on a phone: what its hit test finds is the HUD's,
+  // and the rest is the world's. The GUI and _input have already had the event, so the Controls React Native mounts that live
+  // on the GUI (Button, LineEdit, Switch) were offered it first. A Surface comes after the world in the tree, so Godot calls
+  // this first (SceneTree::_call_input_pause walks the group in reverse tree order); marking the event handled keeps it from
+  // the world's _unhandled_input. Motion and drag are not claimed.
+  if (!surface_id) return;
+  const auto viewport_id = get_viewport()->get_instance_id();
+  if (auto *owner = application(); owner && owner->get_runtime() && owner->get_runtime()->claims(surface_id, event))
+    if (auto *viewport = Object::cast_to<Viewport>(ObjectDB::get_instance(viewport_id))) viewport->set_input_as_handled();
+}
 void FabricSurface::_notification(int what) {
   if (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT && !has_meta("validation_input_device"))
     if (auto *owner = application(); surface_id && owner && owner->get_runtime()) owner->get_runtime()->cancel(surface_id);
