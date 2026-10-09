@@ -1,8 +1,8 @@
 # The Frontier HUD's performance baseline: what a panel swap costs on macOS
 
 Status: executed isolated macOS validation (arm64) against pinned RN 0.87.1, Hermes 250829098.0.17 and official Godot 4.7.2,
-headless for the exact counts and in a real window (local, not in CI) for the frame time; **no windowed attempt was presented by the display**, so the lane ended as not presented
-with no frame-time statistic and the presented frame time is **pending** (see [The windowed baseline](#the-windowed-baseline)). This is the `baseline` criterion of the
+headless for the exact counts and in a real window (local, not in CI) for the frame time; **the display presented the window on 2026-10-09** (commit `1bc3a3c`: five runs, each accepted at its first attempt),
+and the presented frame time is pinned (see [The windowed baseline](#the-windowed-baseline-presented-2026-10-09-1bc3a3c)); the attempts that preceded it were not presented and are kept as history. This is the `baseline` criterion of the
 0.5 Frontier milestone's V05-06: a baseline on the pointer spike's scene, with 50 to 100 native nodes per panel swap, extending the
 GF-30 harness, with a **proposed** budget recorded and not frozen. The `turno`, `soak` and `congelado` criteria of V05-06 are open
 (see [What is left](#what-is-left)). The slice changes no C++, so there is no preceding host to run it on; the control is the
@@ -187,7 +187,95 @@ in clusters (the frame-clock note measured about 3 ms and 13 ms apart at 120 Hz 
 showed twice: no "missed frame" is read from these intervals, and the ROADMAP's missed frames with the vsync on stay open, since they need presentation timestamps that Godot does not
 give. The receipt counts, as the final comparison V05-10 asks, the frames above twice the idle reference (and, as it always did, above twice the idle median) and above 100 ms.
 
-### The windowed baseline: pending
+### The windowed baseline: presented (2026-10-09, `1bc3a3c`)
+
+**The presented frame time is pinned.** The windowed lane ran once on commit [`1bc3a3c`](https://github.com/journey-studios/godot-fabric/commit/1bc3a3cc7d5d1a160f2158a87a5f8c623b504130)
+(`caffeinate -d node scripts/frontier-baseline-graphics.mjs`, the working tree clean) and the display presented the window: **`presented: true`, exit code 0, 5 of 5 slots accepted at the first attempt of each and no attempt rejected**,
+the vsync read back `enabled` at 120 Hz. The commit is that of [the windowed presence](windowed-presence.md), which puts the lane's window in front of the others and above them and records, for every process frame, whether
+the engine could draw it; the rule of validity of protocol item 7 is the one written above and did not change. [The evidence of that slice](../evidence/windowed-presence/README.md) describes the execution (the user's absence, the load, the sources
+pinned), and [this baseline's evidence record](../evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09) pins the numbers below, and the raw receipt itself is committed byte for byte as [`windowed-presented-raw.json`](../evidence/frontier-baseline/windowed-presented-raw.json) (437,679 bytes, SHA-256
+`36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`), so that every statistic can be recomputed from its intervals: [how, in the evidence record](../evidence/frontier-baseline/README.md#recalcular).
+
+**What was checked.** `verifyGraphicsReceipt` accepts the receipt, with the oracle of `1bc3a3c` and with the one of this tree, and each of the five runs passes `graphicsRunValidity` (it drew, it was paced). `summarizeGraphicsRuns`, run over the raw intervals
+of the five runs, gives the receipt's `summary` exactly (but for the count of the real pointer's motion events over the map, which `raw` does not keep), and every figure below was computed again from the raw intervals by a separate script outside the repository
+(nearest rank; quartiles of five) and is equal to the microsecond.
+
+**Where.** An Apple M3 Pro (11 logical cores, 18 GB), macOS 26.6.2 (25G83), arm64, the built-in "Color LCD" (1512 x 982 points, 3024 x 1964 pixels, 120 Hz, scale 2); an 800 x 600 window on `gl_compatibility` over `opengl3` (adapter "Apple M3 Pro"), Godot 4.7.2,
+Hermes 250829098.0.17; the frame cap off (`max_fps` 0) and the vsync mode `enabled`, read back from the window. Five runs, each in a process of its own, about 46 s each; the same scene, tour and swap code as the headless lane.
+
+| Run | Process frames | Frames drawn | Frames the engine could not draw | Idle reference (ms) | Idle median (ms, recorded) |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 5,133 | 5,117 | 0 of 5,120 | 8.339 | 6.022 |
+| 2 | 5,125 | 5,109 | 0 of 5,112 | 8.336 | 7.928 |
+| 3 | 5,095 | 5,079 | 0 of 5,082 | 8.334 | 4.580 |
+| 4 | 5,098 | 5,082 | 0 of 5,085 | 8.338 | 4.367 |
+| 5 | 5,083 | 5,067 | 0 of 5,070 | 8.339 | 8.368 |
+
+In every run a frame was drawn after each of the 360 steady clicks and the idle window drew 601 times for its 600 intervals; the engine could draw the window in all of the 25,469 frames it sampled. The loop was paced: the idle reference is 8.334 to 8.339 ms, the period of 120 Hz
+(8.333 ms), where a loop that nothing paces idles at about 0.7 ms. The median of the idle intervals, which no longer judges, moves from 4.4 to 8.4 ms between runs for the reason given in [the idle reference](#the-idle-reference-three-statistics-over-the-raw-intervals-of-2026-10-09).
+
+**The idle window** (600 consecutive intervals between process frames, the map and the HUD still; ms). The p95 and p99 are the long group of the two that alternate with the vsync on, and the p50 falls in one group or the other, hence its range:
+
+| Run | p50 | p95 | p99 | max | Intervals above twice the idle reference |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 6.022 | 14.854 | 15.604 | 52.315 | 4 of 600 |
+| 2 | 7.928 | 14.583 | 15.169 | 15.888 | 0 of 600 |
+| 3 | 4.580 | 14.504 | 14.854 | 19.290 | 1 of 600 |
+| 4 | 4.367 | 14.554 | 15.213 | 25.699 | 3 of 600 |
+| 5 | 8.368 | 15.167 | 15.509 | 44.654 | 3 of 600 |
+| **Median [IQR]** | 6.022 [3.348] | 14.583 [0.300] | 15.213 [0.340] | 25.699 [25.364] | 3 [2] |
+
+**The swap frame** is the interval of the process frame that took the click, from the start of the frame in which the injection is flushed to the start of the next one (protocol item 4). The nodes exist when the flush returns (0 frames of latency in all of the 1,800 steady
+swaps of the five runs) and a drawn frame followed every click. The table groups the 360 steady swaps of a run by the nodes the swap creates, that is the size of the panel it shows (0, 50, 75 or 100: 90 swaps of each); each cell is the median across the five runs of the statistic of one run,
+with the interquartile range of the five in brackets (ms):
+
+| Nodes created | p50 | p95 | p99 |
+| ---: | ---: | ---: | ---: |
+| 0 | 3.662 [0.014] | 13.714 [0.031] | 14.284 [0.732] |
+| 50 | 8.448 [0.058] | 11.052 [0.403] | 15.565 [3.959] |
+| 75 | 11.171 [0.144] | 14.080 [1.876] | 19.278 [3.406] |
+| 100 | 13.144 [0.111] | 16.577 [0.131] | 24.607 [5.514] |
+| all swaps (360 a run) | 10.596 [0.123] | 14.835 [0.378] | 18.175 [1.639] |
+
+By run, for all the swaps (ms):
+
+| Run | p50 | p95 | p99 | max | Above twice the idle reference |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 10.410 | 14.835 | 18.175 | 22.366 | 6 of 360 |
+| 2 | 10.502 | 14.497 | 18.978 | 25.918 | 5 of 360 |
+| 3 | 10.625 | 15.928 | 19.836 | 60.024 | 11 of 360 |
+| 4 | 10.596 | 14.217 | 15.447 | 19.278 | 2 of 360 |
+| 5 | 10.673 | 14.875 | 17.339 | 24.621 | 6 of 360 |
+
+**The click to the first drawn frame** (from the start of the injection to the first frame drawn after the nodes exist; ms):
+
+| Run | p50 | p95 | p99 | max |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 10.366 | 14.636 | 17.343 | 20.313 |
+| 2 | 10.455 | 14.418 | 18.926 | 25.796 |
+| 3 | 10.580 | 15.878 | 19.735 | 59.945 |
+| 4 | 10.552 | 14.157 | 15.373 | 19.225 |
+| 5 | 10.630 | 14.835 | 17.278 | 24.572 |
+| **Median [IQR]** | 10.552 [0.125] | 14.636 [0.417] | 17.343 [1.648] | |
+
+What the tables say, and no more:
+
+- **The swap frame follows the nodes the swap creates.** At the median it is 3.7, 8.4, 11.2 and 13.1 ms for 0, 50, 75 and 100 nodes: a 50-node swap takes about one period of 120 Hz (8.33 ms) and a 100-node swap 1.6 periods. The 100-node swap's p95 (16.6 ms at the median) is at the 60 Hz period (16.67 ms): under it in three of the five runs (14.73, 16.57 and 16.58 ms) and over it in two (16.70 and 19.44); its p99 (24.6 ms) is over it.
+- **The CPU time inside the frame is the headless lane's.** The injection and flush, by nodes created, is 2.6, 6.3, 7.9 and 9.4 ms at the median (p95 3.7, 8.3, 10.2 and 11.5) in the window, against 2.2, 5.9, 7.7 and 9.2 ms (p95 3.2, 8.6, 10.6 and 12.4) headless. What the window adds is the loop's
+  pace: the frame of a 0-node swap, which costs 2.6 ms of CPU, is 3.7 ms at the median and 13.7 ms at p95, the two groups of the idle window.
+- **The p99 of 90 swaps is the largest of them** (nearest rank 90), so the p99 of a size is the statistic of one swap a run and has the widest range (0.7 to 5.5 ms). The largest swap frame, 60.0 ms (a 100-node swap of run 3), is not the swap's alone: the idle windows of runs 1 and 5 hold intervals of 52.3 and 44.7 ms with
+  nothing happening. The cause of those stalls was not isolated.
+- **No frame of 100 ms or more**: 0 of the 1,800 steady swap frames and 0 of the 3,000 idle intervals. The frames above twice the idle reference (16.7 ms), the count the final comparison V05-10 uses ([the amendment of its protocol](frontier-comparison-protocol.md#amendments)), are 6 [1] of 360 swap frames a run (2 to 11)
+  and 3 [2] of 600 idle intervals (0 to 4); by size the swap frames above it are 0 (0 nodes), 0 to 1 (50), 1 to 2 (75) and 0 to 9 (100) of 90.
+- No missed frame is read from these intervals (see the protocol), and the vsync was on in every run: FPS without a limit is not claimed.
+
+**The load, and who was there.** The Mac was not quiet: other agents' work ran on it. The one-minute load average (`vm.loadavg`, 11 logical cores) was 5.41 before the lane and 6.79 after it, and 5.26 to 6.16 around the five runs (five-minute 5.60 to 5.92, fifteen-minute 6.82 to 7.08);
+it is in the evidence record for every run. **The numbers are therefore pessimistic**: a quieter machine may show smaller ones, and the `congelado` criterion may need an execution on a quiet machine before the proposal below is frozen. Nobody was at the Mac: the time since the last keyboard or pointer event (`HIDIdleTime`) grew by 234.5 s over the 235 s
+of the lane, so there was no event. That says nothing of whether anyone looked at the screen, and it means that **a user working on the Mac is not in these numbers**: the presented baseline is that of a machine nobody was using, and loaded by other agents.
+
+### The first windowed attempts, 2026-10-08: pending (history)
+
+*This is the record as it stood before the lane was presented; it is superseded by the execution above and kept as it was written.*
 
 **No frame time is pinned.** The windowed lane ran on the pinned commit with `caffeinate -d` while the Mac had been idle for about 96 minutes (`HIDIdleTime`) and the display was off or
 showing the lock screen. Every attempt drew (`frame_post_draw` fired after 99.9% of the process frames) and the vsync mode read back `enabled` at 120 Hz on the built-in display
@@ -212,6 +300,8 @@ The captures of each panel (`frontier-baseline-panel-empty.png`, `-units.png`, `
 of the frame as drawn, from a separate run that measures nothing, with pixel checks that the bar is over the map, each panel is where the HUD puts it, and the base comes back after them.
 
 ### The windowed attempts of 2026-10-09: not presented
+
+*History: these two executions, earlier on the same day, were superseded by the one on `1bc3a3c` ([presented](#the-windowed-baseline-presented-2026-10-09-1bc3a3c)). The text is as it was written.*
 
 After the record above, the baseline's windowed lane (`node scripts/frontier-baseline-graphics.mjs`, the main's scripts, unchanged) ran **twice** on commit `e6a271d364a27f73acf995ed846c78eed055dde0`, whose tree (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) is identical to the main commit `1adcdb3`, with the user present and the display on, on the same machine
 (Apple M3 Pro, "Color LCD" at 120 Hz, an 800 x 600 window, `gl_compatibility`, the vsync read back `enabled`). **Both ended as not presented** (`presented: false`, exit code 3, `summary: null`, no frame-time statistic): slot 3 used up its three attempts both times. **The windowed baseline stays pending** and so does the `baseline` criterion; the budget rows that depend on it are as they were.
@@ -337,10 +427,10 @@ the base's 1,960,448 that the first mounts raised and then never gave up. Two th
 
 ## The proposed budget
 
-**PROPOSAL, not frozen.** The table has the values the headless baseline suggests and the rule that derived each, so that the freeze (criterion `congelado`, a separate and single act after this baseline and before
+**PROPOSAL, not frozen.** The table has the values the headless baseline and the presented windowed baseline suggest and the rule that derived each, so that the freeze (criterion `congelado`, a separate and single act after this baseline and before
 the first device session) can accept, tighten or drop each. None of it is a gate today except the rows marked **exact**, which the suite already judges. The rules: the CPU time of a swap is the p95 pooled over
-the two headless processes, times 1.25, rounded up to 0.5 ms; the heap a panel holds is the p50 times 1.25, rounded up to 10,000 bytes; a frame time of a presented window is to be the **median across five
-presented runs of the statistic plus three times its interquartile range**, rounded up to 0.5 ms (it is pending, see the windowed baseline).
+the two headless processes, times 1.25, rounded up to 0.5 ms; the heap a panel holds is the p50 times 1.25, rounded up to 10,000 bytes; a frame time of a presented window is the **median across the five
+presented runs of the statistic plus three times its interquartile range** (the interquartile range of five by nearest rank is the fourth value minus the second), rounded up to 0.5 ms, applied below to the execution of 2026-10-09 on `1bc3a3c`.
 
 | Metric (lane) | Baseline | Proposed bound | Rule |
 | --- | --- | --- | --- |
@@ -351,14 +441,45 @@ presented runs of the statistic plus three times its interquartile range**, roun
 | Frames from the click to the panel (headless) | 0 in 720 of 720 steady swaps | at most 1 | the maximum measured plus one frame for a commit that lands in the next pump |
 | CPU time of the swap (injection and flush), p95, by nodes created 0 / 50 / 75 / 100 (headless, 180 swaps each) | 3.2 / 8.6 / 10.6 / 12.4 ms (p50 2.2 / 5.9 / 7.7 / 9.2) | 4.5 / 11.0 / 13.5 / 16.0 ms | pooled p95 x 1.25, up to 0.5 ms; the 100-node bound is near the 60 Hz period (16.7 ms) |
 | Heap a mounted panel holds over the base (headless, forced collection) | 249,024 / 327,808 / 406,072 bytes for 50 / 75 / 100 nodes (the same in both processes) | 320,000 / 410,000 / 510,000 bytes | p50 x 1.25, up to 10,000 bytes |
-| Swap frame p95 and p99, idle frame p99 and swap frames of 100 ms or more, of a window the display presents (vsync on, 120 Hz) | **PENDING**: no windowed attempt was presented by the display | **PENDING** | to be derived from five presented runs by median + 3 IQR, up to 0.5 ms |
+| Swap frame p50, by nodes created 0 / 50 / 75 / 100 (windowed, the display presents the window, vsync on, 120 Hz; 90 swaps of each size in each of 5 runs) | median of the 5 runs: 3.662 / 8.448 / 11.171 / 13.144 ms | 4.0 / 9.0 / 12.0 / 13.5 ms | median across the 5 runs + 3 IQR, up to 0.5 ms; of a loaded machine nobody was using |
+| Swap frame p95, by nodes created 0 / 50 / 75 / 100 (windowed, same) | 13.714 / 11.052 / 14.080 / 16.577 ms | 14.0 / 12.5 / 20.0 / 17.0 ms | same rule; the 75-node bound is wide because the five runs' p95 are two of about 15.4 ms, one of 14.1 and two of about 13.5 |
+| Swap frame p99, by nodes created 0 / 50 / 75 / 100 (windowed, same) | 14.284 / 15.565 / 19.278 / 24.607 ms | 16.5 / 27.5 / 29.5 / 41.5 ms | same rule; the p99 of 90 swaps is the largest of them, so these are the noisiest bounds (IQR 0.7 to 5.5 ms) |
+| Idle frame p99 (windowed, 600 idle intervals in each run) | 15.213 ms | 16.5 ms | same rule; the long group of the vsync's clusters is 13 to 15 ms, so no bound under it is meaningful |
+| Swap frames and idle frames of 100 ms or more (windowed) | 0 of 1,800 swap frames and 0 of 3,000 idle intervals | 0 | median 0 + 3 x IQR 0 (a count, not rounded) |
 | Resident memory and Godot's static memory per round | RSS 131 to 192 MB headless; static 369 KB a round (the probe's own readings) | none | recorded: they move by tens of MB and by the probe's bookkeeping, and cannot be a limit |
 
 The rule of the ROADMAP's final comparison (V05-10) holds for the frame time: **FPS without a limit counts only if the vsync mode read back is disabled**. With the vsync on, as in every attempt here, the outcome is
 the **CPU time per frame** (the injection and flush, the pump and its phases, which the headless lane records exactly), and the frame times are read against the refresh period the display reports: 8.33 ms at the
 120 Hz of this display. A 100-node swap's own work (9.2 ms at the median, 12.4 at p95) is more than one such period, so today it cannot fit in a single 120 Hz frame on this machine, and a budget in frames at that
 rate would fail it by construction; the freeze has to choose between a per-swap CPU bound (above), a bound in frames at a lower rate, or a change in what a swap creates (fewer or flatter nodes, a list that mounts
-what is visible). Nothing here decides it.
+what is visible). Nothing here decides it. The presented window says the same in frames: the frame that takes a 100-node swap is 13.1 ms at the median (1.6 periods of 120 Hz) and 16.6 ms at p95, and the injection and flush inside it cost 9.4 ms of CPU at the median.
+
+**How the frame-time bounds are derived.** Per statistic, the five runs' values sorted, the nearest-rank quartiles of five (the second, third and fourth values), and the rule. Everything is in milliseconds and was computed on integer microseconds from the raw intervals
+(the all-swaps and idle figures are the receipt's own `summary`, which `summarizeGraphicsRuns` reproduces; the by-size ones are the same statistic over the swaps of one size). The all-swaps rows are for reference; the proposal is by size.
+
+| Statistic (ms) | The five runs, sorted | Q1 | Median | Q3 | IQR | Median + 3 IQR | Up to 0.5 ms |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Swap frame p50, 0 nodes created | 3.565 / 3.653 / 3.662 / 3.667 / 3.731 | 3.653 | 3.662 | 3.667 | 0.014 | 3.704 | **4.0** |
+| Swap frame p95, 0 nodes created | 13.632 / 13.690 / 13.714 / 13.721 / 13.794 | 13.690 | 13.714 | 13.721 | 0.031 | 13.807 | **14.0** |
+| Swap frame p99, 0 nodes created | 13.897 / 14.251 / 14.284 / 14.983 / 15.141 | 14.251 | 14.284 | 14.983 | 0.732 | 16.480 | **16.5** |
+| Swap frame p50, 50 nodes created | 8.414 / 8.436 / 8.448 / 8.494 / 8.588 | 8.436 | 8.448 | 8.494 | 0.058 | 8.622 | **9.0** |
+| Swap frame p95, 50 nodes created | 10.688 / 10.713 / 11.052 / 11.116 / 11.843 | 10.713 | 11.052 | 11.116 | 0.403 | 12.261 | **12.5** |
+| Swap frame p99, 50 nodes created | 12.201 / 13.282 / 15.565 / 17.241 / 20.135 | 13.282 | 15.565 | 17.241 | 3.959 | 27.442 | **27.5** |
+| Swap frame p50, 75 nodes created | 10.926 / 11.053 / 11.171 / 11.197 / 11.534 | 11.053 | 11.171 | 11.197 | 0.144 | 11.603 | **12.0** |
+| Swap frame p95, 75 nodes created | 13.426 / 13.533 / 14.080 / 15.409 / 15.420 | 13.533 | 14.080 | 15.409 | 1.876 | 19.708 | **20.0** |
+| Swap frame p99, 75 nodes created | 18.780 / 18.960 / 19.278 / 22.366 / 24.621 | 18.960 | 19.278 | 22.366 | 3.406 | 29.496 | **29.5** |
+| Swap frame p50, 100 nodes created | 13.130 / 13.144 / 13.144 / 13.255 / 13.541 | 13.144 | 13.144 | 13.255 | 0.111 | 13.477 | **13.5** |
+| Swap frame p95, 100 nodes created | 14.730 / 16.568 / 16.577 / 16.699 / 19.442 | 16.568 | 16.577 | 16.699 | 0.131 | 16.970 | **17.0** |
+| Swap frame p99, 100 nodes created | 16.615 / 20.404 / 24.607 / 25.918 / 60.024 | 20.404 | 24.607 | 25.918 | 5.514 | 41.149 | **41.5** |
+| Idle frame p99 | 14.854 / 15.169 / 15.213 / 15.509 / 15.604 | 15.169 | 15.213 | 15.509 | 0.340 | 16.233 | **16.5** |
+| Swap frames of 100 ms or more, per run | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
+| Idle intervals of 100 ms or more, per run | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
+| Swap frame p50, all swaps (reference) | 10.410 / 10.502 / 10.596 / 10.625 / 10.673 | 10.502 | 10.596 | 10.625 | 0.123 | 10.965 | 11.0 |
+| Swap frame p95, all swaps (reference) | 14.217 / 14.497 / 14.835 / 14.875 / 15.928 | 14.497 | 14.835 | 14.875 | 0.378 | 15.969 | 16.0 |
+| Swap frame p99, all swaps (reference) | 15.447 / 17.339 / 18.175 / 18.978 / 19.836 | 17.339 | 18.175 | 18.978 | 1.639 | 23.092 | 23.5 |
+
+**The load makes these numbers pessimistic.** The windowed lane ran with the Mac's one-minute load average at 5.4 to 6.8 on 11 logical cores (other agents' work), so a quiet machine may show smaller frame times and smaller IQRs, and the bounds above may be looser than they need to be. A user working on the machine is not in them either.
+The `congelado` criterion may therefore need an execution of the lane on a quiet machine before any of these rows is frozen; this proposal neither asks for it nor freezes anything.
 
 ## The retained sabotages
 
@@ -388,7 +509,8 @@ the host no node is itself worth knowing for HUD panels that are hidden and not 
 
 - One machine (an Apple M3 Pro), one display and one vsync mode (the default, enabled, read back); a frame time with the vsync disabled was not measured, so no FPS without a limit is claimed. The Mac was
   loaded (load average 4 to 8 on 11 logical cores) during every run, so the numbers are not a best case and a quieter machine may show smaller ones.
-- **The frame time of a presented window (vsync on, 120 Hz) is PENDING**: no windowed attempt was presented by the display (the Mac was idle, the display off or locked), the lane rejected all three as unpaced and ended with `presented: false`, exit code 3 and no frame-time statistic, and the budget rows that depend on it are PENDING too. The earlier presented execution is an unpinned reference only.
+- **The frame time of a presented window (vsync on, 120 Hz) is pinned from one execution** (2026-10-09, `1bc3a3c`): five runs of one sitting of the lane (about four minutes) with nobody at the Mac and the machine loaded by other agents (load average 5.4 to 6.8 on 11 logical cores), so a user at work and a quiet machine are both missing; the budget rows derived from it
+  are a proposal, and the `congelado` may need an execution on a quiet machine. The attempts before it, which no display presented, and the earlier unpinned reference are history.
 - Synthetic events through `Input.parse_input_event`; no hardware pointer or touch screen, no iPhone, no mobile export. The numbers are macOS, arm64, Compatibility renderer.
 - The HUD is a fixture of the same shape as the Frontier panels, not the Frontier HUD (V05-05 is open). The panels are 50 to 100 native nodes of `View` and `Text`; panels with images, text inputs, scroll views,
   long text shaping or animations are not measured.
