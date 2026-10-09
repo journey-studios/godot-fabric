@@ -11,11 +11,20 @@ import {callFrontier, FRONTIER_SNAPSHOT, FRONTIER_TURN_ENDED} from "../consumers
 // the proof that the services were registered before the mount (a late registration would answer E_SERVICE_MISSING
 // here), and they stay for the life of the application, like a store. The panel's are the root's: it connects when
 // it mounts and removes the connection when it unmounts, so a remount reconnects and receives the current snapshot.
+//
+// The end of a turn is a job (docs/research/frontier-services.md): `frontier.end_turn` answers on acceptance, and the
+// application's own `turn_ended` subscription, which does not go away with the root, is where a job is seen to finish. The
+// calls a HUD makes while a job runs are kept in `attempts`, apart from `results`, so that the step that is being played
+// still has its own answer as the last result. `extras` are further module-scope subscribers of the snapshot, the stress of
+// the registry's budgets: each keeps what it received and the order the registry delivered it in (`arrivals`).
 
 let sequence = 0;
 const snapshots = [];
 const turnEnded = [];
 const results = [];
+const attempts = [];
+const extras = [];
+const arrivals = [];
 const panelSnapshots = [];
 const panel = {mounts: 0, cleanups: 0, connected: false, readyCount: 0, error: null};
 const application = {snapshotReady: 0, signalReady: 0, errors: []};
@@ -41,6 +50,17 @@ function record(label, method, args, run) {
     Object.assign(entry, {state: "resolved", response: result.response, generation: result.generation, value: result.value, settled: ++sequence});
   }, error => {
     Object.assign(entry, {state: "rejected", error: failure(error), settled: ++sequence});
+  });
+}
+
+// A call made while a job runs, recorded apart from `results`.
+function attempt(label, method, args) {
+  const entry = {id: attempts.length + 1, label, method, args, state: "pending", response: null, value: null, error: null};
+  attempts.push(entry);
+  callFrontier(method, args).then(result => {
+    Object.assign(entry, {state: "resolved", response: result.response, value: result.value});
+  }, error => {
+    Object.assign(entry, {state: "rejected", error: failure(error)});
   });
 }
 
@@ -73,10 +93,57 @@ globalThis.FrontierServicesProbe = {
   call(label, name, args) {
     record(label, name, args, () => GodotFabric.call(name, args));
   },
+  // The calls a HUD makes while a job runs: the same method and arguments, recorded in `attempts` and not in `results`.
+  during(label, name, args) {
+    attempt(label, name, args);
+  },
+  attempts() {
+    return attempts.map(entry => ({...entry}));
+  },
+  // Further module-scope subscribers of the snapshot. Each one keeps what it received ([revision, turn, phase, last_job]),
+  // and every delivery is also appended to `arrivals` as [subscriber, revision] in the order JavaScript saw it.
+  addSubscribers(count) {
+    for (let index = 0; index < count; index += 1) {
+      const subscriber = {index: extras.length, ready: false, error: null, received: [], connection: null};
+      subscriber.connection = GodotFabric.connect(FRONTIER_SNAPSHOT, snapshot => {
+        subscriber.received.push([snapshot.revision, snapshot.value.turn, snapshot.value.phase, snapshot.value.last_job]);
+        arrivals.push([subscriber.index, snapshot.revision]);
+      });
+      subscriber.connection.ready.then(() => { subscriber.ready = true; }, error => { subscriber.error = failure(error); });
+      extras.push(subscriber);
+    }
+  },
+  subscribers() {
+    return {count: extras.length, ready: extras.filter(subscriber => subscriber.ready).length,
+      errors: extras.filter(subscriber => subscriber.error !== null).map(subscriber => subscriber.error),
+      received: extras.map(subscriber => subscriber.received.length)};
+  },
+  // What the extras received after the given number of arrivals: the global order as [subscriber, revision], and per
+  // subscriber what it received as [revision, turn, phase, last_job].
+  subscribersSince(arrivalCount) {
+    return {arrivals: arrivals.slice(arrivalCount), arrivalCount: arrivals.length,
+      received: extras.map(subscriber => subscriber.received.map(entry => [...entry]))};
+  },
+  removeSubscribers() {
+    for (const subscriber of extras) {
+      subscriber.connection.remove();
+    }
+    extras.length = 0;
+    arrivals.length = 0;
+  },
+  // Every turn_ended the application's own subscription ever received, and every snapshot's progress, in order.
+  turnEndedLog() {
+    return turnEnded.map(entry => ({seq: entry.seq, ...entry.value}));
+  },
+  progressLog(from) {
+    return snapshots.slice(from).map(entry => ({seq: entry.seq, revision: entry.revision, turn: entry.value.turn, phase: entry.value.phase,
+      last_job: entry.value.last_job}));
+  },
   // The counters the probe polls while it waits.
   counts() {
     return {snapshots: snapshots.length, turnEnded: turnEnded.length, results: results.length,
       settled: results.filter(entry => entry.state !== "pending").length, panelSnapshots: panelSnapshots.length,
+      attempts: attempts.length, attemptsSettled: attempts.filter(entry => entry.state !== "pending").length, arrivals: arrivals.length,
       stepsReceived: steps.length, panel: {...panel}, application: {...application, errors: [...application.errors]}};
   },
   // What the last step left: its result and the events it produced after the given counts.

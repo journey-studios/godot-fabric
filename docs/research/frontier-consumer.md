@@ -7,13 +7,16 @@ its HUD, reloading the scenery and the menu, measured for what a leak would grow
 
 The criterion this closes is V05-03 `consumidor`: "Consumidor civ-lite provisionado pelo addon (TSX público, sem Node global)
 abrindo no editor; 10 ciclos novo jogo, recarregar cenário e menu sem vazar listeners ou nós, com epoch monotônico". It does not
-close `autoridade`, and it does not depend on D22 or D23 (below). The record of the runs, with the receipt and the two
-captures, is [docs/evidence/frontier-consumer/](../evidence/frontier-consumer/README.md); hosted CI for this lane is pending.
+close `autoridade`, and it does not depend on D22 or D23 (below). `autoridade` is closed by the services' probe
+([frontier-services.md](frontier-services.md), "The turn is a job"), and since the end of a turn became a job the cycles here
+exercise it too: the HUD's End turn is a job it sees through every phase, and a job started in the same frame as the menu finishes
+with the menu open. The record of the runs, with the receipt and the two captures, is
+[docs/evidence/frontier-consumer/](../evidence/frontier-consumer/README.md); hosted CI for this lane is pending.
 
 ```sh
 npm run test:consumer:civ-lite            # provisions, builds in the editor, runs the ten cycles, builds offline
 npm run test:consumer:civ-lite -- --capture   # the same plus a headed run that saves the two screenshots
-node scripts/consumer-civ-lite-sabotage.mjs   # the four retained sabotages and the control
+node scripts/consumer-civ-lite-sabotage.mjs   # the five retained sabotages and the control
 ```
 
 ## Sources
@@ -161,6 +164,10 @@ unavoidable is for this, not for the World's return, which `new_game` does by it
 - **New game in the menu** calls `frontier.new_game` (the epoch rises by 1); with no World, `GameServices` instantiates one from
   `world_scene` before it publishes the snapshot, and the HUD, which called it from the menu, goes back to the `game` screen and
   connects again to receive the new epoch.
+- **A job in progress is not the World's.** The end of a turn is a job that `GameServices._process` drives, a phase a frame, so
+  the menu (which drops the World and, in the HUD, the connection to the snapshot) does not stop it: it finishes with the menu open,
+  `finished_jobs[job]` is 1 and the World stays out of the tree until a `new_game`. A `new_game` while a job runs abandons it, because
+  the session it drove is gone (the epoch rises) and no `turn_ended` fires for it.
 
 ## The HUD
 
@@ -173,12 +180,18 @@ connection, shows the turn and the epoch, the context and the phase, the three s
 with the game's `reason_text` under it, when `enabled` is 0), and sends an action back as `frontier.<id>(args)` with the
 arguments the snapshot's action carries. The screens call `frontier.open_menu` and `frontier.new_game`. There is no rule in it.
 
-`globalThis.FrontierHud` exposes `stats()` (the connections the HUD holds now, the calls it made and answered, the epochs it saw,
-the problems it met, the screen) and `send(id, args)` (the function its buttons use) for the validation to read: nothing in the HUD
+While the turn is processed the game disables every action (`turn_in_progress`) and the button that started it shows how far the
+turn is: its label gets the snapshot's `phase` (`End turn · production`). That is presentation of a field the snapshot carries;
+the HUD decides nothing about the job. `End turn` is accepted at once, the answer carries the job's id, and the HUD sees the
+snapshots go through the six phases to rest with `last_job` set to that id (docs/research/frontier-services.md, "The turn is a
+job").
+
+`globalThis.FrontierHud` exposes `stats()` (the connections the HUD holds now, the calls it made and answered with the job each
+carried, the epochs it saw, the phases it saw change and the last job, the problems it met, the screen) and `send(id, args)` (the function its buttons use) for the validation to read: nothing in the HUD
 reads them. They are bounded, because a HUD lives as long as the game and this one is the template to copy: the counters
 (`resultCount`, `epochCount`, `problemCount`) count for the life of the HUD, each list keeps only the last 64 entries, and a reader
 that wants what is new subtracts the counter it saw from the one it sees and takes that many from the end of the list, which is
-what `validation.gd` does for each cycle (six results, three epochs).
+what `validation.gd` does for each cycle (seven results, three epochs, seven phases).
 
 ## The ten cycles
 
@@ -186,9 +199,15 @@ what `validation.gd` does for each cycle (six results, three epochs).
 
 1. **(a)** presses New game on the HUD;
 2. **(b)** three intents of the roteiro through the HUD: `select_unit [1]` and `move_unit [1, 7, 8]` sent with the HUD's own
-   function, and End turn pressed on the HUD (the button of the action `end_turn` of the snapshot);
+   function, and End turn pressed on the HUD (the button of the action `end_turn` of the snapshot). The end of the turn is a job:
+   the validation waits for the HUD to have the turn at rest again with `last_job` equal to the id the acceptance carried, and
+   requires that the HUD saw the phases `ai_plan`, `ai_move`, `production`, `growth`, `research`, `refresh` and `idle` change, in that
+   order, and that the node finished the job once;
 3. **(c)** reloads the scenery: `reload_world()`, which drops the World and starts a new game;
-4. **(d)** presses Menu: the World leaves the tree and is freed, the HUD shows the menu and lets go of the snapshot;
+4. **(d)** presses End turn and Menu in the same frame (both clicks go into the viewport before a frame passes, so the two calls
+   are run in one pump of the registry, in that order): the job is accepted, the World leaves the tree and is freed, the HUD shows
+   the menu and lets go of the snapshot, and the job finishes with the menu open: once, with the turn advanced, and the World does
+   not come back until the next step;
 5. **(e)** presses New game in the menu: a World is back, the HUD is on the game screen again.
 
 A button is pressed as a user would, headless or headed: the mouse goes down and up on the centre of the Pressable's control
@@ -209,29 +228,31 @@ trust:
 | connections of `snapshot_changed` | `get_connections().size()` | the first cycle's: the registry's and the World's |
 | connections the HUD holds | `FrontierHud.stats().subscriptions` | the first cycle's |
 | epoch | `GameServices.epoch`, and the HUD's last | the previous one plus exactly 3 (a, c and e), equal in both, and the HUD saw each one in order |
+| the turn's jobs | the id each End turn answered, `GameServices.finished_jobs`, `FrontierHud.stats().phases` | two a cycle, ids 2k - 1 and 2k in cycle k; each finished once; the HUD saw the seven phases for the first; the second finished with the menu open and the World out |
 | the dropped Worlds | `instance_from_id` of the two that the cycle dropped | freed |
 | errors | `snapshot().errors`, the HUD's problems, and the log | none; no `FABRIC_ERROR`, no `SCRIPT ERROR` |
 
 `OBJECT_COUNT` is recorded in the report and not asserted: it is the same in every cycle of the headless run (1614 in the
 record) and moves over the first cycles of the headed one (1613 to 1618, a renderer warming up), so it does not say "back to the
-first cycle" the way the asserted measures do. The count of checks is exact and fixed in the script: **145 native checks**, 6 before the cycles,
-10 in the first, 14 in each of the other nine, 3 after them; the headed run adds the three of the captures (148).
+first cycle" the way the asserted measures do. The count of checks is exact and fixed in the script: **165 native checks**, 6 before the cycles,
+12 in the first, 16 in each of the other nine, 3 after them (the two new ones in each cycle are about the jobs); the headed run adds the three of the captures (168).
 
-The run on the machine of this slice, headless (the [record](../evidence/frontier-consumer/README.md) has it with the receipt; the
-headed run gave the same values for every measure in the table):
+The run on the machine of the `autoridade` slice, headless (the [record](../evidence/frontier-consumer/README.md) has the earlier
+run of the `consumidor` slice with its receipt and the headed run, which gave the same values for every measure that was then in
+the table; the figures below are from the first headless run of the version with the jobs):
 
-| Cycle | nodes | orphans | bindings | subscriptions | `snapshot_changed` connections | HUD connections | epoch (Godot, HUD) |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 21 | 0 | 14 | 1 | 2 | 1 | 4, 4 |
-| 2 | 21 | 0 | 14 | 1 | 2 | 1 | 7, 7 |
-| 3 | 21 | 0 | 14 | 1 | 2 | 1 | 10, 10 |
-| 4 | 21 | 0 | 14 | 1 | 2 | 1 | 13, 13 |
-| 5 | 21 | 0 | 14 | 1 | 2 | 1 | 16, 16 |
-| 6 | 21 | 0 | 14 | 1 | 2 | 1 | 19, 19 |
-| 7 | 21 | 0 | 14 | 1 | 2 | 1 | 22, 22 |
-| 8 | 21 | 0 | 14 | 1 | 2 | 1 | 25, 25 |
-| 9 | 21 | 0 | 14 | 1 | 2 | 1 | 28, 28 |
-| 10 | 21 | 0 | 14 | 1 | 2 | 1 | 31, 31 |
+| Cycle | nodes | orphans | bindings | subscriptions | `snapshot_changed` connections | HUD connections | epoch (Godot, HUD) | jobs (pressed, with the menu) |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 21 | 0 | 14 | 1 | 2 | 1 | 4, 4 | 1, 2 |
+| 2 | 21 | 0 | 14 | 1 | 2 | 1 | 7, 7 | 3, 4 |
+| 3 | 21 | 0 | 14 | 1 | 2 | 1 | 10, 10 | 5, 6 |
+| 4 | 21 | 0 | 14 | 1 | 2 | 1 | 13, 13 | 7, 8 |
+| 5 | 21 | 0 | 14 | 1 | 2 | 1 | 16, 16 | 9, 10 |
+| 6 | 21 | 0 | 14 | 1 | 2 | 1 | 19, 19 | 11, 12 |
+| 7 | 21 | 0 | 14 | 1 | 2 | 1 | 22, 22 | 13, 14 |
+| 8 | 21 | 0 | 14 | 1 | 2 | 1 | 25, 25 | 15, 16 |
+| 9 | 21 | 0 | 14 | 1 | 2 | 1 | 28, 28 | 17, 18 |
+| 10 | 21 | 0 | 14 | 1 | 2 | 1 | 31, 31 | 19, 20 |
 
 After the ten cycles the validation stops the application: the registry reports `stopped`, no binding, no subscription and
 nothing pending, and `snapshot_changed` keeps only the World's connection.
@@ -246,10 +267,11 @@ that leaves none (a crash, an assertion that came first) is not rejected. The re
 
 | Sabotage | Break | What the series and the checks showed |
 | --- | --- | --- |
-| `hud-leak` | the HUD's effect no longer removes its connection | the registry's subscriptions and the HUD's 2 at cycle 1 and 11 at the tenth; 29 failed checks, the first the menu check of cycle 1 |
+| `hud-leak` | the HUD's effect no longer removes its connection | the registry's subscriptions and the HUD's 2 at cycle 1 and 11 at the tenth; 39 failed checks, the first the check of the job pressed with the menu in cycle 1 (it also requires that the HUD held no connection in the menu), then the menu check of cycle 1 |
 | `orphan` | `remove_child` without `queue_free` when the World is dropped | orphans 2 at cycle 1 and 20 at the tenth, the nodes of the tree unchanged (21); 19 failed checks, the first that the dropped Worlds are not freed |
 | `epoch-reset` | `reload_world` zeroes the epoch before the new game | the epoch ends the tenth cycle at 2; 21 failed checks, the first that the cycle rose 1 and not 3 |
 | `no-facade` | `main.tscn` no longer injects the facade | the log has `FABRIC_ERROR: GameServices has no fabric_api`; the node registered no binding; the 3 preflight checks fail and no cycle is run |
+| `job-dies-with-menu` | the job's driver stops when the World is dropped: the job is abandoned and never finishes | 10 failed checks, one in each cycle: the job pressed in the same frame as the menu is accepted (its id advances) and never finishes, `finished_jobs` stays at 0 for it and the validation waits for it until its limit of frames; the job pressed with the World in the tree still finishes, and nothing else fails |
 
 The baseline of a sabotaged run is already contaminated (the first cycle leaks too), so the comparison with the first cycle
 catches the growth and the cycle-level checks catch the first leak.
@@ -262,8 +284,9 @@ check.
 
 ## What stays open
 
-- **`autoridade`.** A job that survives closing the screen, and bursts against the 64 tasks and 128 events a phase, are not
-  measured here. `end_turn` is still one synchronous GDScript call.
+- **`autoridade`** is closed by the services' probe ([frontier-services.md](frontier-services.md)): the job surviving the closed
+  screen, the rule mutated in Godot and the bursts per phase are measured there. What this lane adds is the HUD's side of the job
+  and the job that finishes with the menu open, in ten cycles. Cancelling a job is not part of the contract.
 - **D22 and D23.** Reconnection after a reload and the activation generations are out; nothing here recreates the application.
   A consumer that does recreate it is not this scene, and what its HUD should then see is those decisions'.
 - **The playable HUD** is V05-05: this one is the smallest that serves the services (no map input, no city or research screen,

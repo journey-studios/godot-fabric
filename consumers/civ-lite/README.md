@@ -33,7 +33,8 @@ and, optionally, the scene of the map as `world_scene`. Without a facade it fail
 else. It connects to `frontier.snapshot` in an effect that removes the connection when its screen goes away, shows the turn, the
 context and the actions with their `reason_text`, and sends an action back as `frontier.<id>(args)`. Its two screens are `game`
 and `menu`: the menu calls `frontier.open_menu`, which drops the World, and New game calls `frontier.new_game`, which brings it
-back. `ui/frontier-types.ts` is the hand-written TypeScript mirror of the registered schemas, which
+back. End turn is accepted at once and the turn goes on in `GameServices`, a phase a frame (the End turn button shows the phase the
+snapshot carries); closing the screen or going to the menu does not stop it. `ui/frontier-types.ts` is the hand-written TypeScript mirror of the registered schemas, which
 `tests/frontier-services-parity.test.mjs` compares with them in both directions.
 
 ## Layout
@@ -49,7 +50,8 @@ back. `ui/frontier-types.ts` is the hand-written TypeScript mirror of the regist
 
 ## Validation
 
-`validation.gd` runs ten cycles (new game, three intents through the HUD, reload the scenery, the menu, new game from the menu)
+`validation.gd` runs ten cycles (new game, three intents through the HUD, reload the scenery, End turn and the menu in the same
+frame, new game from the menu)
 and, after each, once the state it waited for has arrived, compares the nodes, the orphan nodes, the registry's bindings and
 subscriptions, its pending work, the connections of `snapshot_changed`, the connections the HUD holds and the epoch with the
 first cycle's. In a provisioned project:

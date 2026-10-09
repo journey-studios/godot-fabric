@@ -1,9 +1,9 @@
 extends RefCounted
 
-# The snapshot the HUD projects: an immutable tree of integers and strings. It is a function of the state and the
-# session's epoch, never a handle to either, so React can hold it as long as it likes. Every section is always
-# present; an absent thing has `present` or `open` set to 0, empty lists and zeros. The fields are documented one by
-# one in docs/research/frontier-game.md, and the services slice mirrors them in TypeScript.
+# The snapshot the HUD projects: an immutable tree of integers and strings. It is a function of the state, the session's
+# epoch and the last finished end-of-turn job, never a handle to any of them, so React can hold it as long as it likes.
+# Every section is always present; an absent thing has `present` or `open` set to 0, empty lists and zeros. The fields
+# are documented one by one in docs/research/frontier-game.md, and the services slice mirrors them in TypeScript.
 
 const Rules := preload("rules.gd")
 const World := preload("world.gd")
@@ -12,12 +12,13 @@ const Context := preload("context.gd")
 const Intents := preload("intents.gd")
 
 
-static func build(state: Dictionary, epoch: int) -> Dictionary:
+static func build(state: Dictionary, epoch: int, last_job: int) -> Dictionary:
   var rates := Economy.rates(state)
   var context := Context.derive(state)
   var snapshot := {
     "version": Rules.VERSION,
     "epoch": epoch,
+    "last_job": last_job,
     "turn": state.turn,
     "phase": state.phase,
     "context": context,

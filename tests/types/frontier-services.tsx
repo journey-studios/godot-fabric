@@ -31,6 +31,8 @@ import {
 // The snapshot: every field is there, typed, and a field that does not exist does not compile.
 const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ value, revision, generation }) => {
   const epoch: number = value.epoch;
+  const lastJob: number = value.last_job;
+  const phase: string = value.phase;
   const context: string = value.context;
   const turn: number = value.turn;
   const foodStock: number = value.resources.food.stock;
@@ -41,7 +43,7 @@ const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ val
   const queued: string = value.city.queue[0].item;
   const tech: string = value.research.techs[0].state;
   const choice: string = value.dialog.choices[0].label;
-  void [epoch, context, turn, foodStock, foodRate, unitId, reason, terrain, queued, tech, choice, revision, generation];
+  void [epoch, lastJob, phase, context, turn, foodStock, foodRate, unitId, reason, terrain, queued, tech, choice, revision, generation];
   // @ts-expect-error the snapshot has no gold
   value.gold;
   // @ts-expect-error resources have no gold stock
@@ -62,15 +64,22 @@ const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ val
   // @ts-expect-error epoch is a number, not a string
   const wrongEpoch: string = value.epoch;
   void wrongEpoch;
+  // @ts-expect-error last_job is a number, not a string
+  const wrongLastJob: string = value.last_job;
+  void wrongLastJob;
 });
 void snapshot.ready;
 
-// The end of a turn arrives on its own signal, with the turn that begins and the phases that ran.
+// The end of a turn arrives on its own signal, once per job: the turn that begins, the phases that ran and the job it finishes.
 const ended = GodotFabric.subscribe<[FrontierTurnEnded]>(FRONTIER_TURN_ENDED, summary => {
   const turn: number = summary.turn;
   const first: string = summary.phases[0].name;
   const tasks: number = summary.phases[0].tasks;
-  void [turn, first, tasks];
+  const job: number = summary.job;
+  void [turn, first, tasks, job];
+  // @ts-expect-error the job is a number, not a string
+  const wrongJob: string = summary.job;
+  void wrongJob;
   // @ts-expect-error the summary has no result of the intent
   summary.ok;
 });
@@ -79,10 +88,11 @@ void ended.ready;
 // What each registered name carries is declared once: the state's value and the signal's argument tuple.
 declare const published: FrontierStates["frontier.snapshot"];
 const publishedSnapshot: FrontierSnapshot = published;
-const emitted: FrontierSignals["frontier.turn_ended"] = [{ turn: 2, phases: [{ name: "ai_plan", tasks: 1, events: 1 }] }];
+const emitted: FrontierSignals["frontier.turn_ended"] = [{ turn: 2, phases: [{ name: "ai_plan", tasks: 1, events: 1 }], job: 1 }];
 void [publishedSnapshot, emitted];
 
-// Calls: the tuple each method declares, and an answer with `ok` as a number.
+// Calls: the tuple each method declares, and an answer with `ok` as a number. end_turn answers on acceptance, with the id of
+// its job: `job` is 0 for every call that starts none.
 void callFrontier(FRONTIER_SELECT_TILE, [6, 8]);
 void callFrontier(FRONTIER_SELECT_UNIT, [1]);
 void callFrontier(FRONTIER_MOVE_UNIT, [1, 7, 8]);
@@ -100,7 +110,11 @@ const answered = callFrontier(FRONTIER_END_TURN, []).then(({ value }) => {
   const result: FrontierResult = value;
   const ok: number = result.ok;
   const code: string = result.code;
-  void [ok, code];
+  const job: number = result.job;
+  void [ok, code, job];
+  // @ts-expect-error job is a number, not a string
+  const wrongJob: string = result.job;
+  void wrongJob;
   // @ts-expect-error ok is 0 or 1, never a boolean
   const accepted: boolean = result.ok;
   void accepted;

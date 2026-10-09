@@ -24,6 +24,14 @@ import {guardSources} from "./sabotage-sources.mjs";
 //                   no longer a call. The probe's send-back of every action and the oracle's check of its args against the
 //                   method's schema reject it (the sabotaged source is the game's snapshot, shared with the P3 game).
 //  turn-ended-order turn_ended is emitted after the snapshot of the turn that begins instead of before it.
+//  double-finish    the job finishes twice: turn_ended is emitted two times at the end of the job, so JavaScript's own subscription
+//                   receives the same job's end twice.
+//  job-dies-with-screen the job's driver is tied to the screen: when the application holds no root any more (the surface closed) the
+//                   job is abandoned and never finishes. The authority criterion is that it survives the screen.
+//  sync-end-turn    end_turn runs every phase inside the callback again, as it did before the job: no frame is a phase, and a call
+//                   that arrives after the acceptance finds the turn at rest instead of in progress.
+//  stale-snapshot   the snapshot of one phase (growth) is not published: a HUD sees the turn skip a phase, and the job publishes six
+//                   snapshots and not seven.
 //
 // There is no host here and nothing to rebuild: the services are plain GDScript. Run with:
 //   node scripts/frontier-services-sabotage.mjs
@@ -49,8 +57,22 @@ const variants = [
     find: "    actions.append(action(\"found_city\", \"Found city\", [unit_id], Intents.check_found_city(state, unit_id)))\n",
     replace: "    actions.append(action(\"found_city\", \"Found city\", [], Intents.check_found_city(state, unit_id)))\n"},
   {name: "turn-ended-order", file: `${services}/game_services.gd`,
-    find: "    turn_ended.emit({\"turn\": result.turn, \"phases\": result.phases})\n    snapshot_changed.emit(game.snapshot())\n",
-    replace: "    snapshot_changed.emit(game.snapshot())\n    turn_ended.emit({\"turn\": result.turn, \"phases\": result.phases})\n"},
+    find: "  turn_ended.emit(summary)\n  snapshot_changed.emit(game.snapshot())\n",
+    replace: "  snapshot_changed.emit(game.snapshot())\n  turn_ended.emit(summary)\n"},
+  {name: "double-finish", file: `${services}/game_services.gd`,
+    find: "  turn_ended.emit(summary)\n",
+    replace: "  turn_ended.emit(summary)\n  turn_ended.emit(summary)\n"},
+  {name: "job-dies-with-screen", file: `${services}/game_services.gd`,
+    find: "func _process(_delta: float) -> void:\n  advance_job()\n",
+    replace: "func _process(_delta: float) -> void:\n  var runtime := get_node_or_null(\"Application/Runtime\")\n"
+      + "  if job != 0 and runtime != null and int(JSON.parse_string(runtime.call(\"snapshot\")).get(\"rootCount\", 0)) == 0:\n"
+      + "    _abandon_job()\n    return\n  advance_job()\n"},
+  {name: "sync-end-turn", file: `${services}/game_services.gd`,
+    find: "  snapshot_changed.emit(game.snapshot())\n  return _plain(started, job)\n",
+    replace: "  snapshot_changed.emit(game.snapshot())\n  var accepted := job\n  while job != 0:\n    advance_job()\n  return _plain(started, accepted)\n"},
+  {name: "stale-snapshot", file: `${services}/game_services.gd`,
+    find: "  if ran.done == 0:\n    snapshot_changed.emit(game.snapshot())\n    return\n",
+    replace: "  if ran.done == 0:\n    if ran.name != \"growth\":\n      snapshot_changed.emit(game.snapshot())\n    return\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];

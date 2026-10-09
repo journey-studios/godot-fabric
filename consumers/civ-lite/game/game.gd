@@ -20,6 +20,9 @@ const Snapshot := preload("snapshot.gd")
 var state: Dictionary
 # The session's epoch: set by whoever owns the session, never part of the state or of its hash.
 var epoch: int
+# The id of the last end-of-turn job the session's owner finished, 0 for none. Like the epoch it belongs to the owner and
+# reaches the snapshot, and it is never part of the state or of its hash.
+var last_job: int = 0
 
 
 func _init(seed_value: int = Rules.SEED, session_epoch: int = 1, existing: Dictionary = {}) -> void:
@@ -106,7 +109,7 @@ func advance_phase() -> Dictionary:
 
 # The immutable DTO the HUD projects.
 func snapshot() -> Dictionary:
-  return Snapshot.build(state, epoch)
+  return Snapshot.build(state, epoch, last_job)
 
 
 func context() -> String:
@@ -123,9 +126,11 @@ func state_hash() -> String:
   return Canon.state_hash(state)
 
 
-# A game with a deep copy of this state and the same epoch, for asking what an intent would do.
+# A game with a deep copy of this state and the same epoch and last job, for asking what an intent would do.
 func duplicate_game() -> RefCounted:
-  return get_script().new(int(state.seed), epoch, state.duplicate(true))
+  var copy: RefCounted = get_script().new(int(state.seed), epoch, state.duplicate(true))
+  copy.last_job = last_job
+  return copy
 
 
 # --- Results ---------------------------------------------------------------------------------------------------

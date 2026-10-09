@@ -580,7 +580,10 @@ checked against the schemas Godot registered in both directions (`npm run test:f
 The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
 scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
 epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
-The authority under bursts, the playable HUD, the export and the devices are open, and so is hosted CI.
+The end of a turn is then an accepted job that the node runs a phase a frame and finishes once, whether or not a screen is open,
+with a rule mutated in Godot changing the HUD with the same JavaScript bundle and every phase of a turn measured against the
+registry's 64 tasks and 128 events (`npm run test:frontier-services`; [research](docs/research/frontier-services.md)).
+The playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
@@ -886,7 +889,7 @@ npm run test:text-layout                 # onTextLayout and the Yoga baseline fr
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
-npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

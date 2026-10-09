@@ -10,6 +10,11 @@ import type { FrontierResult, FrontierSnapshot, Int } from "./frontier-types";
 // `reason_text` comes from the game, and a refusal is shown, never decided here. The screens are `game` and `menu`, React
 // state; going to the menu tells the scene (`frontier.open_menu`), which drops the World, and "New game" tells it to start
 // a session (`frontier.new_game`), which brings the World back. The playable HUD is the V05-05 slice.
+//
+// The end of a turn is a job the game runs by itself: "End turn" is accepted at once (the answer carries the job's id) and the
+// snapshot shows the turn's progress, one phase after another, until it is at rest again with `last_job` set to that id. The
+// HUD only shows the `phase` the snapshot carries on the button; every action is disabled by the game while the turn runs
+// (`turn_in_progress`), and a HUD that goes to the menu or is closed in the meantime does not stop it.
 
 type Screen = "game" | "menu";
 
@@ -21,15 +26,16 @@ const active = new Set<ServiceSubscription<unknown>>();
 // list keeps only the last KEPT entries. A reader that wants what is new takes the counter it saw before from the one it sees
 // now, and that many entries from the end of the list.
 const KEPT = 64;
-type Result = { id: string; ok: Int; code: string };
+type Result = { id: string; ok: Int; code: string; job: Int };
 type Seen = {
   snapshots: number; turn: number; context: string; screen: Screen; calls: number;
+  phase: string; phaseCount: number; phases: string[]; lastJob: Int;
   epoch: Int; epochCount: number; epochs: Int[];
   resultCount: number; results: Result[];
   problemCount: number; problems: string[];
 };
 const seen: Seen = {
-  snapshots: 0, turn: 0, context: "", screen: "game", calls: 0,
+  snapshots: 0, turn: 0, context: "", screen: "game", calls: 0, phase: "", phaseCount: 0, phases: [], lastJob: -1,
   epoch: -1, epochCount: 0, epochs: [], resultCount: 0, results: [], problemCount: 0, problems: [],
 };
 
@@ -62,7 +68,7 @@ function dispatch(method: string, args: readonly Int[]): Promise<FrontierResult 
   seen.calls += 1;
   return GodotFabric.call<FrontierResult>(method, args).then(result => {
     seen.resultCount += 1;
-    remember(seen.results, { id: method, ok: result.value.ok, code: result.value.code });
+    remember(seen.results, { id: method, ok: result.value.ok, code: result.value.code, job: result.value.job });
     return result.value;
   }, error => {
     fail(error);
@@ -79,7 +85,8 @@ declare global {
   };
 }
 globalThis.FrontierHud = {
-  stats: () => ({ subscriptions: active.size, ...seen, epochs: [...seen.epochs], results: [...seen.results], problems: [...seen.problems] }),
+  stats: () => ({ subscriptions: active.size, ...seen, epochs: [...seen.epochs], phases: [...seen.phases], results: [...seen.results],
+    problems: [...seen.problems] }),
   send: (id, args) => { void dispatch(`frontier.${id}`, args); },
 };
 
@@ -102,6 +109,12 @@ function GameScreen({ onMenu, onNewGame }: { onMenu: () => void; onNewGame: () =
       seen.snapshots += 1;
       seen.turn = value.turn;
       seen.context = value.context;
+      seen.lastJob = value.last_job;
+      if (seen.phase !== value.phase) {
+        seen.phase = value.phase;
+        seen.phaseCount += 1;
+        remember(seen.phases, value.phase);
+      }
       if (seen.epoch !== value.epoch) {
         seen.epoch = value.epoch;
         seen.epochCount += 1;
@@ -132,8 +145,10 @@ function GameScreen({ onMenu, onNewGame }: { onMenu: () => void; onNewGame: () =
       </Text>
       {snapshot.actions.map(action => {
         const key = [action.id, ...action.args].join("-");
+        // While the turn is processed, the button that started it shows how far it is: the phase the snapshot carries.
+        const label = action.id === "end_turn" && snapshot.phase !== "idle" ? `${action.label} · ${snapshot.phase}` : action.label;
         return <View key={key} style={{ gap: 2 }}>
-          <Choice id={`action-${key}`} label={action.label} color="#0369a1" enabled={action.enabled === 1}
+          <Choice id={`action-${key}`} label={label} color="#0369a1" enabled={action.enabled === 1}
             onPress={() => send(action.id, action.args)} />
           {action.enabled === 0 ? <Text style={{ color: "#fca5a5", fontSize: 12 }}>{action.reason_text}</Text> : null}
         </View>;
