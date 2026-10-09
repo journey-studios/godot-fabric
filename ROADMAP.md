@@ -578,6 +578,21 @@ its counts stand and it makes no frame-time claim. Pointer motion, hover and dra
 claimed and the `iphone` criterion stays open, so no criterion changes. Slice 3 decides the
 go/no-go. Hosted CI for both slices is pending. No 1.0 number moves.
 
+**Progress.** V05-02 has its third and last slice, the written go/no-go decision, and the
+spike ends with a **GO for the desktop (macOS)**. It runs nothing. On the numbers of the first
+two slices a React Native HUD over a Godot world gives the pointer to exactly one side by the
+rule of a phone: a click on the empty area reaches the map 100 times out of 100, a `Pressable`
+is pressed once and never reaches it, and nothing reaches it with an overlay or a `Modal` open,
+at the cost of a constructor default, one public method and one override, with no rewrite of
+the pointer pipeline. Motion, hover and drag over the HUD, a release away from its press, a HUD
+placed before the world in the tree and the unpaced windowed lane do not block the GO; the
+[decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3) gives each its owner and lists the
+rules a scene keeps (the HUD's layer after the world, a `box-none` root and containers, a
+world that listens in `_unhandled_input`, and Godot's GUI Controls untouched). The `iphone`
+criterion stays open: it needs a real touch screen and a second finger, so it waits for the
+device package and the user. The numbers are local macOS arm64 evidence and hosted CI for both
+slices is still pending. No criterion changes, and no 1.0 number moves.
+
 **Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
 GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
 73 intents reaches the same golden hash in 3 of 3 processes (9 executions, with a trace hash
@@ -649,6 +664,18 @@ input, panels and phase, and eight retained sabotages are rejected; the lane als
 after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures; the
 hosted CI run and the Pages publication are pending. The `overlays` and `estabilidade` criteria of V05-05 remain open (the dialog is
 a panel, not yet a blocking `Modal`), and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
+panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720
+steady swaps (nodes, creations and deletions, one swap per click, no click reaches the map, a round ends at the base, the
+heap at rest within the GF-30 limit), the host mounts the panel inside the click's flush (0 frames), an independent oracle
+recomputes the numbers and four retained sabotages are rejected. A swap that creates 100 nodes costs 9.2 ms of CPU at the
+median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms); the limits for CPU, heap, nodes and latency are a proposal,
+not a frozen budget. The windowed lane refused its run because the display was not presenting the window, so **no frame time
+is pinned and `baseline` stays open** until a presented run, and `turno`, `soak` and `congelado` are open too. The
+[record](https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does

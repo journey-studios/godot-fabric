@@ -936,7 +936,30 @@ so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle media
 presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
 byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
 not supported, the pointer reaches no phone or hardware pointer yet, and hosted CI is **pending**. The record does not decide
-the go/no-go; it gives the reading for slice 3, which does.
+the go/no-go; it gives the reading for slice 3, which does. Slice 3 decided the spike: GO for the desktop (macOS), with the
+`iphone` criterion open; see the [decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3).
+
+The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the headless part of the `baseline` criterion of
+V05-06 (package P6) and leaves its frame time **pending**. It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
+75 or 100 native nodes, costs on the pointer spike's scene, extending GF-30's harness (its sampler is shared, and the 43 checks of the soak
+are unchanged). Headless, in two Godot processes of 384 swaps each (30 steady swaps for every ordered pair of the four panels, the click made
+by the V05-02 injection), 19 checks per process hold exactly: after every swap the SceneTree, the host and the Surface hold the base's 12
+native nodes plus the new panel's, the swap creates the new panel's nodes and deletes the old one's, a click swaps once and never reaches
+the map, a round ends at the base, and the live heap at rest (2,032,000 bytes) stays within GF-30's 2,048 bytes from the first steady
+rounds to the last (judged at 346146d on the floor of five-round windows; a hosted run showed a noise band of 2,376 bytes that this window did not
+survive, and the gate now compares the medians of the two halves of the steady rounds, see the record's "Registro fixado"); an independent
+oracle recomputes it all and the percentiles. Four retained sabotages (a panel kept mounted, a heap read without the forced collection, the
+buttons made `pointerEvents="none"`, the panel without its `key`) are rejected, and the first `leaky-panel` (`display: none`) was not,
+because a hidden View adds no node; the previous-host control does not apply, since no C++ changed. What a swap costs is recorded and never
+judged: the host mounts the panel inside the flush of the click (0 frames after it in all 720 steady swaps), and a swap that creates 100
+nodes takes 9.2 ms of CPU at the median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms; earlier runs on a more loaded machine gave 11 to 12 ms at the median, not pinned). The proposed limits (the CPU time of a swap by nodes created, the heap
+a panel holds, the frames to the panel) are a **PROPOSTA, not frozen** (`congelado` is a later, single act; `turno` and `soak` are open
+too). **No frame time is pinned**: the local windowed lane (not part of hosted CI) now refuses a run that the display did not pace, and with
+the display off it rejected all three attempts as unpaced (an idle frame of 0.7 ms against the 4.17 ms required), ended with
+`presented: false`, exit code 3 and no frame-time statistic, so the frame time of a presented window (vsync on, 120 Hz) and the budget rows
+that depend on it are **pending**; the rejected attempts are kept as raw data, four captures are kept, and an earlier presented run is
+only an unpinned reference. The clicks are synthetic, the machine was shared with other agents (load average recorded), there are no
+presentation timestamps (missed frames with the vsync stay open) and hosted CI is **pending**.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

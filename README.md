@@ -500,6 +500,7 @@ a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the H
 the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
 Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
 (the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
+The third slice decided the spike: GO for the desktop (macOS), with the `iphone` criterion open ([decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3)).
 Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
@@ -551,6 +552,18 @@ before the checks of the unmount notification and of the stopped application's s
 memory are recorded with their provenance and never judged; target-device budgets, text shaping, 10,000 rows,
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
+
+The [Frontier HUD baseline](examples/frontier-baseline/README.md) (V05-06, criterion `baseline`) extends that harness to
+the pointer spike's scene: a React Native HUD over the Godot map whose panel, a tree of 50, 75 or 100 native nodes, is
+replaced by a real click on a button of the bar. Headless, in two processes, every swap leaves the SceneTree and the host
+with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
+reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
+independent oracle recomputes it all. A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 ms at p95 (headless, pinned run), more than a 120 Hz period (8.33 ms).
+The CPU and heap limits are a proposal, not a frozen budget. **No frame time is pinned**: the local windowed lane
+(`node scripts/frontier-baseline-graphics.mjs`) refuses a run that no display paced and, with the display off, ended as
+not presented (exit code 3, no frame-time statistic), so the frame time of a presented window is pending. The
+lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
+[Evidence](docs/evidence/frontier-baseline/README.md); [research](docs/research/frontier-baseline.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
@@ -886,6 +899,7 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:frontier-baseline           # the Frontier HUD's panel swaps by a real click over the pointer spike's scene: exact node counts, oracle; sabotages: node scripts/frontier-baseline-sabotage.mjs
 npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs

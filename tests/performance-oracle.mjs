@@ -35,7 +35,7 @@ const near = (actual, expected, tolerance, message) =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${message}: ${actual} != ${expected}`);
 
 // Nearest rank: the sample of rank ceil(percent * n / 100) once they are sorted, in integers.
-function nearestRank(values, percent) {
+export function nearestRank(values, percent) {
   if (values.length === 0) {
     return 0;
   }
@@ -43,8 +43,8 @@ function nearestRank(values, percent) {
   const rank = Math.min(Math.max(Math.floor((percent * sorted.length + 99) / 100), 1), sorted.length);
   return sorted[rank - 1];
 }
-const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
-const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
+export const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
+export const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
 
 function finiteAndNotNegative(value, label) {
   if (typeof value === "number") {
@@ -84,7 +84,7 @@ function verifySeries(series, label, windowSize, windowed) {
 }
 
 // ------------------------------------------------------------------ one reading
-function verifyReading(reading, label, windowed = false) {
+export function verifyReading(reading, label, windowed = false) {
   const perf = reading.performance;
   assert.ok(perf != null && Object.keys(perf).length > 0, `${label}: the application reports a performance section`);
   finiteAndNotNegative(perf, `${label}.performance`);
@@ -111,7 +111,7 @@ function verifyReading(reading, label, windowed = false) {
   assert.ok(phases <= pump.totalMs * (1 + 1e-12) + EPSILON, `${label}: the phases (${phases} ms) add up to no more than the pumps (${pump.totalMs} ms)`);
 }
 
-function verifyGrowth(previous, reading, label) {
+export function verifyGrowth(previous, reading, label) {
   for (const name of ["commits", "creates", "deletes", "updates", "retiredRoots"]) {
     assert.ok(reading.performance.counters[name] >= previous.performance.counters[name], `${label}: counter ${name} never goes down`);
   }
