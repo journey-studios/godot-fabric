@@ -3,6 +3,8 @@
 Status: executed isolated macOS validation (arm64) against official Godot 4.7.2, headless for the exact checks and in a real window (local, not in CI) for the render term.
 This is the `execucao` criterion's preparation in the 0.5 Frontier milestone's V05-10: the one instrument that reads the CPU time of the main thread for each process frame in the three arms
 of [the comparison](frontier-comparison-protocol.md), chosen and checked against a synthetic load of known duration **before** any comparative measurement. It changes no C++ and runs no game.
+"CPU time" is the protocol's name for the quantity; what the instrument measures is the **monotonic elapsed time between the engine's hooks on the main thread**, not the thread's CPU clock from the
+operating system, so a scheduling pause inside the hooks raises the total without raising the thread's CPU use (see [the instrument](#the-instrument)).
 **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`; the freeze is a later, single act together with the other numbers): this note delivers the instrument, its
 verification and a written recommendation of what to freeze. The comparison's `execucao` criterion stays open, and so do `protocolo`, `braco-b` and the others. The [evidence record](../evidence/cpu-time-instrument/README.md)
 pins the executions to the commit `e38615d`.

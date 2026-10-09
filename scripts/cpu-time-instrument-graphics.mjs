@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
-import {readFile, rm, writeFile} from "node:fs/promises";
+import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {TARGETS_MS, judgeCpuTimeInstrumentReport} from "../tests/cpu-time-instrument-oracle.mjs";
@@ -15,9 +15,13 @@ import {ensureGodotBinary} from "./godot-binary.mjs";
 // success (0) nor a failure (1), so that nothing downstream takes it for a measurement. A presented window is judged by every rule of the headless lane, and
 // by the render term's: the render pulse has to land six draws after its draw. Run with the display awake:
 //   caffeinate -d node scripts/cpu-time-instrument-graphics.mjs
-// --replay=<report.json> judges a report that was recorded before, without a window, and writes build/cpu-time-instrument-graphics-replay.json.
+// --replay=<file> judges a report that was recorded before (the raw report, or the receipt of a run, which keeps it under raw), without a window, and writes
+// build/cpu-time-instrument-graphics-replay.json. The machine of a replay is not the machine of the measurement: the receipt of a replay has no `machine`
+// of its own making. It records the machine that replayed it as `replayHost`, and says that the measurement came from the report that was read
+// (`measuredOn`), with the machine that the receipt it came from recorded, when there is one. --root=<dir> puts build/ somewhere else (for tests).
 const EXIT_NOT_PRESENTED = 3;
-const root = fileURLToPath(new URL("..", import.meta.url));
+const rootArgument = process.argv.find(argument => argument.startsWith("--root="));
+const root = rootArgument === undefined ? fileURLToPath(new URL("..", import.meta.url)) : path.resolve(rootArgument.slice("--root=".length));
 const replayArgument = process.argv.find(argument => argument.startsWith("--replay="));
 const read = (command, args) => {
   const result = spawnSync(command, args, {encoding: "utf8", timeout: 30000});
@@ -39,14 +43,16 @@ function displays() {
     return null;
   }
 }
-const machine = {chip: read("sysctl", ["-n", "machdep.cpu.brand_string"]), model: read("sysctl", ["-n", "hw.model"]),
+const thisMachine = {chip: read("sysctl", ["-n", "machdep.cpu.brand_string"]), model: read("sysctl", ["-n", "hw.model"]),
   logicalCores: Number(read("sysctl", ["-n", "hw.ncpu"])), memoryGb: Math.round(Number(read("sysctl", ["-n", "hw.memsize"])) / 2 ** 30),
   os: `macOS ${read("sw_vers", ["-productVersion"])} (${read("sw_vers", ["-buildVersion"])})`, architecture: read("uname", ["-m"]), displays: displays()};
 
-// The one run of the probe in a window, or the report that --replay names.
+// The one run of the probe in a window, or the report that --replay names (and the machine of its measurement, when what was read is a receipt that has one).
 async function obtain() {
   if (replayArgument !== undefined) {
-    return {report: JSON.parse(await readFile(path.resolve(replayArgument.slice("--replay=".length)), "utf8")), probeStatus: 0, before: null, after: null, seconds: 0};
+    const recorded = JSON.parse(await readFile(path.resolve(replayArgument.slice("--replay=".length)), "utf8"));
+    const isReceipt = recorded.raw !== undefined;
+    return {report: isReceipt ? recorded.raw : recorded, measuredMachine: isReceipt ? recorded.machine ?? null : null, probeStatus: 0, before: null, after: null, seconds: 0};
   }
   const reportName = "cpu-time-instrument-windowed-report.json";
   await rm(path.join(root, "build", reportName), {force: true});
@@ -67,24 +73,33 @@ async function obtain() {
   assert.equal(result.error, undefined, log);
   assert.equal(result.signal, null, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
-  return {report, probeStatus: result.status, before, after, seconds: Math.round((Date.now() - started) / 100) / 10};
+  return {report, measuredMachine: thisMachine, probeStatus: result.status, before, after, seconds: Math.round((Date.now() - started) / 100) / 10};
 }
 
-const {report, probeStatus, before, after, seconds} = await obtain();
+// build/ is where the log, the report and the receipt go, in a run and in a replay alike; a checkout that has not built anything yet does not have it.
+await mkdir(path.join(root, "build"), {recursive: true});
+const {report, measuredMachine, probeStatus, before, after, seconds} = await obtain();
+const replayed = replayArgument !== undefined;
 const {violations, ...stats} = judgeCpuTimeInstrumentReport(report);
 const presented = stats.presented === true;
 const ok = presented && violations.length === 0 && probeStatus === 0;
-const status = presented ? (ok ? "presented" : "presented, a rule failed") : `not presented: ${stats.reason ?? "the report is incomplete"}`;
+const status = presented ? (ok ? "presented" : "presented, a rule failed") : (stats.reason ?? "not presented: the report is incomplete");
 const receipt = {format: "godot-fabric.cpu-time-instrument-graphics/v1", scenario: report.scenario, godot: report.godot, presented, status,
-  command: "Godot --path <checkout> --windowed --script res://tests/cpu-time-instrument-probe.gd -- --report=<file>",
-  attempts: 1, replayed: replayArgument !== undefined, loadAverage: {before, after, seconds}, machine, provenance: report.provenance,
+  command: replayed ? "node scripts/cpu-time-instrument-graphics.mjs --replay=<file> (no window: the report that was read is judged again)"
+    : "Godot --path <checkout> --windowed --script res://tests/cpu-time-instrument-probe.gd -- --report=<file>",
+  attempts: 1, replayed, loadAverage: {before, after, seconds},
+  // The machine of the measurement. A replay was not measured here: it records the machine that replayed it apart, and the measurement's own when the receipt it read had one.
+  ...(measuredMachine === null ? {} : {machine: measuredMachine}),
+  ...(replayed ? {replayHost: thisMachine, measuredOn: measuredMachine === null ? "the replayed report (the machine of its measurement is not recorded in it; see provenance)"
+    : "the replayed report (the machine recorded in the receipt it came from)"} : {}),
+  provenance: report.provenance,
   probe: {status: probeStatus, checks: report.checks}, violations, verdict: stats,
   limitations: ["Godot macOS windowed run on the Compatibility renderer; no hardware pointer, no mobile export, no iPhone.",
     "One machine, one display and one vsync mode (the project default, read back from the window); a window that no display presented is not a measurement.",
     "The busy loop is a synthetic load in the process step; the render term is exercised by a canvas item of 30,000 rectangles shown for one frame in eleven, not by a Frontier HUD.",
     "The wait for the display is excluded by construction: no term spans the swap. Missed frames with the vsync on are not read."],
   raw: report};
-await writeFile(path.join(root, replayArgument === undefined ? "build/cpu-time-instrument-graphics.json" : "build/cpu-time-instrument-graphics-replay.json"), JSON.stringify(receipt) + "\n");
+await writeFile(path.join(root, replayed ? "build/cpu-time-instrument-graphics-replay.json" : "build/cpu-time-instrument-graphics.json"), JSON.stringify(receipt) + "\n");
 const line = (name, value) => `${name.padEnd(28)}${value}`;
 console.log(JSON.stringify({presented, status, displayServer: report.provenance?.displayServer, renderer: report.provenance?.renderingMethod, adapter: report.provenance?.adapter,
   vsync: report.provenance?.vsyncModeName, refreshRate: report.provenance?.refreshRate, loadAverage: receipt.loadAverage}, null, 2));

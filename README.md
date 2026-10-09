@@ -581,9 +581,11 @@ presented (exit code 3, no frame-time statistic), and with the display on it **w
 and none of either reached 100 ms. Those are intervals between process frames, not frames the display showed, and no limit comes from them. That closes the `turno` criterion; the baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and `congelado` stay open, as do hosted CI and the Pages publication of the turn.
 [Evidence](docs/evidence/frontier-turn/README.md) ([the presented windowed lane](docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)); [research](docs/research/frontier-turn.md).
 
-The [CPU-time instrument](docs/research/cpu-time-instrument.md) (V05-10, the preparation of the `execucao` criterion, `npm run test:cpu-time-instrument`) is the one reading of the main thread's CPU time per
-process frame that the final comparison will use in all three arms: a `Node` that depends on neither React Native nor the Fabric host and stamps the clock at the engine's hooks, adding the physics,
-process, setup and render terms, which all end before the frame is presented. It stamps the clock because Godot's `Performance.TIME_PROCESS` is a once-a-second maximum that includes the wait for the display.
+The [CPU-time instrument](docs/research/cpu-time-instrument.md) (V05-10, the preparation of the `execucao` criterion, `npm run test:cpu-time-instrument`) is the one reading of the main thread's time per
+process frame that the final comparison will use in all three arms, which the protocol calls the CPU time per frame. What it measures is the **monotonic elapsed time between the engine's hooks on the main
+thread**, not the thread's CPU clock from the operating system: a scheduling pause inside the hooks raises the total without raising the thread's CPU use. It is a `Node` that depends on neither React Native
+nor the Fabric host and stamps the clock at the engine's hooks, adding the physics, process, setup and render terms, which all end before the frame is presented. It stamps the clock because Godot's
+`Performance.TIME_PROCESS` is a once-a-second maximum that includes the wait for the display.
 A lab probe checks it against a busy loop of 2, 5, 10 and 20 ms to within 10% (headless in the suite, and once in a window locally, where the render term is aligned to the draw six frames earlier), an
 independent oracle recomputes it from the raw stamps, and three retained sabotages are rejected. The threshold `cpu-time-instrument` is not frozen and no comparative measurement has run.
 [Evidence](docs/evidence/cpu-time-instrument/README.md); [research](docs/research/cpu-time-instrument.md).

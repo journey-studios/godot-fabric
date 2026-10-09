@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
+import {spawnSync} from "node:child_process";
+import {existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from "node:fs";
+import {tmpdir} from "node:os";
+import path from "node:path";
 import test from "node:test";
 import {fileURLToPath} from "node:url";
 import {RENDER_READING_LAG_DRAWS, TARGETS_MS, TOLERANCE, expectedBlocks, judgeCpuTimeInstrumentReport, median, verifyCpuTimeInstrumentReport} from "./cpu-time-instrument-oracle.mjs";
@@ -339,4 +342,45 @@ test("A drawn frame whose render reading had not arrived is not a sample of the 
     Object.assign(original.frames, redone);
   }));
   assert.ok(verdict.violations.some(violation => /render reading of each drawn frame had arrived/.test(violation)), verdict.violations.join("\n"));
+});
+
+// The windowed lane's script judges a recorded report without a window (--replay) and can be pointed at a directory of its own (--root): the replay below
+// runs in an empty one, which has no build/.
+test("The windowed lane replays a recorded report in a checkout with no build/, and its receipt does not pass the replaying machine off as the measurement's", () => {
+  const directory = mkdtempSync(path.join(tmpdir(), "cpu-time-instrument-replay-"));
+  try {
+    const replay = (name, recorded) => {
+      const file = path.join(directory, `${name}.json`);
+      writeFileSync(file, JSON.stringify(recorded));
+      const result = spawnSync(process.execPath, [`${root}scripts/cpu-time-instrument-graphics.mjs`, `--replay=${file}`, `--root=${directory}`], {encoding: "utf8", timeout: 120000});
+      const receiptFile = path.join(directory, "build/cpu-time-instrument-graphics-replay.json");
+      return {status: result.status, output: result.stdout + result.stderr, receipt: JSON.parse(readFileSync(receiptFile, "utf8"))};
+    };
+    assert.equal(existsSync(path.join(directory, "build")), false, "The directory starts with no build/");
+    // The raw report of a presented window: judged, exit 0, and nothing in the receipt says the replaying machine measured it.
+    const presented = replay("presented", report({windowed: true}));
+    assert.equal(presented.status, 0, presented.output);
+    assert.equal(existsSync(path.join(directory, "build")), true, "The script makes build/ itself");
+    assert.equal(presented.receipt.presented, true);
+    assert.equal(presented.receipt.replayed, true);
+    assert.equal("machine" in presented.receipt, false, "A replay has no machine of its own making");
+    assert.ok("replayHost" in presented.receipt, "It records the machine that replayed it apart");
+    assert.match(presented.receipt.measuredOn, /replayed report \(the machine of its measurement is not recorded in it/);
+    assert.match(presented.receipt.command, /--replay/);
+    // The receipt of a run, which keeps the report under raw and the machine that measured it: that machine is the measurement's.
+    const measuring = {chip: "the measuring machine", logicalCores: 11};
+    const fromReceipt = replay("receipt", {raw: report({windowed: true}), machine: measuring});
+    assert.equal(fromReceipt.status, 0, fromReceipt.output);
+    assert.deepEqual(fromReceipt.receipt.machine, measuring);
+    assert.match(fromReceipt.receipt.measuredOn, /machine recorded in the receipt it came from/);
+    assert.ok("replayHost" in fromReceipt.receipt);
+    // A window that no display presented: exit 3, and no accuracy is claimed.
+    const unpaced = replay("unpaced", report({windowed: true, pace: 700}));
+    assert.equal(unpaced.status, 3, unpaced.output);
+    assert.equal(unpaced.receipt.presented, false);
+    assert.equal(unpaced.receipt.status, "not presented: the display did not pace the loop");
+    assert.equal(unpaced.receipt.verdict.accuracy, undefined);
+  } finally {
+    rmSync(directory, {recursive: true, force: true});
+  }
 });
