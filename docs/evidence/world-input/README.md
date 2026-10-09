@@ -47,9 +47,32 @@ npm run test:world-input
 node scripts/world-input-graphics.mjs
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:world-input` e o artefato `native-world-input` do workflow
-> `contracts.yml` ainda não rodaram na CI hospedada. Tudo o que esta página registra é evidência local, em macOS
-> arm64. A faixa gráfica não roda na CI.
+## CI hospedada e Pages
+
+O push da `main` em `7ef63ed` (o squash do #71, run
+[37853001783](https://github.com/journey-studios/godot-fabric/actions/runs/37853001783) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (2 min), `reference-android` (5 min), `reference-ios` (6 min),
+`native-cold-start` (50 min) e `parity-comparison` (27 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `7ef63ed`, e a árvore do head do PR (`c48c7af`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:world-input` (passo 48, 6 s) passou: `# tests 1`, `# pass 1`, `# fail 0`, o teste
+  em que o clique no vazio do HUD chega ao mundo uma vez e o `Pressable` nunca. O job `contracts` passou
+  `npm run test:contracts` (7, 43 e 334 testes de Node e 13 de Python), `check:static` e `check:publication`.
+- **O artefato.** `native-world-input` (id 11583755593, 19.465 bytes, SHA-256 `f1f10b54…`, igual ao digest da API e ao do
+  log de upload) tem 5 arquivos, e o recibo fixa o SHA-256 de cada um. O log dele imprime `WORLD_INPUT_PASSED: 66`, o mesmo
+  número de checks da suíte headless desta página.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37853001775](https://github.com/journey-studios/godot-fabric/actions/runs/37853001775), build e deploy em success, 43 testes
+do painel), e o deployment 6948147325 está em success. **O artefato `github-pages` dele já não existe**: o log de upload o
+registra (id 11582946876, 1.447.045 bytes, SHA-256 `db18c04c…`), mas a lista de artefatos do run está vazia e o download
+devolve 404. Por isso o `migration.json` implantado não foi aberto nem comparado com o `dashboard/migration.json` do squash; o
+recibo diz isso em vez de afirmar uma igualdade que não foi vista, e guarda o que ainda se prova: o run, o deployment e o
+dado commitado do squash, que tem a entrada de atividade `milestone-0-5-v05-02-pointer-03f039a`.
+
+Continua só local: o controle com o host anterior (os 31 checks que ele falha), as sabotagens do probe e a faixa gráfica
+(18 checks numa janela real, quatro capturas). Os eventos continuam sintéticos nos dois lugares.
 
 ## Leitura do go/no-go
 
@@ -234,7 +257,8 @@ gráfico e os docs), que não tocam o que essas suítes executam; o líder reexe
 
 ## Limites
 
-- Evidência local em macOS arm64; a CI hospedada está pendente.
+- Evidência local em macOS arm64, mais o run hospedado da seção "CI hospedada e Pages", que repete só a suíte headless; o
+  controle com o host anterior e a faixa gráfica são só locais.
 - Os eventos são sintéticos, entregues por `Input.parse_input_event`: não há ponteiro de hardware, tela de toque
   real, multitoque (um segundo dedo) nem arrasto.
 - Nenhum export móvel do Godot e nenhuma execução num iPhone: o critério `iphone` do V05-02 segue aberto (P7).

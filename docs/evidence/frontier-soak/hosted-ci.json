@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-soak",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:58:17.848Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37904776515,
+    "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/83",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T08:24:39Z",
+    "updatedAt": "2026-10-09T09:26:25Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113735494204,
+        "runAttempt": 1,
+        "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+        "startedAt": "2026-10-09T08:24:43Z",
+        "completedAt": "2026-10-09T08:27:48Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515/job/113735494204"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113735493916,
+        "runAttempt": 1,
+        "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+        "startedAt": "2026-10-09T08:24:47Z",
+        "completedAt": "2026-10-09T09:25:53Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515/job/113735493916"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113756551711,
+        "runAttempt": 1,
+        "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+        "startedAt": "2026-10-09T09:25:57Z",
+        "completedAt": "2026-10-09T09:26:25Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515/job/113756551711"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113735494147,
+        "runAttempt": 1,
+        "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+        "startedAt": "2026-10-09T08:24:44Z",
+        "completedAt": "2026-10-09T08:31:07Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515/job/113735494147"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113735494071,
+        "runAttempt": 1,
+        "headSha": "a49f8515a34c04a806ed022eb154cd5531941134",
+        "startedAt": "2026-10-09T08:24:56Z",
+        "completedAt": "2026-10-09T08:32:17Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37904776515/job/113735494071"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "native-cold-start": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "parity-comparison": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "reference-android": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "reference-ios": "a49f8515a34c04a806ed022eb154cd5531941134"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T08:25:03Z",
+          "completedAt": "2026-10-09T08:27:45Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 352,
+              "suites": 0,
+              "pass": 352,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T08:27:45Z",
+          "completedAt": "2026-10-09T08:27:46Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T08:27:46Z",
+          "completedAt": "2026-10-09T08:27:46Z",
+          "passed": true,
+          "files": 1835
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-soak": {
+        "step": "Run npm run test:frontier-soak",
+        "number": 58,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T08:45:53Z",
+        "completedAt": "2026-10-09T08:53:22Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "The soak plays 100 turns three times with the same game, steady nodes, heap and memory, no unhandled error, a pause that keeps the HUD alive, and the numbers of mounting against hiding"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 83,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/83",
+    "title": "feat(perf): Soak the Frontier game for 100 turns with the HUD alive under pause (V05-06 soak)",
+    "headSha": "6a1030587a50a845f6d9a9d770e7a4bad95a251b",
+    "baseSha": "818d2f16e400149e04d5fd87a0c3b31fbeaa83cd",
+    "squashMergeCommit": "a49f8515a34c04a806ed022eb154cd5531941134",
+    "squashCommitSubject": "feat(perf): Soak the Frontier game for 100 turns with the HUD alive under pause (V05-06 soak) (#83)",
+    "mergedAt": "2026-10-09T08:24:37Z",
+    "headTreeSha": "11bb27a7d80c179d1b7207550c52edaaf34a0bed",
+    "mainTreeSha": "11bb27a7d80c179d1b7207550c52edaaf34a0bed",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 7,
+    "commits": [
+      {
+        "sha": "dd6767182bbf02d0c0de579fadf632bdeda7f8e1",
+        "subject": "feat(perf): Soak the Frontier game for 100 turns with the HUD alive under pause"
+      },
+      {
+        "sha": "b77178a43d70078385f0368b4cfcb181bfebb6ca",
+        "subject": "docs(perf): Record the Frontier soak"
+      },
+      {
+        "sha": "a27156b377ab7e724e3cb59c9a30a7452fe3faae",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-soak"
+      },
+      {
+        "sha": "95b842d723b519e0d76998059c295a9f598ad1ca",
+        "subject": "test(perf): Expect the 15 bindings the game registers since the hover state"
+      },
+      {
+        "sha": "ba2a106fb26aedce2eccbfef33a351c7636eb070",
+        "subject": "docs(roadmap): Record the 0.5 V05-06 soak criterion"
+      },
+      {
+        "sha": "d9a1531935fadc2b59d93f18c60fb865918353c1",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-soak"
+      },
+      {
+        "sha": "6a1030587a50a845f6d9a9d770e7a4bad95a251b",
+        "subject": "docs(perf): State the mount-versus-hide CPU result as inconclusive"
+      }
+    ],
+    "changedFiles": 18,
+    "additions": 3669,
+    "deletions": 4
+  },
+  "artifacts": {
+    "soak": {
+      "available": true,
+      "id": 11605545298,
+      "name": "native-frontier-soak",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 338367,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "5333ee668eb0d62bcbbf3f1e680af7e2490815878891260e07e0c5daecd20eab",
+      "apiDigest": "sha256:5333ee668eb0d62bcbbf3f1e680af7e2490815878891260e07e0c5daecd20eab",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "5333ee668eb0d62bcbbf3f1e680af7e2490815878891260e07e0c5daecd20eab",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T08:53:22Z",
+      "expiresAt": "2027-01-07T08:24:40Z",
+      "fileCount": 9,
+      "files": {
+        "frontier-soak-comparison.json": "2a509c0c70f0482922ccb1303707f16edaa2c65b9fe2530865f31c71bed794ab",
+        "frontier-soak-current-1-report.json": "be6613f81dbfb95693dd1af962cd2e82c6662904be16ce8362f83e1d12defd5f",
+        "frontier-soak-current-1.log": "7b8b3464f56f4d8661233488f80ff4ce1d0bd8de1b0f3bd073f3ed02022e63b2",
+        "frontier-soak-current-2-report.json": "0e9ea0a94be08fa8cfb75b703a305ab6858e34a77f1bf83101a88ef249b3c5be",
+        "frontier-soak-current-2.log": "e75a73b8e810908ad1dcad4a64040e037abd4eff88c2f2ecc09ebcbbc310427d",
+        "frontier-soak-current-3-report.json": "f8f7483efa359f377c2910a8c783656b9b1a048abe621776b7c3480d4ebd2075",
+        "frontier-soak-current-3.log": "fbcd4f4133c862bfe920a8417cc52eb5435f27abd85110949a31db1dec8f795e",
+        "frontier-soak-probe-bundle.json": "dd04f8252061b5eaaf9791a2675b976c07b5ba1ca558a134c95b6634f05425b1",
+        "frontier-soak-report.json": "c1e0625b210c5d29dee5b8a256e38b3ed70b0fff2be9674aa482bbd56d1e4df5"
+      },
+      "markers": [
+        {
+          "file": "frontier-soak-current-1.log",
+          "line": "FRONTIER_SOAK_PASSED: 34"
+        },
+        {
+          "file": "frontier-soak-current-2.log",
+          "line": "FRONTIER_SOAK_PASSED: 34"
+        },
+        {
+          "file": "frontier-soak-current-3.log",
+          "line": "FRONTIER_SOAK_PASSED: 34"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

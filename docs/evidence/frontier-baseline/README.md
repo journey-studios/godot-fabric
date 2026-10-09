@@ -76,8 +76,34 @@ caffeinate -d node scripts/frontier-baseline-graphics.mjs        # saiu com 3: n
 node tests/frontier-baseline-native.test.mjs --replay=build/frontier-baseline-current-report.json
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:frontier-baseline` e o artefato `native-frontier-baseline` do workflow `contracts.yml` ainda
-> não rodaram na CI hospedada. Tudo o que esta página registra é evidência local, em macOS arm64. A faixa janelada não roda na CI.
+## CI hospedada e Pages
+
+O push da `main` em `3bb51d6` (o squash do #77, run
+[37884924042](https://github.com/journey-studios/godot-fabric/actions/runs/37884924042) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (2 min), `reference-android` (5 min), `reference-ios` (8 min),
+`native-cold-start` (51 min) e `parity-comparison` (21 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `3bb51d6`, e a árvore do head do PR (`c5c914f`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:frontier-baseline` (passo 38, 3 min) passou: `# tests 1`, `# pass 1`, `# fail 0`, o
+  teste em que os painéis da HUD trocam por um clique real com as contagens exatas de nós, criações e remoções e o host volta
+  à base. O job `contracts` passou `npm run test:contracts` (7, 43 e 352 testes de Node e 13 de Python), e nele os 8 testes de
+  `tests/frontier-baseline-graphics.test.mjs` e os 10 de `tests/frontier-baseline-heap.test.mjs` (o julgamento da faixa janelada e
+  o da série de heap, que rodam sobre dados e não abrem janela), além de `check:static` e `check:publication`.
+- **O artefato.** `native-frontier-baseline` (id 11596358583, 400.062 bytes, SHA-256 `3ad621bf…`, igual ao digest da API e ao
+  do log de upload) tem 6 arquivos, e o recibo fixa o SHA-256 de cada um. O log dele imprime `FRONTIER_BASELINE_PASSED: 19`, os
+  19 checks da suíte headless desta página. O recibo guarda a duração do passo e nenhuma medição do probe: as contagens exatas
+  valem em qualquer ritmo, e os tempos e percentis desta página são os da máquina local.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37884924120](https://github.com/journey-studios/godot-fabric/actions/runs/37884924120), build e deploy em success, 43 testes
+do painel). O deployment 6953105313 está em success, o artefato `github-pages` (id 11595901432, SHA-256 `5938a996…`, igual ao
+digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-06-baseline-headless-ebfe8a0`. Um push
+seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: a faixa janelada (que nunca roda na CI e segue PENDENTE), as quatro capturas, as sabotagens retidas e a
+repetição do relatório gravado.
 
 ## Leitura
 
@@ -285,5 +311,6 @@ SHA-256 no recibo (`windowedLane.captures`):
   imagens, entrada de texto, ScrollView ou animações não foram medidos.
 - **`turno`, `soak` e `congelado`** do V05-06 seguem abertos: a proposta de orçamento é a entrada do congelamento, que
   é um ato posterior e único.
-- **CI hospedada pendente**; a faixa janelada é só local e nunca roda na CI.
+- A CI hospedada repete a suíte headless (19 checks, seção "CI hospedada e Pages"); a faixa janelada é só local, nunca roda na
+  CI e segue PENDENTE.
 - O host anterior não se aplica (nenhum C++ mudou).

@@ -724,6 +724,16 @@ of V05-06 (the CPU-time instrument and four absolute budgets) are formulas with 
 when they are frozen together with `congelado`; it stays open and no criterion changes. Nothing is measured and no result is
 claimed. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the eight 0.5 slices already on main are recorded. For each of
+PRs #70, #71, #73, #76, #77, #78, #79 and #83, the push of main at its squash commit passed all five jobs of the Contracts
+workflow on the first attempt, and its Pages run built and deployed. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md)
+links two receipts per slice, written by `scripts/hosted-receipts.mjs` and checked offline by its `--check`: the run, the
+slice's own steps with the result lines of their logs and the artifacts with their digests, and the deployment with the
+published `migration.json`. Two findings: the Pages artifact of #71 no longer exists, so its deployed `migration.json` was not
+compared, and the one of #73 holds the same data as the committed file in another serialization. The windowed lanes, the
+captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
+
 **Progress.** V05-06, criterion `turno`, headless half only: the Frontier game is measured as a consumer has it, the `civ-lite`
 template provisioned into a project of its own with its HUD and scene untouched, by 32 rounds of 16 real pointer clicks through all
 seven contexts (the dialog is opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows
