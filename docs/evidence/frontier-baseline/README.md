@@ -221,6 +221,42 @@ aglomerados de uns 3 e 13 ms a 120 Hz) e quadro da troca p50 de 12,2, p95 de 18,
 não a fixa**: é uma referência, não um resultado, e nenhuma linha do orçamento parte dela. Para fixar o quadro apresentado é preciso rodar a faixa com a tela acordada e
 destravada (a faixa agora o confere sozinha).
 
+## Tentativas janeladas de 2026-10-09: não apresentadas
+
+Depois do registro acima, a faixa janelada do baseline (`node scripts/frontier-baseline-graphics.mjs`, os scripts da main, sem mudança) rodou **duas vezes** sobre o commit `e6a271d364a27f73acf995ed846c78eed055dde0`, cuja árvore (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) é idêntica à da main
+[`1adcdb3`](https://github.com/journey-studios/godot-fabric/commit/1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f), com o usuário presente e a tela acesa, na mesma máquina (Apple M3 Pro, "Color LCD" 120 Hz, janela de 800 × 600, `gl_compatibility`, vsync lido de volta como `enabled`). **As duas terminaram não apresentadas** (`presented: false`, código 3, nenhuma
+estatística de quadro, `summary: null`): a vaga 3 esgotou as 3 tentativas nas duas. **O baseline janelado segue PENDENTE**, o critério `baseline` segue aberto e as linhas do orçamento que dependem dele ficam como estão. Os recibos brutos **não são commitados** (ficaram fora do repositório); os hashes estão abaixo.
+
+**Tentativa A** (`build/frontier-baseline-graphics.json`, 735.913 bytes, SHA-256 `bada551e3014ae950cb5c2ef80e8997752fdd730184099424ed2545d587b49e1`), status `not presented: unpaced: the display is not presenting (slot 3, 3 attempts)`: vagas 1 e 2 aceitas, a 3 rejeitada em três tentativas (duas `undrawn` e uma `unpaced`).
+
+| Execução | Tentativa | Veredito | Mediana ociosa (ms) | Mínimo exigido (ms) | Quadros desenhados | Das 360 trocas estáveis, sem quadro desenhado | `loadavg` antes | depois |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 1 | rejeitada: `undrawn` | 6,888 | 4,167 | 145 de 5.778 | 360 | `{ 6.24 6.17 5.84 }` | `{ 7.96 6.62 6.02 }` |
+| 1 | 2 | **aceita** | 4,665 | 4,167 | 5.062 de 5.066 | 0 | `{ 7.96 6.62 6.02 }` | `{ 6.83 6.49 6.00 }` |
+| 2 | 3 | rejeitada: `undrawn` | 4,643 | 4,167 | 2.986 de 5.416 | 180 | `{ 6.83 6.49 6.00 }` | `{ 6.56 6.49 6.03 }` |
+| 2 | 4 | rejeitada: `undrawn` | 6,894 | 4,167 | 1.979 de 5.458 | 197 | `{ 6.56 6.49 6.03 }` | `{ 7.08 6.63 6.10 }` |
+| 2 | 5 | **aceita** | 11,772 | 4,167 | 5.075 de 5.079 | 0 | `{ 7.08 6.63 6.10 }` | `{ 6.35 6.56 6.10 }` |
+| 3 | 6 | rejeitada: `undrawn` | 6,700 | 4,167 | 4.245 de 5.241 | 73 | `{ 6.35 6.56 6.10 }` | `{ 6.61 6.59 6.13 }` |
+| 3 | 7 | rejeitada: `undrawn` | 6,893 | 4,167 | 182 de 5.774 | 360 | `{ 6.61 6.59 6.13 }` | `{ 6.31 6.51 6.13 }` |
+| 3 | 8 | rejeitada: `unpaced` | 4,136 | 4,167 | 5.106 de 5.110 | 0 | `{ 6.31 6.51 6.13 }` | `{ 6.44 6.57 6.17 }` |
+
+**Tentativa B** (`build/frontier-baseline-graphics.json`, logo depois, 453.863 bytes, SHA-256 `c03a9f46cf35379eb6eabc3e86e8a0960f7d52d40745db23ae4b4fcdeb2f02c4`), status `not presented: undrawn: the window did not draw throughout (slot 3, 3 attempts)`: vagas 1 e 2 aceitas, a 3 com três tentativas `undrawn`.
+
+| Execução | Tentativa | Veredito | Mediana ociosa (ms) | Mínimo exigido (ms) | Quadros desenhados | Das 360 trocas estáveis, sem quadro desenhado | `loadavg` antes | depois |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 1 | **aceita** | 11,548 | 4,167 | 4.989 de 4.993 | 0 | `{ 10.90 9.35 7.84 }` | `{ 7.87 8.71 7.68 }` |
+| 2 | 2 | **aceita** | 5,177 | 4,167 | 5.076 de 5.080 | 0 | `{ 7.87 8.71 7.68 }` | `{ 6.89 8.28 7.57 }` |
+| 3 | 3 | rejeitada: `undrawn` | 6,516 | 4,167 | 3.845 de 5.282 | 106 | `{ 6.89 8.28 7.57 }` | `{ 5.64 7.77 7.42 }` |
+| 3 | 4 | rejeitada: `undrawn` | 5,211 | 4,167 | 2.970 de 5.396 | 180 | `{ 5.64 7.77 7.42 }` | `{ 6.47 7.68 7.40 }` |
+| 3 | 5 | rejeitada: `undrawn` | 6,882 | 4,167 | 90 de 5.771 | 360 | `{ 6.47 7.68 7.40 }` | `{ 7.05 7.70 7.42 }` |
+
+O que os números mostram, e só isso:
+
+- Nas oito rejeições `undrawn` a janela deixou de desenhar parte do percurso (de 90 a 4.245 quadros desenhados de 5.241 a 5.778 quadros de processo) e, em quatro delas (A1, A4, A7 e B5), a janela ociosa não desenhou nenhum quadro (601 desenhos nas outras nove tentativas de A e B), com o intervalo ocioso médio em 6,900 ms; nas demais foi de 8,324 a 8,459 ms, um período de atualização (8,333 ms). A causa **não foi isolada** e não está provada.
+- O `loadavg` de 1 minuto ficou entre 6,2 e 8,0 em A e entre 5,6 e 10,9 em B: o Mac estava sob carga.
+- A tentativa A8 foi recusada como `unpaced` por uma mediana ociosa de 4,136 ms, **0,031 ms abaixo** do mínimo, com a média em 8,333 ms e 5.106 de 5.110 quadros desenhados: seus 600 intervalos se dividem em 300 abaixo de 4,167 ms e 300 de 12 ms ou mais, nenhum entre eles, e a mediana é o último dos curtos. A regra é a do baseline e não foi tocada.
+- As quatro capturas da tentativa A (`panel-empty`, `-units`, `-city` e `-research`) foram gravadas e não medem nada; nenhuma estatística de quadro de A ou de B é resultado.
+
 ## Proposta de orçamento (PROPOSTA, não congelada)
 
 **Nada daqui é um limite hoje**, com a exceção das linhas marcadas **exato**, que a suíte já julga. A tabela traz os valores que a linha de base headless sugere e a regra

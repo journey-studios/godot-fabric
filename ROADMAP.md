@@ -782,6 +782,20 @@ EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The 
 pins the audit, its receipt and the rules. The hosted CI of the guard step is pending, and X9 and X10 stay open until the 0.5
 ends, when the audit runs again. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-06, criterion `turno`, closed: the windowed lane of the turn was presented. On 2026-10-09, with the display on,
+the local lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) ran on a tree identical to main `1adcdb3`, with the
+baseline's validity rule imported: five of five runs were accepted in eight attempts (three were rejected as `undrawn`, none as
+unpaced), with the vsync on at 120 Hz and exit code 0. The first frame of a click has a p95 of 12.98 ms (median across the runs)
+and the frames of a turn a p95 per phase of 12.8 to 14.1 ms, and none of the 1,800 first frames of a click or the 4,800 frames of a
+turn reached 100 ms. They are intervals between process frames, not frames the display showed, and the idle median is unstable
+(4.4 to 13.2 ms across the runs, from two alternating groups of intervals whose mean is one refresh period), so the p95 and the mean
+are what to read; no limit comes from them. With the headless half recorded earlier, the `turno` criterion has the two pieces of
+evidence it asks for. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and
+`congelado` remain open, as do the hosted CI run and the Pages publication of the turn. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
