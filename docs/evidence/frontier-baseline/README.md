@@ -272,7 +272,7 @@ O que os números mostram, e só isso:
 > **Registro fixado no commit [`1bc3a3c`](https://github.com/journey-studios/godot-fabric/commit/1bc3a3cc7d5d1a160f2158a87a5f8c623b504130).** A faixa janelada do baseline rodou **uma vez** sobre ele, com a árvore limpa (árvore `5837a44a`, sobre a main `decc2ad`), e o display **apresentou a janela**:
 > `presented: true`, código de saída 0, **5 de 5 vagas aceitas na primeira tentativa de cada, nenhuma rejeitada**, vsync `enabled` a 120 Hz, 0 de 25.469 quadros amostrados sem poder desenhar. Isto substitui o que as seções anteriores desta página dizem do tempo de quadro como PENDENTE; elas ficam como foram escritas.
 
-É a execução do baseline da fatia da [janela desenhável](../windowed-presence/README.md) (#99, [recibo](../windowed-presence/execution.json)), que descreve o ambiente, a presença do usuário e as 11 fontes fixadas, e **não publica** as estatísticas de quadro: este registro as publica. O [recibo desta seção](windowed-presented.json) guarda o resumo, as tentativas, os hashes, a conta da proposta e o commit. O **recibo bruto não é commitado** (grande; `docs/evidence/**/*-report.json` é ignorado): `frontier-baseline-graphics.json`, 437.679 bytes, SHA-256 `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`. Ele foi só lido, e nenhum intervalo cru entra no repositório. A [nota de pesquisa](../../research/frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c) lê estes números.
+É a execução do baseline da fatia da [janela desenhável](../windowed-presence/README.md) (#99, [recibo](../windowed-presence/execution.json)), que descreve o ambiente, a presença do usuário e as 11 fontes fixadas, e **não publica** as estatísticas de quadro: este registro as publica. O [recibo desta seção](windowed-presented.json) guarda o resumo, as tentativas, os hashes, a conta da proposta e o commit. O **recibo bruto está commitado, byte a byte**, em [`windowed-presented-raw.json`](windowed-presented-raw.json) (o `frontier-baseline-graphics.json` que a faixa gravou, 437.679 bytes, SHA-256 `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`, o mesmo da cópia), com todos os intervalos de todas as execuções aceitas, para que outro leitor recalcule qualquer estatística (ver "Recalcular" abaixo). A [nota de pesquisa](../../research/frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c) lê estes números.
 
 | Faixa | Resultado | Observação |
 | --- | --- | --- |
@@ -419,11 +419,19 @@ Lendo a proposta:
 
 A execução gravou as quatro capturas dos painéis (`panel-empty`, `-units`, `-city` e `-research`, 800 × 600) e elas são **as mesmas bytes que já estão nesta página** (os SHA-256 de `windowedLane.captures` do `execution.json` são os mesmos: `98fff17b…`, `f66f7fbb…`, `dfb7ab35…` e `a8e20412…`), então nenhuma captura é acrescentada. A run das capturas amostrou 60 quadros e nenhum sem poder desenhar.
 
+### Recalcular
+
+`shasum -a 256 windowed-presented-raw.json` deve dar o hash desta seção. A faixa não tem `--replay` para o recibo janelado (o `--replay` do probe julga o relatório headless), então o recálculo é pelo oráculo, em Node, sobre o arquivo:
+
+- `verifyGraphicsReceipt(receipt)`, de `tests/frontier-baseline-oracle.mjs`, aceita o arquivo como está (`JSON.parse` do conteúdo): confere as execuções aceitas pela referência ociosa, a contagem das tentativas e o formato do `summary`.
+- Para refazer as estatísticas, monte uma execução de cada `raw[i]`: as linhas de `swaps` são `[rodada, passo, de, para, quadros de latência, injeção em µs, µs até os nós, µs até o primeiro quadro desenhado, intervalos dos quadros da troca em µs]`, a janela ociosa vem de `idleIntervalsUsec` e `idleDraws`, os quadros de `processFrames` e `drawnFrames` da tentativa de mesmo número, a proveniência do próprio arquivo e `config.nativeNodes` do `NATIVE_NODES` de `tests/frontier-baseline-cases.mjs`. `summarizeGraphicsRuns(execuções)` dá então o `summary` do arquivo, por execução e entre execuções; só o `mapMotionEvents` (o movimento do ponteiro real sobre o mapa), que o `raw` não guarda, fica fora. As estatísticas por nós criados desta seção são o mesmo cálculo (o posto mais próximo sobre `frameUsec[0]` das trocas estáveis, `rodada` 2 em diante, agrupadas pelo tamanho do painel de `para`) e a conta da proposta usa os quartis de cinco dessas estatísticas.
+- Foi assim que este registro foi conferido: o oráculo de `1bc3a3c` e o da árvore deste commit aceitam a cópia commitada e dão os mesmos números, que um script à parte, fora do repositório, recalculou ao microssegundo.
+
 ### Fontes e hashes
 
 | Arquivo | SHA-256 |
 | --- | --- |
-| recibo bruto `frontier-baseline-graphics.json` (437.679 bytes, fora do repositório) | `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7` |
+| recibo bruto `frontier-baseline-graphics.json`, commitado como [`windowed-presented-raw.json`](windowed-presented-raw.json) (437.679 bytes) | `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7` |
 | `tests/window-presence.gd` (blob de `1bc3a3c`) | `0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15` |
 | `tests/frontier-baseline-graphics-probe.gd` (blob de `1bc3a3c`) | `dae47afe2e5c3656f9d018b4f631e045205d06f43c936d62250b2283fa521412` |
 | `tests/frontier-baseline-swap.gd` (blob de `1bc3a3c`) | `31c9e6ce27f7deceaaf3266566b719d315314af0c1f0129b9d8755a88d3aedff` |

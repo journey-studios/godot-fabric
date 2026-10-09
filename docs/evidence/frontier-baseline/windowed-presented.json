@@ -103,8 +103,9 @@
     "format": "godot-fabric.frontier-baseline-graphics/v2",
     "bytes": 437679,
     "sha256": "36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7",
-    "committed": false,
-    "note": "kept outside the repository (large; docs/evidence/**/*-report.json is ignored). Read only to derive this record; no raw interval is copied here."
+    "committed": true,
+    "path": "windowed-presented-raw.json",
+    "note": "committed byte for byte (437,679 bytes, same SHA-256) as windowed-presented-raw.json in this folder, so that another reader can recompute every statistic from the raw intervals. To recompute: verifyGraphicsReceipt accepts the file as it is; to rebuild the statistics, make a run of each raw[i] (its swaps rows are [round, step, from, to, latencyFrames, flushUsec, latencyUsec, drawUsec, frameUsec], idle from idleIntervalsUsec and idleDraws, frames from the matching attempts' processFrames and drawnFrames, provenance from the file, config.nativeNodes from NATIVE_NODES of tests/frontier-baseline-cases.mjs) and call summarizeGraphicsRuns(runs) from tests/frontier-baseline-oracle.mjs: it equals the file's summary (mapMotionEvents, which raw does not keep, is the only field left out)."
   },
   "hashes": {
     "nativeHostSha256": "212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e",

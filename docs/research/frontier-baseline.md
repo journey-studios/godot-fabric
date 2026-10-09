@@ -193,8 +193,8 @@ give. The receipt counts, as the final comparison V05-10 asks, the frames above 
 (`caffeinate -d node scripts/frontier-baseline-graphics.mjs`, the working tree clean) and the display presented the window: **`presented: true`, exit code 0, 5 of 5 slots accepted at the first attempt of each and no attempt rejected**,
 the vsync read back `enabled` at 120 Hz. The commit is that of [the windowed presence](windowed-presence.md), which puts the lane's window in front of the others and above them and records, for every process frame, whether
 the engine could draw it; the rule of validity of protocol item 7 is the one written above and did not change. [The evidence of that slice](../evidence/windowed-presence/README.md) describes the execution (the user's absence, the load, the sources
-pinned), and [this baseline's evidence record](../evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09) pins the numbers below and the hash of the raw receipt (437,679 bytes, SHA-256
-`36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`, kept outside the repository).
+pinned), and [this baseline's evidence record](../evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09) pins the numbers below, and the raw receipt itself is committed byte for byte as [`windowed-presented-raw.json`](../evidence/frontier-baseline/windowed-presented-raw.json) (437,679 bytes, SHA-256
+`36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`), so that every statistic can be recomputed from its intervals: [how, in the evidence record](../evidence/frontier-baseline/README.md#recalcular).
 
 **What was checked.** `verifyGraphicsReceipt` accepts the receipt, with the oracle of `1bc3a3c` and with the one of this tree, and each of the five runs passes `graphicsRunValidity` (it drew, it was paced). `summarizeGraphicsRuns`, run over the raw intervals
 of the five runs, gives the receipt's `summary` exactly (but for the count of the real pointer's motion events over the map, which `raw` does not keep), and every figure below was computed again from the raw intervals by a separate script outside the repository

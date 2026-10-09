@@ -860,8 +860,8 @@ frozen. The Mac was loaded by other agents (load average 5.4 to 6.8 on 11 logica
 pessimistic; `congelado` remains open and may ask for a run on a quiet machine, as do the hosted CI run and the Pages publication
 of this record. With the headless half recorded earlier, the `baseline` criterion has the two pieces of evidence it asks for. The
 [record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/191533a44e93ab98f745c4adfbdb2b614e1a0656/docs/evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09)
-is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or denominator
-moves.
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
+recomputed. No 1.0 checkpoint, weight or denominator moves.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does

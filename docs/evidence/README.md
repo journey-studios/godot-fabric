@@ -999,7 +999,7 @@ the display off it rejected all three attempts as unpaced (an idle frame of 0.7 
 `presented: false`, exit code 3 and no frame-time statistic; the rejected attempts are kept as raw data and four captures are kept.
 **It is pinned since 2026-10-09**: one execution of the lane on `1bc3a3c` (the drawable window of #99) was presented by the display, five runs of five slots at the first attempt
 (0 of 25,469 sampled frames the engine could not draw, vsync `enabled` at 120 Hz), and the record's section "Faixa janelada apresentada" and
-[`windowed-presented.json`](frontier-baseline/windowed-presented.json) publish its statistics and the **proposal** they give by the written rule (median of the five runs
+[`windowed-presented.json`](frontier-baseline/windowed-presented.json) publish its statistics (the raw receipt is committed byte for byte beside them, [`windowed-presented-raw.json`](frontier-baseline/windowed-presented-raw.json)) and the **proposal** they give by the written rule (median of the five runs
 plus three times the interquartile range, up to 0.5 ms): the swap frame's p50 / p95 / p99 by nodes created 0 / 50 / 75 / 100 are 3.662 / 8.448 / 11.171 / 13.144, 13.714 / 11.052 / 14.080 / 16.577 and
 14.284 / 15.565 / 19.278 / 24.607 ms at the median of the runs, with proposed bounds of 4.0 / 9.0 / 12.0 / 13.5, 14.0 / 12.5 / 20.0 / 17.0 and 16.5 / 27.5 / 29.5 / 41.5 ms (the p99 of 90 swaps is the largest of
 them, so those are the noisiest), the idle frame's p99 is 15.213 ms (proposed 16.5) and no frame of 100 ms or more occurred in 1,800 swap frames or 3,000 idle intervals. The Mac was loaded by
@@ -1100,7 +1100,7 @@ process frame, whether the engine could draw it: each attempt of the receipts ca
 unchanged** and no criterion moves. Both lanes ran once each at the commit with a clean tree and were **presented at the first attempt of all five slots** (10 of 10 runs, none rejected), with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379
 in the turn, in the first live execution of the turn's path with the helper. **Nobody touched the keyboard or the pointer during either lane** (the idle time of the input devices grew by as many seconds as passed over the 15 minutes), so the record shows that the helper
 opens a window the engine can draw and that the record is written and verified, not that it keeps the window drawing against interference: that needs a run with the user at the Mac. A locked or asleep display is not covered, and the captures run still waits
-for `frame_post_draw` with no limit of its own. The raw receipts (`SHA-256 36b32e0d…` and `8dd6ec9c…`) stay outside the repository; the frame-time statistics they hold belong to the delivery that closes the `baseline` criterion, and this record changes none.
+for `frame_post_draw` with no limit of its own. The raw receipts (`SHA-256 36b32e0d…` and `8dd6ec9c…`) stay outside the repository in this record (the baseline's, `36b32e0d…`, was committed later, byte for byte, in the [Frontier baseline record](frontier-baseline/windowed-presented-raw.json)); the frame-time statistics they hold belong to the delivery that closes the `baseline` criterion, and this record changes none.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
