@@ -1076,6 +1076,17 @@ against the parent of the squash (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 cl
 [publication](milestone-exit-guards/publication.json)); the pull-request and manual-dispatch branches of the step and the audit stay local. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
 milestone does, by running the audit again. A new folder with a neutral name can still hide a slice; it is listed, not failed.
 
+The [CPU-time instrument record](cpu-time-instrument/README.md), pinned at `e38615d`, records the preparation of the `execucao` criterion of V05-10: the one reading of the main thread's CPU time per process frame
+that the final comparison will use in all three arms, checked against a busy loop of known duration before any comparative measurement. The instrument (`tests/cpu-time-instrument.gd`) does **not** read
+`Performance.TIME_PROCESS`, which at the source and in the binary is a maximum assigned once a second that includes the wait for the display (in an idle 120 Hz window it reads about 15 ms where the instrument reads 0.08 ms):
+it stamps `Time.get_ticks_usec` at the engine's hooks and adds the physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives 6 draws later and is aligned by draw
+index. In the lab (an empty tree, a node that burns 2, 5, 10 and 20 ms in a block of 200 frames, idle blocks between) the four loads are read to within 0.16% headless (10 of 10 checks of the probe; the independent oracle accepts the raw report
+and the engine's own monitor agrees with the instrument's series) and to within 1.5% in a window the display presented on 2026-10-09 (120 Hz, vsync on, one run, exit code 0), where a render pulse of 30,000 rectangles lands at
+lag 6 with a gain of 1.07 ms and at most 0.012 ms at every other lag. Three retained sabotages (the interval between frames for the CPU time, the load outside the measured frame, the engine's monitor for the CPU time) are rejected by the
+probe and by the oracle, each for its own rule, and the sources come back byte for byte. **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`); the clock is monotonic elapsed time and not the thread's
+CPU time, the Mac was shared with other agents (the 1-minute load average stood between 5.5 and 9.9, above the protocol's 2.0 for a comparative execution), the render term was exercised only in a lab scene, and the arms
+and the iPhone are open. The step is in the `native-suites-frontier` job of `contracts.yml`, which only runs on manual dispatch; hosted CI and Pages are pending, and the windowed lane and the sabotages never run there.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

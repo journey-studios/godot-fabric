@@ -586,6 +586,7 @@ process frame that the final comparison will use in all three arms: a `Node` tha
 process, setup and render terms, which all end before the frame is presented. It stamps the clock because Godot's `Performance.TIME_PROCESS` is a once-a-second maximum that includes the wait for the display.
 A lab probe checks it against a busy loop of 2, 5, 10 and 20 ms to within 10% (headless in the suite, and once in a window locally, where the render term is aligned to the draw six frames earlier), an
 independent oracle recomputes it from the raw stamps, and three retained sabotages are rejected. The threshold `cpu-time-instrument` is not frozen and no comparative measurement has run.
+[Evidence](docs/evidence/cpu-time-instrument/README.md); [research](docs/research/cpu-time-instrument.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,

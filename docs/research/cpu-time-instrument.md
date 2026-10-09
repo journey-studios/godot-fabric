@@ -4,8 +4,8 @@ Status: executed isolated macOS validation (arm64) against official Godot 4.7.2,
 This is the `execucao` criterion's preparation in the 0.5 Frontier milestone's V05-10: the one instrument that reads the CPU time of the main thread for each process frame in the three arms
 of [the comparison](frontier-comparison-protocol.md), chosen and checked against a synthetic load of known duration **before** any comparative measurement. It changes no C++ and runs no game.
 **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`; the freeze is a later, single act together with the other numbers): this note delivers the instrument, its
-verification and a written recommendation of what to freeze. The comparison's `execucao` criterion stays open, and so do `protocolo`, `braco-b` and the others. The [evidence record](../evidence/README.md)
-that pins the executions to a commit is a later change.
+verification and a written recommendation of what to freeze. The comparison's `execucao` criterion stays open, and so do `protocolo`, `braco-b` and the others. The [evidence record](../evidence/cpu-time-instrument/README.md)
+pins the executions to the commit `e38615d`.
 
 ## The question
 
@@ -36,12 +36,12 @@ Three things follow, and the instrument is built on them.
 - **The pieces that are per frame are the ones the engine's hooks delimit.** `SceneTree.process_frame` is emitted at the start of the process step (`scene/main/scene_tree.cpp` 713), after
   `MainLoop::process` (700) and before the deferred calls are flushed (715) and the nodes' `_process` run (719). `RenderingServer.frame_pre_draw` is emitted when the draw starts
   (`rendering_server_default.cpp` 443-446), after the nodes' `_process`, the timers, and `message_queue->flush()` (`main/main.cpp` 5065) have run: layout and redraw requests, which a node queues
-  with `call_deferred`, are inside the interval. (Measured in the window run: showing a canvas item of 30,000 rectangles costs a median 3.06 ms between the two signals, of which 0.009 ms
+  with `call_deferred`, are inside the interval. (Measured in the window run: showing a canvas item of 30,000 rectangles costs a median 3.11 ms between the two signals, of which 0.0095 ms
   is up to the last node's `_process`: the rest is the redraw the item queued.) `frame_post_draw`
   is emitted at the end of the draw (229). `SceneTree.physics_frame` opens a physics step (`scene_tree.cpp` 649).
 - **A headless run does not draw.** `wants_present` is false without a window that can draw (`main/main.cpp` 5080-5094), so `frame_pre_draw` never fires (the oracle requires that a headless report has no draw in its 2,422 frames) and the
   render terms do not exist. The loop is paced by a sleep, not by a display: `OS::add_frame_delay` waits until the next 6.9 ms mark when the window cannot draw (`core/os/os.cpp` 708-741), so
-  a headless interval is `max(6.9 ms, the frame's work)` and a 2 ms or a 5 ms load **does not show in it at all** (the interval reads 6.89 ms in the idle blocks and 6.90 in the 2 and 5 ms blocks).
+  a headless interval is `max(6.9 ms, the frame's work)` and a 2 ms or a 5 ms load **does not show in it at all** (the interval reads 6.87 ms in the first idle block and 6.89 and 6.90 in the 2 and 5 ms blocks).
 
 ## The instrument
 
@@ -121,34 +121,33 @@ mutations to the recorded stamps. The windowed lane is local: `caffeinate -d nod
 
 ## What the runs showed
 
-Runs of 2026-10-09 on an Apple M3 Pro (macOS 26.6.2, arm64) with the Compatibility renderer, a `Color LCD` display at 120 Hz and the vsync read back as enabled, while other agents' work loaded the
-machine (the 1-minute load average stood between 6 and 12 around the runs). The evidence record pins the executions to a commit; the numbers here are the ones of these runs and move with the
-state of the machine by a few microseconds in the idle floor and not in the ratios.
+The executions of 2026-10-09 on the commit `e38615d`, which [the evidence record](../evidence/cpu-time-instrument/README.md) pins, on an Apple M3 Pro (macOS 26.6.2, arm64) with the Compatibility renderer, a `Color LCD` display at 120 Hz and the vsync read back
+as enabled, while other agents' work loaded the machine (the 1-minute load average stood between 5.5 and 9.9 around the runs). The numbers move with the state of the machine by a few microseconds in the idle floor and not in the ratios.
 
-The reading against the busy loop, `total_ms` minus the idle median, in milliseconds (the idle median is the base: 0.007 ms headless and 0.085 ms in the window):
+The reading against the busy loop, `total_ms` minus the idle median, in milliseconds (the idle median is the base: 0.014 ms headless and 0.082 ms in the window):
 
 | Target | Headless: read | error | Window: read | error |
 | ---: | ---: | ---: | ---: | ---: |
-| 2 ms | 2.004 | +0.20% | 1.999 | -0.05% |
-| 5 ms | 4.998 | -0.04% | 5.032 | +0.64% |
-| 10 ms | 10.001 | +0.01% | 10.003 | +0.03% |
-| 20 ms | 20.007 | +0.03% | 20.034 | +0.17% |
+| 2 ms | 2.000 | 0.00% | 2.030 | +1.50% |
+| 5 ms | 4.992 | -0.16% | 5.004 | +0.08% |
+| 10 ms | 9.993 | -0.07% | 10.015 | +0.15% |
+| 20 ms | 19.995 | -0.02% | 20.044 | +0.22% |
 
-The same blocks through the other quantities (medians of the measured frames, ms; the window is the official run of the lane):
+The same blocks through the other quantities (medians of the measured frames, ms; the window is the lane's single run):
 
 | Block | Headless interval | Headless `TIME_PROCESS` | Headless total | Window interval | Window `TIME_PROCESS` | Window total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| idle-0 | 6.903 | 0.127 | 0.013 | 8.295 | 15.224 | 0.080 |
-| load-2 | 6.893 | 0.056 | 2.011 | 6.641 | 14.784 | 2.084 |
-| load-5 | 6.901 | 0.114 | 5.005 | 7.210 | 16.544 | 5.117 |
-| load-10 | 10.023 | 11.814 | 10.008 | 10.764 | 15.204 | 10.088 |
-| load-20 | 20.038 | 20.026 | 20.014 | 20.888 | 22.635 | 20.119 |
+| idle-0 | 6.872 | 0.288 | 0.018 | 9.378 | 15.325 | 0.083 |
+| load-2 | 6.892 | 0.221 | 2.014 | 11.040 | 16.802 | 2.112 |
+| load-5 | 6.899 | 0.570 | 5.006 | 5.896 | 14.647 | 5.086 |
+| load-10 | 10.019 | 10.041 | 10.007 | 10.785 | 15.425 | 10.097 |
+| load-20 | 20.026 | 20.075 | 20.009 | 20.864 | 21.018 | 20.126 |
 
-What it shows, and no more: the interval does not see a 2 or 5 ms load headless (the loop's sleep hides it) and in a window it is the clusters of the display (the idle median is 8.3 ms and the
-blocks wander between 4.6 and 11.9 ms for the same idle work); `TIME_PROCESS` is a second behind (a load block starts with the previous block's maximum) and in a window is 15 ms for an idle frame because
-it holds the swap; the instrument reads the load. The idle reference of the window's idle intervals was 8.33 ms against a refresh period of 8.33 ms, 600 of 600 idle frames drew, and the render pulse
-landed at lag 6 with a gain of 1.03 ms and at most 0.005 ms at every other lag. The headless engine cross-check had 20 changes of `TIME_PROCESS` (19 windows between them), none under the instrument's
-largest process term, and the engine's number was 0.016 ms over it at the median.
+What it shows, and no more: the interval does not see a 2 or 5 ms load headless (the loop's sleep hides it) and in a window it is the clusters of the display (the idle blocks, with the same idle work, have medians from 5.0 to 9.4 ms);
+`TIME_PROCESS` is a second behind (a load block starts with the previous block's maximum: 0.22 ms in the 2 ms block, 10.04 ms in the idle block after the 10 ms one) and in a window is 14 to 16 ms for an idle frame because it holds the swap;
+the instrument reads the load. The idle reference of the window's idle intervals was 8.34 ms against a refresh period of 8.33 ms, 600 of 600 idle frames drew, and the render pulse landed at lag 6 with a gain of 1.07 ms and at most 0.012 ms
+at every other lag. The headless engine cross-check had 20 changes of `TIME_PROCESS` (19 windows between them), none under the instrument's largest process term, and the engine's number was 0.015 ms over it at the median. The
+window's 1.5% on the 2 ms load is mostly the floor: the window's idle total is 0.082 ms, 4% of 2 ms.
 
 ## The retained sabotages
 
@@ -174,8 +173,8 @@ For the single act that freezes the thresholds; the protocol's JSON is not chang
    `Performance.TIME_PROCESS` or `TIME_PHYSICS_PROCESS`, which are a once-a-second maximum and, for `TIME_PROCESS`, with the vsync on, hold the wait for the display; `TIME_PROCESS` stays in the samples as a cross-check.
 3. **The alignment:** the render reading of a draw is the one taken 6 draws later (Compatibility renderer, 4.7.2, macOS), joined by draw index when the run is over; the harness keeps 6 draws after the
    last window it needs, and the lag is checked by the render pulse every time the lab probe runs.
-4. **The error observed against a load of known duration:** at most 0.7% at 2, 5, 10 and 20 ms, headless and in a presented window, against the 10% rule; the instrument's floor (the idle total) is
-   about 0.01 ms headless and 0.09 ms in the window, which is the same in every arm.
+4. **The error observed against a load of known duration:** at most 0.16% at 2, 5, 10 and 20 ms headless and at most 1.5% in a presented window (the 2 ms load; 0.22% or less in the others), against the 10% rule; the
+   instrument's floor (the idle total) is about 0.014 ms headless and 0.082 ms in the window, which is the same in every arm.
 5. **The self-check as a gate:** the protocol's `instrument` rule ("the self-check was not passed, or the reading changed after it") is operational as: `tests/cpu-time-instrument.gd` is byte-identical to the
    one the probe and the oracle passed (its hash goes in the provenance), and the probe and the oracle are rerun on the machine, the engine and the renderer of the campaign before it starts.
 

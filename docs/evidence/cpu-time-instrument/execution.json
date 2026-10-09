@@ -1,0 +1,851 @@
+{
+  "format": "godot-fabric.cpu-time-instrument-execution/v1",
+  "executedAt": "2026-10-09",
+  "implementationCommit": "e38615da6ad7f9ca774e2ef8c46de33707c1b427",
+  "executedTreeSha": "825a3f4b84810ab1fec49b0d0d2cf5bea383b63e",
+  "baseCommit": "7fb27e12a4730869a7a4acac915908648f94d9ab",
+  "sourceState": "the working tree was clean (git status empty) before the first command, after the sabotages and after the last one; every tracked source equal to the implementation commit's when each command below ran. The evidence files and the documents that point at them were written afterwards and are not inputs of any command.",
+  "slice": "V05-10 execucao (preparation): the CPU-time instrument of the final comparison, chosen and checked against a synthetic load of known duration (GF-30)",
+  "criterion": "cpu-time-instrument threshold: the instrument and its verification are pinned; the threshold stays UNFROZEN (frozenValue null). The execucao, protocolo and braco-b criteria of V05-10 stay open and no comparative measurement has run.",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "godot": "4.7.2-stable (official)",
+    "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "node": "v22.23.3",
+    "renderer": {
+      "driver": "opengl3",
+      "method": "gl_compatibility",
+      "adapter": "Apple M3 Pro"
+    },
+    "window": {
+      "size": [
+        640,
+        360
+      ],
+      "vsyncMode": 1,
+      "vsyncModeName": "enabled",
+      "refreshRate": 120,
+      "threadModel": 1,
+      "physicsTicksPerSecond": 60
+    },
+    "headlessLoop": {
+      "lowProcessorUsageSleepUsec": 6900,
+      "displayServer": "headless"
+    }
+  },
+  "loadAverage": [
+    {
+      "command": "npm run test:cpu-time-instrument",
+      "before": "{ 8.41 9.11 8.07 }",
+      "after": "{ 9.91 9.44 8.22 }",
+      "seconds": 21.2,
+      "testSeconds": 20.5,
+      "probeProcessSeconds": 20.140695
+    },
+    {
+      "command": "node scripts/cpu-time-instrument-sabotage.mjs",
+      "before": "{ 8.84 9.23 8.16 }",
+      "after": "{ 6.30 8.37 7.93 }",
+      "seconds": 82,
+      "probeProcessSeconds": {
+        "reads-interval": 20.137009,
+        "load-outside-frame": 20.127994,
+        "reads-monitor": 20.136862
+      }
+    },
+    {
+      "command": "caffeinate -d npm run bench:cpu-time-instrument-graphics",
+      "before": "{ 6.02 8.24 7.89 }",
+      "after": "{ 5.46 7.90 7.77 }",
+      "laneBefore": "{ 6.09 8.22 7.88 }",
+      "laneAfter": "{ 5.46 7.90 7.77 }",
+      "seconds": 27.7
+    }
+  ],
+  "loadNote": "The Mac was shared with other agents during every command: the 1-minute load average stood between 5.5 and 9.9 on 11 logical cores, above the protocol's 2.0 limit for a comparative execution. This is a self-check of the instrument and not a campaign; the readings are recorded and nothing is hidden.",
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:cpu-time-instrument step and the native-cpu-time-instrument artifact of .github/workflows/contracts.yml (job native-suites-frontier, which only runs on workflow_dispatch) have not run on hosted CI yet. The windowed lane and the sabotages never run there. Everything below is local macOS arm64 evidence."
+  },
+  "previousHost": {
+    "status": "not applicable",
+    "reason": "the slice changes no C++ and its subject, the instrument, runs without the Fabric host: there is no host to compare it with; the three retained sabotages are the control"
+  },
+  "commands": {
+    "order": [
+      "npm run test:cpu-time-instrument",
+      "node scripts/cpu-time-instrument-sabotage.mjs",
+      "caffeinate -d npm run bench:cpu-time-instrument-graphics"
+    ],
+    "headless": "npm run test:cpu-time-instrument (node --test --test-concurrency=1 tests/cpu-time-instrument-native.test.mjs): the probe in one Godot process, the oracle, the report-level mutations",
+    "sabotage": "node scripts/cpu-time-instrument-sabotage.mjs, alone: three variants, the sources restored byte for byte, and a last run of the genuine source",
+    "windowed": "caffeinate -d npm run bench:cpu-time-instrument-graphics (node scripts/cpu-time-instrument-graphics.mjs): one run in one window, exit code 0 (presented)",
+    "node": "node --test tests/cpu-time-instrument.test.mjs (Node only, part of test:contracts): 18 tests, 18 passed, run after the three commands (vm.loadavg { 5.62 7.25 7.54 } before and after, 0.25 s)"
+  },
+  "apis": [
+    {
+      "api": "Performance.get_monitor(TIME_PROCESS)",
+      "measures": "the largest, over the frames of the last second, of the time from before MainLoop::process to after RenderingServer::draw",
+      "describes": "one value a second",
+      "waitForDisplay": true,
+      "used": "recorded in each sample as a cross-check; not in the total"
+    },
+    {
+      "api": "Performance.get_monitor(TIME_PHYSICS_PROCESS)",
+      "measures": "the largest time of a physics iteration",
+      "describes": "one value a second",
+      "waitForDisplay": false,
+      "used": "not read"
+    },
+    {
+      "api": "RenderingServer.viewport_get_measured_render_time_cpu (after viewport_set_measure_render_time)",
+      "measures": "the CPU clock between the renderer's stamps at the start and the end of the viewport's render",
+      "describes": "a draw 6 draws earlier on the Compatibility renderer",
+      "waitForDisplay": false,
+      "used": "render_ms, aligned by draw index"
+    },
+    {
+      "api": "RenderingServer.get_frame_setup_time_cpu",
+      "measures": "the scene and canvas updates before the viewports render",
+      "describes": "the last completed draw (the frame's own at frame_post_draw)",
+      "waitForDisplay": false,
+      "used": "setup_ms"
+    },
+    {
+      "api": "Time.get_ticks_usec",
+      "measures": "the monotonic clock in microseconds (mach_absolute_time): elapsed time and not the thread's CPU time",
+      "describes": "the instant of the call",
+      "waitForDisplay": "depends on where it is called",
+      "used": "stamps at process_frame, frame_pre_draw, physics_frame and the last _process and _physics_process"
+    }
+  ],
+  "formula": {
+    "terms": {
+      "physics_ms": "physics_frame to the last _physics_process",
+      "process_ms": "process_frame to frame_pre_draw (a frame that does not draw: to the last _process)",
+      "setup_ms": "get_frame_setup_time_cpu of the frame's draw, read at frame_post_draw",
+      "render_ms": "viewport_get_measured_render_time_cpu for the frame's draw, read RENDER_READING_LAG_DRAWS = 6 draws later"
+    },
+    "total": "total_ms = physics_ms + process_ms + setup_ms + render_ms",
+    "headless": "no draw: setup_ms and render_ms are 0 and the total is physics_ms + process_ms",
+    "accuracyRule": "|median(total over the measured frames of load-T) - base - T| <= 0.1 T, base = median of the total over the measured frames of every idle block"
+  },
+  "headless": {
+    "suite": "1/1 subtests passed",
+    "probeChecks": 10,
+    "frames": 2422,
+    "probeProcessSeconds": 20.140695,
+    "allCurrentAssertionsPassed": true,
+    "oracleViolations": [],
+    "accuracy": {
+      "2": {
+        "burnedMs": 2,
+        "totalMedianMs": 2.014,
+        "baseMs": 0.014,
+        "readMs": 2,
+        "errorPercent": 0
+      },
+      "5": {
+        "burnedMs": 5,
+        "totalMedianMs": 5.006,
+        "baseMs": 0.014,
+        "readMs": 4.992,
+        "errorPercent": -0.16
+      },
+      "10": {
+        "burnedMs": 10,
+        "totalMedianMs": 10.007,
+        "baseMs": 0.014,
+        "readMs": 9.993,
+        "errorPercent": -0.07
+      },
+      "20": {
+        "burnedMs": 20,
+        "totalMedianMs": 20.009,
+        "baseMs": 0.014,
+        "readMs": 19.995,
+        "errorPercent": -0.02
+      }
+    },
+    "idleBaseMs": 0.014,
+    "cpu": {
+      "idleTotalMedianMs": 0.014,
+      "idleTotalP95Ms": 0.037,
+      "idleIntervalReferenceMs": 6.899,
+      "idleTotalShare": 0.002
+    },
+    "variation": {
+      "2": {
+        "distinct": 35,
+        "longestRun": 3
+      },
+      "5": {
+        "distinct": 23,
+        "longestRun": 3
+      },
+      "10": {
+        "distinct": 25,
+        "longestRun": 4
+      },
+      "20": {
+        "distinct": 29,
+        "longestRun": 3
+      }
+    },
+    "engineMonitor": {
+      "updates": 19,
+      "underTheInstrument": 0,
+      "medianMarginMs": 0.015
+    },
+    "blocks": [
+      {
+        "block": "idle-0",
+        "intervalMs": 6.872,
+        "engineMonitorMs": 0.288,
+        "processMs": 0.015,
+        "totalMs": 0.018
+      },
+      {
+        "block": "load-2",
+        "intervalMs": 6.892,
+        "engineMonitorMs": 0.221,
+        "processMs": 2.011,
+        "totalMs": 2.014
+      },
+      {
+        "block": "idle-1",
+        "intervalMs": 6.899,
+        "engineMonitorMs": 2.052,
+        "processMs": 0.008,
+        "totalMs": 0.01
+      },
+      {
+        "block": "load-5",
+        "intervalMs": 6.899,
+        "engineMonitorMs": 0.57,
+        "processMs": 5.004,
+        "totalMs": 5.006
+      },
+      {
+        "block": "idle-2",
+        "intervalMs": 6.832,
+        "engineMonitorMs": 5.95,
+        "processMs": 0.011,
+        "totalMs": 0.015
+      },
+      {
+        "block": "load-10",
+        "intervalMs": 10.019,
+        "engineMonitorMs": 10.041,
+        "processMs": 10.006,
+        "totalMs": 10.007
+      },
+      {
+        "block": "idle-3",
+        "intervalMs": 6.896,
+        "engineMonitorMs": 10.04,
+        "processMs": 0.005,
+        "totalMs": 0.007
+      },
+      {
+        "block": "load-20",
+        "intervalMs": 20.026,
+        "engineMonitorMs": 20.075,
+        "processMs": 20.008,
+        "totalMs": 20.009
+      },
+      {
+        "block": "idle-4",
+        "intervalMs": 6.891,
+        "engineMonitorMs": 20.02,
+        "processMs": 0.007,
+        "totalMs": 0.009
+      }
+    ],
+    "reportLevelNegatives": {
+      "target-out-of-10-percent": "The median total minus the idle median is within 10% of the 10 ms load: it read 11.494 ms (14.94%)",
+      "interval-for-cpu": "The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames (median 6.893 ms and p95 9.303 ms against an idle interval reference of 6.899 ms)",
+      "load-outside-frame": "The median total minus the idle median is within 10% of the 2 ms load: it read 0 ms (-100%)",
+      "missing-sample": "Every column of the report has one entry for each of the 2422 scheduled frames: none is missing a sample"
+    },
+    "sabotageRunGenuine": {
+      "note": "the last, genuine run of the sabotage script, a second headless report",
+      "accuracy": {
+        "2": {
+          "burnedMs": 2,
+          "totalMedianMs": 2.011,
+          "baseMs": 0.009,
+          "readMs": 2.002,
+          "errorPercent": 0.1
+        },
+        "5": {
+          "burnedMs": 5,
+          "totalMedianMs": 5.009,
+          "baseMs": 0.009,
+          "readMs": 5,
+          "errorPercent": 0
+        },
+        "10": {
+          "burnedMs": 10,
+          "totalMedianMs": 10.008,
+          "baseMs": 0.009,
+          "readMs": 9.999,
+          "errorPercent": -0.01
+        },
+        "20": {
+          "burnedMs": 20,
+          "totalMedianMs": 20.0175,
+          "baseMs": 0.009,
+          "readMs": 20.0085,
+          "errorPercent": 0.04
+        }
+      },
+      "idleBaseMs": 0.009,
+      "engineMonitor": {
+        "updates": 19,
+        "underTheInstrument": 0,
+        "medianMarginMs": 0.016
+      },
+      "oracleViolations": []
+    }
+  },
+  "sabotages": [
+    {
+      "name": "reads-interval",
+      "file": "tests/cpu-time-instrument.gd",
+      "edits": [
+        {
+          "find": "    process_ms[index] = float((_pre_draw_usec[index] if did_draw else _last_process_usec[index]) - _start_usec[index]) / 1000.0",
+          "replace": "    process_ms[index] = interval_ms[index]"
+        }
+      ],
+      "sourceSha256": "90227d4f6cf6c52e90be8d008fb3ebfaed749cbc2f8f63d124fab5329cd08cc0",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "accuracy/The median total minus the idle median is within 10% of the 2 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 5 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 10 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 20 ms load",
+        "cpu/The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames"
+      ],
+      "oracleRejection": "The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames (median 6.8905 ms and p95 9.2 ms against an idle interval reference of 6.9 ms)",
+      "oracleViolations": [
+        "The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames (median 6.8905 ms and p95 9.2 ms against an idle interval reference of 6.9 ms)",
+        "The median total minus the idle median is within 10% of the 2 ms load: it read 0.0045 ms (-99.77%)",
+        "The median total minus the idle median is within 10% of the 5 ms load: it read -0.01 ms (-100.2%)",
+        "The median total minus the idle median is within 10% of the 10 ms load: it read 3.1315 ms (-68.68%)",
+        "The median total minus the idle median is within 10% of the 20 ms load: it read 13.1545 ms (-34.23%)",
+        "The engine's own TIME_PROCESS monitor agrees with the instrument's process term: never under it and at most 0.5 ms over at the median ({\"updates\":19,\"underTheInstrument\":19,\"medianMarginMs\":-4.856})",
+        "The processMs of the frame 0 is 0 and the instrument's stamps give 0.01: the instrument reads its clock at the engine's hooks and adds its terms as the contract says"
+      ],
+      "probeProcessSeconds": 20.137009
+    },
+    {
+      "name": "load-outside-frame",
+      "file": "tests/cpu-time-instrument-probe.gd",
+      "edits": [
+        {
+          "find": "const LOAD_PLACEMENT := \"in-frame\"",
+          "replace": "const LOAD_PLACEMENT := \"before-frame\""
+        }
+      ],
+      "sourceSha256": "fcfa552e500569841e37b86214159373be699fe5daac6e2468ade0925173ad78",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "accuracy/The median total minus the idle median is within 10% of the 2 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 5 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 10 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 20 ms load",
+        "cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not"
+      ],
+      "oracleRejection": "The median total minus the idle median is within 10% of the 2 ms load: it read -0.001 ms (-100.05%)",
+      "oracleViolations": [
+        "The median total minus the idle median is within 10% of the 2 ms load: it read -0.001 ms (-100.05%)",
+        "The median total minus the idle median is within 10% of the 5 ms load: it read -0.003 ms (-100.06%)",
+        "The median total minus the idle median is within 10% of the 10 ms load: it read -0.005 ms (-100.05%)",
+        "The median total minus the idle median is within 10% of the 20 ms load: it read -0.003 ms (-100.01%)",
+        "The process term of the 5 ms block changes from frame to frame as a clock does (15 values, at most 11 frames the same), and not as a monitor refreshed once a second",
+        "The engine's own TIME_PROCESS monitor agrees with the instrument's process term: never under it and at most 0.5 ms over at the median ({\"updates\":19,\"underTheInstrument\":0,\"medianMarginMs\":5.58})"
+      ],
+      "probeProcessSeconds": 20.127994
+    },
+    {
+      "name": "reads-monitor",
+      "file": "tests/cpu-time-instrument.gd",
+      "edits": [
+        {
+          "find": "    process_ms[index] = float((_pre_draw_usec[index] if did_draw else _last_process_usec[index]) - _start_usec[index]) / 1000.0",
+          "replace": "    process_ms[index] = _monitor_ms[index]"
+        }
+      ],
+      "sourceSha256": "02b6b3bdee43aed650760d256ef88cd079dcfaea3c65810d8d4d1adc3a194901",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "accuracy/The median total minus the idle median is within 10% of the 2 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 5 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 10 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 20 ms load",
+        "cpu/The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames",
+        "cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not"
+      ],
+      "oracleRejection": "The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames (median 2.091 ms and p95 21.405 ms against an idle interval reference of 6.903 ms)",
+      "oracleViolations": [
+        "The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames (median 2.091 ms and p95 21.405 ms against an idle interval reference of 6.903 ms)",
+        "The median total minus the idle median is within 10% of the 2 ms load: it read -2.012 ms (-200.6%)",
+        "The median total minus the idle median is within 10% of the 5 ms load: it read -1.761 ms (-135.22%)",
+        "The median total minus the idle median is within 10% of the 10 ms load: it read 7.957 ms (-20.43%)",
+        "The median total minus the idle median is within 10% of the 20 ms load: it read 17.933 ms (-10.33%)",
+        "The process term of the 2 ms block changes from frame to frame as a clock does (2 values, at most 113 frames the same), and not as a monitor refreshed once a second",
+        "The process term of the 5 ms block changes from frame to frame as a clock does (2 values, at most 127 frames the same), and not as a monitor refreshed once a second",
+        "The process term of the 10 ms block changes from frame to frame as a clock does (3 values, at most 100 frames the same), and not as a monitor refreshed once a second",
+        "The process term of the 20 ms block changes from frame to frame as a clock does (5 values, at most 50 frames the same), and not as a monitor refreshed once a second",
+        "The engine's own TIME_PROCESS monitor agrees with the instrument's process term: never under it and at most 0.5 ms over at the median ({\"updates\":19,\"underTheInstrument\":8,\"medianMarginMs\":0.004})",
+        "The processMs of the frame 0 is 0 and the instrument's stamps give 0.01: the instrument reads its clock at the engine's hooks and adds its terms as the contract says"
+      ],
+      "probeProcessSeconds": 20.136862
+    }
+  ],
+  "sabotageSources": {
+    "genuine": {
+      "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+      "tests/cpu-time-instrument-probe.gd": "9a5505b83aad6f4af7fe3ad07cd6678ac6bd23f1ecef3349c1d01e98cca17e95"
+    },
+    "restored": {
+      "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+      "tests/cpu-time-instrument-probe.gd": "9a5505b83aad6f4af7fe3ad07cd6678ac6bd23f1ecef3349c1d01e98cca17e95"
+    }
+  },
+  "sabotageGenuineRunStatus": 0,
+  "windowedLane": {
+    "presented": true,
+    "status": "presented",
+    "exitCode": 0,
+    "attempts": 1,
+    "seconds": 27.7,
+    "frames": 2696,
+    "probeChecks": 11,
+    "presentation": {
+      "drew": true,
+      "paced": true,
+      "presented": true,
+      "idleDraws": 600,
+      "idleIntervalReferenceMs": 8.336,
+      "refreshPeriodMs": 8.333,
+      "reason": null
+    },
+    "accuracy": {
+      "2": {
+        "burnedMs": 2,
+        "totalMedianMs": 2.112,
+        "baseMs": 0.082,
+        "readMs": 2.03,
+        "errorPercent": 1.5
+      },
+      "5": {
+        "burnedMs": 5,
+        "totalMedianMs": 5.086,
+        "baseMs": 0.082,
+        "readMs": 5.004,
+        "errorPercent": 0.08
+      },
+      "10": {
+        "burnedMs": 10,
+        "totalMedianMs": 10.097,
+        "baseMs": 0.082,
+        "readMs": 10.015,
+        "errorPercent": 0.15
+      },
+      "20": {
+        "burnedMs": 20,
+        "totalMedianMs": 20.126,
+        "baseMs": 0.082,
+        "readMs": 20.044,
+        "errorPercent": 0.22
+      }
+    },
+    "idleBaseMs": 0.082,
+    "cpu": {
+      "idleTotalMedianMs": 0.082,
+      "idleTotalP95Ms": 0.125,
+      "idleIntervalReferenceMs": 8.336,
+      "idleTotalShare": 0.0098
+    },
+    "variation": {
+      "2": {
+        "distinct": 39,
+        "longestRun": 2
+      },
+      "5": {
+        "distinct": 18,
+        "longestRun": 3
+      },
+      "10": {
+        "distinct": 22,
+        "longestRun": 3
+      },
+      "20": {
+        "distinct": 33,
+        "longestRun": 3
+      }
+    },
+    "render": {
+      "pulses": 22,
+      "gainsMs": [
+        0.003,
+        -0.0035,
+        -0.0035,
+        -0.0045,
+        -0.0015,
+        -0.0015,
+        1.069,
+        0.0115,
+        -0.0015,
+        -0.0055,
+        -0.0045
+      ],
+      "bestLag": 6,
+      "responds": true
+    },
+    "blocks": [
+      {
+        "block": "idle-0",
+        "intervalMs": 9.378,
+        "engineMonitorMs": 15.325,
+        "processMs": 0.011,
+        "totalMs": 0.083
+      },
+      {
+        "block": "load-2",
+        "intervalMs": 11.04,
+        "engineMonitorMs": 16.802,
+        "processMs": 2.017,
+        "totalMs": 2.112
+      },
+      {
+        "block": "idle-1",
+        "intervalMs": 7.046,
+        "engineMonitorMs": 49.529,
+        "processMs": 0.01,
+        "totalMs": 0.076
+      },
+      {
+        "block": "load-5",
+        "intervalMs": 5.896,
+        "engineMonitorMs": 14.647,
+        "processMs": 5.009,
+        "totalMs": 5.086
+      },
+      {
+        "block": "idle-2",
+        "intervalMs": 5.918,
+        "engineMonitorMs": 13.992,
+        "processMs": 0.012,
+        "totalMs": 0.081
+      },
+      {
+        "block": "load-10",
+        "intervalMs": 10.785,
+        "engineMonitorMs": 15.425,
+        "processMs": 10.012,
+        "totalMs": 10.097
+      },
+      {
+        "block": "idle-3",
+        "intervalMs": 8.28,
+        "engineMonitorMs": 13.776,
+        "processMs": 0.012,
+        "totalMs": 0.078
+      },
+      {
+        "block": "load-20",
+        "intervalMs": 20.864,
+        "engineMonitorMs": 21.018,
+        "processMs": 20.016,
+        "totalMs": 20.126
+      },
+      {
+        "block": "idle-4",
+        "intervalMs": 4.998,
+        "engineMonitorMs": 28.185,
+        "processMs": 0.014,
+        "totalMs": 0.092
+      }
+    ],
+    "oracleViolations": [],
+    "probeStatus": 0,
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "provenance": {
+      "adapter": "Apple M3 Pro",
+      "architecture": "arm64",
+      "displayServer": "macOS",
+      "godot": "4.7.2-stable (official)",
+      "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "lowProcessorUsageMode": false,
+      "lowProcessorUsageSleepUsec": 6900,
+      "maxFps": 0,
+      "os": "macOS",
+      "physicsTicksPerSecond": 60,
+      "processor": "Apple M3 Pro",
+      "processorCount": 11,
+      "refreshRate": 120,
+      "renderingDriver": "opengl3",
+      "renderingMethod": "gl_compatibility",
+      "threadModel": 1,
+      "vsyncMode": 1,
+      "vsyncModeName": "enabled",
+      "windowCanDraw": true,
+      "windowSize": [
+        640,
+        360
+      ]
+    }
+  },
+  "tables": {
+    "headlessBlocks": [
+      {
+        "block": "idle-0",
+        "intervalMs": 6.872,
+        "engineMonitorMs": 0.288,
+        "processMs": 0.015,
+        "totalMs": 0.018
+      },
+      {
+        "block": "load-2",
+        "intervalMs": 6.892,
+        "engineMonitorMs": 0.221,
+        "processMs": 2.011,
+        "totalMs": 2.014
+      },
+      {
+        "block": "idle-1",
+        "intervalMs": 6.899,
+        "engineMonitorMs": 2.052,
+        "processMs": 0.008,
+        "totalMs": 0.01
+      },
+      {
+        "block": "load-5",
+        "intervalMs": 6.899,
+        "engineMonitorMs": 0.57,
+        "processMs": 5.004,
+        "totalMs": 5.006
+      },
+      {
+        "block": "idle-2",
+        "intervalMs": 6.832,
+        "engineMonitorMs": 5.95,
+        "processMs": 0.011,
+        "totalMs": 0.015
+      },
+      {
+        "block": "load-10",
+        "intervalMs": 10.019,
+        "engineMonitorMs": 10.041,
+        "processMs": 10.006,
+        "totalMs": 10.007
+      },
+      {
+        "block": "idle-3",
+        "intervalMs": 6.896,
+        "engineMonitorMs": 10.04,
+        "processMs": 0.005,
+        "totalMs": 0.007
+      },
+      {
+        "block": "load-20",
+        "intervalMs": 20.026,
+        "engineMonitorMs": 20.075,
+        "processMs": 20.008,
+        "totalMs": 20.009
+      },
+      {
+        "block": "idle-4",
+        "intervalMs": 6.891,
+        "engineMonitorMs": 20.02,
+        "processMs": 0.007,
+        "totalMs": 0.009
+      }
+    ],
+    "windowedBlocks": [
+      {
+        "block": "idle-0",
+        "intervalMs": 9.378,
+        "engineMonitorMs": 15.325,
+        "processMs": 0.011,
+        "totalMs": 0.083
+      },
+      {
+        "block": "load-2",
+        "intervalMs": 11.04,
+        "engineMonitorMs": 16.802,
+        "processMs": 2.017,
+        "totalMs": 2.112
+      },
+      {
+        "block": "idle-1",
+        "intervalMs": 7.046,
+        "engineMonitorMs": 49.529,
+        "processMs": 0.01,
+        "totalMs": 0.076
+      },
+      {
+        "block": "load-5",
+        "intervalMs": 5.896,
+        "engineMonitorMs": 14.647,
+        "processMs": 5.009,
+        "totalMs": 5.086
+      },
+      {
+        "block": "idle-2",
+        "intervalMs": 5.918,
+        "engineMonitorMs": 13.992,
+        "processMs": 0.012,
+        "totalMs": 0.081
+      },
+      {
+        "block": "load-10",
+        "intervalMs": 10.785,
+        "engineMonitorMs": 15.425,
+        "processMs": 10.012,
+        "totalMs": 10.097
+      },
+      {
+        "block": "idle-3",
+        "intervalMs": 8.28,
+        "engineMonitorMs": 13.776,
+        "processMs": 0.012,
+        "totalMs": 0.078
+      },
+      {
+        "block": "load-20",
+        "intervalMs": 20.864,
+        "engineMonitorMs": 21.018,
+        "processMs": 20.016,
+        "totalMs": 20.126
+      },
+      {
+        "block": "idle-4",
+        "intervalMs": 4.998,
+        "engineMonitorMs": 28.185,
+        "processMs": 0.014,
+        "totalMs": 0.092
+      }
+    ],
+    "note": "medians of the measured frames of each block, in milliseconds; interval is the time between the starts of two process frames, engineMonitor is Performance TIME_PROCESS, processMs and totalMs are the instrument's"
+  },
+  "artifactHashes": {
+    "suite-report": {
+      "sha256": "6a310c6f54cb894c15b45a2b8f9aeba17e725c7c8dbe658492428fc7cb142798",
+      "bytes": 177849
+    },
+    "suite-log": {
+      "sha256": "18dfa8d3c40e7269fa9c087aaf97bcbadf68252e7cf670636c8440368cb7eae8",
+      "bytes": 104
+    },
+    "suite-comparison": {
+      "sha256": "e6ee40b2a8dca140a36c91ab00c7ec61389ffea46e008a3ddab8b408408d8058",
+      "bytes": 8526
+    },
+    "sabotage-receipt": {
+      "sha256": "e2c50e33a94795908b91f43bd360b08beb86c744ca485527bacc2d73a5969ab8",
+      "bytes": 4405
+    },
+    "sabotage-genuine-report": {
+      "sha256": "38f1fb45d52d8d2a55f891d69e1631bf058ef0fa101499292d91d7459d23a6bc",
+      "bytes": 178490
+    },
+    "sabotage-genuine-comparison": {
+      "sha256": "ab4c9e81975cfe7d85c2654a6ee037327deeb6ff796e9b41a40b5c457215708c",
+      "bytes": 8532
+    },
+    "sabotage-verdict-reads-interval": {
+      "sha256": "850bb1bbf01fc065ba5641d99cfc2a8b38256e1ab16f274dee895ccffc61b95e",
+      "bytes": 1802
+    },
+    "sabotage-verdict-load-outside-frame": {
+      "sha256": "ecde43b4e7770d14c87ea78abb563a697da8809c43b97455891b083c8bc2ec7f",
+      "bytes": 1512
+    },
+    "sabotage-verdict-reads-monitor": {
+      "sha256": "5c892bfddbe0660b7e4132d06f3f7e0cf361ccc762000c2b58ff599fee59d8ee",
+      "bytes": 2635
+    },
+    "windowed-receipt": {
+      "sha256": "7b7ea9a8152def1ec1632e2908bc0f78a5821cba52f40e3380995943c1f8521b",
+      "bytes": 381014
+    },
+    "windowed-log": {
+      "sha256": "3efee777975c1147ef5b01b3c65893ed9b7988252902187ee50a49296aa0a9dd",
+      "bytes": 185
+    }
+  },
+  "artifactNote": "The raw reports are not committed (docs/evidence/**/*-report.json is ignored and the receipts are large); their SHA-256 are above, and the windowed receipt keeps every frame of the run under raw. Anyone can apply another rule to them with node tests/cpu-time-instrument-native.test.mjs --replay=<report> (headless) or node scripts/cpu-time-instrument-graphics.mjs --replay=<raw> (windowed).",
+  "sourcePins": {
+    "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "tests/cpu-time-instrument-probe.gd": "9a5505b83aad6f4af7fe3ad07cd6678ac6bd23f1ecef3349c1d01e98cca17e95",
+    "tests/cpu-time-instrument-oracle.mjs": "26e68b56be7f6bb45fe4150e1abd4a6bd33818a1810b58b9b68e55c5c121b887",
+    "tests/cpu-time-instrument-native.test.mjs": "3e6b725461bc86fd281df861bbda9c675cd5740c514b6639a736d65ba2be044d",
+    "tests/cpu-time-instrument.test.mjs": "cef8f88a3a57f16fe81a5cc8858b8829ffdde457c47f3b7a0ae5fe805fd22fea",
+    "scripts/cpu-time-instrument-sabotage.mjs": "5c5b15760680157ccdcde91fbb2b0c728559efc9abc8cde55eace4a165d54727",
+    "scripts/cpu-time-instrument-graphics.mjs": "11bff4575725a1a841f023617dfe3ac0c90542a1a7ebb8b940fd47e264dceec0",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "tests/frontier-baseline-oracle.mjs": "80ba4040881b3d6d0789f91cfb3ce553d8d914958fb049277967fc1bd06c4d5c",
+    "tests/performance-oracle.mjs": "c2c9a248042b6f082a426dd8cedec77b3e8f184fd5f4b46d364e53d1a525314a"
+  },
+  "findings": [
+    "Performance.TIME_PROCESS is set once a second, to the largest process time of the second, and with the vsync on it holds the wait for the display: the median of an idle window's TIME_PROCESS is 14 to 16 ms where the instrument reads 0.08 ms.",
+    "A busy loop of 2 or 5 ms does not show in the interval between frames headless (the loop's sleep paces it at 6.9 ms), and in a window the interval is the display's clusters.",
+    "The render reading of a draw arrives 6 draws later on the Compatibility renderer of 4.7.2 on macOS; the render pulse lands there and nowhere else.",
+    "The instrument reads the four loads to within 0.2% headless and 1.5% in a presented window."
+  ],
+  "decisions": [
+    "The per-frame process term is a clock stamp at the engine's hooks and not Performance.TIME_PROCESS, which the spec assumed per frame.",
+    "TIME_PROCESS is recorded in every sample and the oracle checks it against the instrument's series (never under it between two of its changes).",
+    "The windowed lane is one run, judged by the baseline's idle reference; a window that no display presented is reported as not presented and claims no accuracy.",
+    "The threshold is not frozen: this record pins the instrument, its verification and the recommendation, and the freeze is a later single act."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI is pending and the windowed lane and the sabotages are local only.",
+    "The clock is monotonic elapsed time, not the CPU time of the thread: a thread that the system descheduled between two stamps counts that time. The Mac was loaded by other agents (load average 5.5 to 9.9).",
+    "The render term was exercised by a canvas item of 30,000 rectangles in a lab scene, six draws late, on the Compatibility renderer, one display and one vsync mode; not by the Frontier game or either HUD.",
+    "The arms of the comparison (A, B and C) do not carry the instrument yet and arm B does not exist; the iPhone depends on the V05-09 decision; the vsync disabled lane and a render thread were not run.",
+    "The threshold cpu-time-instrument is not frozen (frozenValue null)."
+  ]
+}
