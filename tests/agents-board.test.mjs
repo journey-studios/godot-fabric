@@ -125,11 +125,11 @@ test("an agent whose git state cannot be read gets a git-error warning instead o
   assert.match(warning.message, /Agente 1: não foi possível ler o git da worktree \(fatal: unknown revision main\.\.\.HEAD\); arquivos alterados desconhecidos\./);
 });
 
-test("lanes always have five positions keyed by slot", () => {
+test("lanes always have six positions keyed by slot", () => {
   const result = coordinate([record(5), record(2)], start);
   assert.equal(result.lanes.length, AGENT_SLOTS);
-  assert.deepEqual(result.lanes.map(lane => lane?.slot ?? null), [null, 2, null, null, 5]);
-  assert.deepEqual(coordinate([], start), { lanes: [null, null, null, null, null], issues: [] });
+  assert.deepEqual(result.lanes.map(lane => lane?.slot ?? null), [null, 2, null, null, 5, null]);
+  assert.deepEqual(coordinate([], start), { lanes: [null, null, null, null, null, null], issues: [] });
 });
 
 test("issue order is deterministic: conflicts first, then slots and subject", () => {
@@ -156,7 +156,7 @@ test("validateAgent accepts a complete record and rejects invalid ones with Port
   assert.equal(validateAgent(withShared), withShared);
   const rejected = {
     "slot 0": [{ slot: 0 }, /slot/],
-    "slot 6": [{ slot: 6 }, /slot/],
+    "slot 7": [{ slot: 7 }, /slot/],
     "absolute area": [{ areas: ["/src/a/"] }, /areas/],
     "area with ..": [{ areas: ["src/../x.js"] }, /areas/],
     "area with *": [{ areas: ["src/*.js"] }, /areas/],
@@ -209,14 +209,14 @@ test("relative time reads as agora, minutes, hours and days", () => {
   assert.equal(ago(iso(-3 * 24 * 60), now), "há 3 d");
 });
 
-test("the board view escapes registry text, shortens home, shows five lanes and the Pages notice", () => {
+test("the board view escapes registry text, shortens home, shows six lanes and the Pages notice", () => {
   const hostile = '<img src=x onerror="alert(1)">';
   const agents = [
     live(record(1, { title: hostile, worktree: "/home/dev/.codex/worktrees/abc/godot-fabric", areas: ["src/a/"], messages: [{ at: iso(1), to: 2, text: hostile }], pr: "javascript:alert(1)" }), ["src/a/x.js"]),
     live(record(2, { areas: ["src/a/x.js"] }), ["src/a/x.js"], { dirty: 3, ahead: 2, behind: 1 }),
   ];
   const coordination = coordinate(agents, start);
-  const board = { capacity: 5, directory: "/home/dev/registry", home: "/home/dev", generatedAt: iso(0), agents, invalid: [{ file: "slot-4.json", error: "JSON inválido" }] };
+  const board = { capacity: AGENT_SLOTS, directory: "/home/dev/registry", home: "/home/dev", generatedAt: iso(0), agents, invalid: [{ file: "slot-4.json", error: "JSON inválido" }] };
   const html = renderAgents(board, coordination, [{ id: "GF-01", title: "Primeiro" }]);
   assert.ok(!html.includes("<img"), "registry text must be escaped");
   assert.ok(html.includes("&lt;img"));
@@ -225,7 +225,7 @@ test("the board view escapes registry text, shortens home, shows five lanes and 
   assert.ok(!html.includes('href="javascript:'));
   assert.equal(html.match(/<article class="agent-lane/g).length, AGENT_SLOTS);
   assert.equal(html.match(/<article class="agent-lane free/g).length, AGENT_SLOTS - 2);
-  assert.match(html, /2 \/ 5 agentes ativos/);
+  assert.match(html, /2 \/ 6 agentes ativos/);
   // The reason of a conflict is shown inside the card of every agent involved, not only in the coordination panel.
   const [, first, second] = html.split('<article class="agent-lane');
   for (const card of [first, second]) {
@@ -325,9 +325,9 @@ test("readBoard reads live git state and reports invalid files without throwing"
   await writeFile(path.join(directory, "slot-2.json"), JSON.stringify(record(2, { worktree: path.join(directory, "gone"), branch: "feat/gone" })));
   await writeFile(path.join(directory, "slot-3.json"), "{oops");
   await writeFile(path.join(directory, "slot-4.json"), JSON.stringify(record(9)));
-  await writeFile(path.join(directory, "slot-6.json"), "ignored");
+  await writeFile(path.join(directory, "slot-7.json"), "ignored");
   const board = await readBoard(directory);
-  assert.equal(board.capacity, 5);
+  assert.equal(board.capacity, AGENT_SLOTS);
   assert.equal(board.directory, directory);
   assert.deepEqual(board.agents.map(agent => agent.slot), [1, 2]);
   assert.deepEqual(board.agents[0].git, {
@@ -465,7 +465,7 @@ test("agents coordinate through the CLI: claim, conflict, trespass, messages and
   assert.match(onMain.stderr, /main/);
 });
 
-test("claim honors --slot, keeps the slot on re-claim and refuses a sixth agent", async t => {
+test("claim honors --slot, keeps the slot on re-claim and refuses a seventh agent", async t => {
   const { a, b, directory } = await createRepository(t);
   assert.equal((await cli(a, directory, "claim", "--task", "GF-22", "--title", "A", "--slot", "3")).code, 0);
   assert.deepEqual(await readdir(directory), ["slot-3.json"]);
@@ -481,16 +481,16 @@ test("claim honors --slot, keeps the slot on re-claim and refuses a sixth agent"
   const renewed = JSON.parse(await readFile(path.join(directory, "slot-3.json"), "utf8"));
   assert.deepEqual([renewed.slot, renewed.startedAt, renewed.taskIds, renewed.title, renewed.messages.map(message => message.text)], [3, startedAt, ["GF-22", "GF-24"], "A2", ["recado que sobrevive"]]);
 
-  // Five other worktrees (fictional) fill every slot, so a sixth agent is turned away.
+  // Six other worktrees (fictional) fill every slot, so a seventh agent is turned away.
   const full = path.join(directory, "full");
   await mkdir(full);
   for (let slot = 1; slot <= AGENT_SLOTS; slot++) {
     await writeFile(path.join(full, `slot-${slot}.json`), JSON.stringify(record(slot, { worktree: path.join(full, `tree-${slot}`) })));
   }
-  const sixth = await cli(b, full, "claim", "--task", "GF-30", "--title", "Sexto");
-  assert.equal(sixth.code, 1);
-  assert.match(sixth.stderr, /5 slots estão ocupados/);
-  assert.match(sixth.stderr, /Agente 1/);
+  const seventh = await cli(b, full, "claim", "--task", "GF-30", "--title", "Sétimo");
+  assert.equal(seventh.code, 1);
+  assert.match(seventh.stderr, /6 slots estão ocupados/);
+  assert.match(seventh.stderr, /Agente 1/);
   assert.equal((await readdir(full)).length, AGENT_SLOTS);
 });
 
@@ -638,7 +638,7 @@ test("server publishes the live agent board and tolerates a missing registry", a
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("cache-control"), "no-store");
   const board = await response.json();
-  assert.equal(board.capacity, 5);
+  assert.equal(board.capacity, AGENT_SLOTS);
   assert.equal(board.agents.length, 1);
   assert.equal(board.agents[0].git.branch, "feat/a");
   assert.equal((await fetch(`${base}/agents.json`, { method: "HEAD" })).status, 200);

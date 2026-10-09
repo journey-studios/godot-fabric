@@ -1,5 +1,5 @@
 // Pure agent-board rules shared by the browser and the Node CLI/server (no fs, no DOM).
-export const AGENT_SLOTS = 5;
+export const AGENT_SLOTS = 6;
 export const AGENT_STATES = { planning: "Planejando", implementing: "Implementando", testing: "Testando", ci: "Aguardando CI", review: "Em revisão", blocked: "Bloqueado" };
 // Wired by every delivery and merged sequentially by the orchestrator: never exclusive. They are cut out of every
 // area (reserving one is accepted, ignored and warned about) and only warn when 2+ agents change them.
