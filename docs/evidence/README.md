@@ -882,8 +882,9 @@ V05-06 (package P6) and leaves its frame time **pending**. It measures what a cl
 are unchanged). Headless, in two Godot processes of 384 swaps each (30 steady swaps for every ordered pair of the four panels, the click made
 by the V05-02 injection), 19 checks per process hold exactly: after every swap the SceneTree, the host and the Surface hold the base's 12
 native nodes plus the new panel's, the swap creates the new panel's nodes and deletes the old one's, a click swaps once and never reaches
-the map, a round ends at the base, and the live heap at rest (2,032,000 bytes) stays within GF-30's 2,048 bytes from the first five steady
-rounds to the last (judged on the floor of five-round windows, because a reading can carry a transient of 2,056 bytes); an independent
+the map, a round ends at the base, and the live heap at rest (2,032,000 bytes) stays within GF-30's 2,048 bytes from the first steady
+rounds to the last (judged at 346146d on the floor of five-round windows; a hosted run showed a noise band of 2,376 bytes that this window did not
+survive, and the gate now compares the medians of the two halves of the steady rounds, see the record's "Registro fixado"); an independent
 oracle recomputes it all and the percentiles. Four retained sabotages (a panel kept mounted, a heap read without the forced collection, the
 buttons made `pointerEvents="none"`, the panel without its `key`) are rejected, and the first `leaky-panel` (`display: none`) was not,
 because a hidden View adds no node; the previous-host control does not apply, since no C++ changed. What a swap costs is recorded and never

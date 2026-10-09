@@ -70,16 +70,17 @@ None of it depends on the pace of the machine, and it holds in both processes, s
 - a click **swaps exactly once** (one press on the button of B, one change of the React state) and **never reaches the world**: `world.received` is empty after every swap;
 - a round ends back at the base (nodes, orphans, native views, the one root), and the click shows its panel within a bound of frames after the flush;
 - every reading of Hermes' heap follows a forced collection, so that two are comparable;
-- the live heap at rest does not grow past the GF-30 limit, `HEAP_STEADY_GROWTH_LIMIT_BYTES` = 2,048 bytes (imported), from the first five steady rounds to the last
-  five ([The heap at rest](#the-heap-at-rest)).
+- the live heap at rest does not grow past the GF-30 limit, `HEAP_STEADY_GROWTH_LIMIT_BYTES` = 2,048 bytes (imported), from the first half of the steady rounds to the last, each judged
+  on its median ([The heap at rest](#the-heap-at-rest)).
 
 The probe has 18 checks (and one that the report is saved). An [independent oracle](../../tests/frontier-baseline-oracle.mjs) derives the same from the raw report
 (the sizes from the shapes, the swaps from the tour, the counts from the readings), recomputes the percentiles that are recorded from the raw samples with the GF-30
 oracle's nearest rank, and checks the host's own series through that oracle's `verifyReading` (the 128-sample windows, the ordering of the percentiles, the
-forced-collection mark). `--replay=<report>` judges a recorded report in Godot without the application, as GF-30's does. The suite changes a recorded report in eight ways
+forced-collection mark). `--replay=<report>` judges a recorded report in Godot without the application, as GF-30's does. The suite changes a recorded report in ten ways
 that the probe's replay and the oracle must both reject (a leaked node, a wrong count of deletions, a double press, a click the world heard, a panel without its last node, a heap
-read without a collection, a heap that grew 3,000 bytes, a run cut short), in two that both must accept (a transient allocation of 2,056 bytes in the last round, and a rise of exactly
-the limit), and damages it in eleven ways that the replay must refuse with status 2 and no script error.
+read without a collection, a heap that grew 3,000 bytes, a leak of 200 bytes a round on either of the two hosted series of the heap at rest, a run cut short), in five that both must accept (a transient
+allocation of 2,056 bytes in the last round, a rise of exactly the limit, those two hosted series themselves, and a first half that alone dips to the low level), and damages it in eleven ways that the replay must refuse with status 2 and no script error.
+The oracle's judgement of the heap at rest also has its own unit test on numbers alone (`tests/frontier-baseline-heap.test.mjs`, part of `test:contracts`).
 
 ### What is recorded and never judged
 
@@ -217,13 +218,27 @@ the base's 1,960,448 that the first mounts raised and then never gave up. Two th
   and the readings after a swap, which are recorded, are not at rest.
 - **A reading can carry a transient allocation of 2,056 bytes**, in one to three consecutive rounds, always returning to the same floor (a series like `0 0 0 2056 2056 0 0` over
   the floor). It was seen in about two processes in five while the slice was built, and in both processes of one suite run (one round above the floor in one, two in the other, `highestAboveFloor` 2,056), and in neither process of the run recorded here.
-  It is 8 bytes more than the GF-30 limit of 2,048 and was not seen in GF-30's workloads (their one-off steps were 312 bytes). It adds and goes; a leak raises the floor. The check therefore compares **the
-  lowest reading of the last five steady rounds with the lowest of the first five** (`HEAP_WINDOW_ROUNDS` = 5; a transient of up to three consecutive rounds leaves a window with the floor in it)
-  against the GF-30 limit, which is inclusive. The strict form (the highest of the series over the first steady round, GF-30's) failed in 3 of the 8 processes run before the check was changed; the form
-  "last minus first" would fail whenever the last round is a transient. A leak of `L` bytes a round raises the floor by `25 L` between the windows, so the check fails at `L` of 82 bytes or more per round
-  (GF-30's fails at 129). The suite shows it with a recorded report whose last window is 3,000 bytes up, shows that exactly the limit passes, and shows that a single transient of 2,056 bytes in the last
-  round passes. The oracle records `lastMinusFirst`, `highestAboveFloor` and `largestStep` as observations. This reads the criterion ("grows at most the GF-30 limit between the first steady cycle and the last") as
-  a statement about the floor and not about two single readings; it is the one place where the slice's method is more than the plain reading of the spec, and it is reported as a deviation.
+  It is 8 bytes more than the GF-30 limit of 2,048 and was not seen in GF-30's workloads (their one-off steps were 312 bytes). It adds and goes; a leak raises the floor. The strict form (the highest of the
+  series over the first steady round, GF-30's) failed in 3 of the 8 processes run before the check was changed; the form "last minus first" would fail whenever the last round is a transient.
+- **The noise is wider than that, and a floor does not reach the bottom of it.** The hosted run of PR #77 (job `native-cold-start`, run 37868943054) recorded, in the 32 rests of its second
+  process, a heap that moves among four levels, 2,031,680, 2,032,000, 2,033,736 and 2,034,056 bytes, with no trend: a **band of 2,376 bytes**, wider than the limit. The floor of the first five steady rounds
+  was 2,031,680 and that of the last five 2,033,736, 2,056 bytes apart, and the check of windows of five rounds failed on a run that leaked nothing. (The two hosted series are embedded in
+  `tests/frontier-baseline-heap-series.mjs`.) A floor over a few rounds reads the rare low levels, so what it says depends on whether the run happened to visit one. The floors of the two halves (15 rounds
+  against 15) are no better: they differ by -320 and +320 bytes on the hosted series, but a first half that alone reaches 2,031,680 or 2,032,000 against a last half that never does is 2,056 bytes apart with no leak.
+- **The check therefore compares the median of the last half of the steady rounds with the median of the first** (`floor(n/2)` rounds each: the first 15 against the last 15 of the 30 measured; the median by nearest
+  rank, like the percentiles of the GF-30 oracle) against the GF-30 limit, which is inclusive. A few off-level readings do not move a median, and a leak raises it as it raises the rest. On the two hosted
+  series the medians of the halves are the same (2,034,056 and 2,033,736 bytes): growth 0.
+- **How noisy each statistic is.** Drawing 30 steady values at random, 200,000 times, from the 60 steady values of the two hosted series, a check with no leak to find fails in about **12.7%** of the draws on the floors of
+  windows of five rounds, **4.2%** on the floors of the halves and **0.05%** on the medians of the halves. This is a rough bound and not a model of the heap: the real transients come in runs of one to three rounds
+  and not independently, and the 60 values are from one runner.
+- **What the medians catch.** They lie 15 rounds apart, so on a heap with no noise a leak of `L` bytes a round adds `15 L` between them and the check fails from `L` = 137 bytes a round (GF-30's fails at 129; the check of
+  windows of five rounds claimed 82, which the noise did not allow it to keep). On the hosted series the smallest leak that fails is 158 bytes a round on process 1's and 113 on process 2's (the floors of the halves: 140 and
+  158), because the medians can sit a few hundred bytes apart with no leak. The leak the suite uses is 200 bytes a round, which fails on both (growths of 2,800 and 3,720).
+- **The suite shows it** with the two hosted series, which pass with a growth of 0 (in the probe's replay in Godot, in the oracle, and in the oracle's unit test on numbers alone); with a leak of 200 bytes a round on top
+  of either, which both reject; with the smallest failing leaks pinned (137 on a heap with no noise, 158 and 113); with a first half that alone dips to the low level, which passes (a check on the floors of the halves called it
+  a leak); with a recorded report whose last half is 3,000 bytes up, which fails; with exactly the limit, which passes, and one byte more, which fails; and with a single transient of 2,056 bytes in the last round, which
+  passes. The oracle records the floors of the halves, `lastMinusFirst`, `highestAboveFloor` and `largestStep` as observations. This reads the criterion ("grows at most the GF-30 limit between the first steady cycle and the
+  last") as a statement about the level of the heap at rest and not about two single readings; it is the one place where the slice's method is more than the plain reading of the spec, and it is reported as a deviation.
 
 ## The proposed budget
 
@@ -237,7 +252,7 @@ presented runs of the statistic plus three times its interquartile range**, roun
 | Native nodes after a swap (headless, **exact**) | the base's 12 plus 0, 50, 75 or 100 | exact | judged now: SceneTree, host and Surface |
 | Nodes a swap creates and deletes (headless, **exact**) | the new panel's and the old one's | exact | judged now |
 | A click swaps once, never reaches the map, a round ends at the base (headless, **exact**) | held in 720 steady swaps | exact | judged now |
-| Live heap at rest, first to last five steady rounds (headless, **exact**) | 0 bytes (2,032,000 in both processes) | at most 2,048 bytes | the GF-30 limit, imported and judged now |
+| Live heap at rest, first to last half of the steady rounds, each by its median (headless, **exact**) | 0 bytes (2,032,000 in both processes) | at most 2,048 bytes | the GF-30 limit, imported and judged now |
 | Frames from the click to the panel (headless) | 0 in 720 of 720 steady swaps | at most 1 | the maximum measured plus one frame for a commit that lands in the next pump |
 | CPU time of the swap (injection and flush), p95, by nodes created 0 / 50 / 75 / 100 (headless, 180 swaps each) | 3.2 / 8.6 / 10.6 / 12.4 ms (p50 2.2 / 5.9 / 7.7 / 9.2) | 4.5 / 11.0 / 13.5 / 16.0 ms | pooled p95 x 1.25, up to 0.5 ms; the 100-node bound is near the 60 Hz period (16.7 ms) |
 | Heap a mounted panel holds over the base (headless, forced collection) | 249,024 / 327,808 / 406,072 bytes for 50 / 75 / 100 nodes (the same in both processes) | 320,000 / 410,000 / 510,000 bytes | p50 x 1.25, up to 10,000 bytes |

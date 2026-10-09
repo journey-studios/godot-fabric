@@ -1,5 +1,19 @@
 # A linha de base de desempenho do HUD do Frontier: o que custa trocar um painel no macOS
 
+> **Registro fixado.** Os números, os fontes e os hashes abaixo são os da execução sobre o commit de implementação `346146d` e continuam
+> valendo, e o recibo `execution.json` não foi regenerado. Uma execução hospedada (PR #77, job `native-cold-start`, run 37868943054)
+> reprovou um único check do processo 2, o do heap em repouso (as 5 últimas voltas estáveis contra as 5 primeiras): o heap se move,
+> sem tendência, entre quatro níveis (2.031.680, 2.032.000, 2.033.736 e 2.034.056 bytes), uma **faixa de ruído de 2.376 bytes**, mais
+> larga que o limite de 2.048; o piso da primeira janela de 5 voltas foi 2.031.680 e o da última, 2.033.736, 2.056 bytes de diferença.
+> O gate passou a comparar a **mediana** das duas metades das voltas estáveis medidas (as 15 primeiras contra as 15 últimas; `floor(n/2)`
+> em geral), com o mesmo limite do GF-30 (2.048 bytes, importado, inclusivo). As duas séries hospedadas passam com crescimento 0, um
+> vazamento de 200 bytes por volta sobre qualquer uma é recusado, e o menor vazamento recusado é de 137 bytes por volta num heap sem
+> ruído (158 e 113 sobre as séries hospedadas). Um sorteio de 30 valores das 60 leituras hospedadas, repetido 200.000 vezes, reprova sem
+> vazamento em cerca de 12,7% dos casos com o piso de janelas de 5 voltas, 4,2% com o piso das metades e 0,05% com a mediana das metades
+> (um limite grosseiro: os transitórios reais vêm em sequências de uma a três voltas). Ver "O heap em repouso" na nota de pesquisa. A
+> suíte atual, rodada de novo no mesmo código, passa. Onde este registro diz "5 voltas" no heap em repouso (a linha da lista abaixo e a da
+> tabela da proposta), é o gate de `346146d`: nas duas execuções fixadas aqui o heap ficou em 2.032.000 bytes, e a diferença entre as metades é 0.
+
 Esta fatia fecha o critério `baseline` do V05-06 do marco 0.5 Frontier (pacote P6) **na parte que não depende de um display**: uma linha
 de base, na cena de prova do V05-02, de uma troca de painel do HUD de 50 a 100 nós nativos, estendendo o harness do GF-30, com a
 **proposta** de orçamento registrada e não congelada. A pergunta: quanto custa, no macOS, o que o HUD do jogo mais faz no meio de um

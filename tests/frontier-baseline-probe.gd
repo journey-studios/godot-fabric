@@ -26,9 +26,8 @@ const SCENE := "res://examples/frontier-baseline/scene.tscn"
 const SIZE := Vector2i(800, 600)
 # The most the live heap at rest may rise from the first steady rounds to the last (the GF-30 limit, tests/performance-cases.mjs).
 const HEAP_GROWTH_LIMIT_BYTES := 2048
-# The idle frames before the reading at the end of a round, and the rounds a window of the heap at rest is made of.
+# The idle frames before the reading at the end of a round.
 const REST_FRAMES := 30
-const HEAP_WINDOW_ROUNDS := 5
 
 # The shape of a recorded report, as far as evaluate() indexes it (Sampler.matches).
 const READING := {"godot": {"nodes": "number", "nodeMonitor": "number", "orphans": "number"}, "host": {"rootCount": "number"},
@@ -81,7 +80,7 @@ func run_probe() -> void:
   stages["config"] = {"panels": Swap.PANELS, "nativeNodes": Swap.NATIVE_NODES, "baseNativeNodes": Swap.BASE_NATIVE_NODES,
     "tab": {"left": Swap.TAB_LEFT, "top": Swap.TAB_TOP, "step": Swap.TAB_STEP, "width": Swap.TAB_WIDTH, "height": Swap.TAB_HEIGHT},
     "tour": Swap.TOUR, "warmupRounds": Swap.WARMUP_ROUNDS, "rounds": Swap.ROUNDS, "stableFrames": Swap.STABLE_FRAMES,
-    "restFrames": REST_FRAMES, "heapWindowRounds": HEAP_WINDOW_ROUNDS, "heapGrowthLimitBytes": HEAP_GROWTH_LIMIT_BYTES}
+    "restFrames": REST_FRAMES, "heapGrowthLimitBytes": HEAP_GROWTH_LIMIT_BYTES}
   stages["scene"] = {"mounted": mounted, "mouseFilter": surface.mouse_filter, "viewport": [SIZE.x, SIZE.y]}
   stages["provenance"] = sampler.provenance()
   stages["provenance"].merge({"vsyncMode": DisplayServer.window_get_vsync_mode(), "refreshRate": DisplayServer.screen_get_refresh_rate()})
@@ -206,6 +205,12 @@ func check_swaps() -> void:
   check(shown, "swap/When the tree holds the new panel, the Surface's snapshot holds its last node and the root of no other panel")
 
 # A round ends at the base: after the idle frames, the nodes, the orphans and the native views are the base's again.
+# The median by nearest rank (the lower one of an even count), as the GF-30 oracle's percentiles are.
+func median_of(values: Array) -> float:
+  var sorted: Array = values.duplicate()
+  sorted.sort()
+  return float(sorted[ceili(sorted.size() / 2.0) - 1])
+
 func check_rounds() -> void:
   var rests: Array = stages.rests
   var base: Dictionary = stages.base
@@ -220,14 +225,15 @@ func check_rounds() -> void:
       and Sampler.number(reading.host.rootCount) == Sampler.number(base.reading.host.rootCount)
   check(back, "round/Every round ends back at the base: the SceneTree's nodes, the orphans, the native views and the root count")
   # Bounded in the steady state: the live heap at rest, read after a forced collection with the base shown, does not rise more than the
-  # limit from the first steady rounds to the last. A reading can carry a transient allocation that the next one does not (a step of
-  # 2,056 bytes in one to three consecutive rounds, seen in about one run in three), which only adds: the heap at rest of a window of
-  # rounds is the lowest reading in it, and a leak raises the lowest as it raises the rest.
+  # limit from the first steady rounds to the last. A reading carries noise that the next one does not (a hosted run showed four levels
+  # in a band of 2,376 bytes, wider than the limit), so the heap at rest of a half of the steady rounds (floor(n/2) of them, the first
+  # and the last) is the median of its readings, which a few off-level readings do not move, and a leak raises the median as it raises the rest.
   var rest: Array = rests.map(func(entry: Dictionary) -> float: return Sampler.heap_of(entry.reading))
   var steady: Array = rest.slice(Swap.WARMUP_ROUNDS)
-  check(rest.size() == Swap.WARMUP_ROUNDS + Swap.ROUNDS and steady.size() >= 2 * HEAP_WINDOW_ROUNDS and float(steady.min()) > 0.0
-    and float(steady.slice(steady.size() - HEAP_WINDOW_ROUNDS).min()) - float(steady.slice(0, HEAP_WINDOW_ROUNDS).min()) <= HEAP_GROWTH_LIMIT_BYTES,
-    "heap/The live heap at rest of the last %d steady rounds is within %d bytes of the first %d's" % [HEAP_WINDOW_ROUNDS, HEAP_GROWTH_LIMIT_BYTES, HEAP_WINDOW_ROUNDS])
+  var half := floori(steady.size() / 2.0)
+  check(rest.size() == Swap.WARMUP_ROUNDS + Swap.ROUNDS and half >= 1 and float(steady.min()) > 0.0
+    and median_of(steady.slice(steady.size() - half)) - median_of(steady.slice(0, half)) <= HEAP_GROWTH_LIMIT_BYTES,
+    "heap/The live heap at rest, by the median of the last half of the steady rounds, is within %d bytes of the first half's" % HEAP_GROWTH_LIMIT_BYTES)
 
 func check_section() -> void:
   var collected := true

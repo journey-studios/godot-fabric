@@ -7,7 +7,8 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {bundleFrontierBaselineProbe, frontierBaselineNativeProducers, frontierBaselineSources} from "../scripts/frontier-baseline-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
-import {HEAP_WINDOW_ROUNDS, ROUNDS, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
+import {ROUNDS, TOUR} from "./frontier-baseline-cases.mjs";
+import {FIRST_HALF_DIPS, HOSTED_HEAP_AT_REST, LEAK_BYTES_PER_ROUND, flatSeries, withLeak} from "./frontier-baseline-heap-series.mjs";
 import {verifyFrontierBaselineReport} from "./frontier-baseline-oracle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -172,10 +173,14 @@ test("The HUD's panels swap by a real click with exact counts of nodes, creation
   // The same breakages that the retained sabotages make in the source, made in the recorded readings: the probe's checks and the oracle
   // each reject them, with nothing to rebuild.
   const negatives = {};
-  const heapAtRest = (stages, round, rise) => {
-    stages.rests[round].reading.performance.hermes.heap.hermes_allocatedBytes += rise;
+  // The heap at rest of every round replaced by a series of numbers (tests/frontier-baseline-heap-series.mjs), so that what the check judges is
+  // the series and not the noise of this machine's own.
+  const heapAtRest = (stages, series) => {
+    series.forEach((heap, round) => {
+      stages.rests[round].reading.performance.hermes.heap.hermes_allocatedBytes = heap;
+    });
   };
-  const lastWindow = Array.from({length: HEAP_WINDOW_ROUNDS}, (_, index) => WARMUP_ROUNDS + ROUNDS - 1 - index);
+  const lastHalf = Math.floor(ROUNDS / 2);
   const index = TOUR.length * 2;
   const rejected = {
     "leaked-node": stages => {
@@ -197,11 +202,14 @@ test("The HUD's panels swap by a real click with exact counts of nodes, creation
     "no-collection": stages => {
       stages.rests[5].reading.performance.hermes.collectedBeforeReading = false;
     },
-    "heap-grew": stages => lastWindow.forEach(round => heapAtRest(stages, round, 3000)),
+    "heap-grew": stages => heapAtRest(stages, flatSeries(3000, lastHalf)),
+    "heap-leak-hosted-1": stages => heapAtRest(stages, withLeak(HOSTED_HEAP_AT_REST["process 1"], LEAK_BYTES_PER_ROUND)),
+    "heap-leak-hosted-2": stages => heapAtRest(stages, withLeak(HOSTED_HEAP_AT_REST["process 2"], LEAK_BYTES_PER_ROUND)),
     aborted: stages => {
       stages.aborted = {round: 3, step: 4, from: "empty", to: "city"};
     },
   };
+  const HEAP_CHECK = "heap/The live heap at rest, by the median of the last half of the steady rounds, is within 2048 bytes of the first half's";
   const expected = {
     "leaked-node": ["swap/Every swap leaves the SceneTree with the base's nodes plus the new panel's, and Godot counts no orphan beyond the base's"],
     "wrong-deletes": ["swap/Every swap creates the nodes of the new panel and deletes those of the old one, in the host's counters and in the Surface's"],
@@ -209,7 +217,9 @@ test("The HUD's panels swap by a real click with exact counts of nodes, creation
     "world-heard": ["swap/No click of a swap reaches the Godot world"],
     "late-panel": ["swap/When the tree holds the new panel, the Surface's snapshot holds its last node and the root of no other panel"],
     "no-collection": ["section/Every reading of Hermes' heap follows a forced collection, so that two readings are comparable"],
-    "heap-grew": ["heap/The live heap at rest of the last 5 steady rounds is within 2048 bytes of the first 5's"],
+    "heap-grew": [HEAP_CHECK],
+    "heap-leak-hosted-1": [HEAP_CHECK],
+    "heap-leak-hosted-2": [HEAP_CHECK],
     aborted: ["swap/Every click shows its panel: the tree holds the nodes of the new panel within a bound of frames after the flush"],
   };
   for (const [name, change] of Object.entries(rejected)) {
@@ -222,10 +232,15 @@ test("The HUD's panels swap by a real click with exact counts of nodes, creation
     assert.ok(negatives[name].oracle != null, `${name}: the oracle rejects it`);
   }
   // A transient allocation in a reading, which only adds and returns, is not growth: one reading 2056 bytes up, even the last one, passes.
-  // The limit is inclusive: a whole window 2048 bytes up passes the probe's check and the oracle's.
+  // The limit is inclusive: a whole last half 2048 bytes up passes the probe's check and the oracle's. And the two series of the hosted run
+  // of PR #77, which move in a band of 2,376 bytes with no trend (one of them failed the check of windows of five rounds), pass, and so does
+  // a first half that alone dips to the low level, which a check on the floors of the halves called a leak.
   const allowed = {
-    "heap-blip": stages => heapAtRest(stages, WARMUP_ROUNDS + ROUNDS - 1, 2056),
-    "heap-at-limit": stages => lastWindow.forEach(round => heapAtRest(stages, round, 2048)),
+    "heap-blip": stages => heapAtRest(stages, flatSeries(2056, 1)),
+    "heap-at-limit": stages => heapAtRest(stages, flatSeries(2048, lastHalf)),
+    "heap-hosted-1": stages => heapAtRest(stages, HOSTED_HEAP_AT_REST["process 1"]),
+    "heap-hosted-2": stages => heapAtRest(stages, HOSTED_HEAP_AT_REST["process 2"]),
+    "heap-first-half-dips": stages => heapAtRest(stages, FIRST_HALF_DIPS),
   };
   for (const [name, change] of Object.entries(allowed)) {
     const accepted = await mutated(report, name, change);

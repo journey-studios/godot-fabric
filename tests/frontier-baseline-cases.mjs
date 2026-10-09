@@ -44,10 +44,6 @@ export const ROUNDS = 30;
 export const STABLE_FRAMES = 6;
 export const REST_FRAMES = 30;
 
-// The live heap at rest is judged on windows of this many steady rounds: a reading can carry a transient allocation
-// (2,056 bytes, in one to three consecutive rounds) that the next does not, and the lowest reading of a window leaves it out.
-export const HEAP_WINDOW_ROUNDS = 5;
-
 // The windowed lane (scripts/frontier-baseline-graphics.mjs): the processes of an execution, the frames of the idle window, and the
 // size and rate of the window it draws in.
 export const GRAPHICS_RUNS = 5;

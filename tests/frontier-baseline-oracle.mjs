@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
 import {nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
-import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, HEAP_WINDOW_ROUNDS, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
+import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
   STABLE_FRAMES, TAB, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
 
 // Independent oracle for the performance baseline on the Frontier HUD's scene, written from the contract of the experiment and
@@ -59,22 +59,29 @@ function verifyProvenance(provenance) {
   assert.ok(Number.isInteger(provenance.vsyncMode) && Number.isFinite(provenance.refreshRate), "and the vsync mode and refresh rate it read back");
 }
 
-// The heap at rest after each round, judged on the floor of windows of rounds: a reading can carry a transient allocation that the next
-// does not (a step of 2,056 bytes, in one to three consecutive rounds), which only adds; a leak raises the floor as it raises the rest.
-function heapAtRest(rests) {
+// The heap at rest after each round, judged on the medians of the two halves of the steady rounds (the first and the last floor(n/2) of them, the
+// median by nearest rank like the percentiles): a reading carries noise that the next does not (a hosted run showed four levels in a band of 2,376
+// bytes, wider than the limit), which a few off-level readings do not move in a median, and a leak raises the median as it raises the rest. With n = 30
+// the medians lie 15 rounds apart, so a leak of L bytes a round adds 15 L between them and the limit is crossed from about 137 bytes a round (113 and
+// 158 on the two hosted series); the floors of the halves, which a single low reading moves, are recorded as observations (see the research note).
+export function heapAtRest(rests) {
   const steady = rests.slice(WARMUP_ROUNDS).map(entry => heapOf(entry.reading));
-  assert.ok(steady.length >= 2 * HEAP_WINDOW_ROUNDS, "The steady rounds fill two windows");
-  const firstFloor = Math.min(...steady.slice(0, HEAP_WINDOW_ROUNDS));
-  const lastFloor = Math.min(...steady.slice(-HEAP_WINDOW_ROUNDS));
+  const half = Math.floor(steady.length / 2);
+  assert.ok(half >= 1, "The steady rounds fill two halves");
+  const firstHalf = steady.slice(0, half);
+  const lastHalf = steady.slice(steady.length - half);
+  const firstMedian = nearestRank(firstHalf, 50);
+  const lastMedian = nearestRank(lastHalf, 50);
   const floor = Math.min(...steady);
   assert.ok(floor > 0, "The heap at rest is read");
-  assert.ok(lastFloor - firstFloor <= HEAP_STEADY_GROWTH_LIMIT_BYTES,
-    `The live heap at rest rose ${lastFloor - firstFloor} bytes from the first ${HEAP_WINDOW_ROUNDS} steady rounds to the last, over the limit of ${HEAP_STEADY_GROWTH_LIMIT_BYTES}`);
+  assert.ok(lastMedian - firstMedian <= HEAP_STEADY_GROWTH_LIMIT_BYTES,
+    `The live heap at rest rose ${lastMedian - firstMedian} bytes from the median of the first half (${half} rounds) of the steady rounds to the median of the last, over the limit of ${HEAP_STEADY_GROWTH_LIMIT_BYTES}`);
   let largestStep = 0;
   for (let index = 1; index < steady.length; ++index) {
     largestStep = Math.max(largestStep, Math.abs(steady[index] - steady[index - 1]));
   }
-  return {steadyRounds: steady.length, firstFloor, lastFloor, growth: lastFloor - firstFloor, firstSteady: steady[0], last: steady.at(-1),
+  return {steadyRounds: steady.length, halfRounds: half, firstMedian, lastMedian, growth: lastMedian - firstMedian,
+    firstFloor: Math.min(...firstHalf), lastFloor: Math.min(...lastHalf), firstSteady: steady[0], last: steady.at(-1),
     lastMinusFirst: steady.at(-1) - steady[0], highestAboveFloor: Math.max(...steady) - floor, largestStep,
     roundsAboveFloor: steady.filter(value => value > floor).length};
 }
@@ -191,8 +198,8 @@ export function verifyFrontierBaselineReport(report) {
   const {stages} = report;
   assert.equal(report.scenario, "frontier-baseline");
   const derived = verifyExperiment(stages.config);
-  assert.deepEqual([stages.config.restFrames, stages.config.heapWindowRounds, stages.config.heapGrowthLimitBytes],
-    [REST_FRAMES, HEAP_WINDOW_ROUNDS, HEAP_STEADY_GROWTH_LIMIT_BYTES], "and these for the heap at rest");
+  assert.deepEqual([stages.config.restFrames, stages.config.heapGrowthLimitBytes],
+    [REST_FRAMES, HEAP_STEADY_GROWTH_LIMIT_BYTES], "and these for the heap at rest");
   verifyProvenance(stages.provenance);
   assert.equal(stages.provenance.displayServer, "headless");
   assert.equal(report.displayServer, "headless");
