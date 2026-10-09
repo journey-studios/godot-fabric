@@ -4,7 +4,7 @@ Status: implemented and executed locally on macOS arm64 (Apple M3 Pro) against p
 provenance and in a real window (local, not in CI) for the presented frame time; **the windowed attempt was not presented by the display**, so that lane ended as not presented with no frame-time statistic, and the presented frame time of the turn
 is **pending** (see [The windowed lane](#the-windowed-lane)). This is the `turno` criterion of the 0.5 Frontier milestone's V05-06: the click to the panel, the frames of a turn with the sliced AI, and the Hermes heap, resident memory and native nodes of each
 transition, on the game's consumer. The criterion is **not closed** by this slice (the presented frame time is part of it, as it is of `baseline`), and the windowed part of `baseline` and `congelado` stay open (see [What is left](#what-is-left)).
-The slice changes no C++ and no file of the template (`consumers/civ-lite`), so there is no preceding host to run it on; the control is the four retained sabotages. The evidence record, hosted CI and the Pages publication are pending.
+The slice changes no C++ and no file of the template (`consumers/civ-lite`), so there is no preceding host to run it on; the control is the four retained sabotages. The [evidence record](../evidence/frontier-turn/README.md) pins the execution at `116a72f`; hosted CI and the Pages publication are pending.
 
 ## The question
 
@@ -103,9 +103,9 @@ ceiling and records the observation (p50, p95 and maximum, by step and by contex
 
 ## The headless lane
 
-One run of the lane (2026-10-09), pinned by the evidence record (pending), on an Apple M3 Pro (11 logical cores, 18 GB) with macOS 26.6.2, arm64, Godot 4.7.2, Hermes 250829098.0.17, the headless display server and the `opengl3` driver named: 32 rounds, **512 clicks, 128 turns and 546 readings** in one process.
-The whole test (provisioning, the editor build, the run, the 4.6 seconds Hermes' tracker needs at the end, the oracle and the negatives) took **191 seconds**, the probe itself 172: well under the 5 minutes the lane was allowed before it had to be reported, and the native job's 90-minute limit (about 60 used) stays clear. The Mac was not idle (other
-agents' work ran on it): the system load average (1 minute) was 3.6 before the process and 2.8 after it, so the durations are a baseline of this machine as it was and not a best case. Every number below is of the 30 steady rounds (480 clicks, 120 turns); the 2 warm-up rounds are in the raw data and in no statistic.
+One run of the lane (2026-10-09), pinned by the [evidence record](../evidence/frontier-turn/README.md) at commit `116a72f`, on an Apple M3 Pro (11 logical cores, 18 GB) with macOS 26.6.2, arm64, Godot 4.7.2, Hermes 250829098.0.17, the headless display server and the `opengl3` driver named: 32 rounds, **512 clicks, 128 turns and 546 readings** in one process.
+The whole test (provisioning, the editor build, the run, the 4.6 seconds Hermes' tracker needs at the end, the oracle and the negatives) took **192 seconds**, the probe itself 172: well under the 5 minutes the lane was allowed before it had to be reported, and the native job's 90-minute limit (about 60 used) stays clear. The Mac was not idle (other
+agents' work ran on it): the system load average (1 minute) was 4.1 before the process and 1.5 after it, so the durations are a baseline of this machine as it was and not a best case. Every number below is of the 30 steady rounds (480 clicks, 120 turns); the 2 warm-up rounds are in the raw data and in no statistic.
 The p95 of 30 samples is the 29th, so it moves with one slow click.
 
 ### Click to panels, by step
@@ -114,41 +114,41 @@ The frames and the milliseconds from the start of the injection (the press and t
 
 | Step | Kind | Context before to after | Frames p50 / p95 / max | Click to panels (ms) p50 / p95 / max | Injection p50 (ms) |
 | --- | --- | --- | --- | --- | ---: |
-| `map-stack` | map | none to stack | 2 / 2 / 2 | 10.1 / 11.0 / 11.6 | 0.59 |
-| `select-warrior` | action | stack to warrior | 2 / 2 / 2 | 10.1 / 11.5 / 11.9 | 0.94 |
-| `clear-selection` | action | warrior to none | 2 / 2 / 2 | 10.8 / 11.9 / 12.0 | 0.97 |
-| `map-stack-again` | map | none to stack | 2 / 2 / 2 | 10.1 / 11.3 / 15.5 | 0.57 |
-| `select-settler` | action | stack to settler | 2 / 2 / 2 | 9.9 / 11.4 / 11.5 | 0.93 |
-| `map-tile` | map | settler to tile | 2 / 2 / 2 | 10.5 / 12.3 / 12.4 | 0.51 |
+| `map-stack` | map | none to stack | 2 / 2 / 2 | 10.2 / 11.9 / 12.7 | 0.60 |
+| `select-warrior` | action | stack to warrior | 2 / 2 / 2 | 10.1 / 11.3 / 11.6 | 0.91 |
+| `clear-selection` | action | warrior to none | 2 / 2 / 2 | 10.7 / 11.4 / 11.6 | 0.98 |
+| `map-stack-again` | map | none to stack | 2 / 2 / 2 | 10.3 / 10.8 / 12.6 | 0.57 |
+| `select-settler` | action | stack to settler | 2 / 2 / 2 | 9.8 / 10.6 / 11.0 | 0.94 |
+| `map-tile` | map | settler to tile | 2 / 2 / 2 | 10.5 / 12.3 / 13.0 | 0.51 |
 | `map-stack-third` | map | tile to stack | 2 / 2 / 2 | 9.4 / 11.0 / 11.0 | 0.58 |
-| `select-settler-again` | action | stack to settler | 2 / 2 / 2 | 9.8 / 11.2 / 11.3 | 0.93 |
-| `found-city` | action | settler to city | 2 / 2 / 2 | 13.7 / 14.4 / 31.1 | 1.01 |
-| `map-tile-again` | map | city to tile | 2 / 2 / 2 | 10.2 / 11.8 / 15.7 | 0.54 |
-| `map-city` | map | tile to city | 2 / 2 / 2 | 13.6 / 16.8 / 17.5 | 0.60 |
-| `end-turn-1` | turn | city to none | 8 / 8 / 8 | 52.5 / 54.0 / 54.8 | 0.79 |
-| `end-turn-2` | turn | none to none | 8 / 8 / 8 | 51.7 / 53.4 / 53.5 | 0.90 |
-| `end-turn-3` | turn | none to none | 8 / 8 / 8 | 51.8 / 52.9 / 54.1 | 0.99 |
-| `end-turn-4` | turn | none to dialog | 8 / 8 / 8 | 50.8 / 52.5 / 52.9 | 0.93 |
-| `answer-event` | dialog | dialog to none | 2 / 2 / 2 | 10.4 / 11.3 / 11.7 | 1.06 |
+| `select-settler-again` | action | stack to settler | 2 / 2 / 2 | 9.7 / 10.6 / 10.9 | 0.93 |
+| `found-city` | action | settler to city | 2 / 2 / 2 | 13.5 / 15.2 / 16.4 | 0.96 |
+| `map-tile-again` | map | city to tile | 2 / 2 / 2 | 10.2 / 11.6 / 12.0 | 0.57 |
+| `map-city` | map | tile to city | 2 / 2 / 2 | 13.5 / 14.6 / 15.2 | 0.60 |
+| `end-turn-1` | turn | city to none | 8 / 8 / 8 | 52.5 / 53.1 / 53.2 | 0.85 |
+| `end-turn-2` | turn | none to none | 8 / 8 / 8 | 51.8 / 52.9 / 55.3 | 0.91 |
+| `end-turn-3` | turn | none to none | 8 / 8 / 8 | 51.5 / 52.9 / 53.2 | 0.96 |
+| `end-turn-4` | turn | none to dialog | 8 / 8 / 8 | 50.8 / 51.6 / 52.7 | 0.97 |
+| `answer-event` | dialog | dialog to none | 2 / 2 / 2 | 10.2 / 11.9 / 12.4 | 1.03 |
 
 By the context the click leads to (the clicks that are not an End turn):
 
 | Context the click leads to | Steps | Samples | Frames p50 / p95 / max | Click to panels (ms) p50 / p95 / max |
 | --- | --- | ---: | --- | --- |
-| `none` | `clear-selection`, `answer-event` | 60 | 2 / 2 / 2 | 10.8 / 11.7 / 12.0 |
-| `tile` | `map-tile`, `map-tile-again` | 60 | 2 / 2 / 2 | 10.5 / 12.0 / 15.7 |
-| `settler` | `select-settler`, `select-settler-again` | 60 | 2 / 2 / 2 | 9.8 / 11.3 / 11.5 |
-| `warrior` | `select-warrior` | 30 | 2 / 2 / 2 | 10.1 / 11.5 / 11.9 |
-| `stack` | `map-stack`, `map-stack-again`, `map-stack-third` | 90 | 2 / 2 / 2 | 10.0 / 11.0 / 15.5 |
-| `city` | `found-city`, `map-city` | 60 | 2 / 2 / 2 | 13.7 / 15.1 / 31.1 |
+| `none` | `clear-selection`, `answer-event` | 60 | 2 / 2 / 2 | 10.5 / 11.6 / 12.4 |
+| `tile` | `map-tile`, `map-tile-again` | 60 | 2 / 2 / 2 | 10.4 / 11.6 / 13.0 |
+| `settler` | `select-settler`, `select-settler-again` | 60 | 2 / 2 / 2 | 9.7 / 10.6 / 11.0 |
+| `warrior` | `select-warrior` | 30 | 2 / 2 / 2 | 10.1 / 11.3 / 11.6 |
+| `stack` | `map-stack`, `map-stack-again`, `map-stack-third` | 90 | 2 / 2 / 2 | 10.0 / 11.0 / 12.7 |
+| `city` | `found-city`, `map-city` | 60 | 2 / 2 / 2 | 13.5 / 14.6 / 16.4 |
 
 `dialog` is reached by `end-turn-4`, whose click to the dialog's panels is 50.8 ms at the median (the turn's seven frames and one more; below). The End turn clicks, to the panels of the context the turn leaves the game in and no spinner, are the last four rows of the first table.
 
 - **2 frames in all 480 steady clicks, whatever the context, the device of the click (the map's or a button's) or the panel**, and **8 for an End turn** (the seven frames of the job and one in which the HUD catches up). That is an observation and the oracle does not fix it (see above).
-- **The time follows the nodes the transition mounts.** The contexts of 14 to 27 native views take 9.8 to 10.8 ms at the median and the city ones, which hold 42, 13.7 ms (about 3 ms more for 15 to 28 more native views). Most of the 10 ms is the headless loop's own floor, not work: two frames of a loop that runs a frame every ~6.9 ms
+- **The time follows the nodes the transition mounts.** The contexts of 14 to 27 native views take 9.7 to 10.5 ms at the median and the city ones, which hold 42, 13.5 ms (about 3 ms more for 15 to 28 more native views). Most of the 10 ms is the headless loop's own floor, not work: two frames of a loop that runs a frame every ~6.9 ms
   with nothing pacing it ([frame-clock.md](frame-clock.md)), counted from an injection that happens inside the first. It is **not a presented latency**, and 10 ms is not a "frame time" of anything.
-- **The injection is cheap**: 0.5 to 0.6 ms for a map click, which runs `select_tile` in it, and 0.8 to 1.1 ms for a button, which runs React's handler. The rest of the time is in the two frames after it.
-- The tail is short: the p95 is at most 16.8 ms (`map-city`) and the maximum 31.1 ms (one `found-city`, 2.3 times its median, the one slow click of 480), which is what a shared Mac does to a run.
+- **The injection is cheap**: 0.5 to 0.6 ms for a map click, which runs `select_tile` in it, and 0.8 to 1.0 ms for a button, which runs React's handler. The rest of the time is in the two frames after it.
+- The tail is short: the p95 is at most 15.2 ms (`found-city`) and the maximum 16.4 ms (one `found-city`, 1.2 times its median), in 480 clicks.
 
 ### The turn, frame by frame
 
@@ -157,22 +157,22 @@ it starts at the injection, which comes a few milliseconds after the frame bound
 
 | Frame | Phase the game was at | Interval p50 / p95 / max (ms) | SceneTree nodes (min to max) | Spinner shown |
 | ---: | --- | --- | --- | ---: |
-| 1 | `ai_plan` | 2.8 / 4.6 / 6.8 | 24 to 52 | 0 of 120 |
-| 2 | `ai_move` | 7.3 / 9.8 / 10.7 | 26 to 56 | 120 of 120 |
-| 3 | `production` | 7.3 / 7.8 / 8.2 | 26 to 56 | 120 of 120 |
-| 4 | `growth` | 6.7 / 7.5 / 9.1 | 26 to 56 | 120 of 120 |
+| 1 | `ai_plan` | 2.8 / 4.1 / 7.0 | 24 to 52 | 0 of 120 |
+| 2 | `ai_move` | 7.4 / 10.3 / 10.7 | 26 to 56 | 120 of 120 |
+| 3 | `production` | 7.3 / 7.7 / 8.1 | 26 to 56 | 120 of 120 |
+| 4 | `growth` | 6.7 / 7.1 / 8.4 | 26 to 56 | 120 of 120 |
 | 5 | `research` | 7.0 / 8.0 / 9.0 | 26 to 56 | 120 of 120 |
-| 6 | `refresh` | 6.8 / 7.4 / 9.3 | 26 to 56 | 120 of 120 |
-| 7 | `idle` | 6.9 / 7.4 / 8.5 | 26 to 56 | 120 of 120 |
-| 8 | `idle`, the HUD catching up | 6.8 / 7.8 / 8.1 | 24 to 26 | 0 of 120 |
+| 6 | `refresh` | 6.9 / 7.4 / 8.3 | 26 to 56 | 120 of 120 |
+| 7 | `idle` | 6.9 / 7.4 / 7.6 | 26 to 56 | 120 of 120 |
+| 8 | `idle`, the HUD catching up | 6.8 / 7.9 / 8.1 | 24 to 26 | 0 of 120 |
 
-The host does not expose its pump and phases per frame, only their running totals and the last 128 samples of each series, so they are given **around the turn**: from the reading before the click to the one at the end of the turn, over the 120 steady turns (milliseconds p50 / p95 / max): the pump 23.7 / 32.6 / 34.9, of which JavaScript 21.3 / 29.1 / 31.1, the host's mount
-1.6 / 2.4 / 2.9 and Yoga's layout 0.7 / 1.0 / 1.3, in 10 pumps for the 8 frames (10 in every turn; the two beyond one a frame are not isolated). The 1,200 pump samples of the turns are 2.7 ms at the median, 4.9 at p95 and 8.5 at most. The seven frames of the job take 44.9 ms
-(p50; 46.5 at p95, 47.1 at most) from the first to the last.
+The host does not expose its pump and phases per frame, only their running totals and the last 128 samples of each series, so they are given **around the turn**: from the reading before the click to the one at the end of the turn, over the 120 steady turns (milliseconds p50 / p95 / max): the pump 24.2 / 32.9 / 33.7, of which JavaScript 21.7 / 29.6 / 30.4, the host's mount
+1.7 / 2.3 / 2.4 and Yoga's layout 0.7 / 0.9 / 1.1, in 10 pumps for the 8 frames (10 in every turn; the two beyond one a frame are not isolated). The 1,200 pump samples of the turns are 2.8 ms at the median, 4.8 at p95 and 8.5 at most. The seven frames of the job take 44.7 ms
+(p50; 46.0 at p95, 47.2 at most) from the first to the last.
 
 - **Exact, and what the oracle judges:** one phase in each of the seven frames, in the order of the service; a snapshot published in each (S0 in the frame that accepts the turn, S6 in the one that finishes it, seven in seven consecutive frames) and none before or after; `turn_ended` once, in the frame of the last phase, before its snapshot; the job finished once; the ids of the 128 jobs rise by one; 128 `turn_ended` for
   128 End turn presses.
-- **The frame intervals are the loop's floor, not the phases' cost.** Every phase's frame is 6.7 to 7.3 ms at the median, less than a millisecond of difference between them, which is the unpaced headless loop's own ~6.9 ms and not what a presented frame would show; the host's pump over the turn is 24 ms of the 45. What is
+- **The frame intervals are the loop's floor, not the phases' cost.** Every phase's frame is 6.7 to 7.4 ms at the median, less than a millisecond of difference between them, which is the unpaced headless loop's own ~6.9 ms and not what a presented frame would show; the host's pump over the turn is 24 ms of the 45. What is
   measured here is that **no frame carries two phases and that the turn is eight frames, not how long a frame takes**: that is the windowed lane's.
 - **The HUD follows the game by one frame.** The spinner is not shown at the frame that accepts the turn (0 of 120), is shown in the six that follow and is gone in the eighth: the snapshot a frame publishes is rendered by the pump of the next, which is the same pipeline that makes a click take 2 frames.
 - While the turn runs the HUD mounts a few nodes, the spinner among them (SceneTree 26 to 56, against 24 to 52 at rest before the turn), and gives them back in the eighth frame (24 to 26).
@@ -200,31 +200,31 @@ Each row is a series of one reading a round (32), taken after the step with its 
 
 | Series (the reading at rest after the step) | Native views | Heap at rest (bytes, steady median) | Growth between the medians of the halves | Resident memory p50 (MB) | Resident memory min to max (MB) | Growth between the medians (MB) |
 | --- | ---: | ---: | ---: | ---: | --- | ---: |
-| `start` | 14 | 2,175,808 | 128 | 135.7 | 132.4 to 197.8 | -0.7 |
-| `map-stack` | 26 | 2,244,944 | 128 | 135.7 | 132.4 to 197.8 | -0.7 |
-| `select-warrior` | 24 | 2,270,792 | 128 | 135.7 | 132.5 to 197.8 | -0.7 |
-| `clear-selection` | 14 | 2,178,608 | 128 | 135.7 | 132.5 to 197.8 | -0.7 |
-| `map-stack-again` | 26 | 2,245,016 | 128 | 135.7 | 132.5 to 197.9 | -0.7 |
-| `select-settler` | 27 | 2,289,696 | 128 | 135.8 | 132.5 to 197.9 | -0.7 |
-| `map-tile` | 18 | 2,210,856 | 128 | 135.8 | 132.5 to 197.9 | -0.7 |
-| `map-stack-third` | 26 | 2,260,888 | 128 | 135.8 | 132.6 to 198.0 | -0.7 |
-| `select-settler-again` | 27 | 2,289,696 | 128 | 135.8 | 131.9 to 198.0 | -0.8 |
-| `found-city` | 42 | 2,338,336 | 128 | 136.1 | 132.3 to 198.3 | -0.2 |
-| `map-tile-again` | 18 | 2,195,376 | 128 | 136.1 | 132.3 to 198.3 | -0.2 |
-| `map-city` | 42 | 2,335,280 | 128 | 136.2 | 132.3 to 198.3 | -0.2 |
-| `end-turn-1` | 14 | 2,172,184 | 128 | 136.2 | 132.3 to 198.3 | -0.2 |
-| `end-turn-2` | 14 | 2,164,936 | 128 | 136.0 | 132.3 to 198.3 | -0.7 |
-| `end-turn-3` | 14 | 2,165,120 | 128 | 135.6 | 132.3 to 197.8 | 0.0 |
-| `end-turn-4` | 24 | 2,223,928 | 128 | 135.7 | 132.4 to 197.8 | -0.1 |
-| `answer-event` | 14 | 2,177,904 | 128 | 135.7 | 132.4 to 197.8 | -0.1 |
+| `start` | 14 | 2,175,808 | 128 | 197.0 | 137.8 to 204.8 | -57.6 |
+| `map-stack` | 26 | 2,244,944 | 128 | 197.0 | 137.8 to 204.9 | -57.6 |
+| `select-warrior` | 24 | 2,270,792 | 128 | 197.0 | 137.8 to 204.9 | -57.6 |
+| `clear-selection` | 14 | 2,178,608 | 128 | 197.0 | 137.8 to 204.9 | -57.6 |
+| `map-stack-again` | 26 | 2,245,016 | 128 | 197.0 | 137.8 to 204.9 | -57.6 |
+| `select-settler` | 27 | 2,289,696 | 128 | 197.0 | 137.9 to 205.0 | -57.6 |
+| `map-tile` | 18 | 2,210,856 | 128 | 197.0 | 137.9 to 205.0 | -57.6 |
+| `map-stack-third` | 26 | 2,260,888 | 128 | 197.1 | 138.0 to 205.0 | -57.6 |
+| `select-settler-again` | 27 | 2,289,696 | 128 | 197.1 | 138.0 to 205.0 | -57.6 |
+| `found-city` | 42 | 2,338,336 | 128 | 197.4 | 138.3 to 204.7 | -58.1 |
+| `map-tile-again` | 18 | 2,195,376 | 128 | 196.9 | 138.3 to 204.7 | -58.1 |
+| `map-city` | 42 | 2,335,280 | 128 | 196.9 | 138.4 to 204.8 | -58.1 |
+| `end-turn-1` | 14 | 2,172,184 | 128 | 196.9 | 137.7 to 204.8 | -58.1 |
+| `end-turn-2` | 14 | 2,164,936 | 128 | 196.9 | 137.7 to 204.8 | -58.1 |
+| `end-turn-3` | 14 | 2,165,120 | 128 | 196.9 | 137.7 to 204.8 | -58.1 |
+| `end-turn-4` | 24 | 2,223,928 | 128 | 197.0 | 137.8 to 204.8 | -58.1 |
+| `answer-event` | 14 | 2,177,904 | 128 | 197.0 | 137.8 to 204.8 | -58.1 |
 
 - **The heap was flat to the byte once the HUD's bounded lists had filled, and every series grew by 128 bytes between the medians** (the first median 2,175,680 and the last 2,175,808 for the start of a round; the limit is 2,048). The context sets the level: the heap holds the panels' fibers, so it rises with the native views (2.17 MB with the bar's 14, 2.34 MB with the city's 42, about 6 KB a view), and each series returns to its own level every round, which is why the rule is applied to a series for each step and not to one for the run.
 - **The ramp, and why the warm-up is not tuned.** The heap of the start of a round was 2,125,960 bytes in round 0, 2,166,752 in round 1 (the first renders of every panel), then rose by 2,760, 1,784, 1,296, 1,040, 1,040 and 992 bytes in the next rounds and was flat at 2,175,680 from round 9 to 14. `consumers/civ-lite/ui/telemetry.ts` keeps the last 64 results, phases and epochs the HUD saw (`KEPT = 64`),
   the HUD makes 10 calls a round (320 in the run, all answered), and 64 results are 6.4 rounds: the ramp ends where those lists fill (a reading of the numbers, not isolated). The rule passes because the median of the first 15 steady rounds sits on the plateau: **a HUD whose bounded lists took more than about a dozen rounds to fill would fail the rule on a run that leaks nothing**,
   and the number of warm-up rounds (2) is the baseline's, not chosen for this HUD. The steps of +128 bytes at the 16th round and of +256 at the 32nd are the size of 16 and 32 entries of 8 bytes, which is what a list that gets one entry a round would add as its storage doubles (the epochs the telemetry keeps: consistent with the numbers, not isolated); they are why the growth between the medians is 128 and not 0, and they
   stop at the cap of 64 entries.
-- **Resident memory moved by tens of MB and went down, as it does in every harness of the repository.** The 17 series span 132 to 198 MB; the medians are 136 MB; the growth between the medians of the halves is -0.8 to 0.0 MB, and **-0.7 MB for the run read in order** (510 steady readings, halves of 255), against the 48 MiB the rule allows. The process fell from 203 MB to 138 MB between rounds 5 and 6 (the OS compressing it, as the soak saw; not isolated) and
-  then rose 0.2 to 0.8 MB a round, to fall again by 5.7 MB at round 13, while Godot's static memory (the probe's own readings, 546 of them) grew from 29.0 to 48.7 MB: the resident memory includes the probe's bookkeeping, and the rule is a coarse trend, **blind to a leak under about 3 MiB a round** (45 MiB over the 15 rounds between the medians; the oracle shows that 3 MiB a round passes and 4 MiB fails). The heap rule is the leak detector.
+- **Resident memory moved by tens of MB and went down, as it does in every harness of the repository.** The 17 series span 138 to 205 MB; the medians are 197 MB; the growth between the medians of the halves is -57.6 to -58.1 MB, and **-57.8 MB for the run read in order** (510 steady readings, halves of 255), against the 48 MiB the rule allows (it bounds a rise, and this one is a fall). The process stood at 193 to 205 MB for the first 21 rounds, rising 0.5 to 0.6 MB a round, and fell to 138 MB at round 22 (the OS compressing it, as the soak saw; not isolated), from where it rose again at the same pace;
+  Godot's static memory (the probe's own readings, 546 of them) grew from 29.0 to 48.7 MB, 0.6 MB a round, which is the pace of the rise: the resident memory includes the probe's bookkeeping, and the rule is a coarse trend, **blind to a leak under about 3 MiB a round** (45 MiB over the 15 rounds between the medians; the oracle shows that 3 MiB a round passes and 4 MiB fails). The heap rule is the leak detector.
 
 ### Errors
 
@@ -251,15 +251,15 @@ or injected), the frames that took a **click**, and **every frame of a turn**, w
 
 ### The windowed result: not presented
 
-**No frame time is pinned.** The lane ran once on the pinned code with `caffeinate -d`, while the Mac had been idle for about 9.9 hours (`HIDIdleTime`) and its display was off or showing the lock screen. Every attempt drew (`frame_post_draw` fired after every one of the 11,483 to 11,509 process frames
+**No frame time is pinned.** The lane ran once on the pinned code with `caffeinate -d`, while the Mac had been idle for about 11.6 hours (`HIDIdleTime`) and its display was off or showing the lock screen. Every attempt drew (`frame_post_draw` fired after every one of the 11,473 to 11,488 process frames
 of an attempt, and 601 times in the 600 frames of the idle window) and the vsync mode read back `enabled` at 120 Hz on the built-in display ("Color LCD", 1512 x 982 points, 3024 x 1964 pixels, 120 Hz, scale 2; a 1080 x 600 window, `gl_compatibility`, adapter "Apple M3 Pro"), but **no display paced the loop**: an idle
-frame took about 0.59 ms against the 4.167 ms that the validity rule requires. The three attempts of slot 1 were **rejected as unpaced**, the lane stopped, and the receipt says `presented: false`, carries no frame-time statistic and exits with code 3. Nothing was forced.
+frame took about 0.6 ms against the 4.167 ms that the validity rule requires. The three attempts of slot 1 were **rejected as unpaced**, the lane stopped, and the receipt says `presented: false`, carries no frame-time statistic and exits with code 3. Nothing was forced.
 
 | Slot | Attempt | Idle median (ms) | Required (ms) | Frames drawn | Reason |
 | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | 1 | 0.592 | 4.167 | 11,509 of 11,509 | unpaced: the display is not presenting |
-| 1 | 2 | 0.590 | 4.167 | 11,505 of 11,505 | unpaced: the display is not presenting |
-| 1 | 3 | 0.596 | 4.167 | 11,483 of 11,483 | unpaced: the display is not presenting |
+| 1 | 1 | 0.606 | 4.167 | 11,488 of 11,488 | unpaced: the display is not presenting |
+| 1 | 2 | 0.587 | 4.167 | 11,474 of 11,474 | unpaced: the display is not presenting |
+| 1 | 3 | 0.589 | 4.167 | 11,473 of 11,473 | unpaced: the display is not presenting |
 
 The raw intervals of the three attempts are kept in the receipt (`build/frontier-turn-graphics.json`, `rejectedAttempts`) and are **not frame times**: they are the CPU cost of a process frame in a loop no display brakes. Nothing of them is a result here, and no budget row starts from them.
 The presented frame time of the turn needs an awake, unlocked display: run the lane again and it will check that the loop was paced. The captures run, which measures nothing and does not need a display to pace the loop, passed: it saved one image of the frame as drawn for each of the seven contexts
@@ -296,9 +296,9 @@ that is blind), and in nine ways that it must accept (a single transient of 2,05
 
 ## Limitations and open
 
-- One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites (load average 2.8 to 3.6), so the durations are not a best case. They are the CPU cost of work on a loop that nothing paces and are **not frame times**; the presented frame time is the windowed lane's, still pending. Only the exact
+- One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites (load average 1.5 to 4.1), so the durations are not a best case. They are the CPU cost of work on a loop that nothing paces and are **not frame times**; the presented frame time is the windowed lane's, still pending. Only the exact
   counts are asked of a hosted runner.
-- **The frame time of a presented window (vsync on, 120 Hz) is PENDING**: no windowed attempt was presented by the display (the Mac had been idle for 9.9 hours, the display off or locked), the lane rejected all three attempts as unpaced and ended with `presented: false`, exit code 3 and no frame-time statistic. No frame time of a click, of a phase of the turn or of an idle frame is claimed, and no budget starts from this slice.
+- **The frame time of a presented window (vsync on, 120 Hz) is PENDING**: no windowed attempt was presented by the display (the Mac had been idle for 11.6 hours, the display off or locked), the lane rejected all three attempts as unpaced and ended with `presented: false`, exit code 3 and no frame-time statistic. No frame time of a click, of a phase of the turn or of an idle frame is claimed, and no budget starts from this slice.
   Missed frames with the vsync on are not read either (they need presentation timestamps that Godot does not give).
 - Synthetic events through the viewport on the validation device; no hardware pointer or touch screen, no iPhone, no mobile export. The numbers are macOS, arm64, Compatibility renderer.
 - **The HUD is V05-05's work in progress** (bar, actions, tile, city, research and dialog as positioned panels): no Modal, no overlay stack, no images, no scroll views, no text input, no animation but the spinner. The numbers are that HUD's and move when it does; every exact rule compares a context with itself.

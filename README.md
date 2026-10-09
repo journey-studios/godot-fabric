@@ -578,7 +578,7 @@ HUD and scene untouched, driven by real pointer clicks (16 a round, 32 rounds, a
 and orphans come back to the same count every time a context does, and the heap at rest and the resident memory stay within the GF-30 and soak rules in all 17 series; four retained sabotages (two of them in the provisioned copy, never in the template) are
 rejected, each for its own rule, and an independent oracle recomputes it all. **No presented frame time is pinned**: the local windowed lane (`npm run bench:frontier-turn-graphics`) refuses a run that no display paced and, with the display off, ended as not
 presented (exit code 3, no frame-time statistic), so the criterion stays open, as do `congelado`, hosted CI and the Pages publication.
-Evidence: pending; [research](docs/research/frontier-turn.md).
+[Evidence](docs/evidence/frontier-turn/README.md); [research](docs/research/frontier-turn.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
