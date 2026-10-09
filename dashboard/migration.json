@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T06:33:58.000Z",
+  "updatedAt": "2026-10-09T07:37:32.000Z",
   "source": {
     "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
@@ -4503,6 +4503,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-protocol-draft",
+      "at": "2026-10-09T07:37:32.000Z",
+      "taskIds": [],
+      "message": "Protocolo do comparativo final do marco 0.5 (V05-10, critério protocolo) pré-registrado antes de qualquer medição, sem rodar nenhum braço: os três braços (A sem HUD como controle de custo, B com a HUD nativa do Godot, C com a HUD React Native); as hipóteses H1 (C menos A), H2 (B menos A) e H3 (C contra B, com a nula \"C não é melhor que B\"); o desfecho primário, o tempo de CPU por quadro no p95 em cada uma das 4 janelas ativas (fase da IA, rajada de eventos de fim de turno, 50 trocas de contexto e o estresse com log de 200 linhas e lista de produção de 100 itens); 12 execuções por braço em quadrado latino fixo (ABC, CAB e BCA repetidos 4 vezes); o bootstrap percentil de 95% com 10.000 reamostras e semente fixa; Holm sobre as 4 janelas do H3; e a regra de decisão com margem max(10% da mediana de B, 0,5 ms) e as categorias ganho, neutro, custo e inconclusivo. O JSON legível por máquina tem o SHA-256 fixado em 8dd7779d… (sem os campos frozenValue e frozenAt) por um teste Node que entra no test:contracts, de modo que mudar o protocolo depois exige mudar o teste de propósito. Nada foi medido e nenhum resultado é afirmado. Os limiares que dependem da baseline janelada do V05-06 (o instrumento do tempo de CPU e 4 orçamentos absolutos) ficam como fórmula com frozenValue nulo e serão congelados juntos com o critério congelado do V05-06; por isso o critério protocolo do V05-10 segue aberto e nenhum critério muda. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/789c35f83b64feb4ccc07c37cac5975f833df2dd/docs/research/frontier-comparison-protocol.md"
+    },
     {
       "id": "milestone-0-5-v05-06-soak-b77178a",
       "at": "2026-10-09T06:33:58.000Z",

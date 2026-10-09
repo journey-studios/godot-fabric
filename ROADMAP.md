@@ -712,6 +712,18 @@ and on the
 which survives closing the screen and the menu. Hosted CI and Pages are not claimed here.
 No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-10, criterion `protocolo`, first step: the protocol of the final comparison is pre-registered before
+any measurement, with no arm run. It fixes the three arms (A without a HUD as the cost control, B with a native Godot HUD, C
+with the RN HUD), the hypotheses, the primary outcome (the p95 CPU time per frame in four active windows: the AI phase, the
+end-of-turn event burst, 50 context switches and a stress case), 12 executions per arm in a fixed Latin square, a 95%
+percentile bootstrap with 10,000 resamples and a fixed seed, a Holm guard over the four windows of the C against B question,
+and a decision rule with a margin of the larger of 10% of B's median and 0.5 ms and the verdicts gain, neutral, cost and
+inconclusive. The [protocol](https://github.com/journey-studios/godot-fabric/blob/789c35f83b64feb4ccc07c37cac5975f833df2dd/docs/research/frontier-comparison-protocol.md) is also a JSON whose SHA-256
+a Node test pins, so changing it later takes changing the test on purpose. The numbers that depend on the windowed baseline
+of V05-06 (the CPU-time instrument and four absolute budgets) are formulas with null values, so the criterion closes only
+when they are frozen together with `congelado`; it stays open and no criterion changes. Nothing is measured and no result is
+claimed. No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
