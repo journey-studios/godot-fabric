@@ -1,0 +1,727 @@
+{
+  "schemaVersion": 1,
+  "scenario": "civ-lite-ui",
+  "status": "verified-local-headless-and-headed-causal-control-retained-sabotages-and-regressions",
+  "at": "2026-10-09T05:35:50Z",
+  "item": "V05-05",
+  "criteria": [
+    "matriz",
+    "mapa"
+  ],
+  "executionBaseCommit": "5e1f6a1",
+  "implementationCommit": "38d3182ec3ea1e81387910ed22ef732d38199c0d",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/38d3182ec3ea1e81387910ed22ef732d38199c0d",
+  "executedTreeSha": "3ad4d3b1a4d564610506857f97bc3fb4eab72d88",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "dirtyBeforeFirstCommand": [
+    "?? docs/research/frontier-hud.md"
+  ],
+  "dirtyAfterLastCommand": [
+    " M ROADMAP.md",
+    " M docs/GAME_SERVICES.md",
+    " M docs/research/README.md",
+    " M docs/research/frontier-consumer.md",
+    " M docs/research/frontier-game.md",
+    " M docs/research/frontier-services.md",
+    "?? docs/research/frontier-hud.md"
+  ],
+  "documentsEditedDuringExecution": "docs/research/frontier-hud.md existed before the first command; the other documents (ROADMAP.md, docs/GAME_SERVICES.md, docs/research/*, docs/evidence/*) were written while the batch ran or after it. None is an input of a lane (the lanes read the template, the scripts and the tests, and no lane reads these documents); the gates that read documents ran afterwards (gates)",
+  "implementationPr": null,
+  "environment": {
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "godotNote": "official 4.7.2-stable",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64 26.6.2",
+    "displayServer": {
+      "lane": "headless",
+      "captures": "macOS window"
+    },
+    "nativeHostSha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da"
+  },
+  "screenshots": {
+    "count": 8,
+    "files": {
+      "none": {
+        "file": "docs/evidence/civ-lite-ui/none.png",
+        "sha256": "bbe6b3ee23f9d1d2946c1302477353b96ef5e3f1dc5384a4aa5573b790ee6f5f",
+        "bytes": 17389,
+        "matchesLaneOutput": true
+      },
+      "tile": {
+        "file": "docs/evidence/civ-lite-ui/tile.png",
+        "sha256": "53fb05ee6181f4032004750aa9682abebbd43395f0e49dd13c0994edc03f0785",
+        "bytes": 25807,
+        "matchesLaneOutput": true
+      },
+      "settler": {
+        "file": "docs/evidence/civ-lite-ui/settler.png",
+        "sha256": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+        "bytes": 38191,
+        "matchesLaneOutput": true
+      },
+      "warrior": {
+        "file": "docs/evidence/civ-lite-ui/warrior.png",
+        "sha256": "6ea19858f64dac55447fea811a64084e63120058fdd0758a6b0e6453d90b485d",
+        "bytes": 31757,
+        "matchesLaneOutput": true
+      },
+      "stack": {
+        "file": "docs/evidence/civ-lite-ui/stack.png",
+        "sha256": "7deaf5aa356596132462b37ed53a123428792ff28bc2eeda3d178541b3e8c35f",
+        "bytes": 36503,
+        "matchesLaneOutput": true
+      },
+      "city": {
+        "file": "docs/evidence/civ-lite-ui/city.png",
+        "sha256": "c95729b24e64f50c370fdca2e0637781977c16f9474e1c636136772513616e17",
+        "bytes": 69532,
+        "matchesLaneOutput": true
+      },
+      "dialog": {
+        "file": "docs/evidence/civ-lite-ui/dialog.png",
+        "sha256": "23b6c5ed2372a97d27cef7555b2b343dc5c9a3ec0741aa9ca41f19c0032a7897",
+        "bytes": 37732,
+        "matchesLaneOutput": true
+      },
+      "ai-phase": {
+        "file": "docs/evidence/civ-lite-ui/ai-phase.png",
+        "sha256": "852c2a4c30f79c7aefab28865dd190f363c116acb29878865ed9f1cea3f8e05c",
+        "bytes": 20083,
+        "matchesLaneOutput": true
+      }
+    },
+    "readBeforeCiting": true,
+    "note": "the PNGs are the ones the headed run (node tests/civ-lite-ui-native.test.mjs --capture) saved; summary.json of that run was overwritten by the plain run the sabotage script ends with, and the hashes are those of the files, identical to the first run"
+  },
+  "commands": [
+    {
+      "command": "node tests/civ-lite-ui-native.test.mjs --control --capture",
+      "exit": 0,
+      "seconds": 95,
+      "result": "passed"
+    },
+    {
+      "command": "node scripts/civ-lite-ui-sabotage.mjs",
+      "exit": 0,
+      "seconds": 348,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:consumer:civ-lite",
+      "exit": 0,
+      "seconds": 30,
+      "result": "passed"
+    },
+    {
+      "command": "node scripts/consumer-civ-lite-sabotage.mjs",
+      "exit": 0,
+      "seconds": 198,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:frontier-services",
+      "exit": 0,
+      "seconds": 28,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:civ-lite-game",
+      "exit": 0,
+      "seconds": 1,
+      "result": "passed"
+    }
+  ],
+  "lane": {
+    "probeChecksHeadless": 143,
+    "probeChecksHeaded": 151,
+    "stepsPlayed": 46,
+    "covering": {
+      "city": 18,
+      "dialog": 45,
+      "none": 33,
+      "settler": 3,
+      "stack": 2,
+      "tile": 32,
+      "warrior": 9
+    },
+    "oracleFindings": 0,
+    "framesObservedInTheJob": 15,
+    "publishedPhases": [
+      "ai_plan",
+      "ai_move",
+      "production",
+      "growth",
+      "research",
+      "refresh",
+      "idle"
+    ],
+    "oracleMutations": 23,
+    "mutations": [
+      {
+        "name": "a panel the context mounts is missing",
+        "category": "panels"
+      },
+      {
+        "name": "a panel the context does not mount is shown",
+        "category": "panels"
+      },
+      {
+        "name": "an unowned testID is mounted",
+        "category": "panels"
+      },
+      {
+        "name": "the actions are listed in another order",
+        "category": "actions"
+      },
+      {
+        "name": "a disabled action is shown enabled",
+        "category": "actions"
+      },
+      {
+        "name": "a reason is not the game's",
+        "category": "actions"
+      },
+      {
+        "name": "the spinner is shown at rest",
+        "category": "bar"
+      },
+      {
+        "name": "End turn is enabled while the game says it is not",
+        "category": "bar"
+      },
+      {
+        "name": "a resource is not the snapshot's",
+        "category": "bar"
+      },
+      {
+        "name": "a Control that stops the pointer covers the map",
+        "category": "map"
+      },
+      {
+        "name": "the tile card says another tile",
+        "category": "content"
+      },
+      {
+        "name": "the dialog's choice is not the game's",
+        "category": "content"
+      },
+      {
+        "name": "a frame of the job shows the spinner at an idle phase",
+        "category": "phase"
+      },
+      {
+        "name": "the disabled End turn asked the game",
+        "category": "phase"
+      },
+      {
+        "name": "no snapshot was published at an AI phase",
+        "category": "phase"
+      },
+      {
+        "name": "a click selected another tile than the one under it",
+        "category": "input"
+      },
+      {
+        "name": "the hover is not the tile under the pointer",
+        "category": "input"
+      },
+      {
+        "name": "a click on a panel reached the World",
+        "category": "input"
+      },
+      {
+        "name": "a tick of the wheel on a panel reached the World",
+        "category": "input"
+      },
+      {
+        "name": "the node published the same hover card twice running",
+        "category": "input"
+      },
+      {
+        "name": "a bar that forgot the game's reason",
+        "category": "bar"
+      },
+      {
+        "name": "a press on a disabled action asked the game",
+        "category": "input"
+      },
+      {
+        "name": "the World came back behind the HUD's layer",
+        "category": "input"
+      }
+    ]
+  },
+  "causalControl": {
+    "commit": "5e1f6a1",
+    "source": "git show 5e1f6a1:consumers/civ-lite/ui/index.tsx into build/civ-lite-ui-previous/index.tsx",
+    "sha256": "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346",
+    "pinnedSha256": "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346",
+    "sameHost": true,
+    "categories": [
+      "actions",
+      "content",
+      "input",
+      "panels",
+      "phase"
+    ],
+    "findingCounts": {
+      "actions": 25,
+      "content": 86,
+      "input": 16,
+      "panels": 578,
+      "phase": 374
+    },
+    "failedChecks": 135,
+    "panelsShownAtCovering": {
+      "none": [],
+      "tile": [],
+      "settler": [],
+      "warrior": [],
+      "stack": [],
+      "city": [],
+      "dialog": []
+    },
+    "skippedOnShallowClone": true
+  },
+  "reports": {
+    "headless": {
+      "file": "build/civ-lite-ui/headless.json",
+      "sha256": "529c6e21db2386973575847897d94cd2f921cfeef0d7578b02ae1af50b10c644",
+      "bytes": 832072,
+      "checks": 143,
+      "passed": 143,
+      "failed": 0,
+      "checkNameDigest": "799647114779f626e864d7adb42faade969b08bae735dc649eaa57ab26fc1013",
+      "displayServer": "headless"
+    },
+    "graphical": {
+      "file": "build/civ-lite-ui/graphical.json",
+      "sha256": "5b01eebd7b6bd8c8e1b6fba0281f9a74a3c6e99f3eb16b2bcb18e8a55489a174",
+      "bytes": 832754,
+      "checks": 151,
+      "passed": 151,
+      "failed": 0,
+      "checkNameDigest": "d811e3bdfbef11b25dd63d4b88c4038b255879955830242a5997797c8c6a4104",
+      "displayServer": "macOS"
+    },
+    "control": {
+      "file": "build/civ-lite-ui-control/control.json",
+      "sha256": "f08dc08173f90d0e06d5a590a83d849cdcbae034df8ec31353c81446375412f9",
+      "bytes": 539748,
+      "checks": 143,
+      "passed": 8,
+      "failed": 135,
+      "checkNameDigest": "fc0636c098a4a9f8331313f19b61c6ebb3a081d6faa73bb0b6d644500054a5f8",
+      "displayServer": "headless",
+      "expectedToFail": true
+    },
+    "controlObserved": {
+      "file": "build/civ-lite-ui/control-observed.json",
+      "sha256": "4229b553243485e01acd5323bcd517f1a64b4ec49b33675b8036bf3071071cd1"
+    },
+    "summary": {
+      "file": "build/civ-lite-ui/summary.json",
+      "sha256": "9660abfcaefbd933b950ea6e70e7d99d700287d876d78201a3d62913d98daf9e"
+    }
+  },
+  "retainedSabotages": {
+    "format": "godot-fabric.civ-lite-ui-sabotage/v1",
+    "receipt": {
+      "file": "build/civ-lite-ui-sabotage.json",
+      "sha256": "8bb14b28b3bc1092d45f7a572e90baee9dd5868b4177ece0179890b32545dcf4"
+    },
+    "sourceSha256": {
+      "genuine": {
+        "consumers/civ-lite/ui/hud/hud.tsx": "e99b5d833d518528dae1256b5f4c1b93d764a1a828308b4671f387424ba30b45",
+        "consumers/civ-lite/ui/hud/actions.tsx": "0b540dd2a5da989f55ba72c409cc5f09a39af18c0db8e43053a21ad12e7c6dfc",
+        "consumers/civ-lite/ui/hud/bar.tsx": "0171f343cc98b8a4df27b69c09b960312b31377fd5cae1ea6b55595a3f613fba",
+        "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+        "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+        "consumers/civ-lite/ui/hud/kit.tsx": "ca38cf34ee335c7c3e24d200095f99a2a9b2443dfd0ef7b96937aae50c5f1807"
+      },
+      "restored": {
+        "consumers/civ-lite/ui/hud/hud.tsx": "e99b5d833d518528dae1256b5f4c1b93d764a1a828308b4671f387424ba30b45",
+        "consumers/civ-lite/ui/hud/actions.tsx": "0b540dd2a5da989f55ba72c409cc5f09a39af18c0db8e43053a21ad12e7c6dfc",
+        "consumers/civ-lite/ui/hud/bar.tsx": "0171f343cc98b8a4df27b69c09b960312b31377fd5cae1ea6b55595a3f613fba",
+        "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+        "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+        "consumers/civ-lite/ui/hud/kit.tsx": "ca38cf34ee335c7c3e24d200095f99a2a9b2443dfd0ef7b96937aae50c5f1807"
+      }
+    },
+    "restoredEqualsGenuine": true,
+    "controlStatus": 0,
+    "variants": [
+      {
+        "name": "city-by-data",
+        "file": "consumers/civ-lite/ui/hud/hud.tsx",
+        "find": "      {panels.includes(\"city\") ? <City snapshot={snapshot} /> : null}\n",
+        "replace": "      {snapshot.city.present === 1 ? <City snapshot={snapshot} /> : null}\n",
+        "sourceSha256": "6cd05260862652818854bc7a86063e39ce7e5ecd8648742762ece1a7f42e0a67",
+        "rejected": true,
+        "failedChecks": 17,
+        "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+        "categories": [
+          "panels"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-city-by-data/observed.json",
+          "sha256": "1d5e6c7c4d1933ea8184cee3473948e505ba3c8d4637bd60b6f0573203491e99"
+        }
+      },
+      {
+        "name": "actions-reversed",
+        "file": "consumers/civ-lite/ui/hud/actions.tsx",
+        "find": "    {actions.filter(action => action.id !== \"end_turn\").map(action => {\n",
+        "replace": "    {[...actions].reverse().filter(action => action.id !== \"end_turn\").map(action => {\n",
+        "sourceSha256": "e0e4ee630ad5f82b68b6bbca56de67954f6e41eae036e403bd0527dc5c411085",
+        "rejected": true,
+        "failedChecks": 26,
+        "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+        "categories": [
+          "actions",
+          "panels"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-actions-reversed/observed.json",
+          "sha256": "4b28e8608dd6694994aade3b6f5db398131a4bc93f6507ad394a67e896feb6bd"
+        }
+      },
+      {
+        "name": "spinner-always",
+        "file": "consumers/civ-lite/ui/hud/bar.tsx",
+        "find": "      {snapshot.phase === \"idle\" ? null : <ActivityIndicator testID=\"hud-turn-spinner\" size=\"small\" color={COLORS.accent} />}\n",
+        "replace": "      <ActivityIndicator testID=\"hud-turn-spinner\" size=\"small\" color={COLORS.accent} />\n",
+        "sourceSha256": "7f5b812778a4b9cff04ae7422b49daa42245cc732d27f975cf93048dc21e29fe",
+        "rejected": true,
+        "failedChecks": 49,
+        "firstFailedCheck": "Step 0 (clear_selection): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+        "categories": [
+          "bar",
+          "phase"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-spinner-always/observed.json",
+          "sha256": "72f396f2381b992725cc209dabbd94dab01a9dd9aee561eded6529c1719feb36"
+        }
+      },
+      {
+        "name": "end-turn-by-phase",
+        "file": "consumers/civ-lite/ui/hud/bar.tsx",
+        "find": "  const enabled = endTurn !== undefined && endTurn.enabled === 1;\n",
+        "replace": "  const enabled = snapshot.phase === \"idle\";\n",
+        "sourceSha256": "093d436fed9d988e6d085233885bf652cf2d92b62b0135092c8cbf5887d1b5ad",
+        "rejected": true,
+        "failedChecks": 2,
+        "firstFailedCheck": "Step 44 (end_turn): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+        "categories": [
+          "bar"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-end-turn-by-phase/observed.json",
+          "sha256": "80d0443c795ca47b705b1f152922176372b51a52b1a9e1caaf3e0073c04037f3"
+        }
+      },
+      {
+        "name": "spacer",
+        "file": "consumers/civ-lite/ui/hud/hud.tsx",
+        "find": "    <Bar snapshot={snapshot} answer={answer} />\n",
+        "replace": "    <View testID=\"hud-spacer\" style={{ position: \"absolute\", left: 0, top: 0, width: 616, height: 512 }} />\n    <Bar snapshot={snapshot} answer={answer} />\n",
+        "sourceSha256": "a8d67160faf3be5f198c17afeedce83030ce8eecdb19b7dea2eb27e395325f29",
+        "rejected": true,
+        "failedChecks": 12,
+        "firstFailedCheck": "No Control of the HUD that stops the pointer covers the map: [\"hud-spacer\"]",
+        "categories": [
+          "input",
+          "map",
+          "panels"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-spacer/observed.json",
+          "sha256": "8eedf5f2a20f44324da7bd32582a5993b884942c69fe22962c136882911ca528"
+        }
+      },
+      {
+        "name": "hover-unpublished",
+        "file": "consumers/civ-lite/world/world.gd",
+        "find": "    services.set_hover(tile.x, tile.y)\n",
+        "replace": "    pass\n",
+        "sourceSha256": "118d488976ba1c8307eecba74872359a469fab6c707fb348a295fcd73dc24e15",
+        "rejected": true,
+        "failedChecks": 2,
+        "firstFailedCheck": "The pointer over tile (12, 4) published the hover and the tile card shows it; the selection did not move",
+        "categories": [
+          "input"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-hover-unpublished/observed.json",
+          "sha256": "de3cec945592a8f35bbc0fda4c5a02b17749193f5e5e99a8d7e8af398bbfb681"
+        }
+      },
+      {
+        "name": "world-behind-hud",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "find": "  for child in get_children():\n    if child is CanvasLayer:\n      move_child(world, child.get_index())\n      break\n",
+        "replace": "",
+        "sourceSha256": "81d3e55db9dfdbd5027d60319e6ec693cd5e033ce79bcdad055cf76fe9f34369",
+        "rejected": true,
+        "failedChecks": 2,
+        "firstFailedCheck": "Through the menu and back, the World returned ahead of the HUD's layer in the tree",
+        "categories": [
+          "input"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-world-behind-hud/observed.json",
+          "sha256": "2f73dc596c14cd3363e7f74e2eee4928d4d230672eb80a5c695b92eca40d4dfd"
+        }
+      },
+      {
+        "name": "disabled-ignored",
+        "file": "consumers/civ-lite/ui/hud/kit.tsx",
+        "find": "  return <Pressable testID={id} disabled={!enabled} onPress={onPress}\n",
+        "replace": "  return <Pressable testID={id} onPress={onPress}\n",
+        "sourceSha256": "a74c6bf741077c8107bade6965e2cc34a2e17e7206175556937c451cd04b0952",
+        "rejected": true,
+        "failedChecks": 18,
+        "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+        "categories": [
+          "actions",
+          "bar",
+          "content",
+          "input",
+          "panels",
+          "phase"
+        ],
+        "observed": {
+          "file": "build/civ-lite-ui-sabotage-disabled-ignored/observed.json",
+          "sha256": "02b580a738cd2d3866ed4312865e29473252268c3102ba5f73c90220acac7a46"
+        }
+      }
+    ]
+  },
+  "consumerSabotages": {
+    "format": "godot-fabric.consumer-civ-lite-sabotage/v1",
+    "receipt": {
+      "file": "build/consumer-civ-lite-sabotage.json",
+      "sha256": "7031159f01720ded4f01163d484e618c9a944de0378b84139008993e43e703f8"
+    },
+    "restoredEqualsGenuine": true,
+    "controlStatus": 0,
+    "variants": [
+      {
+        "name": "hud-leak",
+        "rejected": true,
+        "failedChecks": 39
+      },
+      {
+        "name": "orphan",
+        "rejected": true,
+        "failedChecks": 19
+      },
+      {
+        "name": "epoch-reset",
+        "rejected": true,
+        "failedChecks": 21
+      },
+      {
+        "name": "no-facade",
+        "rejected": true,
+        "failedChecks": 3
+      },
+      {
+        "name": "job-dies-with-menu",
+        "rejected": true,
+        "failedChecks": 10
+      }
+    ]
+  },
+  "regressions": {
+    "consumerCivLite": {
+      "buildAndOwnershipChecks": 20,
+      "nativeChecks": 165,
+      "cycles": 10,
+      "bindings": 15
+    },
+    "frontierServices": {
+      "tests": 11,
+      "bindings": 15
+    },
+    "civLiteGame": {
+      "tests": 1,
+      "goldenAndTraceHashesUnchanged": true
+    },
+    "servicesSabotages": "the eleven retained sabotages of the services were run during the review of the slice on the same game_services.gd and schema.gd (11 of 11 rejected) and not repeated in this batch"
+  },
+  "hostBinary": {
+    "file": "addons/fabric_godot.dylib",
+    "sha256": "258d18218cff6e000a1a7d52ede4477c2ac4a97ed910a10102d7cda2226084da",
+    "bytes": 6716720,
+    "note": "the slice has no C++: this is the host of main 5e1f6a1 built in this worktree, unchanged by the slice"
+  },
+  "rnImports": {
+    "react-native": {
+      "AppRegistry": [
+        "registerComponent"
+      ],
+      "components": [
+        "View",
+        "Text",
+        "Pressable",
+        "ActivityIndicator"
+      ],
+      "props": [
+        "testID",
+        "style",
+        "pointerEvents",
+        "key",
+        "disabled",
+        "onPress",
+        "size",
+        "color"
+      ],
+      "notUsed": [
+        "onHoverIn",
+        "onHoverOut",
+        "right click",
+        "ScrollView",
+        "Modal"
+      ]
+    },
+    "react": [
+      "useSyncExternalStore"
+    ],
+    "@godot-fabric/runtime": {
+      "GodotFabric": [
+        "connect",
+        "call"
+      ],
+      "onlyIn": "consumers/civ-lite/ui/store.ts"
+    },
+    "manifestCoverage": "AppRegistry is not one of the twelve names of docs/compatibility/scope-0.5.json; its coverage comes with the P9 branch (docs/compatibility/scope-0.5.json and tests/scope-0.5.test.mjs are not touched by this slice)"
+  },
+  "findings": [
+    {
+      "id": "old-spacer-never-claimed",
+      "meaning": "the 624 px View of the HUD of 5e1f6a1 has no testID and nothing that paints, so Fabric flattens it: no Control exists and the map click selects in the control run; the control fails for the absence of bar, panels and card"
+    },
+    {
+      "id": "world-came-back-behind-the-hud",
+      "meaning": "add_child put a new World last in the tree after the menu, so Godot called its _unhandled_input before the HUD Surface could claim what the GUI lets through (the wheel over a panel); GameServices now moves it before the first CanvasLayer",
+      "fixedIn": "consumers/civ-lite/services/game_services.gd"
+    },
+    {
+      "id": "headless-window-64x64",
+      "meaning": "a headless run has a 64x64 root window regardless of window/size; the probe sets it to 1080x600"
+    },
+    {
+      "id": "available_actions-name-drift",
+      "meaning": "the criterion names unit.available_actions; the DTO field is snapshot.actions; End turn is in that list and lives on the bar"
+    },
+    {
+      "id": "stop-control-beats-tree-order",
+      "meaning": "a click on a panel is stopped by the panel Control in the GUI whatever the order of the tree; only what the GUI lets through (the wheel) depends on the order, so the probe uses the wheel"
+    }
+  ],
+  "limits": [
+    "The run is local, macOS arm64: the lane headless and the captures in a macOS window; there is no hosted CI run and no Pages publication yet",
+    "The dialog is a positioned panel, not yet a blocking Modal: overlays, the event queue of three, remount order and estabilidade are slice 2",
+    "The hover was exercised with synthetic events through the viewport (device 1001) in both modes; no physical mouse, no touch",
+    "Hosted CI runs the lane headless only and skips the control on a shallow clone; the captures are a local run",
+    "The control depends on commit 5e1f6a1 being in the checkout and on the same host running both lanes",
+    "Nothing was compared with an iOS device or simulator; no 1.0 checkpoint, weight or denominator moves, and the dashboard is not edited by this record"
+  ],
+  "openItems": [
+    {
+      "id": "overlays",
+      "owner": "V05-05",
+      "meaning": "blocking Modal overlays, the event queue of three, remount order"
+    },
+    {
+      "id": "estabilidade",
+      "owner": "V05-05",
+      "meaning": "20 open/close cycles without leaks, focus restoration, 0 of 100 clicks under an overlay, captures per context in the final form, API scan, icons by Image"
+    },
+    {
+      "id": "appregistry-in-the-manifest",
+      "owner": "P9",
+      "meaning": "AppRegistry (registerComponent, getAppKeys) enters docs/compatibility/scope-0.5.json with SafeAreaView in the P9 branch"
+    }
+  ],
+  "sourcePins": {
+    ".github/workflows/contracts.yml": "c18e399b36bb1d948e873e028b5d39d926f275b582817d153f2f1b87b67831ae",
+    "consumers/civ-lite/.gitignore": "942ac30c877275a1b25d4e7a7f0f4bd3a9d08e8a854e26f85c4aaaff9c705fbb",
+    "consumers/civ-lite/README.md": "0b85d7320b89f888894d1a99d59a2832cac569bb78df38a57763c380f5fd4beb",
+    "consumers/civ-lite/game/game.gd": "70686c9bfce989f698e20921e735e6d722ca51a0fc8b3528e1ede9c311c31a66",
+    "consumers/civ-lite/game/snapshot.gd": "70c3c57e3f1d7a980cfec0c9c4cd73cd056ad4d9cd5e9118f6ccbfac43aacdd8",
+    "consumers/civ-lite/hud_validation.gd": "5e9ce6917b4bf9bf2d91964981e86378c6a50c9ffd0e38b00b25ac285b5919a2",
+    "consumers/civ-lite/main.tscn": "b936a249f5ee8d529ace77740e8fd4522daa37cbc3602696736d745b38c8f9c4",
+    "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+    "consumers/civ-lite/services/schema.gd": "00e21ac3f1aeafec653dd03935cd2cf2dd193a379cead72d8ff47e10557de240",
+    "consumers/civ-lite/ui/frontier-types.ts": "98caf21285a5561702a978a09b06dc3ac52ccd4f08cfad3384e46f35fd328716",
+    "consumers/civ-lite/ui/hud/actions.tsx": "0b540dd2a5da989f55ba72c409cc5f09a39af18c0db8e43053a21ad12e7c6dfc",
+    "consumers/civ-lite/ui/hud/bar.tsx": "0171f343cc98b8a4df27b69c09b960312b31377fd5cae1ea6b55595a3f613fba",
+    "consumers/civ-lite/ui/hud/city.tsx": "672f3b821338e69ed322a14ccc7da6f0a32943b2f82146ce692a1b2e21d5ba4c",
+    "consumers/civ-lite/ui/hud/dialog.tsx": "39e65fbea038c677437bb3b4eca5cdbc9c74205ffed8564e36efc3db62d3113f",
+    "consumers/civ-lite/ui/hud/hud.tsx": "e99b5d833d518528dae1256b5f4c1b93d764a1a828308b4671f387424ba30b45",
+    "consumers/civ-lite/ui/hud/kit.tsx": "ca38cf34ee335c7c3e24d200095f99a2a9b2443dfd0ef7b96937aae50c5f1807",
+    "consumers/civ-lite/ui/hud/research.tsx": "2f36696e0f4d72a92db17b9e04493787ebd5d1d089f97363ca276d6cd2c157c5",
+    "consumers/civ-lite/ui/hud/tile.tsx": "da954074e632fe873e9aadb9a26f7fa0c62a42238b161c56a7421a9080c2d3df",
+    "consumers/civ-lite/ui/index.tsx": "40687f9a1aea3f1a4961fd3526a43b12394858c944ffb2636430666be01fa1fc",
+    "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+    "consumers/civ-lite/ui/telemetry.ts": "9c14435b6c0772d64510f9dfdd0849473e3cf5ec2dd954b0c25d57b4901f7fd3",
+    "consumers/civ-lite/validation.gd": "1a6d906850f0aab92649d7b4c64844dc60daffffea803ee28a060629630d7a63",
+    "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+    "package.json": "75cf0e4fd94f7f5fdb403e9d2d205b75841813c9986f78409e5feaed3b54e842",
+    "scripts/civ-lite-ui-sabotage.mjs": "371a74f44068180d167366b491d5741c5c1b66b897943850707e3a50803ccd8f",
+    "scripts/consumer-civ-lite-check.mjs": "feaba98404efab37f963bb7e300de1d29cf0a4ae6570ff64df04de2f85215828",
+    "scripts/consumer-civ-lite-sabotage.mjs": "213f7ba68bf4a322f93adea79082077ae832d7b846f45589c0156f9c44ef9a73",
+    "tests/civ-lite-ui-native.test.mjs": "1045d8b6bc1747f209c3b07112b7594cf2eb0a4b640d304286d0de2ece77c71d",
+    "tests/civ-lite-ui-oracle.mjs": "e329f7cb48cf87c96eea44f11f30bc584a22c71a148d104da80b6013cd86b787",
+    "tests/frontier-services-oracle.mjs": "7ba8b9262e86905fbce701fef6a4a3a0ca4d437b8f66c33be6fe26d989105763",
+    "tests/frontier-services-parity.test.mjs": "b702a0964491b7ea4dedc1f5d07fafd8ff238e7c57e4fe3910e26adc700970ef",
+    "tests/frontier-services-probe.gd": "728c7618f125b29e7604d3aa3e99f08981d6a7d70afb58617d7b129d5eddfa0d"
+  },
+  "verificationSourcePins": {
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+    "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    ".fallowrc.json": "562846ea701ef7f355d008cb6fc1dd59dd956b7e9fd8c0b1c6cc8d952f4f3af0"
+  },
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the SHA-256 of the file in the tree the lanes ran from",
+    "sourcePins": 32,
+    "verificationSourcePins": 10,
+    "mismatches": [],
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-09T05:35:49Z",
+    "meaning": "Gates that read documents, on the tree that holds this record: the implementation commit 38d3182 plus ROADMAP.md, docs/GAME_SERVICES.md, docs/evidence/README.md, docs/evidence/civ-lite-ui, docs/research/README.md and the research notes frontier-hud, frontier-game, frontier-services and frontier-consumer (no executed source differs from the commit)",
+    "steps": {
+      "check:publication": "passed",
+      "check:static": "passed",
+      "test:dashboard": "passed",
+      "test:contracts": "passed"
+    },
+    "counts": {
+      "contractsNodeTests": [
+        7,
+        43,
+        334
+      ],
+      "contractsPythonTests": 13,
+      "dashboardTests": 43,
+      "staticAnalysis": "fallow: no issues",
+      "publicationScan": "1801 files, no failures (run again with this report in the tree)"
+    },
+    "dashboard": "dashboard/migration.json was not touched (git status shows no change to it)"
+  }
+}

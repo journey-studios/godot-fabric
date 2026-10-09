@@ -833,6 +833,18 @@ rejected, and the sources are restored byte for byte. Headless only, with synthe
 `finished_jobs` is bounded to 256; a `new_game` abandons a job in progress and no `turn_ended` fires for it; the previous-host
 control does not apply, and the **hosted CI run and the Pages publication are pending**. The record is pinned at `d0c7096`.
 
+The [Frontier HUD record](civ-lite-ui/README.md) is the first slice of V05-05 (criteria `matriz` and `mapa`): the HUD mounts, for
+each of the seven contexts the game derives, exactly the panels the context calls for (the turn and resources bar with a spinner
+during the AI's phase, the unit's actions with the game's reasons, the tile card, the city screen, research and the dialog), through
+one store at module scope that is the only module talking to the game. The pointer over the map is Godot's: a click selects through
+the World's `_unhandled_input` and the tile under the pointer is published as the state `frontier.hover` (15 bindings). A probe plays
+the replay's steps 0 to 45, the end of a turn (every frame, then held at an AI phase) and real pointer events; an independent oracle
+judges what it saw with 143 checks of the probe and 0 findings, rejects 23 mutated copies of the report, the HUD of `5e1f6a1` fails in
+five categories, and eight retained sabotages are rejected. The lane found that the World came back behind the HUD's layer after the
+menu (fixed) and that the old HUD's spacer, flattened by Fabric, never swallowed a click. Eight captures, local macOS arm64, no C++;
+the dialog is not yet a blocking `Modal` (slice 2), the hover was exercised with synthetic events, and the **hosted CI run and the Pages
+publication are pending**. The record is pinned at `38d3182`.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,

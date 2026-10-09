@@ -161,7 +161,9 @@ unavoidable is for this, not for the World's return, which `new_game` does by it
   drops the World, changes no state, publishes no snapshot and leaves the epoch alone. It is in `schema.gd`
   (`METHOD_ARGS`), in `frontier-types.ts` (`FrontierMethods` and `FRONTIER_OPEN_MENU`) and therefore in the parity test, which
   now counts one state, one signal and 12 methods: **14 bindings**, where the package before had 13. The probe, the oracle and
-  the parity test were changed for that count and nothing else.
+  the parity test were changed for that count and nothing else. (Since 2026-10-09 the count is **15**: the HUD slice added the
+  state `frontier.hover`, and the HUD holds two connections on the game screen, the snapshot and the hover; see
+  [Frontier's HUD](frontier-hud.md).)
 - **New game in the menu** calls `frontier.new_game` (the epoch rises by 1); with no World, `GameServices` instantiates one from
   `world_scene` before it publishes the snapshot, and the HUD, which called it from the menu, goes back to the `game` screen and
   connects again to receive the new epoch.
@@ -223,7 +225,7 @@ trust:
 | --- | --- | --- |
 | nodes of the tree | `get_tree().get_node_count()` | the first cycle's |
 | orphan nodes | `Performance.OBJECT_ORPHAN_NODE_COUNT` | the first cycle's |
-| bindings | `snapshot().gameServices.bindings` | 14 |
+| bindings | `snapshot().gameServices.bindings` | 15 (14 until 2026-10-09, when `frontier.hover` was added) |
 | subscriptions | `snapshot().gameServices.subscriptions` | the first cycle's |
 | pending work | `gameServices.pendingHostTasks`, `pendingEvents` | 0 and 0 |
 | connections of `snapshot_changed` | `get_connections().size()` | the first cycle's: the registry's and the World's |
@@ -254,6 +256,11 @@ the table; the figures below are from the first headless run of the version with
 | 8 | 21 | 0 | 14 | 1 | 2 | 1 | 25, 25 | 15, 16 |
 | 9 | 21 | 0 | 14 | 1 | 2 | 1 | 28, 28 | 17, 18 |
 | 10 | 21 | 0 | 14 | 1 | 2 | 1 | 31, 31 | 19, 20 |
+
+The figures above are those of that run: 14 bindings and one HUD connection. Since 2026-10-09 (P8, V05-05) the registry holds 15
+bindings and the HUD holds 2 connections on the game screen (the snapshot and the hover) and none in the menu, and every other
+column is the same; the HUD is now `ui/store.ts` and its panels, with the validation's telemetry in `ui/telemetry.ts`
+([Frontier's HUD](frontier-hud.md)).
 
 After the ten cycles the validation stops the application: the registry reports `stopped`, no binding, no subscription and
 nothing pending, and `snapshot_changed` keeps only the World's connection.

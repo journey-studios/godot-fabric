@@ -28,6 +28,12 @@ extends Node
 # to is gone, and no `turn_ended` fires for it. `finished_jobs` counts how many times each job finished. The job follows the
 # game's clock: it stops while the tree is paused, like the rest of the game.
 #
+# The pointer. `frontier.hover` is a state of its own, the card of the tile under the pointer (the snapshot's `tile` DTO, with
+# `present` 0 over no tile). The World, which hears the pointer, calls `set_hover` (and `refresh_hover` after each snapshot); they are
+# not services and not part of the game, so the snapshot, its emission rule and the hashes are what they were. `hover_changed` fires
+# when the hovered tile changes and when a snapshot changes what the card of the hovered tile says; a new game, the menu and a
+# reload clear it.
+#
 # The facade. This node names no path to the SDK: whoever owns the scene injects `fabric_api`, the script of the facade
 # (godot_fabric.gd). A provisioned consumer's main.tscn points it at the addon's copy; the laboratory's probe assigns the
 # SDK source before the node enters the tree. Without it `_bind_services` fails loud and registers nothing.
@@ -47,11 +53,13 @@ const Schema := preload("schema.gd")
 const PREFIX := "frontier."
 const SNAPSHOT_NAME := PREFIX + "snapshot"
 const TURN_ENDED_NAME := PREFIX + "turn_ended"
+const HOVER_NAME := PREFIX + "hover"
 const WORLD_NAME := "World"
 # How many finished jobs `finished_jobs` remembers: the node runs as long as the game does.
 const FINISHED_KEPT := 256
 
 signal snapshot_changed(snapshot: Dictionary)
+signal hover_changed(card: Dictionary)
 signal turn_ended(summary: Dictionary)
 
 # The script of the SDK facade (godot_fabric.gd), injected by the scene's owner.
@@ -72,6 +80,9 @@ var job := 0
 var job_phases: Array = []
 # The next id. It is the node's, not the session's: it keeps rising across new games.
 var next_job := 1
+# The tile under the pointer, (-1, -1) over none, and the card last published for it.
+var hover := Vector2i(-1, -1)
+var hover_card: Dictionary = {}
 # job id -> how many times it finished (exactly 1 for a job that finished well), for the last FINISHED_KEPT jobs.
 var finished_jobs := {}
 
@@ -102,6 +113,8 @@ func _bind_services(runtime: Node) -> void:
     return
   bindings.append(services.bind_state(SNAPSHOT_NAME, get_snapshot, snapshot_changed, Schema.SNAPSHOT))
   registered.append({"name": SNAPSHOT_NAME, "kind": "state", "value": Schema.SNAPSHOT})
+  bindings.append(services.bind_state(HOVER_NAME, get_hover, hover_changed, Schema.HOVER))
+  registered.append({"name": HOVER_NAME, "kind": "state", "value": Schema.HOVER})
   bindings.append(services.bind_signal(TURN_ENDED_NAME, turn_ended, [Schema.TURN_ENDED]))
   registered.append({"name": TURN_ENDED_NAME, "kind": "signal", "args": [Schema.TURN_ENDED]})
   for method: String in Schema.METHOD_ARGS:
@@ -115,6 +128,41 @@ func _bind_services(runtime: Node) -> void:
 
 func get_snapshot() -> Dictionary:
   return game.snapshot()
+
+
+# The card of the tile under the pointer; the absent card (`present` 0) over none.
+func get_hover() -> Dictionary:
+  return game.tile_card(hover.x, hover.y)
+
+
+# The World reports the tile under the pointer: a coordinate outside the map is none. It publishes only a change.
+func set_hover(x: int, y: int) -> void:
+  var next := Vector2i(x, y) if (x >= 0 and x < Rules.MAP_W and y >= 0 and y < Rules.MAP_H) else Vector2i(-1, -1)
+  if next == hover:
+    return
+  hover = next
+  hover_card = get_hover()
+  hover_changed.emit(hover_card)
+
+
+# A published snapshot can change what the card of the hovered tile says (a unit moved onto it). The World, which hears every
+# snapshot the node publishes, asks for the card again, and the node publishes it only if it changed.
+func refresh_hover() -> void:
+  if hover.x < 0:
+    return
+  var card := get_hover()
+  if card != hover_card:
+    hover_card = card
+    hover_changed.emit(card)
+
+
+# A new game, the menu or a reload: the World that heard the pointer is gone, and with it the tile it pointed at.
+func _clear_hover() -> void:
+  if hover.x < 0:
+    return
+  hover = Vector2i(-1, -1)
+  hover_card = get_hover()
+  hover_changed.emit(hover_card)
 
 
 # --- Intents -------------------------------------------------------------------------------------------------------
@@ -218,6 +266,7 @@ func new_game() -> Dictionary:
   _abandon_job()
   epoch += 1
   game = Game.new(Rules.SEED, epoch)
+  _clear_hover()
   _ensure_world()
   snapshot_changed.emit(game.snapshot())
   return _plain({"ok": 1, "code": "ok", "text": ""})
@@ -241,18 +290,26 @@ func reload_world() -> Dictionary:
 
 # --- The World -----------------------------------------------------------------------------------------------------
 
+# The World comes back ahead of the HUD's layer: Godot offers the unhandled input to the last node of the tree first, and the HUD's
+# Surface has to claim what React Native hits before the World hears it (docs/research/world-input.md). `add_child` alone would put
+# it last, behind the HUD, and what the GUI lets through (the wheel over a panel, a hit slop) would reach the map.
 func _ensure_world() -> void:
   if world_scene == null or get_node_or_null(WORLD_NAME) != null:
     return
   var world := world_scene.instantiate()
   world.name = WORLD_NAME
   add_child(world)
+  for child in get_children():
+    if child is CanvasLayer:
+      move_child(world, child.get_index())
+      break
 
 
 func _drop_world() -> void:
   var world := get_node_or_null(WORLD_NAME)
   if world == null:
     return
+  _clear_hover()
   remove_child(world)
   world.queue_free()
 

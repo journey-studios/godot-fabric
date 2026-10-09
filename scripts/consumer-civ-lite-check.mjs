@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import path from "node:path";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { cp, readFile, writeFile, rm } from "node:fs/promises";
 import { createHarness, hash } from "./consumer-harness.mjs";
@@ -17,7 +17,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
 // others, then 3 after them. The headed run adds the three of its captures.
 const CYCLES = 10;
 const NEW_GAMES_PER_CYCLE = 3;
-const BINDINGS = 14;
+const BINDINGS = 15;
 // The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
 const CALLS_PER_CYCLE = 7;
 const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
@@ -28,14 +28,17 @@ const SABOTAGES = {
   "hud-leak": { failed: [/the connections the HUD holds are the first cycle's/, /the registry's subscriptions are the first cycle's/, /in the menu the HUD showed it/], grows: ["hudSubscriptions", "subscriptions"] },
   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
-  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the state, the signal and the 12 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 12 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
   "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
 
-// The imports the HUD may have: the public API of the platform and the types of the services, nothing of the laboratory.
-const publicModules = ["react", "react-native", "@godot-fabric/runtime", "./frontier-types"];
+// The imports the HUD may have: the public API of the platform and its own files (the store, the panels and the types of the
+// services, all under ui/), nothing of the laboratory.
+const publicModules = ["react", "react-native", "@godot-fabric/runtime"];
 const importsOf = source => [...source.matchAll(/^\s*import\s+(?:[^'"]*?\sfrom\s+)?["']([^"']+)["']/gm)].map(match => match[1]);
+const sourcesUnder = (directory, prefix = "") => readdirSync(directory, { withFileTypes: true }).flatMap(entry => entry.isDirectory()
+  ? sourcesUnder(path.join(directory, entry.name), `${prefix}${entry.name}/`) : /\.tsx?$/.test(entry.name) ? [`${prefix}${entry.name}`] : []);
 
 const harness = await createHarness({ template: "civ-lite", name: sabotage === null ? "consumer-civ-lite" : `consumer-civ-lite-sabotage-${sabotage}` });
 const { directory, project, env, checks, sdk, verify, run, editor } = harness;
@@ -58,7 +61,8 @@ try {
   const world = await readFile(path.join(project, "world", "world.gd"), "utf8");
   const projectFile = await readFile(path.join(project, "project.godot"), "utf8");
   verify(["project.godot", "main.tscn", "validation.gd", "package.json", "package-lock.json", "tsconfig.json", "ui/application.tres", "ui/index.tsx",
-    "ui/frontier-types.ts", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
+    "ui/frontier-types.ts", "ui/store.ts", "ui/telemetry.ts", "ui/hud/hud.tsx", "ui/hud/bar.tsx", "ui/hud/actions.tsx", "ui/hud/tile.tsx", "ui/hud/city.tsx",
+    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
     && ["sdk", "tests", "build", "consumers", "examples", "src", "native"].every(directory => !existsSync(path.join(project, directory))),
   "The provisioned project is the template plus the addon, with no laboratory directory");
   verify(/application="res:\/\/ui\/application\.tres"/.test(projectFile) && /res:\/\/addons\/godot_fabric\/plugin\.cfg/.test(projectFile),
@@ -73,10 +77,16 @@ try {
     "The scene injects the addon's facade and no script of the project names a path to the laboratory SDK or the global class");
     verify(/^\[node name="GameServices" type="Node"\]/m.test(mainScene) && /instance=ExtResource\("5"\)/.test(mainScene) && /type="FabricSurface"/.test(mainScene),
       "The scene's root is the GameServices node, with the Application, the World and a HUD surface under it");
-    const hud = await readFile(path.join(project, "ui", "index.tsx"), "utf8");
+    const hud = sourcesUnder(path.join(project, "ui"));
     const types = await readFile(path.join(project, "ui", "frontier-types.ts"), "utf8");
-    verify(importsOf(hud).length > 0 && importsOf(hud).every(name => publicModules.includes(name)) && importsOf(types).every(name => name === "@godot-fabric/runtime"),
-      "The HUD is public TSX: it imports only react, react-native, @godot-fabric/runtime and its own types");
+    const inside = (file, name) => {
+      const target = path.posix.join(path.posix.dirname(file), name);
+      return name.startsWith(".") && (hud.includes(`${target}.ts`) || hud.includes(`${target}.tsx`));
+    };
+    const imported = await Promise.all(hud.map(async file => ({ file, names: importsOf(await readFile(path.join(project, "ui", file), "utf8")) })));
+    verify(hud.includes("index.tsx") && imported.every(({ file, names }) => names.every(name => publicModules.includes(name) || inside(file, name)))
+      && importsOf(types).every(name => name === "@godot-fabric/runtime"),
+    "The HUD is public TSX: every file under ui/ imports only react, react-native, @godot-fabric/runtime and another file of ui/");
     const guide = await readFile(path.join(project, "README.md"), "utf8");
     assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//);
     verify(guide.includes(`https://github.com/journey-studios/godot-fabric/blob/${manifest.sourceCommit}/docs/research/frontier-consumer.md`),
@@ -152,7 +162,8 @@ try {
     const inputs = buildReport.inputs;
     verify(inputs.every(file => !/(?:^|\/)examples\//.test(file) && !file.startsWith("project/../") && !file.startsWith("project/node_modules/")),
       "The bundle has no laboratory, examples or SDK-checkout source, and no project dependency");
-    verify(inputs.includes("project/ui/index.tsx") && inputs.includes("project/ui/frontier-types.ts"), "The bundle is built from the project's own TSX: the HUD and the types of the services");
+    verify(["index.tsx", "store.ts", "frontier-types.ts", "hud/hud.tsx", "hud/bar.tsx"].every(file => inputs.includes(`project/ui/${file}`)),
+      "The bundle is built from the project's own TSX: the HUD, its store, its panels and the types of the services");
 
     await run("offline", "/usr/bin/sandbox-exec", ["-p", "(version 1)(allow default)(deny network*)", path.join(sdk, "toolchain", "node", "bin", "node"),
       path.join(sdk, "toolchain", "build.mjs"), project, "res://ui/index.tsx", "res://.godot_fabric/app.js"]);

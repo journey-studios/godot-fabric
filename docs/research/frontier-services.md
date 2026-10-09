@@ -43,6 +43,12 @@ here, in "The turn is a job". There is no HUD here: the playable HUD is V05-05, 
 integer `epoch`. It registers 14 bindings: one state, one signal, one method per intent and `open_menu`, the one method that is
 the scene's and not the game's (added by the `consumidor` slice; the package before it registered 13).
 
+> **Update, 2026-10-09 (P8, V05-05).** The HUD slice added a second state, `frontier.hover`: the card of the tile under the pointer,
+> published by the World as a state of its own (the pointer is not part of the game, so the snapshot, its emission and the hashes
+> did not change). The node now registers **15 bindings**: two states, one signal and the same 12 methods. The figures of 14
+> bindings below are those of the runs this note's package made, and are left as they were; the probe, the oracle and the parity
+> test now expect 15. See [Frontier's HUD](frontier-hud.md), "The hover service".
+
 - **Registration is before everything.** The node connects to `$Application.runtime_available` in `_enter_tree`, as
   `consumers/minimal/game.gd` does. The signal is emitted while the application enters the tree, before a surface mounts and
   before the bundle evaluates. `_ready` would be too late: a parent's `_ready` runs after its children's, so the surface has
@@ -369,7 +375,7 @@ process, which the services never touch, plays the same steps and is the referen
 
 - **Registration before the mount.** The bundle's own connections, made as it evaluates, were ready with no error (a late
   registration answers `E_SERVICE_MISSING` there); the first connection received the initial snapshot of epoch 1; the registry
-  held the 14 bindings.
+  held the 14 bindings (15 since the hover state of 2026-10-09; see the update in "The node and its lifecycle").
 - **Round trip.** At all 73 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
   reference session's.
 - **Actions are calls.** At all 73 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
@@ -386,13 +392,13 @@ process, which the services never touch, plays the same steps and is the referen
   `275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29`; the hashes of all 73 steps make the P3 trace hash
   `fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8`.
 - **Persistence.** The surface is unmounted in the frame after the node accepted the third `end_turn`, with the job's first phase
-  not yet run: the panel's connection is removed, the root is gone, and the registry still holds 14 bindings under the same
+  not yet run: the panel's connection is removed, the root is gone, and the registry still holds 14 bindings (15 since 2026-10-09) under the same
   registration generation (`"1"`), the same node and game and the same epoch. The job goes on with no root and finishes once
   (see "The turn is a job"). One more step is played with no surface at all (`select_tile(7, 8)`) and the node answers it. The
   surface is mounted again: the panel reconnects, its first value is the current snapshot (at rest, turn 4, `last_job` 3), and it
   is of the same generation, so nothing was registered a second time.
 - **DTO limits.** The largest snapshot of the roteiro has 174 value nodes and depth 4 (the limits are 10,000 and 32). One
-  state, one signal and twelve methods are 14 bindings.
+  state, one signal and twelve methods are 14 bindings (two states since 2026-10-09: 15).
 - **The dump of the registered schemas** goes in the report for the parity test.
 
 `tests/frontier-services-oracle.mjs` judges the raw report without trusting the probe's verdicts. It derives the schema from
