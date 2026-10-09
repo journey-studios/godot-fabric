@@ -699,7 +699,7 @@ exclusive Modal Window and no Control under it has the focus; Escape closes the 
 and the last cycle of each screen, 100 left clicks, 100 right clicks and 100 wheel ticks reach the World 0 times. A scan of the HUD against the 0.5 manifest, written on
 the syntax tree and reading the manifest (which now decides `AppRegistry`), refuses a name, a prop or a member the manifest does not allow, and the icons are six original
 32x32 PNGs drawn by a generator and shown by `Image` in the bar, the actions, the tile card and the city screen, which is inside a Modal's Window: all of them drew, in
-every opening. The lane (a third probe with 41 checks, an oracle that rejects 38 mutated reports, 14 cases of the scan: 13 changes found and one let through) fails the previous HUD only on the icons, and
+every opening. The lane (a third probe with 41 checks, an oracle that rejects 38 mutated reports, 23 cases of the scan: 21 changes found and two let through) fails the previous HUD only on the icons, and
 five new sabotages join the twelve (17, all rejected). A first review found a real flake, a screen declared at rest while its Images were still loading, and the rest is
 now a state that includes them; the lane passed three runs in a row after it. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with seven
 captures; this slice is not on main yet, so it has no hosted run, and no 1.0 checkpoint, weight or denominator moves.

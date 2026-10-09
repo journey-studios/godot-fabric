@@ -2372,7 +2372,7 @@
       " M tests/hosted-receipts.test.mjs",
       "?? docs/evidence/civ-lite-ui/overlays/"
     ],
-    "documentsEditedDuringExecution": "the tree was clean when the first command ran; the files modified or added by the time the last one ended are the documents of this record (README, research note, ROADMAP, index, this report, the captures) and the hosted receipts of PR #93 with their rows and test (scripts/hosted-receipts-slices.mjs, tests/hosted-receipts.test.mjs), none of which any lane of the batch executes or reads",
+    "documentsEditedDuringExecution": "the tree was clean when the first command ran. When the last command ended, git status listed exactly the entries of dirtyAfterLastCommand: documents of this record (the README of civ-lite-ui, the research note, ROADMAP.md and the evidence index) and the work on the hosted receipts of PR #93 (its row in scripts/hosted-receipts-slices.mjs, tests/hosted-receipts.test.mjs and the folder docs/evidence/civ-lite-ui/overlays/); no lane of the batch reads or executes any of them. This report, the seven captures (copied from build/ after the batch), docs/research/README.md and dashboard/migration.json were written after the last command had ended, so they are not in that list",
     "sourceDirtyDuringExecution": false,
     "environment": {
       "godot": "4.7.2.stable.official.ed1daf0bf",
@@ -2463,7 +2463,7 @@
         "hud": 27,
         "overlays": 20,
         "stability": 38,
-        "scan": 14
+        "scan": 23
       },
       "oracleFindings": 0,
       "scan": {
@@ -2523,6 +2523,42 @@
           },
           {
             "name": "a type-only import of a type the manifest does not decide is not a name",
+            "kind": "clean"
+          },
+          {
+            "name": "a static import of a subpath of react-native",
+            "kind": "import"
+          },
+          {
+            "name": "a re-export from a subpath of react-native",
+            "kind": "import"
+          },
+          {
+            "name": "a require of a subpath of react-native",
+            "kind": "import"
+          },
+          {
+            "name": "a dynamic import of a subpath of react-native",
+            "kind": "import"
+          },
+          {
+            "name": "AppRegistry is destructured into a member outside the subset",
+            "kind": "member"
+          },
+          {
+            "name": "AppRegistry is destructured with a rest element",
+            "kind": "member"
+          },
+          {
+            "name": "AppRegistry is aliased before a member outside the subset is read",
+            "kind": "member"
+          },
+          {
+            "name": "AppRegistry is passed as an argument",
+            "kind": "member"
+          },
+          {
+            "name": "a member of the subset destructured from AppRegistry is let through",
             "kind": "clean"
           }
         ],
@@ -3742,13 +3778,22 @@
       "addedByTheSlice": "AppRegistry (supported; members registerComponent and getAppKeys; the HUD's entry point; the audit row is stale)",
       "scanner": "tests/civ-lite-hud-scan.mjs (TypeScript syntax tree; reads the manifest, never a copy)",
       "findingsOnTheHud": 0,
-      "cleanCases": 1,
+      "cleanCases": 2,
       "sharedPathsAdded": [
         "docs/compatibility/scope-0.5.json",
         "tests/scope-0.5.test.mjs"
       ],
-      "cases": 14,
-      "changesFound": 13
+      "cases": 23,
+      "changesFound": 21,
+      "alsoRefusedAfterTheReview": [
+        "a subpath of react-native (react-native/Libraries/...) by a static import, a re-export, a require or a dynamic import",
+        "a destructuring of a name with a list of members into a member outside the list, or with a rest element",
+        "a loose use of such a name (an alias, an argument, a return, an export)"
+      ],
+      "letThrough": [
+        "a type-only import of react-native",
+        "a member of the subset destructured from AppRegistry"
+      ]
     },
     "reports": {
       "headless": {
@@ -4544,6 +4589,88 @@
       },
       "seconds": {
         "test-contracts": 95
+      }
+    },
+    "writtenAfterTheLastCommand": [
+      "docs/evidence/civ-lite-ui/report.json",
+      "docs/evidence/civ-lite-ui/stability-bar.png",
+      "docs/evidence/civ-lite-ui/stability-actions.png",
+      "docs/evidence/civ-lite-ui/stability-city.png",
+      "docs/evidence/civ-lite-ui/stability-city-1.png",
+      "docs/evidence/civ-lite-ui/stability-city-20.png",
+      "docs/evidence/civ-lite-ui/stability-dialog-1.png",
+      "docs/evidence/civ-lite-ui/stability-dialog-20.png",
+      "docs/research/README.md",
+      "dashboard/migration.json"
+    ],
+    "afterThePin": {
+      "when": "after PR #100 was opened on the pinned commit; the review of the PR raised four findings, all valid",
+      "pinnedCommit": "0a0decaf87548b2515101e27ac62ccf6cfc370f2",
+      "note": "the executed sources of this record (0a0deca) and every pin above are historical and stay as they were; the files below changed afterwards, and the lane was run again on the changed tree",
+      "checkLabel": {
+        "file": "consumers/civ-lite/stability_judge.gd",
+        "before": "City (%s, %s): the nodes, the orphans, the objects and the Windows are the first cycle's",
+        "after": "City (%s, %s): the nodes, the orphans and the Windows are the first cycle's",
+        "why": "the group tree of the probe is nodes, orphans and Windows: the objects are judged apart, by the rule of the heap",
+        "checksRenamed": [
+          "City (close, after)",
+          "City (close, open)",
+          "City (escape, after)",
+          "City (escape, open)"
+        ],
+        "checkNameDigest": {
+          "method": "SHA-256 of the check names of the report, in order, joined by a newline",
+          "at0a0deca": "0bd9d789b67d9f68789d41c321e0c48701ca8786db874b3762995e785a64b116",
+          "now": "9c25b65f8c62cda3fb6107a4a5f9c1b7edc86245e217aa4bbe3a162cf125982e",
+          "checks": 41
+        },
+        "stabilityReportOfAHeadlessRun": {
+          "command": "npm run test:civ-lite-ui",
+          "file": "build/civ-lite-ui/stability.json",
+          "sha256": "c866e27211aa3552716e61715a984722b2c4775db26d16b6fd5f14f001a6c962",
+          "checks": 41,
+          "note": "the digest of the report file depends on the run (heap, object counts and the like); the digest of the names does not"
+        },
+        "unchanged": {
+          "hudCheckNameDigest": "7cf45f6d0192dcd87196f7cdb2889e6a801bd35ab817afeb3e8f066b39ef2b50",
+          "overlaysCheckNameDigest": "d6fb0a4bc304485502461fb8e372b53c55a9efa940756f478f06c4059dd7267b"
+        },
+        "pinnedDigestsStay": "reports.stability.sha256 and the source pins are those of the run on 0a0deca and are not rewritten"
+      },
+      "dirtyList": "the note on the tree that the last command left was made coherent with dirtyAfterLastCommand (see documentsEditedDuringExecution and writtenAfterTheLastCommand)",
+      "scan": {
+        "file": "tests/civ-lite-hud-scan.mjs",
+        "changes": [
+          "any subpath of react-native is refused (static import, re-export, import type, require, dynamic import)",
+          "a name with subset.members is read only as Name.member or by destructuring members of the list; an alias, an argument, a return, an export or a shorthand property is refused"
+        ],
+        "laneMutationsAdded": 9,
+        "cases": 23,
+        "changesFound": 21,
+        "letThrough": 2
+      },
+      "rerun": {
+        "ranAt": "2026-10-09T21:09:01Z",
+        "laneHeadless": {
+          "command": "npm run test:civ-lite-ui",
+          "result": "passed",
+          "seconds": 196,
+          "printed": "CIVLITE_UI_LANE_PASSED: 144 + 26 + 41 probe checks; 27 + 20 + 38 oracle mutations and 23 of the scan; controls fail [actions, content, input, map, panels, phase], [blocking, newgame, queue, remount] and [icons]"
+        },
+        "sabotages": {
+          "command": "node scripts/civ-lite-ui-sabotage.mjs",
+          "result": "17 of 17 rejected, sources restored byte for byte, the restored lane passes (control status 0)",
+          "seconds": 933
+        },
+        "gates": {
+          "check-static": "passed",
+          "check-publication": "passed",
+          "test-dashboard": "passed (43)",
+          "test-contracts": "passed (7, 43 and 456 Node tests, 13 Python)",
+          "milestone-guards": "X9 and X10 clean against origin/main",
+          "hosted-receipts-check": "HOSTED_RECEIPTS_CHECK_PASSED: 15 slices, 30 receipts (after the merge of main)",
+          "type-check": "passed"
+        }
       }
     }
   }

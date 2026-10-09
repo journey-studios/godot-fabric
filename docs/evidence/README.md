@@ -877,7 +877,7 @@ answered by three presses, 60 answers), and after every close, at rest, the tree
 subscriptions, the HUD's connections and the signal's are the first cycle's, exactly, with the Hermes heap flat by the baseline's rule; focus (the root viewport's owner
 restored, the Modal's Window the one exclusive one while open, Escape closing the city and doing nothing on the dialog) and 0 of 100 clicks of each kind under the overlay in
 the first and the last cycle; a scan of the HUD against the 0.5 manifest, which now decides `AppRegistry`; and six original icons shown by `Image`, inside a Modal's Window too.
-A third probe of 41 checks, an oracle that rejects 38 mutated reports, a scan that finds 13 changes of a copy of the sources, a control (`e108e9d`) that fails only the icons,
+A third probe of 41 checks, an oracle that rejects 38 mutated reports, a scan that finds 21 changes of a copy of the sources (a name, a prop or a member the manifest does not allow, a subpath of `react-native`, an alias or a destructuring of `AppRegistry`; 23 cases, 2 of them let through), a control (`e108e9d`) that fails only the icons,
 and 17 sabotages (5 new) rejected; seven captures were read. Local macOS arm64; this part is not on main yet, so it has no hosted run.
 
 The [Frontier scope record](frontier-scope/README.md) is V05-04 (criteria `manifesto`, `tipos` and `props`): the twelve names the HUD imports are decided in

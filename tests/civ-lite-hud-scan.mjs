@@ -7,9 +7,13 @@ import ts from "typescript";
 // and one the component does not declare is refused as unknown); and every member the HUD reads of a name with a `subset.members` list must
 // be in it. What the manifest cannot say, the lane's own patterns say (hooks, listeners, talking to the game): they are not here.
 //
-// A type-only import is erased by the build and not a name the HUD uses; a namespace or default import, a `require` and a dynamic import
-// would hide which names are used and are refused.
+// A type-only import of `react-native` itself is erased by the build and not a name the HUD uses; a namespace or default import, a `require` and a dynamic
+// import would hide which names are used and are refused. So is any subpath of the package (`react-native/Libraries/...`), however it is reached (a static
+// import, a re-export, a `require`, a dynamic import, an import type): the manifest decides names of the public module and nothing deeper. A name with a list
+// of members is read only as `Name.member` (or by destructuring members of the list): an alias, an argument or any other loose use of it would hide which
+// member is read, and is refused.
 const MODULE = "react-native";
+const isDeep = specifier => typeof specifier === "string" && specifier.startsWith(`${MODULE}/`);
 const words = text => text.match(/\b[A-Z][A-Za-z0-9]*\b/g) ?? [];
 
 /** What the manifest leaves out: a name that its prose or `notInTheManifest` names and `names` does not decide, with the sentence that says so. */
@@ -68,9 +72,20 @@ export function scanHud(sources, manifest) {
     const tree = ts.createSourceFile(file, text, ts.ScriptTarget.ESNext, true, file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
     // local name -> the name the manifest decides
     const bound = new Map();
+    const deep = (specifier, how) => found("import", `${how} the subpath ${specifier} of ${MODULE}: only the names of ${MODULE} itself, which the manifest decides, may be used`);
     const importedFrom = specifier => ts.isStringLiteral(specifier) && specifier.text === MODULE;
     for (const statement of tree.statements) {
-      if (ts.isImportDeclaration(statement) && importedFrom(statement.moduleSpecifier)) {
+      if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && isDeep(statement.moduleSpecifier.text)) {
+        deep(statement.moduleSpecifier.text, "the HUD imports");
+      } else if (ts.isExportDeclaration(statement) && statement.moduleSpecifier !== undefined && ts.isStringLiteral(statement.moduleSpecifier) && isDeep(statement.moduleSpecifier.text)) {
+        deep(statement.moduleSpecifier.text, "the HUD re-exports");
+      } else if (ts.isImportEqualsDeclaration(statement) && ts.isExternalModuleReference(statement.moduleReference) && ts.isStringLiteral(statement.moduleReference.expression)
+          && isDeep(statement.moduleReference.expression.text)) {
+        deep(statement.moduleReference.expression.text, "the HUD requires");
+      } else if (ts.isImportEqualsDeclaration(statement) && ts.isExternalModuleReference(statement.moduleReference) && ts.isStringLiteral(statement.moduleReference.expression)
+          && statement.moduleReference.expression.text === MODULE) {
+        found("import", `${MODULE} is required by an import-equals, which hides which names the HUD uses: import the names`);
+      } else if (ts.isImportDeclaration(statement) && importedFrom(statement.moduleSpecifier)) {
         const clause = statement.importClause;
         if (clause === undefined || clause.isTypeOnly) {
           continue;
@@ -98,7 +113,15 @@ export function scanHud(sources, manifest) {
     }
     const visit = node => {
       if (ts.isCallExpression(node) && (node.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(node.expression) && node.expression.text === "require"))) {
-        found("import", "a `require` or a dynamic import: the HUD imports its names statically");
+        const [argument] = node.arguments;
+        if (argument !== undefined && ts.isStringLiteralLike(argument) && isDeep(argument.text)) {
+          deep(argument.text, "the HUD loads");
+        } else {
+          found("import", "a `require` or a dynamic import: the HUD imports its names statically");
+        }
+      }
+      if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal) && isDeep(node.argument.literal.text)) {
+        deep(node.argument.literal.text, "the HUD names a type of");
       }
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         scanElement(node);
@@ -119,7 +142,55 @@ export function scanHud(sources, manifest) {
       if (ts.isElementAccessExpression(node) && ts.isIdentifier(node.expression) && bound.has(node.expression.text)) {
         found("member", `${node.expression.text} is read by a computed member, which the subset cannot be checked against`);
       }
+      if (ts.isVariableDeclaration(node) && node.initializer !== undefined && ts.isIdentifier(node.initializer) && ts.isObjectBindingPattern(node.name)) {
+        const row = withMembers(node.initializer.text);
+        for (const element of row === null ? [] : node.name.elements) {
+          const key = element.propertyName ?? element.name;
+          if (element.dotDotDotToken !== undefined) {
+            found("member", `${row.name} is destructured with a rest element, which takes members the subset cannot be checked against`);
+          } else if (!(ts.isIdentifier(key) || ts.isStringLiteral(key))) {
+            found("member", `${row.name} is destructured by a computed member, which the subset cannot be checked against`);
+          } else if (!row.subset.members.includes(key.text)) {
+            found("member", `${row.name}.${key.text} is not a member of the manifest's subset (${row.subset.members.join(", ")}), and it is destructured`);
+          }
+        }
+      }
+      if (ts.isIdentifier(node) && withMembers(node.text) !== null && useOf(node) === "value") {
+        found("member", `${node.text} is used as a value (an alias, an argument, a return, an export): the subset can only be checked against ${node.text}.member, or members destructured from it`);
+      }
       ts.forEachChild(node, visit);
+    };
+    // The names the manifest gives a list of members (AppRegistry, Platform, ...), by their local binding.
+    const withMembers = local => {
+      const row = bound.has(local) ? names.get(bound.get(local)) : undefined;
+      return Array.isArray(row?.subset?.members) ? row : null;
+    };
+    // How an identifier that is bound to such a name is used: as the object of a member access, as the initializer of a destructuring, as a name that
+    // declares something or names a property (not a use), or as a value (everything else).
+    const useOf = identifier => {
+      const parent = identifier.parent;
+      if (ts.isImportSpecifier(parent) || ts.isImportClause(parent) || ts.isNamespaceImport(parent) || ts.isTypeQueryNode(parent) || ts.isTypeReferenceNode(parent)) {
+        return "type or declaration";
+      }
+      if (ts.isPropertyAccessExpression(parent) && parent.expression === identifier) {
+        return "member access";
+      }
+      if (ts.isElementAccessExpression(parent) && parent.expression === identifier) {
+        return "computed member";
+      }
+      if (ts.isVariableDeclaration(parent) && parent.initializer === identifier && ts.isObjectBindingPattern(parent.name)) {
+        return "destructured";
+      }
+      if (ts.isShorthandPropertyAssignment(parent)) {
+        return "value";
+      }
+      if (ts.isExportSpecifier(parent)) {
+        return parent.propertyName === identifier || (parent.propertyName === undefined && parent.name === identifier) ? "value" : "name";
+      }
+      if (parent.name === identifier || parent.propertyName === identifier || ts.isJsxOpeningElement(parent) || ts.isJsxSelfClosingElement(parent) || ts.isJsxClosingElement(parent)) {
+        return "name";
+      }
+      return "value";
     };
     const scanElement = element => {
       if (!ts.isIdentifier(element.tagName) || !bound.has(element.tagName.text)) {

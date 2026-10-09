@@ -583,12 +583,15 @@ Se a `Window` raiz e a do Modal têm o foco do sistema operacional fica gravado,
 `react-native` tem de ser um dos `names` do manifesto, e um que o `outOfScope` ou o `notInTheManifest` deixam de fora (`TextInput`, `Keyboard`, `FlatList`, ...) é recusado com a frase que o diz;
 cada prop de um elemento JSX desses componentes tem de ser uma que o manifesto suporta para ele (uma recusada passa só com um valor da lista `accepts`, como `animationType="none"`; uma ignorada é
 recusada, porque não muda nada aqui; uma que o RN nem declara para o componente, como `onContextMenu` e `onAuxClick`, é recusada como desconhecida); cada membro lido de um nome com lista de
-`subset.members` tem de estar nela (`AppRegistry.registerComponent`). Um import padrão ou de namespace, um `require` e um import dinâmico são recusados porque escondem quais nomes se usam; um import
+`subset.members` tem de estar nela (`AppRegistry.registerComponent`), e o nome só é lido assim: os membros desestruturados dele (`const { getAppKeys } = AppRegistry`) são conferidos contra a lista
+(um resto ou um membro calculado é recusado), e qualquer uso solto do nome ligado (um alias, um argumento, um retorno, um export) é recusado, porque esconderia que membro se lê depois; qualquer subcaminho de
+`react-native` (`react-native/Libraries/...`) é recusado, seja um import estático, um re-export, um import de tipo, um `require` ou um import dinâmico. Um import padrão ou de namespace, um `require` e um import dinâmico são recusados porque escondem quais nomes se usam; um import
 só de tipo some no build e não é um nome. O `AppRegistry`, o ponto de entrada da HUD, entrou no manifesto (supported, com `registerComponent` e `getAppKeys`) e o teste do manifesto passou a 13 nomes; o
 `docs/compatibility/scope-0.5.json` e o `tests/scope-0.5.test.mjs` entraram nos `SHARED_PATHS` do quadro de agentes, porque toda fatia do 0.5 os estende.
 
-A lane prova que a varredura pode falhar com **13 mudanças** de uma cópia dos fontes (um import de `FlatList`, de `TextInput` e de `Keyboard`; um nome que o manifesto não decide; um import de namespace; um
-`require`; `onHoverIn`, `onContextMenu` e `onMouseEnter`; `animationType="slide"`; filhos numa `Image`; um spread; `AppRegistry.runApplication`) e **um import só de tipo, que ela deixa passar** (14 casos). A regex que a
+A lane prova que a varredura pode falhar com **21 mudanças** de uma cópia dos fontes (um import de `FlatList`, de `TextInput` e de `Keyboard`; um nome que o manifesto não decide; um import de namespace; um
+`require`; `onHoverIn`, `onContextMenu` e `onMouseEnter`; `animationType="slide"`; filhos numa `Image`; um spread; `AppRegistry.runApplication`; um import estático, um re-export, um `require` e um import dinâmico de um subcaminho de `react-native`; o `AppRegistry` desestruturado
+em um membro fora do subconjunto ou com um resto, usado por um alias e passado como argumento) e **dois casos que ela deixa passar** (um import só de tipo e um membro do subconjunto desestruturado): 23 casos. A regex que a
 lane já tinha (hooks, listeners, falar com o jogo) fica: o manifesto não lista nada disso.
 
 ### Os ícones por `Image`
@@ -695,6 +698,9 @@ rota do ponteiro, órfão e do que a rodada criou; o heap e os objetos; o foco; 
 - **Uma sabotagem cujo erro é uma `Image` que não carrega** aparece pelo `status` `failed` e pelo erro "Could not find image", e a probe não depende de nenhum timeout para vê-la.
 - **A varredura achou uma lacuna do manifesto**: o `AppRegistry` estava na HUD desde a fatia 1 e não no manifesto. Entrou nesta fatia.
 - **O Escape é entregue à `Window` do Modal** (um `window_input` o conta), o que faz o check do diálogo provar que a tecla chegou, e não só que nada mudou.
+- **Depois do pin, a revisão do PR #100 achou quatro coisas, todas válidas.** O rótulo do check do grupo `tree` falava de "objects", que esse grupo não julga (o digest dos nomes dos checks da probe de estabilidade passou de
+  `0bd9d789…` para `9c25b65f…`; os da HUD e de overlays não mudaram); a varredura deixava passar um subcaminho de `react-native` e o uso de `AppRegistry` por desestruturação ou por um alias, e agora os recusa; e a nota da
+  árvore suja do recibo estava incoerente com a lista que ela descreve. As fontes pinadas em `0a0deca` não foram reescritas; o bloco `slice2b.afterThePin` do recibo guarda o que mudou depois e o digest novo.
 
 ### Limites da fatia 2b
 

@@ -277,6 +277,17 @@ const SCAN_MUTATIONS = [
   {name: "a View takes a spread of props", file: "hud/kit.tsx", change: swap('return <View testID={id}\n', 'return <View {...style} testID={id}\n'), kind: "prop", match: /takes a spread/},
   {name: "AppRegistry runs an application", file: "index.tsx", change: source => `${source}\nAppRegistry.runApplication("FrontierHUD", {});\n`, kind: "member", match: /AppRegistry\.runApplication is not a member/},
   {name: "a type-only import of a type the manifest does not decide is not a name", file: "hud/kit.tsx", change: swap('import type { ReactNode } from "react";', 'import type { ReactNode } from "react";\nimport type { ViewStyle } from "react-native";'), clean: true},
+  // A subpath of react-native reaches past the names the manifest decides, however it is reached.
+  {name: "a static import of a subpath of react-native", file: "hud/kit.tsx", change: swap('import type { ReactNode } from "react";', 'import type { ReactNode } from "react";\nimport Animated from "react-native/Libraries/Animated/Animated";'), kind: "import", match: /subpath react-native\/Libraries\/Animated\/Animated/},
+  {name: "a re-export from a subpath of react-native", file: "hud/kit.tsx", change: source => `${source}\nexport { default as Deep } from "react-native/Libraries/Animated/Animated";\n`, kind: "import", match: /re-exports the subpath/},
+  {name: "a require of a subpath of react-native", file: "hud/hud.tsx", change: source => `${source}\nconst deep = require("react-native/Libraries/Animated/Animated");\n`, kind: "import", match: /loads the subpath/},
+  {name: "a dynamic import of a subpath of react-native", file: "hud/hud.tsx", change: source => `${source}\nconst later = import("react-native/Libraries/Animated/Animated");\n`, kind: "import", match: /loads the subpath/},
+  // A name with a list of members is read as Name.member, or by destructuring members of the list: nothing else can be checked against it.
+  {name: "AppRegistry is destructured into a member outside the subset", file: "index.tsx", change: source => `${source}\nconst { runApplication } = AppRegistry;\n`, kind: "member", match: /AppRegistry\.runApplication is not a member .* destructured/},
+  {name: "AppRegistry is destructured with a rest element", file: "index.tsx", change: source => `${source}\nconst { ...everything } = AppRegistry;\n`, kind: "member", match: /destructured with a rest element/},
+  {name: "AppRegistry is aliased before a member outside the subset is read", file: "index.tsx", change: source => `${source}\nconst Registry = AppRegistry;\nRegistry.runApplication("FrontierHUD", {});\n`, kind: "member", match: /AppRegistry is used as a value/},
+  {name: "AppRegistry is passed as an argument", file: "index.tsx", change: source => `${source}\nObject.keys(AppRegistry);\n`, kind: "member", match: /AppRegistry is used as a value/},
+  {name: "a member of the subset destructured from AppRegistry is let through", file: "index.tsx", change: source => `${source}\nconst { getAppKeys } = AppRegistry;\n`, clean: true},
 ];
 
 if (sabotage === null) {
@@ -345,7 +356,8 @@ if (sabotage === null) {
       }
       scanned.push({name: mutation.name, kind: mutation.kind ?? "clean"});
     }
-    verify(true, `The scan finds each of ${SCAN_MUTATIONS.length - 1} changes of a copy of the HUD (an import out of scope, a refused or unknown or ignored prop, a member out of the subset) and lets a type-only import through`);
+    const changesFound = SCAN_MUTATIONS.filter(mutation => mutation.clean !== true).length;
+    verify(true, `The scan finds each of ${changesFound} changes of a copy of the HUD (an import out of scope or by a subpath, a refused or unknown or ignored prop, a member out of the subset, read by destructuring, by an alias or by a loose use) and lets ${SCAN_MUTATIONS.length - changesFound} others through (a type-only import, a member of the subset destructured)`);
 
     // The icons: six PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, each imported by the HUD as an asset an Image draws.
     const drawn = renderIcons();

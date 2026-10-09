@@ -124,7 +124,7 @@ func judge_city(city: Dictionary, base: Dictionary) -> void:
     var which: String = rows[0].how
     for phase in ["after", "open"]:
       var group := series(rows, phase)
-      check(drift(group, ["tree"]).is_empty(), "City (%s, %s): the nodes, the orphans, the objects and the Windows are the first cycle's" % [which, phase])
+      check(drift(group, ["tree"]).is_empty(), "City (%s, %s): the nodes, the orphans and the Windows are the first cycle's" % [which, phase])
       check(drift(group, ["views", "work"]).is_empty(), "City (%s, %s): the native views, the Modal members and the pending work are the first cycle's" % [which, phase])
       check(drift(group, ["pointers", "services"]).is_empty(),
         "City (%s, %s): the pointer routes, the registry's subscriptions and pending work, the HUD's connections and the signal's are the first cycle's" % [which, phase])

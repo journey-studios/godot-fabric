@@ -381,11 +381,17 @@ ticks pushed at the map reach the World 0 times and select nothing (`hud_probe.g
 - every prop of a JSX element of one of those components must be one the manifest supports for it; a refused prop passes only with a value its `accepts`
   lists (`animationType="none"`), an ignored prop is refused because it changes nothing here, and a prop that RN does not declare for the component
   (`onContextMenu`, `onAuxClick`) is refused as unknown; a spread cannot be checked and is refused; `children` of an `Image` is refused;
-- every member read of a name that has a `subset.members` list (`AppRegistry.registerComponent`) must be in it.
+- every member read of a name that has a `subset.members` list (`AppRegistry.registerComponent`) must be in it, and the name is read only that way: members
+  destructured from it (`const { getAppKeys } = AppRegistry`) are checked against the list too (a rest element or a computed member is refused), and any loose use
+  of the bound name (an alias, an argument, a return, an export, a shorthand property) is refused, because it would hide which member is read afterwards;
+- any subpath of `react-native` (`react-native/Libraries/...`) is refused, however it is reached: a static import, a re-export, an import type, a `require` or a dynamic
+  import.
 
 The lane runs it on every provisioned project and proves it can fail with 13 changes of a copy of the sources (a `FlatList`, a `TextInput`, a `Keyboard`
 import; a name the manifest does not decide; a namespace import; a `require`; `onHoverIn`, `onContextMenu` and `onMouseEnter`; `animationType="slide"`;
-children of an `Image`; a spread; `AppRegistry.runApplication`) and one that it must let through (a type-only import): 14 cases. The hand-written patterns of the lane
+children of an `Image`; a spread; `AppRegistry.runApplication`; a static import, a re-export, a `require` and a dynamic import of a subpath of `react-native`; `AppRegistry`
+destructured into a member outside the subset or with a rest element, aliased, and passed as an argument: 21 changes in all) and two that it must let through (a type-only import
+and a member of the subset destructured): 23 cases. The hand-written patterns of the lane
 (hooks, listeners, talking to the game) stay: the manifest lists none of those. `AppRegistry` was added to the manifest with the subset it has
 (`src/app-registry.js`).
 
@@ -404,7 +410,7 @@ oracle.
 ### The lane of slice 2b
 
 `npm run test:civ-lite-ui` adds the third probe (41 checks; 49 in the headed run, which adds seven captures and the comparison of the last cycle's pictures with
-the first's), the oracle with 38 mutated reports rejected, and the 14 cases of the scan (13 changes found, 1 let through). The causal control is `e108e9d` (the HUD and the game of slice 2a, with
+the first's), the oracle with 38 mutated reports rejected, and the 23 cases of the scan (21 changes found, 2 let through). The causal control is `e108e9d` (the HUD and the game of slice 2a, with
 the manifest of that commit): its scan finds `AppRegistry` and nothing else, and its probe fails exactly the three checks about icons, because it has none; it leaks
 nothing. Five sabotages join the twelve, all rejected with the sources restored byte for byte: `close-leaks-connection` (the store opens a connection on every
 `clear_selection` and keeps it: leak and heap), `modal-stays-mounted` (the city's Modal gated on the city existing: a Window that stays and blocks the map),
