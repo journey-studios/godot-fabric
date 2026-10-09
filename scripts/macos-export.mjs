@@ -154,7 +154,8 @@ export async function assertLocalLoadPaths(values, binary, app, label = "binary"
     const base = loaderAlias ? path.dirname(binary) : path.join(app, "Contents/MacOS");
     const resolved = path.resolve(base, suffix);
     assert.ok(isPathInside(app, resolved), `${label} escapes the .app: ${value}`);
-    const physical = await realpath(resolved);
+    const physicalCandidate = suffix ? `${base}${path.sep}${suffix}` : base;
+    const physical = await realpath(physicalCandidate);
     assert.ok(isPathInside(appRoot, physical), `${label} resolves outside the .app through ${value}`);
   }
 }
