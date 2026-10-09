@@ -1000,8 +1000,8 @@ five jobs in the first attempt) repeated the 34 checks in each of three processe
 ([hosted receipt](frontier-soak/hosted-ci.json), [publication](frontier-soak/publication.json)); the timings, heap and memory
 numbers above are local.
 
-The [Frontier turn record](frontier-turn/README.md), pinned at `116a72f`, records the `turno` criterion of V05-06 (package P6) on the game **as a consumer has it**, and leaves it **open**:
-the presented frame time is pending. The `consumers/civ-lite` template is provisioned into a project of its own, with its HUD and scene untouched, and clicked for 32 rounds of 16 real pointer
+The [Frontier turn record](frontier-turn/README.md), pinned at `116a72f` (the headless lane) and at `1adcdb3` (the windowed lane), records the `turno` criterion of V05-06 (package P6) on the game **as a consumer has it**, and the two lanes
+together **close** it. The `consumers/civ-lite` template is provisioned into a project of its own, with its HUD and scene untouched, and clicked for 32 rounds of 16 real pointer
 clicks through all seven contexts (the dialog opened by the End turn of the fourth turn), in one headless Godot process (about 172 seconds): all 23 checks of the probe hold and the independent oracle
 accepts every rule. A click shows the panels of its context 2 frames after the injection in all 480 steady clicks (8 for an End turn: the job's seven frames and one for the HUD to catch up; 10 to
 14 ms of CPU on the unpaced headless loop; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and
@@ -1009,9 +1009,13 @@ accepts every rule. A click shows the panels of its context 2 frames after the i
 readings), the live heap at rest of each of the 17 series grows 128 bytes between the medians of the halves (GF-30's 2,048-byte limit, by the baseline's rule, which is now one function shared with
 the soak's resident-memory rule), and no error goes unhandled. Four retained sabotages (a frame that runs two phases, a node left behind by every click, a click delivered far from its target, a
 HUD that keeps 64 numbers of every render), two of them made in the provisioned copy and never in the template, are rejected, each by its own rule, and the oracle rejects 22 changes of a recorded
-report. **No presented frame time is pinned**: the local windowed lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) imports the baseline's validity rule, rejected all three attempts as unpaced
-with the display off (an idle frame of about 0.6 ms against the 4.167 ms required), ended with `presented: false`, exit code 3 and no frame-time statistic, and kept seven captures (one for each
-context) of the real HUD over the real map; `congelado` is a later, single act and this record proposes no bound. The clicks are synthetic, the HUD is V05-05's work in progress, the two
+report. The local windowed lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) imports the baseline's validity rule. The first time, with the display off, it rejected all three attempts as unpaced
+(an idle frame of about 0.6 ms against the 4.167 ms required) and ended with `presented: false`, exit code 3 and no frame-time statistic. **It was presented on 2026-10-09**, with the display on, on the main
+commit `1adcdb3` ([the presented record](frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)): 5 of 5 runs accepted in 8 attempts (three rejected as `undrawn`, none as unpaced), vsync on at 120 Hz, exit code 0; the first frame of a click took
+a p95 of 12.98 ms (median across the runs) and none of 1,800 reached 100 ms, and the frames of a turn have a p95 per phase of 12.8 to 14.1 ms and none of 4,800 reached 100 ms. They are intervals between process frames, and the idle median
+(4.4 to 13.2 ms across the runs) is unstable because the idle intervals fall in two alternating groups whose mean is one refresh period, so the p95 and the mean are what to read. The raw receipt is not committed (SHA-256 `db86eb08…`)
+and seven captures (one for each context) of the real HUD over the real map are kept. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` stays open, and `congelado` is a later, single act
+(this record proposes no bound). The clicks are synthetic, the HUD is V05-05's work in progress, the two
 frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded), the previous-host control does not apply since no
 C++ changed, and hosted CI is **pending**.
 
