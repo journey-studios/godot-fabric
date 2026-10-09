@@ -185,7 +185,7 @@ Regras:
 
 - Um agente por worktree e uma branch por agente, nunca `main`. A worktree
   (raiz do `git rev-parse --show-toplevel`) identifica o agente; o slot sai do
-  `claim` (primeiro livre, ou `--slot N`). Com os cinco slots ocupados o `claim`
+  `claim` (primeiro livre, ou `--slot N`). Com os seis slots ocupados o `claim`
   é recusado e indica com quem falar.
 - Áreas são exclusivas por prefixo: diretório termina com `/`
   (`src/networking/`), arquivo não (`src/a.js`). Sem caminho absoluto, `..` ou
