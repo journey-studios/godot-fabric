@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
-import {nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
+import {growthOfHalves, nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
 import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
   STABLE_FRAMES, TAB, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
 
@@ -66,22 +66,15 @@ function verifyProvenance(provenance) {
 // 158 on the two hosted series); the floors of the halves, which a single low reading moves, are recorded as observations (see the research note).
 export function heapAtRest(rests) {
   const steady = rests.slice(WARMUP_ROUNDS).map(entry => heapOf(entry.reading));
-  const half = Math.floor(steady.length / 2);
-  assert.ok(half >= 1, "The steady rounds fill two halves");
-  const firstHalf = steady.slice(0, half);
-  const lastHalf = steady.slice(steady.length - half);
-  const firstMedian = nearestRank(firstHalf, 50);
-  const lastMedian = nearestRank(lastHalf, 50);
+  const {half, firstMedian, lastMedian, growth} = growthOfHalves(steady, HEAP_STEADY_GROWTH_LIMIT_BYTES, {fill: "The steady rounds fill two halves",
+    read: "The heap at rest is read", exceeded: ({half: rounds, growth: rose}) => `The live heap at rest rose ${rose} bytes from the median of the first half (${rounds} rounds) of the steady rounds to the median of the last, over the limit of ${HEAP_STEADY_GROWTH_LIMIT_BYTES}`});
   const floor = Math.min(...steady);
-  assert.ok(floor > 0, "The heap at rest is read");
-  assert.ok(lastMedian - firstMedian <= HEAP_STEADY_GROWTH_LIMIT_BYTES,
-    `The live heap at rest rose ${lastMedian - firstMedian} bytes from the median of the first half (${half} rounds) of the steady rounds to the median of the last, over the limit of ${HEAP_STEADY_GROWTH_LIMIT_BYTES}`);
   let largestStep = 0;
   for (let index = 1; index < steady.length; ++index) {
     largestStep = Math.max(largestStep, Math.abs(steady[index] - steady[index - 1]));
   }
-  return {steadyRounds: steady.length, halfRounds: half, firstMedian, lastMedian, growth: lastMedian - firstMedian,
-    firstFloor: Math.min(...firstHalf), lastFloor: Math.min(...lastHalf), firstSteady: steady[0], last: steady.at(-1),
+  return {steadyRounds: steady.length, halfRounds: half, firstMedian, lastMedian, growth,
+    firstFloor: Math.min(...steady.slice(0, half)), lastFloor: Math.min(...steady.slice(steady.length - half)), firstSteady: steady[0], last: steady.at(-1),
     lastMinusFirst: steady.at(-1) - steady[0], highestAboveFloor: Math.max(...steady) - floor, largestStep,
     roundsAboveFloor: steady.filter(value => value > floor).length};
 }

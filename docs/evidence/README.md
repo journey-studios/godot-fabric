@@ -1000,6 +1000,21 @@ five jobs in the first attempt) repeated the 34 checks in each of three processe
 ([hosted receipt](frontier-soak/hosted-ci.json), [publication](frontier-soak/publication.json)); the timings, heap and memory
 numbers above are local.
 
+The [Frontier turn record](frontier-turn/README.md), pinned at `116a72f`, records the `turno` criterion of V05-06 (package P6) on the game **as a consumer has it**, and leaves it **open**:
+the presented frame time is pending. The `consumers/civ-lite` template is provisioned into a project of its own, with its HUD and scene untouched, and clicked for 32 rounds of 16 real pointer
+clicks through all seven contexts (the dialog opened by the End turn of the fourth turn), in one headless Godot process (about 172 seconds): all 23 checks of the probe hold and the independent oracle
+accepts every rule. A click shows the panels of its context 2 frames after the injection in all 480 steady clicks (8 for an End turn: the job's seven frames and one for the HUD to catch up; 10 to
+14 ms of CPU on the unpaced headless loop; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and
+`turn_ended` once (120 steady turns, 128 in all), the native views and the SceneTree's nodes are the same every time a context comes back (14, 18, 24, 24, 26, 27 and 42 views, with no orphan in 546
+readings), the live heap at rest of each of the 17 series grows 128 bytes between the medians of the halves (GF-30's 2,048-byte limit, by the baseline's rule, which is now one function shared with
+the soak's resident-memory rule), and no error goes unhandled. Four retained sabotages (a frame that runs two phases, a node left behind by every click, a click delivered far from its target, a
+HUD that keeps 64 numbers of every render), two of them made in the provisioned copy and never in the template, are rejected, each by its own rule, and the oracle rejects 22 changes of a recorded
+report. **No presented frame time is pinned**: the local windowed lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) imports the baseline's validity rule, rejected all three attempts as unpaced
+with the display off (an idle frame of about 0.6 ms against the 4.167 ms required), ended with `presented: false`, exit code 3 and no frame-time statistic, and kept seven captures (one for each
+context) of the real HUD over the real map; `congelado` is a later, single act and this record proposes no bound. The clicks are synthetic, the HUD is V05-05's work in progress, the two
+frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded), the previous-host control does not apply since no
+C++ changed, and hosted CI is **pending**.
+
 The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
 1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
 changed `done`, weight or status and for a changed note, label or evidence) and X10 (frozen tail: no new `pointer-*`, EventTarget, Document or hover slice, and
