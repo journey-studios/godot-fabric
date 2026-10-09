@@ -16,7 +16,9 @@ extends Node
 #   --sabotage   a retained sabotage runs this scene: a failed check is the rejection, not an error
 
 const CYCLES := 10
-const BINDINGS := 14
+const BINDINGS := 15
+# What the HUD holds while the game screen is up: the connection to the snapshot and the one to the tile under the pointer.
+const HUD_CONNECTIONS := 2
 # What the HUD sees of a turn that is processed: the phase of each snapshot as it changes, from the turn at rest to the turn at rest.
 const PHASES_SEEN := ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"]
 # The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game.
@@ -82,7 +84,7 @@ func tail(kept: Array, fresh: int) -> Array:
 
 # The HUD has the snapshot of the session the services hold now, a game that has just begun, and shows it.
 func fresh_game_shown() -> bool:
-  return hud_epoch() == int(services.epoch) and text("hud-turn") == "Turn 1 · epoch %d" % int(services.epoch)
+  return hud_epoch() == int(services.epoch) and text("hud-bar-turn") == "Turn 1 · epoch %d" % int(services.epoch)
 
 
 func hud_tree() -> Dictionary:
@@ -231,7 +233,7 @@ func capture_game() -> void:
   await RenderingServer.frame_post_draw
   var image := get_viewport().get_texture().get_image()
   var unit_at := Vector2i(24 + 6 * 24 + 11, 24 + 8 * 24 + 11)
-  var hud_at := Vector2i(1060, 580)
+  var hud_at := Vector2i(28, 580)
   check(image.save_png("res://civ-lite-game.png") == OK, "Capture saved: the game with its World and its HUD")
   check(near(image.get_pixelv(unit_at), PLAYER_COLOR) and near(image.get_pixelv(hud_at), PANEL_COLOR),
     "Capture: the World's unit marker and the HUD panel are both on screen, the HUD over a transparent map area")
@@ -257,16 +259,16 @@ func _ready() -> void:
 
 
 func run() -> void:
-  var connected := await wait_until(func() -> bool: return int(hud_stats().get("snapshots", 0)) >= 1 and text("hud-turn") != "")
+  var connected := await wait_until(func() -> bool: return int(hud_stats().get("snapshots", 0)) >= 1 and text("hud-bar-turn") != "")
   var initial := state()
   var facade_injected := check(services.fabric_api != null and services.fabric_api.resource_path == "res://addons/godot_fabric/godot_fabric.gd",
     "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK")
   var evaluated := check(initial.bundleEvaluations == 1 and initial.errors.is_empty(), "The provisioned application evaluates its bundle once and reports no error")
   var registered := check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false and services.registered.size() == BINDINGS,
-    "The node registered the state, the signal and the 12 methods while the application entered the tree: 14 bindings")
+    "The node registered the two states, the signal and the 12 methods while the application entered the tree: 15 bindings")
   var scened := check(worlds() == 1 and world() != null and world().get_parent() == services, "The scene starts with one World, a child of the GameServices node")
-  var shown := check(connected and text("hud-turn") == "Turn 1 · epoch 1" and int(hud_stats().subscriptions) == 1,
-    "The public TSX HUD connected to the snapshot of epoch 1 with one subscription")
+  var shown := check(connected and text("hud-bar-turn") == "Turn 1 · epoch 1" and int(hud_stats().subscriptions) == HUD_CONNECTIONS,
+    "The public TSX HUD connected to the snapshot of epoch 1 and to the hover, two subscriptions")
   var plain := check(not DirAccess.dir_exists_absolute("res://sdk") and not DirAccess.dir_exists_absolute("res://tests"), "The project is the template: no laboratory directory")
   epoch_before_cycles = int(services.epoch)
 
@@ -323,24 +325,24 @@ func run_cycle(cycle: int) -> void:
   var results_start := int(hud_stats().resultCount)
 
   # (a) New game, pressed on the HUD.
-  var pressed_new := await press("hud-new-game")
+  var pressed_new := await press("hud-bar-new-game")
   await wait_until(func() -> bool: return int(services.epoch) == epoch_start + 1 and hud_epoch() == int(services.epoch))
   # (b) Three intents of the roteiro through the HUD: select the Settler, move it into the forest, end the turn.
   var selected := await send("select_unit", [1])
   await wait_until(func() -> bool: return hud_stats().context == "settler")
   var moved := await send("move_unit", [1, 7, 8])
-  await wait_until(func() -> bool: return button_ready("action-end_turn") and text("hud-context").begins_with("Context: settler"))
+  await wait_until(func() -> bool: return button_ready("hud-bar-end-turn") and button_ready("hud-actions") and not button_ready("hud-city"))
   if capture and cycle == 1:
     await capture_game()
   # The end of the turn is a job: the game accepts it with an id, the HUD sees the turn go through its phases, and the job
   # finishes by itself. Nothing is pressed until the HUD has the turn at rest again with last_job = the job.
   var phases_start := int(hud_stats().phaseCount)
   var answered_before := int(hud_stats().resultCount)
-  var ended := await press("action-end_turn")
+  var ended := await press("hud-bar-end-turn")
   await wait_until(func() -> bool: return int(hud_stats().resultCount) > answered_before)
   var job_results: Array = hud_stats().results
   var job_id := int(job_results.back().job) if not job_results.is_empty() else 0
-  await wait_until(func() -> bool: return job_id > 0 and int(hud_stats().lastJob) == job_id and int(hud_stats().turn) == 2 and text("hud-turn").begins_with("Turn 2"))
+  await wait_until(func() -> bool: return job_id > 0 and int(hud_stats().lastJob) == job_id and int(hud_stats().turn) == 2 and text("hud-bar-turn").begins_with("Turn 2"))
   var stats_after_job := hud_stats()
   var phases_of_job: Array = tail(stats_after_job.phases, int(stats_after_job.phaseCount) - phases_start)
   # (c) The scene reloaded: the World out of the tree and freed, a new one, a new game (the epoch rises).
@@ -355,7 +357,7 @@ func run_cycle(cycle: int) -> void:
   var job_with_menu := int(services.next_job)
   var turn_with_menu := int(services.game.state.turn)
   var finished_before := int(services.finished_jobs.size())
-  var opened := await press_together(["action-end_turn", "hud-menu"])
+  var opened := await press_together(["hud-bar-end-turn", "hud-bar-menu"])
   await wait_until(func() -> bool: return hud_stats().screen == "menu" and world() == null and button_ready("menu-new-game"))
   await wait_until(func() -> bool: return int(hud_stats().subscriptions) == 0, CLEANUP_FRAMES)
   await wait_until(func() -> bool: return services.job == 0 and int(services.finished_jobs.get(job_with_menu, 0)) >= 1)
@@ -401,7 +403,7 @@ func run_cycle(cycle: int) -> void:
   check(in_menu.screen == "menu" and in_menu.world == false and in_menu.hudSubscriptions == 0,
     label + ": in the menu the HUD showed it, the scene had no World and the HUD held no connection")
   check(row.freed == [true, true], label + ": the two Worlds the cycle dropped (the reload's and the menu's) are freed")
-  check(row.bindings == BINDINGS, label + ": the registry still holds the 14 bindings")
+  check(row.bindings == BINDINGS, label + ": the registry still holds the 15 bindings")
   check(row.pendingHostTasks == 0 and row.pendingEvents == 0, label + ": no host task and no event is pending")
   check(runtime_errors.is_empty() and int(stats.problemCount) == 0, label + ": the application and the HUD report no error")
   check(row.worlds == 1 and world() != null and world().get_parent() == services and world_connected(),
@@ -412,8 +414,8 @@ func run_cycle(cycle: int) -> void:
 
   if cycle == 1:
     baseline = {"nodes": row.nodes, "orphans": row.orphans, "subscriptions": row.subscriptions, "connections": row.connections, "hudSubscriptions": row.hudSubscriptions}
-    check(row.nodes > 0 and row.subscriptions >= 1 and row.connections >= 2 and row.hudSubscriptions == 1,
-      label + ": the baseline is a fresh game on the game screen: one HUD subscription, the registry's connection and the World's")
+    check(row.nodes > 0 and row.subscriptions >= 1 and row.connections >= 2 and row.hudSubscriptions == HUD_CONNECTIONS,
+      label + ": the baseline is a fresh game on the game screen: the HUD's two subscriptions, the registry's connection and the World's")
     return
   check(row.nodes == baseline.nodes, label + ": the nodes of the tree are the first cycle's (%d)" % int(baseline.nodes))
   check(row.orphans == baseline.orphans, label + ": the orphan nodes are the first cycle's (%d)" % int(baseline.orphans))

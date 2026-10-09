@@ -12,7 +12,7 @@ import {guardSources} from "./sabotage-sources.mjs";
 // template must then pass the plain check. There is no sabotage for a World that forgets to disconnect `snapshot_changed`: the
 // engine drops the connection of a freed Node by itself, so that leak cannot happen (docs/research/frontier-consumer.md).
 //
-//  hud-leak    the HUD's effect no longer removes its connection to the snapshot when its screen goes away: the registry's
+//  hud-leak    the store no longer releases its connections when the last screen that reads it goes away: the registry's
 //               subscriptions and the HUD's grow with every visit to the menu.
 //  orphan       dropping the World takes it out of the tree and does not free it: the orphan nodes grow, and the Worlds the cycle
 //               dropped are still alive.
@@ -28,9 +28,9 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const template = "consumers/civ-lite";
 const variants = [
-  {name: "hud-leak", file: `${template}/ui/index.tsx`,
-    find: "    return () => release(connection);\n",
-    replace: "    return () => {};\n"},
+  {name: "hud-leak", file: `${template}/ui/store.ts`,
+    find: "function disconnect() {\n  for (const connection of connections) {\n    connection.remove();\n  }\n  connections.clear();\n  view = NOT_CONNECTED;\n}\n",
+    replace: "function disconnect() {\n  view = NOT_CONNECTED;\n}\n"},
   {name: "orphan", file: `${template}/services/game_services.gd`,
     find: "  remove_child(world)\n  world.queue_free()\n",
     replace: "  remove_child(world)\n"},

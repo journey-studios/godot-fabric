@@ -43,14 +43,17 @@ test("the dump is of this tree: the report was made from the sources the types a
 });
 
 test("the TypeScript types and the schemas Godot registered declare the same names, fields and types", () => {
-  assert.equal(typescript.registrations.length, 14, "one state, one signal and 12 methods");
+  assert.equal(typescript.registrations.length, 15, "two states (the snapshot and the hover), one signal and 12 methods");
   assert.deepEqual(diffRegistrations(typescript.registrations, report.registered), []);
   // The name constants are the registered names: a constant that named nothing would be a call to a missing service.
   assert.deepEqual(Object.values(typescript.constants).sort(), typescript.registrations.map(entry => entry.name).sort());
   assert.deepEqual(report.registered.map(entry => entry.kind).sort(), ["method", "method", "method", "method", "method", "method", "method", "method", "method",
-    "method", "method", "method", "signal", "state"]);
+    "method", "method", "method", "signal", "state", "state"]);
   // The shapes the HUD leans on, spelled out once more.
   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
+  // The hover is the card of the tile under the pointer: the same DTO as the snapshot's `tile`, on both sides.
+  assert.deepEqual(named(typescript.registrations, "frontier.hover").value, at(snapshot, ["tile"]), "the hover is the snapshot's tile card");
+  assert.deepEqual(named(report.registered, "frontier.hover").value, named(report.registered, "frontier.snapshot").value.object.tile, "and so it is in Godot's schemas");
   assert.deepEqual(at(snapshot, ["actions", "[]", "args"]), {array: "integer"}, "an action's args are the intent's positional arguments, integers");
   assert.equal(at(snapshot, ["epoch"]), "integer");
   assert.equal(at(snapshot, ["last_job"]), "integer", "the snapshot carries the last job that finished");
@@ -105,6 +108,10 @@ const mutations = [
     expected: {godot: "frontier.snapshot.last_job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.snapshot.last_job: registered by Godot, missing from the TypeScript types"}},
   {name: "the signal's job removed", target: "frontier.turn_ended", change: value => delete value.args[0].object.job,
     expected: {godot: "frontier.turn_ended(arguments)[0].job: declared in TypeScript, missing from Godot's schema", typescript: "frontier.turn_ended(arguments)[0].job: registered by Godot, missing from the TypeScript types"}},
+  {name: "a hover card field removed", target: "frontier.hover", change: value => delete at(value, []).object.terrain_name,
+    expected: {godot: "frontier.hover.terrain_name: declared in TypeScript, missing from Godot's schema", typescript: "frontier.hover.terrain_name: registered by Godot, missing from the TypeScript types"}},
+  {name: "a hover card unit's type swapped", target: "frontier.hover", change: value => { at(value, ["units", "[]"]).object.moves = "string"; },
+    expected: {godot: "frontier.hover.units[].moves: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.hover.units[].moves: TypeScript declares \"string\", Godot registers \"integer\""}},
   {name: "the job's type swapped", target: "frontier.end_turn", change: value => { value.result.object.job = "string"; },
     expected: {godot: "frontier.end_turn result.job: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.end_turn result.job: TypeScript declares \"string\", Godot registers \"integer\""}},
 ];
