@@ -272,13 +272,54 @@ export function verifyGraphicsRun(run) {
   assert.equal(new Set(run.checks.map(check => check.name)).size, run.checks.length);
 }
 
-// A window that the system does not draw (covered by other windows, or the display asleep) still runs process frames, but they are not
-// the frames of a displayed application. A run is valid only if the window drew throughout: a frame was drawn after every click of the steady
-// rounds and in at least nine of ten frames of the idle window. An invalid run is kept in the receipt, flagged, and repeated.
-export function graphicsRunDrew(run) {
+// A window that the system does not present is not a measurement of a displayed application, in two ways, and a run has to survive both:
+//  - the window does not draw (covered by other windows, or the display asleep): a frame has to have been drawn after every click of the
+//    steady rounds and in at least nine of ten frames of the idle window;
+//  - the window draws but no display paces the loop (the display off or showing the lock screen: the vsync mode still reads back enabled
+//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the median interval of the idle window has to be at
+//    least half of the refresh period that the window read back. A presented window at 120 Hz idles at about 7.8 ms and an unpaced one at about
+//    0.5 ms, against a threshold of 4.17 ms.
+// An invalid run is kept in the receipt, with its reason and its raw intervals, and repeated; no statistic of it is ever reported as a frame time.
+export const UNPACED = "unpaced: the display is not presenting";
+const UNDRAWN = "undrawn: the window did not draw throughout";
+export function graphicsRunValidity(run) {
   const undrawnSwaps = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS && swap.drawUsec === null).length;
-  return {drew: undrawnSwaps === 0 && run.idle.draws >= 0.9 * run.idle.frames, undrawnSwaps, idleDraws: run.idle.draws, idleFrames: run.idle.frames,
-    processFrames: run.frames.processed, drawnFrames: run.frames.drawn};
+  const drew = undrawnSwaps === 0 && run.idle.draws >= 0.9 * run.idle.frames;
+  const idle = run.idle.intervalsUsec.map(value => value / 1000);
+  const idleMedianMs = nearestRank(idle, 50);
+  const periodMs = run.provenance.refreshRate > 0 ? 1000 / run.provenance.refreshRate : null;
+  const minimumIdleMedianMs = periodMs === null ? null : periodMs / 2;
+  const paced = minimumIdleMedianMs !== null && idleMedianMs >= minimumIdleMedianMs;
+  return {valid: drew && paced, drew, paced, reason: !drew ? UNDRAWN : !paced ? UNPACED : null, undrawnSwaps, idleDraws: run.idle.draws,
+    idleFrames: run.idle.frames, processFrames: run.frames.processed, drawnFrames: run.frames.drawn, idleMedianMs: round(idleMedianMs, 3),
+    idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
+    minimumIdleMedianMs: minimumIdleMedianMs === null ? null : round(minimumIdleMedianMs, 3)};
+}
+
+// The receipt of the windowed lane (scripts/frontier-baseline-graphics.mjs), judged from what it carries: an accepted run that no display paced
+// is refused, a lane that did not complete its runs reports no frame-time statistic at all, and a lane that did reports them.
+export function verifyGraphicsReceipt(receipt) {
+  assert.equal(typeof receipt.presented, "boolean", "The receipt says whether the lane was presented");
+  const period = receipt.provenance.refreshRate > 0 ? 1000 / receipt.provenance.refreshRate : null;
+  assert.ok(period !== null, "The receipt carries the refresh rate that the window read back");
+  for (const raw of receipt.raw) {
+    const idleMedian = nearestRank(raw.idleIntervalsUsec.map(value => value / 1000), 50);
+    assert.ok(idleMedian >= period / 2,
+      `Run ${raw.run} is accepted but unpaced: its idle frame median is ${round(idleMedian, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
+  }
+  for (const attempt of receipt.rejectedAttempts) {
+    assert.ok(typeof attempt.reason === "string" && attempt.reason.length > 0, "A rejected attempt says why");
+    assert.ok(attempt.raw != null && attempt.raw.idleIntervalsUsec.length > 0, "and keeps its raw intervals");
+  }
+  assert.equal(receipt.attempts.length, receipt.raw.length + receipt.rejectedAttempts.length, "Every attempt is accepted or rejected");
+  if (receipt.presented) {
+    assert.equal(receipt.raw.length, GRAPHICS_RUNS, "A presented lane has all its runs");
+    assert.ok(receipt.summary != null && receipt.summary.runs.length === GRAPHICS_RUNS, "and their statistics");
+    assert.equal(receipt.status, "presented");
+  } else {
+    assert.equal(receipt.summary, null, "A lane that was not presented reports no frame-time statistic");
+    assert.match(receipt.status, /^not presented: /);
+  }
 }
 
 // The statistics of one run, from its raw intervals: the idle window and the frames that took a click, with the frames above twice the idle
@@ -314,7 +355,10 @@ function summarizeGraphicsRun(run) {
 // separate processes, plus the raw per-run summaries. Nothing is discarded: an outlier run stays in and shows in the range.
 export function summarizeGraphicsRuns(runs) {
   assert.equal(runs.length, GRAPHICS_RUNS, "The execution has its runs");
-  assert.ok(runs.every(run => graphicsRunDrew(run).drew), "and the window drew throughout every one");
+  for (const run of runs) {
+    const validity = graphicsRunValidity(run);
+    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle median ${validity.idleMedianMs} ms, at least ${validity.minimumIdleMedianMs} ms wanted)`);
+  }
   const summaries = runs.map(summarizeGraphicsRun);
   const across = pick => quartiles(summaries.map(pick));
   const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "above100ms"].map(key => [key, across(summary => summary[name][key])]));

@@ -5,7 +5,7 @@ import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {GRAPHICS_RUNS, IDLE_FRAMES, ROUNDS, WARMUP_ROUNDS} from "../tests/frontier-baseline-cases.mjs";
-import {graphicsRunDrew, summarizeGraphicsRuns, verifyGraphicsRun} from "../tests/frontier-baseline-oracle.mjs";
+import {graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt, verifyGraphicsRun} from "../tests/frontier-baseline-oracle.mjs";
 import {bundleFrontierBaselineProbe} from "./frontier-baseline-bundle.mjs";
 import {ensureGodotBinary} from "./godot-binary.mjs";
 
@@ -14,8 +14,18 @@ import {ensureGodotBinary} from "./godot-binary.mjs";
 // and ROUNDS measured (30 swaps for every ordered pair of panels), the intervals between consecutive process frames in an idle window and in the
 // frames that took a click, the vsync mode and refresh rate read back from the window, the load of the system before and after every
 // run, and one capture per panel. The receipt keeps every raw interval, so that the percentiles are recomputed from the data
-// and nothing is discarded; the statistics across runs are the median and the interquartile range of each run's. Run with:
+// and nothing is discarded; the statistics across runs are the median and the interquartile range of each run's.
+//
+// A frame time exists only if a display presents the window. A run is a measurement only if the window drew throughout AND its idle frame
+// median is at least half of the refresh period the window read back (a presented window at 120 Hz idles at about 7.8 ms, an unpaced one at
+// about 0.5 ms: the display off or showing the lock screen, with the vsync still reading back enabled). A run that fails either rule is kept
+// in the receipt under rejectedAttempts, with its reason ("unpaced: the display is not presenting" or "undrawn: ...") and its raw intervals, and
+// repeated, up to MAX_ATTEMPTS times for the same slot. If a slot exhausts its attempts the lane stops: the receipt is written with
+// presented: false, status "not presented: <reason>" and NO frame-time statistic (summary is null, and nothing of the rejected attempts is
+// printed as a frame time), and the process exits with EXIT_NOT_PRESENTED (3), which is neither success nor a crash, so that nothing
+// downstream mistakes it for a baseline. A complete lane exits 0. The receipt is checked by verifyGraphicsReceipt before it is written. Run with:
 //   node scripts/frontier-baseline-graphics.mjs
+const EXIT_NOT_PRESENTED = 3;
 const root = fileURLToPath(new URL("..", import.meta.url));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const bundle = await bundleFrontierBaselineProbe();
@@ -71,34 +81,38 @@ async function launch(number, extra = []) {
   return {report, load: {before, after, seconds: Math.round((Date.now() - started) / 100) / 10}};
 }
 
-// The runs, each in a process of its own. A window that the system does not draw (covered by other windows, the display asleep) runs process
-// frames that are not those of a displayed application: such a run is not a measurement, is kept in the receipt flagged and is repeated, up to
-// MAX_ATTEMPTS times for each of the GRAPHICS_RUNS. No other run is ever left out.
+// The runs, each in a process of its own, accepted or rejected by graphicsRunValidity (see the header), at most MAX_ATTEMPTS for each of the
+// GRAPHICS_RUNS slots. No other run is ever left out.
 const MAX_ATTEMPTS = 3;
 await mkdir(path.join(root, "build/frontier-baseline-graphics"), {recursive: true});
 const runs = [];
 const attempts = [];
 let number = 0;
-for (let slot = 1; slot <= GRAPHICS_RUNS; ++slot) {
+let stopped = null;
+for (let slot = 1; slot <= GRAPHICS_RUNS && stopped === null; ++slot) {
   let accepted = false;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS && !accepted; ++attempt) {
     const {report, load} = await launch(++number);
     verifyGraphicsRun(report);
-    const drew = graphicsRunDrew(report);
+    const validity = graphicsRunValidity(report);
     report.attempt = number;
     report.run = slot;
-    attempts.push({slot, attempt: number, ...drew, loadAverage: load});
-    if (drew.drew) {
+    attempts.push({slot, attempt: number, ...validity, loadAverage: load});
+    if (validity.valid) {
       runs.push(report);
       accepted = true;
     } else {
-      report.rejected = drew;
+      report.rejected = validity;
       attempts.at(-1).raw = report;
     }
   }
-  assert.ok(accepted, `Slot ${slot}: the window did not draw throughout in ${MAX_ATTEMPTS} attempts:\n${JSON.stringify(attempts.filter(each => each.slot === slot), null, 2)}`);
+  if (!accepted) {
+    stopped = {slot, reason: attempts.at(-1).reason};
+  }
 }
-// The captures are a run of their own, which measures nothing: one image per panel and the base, drawn on the same renderer.
+const presented = stopped === null;
+// The captures are a run of their own, which measures nothing and does not depend on a display pacing the loop: one image per panel and the base,
+// read back from the viewport on the same renderer.
 const shots = (await launch(0, ["--captures"])).report;
 const captures = await Promise.all(shots.captures.map(async file => {
   const bytes = await readFile(path.join(root, file));
@@ -106,8 +120,8 @@ const captures = await Promise.all(shots.captures.map(async file => {
 }));
 assert.deepEqual(captures.map(capture => path.basename(capture.path, ".png")), ["panel-empty", "panel-units", "panel-city", "panel-research"]);
 assert.ok(captures.every(capture => capture.bytes > 1000), "Every capture has an image");
-const summary = summarizeGraphicsRuns(runs);
-const first = runs[0];
+const summary = presented ? summarizeGraphicsRuns(runs) : null;
+const first = runs[0] ?? shots;
 // The raw data: every interval of every run, the swaps as [round, step, from, to, latency in frames, injection, time to the nodes, time to the
 // first drawn frame (microseconds, null when none was seen), the intervals of the swap's frames].
 const rawOf = run => ({run: run.run, attempt: run.attempt, idleIntervalsUsec: run.idle.intervalsUsec, idleDraws: run.idle.draws, heap: {
@@ -116,24 +130,37 @@ const rawOf = run => ({run: run.run, attempt: run.attempt, idleIntervalsUsec: ru
 swaps: run.swaps.map(swap => [swap.round, swap.step, swap.from, swap.to, swap.latencyFrames, swap.flushUsec, swap.latencyUsec, swap.drawUsec, swap.frameUsec])});
 const raw = runs.map(rawOf);
 const rejectedAttempts = attempts.filter(each => each.raw !== undefined).map(each => ({...each, raw: rawOf(each.raw)}));
-const receipt = {format: "godot-fabric.frontier-baseline-graphics/v1", scenario: first.scenario, godot: first.godot,
+const receipt = {format: "godot-fabric.frontier-baseline-graphics/v2", scenario: first.scenario, godot: first.godot,
+  presented, status: presented ? "presented" : `not presented: ${stopped.reason} (slot ${stopped.slot}, ${MAX_ATTEMPTS} attempts)`,
   command: "Godot --path <checkout> --windowed --script res://tests/frontier-baseline-graphics-probe.gd -- --run=<n>",
   protocol: {runs: GRAPHICS_RUNS, maxAttempts: MAX_ATTEMPTS, warmupRounds: WARMUP_ROUNDS, rounds: ROUNDS, swapsPerPair: ROUNDS, idleFrames: IDLE_FRAMES,
     viewport: first.viewport, percentiles: "nearest rank over the raw intervals of one run",
     acrossRuns: "median and interquartile range (nearest-rank quartiles) of each run's statistic",
-    discarded: "the warm-up rounds, and a run in which the window did not draw throughout (a frame after every steady click and nine of ten in the idle window), which is repeated; every other interval of every accepted run is in raw, and the rejected attempts are kept in rejectedAttempts"},
+    validity: "a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+    discarded: "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"},
   machine, provenance: first.provenance, attempts: attempts.map(({raw: _raw, ...each}) => each),
   nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))),
-  bundleSha256: bundle.bundle.sha256, checks: first.checks, capturesChecks: shots.checks, captures, summary, raw, rejectedAttempts,
+  bundleSha256: bundle.bundle.sha256, checks: runs[0]?.checks ?? null, capturesChecks: shots.checks, captures, summary, raw, rejectedAttempts,
   limitations: ["Godot macOS windowed run with synthetic events through Input.parse_input_event; no hardware pointer or touch screen, no mobile export.",
     "One machine, one display and one vsync mode (the project default, read back from the window); a frame time with the vsync disabled was not measured.",
     "The intervals are of process frames. With the vsync on they come in clusters (the engine runs ahead of the display and blocks on it), so a missed frame is not read from them; missed frames with the vsync on need presentation timestamps this engine does not give."]};
+verifyGraphicsReceipt(receipt);
 await writeFile(path.join(root, "build/frontier-baseline-graphics.json"), JSON.stringify(receipt, null, 2) + "\n");
 const line = (name, value) => `${name.padEnd(26)}${value}`;
-console.log(JSON.stringify({displayServer: first.provenance.displayServer, renderer: first.provenance.renderingMethod, adapter: first.provenance.adapter,
-  vsync: first.provenance.vsyncModeName, refreshRate: first.provenance.refreshRate, runs: runs.length, captures: captures.map(capture => capture.path)}, null, 2));
-for (const run of summary.runs) {
-  console.log(line(`run ${run.run} idle (ms)`, `p50 ${run.idleFrameMs.p50}  p95 ${run.idleFrameMs.p95}  p99 ${run.idleFrameMs.p99}  max ${run.idleFrameMs.max}`));
-  console.log(line(`run ${run.run} swap frame (ms)`, `p50 ${run.swapFrameMs.p50}  p95 ${run.swapFrameMs.p95}  p99 ${run.swapFrameMs.p99}  max ${run.swapFrameMs.max}  above 2x idle median ${run.swapFrameMs.aboveTwiceIdleMedian}/${run.swapFrameMs.samples}`));
+console.log(JSON.stringify({presented, status: receipt.status, displayServer: first.provenance.displayServer, renderer: first.provenance.renderingMethod,
+  adapter: first.provenance.adapter, vsync: first.provenance.vsyncModeName, refreshRate: first.provenance.refreshRate, accepted: runs.length,
+  attempts: attempts.length, captures: captures.map(capture => capture.path)}, null, 2));
+if (presented) {
+  for (const run of summary.runs) {
+    console.log(line(`run ${run.run} idle (ms)`, `p50 ${run.idleFrameMs.p50}  p95 ${run.idleFrameMs.p95}  p99 ${run.idleFrameMs.p99}  max ${run.idleFrameMs.max}`));
+    console.log(line(`run ${run.run} swap frame (ms)`, `p50 ${run.swapFrameMs.p50}  p95 ${run.swapFrameMs.p95}  p99 ${run.swapFrameMs.p99}  max ${run.swapFrameMs.max}  above 2x idle median ${run.swapFrameMs.aboveTwiceIdleMedian}/${run.swapFrameMs.samples}`));
+  }
+  console.log(JSON.stringify(summary.across, null, 2));
+} else {
+  // Nothing of a rejected attempt is printed as a frame time: only why it was rejected.
+  console.log("NOT PRESENTED: the lane ends without frame-time numbers. Wake and unlock the display and run it again.");
+  for (const attempt of attempts) {
+    console.log(line(`slot ${attempt.slot} attempt ${attempt.attempt}`, `${attempt.valid ? "accepted" : `rejected, ${attempt.reason}`} (idle median ${attempt.idleMedianMs} ms, at least ${attempt.minimumIdleMedianMs} ms wanted)`));
+  }
+  process.exitCode = EXIT_NOT_PRESENTED;
 }
-console.log(JSON.stringify(summary.across, null, 2));
