@@ -677,6 +677,24 @@ is pinned and `baseline` stays open** until a presented run, and `turno`, `soak`
 is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** Exit criteria X3, X4 and X5 of the 0.5 are met on the macOS desktop, on local
+evidence. X3, input in the world against the HUD, rests on the
+[first](https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md)
+and [second](https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md)
+pointer slices and the
+[go/no-go decision](https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3),
+with the iPhone run still open. X4, authority in Godot, rests on the
+[typed services](https://github.com/journey-studios/godot-fabric/blob/75a85ad6ea877eae85d1a55214097eac416f6680/docs/evidence/frontier-services/README.md),
+with no rules in JavaScript, and on the
+[rule lane](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+where a constant mutated in `rules.gd` changes the HUD while the JavaScript bundle stays
+identical. X5, session and lifecycle, rests on the
+[ten consumer cycles](https://github.com/journey-studios/godot-fabric/blob/c8de44b3caa12a82009e55a059e2ce3da68f9485/docs/evidence/frontier-consumer/README.md)
+and on the
+[accepted turn job](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+which survives closing the screen and the menu. Hosted CI and Pages are not claimed here.
+No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

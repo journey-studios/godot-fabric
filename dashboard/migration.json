@@ -4130,20 +4130,51 @@
         {
           "id": "X3",
           "label": "Input mundo contra HUD: 100/100 cliques no vazio chegam ao mundo 1x e 0/100 à HUD; 100/100 em Pressable ativam 1x e 0/100 ao mundo; com overlay aberto 0/100 chegam ao mundo",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "V05-02 fatia 1: 100/100 cliques no vazio chegam ao mundo 1x, 0/100 em Pressable, 0/100 com overlay ou Modal aberto; o host anterior falha exatamente 31; 2 sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md"
+            },
+            {
+              "label": "V05-02 fatia 2 (a2): as 6 lacunas fechadas, 91 checks, a1 falha 19, 5 sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md"
+            },
+            {
+              "label": "Decisão GO no desktop macOS; iPhone pendente (V05-02 `iphone`)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3"
+            }
+          ]
         },
         {
           "id": "X4",
           "label": "Autoridade no Godot: 0 regras de jogo em JS; uma ação desabilitada no Godot muda a HUD sem alterar JS",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Regras só em GDScript; 13 serviços tipados com paridade TS; a HUD envia ações como chamadas, sem regras em JS",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/75a85ad6ea877eae85d1a55214097eac416f6680/docs/evidence/frontier-services/README.md"
+            },
+            {
+              "label": "Lane de regra: uma constante mutada em rules.gd muda o snapshot da HUD (found_city desabilitado com no_moves_left) com o bundle JS idêntico",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md"
+            }
+          ]
         },
         {
           "id": "X5",
           "label": "Sessão e ciclo de vida: 10 ciclos sem vazamento, epoch monotônico, turn.end aceito sobrevive ao fechamento de tela",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "10 ciclos de novo jogo, recarga de cenário e menu, com nós, órfãos, bindings e assinaturas na linha de base e epoch estritamente crescente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c8de44b3caa12a82009e55a059e2ce3da68f9485/docs/evidence/frontier-consumer/README.md"
+            },
+            {
+              "label": "turn.end (frontier.end_turn) aceito como job sobrevive ao fechamento da tela e do menu; job.finished chega uma vez",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md"
+            }
+          ]
         },
         {
           "id": "X6",
@@ -4473,6 +4504,13 @@
       "taskIds": [],
       "message": "V05-05 do marco 0.5, critérios matriz e mapa, com evidência local: a HUD do Frontier passa a ser guiada pelo contexto que o Godot deriva. Um store em escopo de módulo (useSyncExternalStore) é o único módulo que fala com o jogo, com a telemetria da validação à parte; seis painéis (barra, ações, cartão do tile, cidade, pesquisa e diálogo) são montados só pelo contexto, e nos 7 passos do replay que cobrem os contextos (2, 3, 9, 18, 32, 33 e 45) o conjunto exato de testIDs visíveis bate com a tabela, sem painel extra, e a lista de ações é a de snapshot.actions menos end_turn (o unit.available_actions do critério não existe, e o End turn fica na barra). A barra mostra turno, fase e recursos, e o End turn é a ação end_turn do jogo, com o motivo dela e um spinner enquanto a fase não é idle; com o job segurado em ai_plan, um toque no End turn desabilitado não faz chamada. O mapa é do Godot: um clique real em um tile seleciona pelo select_tile do jogo em _unhandled_input, e o ponteiro sobre o mapa é publicado como o estado frontier.hover (15 bindings; o snapshot e os hashes não mudam), que o cartão do tile mostra. A probe headless tem 143 checks e o oráculo independente não acha nada (e rejeita 23 cópias mutadas do relatório); a HUD de 5e1f6a1 falha em actions, content, input, panels e phase (135 checks); 8 sabotagens são rejeitadas pela probe e pelo oráculo; oito capturas mostram os 7 contextos e a fase da IA; e test:consumer:civ-lite (165 checks nativos), test:frontier-services (11 de 11) e test:civ-lite-game passam. A lane achou e corrigiu um World que voltava atrás da camada da HUD depois do menu, e mostrou que o spacer da HUD anterior era achatado pelo Fabric e nunca engoliu cliques. Só macOS arm64: o diálogo ainda não é Modal, o hover foi exercitado com eventos sintéticos e o AppRegistry entra no manifesto do 0.5 pelo PR do P9; CI hospedada e Pages pendentes. Os critérios overlays e estabilidade do V05-05 seguem abertos. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/096a0180e37892277d15d0b13ce2113a4b0793d3/docs/evidence/civ-lite-ui/README.md"
+    },
+    {
+      "id": "milestone-0-5-exit-x3-x4-x5",
+      "at": "2026-10-09T05:04:17.000Z",
+      "taskIds": [],
+      "message": "Critérios de saída X3, X4 e X5 do marco 0.5 cumpridos no desktop macOS, com evidência executada. X3 (input mundo contra HUD): as fatias 1 e 2 do V05-02 mostram 100/100 cliques no vazio chegando ao mundo 1x, 0/100 em Pressable e 0/100 com overlay ou Modal aberto, com as seis lacunas fechadas e 91 checks, e a decisão GO no desktop; o iPhone segue pendente (V05-02 iphone). X4 (autoridade no Godot): regras só em GDScript, 13 serviços tipados com paridade TS e a HUD enviando ações como chamadas, e uma constante mutada em rules.gd muda o snapshot da HUD com o bundle JS idêntico. X5 (sessão e ciclo de vida): 10 ciclos de novo jogo, recarga de cenário e menu, com nós, órfãos, bindings e assinaturas na linha de base e epoch estritamente crescente, e turn.end aceito como job sobrevive ao fechamento da tela e do menu, com job.finished entregue uma vez. Evidência local em macOS arm64; CI hospedada e Pages não conferidas nesta entrega. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3"
     },
     {
       "id": "milestone-0-5-v05-02-decision-09ec1e0",
