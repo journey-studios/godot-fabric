@@ -61,7 +61,7 @@ function GameScreen() {
   }
   const panels = panelsOf(snapshot.context);
   return <View testID="hud-root" pointerEvents="box-none" style={{ flex: 1 }}>
-    {panels.includes("actions") ? <Actions actions={snapshot.actions} /> : null}
+    {panels.includes("actions") ? <Actions actions={snapshot.actions} units={snapshot.tile.units} /> : null}
     {panels.includes("tile") ? <Tile selected={snapshot.tile} hover={hover} /> : null}
     <Bar snapshot={snapshot} answer={answer} />
     {panels.includes("city") || panels.includes("research") ? <Overlay id="hud-city-overlay" onRequestClose={closeSelection}>

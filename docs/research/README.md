@@ -84,7 +84,8 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   module scope that talks to the game, the `frontier.hover` state Godot publishes for the tile under the pointer, the map's
   click and hover in `_unhandled_input` and the order of the World against the HUD's layer, with the lane that judges them and
   what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD); then the blocking `Modal` overlays, the
-  queue of three events the HUD works through ("n of 3", a subtree for each event) and how the probe reads a Modal's nodes from the host snapshot.
+  queue of three events the HUD works through ("n of 3", a subtree for each event) and how the probe reads a Modal's nodes from the host snapshot; and the stability
+slice (20 openings and closings of each overlay measured at rest, what "at rest" and "focus restored" mean on this host, the scan of the HUD against the 0.5 manifest and the icons drawn by `Image`).
 
 ## Useful next experiments
 

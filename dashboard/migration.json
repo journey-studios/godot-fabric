@@ -10,10 +10,10 @@
   },
   "updatedAt": "2026-10-09T20:56:00.000Z",
   "source": {
-    "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
-    "scope": "P8 V05-05 do marco 0.5, critério overlays: a fila de três eventos real no jogo (decisão do usuário de 2026-10-09) e a tela da cidade e o diálogo como Modals bloqueantes na HUD do Frontier, com evidência local em 67c3f16 (probes e oráculos independentes, dois controles, doze sabotagens e doze capturas), mais os recibos hospedados canônicos do #74 e do #82. CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/93"
+    "commit": "4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
+    "scope": "P8 V05-05 do marco 0.5, critério estabilidade (a fatia 2b, o último dos quatro, e com ele o item completo): 20 aberturas e fechamentos de cada overlay sem vazar nós, listeners nem Windows, foco restaurado, 0 de 100 cliques ao mundo sob o overlay, varredura da HUD contra o manifesto 0.5 e seis ícones por Image, com evidência local em 4ffdb6e (probe e oráculo independentes, controle sobre e108e9d, dezessete sabotagens e sete capturas), mais os recibos hospedados canônicos do #93 (a fatia 2a). CI hospedada e Pages desta fatia pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/100"
   },
   "phases": [
     {
@@ -3909,7 +3909,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): a fila de 3 eventos é do jogo (replay de 77 passos, hashes dourado cb7ab974… e de trilha ed43495… recalculados pelo oráculo independente) e a tela da cidade e o diálogo são Modals bloqueantes: com um aberto, 0 de 100 cliques esquerdos, 0 de 100 direitos e 0 de 100 giros da roda no mapa chegam ao mundo, e 100 de 100 depois de fechado; a remontagem com o 2º evento na cabeça mostra \"2 of 3\" no primeiro quadro e uma sessão nova não tem fila; probes de 144 e 26 checks, dois oráculos independentes, dois controles causais e 12 sabotagens da HUD (4 novas) rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): a fila de 3 eventos é do jogo (replay de 77 passos, hashes dourado cb7ab974… e de trilha ed43495… recalculados pelo oráculo independente) e a tela da cidade e o diálogo são Modals bloqueantes: com um aberto, 0 de 100 cliques esquerdos, 0 de 100 direitos e 0 de 100 giros da roda no mapa chegam ao mundo, e 100 de 100 depois de fechado; a remontagem com o 2º evento na cabeça mostra \"2 of 3\" no primeiro quadro e uma sessão nova não tem fila; probes de 144 e 26 checks, dois oráculos independentes, dois controles causais e 12 sabotagens da HUD (4 novas) rejeitadas; a CI hospedada e o Pages do #93 estão nos recibos abaixo",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/evidence/civ-lite-ui/README.md"
                 },
                 {
@@ -3967,14 +3967,91 @@
                 {
                   "label": "Pesquisa: os overlays, a fila de três eventos, a leitura dos nós de um Modal pelo snapshot do host e a regra dos nomes de check",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf/docs/research/frontier-hud.md"
+                },
+                {
+                  "label": "CI hospedada do #93 na main (e108e9d): o workflow Contracts disparado à mão (run 37958818671), oito jobs na primeira tentativa, com os 144 e 26 checks das probes da HUD e de overlays e os 165 checks do consumidor; os relatórios hospedados julgados de novo pelos oráculos independentes, sem achados",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/overlays/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do #93: o deployment do push de e108e9d publicou o migration.json com os mesmos bytes do commitado e com a entrada de atividade desta fatia",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/overlays/publication.json"
                 }
               ]
             },
             {
               "id": "estabilidade",
               "label": "Abrir e fechar cada tela 20x sem vazar nós ou listeners, foco restaurado e 0/100 cliques ao mundo sob overlay; capturas do macOS por contexto; varredura sem APIs proibidas; ícones por Image (GF-16, já na main) ou por glifos se a Image não bastar",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): cada overlay aberto e fechado 20 vezes por entrada real (a tela da cidade 20 vezes por clique e Close e 20 por clique e Escape; o diálogo 20 vezes, de um jogo novo jogado até o turno 5 e as três respostas por toque real, 60 respostas); depois de cada fechamento, em repouso, os nós, os órfãos e as Windows da árvore, as views nativas, as rotas do ponteiro, as subscriptions do registro, as conexões da HUD e do sinal são os do ciclo 1, exatamente, e o heap do Hermes segue a regra do baseline; foco restaurado (o dono do foco da raiz é o mesmo antes e depois, e com o overlay aberto a Window do Modal é a única exclusiva e nenhum Control sob ela tem foco), Escape fecha a cidade e não faz nada no diálogo, e 0 de 100 cliques esquerdos, direitos e giros da roda chegam ao mundo sob o overlay no primeiro e no último ciclo; varredura da HUD contra o manifesto 0.5 (que agora decide o AppRegistry) e seis ícones originais por Image, também dentro da Window do Modal; probe de 41 checks, oráculo independente que rejeita 38 relatórios mutados, 23 casos da varredura (21 mudanças achadas e 2 casos que passam: um import só de tipo e um membro do subconjunto desestruturado), controle sobre e108e9d que falha só nos ícones e 17 sabotagens (5 novas) rejeitadas; CI hospedada desta fatia ainda não existe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das fontes da fatia no commit pinado, dos relatórios, das capturas e do host, as séries por ciclo, o controle, a varredura, as 17 sabotagens, os limites e os itens abertos (bloco slice2b)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/report.json"
+                },
+                {
+                  "label": "A barra com os ícones dos três recursos (comida, produção e ciência), lidos por Image",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/stability-bar.png"
+                },
+                {
+                  "label": "As ações do colono com os ícones (Found city com a cidade, Fortify com o colono) e o cartão do tile com os ícones das unidades",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/stability-actions.png"
+                },
+                {
+                  "label": "A tela da cidade com os ícones do título e dos quatro itens de produção, Images dentro da Window do Modal",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/stability-city.png"
+                },
+                {
+                  "label": "A tela da cidade no ciclo 1 e no ciclo 20 (os mesmos bytes: nenhuma deriva visual)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/stability-city-20.png"
+                },
+                {
+                  "label": "O diálogo no ciclo 1 (época 6) e no ciclo 20 (época 25): iguais pixel a pixel, salvo a primeira linha da barra, que a época desloca",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/stability-dialog-20.png"
+                },
+                {
+                  "label": "A probe de estabilidade (-- --validate-stability): os 20 ciclos de cada tela, o repouso por estado (inclusive as Images assentadas), as medidas, o foco, o burst de 100 e o Escape",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/consumers/civ-lite/stability_validation.gd"
+                },
+                {
+                  "label": "Os checks que a probe faz de si mesma (comparações com o ciclo 1, regra do heap, foco, burst, capturas)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/consumers/civ-lite/stability_judge.gd"
+                },
+                {
+                  "label": "O oráculo independente da estabilidade: o que uma tela em repouso tem, as séries, o heap, o foco, o bloqueio, o Escape e os ícones derivados do snapshot do jogo",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/tests/civ-lite-stability-oracle.mjs"
+                },
+                {
+                  "label": "A varredura da HUD contra o manifesto 0.5, na árvore sintática: nomes importados, props de cada componente e membros, lendo o manifesto e não uma cópia",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/tests/civ-lite-hud-scan.mjs"
+                },
+                {
+                  "label": "O manifesto 0.5, com o AppRegistry (o ponto de entrada da HUD) decidido",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/compatibility/scope-0.5.json"
+                },
+                {
+                  "label": "Os ícones por Image: o módulo que importa os seis PNGs como assets e o componente Icon que os desenha",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/consumers/civ-lite/ui/hud/icons.ts"
+                },
+                {
+                  "label": "O gerador dos seis ícones (arte original, bytes que só dependem do próprio script)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/scripts/civ-lite-icons.mjs"
+                },
+                {
+                  "label": "A lane (test:civ-lite-ui): a varredura, os ícones, as três probes, os oráculos, os controles e as capturas",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/tests/civ-lite-ui-native.test.mjs"
+                },
+                {
+                  "label": "As 17 sabotagens retidas da HUD (as 12 anteriores e close-leaks-connection, modal-stays-mounted, focus-grabbed, icon-missing e import-outside-manifest)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/scripts/civ-lite-ui-sabotage.mjs"
+                },
+                {
+                  "label": "Pesquisa: a probe de estabilidade, o que é repouso, o que o host conta (modalRuntimeMembers, objetos), a regra do heap, o foco que este host mede, a varredura e os ícones",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/research/frontier-hud.md"
+                }
+              ]
             }
           ]
         },
@@ -4643,6 +4720,20 @@
       "taskIds": [],
       "message": "Achado do V05-06 (GF-30) sobre as faixas janeladas do baseline e do turno: no macOS, uma janela que o sistema diz ocluída faz o engine pular o draw (window_can_draw() devolve a flag que o delegate da janela limpa, o Main::iteration não chama o RenderingServer::draw, o frame_post_draw não dispara e o laço dorme 6,9 ms por quadro), e essa é a assinatura das recusas undrawn de 2026-10-09: nas tentativas sem nenhum quadro ocioso desenhado a média dos intervalos ociosos é de 6,900 ms. O helper tests/window-presence.gd põe a janela da faixa à frente das outras e acima delas (Window.always_on_top e DisplayServer.window_move_to_foreground) e grava, a cada quadro de processo, se o engine podia desenhá-la: cada tentativa do recibo ganha undrawableFrames, e o motivo de uma recusa undrawn diz o que o engine disse da janela (uma execução em que window_can_draw() nunca foi falso fica em aberto, sem causa concluída); a regra de validade não muda e nenhum recibo antigo muda de veredito. As duas faixas janeladas, a do baseline e a do turno, rodaram uma vez cada no commit 1bc3a3c, com a árvore limpa, e foram apresentadas, com 5 de 5 vagas aceitas na primeira tentativa de cada e 0 de 25.469 quadros (baseline) e 0 de 68.379 (turno) sem poder desenhar, mas com o usuário ausente: o resultado mostra que o helper abre uma janela que o engine pode desenhar, não que ele vence interferência. O fechamento do critério baseline vem numa entrega à parte, com o recibo dessa execução. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-05-estabilidade-4ffdb6e",
+      "at": "2026-10-09T20:16:05.000Z",
+      "taskIds": [],
+      "message": "V05-05 do marco 0.5, critério estabilidade, o último dos quatro (com ele o item V05-05 fica completo), com evidência local: cada overlay é aberto e fechado 20 vezes por entrada real (a tela da cidade 20 vezes por clique e Close e 20 por clique e Escape; o diálogo 20 vezes, de um jogo novo até o turno 5 e as três respostas por toque real, 60 respostas) e, depois de cada fechamento, em repouso, os nós, os órfãos e as Windows da árvore, as views nativas, as rotas do ponteiro, as subscriptions do registro, as conexões da HUD e do sinal são os do ciclo 1, exatamente, com o heap do Hermes dentro da regra do baseline (a mediana da segunda metade fica a no máximo 2.048 bytes da primeira). O foco é o que este host mede: o dono do foco da raiz depois de cada fechamento é o de antes da abertura, e com o overlay aberto a Window do Modal é a única exclusiva e nenhum Control sob ela tem foco; o Escape fecha a cidade pelo clear_selection e não faz nada no diálogo; e 100 cliques esquerdos, 100 direitos e 100 giros da roda no mapa chegam ao mundo 0 vezes no primeiro e no último ciclo de cada tela. Uma varredura da HUD escrita na árvore sintática lê o manifesto 0.5 (que passa a decidir o AppRegistry) e recusa nome, prop ou membro fora dele, e seis ícones originais de 32x32, desenhados por um gerador, aparecem por Image na barra, nas ações, no cartão do tile e na tela da cidade, que fica numa Window de Modal: todos desenharam, nas 40 aberturas. Um achado da revisão virou regra: o repouso de uma tela é um estado que inclui as Images assentadas, porque uma leitura com o Modal recém-aberto pegou os ícones ainda carregando. A lane tem uma terceira probe de 41 checks, um oráculo que rejeita 38 relatórios mutados e 23 casos da varredura (21 mudanças achadas e 2 casos que passam: um import só de tipo e um membro do subconjunto desestruturado); o controle sobre e108e9d falha só nos ícones e não vaza; 17 sabotagens da HUD (5 novas) são rejeitadas e as capturas foram lidas. Só macOS arm64: a fatia ainda não está na main e não tem CI hospedada, e o Escape foi enviado como evento de tecla pelo viewport. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-93-4ffdb6e",
+      "at": "2026-10-09T20:11:05.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #93, a fatia 2a do V05-05 (critério overlays, a fila de três eventos e os Modals bloqueantes), já na main como e108e9d, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check. Como um push da main não roda mais as suítes nativas, o recibo vem do Contracts disparado à mão na main em e108e9d (run 37958818671, evento workflow_dispatch), que passou nos oito jobs na primeira tentativa, todos com o checkout do squash: nos passos test:civ-lite-ui (144 checks da probe da HUD e 26 da de overlays, os dois controles pulados pelo clone raso) e test:consumer:civ-lite (165 checks nativos), ambos no job native-suites-runtime, e os artefatos civ-lite-ui e independent-civ-lite-consumer conferem com o digest da API; os relatórios hospedados, baixados e julgados de novo fora da CI pelos oráculos independentes da lane, têm 0 checks falhos e 0 achados. O Pages (run 37958764277, o push de e108e9d) implantou o migration.json com os mesmos bytes do commitado e a entrada de atividade da fatia. Por haver um recibo por pasta, este par fica em docs/evidence/civ-lite-ui/overlays/, ao lado do da fatia 1 (#82). As capturas, os controles causais e as sabotagens seguem só locais. Nenhum done, critério ou número da 1.0 muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/overlays/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-3-93323aa",

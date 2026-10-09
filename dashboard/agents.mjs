@@ -17,6 +17,7 @@ export const SHARED_PATHS = [
   // Scripts and tests every slice extends.
   "scripts/sabotage-sources.mjs", "tests/types/consumer.tsx", "tests/platform-seams.test.mjs",
   "scripts/hosted-receipts-slices.mjs", "scripts/hosted-receipts.mjs", "tests/hosted-receipts.test.mjs",
+  "docs/compatibility/scope-0.5.json", "tests/scope-0.5.test.mjs",
 ];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;

@@ -21,8 +21,8 @@ project loads only `game/` and `services/` from it. The research note is
   node for the game's own `select_tile`, and the mouse over the map tells the node which tile is under it (`frontier.hover`). It listens
   in `_unhandled_input`, so it has to stay ahead of the HUD's layer in the tree (the node keeps it there).
 - `HUDLayer/HUD`: a full-screen `FabricSurface` rendering `ui/index.tsx`.
-- `Validation`, `HudValidation` and `OverlayValidation`: the project's own validations, inert unless the game runs with `-- --validate`,
-  `-- --validate-hud` or `-- --validate-overlays`.
+- `Validation`, `HudValidation`, `OverlayValidation` and `StabilityValidation`: the project's own validations, inert unless the game runs
+  with `-- --validate`, `-- --validate-hud`, `-- --validate-overlays` or `-- --validate-stability`.
 
 The application, the registry, the bindings and the epoch belong to the root, so going to the menu, starting a game or
 reloading the scenery never recreates them: the epoch only rises.
@@ -73,8 +73,12 @@ mirror of the registered schemas, which `tests/frontier-services-parity.test.mjs
 - `services/`: `game_services.gd` owns a session and its `epoch` and publishes the snapshot and the intents as typed services;
   `schema.gd` is the one GDScript source of every schema it registers. See
   [docs/research/frontier-services.md](../../docs/research/frontier-services.md).
-- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_probe.gd`, `hud_validation.gd`, `overlay_validation.gd`: the scene, the HUD and the
-  validations described above (`hud_probe.gd` is what the two HUD probes share).
+- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_probe.gd`, `hud_validation.gd`, `overlay_validation.gd`, `stability_validation.gd`,
+  `stability_judge.gd`: the scene, the HUD and the validations described above (`hud_probe.gd` is what the three HUD probes share).
+- `ui/icons/`: the six icons of the HUD (settler, warrior, city, food, production, science), 32x32 PNGs drawn from shapes by
+  `scripts/civ-lite-icons.mjs` (original art, no third-party image). `ui/hud/icons.ts` imports each as an asset (`ui/assets.d.ts` declares
+  `*.png`) and `Icon` in `ui/hud/kit.tsx` draws it with an `Image`: the resources of the bar, the unit actions, the units and the city of the
+  tile card, and the city screen's title and production items, which are inside the Modal's window.
 
 ## Validation
 
@@ -89,12 +93,13 @@ godot --path . --headless --editor -- --godot-fabric-build-check     # builds ui
 godot --path . --headless -- --validate                               # the ten cycles; writes civ-lite-report.json
 godot --path . --headless -- --validate-hud                           # the panels of the seven contexts, the turn and the pointer; writes civ-lite-ui-report.json
 godot --path . --headless -- --validate-overlays                      # the queue of three events, the remount and the blocking Modals; writes civ-lite-overlay-report.json
+godot --path . --headless -- --validate-stability                     # twenty cycles of each overlay, what leaks, focus, the icons; writes civ-lite-stability-report.json
 ```
 
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global
 Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. `npm run test:civ-lite-ui` does the
-same for the HUD (`--validate-hud`, judged again by an independent oracle, with a control and
-`node scripts/civ-lite-ui-sabotage.mjs` for its sabotages). The runs, the receipt and two
+same for the HUD (`--validate-hud`, `--validate-overlays` and `--validate-stability`, each judged again by an independent oracle, a static scan of the
+HUD against the 0.5 manifest, controls, and `node scripts/civ-lite-ui-sabotage.mjs` for its sabotages). The runs, the receipt and two
 captures are in [docs/evidence/frontier-consumer/](../../docs/evidence/frontier-consumer/README.md); hosted CI is pending. The game and the services
 also run in the laboratory's root project:
 

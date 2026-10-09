@@ -23,11 +23,13 @@ evidência foram escritos depois e não são entrada de nenhuma lane. Ambiente: 
 capturas, **janelado** na tela local. A fatia **não tem C++**: o host nativo é o do commit anterior
 (`addons/fabric_godot.dylib`, SHA-256 `258d1821…084da`), o que o recibo registra.
 
-Este registro tem **duas partes**. A **fatia 1** (as seções até "Em aberto" abaixo) descreve `38d3182`; o PR #82 a levou para a `main` como
+Este registro tem **três partes**. A **fatia 1** (as seções até "Em aberto" abaixo) descreve `38d3182`; o PR #82 a levou para a `main` como
 `622102e`, e a CI hospedada e o Pages desse commit têm recibos próprios, [`hosted-ci.json`](hosted-ci.json) e
 [`publication.json`](publication.json), descritos em "CI hospedada e Pages". A **fatia 2a** é a fila de três eventos e os
-overlays bloqueantes (critério `overlays`), em `12b6c83` sobre `622102e`: a seção "Fatia 2a" e o objeto `slice2a` do recibo. As oito capturas
-abaixo foram regeneradas na fatia 2a com os mesmos nomes (o git guarda as de `096a018`).
+overlays bloqueantes (critério `overlays`), em `12b6c83` sobre `622102e`: a seção "Fatia 2a" e o objeto `slice2a` do recibo; o PR #93 a levou para a `main`
+como `e108e9d`, e os recibos hospedados dela estão em [`overlays/`](overlays/README.md). A **fatia 2b** é a estabilidade (critério `estabilidade`, o último do
+item, com as capturas e os ícones), em `0a0deca` sobre `e108e9d`: a seção "Fatia 2b" no fim e o objeto `slice2b` do recibo. As oito capturas
+abaixo foram regeneradas na fatia 2a com os mesmos nomes (o git guarda as de `096a018`); as sete da fatia 2b são as `stability-*.png`.
 
 ## As capturas
 
@@ -477,7 +479,244 @@ o mapa, um `Modal` aberto num contexto sem overlay, a tela da cidade fora do `Mo
 
 ### Em aberto depois da fatia 2a
 
+(Depois deste registro: o #93 levou a fatia 2a para a `main` como `e108e9d`, com os recibos hospedados em [`overlays/`](overlays/README.md), e a fatia 2b, abaixo, fechou a estabilidade.)
+
 - A estabilidade: vinte aberturas e fechamentos sem vazar, a restauração do foco, as capturas por contexto na forma final, o escaneamento da
   API e os ícones por `Image`.
 - O erro do motor ao sair com um `Modal` aberto (do host), a tarefa à parte.
 - O run hospedado e o Pages da fatia 2a, depois do merge dela na `main`.
+
+## Fatia 2b: a estabilidade, a varredura contra o manifesto e os ícones por `Image` (critério `estabilidade`)
+
+Esta parte do registro cobre o critério `estabilidade` do V05-05, o último dos quatro: abrir e fechar cada tela 20 vezes sem vazar nós nem listeners,
+com o foco restaurado e 0 de 100 cliques ao mundo sob o overlay; as capturas do macOS por contexto; uma varredura sem APIs proibidas; e os ícones por
+`Image` (ou por glifos, se a `Image` não bastasse: bastou). Com ela os quatro critérios do item estão feitos, e o V05-05 está completo. A fatia roda sobre a
+`main` em `e108e9d` (o squash do #93, a fatia 2a) e **não tem C++**: o host nativo é o mesmo (`addons/fabric_godot.dylib`, SHA-256 `258d1821…084da`).
+O [recibo](report.json) é o bloco `slice2b`. A [pesquisa](../../research/frontier-hud.md) tem a definição de "repouso" e de "foco restaurado", a regra do heap e a
+varredura, com arquivo.
+
+Os fontes estão fixados no **commit de implementação [`0a0deca`](https://github.com/journey-studios/godot-fabric/commit/0a0decaf87548b2515101e27ac62ccf6cfc370f2)**
+(`0a0decaf87548b2515101e27ac62ccf6cfc370f2`, árvore `a0defa5d541b44f113f4071fc5f7dee54a8a479c`, sobre `e108e9d`). O lote de proveniência rodou na árvore limpa desse commit
+(o `git status --porcelain` antes do primeiro comando não listava nada), e os arquivos de documentação e os recibos desta fatia foram escritos durante e depois
+dele: nenhum arquivo executado mudou, e cada SHA-256 de fonte do recibo bate com `git show 0a0deca:<caminho>`. Ambiente: macOS arm64, Godot oficial **4.7.2**,
+React Native **0.87.1**, Node **v22.23.3**, em modo headless e, para as capturas, janelado.
+
+### O que a lane mede
+
+Uma terceira probe, `consumers/civ-lite/stability_validation.gd` (`-- --validate-stability`, com `stability_judge.gd`), roda no mesmo projeto, depois das outras duas, e o
+oráculo `tests/civ-lite-stability-oracle.mjs` a julga de novo, a partir dos dados brutos, sem os veredictos dela:
+
+- **A tela da cidade: 20 ciclos de duas rodadas.** Um clique real no tile da cidade abre a tela; um toque real no Close a fecha. Um segundo clique a abre e o Escape a
+  fecha (`onRequestClose`, que é o `clear_selection` do jogo): 40 aberturas, cada fechamento com uma chamada ao jogo.
+- **O diálogo: 20 ciclos.** `new_game`, os intents do replay pelos serviços até o turno 5 (o fim do turno que levanta os três eventos) e as três respostas por toque
+  real: 60 respostas. O `Modal` é montado uma vez e fica até a terceira resposta, então cada ciclo é medido em **quatro repousos** (o diálogo aberto e depois de cada uma
+  das três respostas), e cada um tem o do ciclo 1 como baseline.
+- **Os ícones**, em quatro contextos (`none`, `stack`, `settler`, `city`).
+
+Depois de cada fechamento (e com o overlay aberto) a probe espera a tela **chegar ao repouso por estado**, lê o host com o heap do Hermes coletado antes
+(`validation_collect_garbage_on_status`, ligada na aplicação só em volta da leitura) e grava: os nós da SceneTree, os órfãos e as `Window`s; as views nativas, as tags e os
+nós do snapshot do host; as rotas do ponteiro (`stored`, `suppressed`, `contacts`, `active`, `hoverPointers`) e o processador do ponteiro; os bindings, as subscriptions e
+as tarefas e eventos pendentes do registro; as subscriptions da store da HUD; as conexões de `snapshot_changed` e de `hover_changed`; o trabalho pendente; o heap e o foco.
+**Cada um é igual ao do ciclo 1 da sua série, exatamente.** O oráculo diz também o que uma tela em repouso tem sem olhar para o ciclo 1 (15 bindings, as duas subscriptions da HUD, nenhum
+órfão, nada pendente, nenhuma rota do ponteiro ativa ou suprimida, as `Window`s que o jogo tinha antes), para que um vazamento que começou antes do baseline não seja o baseline; e exige que,
+depois de um fechamento, a HUD seja o que era antes da abertura (nós, views, `Window`s) e que o que a rodada criou ela tenha apagado (`creates` menos `deletes` igual dos dois lados).
+
+**O repouso é um estado, e foi isto que a primeira revisão achou.** A primeira versão declarava o repouso por "sem trabalho pendente, sem tag retirando, os Modals da tela" e um
+punhado de quadros de folga. Numa corrida mais lenta, nos ciclos 13 e 14 da cidade, a leitura "aberto" pegou os cinco ícones do Modal ainda em `"status": "loading"`, com `"loads": 0`:
+o decode das `Image`s corre num worker, no ritmo da máquina, e o check "desenhou depois de carregada" falhou. A probe agora espera (`come_to_rest`, com os quadros só como teto) o
+estado que o oráculo julga, em duas leituras seguidas com a mesma assinatura: nada pendente (trabalho, timers, animation frames, tarefas do host, eventos), nenhuma rota ativa ou suprimida,
+nenhuma tag retirando, tantos Modals e `Window`s quanto a tela tem, nenhum nó órfão, views, tags e nós do host em igual número e **todas as `Image`s assentadas** (carregadas e
+desenhadas, ou falhas com o seu erro). Nada numa medida é esperado por uma contagem de quadros; a espera do Escape no diálogo e a do burst seguem a mesma regra. A lane passou **três
+vezes seguidas** depois do ajuste, e a sabotagem `icon-missing` continua rejeitada, agora pelo status de erro da `Image` e não por timeout.
+
+### Os números por ciclo
+
+Cada linha é uma série de 20 leituras em repouso (o ciclo 1 → o ciclo 20); em todas, **os 20 valores de cada coluna são iguais**. A base é o jogo recém-aberto, sem overlay nenhum: 28 nós, 17 views nativas, 0 `Window`s, 2 subscriptions, 15 bindings.
+
+| Série | Nós da árvore | Órfãos | `Window`s | Views nativas | Subscriptions do registro | Subscriptions da HUD | Conexões de `snapshot_changed` | Rotas do ponteiro guardadas |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| cidade, antes de abrir (rodadas de Close) | 28 → 28 | 0 → 0 | 0 → 0 | 17 → 17 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| cidade aberta (Close) | 67 → 67 | 0 → 0 | 1 → 1 | 55 → 55 | 2 → 2 | 2 → 2 | 2 → 2 | 1 → 1 |
+| cidade, depois do Close | 28 → 28 | 0 → 0 | 0 → 0 | 17 → 17 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| cidade, antes de abrir (rodadas de Escape) | 28 → 28 | 0 → 0 | 0 → 0 | 17 → 17 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| cidade aberta (Escape) | 67 → 67 | 0 → 0 | 1 → 1 | 55 → 55 | 2 → 2 | 2 → 2 | 2 → 2 | 1 → 1 |
+| cidade, depois do Escape | 28 → 28 | 0 → 0 | 0 → 0 | 17 → 17 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| diálogo, antes do turno 5 | 44 → 44 | 0 → 0 | 0 → 0 | 33 → 33 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| diálogo aberto (1 of 3) | 43 → 43 | 0 → 0 | 1 → 1 | 31 → 31 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| diálogo, depois da resposta 1 (2 of 3) | 43 → 43 | 0 → 0 | 1 → 1 | 31 → 31 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| diálogo, depois da resposta 2 (3 of 3) | 43 → 43 | 0 → 0 | 1 → 1 | 31 → 31 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+| diálogo, depois da resposta 3 (fechado) | 28 → 28 | 0 → 0 | 0 → 0 | 17 → 17 | 2 → 2 | 2 → 2 | 2 → 2 | 0 → 0 |
+
+- **Heap em repouso**, pela regra do baseline (`heapAtRest`: sem os dois primeiros ciclos, a mediana da segunda metade dos 18 restantes menos a da primeira, no máximo 2.048 bytes), sobre
+  as 20 leituras de cada série depois de um fechamento: depois de um Close, 2.297.856 → 2.295.048 bytes (as medianas das metades: 2.296.920 e 2.295.624, diferença **-1296**); depois de um Escape, 2.296.576 → 2.293.768 (-1296); depois da terceira resposta, 2.298.000 → 2.298.000 (+128). Antes da primeira medida a probe enche a telemetria da HUD (`FrontierHud.stats` guarda os 64 últimos resultados; 70 chamadas e
+  mais duas aceitas, para que a barra não mostre uma recusa velha), porque senão o heap subiria o que a telemetria cresce até 64, que é limitado e não é vazamento; o oráculo exige os 64.
+- **Objetos do motor** (`OBJECT_COUNT`): fora da igualdade exata, porque têm um jitter de um objeto e os 300 eventos de um burst ficam vivos por cerca de cem quadros. A probe espera, por
+  estado, a contagem voltar ao que era antes do burst, e o oráculo julga os repousos depois de um fechamento pela mesma regra do heap com limite de um objeto (a mediana da segunda metade
+  igual à da primeira, nas três séries).
+- **`modalRuntimeMembers` não é o número de Modals abertos**: conta os runtimes na pilha de Modals (`native/modal_window_stack.h`, `runtime_count`) e vale 1 enquanto a aplicação roda,
+  com Modal ou sem. Um Modal aberto é um nó `modal` com `modalWindow` no snapshot do host e uma `Window` na SceneTree; a probe conta os dois e confere que os membros ficam em 1.
+
+### O foco restaurado, como este host o mede
+
+O foco de React Native está fora do 0.5 (o manifesto diz que nenhuma `View` recebe foco de teclado), e nada no host devolve o foco a um `Control` quando um `Modal` fecha
+(`native/modal_window_stack.cpp` só chama `grab_focus` na `Window` exclusiva do topo quando ela abre). "Foco restaurado" quer dizer, aqui, três coisas que o host sabe dizer:
+
+1. o `gui_get_focus_owner()` da viewport raiz depois de cada fechamento é o de antes da abertura (nenhum `Control`, em todos os ciclos das duas telas);
+2. com um overlay aberto, há exatamente uma `Window` de Modal exclusiva e visível (a do topo da pilha, a única), a viewport raiz não tem dono de foco e nenhum nó do snapshot fora dessa
+   `Window` reporta `focused`;
+3. o Escape fecha a tela da cidade e não faz nada no diálogo (abaixo).
+
+Se a `Window` raiz e a do Modal têm o foco do sistema operacional fica gravado, mas não é julgado: depende da área de trabalho do usuário numa corrida janelada.
+
+### O Escape e os 100 cliques sob o overlay
+
+- **Escape na cidade:** em cada uma das 40 aberturas, o fechamento (por Close ou por Escape) fez **uma** chamada `clear_selection` ao jogo e o contexto saiu de `city`. O Escape é um evento de tecla
+  empurrado pela viewport (como `tests/modal-host-probe.gd` faz), não um teclado físico.
+- **Escape no diálogo:** em cada um dos 20 ciclos, a `Window` do Modal ouviu o Escape (uma conexão em `window_input` o conta: 1), e nada mudou: o mesmo evento na cabeça, nenhuma chamada,
+  o mesmo hash do estado, o `Modal` ainda aberto, nenhuma `Window` a mais.
+- **0 de 100, de novo:** no ciclo 1 e no ciclo 20 de cada tela, com o overlay aberto, 100 cliques esquerdos, 100 direitos e 100 giros da roda empurrados no mapa chegam ao `World` 0 vezes, sem
+  nenhuma chamada `select_tile` e sem mudar a seleção (a medida da fatia 2a, agora repetida dentro dos ciclos para que um vazamento não abra um buraco).
+
+### A varredura contra o manifesto
+
+`tests/civ-lite-hud-scan.mjs` lê a HUD (`index.tsx` e `hud/*`) pela árvore sintática do TypeScript e o `docs/compatibility/scope-0.5.json`, e nunca uma cópia das listas: cada nome importado de
+`react-native` tem de ser um dos `names` do manifesto, e um que o `outOfScope` ou o `notInTheManifest` deixam de fora (`TextInput`, `Keyboard`, `FlatList`, ...) é recusado com a frase que o diz;
+cada prop de um elemento JSX desses componentes tem de ser uma que o manifesto suporta para ele (uma recusada passa só com um valor da lista `accepts`, como `animationType="none"`; uma ignorada é
+recusada, porque não muda nada aqui; uma que o RN nem declara para o componente, como `onContextMenu` e `onAuxClick`, é recusada como desconhecida); cada membro lido de um nome com lista de
+`subset.members` tem de estar nela (`AppRegistry.registerComponent`), e o nome só é lido assim: os membros desestruturados dele (`const { getAppKeys } = AppRegistry`) são conferidos contra a lista
+(um resto ou um membro calculado é recusado), e qualquer uso solto do nome ligado (um alias, um argumento, um retorno, um export) é recusado, porque esconderia que membro se lê depois; qualquer subcaminho de
+`react-native` (`react-native/Libraries/...`) é recusado, seja um import estático, um re-export, um import de tipo, um `require` ou um import dinâmico. Um import padrão ou de namespace, um `require` e um import dinâmico são recusados porque escondem quais nomes se usam; um import
+só de tipo some no build e não é um nome. O `AppRegistry`, o ponto de entrada da HUD, entrou no manifesto (supported, com `registerComponent` e `getAppKeys`) e o teste do manifesto passou a 13 nomes; o
+`docs/compatibility/scope-0.5.json` e o `tests/scope-0.5.test.mjs` entraram nos `SHARED_PATHS` do quadro de agentes, porque toda fatia do 0.5 os estende.
+
+A lane prova que a varredura pode falhar com **21 mudanças** de uma cópia dos fontes (um import de `FlatList`, de `TextInput` e de `Keyboard`; um nome que o manifesto não decide; um import de namespace; um
+`require`; `onHoverIn`, `onContextMenu` e `onMouseEnter`; `animationType="slide"`; filhos numa `Image`; um spread; `AppRegistry.runApplication`; um import estático, um re-export, um `require` e um import dinâmico de um subcaminho de `react-native`; o `AppRegistry` desestruturado
+em um membro fora do subconjunto ou com um resto, usado por um alias e passado como argumento) e **dois casos que ela deixa passar** (um import só de tipo e um membro do subconjunto desestruturado): 23 casos. A regex que a
+lane já tinha (hooks, listeners, falar com o jogo) fica: o manifesto não lista nada disso.
+
+### Os ícones por `Image`
+
+Seis PNGs de 32x32, **arte original** desenhada de formas por `scripts/civ-lite-icons.mjs` (colono, guerreiro, cidade, comida, produção e ciência), ficam em `consumers/civ-lite/ui/icons/`; o gerador escreve
+os PNGs com blocos zlib sem compressão, então os bytes só dependem do código dele, e a lane exige que os arquivos commitados sejam o que ele desenha. `ui/hud/icons.ts` importa cada um como asset
+(`ui/assets.d.ts` declara `*.png`, como o consumidor das bibliotecas; o plugin de assets registra o arquivo e o copia ao lado do bundle) e o componente `Icon` de `ui/hud/kit.tsx` o desenha com uma
+`Image`. Eles estão na barra (os três recursos), nas ações (a unidade de um `select_unit` ou `fortify`; a cidade em `found_city`), no cartão do tile (cada unidade e a cidade) e na tela da cidade (o título e cada item de
+produção), que fica **dentro da `Window` do Modal**: uma `Image` ali carrega e desenha como qualquer outra (`errors` 0, `status` `loaded`, `drawn` um dicionário, `loads` 1), nas 40 aberturas. Nenhum
+glifo foi necessário. O oráculo deriva, do snapshot do jogo, quais ícones cada contexto monta e de qual arquivo é cada um; nada disso é lido da HUD.
+
+| Contexto | Images montadas | Dentro da `Window` do Modal |
+| --- | ---: | ---: |
+| `none` (a barra) | 3 | 0 |
+| `stack` (barra, duas ações de seleção, duas unidades no cartão) | 7 | 0 |
+| `settler` (barra, Found city e Fortify, duas unidades no cartão) | 7 | 0 |
+| `city` (barra, o título e os quatro itens da cidade) | 8 | 5 |
+
+### As capturas da fatia 2b
+
+Sete capturas reais do renderizador, salvas pela corrida janelada (`node tests/civ-lite-ui-native.test.mjs --control --capture`); cada uma foi lida antes de entrar aqui, e o SHA-256 de cada PNG
+está no recibo.
+
+| Captura | Imagem | O que mostra |
+| --- | --- | --- |
+| a barra com os ícones | ![stability-bar](stability-bar.png) | O turno 1: "Turn 1 · epoch 3" e os três recursos, cada um com o seu ícone (a maçã, a engrenagem e o frasco), sem a recusa velha da telemetria. |
+| as ações com os ícones | ![stability-actions](stability-actions.png) | O colono selecionado: "Found city" com o ícone da cidade, "Fortify" cinza com o do colono e o motivo "Settlers cannot fortify.", e o cartão do tile com o ícone do colono e o do guerreiro antes do texto. |
+| a tela da cidade | ![stability-city](stability-city.png) | O turno 2: o ícone da cidade no título "Aurora · size 1/3" e os ícones de Warrior, Granary, Workshop e Library nos itens, **dentro do Modal**, com o mapa e a barra escurecidos atrás. |
+| a cidade, ciclo 1 | ![stability-city-1](stability-city-1.png) | A mesma tela no primeiro ciclo (época 5). |
+| a cidade, ciclo 20 | ![stability-city-20](stability-city-20.png) | A mesma tela no vigésimo ciclo: **os mesmos bytes** do ciclo 1 (SHA-256 igual). |
+| o diálogo, ciclo 1 | ![stability-dialog-1](stability-dialog-1.png) | "1 of 3", "Wanderers at the gate" e as duas escolhas, no turno 5 da época 6. |
+| o diálogo, ciclo 20 | ![stability-dialog-20](stability-dialog-20.png) | O mesmo diálogo no turno 5 da época 25. O SHA-256 difere: os dígitos da época deslocam o que está à direita deles na primeira linha da barra. A probe compara as duas imagens, pixel a pixel, no próprio motor, com essa linha mascarada, e não acha nenhum pixel diferente: não houve deriva visual. |
+
+### O que foi executado (fatia 2b)
+
+Cada comando rodou na árvore limpa de `0a0deca`, em sequência; as lanes de sabotagem e as simples escrevem os mesmos arquivos em `build/`, então a lane simples foi a última e os arquivos que o recibo fixa
+são os da última corrida simples (os da corrida janelada que só ela escreve, como as capturas e `graphical.json`, são os da primeira).
+
+| Comando | Resultado | Tempo |
+| --- | --- | ---: |
+| `node tests/civ-lite-ui-native.test.mjs --control --capture` | passou: a lane com os controles e as capturas (a janelada) | 279 s |
+| `node scripts/civ-lite-ui-sabotage.mjs` | passou: as 17 sabotagens e, no fim, a lane restaurada | 926 s |
+| `npm run test:consumer:civ-lite` | passou: o consumidor independente (20 checks de build e posse, 165 nativos, dez ciclos) | 35 s |
+| `npm run test:frontier-turn` | passou: a lane do turno (V05-06) | 243 s |
+| `npm run test:frontier-soak` | passou: o soak de 100 turnos do jogo com a HUD viva | 202 s |
+| `npm run test:frontier-services` | passou: os serviços e a paridade TS/Godot | 27 s |
+| `npm run test:civ-lite-ui` | passou: a lane simples, a última | 210 s |
+
+Os gates que leem documentos (`check:publication`, `check:static`, `test:dashboard`, `test:contracts` e o `type-check`) rodaram depois, na árvore que tem estes registros; o recibo guarda o resultado.
+
+```sh
+npm run test:civ-lite-ui                                      # as três probes, headless, com os controles quando os commits existem no checkout
+node tests/civ-lite-ui-native.test.mjs --control --capture    # os controles obrigatórios; mais as capturas, janeladas (com `node` direto: `node --test` não repassa a flag)
+node scripts/civ-lite-ui-sabotage.mjs                         # as 17 sabotagens e, no fim, a lane restaurada
+```
+
+### O controle causal: a HUD e o jogo de `e108e9d`
+
+A lane roda a mesma probe sobre o `ui`, o `game` e o `services` de `e108e9d` (um `git archive` em `build/civ-lite-stability-previous/`: a HUD sem ícones) e a varredura sobre a HUD dele:
+
+- **A varredura** contra o manifesto **dele** (`git show e108e9d:docs/compatibility/scope-0.5.json`) acha exatamente uma coisa: `index.tsx`: o `AppRegistry` não está nos `names` do manifesto. Contra o manifesto desta fatia, que
+  decide o `AppRegistry`, a mesma HUD passa.
+- **A probe** falha **exatamente os três checks de ícones** ("Icons: ..."), com 44 achados da categoria `icons` no oráculo e nenhum de outra: a HUD de `e108e9d` não monta nenhuma `Image`. Todos os de vazamento,
+  heap, foco, Escape e bloqueio passam, o que também diz que a HUD da fatia 2a não vazava e que as sabotagens abaixo é que quebram a lane.
+
+### As 17 sabotagens
+
+Cinco sabotagens novas juntam-se às doze ([`scripts/civ-lite-ui-sabotage.mjs`](https://github.com/journey-studios/godot-fabric/blob/0a0decaf87548b2515101e27ac62ccf6cfc370f2/scripts/civ-lite-ui-sabotage.mjs)).
+Cada uma quebra um fonte do template de propósito e roda a lane contra ele; as de estabilidade rodam só a probe nova (`mode: "stability"`) e a de import só a varredura (`mode: "scan"`). A probe **e** o
+oráculo (ou a varredura) têm de a rejeitar, pela razão por que foi quebrada, e o fonte volta byte a byte. As contagens abaixo são as desta corrida:
+
+| Sabotagem | O que quebra | Checks que falham | Categorias |
+| --- | --- | ---: | --- |
+| `city-by-data` | a tela da cidade é gateada por `city.present`, não pelo contexto | 23 | `blocking`, `map`, `panels`, `queue`, `remount` |
+| `actions-reversed` | o painel de ações lista na ordem oposta | 26 | `actions`, `panels` |
+| `spinner-always` | o spinner gira em repouso | 49 | `bar`, `phase` |
+| `end-turn-by-phase` | End turn habilitado por uma regra da HUD, não pela ação do jogo | 2 | `bar` |
+| `spacer` | um spacer com testID cobre o mapa | 14 | `blocking`, `input`, `map`, `panels` |
+| `hover-unpublished` | o mundo deixa de publicar o hover | 2 | `input` |
+| `world-behind-hud` | o World volta atrás da camada da HUD depois do menu | 2 | `input` |
+| `queue-out-of-order` | o jogo tira da fila o último evento e não a cabeça | 8 | `newgame`, `queue`, `remount` |
+| `position-in-js` | o "n of 3" é calculado na HUD | 1 | `queue` |
+| `city-in-tree` | a tela da cidade volta a ser um painel da árvore, não um Modal | 5 | `blocking`, `map`, `panels`, `remount` |
+| `dialog-unkeyed` | o diálogo perde a `key` do evento | 1 | `queue` |
+| `disabled-ignored` | o botão deixa de passar o `enabled` ao Pressable | 18 | `actions`, `bar`, `content`, `input`, `panels`, `phase` |
+| `close-leaks-connection` | **nova.** a store abre uma conexão ao snapshot a cada `clear_selection` (Close, Escape) e não a solta | 6 | `heap`, `leak` |
+| `modal-stays-mounted` | **nova.** o Modal da cidade é gateado por `city.present`: a Window fica aberta, vazia, depois de fechar | 15 | `coverage`, `escape`, `focus`, `icons`, `leak` |
+| `focus-grabbed` | **nova.** um Control do World toma o foco ao abrir um overlay | 2 | `focus` |
+| `icon-missing` | **nova.** um ícone aponta para um asset que não existe | 2 | `icons` |
+| `import-outside-manifest` | **nova.** a HUD importa `TextInput`, que o manifesto deixa de fora | 1 | `import` |
+
+Uma sabotagem de Window que fica aberta não consegue ser só "um vazamento": um `Modal` aberto bloqueia o mapa, então `modal-stays-mounted` falha também o que depende de clicar no mapa; é o que se espera
+de um Modal exclusivo. Os oráculos rejeitam também, em memória, cópias do relatório genuíno com uma coisa quebrada cada: 38 do da estabilidade (vazamentos de nó, `Window`, view, subscription, conexão,
+rota do ponteiro, órfão e do que a rodada criou; o heap e os objetos; o foco; o bloqueio; o Escape; os ícones, inclusive uma `Image` ainda carregando; os ciclos que faltam) e as 14 da varredura.
+
+### O que a fatia 2b achou
+
+- **O repouso de uma tela é um estado, e as `Image`s fazem parte dele.** Foi achado na primeira revisão da fatia (acima): o check de ícones falhou numa corrida mais lenta porque o repouso era declarado antes de o
+  decode terminar. A probe agora espera o estado inteiro que o oráculo julga e a lane passou três vezes seguidas. Não consegui reproduzir a falha na máquina de desenvolvimento, nem com 40 laços de CPU concorrentes:
+  a correção vem da leitura do log e do que o host reporta (`status` `loading`, `loaded`, `failed`).
+- **`modalRuntimeMembers` conta runtimes, não Modals** (acima); a primeira versão da probe esperava por ele e esperava o limite inteiro em toda medida.
+- **Um burst deixa 300 eventos de entrada vivos por cerca de cem quadros**, e o `OBJECT_COUNT` não é igual de um ciclo a outro (jitter de um objeto): a igualdade exata não vale para ele.
+- **A telemetria da HUD cresce até 64 resultados**: sem enchê-la antes, a regra do heap acusaria o que é um crescimento limitado.
+- **Uma sabotagem cujo erro é uma `Image` que não carrega** aparece pelo `status` `failed` e pelo erro "Could not find image", e a probe não depende de nenhum timeout para vê-la.
+- **A varredura achou uma lacuna do manifesto**: o `AppRegistry` estava na HUD desde a fatia 1 e não no manifesto. Entrou nesta fatia.
+- **O Escape é entregue à `Window` do Modal** (um `window_input` o conta), o que faz o check do diálogo provar que a tecla chegou, e não só que nada mudou.
+- **Depois do pin, a revisão do PR #100 achou quatro coisas, todas válidas.** O rótulo do check do grupo `tree` falava de "objects", que esse grupo não julga (o digest dos nomes dos checks da probe de estabilidade passou de
+  `0bd9d789…` para `9c25b65f…`; os da HUD e de overlays não mudaram); a varredura deixava passar um subcaminho de `react-native` e o uso de `AppRegistry` por desestruturação ou por um alias, e agora os recusa; e a nota da
+  árvore suja do recibo estava incoerente com a lista que ela descreve. As fontes pinadas em `0a0deca` não foram reescritas; o bloco `slice2b.afterThePin` do recibo guarda o que mudou depois e o digest novo.
+
+### Limites da fatia 2b
+
+- **Só macOS arm64, local.** O run hospedado desta fatia só existirá depois de ela estar na `main`; a CI hospedada roda a lane headless, sem controles (o clone é raso), sem capturas e sem sabotagens. O
+  recibo hospedado dos overlays (#93) está em [`overlays/`](overlays/README.md).
+- **O ruído do heap num runner hospedado não foi observado**: a regra é a do baseline, que já tolera a banda vista lá (2.376 bytes), e os objetos do motor têm limite de um.
+- **O Escape foi um evento de tecla pela viewport**, não um teclado físico; o bloqueio foi medido com eventos empurrados pela viewport, não com mouse físico nem toque; nada foi comparado com um iPhone.
+- **O foco é o que o host sabe dizer** (acima); o foco de React Native não existe no 0.5.
+- **Os ícones são desenhados para este app**: não dizem nada sobre formatos que o host recusa (GIF) nem sobre imagens de rede, que estão fora do 0.5.
+- **As tabelas de views nativas de `docs/research/frontier-turn.md`** (o tour de 19 cliques) são as da HUD sem ícones: pelo relatório da lane do turno em `0a0deca`, `none` passou de 14 para 17 views, `tile` de 18 para
+  21, `warrior` de 24 para 30, `stack` de 26 para 33, `settler` de 27 para 34, `dialog` de 28 para 31 e `city` de 47 para 55. A lane do turno passou porque julga cada contexto contra ele mesmo; quem a rodar de novo regrava as tabelas.
+- **O V05-05 está completo, mas o marco 0.5 não**: nenhum `done` de saída (X1 a X10), nenhum checkpoint, peso ou denominador da 1.0 se move.
+
+### Em aberto depois da fatia 2b
+
+- O run hospedado e o Pages desta fatia, depois do merge dela na `main`.
+- O erro do motor ao sair com um `Modal` aberto (do host), a tarefa à parte.
+- As tabelas de `docs/research/frontier-turn.md`, regravadas pela lane do turno sobre a HUD com ícones.
+- O resto do marco 0.5 (V05-06 em diante e a comparação final).

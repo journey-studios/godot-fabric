@@ -7,6 +7,9 @@ import test from "node:test";
 import {createHarness, hash, root} from "../scripts/consumer-harness.mjs";
 import {assertHudReport, categoriesOf, COVERING, judgeHudReport, TABLE} from "./civ-lite-ui-oracle.mjs";
 import {assertOverlayReport, judgeOverlayReport} from "./civ-lite-overlay-oracle.mjs";
+import {assertStabilityReport, judgeStabilityReport} from "./civ-lite-stability-oracle.mjs";
+import {leftOut, scanHud} from "./civ-lite-hud-scan.mjs";
+import {renderIcons} from "../scripts/civ-lite-icons.mjs";
 
 // V05-05 `matriz`, `mapa` and `overlays`: Frontier's context-driven HUD and its blocking overlays, run for real. The consumer template (consumers/civ-lite) is provisioned
 // into a project outside the checkout, built by the editor plugin with no Node of its own, and run in the official Godot with its own
@@ -21,6 +24,12 @@ import {assertOverlayReport, judgeOverlayReport} from "./civ-lite-overlay-oracle
 // event at the head, 100 real clicks, right clicks and wheel ticks on the map under each overlay (the city screen and the dialog are
 // blocking Modals) and with them closed, and a new game started with events waiting.
 //
+// A third probe, stability_validation.gd (`-- --validate-stability`, judged by tests/civ-lite-stability-oracle.mjs), opens and closes each overlay twenty
+// times (the city screen by a real click and a real press on Close, then by Escape; the dialog by a new game played to turn 5 and the three events answered by
+// real presses) and measures at rest after every close what a leak would grow: the tree's nodes, orphans and Windows, the native views, the pointer routes, the
+// registry's subscriptions, the HUD's connections, the signal's, the Hermes heap; focus as the host can say it; and the Images (the HUD's icons) that each
+// context mounts, inside and outside the Modal. The static scan also reads the HUD against the 0.5 manifest (tests/civ-lite-hud-scan.mjs).
+//
 // The same run is also judged here by three things the probes cannot say of themselves:
 //   - the oracle is not vacuous: a copy of the genuine report with one thing broken each, in memory, is rejected in the category it
 //     breaks;
@@ -33,7 +42,8 @@ import {assertOverlayReport, judgeOverlayReport} from "./civ-lite-overlay-oracle
 //     only if the probe's checks and the oracle both reject it, each for the reason it was broken.
 //
 // --capture adds the headed runs: one PNG per context (seven) and one during the AI phase with the spinner, and the city overlay and the
-// dialog at 1 of 3, at 2 of 3 after the remount and at 3 of 3.
+// dialog at 1 of 3, at 2 of 3 after the remount and at 3 of 3; and, of the stability run, the bar, the actions and the city screen with their icons, and the
+// city screen and the dialog in the first and in the last cycle.
 const capture = process.argv.includes("--capture");
 const requireControl = process.argv.includes("--control");
 const sabotageArgument = process.argv.find(argument => argument.startsWith("--sabotage="));
@@ -42,6 +52,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
 const PROBES = {
   hud: {flag: "--validate-hud", report: "civ-lite-ui-report.json", marker: "CIVLITE_UI"},
   overlays: {flag: "--validate-overlays", report: "civ-lite-overlay-report.json", marker: "CIVLITE_OVERLAYS"},
+  stability: {flag: "--validate-stability", report: "civ-lite-stability-report.json", marker: "CIVLITE_STABILITY"},
 };
 const CONTEXTS = Object.keys(TABLE);
 const CONTROL_COMMIT = "5e1f6a1";
@@ -51,8 +62,14 @@ const CONTROL_SHA256 = "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885
 // What hud_validation.gd and overlay_validation.gd count in a run with no capture, and the captures a headed run adds (eight, and four).
 const EXPECTED_CHECKS = 144;
 const EXPECTED_OVERLAY_CHECKS = 26;
+// What stability_validation.gd counts: 41 in a run with no capture, and the seven pictures and the comparison of the last cycle's a headed run adds.
+const EXPECTED_STABILITY_CHECKS = 41;
 const CAPTURES = [...CONTEXTS, "ai-phase"];
 const OVERLAY_CAPTURES = ["city", "dialog-1", "dialog-2-remounted", "dialog-3"];
+const STABILITY_CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dialog-1", "dialog-20"];
+// The commit before this slice: its HUD has no icons and its manifest does not decide AppRegistry.
+const STABILITY_CONTROL_COMMIT = "e108e9d";
+const ICON_NAMES = ["settler", "warrior", "city", "food", "production", "science"];
 // What each retained sabotage must make the probe and the oracle say. `failed` are patterns of the probe's failed checks and
 // `categories` the oracle's categories that must be among the findings (scripts/civ-lite-ui-sabotage.mjs says what each breaks).
 const SABOTAGES = {
@@ -68,6 +85,12 @@ const SABOTAGES = {
   "position-in-js": {categories: ["queue"], failed: [/the HUD showed the position the game gave/]},
   "city-in-tree": {categories: ["panels", "map", "blocking"], failed: [/The Modal covers the whole map in every step of the city and dialog contexts/, /With the city screen open, 100 left clicks, 100 right clicks and 100 wheel ticks on the map reach the World 0 times/]},
   "dialog-unkeyed": {categories: ["queue"], failed: [/Each event of the queue was a subtree of its own/]},
+  // The sabotages of the stability lane run its probe alone (`mode: "stability"`), or only the static scan (`mode: "scan"`, `categories` are then the findings' kinds).
+  "close-leaks-connection": {mode: "stability", categories: ["leak"], failed: [/the registry's subscriptions and pending work, the HUD's connections and the signal's are the first cycle's/]},
+  "modal-stays-mounted": {mode: "stability", categories: ["leak", "coverage"], failed: [/after every close the screen is at rest with the Windows the game had before/]},
+  "focus-grabbed": {mode: "stability", categories: ["focus"], failed: [/no Control under it has the focus/]},
+  "icon-missing": {mode: "stability", categories: ["icons"], failed: [/is visible and drew once loaded, with no error/]},
+  "import-outside-manifest": {mode: "scan", categories: ["import"], failed: []},
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
 
@@ -108,9 +131,9 @@ async function previousHud() {
   return readFile(path.join(directory, "index.tsx"));
 }
 
-// Directories of the template as a commit had them, by `git archive` into build/civ-lite-overlays-previous/, with a digest of the archive.
-async function previousTemplate(commit, names) {
-  const directory = path.join(root, "build", "civ-lite-overlays-previous");
+// Directories of the template as a commit had them, by `git archive` into build/<target>/, with a digest of the archive.
+async function previousTemplate(commit, names, target = "civ-lite-overlays-previous") {
+  const directory = path.join(root, "build", target);
   await rm(directory, {recursive: true, force: true});
   await mkdir(directory, {recursive: true});
   const archive = spawnSync("git", ["archive", commit, ...names.map(name => `consumers/civ-lite/${name}`)], {cwd: root, maxBuffer: 64 * 1024 * 1024});
@@ -123,6 +146,12 @@ async function previousTemplate(commit, names) {
 }
 
 const failedChecks = report => report.checks.filter(check => !check.passed).map(check => check.name);
+
+// The files of the HUD proper (the entry and the panels) as text, from a directory of `ui/` sources, for the static scan.
+const hudSourcesIn = async ui => Object.fromEntries(await Promise.all(sourcesUnder(ui).filter(file => file === "index.tsx" || file.startsWith("hud/"))
+  .map(async file => [file, await readFile(path.join(ui, file), "utf8")])));
+const manifestAt = commit => JSON.parse(spawnSync("git", ["show", `${commit}:docs/compatibility/scope-0.5.json`], {cwd: root, maxBuffer: 64 * 1024 * 1024, encoding: "utf8"}).stdout);
+const manifestNow = async () => JSON.parse(await readFile(path.join(root, "docs", "compatibility", "scope-0.5.json"), "utf8"));
 
 // The oracle's own proof that it can fail: each case breaks one thing in a copy of the genuine report and names the category the
 // oracle must report. A case that finds nothing to break is an error, so a change of the report cannot make a mutation vacuous.
@@ -184,6 +213,83 @@ const OVERLAY_MUTATIONS = [
   {name: "the new session did not raise its own events", category: "newgame", change: report => { report.newGame.raised.events.queue = []; }},
 ];
 
+// The same for the stability oracle: a copy of the genuine report with one thing broken, and the category that must say so.
+const cityRound = (report, index) => report.city.rounds[index];
+const cityRounds = (report, how) => report.city.rounds.filter(row => row.how === how);
+const dialogCycle = (report, index) => report.dialog.cycles[index];
+const iconsIn = (report, label) => report.icons.find(entry => entry.label === label);
+const imageIn = (report, label, testID) => iconsIn(report, label).images.find(image => image.testID === testID);
+const STABILITY_MUTATIONS = [
+  {name: "a city cycle leaves a node behind", category: "leak", change: report => { cityRound(report, 10).after.nodes += 1; }},
+  {name: "a Window stays open after a close", category: "leak", change: report => { cityRound(report, 12).after.windows += 1; }},
+  {name: "a native view is not released", category: "leak", change: report => { cityRound(report, 6).after.nativeViews += 1; }},
+  {name: "a connection of the registry is not released", category: "leak", change: report => { dialogCycle(report, 7).answers[2].after.subscriptions += 1; }},
+  {name: "the HUD holds a third connection while the screen is open", category: "leak", change: report => { cityRound(report, 4).open.hudSubscriptions = 3; }},
+  {name: "the signal keeps a connection of a freed World", category: "leak", change: report => { dialogCycle(report, 8).open.connections += 1; }},
+  {name: "a route of the pointer stays stored after a close", category: "leak", change: report => { cityRound(report, 8).after.pointerStored = 1; }},
+  {name: "a suppressed pointer is left", category: "leak", change: report => { cityRound(report, 9).after.pointerSuppressed = 1; }},
+  {name: "work is still pending at rest", category: "leak", change: report => { dialogCycle(report, 3).open.pendingWork = 1; }},
+  {name: "a node is orphaned", category: "leak", change: report => { cityRound(report, 2).after.orphans = 1; }},
+  {name: "what a cycle created it did not delete", category: "leak", change: report => { cityRound(report, 5).after.deletes -= 1; }},
+  {name: "the Modal is remounted between two answers of the dialog", category: "leak", change: report => { dialogCycle(report, 6).answers[0].after.windows = 0; }},
+  {name: "the heap grows by 400 bytes a cycle", category: "heap", change: report => { cityRounds(report, "close").forEach((row, index) => { row.after.heap += index * 400; }); }},
+  {name: "the engine's objects grow by two a cycle", category: "heap", change: report => { report.dialog.cycles.forEach((row, index) => { row.answers.at(-1).after.objects += index * 2; }); }},
+  {name: "a heap was read before a collection", category: "heap", change: report => { cityRound(report, 3).after.collected = false; }},
+  {name: "the telemetry's lists were not filled", category: "heap", change: report => { report.fill.kept = 12; }},
+  {name: "the focus after a close is not the one before the open", category: "focus", change: report => { cityRound(report, 6).after.focus.root = 4242; }},
+  {name: "a Control under the dialog has the focus while it is open", category: "focus", change: report => { dialogCycle(report, 9).open.focus.root = 4242; }},
+  {name: "a Control under the city screen reports itself focused", category: "focus", change: report => { cityRound(report, 0).open.focus.focused.push({testID: "hud-bar", modal: false}); }},
+  {name: "two Windows are exclusive", category: "focus", change: report => { const focus = cityRound(report, 2).open.focus; focus.modals.push({...focus.modals[0], id: 7}); }},
+  {name: "the overlay's Window is not exclusive", category: "focus", change: report => { cityRound(report, 2).open.focus.modals[0].exclusive = false; }},
+  {name: "a click reached the world under the city screen in the last cycle", category: "blocking", change: report => { cityRound(report, 38).blocking[0].heardAfter.buttons += 2; }},
+  {name: "a wheel tick selected a tile under the dialog", category: "blocking", change: report => { dialogCycle(report, 19).blocking[2].selectCalls = 1; }},
+  {name: "the burst was not pushed in the last cycle", category: "blocking", change: report => { delete dialogCycle(report, 19).blocking; }},
+  {name: "Escape on the dialog answered the event", category: "escape", change: report => { dialogCycle(report, 4).escape.sameHead = false; }},
+  {name: "Escape on the dialog did not reach its Window", category: "escape", change: report => { dialogCycle(report, 4).escape.heard = 0; }},
+  {name: "Escape on the city screen did not clear the selection", category: "escape", change: report => { cityRound(report, 7).clearCalls = 0; }},
+  {name: "an icon of the bar failed to draw", category: "icons", change: report => { iconsIn(report, "none").images[0].errors = 1; }},
+  {name: "an icon of the bar is missing", category: "icons", change: report => { iconsIn(report, "stack").images.shift(); }},
+  {name: "the Images were read before they settled", category: "icons", change: report => { iconsIn(report, "city").rested = false; }},
+  {name: "an Image was still loading when the screen was called at rest", category: "icons", change: report => { Object.assign(cityRound(report, 12).openImages[1], {status: "loading", loads: 0, drawn: false}); }},
+  {name: "an item's icon is not in the Modal's window", category: "icons", change: report => { imageIn(report, "city", "hud-city-item-granary-icon").modal = false; }},
+  {name: "the granary shows another asset", category: "icons", change: report => { const image = imageIn(report, "city", "hud-city-item-granary-icon"); image.uri = image.uri.replace("food.png", "science.png"); }},
+  {name: "an action's icon is not its unit's", category: "icons", change: report => { const image = imageIn(report, "stack", "hud-actions-select_unit-1-icon"); image.uri = image.uri.replace("settler.png", "warrior.png"); }},
+  {name: "the city screen's icons did not draw in the last cycle", category: "icons", change: report => { cityRound(report, 39).openImages[0].drawn = false; }},
+  {name: "a cycle of the city screen is missing", category: "coverage", change: report => { report.city.rounds.pop(); }},
+  {name: "the dialog's events were answered out of order", category: "coverage", change: report => { const answers = dialogCycle(report, 5).answers; [answers[0].event, answers[1].event] = [answers[1].event, answers[0].event]; }},
+  {name: "the city screen was not opened by a real click", category: "coverage", change: report => { cityRound(report, 9).opened = false; }},
+];
+
+// The static scan's own proof that it can fail: each change of a copy of the HUD's sources must be found, by the kind and the words it breaks; `clean` ones must not.
+const swap = (from, to) => source => source.replace(from, to);
+const SCAN_MUTATIONS = [
+  {name: "FlatList is imported", file: "hud/kit.tsx", change: swap('import { Image, Pressable', 'import { FlatList, Image, Pressable'), kind: "import", match: /FlatList is out of the 0\.5 scope/},
+  {name: "TextInput is imported", file: "hud/kit.tsx", change: swap('import { Image, Pressable', 'import { Image, Pressable, TextInput'), kind: "import", match: /TextInput is out of the 0\.5 scope/},
+  {name: "Keyboard is imported", file: "hud/hud.tsx", change: swap('import { Text, View } from "react-native";', 'import { Keyboard, Text, View } from "react-native";'), kind: "import", match: /Keyboard is out of the 0\.5 scope/},
+  {name: "a name the manifest does not decide is imported", file: "hud/hud.tsx", change: swap('import { Text, View } from "react-native";', 'import { NativeModules, Text, View } from "react-native";'), kind: "import", match: /NativeModules is in neither/},
+  {name: "react-native is imported as a namespace", file: "hud/hud.tsx", change: swap('import { Text, View } from "react-native";', 'import * as Native from "react-native";\nimport { Text, View } from "react-native";'), kind: "import", match: /default or a namespace/},
+  {name: "react-native is required", file: "hud/hud.tsx", change: source => `${source}\nconst native = require("react-native");\n`, kind: "import", match: /`require`/},
+  {name: "a Pressable gets a hover handler", file: "hud/kit.tsx", change: swap('<Pressable testID={id} disabled={!enabled} onPress={onPress}', '<Pressable testID={id} disabled={!enabled} onPress={onPress} onHoverIn={onPress}'), kind: "prop", match: /<Pressable onHoverIn> is refused/},
+  {name: "a Pressable gets a right-click handler", file: "hud/kit.tsx", change: swap('<Pressable testID={id} disabled={!enabled} onPress={onPress}', '<Pressable testID={id} disabled={!enabled} onPress={onPress} onContextMenu={onPress}'), kind: "prop", match: /<Pressable onContextMenu> is not a prop/},
+  {name: "a View gets a mouse-enter handler", file: "hud/hud.tsx", change: swap('<View testID="hud-root" pointerEvents="box-none"', '<View testID="hud-root" onMouseEnter={mustAnswer} pointerEvents="box-none"'), kind: "prop", match: /<View onMouseEnter> is accepted and changes nothing/},
+  {name: "the Modal slides in", file: "hud/overlay.tsx", change: swap('animationType="none"', 'animationType="slide"'), kind: "prop", match: /<Modal animationType> is refused/},
+  {name: "an Image is given children", file: "hud/kit.tsx", change: swap('return <Image testID={id} source={ICONS[name]} style={{ width: size, height: size }} />;', 'return <Image testID={id} source={ICONS[name]} style={{ width: size, height: size }}><View /></Image>;'), kind: "prop", match: /<Image> is given children/},
+  {name: "a View takes a spread of props", file: "hud/kit.tsx", change: swap('return <View testID={id}\n', 'return <View {...style} testID={id}\n'), kind: "prop", match: /takes a spread/},
+  {name: "AppRegistry runs an application", file: "index.tsx", change: source => `${source}\nAppRegistry.runApplication("FrontierHUD", {});\n`, kind: "member", match: /AppRegistry\.runApplication is not a member/},
+  {name: "a type-only import of a type the manifest does not decide is not a name", file: "hud/kit.tsx", change: swap('import type { ReactNode } from "react";', 'import type { ReactNode } from "react";\nimport type { ViewStyle } from "react-native";'), clean: true},
+  // A subpath of react-native reaches past the names the manifest decides, however it is reached.
+  {name: "a static import of a subpath of react-native", file: "hud/kit.tsx", change: swap('import type { ReactNode } from "react";', 'import type { ReactNode } from "react";\nimport Animated from "react-native/Libraries/Animated/Animated";'), kind: "import", match: /subpath react-native\/Libraries\/Animated\/Animated/},
+  {name: "a re-export from a subpath of react-native", file: "hud/kit.tsx", change: source => `${source}\nexport { default as Deep } from "react-native/Libraries/Animated/Animated";\n`, kind: "import", match: /re-exports the subpath/},
+  {name: "a require of a subpath of react-native", file: "hud/hud.tsx", change: source => `${source}\nconst deep = require("react-native/Libraries/Animated/Animated");\n`, kind: "import", match: /loads the subpath/},
+  {name: "a dynamic import of a subpath of react-native", file: "hud/hud.tsx", change: source => `${source}\nconst later = import("react-native/Libraries/Animated/Animated");\n`, kind: "import", match: /loads the subpath/},
+  // A name with a list of members is read as Name.member, or by destructuring members of the list: nothing else can be checked against it.
+  {name: "AppRegistry is destructured into a member outside the subset", file: "index.tsx", change: source => `${source}\nconst { runApplication } = AppRegistry;\n`, kind: "member", match: /AppRegistry\.runApplication is not a member .* destructured/},
+  {name: "AppRegistry is destructured with a rest element", file: "index.tsx", change: source => `${source}\nconst { ...everything } = AppRegistry;\n`, kind: "member", match: /destructured with a rest element/},
+  {name: "AppRegistry is aliased before a member outside the subset is read", file: "index.tsx", change: source => `${source}\nconst Registry = AppRegistry;\nRegistry.runApplication("FrontierHUD", {});\n`, kind: "member", match: /AppRegistry is used as a value/},
+  {name: "AppRegistry is passed as an argument", file: "index.tsx", change: source => `${source}\nObject.keys(AppRegistry);\n`, kind: "member", match: /AppRegistry is used as a value/},
+  {name: "a member of the subset destructured from AppRegistry is let through", file: "index.tsx", change: source => `${source}\nconst { getAppKeys } = AppRegistry;\n`, clean: true},
+];
+
 if (sabotage === null) {
   test("Frontier's HUD mounts the panels of each context, shows the turn and takes the pointer the World leaves it", {timeout: 900000}, async t => {
     const harness = await createHarness({template: "civ-lite", name: lane});
@@ -227,6 +333,52 @@ if (sabotage === null) {
     const imports = new Set(imported.flat());
     verify([...imports].every(name => ["react", "react-native", "@godot-fabric/runtime"].includes(name) || name.startsWith(".")),
       `The HUD imports ${[...imports].filter(name => !name.startsWith(".")).sort().join(", ")} and its own files`);
+
+    // The HUD against the 0.5 manifest, read from the manifest and not from a copy: every name it imports from react-native is one the manifest decides
+    // and none one it leaves out, every prop is one it supports for the component, every member one of the subset.
+    const manifest = await manifestNow();
+    const hudSources = await hudSourcesIn(ui);
+    assert.deepEqual(scanHud(hudSources, manifest), [], "the HUD uses only the names, props and members the manifest decides");
+    assert.ok(manifest.names.some(row => row.name === "AppRegistry"), "the manifest decides AppRegistry, the HUD's entry point");
+    for (const name of ["TextInput", "Keyboard", "FlatList"]) {
+      assert.ok(leftOut(manifest).has(name), `the manifest leaves ${name} out`);
+    }
+    verify(true, `The HUD's imports from react-native, the props of its components and the members it reads are all decided by the manifest (${manifest.names.length} names; none of the ${leftOut(manifest).size} it leaves out)`);
+    const scanned = [];
+    for (const mutation of SCAN_MUTATIONS) {
+      const changed = {...hudSources, [mutation.file]: mutation.change(hudSources[mutation.file])};
+      assert.notEqual(changed[mutation.file], hudSources[mutation.file], `${mutation.name}: the change touched nothing`);
+      const found = scanHud(changed, manifest);
+      if (mutation.clean === true) {
+        assert.deepEqual(found, [], `${mutation.name}: the scan must not flag it`);
+      } else {
+        assert.ok(found.some(finding => finding.kind === mutation.kind && mutation.match.test(finding.message)), `${mutation.name}: the scan must find ${mutation.match}, and found ${JSON.stringify(found)}`);
+      }
+      scanned.push({name: mutation.name, kind: mutation.kind ?? "clean"});
+    }
+    const changesFound = SCAN_MUTATIONS.filter(mutation => mutation.clean !== true).length;
+    verify(true, `The scan finds each of ${changesFound} changes of a copy of the HUD (an import out of scope or by a subpath, a refused or unknown or ignored prop, a member out of the subset, read by destructuring, by an alias or by a loose use) and lets ${SCAN_MUTATIONS.length - changesFound} others through (a type-only import, a member of the subset destructured)`);
+
+    // The icons: six PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, each imported by the HUD as an asset an Image draws.
+    const drawn = renderIcons();
+    assert.deepEqual(Object.keys(drawn).sort(), ICON_NAMES.map(name => `${name}.png`).sort());
+    for (const [file, bytes] of Object.entries(drawn)) {
+      const committed = await readFile(path.join(ui, "icons", file));
+      assert.ok(committed.equals(bytes), `ui/icons/${file} is what the generator draws`);
+      assert.deepEqual([...committed.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `${file} is a PNG`);
+      assert.deepEqual([committed.readUInt32BE(16), committed.readUInt32BE(20)], [32, 32], `${file} is 32x32`);
+    }
+    assert.match(await source("assets.d.ts"), /declare module "\*\.png"[\s\S]*ImageSourcePropType/);
+    const iconModule = await source("hud/icons.ts");
+    for (const name of ICON_NAMES) {
+      assert.match(iconModule, new RegExp(`import ${name} from "\\.\\./icons/${name}\\.png"`), `the HUD imports ${name}.png as an asset`);
+    }
+    assert.match(await source("hud/kit.tsx"), /<Image testID=\{id\} source=\{ICONS\[name\]\}/);
+    for (const [file, pattern] of [["hud/bar.tsx", /<Icon id=\{`hud-bar-\$\{name\}-icon`\}/], ["hud/actions.tsx", /icon=\{iconOf\(action, units\)\}/],
+      ["hud/tile.tsx", /<Icon key=\{unit\.id\} id=\{`hud-tile-unit-\$\{unit\.id\}-icon`\}/], ["hud/city.tsx", /icon=\{itemIcon\(item\.id\)\}/]]) {
+      assert.match(await source(file), pattern, `${file} shows its icons`);
+    }
+    verify(true, "The six icons (settler, warrior, city, food, production, science) are 32x32 PNGs the generator draws, imported as assets and shown by Images in the bar, the actions, the tile card and the city screen");
 
     // The genuine run, headless.
     const {log, report} = await probe(harness, "headless");
@@ -279,6 +431,38 @@ if (sabotage === null) {
     verify(true, `The overlay oracle rejects each of ${OVERLAY_MUTATIONS.length} mutated copies of its report, in the category each breaks`);
     summary.overlays = {checks: overlays.report.checks.length, rounds: overlays.report.queue.rounds.map(entry => [entry.dialog.id, entry.dialog.index, entry.dialog.count, entry.pick]),
       remountFrames: overlays.report.remount.remounted.samples.length, mutations: OVERLAY_MUTATIONS.map(mutation => ({name: mutation.name, category: mutation.category}))};
+
+    // The stability probe: twenty cycles of each overlay, headless.
+    const stability = await probe(harness, "stability", {mode: "stability"});
+    assert.match(stability.log, /CIVLITE_STABILITY_PASSED/);
+    assert.deepEqual(failedChecks(stability.report), [], "every check of the stability probe passed");
+    assert.equal(stability.report.checks.length, EXPECTED_STABILITY_CHECKS, "the stability probe ran the checks it is built of");
+    assertNamesDoNotDependOnPace("the stability probe", stability.report);
+    assertStabilityReport(stability.report);
+    verify(true, `The stability probe ran ${stability.report.checks.length} checks and the independent oracle accepts them: twenty cycles of the city screen (a click and Close, a click and Escape) and of the dialog (a game to turn 5 and three answers by real presses), nothing leaked, focus kept, the map blocked, every icon drawn`);
+    assert.deepEqual(judgeStabilityReport(stability.report), []);
+    for (const mutation of STABILITY_MUTATIONS) {
+      const mutated = structuredClone(stability.report);
+      mutation.change(mutated);
+      assert.notDeepEqual(mutated, stability.report, `${mutation.name}: the mutation changed nothing`);
+      const found = judgeStabilityReport(mutated);
+      assert.ok(categoriesOf(found).includes(mutation.category), `${mutation.name}: the stability oracle must report ${mutation.category}, and found ${JSON.stringify(categoriesOf(found))}`);
+    }
+    verify(true, `The stability oracle rejects each of ${STABILITY_MUTATIONS.length} mutated copies of its report, in the category each breaks`);
+    const rest = (rows, field) => ({first: rows[0][field], last: rows.at(-1)[field]});
+    const closes = cityRounds(stability.report, "close").map(row => row.after);
+    const escapes = cityRounds(stability.report, "escape").map(row => row.after);
+    const closed = stability.report.dialog.cycles.map(row => row.answers.at(-1).after);
+    const numbers = rows => Object.fromEntries(["nodes", "orphans", "objects", "windows", "nativeViews", "nativeTags", "subscriptions", "hudSubscriptions", "connections", "pointerStored",
+      "pointerSuppressed", "heap"].map(field => [field, rest(rows, field)]));
+    summary.stability = {checks: stability.report.checks.length, cycles: {city: cityRounds(stability.report, "close").length, dialog: closed.length},
+      atRest: {cityClose: numbers(closes), cityEscape: numbers(escapes), dialogLastAnswer: numbers(closed)},
+      heap: {cityClose: closes.map(row => row.heap), cityEscape: escapes.map(row => row.heap), dialogLastAnswer: closed.map(row => row.heap)},
+      icons: stability.report.icons.map(entry => ({context: entry.label, images: entry.images.length, modal: entry.images.filter(image => image.modal).length})),
+      mutations: STABILITY_MUTATIONS.map(mutation => ({name: mutation.name, category: mutation.category})), scanMutations: SCAN_MUTATIONS.map(mutation => ({name: mutation.name, kind: mutation.kind ?? "clean"}))};
+    await writeFile(path.join(directory, "stability-series.json"), JSON.stringify({format: "godot-fabric.civ-lite-stability-series/v1", base: stability.report.base,
+      city: stability.report.city.rounds.map(row => ({cycle: row.cycle, how: row.how, before: row.before, open: row.open, after: row.after, clearCalls: row.clearCalls})),
+      dialog: stability.report.dialog.cycles.map(row => ({cycle: row.cycle, before: row.before, open: row.open, answers: row.answers.map(answer => answer.after), escape: row.escape}))}) + "\n");
 
     // The causal control: the HUD of 5e1f6a1 on the same scene fails what the new HUD passes.
     let controlSummary = {commit: CONTROL_COMMIT, skipped: "the commit is not in this checkout"};
@@ -340,6 +524,44 @@ if (sabotage === null) {
       console.log(`CIVLITE_UI_CONTROL_SKIPPED: ${OVERLAY_CONTROL_COMMIT} is not in this checkout (a shallow clone); run with --control where it is`);
     }
 
+    // The causal control of the stability lane: the HUD and the game of e108e9d (no icons, a manifest that does not decide AppRegistry) on the same probe.
+    let stabilityControlSummary = {commit: STABILITY_CONTROL_COMMIT, skipped: "the commit is not in this checkout"};
+    if (requireControl || commitAvailable(STABILITY_CONTROL_COMMIT)) {
+      const previous = await previousTemplate(STABILITY_CONTROL_COMMIT, ["game", "services", "ui"], "civ-lite-stability-previous");
+      const oldSources = await hudSourcesIn(path.join(previous.directory, "ui"));
+      const scanThen = scanHud(oldSources, manifestAt(STABILITY_CONTROL_COMMIT));
+      const scanNow = scanHud(oldSources, manifest);
+      assert.deepEqual(scanThen.map(finding => [finding.file, finding.kind, finding.message.split(" ")[0]]), [["index.tsx", "import", "AppRegistry"]],
+        `the HUD of ${STABILITY_CONTROL_COMMIT} against its manifest fails the scan on AppRegistry and on nothing else: ${JSON.stringify(scanThen)}`);
+      assert.deepEqual(scanNow, [], "the same HUD passes the scan against the manifest of this slice, which decides AppRegistry");
+      const control = await createHarness({template: "civ-lite", name: "civ-lite-stability-control"});
+      t.after(() => control.cleanup());
+      await control.provision();
+      for (const directoryName of ["game", "services", "ui"]) {
+        await rm(path.join(control.project, directoryName), {recursive: true, force: true});
+        await cp(path.join(previous.directory, directoryName), path.join(control.project, directoryName), {recursive: true});
+      }
+      await control.editor("editor");
+      const controlRun = await probe(control, "control", {mode: "stability", expectFailures: true});
+      const controlFindings = judgeStabilityReport(controlRun.report);
+      const controlFailed = failedChecks(controlRun.report);
+      assert.ok(controlFailed.length > 0 && controlFindings.length > 0, `the HUD and the game of ${STABILITY_CONTROL_COMMIT} must fail the stability lane`);
+      assert.ok(controlFailed.every(name => name.startsWith("Icons: ")) && categoriesOf(controlFindings).join() === "icons",
+        `the HUD of ${STABILITY_CONTROL_COMMIT} fails the icon checks and nothing else (it does not leak): ${JSON.stringify({controlFailed, categories: categoriesOf(controlFindings)})}`);
+      await writeFile(path.join(directory, "stability-control-observed.json"), JSON.stringify({
+        format: "godot-fabric.civ-lite-stability-control/v1", commit: STABILITY_CONTROL_COMMIT, archived: previous.sha256, failedChecks: controlFailed, categories: categoriesOf(controlFindings),
+        findingCounts: Object.fromEntries(categoriesOf(controlFindings).map(category => [category, controlFindings.filter(finding => finding.category === category).length])),
+        findings: controlFindings.slice(0, 8).map(finding => `[${finding.category}] ${finding.message.slice(0, 240)}`),
+        scan: {against: STABILITY_CONTROL_COMMIT, findings: scanThen.map(finding => `${finding.file}: ${finding.message}`), againstThisSlice: scanNow.length},
+        images: controlRun.report.icons.map(entry => ({context: entry.label, images: entry.images.length})),
+        leaks: {cyclesRun: controlRun.report.city.rounds.length + controlRun.report.dialog.cycles.length, categoriesOtherThanIcons: categoriesOf(controlFindings).filter(category => category !== "icons")},
+      }, null, 2) + "\n");
+      verify(true, `The HUD of ${STABILITY_CONTROL_COMMIT} fails the lane where it should: its scan against its own manifest finds AppRegistry, and the probe finds no Image where the icons are (${controlFailed.length} checks, category ${JSON.stringify(categoriesOf(controlFindings))}); it leaks nothing`);
+      stabilityControlSummary = {commit: STABILITY_CONTROL_COMMIT, categories: categoriesOf(controlFindings), failedChecks: controlFailed.length, scanFindings: scanThen.length};
+    } else {
+      console.log(`CIVLITE_UI_CONTROL_SKIPPED: ${STABILITY_CONTROL_COMMIT} is not in this checkout (a shallow clone); run with --control where it is`);
+    }
+
     if (capture) {
       const {log: headedLog, report: headed} = await probe(harness, "graphical", {headed: true});
       assert.match(headedLog, /CIVLITE_UI_PASSED/);
@@ -374,13 +596,36 @@ if (sabotage === null) {
       }
       assert.equal(new Set(Object.values(summary.overlayCaptures).map(entry => entry.sha256)).size, OVERLAY_CAPTURES.length, "the four overlay captures are four different pictures");
       verify(true, `The headed overlay run saved ${OVERLAY_CAPTURES.length} captures: the city overlay and the dialog at 1 of 3, 2 of 3 after the remount and 3 of 3`);
+      const {log: stabilityLog, report: stabilityHeaded} = await probe(harness, "stability-graphical", {mode: "stability", headed: true});
+      assert.match(stabilityLog, /CIVLITE_STABILITY_PASSED/);
+      assert.deepEqual(failedChecks(stabilityHeaded), [], "every check of the headed stability run passed");
+      assert.equal(stabilityHeaded.checks.length, stability.report.checks.length + STABILITY_CAPTURES.length + 1, "the headed stability run adds its seven captures and the comparison of the last cycle's");
+      assertSameNamesAsHeadless("the stability probe", stabilityHeaded, stability.report);
+      assertStabilityReport(stabilityHeaded);
+      const drifted = structuredClone(stabilityHeaded);
+      drifted.drift.same = false;
+      assert.ok(categoriesOf(judgeStabilityReport(drifted)).includes("drift"), "the oracle rejects a last cycle whose pictures are not the first's");
+      summary.stabilityCaptures = {};
+      for (const stage of STABILITY_CAPTURES) {
+        const file = path.join(directory, `stability-${stage}.png`);
+        await copyFile(path.join(project, `civ-lite-stability-${stage}.png`), file);
+        const bytes = await readFile(file);
+        assert.deepEqual([...bytes.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `stability-${stage}.png is a PNG`);
+        summary.stabilityCaptures[stage] = {sha256: hash(bytes), bytes: bytes.length};
+      }
+      const distinct = ["bar", "actions", "city", "city-1", "dialog-1"].map(stage => summary.stabilityCaptures[stage].sha256);
+      assert.equal(new Set(distinct).size, distinct.length, "the bar, the actions, the city screen of the icons, and the first cycles' city screen and dialog are five different pictures");
+      summary.stabilityDrift = {...stabilityHeaded.drift, sameBytes: {city: summary.stabilityCaptures["city-1"].sha256 === summary.stabilityCaptures["city-20"].sha256,
+        dialog: summary.stabilityCaptures["dialog-1"].sha256 === summary.stabilityCaptures["dialog-20"].sha256}};
+      verify(true, `The headed stability run saved ${STABILITY_CAPTURES.length} captures (the bar, the actions and the city screen with their icons, the city screen and the dialog in the first and the last cycle), and the last cycle's pictures are the first's but for the first row of the bar`);
     }
 
     summary.control = controlSummary;
     summary.overlaysControl = overlayControlSummary;
+    summary.stabilityControl = stabilityControlSummary;
     await writeFile(path.join(directory, "summary.json"), JSON.stringify({...summary, checks: harness.checks}, null, 2) + "\n");
     assert.ok(existsSync(path.join(directory, "headless.json")));
-    console.log(`CIVLITE_UI_LANE_PASSED: ${report.checks.length} + ${overlays.report.checks.length} probe checks; ${MUTATIONS.length} + ${OVERLAY_MUTATIONS.length} oracle mutations; controls ${controlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(controlSummary.categories)}`} and ${overlayControlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(overlayControlSummary.categories)}`}`);
+    console.log(`CIVLITE_UI_LANE_PASSED: ${report.checks.length} + ${overlays.report.checks.length} + ${stability.report.checks.length} probe checks; ${MUTATIONS.length} + ${OVERLAY_MUTATIONS.length} + ${STABILITY_MUTATIONS.length} oracle mutations and ${SCAN_MUTATIONS.length} of the scan; controls ${controlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(controlSummary.categories)}`}, ${overlayControlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(overlayControlSummary.categories)}`} and ${stabilityControlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(stabilityControlSummary.categories)}`}`);
   });
 } else {
   // A retained sabotage: the project was broken on purpose, and the probe and the oracle must both reject it.
@@ -390,18 +635,27 @@ if (sabotage === null) {
     const expected = SABOTAGES[sabotage];
     await rm(path.join(harness.directory, "observed.json"), {force: true});
     await harness.provision();
-    await harness.editor("editor");
-    // Both probes run on the broken project, each with the verdict of its own; what they and the oracles say is added up.
-    const hudRun = await probe(harness, "headless", {expectFailures: true});
-    const overlayRun = await probe(harness, "overlays", {mode: "overlays", expectFailures: true});
-    const failed = [...failedChecks(hudRun.report), ...failedChecks(overlayRun.report)];
-    const findings = [...judgeHudReport(hudRun.report), ...judgeOverlayReport(overlayRun.report)];
-    for (const run of [hudRun, overlayRun]) {
-      const own = failedChecks(run.report).length;
-      assert.ok(own === 0 || new RegExp(`_REJECTED: ${own}\\b`).test(run.log), "a probe that has failed checks says it rejected the project");
+    let failed;
+    let findings;
+    if (expected.mode === "scan") {
+      // Only the static scan can see this one: an import the manifest does not decide never runs. Nothing is built.
+      const found = scanHud(await hudSourcesIn(path.join(harness.project, "ui")), await manifestNow());
+      failed = found.map(finding => `${finding.file}: ${finding.message}`);
+      findings = found.map(finding => ({category: finding.kind, message: `${finding.file}: ${finding.message}`}));
+    } else {
+      await harness.editor("editor");
+      // The probes run on the broken project, each with the verdict of its own; what they and the oracles say is added up.
+      const runs = expected.mode === "stability" ? [[await probe(harness, "stability", {mode: "stability", expectFailures: true}), judgeStabilityReport]]
+        : [[await probe(harness, "headless", {expectFailures: true}), judgeHudReport], [await probe(harness, "overlays", {mode: "overlays", expectFailures: true}), judgeOverlayReport]];
+      failed = runs.flatMap(([run]) => failedChecks(run.report));
+      findings = runs.flatMap(([run, judge]) => judge(run.report));
+      for (const [run] of runs) {
+        const own = failedChecks(run.report).length;
+        assert.ok(own === 0 || new RegExp(`_REJECTED: ${own}\\b`).test(run.log), "a probe that has failed checks says it rejected the project");
+      }
     }
-    assert.ok(failed.length > 0, "the probes reject the sabotaged project");
-    assert.ok(findings.length > 0, "the oracles reject the sabotaged project");
+    assert.ok(failed.length > 0, "the probes (or the scan) reject the sabotaged project");
+    assert.ok(findings.length > 0, "the oracles (or the scan) reject the sabotaged project");
     for (const pattern of expected.failed) {
       assert.ok(failed.some(name => pattern.test(name)), `${pattern} is among the failed checks:\n${failed.join("\n")}`);
     }

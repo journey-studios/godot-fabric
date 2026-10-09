@@ -22,7 +22,6 @@ const EVENT_STEP := 44
 const CITY_STEP := 18
 # The choice of each event that the probe presses: welcome (it draws from the PRNG), buy_tools and send_on.
 const PICKS := [0, 1, 1]
-const CLICKS := 100
 # The three events of the queue in the order the game raises them, and for each round a choice that belongs to another event: the probe's
 # own copy, so that it runs against a game that has no queue too (the control). EVENT_TURN is the turn that raises them.
 const EVENT_IDS := ["wanderers", "traders", "scholar"]
@@ -66,18 +65,6 @@ func run_probe() -> void:
 
 # --- Reading and driving ---------------------------------------------------------------------------------------------
 
-# A fresh game played through the services up to the step, waiting for the jobs of the end turns, and the HUD caught up.
-func play_to(step: int) -> void:
-  services.new_game()
-  await settle()
-  for index in range(step + 1):
-    var move: Dictionary = Replay.STEPS[index]
-    var result: Dictionary = services.callv(move.intent, move.args)
-    if move.intent == "end_turn" and int(result.ok) == 1:
-      await wait_until(func() -> bool: return int(services.job) == 0)
-  await settle()
-
-
 # What the HUD shows of the dialog: its position, title, text and choices in the order they are drawn, whether it is in a Modal's
 # window, and the instance of its Control (a new subtree is a new instance).
 func dialog_view(seen: Dictionary) -> Dictionary:
@@ -102,43 +89,6 @@ func app_errors() -> Array:
 func queue_state() -> Dictionary:
   var events: Dictionary = services.game.state.get("events", {})
   return {"queue": events.get("queue", []).duplicate(), "resolved": events.get("resolved", []).duplicate(true)}
-
-
-func total_calls() -> int:
-  return int(services.callbacks.values().reduce(func(total: int, count: int) -> int: return total + count, 0))
-
-
-# Real pointer events of one kind over the map, `count` of them on tiles that cycle through it, all pushed before a frame passes: the
-# World hears them in `_unhandled_input` or does not, and nothing in the HUD needs a frame to decide that.
-func burst(kind: String, count: int) -> Dictionary:
-  var before := heard_now()
-  var selects_before := int(services.callbacks.get("select_tile", 0))
-  var selection_before: Dictionary = game_snapshot().selection.duplicate()
-  for index in range(count):
-    var point := tile_centre(2 + index % 20, 2 + int(index / 20.0) % 12)
-    var motion := InputEventMouseMotion.new()
-    motion.device = DEVICE
-    motion.position = point
-    motion.global_position = point
-    get_viewport().push_input(motion, true)
-    for down in [true, false]:
-      var event := InputEventMouseButton.new()
-      event.device = DEVICE
-      event.position = point
-      event.global_position = point
-      event.button_index = {"left": MOUSE_BUTTON_LEFT, "right": MOUSE_BUTTON_RIGHT, "wheel": MOUSE_BUTTON_WHEEL_UP}[kind]
-      event.pressed = down
-      get_viewport().push_input(event, true)
-  await frames(4)
-  return {"kind": kind, "count": count, "heardBefore": before, "heardAfter": heard_now(), "selectCalls": int(services.callbacks.get("select_tile", 0)) - selects_before,
-    "selectionBefore": selection_before, "selectionAfter": game_snapshot().selection.duplicate()}
-
-
-func bursts() -> Array:
-  var rows: Array = []
-  for kind in ["left", "right", "wheel"]:
-    rows.append(await burst(kind, CLICKS))
-  return rows
 
 
 # --- The queue -------------------------------------------------------------------------------------------------------
@@ -303,14 +253,6 @@ func run_blocking() -> void:
   report["blocking"] = {"cityOpen": city_open, "cityPress": city_press, "cityClosePressed": closed_pressed, "cityClosed": closed, "cityAfter": city_closed,
     "dialogOpen": dialog_open, "dialogContext": dialog_context, "dialogAnswers": answers, "dialogAfter": dialog_closed}
   judge_blocking(city_open, city_press, closed_pressed and closed, city_closed, dialog_open, dialog_context, answers, dialog_closed)
-
-
-func reached(row: Dictionary) -> bool:
-  return int(row.heardAfter.buttons) - int(row.heardBefore.buttons) == 2 * int(row.count)
-
-
-func silent(row: Dictionary) -> bool:
-  return row.heardAfter == row.heardBefore and row.selectCalls == 0 and row.selectionAfter == row.selectionBefore
 
 
 func judge_blocking(city_open: Array, city_press: Dictionary, city_closed_ok: bool, city_after: Array, dialog_open: Array, dialog_context: String, answers: Array, dialog_after: Array) -> void:
