@@ -18,6 +18,29 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --ignore-scripts
+      # X9 (the 1.0 does not move) and X10 (frozen tail) of the 0.5 Frontier milestone, for the tree of this event against
+      # its base (docs/research/milestone-exit-guards.md). The checkout is shallow, so the base is fetched by SHA: the base
+      # of the pull request, or the parent of the pushed commit. An event with no base fails the step; it never skips it.
+      - name: Milestone exit guards (X9 and X10)
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          case "$EVENT_NAME" in
+            pull_request)
+              base="$PULL_REQUEST_BASE_SHA"
+              git fetch --no-tags --depth=1 origin "$base"
+              ;;
+            push)
+              git fetch --no-tags --depth=2 origin "$GITHUB_SHA"
+              base="$(git rev-parse HEAD^)"
+              ;;
+            *)
+              echo "milestone guards: the $EVENT_NAME event has no base to compare with" >&2
+              exit 1
+              ;;
+          esac
+          node scripts/milestone-guards.mjs --check --base "$base"
       - run: npm run test:contracts
       - run: npm run check:static
       - run: npm run check:publication
