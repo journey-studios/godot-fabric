@@ -134,8 +134,11 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   probe in two topologies (one full-screen Surface, and one per panel; the overlay checks on the full-screen one
   only) with an independent oracle and a local windowed lane on the full-screen Surface only, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
   its [evidence record](evidence/world-input/README.md) pins the execution, and its hosted CI run is pending. It is a host behavior and not an RN name: it moves no
-  count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD still reach
-  the map too (the second slice), and hardware pointers, a real touch screen and mobile exports stay open.
+  count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD, a ScrollView or a tree overlay
+  reached the map too; the second slice (variant a2) closes them: the `FabricSurface` marks a pointer event as handled in
+  `_unhandled_input` when React Native's hit test finds a View at its point (the host with only a1 fails exactly the 19 checks
+  that need it, the host before a1 fails 41, five retained sabotages are rejected, and a local windowed lane repeats the six gaps at
+  N = 100). Pointer motion, hover and drag are not claimed, and hardware pointers, a real touch screen and mobile exports stay open.
 - **Performance baselines:** a `performance` section in the application snapshot (exact counters of
   the native views, Hermes' live heap after a forced collection, and the host's pump split into JS,
   mount and layout phases) and a soak of 20 mounts and unmounts of four workloads (idle, forms, chart,

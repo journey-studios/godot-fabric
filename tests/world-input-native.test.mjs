@@ -20,7 +20,9 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
 const allowA1Negative = process.argv.includes("--allow-a1-negative");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
-const sabotageNames = ["surface-stop", "views-ignore", "unhandled-off"];
+// The first three are the probe's, from the scene; claim-all and before-gui break fabric_surface.cpp and the sabotage script
+// rebuilds the host for them (scripts/world-input-sabotage.mjs).
+const sabotageNames = ["surface-stop", "views-ignore", "unhandled-off", "claim-all", "before-gui"];
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? sabotageNames[0]);
 assert.ok(sabotage === null || sabotageNames.includes(sabotage), "Unknown sabotage: " + sabotage);
 assert.ok([allowOriginalNegative, allowA1Negative, sabotage !== null].filter(Boolean).length <= 1,
