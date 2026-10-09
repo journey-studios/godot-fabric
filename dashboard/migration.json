@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T19:08:41.000Z",
+  "updatedAt": "2026-10-09T20:19:00.000Z",
   "source": {
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
@@ -4621,6 +4621,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-windowed-presence-59cd006",
+      "at": "2026-10-09T20:19:00.000Z",
+      "taskIds": [],
+      "message": "Achado do V05-06 (GF-30) sobre as faixas janeladas do baseline e do turno: no macOS, uma janela que o sistema diz ocluída faz o engine pular o draw (window_can_draw() devolve a flag que o delegate da janela limpa, o Main::iteration não chama o RenderingServer::draw, o frame_post_draw não dispara e o laço dorme 6,9 ms por quadro), e essa é a assinatura das recusas undrawn de 2026-10-09: nas tentativas sem nenhum quadro ocioso desenhado a média dos intervalos ociosos é de 6,900 ms. O helper tests/window-presence.gd põe a janela da faixa à frente das outras e acima delas (Window.always_on_top e DisplayServer.window_move_to_foreground) e grava, a cada quadro de processo, se o engine podia desenhá-la: cada tentativa do recibo ganha undrawableFrames, e o motivo de uma recusa undrawn diz se a janela não podia desenhar; a regra de validade não muda e nenhum recibo antigo muda de veredito. As duas faixas janeladas, a do baseline e a do turno, rodaram uma vez cada no commit 1bc3a3c, com a árvore limpa, e foram apresentadas, com 5 de 5 vagas aceitas na primeira tentativa de cada e 0 de 25.469 quadros (baseline) e 0 de 68.379 (turno) sem poder desenhar, mas com o usuário ausente: o resultado mostra que o helper abre uma janela que o engine pode desenhar, não que ele vence interferência. O fechamento do critério baseline vem numa entrega à parte, com o recibo dessa execução. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-3-93323aa",
       "at": "2026-10-09T19:08:41.000Z",
