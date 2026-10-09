@@ -564,6 +564,12 @@ not presented (exit code 3, no frame-time statistic), so the frame time of a pre
 lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-baseline/README.md); [research](docs/research/frontier-baseline.md).
 
+The [Frontier soak](docs/research/frontier-soak.md) (V05-06, criterion `soak`, `npm run test:frontier-soak`) plays the game for 100 turns in three
+headless Godot processes through the typed services, with a scripted player and a React Native HUD that opens and closes a 100-node panel every turn: the three games end
+in the same hash and have the same trail of 100 turn hashes, the native views return to the same count in each context, the live heap at rest and the resident memory stay within their
+rules, no JavaScript error goes unhandled, a paused game keeps the HUD answering while its accepted job waits, and the research note decides between unmounting and hiding a panel from the measured
+numbers (a recommendation for the V05-05 HUD, not a change to it); four retained sabotages are rejected and the hosted CI run is pending.
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -905,6 +911,7 @@ npm run test:text-original               # RN's original Text.js and press on th
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
 npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-soak               # Frontier played for 100 turns in three processes: one game (same hashes), steady nodes, heap and memory, a pause that keeps the HUD alive, unmounting against hiding a panel; sabotages: node scripts/frontier-soak-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
