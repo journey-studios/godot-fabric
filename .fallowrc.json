@@ -22,6 +22,7 @@
     "tests/types/consumer.tsx",
     "consumers/minimal/ui/index.tsx",
     "consumers/libraries/ui/index.tsx",
+    "consumers/civ-lite/ui/index.tsx",
     "src/renderer-proxy.js",
     "src/godot-fabric.js",
     "types/godot-fabric.ts",
@@ -77,6 +78,7 @@
     "tests/images-network-fixture.jsx",
     "tests/images-visual-fixture.jsx",
     "tests/modal-host-fixture.jsx",
+    "tests/world-input-fixture.jsx",
     "tests/scope-0.5-fixture.jsx"
   ],
   "ignorePatterns": [

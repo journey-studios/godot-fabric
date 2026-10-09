@@ -2920,6 +2920,28 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   found = guard->roots.find(id);
   return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());
 }
+bool ApplicationRuntime::claims(int id, const Ref<InputEvent> &event) {
+  auto *mouse = Object::cast_to<InputEventMouseButton>(event.ptr());
+  auto *touch = Object::cast_to<InputEventScreenTouch>(event.ptr());
+  if (!mouse && !touch) return false;
+  auto guard = impl;
+  auto found = guard->roots.find(id);
+  if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
+  // The guards of input(): a validation device other than the event's, an invalid point, a suppressed mouse route.
+  if (auto *host = found->second->host(); host && host->has_meta("validation_input_device") &&
+      event->get_device() != static_cast<int>(host->get_meta("validation_input_device"))) return false;
+  auto source = guard->root_pointer_source(id);
+  if (!source) return false;
+  const Vector2 position = mouse ? mouse->get_position() : touch->get_position();
+  if (!position.is_finite()) return false;
+  // The wheel and device -1 have no pointer key: RN ignores them, and they are claimed all the same.
+  Vector2 keyed_position;
+  if (auto key = guard->pointer_key(*source, event, keyed_position)) {
+    auto route = guard->pointer_routes.find(*key);
+    if (route != guard->pointer_routes.end() && route->second.suppressed) return false;
+  }
+  return guard->physical_hit_test(*source, position) != 0;
+}
 void ApplicationRuntime::cancel(int id) {
   auto guard = impl;
   Impl::ExecutionScope execution(*guard);

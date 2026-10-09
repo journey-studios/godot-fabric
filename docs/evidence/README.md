@@ -785,6 +785,30 @@ Headless only, with no HUD and no capture; the probe uses an application stand-i
 reached by `preload`, `consumidor` and `autoridade` are open, and the **hosted CI run (`native-frontier-services`) and the Pages
 publication are pending**. The record is pinned at `75c4c0f`.
 
+The [Frontier consumer record](frontier-consumer/README.md) is the third package of the 0.5 milestone (V05-03, criterion
+`consumidor`, tied to GF-07): `consumers/civ-lite/` becomes a consumer project provisioned by the addon like `consumers/minimal`,
+with its own `project.godot`, scene, application Resource, manifest and lockfile. Its scene's root is the persistent `GameServices`
+node, with the `Application`, a scenery (`World`, which draws the 24x16 map and decides no rule) and a full-screen HUD surface
+under it, so reloading the scenery, going to the menu and starting a game never recreate the application, the registry or the
+epoch; the node names no path to the SDK (`fabric_api` is injected by the scene: the addon's `godot_fabric.gd`, or the SDK source
+in the laboratory's probe) and fails loud without it. The HUD is the smallest that serves the services, public TSX over `View`,
+`Text` and `Pressable`, inside the 0.5 prop scope. Provisioned with no global Node (`spawnSync("node")` gives `ENOENT`), built by
+the editor plugin (`CONSUMER_EDITOR_BUILD_PASSED`, no `ERROR:`, the lockfile untouched) and rebuilt to the same bundle with the
+network denied, with 19 build and ownership checks and **145 native checks** (148 with the captures). Ten cycles of New game,
+three intents through the HUD, a scenery reload, the menu and New game from the menu end every time with 21 nodes, 0 orphans,
+14 bindings, 1 subscription, 2 connections on `snapshot_changed` and 1 held by the HUD, nothing pending and no error, while the
+epoch rises by exactly 3 per cycle, 4 to 31, in Godot and in the HUD, and the two Worlds a cycle drops are freed. Four retained
+sabotages (the HUD's effect keeps its connection, the dropped World is not freed, a reload zeroes the epoch, the scene does not
+inject the facade) fail 29, 19, 21 and 3 checks and are rejected for the reason they were broken; a fifth, a World that forgets to
+disconnect, was dropped because the engine drops the connection of a freed Node by itself (the record shows the experiment). The
+services gained one method, `frontier.open_menu`, so they hold 14 bindings and not 13; the P4 probe, oracle and parity moved with
+that count and nothing else, and the `test:frontier-services` suite and its seven sabotages still pass. All of it ran on the merge
+`029416f` of the implementation commit `b0509db` with main's `b0e40aa` (PR #74's prop-scope policy), which touches none of the
+slice's files, and the minimal consumer still passes its 30 and 40. Two headed captures (the game and the menu, 1080x600) are in
+the record. The previous-host control does not apply: there is no native code. The HUD is the minimal service HUD and not the
+playable one (V05-05), the presses are synthetic, `autoridade` is open, and the **hosted CI run (`test:consumer:civ-lite`) and
+the Pages publication are pending**. The record is pinned at `b0509db`.
+
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
 react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,
@@ -829,6 +853,54 @@ fail 80, 90, 91, 7, 1 and 4) because the review of PR #65 made the driver ignore
 frame clock causes and hand the interest in ticks back to a root that mounts after the last one stopped with an
 animation RN still held, and added a `requestAnimationFrame` stage and a root-restart stage that prove it. Hosted CI and
 Pages are pending; this record does not complete GF-19.
+
+The [world input record](world-input/README.md) is the first slice of the pointer spike (V05-02, go/no-go no. 1
+of the 0.5 Frontier milestone): a React Native HUD drawn over a Godot map, in which a click on the HUD's empty
+area reaches the map exactly once, a click on a `Pressable` presses it once and never reaches the map, and with a
+`View` overlay or a `Modal` open nothing does. The policy is the minimal one: `FabricSurface` takes
+`MOUSE_FILTER_IGNORE` by default (its constructor), so the Views React Native mounts are the only Controls that stop
+a pointer. 66 headless checks run in two topologies (one full-screen Surface with N = 100 per burst, and one Surface
+per panel with N = 20), every count exact because each burst is queued with `Input.parse_input_event` and delivered
+by one `Input.flush_buffered_events()`, never read after waiting frames; an independent oracle re-derives each
+burst from the HUD's geometry and the camera's math (the tile clicked at zoom 2 is the one the formula gives). The
+control is the host of main before the policy (hosts `79f68b1d` and `ab332c33`): it fails exactly the 31 normative
+checks (the empty area's click, right click and tap, the hover, the camera, and the positive controls of the two
+overlays, which are the same click with the overlay closed), while the wheel already reaches the world there (the
+GUI passes it through a STOP Control, `force_pass_scroll_events`); two retained sabotages made by the probe (the
+Surfaces back to STOP, every View IGNORE) fail 31 and 21 and the oracle rejects each. The world listens to the mouse
+stream, emulated mouse included, and a tap is blocked in both streams by a Pressable. A local windowed lane (18
+checks, N = 100, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) repeats the counts of the full-screen
+layout on a real window (the per-panel layout runs headless only) and keeps four captures, linked from the record. A hit slop, a `Text` with `onPress`, the gaps of a
+ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
+recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
+the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
+mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
+
+The [world input a2 record](world-input-a2/README.md) is the second slice of the same spike (V05-02, go/no-go no. 1):
+it closes the six gaps that slice 1 measured (a hit slop, a `Text` with `onPress`, the gaps of a ScrollView, and the
+wheel over the HUD, over a ScrollView and over an overlay in the tree) with one rule, the one of React Native on a phone:
+**what the hit test of React Native finds at the event's point is the HUD's, and the rest is the world's.** In
+`_unhandled_input`, after the GUI, `FabricSurface` calls the new `ApplicationRuntime::claims` and marks the event handled
+when it finds a View; it covers the mouse button (the wheel and its release included), the screen touch and the mouse Godot
+emulates from a touch, and leaves motion and drag alone. `hit_test`, `apply_pointer_filters`, `input()` and `wheel()` do not
+change, and the Controls of Godot's GUI that React Native mounts (`Switch`, `Button`, `LineEdit`) keep their events because the
+claim runs after the GUI. The record pins the implementation `0486727` on the red `9727ceb` (the checks that need the rule,
+made before it) over main `c8de44b`. 91 headless checks (50 normative: 31 of a1 and 19 of a2) run in the same two topologies
+with the independent oracle. The controls are three hosts: the host with a1 only (`28cc9f14`) fails exactly the 19 checks of a2,
+the host before a1 fails 41 (the 31 of slice 1 and the 10 wheel checks of a2; the nine click, tap and emulated-mouse checks
+hold there because its STOP Surface hides them), and the a2 host (`cc8aa3c5`) passes; **the pre-a1 host is a rebuild** on the
+current main with the constructor's `IGNORE` removed, because slice 1's binary (`79f68b1d`) was kept in a worktree that no longer
+exists. Five retained sabotages are rejected, each on named checks: `surface-stop` (31), `views-ignore` (5: the `Switch` and
+the hover, since the claim now hides the Views from the world), `unhandled-off` (19), `claim-all` (35, a host rebuilt from the
+broken source) and `before-gui` (2, the native `Switch` never gets its click, which proves the claim has to run after the GUI).
+The record cites the Godot 4.7.2 lines that make the Surface's `_unhandled_input` run before the world's (reverse tree order,
+`scene_tree.cpp:1461`) and a witness node in the probe that proves it on the live scene. A local windowed lane (32 checks,
+N = 100, the six gaps, `displayServer` macOS, `gl_compatibility`, **not part of hosted CI**) passed, but the display was asleep,
+so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle median 0.776 ms): it makes no frame-time or
+presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
+byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
+not supported, the pointer reaches no phone or hardware pointer yet, and hosted CI is **pending**. The record does not decide
+the go/no-go; it gives the reading for slice 3, which does.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

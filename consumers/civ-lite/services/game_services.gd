@@ -18,21 +18,34 @@ extends Node
 # a refused intent changed nothing and fires nothing. `turn_ended` fires after an accepted end_turn, before that turn's
 # `snapshot_changed`, with the turn that begins and what each phase did.
 #
+# The facade. This node names no path to the SDK: whoever owns the scene injects `fabric_api`, the script of the facade
+# (godot_fabric.gd). A provisioned consumer's main.tscn points it at the addon's copy; the laboratory's probe assigns the
+# SDK source before the node enters the tree. Without it `_bind_services` fails loud and registers nothing.
+#
+# The scene. When the scene owner also sets `world_scene`, this node owns the life of the child named World, the map the
+# session is drawn on: `new_game` brings one back if there is none, `open_menu` drops it, `reload_world` replaces it.
+# Dropping a World is remove_child followed by queue_free, so that it is out of the tree at once and freed within the
+# frame; the application, the registry, the bindings and the epoch are this node's and are never recreated. Without
+# `world_scene` (the laboratory's probe) there is no World and these three leave it alone.
+#
 # Every schema comes from schema.gd. The names and shapes are documented in docs/research/frontier-services.md.
 
 const Rules := preload("../game/rules.gd")
 const Game := preload("../game/game.gd")
 const Schema := preload("schema.gd")
-# The laboratory keeps the SDK sources behind .gdignore, so the root project reaches the facade by path; an installed
-# addon exposes the same script as the global GodotFabric class, which is what a provisioned consumer swaps this for.
-const FabricAPI := preload("res://sdk/addon/godot_fabric.gd")
 
 const PREFIX := "frontier."
 const SNAPSHOT_NAME := PREFIX + "snapshot"
 const TURN_ENDED_NAME := PREFIX + "turn_ended"
+const WORLD_NAME := "World"
 
 signal snapshot_changed(snapshot: Dictionary)
 signal turn_ended(summary: Dictionary)
+
+# The script of the SDK facade (godot_fabric.gd), injected by the scene's owner.
+@export var fabric_api: Script
+# The scene of the map. Optional: a node without it has no World to manage.
+@export var world_scene: PackedScene
 
 # The session: whoever holds it can read it, only the intents below change it.
 var game: RefCounted
@@ -61,7 +74,13 @@ func _exit_tree() -> void:
 
 
 func _bind_services(runtime: Node) -> void:
-  var services = FabricAPI.for_application(runtime)
+  if fabric_api == null:
+    push_error("FABRIC_ERROR: GameServices has no fabric_api; the scene's owner injects the facade script (godot_fabric.gd), so no service was registered")
+    return
+  var services = fabric_api.for_application(runtime)
+  if services == null:
+    push_error("FABRIC_ERROR: the facade refused the application; no service was registered")
+    return
   bindings.append(services.bind_state(SNAPSHOT_NAME, get_snapshot, snapshot_changed, Schema.SNAPSHOT))
   registered.append({"name": SNAPSHOT_NAME, "kind": "state", "value": Schema.SNAPSHOT})
   bindings.append(services.bind_signal(TURN_ENDED_NAME, turn_ended, [Schema.TURN_ENDED]))
@@ -128,12 +147,47 @@ func end_turn() -> Dictionary:
 
 
 # Starts a new session of the same scenario. The epoch rises by 1 and tells a HUD that every earlier snapshot is gone.
+# If the scene has lost its World (the player went to the menu), the new session brings one back before it is published.
 func new_game() -> Dictionary:
   _count("new_game")
   epoch += 1
   game = Game.new(Rules.SEED, epoch)
+  _ensure_world()
   snapshot_changed.emit(game.snapshot())
   return {"ok": 1, "code": "ok", "text": ""}
+
+
+# The player left the game for the menu: the World goes out of the tree and is freed. It is not a rule of the game, so it
+# changes no state, publishes no snapshot and leaves the epoch alone; a `new_game` brings the World back.
+func open_menu() -> Dictionary:
+  _count("open_menu")
+  _drop_world()
+  return {"ok": 1, "code": "ok", "text": ""}
+
+
+# Replaces the World with a new one on a new session. Called by the scene's owner, not a service. The epoch goes on
+# rising: the application, the registry and the bindings are this node's and are not recreated.
+func reload_world() -> Dictionary:
+  _drop_world()
+  return new_game()
+
+
+# --- The World -----------------------------------------------------------------------------------------------------
+
+func _ensure_world() -> void:
+  if world_scene == null or get_node_or_null(WORLD_NAME) != null:
+    return
+  var world := world_scene.instantiate()
+  world.name = WORLD_NAME
+  add_child(world)
+
+
+func _drop_world() -> void:
+  var world := get_node_or_null(WORLD_NAME)
+  if world == null:
+    return
+  remove_child(world)
+  world.queue_free()
 
 
 # --- Results -------------------------------------------------------------------------------------------------------

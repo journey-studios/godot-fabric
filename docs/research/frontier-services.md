@@ -37,7 +37,8 @@ here: the playable HUD is V05-05, so there is no example and no screenshot.
 ## The node and its lifecycle
 
 `consumers/civ-lite/services/game_services.gd` (`extends Node`, no `class_name`) owns one `FrontierGame` session and an
-integer `epoch`. It registers 13 bindings: one state, one signal and one method per intent.
+integer `epoch`. It registers 14 bindings: one state, one signal, one method per intent and `open_menu`, the one method that is
+the scene's and not the game's (added by the `consumidor` slice; the package before it registered 13).
 
 - **Registration is before everything.** The node connects to `$Application.runtime_available` in `_enter_tree`, as
   `consumers/minimal/game.gd` does. The signal is emitted while the application enters the tree, before a surface mounts and
@@ -48,9 +49,11 @@ integer `epoch`. It registers 13 bindings: one state, one signal and one method 
 - **The node is persistent.** The bindings belong to the node and the application, not to a surface. Unmounting and
   remounting the `FabricSurface` leaves the bindings, the registration generation, the game and the epoch as they were
   (measured below).
-- **The facade.** The node reaches `for_application` through the laboratory path
-  (`preload("res://sdk/addon/godot_fabric.gd")`), the line a provisioned consumer replaces with the global `GodotFabric`
-  (open, under `consumidor`).
+- **The facade is injected.** The node names no path to the SDK: it has `@export var fabric_api: Script`, and the owner of the
+  scene hands it the facade's script. The laboratory's probe assigns `preload("res://sdk/addon/godot_fabric.gd")` before the node
+  enters the tree, and a provisioned consumer's `main.tscn` points it at `res://addons/godot_fabric/godot_fabric.gd`. Without a
+  facade `_bind_services` fails loud (`push_error("FABRIC_ERROR: ...")`) and registers nothing. Closed by the `consumidor` slice
+  ([frontier-consumer.md](frontier-consumer.md)).
 
 ## The services
 
@@ -73,6 +76,7 @@ scans `game_services.gd` for one).
 | `frontier.resolve_event` | method | `(choice_id: string)` | |
 | `frontier.end_turn` | method | `()` | |
 | `frontier.new_game` | method | `()` | |
+| `frontier.open_menu` | method | `()` | not a rule of the game: the scene drops its World (`world_scene`, when the owner gave one); no snapshot, the epoch is untouched |
 
 Every method answers the same object, `{ok: integer, code: string, text: string}` (response `completion`, the default):
 `ok` is 0 or 1, `code` is `"ok"` or the game's refusal code, `text` is what the HUD shows (`""` when accepted). The schema
@@ -220,7 +224,7 @@ process, which the services never touch, plays the same steps and is the referen
 
 - **Registration before the mount.** The bundle's own connections, made as it evaluates, were ready with no error (a late
   registration answers `E_SERVICE_MISSING` there); the first connection received the initial snapshot of epoch 1; the registry
-  held the 13 bindings.
+  held the 14 bindings.
 - **Round trip.** At all 73 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
   reference session's.
 - **Actions are calls.** At all 73 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
@@ -235,12 +239,12 @@ process, which the services never touch, plays the same steps and is the referen
   `275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29`; the hashes of all 73 steps make the P3 trace hash
   `fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8`.
 - **Persistence.** After the third accepted `end_turn` the probe unmounts the surface: the panel's connection is removed, the
-  root is gone, and the registry still holds 13 bindings under the same registration generation (`"1"`), the same node and
+  root is gone, and the registry still holds 14 bindings under the same registration generation (`"1"`), the same node and
   game, the same epoch and the same state. One more step is played with no surface at all (`select_tile(7, 8)`) and the node
   answers it. The surface is mounted again: the panel reconnects, its first value is the current snapshot, and it is of the
   same generation, so nothing was registered a second time.
 - **DTO limits.** The largest snapshot of the roteiro has 173 value nodes and depth 4 (the limits are 10,000 and 32). One
-  state, one signal and eleven methods are 13 bindings.
+  state, one signal and twelve methods are 14 bindings.
 - **The dump of the registered schemas** goes in the report for the parity test.
 
 `tests/frontier-services-oracle.mjs` judges the raw report without trusting the probe's verdicts. It derives the schema from
@@ -275,10 +279,9 @@ must pass the plain test.
 
 ## What stays open
 
-- **`consumidor`.** Provisioning by the addon, the editor flow and ten cycles in a provisioned project are not done. The
-  scene here is built in code, with a stand-in for the addon's application node; the node's `preload` of the facade uses the
-  laboratory path and must become the global `GodotFabric` in a provisioned project; and `consumers/civ-lite/` is not a
-  consumer project yet.
+- **`consumidor`.** Closed by the next package: `consumers/civ-lite/` is a provisioned consumer project, the node's facade is
+  injected and the ten cycles run in it ([frontier-consumer.md](frontier-consumer.md)). The probe here still builds its scene in
+  code, with a stand-in for the addon's application node, because its bundle lives in `build/`.
 - **`autoridade`.** A job that survives closing the screen, and bursts against the 64 tasks and 128 events a phase, are not
   measured. `end_turn` here is one synchronous GDScript call; slicing it by phase for a frame budget (`begin_end_turn` and
   `advance_phase` exist in the game) is not wired to a service.

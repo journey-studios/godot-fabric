@@ -27,6 +27,7 @@
   },
   "include": [
     "consumers/civ-lite/ui/**/*.ts",
+    "consumers/civ-lite/ui/**/*.tsx",
     "examples/form/**/*.tsx",
     "tests/types/**/*.tsx"
   ]

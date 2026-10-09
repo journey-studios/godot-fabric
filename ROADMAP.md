@@ -543,11 +543,40 @@ gain, neutral, cost, or inconclusive when the interval is too wide to decide, pl
 decision on keeping the RN HUD for games. If arm B is not ready in its time-box, the
 report is a partial A against C comparison and claims no gain.
 
-**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
-the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
-not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
-item in the title. Record 0.5 progress only in `milestones`; when rewriting
-`migration.json`, keep unknown top-level keys.
+**Progress.** V05-02 has its first slice, the first of the three the spike is
+time-boxed to. With `FabricSurface` taking `MOUSE_FILTER_IGNORE` by default, a click
+on the empty area of the HUD's `pointerEvents="box-none"` root reached the Godot map
+100 times out of 100 and no HUD handler, a click or a tap on a `Pressable` pressed it
+100 times and never reached the map, and with a tree overlay or a `Modal` open nothing
+did. Both layouts, one full-screen Surface and one Surface per panel, ran headless (the
+overlays only in the full-screen one), and only the full-screen layout ran on a real
+macOS window with captures. The red test came first (the preceding host fails exactly
+the 31 checks that need the policy) and two retained sabotages are rejected by an
+independent oracle; the
+[evidence record](https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md)
+has the numbers. In `milestones` the criteria `vermelho`, `politica` and `sabotagem`
+are done and `iphone` is not: the events are synthetic, with no hardware pointer or
+touch screen and no iPhone run, which waits for the device package. Slice 2 (next
+paragraph) closed the gaps this slice left open; the go/no-go decision of slice 3 remains. Hosted CI for the
+slice is pending. No 1.0 number moves.
+
+**Progress.** V05-02 has its second slice, variant (a2). One rule closes the six gaps the
+first slice measured: at the unhandled stage, after the GUI, `FabricSurface` marks a mouse
+button (the wheel included), a touch or the mouse Godot emulates from it as handled when
+React Native's hit test finds a View at the point, as a phone decides who gets a touch by
+geometry, `pointerEvents` and `hitSlop` and never by whether a handler exists. A hit slop, a
+`Text` with `onPress` and the gap of a ScrollView (by click, tap and emulated mouse), and the
+wheel over the HUD, a ScrollView and an open tree overlay, reached the map as well as React
+Native on the host of the first slice and reach it 0 times out of 100 now, with React Native
+hearing its handlers as before. The host with only the first policy fails exactly the 19
+checks that need the rule, the host before it fails 41, and five retained sabotages are
+rejected on named checks (one of them, a claim made before the GUI, takes the native `Switch`
+its clicks); the
+[evidence record](https://github.com/journey-studios/godot-fabric/blob/af941dde794db9ed40595d006977445b6646e9fc/docs/evidence/world-input-a2/README.md)
+has the numbers. The windowed lane ran with the display asleep, so its frames were unpaced:
+its counts stand and it makes no frame-time claim. Pointer motion, hover and drag are not
+claimed and the `iphone` criterion stays open, so no criterion changes. Slice 3 decides the
+go/no-go. Hosted CI for both slices is pending. No 1.0 number moves.
 
 **Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
 GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
@@ -574,6 +603,18 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
+provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
+the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the
+laboratory's SDK path (the scene injects the facade), and its HUD is minimal public TSX. Ten
+cycles of new game, scenery reload and menu end every time with the same nodes, orphans,
+bindings, subscriptions and connections and a strictly rising epoch, and four retained
+sabotages are rejected. The services gained `frontier.open_menu`, so they register 14 bindings.
+The [record](https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md)
+is local macOS arm64 evidence, with synthetic presses and a HUD that is not the playable one;
+the hosted CI run and the Pages publication are pending. The `autoridade` criterion of V05-03
+remains open, and no 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-04: the twelve names the HUD imports are decided in
 [`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
 props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
@@ -587,6 +628,12 @@ first attempt, with the 181 native checks carrying the committed ids and accepte
 data with V05-04 closed ([receipt](docs/evidence/frontier-scope/publication.json)); the causal control and the retained
 sabotages stay local. It lists two open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision)
 and the host crash that removing the check from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
+
+**For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
+the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
+not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
+item in the title. Record 0.5 progress only in `milestones`; when rewriting
+`migration.json`, keep unknown top-level keys.
 
 ## Next implementation order
 

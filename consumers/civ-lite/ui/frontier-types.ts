@@ -224,6 +224,7 @@ export const FRONTIER_SET_RESEARCH = "frontier.set_research";
 export const FRONTIER_RESOLVE_EVENT = "frontier.resolve_event";
 export const FRONTIER_END_TURN = "frontier.end_turn";
 export const FRONTIER_NEW_GAME = "frontier.new_game";
+export const FRONTIER_OPEN_MENU = "frontier.open_menu";
 
 /** The state the node publishes: connect to it for the snapshot now and after every accepted intent. */
 export interface FrontierStates {
@@ -248,6 +249,8 @@ export interface FrontierMethods {
   readonly "frontier.resolve_event": [choice_id: string];
   readonly "frontier.end_turn": [];
   readonly "frontier.new_game": [];
+  /** Not a rule of the game: the scene drops its World. The HUD shows the menu; a `new_game` brings the World back. */
+  readonly "frontier.open_menu": [];
 }
 
 /**

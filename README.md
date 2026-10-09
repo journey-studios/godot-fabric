@@ -486,6 +486,22 @@ touch the real pasteboard. Alert, Share, Settings and BackHandler, mobile deep-l
 cancelling `openURL` or a vibration, and real devices are open. Hosted CI is pending.
 [Evidence](docs/evidence/device-services/README.md); [research](docs/research/device-services.md).
 
+The [world-input spike](examples/world-input/README.md) draws a React Native HUD over a Godot map
+(a `Node2D` of 24x16 tiles under a `Camera2D` at zoom 2) and measures who gets the pointer. A
+`FabricSurface` now takes `MOUSE_FILTER_IGNORE` by default, so the Views React Native mounts are the only
+Controls that stop a pointer: a click on the empty area of the `pointerEvents="box-none"` root reaches the
+map's `_unhandled_input` exactly once (and picks the tile the camera gives), a click or tap on a `Pressable`
+presses it once and never reaches the map, and with a `View` overlay or a `Modal` open nothing does. The
+headless probe counts bursts of 100 events delivered by one flush, so no count depends on frame pacing, in
+two topologies (one full-screen Surface, and one Surface per panel; the overlay checks and a local windowed
+lane with captures on a real macOS window use the full-screen one only) with an independent oracle; the host that
+predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
+a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD, a ScrollView or an overlay reached
+the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
+Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
+(the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
+Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
+
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline
 (`ImageShadowNode`, `ImageRequest` and its observers) with a host `ImageManager`. Pictures are
@@ -563,7 +579,10 @@ contexts and refuses invalid intents with a reason, judged by an independent ora
 (`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The second package, the persistent `GameServices`
 node, publishes the snapshot and takes the intents as typed services with an epoch, with hand-written TypeScript types
 checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-services/README.md), [research](docs/research/frontier-services.md)).
-The consumer project, the authority under bursts, the HUD, the export and the devices are open, and so is hosted CI.
+The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
+scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
+epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
+The authority under bursts, the playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
@@ -853,6 +872,7 @@ npm run test:runtime                     # native deadline budget and callback e
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
+npm run test:consumer:civ-lite -- --capture    # Frontier provisioned as a consumer, ten cycles with no leak and a monotonic epoch; sabotages: node scripts/consumer-civ-lite-sabotage.mjs
 npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer

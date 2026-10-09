@@ -13,7 +13,13 @@ using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
 static String gd(const std::string &value) { return String::utf8(value.c_str()); }
 
-FabricSurface::FabricSurface() = default;
+FabricSurface::FabricSurface() {
+  // The Surface takes no pointer from the GUI. React Native sees the pointer through _input, which mouse_filter does not
+  // gate, and the Views it mounts are the Controls that stop it (STOP, or IGNORE for scroll, text and pointerEvents none or
+  // box-none). A STOP Surface would swallow every click on the HUD's empty area before the world's _unhandled_input hears it.
+  // A scene may still set the filter on a Surface that should take the pointer.
+  set_mouse_filter(MOUSE_FILTER_IGNORE);
+}
 FabricSurface::~FabricSurface() { unmount(); }
 FabricApplication *FabricSurface::application() const {
   return Object::cast_to<FabricApplication>(ObjectDB::get_instance(application_id));
@@ -152,6 +158,17 @@ void FabricSurface::_input(const Ref<InputEvent> &event) {
   if (auto *owner = application(); owner && owner->get_runtime() && owner->get_runtime()->input(surface_id, event))
     // Input may synchronously remove/free this surface. Do not access this
     // after calling the runtime; the independent Viewport is the input owner.
+    if (auto *viewport = Object::cast_to<Viewport>(ObjectDB::get_instance(viewport_id))) viewport->set_input_as_handled();
+}
+void FabricSurface::_unhandled_input(const Ref<InputEvent> &event) {
+  // The pointer belongs to exactly one side, by the rule of React Native on a phone: what its hit test finds is the HUD's,
+  // and the rest is the world's. The GUI and _input have already had the event, so the Controls React Native mounts that live
+  // on the GUI (Button, LineEdit, Switch) were offered it first. A Surface comes after the world in the tree, so Godot calls
+  // this first (SceneTree::_call_input_pause walks the group in reverse tree order); marking the event handled keeps it from
+  // the world's _unhandled_input. Motion and drag are not claimed.
+  if (!surface_id) return;
+  const auto viewport_id = get_viewport()->get_instance_id();
+  if (auto *owner = application(); owner && owner->get_runtime() && owner->get_runtime()->claims(surface_id, event))
     if (auto *viewport = Object::cast_to<Viewport>(ObjectDB::get_instance(viewport_id))) viewport->set_input_as_handled();
 }
 void FabricSurface::_notification(int what) {

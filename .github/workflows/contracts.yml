@@ -27,7 +27,9 @@ jobs:
     runs-on: macos-15
     # Cold dependency builds and native/headed suites took about 46 minutes.
     # Keep a bounded global budget without changing individual probe deadlines.
-    timeout-minutes: 60
+    # The job runs every native suite one after another and took 50-56 minutes
+    # before the civ-lite consumer lane; 90 leaves headroom until it is split.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -262,6 +264,18 @@ jobs:
             build/device-services-probe-current.log
             build/device-services-launch-current.log
             build/device-services-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:world-input
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-world-input
+          path: |
+            build/world-input-report.json
+            build/world-input-current-report.json
+            build/world-input-comparison.json
+            build/world-input-current.log
+            build/world-input-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:os-contracts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -746,6 +760,7 @@ jobs:
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
       - run: npm run test:consumer:libraries
+      - run: npm run test:consumer:civ-lite
       - name: Original Codegen adapter in a provisioned independent consumer
         run: |
           ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
@@ -781,6 +796,15 @@ jobs:
             build/consumer-libraries/*.json
             build/consumer-libraries/*.log
             build/consumer-libraries/*-bundle.js
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-civ-lite-consumer
+          path: |
+            build/consumer-civ-lite/*.json
+            build/consumer-civ-lite/*.log
+            build/consumer-civ-lite/*-bundle.js
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
