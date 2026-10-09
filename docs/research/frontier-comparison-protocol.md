@@ -187,7 +187,7 @@ otherwise, and the report says it is one observation per arm and supports a desc
 
   Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date.
 - **Arm B** (`braco-b`) does not exist, and its time-box has no length yet.
-- **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`.
+- **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`. The instrument and its self-check are written in [cpu-time-instrument.md](cpu-time-instrument.md); the threshold stays unfrozen here.
 - **Missed frames with the vsync on** need presentation timestamps that Godot does not give; the band is N/A until an instrument exists.
 - **The iPhone** depends on the GO or NO-GO of V05-09. With a GO, the same measurements run with the same windows and statistics, the effective refresh rate is recorded, and if the vsync cannot be disabled there the `unlimited` lane is N/A and the CPU time per frame
   and the headroom against the refresh period with the vsync on are the outcome. With a NO-GO the comparison covers macOS only.
