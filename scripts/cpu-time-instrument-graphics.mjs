@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
 import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
+import {release} from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {TARGETS_MS, judgeCpuTimeInstrumentReport} from "../tests/cpu-time-instrument-oracle.mjs";
@@ -43,9 +44,26 @@ function displays() {
     return null;
   }
 }
+// The operating system's label. The window only ever runs on macOS, but a replay judges a recorded report anywhere, so the label comes from the platform
+// the script runs on and never prints a field that a missing command left null.
+function osLabel() {
+  switch (process.platform) {
+    case "darwin": {
+      const version = read("sw_vers", ["-productVersion"]);
+      const build = read("sw_vers", ["-buildVersion"]);
+      return version === null || build === null ? `macOS ${release()}` : `macOS ${version} (${build})`;
+    }
+    case "linux":
+      return `Linux ${release()}`;
+    case "win32":
+      return `Windows ${release()}`;
+    default:
+      return `${process.platform} ${release()}`;
+  }
+}
 const thisMachine = {chip: read("sysctl", ["-n", "machdep.cpu.brand_string"]), model: read("sysctl", ["-n", "hw.model"]),
   logicalCores: Number(read("sysctl", ["-n", "hw.ncpu"])), memoryGb: Math.round(Number(read("sysctl", ["-n", "hw.memsize"])) / 2 ** 30),
-  os: `macOS ${read("sw_vers", ["-productVersion"])} (${read("sw_vers", ["-buildVersion"])})`, architecture: read("uname", ["-m"]), displays: displays()};
+  os: osLabel(), architecture: read("uname", ["-m"]), displays: displays()};
 
 // The one run of the probe in a window, or the report that --replay names (and the machine of its measurement, when what was read is a receipt that has one).
 async function obtain() {

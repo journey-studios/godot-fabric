@@ -365,6 +365,9 @@ test("The windowed lane replays a recorded report in a checkout with no build/, 
     assert.equal(presented.receipt.replayed, true);
     assert.equal("machine" in presented.receipt, false, "A replay has no machine of its own making");
     assert.ok("replayHost" in presented.receipt, "It records the machine that replayed it apart");
+    // The replay runs anywhere, so the label of its system never prints what a missing command left null.
+    assert.equal(typeof presented.receipt.replayHost.os, "string");
+    assert.doesNotMatch(presented.receipt.replayHost.os, /null/);
     assert.match(presented.receipt.measuredOn, /replayed report \(the machine of its measurement is not recorded in it/);
     assert.match(presented.receipt.command, /--replay/);
     // The receipt of a run, which keeps the report under raw and the machine that measured it: that machine is the measurement's.
