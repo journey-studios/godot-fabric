@@ -735,6 +735,17 @@ compared, and the one of #73 holds the same data as the committed file in anothe
 captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** Exit criteria X9 and X10 of the 0.5 now have guards that run, and neither is closed. The PR guard
+(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that fetches only the commit it compares with)
+fails a pull request that adds a `milestone-0-5-*` entry and also changes `tasks`, `phases`, `sequences`, the checklists or
+`decisions` (a changed note or evidence counts, not only `done`, weight or status), that opens a new `pointer-*`,
+EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The audit of the history from `c0f3702` covers
+28 first-parent commits, 15 of them with a 0.5 entry: X10 is clean and GF-13 is equal in depth, and X9 has one known exception,
+#74, which changed the note and the evidence of GF-27 without moving a `done`, a weight or a status. The
+[evidence](https://github.com/journey-studios/godot-fabric/blob/b02e2a531ca548b95496a7e9fb3f04165ec78d97/docs/evidence/milestone-exit-guards/README.md)
+pins the audit, its receipt and the rules. The hosted CI of the guard step is pending, and X9 and X10 stay open until the 0.5
+ends, when the audit runs again. No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
