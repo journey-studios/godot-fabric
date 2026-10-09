@@ -811,6 +811,17 @@ after the P8 slice, and the hosted CI run is pending. The
 [record](https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md) is local macOS arm64
 evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of three more 0.5 slices already on main are recorded: the turn (#86, V05-06
+`turno`), the exit guards (#87) and the idle reference (#94). For each, the push of main at its squash commit passed the Contracts
+workflow on the first attempt and its Pages run built and deployed. The push of #86 still ran the native job, so its receipt holds
+`test:frontier-turn` and the digest of the artifact `native-frontier-turn`; #87 and #94 are slices of contracts only, so their
+receipts hold the guard step (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean) and the slice's contract tests. The push of #94
+came after the native suites became opt-in, so its five native jobs are recorded as skipped, accepted only because that slice has no
+native step. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/README.md)
+links the two receipts of each. The windowed lane, the captures, the sabotages and the audit of X9 and X10 stay local, X9 and X10
+stay open, and no criterion changes state. No 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
