@@ -4561,6 +4561,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
     },
     {
+      "id": "milestone-0-5-exit-guards-b02e2a5",
+      "at": "2026-10-09T12:17:14.000Z",
+      "taskIds": [],
+      "message": "As saídas X9 e X10 do marco 0.5 ganharam guardas executáveis, sem fechar nenhuma das duas. A guarda de PR (scripts/milestone-guards.mjs --check, um passo do job contracts do contracts.yml que toma o primeiro pai do HEAD como base) compara a árvore com essa base: um PR que acrescenta uma entrada milestone-0-5-* não pode mudar nada de tasks, phases, sequences, checklists nem decisions (nem em note, label ou evidence), nem abrir fatia nova de pointer-*, EventTarget, Document ou hover (world-input* é do V05-02), nem tocar no GF-13. A auditoria do histórico desde c0f3702 (#60) até bf00341 cobre 28 commits de primeiro pai, 15 com entrada do 0.5, e grava docs/evidence/milestone-exit-guards/audit.json, que --audit --verify confere sem git. O X9 tem uma exceção conhecida, o #74 (b0e40aa): mudou a note e a evidence do GF-27 (os recibos do #69) sem mover done, peso nem status; está no KNOWN do script para o usuário julgar. O X10 está limpo nos 28 commits e o GF-13 está igual em profundidade. O teste (36 checks, sobre JSON sintético e repositórios descartáveis), type-check, check:static, check:publication e test:dashboard passam em macOS arm64; a CI hospedada do passo está pendente. X9 e X10 seguem abertos até o fim do marco, quando a auditoria roda de novo. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b02e2a531ca548b95496a7e9fb3f04165ec78d97/docs/evidence/milestone-exit-guards/README.md"
+    },
+    {
       "id": "milestone-0-5-v05-06-turno-headless-e2ee6d8",
       "at": "2026-10-09T11:09:05.000Z",
       "taskIds": [],
