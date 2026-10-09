@@ -133,7 +133,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   now takes `MOUSE_FILTER_IGNORE` by default and the Views are the Controls that stop the pointer; a headless
   probe in two topologies (one full-screen Surface, and one per panel; the overlay checks on the full-screen one
   only) with an independent oracle and a local windowed lane on the full-screen Surface only, the preceding host as the control (it fails exactly 31 checks) and two retained sabotages;
-  its [evidence record](evidence/world-input/README.md) pins the execution, and its hosted CI run is pending. It is a host behavior and not an RN name: it moves no
+  its [evidence record](evidence/world-input/README.md) pins the execution (the second slice's [record](evidence/world-input-a2/README.md) pins a2), and its hosted CI run is pending. It is a host behavior and not an RN name: it moves no
   count. A hit slop, a `Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD, a ScrollView or a tree overlay
   reached the map too; the second slice (variant a2) closes them: the `FabricSurface` marks a pointer event as handled in
   `_unhandled_input` when React Native's hit test finds a View at its point (the host with only a1 fails exactly the 19 checks

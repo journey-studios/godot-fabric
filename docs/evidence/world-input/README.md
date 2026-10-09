@@ -11,6 +11,8 @@ quem barra o ponteiro são só os Controls das Views que o React Native monta. O
 [nota de pesquisa](../../research/world-input.md) tem a ordem `_input` → GUI → `_unhandled_input`, as linhas do
 Godot 4.7.2 e as lacunas.
 
+> A fatia 2 (a variante a2, que fecha as lacunas registradas abaixo) tem o seu próprio [registro](../world-input-a2/README.md); este continua pinado ao commit `0d754f2`.
+
 Todo link de código abaixo está fixado no commit de implementação
 [`0d754f2`](https://github.com/journey-studios/godot-fabric/commit/0d754f20e90829c38aa4a7079cb70737a100fcc1)
 (árvore `6d63d265`), em cujo conteúdo cada comando abaixo rodou, sobre o commit do vermelho

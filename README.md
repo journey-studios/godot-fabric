@@ -500,7 +500,7 @@ a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the H
 the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
 Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
 (the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
-Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. [Evidence](docs/evidence/world-input/README.md); [research](docs/research/world-input.md).
+Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline

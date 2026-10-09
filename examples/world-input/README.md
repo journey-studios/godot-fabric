@@ -76,5 +76,6 @@ one that claims before the GUI) are rejected by the probe and by the oracle.
 The pointer motion, the hover and a drag are not claimed: the map still hears the motion over a hit slop or a `Text`, and the drag
 that starts there, while React Native hears the press (measured and recorded, not judged). Hardware pointers, a real touch screen,
 multi-touch and mobile exports are not certified. See the
-[evidence record](../../docs/evidence/world-input/README.md) (the counts, the controls and four captures) and the
+evidence records ([slice 1](../../docs/evidence/world-input/README.md), the policy a1 with four captures, and
+[slice 2](../../docs/evidence/world-input-a2/README.md), the a2 claim with the counts, the controls, the sabotages and five captures) and the
 [research](../../docs/research/world-input.md).

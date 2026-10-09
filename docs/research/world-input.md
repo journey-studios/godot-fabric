@@ -9,8 +9,9 @@ a2, closes them with one rule: **the pointer reaches exactly one side, and what 
 at its point is the HUD's.** The probe drives a React Native HUD drawn over a Godot world in two topologies,
 the overlays and the gaps in the full-screen one only. The host with a1 only fails exactly the 19 checks that need
 a2, the host before a1 fails 41 (the 31 of slice 1 and 10 of a2), and five retained sabotages are rejected by the probe and by
-an independent oracle. The [evidence record](../evidence/world-input/README.md) pins the slice-1 execution and has its
-captures; slice 2's record and the hosted CI run of both are pending. Real hardware pointers, a real touch screen and
+an independent oracle. The [slice-1 evidence record](../evidence/world-input/README.md) pins that execution and has its
+captures; the [slice-2 record](../evidence/world-input-a2/README.md) pins this one (implementation `0486727` on the red `9727ceb`) with its
+captures, and the hosted CI run of both is pending. Real hardware pointers, a real touch screen and
 mobile exports are not certified; see "Not certified".
 
 ## The question
