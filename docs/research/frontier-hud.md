@@ -281,3 +281,23 @@ of overlays rejects 20 mutated copies of its report.
   (the overlay control gave 93 frames where the run gave 5), and the lane now refuses it: `assertNamesDoNotDependOnPace` rejects a name with a count of frames,
   snapshots, cards, samples or time, and `assertSameNamesAsHeadless` requires the headed run to have the headless run's names, in order. The names that embed the
   value observed (the panels a step showed, the list of heads) differ only when the check fails, which is the diagnosis.
+
+### The turn lane after the overlays
+
+The turn lane of V05-06 (`npm run test:frontier-turn`, `tests/frontier-turn-*`; its record is `docs/research/frontier-turn.md`) clicks the provisioned game's HUD, so it was written against the HUD of slice 1: panels in the tree and one
+event. The tables of measurements in `frontier-turn.md` are those of that tour (PR #86: 16 clicks), and whoever runs the lane again re-records them. What changed in the lane, and why:
+
+- **A 19-click tour, with nothing clicked under a Modal.** A Modal takes the pointer from everything under it (0 of 100 clicks reach the map), so the tour closes the city screen with its own Close (`close-city` and `close-city-again`, one `clear_selection` each) before it goes
+  on: `map-tile-again` (a click on the map with the city shown) is gone, `map-city` goes from `none`, and the first End turn is pressed from `none`. The oracle judges this against the contract and not against the probe: no `map` or `turn` step starts in a context that holds a Modal,
+  and each time the city opens the next step is its Close.
+- **The three answers of the queue.** The End turn of the fourth turn opens the first event, and `answer-event-1` to `-3` click the first choice of each head (`welcome`, `buy_grain`, `host`). Each arrival must show the position the game gives ("1 of 3" to "3 of 3") and that event's two
+  choices and no other, against the table of events the oracle writes again; the last answer leaves no dialog.
+- **The Controls are found in the Surface's snapshot.** A Modal's Controls are children of the Modal's own Window, which `hud.find_child` does not reach: the probe resolves the snapshot's testIDs to Controls by instance id (as `hud_probe.gd` does), one read a frame, for what is mounted and
+  for where to click.
+- **A Window for each Modal in the node counts.** The SceneTree holds the host's native views plus the constant of the base, and one `Window` for each Modal the context holds open (`MODAL_CONTEXTS`: the `city` and `dialog` contexts have 1 more node than their native views say, measured 1 in every
+  round; `native/modal_presentation.cpp` holds one window for each `ModalPresentation`).
+- **The calls, counted by intent.** Over a run the game is asked for each intent once for every click of that intent, in every round (`select_tile` 5 a round, `select_unit` 3, `clear_selection` 3, `found_city` 1, `end_turn` 4, `resolve_event` 3, plus the `new_game` of the round).
+- **No Modal is open when the application quits**, which would log the host's engine error: the last click closes the dialog, and the probe closes any that a cut-short run left, with a new game, after it takes its counts.
+
+The rules that compare a context with itself, the frames of the turn and the heap and resident-memory bounds are unchanged. On the new tour every click shows its panels in 2 frames and every End turn in 8, and the contexts hold 14 (`none`), 18 (`tile`), 24 (`warrior`), 26 (`stack`), 27 (`settler`), 28 (`dialog`) and 47 (`city`)
+native views.
