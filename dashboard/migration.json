@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T17:14:51.000Z",
+  "updatedAt": "2026-10-09T18:32:09.000Z",
   "source": {
     "commit": "67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
     "url": "https://github.com/journey-studios/godot-fabric/commit/67c3f1651c1b7e070bad1867be1bbfa4afdde8bf",
@@ -4621,6 +4621,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-cpu-instrument-dad0db1",
+      "at": "2026-10-09T18:32:09.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, preparação do critério execucao: o instrumento de tempo de CPU por quadro do comparativo final foi escolhido e verificado. Ele não lê o Performance.TIME_PROCESS (um máximo atribuído uma vez por segundo, que guarda a espera do display), e sim carimbos de Time.get_ticks_usec nos ganchos do engine, somando os termos de física, processo, setup e render que terminam antes do quadro ser apresentado, sem a espera do display. Contra uma carga sintética de duração conhecida, as cargas de 2, 5, 10 e 20 ms foram lidas dentro de 0,2% na faixa headless e dentro de 1,5% numa janela apresentada a 120 Hz, um oráculo independente recalcula tudo dos carimbos brutos e 3 sabotagens retidas são rejeitadas. O limiar cpu-time-instrument segue sem congelar e nenhum braço rodou: o critério execucao e as medições comparativas seguem abertos. É evidência local em macOS arm64, numa máquina dividida com outros agentes (carga entre 5,5 e 9,9), com a CI hospedada e o Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-2-13f50b1",
       "at": "2026-10-09T17:14:51.000Z",

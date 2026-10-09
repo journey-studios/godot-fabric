@@ -822,6 +822,18 @@ native step. The
 links the two receipts of each. The windowed lane, the captures, the sabotages and the audit of X9 and X10 stay local, X9 and X10
 stay open, and no criterion changes state. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-10, preparation of criterion `execucao`: the CPU-time instrument of the final comparison is chosen and checked against a
+load of known duration, before any comparative measurement. Godot's `Performance.TIME_PROCESS` could not be the per-frame reading: at the
+source and in the binary it is a maximum assigned once a second, and with the vsync on it holds the wait for the display (about 15 ms for
+an idle 120 Hz window, where the instrument reads 0.08 ms). The instrument stamps `Time.get_ticks_usec` at the engine's hooks and adds the
+physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives six
+draws later and is aligned by draw index. In a lab scene a busy loop of 2, 5, 10 and 20 ms is read to within 0.2% headless and to within 1.5%
+in a window that the display presented at 120 Hz, an independent oracle recomputes it from the raw stamps, and three retained sabotages are
+rejected. The threshold `cpu-time-instrument` stays unfrozen, no arm has run, and the `execucao`, `protocolo` and `braco-b` criteria stay
+open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md) is local macOS arm64 evidence on a Mac shared with
+other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
