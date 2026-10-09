@@ -1,0 +1,1496 @@
+{
+  "format": "godot-fabric.frontier-baseline-windowed-presented/v1",
+  "executedAt": "2026-10-09",
+  "implementationCommit": "1bc3a3cc7d5d1a160f2158a87a5f8c623b504130",
+  "executedTreeSha": "5837a44ac994f39b9023341b5c20d01602c38ea4",
+  "baseCommit": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d",
+  "sourceState": "the working tree was clean (git status empty) and HEAD was 1bc3a3c before the first lane, between the two lanes and after the second; every source in sourcePins is the blob of that commit",
+  "slice": "V05-06 baseline: the windowed lane of the Frontier HUD's panel swap, presented by the display, and the frame-time proposal derived from it",
+  "criterion": "baseline: the presented frame time is pinned from this one execution and the proposal of the frame-time rows is recorded. Nothing is frozen: congelado is a later, single act, and turno and soak are not touched.",
+  "executionRecord": {
+    "page": "../windowed-presence/README.md",
+    "receipt": "../windowed-presence/execution.json",
+    "note": "The execution is the baseline lane of the windowed presence slice (#99); that record pins the user's absence, the load and the 11 sources, and does not publish the frame-time statistics. This one does."
+  },
+  "command": "caffeinate -d node scripts/frontier-baseline-graphics.mjs",
+  "exitCode": 0,
+  "presented": true,
+  "status": "presented",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "godot": "4.7.2-stable (official)",
+    "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "display": "macOS",
+    "renderer": {
+      "driver": "opengl3",
+      "method": "gl_compatibility",
+      "adapter": "Apple M3 Pro"
+    },
+    "window": [
+      800,
+      600
+    ],
+    "screenSizePixels": [
+      3024,
+      1964
+    ],
+    "screenScale": 2,
+    "vsyncReadBack": "enabled",
+    "refreshRateReadBack": 120,
+    "maxFps": 0
+  },
+  "userPresence": {
+    "method": "HIDIdleTime of IOHIDSystem (nanoseconds since the last keyboard, pointer or trackpad event) read before and after each lane. If it grew by as many seconds as passed, no such event happened in between.",
+    "before": {
+      "at": "2026-10-09T19:56:43Z",
+      "loadavg": "{ 5.41 5.71 7.07 }",
+      "hidIdleSeconds": 6476.6
+    },
+    "after": {
+      "at": "2026-10-09T20:00:38Z",
+      "loadavg": "{ 6.79 6.05 6.87 }",
+      "hidIdleSeconds": 6711.1
+    },
+    "elapsedSeconds": 235,
+    "hidIdleGrewBySeconds": 234.5,
+    "userPresent": false,
+    "consoleLockedAfterTheLanes": false,
+    "note": "Nobody touched the keyboard or the pointer during the two lanes (about 15 minutes in all). That does not say nobody looked at the screen, and input through another device (Universal Control, screen sharing) may not move this counter."
+  },
+  "loadAverage": {
+    "lane": {
+      "before": "{ 5.41 5.71 7.07 }",
+      "after": "{ 6.79 6.05 6.87 }"
+    },
+    "aroundTheAttempts": {
+      "oneMinute": [
+        5.26,
+        6.16
+      ],
+      "fiveMinutes": [
+        5.6,
+        5.92
+      ],
+      "fifteenMinutes": [
+        6.82,
+        7.08
+      ]
+    },
+    "logicalCores": 11,
+    "note": "vm.loadavg read around the lane and around each attempt. The Mac was loaded by other agents' work, so the frame times are not a best case."
+  },
+  "rawReceipt": {
+    "file": "frontier-baseline-graphics.json",
+    "format": "godot-fabric.frontier-baseline-graphics/v2",
+    "bytes": 437679,
+    "sha256": "36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7",
+    "committed": false,
+    "note": "kept outside the repository (large; docs/evidence/**/*-report.json is ignored). Read only to derive this record; no raw interval is copied here."
+  },
+  "hashes": {
+    "nativeHostSha256": "212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e",
+    "bundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+    "sources": {
+      "tests/window-presence.gd": "0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15",
+      "tests/frontier-baseline-graphics-probe.gd": "dae47afe2e5c3656f9d018b4f631e045205d06f43c936d62250b2283fa521412",
+      "tests/frontier-baseline-swap.gd": "31c9e6ce27f7deceaaf3266566b719d315314af0c1f0129b9d8755a88d3aedff",
+      "tests/frontier-baseline-oracle.mjs": "a55e1d856b254e78e4f732fcff1e5cfc82934d1ccda82ca975ad011e82e8a4ed",
+      "scripts/frontier-baseline-graphics.mjs": "c974c68b37d39a8432d53302c1ba14e0b141ca0a6324225a7ddbda1112373b84",
+      "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+    }
+  },
+  "validation": {
+    "oracles": [
+      {
+        "label": "tests/frontier-baseline-oracle.mjs at 1bc3a3c",
+        "sha256": "a55e1d856b254e78e4f732fcff1e5cfc82934d1ccda82ca975ad011e82e8a4ed"
+      },
+      {
+        "label": "tests/frontier-baseline-oracle.mjs of the tree this record was written on (main ffeeb5c merged)",
+        "sha256": "501caaebecc37f3f92d4b5b36e4582ae5f3e50c8e8775c7d7db84bef3b0bbf91"
+      }
+    ],
+    "verifyGraphicsReceipt": "accepted by both oracles",
+    "graphicsRunValidity": "the 5 accepted runs are valid (drew and paced) by both",
+    "summarizeGraphicsRuns": "run over the raw intervals of the 5 runs, equal to the receipt's summary per run and across the runs; only mapMotionEvents (the real pointer's motion over the map) is not compared, because raw does not keep it",
+    "independentRecompute": "a separate script outside the repository recomputed (nearest rank, quartiles of five, integer microseconds) the statistics of the whole lane, by nodes created, idle, click to draw and injection: equal to the receipt's, to the microsecond",
+    "sameNumbersWithBothOracles": true
+  },
+  "protocol": {
+    "runs": 5,
+    "warmupRounds": 2,
+    "steadyRounds": 30,
+    "swapsPerOrderedPair": 30,
+    "steadySwapsPerRun": 360,
+    "steadySwapsPerNodesCreatedPerRun": 90,
+    "idleIntervals": 600,
+    "swapFrame": "the interval of the process frame that took the click, from the start of the frame in which the injection is flushed to the start of the next (frameUsec[0] of the swap)",
+    "nodesCreated": "the size of the panel the swap shows: 0, 50, 75 or 100",
+    "acrossRuns": "median and interquartile range by nearest rank of the 5 runs' statistic (second and fourth values for the quartiles)"
+  },
+  "attempts": [
+    {
+      "slot": 1,
+      "attempt": 1,
+      "valid": true,
+      "reason": null,
+      "processFrames": 5133,
+      "drawnFrames": 5117,
+      "undrawableFrames": 0,
+      "sampledFrames": 5120,
+      "idleDraws": 601,
+      "idleFrames": 600,
+      "undrawnSwaps": 0,
+      "idleReferenceMs": 8.339,
+      "idleMedianMs": 6.022,
+      "idleMeanMs": 8.433,
+      "seconds": 46.4,
+      "loadAverage": {
+        "before": "{ 5.70 5.76 7.08 }",
+        "after": "{ 5.38 5.66 6.97 }"
+      }
+    },
+    {
+      "slot": 2,
+      "attempt": 2,
+      "valid": true,
+      "reason": null,
+      "processFrames": 5125,
+      "drawnFrames": 5109,
+      "undrawableFrames": 0,
+      "sampledFrames": 5112,
+      "idleDraws": 601,
+      "idleFrames": 600,
+      "undrawnSwaps": 0,
+      "idleReferenceMs": 8.336,
+      "idleMedianMs": 7.928,
+      "idleMeanMs": 8.333,
+      "seconds": 45.7,
+      "loadAverage": {
+        "before": "{ 5.38 5.66 6.97 }",
+        "after": "{ 5.26 5.60 6.89 }"
+      }
+    },
+    {
+      "slot": 3,
+      "attempt": 3,
+      "valid": true,
+      "reason": null,
+      "processFrames": 5095,
+      "drawnFrames": 5079,
+      "undrawableFrames": 0,
+      "sampledFrames": 5082,
+      "idleDraws": 601,
+      "idleFrames": 600,
+      "undrawnSwaps": 0,
+      "idleReferenceMs": 8.334,
+      "idleMedianMs": 4.58,
+      "idleMeanMs": 8.333,
+      "seconds": 45.6,
+      "loadAverage": {
+        "before": "{ 5.26 5.60 6.89 }",
+        "after": "{ 5.79 5.69 6.85 }"
+      }
+    },
+    {
+      "slot": 4,
+      "attempt": 4,
+      "valid": true,
+      "reason": null,
+      "processFrames": 5098,
+      "drawnFrames": 5082,
+      "undrawableFrames": 0,
+      "sampledFrames": 5085,
+      "idleDraws": 601,
+      "idleFrames": 600,
+      "undrawnSwaps": 0,
+      "idleReferenceMs": 8.338,
+      "idleMedianMs": 4.367,
+      "idleMeanMs": 8.366,
+      "seconds": 45.3,
+      "loadAverage": {
+        "before": "{ 5.79 5.69 6.85 }",
+        "after": "{ 6.04 5.82 6.84 }"
+      }
+    },
+    {
+      "slot": 5,
+      "attempt": 5,
+      "valid": true,
+      "reason": null,
+      "processFrames": 5083,
+      "drawnFrames": 5067,
+      "undrawableFrames": 0,
+      "sampledFrames": 5070,
+      "idleDraws": 601,
+      "idleFrames": 600,
+      "undrawnSwaps": 0,
+      "idleReferenceMs": 8.339,
+      "idleMedianMs": 8.368,
+      "idleMeanMs": 8.451,
+      "seconds": 45.2,
+      "loadAverage": {
+        "before": "{ 6.04 5.82 6.84 }",
+        "after": "{ 6.16 5.92 6.82 }"
+      }
+    }
+  ],
+  "summary": {
+    "runs": [
+      {
+        "run": 1,
+        "mapMotionEvents": 0,
+        "idleFrameMs": {
+          "samples": 600,
+          "p50": 6.022,
+          "p95": 14.854,
+          "p99": 15.604,
+          "max": 52.315,
+          "aboveTwiceIdleMedian": 299,
+          "aboveTwiceIdleReference": 4,
+          "above100ms": 0
+        },
+        "swapFrameMs": {
+          "samples": 360,
+          "p50": 10.41,
+          "p95": 14.835,
+          "p99": 18.175,
+          "max": 22.366,
+          "aboveTwiceIdleMedian": 115,
+          "aboveTwiceIdleReference": 6,
+          "above100ms": 0
+        },
+        "swapFrameMsByNodesCreated": {
+          "0": {
+            "samples": 90,
+            "p50": 3.565,
+            "p95": 13.794,
+            "p99": 15.141,
+            "max": 15.141,
+            "aboveTwiceIdleMedian": 16,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "50": {
+            "samples": 90,
+            "p50": 8.414,
+            "p95": 11.052,
+            "p99": 13.282,
+            "max": 13.282,
+            "aboveTwiceIdleMedian": 2,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "75": {
+            "samples": 90,
+            "p50": 11.053,
+            "p95": 15.42,
+            "p99": 22.366,
+            "max": 22.366,
+            "aboveTwiceIdleMedian": 18,
+            "aboveTwiceIdleReference": 2,
+            "above100ms": 0
+          },
+          "100": {
+            "samples": 90,
+            "p50": 13.144,
+            "p95": 16.568,
+            "p99": 20.404,
+            "max": 20.404,
+            "aboveTwiceIdleMedian": 79,
+            "aboveTwiceIdleReference": 4,
+            "above100ms": 0
+          }
+        },
+        "injectionMs": {
+          "p50": 6.824,
+          "p95": 10.228
+        },
+        "clickToNodesMs": {
+          "p50": 6.824,
+          "p95": 10.228
+        },
+        "clickToDrawMs": {
+          "p50": 10.366,
+          "p95": 14.636,
+          "p99": 17.343
+        },
+        "latencyFrames": {
+          "p50": 0,
+          "max": 0
+        },
+        "vsyncMode": 1,
+        "vsyncModeName": "enabled",
+        "refreshRate": 120
+      },
+      {
+        "run": 2,
+        "mapMotionEvents": 0,
+        "idleFrameMs": {
+          "samples": 600,
+          "p50": 7.928,
+          "p95": 14.583,
+          "p99": 15.169,
+          "max": 15.888,
+          "aboveTwiceIdleMedian": 1,
+          "aboveTwiceIdleReference": 0,
+          "above100ms": 0
+        },
+        "swapFrameMs": {
+          "samples": 360,
+          "p50": 10.502,
+          "p95": 14.497,
+          "p99": 18.978,
+          "max": 25.918,
+          "aboveTwiceIdleMedian": 7,
+          "aboveTwiceIdleReference": 5,
+          "above100ms": 0
+        },
+        "swapFrameMsByNodesCreated": {
+          "0": {
+            "samples": 90,
+            "p50": 3.667,
+            "p95": 13.714,
+            "p99": 14.284,
+            "max": 14.284,
+            "aboveTwiceIdleMedian": 0,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "50": {
+            "samples": 90,
+            "p50": 8.436,
+            "p95": 10.688,
+            "p99": 12.201,
+            "max": 12.201,
+            "aboveTwiceIdleMedian": 0,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "75": {
+            "samples": 90,
+            "p50": 10.926,
+            "p95": 14.08,
+            "p99": 18.78,
+            "max": 18.78,
+            "aboveTwiceIdleMedian": 1,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "100": {
+            "samples": 90,
+            "p50": 13.13,
+            "p95": 16.577,
+            "p99": 25.918,
+            "max": 25.918,
+            "aboveTwiceIdleMedian": 6,
+            "aboveTwiceIdleReference": 4,
+            "above100ms": 0
+          }
+        },
+        "injectionMs": {
+          "p50": 6.85,
+          "p95": 10.134
+        },
+        "clickToNodesMs": {
+          "p50": 6.85,
+          "p95": 10.134
+        },
+        "clickToDrawMs": {
+          "p50": 10.455,
+          "p95": 14.418,
+          "p99": 18.926
+        },
+        "latencyFrames": {
+          "p50": 0,
+          "max": 0
+        },
+        "vsyncMode": 1,
+        "vsyncModeName": "enabled",
+        "refreshRate": 120
+      },
+      {
+        "run": 3,
+        "mapMotionEvents": 0,
+        "idleFrameMs": {
+          "samples": 600,
+          "p50": 4.58,
+          "p95": 14.504,
+          "p99": 14.854,
+          "max": 19.29,
+          "aboveTwiceIdleMedian": 299,
+          "aboveTwiceIdleReference": 1,
+          "above100ms": 0
+        },
+        "swapFrameMs": {
+          "samples": 360,
+          "p50": 10.625,
+          "p95": 15.928,
+          "p99": 19.836,
+          "max": 60.024,
+          "aboveTwiceIdleMedian": 223,
+          "aboveTwiceIdleReference": 11,
+          "above100ms": 0
+        },
+        "swapFrameMsByNodesCreated": {
+          "0": {
+            "samples": 90,
+            "p50": 3.653,
+            "p95": 13.721,
+            "p99": 13.897,
+            "max": 13.897,
+            "aboveTwiceIdleMedian": 13,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "50": {
+            "samples": 90,
+            "p50": 8.494,
+            "p95": 11.843,
+            "p99": 20.135,
+            "max": 20.135,
+            "aboveTwiceIdleMedian": 30,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "75": {
+            "samples": 90,
+            "p50": 11.171,
+            "p95": 15.409,
+            "p99": 18.96,
+            "max": 18.96,
+            "aboveTwiceIdleMedian": 90,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "100": {
+            "samples": 90,
+            "p50": 13.144,
+            "p95": 19.442,
+            "p99": 60.024,
+            "max": 60.024,
+            "aboveTwiceIdleMedian": 90,
+            "aboveTwiceIdleReference": 9,
+            "above100ms": 0
+          }
+        },
+        "injectionMs": {
+          "p50": 6.904,
+          "p95": 10.611
+        },
+        "clickToNodesMs": {
+          "p50": 6.904,
+          "p95": 10.611
+        },
+        "clickToDrawMs": {
+          "p50": 10.58,
+          "p95": 15.878,
+          "p99": 19.735
+        },
+        "latencyFrames": {
+          "p50": 0,
+          "max": 0
+        },
+        "vsyncMode": 1,
+        "vsyncModeName": "enabled",
+        "refreshRate": 120
+      },
+      {
+        "run": 4,
+        "mapMotionEvents": 0,
+        "idleFrameMs": {
+          "samples": 600,
+          "p50": 4.367,
+          "p95": 14.554,
+          "p99": 15.213,
+          "max": 25.699,
+          "aboveTwiceIdleMedian": 299,
+          "aboveTwiceIdleReference": 3,
+          "above100ms": 0
+        },
+        "swapFrameMs": {
+          "samples": 360,
+          "p50": 10.596,
+          "p95": 14.217,
+          "p99": 15.447,
+          "max": 19.278,
+          "aboveTwiceIdleMedian": 223,
+          "aboveTwiceIdleReference": 2,
+          "above100ms": 0
+        },
+        "swapFrameMsByNodesCreated": {
+          "0": {
+            "samples": 90,
+            "p50": 3.662,
+            "p95": 13.632,
+            "p99": 14.983,
+            "max": 14.983,
+            "aboveTwiceIdleMedian": 14,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "50": {
+            "samples": 90,
+            "p50": 8.448,
+            "p95": 10.713,
+            "p99": 17.241,
+            "max": 17.241,
+            "aboveTwiceIdleMedian": 29,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "75": {
+            "samples": 90,
+            "p50": 11.197,
+            "p95": 13.533,
+            "p99": 19.278,
+            "max": 19.278,
+            "aboveTwiceIdleMedian": 90,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "100": {
+            "samples": 90,
+            "p50": 13.255,
+            "p95": 14.73,
+            "p99": 16.615,
+            "max": 16.615,
+            "aboveTwiceIdleMedian": 90,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          }
+        },
+        "injectionMs": {
+          "p50": 7.01,
+          "p95": 10.21
+        },
+        "clickToNodesMs": {
+          "p50": 7.01,
+          "p95": 10.21
+        },
+        "clickToDrawMs": {
+          "p50": 10.552,
+          "p95": 14.157,
+          "p99": 15.373
+        },
+        "latencyFrames": {
+          "p50": 0,
+          "max": 0
+        },
+        "vsyncMode": 1,
+        "vsyncModeName": "enabled",
+        "refreshRate": 120
+      },
+      {
+        "run": 5,
+        "mapMotionEvents": 0,
+        "idleFrameMs": {
+          "samples": 600,
+          "p50": 8.368,
+          "p95": 15.167,
+          "p99": 15.509,
+          "max": 44.654,
+          "aboveTwiceIdleMedian": 3,
+          "aboveTwiceIdleReference": 3,
+          "above100ms": 0
+        },
+        "swapFrameMs": {
+          "samples": 360,
+          "p50": 10.673,
+          "p95": 14.875,
+          "p99": 17.339,
+          "max": 24.621,
+          "aboveTwiceIdleMedian": 5,
+          "aboveTwiceIdleReference": 6,
+          "above100ms": 0
+        },
+        "swapFrameMsByNodesCreated": {
+          "0": {
+            "samples": 90,
+            "p50": 3.731,
+            "p95": 13.69,
+            "p99": 14.251,
+            "max": 14.251,
+            "aboveTwiceIdleMedian": 0,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "50": {
+            "samples": 90,
+            "p50": 8.588,
+            "p95": 11.116,
+            "p99": 15.565,
+            "max": 15.565,
+            "aboveTwiceIdleMedian": 0,
+            "aboveTwiceIdleReference": 0,
+            "above100ms": 0
+          },
+          "75": {
+            "samples": 90,
+            "p50": 11.534,
+            "p95": 13.426,
+            "p99": 24.621,
+            "max": 24.621,
+            "aboveTwiceIdleMedian": 1,
+            "aboveTwiceIdleReference": 1,
+            "above100ms": 0
+          },
+          "100": {
+            "samples": 90,
+            "p50": 13.541,
+            "p95": 16.699,
+            "p99": 24.607,
+            "max": 24.607,
+            "aboveTwiceIdleMedian": 4,
+            "aboveTwiceIdleReference": 5,
+            "above100ms": 0
+          }
+        },
+        "injectionMs": {
+          "p50": 7.305,
+          "p95": 10.592
+        },
+        "clickToNodesMs": {
+          "p50": 7.305,
+          "p95": 10.592
+        },
+        "clickToDrawMs": {
+          "p50": 10.63,
+          "p95": 14.835,
+          "p99": 17.278
+        },
+        "latencyFrames": {
+          "p50": 0,
+          "max": 0
+        },
+        "vsyncMode": 1,
+        "vsyncModeName": "enabled",
+        "refreshRate": 120
+      }
+    ],
+    "across": {
+      "idleFrameMs": {
+        "p50": {
+          "median": 6.022,
+          "q1": 4.58,
+          "q3": 7.928,
+          "iqr": 3.348,
+          "min": 4.367,
+          "max": 8.368
+        },
+        "p95": {
+          "median": 14.583,
+          "q1": 14.554,
+          "q3": 14.854,
+          "iqr": 0.29999999999999893,
+          "min": 14.504,
+          "max": 15.167
+        },
+        "p99": {
+          "median": 15.213,
+          "q1": 15.169,
+          "q3": 15.509,
+          "iqr": 0.33999999999999986,
+          "min": 14.854,
+          "max": 15.604
+        },
+        "max": {
+          "median": 25.699,
+          "q1": 19.29,
+          "q3": 44.654,
+          "iqr": 25.364000000000004,
+          "min": 15.888,
+          "max": 52.315
+        },
+        "aboveTwiceIdleMedian": {
+          "median": 299,
+          "q1": 3,
+          "q3": 299,
+          "iqr": 296,
+          "min": 1,
+          "max": 299
+        },
+        "aboveTwiceIdleReference": {
+          "median": 3,
+          "q1": 1,
+          "q3": 3,
+          "iqr": 2,
+          "min": 0,
+          "max": 4
+        },
+        "above100ms": {
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "swapFrameMs": {
+        "p50": {
+          "median": 10.596,
+          "q1": 10.502,
+          "q3": 10.625,
+          "iqr": 0.12299999999999933,
+          "min": 10.41,
+          "max": 10.673
+        },
+        "p95": {
+          "median": 14.835,
+          "q1": 14.497,
+          "q3": 14.875,
+          "iqr": 0.3780000000000001,
+          "min": 14.217,
+          "max": 15.928
+        },
+        "p99": {
+          "median": 18.175,
+          "q1": 17.339,
+          "q3": 18.978,
+          "iqr": 1.639000000000003,
+          "min": 15.447,
+          "max": 19.836
+        },
+        "max": {
+          "median": 24.621,
+          "q1": 22.366,
+          "q3": 25.918,
+          "iqr": 3.5519999999999996,
+          "min": 19.278,
+          "max": 60.024
+        },
+        "aboveTwiceIdleMedian": {
+          "median": 115,
+          "q1": 7,
+          "q3": 223,
+          "iqr": 216,
+          "min": 5,
+          "max": 223
+        },
+        "aboveTwiceIdleReference": {
+          "median": 6,
+          "q1": 5,
+          "q3": 6,
+          "iqr": 1,
+          "min": 2,
+          "max": 11
+        },
+        "above100ms": {
+          "median": 0,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "injectionMsP50": {
+        "median": 6.904,
+        "q1": 6.85,
+        "q3": 7.01,
+        "iqr": 0.16000000000000014,
+        "min": 6.824,
+        "max": 7.305
+      },
+      "clickToNodesMsP50": {
+        "median": 6.904,
+        "q1": 6.85,
+        "q3": 7.01,
+        "iqr": 0.16000000000000014,
+        "min": 6.824,
+        "max": 7.305
+      },
+      "clickToDrawMsP50": {
+        "median": 10.552,
+        "q1": 10.455,
+        "q3": 10.58,
+        "iqr": 0.125,
+        "min": 10.366,
+        "max": 10.63
+      },
+      "clickToDrawMsP95": {
+        "median": 14.636,
+        "q1": 14.418,
+        "q3": 14.835,
+        "iqr": 0.4170000000000016,
+        "min": 14.157,
+        "max": 15.878
+      },
+      "vsync": [
+        "enabled"
+      ],
+      "refreshRate": [
+        120
+      ]
+    },
+    "swapFrameBySizeAcrossRuns": {
+      "0": {
+        "p50": {
+          "medianMs": 3.662,
+          "iqrMs": 0.014,
+          "runsMs": [
+            3.565,
+            3.667,
+            3.653,
+            3.662,
+            3.731
+          ]
+        },
+        "p95": {
+          "medianMs": 13.714,
+          "iqrMs": 0.031,
+          "runsMs": [
+            13.794,
+            13.714,
+            13.721,
+            13.632,
+            13.69
+          ]
+        },
+        "p99": {
+          "medianMs": 14.284,
+          "iqrMs": 0.732,
+          "runsMs": [
+            15.141,
+            14.284,
+            13.897,
+            14.983,
+            14.251
+          ]
+        }
+      },
+      "50": {
+        "p50": {
+          "medianMs": 8.448,
+          "iqrMs": 0.058,
+          "runsMs": [
+            8.414,
+            8.436,
+            8.494,
+            8.448,
+            8.588
+          ]
+        },
+        "p95": {
+          "medianMs": 11.052,
+          "iqrMs": 0.403,
+          "runsMs": [
+            11.052,
+            10.688,
+            11.843,
+            10.713,
+            11.116
+          ]
+        },
+        "p99": {
+          "medianMs": 15.565,
+          "iqrMs": 3.959,
+          "runsMs": [
+            13.282,
+            12.201,
+            20.135,
+            17.241,
+            15.565
+          ]
+        }
+      },
+      "75": {
+        "p50": {
+          "medianMs": 11.171,
+          "iqrMs": 0.144,
+          "runsMs": [
+            11.053,
+            10.926,
+            11.171,
+            11.197,
+            11.534
+          ]
+        },
+        "p95": {
+          "medianMs": 14.08,
+          "iqrMs": 1.876,
+          "runsMs": [
+            15.42,
+            14.08,
+            15.409,
+            13.533,
+            13.426
+          ]
+        },
+        "p99": {
+          "medianMs": 19.278,
+          "iqrMs": 3.406,
+          "runsMs": [
+            22.366,
+            18.78,
+            18.96,
+            19.278,
+            24.621
+          ]
+        }
+      },
+      "100": {
+        "p50": {
+          "medianMs": 13.144,
+          "iqrMs": 0.111,
+          "runsMs": [
+            13.144,
+            13.13,
+            13.144,
+            13.255,
+            13.541
+          ]
+        },
+        "p95": {
+          "medianMs": 16.577,
+          "iqrMs": 0.131,
+          "runsMs": [
+            16.568,
+            16.577,
+            19.442,
+            14.73,
+            16.699
+          ]
+        },
+        "p99": {
+          "medianMs": 24.607,
+          "iqrMs": 5.514,
+          "runsMs": [
+            20.404,
+            25.918,
+            60.024,
+            16.615,
+            24.607
+          ]
+        }
+      }
+    },
+    "clickToDrawAcrossRuns": {
+      "p50": {
+        "medianMs": 10.552,
+        "iqrMs": 0.125,
+        "runsMs": [
+          10.366,
+          10.455,
+          10.58,
+          10.552,
+          10.63
+        ]
+      },
+      "p95": {
+        "medianMs": 14.636,
+        "iqrMs": 0.417,
+        "runsMs": [
+          14.636,
+          14.418,
+          15.878,
+          14.157,
+          14.835
+        ]
+      },
+      "p99": {
+        "medianMs": 17.343,
+        "iqrMs": 1.648,
+        "runsMs": [
+          17.343,
+          18.926,
+          19.735,
+          15.373,
+          17.278
+        ]
+      }
+    },
+    "injectionAndFlushBySizeAcrossRuns": {
+      "0": {
+        "p50": {
+          "medianMs": 2.621,
+          "iqrMs": 0.077
+        },
+        "p95": {
+          "medianMs": 3.715,
+          "iqrMs": 0.156
+        }
+      },
+      "50": {
+        "p50": {
+          "medianMs": 6.251,
+          "iqrMs": 0.027
+        },
+        "p95": {
+          "medianMs": 8.327,
+          "iqrMs": 0.901
+        }
+      },
+      "75": {
+        "p50": {
+          "medianMs": 7.885,
+          "iqrMs": 0.22
+        },
+        "p95": {
+          "medianMs": 10.193,
+          "iqrMs": 0.855
+        }
+      },
+      "100": {
+        "p50": {
+          "medianMs": 9.413,
+          "iqrMs": 0.114
+        },
+        "p95": {
+          "medianMs": 11.515,
+          "iqrMs": 0.406
+        }
+      }
+    },
+    "framesAboveTwiceIdleReferenceBySizePerRun": {
+      "0": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "50": [
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "75": [
+        2,
+        1,
+        1,
+        1,
+        1
+      ],
+      "100": [
+        4,
+        4,
+        9,
+        0,
+        5
+      ]
+    },
+    "latencyFramesMax": 0,
+    "steadySwapsWithoutDrawnFrame": 0
+  },
+  "budgetProposal": {
+    "status": "PROPOSTA: not frozen. The freeze is the congelado criterion, a separate and single act; this record does not freeze, accept or tighten any row.",
+    "rule": "a frame time of a presented window: the median across the 5 presented runs of the statistic plus 3 times its interquartile range (nearest-rank quartiles of five: fourth value minus second), rounded up to 0.5 ms; counts are not rounded",
+    "rows": [
+      {
+        "statistic": "swapFrame.p50",
+        "nodesCreated": 0,
+        "label": "swap frame p50, 0 nodes created",
+        "runsSortedMs": [
+          3.565,
+          3.653,
+          3.662,
+          3.667,
+          3.731
+        ],
+        "q1Ms": 3.653,
+        "medianMs": 3.662,
+        "q3Ms": 3.667,
+        "iqrMs": 0.014,
+        "threeIqrMs": 0.042,
+        "medianPlusThreeIqrMs": 3.704,
+        "proposedBoundMs": 4,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p95",
+        "nodesCreated": 0,
+        "label": "swap frame p95, 0 nodes created",
+        "runsSortedMs": [
+          13.632,
+          13.69,
+          13.714,
+          13.721,
+          13.794
+        ],
+        "q1Ms": 13.69,
+        "medianMs": 13.714,
+        "q3Ms": 13.721,
+        "iqrMs": 0.031,
+        "threeIqrMs": 0.093,
+        "medianPlusThreeIqrMs": 13.807,
+        "proposedBoundMs": 14,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p99",
+        "nodesCreated": 0,
+        "label": "swap frame p99, 0 nodes created",
+        "runsSortedMs": [
+          13.897,
+          14.251,
+          14.284,
+          14.983,
+          15.141
+        ],
+        "q1Ms": 14.251,
+        "medianMs": 14.284,
+        "q3Ms": 14.983,
+        "iqrMs": 0.732,
+        "threeIqrMs": 2.196,
+        "medianPlusThreeIqrMs": 16.48,
+        "proposedBoundMs": 16.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p50",
+        "nodesCreated": 50,
+        "label": "swap frame p50, 50 nodes created",
+        "runsSortedMs": [
+          8.414,
+          8.436,
+          8.448,
+          8.494,
+          8.588
+        ],
+        "q1Ms": 8.436,
+        "medianMs": 8.448,
+        "q3Ms": 8.494,
+        "iqrMs": 0.058,
+        "threeIqrMs": 0.174,
+        "medianPlusThreeIqrMs": 8.622,
+        "proposedBoundMs": 9,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p95",
+        "nodesCreated": 50,
+        "label": "swap frame p95, 50 nodes created",
+        "runsSortedMs": [
+          10.688,
+          10.713,
+          11.052,
+          11.116,
+          11.843
+        ],
+        "q1Ms": 10.713,
+        "medianMs": 11.052,
+        "q3Ms": 11.116,
+        "iqrMs": 0.403,
+        "threeIqrMs": 1.209,
+        "medianPlusThreeIqrMs": 12.261,
+        "proposedBoundMs": 12.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p99",
+        "nodesCreated": 50,
+        "label": "swap frame p99, 50 nodes created",
+        "runsSortedMs": [
+          12.201,
+          13.282,
+          15.565,
+          17.241,
+          20.135
+        ],
+        "q1Ms": 13.282,
+        "medianMs": 15.565,
+        "q3Ms": 17.241,
+        "iqrMs": 3.959,
+        "threeIqrMs": 11.877,
+        "medianPlusThreeIqrMs": 27.442,
+        "proposedBoundMs": 27.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p50",
+        "nodesCreated": 75,
+        "label": "swap frame p50, 75 nodes created",
+        "runsSortedMs": [
+          10.926,
+          11.053,
+          11.171,
+          11.197,
+          11.534
+        ],
+        "q1Ms": 11.053,
+        "medianMs": 11.171,
+        "q3Ms": 11.197,
+        "iqrMs": 0.144,
+        "threeIqrMs": 0.432,
+        "medianPlusThreeIqrMs": 11.603,
+        "proposedBoundMs": 12,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p95",
+        "nodesCreated": 75,
+        "label": "swap frame p95, 75 nodes created",
+        "runsSortedMs": [
+          13.426,
+          13.533,
+          14.08,
+          15.409,
+          15.42
+        ],
+        "q1Ms": 13.533,
+        "medianMs": 14.08,
+        "q3Ms": 15.409,
+        "iqrMs": 1.876,
+        "threeIqrMs": 5.628,
+        "medianPlusThreeIqrMs": 19.708,
+        "proposedBoundMs": 20,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p99",
+        "nodesCreated": 75,
+        "label": "swap frame p99, 75 nodes created",
+        "runsSortedMs": [
+          18.78,
+          18.96,
+          19.278,
+          22.366,
+          24.621
+        ],
+        "q1Ms": 18.96,
+        "medianMs": 19.278,
+        "q3Ms": 22.366,
+        "iqrMs": 3.406,
+        "threeIqrMs": 10.218,
+        "medianPlusThreeIqrMs": 29.496,
+        "proposedBoundMs": 29.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p50",
+        "nodesCreated": 100,
+        "label": "swap frame p50, 100 nodes created",
+        "runsSortedMs": [
+          13.13,
+          13.144,
+          13.144,
+          13.255,
+          13.541
+        ],
+        "q1Ms": 13.144,
+        "medianMs": 13.144,
+        "q3Ms": 13.255,
+        "iqrMs": 0.111,
+        "threeIqrMs": 0.333,
+        "medianPlusThreeIqrMs": 13.477,
+        "proposedBoundMs": 13.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p95",
+        "nodesCreated": 100,
+        "label": "swap frame p95, 100 nodes created",
+        "runsSortedMs": [
+          14.73,
+          16.568,
+          16.577,
+          16.699,
+          19.442
+        ],
+        "q1Ms": 16.568,
+        "medianMs": 16.577,
+        "q3Ms": 16.699,
+        "iqrMs": 0.131,
+        "threeIqrMs": 0.393,
+        "medianPlusThreeIqrMs": 16.97,
+        "proposedBoundMs": 17,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p99",
+        "nodesCreated": 100,
+        "label": "swap frame p99, 100 nodes created",
+        "runsSortedMs": [
+          16.615,
+          20.404,
+          24.607,
+          25.918,
+          60.024
+        ],
+        "q1Ms": 20.404,
+        "medianMs": 24.607,
+        "q3Ms": 25.918,
+        "iqrMs": 5.514,
+        "threeIqrMs": 16.542,
+        "medianPlusThreeIqrMs": 41.149,
+        "proposedBoundMs": 41.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "idleFrame.p99",
+        "nodesCreated": null,
+        "label": "idle frame p99",
+        "runsSortedMs": [
+          14.854,
+          15.169,
+          15.213,
+          15.509,
+          15.604
+        ],
+        "q1Ms": 15.169,
+        "medianMs": 15.213,
+        "q3Ms": 15.509,
+        "iqrMs": 0.34,
+        "threeIqrMs": 1.02,
+        "medianPlusThreeIqrMs": 16.233,
+        "proposedBoundMs": 16.5,
+        "role": "proposal"
+      },
+      {
+        "statistic": "swapFrame.p50",
+        "nodesCreated": "all",
+        "label": "swap frame p50, all swaps",
+        "runsSortedMs": [
+          10.41,
+          10.502,
+          10.596,
+          10.625,
+          10.673
+        ],
+        "q1Ms": 10.502,
+        "medianMs": 10.596,
+        "q3Ms": 10.625,
+        "iqrMs": 0.123,
+        "threeIqrMs": 0.369,
+        "medianPlusThreeIqrMs": 10.965,
+        "proposedBoundMs": 11,
+        "role": "reference"
+      },
+      {
+        "statistic": "swapFrame.p95",
+        "nodesCreated": "all",
+        "label": "swap frame p95, all swaps",
+        "runsSortedMs": [
+          14.217,
+          14.497,
+          14.835,
+          14.875,
+          15.928
+        ],
+        "q1Ms": 14.497,
+        "medianMs": 14.835,
+        "q3Ms": 14.875,
+        "iqrMs": 0.378,
+        "threeIqrMs": 1.134,
+        "medianPlusThreeIqrMs": 15.969,
+        "proposedBoundMs": 16,
+        "role": "reference"
+      },
+      {
+        "statistic": "swapFrame.p99",
+        "nodesCreated": "all",
+        "label": "swap frame p99, all swaps",
+        "runsSortedMs": [
+          15.447,
+          17.339,
+          18.175,
+          18.978,
+          19.836
+        ],
+        "q1Ms": 17.339,
+        "medianMs": 18.175,
+        "q3Ms": 18.978,
+        "iqrMs": 1.639,
+        "threeIqrMs": 4.917,
+        "medianPlusThreeIqrMs": 23.092,
+        "proposedBoundMs": 23.5,
+        "role": "reference"
+      },
+      {
+        "statistic": "swapFrame.above100ms",
+        "nodesCreated": "all",
+        "label": "swap frames of 100 ms or more, per run",
+        "countsPerRun": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "median": 0,
+        "iqr": 0,
+        "medianPlusThreeIqr": 0,
+        "proposedBound": 0,
+        "role": "proposal"
+      },
+      {
+        "statistic": "idleFrame.above100ms",
+        "nodesCreated": "all",
+        "label": "idle intervals of 100 ms or more, per run",
+        "countsPerRun": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "median": 0,
+        "iqr": 0,
+        "medianPlusThreeIqr": 0,
+        "proposedBound": 0,
+        "role": "proposal"
+      }
+    ],
+    "loadNote": "The load average of 5.4 to 6.8 on 11 logical cores makes these numbers pessimistic; the congelado may need an execution on a quiet machine."
+  },
+  "captures": {
+    "sameBytesAsThePage": true,
+    "note": "the four captures of the lane are byte for byte the ones already in this folder (same SHA-256), so none is added",
+    "files": [
+      {
+        "panel": "empty",
+        "file": "frontier-baseline-panel-empty.png",
+        "sha256": "98fff17bbe255c63b402a7b8281dd5c5e7cd77d68ce9d70319a6bd2e2f39b69c",
+        "bytes": 7493
+      },
+      {
+        "panel": "units",
+        "file": "frontier-baseline-panel-units.png",
+        "sha256": "f66f7fbbcda640821b70e610e30ef0e71e1050f40dddbd3c70476e50d32b871e",
+        "bytes": 17281
+      },
+      {
+        "panel": "city",
+        "file": "frontier-baseline-panel-city.png",
+        "sha256": "dfb7ab35063f59c60d73d215a4dc5985f176e8709b9d8bf994e063ea50b4a9b4",
+        "bytes": 27858
+      },
+      {
+        "panel": "research",
+        "file": "frontier-baseline-panel-research.png",
+        "sha256": "a8e204124ba1fb10751f55124fb4552b1a669e16b7b0e3cfd80c80eb4462f6e8",
+        "bytes": 30722
+      }
+    ]
+  },
+  "limitations": [
+    "One execution of the lane (five runs in separate processes, one sitting of about four minutes); the runs are not independent days.",
+    "Nobody used the Mac (no keyboard or pointer event in the interval) and other agents loaded it: a user working on the machine, and a quiet machine, are both missing.",
+    "Frame times are of process frames with the vsync on at 120 Hz: no missed frame is read and no FPS without a limit is claimed.",
+    "The p99 of the 90 swaps of one size is the largest of them (nearest rank), so the by-size p99 rows are the noisiest.",
+    "Synthetic events through Input.parse_input_event; one machine, one display."
+  ]
+}

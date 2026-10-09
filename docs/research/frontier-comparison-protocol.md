@@ -3,8 +3,8 @@
 Status: pre-registered protocol of the final comparison of the 0.5 Frontier milestone (V05-10, criterion `protocolo`). It is documentation, a
 [machine-readable protocol](frontier-comparison-protocol.json) and a [Node test](../../tests/frontier-comparison-protocol.test.mjs); it changes no
 native code and runs no game. **This note states no result**: no arm has been measured, and nothing here says that the React Native HUD is faster, slower
-or equal to anything. The rules and the formulas are closed. The numbers that depend on the windowed baseline of V05-06, which is still
-[pending](frontier-baseline.md#the-windowed-baseline-pending) (its [evidence record](../evidence/frontier-baseline/README.md) pins the headless half), are formulas with a null value, to be frozen later in one act together with the `congelado`
+or equal to anything. The rules and the formulas are closed. The numbers that depend on the windowed baseline of V05-06, which was
+[presented](frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c) on 2026-10-09 with a proposal and not a freeze (its [evidence record](../evidence/frontier-baseline/README.md) pins both halves), are formulas with a null value, to be frozen later in one act together with the `congelado`
 criterion of V05-06. **The `protocolo` criterion therefore stays open**: it closes when those numbers are frozen. This slice moves no checkpoint, grade,
 weight or denominator of the 1.0.
 

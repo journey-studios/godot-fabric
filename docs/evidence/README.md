@@ -979,8 +979,8 @@ controls stay local. The record does not decide
 the go/no-go; it gives the reading for slice 3, which does. Slice 3 decided the spike: GO for the desktop (macOS), with the
 `iphone` criterion open; see the [decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3).
 
-The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the headless part of the `baseline` criterion of
-V05-06 (package P6) and leaves its frame time **pending**. It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
+The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the `baseline` criterion of
+V05-06 (package P6): its headless part, and its frame time since the windowed lane was presented on 2026-10-09 (`1bc3a3c`). It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
 75 or 100 native nodes, costs on the pointer spike's scene, extending GF-30's harness (its sampler is shared, and the 43 checks of the soak
 are unchanged). Headless, in two Godot processes of 384 swaps each (30 steady swaps for every ordered pair of the four panels, the click made
 by the V05-02 injection), 19 checks per process hold exactly: after every swap the SceneTree, the host and the Surface hold the base's 12
@@ -994,11 +994,17 @@ because a hidden View adds no node; the previous-host control does not apply, si
 judged: the host mounts the panel inside the flush of the click (0 frames after it in all 720 steady swaps), and a swap that creates 100
 nodes takes 9.2 ms of CPU at the median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms; earlier runs on a more loaded machine gave 11 to 12 ms at the median, not pinned). The proposed limits (the CPU time of a swap by nodes created, the heap
 a panel holds, the frames to the panel) are a **PROPOSTA, not frozen** (`congelado` is a later, single act; `turno` and `soak` are open
-too). **No frame time is pinned**: the local windowed lane (not part of hosted CI) now refuses a run that the display did not pace, and with
-the display off it rejected all three attempts as unpaced (an idle frame of 0.7 ms against the 4.17 ms required), ended with
-`presented: false`, exit code 3 and no frame-time statistic, so the frame time of a presented window (vsync on, 120 Hz) and the budget rows
-that depend on it are **pending**; the rejected attempts are kept as raw data, four captures are kept, and an earlier presented run is
-only an unpinned reference. The clicks are synthetic, the machine was shared with other agents (load average recorded), there are no
+too). **The frame time was pending at `346146d`**: the local windowed lane (not part of hosted CI) refused a run that the display did not pace, and with
+the display off it rejected all three attempts as unpaced (an idle frame of 0.7 ms against the 4.17 ms required) and ended with
+`presented: false`, exit code 3 and no frame-time statistic; the rejected attempts are kept as raw data and four captures are kept.
+**It is pinned since 2026-10-09**: one execution of the lane on `1bc3a3c` (the drawable window of #99) was presented by the display, five runs of five slots at the first attempt
+(0 of 25,469 sampled frames the engine could not draw, vsync `enabled` at 120 Hz), and the record's section "Faixa janelada apresentada" and
+[`windowed-presented.json`](frontier-baseline/windowed-presented.json) publish its statistics and the **proposal** they give by the written rule (median of the five runs
+plus three times the interquartile range, up to 0.5 ms): the swap frame's p50 / p95 / p99 by nodes created 0 / 50 / 75 / 100 are 3.662 / 8.448 / 11.171 / 13.144, 13.714 / 11.052 / 14.080 / 16.577 and
+14.284 / 15.565 / 19.278 / 24.607 ms at the median of the runs, with proposed bounds of 4.0 / 9.0 / 12.0 / 13.5, 14.0 / 12.5 / 20.0 / 17.0 and 16.5 / 27.5 / 29.5 / 41.5 ms (the p99 of 90 swaps is the largest of
+them, so those are the noisiest), the idle frame's p99 is 15.213 ms (proposed 16.5) and no frame of 100 ms or more occurred in 1,800 swap frames or 3,000 idle intervals. The Mac was loaded by
+other agents (load average 5.4 to 6.8 on 11 logical cores) and nobody used it, so the numbers are pessimistic and the `congelado` may need a run on a quiet machine; nothing is frozen. The
+four captures of that run are the bytes already in the record. The clicks are synthetic and there are no
 presentation timestamps (missed frames with the vsync stay open). Hosted run 37884924042 (the push of main `3bb51d6`, five jobs in
 the first attempt) repeated the 19 headless checks, and the 18 tests of the windowed lane's judgement and the heap series ran in the
 `contracts` job, and Pages published main's data ([hosted receipt](frontier-baseline/hosted-ci.json),
