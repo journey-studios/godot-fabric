@@ -14,13 +14,19 @@
 > suíte atual, rodada de novo no mesmo código, passa. Onde este registro diz "5 voltas" no heap em repouso (a linha da lista abaixo e a da
 > tabela da proposta), é o gate de `346146d`: nas duas execuções fixadas aqui o heap ficou em 2.032.000 bytes, e a diferença entre as metades é 0.
 
+> **Atualização de 2026-10-09: a faixa janelada foi apresentada.** Uma execução da faixa sobre o commit
+> [`1bc3a3c`](https://github.com/journey-studios/godot-fabric/commit/1bc3a3cc7d5d1a160f2158a87a5f8c623b504130) (a janela desenhável do #99) foi apresentada pelo display, nas cinco vagas, na primeira tentativa de cada; a
+> seção [Faixa janelada apresentada (2026-10-09)](#faixa-janelada-apresentada-2026-10-09) e o recibo [`windowed-presented.json`](windowed-presented.json) fixam o tempo de quadro e a proposta que ele dá. O que as seções
+> anteriores dizem do tempo de quadro como PENDENTE é o registro como estava e fica como foi escrito; o `execution.json` continua o de `346146d`, sem regenerar.
+
 Esta fatia fecha o critério `baseline` do V05-06 do marco 0.5 Frontier (pacote P6) **na parte que não depende de um display**: uma linha
 de base, na cena de prova do V05-02, de uma troca de painel do HUD de 50 a 100 nós nativos, estendendo o harness do GF-30, com a
 **proposta** de orçamento registrada e não congelada. A pergunta: quanto custa, no macOS, o que o HUD do jogo mais faz no meio de um
 turno, que é um clique numa barra de botões trocar o painel (unidades, cidade ou pesquisa) por outro? A resposta tem duas metades: as
 contagens **exatas** (nós, criações, remoções, um clique, uma troca) e o **custo de CPU** da troca, que a suíte headless fixa neste
-registro, e o **tempo de quadro de uma janela apresentada** (vsync ligado, 120 Hz), que está **PENDENTE**: nenhuma tentativa da faixa
-janelada foi apresentada pelo display (a tela estava apagada), e a faixa, endurecida, recusou todas e terminou sem estatística de quadro.
+registro, e o **tempo de quadro de uma janela apresentada** (vsync ligado, 120 Hz), que ficou **PENDENTE** neste registro: nenhuma tentativa da faixa
+janelada foi apresentada pelo display (a tela estava apagada), e a faixa, endurecida, recusou todas e terminou sem estatística de quadro. Uma execução de 2026-10-09 o fixou depois
+(ver [Faixa janelada apresentada](#faixa-janelada-apresentada-2026-10-09)).
 O [recibo](execution.json) fixa fontes, hashes, contagens, proveniência e resultados; a [nota de pesquisa](../../research/frontier-baseline.md)
 tem a cena, o método, o protocolo janelado e a justificativa da proposta. Os critérios `turno`, `soak` e `congelado` do V05-06 seguem
 abertos: esta fatia mede uma troca, não um turno do jogo, e o congelamento é um ato posterior e único.
@@ -102,18 +108,18 @@ digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de de
 `dashboard/migration.json` do squash e a entrada de atividade `milestone-0-5-v05-06-baseline-headless-ebfe8a0`. Um push
 seguinte da `main` substitui o deployment, então o site público não foi comparado.
 
-Continua só local: a faixa janelada (que nunca roda na CI e segue PENDENTE), as quatro capturas, as sabotagens retidas e a
+Continua só local: a faixa janelada (que nunca roda na CI; a execução apresentada de 2026-10-09 é local), as quatro capturas, as sabotagens retidas e a
 repetição do relatório gravado.
 
 ## Leitura
 
-**Esta é uma linha de base e uma proposta, não um orçamento, e não diz nada sobre o tempo de quadro.** O achado principal: o host monta o painel
+**Esta é uma linha de base e uma proposta, não um orçamento, e a faixa headless não diz nada sobre o tempo de quadro (o da janela apresentada está em [Faixa janelada apresentada](#faixa-janelada-apresentada-2026-10-09)).** O achado principal: o host monta o painel
 novo **dentro do `flush` que entrega o clique** (o evento de ponteiro, a atualização do React, o commit e o mount rodam nele), então os nós já
 existem quando `Input.flush_buffered_events()` volta: **0 quadros** depois do flush, em todas as 720 trocas estáveis dos dois processos. Quanto custa
 esse flush depende dos nós criados: **uma troca que cria 100 nós custa 9,2 ms de CPU na mediana e 12,4 ms no p95 (sobre 180 trocas dos
 dois processos), mais que o período de 8,33 ms de uma tela de 120 Hz**; criar 50 custa 5,9 ms na mediana (p95 de 8,6 ms), abaixo desse período na mediana e acima dele no p95, e só apagar 50 a 100 custa de
 1,8 a 2,4 ms. Do custo de uma troca de 50 nós, a maior parte é JavaScript (a renderização e o commit do React), uma parte menor é o mount no host e o layout do Yoga é
-pequeno. O que isso vira em tempo de quadro numa janela apresentada não está medido: ver a faixa janelada.
+pequeno. O que isso vira em tempo de quadro numa janela apresentada não estava medido neste registro e foi medido depois: ver [Faixa janelada apresentada](#faixa-janelada-apresentada-2026-10-09).
 
 ## O que o probe prova
 
@@ -191,6 +197,8 @@ As contagens exatas são as mesmas nos dois processos; os tempos são próximos 
 
 ## Faixa janelada: PENDENTE (não apresentada pelo display)
 
+*Histórico, superado pela [execução apresentada de 2026-10-09](#faixa-janelada-apresentada-2026-10-09); o texto é o do registro de `346146d`.*
+
 `caffeinate -d node scripts/frontier-baseline-graphics.mjs` roda a mesma cena, o mesmo percurso e o mesmo código de troca do probe headless
 ([`tests/frontier-baseline-swap.gd`](https://github.com/journey-studios/godot-fabric/blob/346146d4721c3082c495059d47d2ddc2ec7fc3e4/tests/frontier-baseline-swap.gd)) numa janela real, com o renderer nativo, e mede o que só uma janela
 apresentada tem: o intervalo entre quadros de processo consecutivos (o [probe gráfico](https://github.com/journey-studios/godot-fabric/blob/346146d4721c3082c495059d47d2ddc2ec7fc3e4/tests/frontier-baseline-graphics-probe.gd)). O protocolo
@@ -222,6 +230,8 @@ não a fixa**: é uma referência, não um resultado, e nenhuma linha do orçame
 destravada (a faixa agora o confere sozinha).
 
 ## Tentativas janeladas de 2026-10-09: não apresentadas
+
+*Histórico: estas duas execuções, mais cedo no mesmo dia, foram superadas pela execução sobre `1bc3a3c` ([apresentada](#faixa-janelada-apresentada-2026-10-09)); o texto é o de quando foram escritas.*
 
 Depois do registro acima, a faixa janelada do baseline (`node scripts/frontier-baseline-graphics.mjs`, os scripts da main, sem mudança) rodou **duas vezes** sobre o commit `e6a271d364a27f73acf995ed846c78eed055dde0`, cuja árvore (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) é idêntica à da main
 [`1adcdb3`](https://github.com/journey-studios/godot-fabric/commit/1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f), com o usuário presente e a tela acesa, na mesma máquina (Apple M3 Pro, "Color LCD" 120 Hz, janela de 800 × 600, `gl_compatibility`, vsync lido de volta como `enabled`). **As duas terminaram não apresentadas** (`presented: false`, código 3, nenhuma
@@ -257,9 +267,185 @@ O que os números mostram, e só isso:
 - A tentativa A8 foi recusada como `unpaced` por uma mediana ociosa de 4,136 ms, **0,031 ms abaixo** do mínimo, com a média em 8,333 ms e 5.106 de 5.110 quadros desenhados: seus 600 intervalos se dividem em 300 abaixo de 4,167 ms e 300 de 12 ms ou mais, nenhum entre eles, e a mediana é o último dos curtos. A regra é a do baseline e não foi tocada.
 - As quatro capturas da tentativa A (`panel-empty`, `-units`, `-city` e `-research`) foram gravadas e não medem nada; nenhuma estatística de quadro de A ou de B é resultado.
 
+## Faixa janelada apresentada (2026-10-09)
+
+> **Registro fixado no commit [`1bc3a3c`](https://github.com/journey-studios/godot-fabric/commit/1bc3a3cc7d5d1a160f2158a87a5f8c623b504130).** A faixa janelada do baseline rodou **uma vez** sobre ele, com a árvore limpa (árvore `5837a44a`, sobre a main `decc2ad`), e o display **apresentou a janela**:
+> `presented: true`, código de saída 0, **5 de 5 vagas aceitas na primeira tentativa de cada, nenhuma rejeitada**, vsync `enabled` a 120 Hz, 0 de 25.469 quadros amostrados sem poder desenhar. Isto substitui o que as seções anteriores desta página dizem do tempo de quadro como PENDENTE; elas ficam como foram escritas.
+
+É a execução do baseline da fatia da [janela desenhável](../windowed-presence/README.md) (#99, [recibo](../windowed-presence/execution.json)), que descreve o ambiente, a presença do usuário e as 11 fontes fixadas, e **não publica** as estatísticas de quadro: este registro as publica. O [recibo desta seção](windowed-presented.json) guarda o resumo, as tentativas, os hashes, a conta da proposta e o commit. O **recibo bruto está commitado, byte a byte**, em [`windowed-presented-raw.json`](windowed-presented-raw.json) (o `frontier-baseline-graphics.json` que a faixa gravou, 437.679 bytes, SHA-256 `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7`, o mesmo da cópia), com todos os intervalos de todas as execuções aceitas, para que outro leitor recalcule qualquer estatística (ver "Recalcular" abaixo). A [nota de pesquisa](../../research/frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c) lê estes números.
+
+| Faixa | Resultado | Observação |
+| --- | --- | --- |
+| Baseline janelado (`caffeinate -d node scripts/frontier-baseline-graphics.mjs`) | **APRESENTADA, código de saída 0** | 5 de 5 vagas aceitas na **primeira** tentativa de cada; janela de 800 × 600, vsync `enabled`, 120 Hz; 0 de 25.469 quadros sem poder desenhar |
+| `verifyGraphicsReceipt` | **aceito** pelos dois oráculos | o de `1bc3a3c` (`a55e1d85…`) e o da árvore em que este registro foi escrito (a main `ffeeb5c` incorporada, `501caaeb…`) |
+| `graphicsRunValidity` | 5 de 5 execuções válidas | desenhou e deu ritmo, pelos dois |
+| `summarizeGraphicsRuns` sobre os intervalos crus | **igual** ao `summary` do recibo | por execução e entre execuções; só `mapMotionEvents` (o movimento do ponteiro real sobre o mapa), que o `raw` não guarda, ficou fora da comparação |
+| Recálculo independente | **igual, ao microssegundo** | um script à parte, fora do repositório (posto mais próximo, quartis de cinco), para a faixa inteira, por nós criados, o ocioso, o clique até o desenho e a injeção |
+| Usuário no Mac | **ausente** | o tempo ocioso de teclado e ponteiro cresceu 234,5 s em 235 s de relógio |
+| Host anterior | **N/A** | a fatia não muda C++ |
+
+**Ambiente**: o mesmo da página (Apple M3 Pro, `Mac15,6`, 11 núcleos lógicos, 18 GB; macOS 26.6.2 (25G83) arm64; Godot oficial 4.7.2 `ed1daf0bf`; Hermes 250829098.0.17; Node v22.23.3), tela embutida `Color LCD` (1512 × 982 pontos, 3024 × 1964 pixels, 120 Hz, escala 2), janela de 800 × 600 no `gl_compatibility` sobre `opengl3` (adaptador `Apple M3 Pro`), vsync lido de volta como `enabled`, 120 Hz, `max_fps` 0. O host nativo (`212d0f6e…`) e o bundle (`7895d359…`) são os do recibo; as fontes executadas são as de `1bc3a3c`, e as seis da faixa estão em `hashes.sources` do recibo desta seção.
+
+### A janela foi apresentada
+
+Cinco execuções, cada uma num processo, cerca de 46 s cada. "Sem poder desenhar" é `undrawableFrames` de `sampledFrames`; a referência ociosa é a mediana das meias-somas de pares consecutivos dos 600 intervalos ociosos (a regra desde o #94) e a mediana ociosa, que já não julga, fica como registro. Em todas, um quadro foi desenhado depois de cada um dos 360 cliques estáveis e a janela ociosa desenhou 601 vezes para os seus 600 intervalos.
+
+| Vaga | Tentativa | Veredito | Quadros de processo | Desenhados | Sem poder desenhar | Ref. ociosa (ms) | Mediana ociosa (ms) | `loadavg` antes | depois |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 1 | **aceita** | 5.133 | 5.117 | 0 de 5.120 | 8,339 | 6,022 | `{ 5.70 5.76 7.08 }` | `{ 5.38 5.66 6.97 }` |
+| 2 | 2 | **aceita** | 5.125 | 5.109 | 0 de 5.112 | 8,336 | 7,928 | `{ 5.38 5.66 6.97 }` | `{ 5.26 5.60 6.89 }` |
+| 3 | 3 | **aceita** | 5.095 | 5.079 | 0 de 5.082 | 8,334 | 4,580 | `{ 5.26 5.60 6.89 }` | `{ 5.79 5.69 6.85 }` |
+| 4 | 4 | **aceita** | 5.098 | 5.082 | 0 de 5.085 | 8,338 | 4,367 | `{ 5.79 5.69 6.85 }` | `{ 6.04 5.82 6.84 }` |
+| 5 | 5 | **aceita** | 5.083 | 5.067 | 0 de 5.070 | 8,339 | 8,368 | `{ 6.04 5.82 6.84 }` | `{ 6.16 5.92 6.82 }` |
+
+### O quadro ocioso
+
+600 intervalos consecutivos entre quadros de processo, com o mapa e o HUD parados, em ms. Com o vsync ligado os intervalos vêm em dois grupos que se alternam (o `frame-clock.md`): o p95 e o p99 são do grupo longo, e o p50 cai num grupo ou no outro, daí a sua faixa.
+
+| Execução | p50 | p95 | p99 | máximo | Intervalos acima de 2× a referência ociosa |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 6,022 | 14,854 | 15,604 | 52,315 | 4 de 600 |
+| 2 | 7,928 | 14,583 | 15,169 | 15,888 | 0 de 600 |
+| 3 | 4,580 | 14,504 | 14,854 | 19,290 | 1 de 600 |
+| 4 | 4,367 | 14,554 | 15,213 | 25,699 | 3 de 600 |
+| 5 | 8,368 | 15,167 | 15,509 | 44,654 | 3 de 600 |
+| **Mediana [IQR]** | 6,022 [3,348] | 14,583 [0,300] | 15,213 [0,340] | 25,699 [25,364] | 3 [2] |
+
+### O quadro da troca
+
+É o intervalo do quadro de processo que levou o clique, do começo do quadro em que a injeção é entregue ao começo do seguinte. Os nós já existem quando o flush volta (**0 quadros** em todas as 1.800 trocas estáveis das cinco execuções) e um quadro desenhado seguiu todo clique. As 360 trocas estáveis de uma execução se agrupam pelos nós que a troca cria, o tamanho do painel que ela mostra (0, 50, 75 ou 100: 90 trocas de cada). Cada célula é a **mediana entre as cinco execuções** da estatística de cada uma, com o intervalo interquartil das cinco entre colchetes (ms):
+
+| Nós criados | p50 | p95 | p99 |
+| ---: | ---: | ---: | ---: |
+| 0 | 3,662 [0,014] | 13,714 [0,031] | 14,284 [0,732] |
+| 50 | 8,448 [0,058] | 11,052 [0,403] | 15,565 [3,959] |
+| 75 | 11,171 [0,144] | 14,080 [1,876] | 19,278 [3,406] |
+| 100 | 13,144 [0,111] | 16,577 [0,131] | 24,607 [5,514] |
+| todas as trocas (360 por execução) | 10,596 [0,123] | 14,835 [0,378] | 18,175 [1,639] |
+
+Por execução, todas as trocas (ms):
+
+| Execução | p50 | p95 | p99 | máximo | Acima de 2× a referência ociosa |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 10,410 | 14,835 | 18,175 | 22,366 | 6 de 360 |
+| 2 | 10,502 | 14,497 | 18,978 | 25,918 | 5 de 360 |
+| 3 | 10,625 | 15,928 | 19,836 | 60,024 | 11 de 360 |
+| 4 | 10,596 | 14,217 | 15,447 | 19,278 | 2 de 360 |
+| 5 | 10,673 | 14,875 | 17,339 | 24,621 | 6 de 360 |
+
+Por execução, por nós criados (p50 / p95 / p99, ms):
+
+| Nós criados | Execução 1 | Execução 2 | Execução 3 | Execução 4 | Execução 5 |
+| ---: | --- | --- | --- | --- | --- |
+| 0 | 3,565 / 13,794 / 15,141 | 3,667 / 13,714 / 14,284 | 3,653 / 13,721 / 13,897 | 3,662 / 13,632 / 14,983 | 3,731 / 13,690 / 14,251 |
+| 50 | 8,414 / 11,052 / 13,282 | 8,436 / 10,688 / 12,201 | 8,494 / 11,843 / 20,135 | 8,448 / 10,713 / 17,241 | 8,588 / 11,116 / 15,565 |
+| 75 | 11,053 / 15,420 / 22,366 | 10,926 / 14,080 / 18,780 | 11,171 / 15,409 / 18,960 | 11,197 / 13,533 / 19,278 | 11,534 / 13,426 / 24,621 |
+| 100 | 13,144 / 16,568 / 20,404 | 13,130 / 16,577 / 25,918 | 13,144 / 19,442 / 60,024 | 13,255 / 14,730 / 16,615 | 13,541 / 16,699 / 24,607 |
+
+### Do clique ao primeiro quadro desenhado
+
+Do começo da injeção ao primeiro quadro desenhado depois de os nós existirem (ms):
+
+| Execução | p50 | p95 | p99 | máximo |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 10,366 | 14,636 | 17,343 | 20,313 |
+| 2 | 10,455 | 14,418 | 18,926 | 25,796 |
+| 3 | 10,580 | 15,878 | 19,735 | 59,945 |
+| 4 | 10,552 | 14,157 | 15,373 | 19,225 |
+| 5 | 10,630 | 14,835 | 17,278 | 24,572 |
+| **Mediana [IQR]** | 10,552 [0,125] | 14,636 [0,417] | 17,343 [1,648] | |
+
+### O CPU dentro do quadro, contra o headless
+
+A injeção e o flush da troca (o tempo até os nós existirem), por nós criados, na janela (mediana entre as cinco execuções, IQR entre colchetes) e no headless (os dois processos reunidos, da tabela "Por transição" e da proposta):
+
+| Nós criados | Janela p50 | Janela p95 | Headless p50 | Headless p95 |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 2,621 [0,077] | 3,715 [0,156] | 2,2 | 3,2 |
+| 50 | 6,251 [0,027] | 8,327 [0,901] | 5,9 | 8,6 |
+| 75 | 7,885 [0,220] | 10,193 [0,855] | 7,7 | 10,6 |
+| 100 | 9,413 [0,114] | 11,515 [0,406] | 9,2 | 12,4 |
+
+O CPU que a troca põe no quadro é, na janela, o do headless (a mesma ordem, a diferença de décimos de ms no p50), e o que a janela acrescenta é o ritmo do laço: o quadro de uma troca de 0 nós, que custa 2,6 ms de CPU, é de 3,7 ms na mediana e 13,7 ms no p95, os dois grupos do quadro ocioso.
+
+### A carga e a ausência do usuário
+
+O Mac **não estava quieto**: o trabalho de outros agentes rodava nele. O `vm.loadavg` (1, 5 e 15 minutos) foi `{ 5.41 5.71 7.07 }` antes da faixa e `{ 6.79 6.05 6.87 }` depois, e em torno das cinco execuções a média de um minuto ficou entre 5,26 e 6,16, a de cinco entre 5,60 e 5,92 e a de quinze entre 6,82 e 7,08, em 11 núcleos lógicos (a tabela acima traz o par de cada tentativa). **Os números são, portanto, pessimistas**: uma máquina quieta pode mostrar tempos menores, e o `congelado` pode exigir uma execução numa máquina quieta antes de congelar qualquer linha da proposta.
+
+**Ninguém usou o Mac.** O `HIDIdleTime` do `IOHIDSystem` (os nanossegundos desde o último evento de teclado, ponteiro ou trackpad) foi de 6476,6 s (2026-10-09T19:56:43Z) a 6711,1 s (2026-10-09T20:00:38Z): cresceu 234,5 s em 235 s de relógio, então nenhum desses eventos houve na faixa, e a sessão não estava bloqueada ao fim (`IOConsoleLocked = No`). Isso **não** diz que ninguém olhou a tela, e entrada por outro dispositivo (Universal Control, compartilhamento de tela) pode não mover esse contador. O que o registro não tem: um usuário trabalhando no Mac durante a faixa.
+
+### A proposta, com a conta
+
+**PROPOSTA, não congelada.** A regra, escrita antes desta execução na nota de pesquisa: para cada estatística de tempo de quadro de uma janela apresentada, a **mediana entre as cinco execuções mais três vezes o seu IQR** (quartis por posto mais próximo; o IQR de cinco é o quarto valor menos o segundo), **para cima a 0,5 ms**. As contagens não se arredondam. A conta foi feita em microssegundos inteiros, dos intervalos crus. O recibo tem o quadro por grupo, então a proposta é **por nós criados**; as linhas de todas as trocas são só referência.
+
+| Estatística (ms) | As cinco execuções, em ordem | Q1 | Mediana | Q3 | IQR | Mediana + 3 IQR | Para cima a 0,5 ms |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Quadro da troca p50, 0 nós criados | 3,565 / 3,653 / 3,662 / 3,667 / 3,731 | 3,653 | 3,662 | 3,667 | 0,014 | 3,704 | **4,0** |
+| Quadro da troca p95, 0 nós criados | 13,632 / 13,690 / 13,714 / 13,721 / 13,794 | 13,690 | 13,714 | 13,721 | 0,031 | 13,807 | **14,0** |
+| Quadro da troca p99, 0 nós criados | 13,897 / 14,251 / 14,284 / 14,983 / 15,141 | 14,251 | 14,284 | 14,983 | 0,732 | 16,480 | **16,5** |
+| Quadro da troca p50, 50 nós criados | 8,414 / 8,436 / 8,448 / 8,494 / 8,588 | 8,436 | 8,448 | 8,494 | 0,058 | 8,622 | **9,0** |
+| Quadro da troca p95, 50 nós criados | 10,688 / 10,713 / 11,052 / 11,116 / 11,843 | 10,713 | 11,052 | 11,116 | 0,403 | 12,261 | **12,5** |
+| Quadro da troca p99, 50 nós criados | 12,201 / 13,282 / 15,565 / 17,241 / 20,135 | 13,282 | 15,565 | 17,241 | 3,959 | 27,442 | **27,5** |
+| Quadro da troca p50, 75 nós criados | 10,926 / 11,053 / 11,171 / 11,197 / 11,534 | 11,053 | 11,171 | 11,197 | 0,144 | 11,603 | **12,0** |
+| Quadro da troca p95, 75 nós criados | 13,426 / 13,533 / 14,080 / 15,409 / 15,420 | 13,533 | 14,080 | 15,409 | 1,876 | 19,708 | **20,0** |
+| Quadro da troca p99, 75 nós criados | 18,780 / 18,960 / 19,278 / 22,366 / 24,621 | 18,960 | 19,278 | 22,366 | 3,406 | 29,496 | **29,5** |
+| Quadro da troca p50, 100 nós criados | 13,130 / 13,144 / 13,144 / 13,255 / 13,541 | 13,144 | 13,144 | 13,255 | 0,111 | 13,477 | **13,5** |
+| Quadro da troca p95, 100 nós criados | 14,730 / 16,568 / 16,577 / 16,699 / 19,442 | 16,568 | 16,577 | 16,699 | 0,131 | 16,970 | **17,0** |
+| Quadro da troca p99, 100 nós criados | 16,615 / 20,404 / 24,607 / 25,918 / 60,024 | 20,404 | 24,607 | 25,918 | 5,514 | 41,149 | **41,5** |
+| Quadro ocioso p99 | 14,854 / 15,169 / 15,213 / 15,509 / 15,604 | 15,169 | 15,213 | 15,509 | 0,340 | 16,233 | **16,5** |
+| Trocas de 100 ms ou mais, por execução | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
+| Intervalos ociosos de 100 ms ou mais, por execução | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
+| Quadro da troca p50, todas as trocas (referência) | 10,410 / 10,502 / 10,596 / 10,625 / 10,673 | 10,502 | 10,596 | 10,625 | 0,123 | 10,965 | 11,0 |
+| Quadro da troca p95, todas as trocas (referência) | 14,217 / 14,497 / 14,835 / 14,875 / 15,928 | 14,497 | 14,835 | 14,875 | 0,378 | 15,969 | 16,0 |
+| Quadro da troca p99, todas as trocas (referência) | 15,447 / 17,339 / 18,175 / 18,978 / 19,836 | 17,339 | 18,175 | 18,978 | 1,639 | 23,092 | 23,5 |
+
+Lendo a proposta:
+
+- **O p99 por tamanho é o pior das 90 trocas** (posto 90 de 90), então é a linha mais ruidosa: o IQR vai de 0,7 a 5,5 ms e as propostas chegam a 27,5, 29,5 e 41,5 ms. O congelamento pode preferir descartá-las e usar o p99 reunido (23,5 ms, referência).
+- **O p95 de 75 nós (20,0 ms) fica acima do de 100 (17,0 ms)** porque os cinco p95 de 75 nós são dois de uns 15,4 ms, um de 14,1 e dois de uns 13,5 (IQR 1,876), enquanto os de 100 nós são três de uns 16,6 ms, um de 14,7 e um de 19,4, e o segundo e o quarto valores, que dão o IQR (0,131), estão juntos. É ruído de cinco execuções, não um efeito do painel.
+- **O quadro ocioso p99 de 16,5 ms** é o grupo longo dos aglomerados do vsync (13 a 15 ms): um limite do quadro da troca abaixo disso reprovaria uma janela parada.
+- **Nenhum quadro de 100 ms ou mais**: 0 de 1.800 quadros de troca e 0 de 3.000 intervalos ociosos. O maior quadro da faixa, 60,0 ms (uma troca de 100 nós da execução 3), não é só da troca: as janelas ociosas das execuções 1 e 5 têm intervalos de 52,3 e 44,7 ms com nada acontecendo. A causa desses engasgos não foi isolada.
+- **Os quadros acima de 2× a referência ociosa** (16,7 ms), a contagem que a comparação final V05-10 usa, são 6 [1] de 360 quadros de troca por execução (de 2 a 11) e 3 [2] de 600 intervalos ociosos (de 0 a 4); por tamanho, as trocas acima dela são 0 (0 nós), de 0 a 1 (50), de 1 a 2 (75) e de 0 a 9 (100) de 90.
+- **Em quadros**: o quadro de uma troca de 100 nós é de 13,1 ms na mediana (1,6 períodos de 120 Hz, 8,33 ms) e 16,6 ms no p95, no período de 60 Hz (16,67 ms): abaixo dele em três das cinco execuções (14,73, 16,57 e 16,58 ms) e acima em duas (16,70 e 19,44); o p99 (24,6 ms) está acima. A troca de 50 nós leva cerca de um período de 120 Hz (8,4 ms).
+
+### O que isto mostra, e o que não mostra
+
+- **Mostra** o tempo de quadro de uma janela apresentada pelo display (vsync ligado, 120 Hz), pela regra de validade da página, em cinco execuções aceitas de primeira, e a proposta que a regra escrita dá a partir dele.
+- **Não mostra** o tempo de quadro de uma máquina quieta, nem o de um Mac em uso (a carga de 5,4 a 6,8 e a ausência do usuário estão acima); nem quadros perdidos (sem os timestamps de apresentação que o Godot não dá); nem FPS sem limite (o vsync leu `enabled`).
+- É **uma** execução da faixa, de cerca de quatro minutos: as cinco execuções são processos separados, não dias separados.
+- **Não congela nada.** O `congelado` do V05-06 é um ato posterior e único; o `turno` e o `soak` não mudam.
+
+### Capturas
+
+A execução gravou as quatro capturas dos painéis (`panel-empty`, `-units`, `-city` e `-research`, 800 × 600) e elas são **as mesmas bytes que já estão nesta página** (os SHA-256 de `windowedLane.captures` do `execution.json` são os mesmos: `98fff17b…`, `f66f7fbb…`, `dfb7ab35…` e `a8e20412…`), então nenhuma captura é acrescentada. A run das capturas amostrou 60 quadros e nenhum sem poder desenhar.
+
+### Recalcular
+
+`shasum -a 256 windowed-presented-raw.json` deve dar o hash desta seção. A faixa não tem `--replay` para o recibo janelado (o `--replay` do probe julga o relatório headless), então o recálculo é pelo oráculo, em Node, sobre o arquivo:
+
+- `verifyGraphicsReceipt(receipt)`, de `tests/frontier-baseline-oracle.mjs`, aceita o arquivo como está (`JSON.parse` do conteúdo): confere as execuções aceitas pela referência ociosa, a contagem das tentativas e o formato do `summary`.
+- Para refazer as estatísticas, monte uma execução de cada `raw[i]`: as linhas de `swaps` são `[rodada, passo, de, para, quadros de latência, injeção em µs, µs até os nós, µs até o primeiro quadro desenhado, intervalos dos quadros da troca em µs]`, a janela ociosa vem de `idleIntervalsUsec` e `idleDraws`, os quadros de `processFrames` e `drawnFrames` da tentativa de mesmo número, a proveniência do próprio arquivo e `config.nativeNodes` do `NATIVE_NODES` de `tests/frontier-baseline-cases.mjs`. `summarizeGraphicsRuns(execuções)` dá então o `summary` do arquivo, por execução e entre execuções; só o `mapMotionEvents` (o movimento do ponteiro real sobre o mapa), que o `raw` não guarda, fica fora. As estatísticas por nós criados desta seção são o mesmo cálculo (o posto mais próximo sobre `frameUsec[0]` das trocas estáveis, `rodada` 2 em diante, agrupadas pelo tamanho do painel de `para`) e a conta da proposta usa os quartis de cinco dessas estatísticas.
+- Foi assim que este registro foi conferido: o oráculo de `1bc3a3c` e o da árvore deste commit aceitam a cópia commitada e dão os mesmos números, que um script à parte, fora do repositório, recalculou ao microssegundo.
+
+### Fontes e hashes
+
+| Arquivo | SHA-256 |
+| --- | --- |
+| recibo bruto `frontier-baseline-graphics.json`, commitado como [`windowed-presented-raw.json`](windowed-presented-raw.json) (437.679 bytes) | `36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7` |
+| `tests/window-presence.gd` (blob de `1bc3a3c`) | `0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15` |
+| `tests/frontier-baseline-graphics-probe.gd` (blob de `1bc3a3c`) | `dae47afe2e5c3656f9d018b4f631e045205d06f43c936d62250b2283fa521412` |
+| `tests/frontier-baseline-swap.gd` (blob de `1bc3a3c`) | `31c9e6ce27f7deceaaf3266566b719d315314af0c1f0129b9d8755a88d3aedff` |
+| `tests/frontier-baseline-oracle.mjs` (blob de `1bc3a3c`) | `a55e1d856b254e78e4f732fcff1e5cfc82934d1ccda82ca975ad011e82e8a4ed` |
+| `scripts/frontier-baseline-graphics.mjs` (blob de `1bc3a3c`) | `c974c68b37d39a8432d53302c1ba14e0b141ca0a6324225a7ddbda1112373b84` |
+| `tests/performance-sampler.gd` (blob de `1bc3a3c`) | `1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52` |
+| host nativo | `212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e` |
+| bundle do baseline | `7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a` |
+
+O recibo hospedado desta página ([`hosted-ci.json`](hosted-ci.json), do push do #77) cobre a faixa headless; a faixa janelada só roda localmente, e este registro dela não tem recibo hospedado. O push da `main` que incorporar este registro só repete os jobs de contrato.
+
 ## Proposta de orçamento (PROPOSTA, não congelada)
 
-**Nada daqui é um limite hoje**, com a exceção das linhas marcadas **exato**, que a suíte já julga. A tabela traz os valores que a linha de base headless sugere e a regra
+**Nada daqui é um limite hoje**, com a exceção das linhas marcadas **exato**, que a suíte já julga. A tabela traz os valores que a linha de base headless e a janelada apresentada sugerem e a regra
 que derivou cada um, para que o congelamento (o critério `congelado` do V05-06, um ato posterior e único, depois desta linha de base e antes da primeira sessão em
 dispositivo) aceite, aperte ou descarte cada um. O achado principal: **uma troca que cria 100 nós custa 9,2 ms de CPU na mediana e 12,4 ms no p95 (sobre 180 trocas dos dois processos headless), mais que o período de 8,33 ms de uma tela de 120 Hz**
 (em execuções anteriores, com a máquina mais carregada, a mediana foi de 11 a 12 ms); a fatia não decide o que fazer com isso.
@@ -271,7 +457,7 @@ dispositivo) aceite, aperte ou descarte cada um. O achado principal: **uma troca
 | Quadros do clique até o painel (headless) | 0 em 720 de 720 trocas estáveis | no máximo 1 | o máximo medido mais um quadro, para um commit que caia no pump seguinte |
 | CPU da troca (injeção e flush), p95, por nós criados 0 / 50 / 75 / 100 (headless, 180 trocas cada, dois processos) | 3,2 / 8,6 / 10,6 / 12,4 ms (p50 2,2 / 5,9 / 7,7 / 9,2) | 4,5 / 11,0 / 13,5 / 16,0 ms | p95 reunido dos dois processos × 1,25, para cima a 0,5 ms; o de 100 nós é perto do período de 60 Hz (16,7 ms) |
 | Heap que um painel montado segura sobre a base (headless, coleta forçada) | 249.024 / 327.808 / 406.072 bytes para 50 / 75 / 100 nós (iguais nos dois processos) | 320.000 / 410.000 / 510.000 bytes | p50 × 1,25, para cima a 10.000 bytes |
-| Quadro da troca p95 e p99, quadro ocioso p99 e quadros de 100 ms ou mais, de uma janela apresentada (vsync ligado, 120 Hz) | **PENDENTE**: nenhuma tentativa janelada foi apresentada pelo display | **PENDENTE** | a derivar, de cinco execuções apresentadas, pela mediana + 3 IQR, para cima a 0,5 ms |
+| Quadro da troca p50, p95 e p99, por nós criados 0 / 50 / 75 / 100, quadro ocioso p99 e quadros de 100 ms ou mais, de uma janela apresentada (vsync ligado, 120 Hz) | fixados pela execução de 2026-10-09 sobre `1bc3a3c`: ver [Faixa janelada apresentada](#faixa-janelada-apresentada-2026-10-09) (p50 3,662 / 8,448 / 11,171 / 13,144 ms; p95 13,714 / 11,052 / 14,080 / 16,577; p99 14,284 / 15,565 / 19,278 / 24,607; ocioso p99 15,213; 0 quadros de 100 ms ou mais) | p50 4,0 / 9,0 / 12,0 / 13,5 ms; p95 14,0 / 12,5 / 20,0 / 17,0; p99 16,5 / 27,5 / 29,5 / 41,5; ocioso p99 16,5; 0 quadros de 100 ms ou mais | mediana das cinco execuções + 3 IQR, para cima a 0,5 ms; a conta linha por linha está na seção; de uma máquina carregada e sem o usuário, **pessimista**, e o `congelado` pode exigir uma execução numa máquina quieta |
 | Memória residente e memória estática do Godot por volta | RSS 131 a 192 MB headless; estática 369 KB por volta (o próprio probe) | nenhum | só registradas: andam em dezenas de MB e na contabilidade do probe, e não podem ser limite |
 
 A regra do ROADMAP da comparação final (V05-10) vale para o tempo de quadro: **FPS sem limite só conta com o vsync lido como desligado**. Com o vsync ligado, que é o caso do
@@ -311,7 +497,8 @@ negativos do relatório gravado (rejeitados pelo probe e pelo oráculo, cada um 
 
 As quatro capturas (800 × 600, o readback do viewport da root, de uma execução que não mede nada, com os pixels
 conferidos: a barra sobre o mapa, cada painel onde o HUD o põe e a base de volta depois deles) estão nesta pasta, com o
-SHA-256 no recibo (`windowedLane.captures`):
+SHA-256 no recibo (`windowedLane.captures`). A faixa janelada apresentada de 2026-10-09 gravou as mesmas quatro capturas e elas são **as mesmas bytes** (mesmo SHA-256), então
+não se acrescenta outra:
 
 ![A base: a barra sem painel](frontier-baseline-panel-empty.png)
 
@@ -336,10 +523,10 @@ SHA-256 no recibo (`windowedLane.captures`):
 - **Uma máquina sob carga**: um Apple M3 Pro, uma tela, um modo de vsync (o padrão, `enabled`, lido de volta), com a
   máquina dividida com outros agentes; o `loadavg` está registrado antes e depois de cada comando e os tempos não são o
   melhor caso. Um tempo de quadro com o vsync desligado não foi medido.
-- **O tempo de quadro de uma janela apresentada (vsync ligado, 120 Hz) está PENDENTE**: nenhuma tentativa da faixa janelada foi apresentada pelo display (o Mac estava
-  ocioso, a tela apagada ou bloqueada), a faixa endurecida rejeitou as três como `unpaced: the display is not presenting` e terminou com `presented: false`, código 3 e
-  nenhuma estatística de quadro. As linhas do orçamento que dependem dele estão PENDENTES, e nenhum FPS sem limite é reivindicado. A execução anterior, apresentada, é só
-  uma referência não fixada (o recibo cru dela se perdeu).
+- **O tempo de quadro de uma janela apresentada (vsync ligado, 120 Hz) está fixado por uma execução** (2026-10-09, `1bc3a3c`, ver [Faixa janelada apresentada](#faixa-janelada-apresentada-2026-10-09)):
+  cinco execuções de uma sessão da faixa (cerca de quatro minutos), sem ninguém no Mac e com a máquina carregada por outros agentes (média de carga de 5,4 a 6,8 em 11 núcleos lógicos), então
+  faltam um usuário em uso e uma máquina quieta; as linhas do orçamento derivadas dele são uma proposta, e o `congelado` pode exigir uma execução numa máquina quieta. Nenhum FPS sem limite
+  é reivindicado. As tentativas anteriores, que nenhum display apresentou, e a execução anterior sem recibo são histórico.
 - **Sem timestamps de apresentação**: os quadros perdidos com o vsync ligado (a métrica do V05-10 do ROADMAP) seguem
   **abertos**. Os intervalos são de quadros de processo, que com o vsync ligado vêm em aglomerados (o
   `frame-clock.md` mediu cerca de 3 ms e 13 ms a 120 Hz nesta tela), então nenhum quadro perdido se lê deles.
@@ -347,6 +534,6 @@ SHA-256 no recibo (`windowedLane.captures`):
   imagens, entrada de texto, ScrollView ou animações não foram medidos.
 - **`turno`, `soak` e `congelado`** do V05-06 seguem abertos: a proposta de orçamento é a entrada do congelamento, que
   é um ato posterior e único.
-- A CI hospedada repete a suíte headless (19 checks, seção "CI hospedada e Pages"); a faixa janelada é só local, nunca roda na
-  CI e segue PENDENTE.
+- A CI hospedada repete a suíte headless (19 checks, seção "CI hospedada e Pages"); a faixa janelada é só local e nunca roda na
+  CI.
 - O host anterior não se aplica (nenhum C++ mudou).
