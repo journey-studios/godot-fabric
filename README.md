@@ -555,10 +555,12 @@ the pointer spike's scene: a React Native HUD over the Godot map whose panel, a 
 replaced by a real click on a button of the bar. Headless, in two processes, every swap leaves the SceneTree and the host
 with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
 reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
-independent oracle recomputes it all. A local windowed lane (`node scripts/frontier-baseline-graphics.mjs`) records the
-frame time in five processes, with the vsync mode read back. The numbers are a baseline and a proposed budget, not a
-frozen one; the lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
-[Research](docs/research/frontier-baseline.md).
+independent oracle recomputes it all. A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 ms at p95 (headless, pinned run), more than a 120 Hz period (8.33 ms).
+The CPU and heap limits are a proposal, not a frozen budget. **No frame time is pinned**: the local windowed lane
+(`node scripts/frontier-baseline-graphics.mjs`) refuses a run that no display paced and, with the display off, ended as
+not presented (exit code 3, no frame-time statistic), so the frame time of a presented window is pending. The
+lifecycle, the 100-turn soak and the freeze are open, and so is hosted CI.
+[Evidence](docs/evidence/frontier-baseline/README.md); [research](docs/research/frontier-baseline.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,

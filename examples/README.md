@@ -83,8 +83,9 @@ catalog, and a local windowed lane on the full-screen scene (`node scripts/world
 
 The [Frontier baseline](frontier-baseline/README.md) is the same scene with a HUD whose panel (50, 75 or 100 native
 nodes) a click on the bar replaces, and measures the swap: `npm run test:frontier-baseline` headless, with exact
-counts, and a local windowed lane for the frame time (`node scripts/frontier-baseline-graphics.mjs`). It has its own
-scene and commands, outside the launcher catalog.
+counts, and a local windowed lane for the frame time (`node scripts/frontier-baseline-graphics.mjs`, which needs an awake
+display and ends with exit code 3 when none presents the window: the frame time is pending). It has its own scene and
+commands, outside the launcher catalog.
 
 The separate [pointer-interest validation](pointer-interest/README.md) compares
 original/current native View `pointerdown` interest using original listener maps.

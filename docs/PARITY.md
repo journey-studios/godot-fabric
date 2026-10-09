@@ -146,8 +146,9 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   The nodes, orphans and views return to the baseline after every cycle and the live heap at rest may rise at
   most 2,048 bytes in the steady state (a measured 0 to 312). The Frontier HUD's panel swap by a real click, in the
   pointer spike's scene, is the same harness's second consumer (V05-06 `baseline`: exact node, creation and
-  deletion counts per swap, a windowed frame time, a proposed and not frozen budget;
-  [research](research/frontier-baseline.md)); it moves no RN name or count. Durations, the resident
+  deletion counts per swap, the CPU cost of a swap, a proposed and not frozen budget; the frame time of a presented window is pending, because no
+  windowed attempt was presented by the display;
+  [research](research/frontier-baseline.md), [evidence](evidence/frontier-baseline/README.md)); it moves no RN name or count. Durations, the resident
   memory and Godot's static memory are recorded and never judged. Target-device budgets, text shaping,
   10,000 rows, graphic frame time and the mobile targets stay open.
 - **OS-specific contracts:** the original [ToastAndroid (its fallback), PermissionsAndroid, DynamicColorIOS,

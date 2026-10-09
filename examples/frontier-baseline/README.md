@@ -32,8 +32,11 @@ The HUD uses only `View`, `Text` and `Pressable`, with the props the 0.5 scope p
 ```sh
 npm run test:frontier-baseline           # headless: the probe in two processes, the exact counts, the oracle
 node scripts/frontier-baseline-sabotage.mjs   # the four retained sabotages (do not run another suite meanwhile)
-node scripts/frontier-baseline-graphics.mjs   # local only: five runs in a real window, the frame times, the vsync read back, one capture per panel
+caffeinate -d node scripts/frontier-baseline-graphics.mjs   # local only, needs an awake, unlocked display: five runs in a real window, the frame times, the vsync read back, one capture per panel
 ```
+
+The windowed lane refuses a run that the display did not present (the window draws, but its idle frame is under half of the refresh period): it repeats it, and if
+every attempt is refused it writes a receipt with `presented: false` and no frame-time statistic, and exits with code 3.
 
 The first command bundles the HUD (written to `build/frontier-baseline-probe.js`, which the scene loads) and runs the
 headless Godot probe twice. To look at the scene yourself, run it once so that the bundle exists, and start it with the
@@ -59,5 +62,6 @@ click swaps once and never reaches the world, a round ends at the base, and the 
 the GF-30 limit. An [independent oracle](../../tests/frontier-baseline-oracle.mjs) recomputes them from the raw report
 and the percentiles from the raw samples. What depends on the pace (the frames a click takes, the pump and its
 phases, the heap and resident memory of a swap) is recorded and never judged. The frame time exists only in the
-windowed lane: the headless loop is unpaced and draws nothing. See the
-[research](../../docs/research/frontier-baseline.md) for the numbers and the proposed budget.
+windowed lane, and only if a display presents the window: the headless loop is unpaced and draws nothing, and the recorded
+execution was not presented, so **no frame time is pinned and the presented frame time is pending**. See the
+[research](../../docs/research/frontier-baseline.md) for the method and the proposed budget, and the [evidence record](../../docs/evidence/frontier-baseline/README.md) for the numbers, the receipt and the captures.

@@ -1,0 +1,3031 @@
+{
+  "format": "godot-fabric.frontier-baseline-execution/v2",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "346146d4721c3082c495059d47d2ddc2ec7fc3e4",
+  "executedTreeSha": "a8681137d50d2655c59ee5010b3fee87c3994d20",
+  "firstSliceCommit": "375b6e932b36e4875ce8ed02e67fd0948c5784d3",
+  "baseCommit": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+  "sourceState": "every tracked source equal to the implementation commit's when each command below ran; the evidence files and the documents that point at them were in the working tree, uncommitted, and are not inputs of any command",
+  "slice": "V05-06 baseline: performance baseline of a HUD panel swap on the pointer spike's scene, extending the GF-30 harness (package P6)",
+  "criterion": "baseline: the headless baseline and its proposed limits are pinned; the frame time of a presented window is PENDING. turno, soak and congelado stay open",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "hermes": "250829098.0.17",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (windowed lane, not presented)"
+    ],
+    "display": "macOS",
+    "renderer": "gl_compatibility",
+    "adapter": "Apple M3 Pro",
+    "vsyncReadBack": "enabled",
+    "refreshRateReadBack": 120,
+    "window": [
+      800,
+      600
+    ],
+    "screenScale": 2
+  },
+  "loadAverage": [
+    {
+      "command": "npm run test:frontier-baseline",
+      "before": "{ 7.18 5.75 5.54 }",
+      "after": "{ 5.36 5.65 5.53 }",
+      "seconds": 98.4
+    },
+    {
+      "command": "node scripts/frontier-baseline-sabotage.mjs",
+      "before": "{ 7.61 6.18 5.73 }",
+      "after": "{ 4.16 5.06 5.32 }",
+      "seconds": 201.4,
+      "note": "its last step is a run of the genuine source, whose two processes are the headless tables of this record"
+    }
+  ],
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:frontier-baseline step and the native-frontier-baseline artifact of .github/workflows/contracts.yml have not run on hosted CI yet. The windowed lane never runs there. Everything below is local macOS arm64 evidence."
+  },
+  "previousHost": {
+    "status": "not applicable",
+    "reason": "the slice changes no C++: there is no host to compare it with; the four retained sabotages are the control"
+  },
+  "hosts": {
+    "nativeHostSha256": "c78aadd3289968d2e5b137bdd3de679baf18cf07bad58a5fa387083dd076758f",
+    "note": "the host of main as built by npm run setup in this worktree; the slice does not change it"
+  },
+  "commands": {
+    "order": [
+      "npm run test:frontier-baseline",
+      "node scripts/frontier-baseline-sabotage.mjs",
+      "caffeinate -d node scripts/frontier-baseline-graphics.mjs"
+    ],
+    "headless": "npm run test:frontier-baseline (node --test tests/frontier-baseline-native.test.mjs): the probe in two Godot processes, the replay, the report-level negatives",
+    "sabotage": "node scripts/frontier-baseline-sabotage.mjs: four variants, the sources restored byte for byte, and a last run of the genuine source",
+    "windowed": "caffeinate -d node scripts/frontier-baseline-graphics.mjs: exit code 3 (not presented), see windowedLane",
+    "replay": "node tests/frontier-baseline-native.test.mjs --replay=build/frontier-baseline-current-report.json"
+  },
+  "headless": {
+    "suite": "1/1 subtests passed",
+    "processes": 2,
+    "checksPerProcess": [
+      19,
+      19
+    ],
+    "judgedChecks": 18,
+    "allCurrentAssertionsPassed": [
+      true,
+      true
+    ],
+    "swapsPerProcess": 384,
+    "steadySwapsPerProcess": 360,
+    "swapsPerOrderedPairSteady": 30,
+    "warmupRounds": 2,
+    "tour": [
+      "empty",
+      "units",
+      "empty",
+      "city",
+      "empty",
+      "research",
+      "units",
+      "city",
+      "research",
+      "city",
+      "units",
+      "research",
+      "empty"
+    ],
+    "panels": [
+      "units",
+      "city",
+      "research",
+      "empty"
+    ],
+    "nativeNodes": {
+      "units": 50,
+      "city": 75,
+      "research": 100,
+      "empty": 0
+    },
+    "baseNativeNodes": 12,
+    "exactInvariants": [
+      "SceneTree, node monitor, host native views and Surface hold the base plus the new panel's nodes after every swap, and no orphan beyond the base's",
+      "every swap creates the new panel's nodes and deletes the old one's (host counters, Surface counters, application snapshot around the click)",
+      "when the tree holds the new panel the Surface's snapshot holds its last node and no other panel's root",
+      "every click swaps exactly once and no event of it reaches the Godot world",
+      "every round ends at the base; every reading of Hermes' heap follows a forced collection",
+      "the live heap at rest of the last five steady rounds is within 2048 bytes of the first five"
+    ],
+    "sameExactRowsInEveryProcess": true,
+    "latencyFramesAfterTheFlush": "0 in every steady swap of both processes (720 of 720)",
+    "heapAtRest": [
+      {
+        "steadyRounds": 30,
+        "firstFloor": 2032000,
+        "lastFloor": 2032000,
+        "growth": 0,
+        "firstSteady": 2032000,
+        "last": 2032000,
+        "lastMinusFirst": 0,
+        "highestAboveFloor": 0,
+        "largestStep": 0,
+        "roundsAboveFloor": 0
+      },
+      {
+        "steadyRounds": 30,
+        "firstFloor": 2032000,
+        "lastFloor": 2032000,
+        "growth": 0,
+        "firstSteady": 2032000,
+        "last": 2032000,
+        "lastMinusFirst": 0,
+        "highestAboveFloor": 0,
+        "largestStep": 0,
+        "roundsAboveFloor": 0
+      }
+    ],
+    "hostWindow": [
+      {
+        "window": 128,
+        "pump": {
+          "count": 7362,
+          "p50Ms": 0.012416,
+          "p95Ms": 0.767875,
+          "p99Ms": 10.28675,
+          "maxMs": 28.844083
+        },
+        "js": {
+          "count": 7362,
+          "p50Ms": 0.000499,
+          "p95Ms": 0.746749,
+          "p99Ms": 6.272792,
+          "maxMs": 24.75075
+        },
+        "mount": {
+          "count": 385,
+          "p50Ms": 2.100333,
+          "p95Ms": 3.481709,
+          "p99Ms": 3.8675,
+          "maxMs": 24.276292
+        },
+        "layout": {
+          "count": 385,
+          "p50Ms": 0.459584,
+          "p95Ms": 0.72025,
+          "p99Ms": 0.966542,
+          "maxMs": 3.004334
+        }
+      },
+      {
+        "window": 128,
+        "pump": {
+          "count": 7376,
+          "p50Ms": 0.030292,
+          "p95Ms": 0.389833,
+          "p99Ms": 8.764042,
+          "maxMs": 32.765417
+        },
+        "js": {
+          "count": 7376,
+          "p50Ms": 0.001124,
+          "p95Ms": 0.363708,
+          "p99Ms": 5.118709,
+          "maxMs": 24.737834
+        },
+        "mount": {
+          "count": 385,
+          "p50Ms": 2.004959,
+          "p95Ms": 3.124,
+          "p99Ms": 5.725958,
+          "maxMs": 6.506291
+        },
+        "layout": {
+          "count": 385,
+          "p50Ms": 0.450792,
+          "p95Ms": 0.616833,
+          "p99Ms": 0.863834,
+          "maxMs": 7.5865
+        }
+      }
+    ],
+    "memory": [
+      {
+        "rssKb": {
+          "min": 130992,
+          "max": 192336,
+          "firstSteadyRest": 156304,
+          "lastRest": 132832
+        },
+        "staticBytesPerRound": 369433.2
+      },
+      {
+        "rssKb": {
+          "min": 132192,
+          "max": 191024,
+          "firstSteadyRest": 147056,
+          "lastRest": 133568
+        },
+        "staticBytesPerRound": 369407.7
+      }
+    ],
+    "perOrderedPair": [
+      {
+        "empty>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 5.139,
+            "p95": 8.585,
+            "max": 9.199,
+            "p99": 9.199
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 5.574,
+            "p95": 9.166,
+            "max": 9.852,
+            "p99": 9.852
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.056,
+            "p95": 8.368,
+            "max": 9.001,
+            "p99": 9.001
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.283,
+            "p95": 5.506,
+            "max": 6.077,
+            "p99": 6.077
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.37,
+            "p95": 2.261,
+            "max": 2.294,
+            "p99": 2.294
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.349,
+            "p95": 0.596,
+            "max": 0.635,
+            "p99": 0.635
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 250792,
+            "p95": 250792,
+            "max": 250792,
+            "p99": 250792
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 131264,
+            "max": 158608
+          }
+        },
+        "units>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 1.842,
+            "p95": 2.704,
+            "max": 3.422,
+            "p99": 3.422
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.701,
+            "p95": 4.437,
+            "max": 4.854,
+            "p99": 4.854
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 1.686,
+            "p95": 2.394,
+            "max": 3.248,
+            "p99": 3.248
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.213,
+            "p95": 1.751,
+            "max": 2.437,
+            "p99": 2.437
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.363,
+            "p95": 0.569,
+            "max": 0.59,
+            "p99": 0.59
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.018,
+            "p95": 0.029,
+            "max": 0.03,
+            "p99": 0.03
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 80216,
+            "p95": 80216,
+            "max": 80216,
+            "p99": 80216
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 131264,
+            "max": 158608
+          }
+        },
+        "empty>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.104,
+            "p95": 11.622,
+            "max": 16.242,
+            "p99": 16.242
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 7.924,
+            "p95": 13.168,
+            "max": 17.321,
+            "p99": 17.321
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 6.984,
+            "p95": 11.731,
+            "max": 17.725,
+            "p99": 17.725
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.399,
+            "p95": 7.473,
+            "max": 12.68,
+            "p99": 12.68
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.116,
+            "p95": 3.38,
+            "max": 4.418,
+            "p99": 4.418
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.49,
+            "p95": 0.727,
+            "max": 0.78,
+            "p99": 0.78
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 325496,
+            "p95": 325496,
+            "max": 331672,
+            "p99": 331672
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 131296,
+            "max": 158608
+          }
+        },
+        "city>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 2.062,
+            "p95": 3.054,
+            "max": 3.44,
+            "p99": 3.44
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.677,
+            "p95": 5.205,
+            "max": 6.552,
+            "p99": 6.552
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 1.866,
+            "p95": 2.721,
+            "max": 3.107,
+            "p99": 3.107
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.281,
+            "p95": 1.877,
+            "max": 1.992,
+            "p99": 1.992
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.488,
+            "p95": 0.768,
+            "max": 0.943,
+            "p99": 0.943
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.017,
+            "p95": 0.031,
+            "max": 0.036,
+            "p99": 0.036
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 81456,
+            "p95": 81456,
+            "max": 81456,
+            "p99": 81456
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 131104,
+            "max": 158608
+          }
+        },
+        "empty>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 8.722,
+            "p95": 12.429,
+            "max": 12.746,
+            "p99": 12.746
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 9.523,
+            "p95": 13.478,
+            "max": 14.082,
+            "p99": 14.082
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 8.627,
+            "p95": 12.284,
+            "max": 12.763,
+            "p99": 12.763
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.368,
+            "p95": 7.736,
+            "max": 7.91,
+            "p99": 7.91
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.649,
+            "p95": 3.653,
+            "max": 3.974,
+            "p99": 3.974
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.583,
+            "p95": 0.804,
+            "max": 0.819,
+            "p99": 0.819
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 404528,
+            "p95": 404528,
+            "max": 404528,
+            "p99": 404528
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 131344,
+            "max": 158816
+          }
+        },
+        "research>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 6.238,
+            "p95": 15.422,
+            "max": 29.505,
+            "p99": 29.505
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 6.645,
+            "p95": 15.949,
+            "max": 35.706,
+            "p99": 35.706
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.928,
+            "p95": 15.137,
+            "max": 29.616,
+            "p99": 29.616
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.65,
+            "p95": 4.803,
+            "max": 10.528,
+            "p99": 10.528
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.869,
+            "p95": 3.705,
+            "max": 24.276,
+            "p99": 24.276
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.35,
+            "p95": 0.523,
+            "max": 0.807,
+            "p99": 0.807
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 248232,
+            "p95": 248232,
+            "max": 248232,
+            "p99": 248232
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 131088,
+            "max": 158816
+          }
+        },
+        "units>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.498,
+            "p95": 13.192,
+            "max": 16.785,
+            "p99": 16.785
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 8.408,
+            "p95": 14.762,
+            "max": 20.202,
+            "p99": 20.202
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 7.312,
+            "p95": 16.634,
+            "max": 22.622,
+            "p99": 22.622
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.486,
+            "p95": 11.657,
+            "max": 19.067,
+            "p99": 19.067
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.327,
+            "p95": 3.599,
+            "max": 3.698,
+            "p99": 3.698
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.484,
+            "p95": 0.74,
+            "max": 0.967,
+            "p99": 0.967
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 327808,
+            "p95": 327808,
+            "max": 333984,
+            "p99": 333984
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 131104,
+            "max": 158816
+          }
+        },
+        "city>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 9.671,
+            "p95": 13.947,
+            "max": 14.264,
+            "p99": 14.264
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 10.461,
+            "p95": 14.742,
+            "max": 15.591,
+            "p99": 15.591
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 9.408,
+            "p95": 13.403,
+            "max": 13.706,
+            "p99": 13.706
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.595,
+            "p95": 7.712,
+            "max": 9.861,
+            "p99": 9.861
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 3.11,
+            "p95": 4.282,
+            "max": 4.955,
+            "p99": 4.955
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.584,
+            "p95": 0.711,
+            "max": 0.808,
+            "p99": 0.808
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 406080,
+            "p95": 406080,
+            "max": 406080,
+            "p99": 406080
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 131152,
+            "max": 158928
+          }
+        },
+        "research>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.968,
+            "p95": 9.847,
+            "max": 11.193,
+            "p99": 11.193
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 8.856,
+            "p95": 10.914,
+            "max": 12.354,
+            "p99": 12.354
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 7.7,
+            "p95": 9.534,
+            "max": 10.774,
+            "p99": 10.774
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.679,
+            "p95": 5.864,
+            "max": 7.126,
+            "p99": 7.126
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.507,
+            "p95": 2.963,
+            "max": 3.054,
+            "p99": 3.054
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.472,
+            "p95": 0.629,
+            "max": 0.64,
+            "p99": 0.64
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 327808,
+            "p95": 327808,
+            "max": 327808,
+            "p99": 327808
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 131152,
+            "max": 158560
+          }
+        },
+        "city>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 5.808,
+            "p95": 11.471,
+            "max": 11.864,
+            "p99": 11.864
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 6.188,
+            "p95": 11.974,
+            "max": 14.568,
+            "p99": 14.568
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.547,
+            "p95": 10.755,
+            "max": 11.664,
+            "p99": 11.664
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.419,
+            "p95": 5.522,
+            "max": 7.637,
+            "p99": 7.637
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.686,
+            "p95": 2.574,
+            "max": 5.131,
+            "p99": 5.131
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.334,
+            "p95": 0.445,
+            "max": 0.859,
+            "p99": 0.859
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 249024,
+            "p95": 249024,
+            "max": 249024,
+            "p99": 249024
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 130992,
+            "max": 158560
+          }
+        },
+        "units>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 9.061,
+            "p95": 12.331,
+            "max": 22.739,
+            "p99": 22.739
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 9.878,
+            "p95": 13.396,
+            "max": 24.945,
+            "p99": 24.945
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 8.863,
+            "p95": 12.158,
+            "max": 22.693,
+            "p99": 22.693
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.36,
+            "p95": 7.668,
+            "max": 12.979,
+            "p99": 12.979
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.907,
+            "p95": 3.719,
+            "max": 8.123,
+            "p99": 8.123
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.566,
+            "p95": 0.732,
+            "max": 1.379,
+            "p99": 1.379
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 406072,
+            "p95": 406072,
+            "max": 412320,
+            "p99": 412320
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 131264,
+            "max": 158608
+          }
+        },
+        "research>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 2.381,
+            "p95": 3.609,
+            "max": 4.818,
+            "p99": 4.818
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.926,
+            "p95": 4.984,
+            "max": 5.553,
+            "p99": 5.553
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 2.116,
+            "p95": 3.189,
+            "max": 4.244,
+            "p99": 4.244
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.4,
+            "p95": 1.991,
+            "max": 2.946,
+            "p99": 2.946
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.62,
+            "p95": 1.08,
+            "max": 1.132,
+            "p99": 1.132
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.017,
+            "p95": 0.028,
+            "max": 0.031,
+            "p99": 0.031
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 82656,
+            "p95": 82656,
+            "max": 82656,
+            "p99": 82656
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 131264,
+            "max": 158608
+          }
+        }
+      },
+      {
+        "empty>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 5.337,
+            "p95": 9.136,
+            "max": 10.196,
+            "p99": 10.196
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 5.822,
+            "p95": 9.82,
+            "max": 10.969,
+            "p99": 10.969
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.267,
+            "p95": 8.942,
+            "max": 9.997,
+            "p99": 9.997
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.412,
+            "p95": 6.073,
+            "max": 6.784,
+            "p99": 6.784
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.388,
+            "p95": 2.223,
+            "max": 2.498,
+            "p99": 2.498
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.362,
+            "p95": 0.573,
+            "max": 0.622,
+            "p99": 0.622
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 250792,
+            "p95": 250792,
+            "max": 250792,
+            "p99": 250792
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 161424
+          }
+        },
+        "units>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 1.787,
+            "p95": 2.54,
+            "max": 2.624,
+            "p99": 2.624
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.496,
+            "p95": 5.779,
+            "max": 6.545,
+            "p99": 6.545
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 1.635,
+            "p95": 2.209,
+            "max": 2.368,
+            "p99": 2.368
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.208,
+            "p95": 1.642,
+            "max": 1.753,
+            "p99": 1.753
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.336,
+            "p95": 0.522,
+            "max": 0.652,
+            "p99": 0.652
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.018,
+            "p95": 0.027,
+            "max": 0.028,
+            "p99": 0.028
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 80216,
+            "p95": 80216,
+            "max": 80216,
+            "p99": 80216
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 153536
+          }
+        },
+        "empty>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.049,
+            "p95": 10.404,
+            "max": 11.368,
+            "p99": 11.368
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 7.92,
+            "p95": 11.796,
+            "max": 12.835,
+            "p99": 12.835
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 6.972,
+            "p95": 10.232,
+            "max": 11.395,
+            "p99": 11.395
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.372,
+            "p95": 6.612,
+            "max": 7.425,
+            "p99": 7.425
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.058,
+            "p95": 3.174,
+            "max": 3.178,
+            "p99": 3.178
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.48,
+            "p95": 0.729,
+            "max": 0.883,
+            "p99": 0.883
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 325496,
+            "p95": 325496,
+            "max": 325496,
+            "p99": 325496
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 132576,
+            "max": 151760
+          }
+        },
+        "city>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 2.057,
+            "p95": 3.424,
+            "max": 3.765,
+            "p99": 3.765
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.586,
+            "p95": 4.04,
+            "max": 4.311,
+            "p99": 4.311
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 1.829,
+            "p95": 2.889,
+            "max": 3.013,
+            "p99": 3.013
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.274,
+            "p95": 2.084,
+            "max": 2.307,
+            "p99": 2.307
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.481,
+            "p95": 0.771,
+            "max": 0.808,
+            "p99": 0.808
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.018,
+            "p95": 0.03,
+            "max": 0.034,
+            "p99": 0.034
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 81456,
+            "p95": 81456,
+            "max": 81456,
+            "p99": 81456
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 132256,
+            "max": 151760
+          }
+        },
+        "empty>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 8.693,
+            "p95": 12.309,
+            "max": 36.543,
+            "p99": 36.543
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 9.534,
+            "p95": 13.4,
+            "max": 38.58,
+            "p99": 38.58
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 8.627,
+            "p95": 12.277,
+            "max": 33.253,
+            "p99": 33.253
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.309,
+            "p95": 7.782,
+            "max": 25.271,
+            "p99": 25.271
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.653,
+            "p95": 5.726,
+            "max": 6.184,
+            "p99": 6.184
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.597,
+            "p95": 1.034,
+            "max": 1.581,
+            "p99": 1.581
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 404528,
+            "p95": 404528,
+            "max": 410776,
+            "p99": 410776
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 132512,
+            "max": 151968
+          }
+        },
+        "research>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 6.18,
+            "p95": 9.268,
+            "max": 17.089,
+            "p99": 17.089
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 6.63,
+            "p95": 10.481,
+            "max": 18.258,
+            "p99": 18.258
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.916,
+            "p95": 8.634,
+            "max": 16.785,
+            "p99": 16.785
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.598,
+            "p95": 6.255,
+            "max": 10.127,
+            "p99": 10.127
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.879,
+            "p95": 2.929,
+            "max": 5.758,
+            "p99": 5.758
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.358,
+            "p95": 0.557,
+            "max": 0.774,
+            "p99": 0.774
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 248232,
+            "p95": 248232,
+            "max": 254480,
+            "p99": 254480
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 132480,
+            "max": 152032
+          }
+        },
+        "units>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.398,
+            "p95": 10.641,
+            "max": 17.35,
+            "p99": 17.35
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 8.209,
+            "p95": 11.598,
+            "max": 20.507,
+            "p99": 20.507
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 7.266,
+            "p95": 10.352,
+            "max": 17.307,
+            "p99": 17.307
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.466,
+            "p95": 6.737,
+            "max": 11.011,
+            "p99": 11.011
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.225,
+            "p95": 3.001,
+            "max": 4.935,
+            "p99": 4.935
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.472,
+            "p95": 0.694,
+            "max": 1.202,
+            "p99": 1.202
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 327808,
+            "p95": 333984,
+            "max": 333984,
+            "p99": 333984
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 132464,
+            "max": 152032
+          }
+        },
+        "city>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 9.397,
+            "p95": 14.749,
+            "max": 17.364,
+            "p99": 17.364
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 10.199,
+            "p95": 16.106,
+            "max": 18.368,
+            "p99": 18.368
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 9.18,
+            "p95": 14.503,
+            "max": 16.987,
+            "p99": 16.987
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.553,
+            "p95": 8.845,
+            "max": 11.414,
+            "p99": 11.414
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.969,
+            "p95": 4.675,
+            "max": 6.506,
+            "p99": 6.506
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.574,
+            "p95": 0.864,
+            "max": 0.956,
+            "p99": 0.956
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 406080,
+            "p95": 406080,
+            "max": 409024,
+            "p99": 409024
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 152144
+          }
+        },
+        "research>city": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 7.877,
+            "p95": 10.02,
+            "max": 12.779,
+            "p99": 12.779
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 8.742,
+            "p95": 10.98,
+            "max": 13.685,
+            "p99": 13.685
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 7.604,
+            "p95": 9.612,
+            "max": 12.397,
+            "p99": 12.397
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 4.602,
+            "p95": 6.025,
+            "max": 9.117,
+            "p99": 9.117
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.445,
+            "p95": 3.096,
+            "max": 3.12,
+            "p99": 3.12
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.471,
+            "p95": 0.576,
+            "max": 0.622,
+            "p99": 0.622
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 327808,
+            "p95": 327808,
+            "max": 333984,
+            "p99": 333984
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 152144
+          }
+        },
+        "city>units": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 5.893,
+            "p95": 7.302,
+            "max": 8.471,
+            "p99": 8.471
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 6.317,
+            "p95": 7.758,
+            "max": 8.965,
+            "p99": 8.965
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 5.626,
+            "p95": 6.946,
+            "max": 8.085,
+            "p99": 8.085
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 3.512,
+            "p95": 4.354,
+            "max": 4.381,
+            "p99": 4.381
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 1.69,
+            "p95": 2.122,
+            "max": 3.517,
+            "p99": 3.517
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.339,
+            "p95": 0.416,
+            "max": 0.431,
+            "p99": 0.431
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 249024,
+            "p95": 249024,
+            "max": 249024,
+            "p99": 249024
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 152144
+          }
+        },
+        "units>research": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 9.255,
+            "p95": 12.118,
+            "max": 12.422,
+            "p99": 12.422
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 10.1,
+            "p95": 13.077,
+            "max": 13.389,
+            "p99": 13.389
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 9.06,
+            "p95": 11.878,
+            "max": 12.096,
+            "p99": 12.096
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 5.473,
+            "p95": 7.418,
+            "max": 7.762,
+            "p99": 7.762
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 2.841,
+            "p95": 3.686,
+            "max": 4.048,
+            "p99": 4.048
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.587,
+            "p95": 0.724,
+            "max": 0.774,
+            "p99": 0.774
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 406072,
+            "p95": 406072,
+            "max": 406072,
+            "p99": 406072
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 132896,
+            "max": 151760
+          }
+        },
+        "research>empty": {
+          "swaps": 30,
+          "latencyFrames": {
+            "samples": 30,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 30,
+            "p50": 2.432,
+            "p95": 3.445,
+            "max": 3.647,
+            "p99": 3.647
+          },
+          "swapFrameMs": {
+            "samples": 30,
+            "p50": 2.684,
+            "p95": 5.925,
+            "max": 6.364,
+            "p99": 6.364
+          },
+          "pumpMs": {
+            "samples": 30,
+            "p50": 2.165,
+            "p95": 2.903,
+            "max": 2.955,
+            "p99": 2.955
+          },
+          "jsMs": {
+            "samples": 30,
+            "p50": 1.432,
+            "p95": 1.806,
+            "max": 1.873,
+            "p99": 1.873
+          },
+          "mountMs": {
+            "samples": 30,
+            "p50": 0.599,
+            "p95": 0.946,
+            "max": 1.403,
+            "p99": 1.403
+          },
+          "layoutMs": {
+            "samples": 30,
+            "p50": 0.017,
+            "p95": 0.025,
+            "max": 0.051,
+            "p99": 0.051
+          },
+          "heapOverBaseBytes": {
+            "samples": 30,
+            "p50": 82656,
+            "p95": 82656,
+            "max": 82656,
+            "p99": 82656
+          },
+          "treeNodes": {
+            "samples": 30,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 132880,
+            "max": 151760
+          }
+        }
+      }
+    ],
+    "byNodesCreated": [
+      {
+        "0": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 2.218,
+            "p95": 3.279,
+            "max": 4.818,
+            "p99": 4.818
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 2.706,
+            "p95": 4.905,
+            "max": 6.552,
+            "p99": 6.552
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 1.957,
+            "p95": 2.877,
+            "max": 4.244,
+            "p99": 4.244
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 1.337,
+            "p95": 1.877,
+            "max": 2.946,
+            "p99": 2.946
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 0.504,
+            "p95": 0.889,
+            "max": 1.132,
+            "p99": 1.132
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.017,
+            "p95": 0.029,
+            "max": 0.036,
+            "p99": 0.036
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 81456,
+            "p95": 82656,
+            "max": 82656,
+            "p99": 82656
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 131104,
+            "max": 158608
+          }
+        },
+        "50": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 5.842,
+            "p95": 9.199,
+            "max": 29.505,
+            "p99": 29.505
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 6.283,
+            "p95": 9.852,
+            "max": 35.706,
+            "p99": 35.706
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 5.579,
+            "p95": 9.001,
+            "max": 29.616,
+            "p99": 29.616
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 3.428,
+            "p95": 5.506,
+            "max": 10.528,
+            "p99": 10.528
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 1.749,
+            "p95": 2.696,
+            "max": 24.276,
+            "p99": 24.276
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.348,
+            "p95": 0.568,
+            "max": 0.859,
+            "p99": 0.859
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 249024,
+            "p95": 250792,
+            "max": 250792,
+            "p99": 250792
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 130992,
+            "max": 158816
+          }
+        },
+        "75": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 7.764,
+            "p95": 11.429,
+            "max": 16.785,
+            "p99": 16.785
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 8.599,
+            "p95": 12.714,
+            "max": 20.202,
+            "p99": 20.202
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 7.51,
+            "p95": 11.119,
+            "max": 22.622,
+            "p99": 22.622
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 4.578,
+            "p95": 7.126,
+            "max": 19.067,
+            "p99": 19.067
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 2.401,
+            "p95": 3.248,
+            "max": 4.418,
+            "p99": 4.418
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.485,
+            "p95": 0.695,
+            "max": 0.967,
+            "p99": 0.967
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 327808,
+            "p95": 327808,
+            "max": 333984,
+            "p99": 333984
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 131104,
+            "max": 158816
+          }
+        },
+        "100": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 9.112,
+            "p95": 12.429,
+            "max": 22.739,
+            "p99": 22.739
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 9.92,
+            "p95": 13.478,
+            "max": 24.945,
+            "p99": 24.945
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 8.981,
+            "p95": 12.284,
+            "max": 22.693,
+            "p99": 22.693
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 5.454,
+            "p95": 7.712,
+            "max": 12.979,
+            "p99": 12.979
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 2.913,
+            "p95": 3.868,
+            "max": 8.123,
+            "p99": 8.123
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.583,
+            "p95": 0.79,
+            "max": 1.379,
+            "p99": 1.379
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 406072,
+            "p95": 406080,
+            "max": 412320,
+            "p99": 412320
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 131152,
+            "max": 158928
+          }
+        }
+      },
+      {
+        "0": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 2.178,
+            "p95": 3.21,
+            "max": 3.765,
+            "p99": 3.765
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 2.586,
+            "p95": 5.491,
+            "max": 6.545,
+            "p99": 6.545
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 1.945,
+            "p95": 2.812,
+            "max": 3.013,
+            "p99": 3.013
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 1.334,
+            "p95": 1.834,
+            "max": 2.307,
+            "p99": 2.307
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 0.495,
+            "p95": 0.856,
+            "max": 1.403,
+            "p99": 1.403
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.018,
+            "p95": 0.028,
+            "max": 0.051,
+            "p99": 0.051
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 81456,
+            "p95": 82656,
+            "max": 82656,
+            "p99": 82656
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 19,
+            "p95": 19,
+            "max": 19,
+            "p99": 19
+          },
+          "rssKb": {
+            "min": 132256,
+            "max": 153536
+          }
+        },
+        "50": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 5.95,
+            "p95": 8.471,
+            "max": 17.089,
+            "p99": 17.089
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 6.386,
+            "p95": 9.748,
+            "max": 18.258,
+            "p99": 18.258
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 5.699,
+            "p95": 8.219,
+            "max": 16.785,
+            "p99": 16.785
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 3.556,
+            "p95": 5.45,
+            "max": 10.127,
+            "p99": 10.127
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 1.727,
+            "p95": 2.498,
+            "max": 5.758,
+            "p99": 5.758
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.349,
+            "p95": 0.557,
+            "max": 0.774,
+            "p99": 0.774
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 249024,
+            "p95": 250792,
+            "max": 254480,
+            "p99": 254480
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 69,
+            "p95": 69,
+            "max": 69,
+            "p99": 69
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 161424
+          }
+        },
+        "75": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 7.58,
+            "p95": 10.404,
+            "max": 17.35,
+            "p99": 17.35
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 8.4,
+            "p95": 11.598,
+            "max": 20.507,
+            "p99": 20.507
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 7.314,
+            "p95": 10.232,
+            "max": 17.307,
+            "p99": 17.307
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 4.509,
+            "p95": 6.612,
+            "max": 11.011,
+            "p99": 11.011
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 2.328,
+            "p95": 3.096,
+            "max": 4.935,
+            "p99": 4.935
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.477,
+            "p95": 0.686,
+            "max": 1.202,
+            "p99": 1.202
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 327808,
+            "p95": 327808,
+            "max": 333984,
+            "p99": 333984
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 94,
+            "p95": 94,
+            "max": 94,
+            "p99": 94
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 152144
+          }
+        },
+        "100": {
+          "swaps": 90,
+          "latencyFrames": {
+            "samples": 90,
+            "p50": 0,
+            "p95": 0,
+            "max": 0,
+            "p99": 0
+          },
+          "flushMs": {
+            "samples": 90,
+            "p50": 9.255,
+            "p95": 12.422,
+            "max": 36.543,
+            "p99": 36.543
+          },
+          "swapFrameMs": {
+            "samples": 90,
+            "p50": 10.1,
+            "p95": 13.4,
+            "max": 38.58,
+            "p99": 38.58
+          },
+          "pumpMs": {
+            "samples": 90,
+            "p50": 9.065,
+            "p95": 12.277,
+            "max": 33.253,
+            "p99": 33.253
+          },
+          "jsMs": {
+            "samples": 90,
+            "p50": 5.485,
+            "p95": 7.762,
+            "max": 25.271,
+            "p99": 25.271
+          },
+          "mountMs": {
+            "samples": 90,
+            "p50": 2.895,
+            "p95": 4.604,
+            "max": 6.506,
+            "p99": 6.506
+          },
+          "layoutMs": {
+            "samples": 90,
+            "p50": 0.591,
+            "p95": 0.834,
+            "max": 1.581,
+            "p99": 1.581
+          },
+          "heapOverBaseBytes": {
+            "samples": 90,
+            "p50": 406072,
+            "p95": 406080,
+            "max": 410776,
+            "p99": 410776
+          },
+          "treeNodes": {
+            "samples": 90,
+            "p50": 119,
+            "p95": 119,
+            "max": 119,
+            "p99": 119
+          },
+          "rssKb": {
+            "min": 132416,
+            "max": 152144
+          }
+        }
+      }
+    ],
+    "cpuPooled": {
+      "0": {
+        "samples": 180,
+        "p50": 2.182,
+        "p95": 3.21,
+        "proposed": 4.5
+      },
+      "50": {
+        "samples": 180,
+        "p50": 5.896,
+        "p95": 8.585,
+        "proposed": 11
+      },
+      "75": {
+        "samples": 180,
+        "p50": 7.705,
+        "p95": 10.641,
+        "proposed": 13.5
+      },
+      "100": {
+        "samples": 180,
+        "p50": 9.215,
+        "p95": 12.422,
+        "proposed": 16
+      }
+    },
+    "bundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+    "hostSha256": "c78aadd3289968d2e5b137bdd3de679baf18cf07bad58a5fa387083dd076758f",
+    "oracle": "independent: derives the sizes from the shapes, the swaps from the tour, the counts from the raw readings and recomputes every recorded percentile from the raw samples; checks the host's series through the GF-30 oracle's verifyReading",
+    "reportLevelNegatives": {
+      "leaked-node": [
+        "swap/Every swap leaves the SceneTree with the base's nodes plus the new panel's, and Godot counts no orphan beyond the base's"
+      ],
+      "wrong-deletes": [
+        "swap/Every swap creates the nodes of the new panel and deletes those of the old one, in the host's counters and in the Surface's"
+      ],
+      "double-press": [
+        "swap/Every click swaps exactly once: one press on the button, one change of state, the new panel shown"
+      ],
+      "world-heard": [
+        "swap/No click of a swap reaches the Godot world"
+      ],
+      "late-panel": [
+        "swap/When the tree holds the new panel, the Surface's snapshot holds its last node and the root of no other panel"
+      ],
+      "no-collection": [
+        "section/Every reading of Hermes' heap follows a forced collection, so that two readings are comparable"
+      ],
+      "heap-grew": [
+        "heap/The live heap at rest of the last 5 steady rounds is within 2048 bytes of the first 5's"
+      ],
+      "aborted": [
+        "swap/Every click shows its panel: the tree holds the nodes of the new panel within a bound of frames after the flush"
+      ]
+    },
+    "reportLevelAccepted": [
+      "heap-blip (a transient of 2,056 bytes in the last round)",
+      "heap-at-limit (a window exactly 2,048 bytes up)"
+    ],
+    "incompleteReportsRefusedWithStatus2": 11
+  },
+  "sabotages": [
+    {
+      "name": "leaky-panel",
+      "file": "tests/frontier-baseline-fixture.jsx",
+      "edits": [
+        {
+          "find": "function Panel({id}) {",
+          "replace": "function Panel({id, hidden}) {"
+        },
+        {
+          "find": "style={{width: 440, flexDirection",
+          "replace": "style={{opacity: hidden ? 0 : 1, width: 440, flexDirection"
+        },
+        {
+          "find": "{panel !== \"empty\" ? <Panel key={panel} id={panel} /> : null}",
+          "replace": "{(globalThis.shownPanels ??= new Set()).add(panel) && [...globalThis.shownPanels].map(id => id === \"empty\" ? null : <Panel key={id} id={id} hidden={id !== panel} />)}"
+        }
+      ],
+      "sourceSha256": "dfddbdecc78e6fd937f9bdc175b9258b467a9ebf3c68c41dd02f29e7b7a11ab3",
+      "rejected": true,
+      "runStatus": 0,
+      "probeFailures": [
+        "swap/Every click shows its panel: the tree holds the nodes of the new panel within a bound of frames after the flush",
+        "swap/Every swap leaves the SceneTree with the base's nodes plus the new panel's, and Godot counts no orphan beyond the base's",
+        "swap/Every swap leaves the host's native views, and the Surface's, at the base's plus the new panel's",
+        "swap/Every swap creates the nodes of the new panel and deletes those of the old one, in the host's counters and in the Surface's",
+        "swap/Every click swaps exactly once: one press on the button, one change of state, the new panel shown",
+        "swap/No click of a swap reaches the Godot world",
+        "swap/When the tree holds the new panel, the Surface's snapshot holds its last node and the root of no other panel",
+        "round/Every round ends back at the base: the SceneTree's nodes, the orphans, the native views and the root count",
+        "heap/The live heap at rest of the last 5 steady rounds is within 2048 bytes of the first 5's"
+      ],
+      "oracleRejection": "A click showed its panel: the run was not cut short"
+    },
+    {
+      "name": "no-gc",
+      "file": "tests/performance-sampler.gd",
+      "edits": [
+        {
+          "find": "  set_flag(COLLECT_META, collecting)\n",
+          "replace": "  set_flag(COLLECT_META, false)\n"
+        }
+      ],
+      "sourceSha256": "96f1b644c92d43829441ffdb85d1bd4c7d8eda6b6c973768f31cc77f5602bcdf",
+      "rejected": true,
+      "runStatus": 0,
+      "probeFailures": [
+        "section/Every reading of Hermes' heap follows a forced collection, so that two readings are comparable"
+      ],
+      "oracleRejection": "base: Hermes' heap is read after a collection"
+    },
+    {
+      "name": "world-leak",
+      "file": "tests/frontier-baseline-fixture.jsx",
+      "edits": [
+        {
+          "find": "testID={`tab-${id}`} ",
+          "replace": "testID={`tab-${id}`} pointerEvents=\"none\" "
+        }
+      ],
+      "sourceSha256": "7d7ad0b86995056f68c340d6d77e7d7c68bb888ad3a0bafb769e28a8521666fe",
+      "rejected": true,
+      "runStatus": 0,
+      "probeFailures": [
+        "swap/Every click shows its panel: the tree holds the nodes of the new panel within a bound of frames after the flush",
+        "swap/Every swap leaves the SceneTree with the base's nodes plus the new panel's, and Godot counts no orphan beyond the base's",
+        "swap/Every swap leaves the host's native views, and the Surface's, at the base's plus the new panel's",
+        "swap/Every swap creates the nodes of the new panel and deletes those of the old one, in the host's counters and in the Surface's",
+        "swap/Every click swaps exactly once: one press on the button, one change of state, the new panel shown",
+        "swap/No click of a swap reaches the Godot world",
+        "swap/When the tree holds the new panel, the Surface's snapshot holds its last node and the root of no other panel",
+        "round/Every round ends back at the base: the SceneTree's nodes, the orphans, the native views and the root count",
+        "heap/The live heap at rest of the last 5 steady rounds is within 2048 bytes of the first 5's"
+      ],
+      "oracleRejection": "A click showed its panel: the run was not cut short"
+    },
+    {
+      "name": "no-key",
+      "file": "tests/frontier-baseline-fixture.jsx",
+      "edits": [
+        {
+          "find": "<Panel key={panel} id={panel} />",
+          "replace": "<Panel id={panel} />"
+        }
+      ],
+      "sourceSha256": "52e6bb7467906d7ea9e86531382d7bfab3afb5d2dd58ed99b62f9e322193ba82",
+      "rejected": true,
+      "runStatus": 0,
+      "probeFailures": [
+        "swap/Every swap creates the nodes of the new panel and deletes those of the old one, in the host's counters and in the Surface's"
+      ],
+      "oracleRejection": "swap 5 (research to units): the host created the 50 nodes of the new panel"
+    }
+  ],
+  "sabotageSources": {
+    "genuine": {
+      "tests/frontier-baseline-fixture.jsx": "9e237dd77b91a7b7720c5c37fbc5fa9ddaaa29b60be7eee09de9563703131022",
+      "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+    },
+    "restoredEqualsGenuine": true
+  },
+  "findings": [
+    "The host mounts a swap's panel inside the flush that delivers the click: 0 frames after the flush in every steady swap of the headless lane.",
+    "A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 at p95 in the headless loop (pooled over the two processes), more than one 120 Hz period (8.33 ms); earlier development runs on a more loaded machine gave 11 to 12 ms at the median (not pinned).",
+    "A View hidden with display none adds no node to the SceneTree, the host or the Surface (the first leaky-panel sabotage used it and was not rejected); the retained variant uses opacity 0.",
+    "A reading of Hermes' heap can carry a transient allocation of 2,056 bytes (one to three consecutive rounds), which is why the heap at rest is judged on the floor of windows of five rounds.",
+    "A window can draw, with frame_post_draw firing and the vsync mode reading enabled, while no display paces the loop (an idle frame of 0.7 ms): the windowed lane now refuses such runs."
+  ],
+  "windowedLane": {
+    "presented": false,
+    "status": "not presented: unpaced: the display is not presenting (slot 1, 3 attempts)",
+    "exitCode": 3,
+    "explanation": "The lane ran while the Mac had been idle for about 96 minutes (HIDIdleTime) and the display was off or showing the lock screen. Every attempt drew (frame_post_draw fired after 99.9% of the process frames) and the vsync mode read back enabled at 120 Hz, but no display paced the loop: an idle frame took 0.7 ms at the median against the 4.167 ms (half of the 120 Hz period) that the validity rule requires. The three attempts of slot 1 were rejected as unpaced, the lane stopped, and the receipt carries no frame-time statistic.",
+    "command": "Godot --path <checkout> --windowed --script res://tests/frontier-baseline-graphics-probe.gd -- --run=<n>",
+    "protocol": {
+      "runs": 5,
+      "maxAttempts": 3,
+      "warmupRounds": 2,
+      "rounds": 30,
+      "swapsPerPair": 30,
+      "idleFrames": 600,
+      "viewport": [
+        800,
+        600
+      ],
+      "percentiles": "nearest rank over the raw intervals of one run",
+      "acrossRuns": "median and interquartile range (nearest-rank quartiles) of each run's statistic",
+      "validity": "a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      "discarded": "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"
+    },
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "provenance": {
+      "adapter": "Apple M3 Pro",
+      "architecture": "arm64",
+      "displayServer": "macOS",
+      "godot": "4.7.2-stable (official)",
+      "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hermes": "250829098.0.17",
+      "hermesProperties": {
+        "Build": "Release",
+        "Builtins Frozen": false,
+        "Bytecode Version": 98,
+        "CommonJS Modules": "None",
+        "Debugger Enabled": false,
+        "GC": "hades (concurrent)",
+        "OSS Release Version": "250829098.0.17",
+        "Static Hermes": true,
+        "VM Experiments": 0
+      },
+      "maxFps": 0,
+      "os": "macOS",
+      "processor": "Apple M3 Pro",
+      "processorCount": 11,
+      "refreshRate": 120,
+      "renderingDriver": "opengl3",
+      "renderingMethod": "gl_compatibility",
+      "screenScale": 2,
+      "screenSize": [
+        3024,
+        1964
+      ],
+      "vsyncMode": 1,
+      "vsyncModeName": "enabled",
+      "windowSize": [
+        800,
+        600
+      ]
+    },
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": false,
+        "drew": true,
+        "paced": false,
+        "reason": "unpaced: the display is not presenting",
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 5071,
+        "drawnFrames": 5067,
+        "idleMedianMs": 0.704,
+        "idleMeanMs": 0.725,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.17 5.22 5.37 }",
+          "after": "{ 5.77 5.35 5.41 }",
+          "seconds": 13.5
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 2,
+        "valid": false,
+        "drew": true,
+        "paced": false,
+        "reason": "unpaced: the display is not presenting",
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 5051,
+        "drawnFrames": 5047,
+        "idleMedianMs": 0.708,
+        "idleMeanMs": 0.705,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.77 5.35 5.41 }",
+          "after": "{ 5.79 5.37 5.42 }",
+          "seconds": 13.4
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 3,
+        "valid": false,
+        "drew": true,
+        "paced": false,
+        "reason": "unpaced: the display is not presenting",
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 5061,
+        "drawnFrames": 5057,
+        "idleMedianMs": 0.704,
+        "idleMeanMs": 0.719,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.79 5.37 5.42 }",
+          "after": "{ 6.68 5.60 5.50 }",
+          "seconds": 13.2
+        }
+      }
+    ],
+    "rejectedAttempts": 3,
+    "acceptedRuns": 0,
+    "summary": null,
+    "rawFile": {
+      "path": "docs/evidence/frontier-baseline/windowed-raw.json",
+      "sha256": "2673a645ba67d291f1f254860fcc6422cf1723c116f4bb166be6a1e4df4c99b0",
+      "bytes": 65961,
+      "content": "the raw intervals of the three rejected attempts, which are not frame times"
+    },
+    "captureRun": {
+      "checks": [
+        {
+          "name": "scene/The HUD mounts over the world on the native renderer",
+          "passed": true
+        },
+        {
+          "name": "display/The display server is not headless: macOS",
+          "passed": true
+        },
+        {
+          "name": "scene/The Surface takes no pointer (IGNORE)",
+          "passed": true
+        },
+        {
+          "name": "vsync/The vsync mode and the refresh rate of the screen are read back from the window",
+          "passed": true
+        },
+        {
+          "name": "render/The frame as drawn shows the bar over the map and each panel where the HUD puts it, and the base again after them",
+          "passed": true
+        }
+      ],
+      "note": "a run that measures nothing and does not depend on a display pacing the loop"
+    },
+    "captures": [
+      {
+        "panel": "empty",
+        "file": "docs/evidence/frontier-baseline/frontier-baseline-panel-empty.png",
+        "sha256": "98fff17bbe255c63b402a7b8281dd5c5e7cd77d68ce9d70319a6bd2e2f39b69c",
+        "bytes": 7493
+      },
+      {
+        "panel": "units",
+        "file": "docs/evidence/frontier-baseline/frontier-baseline-panel-units.png",
+        "sha256": "f66f7fbbcda640821b70e610e30ef0e71e1050f40dddbd3c70476e50d32b871e",
+        "bytes": 17281
+      },
+      {
+        "panel": "city",
+        "file": "docs/evidence/frontier-baseline/frontier-baseline-panel-city.png",
+        "sha256": "dfb7ab35063f59c60d73d215a4dc5985f176e8709b9d8bf994e063ea50b4a9b4",
+        "bytes": 27858
+      },
+      {
+        "panel": "research",
+        "file": "docs/evidence/frontier-baseline/frontier-baseline-panel-research.png",
+        "sha256": "a8e204124ba1fb10751f55124fb4552b1a669e16b7b0e3cfd80c80eb4462f6e8",
+        "bytes": 30722
+      }
+    ],
+    "earlierPresentedExecution": {
+      "pinned": false,
+      "idleFrameP50Ms": 7.8,
+      "swapFrameMs": {
+        "p50": 12.2,
+        "p95": 18.6,
+        "p99": 25.5
+      },
+      "note": "medians of five runs of an earlier execution of the same code while the display presented the window; its raw receipt was overwritten before it was kept, so this record does not pin it. An unpinned reference, not a result."
+    },
+    "nativeHostSha256": "c78aadd3289968d2e5b137bdd3de679baf18cf07bad58a5fa387083dd076758f",
+    "bundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+    "limitations": [
+      "Godot macOS windowed run with synthetic events through Input.parse_input_event; no hardware pointer or touch screen, no mobile export.",
+      "One machine, one display and one vsync mode (the project default, read back from the window); a frame time with the vsync disabled was not measured.",
+      "The intervals are of process frames. With the vsync on they come in clusters (the engine runs ahead of the display and blocks on it), so a missed frame is not read from them; missed frames with the vsync on need presentation timestamps this engine does not give."
+    ]
+  },
+  "budgetProposal": {
+    "status": "PROPOSTA: not frozen. The freeze is the `congelado` criterion, a separate and single act after this baseline and before the first device session.",
+    "rule": "CPU time of a swap: the p95 pooled over the two headless processes x1.25, rounded up to 0.5 ms; heap held by a panel: the p50 x1.25 rounded up to 10,000 bytes; frame times of a presented window: PENDING, to be derived from five presented runs by the median plus three interquartile ranges, rounded up to 0.5 ms",
+    "rows": [
+      {
+        "metric": "native nodes after a swap, creations and deletions, one swap per click, no click reaches the map, a round ends at the base",
+        "lane": "headless",
+        "baseline": "exact",
+        "proposed": "exact",
+        "gate": "judged now"
+      },
+      {
+        "metric": "live heap at rest, last five steady rounds against the first five",
+        "lane": "headless",
+        "baseline": "0 bytes",
+        "proposed": "at most 2048 bytes",
+        "gate": "judged now (the GF-30 limit, imported)"
+      },
+      {
+        "metric": "frames from the click to the panel",
+        "lane": "headless",
+        "baseline": "0 in 720 of 720 steady swaps",
+        "proposed": "at most 1",
+        "gate": "proposal"
+      },
+      {
+        "metric": "CPU time of the swap (injection and flush), p95, by nodes created 0 / 50 / 75 / 100",
+        "lane": "headless, 2 processes x 30 swaps for each of the pairs",
+        "baselineMs": [
+          3.21,
+          8.585,
+          10.641,
+          12.422
+        ],
+        "baselineP50Ms": [
+          2.182,
+          5.896,
+          7.705,
+          9.215
+        ],
+        "proposedMs": [
+          4.5,
+          11,
+          13.5,
+          16
+        ],
+        "gate": "proposal"
+      },
+      {
+        "metric": "heap a mounted panel holds over the base, 50 / 75 / 100 nodes",
+        "lane": "headless",
+        "baselineBytes": [
+          249024,
+          327808,
+          406072
+        ],
+        "proposedBytes": [
+          320000,
+          410000,
+          510000
+        ],
+        "gate": "proposal"
+      },
+      {
+        "metric": "swap frame p95 and p99, idle frame p99 and swap frames of 100 ms or more, of a window the display presents (vsync on, 120 Hz)",
+        "lane": "windowed",
+        "baseline": "PENDING: no windowed attempt was presented by the display",
+        "proposed": "PENDING",
+        "gate": "to be derived from five presented runs"
+      },
+      {
+        "metric": "resident memory and Godot static memory per round",
+        "lane": "headless",
+        "baseline": "recorded",
+        "proposed": "none",
+        "gate": "recorded, never a limit"
+      }
+    ]
+  },
+  "sourcePins": {
+    "tests/frontier-baseline-fixture.jsx": "9e237dd77b91a7b7720c5c37fbc5fa9ddaaa29b60be7eee09de9563703131022",
+    "tests/frontier-baseline-cases.mjs": "376cf574f8c958b4a869ae0fb94d277bcbfeb22bd75efdcf3726a37134b90b52",
+    "tests/frontier-baseline-probe.gd": "41172643b427c40176d245f96e0fd5941eac0c87f46b7639d7514b7c2701afcd",
+    "tests/frontier-baseline-graphics-probe.gd": "44e2e9b982797a233e4fad3b21f271b877c4dd50585365c36046521b4e7a67ab",
+    "tests/frontier-baseline-swap.gd": "31c9e6ce27f7deceaaf3266566b719d315314af0c1f0129b9d8755a88d3aedff",
+    "tests/frontier-baseline-oracle.mjs": "feb2c55dd302934973790a3cfd7bbef6ffa6b8898093d69bae096facb0500330",
+    "tests/frontier-baseline-native.test.mjs": "f60cfd01286b3af464357106be6ccb291cd751c9d53d6bd807945bf649ef6d92",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/performance-cases.mjs": "05a3f24b9e295bc9cbb24a34a08901e2bb3a97949b3dbd4128533d76bc654105",
+    "tests/performance-oracle.mjs": "107a4fd97be118c2a4b8f15979e4c5301b6e80317a19ca84e7f84b9c1933e3e1",
+    "tests/world-input-driver.gd": "8c79ec404cbd44b94331539e8b09bdcb5e0f2669ceda8875ecc5ffebcebf8739",
+    "examples/frontier-baseline/scene.tscn": "30846917109fb823f4d83dcc609e8deedf4d9d7ff4177ed28c16126ddb82d773",
+    "examples/world-input/world.gd": "39ca22b1c06a092661f3da7a8456ab5eaf1862d511dff0fa4fdb1826b7b4addc",
+    "examples/world-input/world.tscn": "1d3201d629de93b098fa9006b698218d106ad2652cf75420cf26ec296a401a02",
+    "scripts/frontier-baseline-bundle.mjs": "0745c598db17b9883570650f18e10ecd3aa934068bf0b6e676e891bfaaa6bde6",
+    "scripts/frontier-baseline-graphics.mjs": "296454e2c731ec1d861b77f2922f28e1de405f88b92b432cecb952c96fcbabdb",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "src/react-native-platform.jsx": "f7720d6ce52cfbfdb60439ec9631f94dac3681492f93951cc0e4ad516897b776",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/fabric_surface.cpp": "4b6668850029ea1092de4a53f506ea737293730c0cc94bd5734f7dba2cd0ce86",
+    "native/application_runtime.cpp": "58da9fd4f3bc27d72c48a9dd94df5aecce47cf3a485a0278605a78d1420f46e7",
+    "native/application_runtime.h": "8ceb53af9f4265ea1fe01f6945615e74dd01ccbf9580d8cd2799bb576ca70f68",
+    "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+    "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+    "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77",
+    "native/performance_metrics_test.cpp": "2e7dd0cc2a5ae0e4f152f79e72f027dec1250913b9eb3e9a94e724d4c6a4e670",
+    "native/fabric_application.cpp": "73def9bf38c3bf67a6711264100c150ed406c465744b617b0c08ff83bc73b97b",
+    "native/CMakeLists.txt": "2c9ac84915b2ac83e877f56ab18ed9c05d4f6bd8311b7da2253c9608f00741bf"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/TouchTargetHelper.kt": "36888e9275fd171278aa32acdd17096a53591550aa8c69075e3fc4c9662cd569",
+    "ReactCommon/react/nativemodule/webperformance/NativePerformance.cpp": "ec191f7d8960be06c6d011d8ee5f0ed03719659b2129ef70036bb14ee5830c6b",
+    "ReactCommon/react/renderer/mounting/ShadowTree.cpp": "3eab5654687d9c7932b746170fd1c91464613c33e40bf9faf641a9b2c83c8029",
+    "ReactCommon/react/renderer/mounting/MountingCoordinator.cpp": "650b1f53b85676244bf26c4611447fc1e0fa69d9bbef9de1924f9dddde477e0a",
+    "ReactCommon/react/renderer/telemetry/TransactionTelemetry.cpp": "0870fc5a210050313f7be96eb5176646e73428b4e31b72de78f2eeb88994acfa"
+  },
+  "decisions": [
+    "The swap is measured as a real click through the pointer spike's own injection, preloaded and not copied, on the pointer spike's scene unchanged.",
+    "Exact invariants are judged in headless; durations, memory and the frames a click takes are recorded and never judged.",
+    "The heap at rest is read after 30 idle frames and judged on the floor of windows of five steady rounds against the GF-30 limit (a transient of 2,056 bytes exists).",
+    "Frame time exists only in a windowed lane that a display presents; a run is rejected as unpaced when its idle frame median is under half of the refresh period read back. The lane then ends with presented false, exit code 3 and no frame-time statistic.",
+    "No missed frame is read from process-frame intervals, because with the vsync on they come in clusters."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI is pending and the windowed lane is local only.",
+    "The events are synthetic, delivered through Input.parse_input_event: no hardware pointer, no real touch screen, no iPhone, no mobile export.",
+    "One machine under load from other agents (the load average is recorded before and after every command), one display, one vsync mode (the default, enabled, read back).",
+    "The frame time of a presented window (vsync on, 120 Hz) is PENDING: no windowed attempt was presented by the display, so no frame-time statistic is pinned and the frame-dependent rows of the budget are PENDING. No FPS without a limit is claimed.",
+    "No presentation timestamps: missed frames with the vsync on stay open (the ROADMAP's V05-10 metric).",
+    "The HUD is a fixture of the Frontier panels' shape (V05-05 is open), not the Frontier HUD; panels with images, text inputs, scroll views or animations are not measured.",
+    "The turno, soak and congelado criteria of V05-06 are open; the proposed budget is not frozen.",
+    "Previous-host control: not applicable, the slice changes no C++."
+  ]
+}

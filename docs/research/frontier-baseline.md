@@ -1,8 +1,8 @@
 # The Frontier HUD's performance baseline: what a panel swap costs on macOS
 
 Status: executed isolated macOS validation (arm64) against pinned RN 0.87.1, Hermes 250829098.0.17 and official Godot 4.7.2,
-headless for the exact counts and in a real window (local, not in CI) for the frame time; **the pinned windowed execution ran while the display did not present the window**, so
-its intervals are the CPU cost of a process frame and the presented frame time is pending (see [The windowed baseline](#the-windowed-baseline)). This is the `baseline` criterion of the
+headless for the exact counts and in a real window (local, not in CI) for the frame time; **no windowed attempt was presented by the display**, so the lane ended as not presented
+with no frame-time statistic and the presented frame time is **pending** (see [The windowed baseline](#the-windowed-baseline)). This is the `baseline` criterion of the
 0.5 Frontier milestone's V05-06: a baseline on the pointer spike's scene, with 50 to 100 native nodes per panel swap, extending the
 GF-30 harness, with a **proposed** budget recorded and not frozen. The `turno`, `soak` and `congelado` criteria of V05-06 are open
 (see [What is left](#what-is-left)). The slice changes no C++, so there is no preceding host to run it on; the control is the
@@ -93,44 +93,44 @@ is measured only in the windowed lane.
 
 One run of the suite (2026-10-08), pinned by the [evidence record](../evidence/frontier-baseline/README.md), on an Apple M3 Pro (11 logical cores, 18 GB) with macOS 26.6.2, arm64,
 Godot 4.7.2, Hermes 250829098.0.17, the headless display server and the `opengl3` driver named. The Mac was not idle: other agents' work ran on it, and the system load average
-(1 minute) was 6 to 11 around the headless commands (the evidence record has it before and after every command), so the durations are a baseline of this machine as it was and not a best
+(1 minute) was 4 to 8 around the headless commands (the evidence record has it before and after every command), so the durations are a baseline of this machine as it was and not a best
 case. Per ordered pair of panels, the median (p50) and the 95th percentile (p95) of the 30 steady swaps in each of the two processes ("1 / 2", milliseconds), and the host's accounting
 of process 1's median. "Click to nodes" is the time from the start of the click's injection to the moment the SceneTree holds the new panel; the pump and its phases are the host's own
 accounting of the pumps between the read before the click and the read two frames after the nodes exist.
 
 | Swap | Created | Deleted | Click to nodes p50 (1 / 2) | p95 (1 / 2) | Pump p50 | JS p50 | Mount p50 | Layout p50 | Heap over base p50 (KB) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| empty to units | 50 | 0 | 8.9 / 9.1 | 9.6 / 9.9 | 8.6 | 5.9 | 2.2 | 0.57 | 245 |
-| units to empty | 0 | 50 | 2.7 / 2.7 | 3.0 / 3.2 | 2.4 | 1.8 | 0.5 | 0.03 | 78 |
-| empty to city | 75 | 0 | 10.5 / 10.5 | 11.1 / 14.9 | 10.4 | 6.8 | 2.9 | 0.69 | 318 |
-| city to empty | 0 | 75 | 2.9 / 2.8 | 4.1 / 3.1 | 2.5 | 1.8 | 0.7 | 0.03 | 80 |
-| empty to research | 100 | 0 | 12.8 / 12.8 | 13.4 / 13.6 | 12.7 | 8.1 | 3.6 | 0.82 | 395 |
-| research to empty | 0 | 100 | 3.1 / 3.1 | 3.5 / 3.6 | 2.7 | 1.8 | 0.8 | 0.02 | 81 |
-| units to city | 75 | 50 | 10.4 / 10.4 | 10.8 / 10.6 | 10.1 | 6.3 | 3.0 | 0.63 | 320 |
-| city to units | 50 | 75 | 7.3 / 7.4 | 7.8 / 8.0 | 7.0 | 4.4 | 2.1 | 0.39 | 243 |
-| units to research | 100 | 50 | 12.5 / 12.5 | 13.2 / 13.3 | 12.2 | 7.6 | 3.8 | 0.75 | 397 |
-| research to units | 50 | 100 | 7.8 / 7.7 | 8.3 / 8.2 | 7.3 | 4.5 | 2.3 | 0.43 | 242 |
-| city to research | 100 | 75 | 11.7 / 11.7 | 12.3 / 15.5 | 11.4 | 7.0 | 3.6 | 0.68 | 397 |
-| research to city | 75 | 100 | 10.5 / 10.5 | 12.1 / 10.8 | 10.1 | 6.2 | 3.2 | 0.61 | 320 |
+| empty to units | 50 | 0 | 5.1 / 5.3 | 8.6 / 9.1 | 5.1 | 3.3 | 1.4 | 0.3 | 245 |
+| units to empty | 0 | 50 | 1.8 / 1.8 | 2.7 / 2.5 | 1.7 | 1.2 | 0.4 | 0.0 | 78 |
+| empty to city | 75 | 0 | 7.1 / 7.0 | 11.6 / 10.4 | 7.0 | 4.4 | 2.1 | 0.5 | 318 |
+| city to empty | 0 | 75 | 2.1 / 2.1 | 3.1 / 3.4 | 1.9 | 1.3 | 0.5 | 0.0 | 80 |
+| empty to research | 100 | 0 | 8.7 / 8.7 | 12.4 / 12.3 | 8.6 | 5.4 | 2.6 | 0.6 | 395 |
+| research to empty | 0 | 100 | 2.4 / 2.4 | 3.6 / 3.4 | 2.1 | 1.4 | 0.6 | 0.0 | 81 |
+| units to city | 75 | 50 | 7.5 / 7.4 | 13.2 / 10.6 | 7.3 | 4.5 | 2.3 | 0.5 | 320 |
+| city to units | 50 | 75 | 5.8 / 5.9 | 11.5 / 7.3 | 5.5 | 3.4 | 1.7 | 0.3 | 243 |
+| units to research | 100 | 50 | 9.1 / 9.3 | 12.3 / 12.1 | 8.9 | 5.4 | 2.9 | 0.6 | 397 |
+| research to units | 50 | 100 | 6.2 / 6.2 | 15.4 / 9.3 | 5.9 | 3.6 | 1.9 | 0.3 | 242 |
+| city to research | 100 | 75 | 9.7 / 9.4 | 13.9 / 14.7 | 9.4 | 5.6 | 3.1 | 0.6 | 397 |
+| research to city | 75 | 100 | 8.0 / 7.9 | 9.8 / 10.0 | 7.7 | 4.7 | 2.5 | 0.5 | 320 |
 
 The p95 of 30 samples is the 29th, so it moves with one slow swap. The two processes differ at the median by up to 0.3 ms between pairs. The
 exact counts below are identical in both processes; the durations are close and not identical. What the table says:
 
 - **The panel is there when the click returns.** The host mounts the new panel inside the flush that delivers the click (the pointer event, React's update, the commit
   and the mount all run in it), so the SceneTree holds the new nodes the moment `Input.flush_buffered_events()` returns: **0 frames** after the flush, in every one of
-  the 2,520 steady swaps of the two headless processes and the five windowed runs. "Click to panel in process frames" is 0 here, and its time is the time of that call.
-- **The cost follows the nodes the swap creates**, and deleting is cheap: a swap that only deletes 50 to 100 nodes takes 2.7 to 3.1 ms at the median, and one that creates 50, 75 or 100
-  takes 7.3 to 9.1, 10.4 to 10.5 and 11.7 to 12.8 ms, by pair (over all the swaps that create that many: 7.7 and 7.7, 10.5 and 10.5, 12.1 and 12.4 ms in process 1 and 2; roughly
-  0.09 ms for each node created over a floor of about 3 ms). Of the 8.6 ms of process 1's 50-node create, 5.9 are JavaScript (React's render and
-  commit), 2.2 are the host's mounting of the nodes and 0.57 are Yoga's layout.
-- **A swap that creates 100 nodes costs about 12 ms of CPU, more than one 120 Hz period** (8.33 ms), and fits in one 60 Hz period (16.7 ms) at the median; one that creates 50 is around the
-  120 Hz period at the median (7.3 to 9.1 ms by pair) and over it at the 95th percentile.
+  the 720 steady swaps of the two headless processes. "Click to panel in process frames" is 0 here, and its time is the time of that call.
+- **The cost follows the nodes the swap creates**, and deleting is cheap: a swap that only deletes 50 to 100 nodes takes 1.8 to 2.4 ms at the median, and one that creates 50, 75 or 100
+  takes 5.1 to 6.2, 7.0 to 8.0 and 8.7 to 9.7 ms, by pair (over all the swaps that create that many: 5.8 and 6.0, 7.8 and 7.6, 9.1 and 9.3 ms in process 1 and 2; roughly
+  0.07 ms for each node created over a floor of about 3 ms). Of the 5.1 ms of process 1's 50-node create, 3.3 are JavaScript (React's render and
+  commit), 1.4 are the host's mounting of the nodes and 0.35 are Yoga's layout.
+- **A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 at p95, more than one 120 Hz period** (8.33 ms), and fits in one 60 Hz period (16.7 ms) in both; one that creates 50 is under the
+  120 Hz period at the median (5.1 to 6.2 ms by pair) and over it at p95 (8.6 ms). Development runs of the same code on a more loaded machine gave 11 to 12 ms at the median for the 100-node swap (not pinned): the cost moves with the state of the machine by tens of percent, and the position against 8.33 ms holds.
 - **A mounted panel holds heap and gives it back.** While it is shown, Hermes' live heap is 245, 318 and 395 KB over the base (identical in both processes). Once the panel is gone it is
   78 to 81 KB over the base right after the swap and about 70 KB at rest (2,032,000 bytes against the base's 1,960,448, which the first mounts raised), a floor that does not grow with the
   rounds ([The heap at rest](#the-heap-at-rest)).
-- **The host's own window** of the last 128 pumps of process 1 (percentiles recomputed from the samples by the GF-30 oracle): pump p50 0.008 ms, p95 0.39, p99 10.2, maximum 26.1;
-  mount p50 2.5 ms; layout p50 0.57 ms. Most pumps are idle ones; the swaps are in the tail.
-- The resident memory of the process moved between 149 and 190 MB in the run and Godot's static memory grew 369 KB a round, which is the probe keeping its own
+- **The host's own window** of the last 128 pumps of process 1 (percentiles recomputed from the samples by the GF-30 oracle): pump p50 0.012 ms, p95 0.77, p99 10.3, maximum 28.8;
+  mount p50 2.1 ms; layout p50 0.46 ms. Most pumps are idle ones; the swaps are in the tail.
+- The resident memory of the process moved between 131 and 192 MB in the run and Godot's static memory grew 369 KB a round, which is the probe keeping its own
   13 readings a round. Both are recorded and not judged.
 
 Process 2 had the same exact counts swap by swap and all its checks; the suite compares the two.
@@ -163,7 +163,7 @@ measures what only a window has: the interval between consecutive process frames
    - the window **drew throughout**: a frame was drawn after every steady click and in at least nine of ten frames of the idle window (a window the system does not draw, covered by other
      windows or the display asleep, still runs process frames, but they are not those of a displayed application);
    - the loop was **paced**: the median interval of the idle window is **at least half of the refresh period that the window read back** (4.17 ms at 120 Hz). With the display off or showing
-     the lock screen the window still draws, `frame_post_draw` still fires and the vsync mode still reads `enabled`, but nothing paces the loop and an idle frame takes about 0.5 ms; a
+     the lock screen the window still draws, `frame_post_draw` still fires and the vsync mode still reads `enabled`, but nothing paces the loop and an idle frame takes about 0.5 to 0.7 ms; a
      presented window at 120 Hz idles at about 7.8 ms.
 
    A run that fails either check is **rejected with its reason** ("undrawn: the window did not draw throughout" or "unpaced: the display is not presenting"), kept in the receipt
@@ -175,7 +175,7 @@ measures what only a window has: the interval between consecutive process frames
    rule to the same data. An outlier run stays in and shows in the range. (An earlier execution of this code had a run in which the window drew after 16 of 360 steady clicks, and a
    later one drew throughout with no display pacing it: the pacing check was added after it.)
 8. **The map's own pointer events**: a window on a display also gets the motion of the real pointer, which is the map's whenever it is over the map, so the windowed
-   probe judges the presses, releases and touches that reach the world (none may) and records the other events. The five runs below had none. (An earlier execution had two swaps
+   probe judges the presses, releases and touches that reach the world (none may) and records the other events. (An earlier execution had two swaps
    with two motion events each.)
 
 An interval is of **process frames**, which is what the game's `_process` sees. With the vsync on, the engine runs ahead of the display and blocks on it, and the frames come
@@ -183,60 +183,26 @@ in clusters (the frame-clock note measured about 3 ms and 13 ms apart at 120 Hz 
 showed twice: no "missed frame" is read from these intervals, and the ROADMAP's missed frames with the vsync on stay open, since they need presentation timestamps that Godot does not
 give. The receipt counts, as the final comparison V05-10 asks, the frames above twice the idle median and above 100 ms.
 
-### The windowed baseline
+### The windowed baseline: pending
 
-One execution (2026-10-08, pinned by the evidence record): an Apple M3 Pro (Mac15,6, 11 logical cores, 18 GB), macOS 26.6.2 (25G83), the built-in display ("Color LCD", 1512 x 982 points,
-3024 x 1964 pixels, 120 Hz, scale 2), an 800 x 600 window, Godot 4.7.2 on `gl_compatibility` (adapter "Apple M3 Pro"), **vsync `enabled` and refresh rate 120.0 read back from the window**,
-`Engine.max_fps` 0. The load average (1 minute) was 7.06, 6.28, 5.60, 5.33, 5.67 before the five runs and 5.73 after the last.
+**No frame time is pinned.** The windowed lane ran on the pinned commit with `caffeinate -d` while the Mac had been idle for about 96 minutes (`HIDIdleTime`) and the display was off or
+showing the lock screen. Every attempt drew (`frame_post_draw` fired after 99.9% of the process frames) and the vsync mode read back `enabled` at 120 Hz on the built-in display
+("Color LCD", 1512 x 982 points, 3024 x 1964 pixels, 120 Hz, scale 2; an 800 x 600 window, `gl_compatibility`, adapter "Apple M3 Pro"), but **no display paced the loop**: an idle frame took
+about 0.7 ms against the 4.167 ms (half of the 120 Hz period) that the validity rule of protocol item 7 requires. The three attempts of slot 1 were **rejected as unpaced**, the lane stopped,
+and the receipt says `presented: false`, carries no frame-time statistic and exits with code 3:
 
-> **The condition of this execution: the window drew, but the display did not present it.** The Mac had been idle for about 50 to 70 minutes (`HIDIdleTime`) and the display was off or showing
-> the lock screen. The window **drew** (`frame_post_draw` fired after 99.9% of the process frames) and the vsync mode reads `enabled` at 120 Hz, but **nothing paced the loop**: an idle frame takes
-> **0.56 ms** at the median, about 1,800 frames a second (a bare Godot window checked apart under the same conditions gave 0.5 to 0.7 ms). The intervals below are therefore
-> the **CPU cost of a process frame** (the GL submission included) with no wait for a display and no sleep between frames: **they are not the frame times of a presented window**, and the table must
-> not be read as one. The same goes for "frames above twice the idle median" (360 of 360 swaps: an idle median of 0.56 ms makes any swap exceed it), which is left out of the table.
-> An earlier execution of the same code while the display presented the window had an idle p50 of 7.8 ms (the clusters of about 3 and 13 ms at 120 Hz) and a swap frame p50 of 12.2, p95 of 18.6
-> and p99 of 25.5 ms (medians of five runs), but its raw receipt was overwritten before it was kept, so **the record does not pin it**. The presented frame time is **PENDING**: it needs an awake,
-> unlocked display. The validity rule as first run checked that the window drew and not that a display paced the loop; protocol item 7 now has the pacing check (an idle median of at least
-> half a refresh period), which rejects this execution.
+| Slot | Attempt | Idle median (ms) | Required (ms) | Frames drawn | Reason |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | 1 | 0.704 | 4.167 | 5,067 of 5,071 | unpaced: the display is not presenting |
+| 1 | 2 | 0.708 | 4.167 | 5,047 of 5,051 | unpaced: the display is not presenting |
+| 1 | 3 | 0.704 | 4.167 | 5,057 of 5,061 | unpaced: the display is not presenting |
 
-Milliseconds, per run, from the raw intervals (swap frames above 100 ms: none; events of the real pointer heard by the map: none):
+The raw intervals of the three attempts are kept in the evidence record (`windowed-raw.json`, `rejectedAttempts`) and are **not frame times**: they are the CPU cost of a process frame in a loop no
+display brakes. Nothing of them is a result here. The capture run, which measures nothing, passed.
 
-| Run | Idle p50 | Idle p95 | Idle p99 | Idle max | Swap frame p50 | p95 | p99 | max | Injection p50 / p95 |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | 0.57 | 1.0 | 4.1 | 4.8 | 9.2 | 14.7 | 16.9 | 32.0 | 6.1 / 9.2 |
-| 2 | 0.61 | 4.1 | 4.6 | 8.9 | 9.2 | 15.0 | 16.7 | 19.3 | 6.2 / 9.3 |
-| 3 | 0.55 | 0.7 | 3.3 | 4.0 | 9.4 | 14.4 | 16.2 | 28.0 | 6.5 / 9.6 |
-| 4 | 0.54 | 0.8 | 3.0 | 3.3 | 9.5 | 13.9 | 16.1 | 17.2 | 6.7 / 9.8 |
-| 5 | 0.56 | 0.7 | 2.6 | 4.2 | 9.5 | 14.4 | 16.0 | 16.2 | 6.1 / 9.1 |
-
-Across the five runs (the median, the first to the third quartile, the IQR, and the range):
-
-| Statistic (ms) | Median | Q1 to Q3 | IQR | Range |
-| --- | ---: | ---: | ---: | ---: |
-| Idle frame p50 | 0.56 | 0.55 to 0.57 | 0.01 | 0.54 to 0.61 |
-| Idle frame p95 | 0.8 | 0.7 to 1.0 | 0.3 | 0.7 to 4.1 |
-| Idle frame p99 | 3.3 | 3.0 to 4.1 | 1.1 | 2.6 to 4.6 |
-| Idle frame max | 4.2 | 4.0 to 4.8 | 0.8 | 3.3 to 8.9 |
-| Swap frame p50 | 9.4 | 9.2 to 9.5 | 0.3 | 9.2 to 9.5 |
-| Swap frame p95 | 14.4 | 14.4 to 14.7 | 0.4 | 13.9 to 15.0 |
-| Swap frame p99 | 16.2 | 16.1 to 16.7 | 0.6 | 16.0 to 16.9 |
-| Swap frame max | 19.3 | 17.2 to 28.0 | 10.8 | 16.2 to 32.0 |
-| Injection (the click's own work) p50 | 6.2 | 6.1 to 6.5 | 0.3 | 6.1 to 6.7 |
-| Click to the first drawn frame p50 | 9.3 | 9.2 to 9.5 | 0.3 | 9.2 to 9.5 |
-| Click to the first drawn frame p95 | 14.3 | 14.3 to 14.7 | 0.4 | 13.9 to 15.0 |
-
-By the nodes the swap creates, the swap frame (the median across the runs of each run's p50 / p95, in milliseconds): 0 nodes (a swap to the base) 3.4 / 6.8, 50 nodes 7.7 / 10.9,
-75 nodes 10.2 / 13.6, 100 nodes 12.4 / 15.9.
-
-- **The swap frame, with no wait for a display.** p50 9.4 ms (IQR 0.3), p95 14.4 (0.4), p99 16.2 (0.6), maximum 19.3 (IQR 10.8).
-  The click's own work (the injection) is p50 6.2 ms and the rest of the frame, about 3 ms, is the draw of the new nodes and the end of the frame; the first frame drawn after the
-  nodes exist is that same frame (p50 9.3 ms). A 100-node swap's frame is 12.4 ms at the median and 15.9 at p95, more than a 120 Hz period (8.33 ms).
-- **No swap frame lasted 100 ms**, in any of the 1,800 steady swaps, and the map heard no motion of the real pointer.
-- **Without a pause between frames the swap looks faster**: the injection's p50 by nodes created 0 / 50 / 75 / 100 is 2.3 / 5.7 / 7.2 / 8.8 ms in this lane and
-  2.9 / 7.7 / 10.5 / 12.4 ms in the headless loop, which sleeps between frames as a presented game's does (probably the CPU's clock, which was not measured). That is why the CPU
-  proposal below starts from the headless lane.
-- At the start and the end of a run the live heap of Hermes was 1,960,448 and about 2.05 MB (read right after the last swap, not at rest) and the resident memory 238 to 263 MB at the start and 215 to 249 MB at the
-  end: recorded, not judged.
+**Unpinned reference, not a result.** An earlier execution of the same code while the display presented the window had an idle p50 of 7.8 ms (the clusters of about 3 and 13 ms at 120 Hz)
+and a swap frame p50 of 12.2, p95 of 18.6 and p99 of 25.5 ms (medians of five runs). Its raw receipt was overwritten before it was kept, so the record does not pin it and no budget row starts from it.
+The presented frame time needs an awake, unlocked display: run the lane again and it will check that the loop was paced.
 
 The captures of each panel (`frontier-baseline-panel-empty.png`, `-units.png`, `-city.png` and `-research.png`, 800 x 600 PNGs in [the evidence record](../evidence/frontier-baseline/README.md), hashed in its receipt) are
 of the frame as drawn, from a separate run that measures nothing, with pixel checks that the bar is over the map, each panel is where the HUD puts it, and the base comes back after them.
@@ -261,7 +227,7 @@ the base's 1,960,448 that the first mounts raised and then never gave up. Two th
 
 ## The proposed budget
 
-**PROPOSAL, not frozen.** The table has the values the baseline suggests and the rule that derived each, so that the freeze (criterion `congelado`, a separate and single act after this baseline and before
+**PROPOSAL, not frozen.** The table has the values the headless baseline suggests and the rule that derived each, so that the freeze (criterion `congelado`, a separate and single act after this baseline and before
 the first device session) can accept, tighten or drop each. None of it is a gate today except the rows marked **exact**, which the suite already judges. The rules: the CPU time of a swap is the p95 pooled over
 the two headless processes, times 1.25, rounded up to 0.5 ms; the heap a panel holds is the p50 times 1.25, rounded up to 10,000 bytes; a frame time of a presented window is to be the **median across five
 presented runs of the statistic plus three times its interquartile range**, rounded up to 0.5 ms (it is pending, see the windowed baseline).
@@ -270,18 +236,17 @@ presented runs of the statistic plus three times its interquartile range**, roun
 | --- | --- | --- | --- |
 | Native nodes after a swap (headless, **exact**) | the base's 12 plus 0, 50, 75 or 100 | exact | judged now: SceneTree, host and Surface |
 | Nodes a swap creates and deletes (headless, **exact**) | the new panel's and the old one's | exact | judged now |
-| A click swaps once, never reaches the map, a round ends at the base (headless, **exact**) | held in 720 headless and 1,800 windowed steady swaps | exact | judged now |
+| A click swaps once, never reaches the map, a round ends at the base (headless, **exact**) | held in 720 steady swaps | exact | judged now |
 | Live heap at rest, first to last five steady rounds (headless, **exact**) | 0 bytes (2,032,000 in both processes) | at most 2,048 bytes | the GF-30 limit, imported and judged now |
-| Frames from the click to the panel (both lanes) | 0 in 2,520 of 2,520 steady swaps | at most 1 | the maximum measured plus one frame for a commit that lands in the next pump |
-| CPU time of the swap (injection and flush), p95, by nodes created 0 / 50 / 75 / 100 (headless, 180 swaps each) | 3.4 / 9.4 / 11.0 / 13.4 ms (p50 2.9 / 7.7 / 10.5 / 12.4) | 4.5 / 12.0 / 14.0 / 17.0 ms | pooled p95 x 1.25, up to 0.5 ms; the 100-node bound is near the 60 Hz period (16.7 ms) |
+| Frames from the click to the panel (headless) | 0 in 720 of 720 steady swaps | at most 1 | the maximum measured plus one frame for a commit that lands in the next pump |
+| CPU time of the swap (injection and flush), p95, by nodes created 0 / 50 / 75 / 100 (headless, 180 swaps each) | 3.2 / 8.6 / 10.6 / 12.4 ms (p50 2.2 / 5.9 / 7.7 / 9.2) | 4.5 / 11.0 / 13.5 / 16.0 ms | pooled p95 x 1.25, up to 0.5 ms; the 100-node bound is near the 60 Hz period (16.7 ms) |
 | Heap a mounted panel holds over the base (headless, forced collection) | 249,024 / 327,808 / 406,072 bytes for 50 / 75 / 100 nodes (the same in both processes) | 320,000 / 410,000 / 510,000 bytes | p50 x 1.25, up to 10,000 bytes |
-| Swap frames of 100 ms or more, per 360 swaps (windowed) | 0 in all five runs | 0 | no tolerance for a visible stall |
-| Swap frame p95 and p99, and idle frame p99, of a window the display presents (vsync on, 120 Hz) | **PENDING**: the pinned execution was not presented by the display | **PENDING** | to be derived from five presented runs by median + 3 IQR, up to 0.5 ms |
-| Resident memory and Godot's static memory per round (both) | RSS 140 to 191 MB headless; static 369 KB a round (the probe's own readings) | none | recorded: they move by tens of MB and by the probe's bookkeeping, and cannot be a limit |
+| Swap frame p95 and p99, idle frame p99 and swap frames of 100 ms or more, of a window the display presents (vsync on, 120 Hz) | **PENDING**: no windowed attempt was presented by the display | **PENDING** | to be derived from five presented runs by median + 3 IQR, up to 0.5 ms |
+| Resident memory and Godot's static memory per round | RSS 131 to 192 MB headless; static 369 KB a round (the probe's own readings) | none | recorded: they move by tens of MB and by the probe's bookkeeping, and cannot be a limit |
 
-The rule of the ROADMAP's final comparison (V05-10) holds for the frame time: **FPS without a limit counts only if the vsync mode read back is disabled**. With the vsync on, as in every run here, the outcome is
+The rule of the ROADMAP's final comparison (V05-10) holds for the frame time: **FPS without a limit counts only if the vsync mode read back is disabled**. With the vsync on, as in every attempt here, the outcome is
 the **CPU time per frame** (the injection and flush, the pump and its phases, which the headless lane records exactly), and the frame times are read against the refresh period the display reports: 8.33 ms at the
-120 Hz of this display. A 100-node swap's own work (about 12 ms at the median) is more than one such period, so today it cannot fit in a single 120 Hz frame on this machine, and a budget in frames at that
+120 Hz of this display. A 100-node swap's own work (9.2 ms at the median, 12.4 at p95) is more than one such period, so today it cannot fit in a single 120 Hz frame on this machine, and a budget in frames at that
 rate would fail it by construction; the freeze has to choose between a per-swap CPU bound (above), a bound in frames at a lower rate, or a change in what a swap creates (fewer or flatter nodes, a list that mounts
 what is visible). Nothing here decides it.
 
@@ -312,8 +277,8 @@ the host no node is itself worth knowing for HUD panels that are hidden and not 
 ## Limitations and open
 
 - One machine (an Apple M3 Pro), one display and one vsync mode (the default, enabled, read back); a frame time with the vsync disabled was not measured, so no FPS without a limit is claimed. The Mac was
-  loaded (load average 5 to 11 on 11 logical cores) during every run, so the numbers are not a best case and a quieter machine may show smaller ones.
-- **The pinned windowed execution was not presented by the display** (the Mac was idle, the display off or locked): its intervals are the CPU cost of a process frame, and the frame time of a presented window (vsync on, 120 Hz) is PENDING, as are the budget rows that depend on it.
+  loaded (load average 4 to 8 on 11 logical cores) during every run, so the numbers are not a best case and a quieter machine may show smaller ones.
+- **The frame time of a presented window (vsync on, 120 Hz) is PENDING**: no windowed attempt was presented by the display (the Mac was idle, the display off or locked), the lane rejected all three as unpaced and ended with `presented: false`, exit code 3 and no frame-time statistic, and the budget rows that depend on it are PENDING too. The earlier presented execution is an unpinned reference only.
 - Synthetic events through `Input.parse_input_event`; no hardware pointer or touch screen, no iPhone, no mobile export. The numbers are macOS, arm64, Compatibility renderer.
 - The HUD is a fixture of the same shape as the Frontier panels, not the Frontier HUD (V05-05 is open). The panels are 50 to 100 native nodes of `View` and `Text`; panels with images, text inputs, scroll views,
   long text shaping or animations are not measured.
@@ -330,5 +295,5 @@ the host no node is itself worth knowing for HUD panels that are hidden and not 
 npm run test:frontier-baseline                       # the probe in two processes, the exact counts, the oracle and the report-level negatives
 node scripts/frontier-baseline-sabotage.mjs          # the four retained sabotages, source restored byte for byte; run nothing else meanwhile
 node tests/frontier-baseline-native.test.mjs --replay=build/frontier-baseline-current-report.json   # judge a recorded report
-node scripts/frontier-baseline-graphics.mjs          # local only: five windowed runs, the receipt and a capture per panel
+caffeinate -d node scripts/frontier-baseline-graphics.mjs   # local only, needs an awake and unlocked display: five windowed runs, the receipt and a capture per panel; exit 3 if not presented
 ```
