@@ -1,0 +1,23 @@
+{
+  "format": "godot-fabric.local-dashboard-capture/v1",
+  "capturedAt": "2026-10-09T13:37:56.662Z",
+  "url": "http://127.0.0.1:4317/#milestones",
+  "sourceCommit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+  "scope": "Local dashboard rendering only; this capture is not evidence of a GitHub Pages deployment.",
+  "dashboardState": {
+    "migrationJsonSha256": "f77bae85bd3a898159f5f38293ff8f5d593596701ec30dc1d5645a7d09111514",
+    "v05_07Percent": 50,
+    "onePointZero": {
+      "checkpointsComplete": 32,
+      "checkpointTotal": 156,
+      "requiredItemsComplete": 0,
+      "requiredItemTotal": 39
+    }
+  },
+  "screenshot": {
+    "path": "captures/dashboard-local.jpg",
+    "mediaType": "image/jpeg",
+    "bytes": 90543,
+    "sha256": "4122d0eb03a71476667f639210780c77b3b7a513a54d04dbd9f353d18f653c9e"
+  }
+}

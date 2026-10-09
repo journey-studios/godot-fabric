@@ -1,0 +1,165 @@
+{
+  "format": "godot-fabric.evidence-checksums/v1",
+  "files": [
+    {
+      "path": "export/receipt.json",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/receipt.json",
+      "sourceSha256": "cddb18e71f37fe82a16b7a0b1c0769920b2962892a302559b9f84e5d5fbca509",
+      "curatedSha256": "7389b5060f300ce80d7f34cad0553a6784de795f2878c754e786f42145095d88",
+      "bytes": 46456,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "export/sdk-manifest.json",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/sdk-manifest.json",
+      "sourceSha256": "691c1ba4f9b2feed6e362bd497576a2918858d3f33125a4f8bce681afb023e16",
+      "curatedSha256": "691c1ba4f9b2feed6e362bd497576a2918858d3f33125a4f8bce681afb023e16",
+      "bytes": 23307,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "export/build-report.json",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/build-report.json",
+      "sourceSha256": "554c182e3d6facec887c91c08716463ed8c4f195edb86f20e0f2688ee00e8ee9",
+      "curatedSha256": "554c182e3d6facec887c91c08716463ed8c4f195edb86f20e0f2688ee00e8ee9",
+      "bytes": 35562,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "export/runtime-headless.json",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/runtime-headless.json",
+      "sourceSha256": "6b50e5f41205dbe116e8419bf0ea1dcc7ac020b412db5971ef3e805f59761006",
+      "curatedSha256": "732e425e6a81b21dfdee2ca148cce204daa4891127fe03088ca94481b59c22fa",
+      "bytes": 66429,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "export/runtime-headed.json",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/runtime-headed.json",
+      "sourceSha256": "336557bad09e862a72dc81813958e58601fa8141d048693904a888f48450c963",
+      "curatedSha256": "2517b13bb4f382697893a3ddee8bcbfefb62dad2396593196fbc9f6e1cd607a1",
+      "bytes": 66750,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "controls/report.json",
+      "source": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/report.json",
+      "sourceSha256": "f054f854faca4363cbd228985b74c4fe9b20e65cdc652c0b79b58becc48de068",
+      "curatedSha256": "0fb8976ce6f0b39b007f27796dfdff2d182662ef04beb4c624ccd657ae5e4dbb",
+      "bytes": 10247,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "controls/native-independent-review.json",
+      "source": "{WORKTREE}/build/p2-continuation-review/native-independent-review.json",
+      "sourceSha256": "a29639e1db079922ce6e23aac0f370e22584c49e84a879d5aebac678b1affa35",
+      "curatedSha256": "a69b19de22efef0e9cca79bdc5b5e2e366df41b3af53e4b7343479f5cbd1fdf7",
+      "bytes": 1306,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "controls/causal-review.json",
+      "source": "{WORKTREE}/build/p2-continuation-review/causal-review.json",
+      "sourceSha256": "a32f6096b83871936ce812c8d69eb6144107eac2c35d854f83a89ef8e55c47f7",
+      "curatedSha256": "cf6b9da9479d3a49f6dc6c4fb8a8873a0417175a61c33dafd47905004c65298e",
+      "bytes": 1105,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "captures/initial.png",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/initial.png",
+      "sourceSha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+      "curatedSha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+      "bytes": 24826,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "captures/updated.png",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/updated.png",
+      "sourceSha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+      "curatedSha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+      "bytes": 28929,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "captures/resized.png",
+      "source": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/resized.png",
+      "sourceSha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+      "curatedSha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+      "bytes": 31963,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "controls/logs/install-symlink-parent-rpath.log",
+      "source": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4-symlink-parent-rpath/install-symlink-parent-rpath.log",
+      "sourceSha256": "fefbad40145eba9216bdf18df018c6d288d566ea22522d97d598d49267c720e4",
+      "curatedSha256": "c0e69029cc333bd0924ae388b39a5f8026486b7e56ec31ee86633bb3be19eca7",
+      "bytes": 332,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "controls/logs/otool-load-commands-app-executable.log",
+      "source": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4-symlink-parent-rpath/otool-load-commands-app-executable.log",
+      "sourceSha256": "c3c6e2843c337b5521882119113f203a20d20f4fdc17cb2576e992b0a61383bb",
+      "curatedSha256": "9d1c275508498cae3b1ead9c559ead89f4b1159fac850740e77228a02903c3da",
+      "bytes": 18860,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "controls/logs/otool-load-commands-host.log",
+      "source": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4-symlink-parent-rpath/otool-load-commands-host.log",
+      "sourceSha256": "a2e8de5e21871101a15e0a60465a3845d0e2fdc11033592f9784825db1141ad8",
+      "curatedSha256": "5c747a8867328c6667abd6d7b53ed268af3f0808bd9c1216a4d2d15a8490d8b3",
+      "bytes": 7506,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "gates/macos-export-native.log",
+      "source": "{TEMP}/fabric-symlink-parent-native.log",
+      "sourceSha256": "aef7d359c027176c20a0027fe7adc3b3566beea706df5f447b2b320fc05e6e07",
+      "curatedSha256": "aef7d359c027176c20a0027fe7adc3b3566beea706df5f447b2b320fc05e6e07",
+      "bytes": 3364,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "gates/contracts.log",
+      "source": "{TEMP}/fabric-final-contracts.log",
+      "sourceSha256": "d4858668030ce2d1196f11510dfc97e51bd8806a942b3276cb12bdf850de5700",
+      "curatedSha256": "b56af4d060d49e237aa4d788d65736105c4b94b23cb2dca69ad4871aa68eede4",
+      "bytes": 107299,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "gates/static.log",
+      "source": "{TEMP}/fabric-final-static.log",
+      "sourceSha256": "389ecfb60292c382f59ec2d2c52f1835fad0659780a89a58725073cc652aadf7",
+      "curatedSha256": "389ecfb60292c382f59ec2d2c52f1835fad0659780a89a58725073cc652aadf7",
+      "bytes": 223,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "gates/publication.log",
+      "source": "{TEMP}/fabric-final-publication.log",
+      "sourceSha256": "7e8991fb177e42389563fd5450ffea3e86843c52b0482bdee4a36311111ac561",
+      "curatedSha256": "7e8991fb177e42389563fd5450ffea3e86843c52b0482bdee4a36311111ac561",
+      "bytes": 133,
+      "pathTokensApplied": false
+    },
+    {
+      "path": "gates/setup.log",
+      "source": "{TEMP}/fabric-recovery-setup.log",
+      "sourceSha256": "87cf63bab43e146b1b9564c345f6f473630c9db7978a5b25a5343def1a4e7ba7",
+      "curatedSha256": "555362f8e285afe48a9ce68904998972467180ccc1910dc0d647dad29c2a169b",
+      "bytes": 3559,
+      "pathTokensApplied": true
+    },
+    {
+      "path": "gates/native-build.log",
+      "source": "{WORKTREE}/.deps/compile.log",
+      "sourceSha256": "330ba6f29efbcd68afb829b31f6b8dd9189355e9ae7d67a89f9b044dfa366bcb",
+      "curatedSha256": "5803e2b4d841a1103b42125af425e268e1ffdd8cae795e6266ef278df05d26f4",
+      "bytes": 55149,
+      "pathTokensApplied": true
+    }
+  ]
+}

@@ -58,6 +58,14 @@ The packet preserves that failure and the unexplained earlier local remount fail
 The [historical 58f5271 proof](evidence/macos-export/README.md#historical-producer-58f5271)
 and its 1080×600 images remain unchanged.
 
+The later [symlink-parent review](evidence/macos-export/symlink-parent-review/README.md)
+records a fresh local run on producer `6c2169a`: 14/14 native tests, 40/43 runtime
+checks, seven copied-app controls, and a physical `LC_RPATH` symlink escape check
+that rejects a target outside the app before loading it. The independent review
+verified the host hash and RPATH and matched all 220 SDK pins. Its evidence is
+additive; it does not establish Frontier replay, clean-profile/second-machine,
+Developer ID/notarization, hosted CI, final review or Pages publication.
+
 Run the same lane with `MACOS_EXPORT_TEMPLATE` set to the derived ZIP:
 
 ```sh

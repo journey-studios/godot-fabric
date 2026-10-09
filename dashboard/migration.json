@@ -5,15 +5,15 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "5",
-    "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
+    "focusSequence": "6",
+    "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T11:09:05.000Z",
+  "updatedAt": "2026-10-09T13:31:13.000Z",
   "source": {
-    "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
-    "scope": "P8 V05-05 do marco 0.5, critérios matriz e mapa: a HUD do Frontier guiada pelo contexto do Godot (seis painéis por contexto, barra com spinner na fase da IA, ações com motivo, cartão do tile e o estado frontier.hover), com evidência local em 096a018 (probe e oráculo independente, controle sobre 5e1f6a1, oito sabotagens e oito capturas). CI hospedada e Pages deste PR pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/82"
+    "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+    "scope": "P2 V05-07 do marco 0.5: curadoria local da execução macOS symlink-parent no produtor limpo 6c2169a; export 14/14, runtime 40/43, sete controles nativos e revisão física de host/RPATH/220 pins. Evidência aditiva; replay Frontier, perfil limpo/segunda máquina, CI hospedada, revisão final e Pages permanecem pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
   },
   "phases": [
     {
@@ -3990,6 +3990,10 @@
                 {
                   "label": "Recibo real do app assinado e relocável, com SDK/build/PCK vinculados e RN lógico 1080×600 a scale 0.5",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/export/receipt.json"
+                },
+                {
+                  "label": "Nova execução local no produtor limpo 6c2169a: 14/14 testes nativos, 40/43 checks e três capturas verificadas; critérios replay e perfil limpo continuam abertos.",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
                 }
               ]
             },
@@ -4005,6 +4009,10 @@
                 {
                   "label": "Normalização idempotente e quatro mutações reais rejeitadas no produtor 29969eb",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/controls/report.json"
+                },
+                {
+                  "label": "Sete controles nativos e revisão física confirmam rejeição de LC_RPATH via symlink para fora do app antes da carga; host/RPATH e 220 pins verificados localmente.",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
                 }
               ]
             },
@@ -4561,6 +4569,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-p2-symlink-parent-6c2169a",
+      "at": "2026-10-09T13:31:13.000Z",
+      "taskIds": [],
+      "message": "P2 V05-07, critérios plugin e assinatura: execução macOS local no produtor limpo 6c2169a, com 14/14 testes nativos, 40/43 runtime checks, sete controles e revisão física do symlink-parent/RPATH; os 220 pins SDK e três capturas foram verificados. Incidente de recuperação e hashes estão curados sem reescrever históricos. Replay Frontier, perfil limpo/segunda máquina, CI hospedada, revisão final e Pages continuam pendentes; nenhum critério ou denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
+    },
     {
       "id": "milestone-0-5-v05-06-turno-headless-e2ee6d8",
       "at": "2026-10-09T11:09:05.000Z",

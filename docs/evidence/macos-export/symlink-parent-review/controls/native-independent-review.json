@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-09T13:25:59.361Z",
+  "producer": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+  "sourceDirty": false,
+  "controlPath": "build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/report.json",
+  "receiptPath": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/receipt.json",
+  "sdkPins": 220,
+  "runtimeCounts": [
+    40,
+    43
+  ],
+  "captureHashesVerified": true,
+  "sevenControls": [
+    "framework-normalization-is-idempotent-and-preserves-signatures",
+    "missing-rn-dependencies-framework",
+    "xml-whitespace-invalidates-signed-info-plist",
+    "absolute-rpath-rejected",
+    "symlink-rpath-target-outside-app-rejected",
+    "symlink-parent-rpath-target-outside-app-rejected",
+    "stale-native-source-lock-rejected"
+  ],
+  "physicalControl": {
+    "symlink": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/symlink-parent-rpath.app/Contents/Frameworks/external-search",
+    "target": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/symlink-parent-target/child",
+    "physical": "{WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/symlink-parent-target",
+    "hostHashVerified": true,
+    "machoRpathVerified": true
+  },
+  "status": "passed"
+}
