@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T21:51:26.000Z",
+  "updatedAt": "2026-10-09T01:36:34.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -4340,6 +4340,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-02-pointer-a2-af941dd",
+      "at": "2026-10-09T01:36:34.000Z",
+      "taskIds": [],
+      "message": "Segunda fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5) com evidência local: a variante a2 fecha as seis lacunas que a política a1 deixou com uma regra só, a do React Native num telefone. No estágio _unhandled_input, depois do GUI, a FabricSurface marca o evento como tratado quando o hit test do RN (ApplicationRuntime::claims, que respeita pointerEvents, hitSlop, recorte e visibilidade) acha uma View no ponto: vale para o botão do mouse (a roda e o release da roda incluídos), o toque e o mouse que o Godot emula dele; hit_test, apply_pointer_filters, input() e wheel() não mudam e os Controls do GUI (Switch, Button, LineEdit) não perdem nada. A ordem do unhandled (a Surface antes do mundo, porque o Godot chama o grupo em ordem inversa da árvore: viewport.cpp 3489-3553 e 3620-3634, scene_tree.cpp 1430-1502, laço em 1461) é conferida na cena viva por um nó testemunha. As seis lacunas a N=100: o hitSlop, o Text com onPress e o vão de ScrollView (clique, toque e mouse emulado: antes chegavam 100 de 100 ao mundo além do RN, agora 0, e o RN ouve o handler 100 vezes e o emulado nunca), e a roda sobre o HUD, sobre um ScrollView e sobre o overlay na árvore aberto (antes 100 press e 100 release no mundo, ou só o release sobre o ScrollView, agora 0). 91 checks headless em duas topologias, 50 normativos (31 da a1 e 19 da a2), com o oráculo independente. Controles: o host com só a a1 falha exatamente os 19 da a2 e o host anterior à a1 falha 41 (os 31 da fatia 1 e 10 da roda; o binário da fatia 1 se perdeu, e o controle é uma reconstrução da main atual sem o IGNORE do construtor). Cinco sabotagens rejeitadas pelo probe e pelo oráculo, cada uma em checks nomeados: surface-stop (31), views-ignore (5, o Switch e o hover), unhandled-off (19), claim-all (35, host recompilado da fonte quebrada) e before-gui (2, o Switch nativo deixa de receber o clique e o toque, o que prova que a regra tem de rodar depois do GUI). Faixa janelada local no macOS (N=100, as seis lacunas, 32 checks, todos passam, cinco capturas, e a captura depois das lacunas é idêntica byte a byte à do quadro intocado): a tela estava dormindo, o V-Sync lido de volta é enabled a 120 Hz mas a mediana ociosa é 0,776 ms, então os quadros rodaram sem ritmo; as contagens são exatas em rajadas e valem, e a faixa não faz alegação de tempo de quadro nem de apresentação. Segue aberto: o movimento, o hover e o arrasto não são reivindicados (sobre a folga do hitSlop o mundo ainda ouve 20 de 20 movimentos e o arrasto que começa ali), um release longe do press, o HUD antes do mundo na árvore, e o critério iphone (P7), porque os eventos são sintéticos, sem ponteiro de hardware, tela de toque real nem export móvel. É a fatia 2 de 3: o go/no-go é da fatia 3. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/af941dde794db9ed40595d006977445b6646e9fc/docs/evidence/world-input-a2/README.md"
+    },
     {
       "id": "milestone-0-5-v05-03-consumidor-b9a40cb",
       "at": "2026-10-08T21:51:26.000Z",

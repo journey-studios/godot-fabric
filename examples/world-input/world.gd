@@ -3,7 +3,11 @@ extends Node2D
 # The world of the pointer spike: a 24x16 map of 32-pixel tiles seen through a
 # Camera2D at zoom 2, behind a React Native HUD. It listens in _unhandled_input,
 # the last stop of an input event: after every _input and after the GUI, so it
-# only hears what neither the HUD's Surface nor a Control claimed.
+# only hears what neither the HUD's Surface nor a Control claimed. The Surface
+# claims in its own _unhandled_input what React Native's hit test finds at the
+# event's point (a View, a hit slop, a Text, the wheel over the HUD). Godot calls
+# _unhandled_input in reverse tree order, so the HUD's CanvasLayer must come AFTER
+# this node in the scene tree for the Surface to claim before the world hears.
 #
 # The world listens to the MOUSE stream. A touch reaches an unhandled world as
 # two events, the InputEventScreenTouch and the InputEventMouseButton Godot emulates

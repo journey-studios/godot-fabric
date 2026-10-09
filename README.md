@@ -496,9 +496,11 @@ headless probe counts bursts of 100 events delivered by one flush, so no count d
 two topologies (one full-screen Surface, and one Surface per panel; the overlay checks and a local windowed
 lane with captures on a real macOS window use the full-screen one only) with an independent oracle; the host that
 predates the policy fails exactly its 31 normative checks and two retained sabotages are rejected. A hit slop,
-a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD still reach the map as well
-as React Native: they are recorded and left to the second slice of the spike. Hardware pointers, a real touch
-screen and mobile exports are open, and so is hosted CI. [Evidence](docs/evidence/world-input/README.md); [research](docs/research/world-input.md).
+a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the HUD, a ScrollView or an overlay reached
+the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
+Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
+(the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
+Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
 `ImageBackground`, `AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline
