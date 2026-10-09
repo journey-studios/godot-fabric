@@ -165,7 +165,7 @@ unavoidable is for this, not for the World's return, which `new_game` does by it
 - **New game in the menu** calls `frontier.new_game` (the epoch rises by 1); with no World, `GameServices` instantiates one from
   `world_scene` before it publishes the snapshot, and the HUD, which called it from the menu, goes back to the `game` screen and
   connects again to receive the new epoch.
-- **A job in progress is not the World's.** The end of a turn is a job that `GameServices._process` drives, a phase a frame, so
+- **A job in progress is not the World's.** The end of a turn is a job that `GameServices._process` advances one phase per frame, so
   the menu (which drops the World and, in the HUD, the connection to the snapshot) does not stop it: it finishes with the menu open,
   `finished_jobs[job]` is 1 and the World stays out of the tree until a `new_game`. A `new_game` while a job runs abandons it, because
   the session it drove is gone (the epoch rises) and no `turn_ended` fires for it.

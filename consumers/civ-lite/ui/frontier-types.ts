@@ -179,7 +179,7 @@ export interface FrontierSnapshot {
    */
   readonly last_job: Int;
   readonly turn: Int;
-  /** "idle", or the phase a turn being processed is at: the snapshot shows the turn's progress, one phase a frame. */
+  /** "idle", or the phase a turn being processed is at: the snapshot shows the turn's progress, one phase per frame. */
   readonly phase: string;
   /** One of the seven contexts: none, tile, settler, warrior, stack, city, dialog. */
   readonly context: string;

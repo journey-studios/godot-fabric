@@ -18,7 +18,7 @@ extends Node
 # a refused intent changed nothing and fires nothing.
 #
 # The turn is a job. `end_turn` is registered with the acceptance response (docs/GAME_SERVICES.md): it answers that the game
-# took the turn, with the id of the job, and the turn goes on here, one phase a frame, in this node's `_process` and never in
+# took the turn, with the id of the job, and the turn goes on here, advancing one phase per frame, in this node's `_process` and never in
 # the World or in a surface. So closing the HUD, going to the menu or dropping the World does not stop it, and it finishes on
 # its own. The snapshot is published once when the turn is accepted (it shows the first `phase`) and once after each phase (it
 # shows the next one, and the last shows the turn at rest). After the last phase `turn_ended` fires once, with the turn that
@@ -158,7 +158,7 @@ func resolve_event(choice_id: String) -> Dictionary:
 # Accepts the end of the turn as a job. The game starts the turn (`begin_end_turn`): its phase becomes the first one and every
 # intent is refused until the last has run. The answer is the acceptance, with the job's id; a refusal (an event waiting, a
 # turn already in progress) starts nothing and answers job 0. The snapshot is published once, because the state changed:
-# it shows the first phase. `advance_job` does the rest, a phase a frame.
+# it shows the first phase. `advance_job` does the rest, advancing one phase per frame.
 func end_turn() -> Dictionary:
   _count("end_turn")
   var started: Dictionary = game.begin_end_turn()

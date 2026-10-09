@@ -18,7 +18,7 @@ import ts from "typescript";
 //   - every method answered the uniform {ok, code, text, job}, with a code from the game's table and its text, and a refused
 //     intent published nothing; an accepted one published exactly one snapshot; revisions only rose with those;
 //   - end_turn is an accepted job: it answers on acceptance, with the id of the job (1, 2, 3 ... for the accepted ones, 0 when
-//     refused), and the job goes on in the node, a phase a frame: seven snapshots in seven consecutive frames (the first phase
+//     refused), and the job goes on in the node, advancing one phase per frame: seven snapshots in seven consecutive frames (the first phase
 //     at acceptance, then one after each of the six phases, which show the turn's progress and end at rest), and exactly one
 //     turn_ended with that job, after the snapshot of the last phase and before the snapshot of the turn that begins, whose
 //     `last_job` is the job; every frame of a job fits in one pump (64 tasks, 128 events) and leaves nothing pending;
@@ -365,7 +365,7 @@ function verifyJob(job, {where, jobId, turnBefore, lastJobBefore, turnEndedSeq, 
   assert.ok(job.progress[PHASES.length - 1].seq < turnEndedSeq && turnEndedSeq < job.progress[PHASES.length].seq,
     `${where}: turn_ended comes after the snapshot of the last phase and before the snapshot of the turn that begins`);
 
-  // The node on the Godot side: a phase a frame, and turn_ended once, in the frame of the last phase, ahead of its snapshot.
+  // The node on the Godot side: one phase per frame, and turn_ended once, in the frame of the last phase, ahead of its snapshot.
   assert.deepEqual(job.rows.map(row => row.kind), [...Array(PHASES.length).fill("snapshot"), "turn_ended", "snapshot"],
     `${where}: the node published a snapshot for each phase, then turn_ended once, then the snapshot of the turn that begins`);
   const published = job.rows.filter(row => row.kind === "snapshot");
@@ -407,7 +407,7 @@ function verifyJob(job, {where, jobId, turnBefore, lastJobBefore, turnEndedSeq, 
 // The registry's budgets under STRESS_SUBSCRIBERS more subscribers of the snapshot, with the application's own and the panel's.
 // A publication then holds more than 128 events: it drains in ceil(events / 128) pumps (counted as pumps, never as time), no
 // subscriber loses one, and they arrive in the order they were queued. Once with each phase published on its own, once with the
-// node's own driver, a phase a frame, outrunning the pump.
+// node's own driver, one phase per frame, outrunning the pump.
 function verifyStress(stress, {firstJob}) {
   assert.equal(stress.subscribers, STRESS_SUBSCRIBERS, "the stress case has 150 more subscribers");
   const perPublication = STRESS_SUBSCRIBERS + 1 + (stress.panelConnected ? 1 : 0);

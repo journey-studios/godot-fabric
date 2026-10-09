@@ -659,8 +659,8 @@ func delivery(arrivals_from: int) -> Dictionary:
   return js("FrontierServicesProbe.subscribersSince(%d)" % arrivals_from)
 
 # The same publications with more subscribers than one pump can serve. First each phase on its own, driven by the node's own
-# advance_job with its frame driver off, so that a phase drains before the next is published; then the node's driver on, a
-# phase a frame, outrunning the pump. In both, every subscriber receives exactly one snapshot per publication, in order.
+# advance_job with its frame driver off, so that a phase drains before the next is published; then the node's driver on,
+# one phase per frame, outrunning the pump. In both, every subscriber receives exactly one snapshot per publication, in order.
 func run_stress() -> Dictionary:
   var subscriptions_base := int(registry().get("subscriptions", -1))
   var panel_connected: bool = counts().panel.connected
@@ -694,7 +694,7 @@ func run_stress() -> Dictionary:
   check(drains.size() == JOB_SNAPSHOTS and drains.all(drain_fits),
     "stress: every publication held more than 128 events and drained in ceil(events / 128) pumps, nothing left pending")
 
-  # The node's own driver, a phase a frame.
+  # The node's own driver, one phase per frame.
   var free_arrivals_from := int(counts().arrivals)
   shadow.end_turn()
   expected_jobs += 1

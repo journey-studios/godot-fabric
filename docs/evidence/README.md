@@ -812,7 +812,7 @@ the Pages publication are pending**. The record is pinned at `b0509db`.
 The [Frontier authority record](frontier-authority/README.md) closes the criterion `autoridade` of V05-03 (tied to GF-25), on
 the services and the consumer above, with no C++. The dashboard's `turn.end` is `frontier.end_turn` and its `job.finished` is
 `frontier.turn_ended`. `frontier.end_turn` is registered to answer on acceptance, with the id of a job, and the persistent
-`GameServices` node runs the turn one phase a frame in its own `_process`, never in the World or a surface: the snapshot is
+`GameServices` node advances the turn one phase per frame in its own `_process`, never in the World or a surface: the snapshot is
 published at the acceptance and after each of the six phases (seven in seven consecutive frames, the last at rest with
 `last_job` = the job), and `turn_ended` goes out once, between the sixth and the seventh. Every method now answers
 `{ok, code, text, job}`, with `job` 0 unless an accepted `end_turn` started one. Fifteen jobs in the probe: the application's own

@@ -582,7 +582,7 @@ checked against the schemas Godot registered in both directions (`npm run test:f
 The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
 scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
 epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
-The end of a turn is then an accepted job that the node runs a phase a frame and finishes once, whether or not a screen is open,
+The end of a turn is then an accepted job that the node advances one phase per frame and finishes once, whether or not a screen is open,
 with a rule mutated in Godot changing the HUD with the same JavaScript bundle and every phase of a turn measured against the
 registry's 64 tasks and 128 events (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-authority/README.md), [research](docs/research/frontier-services.md)).
 The playable HUD, the export and the devices are open, and so is hosted CI.

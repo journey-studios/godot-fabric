@@ -94,7 +94,7 @@ explicit game signals/methods. Removing UI does not cancel an accepted game job.
 
 Frontier's `frontier.end_turn` is an example of an accepted job
 ([research](research/frontier-services.md)): it answers `{ok, code, text, job}`
-on acceptance, the persistent node runs the turn one phase a frame, and
+on acceptance, the persistent node advances the turn one phase per frame, and
 `frontier.turn_ended` finishes that job once, whether or not a screen is open.
 The probe measures each phase of such a job against the pump's budgets
 (`pendingHostTasks`, `pendingEvents`, `hostTasksRun`, `eventsSent`).

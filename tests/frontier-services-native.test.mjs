@@ -18,7 +18,7 @@ import {diffRegistrations, extractFrontierSchemas, verifyFrontierServicesReport,
 // against the schema derived from the TypeScript types. The names and shapes against Godot are
 // tests/frontier-services-parity.test.mjs, which reads the report this test leaves.
 //
-// The end of a turn is a job (docs/research/frontier-services.md): accepted, one phase a frame in the node, finished once. The
+// The end of a turn is a job (docs/research/frontier-services.md): accepted, advanced one phase per frame in the node, finished once. The
 // probe plays it through the roteiro, with the surface closed during one of them, and the oracle judges what JavaScript saw and
 // what the registry held per frame. The plain test also runs the rule lane twice, once on the genuine rules and once with one
 // constant of rules.gd mutated by scripts/sabotage-sources.mjs and restored byte for byte, with the same bundle; it is a lane of

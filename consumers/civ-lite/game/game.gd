@@ -85,7 +85,7 @@ func end_turn() -> Dictionary:
 # --- The turn in slices ----------------------------------------------------------------------------------------
 
 # Starts the end of the turn without running anything: the state's `phase` becomes the first phase, and every intent but
-# advance_phase is refused until the last phase has run. This is what a frame budget drives, one phase a frame.
+# advance_phase is refused until the last phase has run. This is what a frame budget drives, one phase per frame.
 func begin_end_turn() -> Dictionary:
   var reason := Intents.check_end_turn(state)
   if reason != "":

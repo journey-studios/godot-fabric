@@ -617,7 +617,7 @@ remains open, and no 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-03, criterion `autoridade`: the end of a turn is now an accepted job.
 `frontier.end_turn` answers on acceptance with a job id, the persistent `GameServices` node runs
-the turn one phase a frame, and `frontier.turn_ended` finishes the job once, across an unmounted
+the turn one phase per frame, and `frontier.turn_ended` finishes the job once, across an unmounted
 screen and across the menu. A rule mutated in GDScript changes the HUD while the JavaScript
 bundle stays the same, and every phase fits the registry's 64 tasks and 128 events, with a
 150-subscriber stress case that drains in order and without loss. Eleven sabotages of the

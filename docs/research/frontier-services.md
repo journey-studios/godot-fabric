@@ -240,10 +240,10 @@ publication of the last phase holds 153 with `turn_ended`). The pumps are counte
 | Case | Publications | Events each | Pumps each | Sent in each pump | Lost | Order |
 | --- | ---: | ---: | ---: | --- | --- | --- |
 | one phase at a time (`advance_job` called by the probe with the frame driver off, each publication drained before the next) | 7 | 152 (153 for the last) | 2 | 128 then 24 (128 then 25 for the last) | none: each of the 150 received exactly one snapshot for each publication | FIFO: by publication, and by subscriber within it |
-| the node's own driver, a phase a frame (outrunning the pump) | 7 | 152 | the whole job: 9 pumps | 128 eight times, then 41 | none | FIFO |
+| the node's own driver, one phase per frame (outrunning the pump) | 7 | 152 | the whole job: 9 pumps | 128 eight times, then 41 | none | FIFO |
 
 In the second case the backlog at the start of each frame is 152, 176, 200, 224, 248, 272, 297, 169, 41 and then 0: the job is not
-held back by the registry (a phase a frame regardless), the budget bounds each pump, and the queue drains in `ceil(1065 / 128) = 9`
+held back by the registry (one phase per frame regardless), the budget bounds each pump, and the queue drains in `ceil(1065 / 128) = 9`
 pumps, 1065 being 7 snapshots to 152 subscribers and the one `turn_ended`. The case is a measure, not a recommendation: a HUD that
 lived with that many subscribers would want a policy for backlog that the services do not have.
 
@@ -423,7 +423,7 @@ checks, the oracle or the parity must reject it for the reason it was broken. Th
 | `turn-ended-order` | `turn_ended` is emitted after the snapshot of the turn that begins | the probe at every `end_turn`; the oracle at step 16 |
 | `double-finish` | `turn_ended` is emitted twice at the end of the job | the probe at every `end_turn` (a turn ends exactly when an `end_turn` is accepted); the oracle at step 16 |
 | `job-dies-with-screen` | the driver stops when the application holds no root: the job is abandoned and never finishes | the probe's persistence checks at the third job (it finished once, with no surface); the oracle |
-| `sync-end-turn` | `end_turn` runs every phase inside the callback, as it did before the job | the probe at step 16: the node did not run one phase a frame, and the calls made while the job should run were not refused; the oracle |
+| `sync-end-turn` | `end_turn` runs every phase inside the callback, as it did before the job | the probe at step 16: the node did not advance one phase per frame, and the calls made while the job should run were not refused; the oracle |
 | `stale-snapshot` | the snapshot of the `growth` phase is not published | the probe at step 16: the job publishes six snapshots and not seven; the oracle |
 
 ### No previous host
