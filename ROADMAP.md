@@ -724,6 +724,17 @@ of V05-06 (the CPU-time instrument and four absolute budgets) are formulas with 
 when they are frozen together with `congelado`; it stays open and no criterion changes. Nothing is measured and no result is
 claimed. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the eight 0.5 slices already on main are recorded. For each of
+PRs #70, #71, #73, #76, #77, #78, #79 and #83, the push of main at its squash commit passed all five jobs of the Contracts
+workflow on the first attempt, and its Pages run built and deployed. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md)
+links two receipts per slice, written by `scripts/hosted-receipts.mjs` and checked offline by its `--check`: the run, the
+slice's own steps with the result lines of their logs and the artifacts with their digests, and the deployment with the
+published `migration.json`. Two findings: the Pages artifact of #71 no longer exists, so its deployed `migration.json` was not
+compared, and the one of #73 holds the same data as the committed file in another serialization. The windowed lanes, the
+captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
+denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T07:37:32.000Z",
+  "updatedAt": "2026-10-09T10:12:11.000Z",
   "source": {
     "commit": "096a0180e37892277d15d0b13ce2113a4b0793d3",
     "url": "https://github.com/journey-studios/godot-fabric/commit/096a0180e37892277d15d0b13ce2113a4b0793d3",
@@ -3498,8 +3498,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente",
+                  "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/world-input/hosted-ci.json"
                 }
               ]
             },
@@ -3509,7 +3513,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente",
+                  "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
                 }
               ]
@@ -3541,8 +3545,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): replay de 12 turnos com o mesmo hash dourado em 3 de 3 processos, 7 contextos, oráculo independente e 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-game/hosted-ci.json"
                 }
               ]
             },
@@ -3552,8 +3560,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): o node persistente GameServices com epoch; estado, sinal e 11 métodos registrados antes da montagem; uma só fonte de schema em GDScript e os tipos TS escritos à mão comparados nos dois sentidos; o roteiro de 12 turnos pelos serviços até o hash dourado; 7 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-services/hosted-ci.json"
                 }
               ]
             },
@@ -3563,8 +3575,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): o consumidor civ-lite provisionado pelo addon, com TSX público, sem Node global, build offline e aberto pelo editor; 10 ciclos de novo jogo, recarga do cenário e menu com nós, órfãos, bindings, assinaturas e conexões na linha de base e epoch estritamente crescente; 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): o consumidor civ-lite provisionado pelo addon, com TSX público, sem Node global, build offline e aberto pelo editor; 10 ciclos de novo jogo, recarga do cenário e menu com nós, órfãos, bindings, assinaturas e conexões na linha de base e epoch estritamente crescente; 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/b9a40cbff4d246bf2318914caf0daaab7b1c1e10/docs/evidence/frontier-consumer/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-consumer/hosted-ci.json"
                 }
               ]
             },
@@ -3574,8 +3590,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): turn.end (frontier.end_turn) aceito como job e rodado uma fase por frame pelo node persistente GameServices; job.finished (frontier.turn_ended) entregue 1 vez, com a tela desmontada no frame seguinte ao aceite e com o menu aberto; uma regra mutada no GDScript (os pontos de movimento do Settler) muda a HUD com o mesmo bundle JS e o mesmo host; cada fase cabe num pump de 64 tarefas e 128 eventos, e o caso de estresse com 150 assinantes extras drena em ceil(eventos / 128) pumps, sem perda e em ordem; 11 sabotagens dos serviços e 5 do consumidor rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64): turn.end (frontier.end_turn) aceito como job e rodado uma fase por frame pelo node persistente GameServices; job.finished (frontier.turn_ended) entregue 1 vez, com a tela desmontada no frame seguinte ao aceite e com o menu aberto; uma regra mutada no GDScript (os pontos de movimento do Settler) muda a HUD com o mesmo bundle JS e o mesmo host; cada fase cabe num pump de 64 tarefas e 128 eventos, e o caso de estresse com 150 assinantes extras drena em ceil(eventos / 128) pumps, sem perda e em ordem; 11 sabotagens dos serviços e 5 do consumidor rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-authority/hosted-ci.json"
                 }
               ]
             }
@@ -3911,8 +3931,12 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64, headless): 100 turnos em 3 execuções (unmount, hide, unmount) com o mesmo hash final e a mesma trilha de 100 hashes de turno; nós nativos exatos por contexto (16 a 23, mais 100 com o painel oculto) e 0 órfãos; heap em repouso sem crescimento (2.117.320 bytes, dentro dos 2.048 do GF-30 pela mediana das metades) e RSS dentro da guarda de 48 MiB; 0 erros JS não tratados, com o controle do handler; o jogo pausado no turno 50 mantém o job parado em ai_plan e a UI viva (o clique chega ao handler porque a camada do HUD é PROCESS_MODE_ALWAYS); a decisão entre montar e ocultar um painel de 100 nós, com números (desmontar por padrão: sem vantagem de CPU consistente na soma de abrir e fechar, que é inconclusiva, mas ocultar dá cauda menor na abertura, fecha cerca do dobro mais caro e segura 100 nós e 326.512 bytes de heap); 4 sabotagens rejeitadas; CI hospedada pendente",
+                  "label": "Evidência local (macOS arm64, headless): 100 turnos em 3 execuções (unmount, hide, unmount) com o mesmo hash final e a mesma trilha de 100 hashes de turno; nós nativos exatos por contexto (16 a 23, mais 100 com o painel oculto) e 0 órfãos; heap em repouso sem crescimento (2.117.320 bytes, dentro dos 2.048 do GF-30 pela mediana das metades) e RSS dentro da guarda de 48 MiB; 0 erros JS não tratados, com o controle do handler; o jogo pausado no turno 50 mantém o job parado em ai_plan e a UI viva (o clique chega ao handler porque a camada do HUD é PROCESS_MODE_ALWAYS); a decisão entre montar e ocultar um painel de 100 nós, com números (desmontar por padrão: sem vantagem de CPU consistente na soma de abrir e fechar, que é inconclusiva, mas ocultar dá cauda menor na abertura, fecha cerca do dobro mais caro e segura 100 nós e 326.512 bytes de heap); 4 sabotagens rejeitadas; CI hospedada pendente naquele registro",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md"
+                },
+                {
+                  "label": "CI hospedada e Pages (a suíte headless; o que é só local segue no registro local)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/frontier-soak/hosted-ci.json"
                 }
               ]
             },
@@ -4503,6 +4527,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-70cf43b",
+      "at": "2026-10-09T10:12:11.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages das 8 fatias do marco 0.5 já na main registrados em docs/evidence (hosted-ci.json e publication.json de cada uma, gerados por scripts/hosted-receipts.mjs e conferidos sem rede por --check): frontier-game (#70, run 37815810524 no squash e1c7a39), world-input (#71, 37853001783, 7ef63ed), frontier-services (#73, 37840069134, 75a85ad), frontier-consumer (#76, 37864357395, c8de44b), frontier-baseline (#77, 37884924042, 3bb51d6), world-input-a2 (#78, 37874901247, 2a3f4b0), frontier-authority (#79, 37880395525, 5e1f6a1) e frontier-soak (#83, 37904776515, a49f851). Cada run é o push da main no squash, com os 5 jobs em success na primeira tentativa e todos com checkout do squash. Os recibos fixam os passos npm de cada fatia no job nativo com a linha de resultado do log (TAP ou marcador), os artefatos com id, tamanho, SHA-256 igual ao digest da API e ao log de upload e o SHA-256 de cada arquivo, e, no Pages, o run do push, o deployment em success, o artefato github-pages e o migration.json implantado. Dois achados: o artefato github-pages do Pages do #71 (run 37853001775) expirou e já não existe (a API devolve 404), então o migration.json implantado dele não foi comparado e o recibo diz isso; e o migration.json implantado do #73 (run 37840069193) tem os mesmos dados do commitado, em outra serialização (o Pages reserializa com dois espaços e o arquivo commitado estava com a indentação fora dessa forma). A faixa janelada, as capturas, os controles com host anterior e as sabotagens seguem só locais. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-protocol-draft",
       "at": "2026-10-09T07:37:32.000Z",

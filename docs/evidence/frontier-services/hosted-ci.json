@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-services",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:55:56.150Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37840069134,
+    "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/73",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-08T20:31:20Z",
+    "updatedAt": "2026-10-08T21:27:11Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113526897873,
+        "runAttempt": 1,
+        "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+        "startedAt": "2026-10-08T20:31:24Z",
+        "completedAt": "2026-10-08T20:34:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134/job/113526897873"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113526898217,
+        "runAttempt": 1,
+        "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+        "startedAt": "2026-10-08T20:36:44Z",
+        "completedAt": "2026-10-08T21:26:45Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134/job/113526898217"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113549640399,
+        "runAttempt": 1,
+        "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+        "startedAt": "2026-10-08T21:26:48Z",
+        "completedAt": "2026-10-08T21:27:10Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134/job/113549640399"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113526898047,
+        "runAttempt": 1,
+        "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+        "startedAt": "2026-10-08T20:31:25Z",
+        "completedAt": "2026-10-08T20:37:25Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134/job/113526898047"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113526898258,
+        "runAttempt": 1,
+        "headSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+        "startedAt": "2026-10-08T20:54:14Z",
+        "completedAt": "2026-10-08T21:01:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37840069134/job/113526898258"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "native-cold-start": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "parity-comparison": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "reference-android": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "reference-ios": "75a85ad6ea877eae85d1a55214097eac416f6680"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:31:41Z",
+          "completedAt": "2026-10-08T20:34:27Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 321,
+              "suites": 0,
+              "pass": 321,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:34:27Z",
+          "completedAt": "2026-10-08T20:34:28Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:34:28Z",
+          "completedAt": "2026-10-08T20:34:29Z",
+          "passed": true,
+          "files": 1711
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-services": {
+        "step": "Run npm run test:frontier-services",
+        "number": 52,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T20:54:44Z",
+        "completedAt": "2026-10-08T20:55:22Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 8,
+              "suites": 0,
+              "pass": 8,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "Frontier's services play the 12-turn roteiro to the golden hash, and an independent oracle agrees",
+            "the dump is of this tree: the report was made from the sources the types and the schemas are in now",
+            "the TypeScript types and the schemas Godot registered declare the same names, fields and types",
+            "a field more or less, or a type that differs, on either side fails the parity and names the field",
+            "a name registered on one side only, or of another kind, fails the parity",
+            "the extractor reads the convention and refuses what the schema language cannot say",
+            "the validator the oracle uses rejects a snapshot with a field more or less or of another type",
+            "an action is a call: the oracle rejects one whose args are not its method's arguments, or that was not accepted when enabled"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 73,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/73",
+    "title": "feat(frontier): Publish the Frontier game over typed GameServices (P4 V05-03 servicos)",
+    "headSha": "757d22377e7df288d05011e09ba33f05fd5a0165",
+    "baseSha": "ec831ac1c124c4f49c66c870d1f3ec133115fc3a",
+    "squashMergeCommit": "75a85ad6ea877eae85d1a55214097eac416f6680",
+    "squashCommitSubject": "feat(frontier): Publish the Frontier game over typed GameServices (#73)",
+    "mergedAt": "2026-10-08T20:31:17Z",
+    "headTreeSha": "1849c4b4c95bffc1969994a01f79179bcc955258",
+    "mainTreeSha": "1849c4b4c95bffc1969994a01f79179bcc955258",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 6,
+    "commits": [
+      {
+        "sha": "75c4c0f2b5e68119a3af3da4d1f7f9a2190d5ffa",
+        "subject": "feat(frontier): Publish the Frontier game over typed GameServices"
+      },
+      {
+        "sha": "f199dd0968db4450497488a35f288c7ac8356401",
+        "subject": "docs(frontier): Record the Frontier services slice"
+      },
+      {
+        "sha": "54a9127ecb94d5074032dc2deac72e617af00723",
+        "subject": "docs(roadmap): Record the 0.5 V05-03 services criterion"
+      },
+      {
+        "sha": "94bfb72602db028e6f24bda73976d4f3476fe0f4",
+        "subject": "fix(frontier): Pair each method with its arguments and drop stale sabotage results"
+      },
+      {
+        "sha": "f99c010d1bddefc3bffd897b2e35c70ef8e72308",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-services"
+      },
+      {
+        "sha": "757d22377e7df288d05011e09ba33f05fd5a0165",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-services"
+      }
+    ],
+    "changedFiles": 28,
+    "additions": 4018,
+    "deletions": 26
+  },
+  "artifacts": {
+    "services": {
+      "available": true,
+      "id": 11577664679,
+      "name": "native-frontier-services",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 104725,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "310be4ab4148d1f2ff9fef51a0d2c5ae5a11c51430ae391920c4b55a9c92efa3",
+      "apiDigest": "sha256:310be4ab4148d1f2ff9fef51a0d2c5ae5a11c51430ae391920c4b55a9c92efa3",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "310be4ab4148d1f2ff9fef51a0d2c5ae5a11c51430ae391920c4b55a9c92efa3",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-08T20:55:23Z",
+      "expiresAt": "2027-01-06T20:31:21Z",
+      "fileCount": 7,
+      "files": {
+        "frontier-services-current-1-report.json": "1347ce812ae73787e6dfc332466fd32eb5cf1d39830d60f15dc879548a29b8f0",
+        "frontier-services-current-1.log": "16f39d0c6ce404ddf5441e53ca2578f84b545e5a05e1ac92cf033bcd347fe696",
+        "frontier-services-current-2-report.json": "1347ce812ae73787e6dfc332466fd32eb5cf1d39830d60f15dc879548a29b8f0",
+        "frontier-services-current-2.log": "b425225b145061da253e13f7baf0e95d38460b440f9151e12a2f750405f5ec5f",
+        "frontier-services-probe-bundle.json": "0ce30b5579cb4d8f7ec972d143b7c6a80685b5bbe6df511103d06cc5950cc032",
+        "frontier-services-report.json": "3342155f083915cbf3da08c51974904202fb9fc6bc13b5854b8159849cb21801",
+        "frontier-services-summary.json": "6b24721c46a17c151fa804daa629e958537b00a0cefee481efa3f95dd0aa50b4"
+      },
+      "markers": [
+        {
+          "file": "frontier-services-current-1.log",
+          "line": "FRONTIER_SERVICES_PASSED: 965"
+        },
+        {
+          "file": "frontier-services-current-1.log",
+          "line": "FRONTIER_SERVICES_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "frontier-services-current-2.log",
+          "line": "FRONTIER_SERVICES_PASSED: 965"
+        },
+        {
+          "file": "frontier-services-current-2.log",
+          "line": "FRONTIER_SERVICES_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        }
+      ]
+    }
+  },
+  "findings": []
+}
