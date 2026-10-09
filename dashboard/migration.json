@@ -3993,7 +3993,7 @@
                 },
                 {
                   "label": "Nova execução local no produtor limpo 6c2169a: 14/14 testes nativos, 40/43 checks e três capturas verificadas; critérios replay e perfil limpo continuam abertos.",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
                 }
               ]
             },
@@ -4012,7 +4012,7 @@
                 },
                 {
                   "label": "Sete controles nativos e revisão física confirmam rejeição de LC_RPATH via symlink para fora do app antes da carga; host/RPATH e 220 pins verificados localmente.",
-                  "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
                 }
               ]
             },
@@ -4574,7 +4574,7 @@
       "at": "2026-10-09T13:31:13.000Z",
       "taskIds": [],
       "message": "P2 V05-07, critérios plugin e assinatura: execução macOS local no produtor limpo 6c2169a, com 14/14 testes nativos, 40/43 runtime checks, sete controles e revisão física do symlink-parent/RPATH; os 220 pins SDK e três capturas foram verificados. Incidente de recuperação e hashes estão curados sem reescrever históricos. Replay Frontier, perfil limpo/segunda máquina, CI hospedada, revisão final e Pages continuam pendentes; nenhum critério ou denominador mudou.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-macos-export/docs/evidence/macos-export/symlink-parent-review/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
     },
     {
       "id": "milestone-0-5-v05-06-turno-headless-e2ee6d8",
