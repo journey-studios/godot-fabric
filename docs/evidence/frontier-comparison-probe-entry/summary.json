@@ -1,0 +1,74 @@
+{
+  "note": "The self-check of the instrument through the main loop of the probe project, headless, Debug (the editor's binary). It is not a measurement of an arm and no time of it is compared.",
+  "godot": "4.7.2-stable (official)",
+  "entries": {
+    "main-loop": {
+      "passed": true,
+      "checks": [
+        "schedule/Every scheduled frame of the run has a sample of the instrument",
+        "instrument/The samples are of consecutive process frames, in order, none twice",
+        "instrument/Every measured frame has all its terms: the render reading of each drawn frame had arrived",
+        "load/The busy loop of every load block ran its target, as Time.get_ticks_usec measured it (the field truth)",
+        "accuracy/The median total minus the idle median is within 10% of the 2 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 5 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 10 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 20 ms load",
+        "cpu/The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames",
+        "cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not"
+      ],
+      "failed": [],
+      "oracle": {
+        "judged": true,
+        "violations": []
+      }
+    },
+    "script": {
+      "passed": true,
+      "checks": [
+        "schedule/Every scheduled frame of the run has a sample of the instrument",
+        "instrument/The samples are of consecutive process frames, in order, none twice",
+        "instrument/Every measured frame has all its terms: the render reading of each drawn frame had arrived",
+        "load/The busy loop of every load block ran its target, as Time.get_ticks_usec measured it (the field truth)",
+        "accuracy/The median total minus the idle median is within 10% of the 2 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 5 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 10 ms load",
+        "accuracy/The median total minus the idle median is within 10% of the 20 ms load",
+        "cpu/The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames",
+        "cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not"
+      ],
+      "failed": [],
+      "oracle": {
+        "judged": true,
+        "violations": []
+      }
+    }
+  },
+  "sameChecks": true,
+  "instrumentSha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+  "probeProjectFiles": {
+    "tests/cpu-time-instrument-probe.gd": "c75adee594e3ef21c422b9a772732c56c15df9922f4477ed68d4bf903df31b0a",
+    "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "project.godot": "f4254b28d44fcf5b1027ffd50cae8ebb012d9272e309435e1290ae2ac4daac1f",
+    "tests/cpu-time-instrument-probe-entry.gd": "08ed68565aa10f0fc17ddfe5a8d685747d4d098ebd59213ea9eee14e6ace8a33",
+    "tests/cpu-time-instrument-probe-empty.tscn": "a0da99637da1296c67f0ec75e39c195c2ba894b735af04a80a76cec5bf18aac7",
+    "override.cfg": "19be22c94492776bd6fb574d4001207c1cde0c841b69a78af3a847b3511cdb10"
+  },
+  "scriptsSha256": "5909a07487620b063bde34c949a9886d3dd740e896fdd82629de2edaf1883a8d",
+  "controls": {
+    "without override.cfg": {
+      "passed": false,
+      "why": [
+        "the probe ended with signal SIGTERM",
+        "the probe wrote no report"
+      ],
+      "engineSaid": "Error: Can't run project: no main scene defined in the project."
+    },
+    "override.cfg with the empty scene and no main loop": {
+      "passed": false,
+      "why": [
+        "the probe ended with signal SIGTERM",
+        "the probe wrote no report"
+      ]
+    }
+  }
+}

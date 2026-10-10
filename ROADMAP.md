@@ -1042,6 +1042,16 @@ shape logs no line about the extension, and the control (arm C in the same copy)
 per-arm file sets and the manifest `frontier-comparison-export.json` come later. The [record](https://github.com/journey-studios/godot-fabric/blob/85d2c99a379f1aa2702d0b12bebc0a75ba94b542/docs/evidence/frontier-comparison-arms/README.md)
 is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `execucao`, the instrument's self-check through the main loop (code at `c489a01`, record at `ef18579`): the self-check that gates every campaign (the CPU-time instrument's probe and its oracle)
+no longer needs `-s`, which an export template discards. The probe, a `SceneTree`, is now the main loop of a small probe project (`prepareProbeProject`: the probe and the unchanged instrument copied at their own paths, an entry
+class, an empty scene and an `override.cfg`), and `runSelfCheck` takes an `entry`: `script` as before, `main-loop` (the editor's binary over the probe project, no `--script`) or `release` (the executable of an exported `.app`),
+all judged the same way. The probe's only change is that `--report=<absolute path>` writes there. When the exports directory has `probe/frontier-comparison-export.json`, the Release launcher checks the probe `.app`'s hashes, the
+repository's instrument in its files and that its template is the three arms', and declares `selfCheck: { entry: "release", executable }` instead of `"unsupported"`; without it the campaign refuses as before. On the editor's binary,
+Debug and headless, the self-check through the main loop and through `--script` passes with the same ten checks by name, and two negative controls (no `override.cfg`; an `override.cfg` that names only the empty scene) write no
+report and fail; the times are not compared. **A check of the entry, and no number in it is a result.** The `release` entry ran only against a fake `.app`: the probe project is not exported yet (that comes with the per-arm
+sets, without the frameworks), no window was opened and no campaign ran. The [record](https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md)
+is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to

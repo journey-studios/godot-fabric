@@ -26,7 +26,8 @@ extends SceneTree
 # A window that no display presented (it did not draw nine in ten of the idle frames, or its idle reference is under half of the refresh
 # period) is not a measurement: the checks that need the display are recorded as not judged, with the reason, and the report says so.
 #
-# --report=<file> names the report under res://build. --sabotage expects failures, as the other probes do: scripts/cpu-time-instrument-sabotage.mjs
+# --report=<name> names the report under res://build; --report=<absolute path> writes it there (a pack's res:// is read-only, as in an export).
+# --sabotage expects failures, as the other probes do: scripts/cpu-time-instrument-sabotage.mjs
 # breaks a source on purpose and runs the suite on it.
 const Instrument := preload("res://tests/cpu-time-instrument.gd")
 
@@ -400,7 +401,7 @@ func finish_run() -> void:
     "provenance": provenance(), "config": config(), "frames": frames.columns, "renderReadings": samples.renderReadings,
     "missingSamples": frames.missingSamples, "droppedSamples": frames.droppedSamples, "summary": summary, "checks": checks,
     "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(), "seconds": float(Time.get_ticks_usec() - started_usec) / 1000000.0}
-  var output := FileAccess.open("res://build/" + report_name, FileAccess.WRITE)
+  var output := FileAccess.open(report_name if report_name.is_absolute_path() else "res://build/" + report_name, FileAccess.WRITE)
   if output == null:
     push_error("FABRIC_ERROR: cannot write the report")
     quit(1)
