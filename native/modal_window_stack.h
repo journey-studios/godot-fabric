@@ -23,6 +23,18 @@ class ModalWindowStack final : public godot::RefCounted {
     bool operator==(const Owner &) const = default;
   };
 
+  // Godot runs _exit_tree while a parent is removing children (quit, a scene
+  // change, a freed ancestor), and that parent may be the owner Window, which
+  // then rejects remove_child. Teardown run from _exit_tree holds this scope:
+  // a destroyed Window stays hidden under its owner until it is freed.
+  class TreeExitScope final {
+   public:
+    TreeExitScope() { ++tree_exit_depth_; }
+    ~TreeExitScope() { --tree_exit_depth_; }
+    TreeExitScope(const TreeExitScope &) = delete;
+    TreeExitScope &operator=(const TreeExitScope &) = delete;
+  };
+
   static godot::Ref<ModalWindowStack> for_window(godot::Window &window);
 
   uint64_t create(godot::Window &owner, Owner identity, const godot::Vector2 &size);
@@ -42,6 +54,7 @@ class ModalWindowStack final : public godot::RefCounted {
     Owner identity;
     uint64_t window_id{};
   };
+  static inline thread_local int tree_exit_depth_{};
   uint64_t owner_window_id_{};
   uint64_t revision_{};
   std::vector<Entry> entries_;

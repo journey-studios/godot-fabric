@@ -1,5 +1,29 @@
 # macOS Release export: executed minimal consumer
 
+## CI hospedada e Pages
+
+**O run.** Desde o #88, um push da `main` não roda as suítes nativas. Por isso o recibo vem do workflow Contracts **disparado à mão** sobre a `main` em `19fbb7b`, o squash do #75: run [38063477166](https://github.com/journey-studios/godot-fabric/actions/runs/38063477166), evento `workflow_dispatch`, ramo `main`, primeira tentativa. O run passou nos **oito jobs**, todos com o checkout em `19fbb7b`.
+
+**O passo.** No job `native-suites-runtime`, o passo 69 deriva o template arm64 de Release a partir dos templates oficiais do Godot 4.7.2 e roda `npm run test:export:macos` com `MACOS_EXPORT_TEMPLATE` apontando para ele. O passo se chama "Export, sign and execute the relocated macOS consumer with rejection controls".
+- Passou nos seus 14 testes, sem nenhum pulado (TAP 14 de 14). Entre eles estão o export real, a assinatura ad hoc verificada, o app copiado para outro diretório e executado (headless e com janela) e os controles de rejeição.
+- O artefato `native-macos-export` (id 11675292938, SHA-256 `34f9eb69…`, 89 arquivos) traz os relatórios. Neles estão as marcas `CONSUMER_EDITOR_BUILD_PASSED`, `GODOT_FABRIC_EXPORT_PREFLIGHT_PASSED` e `CONSUMER_VALIDATION_PASSED` (headless e com janela).
+- O job `contracts` passou `npm run test:contracts` (7, 43 e 583 testes de Node). O único teste pulado é, de propósito, o export nativo, que pula sem o template nesse job; o [recibo](hosted-ci.json) registra esse pulo, e o passo nativo acima roda o mesmo teste com o template.
+- O recibo também guarda os jobs, os passos, os digests e os arquivos do artefato.
+
+**O Pages.** O push de `19fbb7b` rodou o workflow do Pages: run [38063457484](https://github.com/journey-studios/godot-fabric/actions/runs/38063457484), com `build` e `deploy` em success e 43 testes do painel passando. O [recibo](publication.json) registra:
+- o deployment 6982856021, em success;
+- o artefato `github-pages` que ele usou (id 11673644082, SHA-256 `6368f93e…`);
+- que o `migration.json` publicado é o commitado em `19fbb7b`, com a entrada de atividade dos critérios `plugin` e `assinatura` do V05-07.
+
+**O que continua só local:** as revisões de contenção e de symlinks, as auditorias locais do arquivo e as capturas comparadas byte a byte, todas registradas abaixo.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice macos-export --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
+node scripts/hosted-receipts.mjs --check
+```
+
 ## Containment review follow-up
 
 Clean producer `881a711b9972421017e98997539e56615586d1e1` repeated the real
@@ -8,7 +32,7 @@ export after consolidating the three path guards: 13/13 native tests, exact
 All 220 SDK source pins remain identical to the preceding producer; all three
 new captures are byte-identical to its exported and independently executed
 editable captures. The [review delta](containment-review/README.md) retains the
-new observations and hash index. Hosted CI for the final delivery is pending.
+new observations and hash index. The hosted CI of the final delivery is recorded in [CI hospedada e Pages](#ci-hospedada-e-pages).
 
 ## Current fixed-window proof
 
@@ -26,7 +50,8 @@ the original/public hash index. Contracts passed 395 Node tests plus one explici
 native-template skip and 23 Python tests; static and publication checks passed.
 
 This is local evidence. The hosted `7c6a4f8` run failed its old 1080×600 capture
-expectation; the new fixed-window protocol has no green hosted result yet.
+expectation; the delivery's hosted run passed the native export lane, its headed run included (see
+[CI hospedada e Pages](#ci-hospedada-e-pages)).
 The [failure history](fixed-window/failure-history.json) also preserves an
 unexplained local remount failure and the corrected generic-output false positive.
 The Frontier game replay, clean OS profile and second Mac/VM remain open.

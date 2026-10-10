@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 1,
+  "scenario": "macos-export",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-10T16:14:25.421Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38063477166,
+    "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/75",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T15:24:26Z",
+    "updatedAt": "2026-10-10T16:05:23Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114246283564,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:24:30Z",
+        "completedAt": "2026-10-10T15:27:58Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114246283564"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114246283550,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:24:34Z",
+        "completedAt": "2026-10-10T15:31:32Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114246283550"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114247729196,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:31:39Z",
+        "completedAt": "2026-10-10T15:52:38Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114247729196"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114247729155,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:31:39Z",
+        "completedAt": "2026-10-10T15:53:36Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114247729155"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114247729190,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:31:41Z",
+        "completedAt": "2026-10-10T16:05:23Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114247729190"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114247729160,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:31:35Z",
+        "completedAt": "2026-10-10T15:32:00Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114247729160"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114246283414,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:24:30Z",
+        "completedAt": "2026-10-10T15:30:06Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114246283414"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114246283573,
+        "runAttempt": 1,
+        "headSha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+        "startedAt": "2026-10-10T15:24:36Z",
+        "completedAt": "2026-10-10T15:30:58Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38063477166/job/114246283573"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "native-cold-start": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "native-suites-frontier": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "native-suites-input": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "native-suites-runtime": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "parity-comparison": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "reference-android": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "reference-ios": "19fbb7b755b56516d66a69706b54e780b309a3e8"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T15:24:50Z",
+          "completedAt": "2026-10-10T15:27:54Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 583,
+              "suites": 0,
+              "pass": 582,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T15:27:54Z",
+          "completedAt": "2026-10-10T15:27:55Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T15:27:55Z",
+          "completedAt": "2026-10-10T15:27:56Z",
+          "passed": true,
+          "files": 2302
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:export:macos": {
+        "job": "native-suites-runtime",
+        "step": "Export, sign and execute the relocated macOS consumer with rejection controls",
+        "number": 69,
+        "conclusion": "success",
+        "startedAt": "2026-10-10T16:03:51Z",
+        "completedAt": "2026-10-10T16:05:04Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 14,
+              "suites": 0,
+              "pass": 14,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "macOS export documents its required new-output contract without starting a build",
+            "macOS export requires an explicit template before provisioning",
+            "macOS export refuses existing and dangling-symlink destinations before provisioning",
+            "committed consumer oracle preserves the exact 40/43 check names and capture order",
+            "headed consumer capture requires the fixed physical image and matching logical RN metrics",
+            "load-path validation checks real targets behind app aliases and symlinks",
+            "load-path audit awaits realpath containment for Mach-O aliases",
+            "generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output",
+            "failed consumer outputs are retained byte-for-byte and missing outputs are allowed",
+            "failed consumer output retention rejects symlinks before copying anything",
+            "failed consumer output retention rejects a symlinked user-data directory",
+            "failed consumer output retention refuses existing evidence destinations",
+            "native macOS arm64 export and copied-app rejection controls",
+            "Godot export payload and registered hooks validate in an isolated project"
+          ],
+          "failedTests": [],
+          "markers": [],
+          "skippedTests": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 75,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/75",
+    "title": "feat(export): Run and verify a signed macOS Release consumer",
+    "headSha": "0e7f0d09430a0cf7cf8309e0dbcff2fd75822646",
+    "baseSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+    "squashMergeCommit": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+    "squashCommitSubject": "feat(export): Run and verify a signed macOS Release consumer (#75)",
+    "mergedAt": "2026-10-10T15:24:06Z",
+    "headTreeSha": "8010a246db20c35b93a3490131af5ef69d884cc1",
+    "mainTreeSha": "33ed1da380fe01e7bc09a57bb585ce6e1ce1b470",
+    "headTreeEqualsMainTree": false,
+    "treeDifference": {
+      "differingPaths": [
+        "ROADMAP.md",
+        "dashboard/migration.json",
+        "docs/evidence/README.md",
+        "docs/evidence/frontier-comparison-campaign/README.md",
+        "docs/evidence/frontier-comparison-campaign/hosted-ci.json",
+        "docs/evidence/frontier-comparison-campaign/publication.json",
+        "scripts/hosted-receipts-slices.mjs",
+        "tests/hosted-receipts.test.mjs"
+      ],
+      "pathsMainChangedAfterTheHeadForked": 8,
+      "comparisonComplete": true,
+      "explainedByMain": true
+    },
+    "commitCount": 36,
+    "commits": [
+      {
+        "sha": "291dbcb967a187d4658ba3f002b2f42b55c6a813",
+        "subject": "feat(export): Add verified macOS arm64 consumer export"
+      },
+      {
+        "sha": "a2b1bcdd7dd8c2bfc170613aae33518da37410dc",
+        "subject": "fix(export): Accept bare executable and loader search roots"
+      },
+      {
+        "sha": "cee40c95cae124479dbb2254ea68a190ef9482bb",
+        "subject": "fix(export): Normalize verified framework aliases before signing"
+      },
+      {
+        "sha": "a3f77023ca0c20ac66489514d06d99152e603cb2",
+        "subject": "Merge remote-tracking branch 'origin/main' into codex/frontier-macos-export"
+      },
+      {
+        "sha": "e51e45415c090d568393106841dc764e9bf4f0cc",
+        "subject": "test(export): Run native package and rejection gates in CI"
+      },
+      {
+        "sha": "cb690c759926c9514284642b6f7f93348e233d07",
+        "subject": "test(export): Assert the actual modified-plist rejection"
+      },
+      {
+        "sha": "58f527193039222b19794960e7b662cb34c65e74",
+        "subject": "fix(export): Retain exact build inputs with runtime receipts"
+      },
+      {
+        "sha": "954a56378fe124608ceb02d821402525363e88be",
+        "subject": "docs(export): Record executed macOS app and independent review"
+      },
+      {
+        "sha": "5ba0d5b26b017f261b28d43dac5653308af14ed4",
+        "subject": "docs(dashboard): Accept two executed macOS export criteria"
+      },
+      {
+        "sha": "ec312d2e37d972a52f24fd0a8a644b9562825153",
+        "subject": "test(export): Exit on failed payload expectations"
+      },
+      {
+        "sha": "64ac2d8db20dca272c004d95614dd996825d82c8",
+        "subject": "chore: Integrate Frontier services before macOS export delivery"
+      },
+      {
+        "sha": "7f95aa9a63bdf1d9bd779e19f18e4845571e31c1",
+        "subject": "ci(export): Preserve the verified macOS application archive"
+      },
+      {
+        "sha": "7c6a4f8d9411fe7ea2ed5f97f18fd97f0ad4ac4e",
+        "subject": "chore: Integrate Frontier scope with the macOS export lane"
+      },
+      {
+        "sha": "9fe64bb0ae5f48ac0b020b0f6b8d9089a9e99369",
+        "subject": "fix(export): Pin a CI-sized window without clipping the consumer"
+      },
+      {
+        "sha": "609f93a2f5abdb9600d5da86450a83cbef4f84dc",
+        "subject": "fix(export): Retain failed consumer observations before cleanup"
+      },
+      {
+        "sha": "63dde9c220eed2c18182bcc82b04035b493641f5",
+        "subject": "fix(test): Classify Godot failures at the engine boundary"
+      },
+      {
+        "sha": "29969eb0d64201a1797e6e866a2ef650b1282fde",
+        "subject": "chore: Integrate the accepted Frontier pointer policy"
+      },
+      {
+        "sha": "ead6ad46a68083c0ba9fd10e82d296d93750ac23",
+        "subject": "docs(export): Record the verified fixed-window macOS evidence"
+      },
+      {
+        "sha": "8805f3a5c30e9fc04bbd94b96c6f642aa9775c6f",
+        "subject": "docs(dashboard): Pin P2 to the verified fixed-window evidence"
+      },
+      {
+        "sha": "881a711b9972421017e98997539e56615586d1e1",
+        "subject": "ref(export): Share component-aware path containment"
+      },
+      {
+        "sha": "873bbc60ab58886e6b5471d68df84a600f36a747",
+        "subject": "docs(export): Record the containment review execution"
+      },
+      {
+        "sha": "5596acb1cf975ff470acf531c0843fef19706e70",
+        "subject": "fix(export): Reject load paths through external symlinks"
+      },
+      {
+        "sha": "a8ab1a3e9b3ecebaf3d618113bd7d9cc379e618f",
+        "subject": "test(export): Use a neutral synthetic traversal target"
+      },
+      {
+        "sha": "0c03dd9c03cbbc8ec1c8a0bf5be54c330dae778d",
+        "subject": "docs(export): Record the symlink rejection execution"
+      },
+      {
+        "sha": "daba1d57690babcc4d213541505b2ab7444facf4",
+        "subject": "fix(export): Preserve symlink traversal in physical load paths"
+      },
+      {
+        "sha": "3403627e284fe6739e33ea579a2ce9d11d334c67",
+        "subject": "chore: Integrate main into the macOS export continuation"
+      },
+      {
+        "sha": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+        "subject": "chore: Integrate the Frontier turn measurement from main"
+      },
+      {
+        "sha": "9c5aa275f3978847ed28af22e53600f73bfa9255",
+        "subject": "docs(export): Record the recovered symlink-parent native proof"
+      },
+      {
+        "sha": "49831a9b8d067203af312339ac13868f0b527dc6",
+        "subject": "docs(dashboard): Pin the symlink-parent evidence links"
+      },
+      {
+        "sha": "a7c39f45c5b5e257a70ecea77d59c25ad4520ed9",
+        "subject": "docs(dashboard): Remove redundant evidence from the main merge"
+      },
+      {
+        "sha": "9333b4c3c53efcfba1bccee86cf1e80d942b20d2",
+        "subject": "merge(main): Preserve the export lane with milestone exit guards"
+      },
+      {
+        "sha": "d4fae6225a5ee3b51414a6abe5ab6b803abb4f0b",
+        "subject": "merge(export): Preserve macOS validation in the split native CI"
+      },
+      {
+        "sha": "37307f7b8517a68ff0cf02d0a3c1b8f3e93b6dd4",
+        "subject": "merge(export): Retain presented Frontier turn evidence"
+      },
+      {
+        "sha": "c579998735379457e2093397f8a21e5cb4742480",
+        "subject": "merge(export): Preserve milestone guards on native dispatch"
+      },
+      {
+        "sha": "b4a2dc25ffd39fcc5cf2c0f46e2b75759fb74e4b",
+        "subject": "Merge remote-tracking branch 'origin/main' into codex/frontier-macos-export"
+      },
+      {
+        "sha": "0e7f0d09430a0cf7cf8309e0dbcff2fd75822646",
+        "subject": "Merge remote-tracking branch 'origin/main' into codex/frontier-macos-export"
+      }
+    ],
+    "changedFiles": 189,
+    "additions": 69074,
+    "deletions": 138
+  },
+  "artifacts": {
+    "macosExport": {
+      "available": true,
+      "id": 11675292938,
+      "name": "native-macos-export",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 36817280,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "34f9eb69c4003fb188a832af29e420f508e931ee2d5a9704a834b89f51b63ed2",
+      "apiDigest": "sha256:34f9eb69c4003fb188a832af29e420f508e931ee2d5a9704a834b89f51b63ed2",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "34f9eb69c4003fb188a832af29e420f508e931ee2d5a9704a834b89f51b63ed2",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-10T16:05:14Z",
+      "expiresAt": "2027-01-08T15:24:27Z",
+      "fileCount": 89,
+      "files": {
+        "macos-export-Verified-50536-1791648232518-aaf84c/app.js": "eab3e11c244cc0d62e0bc36a7e9c0224df7c0e0304ffb1c84ebecb0c3a499e56",
+        "macos-export-Verified-50536-1791648232518-aaf84c/build-report.json": "79d0f8c3d74b99711e20a6c8ea006a4b6eaf093999e16c78eae62cd3357a7881",
+        "macos-export-Verified-50536-1791648232518-aaf84c/exported-engine-version.log": "edff16c1721dd4ae989cadf29a01f574ae8d51b118221f664725bd6980bbba5d",
+        "macos-export-Verified-50536-1791648232518-aaf84c/fixture-project-diff.log": "9a06466511de4b683773c3a150acf05b4ea6240ef22092e393d1a2ced529ebd9",
+        "macos-export-Verified-50536-1791648232518-aaf84c/fixture-validation-diff.log": "f7716f1554380bb8b31973f9d39de4fb5bda9588e4a88bf01ac47ebf2e04426c",
+        "macos-export-Verified-50536-1791648232518-aaf84c/initial.png": "f92ec4a28dba55fd669fa211314d72f4046fa8718bfc634ac6989f8e1106261e",
+        "macos-export-Verified-50536-1791648232518-aaf84c/inspect-plist-bundle-id.log": "f7fa75672824207fee7b75122ebf3d22e4b3f4f292cb992c05c4c22f71a28cee",
+        "macos-export-Verified-50536-1791648232518-aaf84c/inspect-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-Verified-50536-1791648232518-aaf84c/lipo-ReactNativeDependencies-framework.log": "9cb483fd3739db2602d4c5bf672f4af954dc6dad82b36e8642b034af58f11c11",
+        "macos-export-Verified-50536-1791648232518-aaf84c/lipo-app-executable.log": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "macos-export-Verified-50536-1791648232518-aaf84c/lipo-hermesvm-framework.log": "9cb483fd3739db2602d4c5bf672f4af954dc6dad82b36e8642b034af58f11c11",
+        "macos-export-Verified-50536-1791648232518-aaf84c/lipo-host.log": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-editor.log": "86d9d9d5c9321a9aa2da7c408460f0fc261576cf37ca667975d6531d2d17701f",
+        "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-pck.log": "4543568161d0146aaea8978be8b3e388b70de51d536db94f3d7048ba5bb12df9",
+        "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-preflight.log": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+        "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-release.log": "2e2ca31fe62dcb4f30b01d211aac5751d1c7b3de6b4c51267bba665ab6ff8a33",
+        "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-source-head.log": "1a4e88803dbba9a11eb4cca9db393492bda79e8d5bd3b3a99987b5c8ba7c08e8",
+        "macos-export-Verified-50536-1791648232518-aaf84c/otool-load-commands-ReactNativeDependencies-framework.log": "474f3a1f1eb230faf4b7e162a8724770174a9c1aa589e38a3195092d405d5d7c",
+        "macos-export-Verified-50536-1791648232518-aaf84c/otool-load-commands-app-executable.log": "6dbc564983ea6f5e7d1252f00a62a9b1473facda64b15ec212fbcf6eba4fd1ed",
+        "macos-export-Verified-50536-1791648232518-aaf84c/otool-load-commands-hermesvm-framework.log": "5359b6873eebf7c462efa96d54ba0e89f285c3b817e4ba9e547e2117cbee5d84",
+        "macos-export-Verified-50536-1791648232518-aaf84c/otool-load-commands-host.log": "a37cc53915c46c22a7baea8dfb4f17621e5bad0bb9bfcb52127f917c86733a7f",
+        "macos-export-Verified-50536-1791648232518-aaf84c/provision.log": "647a09ff11160734d4dae61aa7161a47c4fefaf2b3178d5f867a8719f1acc59e",
+        "macos-export-Verified-50536-1791648232518-aaf84c/receipt.json": "c0f45b3899fa0017c9a8d466ba466fbcdc08294de9ce917d4128ee1735623e33",
+        "macos-export-Verified-50536-1791648232518-aaf84c/resized.png": "b6a2f073bdb60b34b168d838f14bc90b20a722ad079286ae2d588dca54639bab",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headed-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headed.json": "ce1ff56e655a13f432510f88728a38b995e6cd0740d86e15d2c6e04ca091b9f7",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headed.log": "fb376be7564f8ea2842c8e59dc97309247550466d9c2eceff14c834913ed053e",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headless-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headless.json": "e9d32acc5f5446a0f8876126c3bcf6982fe37a4e9d048bceebdfb8bd8301745a",
+        "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headless.log": "45edbfe59d87f729985f0824fcf819b7c5413a28aca5cafcd05b609bad8a42c9",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sdk-manifest.json": "4d8e215dd7b3a1893accf1a3e19a00b253ca4518faec6ba319ae14878167be08",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-app.log": "e06847729154724f8e54da71222aa24ac7fcd3bdcb6d89f7ef9047ef6031a270",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-executable.log": "cafb0c12dcd3fb502cd85238d5a6b5a1ed7720336d1d0eebda95ed8b20eecfe0",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-framework-0.log": "72c160d2c1f16ad4228a1a8f30e390a3750897ba17292a0c14c055c1bd6407a1",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-framework-1.log": "04b1add2870808c69acdf4ebe6ee65ac3e39b6adec7323645bab8dd622852db2",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-host.log": "6cca01977b0005d931ef446550b7b3204da10ed3201725babfbbaadee678f11e",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-resource-bundle-0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-resource-bundle-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-resource-bundle-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/sign-resource-bundle-3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/signature-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-Verified-50536-1791648232518-aaf84c/template-inventory.log": "4c9db940910b37409b7b7f8be525576a1f46c6b0e0ba78c6b2a388f9872a748a",
+        "macos-export-Verified-50536-1791648232518-aaf84c/template-member-architectures.log": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+        "macos-export-Verified-50536-1791648232518-aaf84c/template-member-extract.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/updated.png": "bbe944cccff92b90808e9f4dd38dc83bf999c6c9ce51f5573d4c65dc94b570ef",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-4.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-5.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-6.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-7.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-Verified-50536-1791648232518-aaf84c/verify-signature-8.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/signature-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-4.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-5.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-6.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-7.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-idempotent/verify-signature-8.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-missing-framework/otool-load-commands-app-executable.log": "c9498b54789eaebf6e0a6e3651efce65e2ab72f1fcae330d0f8a8edab1bfe313",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-missing-framework/otool-load-commands-host.log": "344c73bd117b7d3dc70562c90c960237cf77dbab669cdb725b91a1af864cf20c",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-rpath/install-absolute-rpath.log": "e3ea2b15cd10b267d1ce7185ddd0e85affb0ff4e623f9da39da3609c6239c547",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-rpath/otool-load-commands-app-executable.log": "6418816eacb40a0a63498102f20a5ddaed9d75e68ed328b58f8940b68a4ba831",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-rpath/otool-load-commands-host.log": "68d7c5d28cdfda0b21a2ec6b53a863850abb038f8f685f51bac6a6f3fcb8ec64",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/signature-plist-executable.log": "674f54f40bfe96845ffd78d98129b459abf4ff83fcdd71954a5db166d3c608cc",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-0.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-3.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-4.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-5.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-6.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-signature/verify-signature-7.log": "9834d2deff824adca12880c87732e8f20d9eaf3835a18b6bd9f24491530db77f",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-parent-rpath/install-symlink-parent-rpath.log": "fbb0b781085d0ce4090e48396047369769eb6236d198f09cdad601ceca062c90",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-parent-rpath/otool-load-commands-app-executable.log": "ac1c49ca11dd149e3dd78551ac44a4fcffe95a9ce86c1e52497070ec5d381664",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-parent-rpath/otool-load-commands-host.log": "9c012628b9e5a7ae30f350f499c4cab45aba1e3e15ddeb5b42eb4d30ed9ba456",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-rpath/install-symlink-rpath.log": "a1a2f420bf98e9b10d43a00b622ad4f47d117df00dbe2e0cadbf22c7ee0297b5",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-rpath/otool-load-commands-app-executable.log": "5f6749eb68e2de3372ba90080dc147d9f1ba99f2173f65d13d31b19ab86052af",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191-symlink-rpath/otool-load-commands-host.log": "9c254ded0ccbdfeeb056460ea41d6de19c694d1f1ac4cd9983a211e211e791b4",
+        "macos-export-native-controls-1585304a-71b3-4fae-a4b3-0851e8c53191/report.json": "2cd16db70b32a4715e093adba5bc68d131ae8c9672c4b4e819e4f9a736a6b96c",
+        "macos-export-native-positive-1585304a-71b3-4fae-a4b3-0851e8c53191/Verified.app.tar.gz": "a8f6e85a3e4ed45aea935bdf1900a6008072fe11e71de3f2979d772b991b15d5",
+        "macos-export-payload-controls/expect-rejection.log": "8878751321352e1da297ba224645a9ff4a9505761240f6d942bcecaf4bddffc0",
+        "macos-export-payload-controls/expect-success.log": "2a340703974771c4e80c493c200281f06e1d9771e9741ff7e95c81c8db02fbac",
+        "macos-template-derivation.json": "f70e36295b3f619997d51192dc2e310acb8da776e49c9c01348412b2dd38ee51"
+      },
+      "markers": [
+        {
+          "file": "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-editor.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "macos-export-Verified-50536-1791648232518-aaf84c/macos-export-preflight.log",
+          "line": "GODOT_FABRIC_EXPORT_PREFLIGHT_PASSED: res://.godot_fabric/app.js"
+        },
+        {
+          "file": "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headed.log",
+          "line": "CONSUMER_VALIDATION_PASSED"
+        },
+        {
+          "file": "macos-export-Verified-50536-1791648232518-aaf84c/runtime-headless.log",
+          "line": "CONSUMER_VALIDATION_PASSED"
+        }
+      ]
+    }
+  },
+  "findings": []
+}
