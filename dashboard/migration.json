@@ -4337,6 +4337,14 @@
                 {
                   "label": "Pages do #113: o deployment do push de 4c3abb7 publicou o migration.json commitado, com a entrada de atividade do braço B",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/publication.json"
+                },
+                {
+                  "label": "CI hospedada do passe de otimização do braço B (#121, squash e7fcf1c): a Contracts disparada na main (run 38053834754) passou nos oito jobs, com as duas HUDs na lane no native-suites-runtime",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do #121: o deployment do push de e7fcf1c publicou o migration.json commitado, com a entrada de atividade do passe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/publication.json"
                 }
               ]
             },
@@ -4762,6 +4770,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-braco-b-otimizacao-receipts",
+      "at": "2026-10-10T13:45:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #121, o passe de otimização do braço B do V05-10, já na main como e7fcf1c. A Contracts disparada na main sobre o squash (run 38053834754) passou nos oito jobs: no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs (a nativa com as listas reconciliadas, o pool de painéis e a reciclagem do painel de estresse) pela matriz, pelos overlays e pelo estresse; o job contracts passou 7, 43 e 535 testes de Node. O Pages do push (run 38053830063) publicou o migration.json commitado. Gerador canônico com 26 fatias e 52 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/README.md#ci-hospedada-e-pages"
+    },
     {
       "id": "milestone-0-5-v05-10-mudanca-preregistration",
       "at": "2026-10-10T13:20:00.000Z",
