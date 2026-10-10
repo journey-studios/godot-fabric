@@ -1,0 +1,44 @@
+import React from "react";
+import { View } from "react-native";
+import { send } from "../store";
+import { FRONTIER_CLEAR_SELECTION, FRONTIER_SET_PRODUCTION } from "../frontier-types";
+import type { CityScreen, FrontierSnapshot } from "../frontier-types";
+import { itemIcon } from "./icons";
+import { Choice, COLORS, Heading, Icon, Line, Panel, Reason } from "./kit";
+
+// The city screen: what the city is, what it builds and what it can be told to build. Each item carries the game's own `enabled` and
+// `reason_text`; pressing one puts it in the slot the snapshot's items were checked for, the first free one or the last. It is shown in an
+// overlay (hud.tsx), so it has a Close of its own: the game's `clear_selection`, the same call as Escape. The city's icon is in its title and
+// each item has the icon of what it trains or adds: Images inside the Modal's own window.
+
+const slotFor = (city: CityScreen) => Math.min(city.queue.length, city.queue_max - 1);
+
+export function City({ snapshot }: { snapshot: FrontierSnapshot }) {
+  const city = snapshot.city;
+  const food = snapshot.resources.food.stock;
+  return <Panel id="hud-city" style={{ width: 440 }}>
+    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+        <Icon id="hud-city-icon" name="city" size={22} />
+        <Heading id="hud-city-title">{city.present === 1 ? `${city.name} · size ${city.size}/${city.max_size}` : "No city yet"}</Heading>
+      </View>
+      <Choice id="hud-city-close" label="Close" color={COLORS.neutral} enabled onPress={() => { void send(FRONTIER_CLEAR_SELECTION, []); }} />
+    </View>
+    <Line id="hud-city-rates" color={COLORS.resource}>
+      {`Food ${food}/${city.food_needed} (+${city.food_rate}) · Production +${city.production_rate} · Science +${city.science_rate}`}
+    </Line>
+    <Line id="hud-city-queue-title" color={COLORS.muted}>{`Queue ${city.queue.length}/${city.queue_max}`}</Line>
+    {city.queue.map(entry =>
+      <Line key={entry.slot} id={`hud-city-queue-${entry.slot}`}>{`${entry.slot + 1}. ${entry.label} ${entry.stock}/${entry.cost}`}</Line>)}
+    {city.items.map(item =>
+      <View key={item.id} style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+        <Choice id={`hud-city-item-${item.id}`} label={`${item.label} (${item.cost})`} enabled={item.enabled === 1} icon={itemIcon(item.id)}
+          onPress={() => { void send(FRONTIER_SET_PRODUCTION, [item.id, slotFor(city)]); }} />
+        {item.enabled === 1 ? null : <Reason id={`hud-city-item-${item.id}-reason`}>{item.reason_text}</Reason>}
+      </View>)}
+    <Line id="hud-city-buildings" color={COLORS.muted}>{`Buildings: ${city.buildings.length === 0 ? "none" : city.buildings.join(", ")}`}</Line>
+    <Line id="hud-city-garrison" color={COLORS.muted}>
+      {`Garrison: ${city.garrison.length === 0 ? "none" : city.garrison.map(unit => `${unit.kind} #${unit.id}`).join(", ")}`}
+    </Line>
+  </Panel>;
+}

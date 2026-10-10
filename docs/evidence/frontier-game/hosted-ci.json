@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-game",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:56:16.913Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37815810524,
+    "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/70",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-08T17:20:34Z",
+    "updatedAt": "2026-10-08T18:14:08Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113444020200,
+        "runAttempt": 1,
+        "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+        "startedAt": "2026-10-08T17:20:38Z",
+        "completedAt": "2026-10-08T17:22:41Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524/job/113444020200"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113444019880,
+        "runAttempt": 1,
+        "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+        "startedAt": "2026-10-08T17:20:45Z",
+        "completedAt": "2026-10-08T18:13:42Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524/job/113444019880"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113467322659,
+        "runAttempt": 1,
+        "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+        "startedAt": "2026-10-08T18:13:46Z",
+        "completedAt": "2026-10-08T18:14:07Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524/job/113467322659"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113444019972,
+        "runAttempt": 1,
+        "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+        "startedAt": "2026-10-08T17:20:39Z",
+        "completedAt": "2026-10-08T17:27:01Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524/job/113444019972"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113444020318,
+        "runAttempt": 1,
+        "headSha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+        "startedAt": "2026-10-08T17:20:43Z",
+        "completedAt": "2026-10-08T17:29:09Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37815810524/job/113444020318"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "native-cold-start": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "parity-comparison": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "reference-android": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "reference-ios": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T17:20:51Z",
+          "completedAt": "2026-10-08T17:22:38Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 321,
+              "suites": 0,
+              "pass": 321,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T17:22:38Z",
+          "completedAt": "2026-10-08T17:22:38Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T17:22:38Z",
+          "completedAt": "2026-10-08T17:22:38Z",
+          "passed": true,
+          "files": 1664
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:civ-lite-game": {
+        "step": "Run npm run test:civ-lite-game",
+        "number": 50,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T17:39:27Z",
+        "completedAt": "2026-10-08T17:39:30Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "Frontier's rules replay 12 turns to the same golden hash in three processes, and an independent oracle agrees"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 70,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/70",
+    "title": "feat(frontier): Model the Frontier game's rules and scenario in GDScript",
+    "headSha": "4d3428e88de5673214a5fdacec0e5d29fd6560d8",
+    "baseSha": "66c948bc21fd88c2bb279f198849a5843519f741",
+    "squashMergeCommit": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+    "squashCommitSubject": "feat(frontier): Play the 0.5 Frontier game's rules in pure GDScript (#70)",
+    "mergedAt": "2026-10-08T17:20:31Z",
+    "headTreeSha": "aef6e35b3b4ac5f58df635110ae29a76f0084575",
+    "mainTreeSha": "aef6e35b3b4ac5f58df635110ae29a76f0084575",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 9,
+    "commits": [
+      {
+        "sha": "b14ea13cbe85f43393d7d9e977a010dd17a7bb8b",
+        "subject": "feat(frontier): Model the Frontier game's rules and scenario in GDScript"
+      },
+      {
+        "sha": "4b86a7bd0c9f4880a2241369e944380a4ef7b32c",
+        "subject": "feat(frontier): Let the HUD clear the selection back to no context"
+      },
+      {
+        "sha": "c2e4501c41fb533af45f449068a639d1f02d1a72",
+        "subject": "docs(evidence): Record the frontier-game slice at 4b86a7b"
+      },
+      {
+        "sha": "7d003f2dd436cd1e520956a085e4edffa3b1994e",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-game"
+      },
+      {
+        "sha": "0a52bb25d568f8e0516ef07bd86c8b8634ec12b7",
+        "subject": "docs(roadmap): Record the 0.5 V05-03 replay criterion"
+      },
+      {
+        "sha": "ca55444a07bd41e347bda111b4d566f9e6ca69db",
+        "subject": "fix(frontier): Keep the scripted faction out of the player's city"
+      },
+      {
+        "sha": "95aa3c5c847d904aa33e0d3f48bed899a25e1c94",
+        "subject": "test(frontier): Judge the events the scripted faction logs"
+      },
+      {
+        "sha": "04e2dd375b0ecdb5617be69c3b1c9bb9a427e7b9",
+        "subject": "docs(frontier): Say the wrong-event sabotage changes the wait's log"
+      },
+      {
+        "sha": "4d3428e88de5673214a5fdacec0e5d29fd6560d8",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-game"
+      }
+    ],
+    "changedFiles": 26,
+    "additions": 4039,
+    "deletions": 3
+  },
+  "artifacts": {
+    "game": {
+      "available": true,
+      "id": 11568151521,
+      "name": "native-civ-lite-game",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 50093,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "22e06ce83e3d721badaefa927ff847450a3c2e0cb2336ba58e8103df80dd7bee",
+      "apiDigest": "sha256:22e06ce83e3d721badaefa927ff847450a3c2e0cb2336ba58e8103df80dd7bee",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "22e06ce83e3d721badaefa927ff847450a3c2e0cb2336ba58e8103df80dd7bee",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-08T17:39:33Z",
+      "expiresAt": "2027-01-06T17:20:34Z",
+      "fileCount": 7,
+      "files": {
+        "civ-lite-game-report.json": "a79d78b3237517af4438a8fc0b9fde3d198eaa71622a7884d4cf5028ff25ab1a",
+        "civ-lite-game-run-1-report.json": "05f1d98ae51693e30be89d267e4a6d81bcd2dda387e5128db5e6e08827d35036",
+        "civ-lite-game-run-1.log": "4910bc12a57624ddfb08290bc8e1c1f33cd99d5a718af12ac0146d31ebc21d43",
+        "civ-lite-game-run-2-report.json": "05f1d98ae51693e30be89d267e4a6d81bcd2dda387e5128db5e6e08827d35036",
+        "civ-lite-game-run-2.log": "4910bc12a57624ddfb08290bc8e1c1f33cd99d5a718af12ac0146d31ebc21d43",
+        "civ-lite-game-run-3-report.json": "05f1d98ae51693e30be89d267e4a6d81bcd2dda387e5128db5e6e08827d35036",
+        "civ-lite-game-run-3.log": "4910bc12a57624ddfb08290bc8e1c1f33cd99d5a718af12ac0146d31ebc21d43"
+      },
+      "markers": [
+        {
+          "file": "civ-lite-game-run-1.log",
+          "line": "CIV_LITE_GAME_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "civ-lite-game-run-1.log",
+          "line": "CIV_LITE_GAME_PASSED: 634"
+        },
+        {
+          "file": "civ-lite-game-run-2.log",
+          "line": "CIV_LITE_GAME_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "civ-lite-game-run-2.log",
+          "line": "CIV_LITE_GAME_PASSED: 634"
+        },
+        {
+          "file": "civ-lite-game-run-3.log",
+          "line": "CIV_LITE_GAME_HASH: 275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29"
+        },
+        {
+          "file": "civ-lite-game-run-3.log",
+          "line": "CIV_LITE_GAME_PASSED: 634"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

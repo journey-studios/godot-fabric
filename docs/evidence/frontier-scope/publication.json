@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-scope",
+  "status": "verified-deployment-artifact-unavailable",
+  "at": "2026-10-09T13:58:29.785Z",
+  "repository": "journey-studios/godot-fabric",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/74",
+  "mainCommit": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+  "run": 37842839320,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839320",
+  "event": "push",
+  "branch": "main",
+  "startedAt": "2026-10-08T20:53:45Z",
+  "completedAt": "2026-10-08T20:54:36Z",
+  "triggeredBy": "wallynm",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "attempts": 1,
+  "buildCheckout": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+  "dashboardTestsTap": {
+    "pass": 43,
+    "fail": 0
+  },
+  "deployment": {
+    "id": 6946556335,
+    "sha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+    "state": "success",
+    "at": "2026-10-08T20:54:36Z",
+    "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+  },
+  "deployedArtifact": {
+    "available": false,
+    "name": "github-pages",
+    "id": 11577793612,
+    "sizeBytes": 1446285,
+    "uploadLogDigest": "2d0056fa31417a41499482af2e6e184c2f0639ab9a021e05bcc1bdf7de2e7cfb",
+    "reason": "the run no longer lists the github-pages artifact"
+  },
+  "committedMigrationJsonSha256": "677123bb406a499b4736b17a53c94f7b60d07430b971e4f1a34f8e027c04fbb3",
+  "sliceActivity": {
+    "id": "milestone-0-5-v05-04-scope-1b9f120",
+    "taskIds": [],
+    "presentInCommittedJson": true,
+    "presentInDeployedJson": null
+  },
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "compared": false,
+    "note": "a later push to main replaces the deployment, so the public site serves a later deployment's data and is not the evidence"
+  },
+  "findings": [
+    "the deployment succeeded, but its github-pages artifact is no longer retrievable, so the deployed migration.json was not compared with the committed bytes"
+  ]
+}

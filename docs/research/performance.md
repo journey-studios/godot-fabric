@@ -19,6 +19,15 @@ samples. The preceding host fails exactly the 28 checks that read the section, t
 sabotages each fail at least one check and are rejected by the oracle, and the accounting has a C++
 unit test (`.deps/build/performance_metrics_test`) over synthetic times.
 
+The readings of the soak (the engine's counts next to the host's section after a forced collection of Hermes' heap, the
+resident memory, the provenance and the replay's shape check) are taken by `tests/performance-sampler.gd`, which the
+[performance baseline on the Frontier HUD's scene](frontier-baseline.md) (V05-06, `npm run test:frontier-baseline`) takes
+too, and whose oracle imports this one's percentile helpers. The extraction changed no check and no field of the report. The
+[100-turn soak of the Frontier game](frontier-soak.md) (V05-06, `npm run test:frontier-soak`) is the third consumer: it takes one reading at rest per
+turn with the same sampler and judges the heap with the baseline's median-of-halves rule over this note's 2,048-byte limit. The
+[turn on the Frontier game as a consumer has it](frontier-turn.md) (V05-06, `npm run test:frontier-turn`) is the fourth: the sampler is copied into the provisioned `civ-lite` project and takes one reading at rest
+after each of the 16 real clicks of a round, 32 rounds, and the same heap rule judges each of the 17 series.
+
 ## What RN measures, and where this host reads the same thing
 
 RN has no frame, heap or node budget. It measures, and leaves the budget to the application and

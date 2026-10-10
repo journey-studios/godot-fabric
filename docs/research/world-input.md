@@ -12,7 +12,9 @@ a2, the host before a1 fails 41 (the 31 of slice 1 and 10 of a2), and five retai
 an independent oracle. The [slice-1 evidence record](../evidence/world-input/README.md) pins that execution and has its
 captures; the [slice-2 record](../evidence/world-input-a2/README.md) pins this one (implementation `0486727` on the red `9727ceb`) with its
 captures, and the hosted CI run of both is pending. Real hardware pointers, a real touch screen and
-mobile exports are not certified; see "Not certified".
+mobile exports are not certified; see "Not certified". Slice 3 is the written decision on those numbers, with
+nothing run again: **GO for the desktop (macOS)**, with the `iphone` criterion open; see
+[Decision (slice 3)](#decision-slice-3).
 
 ## The question
 
@@ -28,7 +30,7 @@ time-box of three slices:
 2. **Variant (a2):** the rule that closes the gaps below, in `FabricSurface::_unhandled_input` and one new public method
    of `ApplicationRuntime` (`claims`). It waited for PR #58 (the ScrollView and pointer adapter work), and adds a stage
    instead of rewriting the existing ones, so it touches none of the hunks #58 changed. Delivered in this note.
-3. **The decision:** go or no-go on the numbers of the two. Not made here; see "Reading for slice 3".
+3. **The decision:** go or no-go on the numbers of the two, made in [Decision (slice 3)](#decision-slice-3). It runs nothing.
 
 ## What Godot does with a pointer event
 
@@ -293,13 +295,94 @@ one with a leaked press, a lost `Text` tap or a wrong witness order is rejected,
 - **A HUD before the world in the tree**, a HUD of several layers, another `Camera2D`, several windows: not measured.
 - **Hardware**, a real touch screen, multi-touch and mobile exports: see "Not certified".
 
-## Reading for slice 3
+## Decision (slice 3)
 
-On the numbers of the two slices the premise holds for the clicks, taps, wheel and overlays: a HUD of React Native over a Godot world gives the pointer to exactly one side by the rule of a phone,
-with 0 of 100 leaks in the six gaps and 100 of 100 for the world in the empty area, headless and in a real macOS window, in two topologies.
-What the decision still has to weigh: the open cases above (the drag and hover are the world's today, and a game that pans the map by dragging over
-the HUD's gaps needs a decision of its own), the HUD-before-the-world order, and that nothing here runs on a phone: hardware pointers, a touch screen and the
-mobile exports (the `iphone` criterion of V05-02, package P7) are open. The cost of the rule is one public method and one override, with no change to the existing stages.
+**GO** for the premise "a React Native HUD over a Godot world, in one window", on the desktop (macOS arm64, official
+Godot 4.7.2, RN 0.87.1), with the policy of a1 plus the rule of a2. On the numbers below the pointer reaches exactly one
+side by the rule of a phone: a click on the HUD's empty area reaches the map once, a click on a `Pressable` presses it once
+and never reaches the map, and with an overlay or a `Modal` open nothing does. It took no rewrite of the pointer pipeline:
+a constructor default (a1), one public method (`ApplicationRuntime::claims`) and one override
+(`FabricSurface::_unhandled_input`) (a2), with `hit_test`, `apply_pointer_filters`, `input()` and `wheel()` unchanged.
+
+The decision runs nothing and adds no evidence: it reads the [slice-1][e1-probe] and [slice-2][e2-probe] records, pinned to
+the commits that merged them, and their receipts ([1][e1-receipt], [2][e2-receipt]). Every number is local evidence on macOS arm64
+with synthetic events; the hosted CI run of both slices is still pending. The GO covers the arrangement that was measured (a
+`CanvasLayer` after the world, a `Camera2D` at zoom 2, one full-screen Surface or one per panel); the arrangements in "Not
+certified" are outside it. The time-box of three slices was kept. The roadmap's go/no-go paragraph returns the
+game-driven-hud decision to the user when V05-02 fails; the desktop proof did not fail, so nothing returns on that account.
+**The `iphone` criterion stays open** and this GO says nothing about a phone.
+
+### Criteria against the numbers
+
+| Criterion | Number | Evidence |
+| --- | --- | --- |
+| The empty area reaches the world once | One full-screen Surface, N = 100: left click 100 press and 100 release with tile (16, 11) selected 100 times; right click 100 and 100 of button 2; wheel 100 and 100; tap 100 `ScreenTouch` and 100 emulated mouse; two more points one click each; the HUD's handlers 0. Two Surfaces, N = 20: 20 of 20 per panel for the four inputs, 0 to the HUD | [slice 1][e1-probe], [slice 2][e2-probe] (91 of 91 on the a2 host) |
+| A `Pressable` acts once and never reaches the world | 100 clicks: `onPress` 100, the bar's `pointerdown` 100, world 0. 100 taps: `onPress` 100, world 0 (no mouse, no `ScreenTouch`). A bar with a handler 100 and 0; a plain panel 0 and 0; the ScrollView's `Pressable` 100 and 0; a `Pressable` alternating with the empty area: `onPress` 100 and, in the world, 100 press and 100 release (the empty-area clicks) | [slice 1][e1-probe] |
+| Nothing passes with an overlay or a `Modal` open | Full-screen Surface, 100 per cell at an empty point: closed 100 of 100, open 0 of 100, closed again 100 of 100; the overlay's own `Pressable` pressed 100 times with 0 in the world. The tree overlay holds for the left click, the right click, the tap and, with a2, the wheel (L6: 100 press and 100 release before, 0 after); the `Modal` holds for the four inputs on every host. The overlays are measured in the full-screen topology only | [slice 1][e1-probe], [slice 2][e2-lacunas] |
+| The six gaps of a1 are closed by a2 | L1 hit slop, L2 `Text` `onPress`, L3 ScrollView gap, by click, tap and emulated mouse, N = 100: with a1 the world heard 100 press and 100 release for the click, 100 touch and 100 emulated for the tap and 100 emulated for the emulated mouse; with a2 it hears 0 of each, while RN hears `slopPress`, `textPress`, `wrapDown` 100 times for the click and the tap (never the emulated mouse). Wheel over the HUD (L4), a ScrollView (L5) and the open tree overlay (L6): 100 press and 100 release before (the release only over a ScrollView), 0 after; 20 of 20 before and 0 after on the bar of each panel. Windowed lane: 700 rounds over the gap places select no tile and the frame is byte for byte the untouched one | [slice 2][e2-lacunas], [windowed lane][e2-janela] |
+| Godot's native GUI Controls are intact | A `Switch` is toggled 100 times by 100 clicks and 100 times by 100 taps with 0 in the world, on every host. The `before-gui` sabotage, a claim made ahead of the GUI, fails exactly those two checks | [slice 2][e2-lacunas], [sabotages][e2-sab] |
+| The order of the unhandled stage matches Godot 4.7.2 | Tag `4.7.2-stable`: `viewport.cpp` 3489-3553 and 3620-3634, `scene_tree.cpp` 1430-1502 (the loop at 1461 walks the group in reverse tree order), `node.cpp` 264-266. On the live scene a witness in the HUD's layer heard `[1, 2]`, equal to the world's `[1, 2]`, in both topologies: the Surface is called before the world | [slice 2][e2-ordem] |
+| The controls with the preceding hosts | Host with a1 only (`28cc9f14`): 72 of 91, fails exactly the 19 checks of a2, and the oracle rejects it. Host before a1 (`8bb87738`, rebuilt): 50 of 91, fails 41 (the 31 of slice 1 and 10 wheel checks). Slice 1's original host (`79f68b1d`): 35 of 66, fails the 31. Host a2 (`cc8aa3c5`): 91 of 91 | [slice 2][e2-controles], [slice 1][e1-falhas] |
+| The sabotages | Slice 1: `surface-stop` (31 fail) and `views-ignore` (21). Slice 2: `surface-stop` (31), `views-ignore` (5: the `Switch` and the hover, since the claim now hides the Views from the world), `unhandled-off` (19, the gaps return), `claim-all` (35, the empty area stops reaching the world) and `before-gui` (2). Each is rejected on named checks and by the independent oracle, and the sources and hosts come back byte for byte | [slice 1][e1-sab], [slice 2][e2-sab] |
+| A real macOS window | Native renderer `gl_compatibility`, N = 100: 18 of 18 checks in slice 1 and 32 of 32 in slice 2, with captures. Slice 2's frames ran unpaced (the display was asleep): its counts stand and it claims no frame time | [slice 1][e1-grafica], [slice 2][e2-janela] |
+
+### What does not block the GO
+
+- **Motion, hover and drag over the HUD.** They are outside the rule on purpose ("What a2 leaves open"): a View whose
+  Control stops the pointer keeps motion and drag from the world (0 of 20), and over a hit slop the world still hears 20 of 20
+  motions and the 20 drags and 20 emulated motions of a drag that starts there (its touch and emulated mouse are claimed). The
+  premise (the empty area once, a `Pressable` once, overlays closed) does not need them, and the roadmap freezes the tail of
+  pointer work (new `pointer-*`, EventTarget, Document or hover slices) for the 0.5. Owner: the world, in Godot; what the map
+  does with hover is outside this spike.
+- **A release away from its press.** The claim follows the point of each event, so a press on a View and a release over the empty
+  area, with no Control holding the focus, gives the world a release it never saw the press of. Owner: the author of a world
+  that pairs the two. The evidence records the case and measures no count for it.
+- **A HUD before the world in the tree.** It is not supported and not measured: the Surface is called first when the HUD's
+  layer comes after the world, and the opposite order is not guaranteed. This is a rule of the scene (below), not a gap in the policy. Owner: whoever composes the scene.
+- **A windowed lane without a pace.** Slice 2's lane ran with the display asleep. The counts are exact on bursts delivered by one
+  flush and do not depend on the pace, and the lane claims neither frame time nor presentation. Frame time belongs to the
+  frame-budget item (V05-06 in the roadmap table), not to this decision.
+
+### What stays open and depends on the user
+
+The `iphone` criterion of V05-02 (package P7, which feeds the device gate V05-09): the same proof with a real touch on an iPhone,
+including dragging the map with one finger while another finger is on a HUD button. Nothing here runs on a phone. The events are
+synthetic, delivered through `Input.parse_input_event`, with no hardware pointer, no touch screen, no second finger and no mobile
+export, and the world listens to the mouse stream (see "The touch stream the world listens to"). It needs the user's device. The roadmap
+already says what a phone no-go does: it closes the 0.5 as macOS-complete and hands mobile back to GF-35, without moving any 1.0
+number. This GO does not pre-empt it.
+
+### Rules for a scene
+
+What the Surface does is stated once, in the `mouse_filter` row of the Surface table in
+[docs/API.md](../API.md#shared-application-and-root-authoring), and is not repeated here. These are the rules a scene keeps for it to hold:
+
+- The HUD's `CanvasLayer` comes after the world in the scene tree, as in [scene.tscn](../../examples/world-input/scene.tscn). Godot calls
+  `_unhandled_input` in reverse tree order, so the Surface is called before the world when its layer comes after it ("Where the claim
+  runs"); the opposite arrangement is not measured and not supported.
+- The root is `pointerEvents="box-none"` (the application's root already is: `src/render-application.jsx:20`), and so is every
+  container that covers the map, the HUD component's outermost View included. React Native's hit test gives a View it hits its whole
+  rectangle, whatever its handlers, and the tree overlay, a full-screen View, is exactly that case: it closes the map.
+- The world listens in `_unhandled_input`. `_input` runs before the GUI and before the claim, so a world listening there hears the HUD's
+  clicks too.
+- The Controls of Godot's GUI that React Native mounts (`Button`, `LineEdit`, `Switch`) keep working: they take their events in the GUI,
+  ahead of the claim, and need no scene rule.
+
+The Surface is also anchored to the viewport in the `.tscn`, and the world listens to the mouse stream: see "What the policy needs
+from the project" and "The touch stream the world listens to".
+
+[e1-probe]: https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md#o-que-o-probe-prova
+[e1-receipt]: https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/execution.json
+[e1-falhas]: https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md#as-31-falhas-normativas-do-host-anterior
+[e1-sab]: https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md#sabotagens-retidas
+[e1-grafica]: https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md#faixa-gr%C3%A1fica
+[e2-probe]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#o-que-o-probe-prova
+[e2-receipt]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/execution.json
+[e2-lacunas]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#as-lacunas-da-a1-para-a-a2
+[e2-ordem]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#a-ordem-do-unhandled
+[e2-controles]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#controles
+[e2-sab]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#sabotagens-retidas
+[e2-janela]: https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md#faixa-janelada
 
 ## Controls and sabotages
 

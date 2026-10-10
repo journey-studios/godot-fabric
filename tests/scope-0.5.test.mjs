@@ -29,7 +29,7 @@ const inventory = json("docs/compatibility/contracts-0.87.1.json");
 const audit = json("docs/compatibility/react-native-0.87.1.json");
 const rnRoot = path.join(root, "node_modules");
 const thirteen = ["View", "Text", "Pressable", "ScrollView", "Image", "Modal", "ActivityIndicator", "SafeAreaView", "StyleSheet", "Platform",
-  "Dimensions", "useWindowDimensions", "AppState"];
+  "Dimensions", "useWindowDimensions", "AppState", "AppRegistry"];
 // SafeAreaView's props are ViewProps: it takes no table of its own and is judged by the View's.
 const sharedTable = {SafeAreaView: "View"};
 const decisions = ["supported", "ignored", "refused"];
@@ -60,7 +60,7 @@ test("the manifest decides exactly thirteen names, each with its audit row as re
     assert.ok(row.runtime.length > 0, row.name);
   }
   // The audit's rows that are stale in the way the brief records.
-  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppState", "Image", "Modal", "SafeAreaView"]);
+  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppRegistry", "AppState", "Image", "Modal", "SafeAreaView"]);
   // PR #58 landed: the ScrollView is classified like the other six, and nothing in the manifest waits on another change.
   assert.deepEqual(manifest.names.filter(row => row.pendingOn !== undefined).map(row => row.name), []);
   assert.deepEqual(Object.keys(manifest.notInTheManifest).sort(), ["FlatList", "PixelRatio"]);
@@ -542,6 +542,10 @@ test("Platform, Dimensions, useWindowDimensions and StyleSheet have the members 
   assert.deepEqual(JSON.parse(JSON.stringify(StyleSheet.flatten([{width: 1}, [{height: 2}, null]]))), {width: 1, height: 2});
   const created = {a: {width: 1}};
   assert.equal(StyleSheet.create(created), created);
+  // AppRegistry, the HUD's entry point: the manifest names the two members the facade declares
+  const registry = row("AppRegistry");
+  assert.deepEqual(registry.members, ["registerComponent", "getAppKeys"]);
+  assert.match(read("src/app-registry.js"), /registerComponent\(key, provider, section\)[\s\S]*getAppKeys:/);
   // AppState: the manifest names RN's events, and the suite that certifies them exists
   const appState = row("AppState");
   assert.deepEqual(appState.events, ["change", "focus", "blur", "memoryWarning"]);

@@ -6,3 +6,5 @@ node_modules/
 *.import
 civ-lite-*.png
 civ-lite-report.json
+civ-lite-ui-report.json
+civ-lite-overlay-report.json

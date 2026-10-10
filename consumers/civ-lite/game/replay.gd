@@ -57,13 +57,18 @@ const STEPS := [
   {"label": "", "intent": "move_unit", "args": [2, 9, 8], "code": "ok", "context": "warrior"},
   {"label": "", "intent": "select_tile", "args": [9, 8], "code": "ok", "context": "stack"},
   {"label": "", "intent": "end_turn", "args": [], "code": "ok", "context": "dialog"},
-  # Turn 5: the event blocks everything until it is resolved.
+  # Turn 5: the three events block everything until they are resolved.
   {"label": "cover-dialog", "intent": "select_tile", "args": [7, 8], "code": "event_pending", "context": "dialog"},
   {"label": "", "intent": "clear_selection", "args": [], "code": "event_pending", "context": "dialog"},
   {"label": "", "intent": "end_turn", "args": [], "code": "event_pending", "context": "dialog"},
   {"label": "", "intent": "resolve_event", "args": ["bogus"], "code": "unknown_choice", "context": "dialog"},
-  {"label": "", "intent": "resolve_event", "args": ["welcome"], "code": "ok", "context": "none"},
-  {"label": "", "intent": "resolve_event", "args": ["welcome"], "code": "no_event", "context": "none"},
+  # The queue of three: the head is answered with its own choices only, and the next one becomes the head.
+  {"label": "", "intent": "resolve_event", "args": ["buy_grain"], "code": "unknown_choice", "context": "dialog"},
+  {"label": "", "intent": "resolve_event", "args": ["welcome"], "code": "ok", "context": "dialog"},
+  {"label": "", "intent": "resolve_event", "args": ["welcome"], "code": "unknown_choice", "context": "dialog"},
+  {"label": "", "intent": "resolve_event", "args": ["buy_tools"], "code": "ok", "context": "dialog"},
+  {"label": "", "intent": "resolve_event", "args": ["send_on"], "code": "ok", "context": "none"},
+  {"label": "", "intent": "resolve_event", "args": ["send_on"], "code": "no_event", "context": "none"},
   {"label": "", "intent": "set_research", "args": ["alphabet"], "code": "tech_known", "context": "none"},
   {"label": "", "intent": "set_research", "args": ["bronze_working"], "code": "ok", "context": "none"},
   {"label": "", "intent": "set_production", "args": ["granary", 1], "code": "ok", "context": "none"},

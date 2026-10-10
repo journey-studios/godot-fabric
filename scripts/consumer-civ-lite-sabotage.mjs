@@ -12,13 +12,15 @@ import {guardSources} from "./sabotage-sources.mjs";
 // template must then pass the plain check. There is no sabotage for a World that forgets to disconnect `snapshot_changed`: the
 // engine drops the connection of a freed Node by itself, so that leak cannot happen (docs/research/frontier-consumer.md).
 //
-//  hud-leak    the HUD's effect no longer removes its connection to the snapshot when its screen goes away: the registry's
+//  hud-leak    the store no longer releases its connections when the last screen that reads it goes away: the registry's
 //               subscriptions and the HUD's grow with every visit to the menu.
 //  orphan       dropping the World takes it out of the tree and does not free it: the orphan nodes grow, and the Worlds the cycle
 //               dropped are still alive.
 //  epoch-reset  reloading the scenery zeroes the epoch before the new game: the epoch is no longer monotonic.
 //  no-facade    the scene no longer injects the facade: the node registers nothing and says so (FABRIC_ERROR), and the HUD has
 //               nothing to connect to.
+//  job-dies-with-menu  the job's driver is tied to the World: once the World is dropped (the menu) the job is abandoned and never
+//               finishes. The end of a turn pressed in the same frame as the menu must finish with the menu open.
 //
 // A variant whose run leaves no observed.json (a crash, a failed assertion that came first) is recorded as nothing observed and is
 // not rejected. Run with:
@@ -26,9 +28,9 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const template = "consumers/civ-lite";
 const variants = [
-  {name: "hud-leak", file: `${template}/ui/index.tsx`,
-    find: "    return () => release(connection);\n",
-    replace: "    return () => {};\n"},
+  {name: "hud-leak", file: `${template}/ui/store.ts`,
+    find: "function disconnect() {\n  for (const connection of connections) {\n    connection.remove();\n  }\n  connections.clear();\n  view = NOT_CONNECTED;\n}\n",
+    replace: "function disconnect() {\n  view = NOT_CONNECTED;\n}\n"},
   {name: "orphan", file: `${template}/services/game_services.gd`,
     find: "  remove_child(world)\n  world.queue_free()\n",
     replace: "  remove_child(world)\n"},
@@ -38,6 +40,9 @@ const variants = [
   {name: "no-facade", file: `${template}/main.tscn`,
     find: "fabric_api=ExtResource(\"2\")\n",
     replace: ""},
+  {name: "job-dies-with-menu", file: `${template}/services/game_services.gd`,
+    find: "func _process(_delta: float) -> void:\n  advance_job()\n",
+    replace: "func _process(_delta: float) -> void:\n  if world_scene != null and get_node_or_null(WORLD_NAME) == null:\n    _abandon_job()\n    return\n  advance_job()\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];

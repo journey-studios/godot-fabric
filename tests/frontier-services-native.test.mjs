@@ -7,7 +7,8 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {bundleFrontierServicesProbe, frontierServicesGameSources} from "../scripts/frontier-services-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
-import {diffRegistrations, extractFrontierSchemas, verifyFrontierServicesReport} from "./frontier-services-oracle.mjs";
+import {guardSources} from "../scripts/sabotage-sources.mjs";
+import {diffRegistrations, extractFrontierSchemas, verifyFrontierServicesReport, verifyRuleLane} from "./frontier-services-oracle.mjs";
 
 // Frontier's services, run for real: the persistent GameServices node, a FabricApplication with a bundle that stands in
 // for the HUD, and a FabricSurface, in the official headless Godot on the root project. The bundle plays the game's
@@ -17,12 +18,19 @@ import {diffRegistrations, extractFrontierSchemas, verifyFrontierServicesReport}
 // against the schema derived from the TypeScript types. The names and shapes against Godot are
 // tests/frontier-services-parity.test.mjs, which reads the report this test leaves.
 //
+// The end of a turn is a job (docs/research/frontier-services.md): accepted, advanced one phase per frame in the node, finished once. The
+// probe plays it through the roteiro, with the surface closed during one of them, and the oracle judges what JavaScript saw and
+// what the registry held per frame. The plain test also runs the rule lane twice, once on the genuine rules and once with one
+// constant of rules.gd mutated by scripts/sabotage-sources.mjs and restored byte for byte, with the same bundle; it is a lane of
+// this test and not a sabotage, and it passes only if the only difference in what JavaScript received is what the rule predicts.
+//
 // There is no C++ in this slice, so there is no previous host to compare with.
 //
 // With --sabotage=<name> the same test runs against a node whose source scripts/frontier-services-sabotage.mjs broke on
 // purpose, and passes only if the probe's checks, the oracle or the parity reject it, for the reason it was broken.
 const root = fileURLToPath(new URL("..", import.meta.url));
-const SABOTAGES = ["schema-drift", "late-register", "silent-intent", "frozen-epoch", "emit-on-refusal", "action-args-drift", "turn-ended-order"];
+const SABOTAGES = ["schema-drift", "late-register", "silent-intent", "frozen-epoch", "emit-on-refusal", "action-args-drift", "turn-ended-order",
+  "double-finish", "job-dies-with-screen", "sync-end-turn", "stale-snapshot"];
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? "unnamed");
 assert.ok(sabotage === null || SABOTAGES.includes(sabotage), `Unknown sabotage: ${sabotage}`);
@@ -30,21 +38,26 @@ const lane = sabotage === null ? "current" : `sabotage-${sabotage}`;
 const EXECUTIONS = 2;
 // The golden and trace hashes of the game (tests/civ-lite-game-native.test.mjs). The services must leave the same state
 // the game's own replay leaves, and pass through the same states on the way; the test below proves these are the game's.
-const GOLDEN_HASH = "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29";
-const TRACE_HASH = "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8";
+const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
+const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
 const digest = value => createHash("sha256").update(value).digest("hex");
 // A schema spelled out in the node itself would be a second source: the node registers from schema.gd and nowhere else.
 const INLINE_SCHEMA = /"(object|array|integer)"/;
 const code = line => line.replace(/#.*$/, "");
+// The rule lane's mutation: one constant of the rules, the Settler's movement points, which the snapshot shows on the unit's card
+// and which the game's own rule turns into found_city's `enabled` and `reason`.
+const MUTATION = {name: "settler-moves", file: "consumers/civ-lite/game/rules.gd",
+  find: "  \"settler\": {\"name\": \"Settler\", \"moves\": 2},\n", replace: "  \"settler\": {\"name\": \"Settler\", \"moves\": 0},\n"};
+const settlerMoves = text => Number(/"settler": \{"name": "Settler", "moves": (\d+)\}/.exec(text)?.[1]);
 
-function runProbe(binary) {
+function runProbe(binary, extra = []) {
   const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/frontier-services-probe.gd", "--",
-    ...(sabotage === null ? [] : ["--sabotage"])], {encoding: "utf8", timeout: 240000, maxBuffer: 32 * 1024 * 1024});
+    ...(sabotage === null ? [] : ["--sabotage"]), ...extra], {encoding: "utf8", timeout: 240000, maxBuffer: 32 * 1024 * 1024});
   return {result, log: (result.stdout ?? "") + (result.stderr ?? "")};
 }
 
-async function collect(execution, probe, bundle) {
-  await writeFile(path.join(root, `build/frontier-services-${lane}-${execution}.log`), probe.log);
+async function collect(execution, probe, bundle, laneName = lane) {
+  await writeFile(path.join(root, `build/frontier-services-${laneName}-${execution}.log`), probe.log);
   let report = null;
   try {
     report = JSON.parse(await readFile(path.join(root, "build/frontier-services-report.json"), "utf8"));
@@ -54,8 +67,31 @@ async function collect(execution, probe, bundle) {
   if (report !== null) {
     report.provenance = {node: process.version, bundle, nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))),
       sourceReceiptDoesNotCertifyNativeBuild: true};
-    await writeFile(path.join(root, `build/frontier-services-${lane}-${execution}-report.json`), JSON.stringify(report, null, 2) + "\n");
+    await writeFile(path.join(root, `build/frontier-services-${laneName}-${execution}-report.json`), JSON.stringify(report, null, 2) + "\n");
   }
+  return report;
+}
+
+// One run of the probe in its rule lane, genuine or with the rules mutated: the report and what proves what ran.
+async function ruleLane(label, binary, bundle, {guard = null} = {}) {
+  await rm(path.join(root, "build/frontier-services-report.json"), {force: true});
+  let probe;
+  if (guard === null) {
+    probe = runProbe(binary, ["--rule-lane"]);
+  } else {
+    // The same arguments, run as a guarded child: whatever ends it, the rules go back byte for byte.
+    const result = await guard.run(binary, ["--path", root, "--headless", "--script", "res://tests/frontier-services-probe.gd", "--", "--rule-lane"],
+      {timeout: 240000});
+    probe = {result, log: (result.stdout ?? "") + (result.stderr ?? "")};
+  }
+  const report = await collect(1, probe, bundle, `rule-${label}`);
+  assert.equal(probe.result.error ?? undefined, undefined, probe.log);
+  assert.equal(probe.result.status, 0, probe.log);
+  assert.doesNotMatch(probe.log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use|^ERROR:/m, `${label}: no engine, script or check error`);
+  assert.ok(report !== null, probe.log);
+  assert.equal(report.allPassed, true, `${label}: every check of the rule lane passed`);
+  assert.deepEqual(report.checks.filter(row => !row.passed), [], label);
+  assert.match(probe.log, /^FRONTIER_SERVICES_RULE_LANE_PASSED: \d+$/m, label);
   return report;
 }
 
@@ -137,8 +173,26 @@ test("Frontier's services play the 12-turn roteiro to the golden hash, and an in
       assert.match(oracle, /^step 3 select_unit\(1\): the action found_city carries as many arguments as its method \(1\)/);
       assert.deepEqual(parity, [], "the schemas themselves are still the types'");
     } else if (sabotage === "turn-ended-order") {
-      mentions(/turn_ended comes before the snapshot of the turn that begins$/, failed);
-      assert.match(oracle, /turn_ended comes before the snapshot of the turn that begins/);
+      mentions(/turn_ended comes before the snapshot of the turn that begins/, failed);
+      assert.match(oracle, /turn_ended comes after the snapshot of the last phase and before the snapshot of the turn that begins/);
+    } else if (sabotage === "double-finish") {
+      // The job finishes twice: JavaScript's own subscription receives turn_ended twice for the same job.
+      mentions(/^step \d+ end_turn\[\] ends a turn exactly when an end_turn is accepted$/, failed);
+      assert.match(oracle, /turn_ended is emitted exactly once per accepted end_turn, and by nothing else/);
+    } else if (sabotage === "job-dies-with-screen") {
+      // The driver stops with the screen: the job accepted before the surface closed never finishes.
+      mentions(/^persistence: the surface was closed with the job accepted and not run/, failed);
+      mentions(/^persistence: the job finished with no surface, exactly once, and the game's turn advanced$/, failed);
+      assert.match(oracle, /snapshots of its job|publishes exactly the seven/);
+    } else if (sabotage === "sync-end-turn") {
+      // Every phase runs inside the callback: no frame is a phase, and the turn is not in progress when a call arrives.
+      mentions(/the node ran one phase a frame/, failed);
+      mentions(/every call made while the job ran was refused with turn_in_progress/, failed);
+      assert.match(oracle, /the node ran one phase a frame|every one of the seven|turn_in_progress/);
+    } else if (sabotage === "stale-snapshot") {
+      // One phase's snapshot is not published: the turn skips a phase for the HUD.
+      mentions(/^step \d+ end_turn\[\] publishes the seven snapshots of its job if accepted and none if refused$/, failed);
+      assert.match(oracle, /an accepted end_turn publishes exactly the seven snapshots of its job/);
     }
     return;
   }
@@ -175,9 +229,39 @@ test("Frontier's services play the 12-turn roteiro to the golden hash, and an in
   assert.ok(bundle.bundle.inputs.includes("consumers/civ-lite/ui/frontier-types.ts"), "The bundle contains the hand-written types' module");
   assert.match(bundle.originalReactNativeSources["Libraries/TurboModule/TurboModuleRegistry.js"], /^[0-9a-f]{64}$/);
 
+  // The rule lane: the genuine rules, then one constant mutated, with the same bundle. The bundle is rebuilt for the mutated run and
+  // must be the same bytes, because it contains no .gd; the rules are restored byte for byte, and the receipt is made again.
+  const rulesText = await readFile(path.join(root, MUTATION.file), "utf8");
+  const genuineLane = await ruleLane("genuine", binary, bundle);
+  const guard = guardSources(root, [MUTATION.file]);
+  let mutatedLane;
+  let mutatedBundle;
+  let mutatedText;
+  try {
+    mutatedText = guard.sabotaged(MUTATION);
+    guard.swap(MUTATION.file, mutatedText);
+    mutatedBundle = await bundleFrontierServicesProbe();
+    mutatedLane = await ruleLane("mutated", binary, mutatedBundle, {guard});
+  } finally {
+    guard.restore();
+  }
+  const restoredBundle = await bundleFrontierServicesProbe();
+  assert.equal(restoredBundle.bundle.sha256, bundle.bundle.sha256, "The bundle rebuilt from the restored rules is the genuine one");
+  assert.equal(restoredBundle.sources[MUTATION.file], bundle.sources[MUTATION.file], "The rules are restored byte for byte");
+  assert.deepEqual(await readFile(path.join(root, MUTATION.file), "utf8"), rulesText);
+  const ruleResult = verifyRuleLane(genuineLane, mutatedLane, {genuineMoves: settlerMoves(rulesText), mutatedMoves: settlerMoves(mutatedText), typesText,
+    bundleSha256: {genuine: bundle.bundle.sha256, mutated: mutatedBundle.bundle.sha256},
+    genuineRulesSha256: bundle.sources[MUTATION.file], mutatedRulesSha256: mutatedBundle.sources[MUTATION.file]});
+  const provenance = report => ({bundleSha256: report.provenance.bundle.bundle.sha256, nativeHostSha256: report.provenance.nativeHostSha256, node: report.provenance.node,
+    rulesSha256: report.provenance.bundle.sources[MUTATION.file], settlerMoves: report.ruleLane.settlerMoves});
+  await writeFile(path.join(root, "build/frontier-services-mutation.json"), JSON.stringify({format: "godot-fabric.frontier-services-mutation/v1",
+    mutation: {name: MUTATION.name, file: MUTATION.file, find: MUTATION.find, replace: MUTATION.replace},
+    genuine: provenance(genuineLane), mutated: provenance(mutatedLane), observed: ruleResult,
+    changed: {...ruleResult.differences, move_unit: ruleResult.moveUnit}}, null, 2) + "\n");
+
   await writeFile(path.join(root, "build/frontier-services-summary.json"), JSON.stringify({format: "godot-fabric.frontier-services-summary/v1",
     scenario: first.scenario, godot: first.godot, executions: EXECUTIONS, checks: first.checks.length, goldenHash: GOLDEN_HASH, traceHash: TRACE_HASH,
-    finalHash: first.finalHash, steps: verified.steps, accepted: verified.accepted, refused: verified.refused, refusals: verified.refusals, turns: verified.turns, actionsSentBack: verified.actionsSentBack,
+    finalHash: first.finalHash, jobs: verified.jobs, stress: verified.stress, ruleLane: ruleResult, steps: verified.steps, accepted: verified.accepted, refused: verified.refused, refusals: verified.refusals, turns: verified.turns, actionsSentBack: verified.actionsSentBack,
     epochs: first.epochs.map(entry => ({number: entry.number, epoch: entry.epoch, hash: entry.hash, turn: entry.turn})), initialHash: first.initialHash,
     violations: first.violations.map(entry => ({label: entry.label, name: entry.name, code: entry.result.error.code, callbacksDelta: entry.callbacksDelta})),
     registered: first.registered.map(entry => ({name: entry.name, kind: entry.kind})), largestSnapshot: first.limits, callbacks: first.callbacks,

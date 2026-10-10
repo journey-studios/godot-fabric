@@ -1,8 +1,8 @@
 extends RefCounted
 
 # The one GDScript source of the Frontier service schemas: the snapshot DTO and its parts, the signal the end of a turn
-# emits, the arguments of every method and their result. game_services.gd registers from here and nowhere else repeats
-# a schema. The shapes are the DTO documented in docs/research/frontier-game.md, in the registry's schema language
+# emits, the arguments of every method, their result and the options a registration carries (the end of a turn is an
+# accepted job). game_services.gd registers from here and nowhere else repeats a schema. The shapes are the DTO documented in docs/research/frontier-game.md, in the registry's schema language
 # (docs/GAME_SERVICES.md): scalars are "integer" and "string"; `{"array": schema}` and `{"object": {field: schema}}` are
 # exact, with no optional field and no union. The TypeScript mirror is consumers/civ-lite/ui/frontier-types.ts, and
 # tests/frontier-services-parity.test.mjs compares the two in both directions.
@@ -31,20 +31,33 @@ const CITY_SCREEN := {"object": {"present": INT, "name": STR, "x": INT, "y": INT
 const TECH := {"object": {"id": STR, "label": STR, "cost": INT, "state": STR, "enabled": INT, "reason": STR, "reason_text": STR}}
 const RESEARCH := {"object": {"current": STR, "known": INT, "needed": INT, "rate": INT, "techs": {"array": TECH}}}
 const CHOICE := {"object": {"id": STR, "label": STR, "detail": STR}}
-const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}}}
-const SNAPSHOT := {"object": {"version": INT, "epoch": INT, "turn": INT, "phase": STR, "context": STR, "selection": SELECTION,
-  "resources": RESOURCES, "actions": {"array": ACTION}, "tile": TILE_CARD, "city": CITY_SCREEN, "research": RESEARCH, "dialog": DIALOG}}
+# `index` and `count` place the dialog in the queue of events being answered: 1-based, "1 of 3"; both 0 while it is closed.
+const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}, "index": INT, "count": INT}}
+# `last_job` is the id of the last end-of-turn job that finished, 0 for none: a HUD that connects late learns from it that the
+# job it was told about is over, without a replay of the signal.
+const SNAPSHOT := {"object": {"version": INT, "epoch": INT, "last_job": INT, "turn": INT, "phase": STR, "context": STR,
+  "selection": SELECTION, "resources": RESOURCES, "actions": {"array": ACTION}, "tile": TILE_CARD, "city": CITY_SCREEN,
+  "research": RESEARCH, "dialog": DIALOG}}
+
+# --- The pointer --------------------------------------------------------------------------------------------------
+
+# `frontier.hover`: the card of the tile under the pointer, the same DTO as the snapshot's `tile`, with `present` 0 while the
+# pointer is over no tile. The World publishes it as a state of its own: the pointer is not part of the game, so the snapshot, its
+# emission rule and the hashes are the same with or without it.
+const HOVER := TILE_CARD
 
 # --- The end of a turn ---------------------------------------------------------------------------------------------
 
 const TURN_PHASE := {"object": {"name": STR, "tasks": INT, "events": INT}}
-const TURN_ENDED := {"object": {"turn": INT, "phases": {"array": TURN_PHASE}}}
+# `job` is the id the acceptance of that end_turn answered: the signal finishes exactly that job, once.
+const TURN_ENDED := {"object": {"turn": INT, "phases": {"array": TURN_PHASE}, "job": INT}}
 
 # --- Methods -------------------------------------------------------------------------------------------------------
 
 # Every method answers the same object, so the schema needs no union: `ok` is 0 or 1, `code` is "ok" or the refusal
-# code, `text` is what the HUD shows ("" when accepted). What an intent adds (end_turn's phases) goes out as a signal.
-const RESULT := {"object": {"ok": INT, "code": STR, "text": STR}}
+# code, `text` is what the HUD shows ("" when accepted) and `job` is the id of the job the call started: 0 for every method
+# that starts none and for a call that was refused. What an intent adds (end_turn's phases) goes out as a signal.
+const RESULT := {"object": {"ok": INT, "code": STR, "text": STR, "job": INT}}
 
 # The arguments of each method, in order. The registered name is "frontier." plus the key.
 const METHOD_ARGS := {
@@ -61,4 +74,11 @@ const METHOD_ARGS := {
   "new_game": [],
   # Not a rule of the game: the scene drops its World (game_services.gd). It is here so that HUD and scene share one list.
   "open_menu": [],
+}
+
+# The registration options of the methods that have any. `end_turn` answers on acceptance (docs/GAME_SERVICES.md): the game
+# says it took the turn and gives the job's id, and the turn goes on in the node until `turn_ended` finishes that job. Every
+# other method answers on completion, which is the default.
+const METHOD_OPTIONS := {
+  "end_turn": {"response": "acceptance"},
 }

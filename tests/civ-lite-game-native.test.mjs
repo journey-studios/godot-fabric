@@ -19,10 +19,10 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const EXECUTIONS = 3;
 // The state after the 12th end_turn of replay.gd. It changes when a rule, the map or the roteiro changes, and then
 // the new value is reviewed, not accepted.
-const GOLDEN_HASH = "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29";
+const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
 // SHA-256 of the state hashes after every step of the roteiro, one per line. The golden hash pins where the replay ends;
 // this one pins how it got there, selection included, which every end_turn resets and the final state does not show.
-const TRACE_HASH = "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8";
+const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
 const CONTEXTS = ["none", "tile", "settler", "warrior", "stack", "city", "dialog"];
 // The refusal codes the roteiro plays, and those the probe builds a state for because the scenario cannot reach them.
 const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
@@ -47,7 +47,7 @@ const ACTION = {id: "string", label: "string", args: ["int"], enabled: "int", re
 const UNIT_CARD = {id: "int", owner: "int", kind: "string", name: "string", moves: "int", max_moves: "int", fortified: "int"};
 const CHECKED = {enabled: "int", reason: "string", reason_text: "string"};
 const SNAPSHOT_SHAPE = {
-  version: "int", epoch: "int", turn: "int", phase: "string", context: "string",
+  version: "int", epoch: "int", last_job: "int", turn: "int", phase: "string", context: "string",
   selection: {x: "int", y: "int", unit: "int"},
   resources: {food: {stock: "int", rate: "int"}, production: {stock: "int", rate: "int"}, science: {stock: "int", rate: "int"}},
   actions: [ACTION],
@@ -60,7 +60,7 @@ const SNAPSHOT_SHAPE = {
     buildings: ["string"], garrison: [{id: "int", kind: "string"}]},
   research: {current: "string", known: "int", needed: "int", rate: "int",
     techs: [{id: "string", label: "string", cost: "int", state: "string", ...CHECKED}]},
-  dialog: {open: "int", id: "string", title: "string", text: "string", choices: [{id: "string", label: "string", detail: "string"}]},
+  dialog: {open: "int", id: "string", title: "string", text: "string", choices: [{id: "string", label: "string", detail: "string"}], index: "int", count: "int"},
 };
 
 function conforms(value, shape, where) {
@@ -190,6 +190,10 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
       // The Settler keeps a movement point the roteiro says it has spent.
       assert.ok(failed.some(name => /^step \d+ found_city\[1\] answers no_moves_left$/.test(name)), failed.join("\n"));
       assert.ok(oracle.every(message => /^step \d+ move_unit\(1, 7, 8\)/.test(message)), oracle.join("\n"));
+    } else if (sabotage === "events-out-of-order") {
+      // The queue of three: the head must leave first. The step that answers it and the ones after it do not happen as the roteiro says.
+      assert.ok(failed.some(name => /resolve_event/.test(name)), failed.join("\n"));
+      assert.ok(oracle.every(message => /resolve_event/.test(message)), oracle.join("\n"));
     } else if (sabotage === "economy") {
       // A city that yields one production too many: the oracle that recomputes the economy finds the first end of turn
       // in which the city produced.
@@ -264,6 +268,8 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   }
   assert.equal(report.snapshots["cover-dialog"].dialog.open, 1);
   assert.deepEqual(report.snapshots["cover-dialog"].dialog.choices.map(choice => choice.id), ["welcome", "turn_away"]);
+  // The head of the queue of three is the first event, "1 of 3".
+  assert.deepEqual([report.snapshots["cover-dialog"].dialog.id, report.snapshots["cover-dialog"].dialog.index, report.snapshots["cover-dialog"].dialog.count], ["wanderers", 1, 3]);
   assert.equal(report.snapshots["cover-dialog"].city.items.every(item => item.enabled === 0 && item.reason === "event_pending"), true, "A pending event disables the city screen too");
   assert.equal(report.snapshots["cover-city"].city.present, 1);
   assert.equal(report.snapshots["cover-stack"].tile.units.length, 2);

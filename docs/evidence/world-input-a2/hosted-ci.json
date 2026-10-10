@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "scenario": "world-input-a2",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:57:36.072Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37874901247,
+    "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/78",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T02:30:31Z",
+    "updatedAt": "2026-10-09T03:21:10Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113641127898,
+        "runAttempt": 1,
+        "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+        "startedAt": "2026-10-09T02:30:34Z",
+        "completedAt": "2026-10-09T02:33:41Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247/job/113641127898"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113641127712,
+        "runAttempt": 1,
+        "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+        "startedAt": "2026-10-09T02:30:40Z",
+        "completedAt": "2026-10-09T03:20:49Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247/job/113641127712"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113653588698,
+        "runAttempt": 1,
+        "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+        "startedAt": "2026-10-09T03:20:52Z",
+        "completedAt": "2026-10-09T03:21:09Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247/job/113653588698"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113641127933,
+        "runAttempt": 1,
+        "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+        "startedAt": "2026-10-09T02:30:34Z",
+        "completedAt": "2026-10-09T02:36:59Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247/job/113641127933"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113641127909,
+        "runAttempt": 1,
+        "headSha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+        "startedAt": "2026-10-09T02:30:42Z",
+        "completedAt": "2026-10-09T02:41:03Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37874901247/job/113641127909"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "native-cold-start": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "parity-comparison": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "reference-android": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "reference-ios": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T02:30:53Z",
+          "completedAt": "2026-10-09T02:33:37Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 334,
+              "suites": 0,
+              "pass": 334,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T02:33:37Z",
+          "completedAt": "2026-10-09T02:33:37Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T02:33:37Z",
+          "completedAt": "2026-10-09T02:33:38Z",
+          "passed": true,
+          "files": 1774
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:world-input": {
+        "step": "Run npm run test:world-input",
+        "number": 48,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T02:46:38Z",
+        "completedAt": "2026-10-09T02:46:45Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "a click on the empty area of the HUD reaches the Godot world once, and a Pressable never does"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 78,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/78",
+    "title": "feat(world-input): Keep the pointer the HUD's hit test finds from the Godot world (P1 V05-02 slice 2)",
+    "headSha": "e46fca2079edf449b62ea7fd5ad275bff796d017",
+    "baseSha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+    "squashMergeCommit": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+    "squashCommitSubject": "feat(world-input): Keep the pointer the HUD's hit test finds from the Godot world (#78)",
+    "mergedAt": "2026-10-09T02:30:28Z",
+    "headTreeSha": "56e4e6d512110d4bd2fa9f4cb7b32fcec9a2021a",
+    "mainTreeSha": "56e4e6d512110d4bd2fa9f4cb7b32fcec9a2021a",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 4,
+    "commits": [
+      {
+        "sha": "9727ceb81858043d2aaad6d81f0578e15726918f",
+        "subject": "test(world-input): Prove the pointer gaps reach the world on the a1 host"
+      },
+      {
+        "sha": "048672798db248d2557e111c83c362269fe52730",
+        "subject": "feat(world-input): Keep the pointer the HUD's hit test finds from the world"
+      },
+      {
+        "sha": "af941dde794db9ed40595d006977445b6646e9fc",
+        "subject": "docs(world-input): Record the pointer spike's second slice"
+      },
+      {
+        "sha": "e46fca2079edf449b62ea7fd5ad275bff796d017",
+        "subject": "docs(roadmap): Record the 0.5 V05-02 pointer spike's second slice"
+      }
+    ],
+    "changedFiles": 32,
+    "additions": 2489,
+    "deletions": 195
+  },
+  "artifacts": {
+    "worldInput": {
+      "available": true,
+      "id": 11592531447,
+      "name": "native-world-input",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 21014,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "355bfbfbda62beec5cdce0448a137caea9ef135fc928fd5e1b92a5bd562aaea6",
+      "apiDigest": "sha256:355bfbfbda62beec5cdce0448a137caea9ef135fc928fd5e1b92a5bd562aaea6",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "355bfbfbda62beec5cdce0448a137caea9ef135fc928fd5e1b92a5bd562aaea6",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T02:46:46Z",
+      "expiresAt": "2027-01-07T02:30:31Z",
+      "fileCount": 5,
+      "files": {
+        "world-input-comparison.json": "25faf470356daf78cf1bdce2d6d66cf5aa74ac12d00af32a6c9e0f4d8100dce8",
+        "world-input-current-report.json": "8d1b89d07617adfacd14f1858be39f08ff67b4cc7f424000ec3f65af6e0735f2",
+        "world-input-current.log": "ddb2f91a777f432bcbfca8e86acb7fd195b58ee665b4aeda5737b5058da1c6de",
+        "world-input-probe-bundle.json": "b2cfb8f8a4d76741131ca0784847619e422733207b48ee792e62160d9e9e11e9",
+        "world-input-report.json": "f0bda5629e124f26f9433af64adbb872f63c36e3fee0655bcf420b59197d21be"
+      },
+      "markers": [
+        {
+          "file": "world-input-current.log",
+          "line": "WORLD_INPUT_PASSED: 91"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

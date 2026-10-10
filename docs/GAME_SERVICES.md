@@ -92,6 +92,13 @@ to `completion`. A method registered with `{response: "acceptance"}` may return 
 job identifier while game work continues; completion and cancellation are
 explicit game signals/methods. Removing UI does not cancel an accepted game job.
 
+Frontier's `frontier.end_turn` is an example of an accepted job
+([research](research/frontier-services.md)): it answers `{ok, code, text, job}`
+on acceptance, the persistent node advances the turn one phase per frame, and
+`frontier.turn_ended` finishes that job once, whether or not a screen is open.
+The probe measures each phase of such a job against the pump's budgets
+(`pendingHostTasks`, `pendingEvents`, `hostTasksRun`, `eventsSent`).
+
 ## DTO and schema boundary
 
 Supported DTO values are null, booleans, finite numbers, strings, dense arrays
@@ -161,8 +168,9 @@ fixture synchronously frees a live application from its registered method and
 checks the surviving surface's retired nodes, queues and canceled request.
 
 Frontier, the 0.5 reference game, is the reference consumer with a nested object schema: its persistent `GameServices` node
-registers a state, a signal and twelve methods from one GDScript schema source, and hand-written TypeScript types are
-compared with them in both directions (see [Frontier's services](research/frontier-services.md)). It names no path to the SDK:
+registers two states (the snapshot and the pointer's hover), a signal and twelve methods from one GDScript schema source, and
+hand-written TypeScript types are compared with them in both directions (see [Frontier's services](research/frontier-services.md)
+and [Frontier's HUD](research/frontier-hud.md), which adds the hover). It names no path to the SDK:
 the scene injects the facade's script (`@export var fabric_api: Script`), so the same node runs in the laboratory and in a
 project provisioned by the addon, where ten cycles of new game, intents, scene reload and menu leave the registry's
 bindings and subscriptions, the signal's connections and the nodes where they started (see

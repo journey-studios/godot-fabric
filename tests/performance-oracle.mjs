@@ -35,7 +35,7 @@ const near = (actual, expected, tolerance, message) =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${message}: ${actual} != ${expected}`);
 
 // Nearest rank: the sample of rank ceil(percent * n / 100) once they are sorted, in integers.
-function nearestRank(values, percent) {
+export function nearestRank(values, percent) {
   if (values.length === 0) {
     return 0;
   }
@@ -43,8 +43,24 @@ function nearestRank(values, percent) {
   const rank = Math.min(Math.max(Math.floor((percent * sorted.length + 99) / 100), 1), sorted.length);
   return sorted[rank - 1];
 }
-const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
-const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
+export const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
+export const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
+
+// The rule that every harness of the Frontier slices judges a level at rest by (the live heap, the resident memory): the steady readings, in the order they were taken, are
+// split into a first and a last half of floor(n/2) of them (the one in the middle of an odd count belongs to neither), and the median of the last half, by nearest rank,
+// less the median of the first may be at most `limit`, inclusive. A few off-level readings do not move a median and a leak raises it as it raises the rest. The caller
+// says what a failure is called: `fill` when there are not two halves, `read` when a reading is not a positive number, and `exceeded` for the growth over the limit, given
+// {half, firstMedian, lastMedian, growth}; the extras of each caller (floors, bands, units) stay with it. Returns {half, firstMedian, lastMedian, growth}.
+export function growthOfHalves(steady, limit, {fill, read, exceeded}) {
+  const half = Math.floor(steady.length / 2);
+  assert.ok(half >= 1, fill);
+  assert.ok(steady.every(value => value > 0), read);
+  const firstMedian = nearestRank(steady.slice(0, half), 50);
+  const lastMedian = nearestRank(steady.slice(steady.length - half), 50);
+  const growth = lastMedian - firstMedian;
+  assert.ok(growth <= limit, exceeded({half, firstMedian, lastMedian, growth}));
+  return {half, firstMedian, lastMedian, growth};
+}
 
 function finiteAndNotNegative(value, label) {
   if (typeof value === "number") {
@@ -84,7 +100,7 @@ function verifySeries(series, label, windowSize, windowed) {
 }
 
 // ------------------------------------------------------------------ one reading
-function verifyReading(reading, label, windowed = false) {
+export function verifyReading(reading, label, windowed = false) {
   const perf = reading.performance;
   assert.ok(perf != null && Object.keys(perf).length > 0, `${label}: the application reports a performance section`);
   finiteAndNotNegative(perf, `${label}.performance`);
@@ -111,7 +127,7 @@ function verifyReading(reading, label, windowed = false) {
   assert.ok(phases <= pump.totalMs * (1 + 1e-12) + EPSILON, `${label}: the phases (${phases} ms) add up to no more than the pumps (${pump.totalMs} ms)`);
 }
 
-function verifyGrowth(previous, reading, label) {
+export function verifyGrowth(previous, reading, label) {
   for (const name of ["commits", "creates", "deletes", "updates", "retiredRoots"]) {
     assert.ok(reading.performance.counters[name] >= previous.performance.counters[name], `${label}: counter ${name} never goes down`);
   }

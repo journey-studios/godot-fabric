@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-turn",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T17:05:57.634Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37935936175,
+    "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/86",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T13:18:44Z",
+    "updatedAt": "2026-10-09T14:28:46Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113837876478,
+        "runAttempt": 1,
+        "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+        "startedAt": "2026-10-09T13:18:48Z",
+        "completedAt": "2026-10-09T13:21:55Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175/job/113837876478"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113837876340,
+        "runAttempt": 1,
+        "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+        "startedAt": "2026-10-09T13:18:52Z",
+        "completedAt": "2026-10-09T14:28:18Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175/job/113837876340"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113866853459,
+        "runAttempt": 1,
+        "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+        "startedAt": "2026-10-09T14:28:22Z",
+        "completedAt": "2026-10-09T14:28:46Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175/job/113866853459"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113837876060,
+        "runAttempt": 1,
+        "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+        "startedAt": "2026-10-09T13:18:48Z",
+        "completedAt": "2026-10-09T13:24:59Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175/job/113837876060"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113837876344,
+        "runAttempt": 1,
+        "headSha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+        "startedAt": "2026-10-09T13:18:55Z",
+        "completedAt": "2026-10-09T13:27:26Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37935936175/job/113837876344"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "native-cold-start": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "parity-comparison": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "reference-android": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "reference-ios": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T13:19:08Z",
+          "completedAt": "2026-10-09T13:21:52Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 386,
+              "suites": 0,
+              "pass": 386,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T13:21:52Z",
+          "completedAt": "2026-10-09T13:21:53Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T13:21:53Z",
+          "completedAt": "2026-10-09T13:21:53Z",
+          "passed": true,
+          "files": 1878
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-turn-graphics.test.mjs",
+          "tests": 13,
+          "passed": 13,
+          "topLevel": [
+            "a synthetic run of the windowed probe is accepted, and the run in the baseline's shape has the clicks of the tour",
+            "a run that is not a run of the tour in a window is refused",
+            "the turn's frames: a phase in each frame, a snapshot in each, the end once, and the HUD catching up after",
+            "a window that draws and idles at the refresh period is a measurement",
+            "a window that draws but that no display paces is rejected as unpaced",
+            "the threshold is half of the refresh period that the window read back",
+            "a window that does not draw is rejected as undrawn, whatever its pace",
+            "the statistics across runs refuse an unpaced run, and a presented one is summarized",
+            "the frames of the turn are summarized per phase, across runs by their median and range",
+            "a receipt with an unpaced accepted run is refused",
+            "a lane that was not presented reports no frame-time statistic, and keeps what it rejected",
+            "the receipt takes its build, window and viewport from an accepted run, else from the last rejected attempt, else from the captures",
+            "a lane that claims to be presented has all its runs and their statistics"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-turn": {
+        "step": "Run npm run test:frontier-turn",
+        "number": 60,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T13:47:53Z",
+        "completedAt": "2026-10-09T13:55:44Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "the Frontier game's clicks show their panels, the turn runs one phase a frame, and nodes, heap and memory hold, on the provisioned consumer"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 86,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/86",
+    "title": "feat(perf): Measure the Frontier turn on the provisioned consumer (V05-06 turno, headless)",
+    "headSha": "e6a271d364a27f73acf995ed846c78eed055dde0",
+    "baseSha": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+    "squashMergeCommit": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+    "squashCommitSubject": "feat(perf): Measure the Frontier turn on the provisioned consumer (V05-06 turno, headless) (#86)",
+    "mergedAt": "2026-10-09T13:18:41Z",
+    "headTreeSha": "669f2d8f9739a1fc4189092828fad2bc1d24a386",
+    "mainTreeSha": "669f2d8f9739a1fc4189092828fad2bc1d24a386",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 6,
+    "commits": [
+      {
+        "sha": "116a72fe608ab7a2bdecffe28a7d67358d439965",
+        "subject": "feat(perf): Measure the Frontier turn on the provisioned consumer (V05-06 turno)"
+      },
+      {
+        "sha": "e2ee6d83b392692775400e73db364b3243b47df9",
+        "subject": "docs(perf): Pin the Frontier turn's evidence to 116a72f"
+      },
+      {
+        "sha": "9352d25f2dd7e88e24b05064a7f4e28377220102",
+        "subject": "docs(dashboard): Record the Frontier turn's headless lane (V05-06 turno stays open)"
+      },
+      {
+        "sha": "91616199087a9ef8ac81b0e3876bc21eb0187c8d",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-turn"
+      },
+      {
+        "sha": "22276bc55db6b94fc3fe3f6c9c2d575a6979de64",
+        "subject": "fix(perf): Name the windowed receipt from a windowed run"
+      },
+      {
+        "sha": "e6a271d364a27f73acf995ed846c78eed055dde0",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-turn"
+      }
+    ],
+    "changedFiles": 30,
+    "additions": 4917,
+    "deletions": 25
+  },
+  "artifacts": {
+    "turn": {
+      "available": true,
+      "id": 11621327149,
+      "name": "native-frontier-turn",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 214328,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "c2bc690b26fc924c2d6fa887ec559577eda2a6e8a51f4d484ff3a45ac9c39aed",
+      "apiDigest": "sha256:c2bc690b26fc924c2d6fa887ec559577eda2a6e8a51f4d484ff3a45ac9c39aed",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "c2bc690b26fc924c2d6fa887ec559577eda2a6e8a51f4d484ff3a45ac9c39aed",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T13:55:46Z",
+      "expiresAt": "2027-01-07T13:18:45Z",
+      "fileCount": 6,
+      "files": {
+        "frontier-turn-comparison.json": "9561d006e023f0b24c64f292ea02dd2be2f3a257b0bc9a7b39acad00e4f97003",
+        "frontier-turn-current-report.json": "d34fa7ee82c832aacca13d64b47bae230c4525d6becd7925c81601d0459795b7",
+        "frontier-turn-current.log": "795d7d089cc51ecc15730ce6d5b14c3374c8f8eff67ef8623f10411f55ca3e71",
+        "frontier-turn/editor-cold.log": "050684a8d27a509557c656e9f4315f22286c0a31734f940455e07468bef70553",
+        "frontier-turn/headless.log": "795d7d089cc51ecc15730ce6d5b14c3374c8f8eff67ef8623f10411f55ca3e71",
+        "frontier-turn/provision.log": "c5febabae8326a7d42c826a5d22d021e4190ca16d4a6bc821e1d3c38856bd869"
+      },
+      "markers": [
+        {
+          "file": "frontier-turn-current.log",
+          "line": "FRONTIER_TURN_PASSED: 23"
+        },
+        {
+          "file": "frontier-turn/editor-cold.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "frontier-turn/headless.log",
+          "line": "FRONTIER_TURN_PASSED: 23"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

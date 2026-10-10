@@ -754,7 +754,9 @@ centre that yields one production too many) fail 6, 1, 13 and 3 probe checks, an
 the `prng` one also gives three different hashes in three processes. The previous-host control does not apply: there is no
 native code. `type-check`, `check:static`, `check:publication`, `test:contracts` and all 35 examples pass on the same commit
 (`4b86a7b`). The snapshot is a written and checked contract, not yet a service: the services, the HUD, the export and the
-devices are open, and the **hosted CI run (`native-civ-lite-game`) and the Pages publication are pending**. The record is
+devices are open. Hosted run 37815810524 (the push of main `e1c7a39`, five jobs in the first attempt) repeated the suite with
+634 checks in three processes and the same golden hash, and Pages published main's data
+([hosted receipt](frontier-game/hosted-ci.json), [publication](frontier-game/publication.json)). The record is
 pinned at `4b86a7b`: the current suite has 634 checks (629 there) and seven retained sabotages (the four above and three more,
 failing 5, 4 and 1 probe checks) because the review of PR #70 made the scripted faction wait for the player's city as well as for
 the player's units (before, a Warrior finished in a city on its route was born on top of the faction's), added three turns built
@@ -782,8 +784,10 @@ TypeScript types. 965 checks in each of two executions; seven retained sabotages
 intent, a frozen epoch, a refusal that publishes, an action without its arguments, `turn_ended` after the snapshot) fail 2, 2, 9,
 4, 29, 7 and 12 probe checks and the oracle rejects each. The previous-host control does not apply: there is no native code.
 Headless only, with no HUD and no capture; the probe uses an application stand-in instead of the provisioned node, the facade is
-reached by `preload`, `consumidor` and `autoridade` are open, and the **hosted CI run (`native-frontier-services`) and the Pages
-publication are pending**. The record is pinned at `75c4c0f`.
+reached by `preload`, `consumidor` and `autoridade` are open. Hosted run 37840069134 (the push of main `75a85ad`, five jobs in the
+first attempt) repeated the 965 checks in two processes and the 8 tests of `test:frontier-services`, and Pages published main's
+data, which holds the same data as the committed file in a different serialization
+([hosted receipt](frontier-services/hosted-ci.json), [publication](frontier-services/publication.json)). The record is pinned at `75c4c0f`.
 
 The [Frontier consumer record](frontier-consumer/README.md) is the third package of the 0.5 milestone (V05-03, criterion
 `consumidor`, tied to GF-07): `consumers/civ-lite/` becomes a consumer project provisioned by the addon like `consumers/minimal`,
@@ -806,8 +810,85 @@ that count and nothing else, and the `test:frontier-services` suite and its seve
 `029416f` of the implementation commit `b0509db` with main's `b0e40aa` (PR #74's prop-scope policy), which touches none of the
 slice's files, and the minimal consumer still passes its 30 and 40. Two headed captures (the game and the menu, 1080x600) are in
 the record. The previous-host control does not apply: there is no native code. The HUD is the minimal service HUD and not the
-playable one (V05-05), the presses are synthetic, `autoridade` is open, and the **hosted CI run (`test:consumer:civ-lite`) and
-the Pages publication are pending**. The record is pinned at `b0509db`.
+playable one (V05-05), the presses are synthetic, `autoridade` is open. Hosted run 37864357395 (the push of main `c8de44b`, five
+jobs in the first attempt) repeated the headless check, 18 build and ownership checks and 145 native checks over ten cycles, and
+Pages published main's data ([hosted receipt](frontier-consumer/hosted-ci.json), [publication](frontier-consumer/publication.json));
+the windowed run and the captures stay local. The record is pinned at `b0509db`.
+
+The [Frontier authority record](frontier-authority/README.md) closes the criterion `autoridade` of V05-03 (tied to GF-25), on
+the services and the consumer above, with no C++. The dashboard's `turn.end` is `frontier.end_turn` and its `job.finished` is
+`frontier.turn_ended`. `frontier.end_turn` is registered to answer on acceptance, with the id of a job, and the persistent
+`GameServices` node advances the turn one phase per frame in its own `_process`, never in the World or a surface: the snapshot is
+published at the acceptance and after each of the six phases (seven in seven consecutive frames, the last at rest with
+`last_job` = the job), and `turn_ended` goes out once, between the sixth and the seventh. Every method now answers
+`{ok, code, text, job}`, with `job` 0 unless an accepted `end_turn` started one. Fifteen jobs in the probe: the application's own
+module-scope subscription received `turn_ended` for each, once and in order, and the node's `finished_jobs` holds 1 for each; the
+third job ran with the surface closed in the frame after the acceptance (`rootCount` 0 throughout) and the remounted root's first
+snapshot was at rest, turn 4, `last_job` 3; ten calls sent while a job ran were refused with `turn_in_progress` and started no
+job; and in the consumer's ten cycles an End turn pressed in the same frame as the menu finished with the menu open, once, with
+the World out of the tree. A rule lane runs the probe twice with the same bundle and host, once on the genuine `rules.gd` and
+once with the Settler's movement points mutated from 2 to 0, and exactly the fields the rule predicts change in the snapshot
+JavaScript receives (the Settler's `moves` and `max_moves`, and `found_city`'s `enabled`, `reason` and `reason_text`). Every
+frame of every job fit in one pump of the registry's 64 tasks and 128 events (at most 10 tasks, with ten calls sent, and 3
+events) and left nothing pending; with 150 more subscribers of the snapshot a publication of 152 events drained in 2 pumps (128
+and 24) with no loss and in order, and a job that outran the pump drained 1065 events in 9 pumps. The tests: 1058 probe checks in
+each of two executions, 11/11 in `test:frontier-services`, 165 native checks and ten cycles in `test:consumer:civ-lite`, and the
+P3 golden and trace hashes unchanged. Eleven retained sabotages of the services (four new: `double-finish`,
+`job-dies-with-screen`, `sync-end-turn`, `stale-snapshot`) and five of the consumer (one new, `job-dies-with-menu`) are all
+rejected, and the sources are restored byte for byte. Headless only, with synthetic presses and no playable HUD (V05-05);
+`finished_jobs` is bounded to 256; a `new_game` abandons a job in progress and no `turn_ended` fires for it; the previous-host
+control does not apply. Hosted run 37880395525 (the push of main `5e1f6a1`, five jobs in the first attempt) repeated the 1058
+checks of the services in two processes and the 11 tests of `test:frontier-services`, and the 165 native checks and ten cycles of
+the consumer, and Pages published main's data ([hosted receipt](frontier-authority/hosted-ci.json),
+[publication](frontier-authority/publication.json)). The record is pinned at `d0c7096`.
+
+The [Frontier HUD record](civ-lite-ui/README.md) is the first slice of V05-05 (criteria `matriz` and `mapa`): the HUD mounts, for
+each of the seven contexts the game derives, exactly the panels the context calls for (the turn and resources bar with a spinner
+during the AI's phase, the unit's actions with the game's reasons, the tile card, the city screen, research and the dialog), through
+one store at module scope that is the only module talking to the game. The pointer over the map is Godot's: a click selects through
+the World's `_unhandled_input` and the tile under the pointer is published as the state `frontier.hover` (15 bindings). A probe plays
+the replay's steps 0 to 45, the end of a turn (every frame, then held at an AI phase) and real pointer events; an independent oracle
+judges what it saw with 143 checks of the probe and 0 findings, rejects 23 mutated copies of the report, the HUD of `5e1f6a1` fails in
+five categories, and eight retained sabotages are rejected. The lane found that the World came back behind the HUD's layer after the
+menu (fixed) and that the old HUD's spacer, flattened by Fabric, never swallowed a click. Eight captures, local macOS arm64, no C++;
+the hover was exercised with synthetic events. The record is pinned at `38d3182`. Hosted run 37891490943 (the push of main `622102e`, five jobs in the
+first attempt) repeated the HUD lane's 143 probe checks, with the report byte for byte the local one, and the consumer's 165 native checks over ten cycles, and
+Pages published main's data with `matriz` and `mapa` closed ([hosted receipt](civ-lite-ui/hosted-ci.json), [publication](civ-lite-ui/publication.json));
+the captures, the causal control and the sabotages stay local.
+
+The same record has a second part, slice 2a of V05-05 (criterion `overlays`), pinned at `1810828` (the sources are those of `12b6c83`, `8ba2a35` and the soak oracle's adjustment; the merge of main into the branch is `b3d835e`): by the user's decision of 2026-10-09 the game's
+event is a queue of three (the state, the rules, a 77-step replay, and the golden and trace hashes `cb7ab974…` and `ed43495…`, recomputed at every
+step by the independent oracle), and the city screen and the event dialog are blocking `Modal`s. With either open, 100 left clicks, 100 right
+clicks and 100 wheel ticks on the map reach the World 0 times, and 100 of 100 once it is closed; the dialog shows the game's "n of 3" and mounts each
+event as a subtree of its own, a HUD remounted with the second event at the head shows "2 of 3" in its first frame, and a new session has no queue until
+its own turn 5. The probe reads a `Modal`'s nodes from the host's snapshot, since they are children of the Modal's own window. 144 checks of the HUD
+probe and 26 of the overlay probe, judged by two independent oracles that reject 27 and 20 mutated reports; two causal controls fail exactly their groups,
+twelve sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four captures of the overlays were read. No check name of the probes
+carries a count that depends on the pace, and the lane refuses one that does. The merge of main brought in the soak of PR #83, whose oracle had written the one
+event as a fact: it now expects the three answers of turn 5, with nothing relaxed. Local macOS arm64. This part reached main as `e108e9d` (the squash of PR #93): the
+Contracts run dispatched on main at that commit (run 37958818671, eight jobs, first attempt) repeated the HUD lane's 144 and 26 probe checks and the consumer's 165 native
+checks, with both hosted reports judged again outside the CI by the independent oracles with no finding ([hosted receipt](civ-lite-ui/overlays/hosted-ci.json)), and Pages
+published main's data with `overlays` closed ([publication](civ-lite-ui/overlays/publication.json); [the page](civ-lite-ui/overlays/README.md)). The engine's error when
+quitting with a `Modal` open is a task of its own.
+
+The record has a third part, slice 2b of V05-05 (criterion `estabilidade`, the last of the item, so V05-05 is complete), pinned at `0a0deca`: each overlay is opened and
+closed twenty times by real input (the city screen 20 times by a click and Close and 20 by a click and Escape; the event dialog 20 times from a new game played to turn 5 and
+answered by three presses, 60 answers), and after every close, at rest, the tree's nodes, orphans and `Window`s, the native views, the pointer routes, the registry's
+subscriptions, the HUD's connections and the signal's are the first cycle's, exactly, with the Hermes heap flat by the baseline's rule; focus (the root viewport's owner
+restored, the Modal's Window the one exclusive one while open, Escape closing the city and doing nothing on the dialog) and 0 of 100 clicks of each kind under the overlay in
+the first and the last cycle; a scan of the HUD against the 0.5 manifest, which now decides `AppRegistry`; and six original icons shown by `Image`, inside a Modal's Window too.
+A third probe of 41 checks, an oracle that rejects 38 mutated reports, a scan that finds 21 changes of a copy of the sources (a name, a prop or a member the manifest does not allow, a subpath of `react-native`, an alias or a destructuring of `AppRegistry`; 23 cases, 2 of them let through), a control (`e108e9d`) that fails only the icons,
+and 17 sabotages (5 new) rejected; seven captures were read. Local macOS arm64; this part is not on main yet, so it has no hosted run.
+
+The [Frontier scope record](frontier-scope/README.md) is V05-04 (criteria `manifesto`, `tipos` and `props`): the twelve names the HUD imports are decided in
+`docs/compatibility/scope-0.5.json`, and one policy module decides each of the 880 props RN 0.87.1 declares for its seven components (433 supported, 325 ignored
+with a reason and 122 refused with `Godot <Component> does not implement <prop>`), checked on every mount and every update. A native lane drives every case in the
+real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change fails exactly 22 of its 177 checks, and six retained
+sabotages are rejected; no screenshot, since the slice has no visual output, and two open items (the 26 ScrollView props that refuse even RN's default, and the host
+crash that removing the check from the ScrollView exposes). Hosted run 37842839329 (the push of main `b0e40aa`, five jobs in the first attempt) repeated the 13 tests of
+`tests/scope-0.5.test.mjs`, the 5 of `test:scroll-view` and the lane's `SCOPE_PASSED: 181`, and the Pages build and deployment of that push passed, but the deployed
+`migration.json` was not compared, because the run's `github-pages` artifact has expired and no longer exists ([hosted receipt](frontier-scope/hosted-ci.json),
+[publication](frontier-scope/publication.json)); the causal control and the sabotages stay local. The record is pinned at `e33817e`.
 
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
@@ -874,7 +955,11 @@ layout on a real window (the per-panel layout runs headless only) and keeps four
 ScrollView and the wheel over the HUD or a tree overlay still reach the world as well as React Native: they are
 recorded, not judged, and left to slice 2 (variant a2, unblocked now that PR #58 has merged). Slice 1 of 3 reads GO for the minimal policy;
 the go/no-go is decided in slice 3. The events are synthetic, there is no hardware pointer or touch screen, no
-mobile export and no iPhone (the `iphone` criterion stays open), and hosted CI is **pending**.
+mobile export and no iPhone (the `iphone` criterion stays open). Hosted run 37853001783 (the push of main `7ef63ed`, five jobs in
+the first attempt) repeated the 66 headless checks. The Pages build and deployment of that push passed, but the deployed
+`migration.json` was not verified, because the run's `github-pages` artifact has expired and no longer exists
+([hosted receipt](world-input/hosted-ci.json), [publication](world-input/publication.json)); the windowed lane and the
+previous-host control stay local.
 
 The [world input a2 record](world-input-a2/README.md) is the second slice of the same spike (V05-02, go/no-go no. 1):
 it closes the six gaps that slice 1 measured (a hit slop, a `Text` with `onPress`, the gaps of a ScrollView, and the
@@ -899,8 +984,135 @@ N = 100, the six gaps, `displayServer` macOS, `gl_compatibility`, **not part of 
 so its frames ran **unpaced** (V-Sync read back as enabled at 120 Hz, idle median 0.776 ms): it makes no frame-time or
 presentation claim, its counts do not depend on the pace, and five captures are linked from the record, `gaps-claimed.png`
 byte-identical to the untouched frame. Pointer motion, hover and drag are not claimed, a HUD before the world in the tree is
-not supported, the pointer reaches no phone or hardware pointer yet, and hosted CI is **pending**. The record does not decide
-the go/no-go; it gives the reading for slice 3, which does.
+not supported, and the pointer reaches no phone or hardware pointer yet. Hosted run 37874901247 (the push of main `2a3f4b0`, five
+jobs in the first attempt) repeated the 91 headless checks, and Pages published main's data
+([hosted receipt](world-input-a2/hosted-ci.json), [publication](world-input-a2/publication.json)); the windowed lane and the
+controls stay local. The record does not decide
+the go/no-go; it gives the reading for slice 3, which does. Slice 3 decided the spike: GO for the desktop (macOS), with the
+`iphone` criterion open; see the [decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3).
+
+The [Frontier baseline record](frontier-baseline/README.md), pinned at `346146d`, records the `baseline` criterion of
+V05-06 (package P6): its headless part, and its frame time since the windowed lane was presented on 2026-10-09 (`1bc3a3c`). It measures what a click on a bar `Pressable`, which replaces a HUD panel of 50,
+75 or 100 native nodes, costs on the pointer spike's scene, extending GF-30's harness (its sampler is shared, and the 43 checks of the soak
+are unchanged). Headless, in two Godot processes of 384 swaps each (30 steady swaps for every ordered pair of the four panels, the click made
+by the V05-02 injection), 19 checks per process hold exactly: after every swap the SceneTree, the host and the Surface hold the base's 12
+native nodes plus the new panel's, the swap creates the new panel's nodes and deletes the old one's, a click swaps once and never reaches
+the map, a round ends at the base, and the live heap at rest (2,032,000 bytes) stays within GF-30's 2,048 bytes from the first steady
+rounds to the last (judged at 346146d on the floor of five-round windows; a hosted run showed a noise band of 2,376 bytes that this window did not
+survive, and the gate now compares the medians of the two halves of the steady rounds, see the record's "Registro fixado"); an independent
+oracle recomputes it all and the percentiles. Four retained sabotages (a panel kept mounted, a heap read without the forced collection, the
+buttons made `pointerEvents="none"`, the panel without its `key`) are rejected, and the first `leaky-panel` (`display: none`) was not,
+because a hidden View adds no node; the previous-host control does not apply, since no C++ changed. What a swap costs is recorded and never
+judged: the host mounts the panel inside the flush of the click (0 frames after it in all 720 steady swaps), and a swap that creates 100
+nodes takes 9.2 ms of CPU at the median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms; earlier runs on a more loaded machine gave 11 to 12 ms at the median, not pinned). The proposed limits (the CPU time of a swap by nodes created, the heap
+a panel holds, the frames to the panel) are a **PROPOSTA, not frozen** (`congelado` is a later, single act; `turno` and `soak` are open
+too). **The frame time was pending at `346146d`**: the local windowed lane (not part of hosted CI) refused a run that the display did not pace, and with
+the display off it rejected all three attempts as unpaced (an idle frame of 0.7 ms against the 4.17 ms required) and ended with
+`presented: false`, exit code 3 and no frame-time statistic; the rejected attempts are kept as raw data and four captures are kept.
+**It is pinned since 2026-10-09**: one execution of the lane on `1bc3a3c` (the drawable window of #99) was presented by the display, five runs of five slots at the first attempt
+(0 of 25,469 sampled frames the engine could not draw, vsync `enabled` at 120 Hz), and the record's section "Faixa janelada apresentada" and
+[`windowed-presented.json`](frontier-baseline/windowed-presented.json) publish its statistics (the raw receipt is committed byte for byte beside them, [`windowed-presented-raw.json`](frontier-baseline/windowed-presented-raw.json)) and the **proposal** they give by the written rule (median of the five runs
+plus three times the interquartile range, up to 0.5 ms): the swap frame's p50 / p95 / p99 by nodes created 0 / 50 / 75 / 100 are 3.662 / 8.448 / 11.171 / 13.144, 13.714 / 11.052 / 14.080 / 16.577 and
+14.284 / 15.565 / 19.278 / 24.607 ms at the median of the runs, with proposed bounds of 4.0 / 9.0 / 12.0 / 13.5, 14.0 / 12.5 / 20.0 / 17.0 and 16.5 / 27.5 / 29.5 / 41.5 ms (the p99 of 90 swaps is the largest of
+them, so those are the noisiest), the idle frame's p99 is 15.213 ms (proposed 16.5) and no frame of 100 ms or more occurred in 1,800 swap frames or 3,000 idle intervals. The Mac was loaded by
+other agents (load average 5.4 to 6.8 on 11 logical cores) and nobody used it, so the numbers are pessimistic and the `congelado` may need a run on a quiet machine; nothing is frozen. The
+four captures of that run are the bytes already in the record. The clicks are synthetic and there are no
+presentation timestamps (missed frames with the vsync stay open). Hosted run 37884924042 (the push of main `3bb51d6`, five jobs in
+the first attempt) repeated the 19 headless checks, and the 18 tests of the windowed lane's judgement and the heap series ran in the
+`contracts` job, and Pages published main's data ([hosted receipt](frontier-baseline/hosted-ci.json),
+[publication](frontier-baseline/publication.json)); the windowed lane itself never runs in hosted CI.
+
+The [Frontier soak record](frontier-soak/README.md), pinned at `dd67671`, records the `soak` criterion of V05-06 (package P6) and leaves `turno` and
+`congelado` open. A scripted player plays the Frontier game for 100 turns, through the typed services and a React Native HUD that opens and closes a
+100-node panel every turn, in three headless Godot processes (about 67 seconds each): all 34 checks of each hold, and the three games end in the same
+final hash (`a35c55f2…`) with the same trail of 100 turn hashes, whichever way the panel is closed. At every reading the SceneTree holds the host's native
+views plus a constant, with no orphan, and the views follow the HUD's state exactly (16 at rest with nothing selected, 18, 20, 22 and 23 in the other contexts,
++100 when the panel is kept hidden); the live heap at rest is flat to the byte (2,117,320 bytes, or 2,443,832 with the hidden panel) within GF-30's 2,048
+bytes by the baseline's median-of-halves rule; the resident memory is judged loosely (48 MiB between the medians of the halves, a coarse guard over a
+within-run band of 34 to 137 MB); no error goes unhandled, with a control that shows the tracker can see one. A game paused at turn 50 holds its accepted
+job at its first phase for 60 frames while a click still reaches the HUD's handler, because the HUD's layer is `PROCESS_MODE_ALWAYS`. The written decision
+between mounting and hiding a 100-node panel, from the numbers: no consistent CPU advantage was observed for either (the sum of an open and a close changes sign
+between rounds on a shared machine, so it is inconclusive); what was stable is that hiding has a shorter tail on the open (p95 11.3 against 18.8 ms) and a close
+about twice as costly, and that it keeps 100 native nodes and 326,512 bytes of heap, so the recommendation for the V05-05 HUD (not applied) is to unmount by default. Four retained sabotages (a connection never removed, a player that decides by chance, a HUD layer
+that pauses with the game, a "hidden" panel that is `display: none`) are rejected by the probe and by the oracle, each for the reason it was written for,
+and the oracle rejects 29 changes of a recorded report; the previous-host control does not apply, since no C++ changed. The 101 node updates of a hide
+toggle are unexplained, the clicks are synthetic, the machine was shared with other agents (load average recorded, timings vary by tens of percent),
+the `PROCESS_MODE_ALWAYS` recommendation for the V05-05 scene is not applied. Hosted run 37904776515 (the push of main `a49f851`,
+five jobs in the first attempt) repeated the 34 checks in each of three processes, and Pages published main's data
+([hosted receipt](frontier-soak/hosted-ci.json), [publication](frontier-soak/publication.json)); the timings, heap and memory
+numbers above are local.
+
+The [Frontier turn record](frontier-turn/README.md), pinned at `116a72f` (the headless lane) and at `1adcdb3` (the windowed lane), records the `turno` criterion of V05-06 (package P6) on the game **as a consumer has it**, and the two lanes
+together **close** it. The `consumers/civ-lite` template is provisioned into a project of its own, with its HUD and scene untouched, and clicked for 32 rounds of 16 real pointer
+clicks through all seven contexts (the dialog opened by the End turn of the fourth turn), in one headless Godot process (about 172 seconds): all 23 checks of the probe hold and the independent oracle
+accepts every rule. A click shows the panels of its context 2 frames after the injection in all 480 steady clicks (8 for an End turn: the job's seven frames and one for the HUD to catch up; 10 to
+14 ms of CPU on the unpaced headless loop; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and
+`turn_ended` once (120 steady turns, 128 in all), the native views and the SceneTree's nodes are the same every time a context comes back (14, 18, 24, 24, 26, 27 and 42 views, with no orphan in 546
+readings), the live heap at rest of each of the 17 series grows 128 bytes between the medians of the halves (GF-30's 2,048-byte limit, by the baseline's rule, which is now one function shared with
+the soak's resident-memory rule), and no error goes unhandled. Four retained sabotages (a frame that runs two phases, a node left behind by every click, a click delivered far from its target, a
+HUD that keeps 64 numbers of every render), two of them made in the provisioned copy and never in the template, are rejected, each by its own rule, and the oracle rejects 22 changes of a recorded
+report. The local windowed lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) imports the baseline's validity rule. The first time, with the display off, it rejected all three attempts as unpaced
+(an idle frame of about 0.6 ms against the 4.167 ms required) and ended with `presented: false`, exit code 3 and no frame-time statistic. **It was presented on 2026-10-09**, with the display on, on the main
+commit `1adcdb3` ([the presented record](frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)): 5 of 5 runs accepted in 8 attempts (three rejected as `undrawn`, none as unpaced), vsync on at 120 Hz, exit code 0; the first frame of a click took
+a p95 of 12.98 ms (median across the runs) and none of 1,800 reached 100 ms, and the frames of a turn have a p95 per phase of 12.8 to 14.1 ms and none of 4,800 reached 100 ms. They are intervals between process frames, and the idle median
+(4.4 to 13.2 ms across the runs) is unstable because the idle intervals fall in two alternating groups whose mean is one refresh period, so the p95 and the mean are what to read. The raw receipt is not committed (SHA-256 `db86eb08…`)
+and seven captures (one for each context) of the real HUD over the real map are kept. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` stays open, and `congelado` is a later, single act
+(this record proposes no bound). The clicks are synthetic, the HUD is V05-05's work in progress, the two
+frames from the click to the panels are an observation and not a traced mechanism, the machine was shared with other agents (load average recorded) and the previous-host control does not apply since no
+C++ changed. Hosted run 37935936175 (the push of main `1adcdb3`, five jobs in the first attempt) repeated the 23 headless checks, and the 13 tests of the windowed lane's judgement ran in the `contracts` job,
+and Pages published main's data ([hosted receipt](frontier-turn/hosted-ci.json), [publication](frontier-turn/publication.json)); the windowed lane, the captures and the sabotages never run in hosted CI, so the frame
+times and the timings, heap and memory numbers above are local.
+
+The [idle reference record](idle-reference/README.md), pinned at `237b171`, records the fix of a defect in the validity rule of the windowed lane that the presented executions of 2026-10-09 exposed, and the dated
+amendment of the pre-registered protocol of the final comparison (V05-10) that used the same reference. With the vsync on at 120 Hz the 600 idle intervals of a window the display presents come in two alternating groups
+(about 300 under 4.17 ms and about 300 of 12 ms or more, two neighbours adding up to about 16.67 ms), so the **median** falls in one group or the other by a few samples: one presented attempt of the baseline was
+refused as `unpaced` for a median of 4.136 ms against the 4.167 ms required (a mean of 8.333 ms, 5,106 of 5,110 frames drawn), the accepted runs of the turn had medians of 4.42 to 13.18 ms, and in one run 242 of 360 click frames were
+"above twice the idle median" only because the median was in the low group. The rule is now the **median of the half-sums of consecutive pairs** of the idle intervals (the same threshold, half of the refresh period read back):
+8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the
+half-sums, which the mean would not survive. The record compares the median, the mean and the half-sum median over the 24 raw attempts of the three receipts of 2026-10-09 (kept outside the repository, by SHA-256) and of the baseline's
+record: the mean and the half-sum median give the same verdict on all 24, and the new rule would change one verdict, the refused attempt, which it would accept. The receipts recorded before are **not reclassified** (they were judged by
+the median, and `verifyGraphicsReceipt` still judges a receipt by the rule it was written under), and the new rule applies from the next execution on. The summary now counts the frames above twice the idle median (as before)
+**and** above twice the idle reference, and the protocol of V05-10 is amended for it (`amendments[0]`, 2026-10-09, **no comparative measurement before it**; the pin of the protocol moves from `8dd7779d…` to `8833e54e…`, and a change
+of the protocol without an entry in `amendments` and a new pin now fails its test). The reference is of the same quantity as what it is compared with: the CPU time per frame for the comparison's secondary outcome, and the elapsed intervals between process frames, which is what the lane records, for the pacing check (the wording of the amendment was corrected twice on review before it reached main). The slice measures nothing of the game and **closes no criterion**. The new rule has not yet run in a real windowed execution, the turn's script
+(`scripts/frontier-turn-graphics.mjs`, owned by the open P8 slice) still prints the count by the median until a later change, `docs/research/frontier-turn.md` still describes the old rule, the tests run in Node (16 for the lane, 17 for
+the protocol). Hosted run 37960884650 (the push of main `9f55644`) ran the three jobs that a push has run since the native suites became opt-in, in the first attempt, and skipped
+the five native ones, which this slice does not depend on (no C++ changed, and the windowed lane never runs in hosted CI): its receipt records them as skipped, accepted only because the slice has no native step, and shows the
+guard step, the three contract test files (16, 17 and 10 tests) and the `contracts` job passing, and Pages published main's data ([hosted receipt](idle-reference/hosted-ci.json),
+[publication](idle-reference/publication.json)); the raw receipts of 2026-10-09 stay outside the repository.
+
+The [milestone exit guards record](milestone-exit-guards/README.md), pinned at `bf00341`, turns two exit criteria of the 0.5 into checks that run: X9 (the
+1.0 does not move: no diff in `tasks`, `phases`, `sequences`, the checklists or `decisions` in a change that adds a `milestone-0-5-*` entry, both for a
+changed `done`, weight or status and for a changed note, label or evidence) and X10 (frozen tail: no new `pointer-*`, EventTarget, Document or hover slice, and
+no change to GF-13 outside V05-02). `scripts/milestone-guards.mjs --check` is the guard of a pull request, a step of `contracts.yml` that fetches one commit
+more than the shallow checkout and takes the first parent of `HEAD` as the base (the base branch of GitHub's synthetic merge on a pull request, the parent of the
+pushed commit on a push); `--audit` walks the 28 first-parent commits from `c0f3702` (#60) to `bf00341`, 15 of which add a 0.5 entry, and writes a
+[receipt](milestone-exit-guards/audit.json) that `--audit --verify` judges again with no git. The audit finds X10 clean in all 28 and X9 clean in 14 of the 15,
+with one violation, `b0e40aa` (#74): it merged the hosted CI and Pages receipts of #69 into GF-27's note and `slice` evidence, with no `done`, weight or status
+moved. It is recorded as a known violation for the user to judge, not waved through. The tests run on synthetic documents and throwaway repositories
+(35 checks, 36 at the squash), so they need no history. Hosted run 37945060216 (the push of main `333181d`, five jobs in the first attempt) ran the guard step on a push,
+against the parent of the squash (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean), and the 36 tests in the `contracts` job; Pages published main's data ([hosted receipt](milestone-exit-guards/hosted-ci.json),
+[publication](milestone-exit-guards/publication.json)); the pull-request and manual-dispatch branches of the step and the audit stay local. **X9 and X10 are not closed**: both say "during the 0.5" and close when the
+milestone does, by running the audit again. A new folder with a neutral name can still hide a slice; it is listed, not failed.
+
+The [CPU-time instrument record](cpu-time-instrument/README.md), pinned at `e38615d`, records the preparation of the `execucao` criterion of V05-10: the one reading of the main thread's CPU time per process frame
+that the final comparison will use in all three arms, checked against a busy loop of known duration before any comparative measurement. The instrument (`tests/cpu-time-instrument.gd`) does **not** read
+`Performance.TIME_PROCESS`, which at the source and in the binary is a maximum assigned once a second that includes the wait for the display (in an idle 120 Hz window it reads about 15 ms where the instrument reads 0.08 ms):
+it stamps `Time.get_ticks_usec` at the engine's hooks and adds the physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives 6 draws later and is aligned by draw
+index. In the lab (an empty tree, a node that burns 2, 5, 10 and 20 ms in a block of 200 frames, idle blocks between) the four loads are read to within 0.16% headless (10 of 10 checks of the probe; the independent oracle accepts the raw report
+and the engine's own monitor agrees with the instrument's series) and to within 1.5% in a window the display presented on 2026-10-09 (120 Hz, vsync on, one run, exit code 0), where a render pulse of 30,000 rectangles lands at
+lag 6 with a gain of 1.07 ms and at most 0.012 ms at every other lag. Three retained sabotages (the interval between frames for the CPU time, the load outside the measured frame, the engine's monitor for the CPU time) are rejected by the
+probe and by the oracle, each for its own rule, and the sources come back byte for byte. **The threshold `cpu-time-instrument` stays unfrozen** (`frozenValue: null`); the clock is monotonic elapsed time and not the thread's
+CPU time, the Mac was shared with other agents (the 1-minute load average stood between 5.5 and 9.9, above the protocol's 2.0 for a comparative execution), the render term was exercised only in a lab scene, and the arms
+and the iPhone are open. The step is in the `native-suites-frontier` job of `contracts.yml`, which only runs on manual dispatch, so the push of main at `c57f9f6` (#97) skipped it. That push's jobs passed (the contract tests, 19 of 19, and the milestone guard), and Pages published main's data ([hosted receipt](cpu-time-instrument/hosted-ci.json), [publication](cpu-time-instrument/publication.json)); the headless and windowed lanes and the sabotages stay local, and the windowed lane never runs in hosted CI.
+
+The [windowed presence record](windowed-presence/README.md), pinned at `1bc3a3c`, records the finding of V05-06 (GF-30) about the windowed lanes of the baseline and of the turn, which on 2026-10-09 refused run after run as `undrawn` with the
+user at the Mac and said nothing of why. At the source of Godot 4.7.2 the engine does not draw a macOS window that the system says is occluded (`window_can_draw()` reads the flag the window delegate clears; `Main::iteration` skips `RenderingServer::draw`,
+and with it `frame_post_draw`, while no window can draw, and the loop sleeps 6.9 ms a frame instead; [the research](../research/windowed-presence.md)); that explains the frames in which the flag is false, and a run refused as `undrawn` with the flag true in every sample stays open. `tests/window-presence.gd` puts the lane's window in front of the others and above them and records, for every
+process frame, whether the engine could draw it: each attempt of the receipts carries `undrawableFrames` (of `sampledFrames`), the raw runs carry the spans, and the reason of an `undrawn` refusal says what the engine said of the window (in how many frames `window_can_draw()` was false; a run in which it never was stays open, with no cause concluded). **The validity rule is
+unchanged** and no criterion moves. Both lanes ran once each at the commit with a clean tree and were **presented at the first attempt of all five slots** (10 of 10 runs, none rejected), with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379
+in the turn, in the first live execution of the turn's path with the helper. **Nobody touched the keyboard or the pointer during either lane** (the idle time of the input devices grew by as many seconds as passed over the 15 minutes), so the record shows that the helper
+opens a window the engine can draw and that the record is written and verified, not that it keeps the window drawing against interference: that needs a run with the user at the Mac. A locked or asleep display is not covered, and the captures run still waits
+for `frame_post_draw` with no limit of its own. The raw receipts (`SHA-256 36b32e0d…` and `8dd6ec9c…`) stay outside the repository in this record (the baseline's, `36b32e0d…`, was committed later, byte for byte, in the [Frontier baseline record](frontier-baseline/windowed-presented-raw.json)); the frame-time statistics they hold belong to the delivery that closes the `baseline` criterion, and this record changes none.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

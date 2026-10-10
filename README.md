@@ -500,6 +500,7 @@ a `Text` with `onPress`, the gaps of a ScrollView and the mouse wheel over the H
 the map as well as React Native under that policy; the second slice (variant a2) closes them with one rule, in the
 Surface's `_unhandled_input`: what React Native's hit test finds at the event's point is the HUD's, the rest is the world's
 (the host with only the first policy fails exactly the 19 checks that need it; pointer motion, hover and drag are not claimed).
+The third slice decided the spike: GO for the desktop (macOS), with the `iphone` criterion open ([decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3)).
 Hardware pointers, a real touch screen and mobile exports are open, and so is hosted CI. Evidence: [slice 1](docs/evidence/world-input/README.md) and [slice 2](docs/evidence/world-input-a2/README.md); [research](docs/research/world-input.md).
 
 The [Image example](examples/images/README.md) renders React Native's own `Image.ios.js`,
@@ -552,6 +553,45 @@ memory are recorded with their provenance and never judged; target-device budget
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
 
+The [Frontier HUD baseline](examples/frontier-baseline/README.md) (V05-06, criterion `baseline`) extends that harness to
+the pointer spike's scene: a React Native HUD over the Godot map whose panel, a tree of 50, 75 or 100 native nodes, is
+replaced by a real click on a button of the bar. Headless, in two processes, every swap leaves the SceneTree and the host
+with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
+reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
+independent oracle recomputes it all. A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 ms at p95 (headless, pinned run), more than a 120 Hz period (8.33 ms).
+The CPU and heap limits are a proposal, not a frozen budget. The local windowed lane
+(`node scripts/frontier-baseline-graphics.mjs`) refuses a run that no display paced; with the display off it ended as
+not presented (exit code 3, no frame-time statistic), and on 2026-10-09 the display presented the window (five runs, commit `1bc3a3c`), so the
+frame time of a presented window (vsync on, 120 Hz) is pinned from that one execution: a swap that creates 100 nodes takes a frame of 13.1 ms at the median and 16.6 ms at p95,
+and the proposed bounds are derived from the five runs (median plus three times the interquartile range, up to 0.5 ms). The Mac was loaded by other agents and nobody used it, so those numbers are
+pessimistic and the freeze may need a run on a quiet machine. The raw receipt of that run is committed byte for byte in the evidence folder. The `baseline` criterion is closed, and the freeze (`congelado`) is open.
+[Evidence](docs/evidence/frontier-baseline/README.md); [research](docs/research/frontier-baseline.md).
+
+The [Frontier soak](docs/research/frontier-soak.md) (V05-06, criterion `soak`, `npm run test:frontier-soak`) plays the game for 100 turns in three
+headless Godot processes through the typed services, with a scripted player and a React Native HUD that opens and closes a 100-node panel every turn: the three games end
+in the same hash and have the same trail of 100 turn hashes, the native views return to the same count in each context, the live heap at rest and the resident memory stay within their
+rules, no JavaScript error goes unhandled, a paused game keeps the HUD answering while its accepted job waits, and the research note decides between unmounting and hiding a panel from the measured
+numbers (a recommendation for the V05-05 HUD, not a change to it); four retained sabotages are rejected and the hosted CI run is pending.
+[Evidence](docs/evidence/frontier-soak/README.md); [research](docs/research/frontier-soak.md).
+
+The [Frontier turn](docs/research/frontier-turn.md) (V05-06, criterion `turno`, `npm run test:frontier-turn`) measures the game as a consumer has it: the `civ-lite` template provisioned into a project of its own, its
+HUD and scene untouched, driven by real pointer clicks (16 a round, 32 rounds, all seven contexts, the dialog opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows the panels of its context
+(2 frames, and 10 to 14 ms of CPU headless, in the pinned run; the frames are recorded against a ceiling and never fixed), the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and `turn_ended` once, the native views, SceneTree nodes
+and orphans come back to the same count every time a context does, and the heap at rest and the resident memory stay within the GF-30 and soak rules in all 17 series; four retained sabotages (two of them in the provisioned copy, never in the template) are
+rejected, each for its own rule, and an independent oracle recomputes it all. The local windowed lane (`npm run bench:frontier-turn-graphics`) refuses a run that no display paced: with the display off it ended as not
+presented (exit code 3, no frame-time statistic), and with the display on it **was presented** on 2026-10-09 (5 of 5 runs accepted, vsync on, 120 Hz, exit code 0): the first frame of a click has a p95 of 12.98 ms (median across the runs) and the frames of a turn a p95 per phase of 12.8 to 14.1 ms,
+and none of either reached 100 ms. Those are intervals between process frames, not frames the display showed, and no limit comes from them. That closes the `turno` criterion. The baseline's own windowed lane was not presented in its two attempts of that day, which stay as history; it was presented later the same day, on `1bc3a3c`, and is documented above, so the `baseline` criterion is closed. The `congelado` criterion, and the hosted CI and the Pages publication of the turn, stay open.
+[Evidence](docs/evidence/frontier-turn/README.md) ([the presented windowed lane](docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)); [research](docs/research/frontier-turn.md).
+
+The [CPU-time instrument](docs/research/cpu-time-instrument.md) (V05-10, the preparation of the `execucao` criterion, `npm run test:cpu-time-instrument`) is the one reading of the main thread's time per
+process frame that the final comparison will use in all three arms, which the protocol calls the CPU time per frame. What it measures is the **monotonic elapsed time between the engine's hooks on the main
+thread**, not the thread's CPU clock from the operating system: a scheduling pause inside the hooks raises the total without raising the thread's CPU use. It is a `Node` that depends on neither React Native
+nor the Fabric host and stamps the clock at the engine's hooks, adding the physics, process, setup and render terms, which all end before the frame is presented. It stamps the clock because Godot's
+`Performance.TIME_PROCESS` is a once-a-second maximum that includes the wait for the display.
+A lab probe checks it against a busy loop of 2, 5, 10 and 20 ms to within 10% (headless in the suite, and once in a window locally, where the render term is aligned to the draw six frames earlier), an
+independent oracle recomputes it from the raw stamps, and three retained sabotages are rejected. The threshold `cpu-time-instrument` is not frozen and no comparative measurement has run.
+[Evidence](docs/evidence/cpu-time-instrument/README.md); [research](docs/research/cpu-time-instrument.md).
+
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
 `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
@@ -582,7 +622,10 @@ checked against the schemas Godot registered in both directions (`npm run test:f
 The third package makes `consumers/civ-lite/` a consumer project provisioned by the addon, with a minimal public-TSX HUD and a
 scenery in its scene, and runs ten cycles of new game, intents, scene reload and menu with no listener or node leaked and the
 epoch only rising (`npm run test:consumer:civ-lite`; [evidence](docs/evidence/frontier-consumer/README.md), [research](docs/research/frontier-consumer.md)).
-The authority under bursts, the playable HUD, the export and the devices are open, and so is hosted CI.
+The end of a turn is then an accepted job that the node advances one phase per frame and finishes once, whether or not a screen is open,
+with a rule mutated in Godot changing the HUD with the same JavaScript bundle and every phase of a turn measured against the
+registry's 64 tasks and 128 events (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-authority/README.md), [research](docs/research/frontier-services.md)).
+The playable HUD, the export and the devices are open, and so is hosted CI.
 [Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
@@ -883,12 +926,16 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:frontier-baseline           # the Frontier HUD's panel swaps by a real click over the pointer spike's scene: exact node counts, oracle; sabotages: node scripts/frontier-baseline-sabotage.mjs
 npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
-npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity, the turn as an accepted job that survives its screen, a rule lane, the registry's budgets per phase; sabotages: node scripts/frontier-services-sabotage.mjs
+npm run test:frontier-soak               # Frontier played for 100 turns in three processes: one game (same hashes), steady nodes, heap and memory, a pause that keeps the HUD alive, unmounting against hiding a panel; sabotages: node scripts/frontier-soak-sabotage.mjs
+npm run test:frontier-turn               # Frontier as a provisioned consumer, clicked through its seven contexts and four turns a round: panels per click, one phase a frame, native views, heap and memory per transition; sabotages: node scripts/frontier-turn-sabotage.mjs; local windowed lane: npm run bench:frontier-turn-graphics
+npm run test:cpu-time-instrument      # the CPU-time instrument against a busy loop of 2, 5, 10 and 20 ms, headless, with an independent oracle; sabotages: node scripts/cpu-time-instrument-sabotage.mjs; local windowed lane: npm run bench:cpu-time-instrument-graphics
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

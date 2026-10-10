@@ -10,7 +10,7 @@ extends RefCounted
 #   production  the city adds its production to the stock and finishes the item it can pay
 #   growth      the city adds its food to the stock and grows when it can pay
 #   research    the empire adds its science to the stock and learns the technology it can pay
-#   refresh     units get their movement back, the turn number advances, the selection clears, the event is raised
+#   refresh     units get their movement back, the turn number advances, the selection clears, the events are raised
 
 const Rules := preload("rules.gd")
 const World := preload("world.gd")
@@ -129,8 +129,9 @@ static func _refresh(state: Dictionary) -> int:
   state.turn = int(state.turn) + 1
   state.sel = {"x": -1, "y": -1, "unit": 0}
   World.emit(state, "turn_started", state.turn, 0)
-  var event: Dictionary = state.event
-  if int(state.turn) == Rules.EVENT_TURN and int(event.pending) == 0 and int(event.resolved) == 0:
-    event.pending = 1
-    World.emit(state, "event_raised", state.turn, 0)
+  var events: Dictionary = state.events
+  if int(state.turn) == Rules.EVENT_TURN and events.queue.is_empty() and events.resolved.is_empty():
+    for index in Rules.EVENTS.size():
+      events.queue.append(Rules.EVENTS[index].id)
+      World.emit(state, "event_raised", state.turn, index)
   return state.units.size()

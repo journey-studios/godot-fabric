@@ -1,0 +1,3068 @@
+{
+  "format": "godot-fabric.frontier-turn-execution/v1",
+  "executedAt": "2026-10-09",
+  "implementationCommit": "116a72fe608ab7a2bdecffe28a7d67358d439965",
+  "executedTreeSha": "557565aa1e6eb9ef2cc2fb5aea6eff99eb2f99ac",
+  "baseCommit": "a49f8515a34c04a806ed022eb154cd5531941134",
+  "sourceState": "every tracked source equal to the implementation commit's when each command below ran (git status empty before the first, after the sabotages and after the last); the files of this folder and the documents that point to them were written afterwards and are the input of no command",
+  "slice": "V05-06 turno: the Frontier game measured as a consumer has it (consumers/civ-lite provisioned into a project of its own, its HUD and scene untouched): 16 real clicks a round over 32 rounds through all seven contexts, the click to the panels in frames, the sliced AI's turn frame by frame, and the heap, resident memory and native nodes of each transition",
+  "criterion": "turno: latência clique até painel, tempo de quadro em turno com IA fatiada, heap Hermes, RSS e nós nativos por transição, no consumidor do jogo. Not closed: the presented frame time is part of it and the windowed lane was not presented by the display",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64"
+    },
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "hermes": "250829098.0.17",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "mode": "headless (the headless display server, opengl3 named) and a window on the built-in display for the windowed lane",
+    "displayServer": "headless",
+    "renderingDriver": "opengl3",
+    "processor": "Apple M3 Pro"
+  },
+  "loadAverage": [
+    {
+      "command": "the headless probe process of npm run test:frontier-turn",
+      "before": "{ 4.07 3.15 2.80 }",
+      "after": "{ 1.49 2.48 2.60 }",
+      "seconds": 171.9
+    },
+    {
+      "command": "the probe process of the skipped-phase variant",
+      "before": "{ 1.46 2.05 2.57 }",
+      "after": "{ 1.88 2.09 2.50 }",
+      "seconds": 169.4
+    },
+    {
+      "command": "the probe process of the leaky-transition variant",
+      "before": "{ 2.25 2.17 2.51 }",
+      "after": "{ 1.80 2.01 2.38 }",
+      "seconds": 172
+    },
+    {
+      "command": "the probe process of the click-misses-panel variant",
+      "before": "{ 3.06 2.30 2.48 }",
+      "after": "{ 2.97 2.29 2.47 }",
+      "seconds": 3.6
+    },
+    {
+      "command": "the probe process of the heap-leak variant",
+      "before": "{ 4.82 2.73 2.62 }",
+      "after": "{ 1.58 2.39 2.52 }",
+      "seconds": 172.4
+    },
+    {
+      "command": "windowed attempt 1 (slot 1)",
+      "before": "{ 1.87 2.49 2.59 }",
+      "after": "{ 2.03 2.49 2.59 }",
+      "seconds": 21.6
+    },
+    {
+      "command": "windowed attempt 2 (slot 1)",
+      "before": "{ 2.03 2.49 2.59 }",
+      "after": "{ 3.72 2.85 2.71 }",
+      "seconds": 21.5
+    },
+    {
+      "command": "windowed attempt 3 (slot 1)",
+      "before": "{ 3.72 2.85 2.71 }",
+      "after": "{ 3.38 2.84 2.72 }",
+      "seconds": 21.7
+    }
+  ],
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:frontier-turn step and the native-frontier-turn artifact of .github/workflows/contracts.yml have not run on hosted CI. Everything here is local evidence, macOS arm64; the sabotages and the windowed lane never run there."
+  },
+  "previousHost": {
+    "status": "not applicable",
+    "reason": "the slice changes no C++: there is no host to compare it with; the four retained sabotages are the control"
+  },
+  "hosts": {
+    "nativeHostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+    "note": "the host of main as built by npm run setup in this worktree (addons/fabric_godot.dylib); the slice does not change it. The provisioned addon carries it (nativeSha256 of its manifest)"
+  },
+  "commands": {
+    "order": [
+      "node scripts/frontier-turn-sabotage.mjs",
+      "npm run test:frontier-turn",
+      "caffeinate -d node scripts/frontier-turn-graphics.mjs"
+    ],
+    "sabotage": "node scripts/frontier-turn-sabotage.mjs (794 s, exit 0): four variants, the probe restored byte for byte, the template's tree hashed before and after, and a last genuine run",
+    "turn": "npm run test:frontier-turn (node --test --test-concurrency=1 tests/frontier-turn-native.test.mjs): 192 s (the probe process 171.9 s), exit 0; it runs after the sabotages so that its comparison carries their verdicts",
+    "graphics": "caffeinate -d node scripts/frontier-turn-graphics.mjs (90 s): exit 3, not presented"
+  },
+  "turn": {
+    "suite": "1/1 subtests passed",
+    "checksOfTheProbe": 23,
+    "rounds": {
+      "warmup": 2,
+      "steady": 30
+    },
+    "clicks": 512,
+    "steadyClicks": 480,
+    "turns": 128,
+    "steadyTurns": 120,
+    "readings": 546,
+    "rawReport": {
+      "file": "build/frontier-turn-current-report.json (not kept: 1.8 MB)",
+      "sha256": "ff7ac2fc3988a7bd10279ef5c1736a34a51f24904e11a47bd2e5f94cbf901a1e",
+      "bytes": 1797315
+    },
+    "comparison": {
+      "file": "build/frontier-turn-comparison.json",
+      "sha256": "7ad1ecadf57c5268b28d3851d94c86d4c5507387276e9bffd2cbb0b2dd377b8a"
+    },
+    "bundleSha256": "8f750693b191e8cfc729487d0b75b8a347dcdd01be83a12336f4873ed7d91427",
+    "templateSha256": "d95206e184107409be68887757f03b18c131251e3dbc1c064985f9dfb34e2abf",
+    "templateRule": "the hash of the tree of consumers/civ-lite: the path and the SHA-256 of each file, in order; the same before and after every run",
+    "nativeHostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+    "probeSha256": {
+      "tests/frontier-turn-runner.gd": "e58f1f912df3fe7b0da0197a69f48c67aa6836e62bf201ae3a6a942935082481",
+      "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b",
+      "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+    },
+    "provisionedAddon": {
+      "schemaVersion": 1,
+      "experimental": true,
+      "host": "macOS arm64",
+      "godot": "4.7.2",
+      "react": "19.2.3",
+      "react-native": "0.87.1",
+      "node": "22.23.3",
+      "nodeArchiveSha256": "23b25245dcfb9af7262f8ff142e9e2e0af025368117329e7a7458a51e5922f53",
+      "sourceCommit": "116a72fe608ab7a2bdecffe28a7d67358d439965",
+      "sourceDirty": false,
+      "nativeSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+      "lockfileSha256": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5",
+      "typeChecker": {
+        "name": "tsc-rs",
+        "version": "0.1.0",
+        "typescriptVersion": "7.1.0-dev",
+        "platformPackage": "@tsc-rs/darwin-arm64",
+        "executableSha256": "3a2736e002cdeaa7a7514adb9c5b2f367021fd8253d1fdfb4058f135ead04b49"
+      }
+    },
+    "tour": [
+      {
+        "from": "none",
+        "id": "map-stack",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          6,
+          8
+        ],
+        "to": "stack"
+      },
+      {
+        "from": "stack",
+        "id": "select-warrior",
+        "intent": "select_unit",
+        "kind": "action",
+        "target": "hud-actions-select_unit-2",
+        "to": "warrior"
+      },
+      {
+        "from": "warrior",
+        "id": "clear-selection",
+        "intent": "clear_selection",
+        "kind": "action",
+        "target": "hud-actions-clear_selection",
+        "to": "none"
+      },
+      {
+        "from": "none",
+        "id": "map-stack-again",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          6,
+          8
+        ],
+        "to": "stack"
+      },
+      {
+        "from": "stack",
+        "id": "select-settler",
+        "intent": "select_unit",
+        "kind": "action",
+        "target": "hud-actions-select_unit-1",
+        "to": "settler"
+      },
+      {
+        "from": "settler",
+        "id": "map-tile",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          9,
+          8
+        ],
+        "to": "tile"
+      },
+      {
+        "from": "tile",
+        "id": "map-stack-third",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          6,
+          8
+        ],
+        "to": "stack"
+      },
+      {
+        "from": "stack",
+        "id": "select-settler-again",
+        "intent": "select_unit",
+        "kind": "action",
+        "target": "hud-actions-select_unit-1",
+        "to": "settler"
+      },
+      {
+        "from": "settler",
+        "id": "found-city",
+        "intent": "found_city",
+        "kind": "action",
+        "target": "hud-actions-found_city-1",
+        "to": "city"
+      },
+      {
+        "from": "city",
+        "id": "map-tile-again",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          9,
+          8
+        ],
+        "to": "tile"
+      },
+      {
+        "from": "tile",
+        "id": "map-city",
+        "intent": "select_tile",
+        "kind": "map",
+        "tile": [
+          6,
+          8
+        ],
+        "to": "city"
+      },
+      {
+        "from": "city",
+        "id": "end-turn-1",
+        "intent": "end_turn",
+        "kind": "turn",
+        "target": "hud-bar-end-turn",
+        "to": "none"
+      },
+      {
+        "from": "none",
+        "id": "end-turn-2",
+        "intent": "end_turn",
+        "kind": "turn",
+        "target": "hud-bar-end-turn",
+        "to": "none"
+      },
+      {
+        "from": "none",
+        "id": "end-turn-3",
+        "intent": "end_turn",
+        "kind": "turn",
+        "target": "hud-bar-end-turn",
+        "to": "none"
+      },
+      {
+        "from": "none",
+        "id": "end-turn-4",
+        "intent": "end_turn",
+        "kind": "turn",
+        "target": "hud-bar-end-turn",
+        "to": "dialog"
+      },
+      {
+        "from": "dialog",
+        "id": "answer-event",
+        "intent": "resolve_event",
+        "kind": "dialog",
+        "target": "hud-dialog-choice-welcome",
+        "to": "none"
+      }
+    ],
+    "tables": {
+      "clickToPanel": {
+        "byStep": {
+          "map-stack": {
+            "kind": "map",
+            "from": "none",
+            "to": "stack",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 8.987,
+              "p50": 10.197,
+              "p95": 11.946,
+              "max": 12.704
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.313,
+              "p50": 0.598,
+              "p95": 0.722,
+              "max": 0.879
+            }
+          },
+          "select-warrior": {
+            "kind": "action",
+            "from": "stack",
+            "to": "warrior",
+            "intent": "select_unit",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 8.885,
+              "p50": 10.089,
+              "p95": 11.326,
+              "max": 11.603
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.508,
+              "p50": 0.912,
+              "p95": 0.992,
+              "max": 1.004
+            }
+          },
+          "clear-selection": {
+            "kind": "action",
+            "from": "warrior",
+            "to": "none",
+            "intent": "clear_selection",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 10.359,
+              "p50": 10.683,
+              "p95": 11.438,
+              "max": 11.572
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.765,
+              "p50": 0.977,
+              "p95": 1.108,
+              "max": 1.226
+            }
+          },
+          "map-stack-again": {
+            "kind": "map",
+            "from": "none",
+            "to": "stack",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.392,
+              "p50": 10.271,
+              "p95": 10.802,
+              "max": 12.576
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.339,
+              "p50": 0.57,
+              "p95": 0.654,
+              "max": 0.662
+            }
+          },
+          "select-settler": {
+            "kind": "action",
+            "from": "stack",
+            "to": "settler",
+            "intent": "select_unit",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.278,
+              "p50": 9.76,
+              "p95": 10.647,
+              "max": 11.011
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.689,
+              "p50": 0.935,
+              "p95": 1.203,
+              "max": 1.278
+            }
+          },
+          "map-tile": {
+            "kind": "map",
+            "from": "settler",
+            "to": "tile",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.514,
+              "p50": 10.495,
+              "p95": 12.268,
+              "max": 13.032
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.279,
+              "p50": 0.51,
+              "p95": 0.621,
+              "max": 0.637
+            }
+          },
+          "map-stack-third": {
+            "kind": "map",
+            "from": "tile",
+            "to": "stack",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 8.988,
+              "p50": 9.429,
+              "p95": 10.966,
+              "max": 11.007
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.377,
+              "p50": 0.583,
+              "p95": 0.75,
+              "max": 0.78
+            }
+          },
+          "select-settler-again": {
+            "kind": "action",
+            "from": "stack",
+            "to": "settler",
+            "intent": "select_unit",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.281,
+              "p50": 9.668,
+              "p95": 10.569,
+              "max": 10.945
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.61,
+              "p50": 0.933,
+              "p95": 1.306,
+              "max": 2.178
+            }
+          },
+          "found-city": {
+            "kind": "action",
+            "from": "settler",
+            "to": "city",
+            "intent": "found_city",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.391,
+              "p50": 13.474,
+              "p95": 15.208,
+              "max": 16.43
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.596,
+              "p50": 0.964,
+              "p95": 1.111,
+              "max": 1.122
+            }
+          },
+          "map-tile-again": {
+            "kind": "map",
+            "from": "city",
+            "to": "tile",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 9.354,
+              "p50": 10.184,
+              "p95": 11.562,
+              "max": 11.984
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.34,
+              "p50": 0.566,
+              "p95": 0.707,
+              "max": 0.736
+            }
+          },
+          "map-city": {
+            "kind": "map",
+            "from": "tile",
+            "to": "city",
+            "intent": "select_tile",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 10.268,
+              "p50": 13.536,
+              "p95": 14.581,
+              "max": 15.229
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.416,
+              "p50": 0.595,
+              "p95": 0.758,
+              "max": 0.793
+            }
+          },
+          "end-turn-1": {
+            "kind": "turn",
+            "from": "city",
+            "to": "none",
+            "intent": "end_turn",
+            "frames": {
+              "samples": 30,
+              "min": 8,
+              "p50": 8,
+              "p95": 8,
+              "max": 8
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 51.6,
+              "p50": 52.475,
+              "p95": 53.061,
+              "max": 53.161
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.584,
+              "p50": 0.849,
+              "p95": 0.954,
+              "max": 1.104
+            }
+          },
+          "end-turn-2": {
+            "kind": "turn",
+            "from": "none",
+            "to": "none",
+            "intent": "end_turn",
+            "frames": {
+              "samples": 30,
+              "min": 8,
+              "p50": 8,
+              "p95": 8,
+              "max": 8
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 50.468,
+              "p50": 51.787,
+              "p95": 52.913,
+              "max": 55.263
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.537,
+              "p50": 0.912,
+              "p95": 1.212,
+              "max": 1.316
+            }
+          },
+          "end-turn-3": {
+            "kind": "turn",
+            "from": "none",
+            "to": "none",
+            "intent": "end_turn",
+            "frames": {
+              "samples": 30,
+              "min": 8,
+              "p50": 8,
+              "p95": 8,
+              "max": 8
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 50.739,
+              "p50": 51.539,
+              "p95": 52.904,
+              "max": 53.223
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.6,
+              "p50": 0.962,
+              "p95": 1.101,
+              "max": 1.226
+            }
+          },
+          "end-turn-4": {
+            "kind": "turn",
+            "from": "none",
+            "to": "dialog",
+            "intent": "end_turn",
+            "frames": {
+              "samples": 30,
+              "min": 8,
+              "p50": 8,
+              "p95": 8,
+              "max": 8
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 50.361,
+              "p50": 50.808,
+              "p95": 51.558,
+              "max": 52.669
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.712,
+              "p50": 0.967,
+              "p95": 1.126,
+              "max": 1.139
+            }
+          },
+          "answer-event": {
+            "kind": "dialog",
+            "from": "dialog",
+            "to": "none",
+            "intent": "resolve_event",
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 7.978,
+              "p50": 10.18,
+              "p95": 11.872,
+              "max": 12.444
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.502,
+              "p50": 1.034,
+              "p95": 1.322,
+              "max": 1.838
+            }
+          }
+        },
+        "byContext": {
+          "none": {
+            "steps": [
+              "clear-selection",
+              "answer-event"
+            ],
+            "samples": 60,
+            "frames": {
+              "samples": 60,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 60,
+              "min": 7.978,
+              "p50": 10.53,
+              "p95": 11.572,
+              "max": 12.444
+            },
+            "injectionMs": {
+              "samples": 60,
+              "min": 0.502,
+              "p50": 0.989,
+              "p95": 1.226,
+              "max": 1.838
+            }
+          },
+          "tile": {
+            "steps": [
+              "map-tile",
+              "map-tile-again"
+            ],
+            "samples": 60,
+            "frames": {
+              "samples": 60,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 60,
+              "min": 9.354,
+              "p50": 10.395,
+              "p95": 11.562,
+              "max": 13.032
+            },
+            "injectionMs": {
+              "samples": 60,
+              "min": 0.279,
+              "p50": 0.525,
+              "p95": 0.679,
+              "max": 0.736
+            }
+          },
+          "settler": {
+            "steps": [
+              "select-settler",
+              "select-settler-again"
+            ],
+            "samples": 60,
+            "frames": {
+              "samples": 60,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 60,
+              "min": 9.278,
+              "p50": 9.74,
+              "p95": 10.608,
+              "max": 11.011
+            },
+            "injectionMs": {
+              "samples": 60,
+              "min": 0.61,
+              "p50": 0.935,
+              "p95": 1.203,
+              "max": 2.178
+            }
+          },
+          "warrior": {
+            "steps": [
+              "select-warrior"
+            ],
+            "samples": 30,
+            "frames": {
+              "samples": 30,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 30,
+              "min": 8.885,
+              "p50": 10.089,
+              "p95": 11.326,
+              "max": 11.603
+            },
+            "injectionMs": {
+              "samples": 30,
+              "min": 0.508,
+              "p50": 0.912,
+              "p95": 0.992,
+              "max": 1.004
+            }
+          },
+          "stack": {
+            "steps": [
+              "map-stack",
+              "map-stack-again",
+              "map-stack-third"
+            ],
+            "samples": 90,
+            "frames": {
+              "samples": 90,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 90,
+              "min": 8.987,
+              "p50": 9.99,
+              "p95": 11.007,
+              "max": 12.704
+            },
+            "injectionMs": {
+              "samples": 90,
+              "min": 0.313,
+              "p50": 0.586,
+              "p95": 0.716,
+              "max": 0.879
+            }
+          },
+          "city": {
+            "steps": [
+              "found-city",
+              "map-city"
+            ],
+            "samples": 60,
+            "frames": {
+              "samples": 60,
+              "min": 2,
+              "p50": 2,
+              "p95": 2,
+              "max": 2
+            },
+            "latencyMs": {
+              "samples": 60,
+              "min": 9.391,
+              "p50": 13.491,
+              "p95": 14.581,
+              "max": 16.43
+            },
+            "injectionMs": {
+              "samples": 60,
+              "min": 0.416,
+              "p50": 0.696,
+              "p95": 1.071,
+              "max": 1.122
+            }
+          }
+        },
+        "ceilings": {
+          "click": 10,
+          "turn": 40
+        },
+        "framesObserved": [
+          2
+        ]
+      },
+      "turn": {
+        "steadyTurns": 120,
+        "framesPerTurn": [
+          8
+        ],
+        "byPhase": [
+          {
+            "phase": "ai_plan",
+            "intervalMs": {
+              "samples": 120,
+              "min": 1.274,
+              "p50": 2.754,
+              "p95": 4.104,
+              "max": 7.025
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 24,
+              "p50": 24,
+              "p95": 52,
+              "max": 52
+            },
+            "spinnerShown": 0
+          },
+          {
+            "phase": "ai_move",
+            "intervalMs": {
+              "samples": 120,
+              "min": 5.97,
+              "p50": 7.39,
+              "p95": 10.251,
+              "max": 10.667
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          },
+          {
+            "phase": "production",
+            "intervalMs": {
+              "samples": 120,
+              "min": 4.732,
+              "p50": 7.266,
+              "p95": 7.716,
+              "max": 8.128
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          },
+          {
+            "phase": "growth",
+            "intervalMs": {
+              "samples": 120,
+              "min": 5.152,
+              "p50": 6.719,
+              "p95": 7.129,
+              "max": 8.408
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          },
+          {
+            "phase": "research",
+            "intervalMs": {
+              "samples": 120,
+              "min": 5.939,
+              "p50": 7.029,
+              "p95": 8.003,
+              "max": 8.972
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          },
+          {
+            "phase": "refresh",
+            "intervalMs": {
+              "samples": 120,
+              "min": 5.395,
+              "p50": 6.868,
+              "p95": 7.411,
+              "max": 8.346
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          },
+          {
+            "phase": "idle",
+            "intervalMs": {
+              "samples": 120,
+              "min": 6.124,
+              "p50": 6.937,
+              "p95": 7.367,
+              "max": 7.614
+            },
+            "nodes": {
+              "samples": 120,
+              "min": 26,
+              "p50": 26,
+              "p95": 56,
+              "max": 56
+            },
+            "spinnerShown": 120
+          }
+        ],
+        "settleFrame": {
+          "samples": 120,
+          "min": 5.678,
+          "p50": 6.834,
+          "p95": 7.871,
+          "max": 8.101
+        },
+        "busyMs": {
+          "samples": 120,
+          "min": 43.422,
+          "p50": 44.711,
+          "p95": 46.024,
+          "max": 47.217
+        },
+        "host": {
+          "pumpMs": {
+            "samples": 120,
+            "min": 15.324,
+            "p50": 24.215,
+            "p95": 32.881,
+            "max": 33.696
+          },
+          "jsMs": {
+            "samples": 120,
+            "min": 13.859,
+            "p50": 21.741,
+            "p95": 29.646,
+            "max": 30.439
+          },
+          "mountMs": {
+            "samples": 120,
+            "min": 0.966,
+            "p50": 1.737,
+            "p95": 2.32,
+            "max": 2.431
+          },
+          "layoutMs": {
+            "samples": 120,
+            "min": 0.401,
+            "p50": 0.749,
+            "p95": 0.911,
+            "max": 1.129
+          },
+          "pumpCount": {
+            "samples": 120,
+            "min": 10,
+            "p50": 10,
+            "p95": 10,
+            "max": 10
+          }
+        },
+        "pumpSampleMs": {
+          "samples": 1200,
+          "min": 0.004,
+          "p50": 2.757,
+          "p95": 4.846,
+          "max": 8.455
+        },
+        "clickToPanelsMs": {
+          "end-turn-1": {
+            "samples": 30,
+            "min": 51.6,
+            "p50": 52.475,
+            "p95": 53.061,
+            "max": 53.161
+          },
+          "end-turn-2": {
+            "samples": 30,
+            "min": 50.468,
+            "p50": 51.787,
+            "p95": 52.913,
+            "max": 55.263
+          },
+          "end-turn-3": {
+            "samples": 30,
+            "min": 50.739,
+            "p50": 51.539,
+            "p95": 52.904,
+            "max": 53.223
+          },
+          "end-turn-4": {
+            "samples": 30,
+            "min": 50.361,
+            "p50": 50.808,
+            "p95": 51.558,
+            "max": 52.669
+          }
+        }
+      },
+      "nativeNodes": {
+        "constant": 10,
+        "native": {
+          "none": {
+            "nativeViews": 14,
+            "sceneTreeNodes": 24
+          },
+          "tile": {
+            "nativeViews": 18,
+            "sceneTreeNodes": 28
+          },
+          "settler": {
+            "nativeViews": 27,
+            "sceneTreeNodes": 37
+          },
+          "warrior": {
+            "nativeViews": 24,
+            "sceneTreeNodes": 34
+          },
+          "stack": {
+            "nativeViews": 26,
+            "sceneTreeNodes": 36
+          },
+          "city": {
+            "nativeViews": 42,
+            "sceneTreeNodes": 52
+          },
+          "dialog": {
+            "nativeViews": 24,
+            "sceneTreeNodes": 34
+          }
+        }
+      },
+      "heap": {
+        "start": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2175680,
+          "lastMedian": 2175808,
+          "growth": 128,
+          "firstFloor": 2169512,
+          "lastFloor": 2175808,
+          "firstSteady": 2169512,
+          "last": 2176064,
+          "lastMinusFirst": 6552,
+          "highestAboveFloor": 6552,
+          "largestStep": 1784,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2175808
+        },
+        "map-stack": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2244816,
+          "lastMedian": 2244944,
+          "growth": 128,
+          "firstFloor": 2238648,
+          "lastFloor": 2244944,
+          "firstSteady": 2238648,
+          "last": 2245200,
+          "lastMinusFirst": 6552,
+          "highestAboveFloor": 6552,
+          "largestStep": 1784,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2244944
+        },
+        "select-warrior": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2270664,
+          "lastMedian": 2270792,
+          "growth": 128,
+          "firstFloor": 2264600,
+          "lastFloor": 2270792,
+          "firstSteady": 2264600,
+          "last": 2271048,
+          "lastMinusFirst": 6448,
+          "highestAboveFloor": 6448,
+          "largestStep": 1784,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2270792
+        },
+        "clear-selection": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2178480,
+          "lastMedian": 2178608,
+          "growth": 128,
+          "firstFloor": 2172520,
+          "lastFloor": 2178608,
+          "firstSteady": 2172520,
+          "last": 2178864,
+          "lastMinusFirst": 6344,
+          "highestAboveFloor": 6344,
+          "largestStep": 1784,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2178608
+        },
+        "map-stack-again": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2244888,
+          "lastMedian": 2245016,
+          "growth": 128,
+          "firstFloor": 2238928,
+          "lastFloor": 2245016,
+          "firstSteady": 2238928,
+          "last": 2245272,
+          "lastMinusFirst": 6344,
+          "highestAboveFloor": 6344,
+          "largestStep": 1784,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2245016
+        },
+        "select-settler": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2289568,
+          "lastMedian": 2289696,
+          "growth": 128,
+          "firstFloor": 2283712,
+          "lastFloor": 2289696,
+          "firstSteady": 2283712,
+          "last": 2289952,
+          "lastMinusFirst": 6240,
+          "highestAboveFloor": 6240,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2289696
+        },
+        "map-tile": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2210728,
+          "lastMedian": 2210856,
+          "growth": 128,
+          "firstFloor": 2204872,
+          "lastFloor": 2210856,
+          "firstSteady": 2204872,
+          "last": 2211112,
+          "lastMinusFirst": 6240,
+          "highestAboveFloor": 6240,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2210856
+        },
+        "map-stack-third": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2260760,
+          "lastMedian": 2260888,
+          "growth": 128,
+          "firstFloor": 2254904,
+          "lastFloor": 2260888,
+          "firstSteady": 2254904,
+          "last": 2261144,
+          "lastMinusFirst": 6240,
+          "highestAboveFloor": 6240,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2260888
+        },
+        "select-settler-again": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2289568,
+          "lastMedian": 2289696,
+          "growth": 128,
+          "firstFloor": 2283816,
+          "lastFloor": 2289696,
+          "firstSteady": 2283816,
+          "last": 2289952,
+          "lastMinusFirst": 6136,
+          "highestAboveFloor": 6136,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2289696
+        },
+        "found-city": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2338208,
+          "lastMedian": 2338336,
+          "growth": 128,
+          "firstFloor": 2332560,
+          "lastFloor": 2338336,
+          "firstSteady": 2332560,
+          "last": 2338592,
+          "lastMinusFirst": 6032,
+          "highestAboveFloor": 6032,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2338336
+        },
+        "map-tile-again": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2195248,
+          "lastMedian": 2195376,
+          "growth": 128,
+          "firstFloor": 2189600,
+          "lastFloor": 2195376,
+          "firstSteady": 2189600,
+          "last": 2195632,
+          "lastMinusFirst": 6032,
+          "highestAboveFloor": 6032,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2195376
+        },
+        "map-city": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2335152,
+          "lastMedian": 2335280,
+          "growth": 128,
+          "firstFloor": 2329504,
+          "lastFloor": 2335280,
+          "firstSteady": 2329504,
+          "last": 2335536,
+          "lastMinusFirst": 6032,
+          "highestAboveFloor": 6032,
+          "largestStep": 2040,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2335280
+        },
+        "end-turn-1": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2172056,
+          "lastMedian": 2172184,
+          "growth": 128,
+          "firstFloor": 2166688,
+          "lastFloor": 2172184,
+          "firstSteady": 2166688,
+          "last": 2172440,
+          "lastMinusFirst": 5752,
+          "highestAboveFloor": 5752,
+          "largestStep": 1864,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2172184
+        },
+        "end-turn-2": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2164808,
+          "lastMedian": 2164936,
+          "growth": 128,
+          "firstFloor": 2160080,
+          "lastFloor": 2164936,
+          "firstSteady": 2160080,
+          "last": 2165192,
+          "lastMinusFirst": 5112,
+          "highestAboveFloor": 5112,
+          "largestStep": 1328,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2164936
+        },
+        "end-turn-3": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2164992,
+          "lastMedian": 2165120,
+          "growth": 128,
+          "firstFloor": 2160368,
+          "lastFloor": 2165120,
+          "firstSteady": 2160368,
+          "last": 2165376,
+          "lastMinusFirst": 5008,
+          "highestAboveFloor": 5008,
+          "largestStep": 1328,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2165120
+        },
+        "end-turn-4": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2223800,
+          "lastMedian": 2223928,
+          "growth": 128,
+          "firstFloor": 2219280,
+          "lastFloor": 2223928,
+          "firstSteady": 2219280,
+          "last": 2224184,
+          "lastMinusFirst": 4904,
+          "highestAboveFloor": 4904,
+          "largestStep": 1328,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2223928
+        },
+        "answer-event": {
+          "steadyRounds": 30,
+          "halfRounds": 15,
+          "firstMedian": 2177776,
+          "lastMedian": 2177904,
+          "growth": 128,
+          "firstFloor": 2173360,
+          "lastFloor": 2177904,
+          "firstSteady": 2173360,
+          "last": 2178160,
+          "lastMinusFirst": 4800,
+          "highestAboveFloor": 4800,
+          "largestStep": 1328,
+          "roundsAboveFloor": 29,
+          "levelBytes": 2177904
+        }
+      },
+      "rss": {
+        "bySeries": {
+          "start": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203728,
+            "lastMedianKb": 144736,
+            "growthKb": -58992,
+            "limitKb": 49152,
+            "minKb": 141072,
+            "maxKb": 209760,
+            "bandKb": 68688,
+            "medianKb": 201712
+          },
+          "map-stack": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203728,
+            "lastMedianKb": 144736,
+            "growthKb": -58992,
+            "limitKb": 49152,
+            "minKb": 141088,
+            "maxKb": 209776,
+            "bandKb": 68688,
+            "medianKb": 201712
+          },
+          "select-warrior": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203728,
+            "lastMedianKb": 144736,
+            "growthKb": -58992,
+            "limitKb": 49152,
+            "minKb": 141088,
+            "maxKb": 209776,
+            "bandKb": 68688,
+            "medianKb": 201712
+          },
+          "clear-selection": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203728,
+            "lastMedianKb": 144736,
+            "growthKb": -58992,
+            "limitKb": 49152,
+            "minKb": 141088,
+            "maxKb": 209776,
+            "bandKb": 68688,
+            "medianKb": 201712
+          },
+          "map-stack-again": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203808,
+            "lastMedianKb": 144800,
+            "growthKb": -59008,
+            "limitKb": 49152,
+            "minKb": 141152,
+            "maxKb": 209824,
+            "bandKb": 68672,
+            "medianKb": 201760
+          },
+          "select-settler": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203824,
+            "lastMedianKb": 144880,
+            "growthKb": -58944,
+            "limitKb": 49152,
+            "minKb": 141216,
+            "maxKb": 209872,
+            "bandKb": 68656,
+            "medianKb": 201776
+          },
+          "map-tile": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203824,
+            "lastMedianKb": 144880,
+            "growthKb": -58944,
+            "limitKb": 49152,
+            "minKb": 141232,
+            "maxKb": 209872,
+            "bandKb": 68640,
+            "medianKb": 201776
+          },
+          "map-stack-third": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203840,
+            "lastMedianKb": 144896,
+            "growthKb": -58944,
+            "limitKb": 49152,
+            "minKb": 141296,
+            "maxKb": 209904,
+            "bandKb": 68608,
+            "medianKb": 201792
+          },
+          "select-settler-again": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 203904,
+            "lastMedianKb": 144944,
+            "growthKb": -58960,
+            "limitKb": 49152,
+            "minKb": 141360,
+            "maxKb": 209952,
+            "bandKb": 68592,
+            "medianKb": 201856
+          },
+          "found-city": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204128,
+            "lastMedianKb": 144608,
+            "growthKb": -59520,
+            "limitKb": 49152,
+            "minKb": 141616,
+            "maxKb": 209648,
+            "bandKb": 68032,
+            "medianKb": 202112
+          },
+          "map-tile-again": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204128,
+            "lastMedianKb": 144608,
+            "growthKb": -59520,
+            "limitKb": 49152,
+            "minKb": 141616,
+            "maxKb": 209648,
+            "bandKb": 68032,
+            "medianKb": 201616
+          },
+          "map-city": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204176,
+            "lastMedianKb": 144672,
+            "growthKb": -59504,
+            "limitKb": 49152,
+            "minKb": 141712,
+            "maxKb": 209728,
+            "bandKb": 68016,
+            "medianKb": 201648
+          },
+          "end-turn-1": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204176,
+            "lastMedianKb": 144688,
+            "growthKb": -59488,
+            "limitKb": 49152,
+            "minKb": 140992,
+            "maxKb": 209728,
+            "bandKb": 68736,
+            "medianKb": 201664
+          },
+          "end-turn-2": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204176,
+            "lastMedianKb": 144688,
+            "growthKb": -59488,
+            "limitKb": 49152,
+            "minKb": 141024,
+            "maxKb": 209728,
+            "bandKb": 68704,
+            "medianKb": 201664
+          },
+          "end-turn-3": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204176,
+            "lastMedianKb": 144688,
+            "growthKb": -59488,
+            "limitKb": 49152,
+            "minKb": 141024,
+            "maxKb": 209728,
+            "bandKb": 68704,
+            "medianKb": 201664
+          },
+          "end-turn-4": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204208,
+            "lastMedianKb": 144736,
+            "growthKb": -59472,
+            "limitKb": 49152,
+            "minKb": 141072,
+            "maxKb": 209760,
+            "bandKb": 68688,
+            "medianKb": 201712
+          },
+          "answer-event": {
+            "steadyTurns": 30,
+            "halfTurns": 15,
+            "firstMedianKb": 204208,
+            "lastMedianKb": 144736,
+            "growthKb": -59472,
+            "limitKb": 49152,
+            "minKb": 141072,
+            "maxKb": 209760,
+            "bandKb": 68688,
+            "medianKb": 201712
+          }
+        },
+        "run": {
+          "steadyTurns": 510,
+          "halfTurns": 255,
+          "firstMedianKb": 203904,
+          "lastMedianKb": 144736,
+          "growthKb": -59168,
+          "limitKb": 49152,
+          "minKb": 140992,
+          "maxKb": 209952,
+          "bandKb": 68960,
+          "medianKb": 202112
+        }
+      },
+      "memory": {
+        "staticBytesAtBase": 28977163,
+        "staticBytesAtEnd": 48684695
+      }
+    },
+    "errors": {
+      "faults": {
+        "global": 0,
+        "handlers": {
+          "errorUtils": false,
+          "rejectionTracker": true
+        },
+        "last": "",
+        "rejections": 0
+      },
+      "control": {
+        "handlers": {
+          "errorUtils": false,
+          "rejectionTracker": true
+        },
+        "rejections": 1
+      },
+      "hud": {
+        "calls": 320,
+        "context": "none",
+        "hoverCount": 321,
+        "problemCount": 0,
+        "resultCount": 320,
+        "screen": "game",
+        "snapshots": 1313,
+        "subscriptions": 2
+      }
+    },
+    "oracle": {
+      "independent": "tests/frontier-turn-oracle.mjs judges each rule apart on the raw report, and the report-level negatives are judged by it alone",
+      "rejectedOnARecordedReport": 22,
+      "negatives": {
+        "leaked-node": [
+          "rests"
+        ],
+        "orphan": [
+          "rests"
+        ],
+        "native-drift": [
+          "rests"
+        ],
+        "wrong-panels": [
+          "rests"
+        ],
+        "slow-panel": [
+          "clicks"
+        ],
+        "double-call": [
+          "clicks"
+        ],
+        "map-lost": [
+          "clicks"
+        ],
+        "aborted": [
+          "shape"
+        ],
+        "skipped-phase": [
+          "turns"
+        ],
+        "two-phases-in-a-frame": [
+          "turns"
+        ],
+        "turn-ended-twice": [
+          "turns"
+        ],
+        "silent-frame": [
+          "turns"
+        ],
+        "no-collection": [
+          "readings"
+        ],
+        "host-error": [
+          "readings"
+        ],
+        "heap-grew": [
+          "heap"
+        ],
+        "heap-leak-hosted-1": [
+          "heap"
+        ],
+        "heap-leak-hosted-2": [
+          "heap"
+        ],
+        "heap-over-the-limit-by-one": [
+          "heap"
+        ],
+        "rss-over-the-limit-by-one": [
+          "rss"
+        ],
+        "rss-ramp": [
+          "rss"
+        ],
+        "unhandled-rejection": [
+          "errors"
+        ],
+        "blind-tracker": [
+          "errors"
+        ]
+      },
+      "acceptedAsNotALeak": [
+        "heap-blip",
+        "heap-at-limit",
+        "heap-hosted-1",
+        "heap-hosted-2",
+        "heap-first-half-dips",
+        "rss-at-limit",
+        "rss-falls-30-mib",
+        "rss-rises-30-mib",
+        "rss-ramp-3-mib"
+      ]
+    }
+  },
+  "sabotages": [
+    {
+      "name": "skipped-phase",
+      "target": "copy",
+      "where": "the provisioned copy of services/game_services.gd",
+      "breaks": "the game node advances the turn's job twice in a frame, so a frame runs two phases",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "turn/The game advances one phase in each frame, in the order of the service, and ends at idle",
+        "turn/A snapshot is published in each of the seven frames of the turn",
+        "turn/The end of the turn is published exactly once, in the frame that finishes the last phase"
+      ],
+      "oracleRules": [
+        "turns"
+      ],
+      "expectedRules": [
+        "turns"
+      ]
+    },
+    {
+      "name": "leaky-transition",
+      "target": "probe",
+      "where": "tests/frontier-turn-probe.gd",
+      "breaks": "every click leaves a Godot node behind that nothing frees",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "rest/Godot counts no orphan node at rest"
+      ],
+      "oracleRules": [
+        "rests"
+      ],
+      "expectedRules": [
+        "rests"
+      ]
+    },
+    {
+      "name": "click-misses-panel",
+      "target": "probe",
+      "where": "tests/frontier-turn-probe.gd",
+      "breaks": "the click is delivered far from the tile or the button",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "click/Every click shows the panels of its context within a ceiling of frames, and the run was not cut short",
+        "click/When the HUD shows the panels the game is in the context the click leads to",
+        "click/Every click makes exactly one call to the game, the intent of its step",
+        "click/A click on the map reaches the World (its press and release) and a click on a panel or button does not",
+        "click/A click on a panel or button is one call of the HUD, and a click on the map is none",
+        "rest/Every series (the start of a round and each step) has a reading at rest in every round",
+        "turn/The probe pressed End turn four times in every round",
+        "heap/The live heap at rest, by the median of the last half of the steady rounds, is within 2048 bytes of the first half's, for every series"
+      ],
+      "oracleRules": [
+        "shape",
+        "clicks",
+        "rests",
+        "heap",
+        "rss",
+        "turns"
+      ],
+      "expectedRules": [
+        "shape",
+        "clicks"
+      ]
+    },
+    {
+      "name": "heap-leak",
+      "target": "copy",
+      "where": "the provisioned copy of ui/hud/hud.tsx",
+      "breaks": "the HUD keeps 64 numbers of every render for ever, a JavaScript leak that grows with every transition",
+      "runStatus": 0,
+      "rejected": true,
+      "probeFailures": [
+        "heap/The live heap at rest, by the median of the last half of the steady rounds, is within 2048 bytes of the first half's, for every series"
+      ],
+      "oracleRules": [
+        "heap"
+      ],
+      "expectedRules": [
+        "heap"
+      ]
+    }
+  ],
+  "sabotageSources": {
+    "genuine": {
+      "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b"
+    },
+    "restored": {
+      "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b"
+    },
+    "restoredEqualsGenuine": true,
+    "templateSha256": {
+      "before": "d95206e184107409be68887757f03b18c131251e3dbc1c064985f9dfb34e2abf",
+      "after": "d95206e184107409be68887757f03b18c131251e3dbc1c064985f9dfb34e2abf"
+    },
+    "templateUntouched": true,
+    "genuineRunStatus": 0
+  },
+  "windowed": {
+    "presented": false,
+    "status": "not presented: unpaced: the display is not presenting (slot 1, 3 attempts)",
+    "exitCode": 3,
+    "command": "Godot --path <the provisioned consumer> --windowed -s res://turn_probe/frontier-turn-runner.gd -- --lane=windowed --run=<n>",
+    "protocol": {
+      "runs": 5,
+      "maxAttempts": 3,
+      "warmupRounds": 2,
+      "rounds": 30,
+      "idleFrames": 600,
+      "viewport": [
+        1080,
+        600
+      ],
+      "percentiles": "nearest rank over the raw intervals of one run",
+      "acrossRuns": "median and interquartile range (nearest-rank quartiles) of each run's statistic",
+      "validity": "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      "discarded": "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"
+    },
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "provenance": {
+      "displayServer": "macOS",
+      "renderingMethod": "gl_compatibility",
+      "adapter": "Apple M3 Pro",
+      "vsync": "enabled",
+      "refreshRate": 120,
+      "windowSize": [
+        1080,
+        600
+      ],
+      "screenSize": [
+        3024,
+        1964
+      ],
+      "screenScale": 2
+    },
+    "hidIdleSeconds": 41783,
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": false,
+        "reason": "unpaced: the display is not presenting",
+        "idleMedianMs": 0.606,
+        "minimumIdleMedianMs": 4.167,
+        "refreshPeriodMs": 8.333,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11488,
+        "drawnFrames": 11488,
+        "undrawnSwaps": 0,
+        "loadAverage": {
+          "before": "{ 1.87 2.49 2.59 }",
+          "after": "{ 2.03 2.49 2.59 }",
+          "seconds": 21.6
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 2,
+        "valid": false,
+        "reason": "unpaced: the display is not presenting",
+        "idleMedianMs": 0.587,
+        "minimumIdleMedianMs": 4.167,
+        "refreshPeriodMs": 8.333,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11474,
+        "drawnFrames": 11474,
+        "undrawnSwaps": 0,
+        "loadAverage": {
+          "before": "{ 2.03 2.49 2.59 }",
+          "after": "{ 3.72 2.85 2.71 }",
+          "seconds": 21.5
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 3,
+        "valid": false,
+        "reason": "unpaced: the display is not presenting",
+        "idleMedianMs": 0.589,
+        "minimumIdleMedianMs": 4.167,
+        "refreshPeriodMs": 8.333,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11473,
+        "drawnFrames": 11473,
+        "undrawnSwaps": 0,
+        "loadAverage": {
+          "before": "{ 3.72 2.85 2.71 }",
+          "after": "{ 3.38 2.84 2.72 }",
+          "seconds": 21.7
+        }
+      }
+    ],
+    "summary": null,
+    "turnFrames": null,
+    "receipt": {
+      "file": "build/frontier-turn-graphics.json (not kept: 0.9 MB, the raw intervals of the three rejected attempts)",
+      "sha256": "70a16c234008853252f431692739ea02cd2b6c24d4bffdba4bcf923c2244b094",
+      "bytes": 941712
+    },
+    "nativeHostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+    "bundleSha256": "8f750693b191e8cfc729487d0b75b8a347dcdd01be83a12336f4873ed7d91427",
+    "captures": [
+      {
+        "file": "context-city.png",
+        "sha256": "3b5e11112457434fc9617aee4704c96723c6b2af1611b767710435b01b2d35f5",
+        "bytes": 69596,
+        "context": "city"
+      },
+      {
+        "file": "context-dialog.png",
+        "sha256": "2c49788c474f3f4e6d7a78f0b082db1c8a639e6040c5767efa3cefa2cc1a2468",
+        "bytes": 37762,
+        "context": "dialog"
+      },
+      {
+        "file": "context-none.png",
+        "sha256": "20d09cb50280d2eef25f7038b00748d6185cb5b0803612a05f20fd932c5e8b34",
+        "bytes": 16581,
+        "context": "none"
+      },
+      {
+        "file": "context-settler.png",
+        "sha256": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+        "bytes": 38191,
+        "context": "settler"
+      },
+      {
+        "file": "context-stack.png",
+        "sha256": "765d6a18fc0a5b00eb4fa1ad46479458d16a2050a59cbebcb23cf4b7f9d8e583",
+        "bytes": 36120,
+        "context": "stack"
+      },
+      {
+        "file": "context-tile.png",
+        "sha256": "ad60018e4b62a7b627f70a73492f9e87020c0bca6087ebdde82463c4d38140c2",
+        "bytes": 24544,
+        "context": "tile"
+      },
+      {
+        "file": "context-warrior.png",
+        "sha256": "b115bee3c902fa8ffb41c882b59d0315d02df8c90823b882456f760816c7ccf1",
+        "bytes": 33800,
+        "context": "warrior"
+      }
+    ],
+    "note": "no attempt was presented by the display (an idle frame of about 0.6 ms against the 4.167 ms required): the lane ended with presented false, no frame-time statistic and exit code 3; the rejected attempts are raw CPU cost of a loop that no display paced and are not results"
+  },
+  "windowedPresented": {
+    "note": "A second run of the windowed lane, made after the run pinned under `windowed` (which is kept as it was: the display was off and the lane ended as not presented). This one ran with the user present and the display on, on a tree identical to the main commit that merged PR #86, and the lane was presented. The raw receipt is not committed (its hash is here); the numbers below are the receipt's own, copied from it, with the counts of the raw intervals that the receipt does not summarize.",
+    "executedAt": "2026-10-09",
+    "ranAtCommit": "e6a271d364a27f73acf995ed846c78eed055dde0",
+    "mainCommit": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+    "treeSha": "669f2d8f9739a1fc4189092828fad2bc1d24a386",
+    "treeEqualToMain": true,
+    "conditions": "the user present and the display on; the Mac loaded by other agents' suites (load average 4.27 to 14.44 around the attempts)",
+    "command": "caffeinate -d node scripts/frontier-turn-graphics.mjs",
+    "exitCode": 0,
+    "seconds": 851,
+    "presented": true,
+    "status": "presented",
+    "godot": "4.7.2-stable (official)",
+    "protocol": {
+      "runs": 5,
+      "maxAttempts": 3,
+      "warmupRounds": 2,
+      "rounds": 30,
+      "idleFrames": 600,
+      "viewport": [
+        1080,
+        600
+      ],
+      "percentiles": "nearest rank over the raw intervals of one run",
+      "acrossRuns": "median and interquartile range (nearest-rank quartiles) of each run's statistic",
+      "validity": "the baseline's, imported: a run counts only if the window drew throughout (a frame after every steady click and nine of ten in the idle window) and its idle frame median is at least half of the refresh period read back; any other run is rejected with its reason, kept in rejectedAttempts and repeated; a slot that exhausts its attempts ends the lane as not presented, with no frame-time statistic",
+      "discarded": "the warm-up rounds, and the rejected attempts; every interval of every accepted run is in raw, and every rejected attempt is kept in rejectedAttempts"
+    },
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "provenance": {
+      "displayServer": "macOS",
+      "renderingMethod": "gl_compatibility",
+      "renderingDriver": "opengl3",
+      "adapter": "Apple M3 Pro",
+      "vsync": "enabled",
+      "refreshRate": 120,
+      "windowSize": [
+        1080,
+        600
+      ],
+      "screenSize": [
+        3024,
+        1964
+      ],
+      "screenScale": 2,
+      "hermes": "250829098.0.17"
+    },
+    "nativeHostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+    "bundleSha256": "8f750693b191e8cfc729487d0b75b8a347dcdd01be83a12336f4873ed7d91427",
+    "probeSha256": {
+      "tests/frontier-turn-runner.gd": "e58f1f912df3fe7b0da0197a69f48c67aa6836e62bf201ae3a6a942935082481",
+      "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b",
+      "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52"
+    },
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 35,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 12022,
+        "drawnFrames": 11251,
+        "idleMedianMs": 4.475,
+        "idleMeanMs": 8.329,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 9.78 7.41 6.49 }",
+          "after": "{ 6.65 7.04 6.45 }",
+          "seconds": 103.7
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 2,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 480,
+        "idleDraws": 0,
+        "idleFrames": 600,
+        "processFrames": 11737,
+        "drawnFrames": 78,
+        "idleMedianMs": 6.874,
+        "idleMeanMs": 6.9,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 6.65 7.04 6.45 }",
+          "after": "{ 7.96 7.23 6.57 }",
+          "seconds": 85.4
+        }
+      },
+      {
+        "slot": 1,
+        "attempt": 3,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11988,
+        "drawnFrames": 11970,
+        "idleMedianMs": 13.177,
+        "idleMeanMs": 8.356,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 7.96 7.23 6.57 }",
+          "after": "{ 8.31 7.86 6.90 }",
+          "seconds": 105.7
+        }
+      },
+      {
+        "slot": 2,
+        "attempt": 4,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 12022,
+        "drawnFrames": 12022,
+        "idleMedianMs": 8.495,
+        "idleMeanMs": 8.601,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 8.31 7.86 6.90 }",
+          "after": "{ 8.25 7.99 7.06 }",
+          "seconds": 105.1
+        }
+      },
+      {
+        "slot": 3,
+        "attempt": 5,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11871,
+        "drawnFrames": 11871,
+        "idleMedianMs": 4.421,
+        "idleMeanMs": 8.341,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 8.25 7.99 7.06 }",
+          "after": "{ 5.27 7.05 6.80 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "slot": 4,
+        "attempt": 6,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11961,
+        "drawnFrames": 11961,
+        "idleMedianMs": 8.13,
+        "idleMeanMs": 8.339,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.27 7.05 6.80 }",
+          "after": "{ 5.02 6.52 6.63 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "slot": 5,
+        "attempt": 7,
+        "valid": false,
+        "drew": false,
+        "paced": true,
+        "reason": "undrawn: the window did not draw throughout",
+        "undrawnSwaps": 214,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11836,
+        "drawnFrames": 7168,
+        "idleMedianMs": 4.777,
+        "idleMeanMs": 8.338,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 5.02 6.52 6.63 }",
+          "after": "{ 4.27 5.90 6.37 }",
+          "seconds": 96.5
+        }
+      },
+      {
+        "slot": 5,
+        "attempt": 8,
+        "valid": true,
+        "drew": true,
+        "paced": true,
+        "reason": null,
+        "undrawnSwaps": 0,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "processFrames": 11930,
+        "drawnFrames": 11922,
+        "idleMedianMs": 12.678,
+        "idleMeanMs": 8.631,
+        "refreshPeriodMs": 8.333,
+        "minimumIdleMedianMs": 4.167,
+        "loadAverage": {
+          "before": "{ 4.27 5.90 6.37 }",
+          "after": "{ 14.44 8.28 7.20 }",
+          "seconds": 106.9
+        }
+      }
+    ],
+    "attemptsSummary": {
+      "accepted": 5,
+      "rejected": 3,
+      "rejectedAs": "undrawn",
+      "unpaced": 0,
+      "secondsInTheAttempts": 811.1,
+      "loadAverageAtTheEnd": "{ 12.98 8.18 7.17 }"
+    },
+    "runs": [
+      {
+        "run": 1,
+        "attempt": 3,
+        "idleMs": {
+          "p50": 13.177,
+          "mean": 8.356,
+          "p95": 14.419,
+          "p99": 14.677,
+          "max": 18.382
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 299,
+          "betweenHalfPeriodAnd12ms": 0,
+          "atLeast12ms": 301,
+          "meanOfTheShort": 2.738,
+          "meanOfTheLong": 13.936,
+          "shortToLong": 298,
+          "longToShort": 298,
+          "neighboursInTheSameMode": 3,
+          "medianSumOfTwoNeighboursMs": 16.661
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 10.394,
+          "p95": 12.48,
+          "p99": 13.206,
+          "max": 26.263,
+          "above100ms": 0,
+          "above16_67ms": 1,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.625,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 26.763,
+          "p95": 34.806,
+          "p99": 40.945
+        },
+        "injectionMsP50": 0.523,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 57.088,
+            "p95": 67.843,
+            "max": 145.771
+          },
+          "frames": 960,
+          "above16_67ms": 9,
+          "above33_33ms": 4,
+          "above100ms": 0,
+          "maxMs": 78.155
+        },
+        "loadAverage": {
+          "before": "{ 7.96 7.23 6.57 }",
+          "after": "{ 8.31 7.86 6.90 }",
+          "seconds": 105.7
+        }
+      },
+      {
+        "run": 2,
+        "attempt": 4,
+        "idleMs": {
+          "p50": 8.495,
+          "mean": 8.601,
+          "p95": 16.089,
+          "p99": 20.215,
+          "max": 52.903
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 285,
+          "betweenHalfPeriodAnd12ms": 25,
+          "atLeast12ms": 290,
+          "meanOfTheShort": 2.066,
+          "meanOfTheLong": 15.071,
+          "shortToLong": 284,
+          "longToShort": 284,
+          "neighboursInTheSameMode": 31,
+          "medianSumOfTwoNeighboursMs": 16.662
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.53,
+          "p95": 12.984,
+          "p99": 13.797,
+          "max": 16.221,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.467,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 23.731,
+          "p95": 29.836,
+          "p99": 38.005
+        },
+        "injectionMsP50": 0.518,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 52.808,
+            "p95": 66.582,
+            "max": 73.806
+          },
+          "frames": 960,
+          "above16_67ms": 4,
+          "above33_33ms": 0,
+          "above100ms": 0,
+          "maxMs": 19.838
+        },
+        "loadAverage": {
+          "before": "{ 8.31 7.86 6.90 }",
+          "after": "{ 8.25 7.99 7.06 }",
+          "seconds": 105.1
+        }
+      },
+      {
+        "run": 3,
+        "attempt": 5,
+        "idleMs": {
+          "p50": 4.421,
+          "mean": 8.341,
+          "p95": 15.006,
+          "p99": 15.202,
+          "max": 16.703
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 298,
+          "betweenHalfPeriodAnd12ms": 2,
+          "atLeast12ms": 300,
+          "meanOfTheShort": 2.598,
+          "meanOfTheLong": 14.073,
+          "shortToLong": 298,
+          "longToShort": 298,
+          "neighboursInTheSameMode": 3,
+          "medianSumOfTwoNeighboursMs": 16.675
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.689,
+          "p95": 13.162,
+          "p99": 13.488,
+          "max": 15.417,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 17.45,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 28.198,
+          "p95": 37.327,
+          "p99": 38.077
+        },
+        "injectionMsP50": 0.64,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 56.796,
+            "p95": 69.082,
+            "max": 169.495
+          },
+          "frames": 960,
+          "above16_67ms": 4,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 94.111
+        },
+        "loadAverage": {
+          "before": "{ 8.25 7.99 7.06 }",
+          "after": "{ 5.27 7.05 6.80 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "run": 4,
+        "attempt": 6,
+        "idleMs": {
+          "p50": 8.13,
+          "mean": 8.339,
+          "p95": 15.083,
+          "p99": 15.381,
+          "max": 17.63
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 292,
+          "betweenHalfPeriodAnd12ms": 14,
+          "atLeast12ms": 294,
+          "meanOfTheShort": 2.661,
+          "meanOfTheLong": 14.003,
+          "shortToLong": 292,
+          "longToShort": 292,
+          "neighboursInTheSameMode": 15,
+          "medianSumOfTwoNeighboursMs": 16.67
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 11.585,
+          "p95": 13.483,
+          "p99": 13.755,
+          "max": 14.047,
+          "above100ms": 0,
+          "above16_67ms": 0,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 16.346,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 28.156,
+          "p95": 37.21,
+          "p99": 38.482
+        },
+        "injectionMsP50": 0.531,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 56.652,
+            "p95": 67.581,
+            "max": 93.047
+          },
+          "frames": 960,
+          "above16_67ms": 1,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 34.202
+        },
+        "loadAverage": {
+          "before": "{ 5.27 7.05 6.80 }",
+          "after": "{ 5.02 6.52 6.63 }",
+          "seconds": 103.9
+        }
+      },
+      {
+        "run": 5,
+        "attempt": 8,
+        "idleMs": {
+          "p50": 12.678,
+          "mean": 8.631,
+          "p95": 15.617,
+          "p99": 16.729,
+          "max": 16.985
+        },
+        "idleIntervals": {
+          "total": 600,
+          "belowHalfPeriod": 289,
+          "betweenHalfPeriodAnd12ms": 1,
+          "atLeast12ms": 310,
+          "meanOfTheShort": 2.605,
+          "meanOfTheLong": 14.238,
+          "shortToLong": 289,
+          "longToShort": 289,
+          "neighboursInTheSameMode": 21,
+          "medianSumOfTwoNeighboursMs": 16.683
+        },
+        "clickFirstFrameMs": {
+          "samples": 360,
+          "p50": 10.556,
+          "p95": 12.61,
+          "p99": 14.613,
+          "max": 22.8,
+          "above100ms": 0,
+          "above16_67ms": 3,
+          "above33_33ms": 0
+        },
+        "clickToPanelsMsP50": 15.926,
+        "clickToFirstDrawnFrameMs": {
+          "p50": 27.457,
+          "p95": 36.75,
+          "p99": 44.313
+        },
+        "injectionMsP50": 0.628,
+        "turn": {
+          "turns": 120,
+          "framesPerTurn": 8,
+          "busyMs": {
+            "p50": 57.232,
+            "p95": 73.303,
+            "max": 136.085
+          },
+          "frames": 960,
+          "above16_67ms": 7,
+          "above33_33ms": 1,
+          "above100ms": 0,
+          "maxMs": 86.548
+        },
+        "loadAverage": {
+          "before": "{ 4.27 5.90 6.37 }",
+          "after": "{ 14.44 8.28 7.20 }",
+          "seconds": 106.9
+        }
+      }
+    ],
+    "across": {
+      "clicks": {
+        "idleFrameMs": {
+          "p50": {
+            "median": 8.495,
+            "q1": 8.13,
+            "q3": 12.678,
+            "iqr": 4.548,
+            "min": 4.421,
+            "max": 13.177
+          },
+          "p95": {
+            "median": 15.083,
+            "q1": 15.006,
+            "q3": 15.617,
+            "iqr": 0.6110000000000007,
+            "min": 14.419,
+            "max": 16.089
+          },
+          "p99": {
+            "median": 15.381,
+            "q1": 15.202,
+            "q3": 16.729,
+            "iqr": 1.5269999999999992,
+            "min": 14.677,
+            "max": 20.215
+          },
+          "max": {
+            "median": 17.63,
+            "q1": 16.985,
+            "q3": 18.382,
+            "iqr": 1.397000000000002,
+            "min": 16.703,
+            "max": 52.903
+          },
+          "aboveTwiceIdleMedian": {
+            "median": 1,
+            "q1": 0,
+            "q3": 12,
+            "iqr": 12,
+            "min": 0,
+            "max": 300
+          },
+          "above100ms": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "swapFrameMs": {
+          "p50": {
+            "median": 11.53,
+            "q1": 10.556,
+            "q3": 11.585,
+            "iqr": 1.0290000000000017,
+            "min": 10.394,
+            "max": 11.689
+          },
+          "p95": {
+            "median": 12.984,
+            "q1": 12.61,
+            "q3": 13.162,
+            "iqr": 0.5520000000000014,
+            "min": 12.48,
+            "max": 13.483
+          },
+          "p99": {
+            "median": 13.755,
+            "q1": 13.488,
+            "q3": 13.797,
+            "iqr": 0.30900000000000105,
+            "min": 13.206,
+            "max": 14.613
+          },
+          "max": {
+            "median": 16.221,
+            "q1": 15.417,
+            "q3": 22.8,
+            "iqr": 7.383000000000001,
+            "min": 14.047,
+            "max": 26.263
+          },
+          "aboveTwiceIdleMedian": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 242
+          },
+          "above100ms": {
+            "median": 0,
+            "q1": 0,
+            "q3": 0,
+            "iqr": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "injectionMsP50": {
+          "median": 0.531,
+          "q1": 0.523,
+          "q3": 0.628,
+          "iqr": 0.10499999999999998,
+          "min": 0.518,
+          "max": 0.64
+        },
+        "clickToNodesMsP50": {
+          "median": 15.926,
+          "q1": 15.625,
+          "q3": 16.346,
+          "iqr": 0.7210000000000001,
+          "min": 15.467,
+          "max": 17.45
+        },
+        "clickToDrawMsP50": {
+          "median": 27.457,
+          "q1": 26.763,
+          "q3": 28.156,
+          "iqr": 1.3929999999999971,
+          "min": 23.731,
+          "max": 28.198
+        },
+        "clickToDrawMsP95": {
+          "median": 36.75,
+          "q1": 34.806,
+          "q3": 37.21,
+          "iqr": 2.4040000000000035,
+          "min": 29.836,
+          "max": 37.327
+        },
+        "vsync": [
+          "enabled"
+        ],
+        "refreshRate": [
+          120
+        ]
+      },
+      "turn": {
+        "byPhase": [
+          {
+            "phase": "ai_plan",
+            "p50": {
+              "median": 5.456,
+              "q1": 2.849,
+              "q3": 5.832,
+              "iqr": 2.9829999999999997,
+              "min": 2.224,
+              "max": 6.144
+            },
+            "p95": {
+              "median": 12.791,
+              "q1": 12.484,
+              "q3": 13.327,
+              "iqr": 0.843,
+              "min": 12.398,
+              "max": 13.377
+            },
+            "max": {
+              "median": 18.052,
+              "q1": 15.159,
+              "q3": 34.536,
+              "iqr": 19.377000000000002,
+              "min": 13.566,
+              "max": 94.111
+            }
+          },
+          {
+            "phase": "ai_move",
+            "p50": {
+              "median": 7.908,
+              "q1": 7.872,
+              "q3": 8.019,
+              "iqr": 0.14700000000000024,
+              "min": 6.817,
+              "max": 12.599
+            },
+            "p95": {
+              "median": 13.701,
+              "q1": 13.473,
+              "q3": 13.961,
+              "iqr": 0.48799999999999955,
+              "min": 13.263,
+              "max": 14.65
+            },
+            "max": {
+              "median": 23.71,
+              "q1": 22.931,
+              "q3": 34.202,
+              "iqr": 11.270999999999997,
+              "min": 16.013,
+              "max": 78.155
+            }
+          },
+          {
+            "phase": "production",
+            "p50": {
+              "median": 7.144,
+              "q1": 6.955,
+              "q3": 7.631,
+              "iqr": 0.6760000000000002,
+              "min": 3.89,
+              "max": 7.68
+            },
+            "p95": {
+              "median": 14.134,
+              "q1": 14.095,
+              "q3": 14.403,
+              "iqr": 0.30799999999999983,
+              "min": 13.569,
+              "max": 14.705
+            },
+            "max": {
+              "median": 19.17,
+              "q1": 15.49,
+              "q3": 20.167,
+              "iqr": 4.677000000000001,
+              "min": 15.087,
+              "max": 29.734
+            }
+          },
+          {
+            "phase": "growth",
+            "p50": {
+              "median": 7.698,
+              "q1": 7.574,
+              "q3": 7.783,
+              "iqr": 0.20900000000000052,
+              "min": 6.386,
+              "max": 12.8
+            },
+            "p95": {
+              "median": 13.785,
+              "q1": 13.671,
+              "q3": 13.911,
+              "iqr": 0.2400000000000002,
+              "min": 13.288,
+              "max": 14.303
+            },
+            "max": {
+              "median": 14.835,
+              "q1": 14.555,
+              "q3": 15.08,
+              "iqr": 0.5250000000000004,
+              "min": 14.382,
+              "max": 15.72
+            }
+          },
+          {
+            "phase": "research",
+            "p50": {
+              "median": 6.559,
+              "q1": 5.91,
+              "q3": 7.784,
+              "iqr": 1.8739999999999997,
+              "min": 4.046,
+              "max": 7.785
+            },
+            "p95": {
+              "median": 13.718,
+              "q1": 13.568,
+              "q3": 13.845,
+              "iqr": 0.277000000000001,
+              "min": 13.205,
+              "max": 14.524
+            },
+            "max": {
+              "median": 14.979,
+              "q1": 14.739,
+              "q3": 16.386,
+              "iqr": 1.6469999999999985,
+              "min": 14.418,
+              "max": 35.62
+            }
+          },
+          {
+            "phase": "refresh",
+            "p50": {
+              "median": 7.802,
+              "q1": 7.354,
+              "q3": 7.868,
+              "iqr": 0.5140000000000002,
+              "min": 6.956,
+              "max": 12.754
+            },
+            "p95": {
+              "median": 13.904,
+              "q1": 13.667,
+              "q3": 14.054,
+              "iqr": 0.38700000000000045,
+              "min": 13.426,
+              "max": 14.695
+            },
+            "max": {
+              "median": 18.747,
+              "q1": 15.89,
+              "q3": 26.481,
+              "iqr": 10.591000000000001,
+              "min": 15.129,
+              "max": 86.548
+            }
+          },
+          {
+            "phase": "idle",
+            "p50": {
+              "median": 6.133,
+              "q1": 5.73,
+              "q3": 7.77,
+              "iqr": 2.039999999999999,
+              "min": 4.391,
+              "max": 8.116
+            },
+            "p95": {
+              "median": 13.825,
+              "q1": 13.429,
+              "q3": 13.889,
+              "iqr": 0.4599999999999991,
+              "min": 13.172,
+              "max": 14.609
+            },
+            "max": {
+              "median": 15.031,
+              "q1": 14.465,
+              "q3": 19.838,
+              "iqr": 5.373000000000001,
+              "min": 14.25,
+              "max": 21.252
+            }
+          }
+        ],
+        "busyMs": {
+          "p50": {
+            "median": 56.796,
+            "q1": 56.652,
+            "q3": 57.088,
+            "iqr": 0.43599999999999994,
+            "min": 52.808,
+            "max": 57.232
+          },
+          "p95": {
+            "median": 67.843,
+            "q1": 67.581,
+            "q3": 69.082,
+            "iqr": 1.5009999999999906,
+            "min": 66.582,
+            "max": 73.303
+          },
+          "max": {
+            "median": 136.085,
+            "q1": 93.047,
+            "q3": 145.771,
+            "iqr": 52.72399999999999,
+            "min": 73.806,
+            "max": 169.495
+          }
+        }
+      }
+    },
+    "counts": {
+      "steadyClicksOutsideEndTurn": 1800,
+      "clickFirstFrameAboveTwoRefreshPeriods": 4,
+      "clickFirstFrameAboveFourRefreshPeriods": 0,
+      "clickFirstFrameAbove100ms": 0,
+      "turnFrames": 4800,
+      "turnFramesAboveTwoRefreshPeriods": 25,
+      "turnFramesAboveFourRefreshPeriods": 7,
+      "turnFramesAbove100ms": 0,
+      "steadyClicksByFramesToThePanels": {
+        "otherClick:2": 1799,
+        "endTurn:8": 600,
+        "otherClick:1": 1
+      },
+      "refreshPeriodMs": 8.333
+    },
+    "captures": {
+      "identicalToTheHeadlessCaptures": true,
+      "sha256": {
+        "context-city.png": "3b5e11112457434fc9617aee4704c96723c6b2af1611b767710435b01b2d35f5",
+        "context-dialog.png": "2c49788c474f3f4e6d7a78f0b082db1c8a639e6040c5767efa3cefa2cc1a2468",
+        "context-none.png": "20d09cb50280d2eef25f7038b00748d6185cb5b0803612a05f20fd932c5e8b34",
+        "context-settler.png": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+        "context-stack.png": "765d6a18fc0a5b00eb4fa1ad46479458d16a2050a59cbebcb23cf4b7f9d8e583",
+        "context-tile.png": "ad60018e4b62a7b627f70a73492f9e87020c0bca6087ebdde82463c4d38140c2",
+        "context-warrior.png": "b115bee3c902fa8ffb41c882b59d0315d02df8c90823b882456f760816c7ccf1"
+      }
+    },
+    "receipt": {
+      "file": "build/frontier-turn-graphics.json (not kept: 2.3 MB, the raw intervals of the five accepted runs and the three rejected attempts)",
+      "sha256": "db86eb0816f036add015022ffab74187c8debab0dc218e2bc81e4dad723cdbb5",
+      "bytes": 2380876,
+      "verified": "verifyGraphicsReceipt of tests/frontier-baseline-oracle.mjs passes on it; the idle, click-frame and turn-phase statistics of the five runs, recomputed from the raw intervals by nearest rank, equal the receipt's"
+    },
+    "findings": [
+      "The lane was presented: 5 of 5 runs accepted in 8 attempts, the vsync read back `enabled` at 120 Hz (a refresh period of 8.333 ms); 3 attempts were rejected as undrawn (35, 480 and 214 steady clicks without a drawn frame after them; 11,251, 78 and 7,168 drawn frames of 12,022, 11,737 and 11,836 process frames) and none as unpaced",
+      "The first frame of a click took 11.53 ms at the median of the five runs' p50 (10.39 to 11.69), p95 12.98 (12.48 to 13.48), p99 13.76 (13.21 to 14.61) and at most 16.22 (14.05 to 26.26); 4 of 1,800 were above two refresh periods (16.67 ms), none above four, none at 100 ms or more",
+      "From the injection to the first frame drawn after it took 27.46 ms at the median of the p50 (23.73 to 28.20) and 36.75 at the median of the p95 (29.84 to 37.33); the panels showed after 2 frames in 1,799 of the 1,800 clicks outside End turn (1 frame in one, run 2 round 13) and after 8 in all 600 End turns",
+      "A turn is eight frames (the seven of the job and one for the HUD to catch up), in the order of the service, a snapshot in each of the seven and `turn_ended` once, in all 600 steady turns; its seven frames took 56.80 ms at the median of the p50 (52.81 to 57.23), 67.84 at the median of the p95 (66.58 to 73.30) and 136.09 at the median of the maximum (73.81 to 169.50); the p95 of one phase's frame is 12.79 to 14.13 ms; 25 of 4,800 turn frames were above 16.67 ms, 7 above 33.33 and none at 100 ms or more (the largest 94.11 ms, ai_plan, run 3)",
+      "The idle median of the accepted runs was 4.421 to 13.177 ms against a refresh period of 8.333 ms; in every run the 600 idle intervals fall in two groups that alternate (285 to 299 below 4.167 ms, 290 to 310 of 12 ms or more, 0 to 25 between; two neighbours sum to 16.66 to 16.68 ms at the median) and their mean is 8.34 to 8.63 ms, one refresh period, so the median depends on a few samples while the mean and the p95 (14.42 to 16.09 ms) do not",
+      "The intervals are of process frames, not of frames the display showed; the vsync was on, so a missed frame is not read from them. One machine, one display, synthetic clicks on the validation device, the HUD of V05-05 as it was on the main commit, and no frame-time limit is proposed"
+    ]
+  },
+  "findings": [
+    "A click shows the panels of its context 2 frames after the injection in all 480 steady clicks (8 for an End turn: the seven frames of the job and one for the HUD to catch up); the frames are recorded and the oracle fixes only a ceiling (10 and 40)",
+    "The end of a turn runs one phase in each of seven frames, in the order of the service, publishes a snapshot in each and turn_ended once in the frame of the last phase, in all 120 steady turns (128 with the warm-up); the ids of the 128 jobs rise by one",
+    "The native views, the SceneTree's nodes and Godot's node monitor are the same every time a context comes back (none 14, tile 18, warrior 24, dialog 24, stack 26, settler 27, city 42; the tree holds 10 more), with 0 orphans in all 546 readings",
+    "The live heap at rest of each of the 17 series grows 128 bytes between the medians of the halves (limit 2,048), flat to the byte from round 9; its ramp in the first rounds ends where the HUD's bounded lists (64 entries) fill",
+    "The resident memory fell 57.8 MiB between the medians of the halves (the OS compressed the process at round 22), against a limit on a rise of 48 MiB; its pace between the falls (0.5 to 0.6 MiB a round) is that of Godot's static memory, the probe's own readings",
+    "The headless frame intervals of the turn are 6.7 to 7.4 ms in every phase, the unpaced loop's own floor, and say nothing about a presented frame; the host's pump over the turn is 24 ms of the 45",
+    "No JavaScript error and no promise rejection went unhandled, the host and the HUD reported none, and the control after the run (one rejection that nobody handles) was seen once",
+    "The windowed lane was not presented by the display: three attempts rejected as unpaced, no frame-time statistic, exit 3"
+  ],
+  "decisions": {
+    "note": "this slice records and proposes no bound: the freeze (congelado) is a later, single act; the HUD measured is the one on main at the pinned commit, which V05-05 is still changing"
+  },
+  "limitations": [
+    "Headless and synthetic: the clicks are events pushed through the viewport on the validation device, with no hardware pointer, touch screen, iPhone or mobile export; the durations are the CPU cost of work on a loop that nothing paces and are not frame times",
+    "The frame time of a presented window (vsync on, 120 Hz) is PENDING, and so is the windowed part of the baseline; no budget row starts from this slice",
+    "One machine shared with other agents (the load average is recorded around every process); only the differences that held across runs are conclusions",
+    "The HUD is V05-05's work in progress and the tour is one fixed path through turns 1 to 5 of one scenario; it is not an economy that keeps growing or a long session",
+    "The two frames from the click to the panels are an observation and an explanation that fits the structure; the pumps were not traced inside the frames",
+    "The host reports its pump and JS, mount and layout phases as running totals and the last 128 samples of each series, not per frame",
+    "The heap rule is blind to what the warm-up has not finished (the bounded lists fill for about six rounds) and the resident-memory rule is a coarse trend, blind to a leak under about 3 MiB a round",
+    "Hosted CI and the Pages publication are pending"
+  ],
+  "sourcePins": {
+    "tests/frontier-turn-probe.gd": "21fa02d0df807cd7ee06a8b0a8063e75d558f027926e8cf67c7b4c11bcaa800b",
+    "tests/frontier-turn-runner.gd": "e58f1f912df3fe7b0da0197a69f48c67aa6836e62bf201ae3a6a942935082481",
+    "tests/frontier-turn-cases.mjs": "ea79e1f0b844da290c89c14336196c53f3fca7e30c46a02f7b68623877d7c980",
+    "tests/frontier-turn-oracle.mjs": "7d4af2b2b260d4e8c4be4e91c0a3a721d533afedad4d4a463fe6bb7bbc4ec2e3",
+    "tests/frontier-turn-native.test.mjs": "d51c0970ccd6aad636232c04fd81acf5d42b9c4b8cfaca506dc6de8e000bef12",
+    "tests/frontier-turn-sabotages.mjs": "52e7d8d859ad9c23c98c6f870252c2be05680176fe8a70a595f68240e2159625",
+    "tests/frontier-turn-graphics.test.mjs": "a3b6e3cf75145ece3a1f999a36d80fc3d457d7920aa8a8b970745ceec14f6218",
+    "scripts/frontier-turn-lane.mjs": "01351f631d3e80289d6874c303eeeed3a18eebd37257aa58e87cd3b797ce8c61",
+    "scripts/frontier-turn-graphics.mjs": "03ace810273170e566c1f485ae048b2a94251a4db59bb67c198e4982d197204c",
+    "scripts/frontier-turn-sabotage.mjs": "e5993e126f25354d8bceb187145cc9f3fac76787410ccf4b57750a006572c34d",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/performance-oracle.mjs": "c2c9a248042b6f082a426dd8cedec77b3e8f184fd5f4b46d364e53d1a525314a",
+    "tests/performance-cases.mjs": "05a3f24b9e295bc9cbb24a34a08901e2bb3a97949b3dbd4128533d76bc654105",
+    "tests/frontier-baseline-cases.mjs": "3a4539a305fd40b0dcecacd9c4ee318432aba1f058c5c58563598f9df2977e81",
+    "tests/frontier-baseline-oracle.mjs": "d6f0615be435bc9cd44bf852899b1a18019745200f66d11221cb0d5552c9d56b",
+    "tests/frontier-baseline-heap-series.mjs": "21cba29ccc0991690d97cfdd127650524a2244ef847b06057457b0806bcaa7c0",
+    "tests/frontier-soak-cases.mjs": "7aa170f5f8319d43cb15fae872ab16d5f65020837fa3ae70bd30bcc67070111e",
+    "tests/frontier-soak-oracle.mjs": "7ac55d8aa597041dfd4ae9dee7a071cceb8f1a3a11fda303bfd8bcaf02b1e750",
+    "tests/civ-lite-ui-oracle.mjs": "e329f7cb48cf87c96eea44f11f30bc584a22c71a148d104da80b6013cd86b787",
+    "scripts/consumer-harness.mjs": "50d3c5bbdda8b39f0df2b969abfbad91c41220f0ce85a05e13356c565c51e0d1",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/create-consumer.mjs": "0a936458bb5662f652978c1d68b653dfd360c0ad1063f53e7b4e409b2260e976",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "consumers/civ-lite/hud_validation.gd": "5e9ce6917b4bf9bf2d91964981e86378c6a50c9ffd0e38b00b25ac285b5919a2",
+    "consumers/civ-lite/main.tscn": "b936a249f5ee8d529ace77740e8fd4522daa37cbc3602696736d745b38c8f9c4",
+    "consumers/civ-lite/world/world.gd": "68c7a4d128785f9a17bdbb99e65e6b27f583eb3b53f17a041864b04cd6628886",
+    "consumers/civ-lite/services/game_services.gd": "b0acab0fc53e758a738f92de92ca498754e262f8db5646ee177e0dcf0a3ca245",
+    "consumers/civ-lite/ui/hud/hud.tsx": "e99b5d833d518528dae1256b5f4c1b93d764a1a828308b4671f387424ba30b45",
+    "consumers/civ-lite/ui/telemetry.ts": "9c14435b6c0772d64510f9dfdd0849473e3cf5ec2dd954b0c25d57b4901f7fd3",
+    "consumers/civ-lite/ui/store.ts": "2ad3a4a55e35ea54a2834a6630fc9babf31059fb3007f8b32397f0b55d3daf4e",
+    "consumers/civ-lite/game/turn.gd": "0a5fc0523e0e94d4d42190a770b95a55ca851adfce62abe608150ecb0c99ba05",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "native/fabric_surface.cpp": "054ccf769e34075760cdf7d3a7bb2f97fb275d028d515e15e085f0548c62c051",
+    "native/application_runtime.cpp": "cb5ae4780c5598dcdae5cdc8c70cae8cde01a3680e131e020287a6685bdd9983",
+    "native/fabric_application.cpp": "73def9bf38c3bf67a6711264100c150ed406c465744b617b0c08ff83bc73b97b",
+    "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a"
+  }
+}

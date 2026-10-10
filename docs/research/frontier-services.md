@@ -1,8 +1,10 @@
 # Frontier's services: the GameServices node, its epoch and the types in parity
 
 Status: implemented and executed locally on macOS arm64 against pinned RN 0.87.1 and official Godot 4.7.2 (headless), for
-the criterion `servicos` of V05-03. The [evidence record](../evidence/frontier-services/README.md) pins the local runs at
-commit `75c4c0f`; hosted CI for `npm run test:frontier-services` is pending.
+the criteria `servicos` and `autoridade` of V05-03. The [evidence record](../evidence/frontier-services/README.md) pins the local
+runs of `servicos` at commit `75c4c0f`. `autoridade` (the end of a turn as an accepted job, in "The turn is a job" below) was
+added to the same node afterwards, and its [evidence record](../evidence/frontier-authority/README.md) pins the local runs at
+commit `d0c7096`; hosted CI for `npm run test:frontier-services` is pending.
 
 The second package of the 0.5 milestone exposes the Frontier game ([research](frontier-game.md), rules in GDScript, already on
 `main`) to a React Native HUD through the typed game services the repository already has
@@ -11,9 +13,10 @@ The second package of the 0.5 milestone exposes the Frontier game ([research](fr
 are registered before the mount, with schemas and TypeScript types tested for parity between Godot and TypeScript, positive
 and negative.
 
-It closes only that criterion. `consumidor` (provisioning by the addon, the editor, ten cycles) and `autoridade` (a job that
-survives closing the screen, bursts against the 64/128 budgets) are not in this slice; see "What stays open". There is no HUD
-here: the playable HUD is V05-05, so there is no example and no screenshot.
+That package closed only that criterion. `consumidor` (provisioning by the addon, the editor, ten cycles) was closed by the next
+one ([frontier-consumer.md](frontier-consumer.md)), and `autoridade` (a turn that is a job which survives closing the screen, a
+rule mutated in Godot that changes the HUD with no change in JavaScript, bursts measured against the 64/128 budgets) is added
+here, in "The turn is a job". There is no HUD here: the playable HUD is V05-05, so there is no example and no screenshot.
 
 ## Sources
 
@@ -40,6 +43,12 @@ here: the playable HUD is V05-05, so there is no example and no screenshot.
 integer `epoch`. It registers 14 bindings: one state, one signal, one method per intent and `open_menu`, the one method that is
 the scene's and not the game's (added by the `consumidor` slice; the package before it registered 13).
 
+> **Update, 2026-10-09 (P8, V05-05).** The HUD slice added a second state, `frontier.hover`: the card of the tile under the pointer,
+> published by the World as a state of its own (the pointer is not part of the game, so the snapshot, its emission and the hashes
+> did not change). The node now registers **15 bindings**: two states, one signal and the same 12 methods. The figures of 14
+> bindings below are those of the runs this note's package made, and are left as they were; the probe, the oracle and the parity
+> test now expect 15. See [Frontier's HUD](frontier-hud.md), "The hover service".
+
 - **Registration is before everything.** The node connects to `$Application.runtime_available` in `_enter_tree`, as
   `consumers/minimal/game.gd` does. The signal is emitted while the application enters the tree, before a surface mounts and
   before the bundle evaluates. `_ready` would be too late: a parent's `_ready` runs after its children's, so the surface has
@@ -63,8 +72,8 @@ scans `game_services.gd` for one).
 
 | Name | Kind | Carries | Emits when |
 | --- | --- | --- | --- |
-| `frontier.snapshot` | state | the snapshot DTO (`FrontierSnapshot`), exact schema | its signal `snapshot_changed(snapshot)` fires once after every accepted intent and every `new_game`; a refused intent fires nothing |
-| `frontier.turn_ended` | signal | one argument, `{turn: integer, phases: [{name: string, tasks: integer, events: integer}]}` | after an accepted `end_turn`, before that turn's `snapshot_changed` |
+| `frontier.snapshot` | state | the snapshot DTO (`FrontierSnapshot`), exact schema | its signal `snapshot_changed(snapshot)` fires once after every accepted intent and every `new_game`, and, for the turn's job, once when it is accepted and once after each of its six phases; a refused intent fires nothing |
+| `frontier.turn_ended` | signal | one argument, `{turn: integer, phases: [{name: string, tasks: integer, events: integer}], job: integer}` | once per job, when it finishes: after the snapshot of the last phase and before the snapshot of the turn that begins |
 | `frontier.select_tile` | method | `(x: integer, y: integer)` | |
 | `frontier.select_unit` | method | `(unit_id: integer)` | |
 | `frontier.clear_selection` | method | `()` | |
@@ -74,23 +83,24 @@ scans `game_services.gd` for one).
 | `frontier.set_production` | method | `(item_id: string, slot: integer)` | |
 | `frontier.set_research` | method | `(tech_id: string)` | |
 | `frontier.resolve_event` | method | `(choice_id: string)` | |
-| `frontier.end_turn` | method | `()` | |
+| `frontier.end_turn` | method | `()`, registered `{"response": "acceptance"}` | the answer is the acceptance, with the job's id; the turn goes on in the node |
 | `frontier.new_game` | method | `()` | |
 | `frontier.open_menu` | method | `()` | not a rule of the game: the scene drops its World (`world_scene`, when the owner gave one); no snapshot, the epoch is untouched |
 
-Every method answers the same object, `{ok: integer, code: string, text: string}` (response `completion`, the default):
-`ok` is 0 or 1, `code` is `"ok"` or the game's refusal code, `text` is what the HUD shows (`""` when accepted). The schema
-language has no optional field and no union, so one result cannot be `{ok, code, text}` for most intents and
-`{ok, code, text, turn, phases}` for `end_turn`. What the game adds to `end_turn`'s answer (`turn` and `phases`) goes out on
-`frontier.turn_ended` instead, and the new turn is in the snapshot. A refused intent is a normal answer with `ok: 0`, not a
-rejection: the game decided, and nothing changed.
+Every method answers the same object, `{ok: integer, code: string, text: string, job: integer}` (response `completion`, the
+default, for all of them but `end_turn`, which answers on `acceptance`): `ok` is 0 or 1, `code` is `"ok"` or the game's refusal
+code, `text` is what the HUD shows (`""` when accepted) and `job` is the id of the job the call started, 0 for every method that
+starts none and for a call that was refused. The schema language has no optional field and no union, so one result cannot be
+`{ok, code, text}` for most intents and `{ok, code, text, job}` for `end_turn`: the `job` is in all of them, with no schema per
+method. What the game adds to the end of a turn (`turn` and `phases`) goes out on `frontier.turn_ended` instead, and the new turn
+is in the snapshot. A refused intent is a normal answer with `ok: 0`, not a rejection: the game decided, and nothing changed.
 
 ### Emission
 
 An accepted intent publishes the whole snapshot once (`bind_state` requires the changed signal to carry one complete state
-value). The snapshot is read after the intent applied. For `end_turn` the order in the queue is `turn_ended`, then
-`snapshot_changed`, so a HUD that reacts to the phases sees them before it sees the turn that begins. A refused intent
-publishes nothing and does not run the game's apply step.
+value). The snapshot is read after the intent applied. A refused intent publishes nothing and does not run the game's apply
+step. The end of a turn publishes seven snapshots, one for the acceptance and one after each phase, with `turn_ended` between
+the sixth and the seventh (see below), so a HUD that reacts to the end of the turn sees it before it sees the turn that begins.
 
 ## The epoch
 
@@ -108,6 +118,140 @@ that.
 Every `new_game` publishes one snapshot, no `turn_ended`, and returns to the scenario's initial state (turn 1, context
 `none`, no selection). The initial hash is also the hash the roteiro's opening refusal leaves, which the oracle uses as an
 independent witness of it. The epoch tells a HUD that every snapshot it holds is from a finished game.
+
+## The turn is a job (`autoridade`)
+
+The criterion is V05-03 `autoridade`: "turn.end aceito sobrevive ao fechamento da tela e job.finished chega 1x; uma regra mutada no
+Godot muda a HUD sem alterar JS; rajadas de fim de turno medidas contra 64 tarefas e 128 eventos por fase". It is written in the
+dashboard's words; in the repository `turn.end` is `frontier.end_turn` and `job.finished` is `frontier.turn_ended`.
+
+### Sources
+
+- [docs/GAME_SERVICES.md](../GAME_SERVICES.md) (89-93): a method registered with `{response: "acceptance"}` may return a job
+  identifier while game work continues; completion and cancellation are explicit game signals and methods; removing UI does not
+  cancel an accepted game job.
+- `native/game_service_registry.cpp`: `options` (249-259) accepts `response` as the one option of a method, `completion` or
+  `acceptance`; `call` (641-664) validates the arguments, runs the callback, validates the result and resolves with the
+  registration's `response`; `pump_host(64, 128)` (665-692) runs at most 64 queued tasks and then sends at most 128 queued events,
+  in the order they were queued, and what is left stays queued for the next pump; `snapshot()` (714-722) reports
+  `pendingHostTasks`, `pendingEvents`, `hostTasksRun`, `eventsSent` and the two budgets. A signal or a state change queues one
+  event for each subscription that is ready (`receive`, 395-415).
+- `native/fabric_application.cpp:255` and `native/application_runtime.cpp:681-691`, `1143-1146`: the application's `_process` pumps
+  once a frame, and the pump of the host phase is a deferred call that the engine runs after every `_process` of that frame.
+- `examples/services/game.gd` (`inventory.equip` with `{"response": "acceptance"}`, the job owned by the persistent node and ended
+  by `operation_finished` with a `finished_jobs` record), `examples/services/App.jsx:24-27` (the subscriptions at module scope)
+  and `examples/services/validation.gd:142-168` (the surface unmounted, the job finishing afterwards, `finished.length == 1`): the
+  pattern this reuses.
+- `tests/services_boundaries.gd:259-283` and `tests/services-boundary-fixture.js:165-173`: the burst of 70 tasks and 140 events
+  against 64 and 128, which this measures per phase of a turn.
+
+### The contract
+
+- **`frontier.end_turn` is an accepted job.** `Schema.METHOD_OPTIONS` registers it with `{"response": "acceptance"}`. The game
+  starts the turn (`begin_end_turn`: its `phase` becomes `ai_plan`, and every intent but the phases is refused until the last has
+  run) and answers `{ok: 1, code: "ok", text: "", job: <id>}`. A refused call (`event_pending`, `turn_in_progress`) answers
+  `ok: 0` and `job: 0`; the registration, not the outcome, fixes the response, so a refusal also resolves on `acceptance`.
+- **The ids** are integers rising by 1 from 1 for the life of the node (`next_job`), the same across new games (`new_game` does
+  not reset them), and in neither the state nor its hash.
+- **The node drives the job**, never the World and never a surface: `GameServices._process` calls `advance_job()` once a frame,
+  which runs `game.advance_phase()` (one phase) and publishes the snapshot. Closing the HUD, going to the menu or dropping the
+  World leaves it running (the `job-dies-with-screen` sabotage ties it to the screen and the `job-dies-with-menu` one to the
+  World, and both are rejected). The job follows the game's clock: it stops while the tree is paused, like the rest of the game.
+- **One job is seven snapshots and one `turn_ended`.** The snapshot is published when the turn is accepted (it shows `phase:
+  "ai_plan"` and every action disabled with `turn_in_progress`) and after each of the six phases (it shows the next one; the last
+  shows `"idle"`, the turn that begins, and `last_job` = the job). `turn_ended` goes out once, after the sixth and before the
+  seventh, with `{turn, phases, job}`. The game's own `end_turn()` stays synchronous and serves the replay of the game, whose
+  golden and trace hashes are unchanged (`npm run test:civ-lite-game`).
+- **`snapshot.last_job`** (integer, 0 for none) is the id of the last job that finished in the session. A HUD that connects after
+  the acceptance learns from it that the job is over without a replay of the signal. It is an input of the snapshot like the
+  epoch (`FrontierGame.last_job`, set by the node, never in the state or the hash); a new game starts it at 0.
+- **`new_game` abandons a job in progress**: the session it belonged to is gone (the epoch rises) and no `turn_ended` fires for it.
+- **The tasks and events of `turn_ended.phases` are the game's counters** (what a phase did to the state: the tiles it worked, the
+  entries it logged; at most 64 and 128, `Rules.PHASE_TASK_LIMIT`, `Rules.PHASE_EVENT_LIMIT`). The registry's `hostTasksRun` and
+  `eventsSent` count something else, calls it ran and events it sent. The two are recorded apart and not confused.
+- **Types.** `schema.gd` has `RESULT.job`, `TURN_ENDED.job` and `SNAPSHOT.last_job`; `frontier-types.ts` has `FrontierResult.job`,
+  `FrontierTurnEnded.job` and `FrontierSnapshot.last_job`, all `Int`; and the parity compares them both ways (18 synthetic
+  mutations now, five of them about these fields).
+
+### The job, measured
+
+The probe waits for each job to finish before the next step of the roteiro, and reports for each: the snapshots JavaScript
+received (phase, turn, `last_job`), the frame each was published in on the Godot side, and what the registry held in the middle of
+that frame (after the application's `_process` scheduled the pump, before the deferred pump ran) and at the start of the next one
+(after it). The first job of the roteiro, with the surface mounted (two subscribers of the snapshot, the application's and the
+panel's, and one of `turn_ended`); `F0` is the frame the call was accepted in:
+
+| Frame | The snapshot published shows | Tasks run | Events sent | Pending after the pump |
+| --- | --- | ---: | ---: | --- |
+| F0 | `ai_plan` (accepted), turn 1 | 1 (the `end_turn` call) | 2 | 0 tasks, 0 events |
+| F1 | `ai_move`, turn 1 | 0 | 2 | 0, 0 |
+| F2 | `production`, turn 1 | 0 | 2 | 0, 0 |
+| F3 | `growth`, turn 1 | 0 | 2 | 0, 0 |
+| F4 | `research`, turn 1 | 0 | 2 | 0, 0 |
+| F5 | `refresh`, turn 1 | 0 | 2 | 0, 0 |
+| F6 | `idle`, turn 2, `last_job` 1, after `turn_ended` | 0 | 3 (`turn_ended` and two snapshots) | 0, 0 |
+
+| What was measured | Accepted | Phases | `turn_ended` for the job | `last_job` at rest | Recorded in |
+| --- | --- | --- | --- | --- | --- |
+| Surface mounted (jobs 1, 2 and 4 to 12 of the roteiro) | `{ok: 1, job: N}`, response `acceptance` | 7 snapshots in 7 consecutive frames | once, in the application's own subscription | N | the report's `steps[].job` |
+| Surface closed in the frame after the acceptance, before the first phase ran (job 3) | the same | the same: the application held `rootCount` 0 in all 4 samples taken while it ran | once, and still once after the remount | 3; the remounted root's first snapshot is `idle`, turn 4, `last_job` 3 | `persistence.job` |
+| Ten calls sent while the job runs (job 13) | the same | the same, and each call refused with `turn_in_progress`, `job: 0`, with no snapshot published and no state changed | once | 13 | `jobLane.burst` |
+| End of turn and the menu in the same frame (the consumer, ten cycles, jobs 2, 4, ... 20) | the same | the same, with the World out of the tree and no HUD connection | once | the node's `finished_jobs[N] == 1` | [frontier-consumer.md](frontier-consumer.md) |
+
+All jobs of the probe: 15 accepted (12 in the roteiro, one with calls sent while it ran, two in the stress cases), 15 finished,
+the application's own subscription received `turn_ended` for jobs 1 to 15, each once and in order, and the node's
+`finished_jobs` holds 1 for each. The third job is the one with the screen closed: the probe closes the surface at the start of
+the frame after the node accepted it, which it detects from the node (`job != 0`) and not from JavaScript, so the job has run none
+of its phases; the application's `rootCount` is read while it runs; and after it the probe plays one more step with no surface and
+mounts again.
+
+### Rules from Godot change the HUD with no change in JavaScript
+
+A lane of the plain test, not a sabotage. The probe has a `--rule-lane` mode that plays the first intents of the game through the
+services (`select_tile(6, 8)`, `select_unit(1)`, `move_unit(1, 7, 8)`) and keeps the snapshot JavaScript received after each. The
+test runs it twice with the same bundle: once on the genuine `rules.gd`, and once with one constant of it mutated by
+`scripts/sabotage-sources.mjs` (the Settler's movement points, `"moves": 2` to `"moves": 0`), restored byte for byte afterwards.
+
+| | Genuine | Mutated |
+| --- | --- | --- |
+| `rules.gd` SHA-256 | `bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040` | `5b593b141e0f5ad932578a19400869a97b6c54970b9af404460344640dcbe0fd` |
+| bundle SHA-256 | `5df6014653829e791cf348b454128f21fa0b34b501b33d280ba82de14a2be468` | the same: the bundle contains no `.gd` |
+| native host SHA-256 | `9b1cc1b73d99649a10624d8eaf9beb407e8b51cdf321cced7fc3a758954f020c` | the same |
+
+The oracle derives what must change from the genuine snapshots and the constant, and requires that it is exactly what changed:
+
+| Observation | What differs in the snapshot JavaScript received |
+| --- | --- |
+| initial | nothing (the state is not the same, its hash differs, but the snapshot shows no unit yet) |
+| after `select_tile(6, 8)` | the Settler's card in `tile.units[0]`: `moves` 2 to 0 and `max_moves` 2 to 0, and nothing else |
+| after `select_unit(1)` | the same two fields, and `found_city`: `enabled` 1 to 0, `reason` `""` to `"no_moves_left"`, `reason_text` to the game's text |
+| `move_unit(1, 7, 8)` | genuine `{ok: 1}`; mutated `{ok: 0, code: "no_moves_left"}`, and a refused move changes neither the snapshot nor the state |
+
+The state changed because Godot changed: the JavaScript is the same bytes in both runs. The test also rebuilds the bundle from the
+restored rules and requires the first run's hash. The oracle refuses a lane where something else differs, where nothing does,
+where the move was accepted, where the hash is the same or where the bundle or the rules are not what they should be (six
+variants in the parity test).
+
+### Bursts against 64 tasks and 128 events a phase
+
+Every frame of every job fit in one pump: the largest pump of the 12 roteiro jobs ran 1 task and sent 3 events, and left nothing
+pending, against the budgets of 64 and 128. With ten calls sent while the job runs (job 13), the frame that carries them ran 10
+tasks and sent 2 events (their results are resolved in the tasks, which do not count as events), and left nothing pending. That
+is the real subscribers of the probe. The game's own counters in `turn_ended.phases` are at most 5 tasks and 4 events a phase
+in the roteiro (4 is the `refresh` of turn 4: the turn start and the three events the queue raises; it was 2 with the one event).
+
+The stress case adds 150 module-scope subscribers of `frontier.snapshot` (so a publication holds 152 events, more than 128; the
+publication of the last phase holds 153 with `turn_ended`). The pumps are counted as pumps, not as time:
+
+| Case | Publications | Events each | Pumps each | Sent in each pump | Lost | Order |
+| --- | ---: | ---: | ---: | --- | --- | --- |
+| one phase at a time (`advance_job` called by the probe with the frame driver off, each publication drained before the next) | 7 | 152 (153 for the last) | 2 | 128 then 24 (128 then 25 for the last) | none: each of the 150 received exactly one snapshot for each publication | FIFO: by publication, and by subscriber within it |
+| the node's own driver, one phase per frame (outrunning the pump) | 7 | 152 | the whole job: 9 pumps | 128 eight times, then 41 | none | FIFO |
+
+In the second case the backlog at the start of each frame is 152, 176, 200, 224, 248, 272, 297, 169, 41 and then 0: the job is not
+held back by the registry (one phase per frame regardless), the budget bounds each pump, and the queue drains in `ceil(1065 / 128) = 9`
+pumps, 1065 being 7 snapshots to 152 subscribers and the one `turn_ended`. The case is a measure, not a recommendation: a HUD that
+lived with that many subscribers would want a policy for backlog that the services do not have.
 
 ## `Action.args` is the call's positional arguments
 
@@ -127,7 +271,7 @@ What proves it:
   of the reference session (never the live one, so the roteiro's states stay as they are). The call must name a registered
   method that takes that many arguments; it must be accepted exactly when the action is enabled and refused with the action's
   `reason` otherwise. The oracle checks each action's `args` against the method's argument schema derived from the TypeScript
-  tuples, and the reported results, at all 73 steps.
+  tuples, and the reported results, at all 77 steps (73 until the queue of three events of 2026-10-09).
 
 The snapshot is not part of the state, so the golden hash and the trace hash did not change; `npm run test:civ-lite-game` shows
 the same two hashes.
@@ -168,21 +312,28 @@ frontier.move_unit: TypeScript declares 3 arguments, Godot registers 2
 frontier.snapshot.epoch: TypeScript declares "number", Godot registers "integer"
 ```
 
-The retained negative cases apply 13 synthetic mutations (a field removed, nested or not, one added, `integer` swapped for
+The retained negative cases apply 18 synthetic mutations (a field removed, nested or not, one added, `integer` swapped for
 `string`, an array turned into its element, an action's `args` element retyped or the array turned into an object, a signal
-payload field removed, an argument removed or added or retyped, a result field removed or added) to each side in turn and
-require the comparison to report the field. It also requires that a name registered on one side only, or of another kind,
+payload field removed, an argument removed or added or retyped, a result field removed or added, and the `job` of a result, of
+`turn_ended` and the `last_job` of the snapshot removed or retyped) to each side in turn and require the comparison to report the
+field. It also requires that a name registered on one side only, or of another kind,
 fails, that the extractor refuses nine kinds of unsupported TypeScript, that the oracle's validator rejects a snapshot with a
 field more or less or of another type, and that the oracle rejects a report in which an action's `args` are not its method's
-arguments (wrong count, wrong type) or in which an action was not accepted when enabled. The test refuses a stale dump: it
-checks that the sources pinned in the report are the ones in the tree.
+arguments (wrong count, wrong type) or in which an action was not accepted when enabled. It requires that `end_turn` is the one
+method registered to answer on acceptance, and a second test requires the oracle to reject 21 mutants of a report for what the
+job guarantees (a phase's snapshot missing, `last_job` set early, the phases in one frame, `turn_ended` twice, a job counted twice,
+a wrong id, `end_turn` answering on completion, a refused one starting a job, a pump leaving work pending or over budget, a call
+accepted while the job ran, a root held while the screen was closed, the screen closed after the job had run, a job received twice
+after the remount, a remounted root at the wrong job, a delivery out of order, a lost snapshot, a drain in too many pumps, a
+backlog that never grew, a job lost from the log). The test refuses a stale dump: it checks that the sources pinned in the report
+are the ones in the tree.
 
 `tests/types/frontier-services.tsx`, included in `tsconfig.godot.json` and so in `npm run type-check`, holds the type-level
 cases in the style of `tests/types/godot-fabric.tsx`: `connect<FrontierSnapshot>`, `subscribe<[FrontierTurnEnded]>` and
 `callFrontier` with the right tuples; and, with `@ts-expect-error`, a wrong argument type, a wrong count, an unknown method, a name that is a union of two methods called with the arguments of
 only one of them, a `FrontierCall` pairing a name with another method's arguments,
 a field the snapshot does not have, an action's `args` read as an object or as strings or pushed to, an `ok` treated as a
-boolean, and a `turn` read from a result. A positive case sends each action of a snapshot back with
+boolean, a `turn` read from a result and a `job` read as a string. A positive case sends each action of a snapshot back with
 `GodotFabric.call("frontier." + action.id, action.args)`.
 
 ## Schema violations
@@ -224,27 +375,32 @@ process, which the services never touch, plays the same steps and is the referen
 
 - **Registration before the mount.** The bundle's own connections, made as it evaluates, were ready with no error (a late
   registration answers `E_SERVICE_MISSING` there); the first connection received the initial snapshot of epoch 1; the registry
-  held the 14 bindings.
-- **Round trip.** At all 73 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
+  held the 14 bindings (15 since the hover state of 2026-10-09; see the update in "The node and its lifecycle").
+- **Round trip.** At all 77 steps the snapshot JavaScript holds is byte-for-byte the node's canonical snapshot and the
   reference session's.
-- **Actions are calls.** At all 73 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
+- **Actions are calls.** At all 77 steps every action of the snapshot JavaScript holds is sent back as `frontier.<id>(args)`,
   with its own `args` and nothing else, on a copy of the reference session (the live one is never touched, so the roteiro's
   hashes are intact). It names a registered method that takes that many arguments, is accepted exactly when it is enabled and is
   refused with its `reason` otherwise.
-- **The roteiro through the services.** 73 steps: 43 accepted and 30 refused. Each answer is the uniform `{ok, code, text}` and
-  has the roteiro's code. The 24 refusal codes the roteiro plays reach JavaScript with `ok: 0`, the same code and the same
-  text, and publish nothing. Each of the 12 accepted `end_turn` produced one `turn_ended` with the six phases in order
-  (`ai_plan`, `ai_move`, `production`, `growth`, `research`, `refresh`), before the snapshot of the turn that begins. The state
-  of the node is the reference's at every step, and the final hash is the P3 golden hash
-  `275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29`; the hashes of all 73 steps make the P3 trace hash
-  `fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8`.
-- **Persistence.** After the third accepted `end_turn` the probe unmounts the surface: the panel's connection is removed, the
-  root is gone, and the registry still holds 14 bindings under the same registration generation (`"1"`), the same node and
-  game, the same epoch and the same state. One more step is played with no surface at all (`select_tile(7, 8)`) and the node
-  answers it. The surface is mounted again: the panel reconnects, its first value is the current snapshot, and it is of the
-  same generation, so nothing was registered a second time.
-- **DTO limits.** The largest snapshot of the roteiro has 173 value nodes and depth 4 (the limits are 10,000 and 32). One
-  state, one signal and twelve methods are 14 bindings.
+- **The roteiro through the services.** 77 steps: 45 accepted and 32 refused (73, 43 and 30 until the queue of three events of 2026-10-09). Each answer is the uniform
+  `{ok, code, text, job}` and has the roteiro's code; `end_turn` answers on acceptance. The 24 refusal codes the roteiro plays
+  reach JavaScript with `ok: 0`, the same code and the same text, and publish nothing. Each of the 12 accepted `end_turn` was a job:
+  seven snapshots through the six phases, one a frame, and one `turn_ended` with the six phases in order (`ai_plan`, `ai_move`,
+  `production`, `growth`, `research`, `refresh`) and the job, before the snapshot of the turn that begins, which carries
+  `last_job`. The probe waits for each job before the next step. The state of the node is the reference's at every step, and the
+  final hash is the P3 golden hash
+  `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d`; the hashes of all 77 steps make the P3 trace hash
+  `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e`. (The package's own run, which the record under
+  `docs/evidence/frontier-services/` keeps, had 73 steps and the hashes `275b7c61…` and `fba99004…`: the queue of three events of 2026-10-09 added four
+  steps to turn 5 and moved both hashes; see [frontier-game.md](frontier-game.md), "The replay".)
+- **Persistence.** The surface is unmounted in the frame after the node accepted the third `end_turn`, with the job's first phase
+  not yet run: the panel's connection is removed, the root is gone, and the registry still holds 14 bindings (15 since 2026-10-09) under the same
+  registration generation (`"1"`), the same node and game and the same epoch. The job goes on with no root and finishes once
+  (see "The turn is a job"). One more step is played with no surface at all (`select_tile(7, 8)`) and the node answers it. The
+  surface is mounted again: the panel reconnects, its first value is the current snapshot (at rest, turn 4, `last_job` 3), and it
+  is of the same generation, so nothing was registered a second time.
+- **DTO limits.** The largest snapshot of the roteiro has 174 value nodes and depth 4 (the limits are 10,000 and 32). One
+  state, one signal and twelve methods are 14 bindings (two states since 2026-10-09: 15).
 - **The dump of the registered schemas** goes in the report for the parity test.
 
 `tests/frontier-services-oracle.mjs` judges the raw report without trusting the probe's verdicts. It derives the schema from
@@ -253,7 +409,10 @@ agreement with the serialized state (turn, phase, selection, stocks, city), ever
 schema and the result of sending it back, the refusal table's codes and texts, one snapshot per
 accepted intent and none per refusal, strictly rising revisions with those only, `turn_ended` once per accepted `end_turn` and
 in order, epochs rising by 1 with the initial hash, the SHA-256 of every serialization, the golden and the trace hash, the
-violations never reaching GDScript, and the persistence figures above.
+violations never reaching GDScript, and the persistence figures above. For each job it requires the id, the seven snapshots with
+the turn and `last_job` they must show, the consecutive frames, the pumps of each frame (nothing pending after it, at most 64
+tasks and 128 events), the calls refused while it ran, the figures of the job that outlived its screen, the stress case (events
+per publication, pumps, no loss, FIFO) and the jobs of the whole probe. `verifyRuleLane` judges the two runs of the rule lane.
 
 ### Retained sabotages
 
@@ -269,7 +428,11 @@ checks, the oracle or the parity must reject it for the reason it was broken. Th
 | `frozen-epoch` | `new_game` does not raise the epoch | the probe's epoch checks; the oracle at the first `new_game` |
 | `emit-on-refusal` | a refused intent publishes a snapshot | the probe at every refusal; the oracle at step 0 |
 | `action-args-drift` | the snapshot's `found_city` action (in the game's `snapshot.gd`) carries `[]` instead of `[unit_id]` | the probe's send-back of every action at step 3; the oracle, which checks each action's `args` against its method's schema |
-| `turn-ended-order` | `turn_ended` is emitted after the snapshot | the probe at every `end_turn`; the oracle at step 16 |
+| `turn-ended-order` | `turn_ended` is emitted after the snapshot of the turn that begins | the probe at every `end_turn`; the oracle at step 16 |
+| `double-finish` | `turn_ended` is emitted twice at the end of the job | the probe at every `end_turn` (a turn ends exactly when an `end_turn` is accepted); the oracle at step 16 |
+| `job-dies-with-screen` | the driver stops when the application holds no root: the job is abandoned and never finishes | the probe's persistence checks at the third job (it finished once, with no surface); the oracle |
+| `sync-end-turn` | `end_turn` runs every phase inside the callback, as it did before the job | the probe at step 16: the node did not advance one phase per frame, and the calls made while the job should run were not refused; the oracle |
+| `stale-snapshot` | the snapshot of the `growth` phase is not published | the probe at step 16: the job publishes six snapshots and not seven; the oracle |
 
 ### No previous host
 
@@ -282,9 +445,10 @@ must pass the plain test.
 - **`consumidor`.** Closed by the next package: `consumers/civ-lite/` is a provisioned consumer project, the node's facade is
   injected and the ten cycles run in it ([frontier-consumer.md](frontier-consumer.md)). The probe here still builds its scene in
   code, with a stand-in for the addon's application node, because its bundle lives in `build/`.
-- **`autoridade`.** A job that survives closing the screen, and bursts against the 64 tasks and 128 events a phase, are not
-  measured. `end_turn` here is one synchronous GDScript call; slicing it by phase for a frame budget (`begin_end_turn` and
-  `advance_phase` exist in the game) is not wired to a service.
+- **`autoridade`** is closed by "The turn is a job". What it does not do: cancel a job (there is no cancel method; the
+  contract is that a job finishes, and a new game abandons it), keep a job across a new application (D22 and D23 are pending),
+  resolve a backlog (the stress case measures that the queue drains in order and without loss, and does not propose a policy), or
+  run the headed and the hosted lanes: the figures above are headless, on one machine.
 - **The HUD** (V05-05) and the native HUD of arm B (V05-10): nothing here mounts a panel. The bundle is a probe fixture.
 - **No generator.** The TypeScript types are written by hand and the parity test is what keeps the two sides together. It
   checks names and shapes; it does not check that a type means what its name says.
@@ -297,4 +461,5 @@ must pass the plain test.
 No React Native export, TurboModule or prop changed: nothing in `src/`, `sdk/` or `native/` was edited, so `docs/API.md`,
 `docs/NATIVE_MODULES.md`, `docs/PARITY.md` (an audit of React Native's API) and `docs/compatibility/` do not apply. The
 public services API is unchanged; [docs/GAME_SERVICES.md](../GAME_SERVICES.md) names Frontier as a reference consumer with a
-nested object schema. There is no example directory for this slice, because it has no HUD.
+nested object schema and, for `autoridade`, as the example of an accepted job. There is no example directory for this slice,
+because it has no HUD.

@@ -147,7 +147,11 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   three retained sabotages and an independent oracle; see the [evidence](evidence/performance/README.md) and the
   [research note](research/performance.md); its hosted CI run is pending).
   The nodes, orphans and views return to the baseline after every cycle and the live heap at rest may rise at
-  most 2,048 bytes in the steady state (a measured 0 to 312). Durations, the resident
+  most 2,048 bytes in the steady state (a measured 0 to 312). The Frontier HUD's panel swap by a real click, in the
+  pointer spike's scene, is the same harness's second consumer (V05-06 `baseline`: exact node, creation and
+  deletion counts per swap, the CPU cost of a swap, a proposed and not frozen budget; the frame time of a presented window is pending, because no
+  windowed attempt was presented by the display;
+  [research](research/frontier-baseline.md), [evidence](evidence/frontier-baseline/README.md)); it moves no RN name or count. Durations, the resident
   memory and Godot's static memory are recorded and never judged. Target-device budgets, text shaping,
   10,000 rows, graphic frame time and the mobile targets stay open.
 - **OS-specific contracts:** the original [ToastAndroid (its fallback), PermissionsAndroid, DynamicColorIOS,
@@ -207,7 +211,7 @@ part of 1.0.
 | Pressable | Upstream Pressability and responder negotiation; transfer/refusal/cancel and supported callbacks | Physical input, keyboard/hover, pointer events, multitouch, hit geometry and accessibility focus/actions (its role, label, state and press props are mapped) |
 | ScrollView | Original descriptor/state/emitter; native vertical/horizontal scroll, offsets/events, nonanimated commands and responder handoff | Every child mounts; inertia, virtualization, nested/multitouch, refresh/paging/snap and keyboard interactions |
 | Styling/libraries | Original NativeWind compiler/runtime; supported utilities, responsive logical viewport, variables/manual theme; unmodified Chart Kit with the local SVG adapter | Complete RN styles, automatic system theme, general SVG and native library infrastructure |
-| Runtime/build | Hermes JSI, monotonic animation frames, timers/microtasks and visible cleanup failures; pinned archive checksums and standalone native build | Production-only, one surface/main thread, narrow globals, macOS-arm64-only setup and no native hosted CI |
+| Runtime/build | Hermes JSI, monotonic animation frames, timers/microtasks and visible cleanup failures; pinned archive checksums and standalone native build | Production-only, one surface/main thread, narrow globals, macOS-arm64-only setup, and hosted native suites that are headless and run only on request |
 
 The [retained evidence](evidence/README.md) contains **764 passing assertions in
 16 macOS runs**, plus contract, negative and recovery checks. These prove those
@@ -215,7 +219,9 @@ fixtures and modes. They are neither a percentage of RN compatibility nor new
 runs performed for this documentation audit. Logical Viewport events do not
 certify physical input, DPI, IME, assistive technologies or mobile behavior.
 The hosted [Contracts workflow](../.github/workflows/contracts.yml) checks
-JS/Python/compiler/static/publication contracts, not native rendering.
+JS/Python/compiler/static/publication contracts on every pull request. Its
+headless native suites run only when the workflow is dispatched, and they do
+not check graphical rendering ([how they run](../CONTRIBUTING.md#hosted-ci)).
 
 ## Root public API inventory
 

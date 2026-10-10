@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-scope",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T13:58:22.064Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37842839329,
+    "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/74",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-08T20:53:45Z",
+    "updatedAt": "2026-10-08T22:05:17Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113536261106,
+        "runAttempt": 1,
+        "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+        "startedAt": "2026-10-08T20:53:49Z",
+        "completedAt": "2026-10-08T20:56:44Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329/job/113536261106"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113536261114,
+        "runAttempt": 1,
+        "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+        "startedAt": "2026-10-08T21:08:38Z",
+        "completedAt": "2026-10-08T22:04:52Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329/job/113536261114"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113564085192,
+        "runAttempt": 1,
+        "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+        "startedAt": "2026-10-08T22:04:55Z",
+        "completedAt": "2026-10-08T22:05:16Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329/job/113564085192"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113536261004,
+        "runAttempt": 1,
+        "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+        "startedAt": "2026-10-08T20:53:50Z",
+        "completedAt": "2026-10-08T20:59:54Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329/job/113536261004"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113536260833,
+        "runAttempt": 1,
+        "headSha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+        "startedAt": "2026-10-08T21:01:55Z",
+        "completedAt": "2026-10-08T21:08:51Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37842839329/job/113536260833"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "native-cold-start": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "parity-comparison": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "reference-android": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "reference-ios": "b0e40aa21fcab67cfa01b77e27117c895a30c886"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:54:06Z",
+          "completedAt": "2026-10-08T20:56:41Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 334,
+              "suites": 0,
+              "pass": 334,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:56:41Z",
+          "completedAt": "2026-10-08T20:56:42Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-08T20:56:42Z",
+          "completedAt": "2026-10-08T20:56:42Z",
+          "passed": true,
+          "files": 1727
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/scope-0.5.test.mjs",
+          "tests": 13,
+          "passed": 13,
+          "topLevel": [
+            "the manifest decides exactly twelve names, each with its audit row as recorded and its evidence",
+            "every prop that RN declares for the seven components is classified exactly once",
+            "every ignored and refused prop has a reason, a basis and sources that exist and say what they are cited for",
+            "the supported props agree with the view configs the host is given, in both directions",
+            "the Text and Image decisions in the tables are the decisions their documents publish",
+            "the manifest carries the tables of the module and nothing else of them",
+            "the checker refuses by the table, on any value that is not null, and lets everything else through",
+            "the value RN gives every refused prop by default passes, with the source of the default cited and read",
+            "the Pressable drops the keys RN does not declare before the host's Control, and keeps ref",
+            "every component facade runs the check, and only the one module owns the tables",
+            "the Modal wrapper keeps what RN's Modal exposes",
+            "the types and the tables agree: a supported prop type-checks and a refused one does not",
+            "Platform, Dimensions, useWindowDimensions and StyleSheet have the members the manifest says"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:scope-0.5": {
+        "step": "Run npm run test:scope-0.5",
+        "number": 118,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T21:53:54Z",
+        "completedAt": "2026-10-08T21:54:24Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      },
+      "test:scroll-view": {
+        "step": "Run npm run test:scroll-view",
+        "number": 28,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T21:23:05Z",
+        "completedAt": "2026-10-08T21:23:50Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 5,
+              "suites": 0,
+              "pass": 5,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "the public ScrollView rejects native features the host cannot honor",
+            "the original list's passthrough and native indicator defaults remain usable",
+            "neutral ScrollView options do not strip ordinary props or command inputs",
+            "original RN Modal wheel events reach its mounted ScrollView",
+            "original RN ScrollView commands and pan use one mounted Fabric offset"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 74,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/74",
+    "title": "feat(frontier): Decide every prop RN declares for the HUD's components (P5 V05-04)",
+    "headSha": "ed2c69cc6bf5387c3432e691220310bb6dfe42f7",
+    "baseSha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+    "squashMergeCommit": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+    "squashCommitSubject": "feat(frontier): Decide every prop RN declares for the HUD's components (P5 V05-04) (#74)",
+    "mergedAt": "2026-10-08T20:53:42Z",
+    "headTreeSha": "0101d146993b98eeeb30b2e34e000abe904bcd36",
+    "mainTreeSha": "0101d146993b98eeeb30b2e34e000abe904bcd36",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 10,
+    "commits": [
+      {
+        "sha": "baff0022f0d5352761e854d301f664083ac0f3bc",
+        "subject": "feat(frontier): Decide every prop RN declares for the HUD's components"
+      },
+      {
+        "sha": "6bbd63f4d9ff2cb2cbf67af5e07d538ceb694b5b",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-scope"
+      },
+      {
+        "sha": "e33817e643c65c521d50e589219ff33d8b268643",
+        "subject": "feat(frontier): Decide the ScrollView's props in the same prop policy"
+      },
+      {
+        "sha": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
+        "subject": "docs(frontier): Record the 0.5 scope manifest and its prop policy"
+      },
+      {
+        "sha": "eda4ac424ef0bff43b24bd234de9b28e67410f55",
+        "subject": "docs(sdk): Record the hosted CI and Pages receipts of #69"
+      },
+      {
+        "sha": "3146e5faa44f0e0eef14959a9314d00b43fb5f9c",
+        "subject": "docs(dashboard): Close V05-04 and record #69's receipts"
+      },
+      {
+        "sha": "e7642f09f2ed24492f7b8889cfdffb249d108205",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-scope"
+      },
+      {
+        "sha": "e8d4d381d7f52da5e46b1f14baf4048d1ec31ed5",
+        "subject": "docs(dashboard): Point the source at the P5 V05-04 delivery"
+      },
+      {
+        "sha": "22c8762aee60f389cb506236fe0d25220e8fe0a7",
+        "subject": "docs: Correct the ScrollView's neutral values and the #69 receipt limit"
+      },
+      {
+        "sha": "ed2c69cc6bf5387c3432e691220310bb6dfe42f7",
+        "subject": "Merge branch 'main' of <repository> into feat/frontier-scope"
+      }
+    ],
+    "changedFiles": 35,
+    "additions": 8326,
+    "deletions": 191
+  },
+  "artifacts": {
+    "scope": {
+      "available": true,
+      "id": 11581397662,
+      "name": "native-scope-0.5",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 600687,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "1b259af8221abcf96ab0fefdc273e30f38bf3ef8afef28ab5b0cdd0193b538df",
+      "apiDigest": "sha256:1b259af8221abcf96ab0fefdc273e30f38bf3ef8afef28ab5b0cdd0193b538df",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "1b259af8221abcf96ab0fefdc273e30f38bf3ef8afef28ab5b0cdd0193b538df",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-08T21:54:26Z",
+      "expiresAt": "2027-01-06T20:53:46Z",
+      "fileCount": 4,
+      "files": {
+        "scope-0.5-comparison.json": "ea71015f73134174e5b1dae1918b94648fc4bcfeb2d1f5bf77fb032b9811d2a5",
+        "scope-0.5-current-report.json": "c8f97f801ad0405c2adb9275e66e7ae67ac1574d640cdade32919362f6a6cde7",
+        "scope-0.5-current.log": "b037b56907c5baf575bdfa1f75e12bcd5142dd798520c18242a0080b5d4c3f6f",
+        "scope-0.5-report.json": "553984e2f7663c1ccbf834779f046f7873f09648d4ec70b5e2f259e8cc6c9b14"
+      },
+      "markers": [
+        {
+          "file": "scope-0.5-current.log",
+          "line": "SCOPE_PASSED: 181"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

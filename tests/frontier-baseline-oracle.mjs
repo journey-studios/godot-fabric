@@ -1,0 +1,475 @@
+import assert from "node:assert/strict";
+import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
+import {growthOfHalves, nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
+import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
+  STABLE_FRAMES, TAB, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
+
+// Independent oracle for the performance baseline on the Frontier HUD's scene, written from the contract of the experiment and
+// from what the engine itself counts, not from the probe: it takes the raw readings the probe recorded, one after every swap and
+// one at rest at the end of every round, and recomputes from them what must hold at any pace of the machine. The percentiles of
+// the host's own series are recomputed by the performance oracle (tests/performance-oracle.mjs, the GF-30 one) from the
+// samples the host reports, and the ones recorded here are computed from the raw samples with its nearest rank.
+//
+// The contract. The HUD has a base (no panel) and four panels whose native nodes follow from their shapes: a root, a header, a View and a
+// Text for every chip, and for the city its production bar. A swap by a click on the button of panel B, from A, creates the nodes of B
+// and deletes those of A, and leaves the SceneTree, the host's native views and the Surface holding the base plus the nodes of B. A click swaps once
+// and never reaches the world. A round (every ordered pair of panels once) ends at the base. The live heap at rest, read after a
+// forced collection, does not grow more than HEAP_STEADY_GROWTH_LIMIT_BYTES (the GF-30 limit) from the first steady rounds to the last.
+//
+// Nothing here judges a duration, the frames a click takes (recorded as measured), the resident memory or Godot's static memory:
+// they depend on the pace of the machine (docs/research/frontier-baseline.md).
+const EPSILON = 1e-9;
+const stats = values => ({...summary(values), p99: nearestRank(values, 99)});
+const quartiles = values => ({median: nearestRank(values, 50), q1: nearestRank(values, 25), q3: nearestRank(values, 75),
+  iqr: nearestRank(values, 75) - nearestRank(values, 25), min: Math.min(...values), max: Math.max(...values)});
+const heapOf = reading => reading.performance.hermes.heap.hermes_allocatedBytes;
+const sum = values => values.reduce((total, value) => total + value, 0);
+
+// The nodes of a panel from its shape: a root, a header, two nodes a chip (the View and its Text) and the city's production bar.
+const nodesOfShape = shape => shape === null ? 0 : 2 + 2 * shape.chips + (shape.footer ? 1 : 0);
+// The base from the bar: the Surface's root, the HUD's root and the bar, a button and a label for every panel, and the region.
+const baseOfBar = panels => 3 + 2 * panels.length + 1;
+
+function verifyExperiment(config) {
+  assert.deepEqual(config.panels, PANELS, "The probe ran the panels this oracle recomputes");
+  const derived = Object.fromEntries(PANELS.map(panel => [panel, nodesOfShape(SHAPES[panel])]));
+  assert.deepEqual(derived, NATIVE_NODES, "The sizes pinned in the cases are what the shapes give: a root, a header, two nodes a chip");
+  assert.deepEqual(config.nativeNodes, derived, "and the probe swapped panels of these sizes");
+  assert.deepEqual(Object.values(derived).slice(0, 3), [50, 75, 100], "the 50 to 100 nodes per swap of the milestone");
+  assert.equal(baseOfBar(PANELS), BASE_NATIVE_NODES, "The base is what the bar and the region give");
+  assert.equal(config.baseNativeNodes, BASE_NATIVE_NODES);
+  assert.deepEqual(config.tab, TAB);
+  assert.deepEqual(config.tour, TOUR);
+  // The tour is a closed walk from the base that takes every ordered pair of panels once.
+  assert.ok(TOUR[0] === "empty" && TOUR.at(-1) === "empty", "A round starts and ends at the base");
+  const pairs = new Set(TOUR.slice(1).map((panel, index) => `${TOUR[index]}>${panel}`));
+  assert.equal(pairs.size, TOUR.length - 1, "no pair twice");
+  assert.equal(pairs.size, PANELS.length * (PANELS.length - 1), "and none left out");
+  assert.ok(TOUR.every((panel, index) => index === 0 || panel !== TOUR[index - 1]), "a swap changes the panel");
+  assert.deepEqual([config.warmupRounds, config.rounds, config.stableFrames], [WARMUP_ROUNDS, ROUNDS, STABLE_FRAMES], "with these parameters");
+  return derived;
+}
+
+function verifyProvenance(provenance) {
+  assert.match(provenance.godot, /^4\.\d+\.\d+-stable/, "The report names the Godot version");
+  assert.match(provenance.hermes, /^\d+\.\d+\.\d+$/, "and the Hermes version");
+  for (const key of ["architecture", "os", "displayServer", "renderingDriver", "renderingMethod", "processor"]) {
+    assert.ok(typeof provenance[key] === "string" && provenance[key].length > 0, `and the ${key}`);
+  }
+  assert.ok(Number.isInteger(provenance.vsyncMode) && Number.isFinite(provenance.refreshRate), "and the vsync mode and refresh rate it read back");
+}
+
+// The heap at rest after each round, judged on the medians of the two halves of the steady rounds (the first and the last floor(n/2) of them, the
+// median by nearest rank like the percentiles): a reading carries noise that the next does not (a hosted run showed four levels in a band of 2,376
+// bytes, wider than the limit), which a few off-level readings do not move in a median, and a leak raises the median as it raises the rest. With n = 30
+// the medians lie 15 rounds apart, so a leak of L bytes a round adds 15 L between them and the limit is crossed from about 137 bytes a round (113 and
+// 158 on the two hosted series); the floors of the halves, which a single low reading moves, are recorded as observations (see the research note).
+export function heapAtRest(rests) {
+  const steady = rests.slice(WARMUP_ROUNDS).map(entry => heapOf(entry.reading));
+  const {half, firstMedian, lastMedian, growth} = growthOfHalves(steady, HEAP_STEADY_GROWTH_LIMIT_BYTES, {fill: "The steady rounds fill two halves",
+    read: "The heap at rest is read", exceeded: ({half: rounds, growth: rose}) => `The live heap at rest rose ${rose} bytes from the median of the first half (${rounds} rounds) of the steady rounds to the median of the last, over the limit of ${HEAP_STEADY_GROWTH_LIMIT_BYTES}`});
+  const floor = Math.min(...steady);
+  let largestStep = 0;
+  for (let index = 1; index < steady.length; ++index) {
+    largestStep = Math.max(largestStep, Math.abs(steady[index] - steady[index - 1]));
+  }
+  return {steadyRounds: steady.length, halfRounds: half, firstMedian, lastMedian, growth,
+    firstFloor: Math.min(...steady.slice(0, half)), lastFloor: Math.min(...steady.slice(steady.length - half)), firstSteady: steady[0], last: steady.at(-1),
+    lastMinusFirst: steady.at(-1) - steady[0], highestAboveFloor: Math.max(...steady) - floor, largestStep,
+    roundsAboveFloor: steady.filter(value => value > floor).length};
+}
+
+// ----------------------------------------------------------------------- the swaps
+function verifySwaps(stages, derived) {
+  const {base, swaps, rests} = stages;
+  const steps = TOUR.length - 1;
+  assert.equal(stages.aborted, null, "A click showed its panel: the run was not cut short");
+  assert.equal(swaps.length, (WARMUP_ROUNDS + ROUNDS) * steps, "The probe made every swap of every round");
+  assert.equal(rests.length, WARMUP_ROUNDS + ROUNDS, "and read the heap at rest at the end of every round");
+  assert.equal(base.surface.nativeTags, BASE_NATIVE_NODES, "The Surface holds the base's native nodes");
+  assert.equal(base.reading.performance.counters.nativeViews, BASE_NATIVE_NODES, "and so does the host");
+  assert.equal(base.reading.performance.counters.liveRoots, 1, "in one root");
+  const baseViews = base.reading.performance.counters.nativeViews;
+  let previous = base.reading;
+  let previousSurface = base.surface;
+  swaps.forEach((swap, index) => {
+    const label = `swap ${index} (${swap.from} to ${swap.to})`;
+    const round = Math.floor(index / steps);
+    const step = index % steps;
+    assert.deepEqual([swap.round, swap.step, swap.from, swap.to], [round, step, TOUR[step], TOUR[step + 1]], `${label}: in the order of the tour`);
+    const size = derived[swap.to];
+    const fromSize = derived[swap.from];
+    const counters = swap.after.performance.counters;
+    // The tree, the host and the Surface hold the base plus the new panel.
+    assert.equal(swap.treeNodes, base.baseNodes + size, `${label}: the SceneTree holds the base's nodes plus the new panel's`);
+    assert.equal(swap.after.godot.nodes, base.reading.godot.nodes + size, `${label}: and so does the reading`);
+    assert.equal(swap.after.godot.nodeMonitor, base.reading.godot.nodeMonitor + size, `${label}: and Godot's node monitor`);
+    assert.equal(swap.after.godot.orphans, base.reading.godot.orphans, `${label}: Godot counts no orphan beyond the base's`);
+    assert.equal(counters.nativeViews, baseViews + size, `${label}: the host holds the base's native views plus the new panel's`);
+    assert.equal(swap.surface.nativeTags, base.surface.nativeTags + size, `${label}: and so does the Surface`);
+    assert.equal(swap.surface.state, "mounted", `${label}: the Surface stays mounted`);
+    assert.equal(counters.creates - counters.deletes, counters.nativeViews, `${label}: created minus deleted views are the views alive`);
+    // The swap creates the nodes of the new panel and deletes those of the old one, in the host's counters, in the Surface's and in
+    // the application's snapshot as the probe read it before and after the click.
+    assert.equal(counters.creates - previous.performance.counters.creates, size, `${label}: the host created the ${size} nodes of the new panel`);
+    assert.equal(counters.deletes - previous.performance.counters.deletes, fromSize, `${label}: and deleted the ${fromSize} of the old one`);
+    assert.equal(swap.surface.creates - previousSurface.creates, size, `${label}: the Surface counted the nodes created`);
+    assert.equal(swap.surface.deletes - previousSurface.deletes, fromSize, `${label}: and deleted`);
+    assert.equal(swap.host.creates, size, `${label}: the snapshot read around the click saw the same creations`);
+    assert.equal(swap.host.deletes, fromSize, `${label}: and deletions`);
+    assert.ok(swap.host.commits >= 1 && counters.commits - previous.performance.counters.commits >= 1, `${label}: the click committed`);
+    // One click, one swap, and the world heard nothing.
+    const presses = Object.values(swap.rn.presses).reduce((total, count) => total + count, 0);
+    assert.equal(presses, 1, `${label}: the click pressed one button once`);
+    assert.equal(swap.rn.presses[swap.to], 1, `${label}: the button of the new panel`);
+    assert.equal(swap.rn.changes, 1, `${label}: and changed the state once`);
+    assert.equal(swap.rn.shown, swap.to, `${label}: to the new panel`);
+    assert.equal(swap.worldEvents, 0, `${label}: and no event of the click reached the Godot world`);
+    assert.equal(swap.snapshotComplete, true, `${label}: when the tree held the new panel, the snapshot held its last node`);
+    assert.deepEqual(swap.shownRoots, swap.to === "empty" ? [] : [swap.to], `${label}: and the root of no other panel`);
+    // What is recorded: shaped, finite, and not judged.
+    assert.ok(Number.isInteger(swap.latencyFrames) && swap.latencyFrames >= 0, `${label}: the click showed its panel within the bound`);
+    assert.ok(swap.frameUsec.length >= 1 && swap.frameUsec.every(value => Number.isInteger(value) && value > 0), `${label}: the frames of the swap were timed`);
+    assert.ok(Number.isInteger(swap.flushUsec) && swap.flushUsec > 0 && Number.isInteger(swap.latencyUsec) && swap.latencyUsec >= swap.flushUsec,
+      `${label}: and so were the injection and the time to the nodes`);
+    for (const name of ["pump", "js", "mount", "layout"]) {
+      assert.ok(swap.host[`${name}Ms`] >= 0 && swap.host[`${name}Count`] >= 0, `${label}: the ${name} phase is recorded`);
+    }
+    assert.ok(swap.host.mountMs + swap.host.layoutMs + swap.host.jsMs <= swap.host.pumpMs * (1 + 1e-12) + EPSILON, `${label}: the phases fit in the pump`);
+    previous = swap.after;
+    previousSurface = swap.surface;
+  });
+  // A round ends at the base.
+  rests.forEach((entry, index) => {
+    const {reading} = entry;
+    assert.equal(entry.round, index, `rest ${index}: in order`);
+    assert.equal(reading.godot.nodes, base.reading.godot.nodes, `rest ${index}: the SceneTree holds the nodes the base holds`);
+    assert.equal(reading.godot.nodeMonitor, base.reading.godot.nodeMonitor, `rest ${index}: and so does Godot's node monitor`);
+    assert.equal(reading.godot.orphans, base.reading.godot.orphans, `rest ${index}: Godot counts no orphan beyond the base's`);
+    assert.equal(reading.performance.counters.nativeViews, baseViews, `rest ${index}: the host holds the base's native views`);
+    assert.equal(reading.host.rootCount, base.reading.host.rootCount, `rest ${index}: in the one root`);
+  });
+}
+
+// What was recorded, summarized per ordered pair of panels and per nodes the swap creates (the size of the new panel, which is where most of its
+// time goes), over the steady rounds.
+function summarizeSwaps(stages, derived) {
+  const steady = stages.swaps.filter(swap => swap.round >= WARMUP_ROUNDS);
+  const baseHeap = heapOf(stages.base.reading);
+  const frameMs = swap => sum(swap.frameUsec) / 1000;
+  const row = group => ({
+    swaps: group.length, latencyFrames: stats(group.map(swap => swap.latencyFrames)),
+    flushMs: stats(group.map(swap => round(swap.flushUsec / 1000, 3))), swapFrameMs: stats(group.map(swap => round(frameMs(swap), 3))),
+    pumpMs: stats(group.map(swap => round(swap.host.pumpMs, 3))), jsMs: stats(group.map(swap => round(swap.host.jsMs, 3))),
+    mountMs: stats(group.map(swap => round(swap.host.mountMs, 3))), layoutMs: stats(group.map(swap => round(swap.host.layoutMs, 3))),
+    heapOverBaseBytes: stats(group.map(swap => heapOf(swap.after) - baseHeap)), treeNodes: stats(group.map(swap => swap.treeNodes)),
+    rssKb: {min: Math.min(...group.map(swap => swap.after.godot.rssKb)), max: Math.max(...group.map(swap => swap.after.godot.rssKb))}});
+  const perPair = {};
+  const byCreated = {};
+  for (const swap of steady) {
+    const key = `${swap.from}>${swap.to}`;
+    (perPair[key] ??= []).push(swap);
+    (byCreated[derived[swap.to]] ??= []).push(swap);
+  }
+  for (const [key, group] of Object.entries(perPair)) {
+    assert.equal(group.length, ROUNDS, `${key}: ${ROUNDS} steady swaps`);
+  }
+  return {perPair: Object.fromEntries(Object.entries(perPair).map(([key, group]) => [key, row(group)])),
+    byNodesCreated: Object.fromEntries(Object.entries(byCreated).map(([created, group]) => [created, row(group)])), all: row(steady)};
+}
+
+function summarizeMemory(stages) {
+  const rss = [stages.base.reading, ...stages.swaps.map(swap => swap.after), ...stages.rests.map(entry => entry.reading)].map(reading => reading.godot.rssKb);
+  const first = stages.rests[WARMUP_ROUNDS].reading.godot;
+  const last = stages.rests.at(-1).reading.godot;
+  return {rssKb: {min: Math.min(...rss), max: Math.max(...rss), firstSteadyRest: first.rssKb, lastRest: last.rssKb},
+    staticBytesPerRound: round((last.staticMemory - first.staticMemory) / (stages.rests.length - 1 - WARMUP_ROUNDS), 1)};
+}
+
+// ----------------------------------------------------------------- the report
+export function verifyFrontierBaselineReport(report) {
+  const {stages} = report;
+  assert.equal(report.scenario, "frontier-baseline");
+  const derived = verifyExperiment(stages.config);
+  assert.deepEqual([stages.config.restFrames, stages.config.heapGrowthLimitBytes],
+    [REST_FRAMES, HEAP_STEADY_GROWTH_LIMIT_BYTES], "and these for the heap at rest");
+  verifyProvenance(stages.provenance);
+  assert.equal(stages.provenance.displayServer, "headless");
+  assert.equal(report.displayServer, "headless");
+  assert.equal(stages.scene.mounted, true, "The HUD mounted over the world");
+  assert.equal(stages.scene.mouseFilter, 2, "in a Surface that takes no pointer (IGNORE)");
+  // The chain of readings in the order they were taken: every one holds the invariants of the host's performance section, was read
+  // after a forced collection of Hermes' heap, and none goes backwards.
+  const chain = [["base", stages.base.reading]];
+  stages.swaps.forEach((swap, index) => {
+    chain.push([`swap ${index}`, swap.after]);
+    if (swap.step === TOUR.length - 2 && stages.rests[swap.round] !== undefined) {
+      chain.push([`rest ${swap.round}`, stages.rests[swap.round].reading]);
+    }
+  });
+  chain.push(["final", stages.final]);
+  const windowed = new Set([stages.base.reading, stages.final]);
+  chain.forEach(([label, reading], index) => {
+    verifyReading(reading, label, windowed.has(reading));
+    if (index > 0) {
+      verifyGrowth(chain[index - 1][1], reading, label);
+    }
+  });
+  assert.equal(stages.base.reading.host.rootCount, 1, "One root is mounted at the base");
+  verifySwaps(stages, derived);
+  const heap = heapAtRest(stages.rests);
+  const {perPair, byNodesCreated, all} = summarizeSwaps(stages, derived);
+  const final = stages.final.performance;
+  const series = value => ({count: value.count, p50Ms: round(value.p50Ms), p95Ms: round(value.p95Ms), p99Ms: round(value.p99Ms), maxMs: round(value.maxMs)});
+  return {provenance: {godot: stages.provenance.godot, hermes: stages.provenance.hermes, architecture: stages.provenance.architecture,
+    os: stages.provenance.os, displayServer: stages.provenance.displayServer, renderingDriver: stages.provenance.renderingDriver,
+    processor: stages.provenance.processor, vsyncMode: stages.provenance.vsyncMode, refreshRate: stages.provenance.refreshRate},
+  nativeNodes: derived, baseNativeNodes: BASE_NATIVE_NODES, swaps: stages.swaps.length, steadySwaps: all.swaps, heap, perPair, byNodesCreated,
+  hostWindow: {window: final.windowSize, pump: series(final.pump), js: series(final.phases.js), mount: series(final.phases.mount),
+    layout: series(final.phases.layout)}, memory: summarizeMemory(stages), readings: chain.length};
+}
+
+// ----------------------------------------------------------- the windowed lane
+// One run of the windowed lane (tests/frontier-baseline-graphics-probe.gd): the same swaps, with the frame intervals of the idle
+// window and of the swaps, exact where the headless lane is exact, and the vsync mode and refresh rate it read back.
+export function verifyGraphicsRun(run) {
+  assert.equal(run.scenario, "frontier-baseline-graphics");
+  const derived = verifyExperiment(run.config);
+  verifyProvenance(run.provenance);
+  assert.notEqual(run.provenance.displayServer, "headless", "The run drew in a window");
+  assert.deepEqual(run.viewport, GRAPHICS_VIEWPORT);
+  assert.equal(run.aborted, null, "A click showed its panel: the run was not cut short");
+  const steps = TOUR.length - 1;
+  assert.equal(run.swaps.length, (WARMUP_ROUNDS + ROUNDS) * steps, "The run made every swap of every round");
+  assert.equal(run.baseNodes, run.base.treeNodes, "The base is read once");
+  assert.equal(run.base.surface.nativeTags, BASE_NATIVE_NODES, "The Surface holds the base's native nodes");
+  run.swaps.forEach((swap, index) => {
+    const label = `run ${run.run} swap ${index} (${swap.from} to ${swap.to})`;
+    const step = index % steps;
+    assert.deepEqual([swap.round, swap.step, swap.from, swap.to], [Math.floor(index / steps), step, TOUR[step], TOUR[step + 1]], `${label}: in the order of the tour`);
+    const size = derived[swap.to];
+    assert.equal(swap.treeNodes, run.baseNodes + size, `${label}: the SceneTree holds the base's nodes plus the new panel's`);
+    assert.equal(swap.surface.nativeTags, run.base.surface.nativeTags + size, `${label}: and the Surface its native nodes`);
+    assert.equal(swap.host.creates, size, `${label}: the host created the nodes of the new panel`);
+    assert.equal(swap.host.deletes, derived[swap.from], `${label}: and deleted those of the old one`);
+    assert.equal(Object.values(swap.rn.presses).reduce((total, count) => total + count, 0), 1, `${label}: one press`);
+    assert.equal(swap.rn.presses[swap.to], 1, `${label}: on the button of the new panel`);
+    assert.equal(swap.rn.changes, 1, `${label}: and one change of state`);
+    assert.equal(swap.rn.shown, swap.to);
+    // A window on a display also gets the motion of the real pointer, which is the map's: the presses, releases and touches are judged.
+    assert.equal(swap.worldClicks, 0, `${label}: and none of its presses, releases or touches reached the world`);
+    assert.ok(Number.isInteger(swap.worldEvents) && swap.worldEvents >= swap.worldClicks, `${label}: the other events the map heard are recorded`);
+    assert.equal(swap.snapshotComplete, true, `${label}: the snapshot held the new panel complete`);
+    assert.deepEqual(swap.shownRoots, swap.to === "empty" ? [] : [swap.to], `${label}: and no other panel`);
+    assert.ok(Number.isInteger(swap.latencyFrames) && swap.latencyFrames >= 0, `${label}: the click showed its panel within the bound`);
+    assert.ok(swap.frameUsec.length >= 1 && swap.frameUsec.every(value => Number.isInteger(value) && value > 0), `${label}: the swap's frames were timed`);
+    assert.ok(Number.isInteger(swap.flushUsec) && swap.flushUsec > 0, `${label}: and so was the injection`);
+    assert.ok(swap.drawUsec === null || (Number.isInteger(swap.drawUsec) && swap.drawUsec > 0), `${label}: the time to the first drawn frame, when one was seen`);
+  });
+  assert.equal(run.idle.intervalsUsec.length, IDLE_FRAMES, "The idle window has its frames");
+  assert.ok(run.idle.intervalsUsec.every(value => Number.isInteger(value) && value > 0), "and each was timed");
+  assert.ok(run.checks.length > 0 && run.checks.every(check => check.passed), "Every check of the run passed");
+  assert.equal(new Set(run.checks.map(check => check.name)).size, run.checks.length);
+  if (run.presence !== undefined) {
+    verifyPresence(run.presence, `run ${run.run}`);
+  }
+}
+
+// The record of the window's presence that a windowed run carries (tests/window-presence.gd): whether the engine could draw the window, frame by frame.
+// The runs recorded before it have none, and nothing here asks for it. What is judged is its structure and that it adds up; whether the window could draw
+// does not make a run valid or invalid (graphicsRunValidity judges that the window drew, as it always has).
+export function verifyPresence(presence, label) {
+  assert.equal(presence.windowed, true, `${label}: the presence record is of a window`);
+  assert.equal(typeof presence.opened.alwaysOnTop, "boolean", `${label}: the record says whether the window was put above the others`);
+  assert.equal(typeof presence.opened.canDraw, "boolean", `${label}: and whether the engine could draw it when the lane began`);
+  assert.equal(typeof presence.canDrawAtEnd, "boolean", `${label}: and whether it could when the lane ended`);
+  assert.ok(Number.isInteger(presence.sampledFrames) && presence.sampledFrames > 0, `${label}: the window was sampled`);
+  assert.ok(Number.isInteger(presence.undrawableFrames) && presence.undrawableFrames >= 0 && presence.undrawableFrames <= presence.sampledFrames,
+    `${label}: the frames the engine could not draw are a count of the sampled ones`);
+  assert.ok(Number.isInteger(presence.spanCount) && presence.spanCount <= presence.undrawableFrames && (presence.spanCount > 0) === (presence.undrawableFrames > 0),
+    `${label}: and they come in spans`);
+  assert.ok(Array.isArray(presence.spans) && presence.spans.length <= presence.spanCount, `${label}: of which the record keeps the first ones`);
+  for (const span of presence.spans) {
+    assert.ok(span.length === 4 && span.every(Number.isInteger) && span[1] > 0 && span[3] >= span[2], `${label}: a span is [first frame, frames, first microsecond, last microsecond]`);
+  }
+  const listed = presence.spans.reduce((total, span) => total + span[1], 0);
+  assert.ok(presence.spans.length < presence.spanCount ? listed < presence.undrawableFrames : listed === presence.undrawableFrames,
+    `${label}: the spans add up to the frames the engine could not draw`);
+}
+
+// The idle reference of the windowed lane: the median of the half-sums of consecutive pairs of the idle intervals x[0..n-1], that is the median
+// of (x[i] + x[i+1]) / 2 for i from 0 to n - 2, nearest rank. With the vsync on at 120 Hz the intervals of a presented window come in two groups
+// that alternate (about 300 under 4.17 ms and about 300 of 12 ms or more: docs/research/frame-clock.md), so the median of the intervals falls in one
+// group or the other by a few samples (a presented attempt had 4.136 ms, 0.031 ms under the threshold), while two neighbours add up to about one
+// refresh period and every pair's half-sum is about 8.33 ms. In a loop that nothing paces a half-sum is about 0.6 ms, and a single stall moves only
+// two of them, which the mean would not survive. Adopted on 2026-10-09 (docs/research/frontier-baseline.md, "The idle reference"); the receipts
+// recorded before it were judged by the median and are not judged again (see verifyGraphicsReceipt). Fewer than two intervals have no reference (0).
+export function idleReference(intervals) {
+  return nearestRank(intervals.slice(1).map((value, index) => (intervals[index] + value) / 2), 50);
+}
+
+// A window that the system does not present is not a measurement of a displayed application, in two ways, and a run has to survive both:
+//  - the window does not draw (covered by other windows, or the display asleep): a frame has to have been drawn after every click of the
+//    steady rounds and in at least nine of ten frames of the idle window;
+//  - the window draws but no display paces the loop (the display off or showing the lock screen: the vsync mode still reads back enabled
+//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the idle reference (the median of the half-sums of
+//    consecutive pairs of the idle intervals, see idleReference) has to be at least half of the refresh period that the window read back. A
+//    presented window at 120 Hz has a reference of about 8.3 ms and an unpaced one of about 0.6 ms, against a threshold of 4.17 ms.
+// The median of the idle intervals is still recorded (idleMedianMs), as a record and not as the judge; minimumIdleMedianMs is kept, with the value
+// of minimumIdleReferenceMs, for the receipts and the tests that already read it.
+// An invalid run is kept in the receipt, with its reason and its raw intervals, and repeated; no statistic of it is ever reported as a frame time.
+// The rule does not read the window's presence (tests/window-presence.gd): a run that did not draw is refused whatever the engine said of the window. The
+// count of the frames in which the engine could not draw it (undrawableFrames, of sampledFrames) is recorded with the validity, and the reason of an undrawn
+// refusal says what the engine said of the window (undrawnReason).
+export const UNPACED = "unpaced: the display is not presenting";
+const UNDRAWN = "undrawn: the window did not draw throughout";
+
+// What the engine said of the window in a run that did not draw: the frames in which it could not draw it (window_can_draw() was false, which on macOS is the
+// system saying the window is occluded: docs/research/windowed-presence.md), or that it never said so. The count is stated and no cause is: the engine does not
+// draw in the frames where the flag is false, but whether those frames are the ones that were not drawn is read from the spans, and a run in which the flag was
+// never false is left open, with nothing said of why it was not drawn. A run recorded before the presence has no such count and its reason is the plain one.
+// The reason explains the refusal and never decides it.
+export function undrawnReason(presence) {
+  if (presence === undefined || presence === null) {
+    return UNDRAWN;
+  }
+  if (presence.undrawableFrames > 0) {
+    const spans = `${presence.spanCount} span${presence.spanCount === 1 ? "" : "s"}`;
+    return `${UNDRAWN} (window_can_draw() was false in ${presence.undrawableFrames} of ${presence.sampledFrames} sampled frames, in ${spans}: the engine does not draw in those frames, `
+      + "and whether they account for the missing draws is read from the spans)";
+  }
+  return `${UNDRAWN} (window_can_draw() was never false in the ${presence.sampledFrames} sampled frames: the engine believed it could draw, and the cause is open)`;
+}
+
+export function graphicsRunValidity(run) {
+  const undrawnSwaps = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS && swap.drawUsec === null).length;
+  const drew = undrawnSwaps === 0 && run.idle.draws >= 0.9 * run.idle.frames;
+  const idle = run.idle.intervalsUsec.map(value => value / 1000);
+  const idleMedianMs = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
+  const periodMs = run.provenance.refreshRate > 0 ? 1000 / run.provenance.refreshRate : null;
+  const minimumIdleReferenceMs = periodMs === null ? null : periodMs / 2;
+  const paced = minimumIdleReferenceMs !== null && idleReferenceMs >= minimumIdleReferenceMs;
+  return {valid: drew && paced, drew, paced, reason: !drew ? undrawnReason(run.presence) : !paced ? UNPACED : null, undrawnSwaps, idleDraws: run.idle.draws,
+    idleFrames: run.idle.frames, processFrames: run.frames.processed, drawnFrames: run.frames.drawn,
+    undrawableFrames: run.presence?.undrawableFrames ?? null, sampledFrames: run.presence?.sampledFrames ?? null, idleMedianMs: round(idleMedianMs, 3),
+    idleReferenceMs: round(idleReferenceMs, 3), idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
+    minimumIdleMedianMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3),
+    minimumIdleReferenceMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3)};
+}
+
+// The receipt of the windowed lane (scripts/frontier-baseline-graphics.mjs), judged from what it carries: an accepted run that no display paced
+// is refused, a lane that did not complete its runs reports no frame-time statistic at all, and a lane that did reports them.
+export function verifyGraphicsReceipt(receipt) {
+  assert.equal(typeof receipt.presented, "boolean", "The receipt says whether the lane was presented");
+  const period = receipt.provenance.refreshRate > 0 ? 1000 / receipt.provenance.refreshRate : null;
+  assert.ok(period !== null, "The receipt carries the refresh rate that the window read back");
+  // A receipt is judged by the rule it was written under. The attempts of one written since 2026-10-09 carry idleReferenceMs, and its accepted runs
+  // are judged by the idle reference; the ones recorded before (the pinned receipts, which are not regenerated) have none and were judged by the median
+  // of the idle intervals, so they are judged by it again and nothing already recorded is reclassified.
+  const byReference = receipt.attempts.some(attempt => attempt.idleReferenceMs !== undefined);
+  for (const raw of receipt.raw) {
+    const idle = raw.idleIntervalsUsec.map(value => value / 1000);
+    const [statistic, name] = byReference ? [idleReference(idle), "idle reference (the median of the half-sums of consecutive pairs)"] : [nearestRank(idle, 50), "idle frame median"];
+    assert.ok(statistic >= period / 2,
+      `Run ${raw.run} is accepted but unpaced: its ${name} is ${round(statistic, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
+  }
+  for (const attempt of receipt.rejectedAttempts) {
+    assert.ok(typeof attempt.reason === "string" && attempt.reason.length > 0, "A rejected attempt says why");
+    assert.ok(attempt.raw != null && attempt.raw.idleIntervalsUsec.length > 0, "and keeps its raw intervals");
+  }
+  // The window's presence is newer than the receipts: the attempts and runs recorded before it have none, and are judged as they always were. When an attempt
+  // carries the count of the frames the engine could not draw, it is a count of the frames sampled, it is the count of the presence of its own raw run (the
+  // accepted run in `raw` or the rejected attempt's `raw`, by the attempt's number), and a refusal for not drawing says what the engine said.
+  const rawOfAttempt = attempt => receipt.rejectedAttempts.find(rejected => rejected.attempt === attempt.attempt)?.raw ?? receipt.raw.find(raw => raw.attempt === attempt.attempt);
+  for (const attempt of receipt.attempts) {
+    if (attempt.undrawableFrames === undefined || attempt.undrawableFrames === null) {
+      continue;
+    }
+    assert.ok(Number.isInteger(attempt.undrawableFrames) && attempt.undrawableFrames >= 0 && attempt.undrawableFrames <= attempt.sampledFrames,
+      `Attempt ${attempt.attempt}: the frames the engine could not draw are a count of the sampled ones`);
+    const presence = rawOfAttempt(attempt)?.presence;
+    assert.ok(presence !== undefined && presence !== null, `Attempt ${attempt.attempt} carries a count of the frames the engine could not draw and its raw run holds no presence`);
+    assert.equal(attempt.undrawableFrames, presence.undrawableFrames,
+      `Attempt ${attempt.attempt} says ${attempt.undrawableFrames} frames the engine could not draw and its raw run says ${presence.undrawableFrames}`);
+    assert.equal(attempt.sampledFrames, presence.sampledFrames,
+      `Attempt ${attempt.attempt} says ${attempt.sampledFrames} sampled frames and its raw run says ${presence.sampledFrames}`);
+    if (attempt.valid === false && typeof attempt.reason === "string" && attempt.reason.startsWith("undrawn")) {
+      assert.match(attempt.reason, /window_can_draw\(\)/, `Attempt ${attempt.attempt} was refused for not drawing and its reason says what the engine said of the window`);
+    }
+  }
+  for (const raw of [...receipt.raw, ...receipt.rejectedAttempts.map(attempt => attempt.raw)]) {
+    if (raw.presence !== undefined && raw.presence !== null) {
+      verifyPresence(raw.presence, `Run ${raw.run}, attempt ${raw.attempt}`);
+    }
+  }
+  assert.equal(receipt.attempts.length, receipt.raw.length + receipt.rejectedAttempts.length, "Every attempt is accepted or rejected");
+  if (receipt.presented) {
+    assert.equal(receipt.raw.length, GRAPHICS_RUNS, "A presented lane has all its runs");
+    assert.ok(receipt.summary != null && receipt.summary.runs.length === GRAPHICS_RUNS, "and their statistics");
+    // The count above twice the idle reference is newer than the receipts: when a run carries it, it is a count of the window's samples.
+    for (const run of receipt.summary.runs) {
+      for (const frames of [run.idleFrameMs, run.swapFrameMs]) {
+        assert.ok(frames.aboveTwiceIdleReference === undefined || (Number.isInteger(frames.aboveTwiceIdleReference) && frames.aboveTwiceIdleReference >= 0
+          && frames.aboveTwiceIdleReference <= frames.samples), `Run ${run.run}: the frames above twice the idle reference are a count of its samples`);
+      }
+    }
+    assert.equal(receipt.status, "presented");
+  } else {
+    assert.equal(receipt.summary, null, "A lane that was not presented reports no frame-time statistic");
+    assert.match(receipt.status, /^not presented: /);
+  }
+}
+
+// The statistics of one run, from its raw intervals: the idle window and the frames that took a click, with the frames above twice the idle
+// median (aboveTwiceIdleMedian, as it has always been counted), the frames above twice the idle reference (aboveTwiceIdleReference: the count that
+// the amended protocol of the final comparison V05-10 uses) and the frames above 100 ms. The count by the median depends on the group the median
+// falls in (242 of the 360 clicks of a presented run of the turn were "above twice the idle median" only because the median was in the low group),
+// the count by the reference does not. scripts/frontier-baseline-graphics.mjs and scripts/frontier-turn-graphics.mjs both print the two counts, the one by the
+// median and the one by the reference. No "missed frame" is
+// read from them: on a display with the vsync on the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at
+// 120 Hz), so an interval longer than the refresh period is not an image the display showed twice.
+function summarizeGraphicsRun(run) {
+  const steady = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS);
+  const toMs = values => values.map(value => value / 1000);
+  const idle = toMs(run.idle.intervalsUsec);
+  const swapFrames = toMs(steady.map(swap => swap.frameUsec[0]));
+  const idleMedian = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
+  const frame = values => ({samples: values.length, p50: round(nearestRank(values, 50), 3), p95: round(nearestRank(values, 95), 3),
+    p99: round(nearestRank(values, 99), 3), max: round(Math.max(...values), 3),
+    aboveTwiceIdleMedian: values.filter(value => value > 2 * idleMedian).length,
+    aboveTwiceIdleReference: values.filter(value => value > 2 * idleReferenceMs).length, above100ms: values.filter(value => value > 100).length});
+  const byCreated = {};
+  for (const swap of steady) {
+    (byCreated[run.config.nativeNodes[swap.to]] ??= []).push(swap.frameUsec[0] / 1000);
+  }
+  return {run: run.run, mapMotionEvents: sum(run.swaps.map(swap => swap.worldEvents - swap.worldClicks)),
+    idleFrameMs: frame(idle), swapFrameMs: frame(swapFrames),
+    swapFrameMsByNodesCreated: Object.fromEntries(Object.entries(byCreated).map(([nodes, values]) => [nodes, frame(values)])),
+    injectionMs: {p50: round(nearestRank(toMs(steady.map(swap => swap.flushUsec)), 50), 3), p95: round(nearestRank(toMs(steady.map(swap => swap.flushUsec)), 95), 3)},
+    clickToNodesMs: {p50: round(nearestRank(toMs(steady.map(swap => swap.latencyUsec)), 50), 3), p95: round(nearestRank(toMs(steady.map(swap => swap.latencyUsec)), 95), 3)},
+    clickToDrawMs: steady.every(swap => swap.drawUsec !== null)
+      ? {p50: round(nearestRank(toMs(steady.map(swap => swap.drawUsec)), 50), 3), p95: round(nearestRank(toMs(steady.map(swap => swap.drawUsec)), 95), 3),
+        p99: round(nearestRank(toMs(steady.map(swap => swap.drawUsec)), 99), 3)} : null,
+    latencyFrames: {p50: nearestRank(steady.map(swap => swap.latencyFrames), 50), max: Math.max(...steady.map(swap => swap.latencyFrames))},
+    vsyncMode: run.provenance.vsyncMode, vsyncModeName: run.provenance.vsyncModeName, refreshRate: run.provenance.refreshRate};
+}
+
+// The runs together: for every statistic, the median and the interquartile range (nearest rank) across the runs, which are
+// separate processes, plus the raw per-run summaries. Nothing is discarded: an outlier run stays in and shows in the range.
+export function summarizeGraphicsRuns(runs) {
+  assert.equal(runs.length, GRAPHICS_RUNS, "The execution has its runs");
+  for (const run of runs) {
+    const validity = graphicsRunValidity(run);
+    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle reference ${validity.idleReferenceMs} ms, at least ${validity.minimumIdleReferenceMs} ms wanted; idle median ${validity.idleMedianMs} ms, recorded)`);
+  }
+  const summaries = runs.map(summarizeGraphicsRun);
+  const across = pick => quartiles(summaries.map(pick));
+  const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "aboveTwiceIdleReference", "above100ms"].map(key => [key, across(summary => summary[name][key])]));
+  return {runs: summaries, across: {idleFrameMs: frame("idleFrameMs"), swapFrameMs: frame("swapFrameMs"),
+    injectionMsP50: across(summary => summary.injectionMs.p50), clickToNodesMsP50: across(summary => summary.clickToNodesMs.p50),
+    clickToDrawMsP50: summaries.every(summary => summary.clickToDrawMs !== null) ? across(summary => summary.clickToDrawMs.p50) : null,
+    clickToDrawMsP95: summaries.every(summary => summary.clickToDrawMs !== null) ? across(summary => summary.clickToDrawMs.p95) : null,
+    vsync: [...new Set(summaries.map(summary => summary.vsyncModeName))], refreshRate: [...new Set(summaries.map(summary => summary.refreshRate))]}};
+}

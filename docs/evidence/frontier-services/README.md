@@ -227,10 +227,35 @@ cada blob. **O recibo de fonte não certifica o build hospedado**: ele prova o G
 rodaram nesta máquina, e o `fabric_godot.dylib` que o projeto raiz carrega ao abrir foi construído aqui a partir dos fontes
 nativos da main (`1fd43a17…`); esta fatia não o altera nem o compara.
 
-> **CI hospedada e Pages pendentes.** O passo `npm run test:frontier-services` e o artefato `native-frontier-services` do
-> workflow `contracts.yml` ainda não rodaram na CI hospedada, e nada foi publicado no Pages. Tudo o que esta página registra é
-> evidência local, em macOS arm64. Este registro cobre o critério `servicos` do V05-03; os critérios `consumidor` e
-> `autoridade`, os demais itens do 0.5 e todo número da 1.0 seguem como estavam.
+## CI hospedada e Pages
+
+O push da `main` em `75a85ad` (o squash do #73, run
+[37840069134](https://github.com/journey-studios/godot-fabric/actions/runs/37840069134) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (8 min),
+`native-cold-start` (50 min) e `parity-comparison` (22 s). O [recibo](hosted-ci.json) confere o run, o PR e o artefato
+contra a API do GitHub e os logs:
+
+- **O checkout.** Todos os jobs usaram `75a85ad`, e a árvore do head do PR (`757d223`) é a árvore do squash.
+- **O passo da fatia.** `npm run test:frontier-services` (passo 52, 38 s) passou: `# tests 8`, `# pass 8`, `# fail 0`, com
+  os oito testes que o recibo lista (o roteiro de 12 turnos pelos serviços até o hash dourado com o oráculo, a árvore do
+  dump, a paridade dos tipos com os schemas nos dois sentidos e as recusas). O job `contracts` passou `npm run test:contracts`
+  (7, 43 e 321 testes de Node e 13 de Python), `check:static` e `check:publication`.
+- **O artefato.** `native-frontier-services` (id 11577664679, 104.725 bytes, SHA-256 `310be4ab…`, igual ao digest da API e ao
+  do log de upload) tem 7 arquivos, e o recibo fixa o SHA-256 de cada um. Os dois processos imprimem
+  `FRONTIER_SERVICES_PASSED: 965` e o hash dourado `275b7c61…`, e os dois relatórios têm o mesmo SHA-256 (`1347ce81…`).
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37840069193](https://github.com/journey-studios/godot-fabric/actions/runs/37840069193), build e deploy em success, 43 testes
+do painel). O deployment 6946117002 está em success, e o artefato `github-pages` (id 11577142168, SHA-256 `51d52dfd…`, igual
+ao digest da API e ao do log de upload) tem 15 arquivos. O `migration.json` de dentro tem **os mesmos dados, mas não os mesmos
+bytes** do `dashboard/migration.json` do squash: o Pages grava o JSON reserializado (dois espaços e uma quebra de linha
+final), e o arquivo commitado em `75a85ad` não está nessa forma (a indentação de alguns itens difere). O recibo guarda os dois
+SHA-256 (`182e8066…` o implantado, `c714e970…` o commitado), a igualdade dos dados e a do implantado com a serialização
+canônica do commitado, e a entrada de atividade `milestone-0-5-v05-03-servicos-f199dd0` está nos dois. Um push seguinte da
+`main` substitui o deployment, então o site público não foi comparado.
+
+Continua só local: as sete sabotagens retidas e o recibo de fonte em `75c4c0f`. Este registro cobre o critério `servicos` do V05-03; os critérios `consumidor` e `autoridade`, os demais itens do 0.5 e todo
+número da 1.0 seguem como estavam.
 
 ## Limites e abertos
 
@@ -247,4 +272,5 @@ nativos da main (`1fd43a17…`); esta fatia não o altera nem o compara.
 - Os tipos TypeScript são escritos à mão e a paridade compara nomes e formas; não há gerador, e ela não confere que um tipo
   signifique o que o nome diz.
 - O controle com host anterior não se aplica: não há C++.
-- A CI hospedada e a publicação no Pages estão pendentes.
+- A CI hospedada repete o passo `test:frontier-services` e as 965 verificações (seção "CI hospedada e Pages"); as sabotagens
+  retidas e o recibo de fonte seguem só locais.

@@ -1,9 +1,9 @@
 extends RefCounted
 
-# The snapshot the HUD projects: an immutable tree of integers and strings. It is a function of the state and the
-# session's epoch, never a handle to either, so React can hold it as long as it likes. Every section is always
-# present; an absent thing has `present` or `open` set to 0, empty lists and zeros. The fields are documented one by
-# one in docs/research/frontier-game.md, and the services slice mirrors them in TypeScript.
+# The snapshot the HUD projects: an immutable tree of integers and strings. It is a function of the state, the session's
+# epoch and the last finished end-of-turn job, never a handle to any of them, so React can hold it as long as it likes.
+# Every section is always present; an absent thing has `present` or `open` set to 0, empty lists and zeros. The fields
+# are documented one by one in docs/research/frontier-game.md, and the services slice mirrors them in TypeScript.
 
 const Rules := preload("rules.gd")
 const World := preload("world.gd")
@@ -12,12 +12,13 @@ const Context := preload("context.gd")
 const Intents := preload("intents.gd")
 
 
-static func build(state: Dictionary, epoch: int) -> Dictionary:
+static func build(state: Dictionary, epoch: int, last_job: int) -> Dictionary:
   var rates := Economy.rates(state)
   var context := Context.derive(state)
   var snapshot := {
     "version": Rules.VERSION,
     "epoch": epoch,
+    "last_job": last_job,
     "turn": state.turn,
     "phase": state.phase,
     "context": context,
@@ -98,9 +99,13 @@ static func _unit_card(unit: Dictionary) -> Dictionary:
 
 
 static func _tile(state: Dictionary) -> Dictionary:
-  var x := int(state.sel.x)
-  var y := int(state.sel.y)
-  if x < 0:
+  return tile_card(state, int(state.sel.x), int(state.sel.y))
+
+
+# The card of one tile: the selected tile's in the snapshot, and the tile under the pointer in frontier.hover (the pointer is the
+# World's and is outside the state). A coordinate outside the map is the absent card.
+static func tile_card(state: Dictionary, x: int, y: int) -> Dictionary:
+  if not World.in_bounds(x, y):
     return {"present": 0, "x": -1, "y": -1, "terrain": -1, "terrain_name": "", "food": 0, "production": 0, "science": 0, "move_cost": 0,
       "city": 0, "units": []}
   var terrain_id := World.terrain_at(state, x, y)
@@ -160,10 +165,16 @@ static func _research(state: Dictionary, rates: Dictionary) -> Dictionary:
   return {"current": current, "known": done, "needed": Rules.TECHS[done].cost if current != "" else 0, "rate": rates.science, "techs": techs}
 
 
+# The dialog is the head of the event queue, read through the table of events. `index` (1-based) and `count` say where it is in
+# the queue the HUD is working through ("1 of 3"): the ones already answered plus this one, and those plus the ones waiting.
 static func _dialog(state: Dictionary) -> Dictionary:
-  if int(state.event.pending) != 1:
-    return {"open": 0, "id": "", "title": "", "text": "", "choices": []}
+  var queue: Array = state.events.queue
+  if queue.is_empty():
+    return {"open": 0, "id": "", "title": "", "text": "", "choices": [], "index": 0, "count": 0}
+  var event: Dictionary = Rules.EVENTS[Rules.event_index(queue[0])]
   var choices := []
-  for choice: Dictionary in Rules.EVENT_CHOICES:
+  for choice: Dictionary in event.choices:
     choices.append({"id": choice.id, "label": choice.label, "detail": choice.detail})
-  return {"open": 1, "id": Rules.EVENT_ID, "title": Rules.EVENT_TITLE, "text": Rules.EVENT_TEXT, "choices": choices}
+  var answered: int = state.events.resolved.size()
+  return {"open": 1, "id": event.id, "title": event.title, "text": event.text, "choices": choices, "index": answered + 1,
+    "count": answered + queue.size()}

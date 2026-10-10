@@ -466,7 +466,8 @@ to mount. It stays in `consumers/minimal` as a regression and is not edited.
 
 **Ceiling of the game** (a cut enters only if it removes a distinct context):
 24x16 map from a fixed seed; two unit types (Settler, Warrior); one city with three
-to five production items; research as a list; one blocking event or dialog; a
+to five production items; research as a list; a queue of three blocking events, each
+a dialog answered in turn (decision of 2026-10-09: the queue is real in the game); a
 minimal scripted AI; a 12-turn replay with a golden state hash, plus a 100-turn
 soak. Seven contexts: none, tile, Settler, Warrior, stack of two units, city,
 dialog. Six HUD panels: turn and resources bar, unit actions, tile card, city
@@ -578,6 +579,21 @@ its counts stand and it makes no frame-time claim. Pointer motion, hover and dra
 claimed and the `iphone` criterion stays open, so no criterion changes. Slice 3 decides the
 go/no-go. Hosted CI for both slices is pending. No 1.0 number moves.
 
+**Progress.** V05-02 has its third and last slice, the written go/no-go decision, and the
+spike ends with a **GO for the desktop (macOS)**. It runs nothing. On the numbers of the first
+two slices a React Native HUD over a Godot world gives the pointer to exactly one side by the
+rule of a phone: a click on the empty area reaches the map 100 times out of 100, a `Pressable`
+is pressed once and never reaches it, and nothing reaches it with an overlay or a `Modal` open,
+at the cost of a constructor default, one public method and one override, with no rewrite of
+the pointer pipeline. Motion, hover and drag over the HUD, a release away from its press, a HUD
+placed before the world in the tree and the unpaced windowed lane do not block the GO; the
+[decision](https://github.com/journey-studios/godot-fabric/blob/09ec1e0a1a08c8f6ca7f7a61a1aafb5ce8c86ba6/docs/research/world-input.md#decision-slice-3) gives each its owner and lists the
+rules a scene keeps (the HUD's layer after the world, a `box-none` root and containers, a
+world that listens in `_unhandled_input`, and Godot's GUI Controls untouched). The `iphone`
+criterion stays open: it needs a real touch screen and a second finger, so it waits for the
+device package and the user. The numbers are local macOS arm64 evidence and hosted CI for both
+slices is still pending. No criterion changes, and no 1.0 number moves.
+
 **Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
 GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
 73 intents reaches the same golden hash in 3 of 3 processes (9 executions, with a trace hash
@@ -615,6 +631,18 @@ is local macOS arm64 evidence, with synthetic presses and a HUD that is not the 
 the hosted CI run and the Pages publication are pending. The `autoridade` criterion of V05-03
 remains open, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `autoridade`: the end of a turn is now an accepted job.
+`frontier.end_turn` answers on acceptance with a job id, the persistent `GameServices` node runs
+the turn one phase per frame, and `frontier.turn_ended` finishes the job once, across an unmounted
+screen and across the menu. A rule mutated in GDScript changes the HUD while the JavaScript
+bundle stays the same, and every phase fits the registry's 64 tasks and 128 events, with a
+150-subscriber stress case that drains in order and without loss. Eleven sabotages of the
+services and five of the consumer are rejected. The
+[record](https://github.com/journey-studios/godot-fabric/blob/5ee0127a63686b30c65c34f06bae619111413aaf/docs/evidence/frontier-authority/README.md)
+is local macOS arm64 evidence, with synthetic presses and without the playable HUD; the hosted
+CI run and the Pages publication are pending. All four criteria of V05-03 are now done, and no
+1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-04: the twelve names the HUD imports are decided in
 [`docs/compatibility/scope-0.5.json`](docs/compatibility/scope-0.5.json), and one policy module decides each of the 880
 props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored with a reason and 122 refused with
@@ -622,12 +650,236 @@ props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored wi
 case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
 fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
 [record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
-visual output). The hosted CI run of main `b0e40aa` (the squash of #74, run 37842839329) passed its five jobs on the
-first attempt, with the 181 native checks carrying the committed ids and accepted by the repository's oracle
-([receipt](docs/evidence/frontier-scope/hosted-ci.json)), and the Pages run 37842839320 deployed that commit's dashboard
-data with V05-04 closed ([receipt](docs/evidence/frontier-scope/publication.json)); the causal control and the retained
-sabotages stay local. It lists two open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision)
-and the host crash that removing the check from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
+visual output). The hosted CI run of main `b0e40aa` (the squash of #74, run 37842839329) passed its five jobs on the first
+attempt, with the 13 tests of the scope test, the 5 of `test:scroll-view` and the lane's `SCOPE_PASSED: 181`
+([receipt](docs/evidence/frontier-scope/hosted-ci.json)); the Pages run 37842839320 built and deployed that commit, but its
+artifact has expired, so the deployed `migration.json` was not compared
+([receipt](docs/evidence/frontier-scope/publication.json)). The causal control and the retained sabotages stay local. It lists two
+open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision) and the host crash that removing the check
+from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-05, criteria `matriz` and `mapa`: the HUD is now driven by the context Godot derives. One store at module scope
+is the only module that talks to the game; six panels (the turn and resources bar, the unit's actions, the tile card, the city
+screen, research and the dialog) are mounted by that context alone, and over the replay's seven covering steps the visible
+testIDs match the table with no extra panel and the actions listed are the snapshot's but End turn. The bar shows the phase and a
+spinner while the turn is processed, with End turn enabled by the game's own action; the tile card shows the tile under the pointer,
+which Godot publishes as the state `frontier.hover` (the registry holds 15 bindings), and a click on the map selects through the
+World's `_unhandled_input`. An independent oracle judges the lane, the HUD of the previous commit fails it in actions, content,
+input, panels and phase, and eight retained sabotages are rejected; the lane also found a World that came back behind the HUD's layer
+after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures. The
+hosted CI run of main `622102e` (the squash of #82, run 37891490943) passed its five jobs on the first attempt, with the HUD lane's 143 probe
+checks, the report byte for byte the local one, and the consumer's 165 native checks
+([receipt](docs/evidence/civ-lite-ui/hosted-ci.json)), and the Pages run 37891490845 deployed that commit's dashboard data with
+`matriz` and `mapa` closed ([receipt](docs/evidence/civ-lite-ui/publication.json)); the captures, the causal control and the retained
+sabotages stay local.
+
+**Progress.** V05-05, criterion `overlays` (slice 2a): by the user's decision of 2026-10-09 the game's event is a queue of three (the
+state, the rules and a 77-step replay with new golden and trace hashes, `cb7ab974…` and `ed43495…`, which the independent oracle
+recomputed at every step), and the city screen and the event dialog are blocking `Modal`s: with either open, 100 left clicks, 100
+right clicks and 100 wheel ticks on the map reach the World 0 times, and 100 of 100 once it is closed. The dialog shows the game's
+"n of 3" and mounts each event as a subtree of its own, a HUD remounted with the second event at the head shows "2 of 3" in its
+first frame, and a new session has no queue until its own turn 5. Two causal controls (the previous HUD and the previous game with its HUD)
+fail exactly their groups, twelve retained sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four
+captures of the overlays were read, and no check name of the probes carries a count that depends on the pace (the lane refuses one that
+does). The merge of main brought in the soak of #83, whose oracle had written the one event as a fact; it now expects the three answers of
+turn 5, with nothing relaxed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence. The slice reached main as `e108e9d` (the squash of
+#93), and the Contracts run dispatched on main at that commit (run 37958818671, the eight jobs on the first attempt) repeated the HUD lane's 144 and 26 probe
+checks and the consumer's 165 native checks, with both hosted reports judged again, outside the CI, by the independent oracles with no finding
+([receipt](docs/evidence/civ-lite-ui/overlays/hosted-ci.json)); the Pages run 37958764277 deployed that commit's dashboard data with `overlays` closed
+([receipt](docs/evidence/civ-lite-ui/overlays/publication.json)). The engine logs an error when the application quits with a `Modal` open (a task of its own),
+and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-05, criterion `estabilidade` (slice 2b), the last of its four, so the item is complete: each overlay is opened and closed twenty times by real
+input, the city screen 20 times by a click and Close and 20 by a click and Escape, and the event dialog 20 times from a new game played to turn 5 and answered by
+three real presses (60 answers), and after every close, at rest (no pending work, no tag retiring, every Image settled), the nodes, orphans and `Window`s of the tree,
+the native views, the pointer routes, the registry's subscriptions and pending work, the HUD's connections and the signal's connections are the first cycle's, exactly;
+the Hermes heap at rest follows the baseline's rule (-1,296, -1,296 and +128 bytes between the medians, against 2,048), and the engine's objects stay within one.
+Focus is what this host can measure: the root viewport's focus owner after a close is the one before the open, and while an overlay is open its Window is the one
+exclusive Modal Window and no Control under it has the focus; Escape closes the city screen through `clear_selection` and does nothing on the dialog. In the first
+and the last cycle of each screen, 100 left clicks, 100 right clicks and 100 wheel ticks reach the World 0 times. A scan of the HUD against the 0.5 manifest, written on
+the syntax tree and reading the manifest (which now decides `AppRegistry`), refuses a name, a prop or a member the manifest does not allow, and the icons are six original
+32x32 PNGs drawn by a generator and shown by `Image` in the bar, the actions, the tile card and the city screen, which is inside a Modal's Window: all of them drew, in
+every opening. The lane (a third probe with 41 checks, an oracle that rejects 38 mutated reports, 23 cases of the scan: 21 changes found and two let through) fails the previous HUD only on the icons, and
+five new sabotages join the twelve (17, all rejected). A first review found a real flake, a screen declared at rest while its Images were still loading, and the rest is
+now a state that includes them; the lane passed three runs in a row after it. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with seven
+captures; this slice is not on main yet, so it has no hosted run, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
+panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720
+steady swaps (nodes, creations and deletions, one swap per click, no click reaches the map, a round ends at the base, the
+heap at rest within the GF-30 limit), the host mounts the panel inside the click's flush (0 frames), an independent oracle
+recomputes the numbers and four retained sabotages are rejected. A swap that creates 100 nodes costs 9.2 ms of CPU at the
+median and 12.4 ms at p95, more than a 120 Hz period (8.33 ms); the limits for CPU, heap, nodes and latency are a proposal,
+not a frozen budget. The windowed lane refused its run because the display was not presenting the window, so **no frame time
+is pinned and `baseline` stays open** until a presented run, and `turno`, `soak` and `congelado` are open too. The
+[record](https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** V05-06, criterion `soak`: the Frontier game is played for 100 turns in three headless Godot processes, through the
+typed services, by a scripted player that decides only from the snapshot, with a React Native HUD that opens and closes a 100-node
+panel every turn (unmounted in two executions, kept hidden in the third). The three games end in the same final hash and the same
+trail of 100 turn hashes, the native views follow the HUD's state exactly in every context with no orphan, the live heap at rest does
+not grow (within the GF-30 limit, by the baseline's median-of-halves rule), the resident memory is held by a coarse 48 MiB guard
+because it moves by tens of MB, and no JavaScript error goes unhandled. A game paused at turn 50 holds its accepted job at its first
+phase while the HUD still answers a click, which needs the HUD's layer to be `PROCESS_MODE_ALWAYS` (a recommendation for the V05-05
+scene, not applied). From the numbers, no consistent CPU advantage was observed for hiding a 100-node panel over unmounting it (the
+cost of opening and closing once changes sign between rounds on a shared machine, so that comparison is inconclusive); what was stable
+is that hiding has a smaller tail on the open and a close about twice as costly, and that a hidden panel keeps its 100 native views and
+326,512 bytes of heap, so the recommendation for the HUD is to unmount by default. An independent oracle recomputes the report and four
+retained sabotages are rejected. The
+[record](https://github.com/journey-studios/godot-fabric/blob/b77178a43d70078385f0368b4cfcb181bfebb6ca/docs/evidence/frontier-soak/README.md)
+is local macOS arm64 evidence, headless, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
+publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0
+checkpoint, weight or denominator moves.
+
+**Progress.** Exit criteria X3, X4 and X5 of the 0.5 are met on the macOS desktop, on local
+evidence. X3, input in the world against the HUD, rests on the
+[first](https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md)
+and [second](https://github.com/journey-studios/godot-fabric/blob/2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f/docs/evidence/world-input-a2/README.md)
+pointer slices and the
+[go/no-go decision](https://github.com/journey-studios/godot-fabric/blob/3d531a6cf576576a6f3790fb742b5a0e8b4643cf/docs/research/world-input.md#decision-slice-3),
+with the iPhone run still open. X4, authority in Godot, rests on the
+[typed services](https://github.com/journey-studios/godot-fabric/blob/75a85ad6ea877eae85d1a55214097eac416f6680/docs/evidence/frontier-services/README.md),
+with no rules in JavaScript, and on the
+[rule lane](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+where a constant mutated in `rules.gd` changes the HUD while the JavaScript bundle stays
+identical. X5, session and lifecycle, rests on the
+[ten consumer cycles](https://github.com/journey-studios/godot-fabric/blob/c8de44b3caa12a82009e55a059e2ce3da68f9485/docs/evidence/frontier-consumer/README.md)
+and on the
+[accepted turn job](https://github.com/journey-studios/godot-fabric/blob/5e1f6a16f41e810fd530125fb23d925e5e3f00d8/docs/evidence/frontier-authority/README.md),
+which survives closing the screen and the menu. Hosted CI and Pages are not claimed here.
+No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, criterion `protocolo`, first step: the protocol of the final comparison is pre-registered before
+any measurement, with no arm run. It fixes the three arms (A without a HUD as the cost control, B with a native Godot HUD, C
+with the RN HUD), the hypotheses, the primary outcome (the p95 CPU time per frame in four active windows: the AI phase, the
+end-of-turn event burst, 50 context switches and a stress case), 12 executions per arm in a fixed Latin square, a 95%
+percentile bootstrap with 10,000 resamples and a fixed seed, a Holm guard over the four windows of the C against B question,
+and a decision rule with a margin of the larger of 10% of B's median and 0.5 ms and the verdicts gain, neutral, cost and
+inconclusive. The [protocol](https://github.com/journey-studios/godot-fabric/blob/789c35f83b64feb4ccc07c37cac5975f833df2dd/docs/research/frontier-comparison-protocol.md) is also a JSON whose SHA-256
+a Node test pins, so changing it later takes changing the test on purpose. The numbers that depend on the windowed baseline
+of V05-06 (the CPU-time instrument and four absolute budgets) are formulas with null values, so the criterion closes only
+when they are frozen together with `congelado`; it stays open and no criterion changes. Nothing is measured and no result is
+claimed. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the eight 0.5 slices already on main are recorded. For each of
+PRs #70, #71, #73, #76, #77, #78, #79 and #83, the push of main at its squash commit passed all five jobs of the Contracts
+workflow on the first attempt, and its Pages run built and deployed. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/70cf43b61886c3adf212616d4d8d10c1d890b49c/docs/evidence/README.md)
+links two receipts per slice, written by `scripts/hosted-receipts.mjs` and checked offline by its `--check`: the run, the
+slice's own steps with the result lines of their logs and the artifacts with their digests, and the deployment with the
+published `migration.json`. Two findings: the Pages artifact of #71 no longer exists, so its deployed `migration.json` was not
+compared, and the one of #73 holds the same data as the committed file in another serialization. The windowed lanes, the
+captures, the previous-host controls and the sabotages stay local, and no criterion changes. No 1.0 checkpoint, weight or
+
+**Progress.** V05-06, criterion `turno`, headless half only: the Frontier game is measured as a consumer has it, the `civ-lite`
+template provisioned into a project of its own with its HUD and scene untouched, by 32 rounds of 16 real pointer clicks through all
+seven contexts (the dialog is opened by the End turn of the fourth turn). Every click makes exactly one call to the game and shows
+the panels of its context two frames after the injection in all 480 steady clicks (eight for an End turn), recorded against a
+ceiling and never fixed; the end of a turn runs one phase in each of seven frames, publishes a snapshot in each and `turn_ended`
+once; the native views and the SceneTree's nodes are the same every time a context comes back, with no orphan; the live heap at
+rest of each of 17 series grows 128 bytes between the medians of the halves (the GF-30 limit is 2,048, by the baseline's rule, which
+is now one function shared with the soak's resident-memory rule); and no error goes unhandled. An independent oracle recomputes the
+report, and four retained sabotages, two of them made in the provisioned copy and never in the template, are rejected. **The
+presented frame time is not measured**: the local windowed lane imports the baseline's validity rule and was not presented by the
+display (it was off), so it ended with no frame-time statistic and exit code 3. The
+[record](https://github.com/journey-studios/godot-fabric/blob/e2ee6d83b392692775400e73db364b3243b47df9/docs/evidence/frontier-turn/README.md)
+is local macOS arm64 evidence, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
+publication are pending. `turno`, `baseline` (the presented frame time) and `congelado` remain open. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** Exit criteria X9 and X10 of the 0.5 now have guards that run, and neither is closed. The PR guard
+(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that compares the tree with the first parent of `HEAD`)
+fails a pull request that adds a `milestone-0-5-*` entry and also changes `tasks`, `phases`, `sequences`, the checklists or
+`decisions` (a changed note or evidence counts, not only `done`, weight or status), that opens a new `pointer-*`,
+EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The audit of the history from `c0f3702` covers
+28 first-parent commits, 15 of them with a 0.5 entry: X10 is clean and GF-13 is equal in depth, and X9 has one known exception,
+#74, which changed the note and the evidence of GF-27 without moving a `done`, a weight or a status. The
+[evidence](https://github.com/journey-studios/godot-fabric/blob/b02e2a531ca548b95496a7e9fb3f04165ec78d97/docs/evidence/milestone-exit-guards/README.md)
+pins the audit, its receipt and the rules. The hosted CI of the guard step is pending, and X9 and X10 stay open until the 0.5
+ends, when the audit runs again. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `turno`, closed: the windowed lane of the turn was presented. On 2026-10-09, with the display on,
+the local lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) ran on a tree identical to main `1adcdb3`, with the
+baseline's validity rule imported: five of five runs were accepted in eight attempts (three were rejected as `undrawn`, none as
+unpaced), with the vsync on at 120 Hz and exit code 0. The first frame of a click has a p95 of 12.98 ms (median across the runs)
+and the frames of a turn a p95 per phase of 12.8 to 14.1 ms, and none of the 1,800 first frames of a click or the 4,800 frames of a
+turn reached 100 ms. They are intervals between process frames, not frames the display showed, and the idle median is unstable
+(4.4 to 13.2 ms across the runs, from two alternating groups of intervals whose mean is one refresh period), so the p95 and the mean
+are what to read; no limit comes from them. With the headless half recorded earlier, the `turno` criterion has the two pieces of
+evidence it asks for. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and
+`congelado` remain open, as do the hosted CI run and the Pages publication of the turn. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** V05-06, the windowed lane's pacing rule: a run is now judged by an idle reference that does not swing with the display's
+clusters. With the vsync on at 120 Hz, the 600 idle intervals of a presented window come in two alternating groups (about 300 under
+4.17 ms and 300 of 12 ms or more), so the median fell in one group or the other: a presented attempt of the baseline was refused as
+`unpaced` for a median of 4.136 ms against the 4.167 ms required (mean 8.333 ms), and the accepted runs of the turn had medians of
+4.42 to 13.18 ms. The reference is the median of the half-sums of consecutive pairs of intervals, with the same threshold (half of
+the refresh period read back): 8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, and about
+0.6 ms in the unpaced ones. Over the 24 raw attempts of the three receipts of that day and of 2026-10-08, the mean and the new
+reference agree on every verdict and only the refused attempt would change, to accepted. No recorded receipt is reclassified, and the
+rule applies from the next execution on, which has not run yet. The pre-registered protocol of the final comparison (V05-10, criterion
+`protocolo`) took the same reference by a dated amendment, with no comparative measurement before it. No criterion changes: the
+windowed part of `baseline`, `congelado` and `execucao` stay open, the turn's script and note still describe the median until
+after the P8 slice, and the hosted CI run is pending. The
+[record](https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md) is local macOS arm64
+evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of three more 0.5 slices already on main are recorded: the turn (#86, V05-06
+`turno`), the exit guards (#87) and the idle reference (#94). For each, the push of main at its squash commit passed the Contracts
+workflow on the first attempt and its Pages run built and deployed. The push of #86 still ran the native job, so its receipt holds
+`test:frontier-turn` and the digest of the artifact `native-frontier-turn`; #87 and #94 are slices of contracts only, so their
+receipts hold the guard step (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean) and the slice's contract tests. The push of #94
+came after the native suites became opt-in, so its five native jobs are recorded as skipped, accepted only because that slice has no
+native step. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/README.md)
+links the two receipts of each. The windowed lane, the captures, the sabotages and the audit of X9 and X10 stay local, X9 and X10
+stay open, and no criterion changes state. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, preparation of criterion `execucao`: the CPU-time instrument of the final comparison is chosen and checked against a
+load of known duration, before any comparative measurement. Godot's `Performance.TIME_PROCESS` could not be the per-frame reading: at the
+source and in the binary it is a maximum assigned once a second, and with the vsync on it holds the wait for the display (about 15 ms for
+an idle 120 Hz window, where the instrument reads 0.08 ms). The instrument stamps `Time.get_ticks_usec` at the engine's hooks and adds the
+physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives six
+draws later and is aligned by draw index. In a lab scene a busy loop of 2, 5, 10 and 20 ms is read to within 0.2% headless and to within 1.5%
+in a window that the display presented at 120 Hz, an independent oracle recomputes it from the raw stamps, and three retained sabotages are
+rejected. The threshold `cpu-time-instrument` stays unfrozen, no arm has run, and the `execucao`, `protocolo` and `braco-b` criteria stay
+open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md) is local macOS arm64 evidence on a Mac shared with
+other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** V05-06, the windowed lanes of the baseline and of the turn: the window they measure in is now put where the system has no
+reason to stop drawing it, and the frames in which the engine could not draw it are recorded. The finding: on macOS an occluded window
+makes the engine skip the draw (`window_can_draw()` reads the flag that the window delegate clears, `Main::iteration` does not call
+`RenderingServer::draw`, `frame_post_draw` never fires, and the loop sleeps 6.9 ms a frame), which is the signature of the `undrawn`
+refusals of 2026-10-09 (a mean idle interval of 6.900 ms where the idle window drew no frame). A small helper puts the window in front of
+the others and above them and counts, for every process frame, the frames the engine could not draw: each attempt of the receipts carries
+`undrawableFrames`, and the reason of an `undrawn` refusal says what the engine said of the window (a run in which it never said it could not draw
+stays open, with no cause concluded). The validity rule is unchanged and no
+recorded receipt changes its verdict. Both windowed lanes ran once each on the implementation commit and were presented at the first
+attempt of all five slots, with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379 in the turn, with nobody at the Mac:
+the runs show that the helper opens a window the engine can draw, not that it beats interference, and a locked or asleep display is not
+covered. The `baseline` criterion stays open; a later delivery closes it with the receipt of the baseline run. The
+[record](https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md)
+is local macOS arm64 evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `baseline`, closed: the windowed lane of the baseline was presented. On 2026-10-09, on commit
+`1bc3a3c` with a clean tree, the local lane (`caffeinate -d node scripts/frontier-baseline-graphics.mjs`) was presented by the
+display: five of five runs were accepted at the first attempt, with the vsync on at 120 Hz, exit code 0 and 0 of 25,469 sampled
+frames the engine could not draw. At the median across the runs, the frame of a swap that creates 0, 50, 75 or 100 nodes has a p50
+of 3.7, 8.4, 11.2 and 13.1 ms and a p95 of 13.7, 11.1, 14.1 and 16.6 ms, and none of the 1,800 swap frames or the 3,000 idle
+intervals reached 100 ms. The proposal, by the rule written beforehand (the median across the five runs plus three times the
+interquartile range, up to 0.5 ms), puts the swap frame's p95 at 14.0, 12.5, 20.0 and 17.0 ms by nodes created, and it is not
+frozen. The Mac was loaded by other agents (load average 5.4 to 6.8 on 11 logical cores) and nobody used it, so the numbers are
+pessimistic; `congelado` remains open and may ask for a run on a quiet machine, as do the hosted CI run and the Pages publication
+of this record. With the headless half recorded earlier, the `baseline` criterion has the two pieces of evidence it asks for. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/191533a44e93ab98f745c4adfbdb2b614e1a0656/docs/evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
+recomputed. No 1.0 checkpoint, weight or denominator moves.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does

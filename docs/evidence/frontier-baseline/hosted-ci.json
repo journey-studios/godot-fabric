@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-baseline",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-09T09:57:14.950Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37884924042,
+    "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/77",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T04:39:48Z",
+    "updatedAt": "2026-10-09T05:30:54Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113672670055,
+        "runAttempt": 1,
+        "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+        "startedAt": "2026-10-09T04:39:52Z",
+        "completedAt": "2026-10-09T04:42:11Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042/job/113672670055"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113672670009,
+        "runAttempt": 1,
+        "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+        "startedAt": "2026-10-09T04:39:55Z",
+        "completedAt": "2026-10-09T05:30:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042/job/113672670009"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113685106366,
+        "runAttempt": 1,
+        "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+        "startedAt": "2026-10-09T05:30:33Z",
+        "completedAt": "2026-10-09T05:30:54Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042/job/113685106366"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113672669824,
+        "runAttempt": 1,
+        "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+        "startedAt": "2026-10-09T04:39:51Z",
+        "completedAt": "2026-10-09T04:45:02Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042/job/113672669824"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113672670035,
+        "runAttempt": 1,
+        "headSha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+        "startedAt": "2026-10-09T04:39:57Z",
+        "completedAt": "2026-10-09T04:47:29Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37884924042/job/113672670035"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "native-cold-start": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "parity-comparison": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "reference-android": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "reference-ios": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T04:40:06Z",
+          "completedAt": "2026-10-09T04:42:07Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 352,
+              "suites": 0,
+              "pass": 352,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T04:42:07Z",
+          "completedAt": "2026-10-09T04:42:08Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T04:42:08Z",
+          "completedAt": "2026-10-09T04:42:08Z",
+          "passed": true,
+          "files": 1800
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-baseline-graphics.test.mjs",
+          "tests": 8,
+          "passed": 8,
+          "topLevel": [
+            "a window that draws and idles at the refresh period is a measurement",
+            "a window that draws but that no display paces is rejected as unpaced",
+            "the threshold is half of the refresh period that the window read back",
+            "a window that does not draw is rejected as undrawn, whatever its pace",
+            "the statistics across runs refuse an unpaced run",
+            "a receipt with an unpaced accepted run is refused",
+            "a lane that was not presented reports no frame-time statistic, and keeps what it rejected",
+            "a lane that claims to be presented has all its runs and their statistics"
+          ]
+        },
+        {
+          "file": "tests/frontier-baseline-heap.test.mjs",
+          "tests": 10,
+          "passed": 10,
+          "topLevel": [
+            "the hosted series are 32 readings that move in a band wider than the limit, with no trend",
+            "the hosted series pass with a growth of 0: the median of the last half is the median of the first",
+            "the floors judged the hosted run wrongly: five-round floors failed process 2 by 8 bytes, the floors of the halves are 320 apart in both",
+            "a first half that alone dips to the low level, with a last half that never does, is not a leak (it was the flake of the floors)",
+            "a leak on top of either hosted series is rejected",
+            "the leak the medians catch: 158 and 113 bytes a round on the hosted series, 137 on a heap with no noise",
+            "the limit is the GF-30 limit and it is inclusive",
+            "a transient in the last round is not growth",
+            "an odd number of steady rounds leaves the one between the halves out, and an even one takes the lower median",
+            "a run without two halves, or without a heap, is refused"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-baseline": {
+        "step": "Run npm run test:frontier-baseline",
+        "number": 38,
+        "conclusion": "success",
+        "startedAt": "2026-10-09T04:53:42Z",
+        "completedAt": "2026-10-09T04:57:06Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "The HUD's panels swap by a real click with exact counts of nodes, creations and deletions, and the host returns to the base"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 77,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/77",
+    "title": "feat(perf): Measure the 0.5 HUD's panel swaps on the pointer spike's scene (P6 V05-06, frame time pending)",
+    "headSha": "c5c914ff1db7f59aa4088c59d8c317e957cd89d4",
+    "baseSha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+    "squashMergeCommit": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+    "squashCommitSubject": "feat(perf): Measure the 0.5 HUD's panel swaps on the pointer spike's scene (#77)",
+    "mergedAt": "2026-10-09T04:39:45Z",
+    "headTreeSha": "736fa0b60951bd5682c2cce3ef4e5a9d8719ed9d",
+    "mainTreeSha": "736fa0b60951bd5682c2cce3ef4e5a9d8719ed9d",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "commits": [
+      {
+        "sha": "375b6e932b36e4875ce8ed02e67fd0948c5784d3",
+        "subject": "feat(perf): Measure the 0.5 HUD's panel swaps on the pointer spike's scene"
+      },
+      {
+        "sha": "346146d4721c3082c495059d47d2ddc2ec7fc3e4",
+        "subject": "fix(perf): Refuse a windowed run the display did not pace"
+      },
+      {
+        "sha": "ebfe8a095fda185af7e20e2a2d47e26c641579c0",
+        "subject": "docs(perf): Record the 0.5 panel-swap baseline with its frame time pending"
+      },
+      {
+        "sha": "d5310c6235c2c264a3ea0b2763dd35b1192ddcd4",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-baseline"
+      },
+      {
+        "sha": "0568755469a0d5181e5652fe859d56471646f5db",
+        "subject": "docs(roadmap): Record the 0.5 V05-06 headless baseline as progress"
+      },
+      {
+        "sha": "178e3fc63a497aa65496f64518487458bd035d8e",
+        "subject": "fix(perf): Judge the heap at rest by the medians of the two halves"
+      },
+      {
+        "sha": "1cdca4f152ec8f18196e3fef1128d301143eb13f",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-baseline"
+      },
+      {
+        "sha": "c5c914ff1db7f59aa4088c59d8c317e957cd89d4",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-baseline"
+      }
+    ],
+    "changedFiles": 38,
+    "additions": 6214,
+    "deletions": 210
+  },
+  "artifacts": {
+    "baseline": {
+      "available": true,
+      "id": 11596358583,
+      "name": "native-frontier-baseline",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 400062,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "3ad621bfdef3ff27ec37b4842cd890c32a1594fadec235bd322afdbbbfc99b97",
+      "apiDigest": "sha256:3ad621bfdef3ff27ec37b4842cd890c32a1594fadec235bd322afdbbbfc99b97",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "3ad621bfdef3ff27ec37b4842cd890c32a1594fadec235bd322afdbbbfc99b97",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-09T04:57:07Z",
+      "expiresAt": "2027-01-07T04:39:48Z",
+      "fileCount": 6,
+      "files": {
+        "frontier-baseline-comparison.json": "e17c82b891ae0ef7a8f304fa3bfaacacdf86dc3d7edd7c9e113aa10352d6b9ab",
+        "frontier-baseline-current-2-report.json": "21c79f48b53fc6af878b405e90d3e15e4f6b18162a63f1beff9fabc937456f02",
+        "frontier-baseline-current-report.json": "8c72217816e5a62394e91641f2fc4c21b3fb58a410122412ef32b877e3a9bac9",
+        "frontier-baseline-current.log": "839fb6ec37957df70d5b2d67b5dc71a01fa75e31c67c6e56040110cbddcd8f55",
+        "frontier-baseline-probe-bundle.json": "ef82051fbe0477e96959a585965fd84850713fceeca34faf04cd6ccd229284e4",
+        "frontier-baseline-report.json": "ae38cb9c0c701690567b57b143d19f9a2e3dab5e6ee282813df887d017fe44b1"
+      },
+      "markers": [
+        {
+          "file": "frontier-baseline-current.log",
+          "line": "FRONTIER_BASELINE_PASSED: 19"
+        }
+      ]
+    }
+  },
+  "findings": []
+}
