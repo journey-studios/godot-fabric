@@ -8,7 +8,8 @@ export const REPOSITORY_URL = `https://github.com/${REPOSITORY}`;
 // One row per slice: the folder of its evidence page, the pull request and its squash commit on main,
 // the Contracts run of main at the squash (the push until the native suites became opt-in, a dispatch
 // since: a push no longer runs them) and the Pages run of the push, the npm steps of the native jobs that exercise the slice
-// (judged by the TAP summary or by a marker line), the artifacts those steps upload, the Node test
+// (judged by the TAP summary or by a marker line; `step` names a step the workflow gave its own `name:`, which is otherwise
+// GitHub's "Run npm run <script>"), the artifacts those steps upload, the Node test
 // files of the `contracts` job that belong to the slice and the activity entry of the dashboard data.
 // A slice with no native step has `nativeSteps: []` and `artifacts: []`: its Contracts run proves its contract tests and, when
 // `guard` is true, the step "Milestone exit guards (X9 and X10)" that the `contracts` job has run since #87.
@@ -402,5 +403,20 @@ export const SLICES = [
     ],
     guard: true,
     activity: "milestone-0-5-v05-10-unreported-8817938",
+  },
+  // The signed macOS Release export of #75 (V05-07, plugin and signing), squash 19fbb7b: the native step test:export:macos in the
+  // native-suites-runtime job with the derived arm64 template (it runs the export's two test files whole, the native test included, which
+  // the contracts job skips without the template) and its artifact; Contracts was dispatched
+  // on main at the squash (the native suites are opt-in since #88) and Pages is the push of 19fbb7b.
+  {
+    folder: "macos-export",
+    pr: 75,
+    squash: "19fbb7b",
+    contractsRun: 38063477166,
+    pagesRun: 38063457484,
+    nativeSteps: [{ script: "test:export:macos", step: "Export, sign and execute the relocated macOS consumer with rejection controls", expect: "tap" }],
+    artifacts: [{ key: "macosExport", name: "native-macos-export" }],
+    contractTests: [],
+    activity: "milestone-0-5-p2-symlink-parent-6c2169a",
   },
 ];
