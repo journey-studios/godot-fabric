@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T16:57:00.000Z",
+  "updatedAt": "2026-10-10T17:10:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4805,6 +4805,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-teardown-on-exit-28edbbc",
+      "at": "2026-10-10T17:10:00.000Z",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "GF-18 (Modal): o #90, mergeado em 28edbbc, tira o erro do host ao sair com um Modal aberto. O Godot chama _exit_tree enquanto um pai remove filhos (o quit, a troca de cena, um ancestral liberado), e o Window dono dos Modals costuma ser esse pai ocupado, então o remove_child da janela retirada falhava com \"Parent node is busy adding/removing children\". O _exit_tree do FabricApplication e do FabricSurface agora segura um ModalWindowStack::TreeExitScope: a janela retirada fica escondida sob o dono até o free enfileirado ou, no quit, até a remoção do próprio dono, e fora de uma saída da árvore o desacoplamento imediato segue igual. A suíte nova tests/modal-teardown-native.test.mjs (em test:modal) roda quit, troca de cena e dono liberado com o Modal aberto e exclusivo: o host anterior falha os três com exatamente um ERROR cada, e o novo passa sem ERROR. A Contracts disparada no ramo (run 38067347088) passou nos oito jobs, com test:modal 11 de 11 local. Nenhum checkpoint muda: contrato completo, orientação/insets, hardware, mobile/export e paridade integral seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/28edbbce7cb7e25af9e8163511943ab7556820ba/docs/research/modal.md#teardown-with-an-open-modal"
+    },
     {
       "id": "milestone-0-5-v05-10-arm-projects-85d2c99",
       "at": "2026-10-10T16:57:00.000Z",
