@@ -7,6 +7,9 @@ extends SceneTree
 # judges the raw observations without trusting any verdict here. There is no extension, no Control and no frame: the
 # rules are plain GDScript.
 #
+# It also plays the irrigation scenarios (the Irrigate rule, the base of the cost-of-change experiment, docs/research/frontier-change-cost.md):
+# games built for each case of the rule, played through the same intents, with the state after every step in the report for the oracle.
+#
 #   --out=<path>   where the report goes, relative to the project (default build/civ-lite-game-report.json)
 
 const Rules := preload("res://consumers/civ-lite/game/rules.gd")
@@ -152,7 +155,7 @@ func check_turn_slicing() -> void:
   var before: String = game.serialize()
   check(game.begin_end_turn().ok == 1 and game.state.phase == Rules.PHASES[0], "turn: begin_end_turn stops at the first phase")
   var refused := true
-  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["clear_selection", []], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]],
+  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["clear_selection", []], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]], ["irrigate", [1]],
     ["set_production", ["warrior", 0]], ["set_research", ["alphabet"]], ["resolve_event", ["welcome"]], ["end_turn", []], ["begin_end_turn", []]]
   var mid: String = game.serialize()
   for call: Array in calls:
@@ -242,6 +245,168 @@ func check_faction_waits() -> Array:
   return cases
 
 
+# --- Irrigation -----------------------------------------------------------------------------------------------------------
+
+# The actions of the Settler's context, in the game's order.
+const SETTLER_ACTIONS := ["found_city", "irrigate", "fortify", "clear_selection", "end_turn"]
+
+
+# A Settler on open land for the scenarios: the 3x3 around it is Plain, with Water on the one tile given and nowhere else, so what the
+# tile has beside it is exactly that. Answers the Settler's id.
+func place_settler(game: RefCounted, tile: Vector2i, water: Vector2i) -> int:
+  for dy in range(-1, 2):
+    for dx in range(-1, 2):
+      game.state.map.terrain[World.index(tile.x + dx, tile.y + dy)] = Rules.PLAIN
+  game.state.map.terrain[World.index(water.x, water.y)] = Rules.WATER
+  var id := int(game.state.next_unit)
+  game.state.units.append(World.make_unit(id, Rules.OWNER_PLAYER, "settler", tile.x, tile.y))
+  game.state.next_unit = id + 1
+  return id
+
+
+func add_city(game: RefCounted) -> void:
+  game.state.cities.append({"name": Rules.CITY_NAME, "x": 7, "y": 8, "size": 1, "queue": [], "buildings": []})
+
+
+# Settlers 4 to 8, with Water north, east, south and west of the first four and on a diagonal only of the fifth.
+func setup_four_sides(game: RefCounted) -> void:
+  place_settler(game, Vector2i(4, 4), Vector2i(4, 3))
+  place_settler(game, Vector2i(7, 4), Vector2i(8, 4))
+  place_settler(game, Vector2i(10, 4), Vector2i(10, 5))
+  place_settler(game, Vector2i(13, 4), Vector2i(12, 4))
+  place_settler(game, Vector2i(16, 4), Vector2i(17, 5))
+
+
+func setup_far_tile(game: RefCounted) -> void:
+  add_city(game)
+  place_settler(game, Vector2i(14, 4), Vector2i(14, 3))
+
+
+# The scenarios: a setup that builds the game, and the steps [intent, args, code] it plays. The start tile (6, 8) is a Plain with Water at
+# (5, 8), and (6, 9) another with Water at (5, 9); the Forest (7, 8) and the Hill (7, 7) are next to it.
+func irrigation_scenarios() -> Array:
+  return [
+    {"name": "start-plain", "steps": [["irrigate", [99], "unknown_unit"], ["irrigate", [3], "not_your_unit"], ["irrigate", [2], "not_a_settler"],
+      ["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["irrigate", [1], "already_irrigated"], ["end_turn", [], "ok"], ["irrigate", [1], "already_irrigated"]]},
+    # The Settler has no moves left after the forest (2 of 2), and the refusal is still the tile's: the checks run unit, tile, moves.
+    {"name": "forest", "steps": [["move_unit", [1, 7, 8], "ok"], ["irrigate", [1], "not_a_plain"]]},
+    {"name": "hill", "steps": [["move_unit", [1, 7, 7], "ok"], ["irrigate", [1], "not_a_plain"]]},
+    {"name": "no-moves-left", "steps": [["move_unit", [1, 6, 9], "ok"], ["move_unit", [1, 6, 8], "ok"], ["irrigate", [1], "no_moves_left"], ["end_turn", [], "ok"],
+      ["irrigate", [1], "ok"]]},
+    # Water on each of the four sides irrigates, in whatever order the Settlers go; Water on a diagonal only does not.
+    {"name": "four-sides", "setup": setup_four_sides,
+      "steps": [["irrigate", [6], "ok"], ["irrigate", [4], "ok"], ["irrigate", [8], "no_water_nearby"], ["irrigate", [7], "ok"], ["irrigate", [5], "ok"]]},
+    # The city's yields use the bonus: the irrigated Plain next to the city outranks every neighbour, so the city works it.
+    {"name": "city-yield", "setup": add_city, "steps": [["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["end_turn", [], "ok"]]},
+    {"name": "city-control", "setup": add_city, "steps": [["select_unit", [1], "ok"], ["end_turn", [], "ok"]]},
+    # An irrigated Plain that the city does not work changes nothing of its yields.
+    {"name": "far-tile", "setup": setup_far_tile,
+      "steps": [["select_unit", [4], "ok"], ["irrigate", [4], "ok"]]},
+    # The city founded on an irrigated Plain works it as its centre.
+    {"name": "city-on-irrigated", "steps": [["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["end_turn", [], "ok"], ["found_city", [1], "ok"], ["end_turn", [], "ok"]]},
+  ]
+
+
+# Plays one scenario on a game built for it. The state after every step goes to the report; the snapshots stay here for the checks of the case.
+func play_irrigation(entry: Dictionary) -> Dictionary:
+  var game = Game.new(Rules.SEED, SESSION_EPOCH)
+  if entry.has("setup"):
+    entry.setup.call(game)
+  var initial: String = game.serialize()
+  check(initial != "", "irrigation %s: the game built for the case serializes" % entry.name)
+  var records := []
+  var snapshots := []
+  for index in entry.steps.size():
+    var step: Array = entry.steps[index]
+    var name := "irrigation %s step %02d %s%s" % [entry.name, index, step[0], JSON.stringify(step[1])]
+    var before: String = game.serialize()
+    var result: Dictionary = game.callv(step[0], step[1])
+    var after: String = game.serialize()
+    check(result.code == step[2], name + " answers " + step[2])
+    if result.ok == 0:
+      check(after == before, name + " refused: the state is untouched")
+      check(result.text == Rules.reason_text(result.code) and result.text != "", name + " refused: the text is the code's")
+    var snapshot: Dictionary = game.snapshot()
+    check(Snapshot.is_frozen(snapshot) and Canon.encode(snapshot) != "", name + " snapshot is immutable and integers and strings only")
+    check(intents_agree_with_snapshot(game, snapshot), name + " every enabled action is an accepted intent and the reverse")
+    if snapshot.context == "settler":
+      check(snapshot.actions.map(func(action: Dictionary) -> String: return action.id) == SETTLER_ACTIONS, name + " the Settler's actions are in the game's order")
+    var record := {"index": index, "intent": step[0], "args": step[1], "ok": result.ok, "code": result.code, "context": game.context(), "turn": game.state.turn,
+      "serialization": after, "hash": Canon.hash_text(after)}
+    if result.has("phases"):
+      record["phases"] = result.phases
+    records.append(record)
+    snapshots.append(snapshot)
+  return {"name": entry.name, "initial": initial, "steps": records, "snapshots": snapshots, "game": game}
+
+
+# The irrigation of the start tile, seen in the snapshot, the card and the hover: the numbers the HUDs show.
+func check_start_plain(played: Dictionary) -> Dictionary:
+  var snapshots: Array = played.snapshots
+  var game = played.game
+  var offered: Dictionary = snapshots[3].actions[1]
+  check(snapshots[3].context == "settler" and offered.id == "irrigate" and offered.label == "Irrigate" and offered.args == [1] and offered.enabled == 1 and offered.reason == "",
+    "irrigation: a Settler on a Plain with Water beside it is offered Irrigate, enabled, for its own id")
+  check(snapshots[3].tile.irrigated == 0 and snapshots[3].tile.food == 2 and snapshots[3].tile.production == 1,
+    "irrigation: the tile card of a Plain that is not irrigated says so and yields its terrain's")
+  var done: Dictionary = snapshots[4].actions[1]
+  check(done.enabled == 0 and done.reason == "already_irrigated" and done.reason_text == Rules.reason_text("already_irrigated"),
+    "irrigation: once irrigated the action is disabled with already_irrigated and the game's text")
+  check(snapshots[4].tile.irrigated == 1 and snapshots[4].tile.food == 3 and snapshots[4].tile.production == 1 and snapshots[4].tile.science == 0,
+    "irrigation: the card of the irrigated tile says so and its food has the bonus")
+  var settler: Dictionary = snapshots[4].tile.units.filter(func(unit: Dictionary) -> bool: return unit.id == 1)[0]
+  check(settler.moves == 0 and settler.max_moves == 2, "irrigation: irrigating spends all of the Settler's remaining moves")
+  check(game.state.irrigated == [World.index(6, 8)], "irrigation: the state holds the tile as an index into the map")
+  # Two turns on, the Settler has its moves back and the tile is still irrigated: the refusal is the tile's, not the moves'.
+  check(World.unit_by_id(game.state, 1).moves == 2 and game.state.turn == 2 and game.tile_card(6, 8).food == 3, "irrigation: the tile stays irrigated across the turn")
+  var hover_irrigated: Dictionary = game.tile_card(6, 8)
+  var hover_plain: Dictionary = game.tile_card(9, 8)
+  var hover_water: Dictionary = game.tile_card(5, 8)
+  var hover_outside: Dictionary = game.tile_card(-1, 8)
+  check(hover_irrigated.irrigated == 1 and hover_irrigated.food == 3 and hover_plain.irrigated == 0 and hover_plain.food == 2 and hover_water.irrigated == 0
+    and hover_water.food == 1 and hover_outside.present == 0 and hover_outside.irrigated == 0, "irrigation: the hover's card says it too, tile by tile, and the absent card is not irrigated")
+  var fresh = Game.new()
+  var changed = Game.new()
+  changed.state.irrigated.append(World.index(6, 8))
+  check(fresh.state.irrigated.is_empty() and fresh.state_hash() != changed.state_hash() and fresh.serialize().contains("\"irrigated\":[]"),
+    "irrigation: a fresh game holds no irrigated tile, and the irrigated tiles are part of the state's hash")
+  return {"before": snapshots[3], "after": snapshots[4], "hoverIrrigated": hover_irrigated, "hoverPlain": hover_plain, "hoverWater": hover_water, "hoverOutside": hover_outside}
+
+
+func check_irrigation_yields(by_name: Dictionary) -> void:
+  var yield_case: Dictionary = by_name["city-yield"]
+  var control: Dictionary = by_name["city-control"]
+  var before: Dictionary = yield_case.snapshots[0]
+  var after: Dictionary = yield_case.snapshots[1]
+  check(before.city.food_rate == 3 and before.city.production_rate == 5 and after.city.food_rate == 5 and after.city.production_rate == 4,
+    "irrigation: the city works the irrigated Plain, which outranks its other neighbours: two more food and one less production")
+  check(after.resources.food.rate == after.city.food_rate and yield_case.snapshots[2].resources.food.stock == 5 and control.snapshots[1].resources.food.stock == 3,
+    "irrigation: the turn after, the city's food stock has the irrigated yield, and the same turn without it has the other")
+  var far_before: Dictionary = by_name["far-tile"].snapshots[0]
+  var far_after: Dictionary = by_name["far-tile"].snapshots[1]
+  check(far_before.city.food_rate == far_after.city.food_rate and far_after.tile.irrigated == 1 and far_after.tile.food == 3,
+    "irrigation: an irrigated Plain the city does not work leaves the city's yields as they were, and its card has the bonus")
+  var founded: Dictionary = by_name["city-on-irrigated"].snapshots[3]
+  check(founded.city.present == 1 and founded.city.food_rate == 5, "irrigation: a city founded on an irrigated Plain works it as its centre")
+
+
+func check_irrigation() -> Dictionary:
+  var scenarios := []
+  var by_name := {}
+  for entry: Dictionary in irrigation_scenarios():
+    var played := play_irrigation(entry)
+    by_name[entry.name] = played
+    scenarios.append({"name": played.name, "initial": played.initial, "steps": played.steps})
+  var cards := check_start_plain(by_name["start-plain"])
+  check_irrigation_yields(by_name)
+  var four: Dictionary = by_name["four-sides"]
+  check(four.game.state.irrigated == [100, 103, 106, 109], "irrigation: four tiles with Water on each of the four sides are irrigated, kept ascending whatever the order")
+  check(World.unit_by_id(four.game.state, 8).moves == 2 and World.unit_by_id(four.game.state, 6).moves == 0,
+    "irrigation: the Settler that was refused keeps its moves and the ones that irrigated spent them")
+  check(by_name["forest"].game.state.irrigated.is_empty() and by_name["hill"].game.state.irrigated.is_empty(), "irrigation: no Forest and no Hill is irrigated")
+  return {"scenarios": scenarios, "cards": cards}
+
+
 func check_epoch(primary: Dictionary) -> void:
   var other = Game.new(Rules.SEED, SESSION_EPOCH + 1)
   check(other.snapshot().epoch == SESSION_EPOCH + 1 and primary.snapshots.final.epoch == SESSION_EPOCH, "epoch: the snapshot carries the session's epoch")
@@ -254,6 +419,7 @@ func _init() -> void:
   check_turn_slicing()
   var unreachable := check_unreachable_refusals()
   var waits := check_faction_waits()
+  var irrigation := check_irrigation()
   var primary := play(false, SESSION_EPOCH, true)
   var repeated := play(false, SESSION_EPOCH, false)
   var sliced := play(true, SESSION_EPOCH, false)
@@ -268,7 +434,7 @@ func _init() -> void:
   var final_hash: String = hashes[hashes.size() - 1]
   var report := {"scenario": "civ-lite-game", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
     "seed": Rules.SEED, "epoch": SESSION_EPOCH, "prng": {"vector": Prng.reference_vector()}, "initial": primary.initial,
-    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "waitCases": waits, "finalHash": final_hash, "checks": checks,
+    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "waitCases": waits, "irrigation": irrigation, "finalHash": final_hash, "checks": checks,
     "allPassed": failures.is_empty()}
   DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://build"))
   var output := FileAccess.open(output_path(), FileAccess.WRITE)

@@ -33,6 +33,14 @@ import {guardSources} from "./sabotage-sources.mjs";
 //         probe's check of the wait's event fails, and the oracle, which judges the log entries a turn appended against
 //         the events the rules give the faction's phases, rejects it.
 //
+//  irrigation-diagonal  Water on a diagonal counts as Water beside the tile: a Settler with Water only on a corner irrigates. The roteiro
+//         never irrigates, so its states and its golden hash are unchanged; the irrigation scenarios built for the four sides fail the probe's
+//         checks, and the oracle finds an irrigation its rule refuses.
+//  irrigation-keeps-moves  irrigating does not spend the Settler's moves: the Settler that irrigated can still found a city, move or irrigate.
+//  irrigation-unsorted  the irrigated tiles stay in the order they were irrigated in, not ascending: the same set has two spellings, and so two hashes.
+//  irrigation-no-yield  the tile does not yield the bonus: the card's food and the city's yields are the terrain's. The irrigated tile is
+//         recorded in the state, so only the yields tell.
+//
 //  events-out-of-order  an answered event leaves the queue by its tail and not by its head: the first event is answered and is
 //         still the head, so the second never comes up. The replay's refusals and contexts at the queue steps do not happen, the
 //         golden hash is lost and the oracle finds the first answer that did not take the head out.
@@ -54,6 +62,13 @@ const variants = [
   {name: "ai-city", file: `${game}/turn.gd`,
     find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
     replace: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty()\n"},
+  {name: "irrigation-diagonal", file: `${game}/world.gd`,
+    find: "  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:\n",
+    replace: "  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(1, -1), Vector2i(1, 1), Vector2i(-1, 1)]:\n"},
+  {name: "irrigation-keeps-moves", file: `${game}/intents.gd`, find: "  state.irrigated.sort()\n  unit.moves = 0\n", replace: "  state.irrigated.sort()\n"},
+  {name: "irrigation-unsorted", file: `${game}/intents.gd`, find: "  state.irrigated.sort()\n", replace: ""},
+  {name: "irrigation-no-yield", file: `${game}/economy.gd`,
+    find: "  var food: int = terrain.food + (Rules.IRRIGATION_FOOD if World.is_irrigated(state, x, y) else 0)\n", replace: "  var food: int = terrain.food\n"},
   {name: "events-out-of-order", file: `${game}/intents.gd`, find: "  state.events.queue.remove_at(0)\n", replace: "  state.events.queue.pop_back()\n"},
   {name: "ai-wrong-event", file: `${game}/turn.gd`, find: "    World.emit(state, \"ai_blocked\", ai.tx, ai.ty)\n",
     replace: "    World.emit(state, \"ai_moved\", ai.tx, ai.ty)\n"},

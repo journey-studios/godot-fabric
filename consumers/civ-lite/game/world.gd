@@ -27,6 +27,8 @@ static func new_state(seed_value: int) -> Dictionary:
   ]
   state["next_unit"] = 4
   state["cities"] = []
+  # The irrigated tiles as indexes into the map, ascending: a set, so one state has one spelling whatever the order they were irrigated in.
+  state["irrigated"] = []
   state["res"] = {"food": 0, "production": 0, "science": 0}
   state["research"] = {"done": 0, "current": ""}
   state["events"] = {"queue": [], "resolved": []}
@@ -88,6 +90,18 @@ static func in_bounds(x: int, y: int) -> bool:
 
 static func terrain_at(state: Dictionary, x: int, y: int) -> int:
   return state.map.terrain[index(x, y)]
+
+
+static func is_irrigated(state: Dictionary, x: int, y: int) -> bool:
+  return state.irrigated.has(index(x, y))
+
+
+# Whether Water is on one of the tile's four sides. The diagonals do not count, and a side outside the map is not water.
+static func water_beside(state: Dictionary, x: int, y: int) -> bool:
+  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
+    if in_bounds(x + side.x, y + side.y) and terrain_at(state, x + side.x, y + side.y) == Rules.WATER:
+      return true
+  return false
 
 
 # The unit with this id, or an empty Dictionary. The result is the state's own entry, not a copy.

@@ -34,6 +34,10 @@ const UNITS := {
   "warrior": {"name": "Warrior", "moves": 3},
 }
 
+# Irrigation: a Settler irrigates the Plain it stands on when Water is one of the tile's four neighbours (not the diagonals) and the tile is not
+# irrigated yet. It spends all of the Settler's remaining moves, and the tile yields this much more food for the rest of the game.
+const IRRIGATION_FOOD := 1
+
 # The city centre adds this on top of its own tile.
 const CENTER_FOOD := 1
 const CENTER_PRODUCTION := 1
@@ -121,7 +125,10 @@ const REASONS := {
   "not_enough_moves": "Not enough movement points for that terrain.",
   "cannot_fortify": "Settlers cannot fortify.",
   "already_fortified": "The unit is already fortified.",
-  "not_a_settler": "Only a Settler can found a city.",
+  "not_a_settler": "Only a Settler can do that.",
+  "not_a_plain": "Only a Plain can be irrigated.",
+  "no_water_nearby": "Irrigation needs Water on one of the tile's four sides.",
+  "already_irrigated": "This tile is already irrigated.",
   "city_exists": "This scenario allows a single city.",
   "too_close_to_edge": "A city needs open ground on every side.",
   "no_city": "There is no city to manage yet.",

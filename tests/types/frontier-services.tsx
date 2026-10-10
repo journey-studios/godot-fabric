@@ -5,6 +5,7 @@ import {
   FRONTIER_END_TURN,
   FRONTIER_FORTIFY,
   FRONTIER_FOUND_CITY,
+  FRONTIER_IRRIGATE,
   FRONTIER_MOVE_UNIT,
   FRONTIER_NEW_GAME,
   FRONTIER_RESOLVE_EVENT,
@@ -49,10 +50,15 @@ const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ val
   void carried;
   const reason: string = value.actions[0].reason;
   const terrain: string = value.tile.terrain_name;
+  // The tile card says whether the tile is irrigated (0 or 1); its `food` already has the irrigation's.
+  const irrigated: number = value.tile.irrigated;
   const queued: string = value.city.queue[0].item;
   const tech: string = value.research.techs[0].state;
   const choice: string = value.dialog.choices[0].label;
-  void [epoch, lastJob, phase, context, turn, foodStock, foodRate, unitId, reason, terrain, queued, tech, choice, revision, generation];
+  void [epoch, lastJob, phase, context, turn, foodStock, foodRate, unitId, reason, terrain, irrigated, queued, tech, choice, revision, generation];
+  // @ts-expect-error irrigated is a number, not a boolean
+  const flag: boolean = value.tile.irrigated;
+  void flag;
   // @ts-expect-error the snapshot has no gold
   value.gold;
   // @ts-expect-error resources have no gold stock
@@ -109,6 +115,7 @@ void callFrontier(FRONTIER_SET_PRODUCTION, ["warrior", 0]);
 void callFrontier(FRONTIER_CLEAR_SELECTION, []);
 void callFrontier(FRONTIER_FOUND_CITY, [1]);
 void callFrontier(FRONTIER_FORTIFY, [2]);
+void callFrontier(FRONTIER_IRRIGATE, [1]);
 void callFrontier(FRONTIER_SET_RESEARCH, ["alphabet"]);
 void callFrontier(FRONTIER_RESOLVE_EVENT, ["welcome"]);
 void callFrontier(FRONTIER_END_TURN, []);
@@ -146,6 +153,8 @@ void callFrontier(FRONTIER_SELECT_TILE, [6, 8, 1]);
 void callFrontier(FRONTIER_END_TURN, [1]);
 // @ts-expect-error set_production takes (item, slot), not (slot, item)
 void callFrontier(FRONTIER_SET_PRODUCTION, [0, "warrior"]);
+// @ts-expect-error irrigate takes the Settler's id and nothing else
+void callFrontier(FRONTIER_IRRIGATE, [1, 6]);
 // @ts-expect-error select_unit takes an integer, not an object
 void callFrontier(FRONTIER_SELECT_UNIT, [{ unit_id: 1 }]);
 // @ts-expect-error there is no such method

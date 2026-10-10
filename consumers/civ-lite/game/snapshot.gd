@@ -68,8 +68,11 @@ static func is_frozen(value: Variant) -> bool:
 
 # An action is an intent the HUD can offer. `enabled` and `reason` come from the intent's own check, so the two agree.
 # `args` are the intent's positional arguments, an array of integers in the order the intent takes them: [unit_id] for
-# select_unit, found_city and fortify, [] for clear_selection and end_turn. A caller sends them back as they are, under the
+# select_unit, found_city, irrigate and fortify, [] for clear_selection and end_turn. A caller sends them back as they are, under the
 # action's id as the intent's name, and needs no knowledge of which intent takes what.
+#
+# The order of the actions is the game's, and the HUDs list them as they come. The Settler's: found_city, irrigate, fortify, then the two every
+# context with a selection has (clear_selection and end_turn). A Warrior's: fortify. A stack's: one select_unit for each of the player's units.
 static func action(id: String, label: String, args: Array, reason: String) -> Dictionary:
   return {"id": id, "label": label, "args": args, "enabled": 1 if reason == "" else 0, "reason": reason, "reason_text": Rules.reason_text(reason)}
 
@@ -79,6 +82,7 @@ static func _actions(state: Dictionary, context: String) -> Array:
   var unit_id := int(state.sel.unit)
   if context == "settler":
     actions.append(action("found_city", "Found city", [unit_id], Intents.check_found_city(state, unit_id)))
+    actions.append(action("irrigate", "Irrigate", [unit_id], Intents.check_irrigate(state, unit_id)))
     actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
   elif context == "warrior":
     actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
@@ -103,19 +107,21 @@ static func _tile(state: Dictionary) -> Dictionary:
 
 
 # The card of one tile: the selected tile's in the snapshot, and the tile under the pointer in frontier.hover (the pointer is the
-# World's and is outside the state). A coordinate outside the map is the absent card.
+# World's and is outside the state). A coordinate outside the map is the absent card. `irrigated` is 0 or 1, and the card's `food`
+# is what the tile yields, the irrigation's food included.
 static func tile_card(state: Dictionary, x: int, y: int) -> Dictionary:
   if not World.in_bounds(x, y):
     return {"present": 0, "x": -1, "y": -1, "terrain": -1, "terrain_name": "", "food": 0, "production": 0, "science": 0, "move_cost": 0,
-      "city": 0, "units": []}
+      "city": 0, "irrigated": 0, "units": []}
   var terrain_id := World.terrain_at(state, x, y)
   var terrain: Dictionary = Rules.TERRAIN[terrain_id]
+  var yields := Economy.tile_yield(state, x, y)
   var units := []
   for unit: Dictionary in World.units_at(state, x, y):
     units.append(_unit_card(unit))
-  return {"present": 1, "x": x, "y": y, "terrain": terrain_id, "terrain_name": terrain.name, "food": terrain.food,
-    "production": terrain.production, "science": terrain.science, "move_cost": terrain.move,
-    "city": 0 if World.city_at(state, x, y).is_empty() else 1, "units": units}
+  return {"present": 1, "x": x, "y": y, "terrain": terrain_id, "terrain_name": terrain.name, "food": yields.food,
+    "production": yields.production, "science": yields.science, "move_cost": terrain.move,
+    "city": 0 if World.city_at(state, x, y).is_empty() else 1, "irrigated": 1 if World.is_irrigated(state, x, y) else 0, "units": units}
 
 
 static func _city(state: Dictionary, rates: Dictionary) -> Dictionary:

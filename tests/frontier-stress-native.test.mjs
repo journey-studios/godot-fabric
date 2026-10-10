@@ -40,7 +40,7 @@ test("the stress mode: three intents outside the game's state, a snapshot that c
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed/);
 
   // The raw observations, judged again from the rules of the mode.
-  assert.equal(report.bindings, 18);
+  assert.equal(report.bindings, 19);
   assert.deepEqual([report.off.step.code, report.off.end.code, report.off.published], ["stress_off", "stress_off", 0]);
   assert.deepEqual([report.during.refused.ok, report.during.refused.code, report.during.carried], [0, "turn_in_progress", false]);
   assert.deepEqual([report.begun.result.code, report.begun.log, report.begun.production, report.begun.published, report.begun.frozen], ["ok", 200, 100, 1, true]);

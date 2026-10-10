@@ -21,7 +21,7 @@ const ACTION_ARGS := {"array": INT}
 const ACTION := {"object": {"id": STR, "label": STR, "args": ACTION_ARGS, "enabled": INT, "reason": STR, "reason_text": STR}}
 const UNIT_CARD := {"object": {"id": INT, "owner": INT, "kind": STR, "name": STR, "moves": INT, "max_moves": INT, "fortified": INT}}
 const TILE_CARD := {"object": {"present": INT, "x": INT, "y": INT, "terrain": INT, "terrain_name": STR, "food": INT, "production": INT,
-  "science": INT, "move_cost": INT, "city": INT, "units": {"array": UNIT_CARD}}}
+  "science": INT, "move_cost": INT, "city": INT, "irrigated": INT, "units": {"array": UNIT_CARD}}}
 const QUEUE_ENTRY := {"object": {"slot": INT, "item": STR, "label": STR, "cost": INT, "stock": INT}}
 const ITEM := {"object": {"id": STR, "label": STR, "kind": STR, "cost": INT, "tech": STR, "enabled": INT, "reason": STR, "reason_text": STR}}
 const GARRISON_ENTRY := {"object": {"id": INT, "kind": STR}}
@@ -71,6 +71,7 @@ const METHOD_ARGS := {
   "move_unit": [INT, INT, INT],
   "found_city": [INT],
   "fortify": [INT],
+  "irrigate": [INT],
   "set_production": [STR, INT],
   "set_research": [STR],
   "resolve_event": [STR],

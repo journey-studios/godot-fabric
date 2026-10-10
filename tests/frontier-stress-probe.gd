@@ -83,7 +83,7 @@ func run() -> void:
   application = stand_in.get_node("Runtime")
   await frames(4)
   report["bindings"] = int(registry().get("bindings", -1))
-  check(report.bindings == 18 and errors().is_empty(), "The node registered the two states, the signal and 15 methods (the three of the stress mode among them) and the registry took the snapshot's schema, its optional field included")
+  check(report.bindings == 19 and errors().is_empty(), "The node registered the two states, the signal and 16 methods (the three of the stress mode among them) and the registry took the snapshot's schema, its optional field included")
   await run_mode()
   await run_validator()
   finish()

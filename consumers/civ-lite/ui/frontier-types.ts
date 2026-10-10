@@ -44,7 +44,7 @@ export interface Action {
   readonly id: string;
   readonly label: string;
   /**
-   * The intent's positional arguments, in order: `[unit_id]` for select_unit, found_city and fortify, `[]` for
+   * The intent's positional arguments, in order: `[unit_id]` for select_unit, found_city, irrigate and fortify, `[]` for
    * clear_selection and end_turn. The HUD sends them back as they are, `GodotFabric.call("frontier." + id, args)`, and
    * needs no knowledge of which intent takes what.
    */
@@ -81,6 +81,8 @@ export interface TileCard {
   readonly move_cost: Int;
   /** 0 or 1. */
   readonly city: Int;
+  /** 0 or 1: the tile is irrigated, and the `food` above already includes the one more food that gives. */
+  readonly irrigated: Int;
   readonly units: readonly UnitCard[];
 }
 
@@ -258,6 +260,7 @@ export const FRONTIER_CLEAR_SELECTION = "frontier.clear_selection";
 export const FRONTIER_MOVE_UNIT = "frontier.move_unit";
 export const FRONTIER_FOUND_CITY = "frontier.found_city";
 export const FRONTIER_FORTIFY = "frontier.fortify";
+export const FRONTIER_IRRIGATE = "frontier.irrigate";
 export const FRONTIER_SET_PRODUCTION = "frontier.set_production";
 export const FRONTIER_SET_RESEARCH = "frontier.set_research";
 export const FRONTIER_RESOLVE_EVENT = "frontier.resolve_event";
@@ -291,6 +294,8 @@ export interface FrontierMethods {
   readonly "frontier.move_unit": [unit_id: Int, x: Int, y: Int];
   readonly "frontier.found_city": [unit_id: Int];
   readonly "frontier.fortify": [unit_id: Int];
+  /** A Settler irrigates the Plain it stands on (Water beside it, not irrigated yet): all its moves are spent and the tile yields one more food. */
+  readonly "frontier.irrigate": [unit_id: Int];
   readonly "frontier.set_production": [item_id: string, slot: Int];
   readonly "frontier.set_research": [tech_id: string];
   readonly "frontier.resolve_event": [choice_id: string];

@@ -389,8 +389,8 @@ process, which the services never touch, plays the same steps and is the referen
   `production`, `growth`, `research`, `refresh`) and the job, before the snapshot of the turn that begins, which carries
   `last_job`. The probe waits for each job before the next step. The state of the node is the reference's at every step, and the
   final hash is the P3 golden hash
-  `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d`; the hashes of all 77 steps make the P3 trace hash
-  `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e`. (The package's own run, which the record under
+  `0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1`; the hashes of all 77 steps make the P3 trace hash
+  `a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba`. (The package's own run, which the record under
   `docs/evidence/frontier-services/` keeps, had 73 steps and the hashes `275b7c61…` and `fba99004…`: the queue of three events of 2026-10-09 added four
   steps to turn 5 and moved both hashes; see [frontier-game.md](frontier-game.md), "The replay".)
 - **Persistence.** The surface is unmounted in the frame after the node accepted the third `end_turn`, with the job's first phase

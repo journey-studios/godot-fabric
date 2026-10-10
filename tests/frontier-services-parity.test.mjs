@@ -43,12 +43,12 @@ test("the dump is of this tree: the report was made from the sources the types a
 });
 
 test("the TypeScript types and the schemas Godot registered declare the same names, fields and types", () => {
-  assert.equal(typescript.registrations.length, 18, "two states (the snapshot and the hover), one signal and 15 methods");
+  assert.equal(typescript.registrations.length, 19, "two states (the snapshot and the hover), one signal and 16 methods");
   assert.deepEqual(diffRegistrations(typescript.registrations, report.registered), []);
   // The name constants are the registered names: a constant that named nothing would be a call to a missing service.
   assert.deepEqual(Object.values(typescript.constants).sort(), typescript.registrations.map(entry => entry.name).sort());
   assert.deepEqual(report.registered.map(entry => entry.kind).sort(), ["method", "method", "method", "method", "method", "method", "method", "method", "method",
-    "method", "method", "method", "method", "method", "method", "signal", "state", "state"]);
+    "method", "method", "method", "method", "method", "method", "method", "signal", "state", "state"]);
   // The shapes the HUD leans on, spelled out once more.
   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
   // The hover is the card of the tile under the pointer: the same DTO as the snapshot's `tile`, on both sides.
@@ -63,7 +63,7 @@ test("the TypeScript types and the schemas Godot registered declare the same nam
   // One result for every method: the job a call started is 0 for all but an accepted end_turn.
   assert.deepEqual(named(typescript.registrations, "frontier.end_turn").result, {object: {ok: "integer", code: "string", text: "string", job: "integer"}});
   assert.deepEqual(typescript.registrations.filter(entry => entry.kind === "method").map(entry => entry.result),
-    Array(15).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
+    Array(16).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
 });
 
 // Each case changes one thing at a path and says what the comparison must report. `side` is the side that is changed.
@@ -114,6 +114,10 @@ const mutations = [
     expected: {godot: "frontier.snapshot.dialog.count: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.snapshot.dialog.count: TypeScript declares \"string\", Godot registers \"integer\""}},
   {name: "a hover card field removed", target: "frontier.hover", change: value => delete at(value, []).object.terrain_name,
     expected: {godot: "frontier.hover.terrain_name: declared in TypeScript, missing from Godot's schema", typescript: "frontier.hover.terrain_name: registered by Godot, missing from the TypeScript types"}},
+  {name: "the irrigated flag removed from the card", target: "frontier.hover", change: value => delete at(value, []).object.irrigated,
+    expected: {godot: "frontier.hover.irrigated: declared in TypeScript, missing from Godot's schema", typescript: "frontier.hover.irrigated: registered by Godot, missing from the TypeScript types"}},
+  {name: "the irrigate method's unit argument removed", target: "frontier.irrigate", change: value => value.args.pop(),
+    expected: {godot: "frontier.irrigate: TypeScript declares 1 arguments, Godot registers 0", typescript: "frontier.irrigate: TypeScript declares 0 arguments, Godot registers 1"}},
   {name: "a hover card unit's type swapped", target: "frontier.hover", change: value => { at(value, ["units", "[]"]).object.moves = "string"; },
     expected: {godot: "frontier.hover.units[].moves: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.hover.units[].moves: TypeScript declares \"string\", Godot registers \"integer\""}},
   {name: "the job's type swapped", target: "frontier.end_turn", change: value => { value.result.object.job = "string"; },
@@ -283,7 +287,7 @@ test("the rule lane's oracle accepts what the mutation predicts and rejects anyt
       snapshot.resources.food.stock += 1;
       other.ruleLane.rows[2].snapshot = JSON.stringify(snapshot);
       return [genuine, other, options];
-    }, /found_city, its reason and the Settler's card are all that differ/],
+    }, /found_city, irrigate, their reasons and the Settler's card are all that differ/],
     ["the rule did not change the snapshot", () => {
       const other = clone(mutated);
       other.ruleLane.rows[2].snapshot = genuine.ruleLane.rows[2].snapshot;

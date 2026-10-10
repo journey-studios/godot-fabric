@@ -56,6 +56,11 @@ func fortify(unit_id: int) -> Dictionary:
   return _decide(Intents.check_fortify(state, unit_id), func() -> void: Intents.apply_fortify(state, unit_id))
 
 
+# The Settler irrigates the Plain it stands on: the tile yields one more food from now on, and the Settler has no moves left this turn.
+func irrigate(unit_id: int) -> Dictionary:
+  return _decide(Intents.check_irrigate(state, unit_id), func() -> void: Intents.apply_irrigate(state, unit_id))
+
+
 # Puts an item in a slot of the city's queue: slot 0 is what it is building, and a slot equal to the queue's length
 # appends.
 func set_production(item_id: String, slot: int) -> Dictionary:

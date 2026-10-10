@@ -155,6 +155,41 @@ static func apply_fortify(state: Dictionary, unit_id: int) -> void:
   World.emit(state, "unit_fortified", unit_id, 0)
 
 
+# A Settler irrigates the Plain it stands on. The checks run in this order, so a Settler that has just irrigated is told the tile is
+# already irrigated and not that it has no moves left: the unit, the tile, then the moves.
+static func check_irrigate(state: Dictionary, unit_id: int) -> String:
+  var guard := check_guard(state)
+  if guard != "":
+    return guard
+  var unit_reason := _unit_reason(state, unit_id)
+  if unit_reason != "":
+    return unit_reason
+  var unit := World.unit_by_id(state, unit_id)
+  if unit.kind != "settler":
+    return "not_a_settler"
+  var x := int(unit.x)
+  var y := int(unit.y)
+  if World.terrain_at(state, x, y) != Rules.PLAIN:
+    return "not_a_plain"
+  if not World.water_beside(state, x, y):
+    return "no_water_nearby"
+  if World.is_irrigated(state, x, y):
+    return "already_irrigated"
+  if int(unit.moves) == 0:
+    return "no_moves_left"
+  return ""
+
+
+# The tile joins the irrigated ones (kept ascending) and the Settler spends all of its remaining moves.
+static func apply_irrigate(state: Dictionary, unit_id: int) -> void:
+  var unit := World.unit_by_id(state, unit_id)
+  var tile := World.index(int(unit.x), int(unit.y))
+  state.irrigated.append(tile)
+  state.irrigated.sort()
+  unit.moves = 0
+  World.emit(state, "tile_irrigated", unit_id, tile)
+
+
 static func check_set_production(state: Dictionary, item_id: String, slot: int) -> String:
   var guard := check_guard(state)
   if guard != "":

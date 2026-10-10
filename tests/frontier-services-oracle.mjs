@@ -43,7 +43,7 @@ const TASK_LIMIT = 64;
 const EVENT_LIMIT = 128;
 const NODE_LIMIT = 10000;
 const DEPTH_LIMIT = 32;
-const BINDINGS = 18;
+const BINDINGS = 19;
 const NEW_GAMES = 3;
 const JOB_SNAPSHOTS = 7;
 const STRESS_SUBSCRIBERS = 150;
@@ -66,7 +66,10 @@ const REFUSALS = {
   not_enough_moves: "Not enough movement points for that terrain.",
   cannot_fortify: "Settlers cannot fortify.",
   already_fortified: "The unit is already fortified.",
-  not_a_settler: "Only a Settler can found a city.",
+  not_a_settler: "Only a Settler can do that.",
+  not_a_plain: "Only a Plain can be irrigated.",
+  no_water_nearby: "Irrigation needs Water on one of the tile's four sides.",
+  already_irrigated: "This tile is already irrigated.",
   city_exists: "This scenario allows a single city.",
   too_close_to_edge: "A city needs open ground on every side.",
   no_city: "There is no city to manage yet.",
@@ -83,11 +86,12 @@ const REFUSALS = {
   no_event: "There is no event to resolve.",
   unknown_choice: "That is not one of the choices.",
 };
-// The 24 codes the roteiro plays; the other four of the table cannot be reached in the scenario.
+// The 24 codes the roteiro plays; the others of the table cannot be reached in it: four need a state the scenario never has, and the Irrigate rule's
+// (not_a_plain, no_water_nearby and already_irrigated) are played by the game's own scenarios (tests/civ-lite-game-native.test.mjs), not by this roteiro.
 const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot",
   "unknown_tech", "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"].sort();
-const UNIT_INTENTS = ["select_unit", "found_city", "fortify"];
+const UNIT_INTENTS = ["select_unit", "found_city", "irrigate", "fortify"];
 
 const digest = value => createHash("sha256").update(value).digest("hex");
 
@@ -491,8 +495,8 @@ function differences(left, right, where = "") {
 // The same first intents of the game on the genuine rules and on rules with one constant mutated, read from the snapshots
 // JavaScript received. The only thing that differs is what Godot decided: the same bundle ran in both. The expected
 // differences are derived here from the genuine snapshots and the one constant, and must be exactly what changed: the
-// Settler's card (moves and max_moves) wherever it is shown, and found_city, which the game's own rule turns off with
-// no_moves_left once the Settler has none.
+// Settler's card (moves and max_moves) wherever it is shown, and found_city and irrigate, which the game's own rule turns off with
+// no_moves_left once the Settler has none (the start tile is a Plain with Water beside it, so irrigate is enabled when it has moves to spend).
 export function verifyRuleLane(genuine, mutated, {genuineMoves, mutatedMoves, typesText, bundleSha256, genuineRulesSha256, mutatedRulesSha256}) {
   assert.notEqual(genuineMoves, mutatedMoves, "the mutation changes the Settler's movement points");
   assert.equal(mutatedMoves, 0, "the mutation takes the Settler's movement points to 0, so that found_city is turned off from the start");
@@ -531,14 +535,22 @@ export function verifyRuleLane(genuine, mutated, {genuineMoves, mutatedMoves, ty
   assert.ok(foundCity >= 0 && settler.actions[foundCity].enabled === 1 && settler.actions[foundCity].reason === "", "genuine: found_city is enabled for a Settler with points");
   assert.deepEqual(settlerMutated.actions[foundCity], {id: "found_city", label: "Found city", args: [1], enabled: 0, reason: "no_moves_left", reason_text: REFUSALS.no_moves_left},
     "mutated: found_city is turned off by the game's rule with no_moves_left");
+  const irrigate = settler.actions.findIndex(action => action.id === "irrigate");
+  assert.ok(irrigate === foundCity + 1 && settler.actions[irrigate].enabled === 1 && settler.actions[irrigate].reason === "",
+    "genuine: irrigate follows found_city and is enabled for a Settler with points, on a Plain with Water beside it");
+  assert.deepEqual(settlerMutated.actions[irrigate], {id: "irrigate", label: "Irrigate", args: [1], enabled: 0, reason: "no_moves_left", reason_text: REFUSALS.no_moves_left},
+    "mutated: irrigate is turned off by the game's rule with no_moves_left");
   assert.deepEqual(differences(settler, settlerMutated), [
     {path: `actions[${foundCity}].enabled`, from: 1, to: 0},
     {path: `actions[${foundCity}].reason`, from: "", to: "no_moves_left"},
     {path: `actions[${foundCity}].reason_text`, from: "", to: REFUSALS.no_moves_left},
+    {path: `actions[${irrigate}].enabled`, from: 1, to: 0},
+    {path: `actions[${irrigate}].reason`, from: "", to: "no_moves_left"},
+    {path: `actions[${irrigate}].reason_text`, from: "", to: REFUSALS.no_moves_left},
     {path: `${card}.max_moves`, from: genuineMoves, to: mutatedMoves},
     {path: `${card}.moves`, from: genuineMoves, to: mutatedMoves},
   ],
-  "selecting the Settler: found_city, its reason and the Settler's card are all that differ, exactly as the rule predicts");
+  "selecting the Settler: found_city, irrigate, their reasons and the Settler's card are all that differ, exactly as the rule predicts");
 
   // The intent the rule decides: the same move is accepted with points and refused without.
   const [, , , moving] = genuine.ruleLane.rows;
@@ -647,7 +659,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
       if (UNIT_INTENTS.includes(action.id)) {
         assert.ok(action.args[0] > 0, `${where}: ${action.id} names a unit`);
       }
-      if (action.id === "found_city" || action.id === "fortify") {
+      if (action.id === "found_city" || action.id === "irrigate" || action.id === "fortify") {
         assert.deepEqual(action.args, [received.selection.unit], `${where}: ${action.id} is for the selected unit`);
       }
       const tried = step.actionsTried[index];

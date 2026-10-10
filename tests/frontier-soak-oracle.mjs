@@ -27,7 +27,7 @@ const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refre
 // What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the fifteen methods (one for each
 // intent, `new_game`, `open_menu` and the three of the stress mode). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82); the soak asserts the count the node
 // registers, it does not depend on what the services are.
-const BINDINGS = 18;
+const BINDINGS = 19;
 
 // The nodes of the heavy panel from its shape: a root, a header and two nodes a chip (the View and its Text).
 const PANEL_NODES = 2 + 2 * PANEL_SHAPE.chips;

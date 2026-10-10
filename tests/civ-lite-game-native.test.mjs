@@ -18,17 +18,22 @@ import {verifyFrontierReport} from "./civ-lite-game-oracle.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const EXECUTIONS = 3;
 // The state after the 12th end_turn of replay.gd. It changes when a rule, the map or the roteiro changes, and then
-// the new value is reviewed, not accepted.
-const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
+// the new value is reviewed, not accepted. It moved once for the Irrigate rule (the cost-of-change experiment's base): the state gained
+// `irrigated`, an empty list in every state of the roteiro, and nothing else of any of its states changed: with that field taken out of each
+// serialization, the previous golden hash (cb7ab974...) and trace hash (ed43495e...) come back.
+const GOLDEN_HASH = "0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1";
 // SHA-256 of the state hashes after every step of the roteiro, one per line. The golden hash pins where the replay ends;
 // this one pins how it got there, selection included, which every end_turn resets and the final state does not show.
-const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
+const TRACE_HASH = "a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba";
 const CONTEXTS = ["none", "tile", "settler", "warrior", "stack", "city", "dialog"];
 // The refusal codes the roteiro plays, and those the probe builds a state for because the scenario cannot reach them.
 const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot", "unknown_tech",
   "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"];
 const BUILT_REFUSALS = ["city_exists", "too_close_to_edge", "tile_occupied", "queue_full"];
+// The refusals of the Irrigate rule, played by the irrigation scenarios (the roteiro never irrigates): the three codes it adds, and the ones it reuses.
+const IRRIGATION_REFUSALS = ["already_irrigated", "no_moves_left", "no_water_nearby", "not_a_plain", "not_a_settler", "not_your_unit", "unknown_unit"];
+const IRRIGATION_SCENARIOS = ["start-plain", "forest", "hill", "no-moves-left", "four-sides", "city-yield", "city-control", "far-tile", "city-on-irrigated"];
 // The turns the probe builds states for, because the roteiro never puts the player on the faction's route.
 const WAIT_CASES = ["city-on-route", "city-on-route-next-turn", "unit-on-route"];
 const GAME_DIRECTORY = "consumers/civ-lite/game";
@@ -52,7 +57,7 @@ const SNAPSHOT_SHAPE = {
   resources: {food: {stock: "int", rate: "int"}, production: {stock: "int", rate: "int"}, science: {stock: "int", rate: "int"}},
   actions: [ACTION],
   tile: {present: "int", x: "int", y: "int", terrain: "int", terrain_name: "string", food: "int", production: "int", science: "int", move_cost: "int",
-    city: "int", units: [UNIT_CARD]},
+    city: "int", irrigated: "int", units: [UNIT_CARD]},
   city: {present: "int", name: "string", x: "int", y: "int", size: "int", max_size: "int", food_needed: "int", food_rate: "int",
     production_rate: "int", science_rate: "int",
     queue: [{slot: "int", item: "string", label: "string", cost: "int", stock: "int"}], queue_max: "int",
@@ -177,6 +182,14 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
       }
       return;
     }
+    if (sabotage.startsWith("irrigation-")) {
+      // The roteiro never irrigates, so its states and its golden hash are the genuine ones: the scenarios built for the rule tell, to the probe's
+      // checks and to the oracle, which judges every step of a scenario by the rules written again in Node.
+      assert.ok(!rejections.goldenHashDiffers && !rejections.executionsDiffer, "The roteiro does not irrigate");
+      assert.ok(failed.some(name => /^irrigation[: ]/.test(name)), failed.join("\n"));
+      assert.ok(oracle.every(message => /^irrigation /.test(message)), oracle.join("\n"));
+      return;
+    }
     assert.ok(rejections.goldenHashDiffers, "The golden hash rejects the sabotaged game");
     if (sabotage === "prng") {
       // A generator that is not the game's own gives a different map every process.
@@ -246,16 +259,17 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   const actions = context => report.snapshots[`cover-${context}`].actions.map(action => [action.id, action.enabled, action.reason]);
   assert.deepEqual(actions("none"), [["end_turn", 1, ""]]);
   assert.deepEqual(actions("tile"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
-  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["fortify", 0, "cannot_fortify"], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+  // Irrigate sits between found_city and fortify; at the covering step the Settler is on the start Plain, with Water beside it and moves to spend.
+  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["irrigate", 1, ""], ["fortify", 0, "cannot_fortify"], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("warrior"), [["fortify", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("stack"), [["select_unit", 1, ""], ["select_unit", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("city"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("dialog"), [["end_turn", 0, "event_pending"]]);
-  // The args are the intent's positional arguments: [unit_id] for select_unit, found_city and fortify, and [] for the
-  // others. For found_city and fortify the unit is the selected one; for select_unit it is one of the tile's own units.
+  // The args are the intent's positional arguments: [unit_id] for select_unit, found_city, irrigate and fortify, and [] for the
+  // others. For found_city, irrigate and fortify the unit is the selected one; for select_unit it is one of the tile's own units.
   for (const [name, snapshot] of Object.entries(report.snapshots)) {
     for (const action of snapshot.actions) {
-      if (["found_city", "fortify"].includes(action.id)) {
+      if (["found_city", "irrigate", "fortify"].includes(action.id)) {
         assert.deepEqual(action.args, [snapshot.selection.unit], `${name} ${action.id}: args are [the selected unit's id]`);
         assert.ok(snapshot.selection.unit > 0, `${name} ${action.id}: a unit is selected`);
       } else if (action.id === "select_unit") {
@@ -278,6 +292,23 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   assert.deepEqual(Object.keys(verified.refusals).sort(), [...ROTEIRO_REFUSALS].sort(), "The roteiro refuses with every code it documents");
   assert.deepEqual(report.unreachableRefusals.map(entry => entry.code).sort(), [...BUILT_REFUSALS].sort());
 
+  // The Irrigate rule: each case played on a game built for it and judged by the oracle step by step; the refusals it plays, in the game's table; and the
+  // cards the HUDs show, as the snapshot and the hover give them.
+  assert.deepEqual(verified.irrigation.scenarios, IRRIGATION_SCENARIOS, "The irrigation scenarios were all played and judged");
+  assert.deepEqual(Object.keys(verified.irrigation.refusals).sort(), IRRIGATION_REFUSALS, "The irrigation scenarios are refused with every code the rule documents");
+  const cards = report.irrigation.cards;
+  for (const [name, snapshot] of [["before", cards.before], ["after", cards.after]]) {
+    conforms(snapshot, SNAPSHOT_SHAPE, `irrigation ${name} snapshot`);
+  }
+  for (const [name, card] of [["irrigated", cards.hoverIrrigated], ["plain", cards.hoverPlain], ["water", cards.hoverWater], ["outside", cards.hoverOutside]]) {
+    conforms(card, SNAPSHOT_SHAPE.tile, `irrigation ${name} hover card`);
+  }
+  assert.deepEqual([cards.before.tile.irrigated, cards.before.tile.food, cards.after.tile.irrigated, cards.after.tile.food], [0, 2, 1, 3],
+    "Irrigating a Plain turns its card's irrigated flag on and its food from 2 to 3");
+  assert.deepEqual(cards.before.actions.map(action => [action.id, action.enabled, action.reason]).slice(0, 3), [["found_city", 1, ""], ["irrigate", 1, ""], ["fortify", 0, "cannot_fortify"]]);
+  assert.deepEqual(cards.after.actions.map(action => [action.id, action.enabled, action.reason]).slice(0, 3), [["found_city", 0, "no_moves_left"], ["irrigate", 0, "already_irrigated"], ["fortify", 0, "cannot_fortify"]]);
+  assert.deepEqual([cards.hoverIrrigated, cards.hoverPlain, cards.hoverWater].map(card => [card.irrigated, card.food]), [[1, 3], [0, 2], [0, 1]], "The hover's card says which tile is irrigated, its food with the bonus");
+
   // The faction's wait: a city and a unit of the player on its route, on states built for it, judged by the oracle.
   assert.deepEqual(verified.waitCases, WAIT_CASES, "The faction waits in every case built for it");
   for (const entry of report.waitCases) {
@@ -291,5 +322,5 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
     goldenHash: GOLDEN_HASH, traceHash, executions: runs.map((run, position) => ({execution: position + 1, status: run.result.status, finalHash: run.report.finalHash,
       checks: run.report.checks.length, reportSha256: digest(run.text)})),
     byteIdentical: true, steps: report.steps.length, turns: verified.turns, rngDraws: verified.draws, coverage, refusals: verified.refusals,
-    unreachableRefusals: report.unreachableRefusals, waitCases: verified.waitCases, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
+    unreachableRefusals: report.unreachableRefusals, waitCases: verified.waitCases, irrigation: verified.irrigation, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
 });

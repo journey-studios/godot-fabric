@@ -76,6 +76,7 @@ lower-case ASCII.
 | `map` | object | `w` (24), `h` (16), `terrain` (int[384], row-major: index `y * 24 + x`; 0 water, 1 plain, 2 forest, 3 hill). |
 | `units` | object[], ascending `id` | `id`, `owner` (1 player, 2 faction), `kind` (`"settler"` or `"warrior"`), `x`, `y`, `moves` (points left, 0 to the kind's allowance), `fortified` (0 or 1). |
 | `next_unit` | int | The id the next unit gets. |
+| `irrigated` | int[], ascending | The irrigated tiles as indexes into `map.terrain` (`y * 24 + x`): a set, kept sorted, so the order they were irrigated in is not part of the state. Each is a Plain with Water on one of its four sides. Empty in every state of the replay. |
 | `cities` | object[], 0 or 1 | `name`, `x`, `y`, `size` (1 to 3), `queue` (item ids, at most 3), `buildings` (item ids in completion order). |
 | `res` | object | `food`, `production`, `science`: the stocks, never negative. |
 | `research` | object | `done` (technologies learned, a prefix of the list) and `current` (a technology id, or `""`). |
@@ -102,6 +103,12 @@ The selection is part of the state because the context is derived from it and th
   does not depend on what the generator drew there, while the rest of the map still depends on the PRNG.
 - **Movement.** A unit moves to an adjacent tile (8 directions) if it can pay the terrain's cost from its points. Moving
   ends a fortification. Points refresh to the allowance at the end of every turn.
+- **Irrigation.** A Settler can irrigate the Plain it stands on when Water is one of the tile's four neighbours (north, east, south,
+  west: not the diagonals; a side outside the map is not water) and the tile is not irrigated yet. It spends all of the Settler's remaining
+  moves, and the tile yields one more food (`Rules.IRRIGATION_FOOD`) for the rest of the game, wherever it is read: the tile card's `food`, the
+  ranking of the city's neighbours and the city's rates. So an irrigated Plain next to the city (2 + 1 food, 1 production) outranks every other
+  neighbour and the city works it. The state gained `irrigated` for this, which moved the golden and trace hashes below once and for no other
+  reason (taking the field out of every serialization of the replay brings the previous hashes back).
 - **City.** It works its own tile plus as many neighbours as its size, best first (total yield, then production, then
   food, then row, then column: a total order). The centre adds 1 food, 1 production and 2 science. A building adds its
   own yields.
@@ -171,6 +178,7 @@ returns `{"ok": 1, "code": "ok", "text": ""}` plus the fields noted. All argumen
 | `move_unit` | `unit_id`, `x`, `y` | Moves one step to an adjacent tile, paying its cost. |
 | `found_city` | `unit_id` | The Settler becomes the city on its tile; the city is selected. |
 | `fortify` | `unit_id` | Fortifies a Warrior and ends its movement for the turn. |
+| `irrigate` | `unit_id` | A Settler irrigates the Plain it stands on (Water on one of its four sides, not irrigated yet): all its moves are spent and the tile yields one more food. The checks run in this order: the guard, the unit (`unknown_unit`, `not_your_unit`), `not_a_settler`, `not_a_plain`, `no_water_nearby`, `already_irrigated`, `no_moves_left`. So a Settler that has just irrigated is told the tile is already irrigated. |
 | `set_production` | `item_id`, `slot` | Puts an item in a slot of the queue: slot 0 is what is being built, a slot equal to the queue's length appends. The stock already made is kept. |
 | `set_research` | `tech_id` | Starts the next technology of the list. |
 | `resolve_event` | `choice_id` | Answers the head of the event queue with one of its own choices; the next event becomes the head. |
@@ -197,11 +205,14 @@ it), then its own checks as listed.
 | `not_adjacent` | The destination is not an adjacent tile. | `move_unit` not exactly one tile away |
 | `impassable_terrain` | Land units cannot enter water. | `move_unit` into water |
 | `tile_occupied` | A foreign unit blocks that tile. | `move_unit` onto the faction's unit |
-| `no_moves_left` | The unit has no movement points left. | `move_unit` or `found_city` with 0 points |
+| `no_moves_left` | The unit has no movement points left. | `move_unit`, `found_city` or `irrigate` with 0 points |
 | `not_enough_moves` | Not enough movement points for that terrain. | `move_unit` with fewer points than the cost |
 | `cannot_fortify` | Settlers cannot fortify. | `fortify` on a Settler |
 | `already_fortified` | The unit is already fortified. | `fortify` on a fortified unit |
-| `not_a_settler` | Only a Settler can found a city. | `found_city` with another kind |
+| `not_a_settler` | Only a Settler can do that. | `found_city` or `irrigate` with another kind |
+| `not_a_plain` | Only a Plain can be irrigated. | `irrigate` on a Forest or a Hill (Water is never stood on) |
+| `no_water_nearby` | Irrigation needs Water on one of the tile's four sides. | `irrigate` on a Plain with no Water to its north, east, south or west |
+| `already_irrigated` | This tile is already irrigated. | `irrigate` on an irrigated tile |
 | `city_exists` | This scenario allows a single city. | `found_city` with a city already founded |
 | `too_close_to_edge` | A city needs open ground on every side. | `found_city` on the outer ring of tiles |
 | `no_city` | There is no city to manage yet. | `set_production` before a city exists |
@@ -266,7 +277,7 @@ lists, so the TypeScript mirror needs no optional fields. Types below are `int`,
 **Resources**: `food`, `production`, `science`, each `{stock: int, rate: int}`. The rate is 0 until the city exists.
 
 **Action**: `id` (string, the intent's name), `label` (string), `args` (`int[]`, the intent's positional arguments in the
-order it takes them: `[unit_id]` for `select_unit`, `found_city` and `fortify`, `[]` for `clear_selection` and `end_turn`; a
+order it takes them: `[unit_id]` for `select_unit`, `found_city`, `irrigate` and `fortify`, `[]` for `clear_selection` and `end_turn`; a
 caller turns an action into a call as it is, the intent named `id` with `args`, and needs no knowledge of which intent takes
 what), `enabled` (0 or 1), `reason` (string, the refusal code, `""` when enabled) and `reason_text` (string, what the HUD
 shows next to a disabled action). `enabled` is exactly "the intent would be accepted now": it comes from the same check the
@@ -277,7 +288,7 @@ context:
 | --- | --- |
 | `none` | `end_turn` |
 | `tile`, `city` | `clear_selection`, `end_turn` |
-| `settler` | `found_city`, `fortify`, `clear_selection`, `end_turn` |
+| `settler` | `found_city`, `irrigate`, `fortify`, `clear_selection`, `end_turn` |
 | `warrior` | `fortify`, `clear_selection`, `end_turn` |
 | `stack` | one `select_unit` per unit of the player on the tile, `clear_selection`, `end_turn` |
 | `dialog` | `end_turn`, disabled with `event_pending` (the choices are in `dialog`) |
@@ -286,7 +297,8 @@ context:
 enabled there (the dialog blocks it).
 
 **TileCard**: `present` (0 or 1), `x`, `y`, `terrain` (int id, `-1` if absent), `terrain_name`, `food`, `production`,
-`science`, `move_cost` (0: cannot be entered), `city` (0 or 1) and `units` (UnitCard[], every faction, in id order).
+`science`, `move_cost` (0: cannot be entered), `city` (0 or 1), `irrigated` (0 or 1: `food` already includes the one more food an
+irrigated tile yields; the snapshot's `tile` and `frontier.hover` carry it alike) and `units` (UnitCard[], every faction, in id order).
 **UnitCard**: `id`, `owner`, `kind`, `name`, `moves`, `max_moves`, `fortified`.
 
 **CityScreen**: `present`, `name`, `x`, `y`, `size`, `max_size`, `food_needed` (0 without a city), `food_rate`,
@@ -311,7 +323,7 @@ it must produce. A refused step also proves it changed nothing. The state after 
 the **golden hash**, fixed in `tests/civ-lite-game-native.test.mjs`:
 
 ```
-cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d
+0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1
 ```
 
 It changes only when a rule, the map or the roteiro changes the state the replay ends in; the new value is then reviewed, not
@@ -322,6 +334,10 @@ records under `docs/evidence/frontier-{game,services,authority}/` keep describin
 which recomputes the state after each of the 77 steps from the table of events and PCG32 written again in Node, and agreed with the game at every step
 before the hashes were re-pinned.
 
+The Irrigate rule (the base of the cost-of-change experiment, on a branch that never reaches `main`) moved both hashes once more by adding the
+state's `irrigated` list, empty in every state of the roteiro and nowhere else different: with `"irrigated":[],` taken out of each of the 77
+serializations, the hashes come back to `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d` (golden) and `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e` (trace).
+
 Adding `clear_selection` and four steps that use it (two accepted, `nothing_selected`, and `event_pending` while the dialog is
 open) **did not change the golden hash**: the intent only changes the selection and emits no event, and every `end_turn`
 clears the selection, so the state the twelfth turn ends in is the same. What did change is the state after each of those
@@ -329,7 +345,7 @@ steps. The test therefore fixes a second hash, the **trace hash**, the SHA-256 o
 line, which pins how the replay got there:
 
 ```
-ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e
+a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba
 ```
 
 The oracle judges every one of those states regardless.

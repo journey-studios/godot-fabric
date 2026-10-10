@@ -14,9 +14,11 @@ static func city(state: Dictionary) -> Dictionary:
   return state.cities[0]
 
 
+# What a tile yields: its terrain's, and one more food while it is irrigated.
 static func tile_yield(state: Dictionary, x: int, y: int) -> Dictionary:
   var terrain: Dictionary = Rules.TERRAIN[World.terrain_at(state, x, y)]
-  return {"x": x, "y": y, "food": terrain.food, "production": terrain.production, "science": terrain.science}
+  var food: int = terrain.food + (Rules.IRRIGATION_FOOD if World.is_irrigated(state, x, y) else 0)
+  return {"x": x, "y": y, "food": food, "production": terrain.production, "science": terrain.science}
 
 
 # The in-map neighbours of the city, best first: by total yield, then production, then food, then row, then column.

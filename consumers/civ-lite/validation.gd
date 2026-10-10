@@ -16,7 +16,7 @@ extends Node
 #   --sabotage   a retained sabotage runs this scene: a failed check is the rejection, not an error
 
 const CYCLES := 10
-const BINDINGS := 18
+const BINDINGS := 19
 # What the HUD holds while the game screen is up: the connection to the snapshot and the one to the tile under the pointer.
 const HUD_CONNECTIONS := 2
 # What the HUD sees of a turn that is processed: the phase of each snapshot as it changes, from the turn at rest to the turn at rest.
@@ -265,7 +265,7 @@ func run() -> void:
     "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK")
   var evaluated := check(initial.bundleEvaluations == 1 and initial.errors.is_empty(), "The provisioned application evaluates its bundle once and reports no error")
   var registered := check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false and services.registered.size() == BINDINGS,
-    "The node registered the two states, the signal and the 15 methods while the application entered the tree: 18 bindings")
+    "The node registered the two states, the signal and the 16 methods while the application entered the tree: 19 bindings")
   var scened := check(worlds() == 1 and world() != null and world().get_parent() == services, "The scene starts with one World, a child of the GameServices node")
   var shown := check(connected and text("hud-bar-turn") == "Turn 1 · epoch 1" and int(hud_stats().subscriptions) == HUD_CONNECTIONS,
     "The public TSX HUD connected to the snapshot of epoch 1 and to the hover, two subscriptions")
@@ -403,7 +403,7 @@ func run_cycle(cycle: int) -> void:
   check(in_menu.screen == "menu" and in_menu.world == false and in_menu.hudSubscriptions == 0,
     label + ": in the menu the HUD showed it, the scene had no World and the HUD held no connection")
   check(row.freed == [true, true], label + ": the two Worlds the cycle dropped (the reload's and the menu's) are freed")
-  check(row.bindings == BINDINGS, label + ": the registry still holds the 18 bindings")
+  check(row.bindings == BINDINGS, label + ": the registry still holds the 19 bindings")
   check(row.pendingHostTasks == 0 and row.pendingEvents == 0, label + ": no host task and no event is pending")
   check(runtime_errors.is_empty() and int(stats.problemCount) == 0, label + ": the application and the HUD report no error")
   check(row.worlds == 1 and world() != null and world().get_parent() == services and world_connected(),

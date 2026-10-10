@@ -17,7 +17,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
 // others, then 3 after them. The headed run adds the three of its captures.
 const CYCLES = 10;
 const NEW_GAMES_PER_CYCLE = 3;
-const BINDINGS = 18;
+const BINDINGS = 19;
 // The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
 const CALLS_PER_CYCLE = 7;
 const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
@@ -28,7 +28,7 @@ const SABOTAGES = {
   "hud-leak": { failed: [/the connections the HUD holds are the first cycle's/, /the registry's subscriptions are the first cycle's/, /in the menu the HUD showed it/], grows: ["hudSubscriptions", "subscriptions"] },
   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
-  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 15 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 16 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
   "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
@@ -129,7 +129,7 @@ try {
     verify(series.every(row => ["nodes", "orphans", "subscriptions", "connections", "hudSubscriptions"].every(name => row[name] === baseline[name])),
       `Nodes (${baseline.nodes}), orphans (${baseline.orphans}), subscriptions (${baseline.subscriptions}), snapshot_changed connections (${baseline.connections}) and HUD connections (${baseline.hudSubscriptions}) are the first cycle's after every cycle`);
     verify(series.every(row => row.bindings === BINDINGS && row.pendingHostTasks === 0 && row.pendingEvents === 0 && row.worlds === 1),
-      "Every cycle ends with the 14 bindings, nothing pending and exactly one World");
+      "Every cycle ends with the 19 bindings, nothing pending and exactly one World");
     verify(series.every((row, index) => row.epoch === 1 + NEW_GAMES_PER_CYCLE * (index + 1) && row.hudEpoch === row.epoch
       && JSON.stringify(row.epochsSeen) === JSON.stringify([row.epoch - 2, row.epoch - 1, row.epoch])),
     "The epoch rises by exactly the three new games of each cycle, strictly, and the HUD and Godot agree on it");

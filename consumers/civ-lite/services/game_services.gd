@@ -229,6 +229,10 @@ func fortify(unit_id: int) -> Dictionary:
   return _intent("fortify", game.fortify(unit_id))
 
 
+func irrigate(unit_id: int) -> Dictionary:
+  return _intent("irrigate", game.irrigate(unit_id))
+
+
 func set_production(item_id: String, slot: int) -> Dictionary:
   return _intent("set_production", game.set_production(item_id, slot))
 

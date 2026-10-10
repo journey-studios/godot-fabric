@@ -4,7 +4,7 @@ import {growthOfHalves} from "./performance-oracle.mjs";
 // The independent oracle of Frontier's stability lane: opening and closing each overlay twenty times. It judges the raw observations of
 // consumers/civ-lite/stability_validation.gd (a measure at rest after every close and open, the focus the host can say, the bursts at the
 // map, the Images the HUD mounts) and none of the probe's verdicts. What a screen at rest holds is written here, apart from the probe:
-// the registry's 18 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
+// the registry's 19 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
 // the ones the game had before, and the first cycle's numbers for everything else, exactly. The icons each context must show are derived
 // from the game's own snapshot that the report carries, with this file's table of which asset each icon is.
 //
@@ -29,9 +29,9 @@ const CYCLES = 20;
 const BURST_CYCLES = [1, 20];
 const EVENTS = ["wanderers", "traders", "scholar"];
 const PICKS = ["welcome", "buy_tools", "send_on"];
-// The registry holds one binding for each state, signal and method the node registers: 18 since the stress mode (15 before it, which a control run
-// on an older tree says with `{bindings: 15}`).
-const BINDINGS = 18;
+// The registry holds one binding for each state, signal and method the node registers: 19 since the Irrigate rule (18 with the stress mode and 15 before it,
+// which a control run on an older tree says with `{bindings: 15}`).
+const BINDINGS = 19;
 const HUD_CONNECTIONS = 2;
 const HEAP_LIMIT_BYTES = 2048;
 const OBJECTS_LIMIT = 1;

@@ -59,7 +59,11 @@ const FORCED_TILES = [
 ];
 // PCG's published reference outputs for the generator seeded with state 42 and sequence 54.
 const PCG_REFERENCE = [0xa15c02b7, 0x7b47f409, 0xba1d3330, 0x83d2f293, 0xbfa4784b, 0xcbed606e];
-const STATE_KEYS = ["ai", "cities", "events", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
+const STATE_KEYS = ["ai", "cities", "events", "irrigated", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
+// Irrigation: a Settler irrigates the Plain it stands on when Water is on one of the tile's four sides (not the diagonals) and the tile is not
+// irrigated yet; it spends all of the Settler's moves, and the tile yields one more food for the rest of the game.
+const IRRIGATION_FOOD = 1;
+const SIDES = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 
 const M64 = (1n << 64n) - 1n;
 const MULTIPLIER = 6364136223846793005n;
@@ -147,6 +151,8 @@ const unitAt = (state, x, y, owner = 0) => state.units.filter(unit => unit.x ===
 const unitById = (state, id) => state.units.find(unit => unit.id === id);
 const cityAt = (state, x, y) => state.cities.find(city => city.x === x && city.y === y);
 const terrainAt = (state, x, y) => state.map.terrain[index(x, y)];
+const irrigatedAt = (state, x, y) => state.irrigated.includes(index(x, y));
+const waterBeside = (state, x, y) => SIDES.some(([dx, dy]) => inBounds(x + dx, y + dy) && terrainAt(state, x + dx, y + dy) === WATER);
 const techIndex = id => TECHS.findIndex(entry => entry.id === id);
 const known = (state, id) => techIndex(id) >= 0 && techIndex(id) < state.research.done;
 
@@ -174,7 +180,10 @@ function rates(state) {
   if (city === undefined) {
     return {food: 0, production: 0, science: 0, tiles: 0};
   }
-  const tile = (x, y) => ({x, y, ...TERRAIN[terrainAt(state, x, y)]});
+  const tile = (x, y) => {
+    const terrain = TERRAIN[terrainAt(state, x, y)];
+    return {x, y, ...terrain, food: terrain.food + (irrigatedAt(state, x, y) ? IRRIGATION_FOOD : 0)};
+  };
   const neighbors = [];
   for (let dy = -1; dy <= 1; dy += 1) {
     for (let dx = -1; dx <= 1; dx += 1) {
@@ -270,6 +279,25 @@ function refusal(state, intent, args) {
       }
       return unit.fortified === 1 ? "already_fortified" : "";
     }
+    case "irrigate": {
+      if (unitReason(args[0]) !== "") {
+        return unitReason(args[0]);
+      }
+      const unit = unitById(state, args[0]);
+      if (unit.kind !== "settler") {
+        return "not_a_settler";
+      }
+      if (terrainAt(state, unit.x, unit.y) !== PLAIN) {
+        return "not_a_plain";
+      }
+      if (!waterBeside(state, unit.x, unit.y)) {
+        return "no_water_nearby";
+      }
+      if (irrigatedAt(state, unit.x, unit.y)) {
+        return "already_irrigated";
+      }
+      return unit.moves === 0 ? "no_moves_left" : "";
+    }
     case "set_production": {
       const [item, slot] = args;
       const city = state.cities[0];
@@ -363,6 +391,12 @@ function accept(state, intent, args) {
     case "fortify": {
       const unit = unitById(next, args[0]);
       unit.fortified = 1;
+      unit.moves = 0;
+      break;
+    }
+    case "irrigate": {
+      const unit = unitById(next, args[0]);
+      next.irrigated = [...next.irrigated, index(unit.x, unit.y)].sort((a, b) => a - b);
       unit.moves = 0;
       break;
     }
@@ -548,6 +582,11 @@ function checkInvariants(state, where) {
     assert.ok(unit.fortified === 0 || unit.fortified === 1, `${where} unit ${unit.id} fortified flag`);
   }
   assert.ok(state.next_unit > previous, `${where} next unit id`);
+  // The irrigated tiles are a set kept ascending, and each is a Plain with Water on one of its four sides (the only tiles the rule irrigates; the terrain never changes).
+  assert.ok(state.irrigated.every((tile, position) => Number.isInteger(tile) && tile >= 0 && tile < WIDTH * HEIGHT && (position === 0 || tile > state.irrigated[position - 1])),
+    `${where} the irrigated tiles are indexes into the map, ascending and without repeats`);
+  assert.ok(state.irrigated.every(tile => state.map.terrain[tile] === PLAIN && waterBeside(state, tile % WIDTH, Math.floor(tile / WIDTH))),
+    `${where} every irrigated tile is a Plain with Water on one of its four sides`);
   assert.ok(state.cities.length <= 1, `${where} at most one city`);
   for (const city of state.cities) {
     assert.ok(inBounds(city.x, city.y) && terrainAt(state, city.x, city.y) !== WATER, `${where} the city stands on land`);
@@ -612,6 +651,80 @@ function appendedEntries(before, after, phases, aiEvents, where) {
   return entries;
 }
 
+// One state of a scenario against the one before it, as a step of the roteiro is judged: the intent is accepted or refused with the code the
+// rules give, a refusal changes nothing, and an acceptance leaves the state the rules compute. Answers the refusal, or "".
+function judgeScenarioStep(previous, previousText, step, where, generator) {
+  const state = parseState(step.serialization, where);
+  checkInvariants(state, where);
+  assert.deepEqual(state.rng, generator.record(), `${where}: no step of a scenario draws from the PRNG`);
+  assert.equal(step.hash, digest(step.serialization), `${where}: the hash is SHA-256 of the serialization`);
+  assert.equal(step.turn, state.turn, where);
+  const reason = refusal(previous, step.intent, step.args);
+  assert.equal(step.code, reason === "" ? "ok" : reason, `${where} must be ${reason === "" ? "accepted" : "refused with " + reason}`);
+  assert.equal(step.ok, reason === "" ? 1 : 0, where);
+  if (reason !== "") {
+    assert.equal(step.serialization, previousText, `${where} was refused and must change nothing`);
+  } else {
+    const {next, phases, aiEvents} = accept(previous, step.intent, step.args);
+    assert.deepEqual(withoutLog(state), withoutLog(next), `${where} must leave the state the rules compute from the state before it`);
+    appendedEntries(previous, state, phases, aiEvents, where);
+    const emitted = state.log_seq - previous.log_seq;
+    if (step.intent === "end_turn") {
+      assert.deepEqual(step.phases, phases, `${where}: each phase reports the tasks it ran and the events it emitted`);
+      assert.equal(emitted, phases.reduce((sum, phase) => sum + phase.events, 0), `${where}: the log grows by the events the phases reported`);
+    } else if (["select_tile", "select_unit", "clear_selection"].includes(step.intent)) {
+      assert.equal(emitted, 0, `${where}: a selection change emits no event`);
+    } else {
+      assert.equal(emitted, 1, `${where}: an accepted intent emits one event`);
+    }
+  }
+  assert.equal(step.context, contextOf(state), `${where}: the context is derived from the state`);
+  return {state, reason};
+}
+
+// The irrigation scenarios: games the probe built for each case of the rule (open land placed with Water on one side, a city next to the
+// Settler), played through the same intents and judged step by step with the rules written again here. A scenario's first state is the fresh
+// game with its setup applied, so its map is not the generator's: the invariants judge it, and the rules judge every step after.
+function verifyIrrigation(irrigation) {
+  assert.ok(Array.isArray(irrigation?.scenarios) && irrigation.scenarios.length > 0, "the report holds the irrigation scenarios");
+  const refusals = {};
+  const last = {};
+  for (const scenario of irrigation.scenarios) {
+    const initial = parseState(scenario.initial, `irrigation ${scenario.name} initial`);
+    checkInvariants(initial, `irrigation ${scenario.name} initial`);
+    const generator = Pcg32.seeded(SEED, PRNG_SEQUENCE);
+    while (generator.draws < initial.rng.draws) {
+      generator.next();
+    }
+    assert.deepEqual(initial.rng, generator.record(), `irrigation ${scenario.name}: the PRNG is what the map's draws left`);
+    assert.deepEqual([initial.turn, initial.irrigated], [1, []], `irrigation ${scenario.name}: a scenario begins on turn 1 with no tile irrigated`);
+    let previous = initial;
+    let previousText = scenario.initial;
+    for (const step of scenario.steps) {
+      const where = `irrigation ${scenario.name} step ${step.index} ${step.intent}(${step.args.join(", ")})`;
+      const judged = judgeScenarioStep(previous, previousText, step, where, generator);
+      if (judged.reason !== "") {
+        refusals[judged.reason] = (refusals[judged.reason] ?? 0) + 1;
+      }
+      previous = judged.state;
+      previousText = step.serialization;
+    }
+    last[scenario.name] = previous;
+  }
+  // What each scenario is for, said again in the oracle's own terms.
+  assert.deepEqual(last["start-plain"].irrigated, [index(6, 8)], "the start tile, and only it, is irrigated");
+  assert.deepEqual(last["four-sides"].irrigated, [index(4, 4), index(7, 4), index(10, 4), index(13, 4)], "Water on each of the four sides irrigates, the diagonal does not, whatever the order");
+  assert.deepEqual([last.forest.irrigated, last.hill.irrigated], [[], []], "no Forest and no Hill is irrigated");
+  assert.deepEqual(last["no-moves-left"].irrigated, [index(6, 8)], "the Settler that regained its moves irrigated the tile");
+  // The irrigated Plain next to the city outranks the other neighbours: the city works it, and a turn later its food stock is the larger rate.
+  assert.equal(last["city-yield"].res.food - last["city-control"].res.food, 2, "the irrigated tile the city works gives it two more food a turn than the Forest it worked");
+  assert.deepEqual(last["city-yield"].irrigated, [index(6, 8)]);
+  assert.equal(last["far-tile"].cities.length, 1, "the far tile's scenario has the city");
+  assert.equal(rates(last["far-tile"]).food, rates({...last["far-tile"], irrigated: []}).food, "an irrigated Plain the city does not work changes none of its yields");
+  assert.equal(rates(last["city-on-irrigated"]).food - rates({...last["city-on-irrigated"], irrigated: []}).food, IRRIGATION_FOOD, "a city founded on an irrigated Plain works it as its centre");
+  return {scenarios: irrigation.scenarios.map(scenario => scenario.name), refusals};
+}
+
 export function verifyFrontierReport(report) {
   assert.equal(report.scenario, "civ-lite-game");
   assert.equal(report.displayServer, "headless");
@@ -640,7 +753,7 @@ export function verifyFrontierReport(report) {
   assert.equal(initial.turn, 1);
   assert.deepEqual(initial.units.map(unit => [unit.id, unit.owner, unit.kind, unit.x, unit.y, unit.moves, unit.fortified]),
     [[1, PLAYER, "settler", 6, 8, 2, 0], [2, PLAYER, "warrior", 6, 8, 3, 0], [3, FACTION, "warrior", 17, 8, 3, 0]]);
-  assert.deepEqual([initial.cities.length, initial.res, initial.events.queue, initial.events.resolved], [0, {food: 0, production: 0, science: 0}, [], []]);
+  assert.deepEqual([initial.cities.length, initial.res, initial.events.queue, initial.events.resolved, initial.irrigated], [0, {food: 0, production: 0, science: 0}, [], [], []]);
 
   const seen = new Set();
   const refusals = {};
@@ -721,6 +834,7 @@ export function verifyFrontierReport(report) {
       `${where}: exactly one ai_blocked, at the tile the faction could not enter`);
     assert.equal(entries.filter(entry => entry.code === "ai_moved").length, 0, `${where}: the faction that waits does not report a move`);
   }
+  const irrigation = verifyIrrigation(report.irrigation);
   return {steps: report.steps.length, turns, finalHash: report.finalHash, contexts: [...seen].sort(), refusals, draws: previous.rng.draws,
-    waitCases: report.waitCases.map(entry => entry.name)};
+    waitCases: report.waitCases.map(entry => entry.name), irrigation};
 }
