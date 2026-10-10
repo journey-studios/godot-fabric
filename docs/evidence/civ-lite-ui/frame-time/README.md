@@ -29,7 +29,9 @@ atividade da correção.
 
 **O que continua só local:** a lane janelada (o A/B dos quatro braços), o diagnóstico com a sonda remendada e a rampa headless.
 
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve, e ele guarda os downloads do run.
+
 ```sh
-node scripts/hosted-receipts.mjs --write --slice civ-lite-ui/frame-time --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --write --slice civ-lite-ui/frame-time --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
 node scripts/hosted-receipts.mjs --check
 ```
