@@ -28,7 +28,7 @@ gh workflow run contracts.yml --ref <branch>
 ```
 
 The **Run workflow** button under Actions → Contracts does the same. A
-dispatched run adds five jobs:
+dispatched run adds six jobs:
 
 - `native-cold-start` builds the native host from scratch with `npm run setup`,
   packs the native SDK and uploads the built workspace (`.deps`, `addons`,
@@ -51,6 +51,11 @@ dispatched run adds five jobs:
 
   `test:examples` imports the project for the suites after it. The frontier
   and input jobs do not run it, so they import the project the same way first.
+- `macos-clean-run` starts when `native-suites-runtime` ends. It downloads the signed
+  Frontier app that job archived (`frontier-release-app`, kept one day) and replays
+  it on its own fresh runner, which installs no Godot, native host or npm
+  dependencies; Node only judges (`scripts/macos-clean-run.mjs`). The runner image
+  still ships Node and Xcode.
 - `parity-comparison` compares the Godot, iOS and Android reports.
 
 In the first dispatched run (37936787624, 2026-10-09), `native-cold-start`

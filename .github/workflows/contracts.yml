@@ -661,6 +661,49 @@ jobs:
           name: native-examples-headless
           path: build/examples/headless/*.json
           if-no-files-found: error
+      # The signed app as it left the export, for the macos-clean-run job. tar keeps the symlinks, the modes and the extended attributes that the ad-hoc signature covers, which
+      # an artifact's zip alone does not. pack unpacks the archive once more here, checks the bundle hash against the lane's own, verifies the signatures of the copy and records
+      # the archive's SHA-256 with the machine that made it. These are the last steps of the job, so a failure here skips none of the uploads above.
+      - name: Archive the signed Frontier app for the clean runner
+        run: node scripts/macos-clean-run.mjs pack --app build/macos-export-civ-lite-native/Frontier.app --lane-report build/macos-export-civ-lite-native/report.json --out "$RUNNER_TEMP/frontier-release-app"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: frontier-release-app
+          path: |
+            ${{ runner.temp }}/frontier-release-app/Frontier.app.tar.gz
+            ${{ runner.temp }}/frontier-release-app/frontier-release-app.json
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+  # V05-07 `limpa`: the signed Release app of native-suites-runtime, replayed on another hosted runner. A runner is a new VM with a clean user, so the app runs where no
+  # engine, no editor and no project dependency was ever installed, which is why this job installs none: no setup-node (the image's own Node is the judge, and the app never
+  # sees it), no engine download, no native host, no npm install. The image still ships Node and Xcode; scripts/macos-clean-run.mjs shows the app does not use them.
+  # It checks out the repository only for that script, the replay oracle and the game's roteiro.
+  macos-clean-run:
+    if: github.event_name == 'workflow_dispatch'
+    needs: native-suites-runtime
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: frontier-release-app
+          path: ${{ runner.temp }}/frontier-release-app
+      - name: Replay the downloaded app in clean profiles with a scrubbed environment, and judge it
+        run: node scripts/macos-clean-run.mjs run --archive "$RUNNER_TEMP/frontier-release-app/Frontier.app.tar.gz" --record "$RUNNER_TEMP/frontier-release-app/frontier-release-app.json" --out "$RUNNER_TEMP/macos-clean-run"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: macos-clean-run
+          path: |
+            ${{ runner.temp }}/macos-clean-run/clean-run.json
+            ${{ runner.temp }}/macos-clean-run/frontier-release-app.json
+            ${{ runner.temp }}/macos-clean-run/replay-clean-*.json
+            ${{ runner.temp }}/macos-clean-run/replay-clean-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
   # The Frontier suites: baseline, game, services, soak and turn.
   native-suites-frontier:
     if: github.event_name == 'workflow_dispatch'
