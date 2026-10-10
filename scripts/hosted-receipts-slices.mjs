@@ -535,4 +535,18 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-measurement-exports-3cddd82",
   },
+  // V05-07 limpa (#150, squash 7e6f0b1): the record of the clean-machine replay of run 38085526897 (the macos-clean-run job of #147, cited
+  // by the record), with no native step of its own; both runs are on the push of main, and the guard compares with the squash's parent.
+  {
+    folder: "macos-export/clean-machine",
+    pr: 150,
+    squash: "7e6f0b1",
+    contractsRun: 38089562271,
+    pagesRun: 38089562266,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [],
+    guard: true,
+    activity: "milestone-0-5-v05-07-limpa-813e9b3",
+  },
 ];

@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "scenario": "macos-export/clean-machine",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T22:03:11.438Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38089562271,
+    "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/150",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T21:57:00Z",
+    "updatedAt": "2026-10-10T22:02:24Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114323027400,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "startedAt": "2026-10-10T21:57:03Z",
+        "completedAt": "2026-10-10T22:00:37Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323027400"
+      },
+      {
+        "name": "macos-clean-run",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114323028978,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323028978"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114323028310,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323028310"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114323028319,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323028319"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114323028513,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323028513"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114323028389,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323028389"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114324027414,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114324027414"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114323027497,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "startedAt": "2026-10-10T21:57:03Z",
+        "completedAt": "2026-10-10T22:02:23Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323027497"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114323027500,
+        "runAttempt": 1,
+        "headSha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+        "startedAt": "2026-10-10T21:57:08Z",
+        "completedAt": "2026-10-10T22:02:20Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38089562271/job/114323027500"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+      "reference-android": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+      "reference-ios": "7e6f0b1252326cf26cc1bccca039a6aff93716b8"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:57:25Z",
+          "completedAt": "2026-10-10T21:57:26Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against a1d3d780394b (--base a1d3d780394b0a01804b83a1a43ebb8456e4b88a); X9 clean, X10 clean"
+          ],
+          "base": "a1d3d780394b0a01804b83a1a43ebb8456e4b88a"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:57:26Z",
+          "completedAt": "2026-10-10T22:00:33Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 736,
+              "suites": 0,
+              "pass": 735,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 37
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T22:00:33Z",
+          "completedAt": "2026-10-10T22:00:34Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T22:00:34Z",
+          "completedAt": "2026-10-10T22:00:34Z",
+          "passed": true,
+          "files": 2413
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 150,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/150",
+    "title": "docs(evidence): Close V05-07's limpa on another hosted runner",
+    "headSha": "e61914b007ff8c9ea865b478005f2bdd7c8917ed",
+    "baseSha": "a1d3d780394b0a01804b83a1a43ebb8456e4b88a",
+    "squashMergeCommit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+    "squashCommitSubject": "docs(evidence): Close V05-07's limpa on another hosted runner (#150)",
+    "mergedAt": "2026-10-10T21:56:57Z",
+    "headTreeSha": "048a76e00508e356acff1a58139c77ca0d4c7823",
+    "mainTreeSha": "048a76e00508e356acff1a58139c77ca0d4c7823",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 3,
+    "commits": [
+      {
+        "sha": "813e9b30795a2126cf63cd70c1f15fede849c45e",
+        "subject": "docs(evidence): Record Frontier's Release app on another hosted runner"
+      },
+      {
+        "sha": "4a64c0fb9c57da93e1199644f148fe30fc880d52",
+        "subject": "docs(dashboard): Close V05-07's limpa on another hosted runner"
+      },
+      {
+        "sha": "e61914b007ff8c9ea865b478005f2bdd7c8917ed",
+        "subject": "Merge origin/main and revise limpa's text to the user's decision"
+      }
+    ],
+    "changedFiles": 9,
+    "additions": 1045,
+    "deletions": 6
+  },
+  "artifacts": {},
+  "findings": []
+}
