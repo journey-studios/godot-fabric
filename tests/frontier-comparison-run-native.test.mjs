@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test, { after, before } from "node:test";
 import { goldenReplayHash } from "../scripts/frontier-comparison-run-campaign.mjs";
-import { launchScenario, prepareProject, rehearse, summaryOf } from "../scripts/frontier-comparison-run.mjs";
+import { launchScenario, prepareProject, readCostsOf, rehearse, summaryOf } from "../scripts/frontier-comparison-run.mjs";
 
 // The scenario of the comparative execution (tests/frontier-comparison-scenario.gd) run for real, headless, in each of the three arms, and the rehearsal that the runner builds from it
 // (scripts/frontier-comparison-run.mjs). It is a REHEARSAL: a Debug build, one execution per arm, no campaign, and no number of it is a measurement of an arm. What it proves is that the
@@ -54,21 +54,34 @@ test("in each arm the replay reaches its golden hash, the soak its final hash, a
     assert.equal(report.seed, 4242);
     assert.equal(derived.idle.cpuUsec.length, rehearsal.protocol.idleReference.frames, `${where}: the idle window`);
     assert.equal(derived.idle.intervalsUsec.length, rehearsal.protocol.idleReference.frames);
+    // The hooks of the stress and events slice are delivered, so the four windows are measured in the three arms, with the occurrences the protocol counts: the 2 of warm-up and the rest.
     for (const window of rehearsal.protocol.windows) {
       const found = derived.windows[window.id];
-      if (found.available) {
-        assert.equal(found.occurrences.length, window.warmupOccurrences + window.measuredOccurrences, `${where}: ${window.id} occurrences`);
-        assert.equal(found.occurrences.filter((occurrence) => !occurrence.warmup).length, window.measuredOccurrences, `${where}: ${window.id} measured`);
-      } else {
-        assert.deepEqual(found.occurrences, [], `${where}: ${window.id} is unavailable, so it has none`);
-        assert.notEqual(found.reason, "", `${where}: ${window.id} says why`);
-      }
+      assert.equal(found.available, true, `${where}: ${window.id} is measured (${found.reason})`);
+      assert.equal(found.occurrences.length, window.warmupOccurrences + window.measuredOccurrences, `${where}: ${window.id} occurrences`);
+      assert.equal(found.occurrences.filter((occurrence) => !occurrence.warmup).length, window.measuredOccurrences, `${where}: ${window.id} measured`);
     }
-    // The windows that do not depend on a hook are there in every arm, and the ones that do say which hook they wait for.
-    assert.equal(derived.windows["ai-phase"].available, true);
-    assert.equal(derived.windows["context-switches"].available, true);
     assert.ok(derived.windows["ai-phase"].occurrences.every((occurrence) => occurrence.frameUsec.length === 5), `${where}: a direct call at the start of a frame runs the first phase in that frame, so the AI phase is five frames`);
+    assert.ok(derived.windows["event-burst"].occurrences.every((occurrence) => occurrence.frameUsec.length >= 5), `${where}: an event burst is five frames at least`);
+    assert.equal(report.trace.filter((entry) => entry.kind === "events-settled").length, 100, `${where}: the counters agreed at the end of every one of the 100 turns`);
     assert.ok(derived.windows["context-switches"].occurrences.every((occurrence) => occurrence.frameUsec.length === 3), `${where}: a context switch is 3 frames`);
+    assert.ok(derived.windows.stress.occurrences.every((occurrence) => occurrence.frameUsec.length === 23), `${where}: a stress round is the begin, 20 steps and the 2 frames after the last`);
+    assert.equal(report.stress.rounds, 32);
+    assert.deepEqual(report.boot.hooks.eventBurstReason, "");
+    assert.deepEqual(report.boot.hooks.stressReason, "");
+    // At rest at the end the HUD has consumed everything the game emitted, in B and in C (in A there is no consumer: -1). The count is 3 notifications for each turn at least.
+    assert.ok(report.counters.emitted > 300, `${where}: the game emitted its notifications`);
+    assert.equal(report.counters.consumed, report.arm === "A" ? -1 : report.counters.emitted, `${where}: events equals notifications_emitted() at rest`);
+  }
+});
+
+test("the cost of reading stats() is in the provenance of the rehearsal, from the record of the slice that delivered the hooks", async () => {
+  const costs = await readCostsOf();
+  assert.deepEqual(costs, { source: "docs/evidence/frontier-stress/costs.json", statsUsec: { B: 0.86, C: 4.5 }, notTaken: { evaluateUsec: 100, surfaceSnapshotUsec: 570 } });
+  assert.deepEqual(rehearsal.sidecar.provenance.readCosts, costs);
+  // What the scenario measured of the same reads in these runs, for the record beside the figures above.
+  for (const { report } of rehearsal.runs.filter((run) => run.report.arm !== "A")) {
+    assert.ok(report.costsUsec.statsUsec > 0, `arm ${report.arm}: stats() was read and timed`);
   }
 });
 
@@ -138,57 +151,47 @@ test("the unlimited lane asks for the vsync DISABLED, reads it back and records 
   assert.ok(rehearsal.runs.every((run) => run.report.lane === "presented" && run.report.vsync.requested === "default"), "the presented lane keeps the project's vsync");
 });
 
-// Replaces one place of a file of the provisioned copy and says how to put it back. The hooks that the stress and events slice will deliver are not there yet; this test gives the copy a
-// stand-in for them, only to run the scenario's paths that wait for them (the reads of the counters in the event burst, the stress rounds). The stand-ins count what the contract says and do
-// nothing else; they are not the hooks and prove nothing about them.
+// Replaces one place of a file of the provisioned copy and says how to put it back.
 async function patched(file, edits) {
   const target = path.join(prepared.harness.project, file);
   const genuine = await readFile(target, "utf8");
   let text = genuine;
   for (const [find, replace] of edits) {
-    assert.equal(text.split(find).length, 2, `${file}: the stand-in changes exactly one place (${find.slice(0, 40)})`);
+    assert.equal(text.split(find).length, 2, `${file}: the change is in exactly one place (${find.slice(0, 40)})`);
     text = text.replace(find, () => replace);
   }
   await writeFile(target, text);
   return () => writeFile(target, genuine);
 }
 
-test("with stand-ins for the hooks, the event burst and the stress window are measured, and a burst lasts five frames when the counters agree at once", async () => {
+test("a game without the hooks, or a HUD without its counters, makes the windows that wait for them unavailable, with the reason, and the rest is measured", async () => {
   const restore = [
     await patched("services/game_services.gd", [
-      ["  turn_ended.emit(summary)\n", "  turn_ended.emit(summary)\n  notification_count += 1\n"],
-      ["var finished_jobs := {}\n", "var finished_jobs := {}\nvar notification_count := 0\n"],
-      ["# --- State ----", "func notifications_emitted() -> int:\n  return notification_count\n\n\nfunc stress_begin() -> Dictionary:\n  return _plain({\"ok\": 1, \"code\": \"ok\", \"text\": \"\"})\n\n\n"
-        + "func stress_step() -> Dictionary:\n  return _plain({\"ok\": 1, \"code\": \"ok\", \"text\": \"\"})\n\n\nfunc stress_end() -> Dictionary:\n  return _plain({\"ok\": 1, \"code\": \"ok\", \"text\": \"\"})\n\n\n# --- State ----"],
+      ["func stress_step() -> Dictionary:", "func stress_step_removed() -> Dictionary:"],
     ]),
     await patched("native_hud/hud.gd", [
-      ["  services = get_node(services_path)\n", "  services = get_node(services_path)\n  if not services.turn_ended.is_connected(_count_event):\n    services.turn_ended.connect(_count_event)\n"],
-      ["var _in_menu := false\n", "var _in_menu := false\nvar _events := 0\n"],
-      ["\"context\": _snapshot.get(\"context\", \"\")}", "\"context\": _snapshot.get(\"context\", \"\"), \"snapshots\": 0, \"events\": _events}"],
-      ["# The GUI hands a click", "func _count_event(_summary: Dictionary) -> void:\n  _events += 1\n\n\n# The GUI hands a click"],
+      ["func stats() -> Dictionary:", "func stats_removed() -> Dictionary:"],
     ]),
   ];
   try {
-    const hooked = await rehearse({ prepared, arms: ["A", "B"], lane: "presented", assumeRefreshHz: ASSUMED_REFRESH_HZ });
-    assert.deepEqual(hooked.problems, []);
-    assert.deepEqual(hooked.formatErrors, []);
-    for (const { report, derived } of hooked.runs) {
-      assert.equal(report.boot.hooks.eventBurstReason, "", `arm ${report.arm}: the hooks are there`);
-      assert.equal(report.boot.hooks.stressReason, "");
-      const burst = derived.windows["event-burst"];
-      assert.equal(burst.available, true);
-      assert.equal(burst.occurrences.length, 100);
-      assert.equal(burst.occurrences.filter((occurrence) => !occurrence.warmup).length, 98);
-      assert.ok(burst.occurrences.every((occurrence) => occurrence.frameUsec.length === 5), `arm ${report.arm}: the counters agree at the delivery, so every burst is the minimum of five frames`);
-      assert.equal(report.trace.filter((entry) => entry.kind === "events-settled").length, 100);
-      const stress = derived.windows.stress;
-      assert.equal(stress.available, true);
-      assert.equal(stress.occurrences.length, 32);
-      assert.equal(stress.occurrences.filter((occurrence) => !occurrence.warmup).length, 30);
-      assert.ok(stress.occurrences.every((occurrence) => occurrence.frameUsec.length === 23), `arm ${report.arm}: a stress round is the begin, 20 steps and 2 frames after the last`);
+    const bare = await rehearse({ prepared, arms: ["A", "B"], lane: "presented", assumeRefreshHz: ASSUMED_REFRESH_HZ });
+    assert.deepEqual(bare.problems, []);
+    const [a, b] = bare.runs.map((run) => run.derived);
+    // The game lacks stress_step(): the stress window is unavailable in both, and says which hook is missing; arm A's event burst is measured, because the game's counter is there.
+    for (const derived of [a, b]) {
+      assert.equal(derived.windows.stress.available, false);
+      assert.match(derived.windows.stress.reason, /GameServices has no stress_step\(\)/);
+      assert.deepEqual(derived.windows.stress.occurrences, []);
+      assert.equal(derived.windows["ai-phase"].occurrences.length, 100);
+      assert.equal(derived.windows["context-switches"].occurrences.length, 74);
     }
-    const reasons = hooked.analysis.sections.validity.slots.filter((slot) => slot.attempts.length > 0).flatMap((slot) => slot.attempts[0].reasons.map((reason) => reason.rule));
-    assert.ok(!reasons.includes("incomplete"), "with the four windows measured no execution is incomplete");
+    assert.equal(a.windows["event-burst"].available, true);
+    // The HUD of B lacks stats(): its event burst is unavailable and the reason names the HUD.
+    assert.equal(b.windows["event-burst"].available, false);
+    assert.match(b.windows["event-burst"].reason, /the HUD of arm B has no stats\(\)/);
+    assert.deepEqual(b.windows["event-burst"].occurrences, []);
+    const reasons = bare.analysis.sections.validity.slots.filter((slot) => slot.attempts.length > 0).flatMap((slot) => slot.attempts[0].reasons.filter((reason) => reason.rule === "incomplete").map((reason) => `${slot.arm}:${reason.clause}`));
+    assert.deepEqual(reasons, ["A:stress", "B:event-burst", "B:stress"]);
   } finally {
     for (const put of restore) {
       await put();

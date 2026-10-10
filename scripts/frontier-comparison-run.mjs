@@ -39,6 +39,20 @@ const PACKAGE_EXCLUDED = new Set([".godot", PROJECT_DIRECTORY]);
 
 const fileSha256 = async (file) => sha256(await readFile(file));
 
+// What reading `stats()` costs, from the record of the slice that delivered the hooks (docs/research/frontier-stress.md): the median per read in B and in C over 20,000 reads, headless, and the two
+// paths that a measured frame must not take, for the record. It is part of the rehearsal's provenance, beside what the scenario itself measured of the same reads.
+const STRESS_COSTS = "docs/evidence/frontier-stress/costs.json";
+const twoDigits = (value) => Number(value.toPrecision(2));
+
+export async function readCostsOf() {
+  const costs = JSON.parse(await readFile(path.join(root, STRESS_COSTS), "utf8"));
+  return {
+    source: STRESS_COSTS,
+    statsUsec: { B: twoDigits(costs.arms["b-new"].statsUs.median), C: twoDigits(costs.arms["c-new"].statsUs.median) },
+    notTaken: { evaluateUsec: twoDigits(costs.arms["c-new"].evaluateUs), surfaceSnapshotUsec: twoDigits(costs.arms["c-new"].surfaceSnapshotUs) },
+  };
+}
+
 // The files of a directory with their hashes, in path order, leaving out the top-level entries in `excluded`.
 async function digest(directory, excluded = new Set()) {
   const lines = [];
@@ -202,6 +216,7 @@ export async function rehearse({ prepared, arms, lane, windowed = false, assumeR
   const formatErrors = campaignErrors(campaign, protocol);
   const campaignText = `${JSON.stringify(campaign, null, 2)}\n`;
   const analysis = problems.length === 0 && formatErrors.length === 0 ? buildReport({ campaign, protocol, protocolSha256, campaignSha256: sha256(campaignText) }) : null;
+  const readCosts = await readCostsOf();
   const sidecar = {
     rehearsal: true,
     notAResult: "This is a rehearsal of the scenario. No number in it is a measurement of an arm for the comparison, and no campaign was run.",
@@ -213,6 +228,7 @@ export async function rehearse({ prepared, arms, lane, windowed = false, assumeR
     assumedRefreshHz: assumed,
     unavailableWindows: unavailable,
     sizesAre: "the size of the provisioned copy, not of a Release export",
+    provenance: { readCosts },
   };
   return { protocol, protocolSha256, campaign, campaignText, formatErrors, problems, analysis, sidecar, runs, executions };
 }
@@ -228,6 +244,7 @@ export function summaryOf(result, prepared) {
     commit: result.campaign.provenance.commit,
     hashes: { binary: prepared.binarySha256, package: prepared.package.sha256, script: prepared.scripts.sha256, protocol: result.protocolSha256 },
     scriptFiles: prepared.scripts.files,
+    provenance: result.sidecar.provenance,
     formatErrors: result.formatErrors,
     problems: result.problems,
     status: result.analysis === null ? null : result.analysis.status,

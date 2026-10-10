@@ -10,8 +10,8 @@ import { launchScenario, prepareProject } from "../scripts/frontier-comparison-r
 //
 // The numbers are the soak of JavaScript's today, as `npm run test:frontier-soak` reports them ("The game after 100 turns, in 3 executions: final hash 0b21c332..., trail hash
 // 4d6d3c4c...") and as docs/evidence/civ-lite-ui/README.md and report.json (`afterTheChange`: finalHash, trailHash, 429 decisions) record them. They are NOT the numbers
-// docs/research/frontier-soak.md still prints (a35c55f2... and fe9d4f36..., lines 96 to 100): that note describes the run before #93, which added the three events of turn 5 and moved
-// the state of the game. The final hash is the SHA-256 of the canonical serialization of the state after turn 100, `game.state_hash()`, and the trail hash is the SHA-256 of the hundred
+// docs/research/frontier-soak.md prints at lines 96 to 100 (a35c55f2... and fe9d4f36...): those are the run before #93, which added the three events of turn 5 and moved the state of
+// the game (since #118 the note says so and points to the run after it). The final hash is the SHA-256 of the canonical serialization of the state after turn 100, `game.state_hash()`, and the trail hash is the SHA-256 of the hundred
 // turn hashes, one per line (tests/frontier-soak-oracle.mjs, `trailHash`).
 const FINAL_HASH = "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0";
 const TRAIL_HASH = "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b";

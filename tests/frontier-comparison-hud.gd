@@ -7,8 +7,10 @@ extends RefCounted
 # testID and the native HUD names its own the same way, so `live_views()` is one walk of the SceneTree for both arms. A Control that counts is live (in the tree, not queued to be
 # freed) and visible, the reading the context matrix of consumers/civ-lite/hud_probe.gd makes of the native HUD and of the host's.
 #
-# The hooks. These are named by contract and detected by name; a hook that is not there is reported as missing and the window that needs it is recorded as unavailable, never invented:
-#   the HUD of B and C           stats() -> {snapshots: int, context: String, events: int}, cumulative; `events` counts the turn notifications the HUD consumed
+# The hooks of the stress and events slice (docs/research/frontier-stress.md). They are detected by name; a hook that is not there is reported as missing and the window that needs it is
+# recorded as unavailable, never invented:
+#   the HUD of B                 stats() on `HUDLayer/HUD`: {snapshots: int, context: String, events: int}, cumulative; `events` counts the notifications the HUD consumed
+#   the HUD of C                 the same stats() on the node `HudStats` of main.tscn, which reads the registry's native counters and evaluates no JavaScript
 #   GameServices                 notifications_emitted() -> int, the same set on the side that emits
 #   GameServices                 stress_begin(), stress_step(), stress_end(): the stress window's intents
 const Driver := preload("world-input-driver.gd")
@@ -28,6 +30,8 @@ var arm: String
 var tree: SceneTree
 var services: Node
 var hud: Control
+# The node whose stats() the runner reads: the native HUD in B, `HudStats` in C, none in A.
+var stats_source: Node
 var _driver: Driver
 
 
@@ -46,6 +50,7 @@ func instantiate() -> void:
   services = packed.instantiate()
   tree.root.add_child(services)
   hud = services.get_node_or_null("HUDLayer/HUD") as Control
+  stats_source = hud if arm == "B" else services.get_node_or_null("HudStats")
 
 
 func has_hud() -> bool:
@@ -126,14 +131,14 @@ func click(control: Control) -> void:
 # --- The hooks ----------------------------------------------------------------------------------------------------------------------
 
 func stats_available() -> bool:
-  return hud != null and hud.has_method("stats")
+  return stats_source != null and stats_source.has_method("stats")
 
 
-# What stats() answers, or {} when the HUD has no such method.
+# What stats() answers, or {} when the arm has no such method.
 func stats() -> Dictionary:
   if not stats_available():
     return {}
-  var value: Variant = hud.call("stats")
+  var value: Variant = stats_source.call("stats")
   return value if value is Dictionary else {}
 
 
@@ -143,7 +148,7 @@ func event_burst_reason() -> String:
     return "GameServices has no notifications_emitted() (the hook of the stress and events slice is not delivered)"
   if has_hud():
     if not stats_available():
-      return "the HUD of arm %s has no stats() that the scenario can read from GDScript without evaluating JavaScript in a measured frame" % arm
+      return "the HUD of arm %s has no stats() that the scenario can read from GDScript without evaluating JavaScript in a measured frame (B: HUDLayer/HUD, C: HudStats)" % arm
     if not stats().has("events"):
       return "stats() of the HUD of arm %s has no `events` counter" % arm
   return ""

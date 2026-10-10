@@ -46,7 +46,7 @@ The scenario instantiates the arm's scene (A is `main_bare.tscn`, the game with 
 | `soak` | After a new game, 100 turns of the scripted player (below), each turn a sequence of intents that ends with End Turn. The windows `ai-phase` and `event-burst`. | `runs.script` `soak`; `windows` `ai-phase` and `event-burst`, 2 turns of warm-up and 98 measured |
 | `context-switches` | 24 + 50 intents that change the game's context, through the seven contexts, in a fixed cycle ([below](#the-cycle-of-the-contexts)). | `windows` `context-switches` |
 | `latency` | (B and C) 2 + 30 real clicks on HUD controls found by testID in the live tree, injected as in the V05-06 baseline: `Driver.inject` of `tests/world-input-driver.gd` (a motion, a press and a release through `Input.parse_input_event`) and `Input.flush_buffered_events()`, at the centre of the Control's rectangle. | `runs.script` `latency`; `secondaryOutcomes` `click-to-panel`, in frames |
-| `stress` | 2 + 30 rounds: `stress_begin()`, 20 `stress_step()` in consecutive frames, `stress_end()`. | `windows` `stress`. The hooks are not delivered yet: the window is recorded as unavailable. |
+| `stress` | 2 + 30 rounds: `stress_begin()`, 20 `stress_step()` in consecutive frames, `stress_end()`. | `windows` `stress`. The hooks of the stress and events slice (#119) are there; without them the window is recorded as unavailable, with the reason. |
 | `end` | The 12 drain frames of the instrument after the last window, then the resident memory, the nodes of the SceneTree and, in C, Hermes' heap after a forced collection and the native views; the process exits with its code. | `runs.script` `end`; the instrument's lag of 6 draws (`cpu-time-instrument` `alignment`) |
 
 Between any two intents that are not a window's own the scenario waits `SETTLE_FRAMES` (6) frames of rest, so that the HUD has caught up before the next one; and after a new game or a setup it waits for the set of live
@@ -184,9 +184,8 @@ game's own boundary, so the intents are the ones the React Native HUD's player s
 
 which are the numbers of the soak of JavaScript **today**: `npm run test:frontier-soak` at this commit (4c3abb7) passed in three executions with the same final hash and trail, and the record of the change that moved them,
 [`docs/evidence/civ-lite-ui/README.md`](../evidence/civ-lite-ui/README.md) (the section of the three events of turn 5: "hashes final `0b21c332…` e de trilha `4d6d3c4c…` onde eram `a35c55f2…` e `fe9d4f36…`, porque o
-estado do jogo mudou", 429 decisions) and its [`report.json`](../evidence/civ-lite-ui/report.json) (`afterTheChange`: `finalHash`, `trailHash`, `previousFinalHash`, `previousTrailHash`). **[`frontier-soak.md`](frontier-soak.md)
-(lines 96 to 100) still describes the run before #93**, which added the three events of turn 5 and moved the state of the game: its `a35c55f2…` and `fe9d4f36…` are the previous run's. This note does not edit it; it is
-a correction of its own.
+estado do jogo mudou", 429 decisions) and its [`report.json`](../evidence/civ-lite-ui/report.json) (`afterTheChange`: `finalHash`, `trailHash`, `previousFinalHash`, `previousTrailHash`). **[`frontier-soak.md`](frontier-soak.md)** printed `a35c55f2…` and `fe9d4f36…` (lines 96 to 100) as if they were the soak's, which they were before #93, the change that added the three events of turn 5 and moved
+the state of the game; since #118 it says so and points to the section of the run after it.
 
 A control in the same test plays the game with a garrison of two units instead of six (one constant changed in the copy): the final and the trail hashes move, and the hashes of the turns part from the genuine player's at
 turn 3. So the equivalence is a check that can fail, and it says where.
@@ -211,19 +210,20 @@ window to what a consumer of the game does in any case, and does the rest in fra
 | Window | What happens in its frames | Cost, measured |
 | --- | --- | --- |
 | `ai-phase` | In the first frame: `Engine.get_process_frames()`, the call of `GameServices.end_turn()` (the intent itself, which the game and the HUDs pay for) and one trace entry. In the others: waiting for the next frame and comparing two integers. The player's decision, with the snapshot it reads, is taken in a frame of rest before. | a trace entry is 0.3 to 0.8 µs |
-| `event-burst` | The handler of `turn_ended` (a counter, the frame number, one trace entry). From the fifth frame of the burst on, one read of each counter per frame: `stats()` of the HUD and `notifications_emitted()` of the game; arm A, which has no HUD, reads only the second, from the fourth frame, to have two readings to compare. | `stats()` of the native HUD is 0.6 to 2.0 µs; the other hook is not delivered |
+| `event-burst` | The handler of `turn_ended` (a counter, the frame number, one trace entry). From the fifth frame of the burst on, one read of each counter per frame: `stats()` of the HUD and `notifications_emitted()` of the game; arm A, which has no HUD, reads only the second, from the fourth frame, to have two readings to compare. | `stats()` is **0.86 µs in B and 4.5 µs in C** per read (the record of the slice that delivered it: [provenance of the reads](#provenance-of-the-reads)); `notifications_emitted()` 0.1 to 0.2 µs |
 | `context-switches` | In the first frame: one trace entry and the call of the intent. In the other two: waiting. The context reached is read after the window, at rest. | the same trace entry |
-| `stress` | In every frame: one trace entry and the call of the hook. | the same trace entry |
+| `stress` | In every frame: one trace entry and the call of the hook (the answers are kept and read after the window). | the same trace entry; the hook itself is the game's own work and is what the window measures |
 | idle | Waiting for the next frame, as everywhere. | none |
 
 The wait for the next frame is the same in every frame of the run, idle included, so it is in the instrument's floor and not in a difference. Nothing evaluates JavaScript, nothing reads the Surface's snapshot and nothing spawns
 a process in a window. In C the only call into the host's JavaScript side is the forced collection of Hermes' heap, once, after the drain, which is the reading at rest of the turn lane (`tests/performance-sampler.gd`).
-**The `stats()` of the HUD of C is not to be read by evaluating JavaScript** (that would charge arm C alone, the trap of #108); the scenario reads a counter that the HUD exposes to GDScript, or it records the window as
-unavailable.
+**The `stats()` of the HUD of C is not read by evaluating JavaScript** (that would charge arm C alone, the trap of #108): it is read from `HudStats`, a node of `main.tscn` that reads the registry's native counters
+(`FabricApplication.service_delivery`), with no JavaScript and no Surface snapshot. A path that evaluated JavaScript would cost about 100 µs a read and a read of the Surface's snapshot about 570 µs (the same record).
 
 ## What each reading costs, and where it falls
 
 Measured by the scenario in the rehearsal, on a machine that was not quiet, headless; they are the costs of the readings and not of any arm. Only the last row can fall inside a measured frame.
+The two cost figures of `stats()` are those of the record of the slice that delivered it; what the scenario measured of the same reads in its own runs is beside them.
 
 | Reading | When it is taken | Cost | In a measured frame? |
 | --- | --- | --- | --- |
@@ -234,7 +234,7 @@ Measured by the scenario in the rehearsal, on a machine that was not quiet, head
 | Time to the interactive HUD | At the boot | the frame's own clock reading | No: the boot belongs to no window |
 | The player's snapshot (`get_snapshot()`) | At rest, before each decision, and after each switch | 50 to 133 µs | No |
 | The flags of validity (drew after every measured intent, the idle frames drawn) | After the run, from the instrument's columns | none during the run | No |
-| `stats()` of the HUD and `notifications_emitted()` of the game | Each frame of the event burst from its fifth on, when the hooks exist | 0.6 to 2.0 µs for the native HUD's; the rest not delivered | Yes, by design: the window ends when they agree |
+| `stats()` of the HUD and `notifications_emitted()` of the game | Each frame of the event burst from its fifth on | `stats()`: 0.86 µs in B and 4.5 µs in C (the record); 1.0 µs in B and 4.3 µs in C in the scenario's runs. `notifications_emitted()`: 0.1 to 0.2 µs | Yes, by design: the window ends when they agree |
 
 ## The validation nodes of `main.tscn`
 
@@ -250,22 +250,33 @@ on the measured frames**, and nothing was done about them; if the cost should be
 
 ## The hooks of the stress and events slice
 
-The scenario is written against the contract and detects each hook by name; a hook that is not there is reported, and the window that needs it is recorded as unavailable with the reason, never invented.
+The hooks were delivered by #119 ([`frontier-stress.md`](frontier-stress.md)) and the scenario uses them; it detects each by name, so a game or a HUD without one makes the window that needs it unavailable, with the
+reason, and never invented.
 
-| Hook | Where | State at this commit | What the scenario does |
-| --- | --- | --- | --- |
-| `stats() -> {snapshots, context, events}` | the HUD of B and C | B has `stats()` with `{calls, screen, context}` (no `snapshots`, no `events`); C's `FabricSurface` has no such method | `event-burst` unavailable in B and C: the HUD has no `events` counter that GDScript can read without evaluating JavaScript in a measured frame |
-| `notifications_emitted() -> int` | `GameServices` | absent | `event-burst` unavailable in A, B and C |
-| `stress_begin()`, `stress_step()`, `stress_end()` | `GameServices` | absent | `stress` unavailable in A, B and C: no round is played |
+| Hook | Where | What the scenario does with it |
+| --- | --- | --- |
+| `stats() -> {snapshots, context, events}` | B: the native HUD, `HUDLayer/HUD`. C: the node `HudStats` of `main.tscn`, which reads the registry's counters natively (`service_delivery`) and evaluates no JavaScript | reads it from the fifth frame of the burst on, in B and C (`Hud.stats_source`) |
+| `notifications_emitted() -> int` | `GameServices` | reads it in the same frames, in the three arms; the set it counts (snapshots, hover cards and ends of turn) is the set `events` counts |
+| `stress_begin()`, `stress_step()`, `stress_end()` | `GameServices` | a round is `stress_begin()`, 20 `stress_step()` in consecutive frames and `stress_end()`; the window runs from the first to the second frame after the last step. A refusal (`turn_in_progress`, `stress_on`, `stress_off`) is read after the window and reported |
 
-When the hooks land the windows come in by themselves: `events-settled` is read from the fifth frame of the burst on, comparing the HUD's `events` with the game's `notifications_emitted()` (in A, which has no HUD, the
-emitter's counter against its own value one frame earlier, read from the fourth frame on: only the game's side, as the specification of the window says, and independent of whether the game counts a notification
-before or after it emits it), and a stress round is `stress_begin()`, 20 `stress_step()` in consecutive frames and
-`stress_end()`, with the window from the first to the second frame after the last step. The native test pins the unavailable state, and then runs those paths once with **stand-ins** that it writes into a copy of the
-game and of the native HUD for the length of the test (a counter that `notifications_emitted()` and the HUD's `events` both read, and three hooks that answer `ok` and do nothing): in A and B the event burst is measured
-(100 occurrences, 98 of them measured, five frames each, because the stand-ins agree at once) and so is the stress window (32 rounds, 30 measured, 23 frames each: the begin, 20 steps and the 2 frames after the last).
-That shows the plumbing of the scenario, the trace and the window rule work with hooks; it says nothing about the real hooks, which do not exist yet, and the first run with them is the first run of the
-reads that depend on what they cost.
+`events-settled` is read from the fifth frame of the burst on: in B and C the HUD's `events` against the game's `notifications_emitted()`; in A, which has no HUD, the emitter's counter against its own value one frame
+earlier, read from the fourth frame on (only the game's side, as the specification of the window says, and independent of whether the game counts a notification before or after it emits it). In the rehearsal the
+counters agree at the first read after the minimum in every turn of the three arms: all 100 bursts are the minimum of five frames, and at rest at the end of the run the HUD has consumed everything the game emitted
+(`events` equals `notifications_emitted()` in B and in C). **`service_delivery` counts each revision once, however many subscriptions receive it** (the correction that entered with #119), which is why `events` of C
+stays equal to the emitter's.
+
+The stress overlay is not the game's state, and a snapshot carries `stress` only while the mode is on; the scenario checks the context matrix's parity outside the stress rounds only (the panel `hud-stress` is in no row of
+the matrix) and leaves the mode with `stress_end()` at the end of every round, then waits for the HUD to rest before the next one.
+
+The native test also runs the scenario against a copy of the game that lacks `stress_step()` and a copy of the native HUD that lacks `stats()`: the stress window is unavailable in A and B and says that the hook is missing,
+the event burst is unavailable in B and says which HUD lacks which counter, A's event burst is measured, and the analysis rejects the executions as incomplete for exactly those windows.
+
+### Provenance of the reads
+
+What reading `stats()` costs is part of the provenance of the rehearsal (`rehearsal.json`, `provenance.readCosts`, and `summary.json`), taken from the record of the slice that delivered the hooks,
+[`docs/evidence/frontier-stress/costs.json`](../evidence/frontier-stress/costs.json): the median per read over 20,000 reads, headless, on a machine under load, **B 0.86 µs and C 4.5 µs**
+(`arms["b-new"].statsUs.median` and `arms["c-new"].statsUs.median`, to two digits; the figures after the review fix), and for the record the two paths that a measured frame must not take: evaluating JavaScript, about 100 µs, and
+reading the Surface's snapshot, about 570 µs. The campaign's own `provenance` is closed by its format and holds none of this; the scenario also times the reads in each run (`costsUsec`).
 
 ## The rehearsal
 
@@ -282,7 +293,7 @@ reads that depend on what they cost.
 - `summary.json`: counts, times and reasons of each execution.
 
 Every execution comes out rejected with `not-the-registered-build` (clause `build`: Debug). In the headless rehearsal the analysis adds `not-presented` (a headless display draws nothing and does not pace the loop),
-`incomplete` for the windows that wait for a hook, and `load` when the machine is not quiet (the repository's other lanes run on it: the 1-minute load was above 5 while it ran, against the limit of 2.0).
+`load` when the machine is not quiet (the repository's other lanes run on it: the 1-minute load was above 5 while it ran, against the limit of 2.0).
 
 **The refresh rate.** A headless display reads `-1` and the format requires a positive one (and the analysis refuses `refreshHz <= 0`), so the headless rehearsal is given `--assume-refresh-hz 60`; the value is
 written in the campaign's deviations and in `rehearsal.json`. Without it the runner stops with the format's own error. The windowed rehearsal reads the real one.
@@ -291,20 +302,21 @@ written in the campaign's deviations and in `rehearsal.json`. Without it the run
 
 | | A | B | C |
 | --- | ---: | ---: | ---: |
-| Seconds | 39.9 | 43.8 | 44.9 |
-| Process frames | 5,731 | 6,291 | 6,385 |
+| Seconds | 52.3 | 56.9 | 75.0 |
+| Process frames | 7,449 | 8,042 | 8,168 |
 | Replay: steps and golden hash | 77, `cb7ab974…` | 77, `cb7ab974…` | 77, `cb7ab974…` |
 | Soak: turns, decisions, final hash | 100, 429, `0b21c332…` | 100, 429, `0b21c332…` | 100, 429, `0b21c332…` |
 | Idle window | 600 frames | 600 | 600 |
 | `ai-phase` | 100 occurrences (2 + 98), 500 frames | the same | the same |
-| `event-burst` | unavailable (hook) | unavailable (hook) | unavailable (hook) |
+| `event-burst` | 100 occurrences (2 + 98), 500 frames: every burst is the minimum of 5 | the same | the same |
 | `context-switches` | 74 (24 + 50), 222 frames | the same | the same |
-| `stress` | unavailable (hooks) | unavailable (hooks) | unavailable (hooks) |
+| `stress` | 32 rounds (2 + 30), 736 frames: 23 each | the same | the same |
 | Latency clicks | not measured in A | 2 + 30 | 2 + 30 |
 | Parity | not measured in A | 93 checks, 7 contexts, all match | 93 checks, 7 contexts, all match |
-| Time to the interactive HUD (ms, headless, not a result) | not measured in A | 303 | 577 |
-| Scene nodes at the end | 4 | 31 | 29 |
-| Hermes heap, native views | | | 2,286,680 bytes, 17 |
+| Time to the interactive HUD (ms, headless, not a result) | not measured in A | 291 | 419 |
+| Notifications the game emitted, and the HUD consumed, at rest at the end | 2,256, no consumer | 2,306 and 2,306 | 2,307 and 2,307 |
+| Scene nodes at the end | 4 | 31 | 30 |
+| Hermes heap, native views | | | 2,338,264 bytes, 17 |
 | Errors (script, Godot log, JavaScript), exit code | 0, 0, 0, exit 0 | 0, 0, 0, exit 0 | 0, 0, 0, exit 0 |
 
 The unlimited lane was run on arm A: the vsync was requested `DISABLED` and read back, and the headless display server keeps `ENABLED`, which the scenario records (`vsync-reading`: the FPS band is N/A for that execution).
@@ -315,11 +327,12 @@ The unlimited lane was run on arm A: the vsync was requested `DISABLED` and read
 Where the protocol is a sentence, or says nothing, and the scenario had to decide. None of them changes a number of the protocol; each decides how a sentence meets the game.
 
 1. **The replay has 77 steps**, as the amendment 3 of the protocol says; the scenario plays `Replay.STEPS`, whose length the native test asserts.
-2. **The soak's hashes** are the soak of JavaScript's today (above), not the ones `frontier-soak.md` still prints.
+2. **The soak's hashes** are the soak of JavaScript's today (above), not the ones of the run before #93 that `frontier-soak.md` marks as such.
 3. **The occurrence of the dialog is the intent that leaves it**, as the amendment 4 of the protocol writes it, and `found_city` is a setup and not an occurrence, because it is not a selection intent.
 4. **12 switches a round and 7 rounds** (6 whole and 2 switches of the seventh), because the contexts do not fit in a game and the dialog needs 4 End Turns outside every window.
 5. **The window of the AI phase is five frames**, because the first phase of the job runs in the frame that accepts End Turn, and `turn_ended` is delivered by the frame of the sixth.
-6. **The burst of a turn ends with the frame before the first at whose start the counters agree**, and never before its fifth frame; in A, which has no HUD, the agreement is the emitter's counter not having moved since the previous frame's reading.7. **The time to the interactive HUD** is on the engine's clock, with New game as the control that is clicked, and in a windowed run the window is put in front after it.
+6. **The burst of a turn ends with the frame before the first at whose start the counters agree**, and never before its fifth frame; in A, which has no HUD, the agreement is the emitter's counter not having moved since the previous frame's reading.
+7. **The time to the interactive HUD** is on the engine's clock, with New game as the control that is clicked, and in a windowed run the window is put in front after it.
 8. **The latency pass** clicks the Warrior and the Settler of a stack alternately and then Clear selection; the first two clicks are the warm-up; it is over when the HUD shows the target context's panels and marker.
 9. **Parity** is the visible panels (live, visible Controls named `hud-*` that the matrix lists) against the matrix's row for the context the game is in, checked at rest after every switch and every setup; a run passes if all of its checks (93 in the rehearsal) match and all seven contexts were seen.
 10. **The unhandled JavaScript errors** of the `errors` rule are the errors the application reports at the end (the host's `errors`); the scenario installs no tracker of rejections, because that would put a handler in arm C alone.
@@ -334,19 +347,17 @@ Where the protocol is a sentence, or says nothing, and the scenario had to decid
 - **V05-07, the Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice. The scenario is a `SceneTree` script that is run with
   `-s` from a project; how it starts inside an exported package (an export template may not run `-s`, and the scenario may have to be the exported project's main scene or an autoload) is **open** and belongs to that
   slice.
-- **The stress and events hooks**, and the HUD counters for B and C, so that `event-burst` and `stress` are measurable; the first run with them is the first run of those lines.
 - **The instrument's self-check** on the campaign's machine, and its hash registered (`cpu-time-instrument` `gate`).
 - **A quiet machine**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window; the repository's other lanes run on this one.
 - **The windowed rehearsal**, once, when the user pauses the board.
-- **A correction of `frontier-soak.md`**, which still describes the run before #93.
 
 ## Limits
 
 - Every number of the rehearsal is a headless Debug number on a busy machine. They show that the script runs and what it counts, nothing of how an arm performs, and no analysis has run on the data of a campaign.
 - The six frames of rest are a rule, not a check that the React Native HUD has finished: the windowed rehearsal is the first run in which a pump that is still busy would show in the frames after a window.
 - Arms A and B have no host, so the scenario's readings of C that need it (the heap, the views, the errors) exist only there, as the protocol says.
-- The paths of the scenario that wait for the hooks (the burst's reads of the counters, the stress rounds) are written against the contract and were run only with the test's stand-ins, in A and B; arm C has no counter to
-  read yet, so they were not run there at all.
+- The event burst and the stress window are measured in the three arms, headless: in the burst the counters agree at the first read in every turn, so every burst is the minimum of five frames. A windowed loop, with the
+  host's pump and the JavaScript runtime draining at the pace of a display, may show a burst longer than five frames in C; that is what the rule is for, and it has not been seen yet.
 
 ## Reproducing
 

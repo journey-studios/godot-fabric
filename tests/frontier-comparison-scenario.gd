@@ -93,6 +93,7 @@ var latency_report := {"available": false, "reason": "", "warmupFrames": [], "fr
 var stress_report := {"rounds": 0}
 var rss_series: Array = []
 var reading_costs := {}
+var final_counters := {}
 var vsync_requested := "default"
 
 
@@ -477,17 +478,19 @@ func stress() -> void:
     await frames(SETTLE_FRAMES)
     await process_frame
     trace.append({"frame": Engine.get_process_frames(), "kind": "stress-begin"})
-    var begun: Variant = services.call("stress_begin")
-    if begun is Dictionary and int(begun.get("ok", 1)) != 1:
-      anomalies.append("stress: stress_begin was refused (%s) in round %d" % [str(begun.get("code", "")), round_index + 1])
+    # The answers are kept and read after the window: a refusal (`turn_in_progress`, `stress_on`, `stress_off`) would make the window something else, and is reported.
+    var answers: Array = [services.call("stress_begin")]
     for step in range(STRESS_STEPS):
       await process_frame
       trace.append({"frame": Engine.get_process_frames(), "kind": "stress-step"})
-      services.call("stress_step")
+      answers.append(services.call("stress_step"))
     await frames(STRESS_TAIL)
     await frames(SETTLE_FRAMES)
-    services.call("stress_end")
-    await frames(SETTLE_FRAMES)
+    answers.append(services.call("stress_end"))
+    for answer: Variant in answers:
+      if not answer is Dictionary or int(answer.get("ok", 0)) != 1:
+        anomalies.append("stress: a call of round %d was refused (%s)" % [round_index + 1, str(answer.get("code", "")) if answer is Dictionary else "no answer"])
+    await quiet()
     stress_report.rounds += 1
   rest_reading("stress")
 
@@ -531,6 +534,8 @@ func finish_run() -> void:
     reading_costs["liveViewsUsec"] = bench(hud.live_views)
   var scratch: Array = []
   reading_costs["traceEntryUsec"] = bench(func() -> void: scratch.append({"frame": Engine.get_process_frames(), "kind": "context-switch"}))
+  # The counters at the end of the run, at rest: the HUD must have consumed every notification the game emitted (in A there is no consumer, and `consumed` is -1).
+  final_counters = hud.notification_counters() if event_burst_reason == "" else {}
   instrument.finish()
   var samples: Dictionary = instrument.samples()
   write_report(samples, readings, application_errors)
@@ -565,7 +570,7 @@ func write_report(samples: Dictionary, readings: Dictionary, application_errors:
       "renderReadingLagDraws": Instrument.RENDER_READING_LAG_DRAWS, "waits": {"burstMinimumFrames": BURST_MINIMUM_FRAMES, "switchFrames": SWITCH_FRAMES,
         "stressSteps": STRESS_STEPS, "stressTail": STRESS_TAIL}},
     "boot": boot_report, "stages": marks, "game": game_report, "idle": idle_range, "unavailable": unavailable_windows(), "trace": trace, "switches": switch_log,
-    "latency": latency_report, "stress": stress_report, "parity": Hud.parity_summary(parity_checks), "readings": readings, "rssSeriesMb": rss_series, "costsUsec": reading_costs,
+    "latency": latency_report, "stress": stress_report, "parity": Hud.parity_summary(parity_checks), "readings": readings, "rssSeriesMb": rss_series, "costsUsec": reading_costs, "counters": final_counters,
     "applicationErrors": application_errors, "anomalies": anomalies, "aborted": aborted, "frames": frame_columns(samples)}
   var file := FileAccess.open(out_path, FileAccess.WRITE)
   if file == null:

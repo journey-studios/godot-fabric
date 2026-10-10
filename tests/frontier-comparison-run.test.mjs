@@ -8,7 +8,7 @@ import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { buildReport } from "../scripts/frontier-comparison-report.mjs";
 import { analyse, campaignOf, executionOf, fpsOf, goldenReplayHash, sha256, slotOf } from "../scripts/frontier-comparison-run-campaign.mjs";
 import { derivedOf, TRACE_KINDS, usecOf, windowFramesOf, windowRulesOf } from "../scripts/frontier-comparison-run-windows.mjs";
-import { loadNumber, processOf } from "../scripts/frontier-comparison-run.mjs";
+import { loadNumber, processOf, readCostsOf } from "../scripts/frontier-comparison-run.mjs";
 import { syntheticReport, syntheticTrace, totalMsOf } from "./frontier-comparison-run-synthetic.mjs";
 
 // The runner of the comparative execution (V05-10, `execucao`), Node only: the window rule (there is one, in JavaScript), the numbers the scenario waits with, the conversion to microseconds and
@@ -153,6 +153,16 @@ test("the load average, the exit and the log of a Godot process are read as the 
   const failed = processOf({ status: 1, signal: null }, "SCRIPT ERROR: Parse Error\nERROR: Failed to load script\nFABRIC_ERROR: no\n   at: x\n");
   assert.deepEqual(failed, { exitCode: 1, crashed: false, scriptErrors: 1, godotLogErrors: 2 });
   assert.equal(processOf({ status: null, signal: "SIGSEGV" }, "").crashed, true);
+});
+
+test("the cost of reading stats() is taken from the record of the slice that delivered the hooks, with two digits", async () => {
+  const record = JSON.parse(text("docs/evidence/frontier-stress/costs.json"));
+  const costs = await readCostsOf();
+  assert.equal(costs.source, "docs/evidence/frontier-stress/costs.json");
+  assert.deepEqual(costs.statsUsec, { B: 0.86, C: 4.5 });
+  assert.ok(Math.abs(costs.statsUsec.B - record.arms["b-new"].statsUs.median) < 0.01);
+  assert.ok(Math.abs(costs.statsUsec.C - record.arms["c-new"].statsUs.median) < 0.05);
+  assert.deepEqual(costs.notTaken, { evaluateUsec: 100, surfaceSnapshotUsec: 570 });
 });
 
 test("the replay's golden hash is read from the test that fixes it", () => {
