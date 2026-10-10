@@ -288,7 +288,7 @@ are the sizes of one trial, and no time here is a measurement of an arm.** The e
    never saw `comparison/`, `override.cfg` or their entries in the cache.
 3. **The probe project**, once, with `frameworks: false`, the include filter `override.cfg` (not a resource, so named; `all_resources` alone was not tried) and the two texture lines that every export of a project needs in `project.godot` (the hash of that file in the manifest follows the edit), and its manifest in `<dir>/probe/`.
 
-Then `readExports` and `readProbeExport`, which are the Release launcher's own, read the four back. One `.app` of a product exists at a time; an export that would start with under 600 MB free is refused (the disk of this Mac is small); a failed export removes its staging path.
+Then `readExports` and `readProbeExport`, which are the Release launcher's own, read the four back. An `--out` that already holds an app, a manifest or the summary of an earlier export is refused up front, naming what is there, before anything is provisioned (nothing is deleted: pass a new `--out`). One `.app` of a product exists at a time; an export that would start with under 600 MB free is refused (the disk of this Mac is small); a failed export removes its staging path.
 
 ### The set of files of each arm
 

@@ -22,6 +22,7 @@ import { exportPreparedProject } from "./macos-export.mjs";
 //      price of a HUD in package size is what the application weighs with it and without it. The size of the PCK is recorded beside it. The two exports of an arm must have the same size.
 // The probe project is exported once with the same template (no frameworks), and its manifest has `exportBytes` twice that size: there is no repeat of it, and no axis reads it.
 //
+// An --out that already holds an app, a manifest or the summary of an earlier export is refused up front, naming what is there, before anything is provisioned; nothing is deleted.
 // A manifest is checked by `manifestErrors` before it is written, and the whole directory by `readExports` and `readProbeExport` when all four are exported. Only one `.app` of a product exists at a
 // time, and an export that would start with less than MIN_FREE_BYTES free is refused: the disk of this machine is small, and an export that fails half-way for lack of space leaves nothing to judge.
 
@@ -46,6 +47,21 @@ async function assertRoom(directory, { freeBytes, minimum }) {
     throw new Error(`only ${Math.floor(free / 1048576)} MB are free where ${directory} is, and an export needs ${Math.floor(minimum / 1048576)} MB at least: free some space and export again`);
   }
   return free;
+}
+
+// What an earlier export left in `out` for the names about to be exported: the app and the manifest of each one's folder, and the summary of a whole run. An existing app is also what
+// exportPreparedProject would refuse, but only after the whole preparation; nothing is deleted here, and what is found is named.
+async function assertNothingThere(out, names, { summary = false } = {}) {
+  const candidates = [...names.flatMap((name) => [path.join(out, name, APP_NAMES[name]), path.join(out, name, MANIFEST_FILE)]), ...(summary ? [path.join(out, SUMMARY_FILE)] : [])];
+  const found = [];
+  for (const candidate of candidates) {
+    if (await lstat(candidate).then(() => true, () => false)) {
+      found.push(path.relative(out, candidate));
+    }
+  }
+  if (found.length > 0) {
+    throw new Error(`${out} already holds the output of an earlier export (${found.join(", ")}): pass a new --out, or remove it yourself; nothing was provisioned, exported or deleted`);
+  }
 }
 
 // The size of an application bundle: the bytes of every regular file in it. Symbolic links count for nothing (a framework's `Versions/Current` is one), so a file reached by two paths counts once.
@@ -127,6 +143,7 @@ export async function exportArm({ arm, out, template, templateMember = null, log
   const { prepare = prepareProject, exportApp = exportPreparedProject, freeBytes = freeBytesOf, minFreeBytes = MIN_FREE_BYTES } = deps;
   const set = armProject(arm);
   const directory = path.join(out, arm);
+  await assertNothingThere(out, [arm]);
   await mkdir(directory, { recursive: true });
   const prepared = await prepare({ name: `${WORK_PREFIX}-${arm.toLowerCase()}` });
   const { harness } = prepared;
@@ -191,6 +208,7 @@ export async function exportArm({ arm, out, template, templateMember = null, log
 export async function exportProbe({ out, template, templateMember = null, log = () => undefined, deps = {} }) {
   const { prepareProbe = prepareProbeProject, exportApp = exportPreparedProject, makeHarness = createHarness, freeBytes = freeBytesOf, minFreeBytes = MIN_FREE_BYTES } = deps;
   const directory = path.join(out, PROBE_ARM);
+  await assertNothingThere(out, [PROBE_ARM]);
   await mkdir(directory, { recursive: true });
   const harness = await makeHarness({ template: "civ-lite", name: `${WORK_PREFIX}-probe` });
   try {
@@ -226,6 +244,8 @@ export async function exportMeasurementProject({ out, template, only = [...ARMS,
     throw new Error(`--only takes ${[...ARMS, PROBE_ARM].join(", ")}; not ${unknown.join(", ")}`);
   }
   const directory = path.resolve(out);
+  // Before anything is provisioned or made: a second run in the same --out would fail late, after the whole preparation of its first arm.
+  await assertNothingThere(directory, [...ARMS, PROBE_ARM].filter((name) => wanted.has(name)), { summary: true });
   await mkdir(directory, { recursive: true });
   const arms = {};
   let templateMember = null;

@@ -244,6 +244,47 @@ test("what the script refuses: unequal product sizes, a copy that is not the scr
   await assert.rejects(exportMeasurementProject({ out: path.join(full, "out"), template: "t.zip", only: ["A", "D"], deps: depsOf(full, fullCalls, []) }), /--only takes A, B, C, probe; not D/);
 });
 
+test("an --out that already holds an earlier export is refused up front, before anything is provisioned or exported, and nothing in it is touched", async () => {
+  const parent = await folder("earlier");
+  const never = (name) => async () => assert.fail(`${name} was called`);
+  const deps = { prepare: never("prepare"), exportApp: never("exportApp"), prepareProbe: never("prepareProbe"), makeHarness: never("makeHarness"), freeBytes: never("freeBytes") };
+  const held = async (out, files) => {
+    for (const [file, content] of Object.entries(files)) {
+      await mkdir(path.dirname(path.join(out, file)), { recursive: true });
+      await writeFile(path.join(out, file), content);
+    }
+  };
+  const message = (found) => new RegExp(`already holds the output of an earlier export \\(${found}\\): pass a new --out, or remove it yourself; nothing was provisioned, exported or deleted`);
+  // A manifest of B, an app of the probe, the summary of a run, and all of them at once.
+  const cases = [
+    [{ [`B/${MANIFEST_FILE}`]: "{}\n" }, `B/${MANIFEST_FILE.replaceAll(".", "\\.")}`],
+    [{ [`probe/${APP_NAMES.probe}/Contents/Info.plist`]: "plist\n" }, `probe/${APP_NAMES.probe.replaceAll(".", "\\.")}`],
+    [{ "export-summary.json": "{}\n" }, "export-summary\\.json"],
+    [{ [`A/${APP_NAMES.A}/Contents/Info.plist`]: "plist\n", [`C/${MANIFEST_FILE}`]: "{}\n", "export-summary.json": "{}\n" }, `A/${APP_NAMES.A.replaceAll(".", "\\.")}, C/${MANIFEST_FILE.replaceAll(".", "\\.")}, export-summary\\.json`],
+  ];
+  for (const [index, [files, found]] of cases.entries()) {
+    const out = path.join(parent, `out-${index}`);
+    await held(out, files);
+    const before = await readdir(out, { recursive: true });
+    await assert.rejects(exportMeasurementProject({ out, template: "template.zip", deps }), message(found));
+    assert.deepEqual(await readdir(out, { recursive: true }), before, "nothing was made, and nothing was deleted");
+  }
+  // The same for one arm and for the probe on their own.
+  const alone = path.join(parent, "alone");
+  await held(alone, { [`A/${MANIFEST_FILE}`]: "{}\n", [`probe/${MANIFEST_FILE}`]: "{}\n" });
+  await assert.rejects(exportArm({ arm: "A", out: alone, template: "template.zip", deps }), message(`A/${MANIFEST_FILE.replaceAll(".", "\\.")}`));
+  await assert.rejects(exportProbe({ out: alone, template: "template.zip", deps }), message(`probe/${MANIFEST_FILE.replaceAll(".", "\\.")}`));
+  assert.deepEqual((await readdir(alone, { recursive: true })).sort(), ["A", `A/${MANIFEST_FILE}`, "probe", `probe/${MANIFEST_FILE}`]);
+  // What is not asked for is not in the way: an --out with B's manifest takes A.
+  const partial = path.join(parent, "partial");
+  await held(partial, { [`B/${MANIFEST_FILE}`]: "{}\n" });
+  const result = await exportMeasurementProject({ out: partial, template: "template.zip", only: ["A"], deps: depsOf(parent, [], []) });
+  assert.deepEqual(Object.keys(result.arms), ["A"]);
+  assert.equal(await readFile(path.join(partial, "B", MANIFEST_FILE), "utf8"), "{}\n", "B's was left as it was");
+  // And a second run in the same --out is the case that was late.
+  await assert.rejects(exportMeasurementProject({ out: partial, template: "template.zip", only: ["A"], deps }), message(`A/${APP_NAMES.A.replaceAll(".", "\\.")}, A/${MANIFEST_FILE.replaceAll(".", "\\.")}, export-summary\\.json`));
+});
+
 test("a manifest that is not good is not written, the size of an app counts its files and no link, and the paths are relative to the arm's folder", async () => {
   const parent = await folder("manifest-unit");
   const app = path.join(parent, "x", "X.app");
