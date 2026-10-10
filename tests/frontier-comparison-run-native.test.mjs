@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test, { after, before } from "node:test";
 import { goldenReplayHash } from "../scripts/frontier-comparison-run-campaign.mjs";
-import { launchScenario, prepareProject, readCostsOf, rehearse, summaryOf } from "../scripts/frontier-comparison-run.mjs";
+import { launchScenario, MEASUREMENT_FILES, prepareProject, readCostsOf, rehearse, summaryOf } from "../scripts/frontier-comparison-run.mjs";
 
 // The scenario of the comparative execution (tests/frontier-comparison-scenario.gd) run for real, headless, in each of the three arms, and the rehearsal that the runner builds from it
 // (scripts/frontier-comparison-run.mjs). It is a REHEARSAL: a Debug build, one execution per arm, no campaign, and no number of it is a measurement of an arm. What it proves is that the
@@ -13,6 +14,9 @@ import { launchScenario, prepareProject, readCostsOf, rehearse, summaryOf } from
 // tests/frontier-comparison-player.test.mjs. `npm run test:frontier-comparison-run` runs both, one at a time.
 //
 // The headless display server has no refresh rate (it reads -1) and the format requires a positive one, so the rehearsal assumes 60 Hz for the format, and says so in its deviations.
+//
+// The scenario enters as the MAIN LOOP of the measurement project (`application/run/main_loop_type` in the copy's override.cfg), never with `-s`: it is the entry that a Release export runs.
+// The test after the first one shows it, and the one after that runs arm A through `-s` as a control and compares what the scenario counts.
 const ARMS = ["A", "B", "C"];
 const ASSUMED_REFRESH_HZ = 60;
 const SOAK_FINAL_HASH = "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0";
@@ -40,6 +44,53 @@ test("the rehearsal runs the script to its end in the three arms and builds a ca
     assert.equal(run.report.aborted, "");
     assert.deepEqual(run.report.anomalies, []);
   }
+});
+
+test("the scenario entered as the main loop of the measurement project: no -s, the settings in the copy, the class in the cache, the product's project.godot untouched", async () => {
+  const project = prepared.harness.project;
+  assert.equal(await readFile(path.join(project, "override.cfg"), "utf8"), MEASUREMENT_FILES["override.cfg"]);
+  assert.match(await readFile(path.join(project, ".godot", "global_script_class_cache.cfg"), "utf8"), /FrontierComparisonEntry/);
+  assert.doesNotMatch(await readFile(path.join(project, "project.godot"), "utf8"), /main_loop_type|frontier-comparison/);
+  for (const run of rehearsal.runs) {
+    assert.deepEqual(run.args.slice(0, 2), ["--path", project]);
+    assert.ok(!run.args.includes("-s") && !run.args.includes("--script"), `arm ${run.report.arm}: the process did not receive -s: ${run.args}`);
+    assert.ok(run.args.slice(run.args.indexOf("--")).every((argument) => argument === "--" || /^--(arm|lane|out)=/.test(argument)));
+    assert.equal(run.report.provenance.mainLoop, "FrontierComparisonEntry", `arm ${run.report.arm}: the script ran as the main loop, as the class the settings name`);
+  }
+});
+
+// What a report counts, none of it a time: the nodes of the tree at the end, the game's hashes and counts, the parity, the notifications and the occurrences of the trace by kind.
+const countsOf = (report) => ({
+  sceneNodes: report.readings.sceneNodes,
+  game: report.game,
+  parity: report.parity,
+  counters: report.counters,
+  unavailable: report.unavailable,
+  switches: report.switches.length,
+  stressRounds: report.stress.rounds,
+  idle: report.idle.last - report.idle.first + 1,
+  trace: Object.fromEntries([...new Set(report.trace.map((entry) => entry.kind))].sort().map((kind) => [kind, report.trace.filter((entry) => entry.kind === kind).length])),
+});
+
+test("the empty main scene changes no reading: arm A through -s, without the settings, counts what it counts as the main loop", async () => {
+  const settings = path.join(prepared.harness.project, "override.cfg");
+  const genuine = await readFile(settings, "utf8");
+  const out = path.join(prepared.harness.directory, "run-A-presented-s.json");
+  await rm(out, { force: true });
+  await rm(settings);
+  let control = null;
+  try {
+    control = spawnSync(prepared.harness.godot, ["--path", prepared.harness.project, "--headless", "-s", "res://comparison/frontier-comparison-scenario.gd", "--", "--arm=A", "--lane=presented", `--out=${out}`],
+      { env: prepared.harness.env, encoding: "utf8", timeout: 1800000, maxBuffer: 256 * 1024 * 1024 });
+  } finally {
+    await writeFile(settings, genuine);
+  }
+  assert.equal(control.status, 0, (control.stdout ?? "") + (control.stderr ?? ""));
+  const through = JSON.parse(await readFile(out, "utf8"));
+  const entered = rehearsal.runs.find((run) => run.report.arm === "A").report;
+  assert.equal(through.provenance.mainLoop, "", "the control is the scenario script itself, run with -s");
+  assert.ok(through.readings.sceneNodes > 0);
+  assert.deepEqual(countsOf(entered), countsOf(through));
 });
 
 test("in each arm the replay reaches its golden hash, the soak its final hash, and every window has the occurrences the protocol counts or says why it has none", () => {
