@@ -203,6 +203,10 @@ function unreportedErrors(entry, where, protocol) {
   if (!crashed && !timedOut && !Object.hasOwn(entry.errors, "exitCode")) {
     errors.push(`${where}.errors: no reason for the missing report: the process did not crash, did not time out and has no exit code`);
   }
+  // A process that exited has an exit code and one that was killed has a signal, never both (the campaign writes the signal when there is one and the exit code otherwise).
+  if (Object.hasOwn(entry.errors, "exitCode") && Object.hasOwn(entry.errors, "signal")) {
+    errors.push(`${where}.errors: exitCode and signal are both present: a process that exited has an exit code and one that was killed has a signal`);
+  }
   return errors;
 }
 

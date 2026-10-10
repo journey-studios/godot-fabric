@@ -307,6 +307,13 @@ test("an attempt that wrote no report is in the format: a valid entry is accepte
       entry.errors = errorsOfProcess;
     }), [], JSON.stringify(errorsOfProcess));
   }
+  // A process that exited has an exit code and one that was killed has a signal, never both; neither is fine when it crashed or timed out.
+  assert.deepEqual(errors(entry => {
+    entry.errors.exitCode = -1;
+  }), ["unreported[0].errors: exitCode and signal are both present: a process that exited has an exit code and one that was killed has a signal"]);
+  assert.deepEqual(errors(entry => {
+    entry.errors = {crashed: true, timedOut: false};
+  }), []);
   // An attempt is in one of the two lists, once.
   assert.deepEqual(errors((entry, copy) => {
     copy.unreported.push(structuredClone(entry));
