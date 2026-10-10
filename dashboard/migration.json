@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T17:10:00.000Z",
+  "updatedAt": "2026-10-10T17:55:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4806,6 +4806,13 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-hosted-receipts-11-ea5fcea",
+      "at": "2026-10-10T17:55:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de duas fatias do V05-10, já na main: o lançador Release sobre os manifestos do export (#136, critério execucao, squash e4730cb, entrada milestone-0-5-v05-10-release-launcher-29e379f) e os projetos dos braços A e B sem a extensão Fabric (#138, critério execucao, squash 2d2ba46, entrada milestone-0-5-v05-10-arm-projects-85d2c99). A Contracts do push de cada squash passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque nenhuma das duas fatias tem passo nativo nem artefato (runs 38072053021 e 38071259582). A guarda de marco passou contra o pai de cada squash. O test:contracts deu 7, 43 e 669 testes no #136 e 7, 43 e 656 no #138, com um skipped cada, o export nativo do macOS, aceito pela allowlist. tests/frontier-comparison-release.test.mjs passou 13 de 13, tests/frontier-comparison-campaign.test.mjs 20 de 20, tests/frontier-comparison-run.test.mjs 22 de 22 e tests/frontier-comparison-arms.test.mjs 10 de 10. O Pages do push de e4730cb (run 38072053016) publicou o migration.json commitado com as duas entradas, a do #136 e a do #138, que entrou antes, em 2d2ba46; o do push de 2d2ba46 (run 38071259623) publicou só a entrada do #138, porque a do #136 ainda não existia. Gerador canônico com 33 fatias e 66 recibos. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ea5fceacdcd38d94d502325a8b26b44c0310fc3d/docs/evidence/frontier-comparison-release-launcher/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "modal-teardown-on-exit-28edbbc",
       "at": "2026-10-10T17:10:00.000Z",
       "taskIds": [
@@ -4827,6 +4834,13 @@
       "taskIds": [],
       "message": "V05-10 do marco 0.5, critério execucao (código no commit 29e379f): o lançador Release da campanha comparativa deixa de só recusar e passa a rodar os três .app de um diretório de exports (--exports <dir>), sobre um manifesto (frontier-comparison-export.json, formato godot-fabric.frontier-comparison-export/v1) que o script de medição do export escreve ao lado de cada .app: o braço, os caminhos do .app, do executável e do .pck (relativos ao diretório do manifesto, sem ..), os SHA-256 do binário, do pacote, do roteiro e do template, os arquivos do roteiro com seus hashes, a versão do Godot e o tamanho do pacote de produto em um export e na repetição (dois inteiros iguais, como o protocolo exige). O prepare() lê e valida os três manifestos, recalcula o SHA-256 de cada executável e pacote e recusa, nomeando cada problema e sem iniciar nada, se um manifesto faltar, estiver errado ou não for o do arquivo (ou se o export levar outro tests/cpu-time-instrument.gd que o do repositório); registra os hashes de cada braço, com a semente, os hashes do jogo e o do instrumento das mesmas fontes do lançador Debug. O launch() confere de novo os hashes do executável e do pacote (um arquivo trocado depois do prepare() faz o launch lançar erro e a campanha parar) e roda Contents/MacOS/<executável> com scenarioArguments (--windowed -- --arm --lane --out, com --out absoluto) num diretório privado fora do .app, com timeout; o override.cfg vai dentro do pck e o lançador não põe nada no .app. A carga, o timeout e o log passam por uma primitiva só (runTimed), que o lançador Debug também usa, e um relatório que não é JSON (processo morto ao escrevê-lo) vira relatório nulo nos dois lançadores, com o arquivo guardado como .unreadable.json: a tentativa entra em unreported. A campanha ainda não roda pelo Release: o lançador diz selfCheck unsupported, porque o autoteste do instrumento usa -s e um template o descarta; a campanha lê e valida os exports e então recusa, antes de qualquer processo ou diretório de campanha. Tudo foi testado só em Node, com um .app falso (três executáveis que escrevem um relatório mínimo): nenhum número é resultado, e o export real do civ-lite nos três braços, o tamanho do pacote nos braços A e B e o autoteste do instrumento num template seguem abertos. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/29e379f78652cbcfbb1e8184ca8f2158b9aa71c3/docs/research/frontier-comparison-execution.md#the-launcher"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-10-ddb887f",
+      "at": "2026-10-10T16:46:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de duas fatias do V05-10, já na main: a entrada do roteiro como main loop do projeto de medição (#133, critério execucao, squash 81eaa0a) e o relatório da comparação como documento Markdown (#132, critério relatorio, squash 01118ad). A Contracts do push de cada squash passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque nenhuma das duas fatias tem passo nativo nem artefato (runs 38067297038 e 38068135735). A guarda de marco passou contra o pai de cada squash. O test:contracts deu 7, 43 e 629 testes no #133 e 7, 43 e 646 no #132, com um skipped cada, o export nativo do macOS, aceito pela allowlist. tests/frontier-comparison-run.test.mjs passou 22 de 22 e tests/frontier-comparison-report-markdown.test.mjs passou 17 de 17. O Pages do push de 81eaa0a (run 38067297023) publicou o migration.json commitado com a entrada de atividade do #133; o do push de 01118ad (run 38068135660) publicou-o com as duas entradas, a do #133 e a do #132 (no push de 81eaa0a, a do #132 ainda não existia). Gerador canônico com 31 fatias e 62 recibos (com o #75, que entrou antes pelo #134). Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ddb887f7e618362294018641b6904d609b15af70/docs/evidence/frontier-comparison-entry/README.md#ci-hospedada-e-pages"
     },
     {
       "id": "milestone-0-5-hosted-receipts-10-657694e",
