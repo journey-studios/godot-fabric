@@ -4050,6 +4050,14 @@
                 {
                   "label": "Pesquisa: a probe de estabilidade, o que é repouso, o que o host conta (modalRuntimeMembers, objetos), a regra do heap, o foco que este host mede, a varredura e os ícones",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/research/frontier-hud.md"
+                },
+                {
+                  "label": "CI hospedada: recibo do run 37995325873 (Contracts disparado na main em 916387e, PR #100, oito jobs em success) (hosted-ci.json)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1271bbabd36d55463cd290740b33e415e817110e/docs/evidence/civ-lite-ui/stability/hosted-ci.json"
+                },
+                {
+                  "label": "Pages: recibo do run 37995302878 (push de 916387e, build e deploy em success, deployment 6971658371, migration.json publicado igual ao commitado) (publication.json)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1271bbabd36d55463cd290740b33e415e817110e/docs/evidence/civ-lite-ui/stability/publication.json"
                 }
               ]
             }
