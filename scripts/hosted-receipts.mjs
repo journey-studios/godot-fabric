@@ -270,8 +270,8 @@ function jobRecord(job) {
     databaseId: job.id,
     runAttempt: job.run_attempt,
     headSha: job.head_sha,
-    startedAt: job.started_at,
-    completedAt: job.completed_at,
+    // A skipped job never ran, and the API's times of it are not a run's: the receipt keeps none for it.
+    ...(job.conclusion === "skipped" ? {} : { startedAt: job.started_at, completedAt: job.completed_at }),
     url: job.html_url,
   };
 }

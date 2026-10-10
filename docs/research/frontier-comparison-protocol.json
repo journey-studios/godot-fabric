@@ -29,6 +29,13 @@
       "why": "The V05-06 windowed baseline found that, with the vsync on at 120 Hz, the 600 idle intervals of a window the display presents come in two alternating groups: about 300 under 4.17 ms and about 300 of 12 ms or more, two neighbours adding up to about 16.67 ms and the mean being about 8.33 ms. The median falls in one group or the other by a few samples. One presented attempt of the baseline was refused as unpaced with a median of 4.136 ms against the 4.167 ms required, with a mean of 8.333 ms and 5,106 of 5,110 frames drawn; the five accepted runs of the turn had medians from 4.421 to 13.177 ms, and in its run 3 (median 4.421 ms) 242 of 360 click frames were above twice the idle median only because the median was in the low group. The median of the half-sums of consecutive pairs was between 8.327 and 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, is about 0.6 ms in a loop that nothing paces (0.704 to 0.710 ms in the three unpaced attempts of 2026-10-08), and a single stall moves only two of the half-sums, which the mean would not survive. The two alternating groups are an effect of the intervals between process frames with the vsync on, not of the CPU time; the median of the half-sums of pairs is robust to them and to an isolated stall and, in a series with no groups, is practically its median (6.888 against 6.901 ms in a uniform loop, 0.704 against 0.706 ms in an unpaced one), so the same statistic serves both quantities. The pre-registered text defined the idle median over the CPU time of the idle frames and compared the same idle median with half of the refresh period, which is a quantity of intervals; the amendment names, for each use, the quantity that is compared. The primary outcome, the CPU time per frame, does not change. The table is in docs/research/frontier-baseline.md and the evidence in docs/evidence/idle-reference/.",
       "before": "idleReference.rule: \"after the boot, 600 consecutive frames with the map and the HUD still and nothing injected; the median CPU time of those frames is the run's idle median, the reference of the frames above twice the idle median\". Secondary outcome: id \"frames-above-twice-idle-median\", label \"Frames of a window whose CPU time is above twice the run's idle median\". runs.script, step idle: \"600 frames with nothing injected: the idle median\". Invalidation rule not-presented: \"... or the loop was not paced (the idle median is under half of the refresh period read back)\". preRegistration.amendments: \"any other change is an amendment: it is listed with its date, commit and reason in the Amendments section of the research note, the pin in the test is changed on purpose in the same commit, and no execution made under the previous text is mixed with the new one\".",
       "measurementsBefore": 0
+    },
+    {
+      "date": "2026-10-09",
+      "what": "Arm B's time-box gets its length, and the open item of the iPhone records the NO-GO of V05-09. Three texts change: decisionRule.partialReport.timeBox (the unit, arm C's measurement, the optimization pass and the total), the `arm-b` open item and the `iphone` open item. The arms, the hypotheses, the outcomes, the windows, the executions, the statistics, the thresholds and the categories of the decision rule do not change; the `iphone` block keeps its GO and NO-GO rules, and its NO-GO branch is the one that applies.",
+      "why": "The pre-registration said that arm B's time-box is the same as arm C's plus one optimization pass and that its length is set and recorded before arm B starts, but it gave no unit, no measurement of C and no length for the pass. The unit is the active time of the subagents, the only effort of C that carries timestamps: the transcripts of the implementer of #82 and #93 (one agent, 7.35 h), of the implementer of #100 (5.12 h) and of the two researchers (0.12 h and 0.19 h), 12.78 h in all. The cut of 30 minutes is on a plateau: 12.78 h with 30 or 60 minutes, 11.62 h with 20 and 10.50 h with 10, because the gaps under it are native suites that ran for up to 25 minutes with no event, and the only gap above it (305 minutes) is the wait between the first slice and the second. C's 12.8 h also built the game side that B reuses (the event queue, the context in the snapshot, the input blocking under overlays and the probes), so B's box is generous, as a native HUD that is not a straw man needs. The pass is a quarter of C's because C had none and the protocol asks for one round, not a second implementation. The NO-GO of V05-09 was recorded on 2026-10-09 (docs/evidence/frontier-device/README.md, #102), and the `iphone` block already said that with a NO-GO the comparison covers macOS only.",
+      "before": "decisionRule.partialReport.timeBox: \"the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts\". open, id arm-b: \"arm B (criterion `braco-b`) does not exist; its time-box has no length yet\". open, id iphone: \"the iPhone depends on the GO or NO-GO of V05-09\".",
+      "measurementsBefore": 0
     }
   ],
   "arms": [
@@ -406,7 +413,7 @@
     "partialReport": {
       "when": "arm B is not ready in its time-box",
       "report": "a partial comparison of A against C: H1 only, no category for H3 and no gain claimed",
-      "timeBox": "the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts"
+      "timeBox": "the same as arm C's plus one optimization pass, counted as the active time of the subagents that implement and research the arm: the sum of the gaps shorter than 30 minutes between consecutive timestamped events of their transcripts (a longer gap is a wait for review or for a decision, not work). Arm C, the React Native HUD of V05-05 (#82, #93 and #100), took 12.8 h by that count. Arm B therefore has 12.8 h to pass the context matrix (the invalidation rule `parity`), then one optimization pass of at most 3.2 h (a quarter of C's): one round, after the parity passes, that profiles arm B alone by idiomatic Godot means, outside any comparative execution, and keeps the parity. In all 16.0 h, counted the same way from the first event of arm B's first subagent; recorded on 2026-10-09, before arm B starts"
     }
   },
   "thresholds": [
@@ -414,40 +421,47 @@
       "id": "cpu-time-instrument",
       "rule": "one engine-side reading of the main thread's CPU time for the process frame, taken by the same code in the three arms, that excludes the wait for the display; a self-check with a synthetic load of known duration must read it within 10% before any comparative execution",
       "source": "the instrument self-check of V05-10 `execucao`; the host's pump accounting is not used because arms A and B have no host",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": {
+        "quantity": "total_ms = physics_ms + process_ms + setup_ms + render_ms for each process frame, in milliseconds: the monotonic elapsed time between the engine's hooks on the main thread (not the thread's CPU clock of the operating system), every term ending before the frame is presented; the percentile and the windows are the protocol's",
+        "reading": "Time.get_ticks_usec stamped at SceneTree.process_frame, RenderingServer.frame_pre_draw (the last _process when the frame does not draw), SceneTree.physics_frame and the last _physics_process; RenderingServer.get_frame_setup_time_cpu() and viewport_get_measured_render_time_cpu() read at frame_post_draw, with the render measure on for the main window's viewport; never Performance.TIME_PROCESS or TIME_PHYSICS_PROCESS, which are a once-a-second maximum and, for TIME_PROCESS with the vsync on, hold the wait for the display (TIME_PROCESS stays in the samples as a cross-check)",
+        "alignment": "the render reading of a draw is the one taken 6 draws later (Compatibility renderer, Godot 4.7.2, macOS), joined by draw index when the run is over; the harness keeps 6 draws after the last window it needs, and the lag is checked by the render pulse every time the lab probe runs",
+        "observedError": "against a load of known duration, at most 0.16% at 2, 5, 10 and 20 ms headless and at most 1.5% in a presented window (the 2 ms load; 0.22% or less in the others), under the 10% rule; the instrument's floor, the idle total, is about 0.014 ms headless and 0.082 ms in a window, the same in every arm",
+        "gate": "the protocol's `instrument` rule is operational as: tests/cpu-time-instrument.gd is byte-identical to the one the probe and the oracle passed (its hash goes in the provenance), and the probe and the oracle are rerun on the machine, the engine and the renderer of the campaign before it starts",
+        "evidence": {"research": "docs/research/cpu-time-instrument.md", "record": "docs/evidence/cpu-time-instrument/README.md", "pinnedCommit": "e38615da6ad7f9ca774e2ef8c46de33707c1b427"}
+      },
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-ai-phase",
       "unit": "ms",
       "rule": "the median across five presented runs of the window's p95 plus three times its interquartile range, rounded up to 0.5 ms, as the V05-06 proposal derives a presented frame time",
       "source": "V05-06 `turno`: the frame time of a turn with the AI sliced per frame",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-event-burst",
       "unit": "ms",
       "rule": "the same rule, on the frames of the end of a turn",
       "source": "V05-06 `turno`: the frame time of the end of a turn",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-context-switches",
       "unit": "ms",
       "rule": "the same rule, on the swap frame p95 of the presented windowed baseline",
       "source": "V05-06 windowed baseline: swap frame p95, pending until a display presents the window",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 16,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-stress",
       "unit": "ms",
       "rule": "the same rule, on the stress scenario's counterpart in V05-06; frozen as N/A with the reason when V05-06 measured none, and then the window is judged by the relative rule alone",
       "source": "V05-06 `turno` or `soak`, whichever measured a log of 200 lines and a production list of 100 items",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+      "frozenAt": "2026-10-10"
     }
   ],
   "invalidation": [
@@ -504,10 +518,10 @@
   },
   "open": [
     {"id": "windowed-baseline", "text": "the presented windowed baseline of V05-06 is pending, and `turno`, `soak` and `congelado` are open, so the absolute budgets are formulas with a null value"},
-    {"id": "arm-b", "text": "arm B (criterion `braco-b`) does not exist; its time-box has no length yet"},
+    {"id": "arm-b", "text": "arm B (criterion `braco-b`) does not exist yet; its time-box is set in decisionRule.partialReport.timeBox (the amendment of 2026-10-09 that records it)"},
     {"id": "instrument", "text": "the exact reading of the CPU time per frame is chosen and checked by `execucao` before the first comparative execution and then frozen"},
     {"id": "missed-frames", "text": "missed frames with the vsync on need presentation timestamps that Godot does not give"},
-    {"id": "iphone", "text": "the iPhone depends on the GO or NO-GO of V05-09"},
+    {"id": "iphone", "text": "V05-09 is a NO-GO (2026-10-09), so by the `iphone` block the comparison covers macOS only"},
     {"id": "scripts", "text": "the scenario script, the analysis script and the hashes of the binary and the package are written by `execucao` and `relatorio`, before the first comparative execution"}
   ],
   "report": {

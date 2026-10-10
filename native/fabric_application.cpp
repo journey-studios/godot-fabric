@@ -3,6 +3,7 @@
 #include "adapter_loader.h"
 #include "app_lifecycle.h"
 #include "device_services.h"
+#include "display_insets.h"
 #include "accessibility_info.h"
 #include "godot_device_backend.h"
 #include "system_appearance.h"
@@ -17,6 +18,7 @@
 #include <godot_cpp/variant/callable_method_pointer.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <folly/json.h>
+#include <cmath>
 #include <stdexcept>
 #include <filesystem>
 #include <optional>
@@ -34,6 +36,11 @@ static constexpr const char *validation_refresh_rate = "validation_refresh_rate"
 // And the headless DisplayServer presents nothing, so a validation run states how its
 // simulated window is presented ("presentation" or "time") through this meta.
 static constexpr const char *validation_frame_pacing = "validation_frame_pacing";
+// The headless DisplayServer has one screen scale, 1, and no safe area; a validation run states the screen scale that
+// density_policy "screen" follows through the first meta, and the unsafe bands RN's SafeAreaView receives (in Fabric points, a
+// Dictionary with left, top, right and bottom; a missing key is 0) through the second. Removing a meta returns to the platform.
+static constexpr const char *validation_screen_scale = "validation_screen_scale";
+static constexpr const char *validation_safe_area = "validation_safe_area";
 // Godot's default roots cannot vouch for the private authority of a local test server, so
 // a validation run states the PEM text of the authorities an HTTPS request trusts, instead
 // of those roots, through this meta.
@@ -143,6 +150,9 @@ void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("set_native_combination_path", "path"), &FabricApplication::set_native_combination_path);
   ClassDB::bind_method(D_METHOD("get_native_combination_path"), &FabricApplication::get_native_combination_path);
   ADD_PROPERTY(PropertyInfo(Variant::STRING, "native_combination_path", PROPERTY_HINT_FILE, "*.json"), "set_native_combination_path", "get_native_combination_path");
+  ClassDB::bind_method(D_METHOD("set_density_policy", "policy"), &FabricApplication::set_density_policy);
+  ClassDB::bind_method(D_METHOD("get_density_policy"), &FabricApplication::get_density_policy);
+  ADD_PROPERTY(PropertyInfo(Variant::STRING, "density_policy", PROPERTY_HINT_ENUM, "content,screen"), "set_density_policy", "get_density_policy");
 }
 void FabricApplication::set_bundle_path(const String &path) {
   if (initialization_attempted) { report_error("Bundle path cannot change after application initialization"); return; }
@@ -159,6 +169,50 @@ void FabricApplication::set_native_combination_path(const String &path) {
   native_combination_path = path;
 }
 String FabricApplication::get_native_combination_path() const { return native_combination_path; }
+void FabricApplication::set_density_policy(const String &policy) {
+  if (initialization_attempted) { report_error("Density policy cannot change after application initialization"); return; }
+  if (policy != "content" && policy != "screen") { report_error("Density policy must be content or screen: " + utf8(policy)); return; }
+  density_policy = policy;
+}
+String FabricApplication::get_density_policy() const { return density_policy; }
+double FabricApplication::screen_scale(Window &window) const {
+  if (has_meta(validation_screen_scale)) return get_meta(validation_screen_scale);
+  auto *display = Engine::get_singleton()->get_singleton("DisplayServer");
+  if (!display) return 1.0;
+  const int screen = display->call("window_get_current_screen", window.get_window_id());
+  return display->call("screen_get_scale", screen);
+}
+// "screen": Fabric points become the OS's points. canvas_items with no content size scales by content_scale_factor alone
+// (scene/main/window.cpp, _update_viewport_size), so the factor is the screen's scale, and the window's visible size, the
+// content transform Dimensions reads and every point of layout follow. Called on every read of the window's metrics, which
+// is the per-pump path, so a change of the screen's scale (another display) is applied there and no timer is needed; a
+// setting that already holds is not set again.
+void FabricApplication::apply_density_policy(Window &window) {
+  if (density_policy != "screen") return;
+  double factor = screen_scale(window);
+  if (!std::isfinite(factor) || factor <= 0) factor = 1.0;
+  if (window.get_content_scale_mode() != Window::CONTENT_SCALE_MODE_CANVAS_ITEMS)
+    window.set_content_scale_mode(Window::CONTENT_SCALE_MODE_CANVAS_ITEMS);
+  if (window.get_content_scale_size() != Vector2i()) window.set_content_scale_size(Vector2i());
+  if (std::abs(window.get_content_scale_factor() - factor) > 1e-6) window.set_content_scale_factor(factor);
+}
+fabric_godot::display_insets::Edges FabricApplication::unsafe_edges(Window &window, double scale) const {
+  if (!has_meta(validation_safe_area)) return fabric_godot::window_unsafe_edges(window, scale);
+  const Variant seam = get_meta(validation_safe_area);
+  if (seam.get_type() != Variant::DICTIONARY) throw std::runtime_error("validation_safe_area must be a Dictionary of left, top, right and bottom");
+  const Dictionary bands = seam;
+  // A band that is there is a number of points: an int or a float, finite, not below zero. A String, a NaN or a negative would
+  // otherwise become the padding RN's State holds. A band that is not there is 0.
+  const auto band = [&bands](const char *name) {
+    if (!bands.has(name)) return 0.0;
+    const Variant value = bands.get(name, Variant());
+    const bool number = value.get_type() == Variant::INT || value.get_type() == Variant::FLOAT;
+    const double points = number ? static_cast<double>(value) : 0.0;
+    if (!number || !std::isfinite(points) || points < 0) throw std::runtime_error(std::string("validation_safe_area.") + name + " must be a finite non-negative number");
+    return points;
+  };
+  return {band("left"), band("top"), band("right"), band("bottom")};
+}
 fabric_godot::ApplicationRuntime *FabricApplication::get_runtime() const { return runtime.get(); }
 int FabricApplication::mount(FabricSurface &host, const String &component, const Dictionary &props) {
   try {
@@ -184,6 +238,8 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             auto *window = get_window();
             if (!window) return metrics;
             metrics.window_instance_id = window->get_instance_id();
+            // The policy decides the stretch before it is judged: "screen" never leaves viewport stretch behind.
+            if (!window->is_embedded()) apply_density_policy(*window);
             if (window->is_embedded() || window->get_content_scale_mode() == Window::CONTENT_SCALE_MODE_VIEWPORT)
               throw std::runtime_error("Embedded windows and viewport stretch require a complete React Native metrics adapter");
             metrics.size = window->get_visible_rect().size;
@@ -197,6 +253,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             if (!Math::is_equal_approx(scale.x, scale.y) || scale.x <= 0)
               throw std::runtime_error("React Native window metrics require uniform positive Godot content scaling");
             metrics.scale = scale.x;
+            metrics.unsafe = unsafe_edges(*window, metrics.scale);
             if (auto *display = Engine::get_singleton()->get_singleton("DisplayServer")) {
               const int screen = display->call("window_get_current_screen", window->get_window_id());
               const Vector2i pixels = display->call("screen_get_size", screen);

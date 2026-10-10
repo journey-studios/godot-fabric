@@ -852,6 +852,17 @@ open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db17
 other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the window presence (#99, the drawable window of the windowed lanes, the finding of V05-06
+and GF-30) are recorded. The push of main at its squash commit `ffeeb5c` passed the Contracts workflow on the first attempt:
+`contracts`, `reference-android` and `reference-ios` succeeded, and the five native jobs are recorded as skipped, accepted because the
+slice has no native step. The milestone guard passed against the squash's parent, the 23 and 17 contract tests of the two files the PR
+changed passed, and its Pages run built and deployed. The native steps of that squash did not run in its hosted CI, so the windowed
+lane and the native suites stay local evidence. The presented baseline (#101) has no receipt pair: its push ran in two attempts, with
+`reference-android` rerun after a failed NDK download, and the generator records only one-attempt runs, so the receipts of its folder
+are still #77's. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/2c4a822c4d3fcd59b99453325323bdd1746fd97e/docs/evidence/README.md)
+links the two receipts of the slice. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-06, the windowed lanes of the baseline and of the turn: the window they measure in is now put where the system has no
 reason to stop drawing it, and the frames in which the engine could not draw it are recorded. The finding: on macOS an occluded window
 makes the engine skip the draw (`window_can_draw()` reads the flag that the window delegate clears, `Main::iteration` does not call
@@ -880,6 +891,23 @@ of this record. With the headless half recorded earlier, the `baseline` criterio
 [record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/191533a44e93ab98f745c4adfbdb2b614e1a0656/docs/evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09)
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
 recomputed. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `congelado`, closed, and V05-10, criterion `protocolo`, closed: the performance budget and the five thresholds of the
+final comparison's protocol were frozen once, on 2026-10-10, before any comparative execution, by the rule that the proposal wrote beforehand (the median
+across the five runs plus three times the interquartile range, up to 0.5 ms), on the presented windowed baseline and turn of commit `1bc3a3c`, by the user's
+decision (five of five slots accepted at the first attempt in each lane). The swap frame's p95 over all swaps freezes at 16.0 ms
+(`budget-p95-context-switches`), the p95 of the AI phase and of the end of the turn at 15.5 ms each (the lane records two frames of the end of a turn, and the
+protocol's window has at least five), the stress window as N/A (V05-06 measured no log of 200 lines and no production list of 100 items), and the CPU-time
+instrument freezes the recommendation of its record. The proposal's rows of the p99 by size leave the budget (the p99 of 90 swaps is its maximum) and the other
+windowed rows give the proposal's bounds. Only `frozenValue` and `frozenAt` of the thresholds were filled, so the protocol's pin does not move, and
+`node scripts/frontier-freeze.mjs --check` recomputes every value from the committed extract of the receipts. With `baseline`, `turno` and `soak` already closed,
+V05-06 has its four criteria closed. Three executions of the night of 2026-10-09 on `916387e` corroborate and become no threshold: the turn lane with the HUD of
+#100 is over the frozen bounds of the turn (the seven frames of the job add up to 94.7 ms at the p50, against 54.2 ms frozen and 54.9 ms with the HUD of before
+#100), the cause is under diagnosis and is not stated, and the baseline is sensitive to load. The executions that froze ran at a 1-minute load average of 5.3 to
+7.6 on 11 logical cores, above the 2.0 that a comparative execution requires. **Exit X6 stays open**: "met" waits for the arms of the comparison and for that
+diagnosis, and arm B, `execucao` and the iPhone (a no-go) are open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md) is local macOS arm64 evidence, and its hosted CI run and Pages
+publication come after the merge. No 1.0 checkpoint, weight or denominator moves.
 
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
@@ -4075,6 +4103,23 @@ Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
 [`092dd14`](https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9). On the implementation tree the contracts
 gate (302 Node/13 Python), the type check, static analysis, the publication scan, the animated, frame clock and touchables
 suites, the platform-seams test and the 36 examples pass. No checkpoint, whole GF, weight or denominator closes.
+
+### Screen density and RN's SafeAreaView on the desktop (2026-10-09)
+
+`FabricApplication.density_policy` gives a window the scale of its display (`screen`: a `canvas_items` stretch with no
+content size at `DisplayServer.screen_get_scale`, followed when it changes; `content`, the default, leaves a project as it
+was), and RN's own `SafeAreaView` (its iOS native component and C++ descriptor over the host's View) holds the padding that
+the window's unsafe bands leave of its frame, with UIKit's rule, its pixel rounding and its update threshold. The bands come
+from `get_display_safe_area` only on iOS and Android and are zero elsewhere (macOS's usable rectangle is never read), so a
+test states them through a seam (which refuses a band that is not a finite, non-negative number). The desktop headless lane (149 checks, an independent oracle, the control on main
+`b0e40aa` failing 90 of them and four retained sabotages rejected) also puts the HUD over a Godot world: a full-screen
+SafeAreaView with `pointerEvents="box-none"` leaves the empty area and its padding band to the world, as a View does. A
+windowed run on a Retina display at scale 2 captured three frames and read their pixels. This is the preparation V05-08
+asked for, delivered on the desktop with no simulator or device run, because the iPhone gate of the 0.5 is NO-GO
+(2026-10-09) and mobile goes back to GF-35: it moves GF-09 (density, insets) and GF-18 (SafeAreaView) only that far, closes
+no checkpoint and changes no weight or denominator. The [record](docs/evidence/mobile-density/README.md), the
+[research note](docs/research/mobile-density.md) and implementation
+[`05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6`](https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6) have the numbers.
 
 ## M1 — Complete the native UI tree
 

@@ -44,6 +44,9 @@ export function nearestRank(values, percent) {
   return sorted[rank - 1];
 }
 export const summary = values => ({samples: values.length, p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
+// Quartiles by nearest rank, the baseline's: with five runs the median is the third value and the range between the second and the fourth.
+export const quartiles = values => ({median: nearestRank(values, 50), q1: nearestRank(values, 25), q3: nearestRank(values, 75),
+  iqr: nearestRank(values, 75) - nearestRank(values, 25), min: Math.min(...values), max: Math.max(...values)});
 export const round = (value, digits = 6) => Math.round(value * 10 ** digits) / 10 ** digits;
 
 // The rule that every harness of the Frontier slices judges a level at rest by (the live heap, the resident memory): the steady readings, in the order they were taken, are

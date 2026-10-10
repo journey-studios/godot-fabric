@@ -116,3 +116,17 @@ caffeinate -d node scripts/frontier-turn-graphics.mjs       # o recibo em build/
 ```
 
 Acorde e desbloqueie a tela antes. O recibo de cada tentativa traz `undrawableFrames` e `sampledFrames`; os brutos, os trechos dos quadros sem poder desenhar (`presence.spans`).
+
+## CI hospedada e Pages
+
+O push da `main` em `ffeeb5c` (o squash do #99; run [37989027813](https://github.com/journey-studios/godot-fabric/actions/runs/37989027813) do workflow Contracts) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 13 s), `reference-android` (5 min 58 s) e `reference-ios` (7 min). Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**. O [recibo](hosted-ci.json) registra esses cinco como `skipped` e não como falha, e só os aceita porque a linha da fatia não tem passo nativo nem artefato.
+
+**Os passos nativos desta faixa não rodaram na CI hospedada do squash.** `test:frontier-baseline`, `test:frontier-turn` e `test:cpu-time-instrument` rodam no job `native-suites-frontier` do `contracts.yml`, que só roda sob demanda (`workflow_dispatch`); o push de `ffeeb5c` o pulou, e por isso o recibo não tem passo nativo nem artefato. A faixa janelada nunca roda na CI hospedada: ela é local, em macOS arm64, e a evidência dela é a desta página (a janela desenhável, as tentativas e a execução apresentada, nas seções acima). O recibo não certifica nenhum build nativo.
+
+O que o run prova, conferido pelo `--check` do script e pelos logs:
+
+- **O checkout.** Os três jobs que rodaram usaram `ffeeb5c`, e a árvore do head do PR (`f1b8a44`) é a árvore do squash.
+- **O passo da guarda.** "Milestone exit guards (X9 and X10)" (passo 5 do job `contracts`) passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against decc2ad0eec6 (--base decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d); X9 clean, X10 clean`. A base é o pai do squash.
+- **Os testes.** `npm run test:contracts` (passo 6) passou com 7, 43 e 466 testes de Node e 13 de Python, `# fail 0`. O recibo confere, pelo nome e no log do job `contracts`, os 23 testes de nível superior de `tests/frontier-baseline-graphics.test.mjs` e os 17 de `tests/frontier-turn-graphics.test.mjs`, os dois que o #99 mudou: 40 de 40. `check:static` e `check:publication` também passaram (1.920 arquivos).
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run [37989027744](https://github.com/journey-studios/godot-fabric/actions/runs/37989027744), `build` e `deploy` em success, 43 testes do painel). O deployment 6970657264 está em success, o artefato `github-pages` (id 11644560821, SHA-256 `fccbd78d…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash (SHA-256 `b0411814…`) e a entrada de atividade `milestone-0-5-windowed-presence-59cd006`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.

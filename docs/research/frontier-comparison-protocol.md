@@ -8,6 +8,9 @@ or equal to anything. The rules and the formulas are closed. The numbers that de
 criterion of V05-06. **The `protocolo` criterion therefore stays open**: it closes when those numbers are frozen. This slice moves no checkpoint, grade,
 weight or denominator of the 1.0.
 
+**Update, 2026-10-10:** those numbers were frozen, once, by [the freeze](frontier-freeze.md) (see [The freeze](#the-freeze) below), which closes the `protocolo` criterion. The paragraph above and the rest of this note describe the protocol as pre-registered; the freeze fills only the
+`frozenValue` and `frozenAt` of the five thresholds and the pin does not move.
+
 ## The question
 
 The same Frontier game runs in three arms with the same seed, the same replay and the same scripted input, in a Release export on the same machine:
@@ -171,7 +174,7 @@ The examples below use **invented numbers** to show how the rule reads an interv
 **One observation.** The cost of change has one implementation per arm, so there is no interval: the category is taken on the difference of each of files, lines, time and tests against the margin, the axis takes it only when the four agree and is inconclusive
 otherwise, and the report says it is one observation per arm and supports a description and not a statistical claim. **A deterministic axis**, the package size, has its repeated export give equal sizes, so the interval is a point; if the two exports of an arm differ, the axis is inconclusive.
 **Absolute budgets.** Once frozen, the median over the executions of an arm of the per-run p95 of a window is compared with the window's budget (met when at most the budget, exceeded otherwise, N/A while it is null). It is reported beside the category for B and for C and never changes it.
-**If arm B is not ready in its time-box**, the report is a partial comparison of A against C: `H1` only, no category for `H3`, and no gain claimed. The time-box is the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts.
+**If arm B is not ready in its time-box**, the report is a partial comparison of A against C: `H1` only, no category for `H3`, and no gain claimed. The time-box is the same as arm C's plus one optimization pass; its length was set and recorded before arm B started ([Amendments](#amendments)): **16.0 h** of subagent active time, 12.8 h to pass the `parity` rule and one optimization pass of at most 3.2 h.
 
 ## What is open
 
@@ -185,11 +188,11 @@ otherwise, and the report says it is one observation per arm and supports a desc
   | `budget-p95-context-switches` | the same rule, on the swap frame p95 of the presented windowed baseline | V05-06 windowed baseline, pending until a display presents the window | null |
   | `budget-p95-stress` | the same rule on the stress counterpart in V05-06; frozen as N/A with the reason if V05-06 measured none, and then the window is judged by the relative rule alone | V05-06 `turno` or `soak` | null |
 
-  Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date.
-- **Arm B** (`braco-b`) does not exist, and its time-box has no length yet.
+  Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date. **That was done on 2026-10-10** ([The freeze](#the-freeze)); the table above is the pre-registration's.
+- **Arm B** (`braco-b`) does not exist yet. Its time-box is set: 16.0 h, by the amendment of 2026-10-09 below.
 - **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`. The instrument and its self-check are written in [cpu-time-instrument.md](cpu-time-instrument.md); the threshold stays unfrozen here.
 - **Missed frames with the vsync on** need presentation timestamps that Godot does not give; the band is N/A until an instrument exists.
-- **The iPhone** depends on the GO or NO-GO of V05-09. With a GO, the same measurements run with the same windows and statistics, the effective refresh rate is recorded, and if the vsync cannot be disabled there the `unlimited` lane is N/A and the CPU time per frame
+- **The iPhone:** V05-09 is a NO-GO (2026-10-09, [its record](../evidence/frontier-device/README.md)), so the comparison covers macOS only. The rule written for a GO stays as it was: with a GO, the same measurements run with the same windows and statistics, the effective refresh rate is recorded, and if the vsync cannot be disabled there the `unlimited` lane is N/A and the CPU time per frame
   and the headroom against the refresh period with the vsync on are the outcome. With a NO-GO the comparison covers macOS only.
 - **The scripts**: the scenario script, the analysis script and the hashes of the binary and the package are written by `execucao` and `relatorio` before the first comparative execution.
 
@@ -228,6 +231,7 @@ The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at eve
 ```
 8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c   the pre-registration: no amendments (commit 82f5f43)
 8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb   one amendment: 2026-10-09, the idle reference
+0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6   two amendments: 2026-10-09, arm B's time-box and the iPhone's NO-GO
 ```
 
 The freeze may fill those two fields of the entries of `thresholds` and nothing else, and the test requires it: no other object may carry them (a freeze field elsewhere would escape the hash), the value and the date are filled together, all the thresholds are frozen
@@ -263,8 +267,71 @@ The entry was reworded twice on review of the pull request, before the amendment
 
 **What it replaces.** In `idleReference.rule`: "the median CPU time of those frames is the run's idle median, the reference of the frames above twice the idle median". In the outcome: "Frames of a window whose CPU time is above twice the run's idle median". In the script: "the idle median". In `not-presented`: "the idle median is under half of the refresh period read back".
 
+### 2026-10-09: arm B's time-box gets its length, and the iPhone's open item records the NO-GO
+
+**Commit:** the one that adds this section, the entry `amendments[1]` of the JSON and the third pin of the test. **Comparative measurements before it: 0**, and arm B
+has not started: no arm-B subagent has run. **Pin after it:** `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6`.
+
+**What changes.** Three texts of the JSON change. The arms, the hypotheses, the outcomes, the windows, the executions, the statistics, the thresholds and the categories of the decision rule stay as they were.
+
+- `decisionRule.partialReport.timeBox`: its first words are the pre-registered rule, and it now gives the unit, arm C's measurement, the pass and the total.
+- The `arm-b` open item: it points at the time-box.
+- The `iphone` open item: it records the NO-GO. The `iphone` block keeps its GO and NO-GO rules, and its NO-GO branch is the one that applies.
+
+| | Active time |
+| --- | ---: |
+| Arm C, the React Native HUD of V05-05 (#82, #93 and #100) | 12.8 h |
+| Arm B, to pass the context matrix (the invalidation rule `parity`) | 12.8 h |
+| Arm B, one optimization pass after the parity passes | at most 3.2 h |
+| **Arm B's time-box** | **16.0 h** |
+
+**The unit** is the active time of the subagents that implement and research the arm. It is the sum of the gaps shorter than 30 minutes between consecutive timestamped events of their transcripts; a longer gap is a wait for review or for a decision, not work. Arm B's clock starts at the first event of its first subagent and is
+counted the same way. The orchestrator's own time is counted in neither arm. **The optimization pass** is one round: it profiles arm B alone by idiomatic Godot means, outside any comparative execution, and keeps the parity.
+
+**Why.** The pre-registration said the time-box is the same as arm C's plus one optimization pass, and that its length is set and recorded before arm B starts. It gave no unit, no measurement of C and no length for the pass.
+
+- **The unit.** The subagents' active time is the only effort of C that carries timestamps. By transcript:
+
+  | Subagent of arm C | Active time |
+  | --- | ---: |
+  | Implementer of #82 and #93 (one agent) | 7.35 h |
+  | Implementer of #100 | 5.12 h |
+  | Researcher | 0.12 h |
+  | Researcher | 0.19 h |
+  | **Total** | **12.78 h** |
+
+- **The cut** of 30 minutes is on a plateau. The total is 12.78 h with a cut of 30 or 60 minutes, 11.62 h with 20 and 10.50 h with 10.
+  - The gaps under the cut are native suites that ran for up to 25 minutes with no event.
+  - The only gap above it, 305 minutes, is the wait between the first slice and the second.
+- **The box is generous.** C's 12.8 h also built the game side that B reuses: the event queue, the context in the snapshot, the input blocking under overlays and the probes. A native HUD that is not a straw man needs that room.
+- **The pass is a quarter of C's**, because C had none and the protocol asks for one round, not a second implementation.
+- **The NO-GO** of V05-09 was recorded on 2026-10-09 ([its record](../evidence/frontier-device/README.md), #102). The `iphone` block already said that with a NO-GO the comparison covers macOS only.
+
+**What it replaces.** In `decisionRule.partialReport.timeBox`: "the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts". In the open item `arm-b`: "arm B (criterion `braco-b`) does not exist; its time-box has no length yet". In the open item `iphone`: "the iPhone depends on the GO or NO-GO of V05-09".
+
+## The freeze
+
+**2026-10-10.** The five thresholds were frozen **once**, together with the `congelado` criterion of V05-06 and before any comparative execution, as `preRegistration.freeze` provides: only the `frozenValue` and `frozenAt` of each entry of `thresholds` were filled, on one date, and nothing else of the JSON changed.
+The pin did not move: the test still holds `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6` for the two amendments, and the freeze is not an amendment. The act, its inputs, the rule and each derivation are in [the freeze note](frontier-freeze.md) and in [its evidence record](../evidence/frontier-freeze/README.md);
+`node scripts/frontier-freeze.mjs --check` recomputes the numbers from the committed inputs and requires them to be the protocol's, on one date, and `tests/frontier-freeze.test.mjs` runs it.
+
+| Threshold | Frozen value | Where it comes from |
+| --- | --- | --- |
+| `cpu-time-instrument` | an object: the quantity, the reading, the alignment, the observed error, the gate and the evidence | the five points that [the instrument's note](cpu-time-instrument.md#what-cpu-time-instrument-should-freeze) recommends, condensed, with the commit that its record pins |
+| `budget-p95-ai-phase` | **15.5 ms** | the p95 of the 720 frames of the window in each of the five runs of the windowed turn of `1bc3a3c` (the first six busy frames of 120 steady turns), by the rule of the proposal |
+| `budget-p95-event-burst` | **15.5 ms** | the same rule on the frames of the end of the turn that the lane records (the seventh busy frame and the one after it, 240 a run; the window has at least five frames and the later ones were not measured) |
+| `budget-p95-context-switches` | **16.0 ms** | the swap frame p95 over all the swaps of each of the five runs of the windowed baseline of `1bc3a3c`, by the same rule |
+| `budget-p95-stress` | **N/A**, with the reason | V05-06 measured no log of 200 lines and no production list of 100 items, so the window is judged by the relative rule alone |
+
+**What still says the pre-registration's words, on purpose.** The JSON's `status`, `baseline.windowed` and the first `open` item (and `baseline.freezeCriterion` and `preRegistration`) keep the text they had when the protocol was pre-registered, and so do the `rule` and the `source` of each threshold: the pin hashes them, and changing a letter of them would be an amendment. They describe the state at the pre-registration, not the
+one after the freeze, which is this section, [the freeze note](frontier-freeze.md) and the dashboard's record of the criteria `congelado` and `protocolo`.
+
+**Two things the freeze notes and does not change.** The `absoluteBudget` compares the p95 of the *CPU time* per frame of an arm with a bound derived from the *frame time* of a presented window, which includes the wait for the display, so the bound is wide for the CPU time by construction and the relative rule (C against B) is what decides.
+And the comparative executions need a 1-minute load average of 2.0 or less (`runs.load.limit1MinuteAverage`), while the executions the freeze read ran at 5.3 to 7.6: the `execucao` criterion needs a machine within that limit ([the freeze note](frontier-freeze.md#four-observations-that-change-no-rule)).
+
 ## Reproducing
 
 ```sh
 node --test tests/frontier-comparison-protocol.test.mjs   # the schema, the decision rule, the order of the executions, the bootstrap, the pin; part of npm run test:contracts
+node scripts/frontier-freeze.mjs --check                  # the frozen values of the thresholds, recomputed from the committed inputs; node --test tests/frontier-freeze.test.mjs
 ```

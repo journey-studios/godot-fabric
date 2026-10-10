@@ -186,7 +186,7 @@ For the single act that freezes the thresholds; the protocol's JSON is not chang
   exist yet (`braco-b`, the instrument's wiring in A, B and C).
 - **The lag is a property of the renderer, the platform and the engine version.** Another renderer (Forward+, Mobile), a Release export, or Godot mobile may take another number of draws or report none.
   The probe finds out on the machine of the campaign; nothing here says it holds elsewhere.
-- **The iPhone,** which depends on the GO or NO-GO of V05-09: `Time.get_ticks_usec` is `mach_absolute_time` there too, but no render reading, thread model or display pacing of a device was read.
+- **The iPhone,** out of the comparison since V05-09 is a NO-GO (2026-10-09, [its record](../evidence/frontier-device/README.md)): `Time.get_ticks_usec` is `mach_absolute_time` there too, but no render reading, thread model or display pacing of a device was read.
 - **The vsync disabled lane** (`unlimited`): the swap does not block then, so the exclusion is trivial, but it was not run.
 - **A render thread.** With `rendering/driver/threads/thread_model` set to the separate render thread the draw is not the main thread's, and the oracle refuses the run; what the main thread's
   frame is then was not studied.

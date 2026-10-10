@@ -328,6 +328,50 @@
       ]
     },
     {
+      "name": "SafeAreaView",
+      "decision": "supported",
+      "reason": "the HUD's insets: its bars and panels stay inside the notch and the home indicator that the OS leaves out of the window",
+      "audit": {
+        "file": "docs/compatibility/react-native-0.87.1.json",
+        "auditDate": "2026-10-01",
+        "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+        "name": "SafeAreaView",
+        "status": "missing_public_export",
+        "target": "1_0",
+        "roadmap": "GF-18",
+        "evidence": [
+          "src/react-native-platform.jsx"
+        ],
+        "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+      },
+      "auditStale": {
+        "stale": true,
+        "current": "the audit records a missing public export; SafeAreaView has been exported since the Modal slice, and since V05-08 it is RN's own iOS component with the padding of the window's unsafe bands (docs/PARITY.md)"
+      },
+      "facade": [
+        "src/react-native-platform.jsx"
+      ],
+      "runtime": "RN's own RCTSafeAreaViewNativeComponent and SafeAreaViewComponentDescriptor (the component Platform.select picks on iOS) over the host's View control; the host fills the State with the padding that the window's unsafe bands leave of the view's frame (native/display_insets.h), as RCTSafeAreaViewComponentView does, and RN's descriptor applies it to Yoga",
+      "props": "components.View",
+      "subset": {
+        "props": "ViewProps, judged by the table of the View (checkProps(\"View\")); like RN's iOS SafeAreaView it does not go through View.js, so the aria-*, id and tabIndex mappings of that file do not apply and the view config drops those names",
+        "style": "the names of controlViewConfig.validAttributes.style, as the View's; another name throws `Godot View does not implement style <name>`",
+        "insets": "iOS and Android report the window's unsafe bands through DisplayServer.get_display_safe_area (screen pixels, converted to Fabric points); every other display server reports none, so the view pads nothing on a desktop. macOS's usable rectangle is never read",
+        "padding": "UIKit's safeAreaInsets: for each edge the part of the band that the view's frame in the window reaches, rounded to a pixel; the State changes only when a side moved by one pixel plus 0.01 (RCTSafeAreaViewComponentView._updateStateIfNecessary)",
+        "ref": "ViewInstance, the public instance of the host View"
+      },
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "native/display_insets.cpp",
+        "native/display_insets_core.h",
+        "native/display_insets_core_test.cpp",
+        "src/prop-scope.mjs",
+        "tests/modal-host-native.test.mjs",
+        "tests/mobile-density-native.test.mjs",
+        "tests/mobile-density-oracle.mjs"
+      ]
+    },
+    {
       "name": "StyleSheet",
       "decision": "supported",
       "audit": {
