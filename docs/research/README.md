@@ -92,6 +92,9 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD); then the blocking `Modal` overlays, the
   queue of three events the HUD works through ("n of 3", a subtree for each event) and how the probe reads a Modal's nodes from the host snapshot; and the stability
 slice (20 openings and closings of each overlay measured at rest, what "at rest" and "focus restored" mean on this host, the scan of the HUD against the 0.5 manifest and the icons drawn by `Image`).
+- [The cost of change](frontier-change-cost.md): the V05-10 `mudanca` axis, pre-registered before any implementation: the request (a
+  Settler's Irrigate, with its button icon and the tile card's mark), the shared base that neither arm is charged for, what is counted for
+  each arm (files, lines, a new subagent's active time and its own tests) and why the experiment stays off `main`.
 
 ## Useful next experiments
 

@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T11:23:00.000Z",
+  "updatedAt": "2026-10-10T12:23:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4337,6 +4337,14 @@
                 {
                   "label": "Pages do #113: o deployment do push de 4c3abb7 publicou o migration.json commitado, com a entrada de atividade do braço B",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/publication.json"
+                },
+                {
+                  "label": "CI hospedada do passe de otimização do braço B (#121, squash e7fcf1c): a Contracts disparada na main (run 38053834754) passou nos oito jobs, com as duas HUDs na lane no native-suites-runtime",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do #121: o deployment do push de e7fcf1c publicou o migration.json commitado, com a entrada de atividade do passe",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/publication.json"
                 }
               ]
             },
@@ -4762,6 +4770,41 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-braco-b-otimizacao-receipts",
+      "at": "2026-10-10T13:45:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #121, o passe de otimização do braço B do V05-10, já na main como e7fcf1c. A Contracts disparada na main sobre o squash (run 38053834754) passou nos oito jobs: no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs (a nativa com as listas reconciliadas, o pool de painéis e a reciclagem do painel de estresse) pela matriz, pelos overlays e pelo estresse; o job contracts passou 7, 43 e 535 testes de Node. O Pages do push (run 38053830063) publicou o migration.json commitado. Gerador canônico com 26 fatias e 52 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/8935cf980e029faed51f6586485a5ba5ada23a7c/docs/evidence/frontier-arm-b/optimization/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-10-mudanca-preregistration",
+      "at": "2026-10-10T13:20:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério mudanca, pré-registrado antes de qualquer implementação: o pedido (Irrigar, uma ação nova do Settler, com o ícone no botão e a marca no cartão do tile), a base comum que nenhum braço paga (a regra do jogo, o ícone e a extensão da lane, que falha nos dois braços), o que conta para cada braço (arquivos, linhas, o tempo ativo de um subagente novo e os testes próprios do braço) e por que o experimento fica fora da main (o jogo que a campanha da execucao mede não muda). O critério segue aberto até as duas implementações e as contagens.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7f09e76b860cbaecd0c34f895a917cb50e239dfa/docs/research/frontier-change-cost.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-7-1205949",
+      "at": "2026-10-10T12:23:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #120, a execução comparativa (a parte 1 do critério execucao), já na main como c3892ac. A Contracts do push da main em c3892ac (run 38050941623) passou na primeira tentativa: os jobs contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque a linha da fatia não tem passo nativo nem artefato. A guarda de marco passou, e o job contracts rodou tests/frontier-comparison-run.test.mjs com 17 de 17 testes no log. O Pages do push (run 38050941565) publicou o migration.json commitado, com a entrada de atividade da fatia. Nenhum critério muda; a execução comparativa segue aberta. Gerador canônico com 25 fatias e 50 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/12059499a3dd5c9135f8f8ded1b5586adacc87ec/docs/evidence/frontier-comparison-execution/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-10-stress-receipts",
+      "at": "2026-10-10T12:10:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #119, a janela de estresse do comparativo e os contadores do runner, já na main como 151427e. A Contracts disparada na main sobre o squash (run 38044068758) passou nos oito jobs: no native-suites-frontier, npm run test:frontier-stress passou (FRONTIER_STRESS_PASSED: a sonda do nó e do registro); no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs com o estágio de estresse; o job contracts passou 7, 43 e 518 testes de Node. O Pages do push (run 38044064101) publicou o migration.json commitado, com a entrada de atividade da janela. Gerador canônico com 24 fatias e 48 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ad9a527ce7f325703debcb249c7beb4ceb7d47e2/docs/evidence/frontier-stress/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-10-braco-b-otimizacao",
+      "at": "2026-10-10T11:52:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, passe de otimização do braço B (nenhum critério muda): a passada única do protocolo, uma rodada, só no B e com meios do Godot, medida sobre a main em 151427e nas quatro janelas (5 execuções de cada, alternadas, headless, fora de qualquer execução comparativa). Três custos saíram: as listas das ações, da cidade e da pesquisa eram refeitas inteiras quando o jogo desabilita as escolhas (agora são atualizadas linha a linha), um painel que saía da árvore era liberado e feito de novo (agora vai para um pool; o diálogo e o menu seguem sendo feitos a cada vez) e o painel de estresse perguntava a cada uma das 300 linhas se tinha mudado (agora compara as listas e reaproveita a linha que sai). O p95 da ai-phase com a cidade aberta caiu de 7,95 para 3,51 ms (−56%), o quadro médio do estresse 19% e a troca que abre a cidade de 9,1 para 5,6 ms; o p95 do estresse (−3%) e o das trocas (−7%) ficaram dentro da dispersão, o event-burst e a ai-phase sem seleção não mudaram, os quatro quadros depois do primeiro do turno com a cidade custam de 0,1 a 0,3 ms a mais e o pool mantém mais objetos vivos. Paridade: as duas HUDs passam a lane e as cinco sabotagens nativas são rejeitadas; o custo do stats() não mudou. As tentativas inválidas ficam registradas. Cerca de 2,2 h de relógio das 3,2 h. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c6ea5c7acfa7370fbff45a45abe3ec2b84378f83/docs/evidence/frontier-arm-b/README.md#passe-de-otimização"
+    },
     {
       "id": "milestone-0-5-v05-10-execution-1-f77d81d",
       "at": "2026-10-10T11:23:00.000Z",

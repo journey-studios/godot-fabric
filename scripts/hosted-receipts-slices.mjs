@@ -324,4 +324,48 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-analysis-4592dba",
   },
+  // The stress window and the runner's HUD counters (#119): the node probe of the stress mode runs in its own step, and the HUD lane runs
+  // both HUDs with the stress stage, both in the native jobs of the dispatched run.
+  {
+    folder: "frontier-stress",
+    pr: 119,
+    squash: "151427e",
+    contractsRun: 38044068758,
+    pagesRun: 38044064101,
+    nativeSteps: [
+      { script: "test:frontier-stress", expect: "tap" },
+      { script: "test:civ-lite-ui", expect: "tap" },
+    ],
+    artifacts: [
+      { key: "stress", name: "native-frontier-stress" },
+      { key: "ui", name: "civ-lite-ui" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-stress-window",
+  },
+  {
+    folder: "frontier-comparison-execution",
+    pr: 120,
+    squash: "c3892ac",
+    contractsRun: 38050941623,
+    pagesRun: 38050941565,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-run.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-execution-1-f77d81d",
+  },
+  // Arm B's single optimization pass (#121), in a folder of its own inside arm B's: the native HUD changed, so its native step is the HUD lane
+  // with both arms in the job native-suites-runtime.
+  {
+    folder: "frontier-arm-b/optimization",
+    pr: 121,
+    squash: "e7fcf1c",
+    contractsRun: 38053834754,
+    pagesRun: 38053830063,
+    nativeSteps: [{ script: "test:civ-lite-ui", expect: "tap" }],
+    artifacts: [{ key: "ui", name: "civ-lite-ui" }],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-braco-b-otimizacao",
+  },
 ];

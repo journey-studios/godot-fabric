@@ -954,6 +954,8 @@ V05-07 (how the scenario runs in an exported `.app` is open) and a quiet window 
 [record](https://github.com/journey-studios/godot-fabric/blob/f77d81d097f8dd552f70fc63c4d3050665ff6007/docs/evidence/frontier-comparison-execution/README.md) is local evidence, and its hosted CI run and Pages
 publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the comparative execution's part 1 (#120, GF-30) are recorded from the push of main at `c3892ac`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/12059499a3dd5c9135f8f8ded1b5586adacc87ec/docs/evidence/frontier-comparison-execution/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, `tests/frontier-comparison-run.test.mjs` passed 17 of 17 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to

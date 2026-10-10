@@ -1,8 +1,8 @@
 extends Control
 
 # Frontier's native HUD, arm B of the 0.5 comparison: the same six panels, seven contexts and testIDs as the React Native HUD (ui/hud/), written
-# as Godot is written. It connects to the signals of the GameServices node, mounts the panels the context calls for and unmounts the others,
-# and sets a Control only when what it shows has changed. Like the React Native HUD it decides nothing of the game: the context, the
+# as Godot is written. It connects to the signals of the GameServices node, mounts the panels the context calls for and unmounts the others
+# (a panel is made once and kept, out of the tree, for the next time), and sets a Control only when what it shows has changed. Like the React Native HUD it decides nothing of the game: the context, the
 # actions and their reasons, the phase and the queue of events all come from the snapshot, and an intent is the game's own, sent back through
 # the node's methods. The panels are scenes of their own (bar, actions, tile, city, research, dialog) with a `render(snapshot, hover)`; they
 # raise `intent` and the HUD sends it.
@@ -63,6 +63,8 @@ var _bar: Control
 var _menu: Control
 var _panels: Dictionary = {}
 var _overlays: Dictionary = {}
+# What was unmounted and is kept for the next time, by key.
+var _pool: Dictionary = {}
 
 @onready var _column: Control = $Column
 
@@ -152,13 +154,10 @@ func _show_menu() -> void:
 
 func _show_game() -> void:
   if _menu != null:
-    _unmount(_menu)
+    _unmount("menu", _menu)
     _menu = null
   if _bar == null:
-    _bar = Bar.instantiate()
-    _bar.intent.connect(_send)
-    _bar.menu_requested.connect(_open_menu)
-    _bar.new_game_requested.connect(_new_game)
+    _bar = _take("bar", _new_bar)
     add_child(_bar)
     _bar.show_answer(_answer)
   # The stress panel is the comparison's, not the table's: it is mounted in every context while the snapshot carries the mode.
@@ -177,18 +176,15 @@ func _show_game() -> void:
 func _sync_panels(wanted: Array) -> void:
   for panel_name: String in _panels.keys():
     if not wanted.has(panel_name) or (panel_name == "dialog" and _panels.dialog.event_id != _snapshot.dialog.id):
-      _unmount(_panels[panel_name])
+      _unmount(panel_name, _panels[panel_name])
       _panels.erase(panel_name)
   for overlay_name: String in _overlays.keys():
     if not OVERLAYS[overlay_name].any(func(panel_name: String) -> bool: return wanted.has(panel_name)):
-      _unmount(_overlays[overlay_name])
+      _unmount("overlay-" + overlay_name, _overlays[overlay_name])
       _overlays.erase(overlay_name)
   for panel_name: String in SCENES:
     if wanted.has(panel_name) and not _panels.has(panel_name):
-      var panel: Control = SCENES[panel_name].instantiate()
-      # The tile card and the stress panel only show; the others send intents.
-      if panel.has_signal(&"intent"):
-        panel.intent.connect(_send)
+      var panel: Control = _take(panel_name, _new_panel.bind(panel_name))
       _parent_of(panel_name).add_child(panel)
       # Under the overlays and the bar, which come after the column.
       if panel_name == "stress":
@@ -202,35 +198,74 @@ func _parent_of(panel_name: String) -> Node:
   for overlay_name: String in OVERLAYS:
     if OVERLAYS[overlay_name].has(panel_name):
       if not _overlays.has(overlay_name):
-        _overlays[overlay_name] = _make_overlay(overlay_name)
+        _overlays[overlay_name] = _take("overlay-" + overlay_name, _new_overlay.bind(overlay_name))
+        add_child(_overlays[overlay_name])
       return _overlays[overlay_name].content
   return _column if panel_name == "actions" else self
 
 
-func _make_overlay(overlay_name: String) -> Overlay:
+func _new_bar() -> Control:
+  var bar: Control = Bar.instantiate()
+  bar.intent.connect(_send)
+  bar.menu_requested.connect(_open_menu)
+  bar.new_game_requested.connect(_new_game)
+  return bar
+
+
+func _new_panel(panel_name: String) -> Control:
+  var panel: Control = SCENES[panel_name].instantiate()
+  # The tile card and the stress panel only show; the others send intents.
+  if panel.has_signal(&"intent"):
+    panel.intent.connect(_send)
+  return panel
+
+
+func _new_overlay(overlay_name: String) -> Overlay:
   var overlay: Overlay = Overlay.new()
   overlay.name = "hud-%s-overlay" % overlay_name
   overlay.centered = overlay_name == "dialog"
   # Escape closes the city screen, as its Close button does; on the dialog nothing is connected, because the event has to be answered.
   if overlay_name == "city":
     overlay.close_requested.connect(_send.bind(&"clear_selection", []))
-  add_child(overlay)
   return overlay
 
 
 func _unmount_game() -> void:
-  for node: Node in _panels.values() + _overlays.values() + [_bar]:
-    if node != null:
-      _unmount(node)
+  for panel_name: String in _panels:
+    _unmount(panel_name, _panels[panel_name])
+  for overlay_name: String in _overlays:
+    _unmount("overlay-" + overlay_name, _overlays[overlay_name])
+  if _bar != null:
+    _unmount("bar", _bar)
   _panels.clear()
   _overlays.clear()
   _bar = null
 
 
-# Out of the tree at once, so that the names are free for what replaces it, and freed within the frame.
-func _unmount(node: Node) -> void:
+# A panel or an overlay is made once and kept: taken out of the tree it goes to the pool whole, with its Controls and the text they shaped, and the
+# next time the context calls for it, mounting it is an add_child and a render that touches only what changed. The dialog and the menu are
+# made each time (a new event is a subtree of its own) and are freed. Out of the tree at once, so that the names are free for what replaces it.
+func _unmount(key: String, node: Node) -> void:
   node.get_parent().remove_child(node)
-  node.queue_free()
+  if key == "dialog" or key == "menu":
+    node.queue_free()
+  else:
+    _pool[key] = node
+
+
+func _take(key: String, make: Callable) -> Node:
+  var kept: Node = _pool.get(key)
+  if kept == null:
+    return make.call()
+  _pool.erase(key)
+  return kept
+
+
+# What is in the pool is in no tree, so nothing frees it with the HUD.
+func _notification(what: int) -> void:
+  if what == NOTIFICATION_PREDELETE:
+    for node: Node in _pool.values():
+      node.free()
 
 
 # --- Intents ---------------------------------------------------------------------------------------------------------------

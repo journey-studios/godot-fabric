@@ -1,0 +1,3011 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-arm-b-optimization",
+  "item": "V05-10",
+  "at": "2026-10-10T11:51:15Z",
+  "implementationCommit": "960b4adb101647f4794f3c8231f0f7668289886c",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/960b4adb101647f4794f3c8231f0f7668289886c",
+  "baseCommit": "151427e",
+  "harness": {
+    "what": "scratch harness (not committed): the CPU-time instrument of #97, the native scene main_native.tscn, headless, one Godot process per run; it plays the four windows of the protocol through the GameServices node the way tests/frontier-comparison-scenario.gd does",
+    "windows": {
+      "ai-phase": "from the frame that accepts End Turn to the frame before the one that delivers turn_ended; two scenarios: soak (no selection) and soak-city (the city screen open, the heaviest context); 2 warm-up + 60 measured turns each",
+      "event-burst": "from the frame that delivers turn_ended to the first frame, at least five from the start, after which stats().events equals notifications_emitted() (B: the same frame, so five frames); same turns",
+      "context-switches": "the 12-switch round of tests/frontier-comparison-cycle.gd (a new game each round, with its setups), 24 warm-up + 200 measured occurrences of 3 frames (the protocol has 50 measured; more here for a steadier p95)",
+      "stress": "stress_begin in a frame, 20 stress_step one per frame, two frames after the last: 23 frames; 2 warm-up + 30 measured rounds; stress_end outside the window"
+    },
+    "quantity": "the protocol outcome per window: p95 of the CPU time per frame over the measured occurrences of a run, then the median over the runs; p50, p99, mean and the sum of the frames of an occurrence are kept beside it",
+    "headless": "no draw: setup and render terms are 0, so the time is the script and the layout of the frame; a windowed run was not made (windowed lanes of other slots were in use)",
+    "calibration": "the machine was shared with other work (1-minute load average between 4 and 10) and ran in slower states, so a fixed piece of GDScript on data of its own was timed (best of 5) between the phases of every run; the normalized figures divide each phase by the mean of the two calibrations around it over 82 us, the speed of the fastest state seen",
+    "notComparative": "outside any comparative execution: the protocol load limit (2.0) was not met and these numbers are not entered in any statistic"
+  },
+  "trees": {
+    "main": "origin/main 151427e (native_hud as merged, no optimization edits), scratch copy",
+    "optimized": "the working tree: WIP 45a3716 (pool, in-place lists) + the stress panel (incremental sync, row recycling)"
+  },
+  "runs": {
+    "main": [
+      {
+        "run": "finalB-1",
+        "loadBefore": 5.86,
+        "loadAfter": 7.27,
+        "calibrationUs": [
+          [
+            "start",
+            122.15
+          ],
+          [
+            "after-idle",
+            137.875
+          ],
+          [
+            "after-soak",
+            122.675
+          ],
+          [
+            "after-soak-city",
+            108.25
+          ],
+          [
+            "after-switches",
+            113.675
+          ],
+          [
+            "after-stress",
+            118.15
+          ]
+        ],
+        "objectsAtEnd": 1640.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "finalB-2",
+        "loadBefore": 7.27,
+        "loadAfter": 5.04,
+        "calibrationUs": [
+          [
+            "start",
+            125.05
+          ],
+          [
+            "after-idle",
+            111.975
+          ],
+          [
+            "after-soak",
+            140.15
+          ],
+          [
+            "after-soak-city",
+            125.85
+          ],
+          [
+            "after-switches",
+            135.925
+          ],
+          [
+            "after-stress",
+            135.15
+          ]
+        ],
+        "objectsAtEnd": 1640.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "finalB-3",
+        "loadBefore": 5.69,
+        "loadAfter": 4.49,
+        "calibrationUs": [
+          [
+            "start",
+            123.475
+          ],
+          [
+            "after-idle",
+            130.925
+          ],
+          [
+            "after-soak",
+            121.0
+          ],
+          [
+            "after-soak-city",
+            121.1
+          ],
+          [
+            "after-switches",
+            124.475
+          ],
+          [
+            "after-stress",
+            125.5
+          ]
+        ],
+        "objectsAtEnd": 1640.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "finalB-4",
+        "loadBefore": 4.37,
+        "loadAfter": 9.64,
+        "calibrationUs": [
+          [
+            "start",
+            117.575
+          ],
+          [
+            "after-idle",
+            140.4
+          ],
+          [
+            "after-soak",
+            122.5
+          ],
+          [
+            "after-soak-city",
+            124.725
+          ],
+          [
+            "after-switches",
+            112.125
+          ],
+          [
+            "after-stress",
+            83.9
+          ]
+        ],
+        "objectsAtEnd": 1640.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "finalB-5",
+        "loadBefore": 4.99,
+        "loadAfter": 5.36,
+        "calibrationUs": [
+          [
+            "start",
+            116.25
+          ],
+          [
+            "after-idle",
+            136.8
+          ],
+          [
+            "after-soak",
+            138.45
+          ],
+          [
+            "after-soak-city",
+            80.775
+          ],
+          [
+            "after-switches",
+            124.925
+          ],
+          [
+            "after-stress",
+            82.0
+          ]
+        ],
+        "objectsAtEnd": 1640.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      }
+    ],
+    "optimized": [
+      {
+        "run": "final-1",
+        "loadBefore": 6.97,
+        "loadAfter": 5.86,
+        "calibrationUs": [
+          [
+            "start",
+            122.925
+          ],
+          [
+            "after-idle",
+            144.775
+          ],
+          [
+            "after-soak",
+            142.825
+          ],
+          [
+            "after-soak-city",
+            133.3
+          ],
+          [
+            "after-switches",
+            124.95
+          ],
+          [
+            "after-stress",
+            127.075
+          ]
+        ],
+        "objectsAtEnd": 2419.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "final-2",
+        "loadBefore": 5.04,
+        "loadAfter": 3.87,
+        "calibrationUs": [
+          [
+            "start",
+            124.275
+          ],
+          [
+            "after-idle",
+            142.875
+          ],
+          [
+            "after-soak",
+            137.325
+          ],
+          [
+            "after-soak-city",
+            131.675
+          ],
+          [
+            "after-switches",
+            139.6
+          ],
+          [
+            "after-stress",
+            123.225
+          ]
+        ],
+        "objectsAtEnd": 2419.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "final-3",
+        "loadBefore": 3.87,
+        "loadAfter": 5.69,
+        "calibrationUs": [
+          [
+            "start",
+            122.35
+          ],
+          [
+            "after-idle",
+            117.975
+          ],
+          [
+            "after-soak",
+            90.125
+          ],
+          [
+            "after-soak-city",
+            120.975
+          ],
+          [
+            "after-switches",
+            144.575
+          ],
+          [
+            "after-stress",
+            132.8
+          ]
+        ],
+        "objectsAtEnd": 2419.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "final-4",
+        "loadBefore": 9.51,
+        "loadAfter": 6.07,
+        "calibrationUs": [
+          [
+            "start",
+            122.625
+          ],
+          [
+            "after-idle",
+            145.125
+          ],
+          [
+            "after-soak",
+            141.375
+          ],
+          [
+            "after-soak-city",
+            144.175
+          ],
+          [
+            "after-switches",
+            83.25
+          ],
+          [
+            "after-stress",
+            122.225
+          ]
+        ],
+        "objectsAtEnd": 2419.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      },
+      {
+        "run": "final-5",
+        "loadBefore": 6.07,
+        "loadAfter": 4.99,
+        "calibrationUs": [
+          [
+            "start",
+            126.95
+          ],
+          [
+            "after-idle",
+            120.775
+          ],
+          [
+            "after-soak",
+            124.775
+          ],
+          [
+            "after-soak-city",
+            115.5
+          ],
+          [
+            "after-switches",
+            139.4
+          ],
+          [
+            "after-stress",
+            116.9
+          ]
+        ],
+        "objectsAtEnd": 2419.0,
+        "nodesAtEnd": 32.0,
+        "anomalies": 0,
+        "statsFinal": {
+          "context": "none",
+          "events": 3088,
+          "snapshots": 2891
+        },
+        "notificationsEmitted": 2967
+      }
+    ]
+  },
+  "raw": {
+    "main": {
+      "ai-phase:soak": {
+        "median": {
+          "p50": 0.49,
+          "p95": 1.911,
+          "p99": 2.369,
+          "mean": 0.694,
+          "occurrenceSum": 3.472,
+          "max": 3.197
+        },
+        "perRun": [
+          {
+            "p50": 0.515,
+            "p95": 2.112,
+            "p99": 2.589,
+            "mean": 0.694,
+            "occurrenceSum": 3.472,
+            "max": 4.516,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.49,
+            "p95": 1.895,
+            "p99": 2.369,
+            "mean": 0.626,
+            "occurrenceSum": 3.128,
+            "max": 2.662,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.537,
+            "p95": 1.911,
+            "p99": 2.336,
+            "mean": 0.726,
+            "occurrenceSum": 3.63,
+            "max": 3.197,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.417,
+            "p95": 1.66,
+            "p99": 2.173,
+            "mean": 0.58,
+            "occurrenceSum": 2.901,
+            "max": 2.835,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.452,
+            "p95": 1.988,
+            "p99": 2.502,
+            "mean": 0.703,
+            "occurrenceSum": 3.514,
+            "max": 4.122,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "ai-phase:soak-city": {
+        "median": {
+          "p50": 0.404,
+          "p95": 7.949,
+          "p99": 9.31,
+          "mean": 1.696,
+          "occurrenceSum": 8.478,
+          "max": 10.77
+        },
+        "perRun": [
+          {
+            "p50": 0.393,
+            "p95": 7.949,
+            "p99": 9.302,
+            "mean": 1.693,
+            "occurrenceSum": 8.463,
+            "max": 10.414,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.407,
+            "p95": 7.851,
+            "p99": 9.381,
+            "mean": 1.704,
+            "occurrenceSum": 8.522,
+            "max": 21.526,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.39,
+            "p95": 8.122,
+            "p99": 9.31,
+            "mean": 1.696,
+            "occurrenceSum": 8.478,
+            "max": 10.77,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.404,
+            "p95": 7.552,
+            "p99": 9.133,
+            "mean": 1.665,
+            "occurrenceSum": 8.325,
+            "max": 12.57,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.434,
+            "p95": 8.224,
+            "p99": 9.749,
+            "mean": 1.704,
+            "occurrenceSum": 8.522,
+            "max": 10.142,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak": {
+        "median": {
+          "p50": 0.073,
+          "p95": 0.703,
+          "p99": 0.885,
+          "mean": 0.164,
+          "occurrenceSum": 0.82,
+          "max": 2.937
+        },
+        "perRun": [
+          {
+            "p50": 0.073,
+            "p95": 0.708,
+            "p99": 0.859,
+            "mean": 0.175,
+            "occurrenceSum": 0.875,
+            "max": 3.798,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.075,
+            "p95": 0.735,
+            "p99": 0.885,
+            "mean": 0.164,
+            "occurrenceSum": 0.82,
+            "max": 2.622,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.076,
+            "p95": 0.703,
+            "p99": 0.902,
+            "mean": 0.188,
+            "occurrenceSum": 0.941,
+            "max": 3.231,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.062,
+            "p95": 0.6,
+            "p99": 1.018,
+            "mean": 0.144,
+            "occurrenceSum": 0.72,
+            "max": 1.455,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.057,
+            "p95": 0.624,
+            "p99": 0.816,
+            "mean": 0.164,
+            "occurrenceSum": 0.818,
+            "max": 2.937,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak-city": {
+        "median": {
+          "p50": 0.076,
+          "p95": 1.493,
+          "p99": 1.822,
+          "mean": 0.274,
+          "occurrenceSum": 1.369,
+          "max": 3.452
+        },
+        "perRun": [
+          {
+            "p50": 0.089,
+            "p95": 1.511,
+            "p99": 1.873,
+            "mean": 0.287,
+            "occurrenceSum": 1.433,
+            "max": 3.841,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.078,
+            "p95": 1.493,
+            "p99": 1.817,
+            "mean": 0.26,
+            "occurrenceSum": 1.299,
+            "max": 2.338,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.076,
+            "p95": 1.532,
+            "p99": 1.851,
+            "mean": 0.285,
+            "occurrenceSum": 1.425,
+            "max": 4.476,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.074,
+            "p95": 1.473,
+            "p99": 1.822,
+            "mean": 0.274,
+            "occurrenceSum": 1.369,
+            "max": 3.452,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.056,
+            "p95": 1.304,
+            "p99": 1.795,
+            "mean": 0.247,
+            "occurrenceSum": 1.233,
+            "max": 2.394,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "context-switches:switches": {
+        "median": {
+          "p50": 0.093,
+          "p95": 4.63,
+          "p99": 9.289,
+          "mean": 1.089,
+          "occurrenceSum": 3.267,
+          "max": 12.648
+        },
+        "perRun": [
+          {
+            "p50": 0.106,
+            "p95": 4.63,
+            "p99": 10.411,
+            "mean": 1.178,
+            "occurrenceSum": 3.534,
+            "max": 62.004,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.098,
+            "p95": 4.798,
+            "p99": 9.289,
+            "mean": 1.102,
+            "occurrenceSum": 3.306,
+            "max": 10.467,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.072,
+            "p95": 3.734,
+            "p99": 8.482,
+            "mean": 0.838,
+            "occurrenceSum": 2.513,
+            "max": 16.58,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.093,
+            "p95": 4.697,
+            "p99": 10.133,
+            "mean": 1.089,
+            "occurrenceSum": 3.267,
+            "max": 12.648,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.074,
+            "p95": 4.356,
+            "p99": 8.729,
+            "mean": 1.02,
+            "occurrenceSum": 3.061,
+            "max": 12.448,
+            "measuredOccurrences": 200,
+            "frames": 600
+          }
+        ]
+      },
+      "stress:stress": {
+        "median": {
+          "p50": 1.358,
+          "p95": 3.502,
+          "p99": 38.027,
+          "mean": 2.791,
+          "occurrenceSum": 64.203,
+          "max": 44.554
+        },
+        "perRun": [
+          {
+            "p50": 1.365,
+            "p95": 3.463,
+            "p99": 38.027,
+            "mean": 2.791,
+            "occurrenceSum": 64.203,
+            "max": 41.424,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.355,
+            "p95": 3.502,
+            "p99": 37.36,
+            "mean": 2.76,
+            "occurrenceSum": 63.481,
+            "max": 44.554,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.324,
+            "p95": 2.524,
+            "p99": 36.886,
+            "mean": 2.592,
+            "occurrenceSum": 59.626,
+            "max": 38.662,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.358,
+            "p95": 20.315,
+            "p99": 41.846,
+            "mean": 3.415,
+            "occurrenceSum": 78.534,
+            "max": 139.222,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.397,
+            "p95": 3.935,
+            "p99": 42.832,
+            "mean": 2.929,
+            "occurrenceSum": 67.363,
+            "max": 49.901,
+            "measuredOccurrences": 30,
+            "frames": 690
+          }
+        ]
+      }
+    },
+    "optimized": {
+      "ai-phase:soak": {
+        "median": {
+          "p50": 0.535,
+          "p95": 1.956,
+          "p99": 2.296,
+          "mean": 0.747,
+          "occurrenceSum": 3.736,
+          "max": 3.15
+        },
+        "perRun": [
+          {
+            "p50": 0.568,
+            "p95": 1.909,
+            "p99": 2.2,
+            "mean": 0.747,
+            "occurrenceSum": 3.736,
+            "max": 2.981,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.535,
+            "p95": 2.146,
+            "p99": 2.62,
+            "mean": 0.753,
+            "occurrenceSum": 3.767,
+            "max": 6.614,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.554,
+            "p95": 2.123,
+            "p99": 2.495,
+            "mean": 0.786,
+            "occurrenceSum": 3.929,
+            "max": 3.15,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.45,
+            "p95": 1.894,
+            "p99": 2.262,
+            "mean": 0.685,
+            "occurrenceSum": 3.423,
+            "max": 2.747,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.446,
+            "p95": 1.956,
+            "p99": 2.296,
+            "mean": 0.673,
+            "occurrenceSum": 3.366,
+            "max": 4.024,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "ai-phase:soak-city": {
+        "median": {
+          "p50": 0.765,
+          "p95": 3.505,
+          "p99": 4.192,
+          "mean": 1.131,
+          "occurrenceSum": 5.654,
+          "max": 5.089
+        },
+        "perRun": [
+          {
+            "p50": 0.765,
+            "p95": 3.527,
+            "p99": 4.393,
+            "mean": 1.122,
+            "occurrenceSum": 5.609,
+            "max": 5.135,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.779,
+            "p95": 3.453,
+            "p99": 4.188,
+            "mean": 1.135,
+            "occurrenceSum": 5.676,
+            "max": 5.089,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.796,
+            "p95": 3.946,
+            "p99": 4.485,
+            "mean": 1.256,
+            "occurrenceSum": 6.282,
+            "max": 4.593,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.652,
+            "p95": 3.505,
+            "p99": 4.192,
+            "mean": 1.131,
+            "occurrenceSum": 5.654,
+            "max": 5.092,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.677,
+            "p95": 3.487,
+            "p99": 3.972,
+            "mean": 1.129,
+            "occurrenceSum": 5.644,
+            "max": 4.576,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak": {
+        "median": {
+          "p50": 0.079,
+          "p95": 0.73,
+          "p99": 0.988,
+          "mean": 0.186,
+          "occurrenceSum": 0.93,
+          "max": 3.412
+        },
+        "perRun": [
+          {
+            "p50": 0.081,
+            "p95": 0.73,
+            "p99": 0.988,
+            "mean": 0.186,
+            "occurrenceSum": 0.93,
+            "max": 3.097,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.081,
+            "p95": 0.736,
+            "p99": 1.024,
+            "mean": 0.196,
+            "occurrenceSum": 0.98,
+            "max": 3.57,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.079,
+            "p95": 0.843,
+            "p99": 1.113,
+            "mean": 0.208,
+            "occurrenceSum": 1.041,
+            "max": 3.043,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.061,
+            "p95": 0.633,
+            "p99": 0.755,
+            "mean": 0.168,
+            "occurrenceSum": 0.842,
+            "max": 4.448,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.06,
+            "p95": 0.569,
+            "p99": 0.842,
+            "mean": 0.158,
+            "occurrenceSum": 0.79,
+            "max": 3.412,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak-city": {
+        "median": {
+          "p50": 0.071,
+          "p95": 1.455,
+          "p99": 1.908,
+          "mean": 0.304,
+          "occurrenceSum": 1.521,
+          "max": 3.554
+        },
+        "perRun": [
+          {
+            "p50": 0.075,
+            "p95": 1.455,
+            "p99": 1.908,
+            "mean": 0.291,
+            "occurrenceSum": 1.454,
+            "max": 4.12,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.071,
+            "p95": 1.564,
+            "p99": 1.902,
+            "mean": 0.304,
+            "occurrenceSum": 1.522,
+            "max": 3.385,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.078,
+            "p95": 1.517,
+            "p99": 1.865,
+            "mean": 0.309,
+            "occurrenceSum": 1.545,
+            "max": 3.554,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.054,
+            "p95": 1.361,
+            "p99": 2.346,
+            "mean": 0.29,
+            "occurrenceSum": 1.452,
+            "max": 3.168,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.054,
+            "p95": 1.362,
+            "p99": 1.99,
+            "mean": 0.304,
+            "occurrenceSum": 1.521,
+            "max": 9.079,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "context-switches:switches": {
+        "median": {
+          "p50": 0.095,
+          "p95": 4.315,
+          "p99": 5.853,
+          "mean": 0.956,
+          "occurrenceSum": 2.869,
+          "max": 8.385
+        },
+        "perRun": [
+          {
+            "p50": 0.114,
+            "p95": 4.315,
+            "p99": 6.411,
+            "mean": 1.004,
+            "occurrenceSum": 3.013,
+            "max": 11.485,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.095,
+            "p95": 4.444,
+            "p99": 5.872,
+            "mean": 0.984,
+            "occurrenceSum": 2.951,
+            "max": 6.774,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.104,
+            "p95": 4.0,
+            "p99": 5.853,
+            "mean": 0.924,
+            "occurrenceSum": 2.772,
+            "max": 9.78,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.088,
+            "p95": 4.406,
+            "p99": 5.731,
+            "mean": 0.956,
+            "occurrenceSum": 2.869,
+            "max": 8.385,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.075,
+            "p95": 3.853,
+            "p99": 5.25,
+            "mean": 0.832,
+            "occurrenceSum": 2.495,
+            "max": 7.054,
+            "measuredOccurrences": 200,
+            "frames": 600
+          }
+        ]
+      },
+      "stress:stress": {
+        "median": {
+          "p50": 0.931,
+          "p95": 3.407,
+          "p99": 33.366,
+          "mean": 2.256,
+          "occurrenceSum": 51.883,
+          "max": 37.899
+        },
+        "perRun": [
+          {
+            "p50": 0.96,
+            "p95": 3.568,
+            "p99": 32.607,
+            "mean": 2.315,
+            "occurrenceSum": 53.245,
+            "max": 37.826,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.933,
+            "p95": 3.517,
+            "p99": 31.738,
+            "mean": 2.216,
+            "occurrenceSum": 50.967,
+            "max": 38.175,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.926,
+            "p95": 3.321,
+            "p99": 35.46,
+            "mean": 2.31,
+            "occurrenceSum": 53.133,
+            "max": 48.333,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.931,
+            "p95": 3.407,
+            "p99": 33.937,
+            "mean": 2.256,
+            "occurrenceSum": 51.883,
+            "max": 37.899,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.902,
+            "p95": 3.398,
+            "p99": 33.366,
+            "mean": 2.232,
+            "occurrenceSum": 51.327,
+            "max": 37.484,
+            "measuredOccurrences": 30,
+            "frames": 690
+          }
+        ]
+      }
+    }
+  },
+  "normalized": {
+    "main": {
+      "ai-phase:soak": {
+        "median": {
+          "p50": 0.319,
+          "p95": 1.233,
+          "p99": 1.521,
+          "mean": 0.419,
+          "occurrenceSum": 2.094,
+          "max": 2.081
+        },
+        "perRun": [
+          {
+            "p50": 0.324,
+            "p95": 1.329,
+            "p99": 1.63,
+            "mean": 0.437,
+            "occurrenceSum": 2.185,
+            "max": 2.843,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.319,
+            "p95": 1.233,
+            "p99": 1.541,
+            "mean": 0.407,
+            "occurrenceSum": 2.035,
+            "max": 1.732,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.35,
+            "p95": 1.244,
+            "p99": 1.521,
+            "mean": 0.473,
+            "occurrenceSum": 2.363,
+            "max": 2.081,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.26,
+            "p95": 1.036,
+            "p99": 1.356,
+            "mean": 0.362,
+            "occurrenceSum": 1.81,
+            "max": 1.769,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.269,
+            "p95": 1.184,
+            "p99": 1.491,
+            "mean": 0.419,
+            "occurrenceSum": 2.094,
+            "max": 2.456,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "ai-phase:soak-city": {
+        "median": {
+          "p50": 0.268,
+          "p95": 5.502,
+          "p99": 6.307,
+          "mean": 1.149,
+          "occurrenceSum": 5.743,
+          "max": 7.587
+        },
+        "perRun": [
+          {
+            "p50": 0.279,
+            "p95": 5.645,
+            "p99": 6.606,
+            "mean": 1.202,
+            "occurrenceSum": 6.01,
+            "max": 7.396,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.251,
+            "p95": 4.84,
+            "p99": 5.784,
+            "mean": 1.051,
+            "occurrenceSum": 5.254,
+            "max": 13.272,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.264,
+            "p95": 5.502,
+            "p99": 6.307,
+            "mean": 1.149,
+            "occurrenceSum": 5.743,
+            "max": 7.296,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.268,
+            "p95": 5.01,
+            "p99": 6.058,
+            "mean": 1.104,
+            "occurrenceSum": 5.522,
+            "max": 8.338,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.325,
+            "p95": 6.152,
+            "p99": 7.293,
+            "mean": 1.275,
+            "occurrenceSum": 6.376,
+            "max": 7.587,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak": {
+        "median": {
+          "p50": 0.046,
+          "p95": 0.446,
+          "p99": 0.576,
+          "mean": 0.107,
+          "occurrenceSum": 0.533,
+          "max": 1.75
+        },
+        "perRun": [
+          {
+            "p50": 0.046,
+            "p95": 0.446,
+            "p99": 0.541,
+            "mean": 0.11,
+            "occurrenceSum": 0.551,
+            "max": 2.391,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.049,
+            "p95": 0.478,
+            "p99": 0.576,
+            "mean": 0.107,
+            "occurrenceSum": 0.533,
+            "max": 1.706,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.049,
+            "p95": 0.458,
+            "p99": 0.587,
+            "mean": 0.123,
+            "occurrenceSum": 0.613,
+            "max": 2.103,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.039,
+            "p95": 0.374,
+            "p99": 0.635,
+            "mean": 0.09,
+            "occurrenceSum": 0.449,
+            "max": 0.908,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.034,
+            "p95": 0.372,
+            "p99": 0.486,
+            "mean": 0.098,
+            "occurrenceSum": 0.488,
+            "max": 1.75,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak-city": {
+        "median": {
+          "p50": 0.049,
+          "p95": 0.977,
+          "p99": 1.254,
+          "mean": 0.184,
+          "occurrenceSum": 0.922,
+          "max": 2.29
+        },
+        "perRun": [
+          {
+            "p50": 0.063,
+            "p95": 1.073,
+            "p99": 1.33,
+            "mean": 0.203,
+            "occurrenceSum": 1.017,
+            "max": 2.728,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.048,
+            "p95": 0.92,
+            "p99": 1.12,
+            "mean": 0.16,
+            "occurrenceSum": 0.801,
+            "max": 1.441,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.051,
+            "p95": 1.038,
+            "p99": 1.254,
+            "mean": 0.193,
+            "occurrenceSum": 0.965,
+            "max": 3.032,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.049,
+            "p95": 0.977,
+            "p99": 1.209,
+            "mean": 0.182,
+            "occurrenceSum": 0.908,
+            "max": 2.29,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.042,
+            "p95": 0.976,
+            "p99": 1.343,
+            "mean": 0.184,
+            "occurrenceSum": 0.922,
+            "max": 1.791,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "context-switches:switches": {
+        "median": {
+          "p50": 0.061,
+          "p95": 3.252,
+          "p99": 6.959,
+          "mean": 0.754,
+          "occurrenceSum": 2.262,
+          "max": 9.925
+        },
+        "perRun": [
+          {
+            "p50": 0.078,
+            "p95": 3.422,
+            "p99": 7.694,
+            "mean": 0.87,
+            "occurrenceSum": 2.611,
+            "max": 45.82,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.061,
+            "p95": 3.006,
+            "p99": 5.819,
+            "mean": 0.69,
+            "occurrenceSum": 2.071,
+            "max": 6.557,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.048,
+            "p95": 2.494,
+            "p99": 5.664,
+            "mean": 0.559,
+            "occurrenceSum": 1.678,
+            "max": 11.072,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.064,
+            "p95": 3.252,
+            "p99": 7.016,
+            "mean": 0.754,
+            "occurrenceSum": 2.262,
+            "max": 8.758,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.059,
+            "p95": 3.473,
+            "p99": 6.959,
+            "mean": 0.814,
+            "occurrenceSum": 2.441,
+            "max": 9.925,
+            "measuredOccurrences": 200,
+            "frames": 600
+          }
+        ]
+      },
+      "stress:stress": {
+        "median": {
+          "p50": 0.966,
+          "p95": 2.45,
+          "p99": 26.901,
+          "mean": 1.975,
+          "occurrenceSum": 45.419,
+          "max": 29.305
+        },
+        "perRun": [
+          {
+            "p50": 0.966,
+            "p95": 2.45,
+            "p99": 26.901,
+            "mean": 1.975,
+            "occurrenceSum": 45.419,
+            "max": 29.305,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.82,
+            "p95": 2.119,
+            "p99": 22.603,
+            "mean": 1.67,
+            "occurrenceSum": 38.406,
+            "max": 26.955,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.869,
+            "p95": 1.656,
+            "p99": 24.2,
+            "mean": 1.701,
+            "occurrenceSum": 39.118,
+            "max": 25.365,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.136,
+            "p95": 16.996,
+            "p99": 35.01,
+            "mean": 2.857,
+            "occurrenceSum": 65.704,
+            "max": 116.477,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.107,
+            "p95": 3.119,
+            "p99": 33.947,
+            "mean": 2.321,
+            "occurrenceSum": 53.389,
+            "max": 39.549,
+            "measuredOccurrences": 30,
+            "frames": 690
+          }
+        ]
+      }
+    },
+    "optimized": {
+      "ai-phase:soak": {
+        "median": {
+          "p50": 0.313,
+          "p95": 1.256,
+          "p99": 1.533,
+          "mean": 0.441,
+          "occurrenceSum": 2.205,
+          "max": 2.482
+        },
+        "perRun": [
+          {
+            "p50": 0.324,
+            "p95": 1.089,
+            "p99": 1.255,
+            "mean": 0.426,
+            "occurrenceSum": 2.13,
+            "max": 1.7,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.313,
+            "p95": 1.256,
+            "p99": 1.533,
+            "mean": 0.441,
+            "occurrenceSum": 2.205,
+            "max": 3.871,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.437,
+            "p95": 1.673,
+            "p99": 1.966,
+            "mean": 0.619,
+            "occurrenceSum": 3.096,
+            "max": 2.482,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.258,
+            "p95": 1.084,
+            "p99": 1.295,
+            "mean": 0.392,
+            "occurrenceSum": 1.959,
+            "max": 1.572,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.298,
+            "p95": 1.306,
+            "p99": 1.533,
+            "mean": 0.45,
+            "occurrenceSum": 2.248,
+            "max": 2.688,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "ai-phase:soak-city": {
+        "median": {
+          "p50": 0.462,
+          "p95": 2.105,
+          "p99": 2.609,
+          "mean": 0.692,
+          "occurrenceSum": 3.46,
+          "max": 3.103
+        },
+        "perRun": [
+          {
+            "p50": 0.454,
+            "p95": 2.095,
+            "p99": 2.609,
+            "mean": 0.666,
+            "occurrenceSum": 3.331,
+            "max": 3.05,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.475,
+            "p95": 2.105,
+            "p99": 2.553,
+            "mean": 0.692,
+            "occurrenceSum": 3.46,
+            "max": 3.103,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.618,
+            "p95": 3.066,
+            "p99": 3.484,
+            "mean": 0.976,
+            "occurrenceSum": 4.88,
+            "max": 3.568,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.374,
+            "p95": 2.013,
+            "p99": 2.408,
+            "mean": 0.649,
+            "occurrenceSum": 3.247,
+            "max": 2.924,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.462,
+            "p95": 2.38,
+            "p99": 2.711,
+            "mean": 0.77,
+            "occurrenceSum": 3.852,
+            "max": 3.123,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak": {
+        "median": {
+          "p50": 0.046,
+          "p95": 0.416,
+          "p99": 0.563,
+          "mean": 0.106,
+          "occurrenceSum": 0.531,
+          "max": 2.279
+        },
+        "perRun": [
+          {
+            "p50": 0.046,
+            "p95": 0.416,
+            "p99": 0.563,
+            "mean": 0.106,
+            "occurrenceSum": 0.531,
+            "max": 1.766,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.047,
+            "p95": 0.431,
+            "p99": 0.599,
+            "mean": 0.115,
+            "occurrenceSum": 0.573,
+            "max": 2.09,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.062,
+            "p95": 0.664,
+            "p99": 0.877,
+            "mean": 0.164,
+            "occurrenceSum": 0.82,
+            "max": 2.398,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.035,
+            "p95": 0.362,
+            "p99": 0.432,
+            "mean": 0.096,
+            "occurrenceSum": 0.482,
+            "max": 2.546,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.04,
+            "p95": 0.38,
+            "p99": 0.562,
+            "mean": 0.106,
+            "occurrenceSum": 0.528,
+            "max": 2.279,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak-city": {
+        "median": {
+          "p50": 0.043,
+          "p95": 0.93,
+          "p99": 1.347,
+          "mean": 0.186,
+          "occurrenceSum": 0.928,
+          "max": 2.447
+        },
+        "perRun": [
+          {
+            "p50": 0.045,
+            "p95": 0.864,
+            "p99": 1.133,
+            "mean": 0.173,
+            "occurrenceSum": 0.864,
+            "max": 2.447,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.043,
+            "p95": 0.954,
+            "p99": 1.16,
+            "mean": 0.186,
+            "occurrenceSum": 0.928,
+            "max": 2.064,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.061,
+            "p95": 1.179,
+            "p99": 1.449,
+            "mean": 0.24,
+            "occurrenceSum": 1.2,
+            "max": 2.761,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.031,
+            "p95": 0.782,
+            "p99": 1.347,
+            "mean": 0.167,
+            "occurrenceSum": 0.834,
+            "max": 1.819,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.037,
+            "p95": 0.93,
+            "p99": 1.358,
+            "mean": 0.208,
+            "occurrenceSum": 1.038,
+            "max": 6.197,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "context-switches:switches": {
+        "median": {
+          "p50": 0.063,
+          "p95": 2.687,
+          "p99": 3.615,
+          "mean": 0.595,
+          "occurrenceSum": 1.784,
+          "max": 6.04
+        },
+        "perRun": [
+          {
+            "p50": 0.072,
+            "p95": 2.74,
+            "p99": 4.071,
+            "mean": 0.638,
+            "occurrenceSum": 1.913,
+            "max": 7.293,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.057,
+            "p95": 2.687,
+            "p99": 3.55,
+            "mean": 0.595,
+            "occurrenceSum": 1.784,
+            "max": 4.095,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.064,
+            "p95": 2.47,
+            "p99": 3.615,
+            "mean": 0.571,
+            "occurrenceSum": 1.712,
+            "max": 6.04,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.063,
+            "p95": 3.177,
+            "p99": 4.133,
+            "mean": 0.69,
+            "occurrenceSum": 2.069,
+            "max": 6.047,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.048,
+            "p95": 2.479,
+            "p99": 3.378,
+            "mean": 0.535,
+            "occurrenceSum": 1.605,
+            "max": 4.538,
+            "measuredOccurrences": 200,
+            "frames": 600
+          }
+        ]
+      },
+      "stress:stress": {
+        "median": {
+          "p50": 0.582,
+          "p95": 2.195,
+          "p99": 21.218,
+          "mean": 1.428,
+          "occurrenceSum": 32.843,
+          "max": 24.614
+        },
+        "perRun": [
+          {
+            "p50": 0.625,
+            "p95": 2.322,
+            "p99": 21.218,
+            "mean": 1.506,
+            "occurrenceSum": 34.648,
+            "max": 24.614,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.582,
+            "p95": 2.195,
+            "p99": 19.804,
+            "mean": 1.383,
+            "occurrenceSum": 31.803,
+            "max": 23.821,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.548,
+            "p95": 1.964,
+            "p99": 20.966,
+            "mean": 1.366,
+            "occurrenceSum": 31.415,
+            "max": 28.577,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.743,
+            "p95": 2.719,
+            "p99": 27.087,
+            "mean": 1.8,
+            "occurrenceSum": 41.41,
+            "max": 30.249,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 0.577,
+            "p95": 2.174,
+            "p99": 21.35,
+            "mean": 1.428,
+            "occurrenceSum": 32.843,
+            "max": 23.985,
+            "measuredOccurrences": 30,
+            "frames": 690
+          }
+        ]
+      }
+    }
+  },
+  "deltaPercentRaw": {
+    "ai-phase:soak": {
+      "p50": 9.2,
+      "p95": 2.4,
+      "p99": -3.1,
+      "mean": 7.6,
+      "occurrenceSum": 7.6
+    },
+    "ai-phase:soak-city": {
+      "p50": 89.4,
+      "p95": -55.9,
+      "p99": -55.0,
+      "mean": -33.3,
+      "occurrenceSum": -33.3
+    },
+    "event-burst:soak": {
+      "p50": 8.2,
+      "p95": 3.8,
+      "p99": 11.6,
+      "mean": 13.4,
+      "occurrenceSum": 13.4
+    },
+    "event-burst:soak-city": {
+      "p50": -6.6,
+      "p95": -2.5,
+      "p99": 4.7,
+      "mean": 10.9,
+      "occurrenceSum": 11.1
+    },
+    "context-switches:switches": {
+      "p50": 2.2,
+      "p95": -6.8,
+      "p99": -37.0,
+      "mean": -12.2,
+      "occurrenceSum": -12.2
+    },
+    "stress:stress": {
+      "p50": -31.4,
+      "p95": -2.7,
+      "p99": -12.3,
+      "mean": -19.2,
+      "occurrenceSum": -19.2
+    }
+  },
+  "deltaPercentNormalized": {
+    "ai-phase:soak": {
+      "p50": -1.9,
+      "p95": 1.9,
+      "p99": 0.8,
+      "mean": 5.3,
+      "occurrenceSum": 5.3
+    },
+    "ai-phase:soak-city": {
+      "p50": 72.4,
+      "p95": -61.7,
+      "p99": -58.6,
+      "mean": -39.8,
+      "occurrenceSum": -39.8
+    },
+    "event-burst:soak": {
+      "p50": 0.0,
+      "p95": -6.7,
+      "p99": -2.3,
+      "mean": -0.9,
+      "occurrenceSum": -0.4
+    },
+    "event-burst:soak-city": {
+      "p50": -12.2,
+      "p95": -4.8,
+      "p99": 7.4,
+      "mean": 1.1,
+      "occurrenceSum": 0.7
+    },
+    "context-switches:switches": {
+      "p50": 3.3,
+      "p95": -17.4,
+      "p99": -48.1,
+      "mean": -21.1,
+      "occurrenceSum": -21.1
+    },
+    "stress:stress": {
+      "p50": -39.8,
+      "p95": -10.4,
+      "p99": -21.1,
+      "mean": -27.7,
+      "occurrenceSum": -27.7
+    }
+  },
+  "frameIndexMediansMs": {
+    "ai-phase:soak-city": {
+      "main": [
+        6.747,
+        0.359,
+        0.372,
+        0.382,
+        0.398
+      ],
+      "optimized": [
+        3.168,
+        0.491,
+        0.726,
+        0.683,
+        0.738
+      ]
+    },
+    "ai-phase:soak": {
+      "main": [
+        1.599,
+        0.384,
+        0.439,
+        0.407,
+        0.465
+      ],
+      "optimized": [
+        1.691,
+        0.468,
+        0.508,
+        0.477,
+        0.505
+      ]
+    },
+    "event-burst:soak-city": {
+      "main": [
+        1.128,
+        0.029,
+        0.063,
+        0.067,
+        0.07
+      ],
+      "optimized": [
+        1.184,
+        0.05,
+        0.065,
+        0.058,
+        0.068
+      ]
+    },
+    "stress:stress": {
+      "main": [
+        35.364,
+        1.336,
+        1.046,
+        1.187,
+        1.173,
+        1.213,
+        1.24,
+        1.267,
+        1.325,
+        1.356,
+        1.36,
+        1.472,
+        1.504,
+        1.524,
+        1.526,
+        1.729,
+        1.754,
+        1.772,
+        1.792,
+        1.828,
+        2.004,
+        0.021,
+        0.036
+      ],
+      "optimized": [
+        29.76,
+        0.855,
+        0.661,
+        0.766,
+        0.778,
+        0.806,
+        0.811,
+        0.874,
+        0.9,
+        0.919,
+        0.952,
+        1.034,
+        1.048,
+        1.06,
+        1.157,
+        1.21,
+        1.218,
+        1.237,
+        1.262,
+        1.394,
+        1.344,
+        0.022,
+        0.086
+      ]
+    }
+  },
+  "attribution": {
+    "main": {
+      "stressHandlerUs": {
+        "begin": 16794.0,
+        "step": 491.5,
+        "end": 731.5,
+        "steadyPanelRender": 251.8,
+        "steadyShowGame": 344.725
+      },
+      "citySwitchHandlerUs": {
+        "game": 20,
+        "snapshot": 189,
+        "hud": 2291,
+        "world": 2,
+        "back": 284
+      },
+      "barFlipUs": {
+        "toPhase": 266.27,
+        "toIdle": 107.36
+      },
+      "contexts": {
+        "none": {
+          "showGameUs": 11.93,
+          "panelsUs": {
+            "bar": 10.543
+          },
+          "mountUs": {}
+        },
+        "stack": {
+          "showGameUs": 27.843,
+          "panelsUs": {
+            "bar": 5.92,
+            "city": 13.22,
+            "research": 6.277
+          },
+          "mountUs": {
+            "city": [
+              84,
+              202,
+              579,
+              25
+            ],
+            "research": [
+              26,
+              59,
+              399,
+              14
+            ]
+          }
+        },
+        "city": {
+          "showGameUs": 25.477,
+          "panelsUs": {
+            "bar": 5.24,
+            "city": 11.937,
+            "research": 5.843
+          },
+          "mountUs": {
+            "city": [
+              75,
+              178,
+              509,
+              24
+            ],
+            "research": [
+              23,
+              55,
+              369,
+              13
+            ]
+          }
+        },
+        "dialog": {
+          "showGameUs": 8.647,
+          "panelsUs": {
+            "bar": 5.04,
+            "dialog": 1.207
+          },
+          "mountUs": {
+            "dialog": [
+              28,
+              76,
+              223,
+              12
+            ]
+          }
+        }
+      }
+    },
+    "optimized": {
+      "stressHandlerUs": {
+        "begin": 17017.5,
+        "step": 121.0,
+        "end": 1030.0,
+        "steadyPanelRender": 0.845,
+        "steadyShowGame": 17.87
+      },
+      "citySwitchHandlerUs": {
+        "game": 38,
+        "snapshot": 311,
+        "hud": 1965,
+        "world": 2,
+        "back": 432
+      },
+      "barFlipUs": {
+        "toPhase": 279.06,
+        "toIdle": 128.45
+      },
+      "contexts": {
+        "none": {
+          "showGameUs": 14.567,
+          "panelsUs": {
+            "bar": 11.997
+          },
+          "mountUs": {}
+        },
+        "stack": {
+          "showGameUs": 26.65,
+          "panelsUs": {
+            "bar": 5.203,
+            "city": 12.227,
+            "research": 6.02
+          },
+          "mountUs": {
+            "city": [
+              79,
+              184,
+              545,
+              26
+            ],
+            "research": [
+              26,
+              58,
+              394,
+              14
+            ]
+          }
+        },
+        "city": {
+          "showGameUs": 26.043,
+          "panelsUs": {
+            "bar": 5.153,
+            "city": 11.887,
+            "research": 6.177
+          },
+          "mountUs": {
+            "city": [
+              74,
+              180,
+              516,
+              24
+            ],
+            "research": [
+              23,
+              57,
+              369,
+              14
+            ]
+          }
+        },
+        "dialog": {
+          "showGameUs": 8.723,
+          "panelsUs": {
+            "bar": 5.18,
+            "dialog": 1.227
+          },
+          "mountUs": {
+            "dialog": [
+              28,
+              74,
+              216,
+              13
+            ]
+          }
+        }
+      }
+    }
+  },
+  "baselineBeforeChanges": {
+    "note": "the first five runs on main, taken before any change (no in-run calibration; the end-of-run calibration is attribution.deriveKeysUs). Same code as the main arm above, in another period of the same session",
+    "raw": {
+      "ai-phase:soak": {
+        "median": {
+          "p50": 0.356,
+          "p95": 1.684,
+          "p99": 2.235,
+          "mean": 0.549,
+          "occurrenceSum": 2.746,
+          "max": 2.878
+        },
+        "perRun": [
+          {
+            "p50": 0.206,
+            "p95": 0.891,
+            "p99": 1.514,
+            "mean": 0.358,
+            "occurrenceSum": 1.789,
+            "max": 2.878,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.459,
+            "p95": 1.836,
+            "p99": 2.235,
+            "mean": 0.676,
+            "occurrenceSum": 3.382,
+            "max": 2.678,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.438,
+            "p95": 1.926,
+            "p99": 2.918,
+            "mean": 0.687,
+            "occurrenceSum": 3.434,
+            "max": 3.55,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.111,
+            "p95": 0.435,
+            "p99": 0.588,
+            "mean": 0.178,
+            "occurrenceSum": 0.888,
+            "max": 1.025,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.356,
+            "p95": 1.684,
+            "p99": 2.47,
+            "mean": 0.549,
+            "occurrenceSum": 2.746,
+            "max": 4.318,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "ai-phase:soak-city": {
+        "median": {
+          "p50": 0.395,
+          "p95": 7.41,
+          "p99": 9.132,
+          "mean": 1.542,
+          "occurrenceSum": 7.709,
+          "max": 10.729
+        },
+        "perRun": [
+          {
+            "p50": 0.316,
+            "p95": 4.496,
+            "p99": 5.328,
+            "mean": 1.043,
+            "occurrenceSum": 5.214,
+            "max": 6.288,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.426,
+            "p95": 7.898,
+            "p99": 9.518,
+            "mean": 1.623,
+            "occurrenceSum": 8.113,
+            "max": 11.499,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.421,
+            "p95": 8.163,
+            "p99": 9.489,
+            "mean": 1.652,
+            "occurrenceSum": 8.262,
+            "max": 10.574,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.395,
+            "p95": 6.364,
+            "p99": 8.834,
+            "mean": 1.165,
+            "occurrenceSum": 5.826,
+            "max": 10.729,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.379,
+            "p95": 7.41,
+            "p99": 9.132,
+            "mean": 1.542,
+            "occurrenceSum": 7.709,
+            "max": 19.292,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak": {
+        "median": {
+          "p50": 0.035,
+          "p95": 0.557,
+          "p99": 0.738,
+          "mean": 0.126,
+          "occurrenceSum": 0.63,
+          "max": 3.231
+        },
+        "perRun": [
+          {
+            "p50": 0.021,
+            "p95": 0.28,
+            "p99": 0.694,
+            "mean": 0.08,
+            "occurrenceSum": 0.399,
+            "max": 1.845,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.047,
+            "p95": 0.568,
+            "p99": 0.979,
+            "mean": 0.146,
+            "occurrenceSum": 0.729,
+            "max": 3.485,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.048,
+            "p95": 0.57,
+            "p99": 0.87,
+            "mean": 0.153,
+            "occurrenceSum": 0.763,
+            "max": 4.203,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.009,
+            "p95": 0.144,
+            "p99": 0.201,
+            "mean": 0.038,
+            "occurrenceSum": 0.192,
+            "max": 0.88,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.035,
+            "p95": 0.557,
+            "p99": 0.738,
+            "mean": 0.126,
+            "occurrenceSum": 0.63,
+            "max": 3.231,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "event-burst:soak-city": {
+        "median": {
+          "p50": 0.035,
+          "p95": 1.309,
+          "p99": 1.622,
+          "mean": 0.213,
+          "occurrenceSum": 1.065,
+          "max": 2.058
+        },
+        "perRun": [
+          {
+            "p50": 0.022,
+            "p95": 0.544,
+            "p99": 1.236,
+            "mean": 0.131,
+            "occurrenceSum": 0.653,
+            "max": 1.561,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.042,
+            "p95": 1.422,
+            "p99": 1.622,
+            "mean": 0.241,
+            "occurrenceSum": 1.203,
+            "max": 1.742,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.043,
+            "p95": 1.442,
+            "p99": 1.733,
+            "mean": 0.251,
+            "occurrenceSum": 1.255,
+            "max": 2.789,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.031,
+            "p95": 0.987,
+            "p99": 1.548,
+            "mean": 0.162,
+            "occurrenceSum": 0.81,
+            "max": 3.808,
+            "measuredOccurrences": 60,
+            "frames": 300
+          },
+          {
+            "p50": 0.035,
+            "p95": 1.309,
+            "p99": 1.668,
+            "mean": 0.213,
+            "occurrenceSum": 1.065,
+            "max": 2.058,
+            "measuredOccurrences": 60,
+            "frames": 300
+          }
+        ]
+      },
+      "context-switches:switches": {
+        "median": {
+          "p50": 0.061,
+          "p95": 3.887,
+          "p99": 8.539,
+          "mean": 0.888,
+          "occurrenceSum": 2.663,
+          "max": 11.06
+        },
+        "perRun": [
+          {
+            "p50": 0.036,
+            "p95": 2.602,
+            "p99": 5.49,
+            "mean": 0.543,
+            "occurrenceSum": 1.628,
+            "max": 9.393,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.068,
+            "p95": 3.887,
+            "p99": 8.679,
+            "mean": 0.913,
+            "occurrenceSum": 2.74,
+            "max": 11.73,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.07,
+            "p95": 4.255,
+            "p99": 8.539,
+            "mean": 0.988,
+            "occurrenceSum": 2.963,
+            "max": 12.83,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.052,
+            "p95": 3.762,
+            "p99": 8.374,
+            "mean": 0.791,
+            "occurrenceSum": 2.372,
+            "max": 11.06,
+            "measuredOccurrences": 200,
+            "frames": 600
+          },
+          {
+            "p50": 0.061,
+            "p95": 3.963,
+            "p99": 8.654,
+            "mean": 0.888,
+            "occurrenceSum": 2.663,
+            "max": 10.27,
+            "measuredOccurrences": 200,
+            "frames": 600
+          }
+        ]
+      },
+      "stress:stress": {
+        "median": {
+          "p50": 1.223,
+          "p95": 3.069,
+          "p99": 37.572,
+          "mean": 2.52,
+          "occurrenceSum": 57.97,
+          "max": 44.462
+        },
+        "perRun": [
+          {
+            "p50": 0.834,
+            "p95": 1.731,
+            "p99": 22.309,
+            "mean": 1.637,
+            "occurrenceSum": 37.641,
+            "max": 29.683,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.334,
+            "p95": 2.475,
+            "p99": 39.774,
+            "mean": 2.86,
+            "occurrenceSum": 65.771,
+            "max": 46.444,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.223,
+            "p95": 3.069,
+            "p99": 37.572,
+            "mean": 2.475,
+            "occurrenceSum": 56.926,
+            "max": 44.462,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.348,
+            "p95": 3.434,
+            "p99": 37.629,
+            "mean": 2.736,
+            "occurrenceSum": 62.932,
+            "max": 41.543,
+            "measuredOccurrences": 30,
+            "frames": 690
+          },
+          {
+            "p50": 1.134,
+            "p95": 4.539,
+            "p99": 35.859,
+            "mean": 2.52,
+            "occurrenceSum": 57.97,
+            "max": 45.857,
+            "measuredOccurrences": 30,
+            "frames": 690
+          }
+        ]
+      }
+    },
+    "runs": [
+      {
+        "run": "before-1",
+        "loadBefore": 5.52,
+        "loadAfter": 6.13
+      },
+      {
+        "run": "before-2",
+        "loadBefore": 6.13,
+        "loadAfter": 7.1
+      },
+      {
+        "run": "before-3",
+        "loadBefore": 7.1,
+        "loadAfter": 5.99
+      },
+      {
+        "run": "before-4",
+        "loadBefore": 5.99,
+        "loadAfter": 5.24
+      },
+      {
+        "run": "before-5",
+        "loadBefore": 5.24,
+        "loadAfter": 5.61
+      }
+    ]
+  },
+  "frames": {
+    "file": "docs/evidence/frontier-arm-b/optimization-frames.json",
+    "sha256": "988811b463e269165e071cbbe7489130330026651078cf768595e6be7ee0df73",
+    "bytes": 689045
+  },
+  "attempts": [
+    {
+      "label": "before",
+      "dir": null,
+      "runs": 5,
+      "tree": "main",
+      "status": "kept as the baseline before any change",
+      "reason": "the first five runs on origin/main, taken before the changes",
+      "attributionDeriveKeysUs": [
+        83.5,
+        82.3,
+        83.0,
+        82.6,
+        84.2
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.684,
+        "ai-phase:soak-city": 7.41,
+        "event-burst:soak": 0.557,
+        "event-burst:soak-city": 1.309,
+        "context-switches:switches": 3.887,
+        "stress:stress": 3.069
+      }
+    },
+    {
+      "label": "after",
+      "dir": "invalid/",
+      "runs": 5,
+      "tree": "working tree before the stress panel recycled rows",
+      "status": "rejected",
+      "reason": "the scratch copy had no imported icons (about 8 900 load errors, scripts that did not compile): the HUD was not the HUD",
+      "attributionDeriveKeysUs": [
+        147.9,
+        159.4,
+        165.1,
+        163.9,
+        87.4
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.78,
+        "ai-phase:soak-city": 4.481,
+        "event-burst:soak": 0.607,
+        "event-burst:soak-city": 0.976,
+        "context-switches:switches": 3.868,
+        "stress:stress": 3.62
+      }
+    },
+    {
+      "label": "beforeB",
+      "dir": "invalid/",
+      "runs": 5,
+      "tree": "main",
+      "status": "rejected",
+      "reason": "the pair of the invalid after series",
+      "attributionDeriveKeysUs": [
+        81.5,
+        82.5,
+        81.7,
+        82.5,
+        83.8
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.729,
+        "ai-phase:soak-city": 7.543,
+        "event-burst:soak": 0.591,
+        "event-burst:soak-city": 1.189,
+        "context-switches:switches": 3.305,
+        "stress:stress": 3.404
+      }
+    },
+    {
+      "label": "after",
+      "dir": null,
+      "runs": 5,
+      "tree": "working tree before the stress panel recycled rows",
+      "status": "set aside",
+      "reason": "valid project, no calibration inside the run. The reference loop of the attribution section (attributionDeriveKeysUs) read 142 to 172 us for this tree and 82 to 87 for main, which first looked like a slower process; the in-run calibrations of the later series show the same machine states in both trees, so it is most likely an artifact of that loop running after the optimized tree's now trivial repeated renders have not kept the CPU busy (not isolated). Set aside for want of in-run calibration",
+      "attributionDeriveKeysUs": [
+        149.7,
+        141.6,
+        148.4,
+        171.7,
+        165.8
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.798,
+        "ai-phase:soak-city": 3.501,
+        "event-burst:soak": 0.623,
+        "event-burst:soak-city": 1.363,
+        "context-switches:switches": 3.871,
+        "stress:stress": 3.644
+      }
+    },
+    {
+      "label": "beforeB",
+      "dir": null,
+      "runs": 5,
+      "tree": "main",
+      "status": "set aside",
+      "reason": "the pair of the series above",
+      "attributionDeriveKeysUs": [
+        84.5,
+        82.3,
+        82.3,
+        87.0,
+        82.3
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.848,
+        "ai-phase:soak-city": 7.658,
+        "event-burst:soak": 0.604,
+        "event-burst:soak-city": 1.308,
+        "context-switches:switches": 4.212,
+        "stress:stress": 2.823
+      }
+    },
+    {
+      "label": "afterv",
+      "dir": null,
+      "runs": 5,
+      "tree": "working tree before the stress panel recycled rows",
+      "status": "set aside",
+      "reason": "five more runs in the foreground, the same reading of the reference loop (90 to 167 us); led to the in-run calibration",
+      "attributionDeriveKeysUs": [
+        127.1,
+        167.0,
+        90.4,
+        151.3,
+        133.8
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.762,
+        "ai-phase:soak-city": 3.197,
+        "event-burst:soak": 0.643,
+        "event-burst:soak-city": 1.333,
+        "context-switches:switches": 3.748,
+        "stress:stress": 3.742
+      }
+    },
+    {
+      "label": "diagA",
+      "dir": null,
+      "runs": 5,
+      "tree": "working tree before the stress panel recycled rows",
+      "status": "set aside",
+      "reason": "calibrated (in-run, best of five, between the phases), but before the log recycled the row that leaves; superseded by the final series. Its attributionDeriveKeysUs again splits by tree (148 to 172 us against 82 to 83), while its in-run calibrations are alike in both trees",
+      "attributionDeriveKeysUs": [
+        165.9,
+        170.9,
+        151.8,
+        171.8,
+        147.4
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.679,
+        "ai-phase:soak-city": 3.425,
+        "event-burst:soak": 0.526,
+        "event-burst:soak-city": 1.202,
+        "context-switches:switches": 3.97,
+        "stress:stress": 4.006
+      }
+    },
+    {
+      "label": "diagB",
+      "dir": null,
+      "runs": 5,
+      "tree": "main",
+      "status": "set aside",
+      "reason": "the pair of diagA",
+      "attributionDeriveKeysUs": [
+        83.1,
+        82.9,
+        82.5,
+        82.0,
+        82.1
+      ],
+      "p95Raw": {
+        "ai-phase:soak": 1.704,
+        "ai-phase:soak-city": 8.021,
+        "event-burst:soak": 0.57,
+        "event-burst:soak-city": 1.133,
+        "context-switches:switches": 4.012,
+        "stress:stress": 3.827
+      }
+    }
+  ],
+  "diagnostics": {
+    "cityAiPhaseHandlerSplit": {
+      "what": "one run of a diagnostic script on each tree: 36 turns of the soak with the city open, the HUD called through a timing wrapper so its script time is separated from the rest of the frame (frame 0 is the one that accepts End Turn); medians in ms",
+      "main": {
+        "frameTotal": [
+          6.755,
+          0.362,
+          0.372,
+          0.406,
+          0.404,
+          1.277,
+          0.035
+        ],
+        "hudHandler": [
+          4.632,
+          0.095,
+          0.1,
+          0.102,
+          0.114,
+          0.631,
+          0.0
+        ]
+      },
+      "optimized": {
+        "frameTotal": [
+          2.824,
+          0.445,
+          0.554,
+          0.509,
+          0.59,
+          0.936,
+          0.034
+        ],
+        "hudHandler": [
+          0.88,
+          0.121,
+          0.162,
+          0.144,
+          0.151,
+          0.518,
+          0.0
+        ]
+      }
+    },
+    "stressStepParts": {
+      "what": "one run on the optimized tree (before the row recycling): the pieces of a step by hand, in us (first five and last five of 40 steps): find 1, compare 7 to 9, drop 10 to 47, mount (Label made and added) 70 to 440, production text 35 to 63"
+    }
+  },
+  "parity": {
+    "lane": {
+      "command": "node --test tests/civ-lite-ui-native.test.mjs",
+      "result": "2 of 2 (the React Native HUD and the native HUD, both with the stress stage), on the final tree"
+    },
+    "nativeSabotages": {
+      "command": "node scripts/civ-lite-ui-sabotage.mjs native-stress-rows-rebuilt native-stats-miss-turn-ended native-city-shows-tile native-overlay-not-blocking native-end-turn-by-phase",
+      "control": 0,
+      "variants": [
+        {
+          "name": "native-stress-rows-rebuilt",
+          "rejected": true,
+          "failedChecks": 1,
+          "categories": [
+            "stress"
+          ]
+        },
+        {
+          "name": "native-stats-miss-turn-ended",
+          "rejected": true,
+          "failedChecks": 2,
+          "categories": [
+            "stats"
+          ]
+        },
+        {
+          "name": "native-city-shows-tile",
+          "rejected": true,
+          "failedChecks": 14,
+          "categories": [
+            "panels",
+            "remount"
+          ]
+        },
+        {
+          "name": "native-overlay-not-blocking",
+          "rejected": true,
+          "failedChecks": 5,
+          "categories": [
+            "blocking",
+            "map"
+          ]
+        },
+        {
+          "name": "native-end-turn-by-phase",
+          "rejected": true,
+          "failedChecks": 2,
+          "categories": [
+            "bar"
+          ]
+        }
+      ],
+      "sourcesRestored": true,
+      "note": "native-stress-rows-rebuilt was moved to the new stress.gd (the text it searched for no longer exists); with names on the command line the script writes no receipt, so this block is its record"
+    },
+    "statsReadUs": {
+      "what": "one read of the runner stats() on HudRoot, 20 000 reads in 10 rounds, medians of the rounds; the code is the same in both trees",
+      "main": [
+        0.503,
+        0.896
+      ],
+      "optimized": [
+        0.868,
+        0.951
+      ],
+      "note": "the spread between the readings is the machine state (calibration), not the HUD"
+    }
+  }
+}
