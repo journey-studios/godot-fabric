@@ -1,0 +1,358 @@
+{
+  "schemaVersion": 1,
+  "scenario": "macos-export/civ-lite",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-10T19:16:09.720Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38076585188,
+    "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/135",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T18:38:21Z",
+    "updatedAt": "2026-10-10T19:14:39Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114284733111,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:38:25Z",
+        "completedAt": "2026-10-10T18:41:51Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114284733111"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114284733021,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:38:29Z",
+        "completedAt": "2026-10-10T18:45:23Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114284733021"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114286137390,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:45:31Z",
+        "completedAt": "2026-10-10T19:08:38Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114286137390"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114286137365,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:45:32Z",
+        "completedAt": "2026-10-10T19:10:08Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114286137365"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114286137313,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:45:29Z",
+        "completedAt": "2026-10-10T19:14:38Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114286137313"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114286137349,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:45:26Z",
+        "completedAt": "2026-10-10T18:45:46Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114286137349"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114284733126,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:38:25Z",
+        "completedAt": "2026-10-10T18:44:48Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114284733126"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114284732972,
+        "runAttempt": 1,
+        "headSha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+        "startedAt": "2026-10-10T18:38:28Z",
+        "completedAt": "2026-10-10T18:43:12Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076585188/job/114284732972"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "native-cold-start": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "native-suites-frontier": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "native-suites-input": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "native-suites-runtime": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "parity-comparison": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "reference-android": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "reference-ios": "02e7868ca68cd31b33ba249076c0fe07909d256e"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:38:44Z",
+          "completedAt": "2026-10-10T18:41:48Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 693,
+              "suites": 0,
+              "pass": 692,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:41:48Z",
+          "completedAt": "2026-10-10T18:41:49Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:41:49Z",
+          "completedAt": "2026-10-10T18:41:50Z",
+          "passed": true,
+          "files": 2383
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/macos-export-civ-lite-oracle.test.mjs",
+          "tests": 10,
+          "passed": 10,
+          "topLevel": [
+            "the lane's pins are the ones the headless lanes pin",
+            "the oracle reads the roteiro from the game's own source",
+            "the oracle accepts a consistent replay report and rejects each thing that makes it wrong",
+            "the oracle accepts a consistent export and rejects each thing that makes it wrong",
+            "the runner's own judgment of a run agrees with the oracle's",
+            "the replay gate is inert without its flag, reuses the game's roteiro and hashing, and the scene and the HUD report keep their shape",
+            "the command line refuses an unknown consumer and an existing destination before it provisions anything",
+            "the profile removal touches only an export's own user-data directory",
+            "the retained sabotage alters the seed the golden hash was taken from, in the template's source and in one place",
+            "the export of a prepared project is a function of its own, and its preset writes the filters it is given"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:export:civ-lite": {
+        "job": "native-suites-runtime",
+        "step": "Export Frontier as a signed Release app and replay it to the golden hash in clean profiles",
+        "number": 72,
+        "conclusion": "success",
+        "startedAt": "2026-10-10T19:13:23Z",
+        "completedAt": "2026-10-10T19:14:28Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "Frontier's Release .app plays the 12-turn replay to the golden hash in the editor and in a copy, in clean profiles, and the HUD matrix passes in the app"
+          ],
+          "failedTests": [],
+          "markers": [],
+          "skippedTests": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 135,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/135",
+    "title": "feat(export): Export Frontier as a Release app that replays to the golden hash (V05-07)",
+    "headSha": "dcd4e916bc43403698d8960f3cbcc987265e376c",
+    "baseSha": "9810100246c8c869abc778fee456ff56d2d44958",
+    "squashMergeCommit": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+    "squashCommitSubject": "feat(export): Export Frontier as a Release app that replays to the golden hash (V05-07) (#135)",
+    "mergedAt": "2026-10-10T18:38:06Z",
+    "headTreeSha": "42efc7824ab185f6736fe34239a8f9e2104f9431",
+    "mainTreeSha": "42efc7824ab185f6736fe34239a8f9e2104f9431",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "commits": [
+      {
+        "sha": "5da4e7729b71e427e4dfd80a612bf0d5a6c2a3b9",
+        "subject": "feat(export): Export Frontier as a Release app that replays to the golden hash"
+      },
+      {
+        "sha": "7207170514091919aeb074525e92842f0ad928fe",
+        "subject": "docs(evidence): Record Frontier's Release app reaching the golden hash"
+      },
+      {
+        "sha": "cea1f9ce55418141508ef9823f727d2c7929f421",
+        "subject": "docs(dashboard): Close V05-07's replay and exits X1, X2 and X7"
+      },
+      {
+        "sha": "954284b3fe0dd57e1425b21075d3265b92b1f6de",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-export-replay"
+      },
+      {
+        "sha": "743f6f6acd7a4d8508b9caa2aca324fe680cb257",
+        "subject": "fix(export): Exclude the audited binaries from the path scan by real path"
+      },
+      {
+        "sha": "16a2959c3f6b026138cd0b18e5d24fe29cb213a9",
+        "subject": "fix(export): Fail an unknown sabotage name and describe every gate check"
+      },
+      {
+        "sha": "f4ab7579a92cf0c4a4ecf5ec7f8b3c55983f2412",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-export-replay"
+      },
+      {
+        "sha": "dcd4e916bc43403698d8960f3cbcc987265e376c",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-export-replay"
+      }
+    ],
+    "changedFiles": 22,
+    "additions": 1752,
+    "deletions": 86
+  },
+  "artifacts": {
+    "civLiteExport": {
+      "available": true,
+      "id": 11679920376,
+      "name": "native-macos-export-civ-lite",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 139090,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "f9889d3eea459338a1f87c500aa07d5c27e0fa5a003365fe8b093a7c676fde97",
+      "apiDigest": "sha256:f9889d3eea459338a1f87c500aa07d5c27e0fa5a003365fe8b093a7c676fde97",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "f9889d3eea459338a1f87c500aa07d5c27e0fa5a003365fe8b093a7c676fde97",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-10T19:14:30Z",
+      "expiresAt": "2027-01-08T18:38:22Z",
+      "fileCount": 17,
+      "files": {
+        "macos-export-Frontier-51798-1791659603381-f15e23/hud-app.json": "f36b35faf1774915cf9cfe220f470e9b1a714806c1fbbb31f7ba0e35b07cd126",
+        "macos-export-Frontier-51798-1791659603381-f15e23/hud-app.log": "2962eee18c48fcf5befdc75da805803969918e6bcf35d7f336aa7d5a8907e81b",
+        "macos-export-Frontier-51798-1791659603381-f15e23/receipt.json": "f01499af9926931e12d5ea9651a322e2a124f52a42feee4946b3770474b4e8db",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-1.json": "0b1f0df3dd8a58b7e9065f150609efe6f02bc9b27bdf70aa5471f9688a088a2d",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-1.log": "10b0a05593b975eae50841d2ac17f8edf440aa96bf8570966a8d83f31436394e",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-2.json": "0b1f0df3dd8a58b7e9065f150609efe6f02bc9b27bdf70aa5471f9688a088a2d",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-2.log": "0fce215a2990db089b4d4ab2597707a42ba9773046ef91b20e360627d65ed73e",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-3.json": "0b1f0df3dd8a58b7e9065f150609efe6f02bc9b27bdf70aa5471f9688a088a2d",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-3.log": "4875f63c365f7104a7a32318cd42543d72b8158318753f99a00385ab7ad6d3b7",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-1.json": "abeef38d7d72aa39b5d2e6d8156ea93917bf013a744461ea18a2a58975b004c9",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-1.log": "749e1e1b29efaf894d8070c6d75693b16113a8a5368eb6d01e8eddd46303510e",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-2.json": "abeef38d7d72aa39b5d2e6d8156ea93917bf013a744461ea18a2a58975b004c9",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-2.log": "969d96a27e7cf9a1cb42a1b904d2232231fb9ff5a7fd15d4bfd21329246c6ad5",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-3.json": "abeef38d7d72aa39b5d2e6d8156ea93917bf013a744461ea18a2a58975b004c9",
+        "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-3.log": "6c50ec4735dc8e947799151fb942256fbce157d0fe911063e7cbc91f2e5b5761",
+        "macos-export-Frontier-51798-1791659603381-f15e23/sdk-manifest.json": "802944be4dd3310d69d091a25f19fcc333527b1c246c990d6006fc31be03ef29",
+        "macos-export-civ-lite-native/report.json": "4297be48d3408a99fa0bf41b0961c836aa3736f9014d3a1e0ed1835e413cfa49"
+      },
+      "markers": [
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/hud-app.log",
+          "line": "CIVLITE_UI_PASSED"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-1.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-2.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-app-3.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-1.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-2.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        },
+        {
+          "file": "macos-export-Frontier-51798-1791659603381-f15e23/replay-editor-3.log",
+          "line": "CIVLITE_REPLAY_PASSED: 246"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

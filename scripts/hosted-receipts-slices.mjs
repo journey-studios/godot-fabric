@@ -491,4 +491,18 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-probe-entry-ef18579",
   },
+  // Frontier as a Release app (#135, V05-07 replay, exits X1, X2 and X7), squash 02e7868: the native step test:export:civ-lite in the
+  // native-suites-runtime job with the derived arm64 template, its artifact, and the template-free contract file of the lane; Contracts
+  // was dispatched on main at the squash and Pages is the push of 02e7868.
+  {
+    folder: "macos-export/civ-lite",
+    pr: 135,
+    squash: "02e7868",
+    contractsRun: 38076585188,
+    pagesRun: 38076571354,
+    nativeSteps: [{ script: "test:export:civ-lite", step: "Export Frontier as a signed Release app and replay it to the golden hash in clean profiles", expect: "tap" }],
+    artifacts: [{ key: "civLiteExport", name: "native-macos-export-civ-lite" }],
+    contractTests: ["tests/macos-export-civ-lite-oracle.test.mjs"],
+    activity: "milestone-0-5-v05-07-replay-7207170",
+  },
 ];
