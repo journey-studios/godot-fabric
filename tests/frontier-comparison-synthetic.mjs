@@ -200,7 +200,7 @@ export const slotRecord = (report, lane, slot) => report.sections.validity.slots
 
 // ---- the example of the evidence record ----
 
-// The synthetic campaign of docs/evidence/frontier-comparison-analysis/: the committed `example-report.json` is the analysis of exactly these bytes. A scenario that shows the four categories and
+// The synthetic campaign of docs/evidence/frontier-comparison-analysis/: the committed `example-analysis.json` is the analysis of exactly these bytes. A scenario that shows the four categories and
 // the Holm guard side by side (a gain, a neutral, a cost and an inconclusive window), one load that was redone, one window in which the arm with the React Native HUD draws more frames per second
 // without a limit, and the words of a report that say the data are made up. Nothing here was measured: no number of it is a result of any arm.
 const EXAMPLE_TEXT = {

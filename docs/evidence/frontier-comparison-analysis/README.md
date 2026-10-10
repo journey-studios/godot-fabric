@@ -2,7 +2,7 @@
 
 > **Registro fixado.** O script, os testes e a nota de pesquisa citados abaixo são os do commit de implementação
 > [`8554c75`](https://github.com/journey-studios/godot-fabric/commit/8554c750936934f85173c8332dbec32237510f04), de 2026-10-10. A única entrada do exemplo é o gerador sintético desse commit e o arquivo do protocolo
-> (`docs/research/frontier-comparison-protocol.json`, intocado); este README, o `example-report.json`, o teste que o confere e o índice das evidências foram escritos depois e não são entrada de nenhum comando.
+> (`docs/research/frontier-comparison-protocol.json`, intocado); este README, o `example-analysis.json`, o teste que o confere e o índice das evidências foram escritos depois e não são entrada de nenhum comando.
 > A [nota de pesquisa](../../research/frontier-comparison-analysis.md) e esta página dizem as mesmas coisas.
 
 O protocolo do comparativo final exige que a análise rode "de um script commitado antes da primeira execução comparativa" e que a saída seja "reprodutível a partir dos dados brutos e da semente" (`statistics.analysis`). Este é esse script:
@@ -58,16 +58,16 @@ O relatório parcial (o braço B não ficou pronto no time-box) tem só H1 e nen
 
 ## O exemplo e como regerá-lo
 
-[`example-report.json`](example-report.json) (125 KB) é o relatório que o script produz de uma campanha **sintética** com a semente fixa `example`: 12 execuções por braço, a ordem do protocolo, as duas faixas e os três braços. O cenário foi escolhido para mostrar as quatro categorias lado a lado
+[`example-analysis.json`](example-analysis.json) (125 KB) é o relatório que o script produz de uma campanha **sintética** com a semente fixa `example`: 12 execuções por braço, a ordem do protocolo, as duas faixas e os três braços. O cenário foi escolhido para mostrar as quatro categorias lado a lado
 (`ai-phase` ganho, `event-burst` neutro, `context-switches` custo, `stress` inconclusivo, com B e C de variância grande), uma carga acima do limite refeita na vaga 4 da faixa apresentada, e uma janela (`ai-phase`) em que C tem mais quadros por segundo sem limite que B. O texto de `decision`, `limitations` e `cost-of-change` diz "SYNTHETIC EXAMPLE".
 A campanha em si, de 1,9 MB, **não está no repositório**: ela se regera, e o relatório registra o SHA-256 dos bytes dela (`sections.reproduction.campaignSha256`, `5e26c425…`).
 
 ```sh
 node tests/frontier-comparison-synthetic.mjs example-campaign.json
-node scripts/frontier-comparison-analysis.mjs example-campaign.json --out docs/evidence/frontier-comparison-analysis/example-report.json
+node scripts/frontier-comparison-analysis.mjs example-campaign.json --out docs/evidence/frontier-comparison-analysis/example-analysis.json
 ```
 
-O primeiro comando grava a campanha sintética (compacta, com uma quebra de linha no fim); o segundo a analisa. O teste `tests/frontier-comparison-analysis.test.mjs` roda **esses dois comandos** num diretório temporário e exige que o relatório seja o `example-report.json` desta pasta byte a byte; se o protocolo (o hash do arquivo está no relatório)
+O primeiro comando grava a campanha sintética (compacta, com uma quebra de linha no fim); o segundo a analisa. O teste `tests/frontier-comparison-analysis.test.mjs` roda **esses dois comandos** num diretório temporário e exige que o relatório seja o `example-analysis.json` desta pasta byte a byte; se o protocolo (o hash do arquivo está no relatório)
 ou o script mudarem, o teste falha e o relatório se regera com os mesmos comandos. Apague o `example-campaign.json` depois.
 
 ## Os limites

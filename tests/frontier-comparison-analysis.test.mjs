@@ -465,19 +465,19 @@ test("the command line writes the report of a campaign file, checks its format a
 const EVIDENCE = "docs/evidence/frontier-comparison-analysis";
 const EXAMPLE_COMMANDS = [
   "node tests/frontier-comparison-synthetic.mjs example-campaign.json",
-  `node scripts/frontier-comparison-analysis.mjs example-campaign.json --out ${EVIDENCE}/example-report.json`
+  `node scripts/frontier-comparison-analysis.mjs example-campaign.json --out ${EVIDENCE}/example-analysis.json`
 ];
 test("the example report of the evidence record is the exact output of the script for the synthetic campaign regenerated with the same seed, by the commands of its README", () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "frontier-comparison-example-"));
   try {
     const campaignFile = path.join(directory, "example-campaign.json");
-    const reportFile = path.join(directory, "example-report.json");
+    const reportFile = path.join(directory, "example-analysis.json");
     const run = args => spawnSync(process.execPath, args, {encoding: "utf8", maxBuffer: 1 << 28});
     const written = run([path.join(root, "tests/frontier-comparison-synthetic.mjs"), campaignFile]);
     assert.equal(written.status, 0, written.stderr);
     const analysed = run([SCRIPT, campaignFile, "--out", reportFile]);
     assert.equal(analysed.status, 0, analysed.stderr);
-    const committed = fs.readFileSync(path.join(root, EVIDENCE, "example-report.json"), "utf8");
+    const committed = fs.readFileSync(path.join(root, EVIDENCE, "example-analysis.json"), "utf8");
     assert.equal(fs.readFileSync(reportFile, "utf8"), committed, "the committed report is the script's output, byte for byte; regenerate it with the commands of the README if the protocol or the script changed");
     const report = JSON.parse(committed);
     assert.deepEqual([report.status, report.why, report.sections.reproduction.campaignSha256], ["complete", [], sha256(fs.readFileSync(campaignFile))], "the report records the hash of the campaign bytes it analysed");
