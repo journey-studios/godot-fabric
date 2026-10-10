@@ -1054,6 +1054,17 @@ report and fail; the times are not compared. **A check of the entry, and no numb
 sets, without the frameworks), no window was opened and no campaign ran. The [record](https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md)
 is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** The hosted CI and Pages receipts of the instrument's self-check through the main loop (#141, GF-30, criterion `execucao`) are recorded from the push of main at `9810100`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/97af2c2f2c99636bc9f7c896167019306dc283b1/docs/evidence/frontier-comparison-probe-entry/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (the five native jobs skipped, since the slice has no native step), the milestone guard passed against the squash's parent, the entry's two contract test files passed 26 of 26 in the log, and the Pages run published the committed `migration.json` byte for byte. The receipts now count 34 slices and 68 receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** V05-10, criterion `execucao`, the export without the Fabric extension (code at `a44d552`, record at `ecf637e`): `exportPreparedProject` and `presetText` take `exportFiles` (the scenes of the `scenes`
+export filter) and `frameworks: false` (a project without the extension, which is what arms A and B are). What an app carries of the extension is now data (`FABRIC_PAYLOAD`, `BARE_PAYLOAD`), the export flow iterates it, and one exact
+check holds for both: `Contents/Frameworks` and the PCK hold exactly the payload. The PCK inspector gained `--no-bundle` and lists the sorted `paths`. Frontier prepared as arm A (`shapeArmProject`) exports as a signed Release
+`.app` with no frameworks, no host and a 37-file PCK without `main.tscn`, `main_native.tscn`, `ui/` or `native_hud/`, and the same options are refused for the copy that has the addon. Godot's scenes mode follows the references
+of scene files, not the `preload()` calls of scripts, so a selection names its scripts through the include filter (the scene alone exports 11 files). The default export is unchanged: the preset is byte for byte the old one,
+`npm run test:export:macos` passed 14 of 14 and `npm run test:export:civ-lite` 1 of 1 at the commit. **A capacity of the export, and no number in it is a result:** the arm's `.app` was not run and nothing was compared.
+The [record](https://github.com/journey-studios/godot-fabric/blob/ecf637e2a05f6b07fa3920edd61c1b4a43700305/docs/evidence/macos-export-options/README.md) is local evidence. No criterion changes state, and no 1.0 checkpoint,
+weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
