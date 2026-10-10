@@ -16,13 +16,18 @@ import { loadAverage, machine } from "./frontier-turn-lane.mjs";
 //
 //   node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane presented|unlimited [--windowed] [--assume-refresh-hz <n>] [--out <directory>]
 //
-// It provisions civ-lite with the harness (scripts/consumer-harness.mjs), builds the HUD with the editor, copies the scenario into the copy and runs a Godot process for each arm. It reads
-// the load before and after each process as a number, and hashes the binary, the package (the provisioned copy), the scenario and the protocol. It assembles a campaign with
+// It provisions civ-lite with the harness (scripts/consumer-harness.mjs), builds the HUD with the editor, copies the scenario into the copy with its entry (below) and runs a Godot process for
+// each arm. It reads the load before and after each process as a number, and hashes the binary, the package (the provisioned copy), the scenario and the protocol. It assembles a campaign with
 // `build: "debug"`, requires `campaignErrors` to pass and builds the analysis' report: every execution comes out rejected by `not-the-registered-build`, which is what a rehearsal must show.
+//
+// The entry (docs/research/frontier-comparison-execution.md, "The entry"): the scenario is the MAIN LOOP of the measurement project, never `-s`, because an export template discards `-s`. The copy gets
+// a two-line class that extends the scenario (the main loop's class), an empty main scene and an override.cfg that names both. override.cfg is read from the project folder with `--path` and, in an
+// exported .app, from the folder of the executable (or from the package): the Debug run and a Release run enter the same way, and the product's own project.godot is left as it is.
 
 const TEMPLATE = "civ-lite";
-const RUNNER = "res://comparison/frontier-comparison-scenario.gd";
 const PROJECT_DIRECTORY = "comparison";
+const OVERRIDE_FILE = "override.cfg";
+const ENTRY_CLASS = "FrontierComparisonEntry";
 export const PROTOCOL_FILE = path.join(root, "docs", "research", "frontier-comparison-protocol.json");
 // The files of the scenario, copied into the provisioned copy next to one another (the scenario preloads them by name), and the files the scenario uses that other lanes own.
 const SCENARIO_FILES = [
@@ -34,8 +39,15 @@ const SCENARIO_FILES = [
 ];
 const SUPPORT_FILES = ["tests/cpu-time-instrument.gd", "tests/performance-sampler.gd", "tests/window-presence.gd", "tests/world-input-driver.gd"];
 const INSTRUMENT_FILE = "tests/cpu-time-instrument.gd";
-// The game and the HUD are the template's; the scenario and its readings are not part of the package, which is the provisioned copy as the product ships it.
-const PACKAGE_EXCLUDED = new Set([".godot", PROJECT_DIRECTORY]);
+// The game and the HUD are the template's; the scenario, its entry and the measurement settings (override.cfg) are not part of the package, which is the provisioned copy as the product ships it.
+export const PACKAGE_EXCLUDED = new Set([".godot", PROJECT_DIRECTORY, OVERRIDE_FILE]);
+// What the runner writes into the copy, by path: the main loop's class (it extends the scenario by its relative name), the empty main scene and the settings that name both. Their text is here, so it
+// is in the hash of the scenario.
+export const MEASUREMENT_FILES = {
+  [`${PROJECT_DIRECTORY}/frontier-comparison-entry.gd`]: `class_name ${ENTRY_CLASS}\nextends "frontier-comparison-scenario.gd"\n`,
+  [`${PROJECT_DIRECTORY}/frontier-comparison-empty.tscn`]: `[gd_scene format=3]\n\n[node name="FrontierComparisonEmpty" type="Node"]\n`,
+  [OVERRIDE_FILE]: `config_version=5\n\n[application]\n\nrun/main_scene="res://${PROJECT_DIRECTORY}/frontier-comparison-empty.tscn"\nrun/main_loop_type="${ENTRY_CLASS}"\n`,
+};
 
 const fileSha256 = async (file) => sha256(await readFile(file));
 
@@ -54,7 +66,7 @@ export async function readCostsOf() {
 }
 
 // The files of a directory with their hashes, in path order, leaving out the top-level entries in `excluded`.
-async function digest(directory, excluded = new Set()) {
+export async function digest(directory, excluded = new Set()) {
   const lines = [];
   let bytes = 0;
   const walk = async (current, prefix) => {
@@ -79,8 +91,13 @@ async function digest(directory, excluded = new Set()) {
   return { sha256: sha256(lines.join("\n")), bytes, files: lines.length };
 }
 
-// A provisioned copy of the consumer with the HUD built and the scenario copied in. The package is the copy as provisioned and built; the script is the scenario's files and the support
-// files it uses, by path and hash; the binary is the engine's executable.
+// The script of an execution: the files it runs by path and hash (the scenario's, the support files it uses and what the runner writes into the copy), and one hash of them all.
+export function scriptsOf(files) {
+  return { files, sha256: sha256(Object.entries(files).map(([file, fileHash]) => `${file} ${fileHash}`).sort().join("\n")) };
+}
+
+// A provisioned copy of the consumer with the HUD built and the scenario copied in. The package is the copy as provisioned and built; the script is the scenario's files, the support
+// files it uses and the entry the runner writes, by path and hash; the binary is the engine's executable.
 export async function prepareProject({ name = "frontier-comparison-rehearsal" } = {}) {
   const harness = await createHarness({ template: TEMPLATE, name });
   await harness.provision();
@@ -93,10 +110,15 @@ export async function prepareProject({ name = "frontier-comparison-rehearsal" } 
     await copyFile(path.join(root, file), path.join(directory, path.basename(file)));
     files[file] = await fileSha256(path.join(root, file));
   }
-  const scripted = Object.entries(files).map(([file, fileHash]) => `${file} ${fileHash}`).sort();
+  for (const [file, content] of Object.entries(MEASUREMENT_FILES)) {
+    await writeFile(path.join(harness.project, file), content);
+    files[file] = sha256(content);
+  }
+  // The main loop's class is a global class, and the editor run above did not see it: the import refreshes the project's cache of them (`.godot/global_script_class_cache.cfg`).
+  await harness.run("import", harness.godot, ["--path", harness.project, "--headless", "--import"]);
   return {
     harness,
-    scripts: { files, sha256: sha256(scripted.join("\n")) },
+    scripts: scriptsOf(files),
     package: packageDigest,
     binarySha256: await fileSha256(harness.godot),
     instrumentSha256: files[INSTRUMENT_FILE],
@@ -120,6 +142,15 @@ export function processOf(result, log) {
   };
 }
 
+// What follows the executable in a process of the scenario, the same for every launcher: the scenario enters as the project's main loop, so there is no `-s`, the user arguments come after `--`,
+// and `--out` is absolute (an exported .app runs with the Resources folder of its bundle as the working directory).
+export function scenarioArguments({ arm, lane, windowed = false, out }) {
+  if (!path.isAbsolute(out)) {
+    throw new Error(`--out must be an absolute path: ${out}`);
+  }
+  return [windowed ? "--windowed" : "--headless", "--", `--arm=${arm}`, `--lane=${lane}`, `--out=${out}`];
+}
+
 // One Godot process: the scenario in an arm. Returns where the scenario's report is (if it wrote one), the log, how the process ended and the load around it.
 export function launchScenario({ prepared, arm, lane, windowed = false, timeout = 1800000 }) {
   const { harness } = prepared;
@@ -128,12 +159,12 @@ export function launchScenario({ prepared, arm, lane, windowed = false, timeout 
   rmSync(reportFile, { force: true });
   const before = loadNumber(loadAverage());
   const started = Date.now();
-  const result = spawnSync(harness.godot, ["--path", harness.project, windowed ? "--windowed" : "--headless", "-s", RUNNER, "--", `--arm=${arm}`, `--lane=${lane}`, `--out=${reportFile}`],
-    { env: harness.env, encoding: "utf8", timeout, maxBuffer: 256 * 1024 * 1024 });
+  const args = ["--path", harness.project, ...scenarioArguments({ arm, lane, windowed, out: reportFile })];
+  const result = spawnSync(harness.godot, args, { env: harness.env, encoding: "utf8", timeout, maxBuffer: 256 * 1024 * 1024 });
   const after = loadNumber(loadAverage());
   const log = (result.stdout ?? "") + (result.stderr ?? "");
   writeFileSync(path.join(harness.directory, `${label}.log`), log);
-  return { label, reportFile, log, result, process: processOf(result, log), load: { before, after }, seconds: Math.round((Date.now() - started) / 100) / 10, windowed };
+  return { label, reportFile, args, log, result, process: processOf(result, log), load: { before, after }, seconds: Math.round((Date.now() - started) / 100) / 10, windowed };
 }
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));

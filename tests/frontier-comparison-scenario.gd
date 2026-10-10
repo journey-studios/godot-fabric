@@ -3,7 +3,10 @@ extends SceneTree
 # The scenario of one execution of the final comparison (V05-10, criterion `execucao`): the script of docs/research/frontier-comparison-protocol.json (`runs.script`) played once,
 # in one Godot process, in any of the three arms, with the one CPU-time instrument (tests/cpu-time-instrument.gd) running through all of it.
 #
-#   godot --path <project> [--headless|--windowed] -s res://comparison/frontier-comparison-scenario.gd -- --arm=A|B|C --lane=presented|unlimited --out=<file>
+#   godot --path <project> [--headless|--windowed] -- --arm=A|B|C --lane=presented|unlimited --out=<absolute file>
+#
+# No `-s`: this script is the project's main loop (`application/run/main_loop_type` = FrontierComparisonEntry, set by the runner in override.cfg), the way a Release export runs it, where
+# `-s` is discarded (docs/research/frontier-comparison-execution.md, "The entry").
 #
 # The script, step by step (docs/research/frontier-comparison-execution.md has the rule of the protocol for each):
 #   boot              instantiates the arm's scene; in the unlimited lane asks for the vsync DISABLED and reads it back; in B and C measures the time to the interactive HUD
@@ -31,6 +34,7 @@ const Replay := preload("res://game/replay.gd")
 const Rules := preload("res://game/rules.gd")
 
 const FORMAT := "godot-fabric.frontier-comparison-scenario/v1"
+const EMPTY_SCENE := "res://comparison/frontier-comparison-empty.tscn"
 const LANES := ["presented", "unlimited"]
 const IDLE_FRAMES := 600
 const DRAIN_FRAMES := 12
@@ -106,6 +110,7 @@ func _initialize() -> void:
     elif argument.begins_with("--out="):
       out_path = argument.get_slice("=", 1)
   windowed = DisplayServer.get_name() != "headless"
+  drop_empty_scene()
   if not Hud.is_arm(arm) or not LANES.has(lane) or out_path == "":
     push_error("FABRIC_ERROR: use -- --arm=A|B|C --lane=presented|unlimited --out=<file>")
     quit(2)
@@ -121,6 +126,14 @@ func _initialize() -> void:
   services = hud.services
   services.turn_ended.connect(_on_turn_ended)
   call_deferred("run")
+
+
+# As the main loop the engine adds the project's main scene (an empty node) before `_initialize`; it is freed here, so that `scene-nodes` counts the tree that the `-s` entry had.
+func drop_empty_scene() -> void:
+  var scene := current_scene
+  if scene != null and scene.scene_file_path == EMPTY_SCENE:
+    root.remove_child(scene)
+    scene.free()
 
 
 # The handler of `turn_ended`: the count of the notification and the record of the frame that delivered it, in every arm.
@@ -563,8 +576,11 @@ func frame_columns(samples: Dictionary) -> Dictionary:
 
 
 func write_report(samples: Dictionary, readings: Dictionary, application_errors: int) -> void:
+  var provenance := Readings.provenance(windowed)
+  var entry: Script = get_script()
+  provenance["mainLoop"] = String(entry.get_global_name())
   var report := {"format": FORMAT, "arm": arm, "lane": lane, "scene": Hud.SCENES[arm], "seed": int(Rules.SEED), "windowed": windowed,
-    "provenance": Readings.provenance(windowed), "vsync": {"requested": vsync_requested, "mode": Readings.vsync_name(), "refreshHz": DisplayServer.screen_get_refresh_rate()},
+    "provenance": provenance, "vsync": {"requested": vsync_requested, "mode": Readings.vsync_name(), "refreshHz": DisplayServer.screen_get_refresh_rate()},
     "config": {"idleFrames": IDLE_FRAMES, "drainFrames": DRAIN_FRAMES, "turns": TURNS, "settleFrames": SETTLE_FRAMES, "switches": [Cycle.WARMUP_SWITCHES, Cycle.MEASURED_SWITCHES],
       "switchesPerRound": Cycle.SWITCHES_PER_ROUND, "latency": [LATENCY_WARMUP, LATENCY_MEASURED], "stress": [STRESS_WARMUP, STRESS_MEASURED],
       "renderReadingLagDraws": Instrument.RENDER_READING_LAG_DRAWS, "waits": {"burstMinimumFrames": BURST_MINIMUM_FRAMES, "switchFrames": SWITCH_FRAMES,

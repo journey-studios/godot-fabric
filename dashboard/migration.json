@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T15:48:00.000Z",
+  "updatedAt": "2026-10-10T16:09:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4805,6 +4805,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-entry-bb30d75",
+      "at": "2026-10-10T16:09:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit da7eff5, registro no bb30d75): o roteiro da execução comparativa deixa de rodar com -s e passa a ser o main loop do projeto de medição (a cópia provisionada do civ-lite). Um template de export oficial descarta o -s em silêncio (Godot 4.7.2-stable, main.cpp 4322-4333; --path, --main-pack e --scene abortam), então a campanha Release não poderia usar a entrada das partes 1 e 2. A entrada nova são três arquivos que o executor escreve na cópia: uma classe de duas linhas (FrontierComparisonEntry, que estende o roteiro), uma cena principal vazia e um override.cfg com run/main_scene e run/main_loop_type. Os textos entram no hash do roteiro; o override.cfg sai do hash do pacote, e o project.godot do produto não muda. Pelo project_settings.cpp o override.cfg é lido com --path (a pasta do projeto) e num .app exportado (a pasta do executável, Contents/MacOS/, e o pacote). O roteiro libera a cena vazia no _initialize, para scene-nodes contar a mesma árvore (sem isso o braço A lê 5 nós em vez de 4). O lançador roda godot --path <cópia> --headless|--windowed -- --arm=… --lane=… --out=<caminho absoluto> por uma função pura (scenarioArguments), que o lançador Release vai reaproveitar, e o lançador Debug passa timedOut adiante. É um ensaio de entrada, Debug e headless: nos três braços, pela entrada nova e pelo -s de controle, as contagens e os hashes são os mesmos (scene-nodes 4, 31 e 30; hash do replay cb7ab974… e do soak 0b21c332…; as janelas, a paridade e as notificações), e também os do último ensaio por -s; os tempos não se comparam. Uma sonda de rascunho no template Release oficial (binário apagado; método e hashes em template-probe.txt) mostrou o template tirando o main loop de um Contents/MacOS/override.cfg e descartando o -s. O lançador Release continua recusando, agora dizendo que a entrada está definida e que falta o export do civ-lite nos três braços; o tamanho do pacote nos braços A e B e o autoteste do instrumento num template são itens abertos. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/bb30d75364f4edf50b05ef1710b70c662da9dbdd/docs/evidence/frontier-comparison-entry/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-9-f832739",
       "at": "2026-10-10T15:48:00.000Z",
