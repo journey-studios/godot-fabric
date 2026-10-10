@@ -428,6 +428,14 @@ The icons add native views to every context (three in the bar, then those of the
 `tile` 18 → 21, `warrior` 24 → 30, `stack` 26 → 33, `settler` 27 → 34, `dialog` 28 → 31 and `city` 47 → 55 (the eight of the city are the three of the bar and the five icons inside the
 Modal). The lane judges a context against itself and passes, and whoever runs it again re-records the tables.
 
+### The frame time of the turn after the icons
+
+The windowed turn lane measured the seven frames of a turn at 94.7 ms after the icons against 54.9 ms before them (slot 4's A/B, from `fb51c07` to `916387e`), and the icons were not what slowed them. The host loads nothing per snapshot (a turn asks the image loader for 0 pictures and fires no `onLoadStart`,
+`onLoad` or `onLoadEnd`; a picture is loaded when an `Image` is mounted, never when it is re-rendered or moved) and the HUD's own part of each frame is the same with and without icons. What grew was the turn probe's own reading: it read the Surface's snapshot twice in every timed frame, and that
+snapshot carries the whole application's status, the image loader's log among it (`images.jobs`, one record per `Image` ever mounted, up to 256), which the HUD without icons never filled. A read was 26 KB and 2.6 ms of a frame without icons and 105 KB to 145 KB and 7 ms or more with them, and the sum of a turn's frames rose with the log, from
+51.6 ms in the first round to about 90 ms when it was full. The timed frames now read the Controls and the snapshot is read at rest and once at each arrival (`observation`, in `tests/frontier-turn-oracle.mjs`), with `observed-in-frames` as the retained sabotage. The HUD is unchanged; the measurements, the
+control and the windowed A/B are in [the evidence](../evidence/civ-lite-ui/README.md#correção-do-tempo-de-quadro-regressão-do-100), and `docs/research/frontier-turn.md` has the lane's rules.
+
 ### Limits
 
 - Local macOS arm64; the hosted run of this slice exists only after it is on main. Hosted CI runs the lane headless, without controls (a shallow clone), captures or sabotages.

@@ -14,7 +14,9 @@ import {createTurnLane, machine, loadAverage} from "./frontier-turn-lane.mjs";
 // the intervals between consecutive process frames in an idle window, in the frames that took a click and in every frame of a turn (the phases of the sliced
 // AI), the vsync mode and refresh rate read back from the window, the load of the system before and after every run, and one capture per context. The receipt
 // keeps every raw interval, so that the percentiles are recomputed from the data and nothing is discarded; the statistics across runs are the median and the
-// interquartile range of each run's.
+// interquartile range of each run's. No interval contains a read of the Surface's snapshot (the probe reads the Controls in the timed frames, and the oracle refuses a run
+// in which it did not): the snapshot carries the whole application's status, so a read costs what the application has accumulated and not what the game does in the frame.
+// The receipt keeps what a read weighed at the start of every round, which is why.
 //
 // A frame time exists only if a display presents the window, and the rule is the baseline's, imported and not copied (tests/frontier-baseline-oracle.mjs): a run
 // is a measurement only if the window drew throughout AND its idle reference (the median of the half-sums of consecutive pairs of its idle intervals) is at least half of
@@ -123,7 +125,9 @@ try {
       record.drawUsec, record.frameUsec])),
     turns: report.stages.rounds.flatMap(row => row.steps.filter(record => record.kind === "turn").map(record => [record.round, record.id,
       record.turn.frames.map(frame => [frame.phase, frame.usec, frame.nodes, frame.snapshots, frame.turnEnded]),
-      [record.turn.host.pumpMs, record.turn.host.jsMs, record.turn.host.mountMs, record.turn.host.layoutMs]]))});
+      [record.turn.host.pumpMs, record.turn.host.jsMs, record.turn.host.mountMs, record.turn.host.layoutMs]])),
+    observation: {readsInTimedFrames: report.stages.rounds.flatMap(row => row.steps).reduce((total, record) => total + record.frameReads.reduce((sum, reads) => sum + reads, 0), 0),
+      snapshotBytesAtRoundStart: report.stages.rounds.map(row => row.start.surface.bytes), loaderRecordsAtRoundStart: report.stages.rounds.map(row => row.start.surface.loaderRecords)}});
   const raw = reports.map(rawOf);
   const rejectedAttempts = attempts.filter(each => each.raw !== undefined).map(each => ({...each, raw: rawOf(each.raw)}));
   const receipt = {format: "godot-fabric.frontier-turn-graphics/v1", scenario: "frontier-turn-graphics", godot: first.godot, presented,

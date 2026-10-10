@@ -1,0 +1,792 @@
+{
+ "format": "godot-fabric.civ-lite-ui-frame-time-ab/v1",
+ "how": "caffeinate -d node scripts/frontier-turn-graphics.mjs, 5 presented runs per arm, one arm after the other on the same Mac (macOS, 120 Hz, vsync on), 2026-10-10 from 03:50 to 04:35 UTC; the receipts are the lane's own, re-serialized compact without changing their data, and the machine was loaded by other work all along (the load averages before each run are in the arms). The windows and the statistics are computed by the freeze's own code (scripts/frontier-freeze-receipts.mjs of origin/main at 561251d, #107: extractTurnRun, turnBusySums, turnPhaseValues; nearestRank and quartiles of tests/performance-oracle.mjs) from the raw intervals of the receipts, in integer microseconds: ai-phase = the turn's first 6 busy frames (from the one that accepts End Turn to the last before the one that delivers turn_ended), event-burst = the last busy frame (which delivers turn_ended) and the frames after it that the turn records; 120 steady turns a run (the 2 warm-up rounds left out). A statistic of a run is by nearest rank over its pooled intervals; across the 5 runs it is the median and the interquartile range (nearest-rank quartiles of five).",
+ "arms": [
+  {
+   "arm": "main",
+   "receipt": "windowed-main.json",
+   "what": "The lane of 0b9fbbf (the probe read the Surface snapshot in every timed frame) on the HUD of #100, with icons",
+   "presented": true,
+   "status": "presented",
+   "attempts": 5,
+   "accepted": 5,
+   "vsync": "enabled",
+   "refreshRateHz": 120,
+   "idleReferenceMsPerRun": [
+    8.33,
+    8.326,
+    8.333,
+    8.34,
+    8.33
+   ],
+   "undrawableFramesPerRun": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "loadAverageBeforeEachRun": [
+    "{ 6.48 6.75 7.21 }",
+    "{ 7.75 6.99 7.22 }",
+    "{ 7.02 7.12 7.25 }",
+    "{ 6.02 6.69 7.05 }",
+    "{ 8.70 6.90 7.04 }"
+   ],
+   "secondsPerRun": [
+    137,
+    137.1,
+    136.7,
+    136.9,
+    136.2
+   ],
+   "sumOfTheSevenFramesMs": {
+    "p50PerRun": [
+     92.189,
+     92.295,
+     92.127,
+     91.506,
+     92.349
+    ],
+    "acrossRuns": {
+     "median": 92.189,
+     "q1": 92.127,
+     "q3": 92.295,
+     "iqr": 0.168,
+     "min": 91.506,
+     "max": 92.349
+    }
+   },
+   "byPhaseP50AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 7.421,
+     "iqr": 0.793
+    },
+    {
+     "phase": "ai_move",
+     "median": 13.721,
+     "iqr": 0.071
+    },
+    {
+     "phase": "production",
+     "median": 13.903,
+     "iqr": 0.047
+    },
+    {
+     "phase": "growth",
+     "median": 13.81,
+     "iqr": 0.04
+    },
+    {
+     "phase": "research",
+     "median": 13.728,
+     "iqr": 0.046
+    },
+    {
+     "phase": "refresh",
+     "median": 13.771,
+     "iqr": 0.071
+    },
+    {
+     "phase": "idle",
+     "median": 13.838,
+     "iqr": 0.062
+    }
+   ],
+   "byPhaseP95AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 9.351
+    },
+    {
+     "phase": "ai_move",
+     "median": 16.631
+    },
+    {
+     "phase": "production",
+     "median": 16.82
+    },
+    {
+     "phase": "growth",
+     "median": 16.684
+    },
+    {
+     "phase": "research",
+     "median": 16.744
+    },
+    {
+     "phase": "refresh",
+     "median": 16.695
+    },
+    {
+     "phase": "idle",
+     "median": 16.618
+    }
+   ],
+   "windows": {
+    "ai-phase": {
+     "framesPerRun": 720,
+     "p50PerRun": [
+      13.639,
+      13.734,
+      13.662,
+      13.677,
+      13.711
+     ],
+     "p95PerRun": [
+      16.664,
+      16.817,
+      16.593,
+      16.608,
+      16.716
+     ],
+     "p95AcrossRuns": {
+      "median": 16.664,
+      "q1": 16.608,
+      "q3": 16.716,
+      "iqr": 0.108,
+      "min": 16.593,
+      "max": 16.817
+     }
+    },
+    "event-burst": {
+     "framesPerRun": 240,
+     "p50PerRun": [
+      13.873,
+      13.855,
+      13.792,
+      13.805,
+      13.803
+     ],
+     "p95PerRun": [
+      16.863,
+      17.05,
+      16.875,
+      16.886,
+      17.053
+     ],
+     "p95AcrossRuns": {
+      "median": 16.886,
+      "q1": 16.875,
+      "q3": 17.05,
+      "iqr": 0.175,
+      "min": 16.863,
+      "max": 17.053
+     }
+    }
+   },
+   "readsOfTheSnapshotInTimedFrames": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "snapshotBytesAtTheFirstAndLastRound": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  },
+  {
+   "arm": "fix",
+   "receipt": "windowed-fix.json",
+   "what": "The corrected lane (the probe reads the Controls in the timed frames) on the HUD of #100, with icons",
+   "presented": true,
+   "status": "presented",
+   "attempts": 5,
+   "accepted": 5,
+   "vsync": "enabled",
+   "refreshRateHz": 120,
+   "idleReferenceMsPerRun": [
+    8.331,
+    8.336,
+    8.336,
+    8.327,
+    8.324
+   ],
+   "undrawableFramesPerRun": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "loadAverageBeforeEachRun": [
+    "{ 4.97 5.90 6.58 }",
+    "{ 6.90 6.25 6.62 }",
+    "{ 11.49 7.67 7.10 }",
+    "{ 10.06 8.87 7.69 }",
+    "{ 6.40 7.84 7.43 }"
+   ],
+   "secondsPerRun": [
+    128.5,
+    128.7,
+    131.2,
+    128.7,
+    127.9
+   ],
+   "sumOfTheSevenFramesMs": {
+    "p50PerRun": [
+     52.749,
+     53.796,
+     53.783,
+     53.397,
+     53.172
+    ],
+    "acrossRuns": {
+     "median": 53.397,
+     "q1": 53.172,
+     "q3": 53.783,
+     "iqr": 0.611,
+     "min": 52.749,
+     "max": 53.796
+    }
+   },
+   "byPhaseP50AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 2.146,
+     "iqr": 0.042
+    },
+    {
+     "phase": "ai_move",
+     "median": 11.9,
+     "iqr": 5.806
+    },
+    {
+     "phase": "production",
+     "median": 4.401,
+     "iqr": 8.984
+    },
+    {
+     "phase": "growth",
+     "median": 12.409,
+     "iqr": 8.673
+    },
+    {
+     "phase": "research",
+     "median": 4.158,
+     "iqr": 8.747
+    },
+    {
+     "phase": "refresh",
+     "median": 12.582,
+     "iqr": 8.499
+    },
+    {
+     "phase": "idle",
+     "median": 3.914,
+     "iqr": 8.685
+    }
+   ],
+   "byPhaseP95AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 4.195
+    },
+    {
+     "phase": "ai_move",
+     "median": 13.924
+    },
+    {
+     "phase": "production",
+     "median": 13.857
+    },
+    {
+     "phase": "growth",
+     "median": 13.571
+    },
+    {
+     "phase": "research",
+     "median": 13.532
+    },
+    {
+     "phase": "refresh",
+     "median": 13.576
+    },
+    {
+     "phase": "idle",
+     "median": 13.525
+    }
+   ],
+   "windows": {
+    "ai-phase": {
+     "framesPerRun": 720,
+     "p50PerRun": [
+      4.158,
+      4.452,
+      4.886,
+      4.627,
+      4.478
+     ],
+     "p95PerRun": [
+      13.632,
+      13.714,
+      13.664,
+      13.631,
+      13.684
+     ],
+     "p95AcrossRuns": {
+      "median": 13.664,
+      "q1": 13.632,
+      "q3": 13.684,
+      "iqr": 0.052,
+      "min": 13.631,
+      "max": 13.714
+     }
+    },
+    "event-burst": {
+     "framesPerRun": 240,
+     "p50PerRun": [
+      7.21,
+      7.03,
+      6.897,
+      7.309,
+      7.602
+     ],
+     "p95PerRun": [
+      13.569,
+      13.515,
+      13.448,
+      13.519,
+      13.634
+     ],
+     "p95AcrossRuns": {
+      "median": 13.519,
+      "q1": 13.515,
+      "q3": 13.569,
+      "iqr": 0.054,
+      "min": 13.448,
+      "max": 13.634
+     }
+    }
+   },
+   "readsOfTheSnapshotInTimedFrames": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "snapshotBytesAtTheFirstAndLastRound": [
+    [
+     31867,
+     144713
+    ],
+    [
+     31865,
+     144703
+    ],
+    [
+     31866,
+     144711
+    ],
+    [
+     31865,
+     144710
+    ],
+    [
+     31880,
+     144715
+    ]
+   ]
+  },
+  {
+   "arm": "previous-hud-fixed-probe",
+   "receipt": "windowed-previous-hud-fixed-probe.json",
+   "what": "The corrected lane on the HUD of fb51c07 (the one of 1bc3a3c, no icons)",
+   "presented": true,
+   "status": "presented",
+   "attempts": 5,
+   "accepted": 5,
+   "vsync": "enabled",
+   "refreshRateHz": 120,
+   "idleReferenceMsPerRun": [
+    8.36,
+    8.331,
+    8.338,
+    8.336,
+    8.34
+   ],
+   "undrawableFramesPerRun": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "loadAverageBeforeEachRun": [
+    "{ 5.70 7.20 7.27 }",
+    "{ 7.40 8.16 7.69 }",
+    "{ 8.96 8.47 7.88 }",
+    "{ 10.45 9.82 8.53 }",
+    "{ 12.71 10.15 8.79 }"
+   ],
+   "secondsPerRun": [
+    119.8,
+    119.9,
+    119.2,
+    119.4,
+    119.6
+   ],
+   "sumOfTheSevenFramesMs": {
+    "p50PerRun": [
+     55.343,
+     56.355,
+     60.568,
+     55.626,
+     60.376
+    ],
+    "acrossRuns": {
+     "median": 56.355,
+     "q1": 55.626,
+     "q3": 60.376,
+     "iqr": 4.75,
+     "min": 55.343,
+     "max": 60.568
+    }
+   },
+   "byPhaseP50AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 3.888,
+     "iqr": 7.034
+    },
+    {
+     "phase": "ai_move",
+     "median": 5.944,
+     "iqr": 0.973
+    },
+    {
+     "phase": "production",
+     "median": 7.215,
+     "iqr": 5.486
+    },
+    {
+     "phase": "growth",
+     "median": 5.811,
+     "iqr": 1.97
+    },
+    {
+     "phase": "research",
+     "median": 12.245,
+     "iqr": 1.281
+    },
+    {
+     "phase": "refresh",
+     "median": 5.074,
+     "iqr": 1.363
+    },
+    {
+     "phase": "idle",
+     "median": 12.187,
+     "iqr": 0.796
+    }
+   ],
+   "byPhaseP95AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 11.878
+    },
+    {
+     "phase": "ai_move",
+     "median": 14.609
+    },
+    {
+     "phase": "production",
+     "median": 14.362
+    },
+    {
+     "phase": "growth",
+     "median": 14.488
+    },
+    {
+     "phase": "research",
+     "median": 14.526
+    },
+    {
+     "phase": "refresh",
+     "median": 13.916
+    },
+    {
+     "phase": "idle",
+     "median": 14.433
+    }
+   ],
+   "windows": {
+    "ai-phase": {
+     "framesPerRun": 720,
+     "p50PerRun": [
+      6.02,
+      6.014,
+      6.058,
+      5.93,
+      5.905
+     ],
+     "p95PerRun": [
+      14.548,
+      14.441,
+      13.701,
+      14.526,
+      14.36
+     ],
+     "p95AcrossRuns": {
+      "median": 14.441,
+      "q1": 14.36,
+      "q3": 14.526,
+      "iqr": 0.166,
+      "min": 13.701,
+      "max": 14.548
+     }
+    },
+    "event-burst": {
+     "framesPerRun": 240,
+     "p50PerRun": [
+      7.594,
+      7.609,
+      7.564,
+      7.327,
+      7.603
+     ],
+     "p95PerRun": [
+      14.423,
+      14.379,
+      13.569,
+      14.433,
+      14.131
+     ],
+     "p95AcrossRuns": {
+      "median": 14.379,
+      "q1": 14.131,
+      "q3": 14.423,
+      "iqr": 0.292,
+      "min": 13.569,
+      "max": 14.433
+     }
+    }
+   },
+   "readsOfTheSnapshotInTimedFrames": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "snapshotBytesAtTheFirstAndLastRound": [
+    [
+     24055,
+     24136
+    ],
+    [
+     24039,
+     24135
+    ],
+    [
+     24035,
+     24135
+    ],
+    [
+     24046,
+     24142
+    ],
+    [
+     24043,
+     24141
+    ]
+   ]
+  },
+  {
+   "arm": "previous-hud-old-probe",
+   "receipt": "windowed-previous-hud-old-probe.json",
+   "what": "The lane of 0b9fbbf on the HUD of fb51c07 (the one of 1bc3a3c, no icons): the arrangement of the freeze's runs",
+   "presented": true,
+   "status": "presented",
+   "attempts": 5,
+   "accepted": 5,
+   "vsync": "enabled",
+   "refreshRateHz": 120,
+   "idleReferenceMsPerRun": [
+    8.34,
+    8.339,
+    8.333,
+    8.338,
+    8.338
+   ],
+   "undrawableFramesPerRun": [
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "loadAverageBeforeEachRun": [
+    "{ 10.46 10.07 8.96 }",
+    "{ 5.78 8.71 8.59 }",
+    "{ 6.25 7.77 8.22 }",
+    "{ 6.50 7.50 8.06 }",
+    "{ 7.20 7.36 7.92 }"
+   ],
+   "secondsPerRun": [
+    121.3,
+    120.8,
+    120.7,
+    120.6,
+    119.4
+   ],
+   "sumOfTheSevenFramesMs": {
+    "p50PerRun": [
+     55.836,
+     56.637,
+     55.131,
+     55.657,
+     54.454
+    ],
+    "acrossRuns": {
+     "median": 55.657,
+     "q1": 55.131,
+     "q3": 55.836,
+     "iqr": 0.705,
+     "min": 54.454,
+     "max": 56.637
+    }
+   },
+   "byPhaseP50AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 4.465,
+     "iqr": 0.128
+    },
+    {
+     "phase": "ai_move",
+     "median": 7.991,
+     "iqr": 0.35
+    },
+    {
+     "phase": "production",
+     "median": 7.776,
+     "iqr": 0.202
+    },
+    {
+     "phase": "growth",
+     "median": 7.56,
+     "iqr": 0.25
+    },
+    {
+     "phase": "research",
+     "median": 7.734,
+     "iqr": 0.103
+    },
+    {
+     "phase": "refresh",
+     "median": 7.435,
+     "iqr": 0.248
+    },
+    {
+     "phase": "idle",
+     "median": 7.265,
+     "iqr": 0.357
+    }
+   ],
+   "byPhaseP95AcrossRunsMs": [
+    {
+     "phase": "ai_plan",
+     "median": 11.636
+    },
+    {
+     "phase": "ai_move",
+     "median": 10.609
+    },
+    {
+     "phase": "production",
+     "median": 10.37
+    },
+    {
+     "phase": "growth",
+     "median": 14.625
+    },
+    {
+     "phase": "research",
+     "median": 14.836
+    },
+    {
+     "phase": "refresh",
+     "median": 14.93
+    },
+    {
+     "phase": "idle",
+     "median": 14.876
+    }
+   ],
+   "windows": {
+    "ai-phase": {
+     "framesPerRun": 720,
+     "p50PerRun": [
+      7.596,
+      7.649,
+      7.375,
+      7.524,
+      7.288
+     ],
+     "p95PerRun": [
+      14.65,
+      14.822,
+      14.663,
+      14.718,
+      14.594
+     ],
+     "p95AcrossRuns": {
+      "median": 14.663,
+      "q1": 14.65,
+      "q3": 14.718,
+      "iqr": 0.068,
+      "min": 14.594,
+      "max": 14.822
+     }
+    },
+    "event-burst": {
+     "framesPerRun": 240,
+     "p50PerRun": [
+      7.701,
+      7.311,
+      7.503,
+      7.498,
+      7.777
+     ],
+     "p95PerRun": [
+      14.778,
+      14.884,
+      14.817,
+      14.923,
+      14.844
+     ],
+     "p95AcrossRuns": {
+      "median": 14.844,
+      "q1": 14.817,
+      "q3": 14.884,
+      "iqr": 0.067,
+      "min": 14.778,
+      "max": 14.923
+     }
+    }
+   },
+   "readsOfTheSnapshotInTimedFrames": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "snapshotBytesAtTheFirstAndLastRound": [
+    null,
+    null,
+    null,
+    null,
+    null
+   ]
+  }
+ ]
+}

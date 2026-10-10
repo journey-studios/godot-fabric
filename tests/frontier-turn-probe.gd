@@ -187,12 +187,55 @@ func hud_stats() -> Dictionary:
   return out
 
 # ------------------------------------------------------------------------------------------------ what the HUD mounted
+# The Surface's snapshot is the whole application's status as well as the HUD's nodes: the loader's log of every image it loaded (one record for each Image that was ever
+# mounted, up to 256), the counters, the pointer, the services. Reading it costs what the application has accumulated and not what the HUD shows (it was 26 KB before the HUD
+# had icons and 105 KB to 150 KB after, which two reads in each timed frame turned into 4.6 ms of each frame of the turn: docs/evidence/civ-lite-ui/README.md), so it is read
+# at rest only. `surface_reads` counts every read, and the frames that are timed carry how many were made inside them: none (the `observation` rule of the oracle).
+var surface_reads := 0
+
+func surface_read() -> Dictionary:
+  surface_reads += 1
+  var text: String = hud.call("snapshot")
+  return {"state": Sampler.parsed(text), "bytes": text.length()}
+
+func surface() -> Dictionary:
+  return surface_read().state
+
+# What a timed frame reads instead: the Controls themselves. The host names every Control by its testID (native/application_runtime.cpp, `set_name`) and every testID of the HUD
+# begins with `hud-`; a Modal's Controls are children of its Window, which is in the SceneTree. One walk of the tree costs the tree and not the application's history. The Controls
+# that count are live ones: in the tree and not queued to be freed (the test `mounted()` makes of the snapshot's).
+func live_views() -> Dictionary:
+  var out := {}
+  for view: Node in get_tree().root.find_children("hud-*", "Control", true, false):
+    if view.is_inside_tree() and not view.is_queued_for_deletion():
+      out[str(view.name)] = true
+  return out
+
+# The one reading of the HUD that a timed frame makes: both what it asks for the arrival of a click and what it records of the spinner come through here.
+func timed_view() -> Dictionary:
+  return live_views()
+
+# The HUD shows a context, as `shows_in` says it of a full reading: exactly its panels and only its own marker.
+func shows_light(context: String, live: Dictionary) -> bool:
+  var expected: Array = TABLE[context]
+  for id: String in PANELS:
+    if live.has(id) != expected.has(id):
+      return false
+  for other: String in MARKERS.keys():
+    if live.has(MARKERS[other]) != (other == context):
+      return false
+  return true
+
+# The step that opens an event shows the choice at the head of the queue (`head_shown`, from the Controls).
+func head_light(step: Dictionary, live: Dictionary) -> bool:
+  return not step.has("head") or live.has("hud-dialog-choice-" + str(step.head))
+
 # What the HUD holds, by testID, as the host reports it in the Surface's snapshot: the Control of each and the text the host drew in it. A Modal's Controls are children
 # of the Modal's own Window, which `hud.find_child` does not reach, so the Controls are resolved from the snapshot's instance ids (consumers/civ-lite/hud_probe.gd does the
-# same). One read of the snapshot serves every question a frame asks.
+# same). One read of the snapshot serves every question a rest asks.
 func mounted() -> Dictionary:
   var out := {}
-  for entry: Dictionary in Sampler.surface_state(hud).get("nodes", []):
+  for entry: Dictionary in surface().get("nodes", []):
     var test_id := str(entry.get("testID", ""))
     if test_id == "":
       continue
@@ -332,10 +375,14 @@ func click_at(point: Vector2) -> void:
     get_viewport().push_input(event, true)
 
 # ------------------------------------------------------------------------------------------------ readings at rest
-func row_of(state: Dictionary) -> Dictionary:
+# What the Surface's snapshot weighs when it is read: its bytes and the records the loader's log holds in it, which grow with every Image the HUD mounts and are why the
+# snapshot must not be read in a timed frame.
+func row_of(state: Dictionary, bytes: int = -1) -> Dictionary:
   var nodes: Array = state.get("nodes", [])
+  var images: Dictionary = state.get("images", {})
   return {"state": str(state.get("state", "")), "nativeTags": Sampler.number(state.get("nativeTags")), "creates": Sampler.number(state.get("creates")),
-    "deletes": Sampler.number(state.get("deletes")), "commits": Sampler.number(state.get("commits")), "nodes": nodes.size()}
+    "deletes": Sampler.number(state.get("deletes")), "commits": Sampler.number(state.get("commits")), "nodes": nodes.size(), "bytes": bytes,
+    "loaderRecords": images.get("jobs", []).size(), "loaderRequests": Sampler.number(images.get("counters", {}).get("requested"), 0.0)}
 
 # The panels and markers that the Surface's snapshot lists, by testID: what the HUD holds, read apart from the tree of Controls.
 func ids_of(state: Dictionary) -> Dictionary:
@@ -348,10 +395,11 @@ func ids_of(state: Dictionary) -> Dictionary:
 
 # In the windowed lane the HUD is only counted, not weighed: the Surface's snapshot and what the game says.
 func light_rest() -> Dictionary:
-  var state := Sampler.surface_state(hud)
+  var read := surface_read()
+  var state: Dictionary = read.state
   var ids := ids_of(state)
   var snapshot: Dictionary = services.game.snapshot()
-  return {"surface": row_of(state), "panels": PANELS.filter(func(id: String) -> bool: return ids.has(id)),
+  return {"surface": row_of(state, int(read.bytes)), "panels": PANELS.filter(func(id: String) -> bool: return ids.has(id)),
     "markers": MARKERS.keys().filter(func(context: String) -> bool: return ids.has(MARKERS[context])),
     "context": str(snapshot.context), "turn": int(snapshot.turn), "phase": str(snapshot.phase)}
 
@@ -380,20 +428,28 @@ func first_after(moment: int) -> int:
 
 # The End turn of a step is accepted at once and the game goes on, one phase per frame: the click is over when the job has finished, the game
 # is at rest and the HUD shows the context the turn leaves it in (and no spinner).
-func turn_over(step: Dictionary, calls_before: int, seen: Dictionary) -> bool:
+func turn_over(step: Dictionary, calls_before: int, live: Dictionary) -> bool:
+  return (int(services.callbacks.get("end_turn", 0)) > calls_before and int(services.job) == 0 and phase_now() == "idle"
+    and not live.has("hud-turn-spinner") and shows_light(step.to, live) and head_light(step, live))
+
+# The same, from a full reading of the Surface: asked once, at the arrival, outside the timed frames.
+func turn_over_full(step: Dictionary, calls_before: int, seen: Dictionary) -> bool:
   return (int(services.callbacks.get("end_turn", 0)) > calls_before and int(services.job) == 0 and phase_now() == "idle"
     and not seen.has("hud-turn-spinner") and shows_in(seen, step.to) and head_shown(step, seen))
 
+# Whether the HUD shows what the click leads to, read from the Controls and not from the snapshot (this is asked in every timed frame). The full reading of the arrival is taken
+# once the loop is over, and the two must agree (`fullAgrees`).
 func arrived_for(step: Dictionary, calls_before: int) -> bool:
-  var seen := mounted()
-  return turn_over(step, calls_before, seen) if step.kind == "turn" else shows_in(seen, step.to) and head_shown(step, seen)
+  var live := timed_view()
+  return turn_over(step, calls_before, live) if step.kind == "turn" else shows_light(step.to, live) and head_light(step, live)
 
 # Every frame of a turn, from the click until the HUD shows the context the turn leaves the game in: the phase, the interval since the previous
-# frame, the nodes of the tree and what was published in the frame. Nothing heavy is read in them.
-func record_turn_frame(previous: int, snapshots_before: int, ended_before: int) -> Dictionary:
+# frame, the nodes of the tree and what was published in the frame. Nothing heavy is read in them: the spinner is the Control itself, and `surfaceReads` counts the reads of the
+# Surface's snapshot made inside the interval (none).
+func record_turn_frame(previous: int, snapshots_before: int, ended_before: int, reads: int) -> Dictionary:
   var now := Time.get_ticks_usec()
   return {"phase": phase_now(), "job": int(services.job), "usec": now - previous, "nodes": get_tree().get_node_count(),
-    "snapshots": snapshots_seen - snapshots_before, "turnEnded": turn_ended_seen - ended_before, "spinner": is_mounted("hud-turn-spinner"), "stamp": now}
+    "snapshots": snapshots_seen - snapshots_before, "turnEnded": turn_ended_seen - ended_before, "spinner": timed_view().has("hud-turn-spinner"), "surfaceReads": reads, "stamp": now}
 
 func run_step(round_index: int, index: int) -> Dictionary:
   var step: Dictionary = STEPS[index]
@@ -410,6 +466,9 @@ func run_step(round_index: int, index: int) -> Dictionary:
   var calls_before := int(callbacks_before.get("end_turn", 0))
   var frame0 := Engine.get_process_frames()
   var started := Time.get_ticks_usec()
+  # The reads of the Surface's snapshot made in each timed interval: from one stamp to the next, as the intervals are.
+  var reads_mark := surface_reads
+  var reads_in_frames: Array = []
   click_at(point)
   var flushed := Time.get_ticks_usec()
   var limit := TURN_FRAME_LIMIT if step.kind == "turn" else CLICK_FRAME_LIMIT
@@ -424,8 +483,10 @@ func run_step(round_index: int, index: int) -> Dictionary:
     await get_tree().process_frame
     var now := Time.get_ticks_usec()
     stamps.append(now)
+    reads_in_frames.append(surface_reads - reads_mark)
+    reads_mark = surface_reads
     if step.kind == "turn":
-      turn_frames.append(record_turn_frame(int(stamps[stamps.size() - 2]), snapshots_previous, ended_previous))
+      turn_frames.append(record_turn_frame(int(stamps[stamps.size() - 2]), snapshots_previous, ended_previous, int(reads_in_frames[reads_in_frames.size() - 1])))
       snapshots_previous = snapshots_seen
       ended_previous = turn_ended_seen
     if arrived_frames < 0 and arrived_for(step, calls_before):
@@ -436,6 +497,8 @@ func run_step(round_index: int, index: int) -> Dictionary:
     if arrived_frames >= 0:
       break
   var seen_at_arrival := mounted()
+  # The full reading of the Surface and the Controls the frames read must say the same of the HUD when the click arrives.
+  var full_agrees := arrived_frames >= 0 and (turn_over_full(step, calls_before, seen_at_arrival) if step.kind == "turn" else shows_in(seen_at_arrival, step.to) and head_shown(step, seen_at_arrival))
   var shown := panels_in(seen_at_arrival)
   var dialog_at_arrival := dialog_reading(seen_at_arrival)
   var context_at_arrival := game_context() if arrived_frames >= 0 else ""
@@ -452,7 +515,7 @@ func run_step(round_index: int, index: int) -> Dictionary:
       callbacks_delta[key] = change
   var record := {"round": round_index, "step": index, "id": step.id, "kind": step.kind, "from": step.from, "to": step.to, "intent": step.intent,
     "approachFrames": approach, "frames": arrived_frames, "flushUsec": flushed - started, "latencyUsec": arrived - started if arrived >= 0 else null,
-    "drawUsec": drawn - started if drawn >= 0 else null, "frameUsec": intervals, "callbacks": callbacks_delta,
+    "drawUsec": drawn - started if drawn >= 0 else null, "frameUsec": intervals, "frameReads": reads_in_frames, "fullAgrees": full_agrees, "callbacks": callbacks_delta,
     "worldEvents": int(heard_after.buttons) - int(heard_before.buttons) + int(heard_after.motions) - int(heard_before.motions),
     "worldClicks": int(heard_after.buttons) - int(heard_before.buttons), "worldMotions": int(heard_after.motions) - int(heard_before.motions),
     "shown": shown, "dialog": dialog_at_arrival, "contextAtArrival": context_at_arrival, "turn": null}
@@ -575,7 +638,8 @@ func run() -> void:
   stages["scene"] = {"mounted": mounted and settled > 0, "device": DEVICE, "viewport": [get_viewport().size.x, get_viewport().size.y],
     "mouseFilter": hud.mouse_filter}
   stages["provenance"] = provenance()
-  stages["base"] = {"reading": sampler.sample(true), "surface": row_of(Sampler.surface_state(hud)), "baseNodes": get_tree().get_node_count(),
+  var base_read := surface_read()
+  stages["base"] = {"reading": sampler.sample(true), "surface": row_of(base_read.state, int(base_read.bytes)), "baseNodes": get_tree().get_node_count(),
     "hud": hud_stats(), "context": game_context(), "panels": panels_mounted()}
   stages["aborted"] = null
   var rounds: Array = []
@@ -785,6 +849,20 @@ func check_turns() -> void:
   check(ended, "turn/The end of the turn is published exactly once, in the frame that finishes the last phase")
   check(job, "turn/The job finished once and the summary lists the six phases")
 
+# What the timed frames cost is the game's and the HUD's, and nothing the probe's own reading adds: no interval between two timed frames (the frames of a click, the frames of a
+# turn) contains a read of the Surface's snapshot, and the cheap reading the frames make of the Controls says what a full reading says when a click arrives.
+func check_observation() -> void:
+  var records := all_records()
+  var silent := not records.is_empty()
+  var agree := not records.is_empty()
+  for record: Dictionary in records:
+    silent = silent and record.frameReads.size() == record.frameUsec.size() and record.frameReads.all(func(reads: int) -> bool: return reads == 0)
+    if record.kind == "turn":
+      silent = silent and record.turn.frames.all(func(frame: Dictionary) -> bool: return int(frame.surfaceReads) == 0)
+    agree = agree and record.fullAgrees == true
+  check(silent, "observation/No interval between two timed frames contains a read of the Surface's snapshot, which carries everything the application has accumulated")
+  check(agree, "observation/The Controls the timed frames read and the full reading of the Surface say the same when a click arrives")
+
 func check_heap() -> void:
   var collected := true
   var comparable := true
@@ -822,11 +900,13 @@ func evaluate_headless() -> void:
   check_queue()
   check_rests()
   check_turns()
+  check_observation()
   check_heap()
   check_errors()
 
 func check_windowed() -> void:
   check_arrivals(all_records(), true)
+  check_observation()
   check(DisplayServer.get_name() != "headless", "display/The display server is not headless: " + DisplayServer.get_name())
   var info: Dictionary = stages.provenance
   check(int(info.vsyncMode) >= 0 and int(info.vsyncMode) < VSYNC_NAMES.size() and float(info.refreshRate) > 0.0,
