@@ -7,7 +7,7 @@
       "protocol": {
         "id": "frontier-comparison-protocol",
         "item": "V05-10",
-        "sha256": "b4120dcf4ffdf7ac2ca3c08ac8497dfa8cac0a45bf7f09c69977fb6d6b609788",
+        "sha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
         "amendments": 4,
         "frozen": [
           {
@@ -4714,8 +4714,8 @@
     },
     "reproduction": {
       "rawData": "synthetic: no raw data",
-      "campaignSha256": "a7b26c8a47e156e3c1fbc28f1bf717268f447e388c445a943ad6f9987c03cc79",
-      "protocolSha256": "b4120dcf4ffdf7ac2ca3c08ac8497dfa8cac0a45bf7f09c69977fb6d6b609788",
+      "campaignSha256": "62eccb0534b33f16192da2d06eed2e474289c14377f7da893bd293725e129eed",
+      "protocolSha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
       "seed": 20261009,
       "resamples": 10000,
       "commands": [
