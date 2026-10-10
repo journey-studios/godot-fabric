@@ -104,8 +104,30 @@ node scripts/macos-clean-run.mjs run --local --archive "$TMPDIR/frontier-release
 
 `--local` relaxa só as asserções que uma máquina limpa cumpre (nenhum Godot ali, outra máquina que o uploader): o resumo diz `claim: local-rehearsal` e **não reivindica nada**; o script recusa a opção no GitHub Actions e recusa rodar sem ela fora do Actions. A metade sem template, que não roda Godot e está em `npm run test:contracts`, é `node --test tests/macos-clean-run.test.mjs`.
 
+## CI hospedada e Pages
+
+Estes são os recibos deste registro (#150, squash `7e6f0b1`). A prova do critério é o run 38085526897, descrito acima.
+
+**O run.** O push da `main` em `7e6f0b1` rodou a Contracts (run [38089562271](https://github.com/journey-studios/godot-fabric/actions/runs/38089562271)), que passou na primeira tentativa:
+- `contracts`, `reference-android` e `reference-ios` em success;
+- os jobs nativos e o `macos-clean-run` pulados, porque um push não os roda e este registro não tem passo nativo próprio.
+
+O passo da guarda de marco (X9 e X10) passou contra o pai do squash. O job `contracts` passou `npm run test:contracts` (7, 43 e 736 testes de Node, com o único pulo da lista explícita). O [recibo](hosted-ci.json) guarda os jobs, os passos e os digests.
+
+**O Pages.** O push de `7e6f0b1` rodou o workflow do Pages: run [38089562266](https://github.com/journey-studios/godot-fabric/actions/runs/38089562266), com `build` e `deploy` em success e 43 testes do painel passando. O [recibo](publication.json) registra:
+- o deployment 6987435420, em success;
+- o artefato `github-pages` que ele usou (id 11683477948, SHA-256 `ca70b042…`);
+- que o `migration.json` publicado é o commitado em `7e6f0b1`, com a entrada de atividade do critério (`milestone-0-5-v05-07-limpa-813e9b3`).
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice macos-export/clean-machine --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
+node scripts/hosted-receipts.mjs --check
+```
+
 ## Abertos
 
 - Developer ID e notarização: o app é ad hoc, e nada aqui os reivindica.
 - Um Mac ou uma VM sem Node e sem Xcode de fato: este registro prova o app **sem usá-los** numa imagem que os traz. O iPhone segue NO-GO (X8).
-- O artefato `frontier-release-app` expira em um dia; o `macos-clean-run` e o `native-macos-export-civ-lite` duram até 2027-01-08. Os recibos de CI hospedada e de Pages deste registro (`hosted-ci.json` e `publication.json`, por `scripts/hosted-receipts.mjs`) vêm depois.
+- O artefato `frontier-release-app` expira em um dia; o `macos-clean-run` e o `native-macos-export-civ-lite` duram até 2027-01-08. Os recibos de CI hospedada e de Pages deste registro estão na seção "CI hospedada e Pages".
