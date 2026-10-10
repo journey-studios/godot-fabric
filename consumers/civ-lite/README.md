@@ -21,8 +21,8 @@ project loads only `game/` and `services/` from it. The research note is
   node for the game's own `select_tile`, and the mouse over the map tells the node which tile is under it (`frontier.hover`). It listens
   in `_unhandled_input`, so it has to stay ahead of the HUD's layer in the tree (the node keeps it there).
 - `HUDLayer/HUD`: a full-screen `FabricSurface` rendering `ui/index.tsx`.
-- `Validation`, `HudValidation`, `OverlayValidation` and `StabilityValidation`: the project's own validations, inert unless the game runs
-  with `-- --validate`, `-- --validate-hud`, `-- --validate-overlays` or `-- --validate-stability`.
+- `Validation`, `HudValidation`, `OverlayValidation`, `StabilityValidation` and `ReplayValidation`: the project's own validations, inert unless
+  the game runs with `-- --validate`, `-- --validate-hud`, `-- --validate-overlays`, `-- --validate-stability` or `-- --validate-replay`.
 
 The application, the registry, the bindings and the epoch belong to the root, so going to the menu, starting a game or
 reloading the scenery never recreates them: the epoch only rises.
@@ -128,7 +128,19 @@ godot --path . --headless -- --validate                               # the ten 
 godot --path . --headless -- --validate-hud                           # the panels of the seven contexts, the turn and the pointer; writes civ-lite-ui-report.json
 godot --path . --headless -- --validate-overlays                      # the queue of three events, the remount and the blocking Modals; writes civ-lite-overlay-report.json
 godot --path . --headless -- --validate-stability                     # twenty cycles of each overlay, what leaks, focus, the icons; writes civ-lite-stability-report.json
+godot --path . --headless -- --validate-replay                        # the 77-intent replay through GameServices; prints the golden and the trace hash; writes user://civ-lite-replay-report.json
 ```
+
+**The replay gate.** `replay_validation.gd` (the `ReplayValidation` node) plays `game/replay.gd` on a new game through this scene's `GameServices`, as a
+HUD would: each intent is a call of the node, and an accepted `end_turn` is a job that the gate waits for before the next intent. After every intent it
+hashes the game's canonical serialization with `game/canon.gd`, the code the headless lane (`tests/civ-lite-game-probe.gd`) hashes it with, so the hash
+after the last intent is the golden hash and the SHA-256 of the 77 hashes, one per line, is the trace hash. The gate pins neither: it prints
+`CIVLITE_REPLAY_HASHES: golden=<hash> trace=<hash>`, writes its report to `user://` (the data directory of an exported game; `res://` is read-only
+there) and exits 0 when every step answered the code and left the context the replay says, 1 otherwise. A Release export template ignores `-s` and
+`--main-loop` and aborts on `--path`, `--main-pack` and `--scene`, so the replay runs from the exported scene behind this user argument, as `--validate`
+does. In an exported game `--validate-hud` writes its report to `user://` too (`OS.has_feature("template")`); in the editor it still writes to `res://`.
+`node scripts/macos-export.mjs --consumer civ-lite` runs the gate three times in the provisioned project and three times in a copy of the signed
+Release `.app` ([docs/MACOS_BUILD.md](../../docs/MACOS_BUILD.md)).
 
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global
 Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. `npm run test:civ-lite-ui` does the

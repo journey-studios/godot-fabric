@@ -4196,8 +4196,17 @@
             {
               "id": "replay",
               "label": "O .app do jogo executa o replay de 12 turnos com o hash dourado do editor, copiado para outro diretório e em perfil de usuário limpo",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Replay de 12 turnos no hash dourado cb7ab974… e no de trilha ed43495e… em 6 de 6 execuções: 3 no projeto provisionado e 3 numa cópia do .app Release em outro diretório, cada uma em perfil de dados limpo (mesmo Mac; o critério limpa não é reivindicado)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das fontes, dos relatórios e dos logs de cada execução, do app, do PCK e do template; sabotagem da semente rejeitada 6 de 6, sem publicação",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/report.json"
+                }
+              ]
             },
             {
               "id": "limpa",
@@ -4420,14 +4429,24 @@
         {
           "id": "X1",
           "label": "Vertical slice: cenário fixo com 6 painéis e 7 contextos exercitado pelo replay no editor e no .app",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Matriz da HUD (46 passos, 6 painéis, 7 contextos) passa no .app Release: 152 de 152 checks, julgados pelo oráculo do lane da HUD; o replay toca o mesmo cenário no editor e no .app",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            }
+          ]
         },
         {
           "id": "X2",
           "label": "Turno determinístico: replay de 12 turnos com hash dourado idêntico em 3 de 3 execuções (editor e .app macOS; iPhone se houver GO)",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Hash dourado cb7ab974… idêntico em 6 de 6 execuções (3 no editor, 3 no .app Release), também o de trilha; o iPhone é NO-GO (X8)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            }
+          ]
         },
         {
           "id": "X3",
@@ -4487,8 +4506,17 @@
         {
           "id": "X7",
           "label": "macOS: .app Release exportado executa o replay em perfil limpo; codesign ad hoc verificado",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": ".app Release com Hermes e RN embutidos, assinado ad hoc (codesign --verify --deep --strict) e sem caminho de desenvolvimento nos load commands, executa o replay em perfil limpo (mesmo Mac)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            },
+            {
+              "label": "Recibo e SHA-256 do app, do PCK e do template",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/report.json"
+            }
+          ]
         },
         {
           "id": "X8",
@@ -4811,6 +4839,13 @@
       "taskIds": [],
       "message": "V05-10 do marco 0.5, critério execucao (código no commit 769145d, registro no 85d2c99): os projetos dos braços da comparação. Os braços A (sem HUD, main_bare.tscn) e B (HUD nativa em GDScript, main_native.tscn) passam a ser montados sem a extensão Fabric (sem addons/godot_fabric: o addon, o .gdextension, o host e os frameworks Hermes e React Native); só C (main.tscn) a leva. A decisão foi acertada com o dono do export macOS (V05-07): o protocolo lê o preço de cada HUD em tamanho de pacote como C−A e B−A, e a carga da extensão também entraria nas medidas de execução de A e B. scripts/frontier-comparison-arms.mjs descreve cada braço (armProject, pura: a cena principal de produto, se leva a extensão e os filtros include_filter e exclude_filter do produto e da medição, no formato do export_presets.cfg) e aplica a descrição a uma cópia provisionada (shapeArmProject): em A e B tira addons/godot_fabric, as seções [editor_plugins] e [godot_fabric] do project.godot (editadas por linhas; no project.godot real do civ-lite o resto fica byte a byte igual), a pasta .godot_fabric/ e a lista .godot/extension_list.cfg; em todos escreve o run/main_scene de produto, e com a medição escreve os arquivos do executor. É uma verificação dos projetos, Debug e headless, e nenhum número dela é resultado: numa só cópia provisionada, A e B rodam o roteiro inteiro pelo main loop com a extensão e depois sem ela, e tudo que o roteiro conta é igual (scene-nodes 4 e 31; hash do replay cb7ab974… e do soak 0b21c332…; ocorrências e quadros das quatro janelas; notificações; as 93 checagens de paridade de B); os tempos não se comparam. O import depois do shape não registra nenhuma linha sobre a extensão, e o controle (o braço C na mesma cópia) falha, com 202 erros de script e 12 linhas do log sobre o addon ausente. Nada foi exportado e nenhuma campanha rodou: a função de export do V05-07, os conjuntos de arquivos por braço (com all_resources, A e B ainda receberiam main.tscn, ui/application.tres e os recursos do HUD do outro braço) e o manifesto frontier-comparison-export.json vêm depois. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/85d2c99a379f1aa2702d0b12bebc0a75ba94b542/docs/evidence/frontier-comparison-arms/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-07-replay-7207170",
+      "at": "2026-10-10T16:40:00.000Z",
+      "taskIds": [],
+      "message": "V05-07 do marco 0.5, critério replay (código no commit 5da4e77, registro no 7207170): o Frontier (consumers/civ-lite) é exportado como .app Release assinado ad hoc e toca o replay de 77 intents (12 turnos) pelo GameServices, com o hash dourado cb7ab974… e o de trilha ed43495e… nas 6 execuções: 3 no projeto provisionado e 3 numa cópia do .app em outro diretório, cada uma em um perfil de dados limpo (o diretório não existia antes e foi removido depois). Um nó inerte de main.tscn (replay_validation.gd, -- --validate-replay) joga o replay a partir da cena exportada, porque o Release template ignora -s e --main-loop e aborta com --path; ele usa o canon.gd do jogo, não fixa hash e grava o relatório em user://. A matriz da HUD (46 passos, 6 painéis, 7 contextos) também passa no .app: 152 de 152 checks, julgados de novo pelo oráculo do lane da HUD. O runner de export ganha --consumer civ-lite e a função exportPreparedProject, que exporta um projeto já preparado; o lane minimal segue 14/14 em test:export:macos, com 40/43 checks. Uma sabotagem retida, a semente do jogo trocada na cópia do projeto, é rejeitada 6 de 6 pelos hashes fixados e nada é publicado. É mesmo Mac, perfil limpo: o critério limpa (segundo Mac ou VM) continua aberto, e os braços A e B exportam sem addons/godot_fabric e sem os frameworks, como o protocolo os define, pelo script de medição do slot 3 (exportPreparedProject), ainda por construir. Nenhum peso, nota ou denominador do 1.0 se move. Tudo rodou na árvore limpa do commit (npm run test:export:civ-lite 1/1, test:export:macos 14/14 e a sabotagem rejeitada), e três quadros do replay no .app Release, capturados com o Movie Maker do Godot, estão no registro. A CI hospedada e o Pages vêm depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-10-657694e",
