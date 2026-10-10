@@ -319,7 +319,7 @@ test("the protocol has its five thresholds frozen on one date, the stress as N/A
   assert.match(protocol.status, /^pre-registered/);
   assert.match(protocol.baseline.windowed, /^pending/);
   assert.equal(protocol.open[0].id, "windowed-baseline");
-  assert.equal(protocol.amendments.length, 2);
+  assert.equal(protocol.amendments.length, 3);
 });
 
 // ---- the corroboration: what the other executions of the same night show, and no threshold ----

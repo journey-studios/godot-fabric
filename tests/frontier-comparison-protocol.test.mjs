@@ -31,10 +31,13 @@ const migration = JSON.parse(read("dashboard/migration.json"));
 //    b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f) called them the intervals for both.
 //  - PINS[2]: the amendment of 2026-10-09, `amendments[1]`: arm B's time-box gets its length (arm C's 12.8 h of subagent active time plus an optimization pass of at
 //    most 3.2 h, 16.0 h in all), and the open item of the iPhone records the NO-GO of V05-09. No comparative measurement had run (`measurementsBefore: 0`).
+//  - PINS[3]: the amendment of 2026-10-10, `amendments[2]`: the count of the 12-turn replay written in `runs.fixed.replay` is 77 intents, the replay that the queue of
+//    three events of #93 (e108e9d) fixed, where the pre-registration had 73. The reference to the golden hash keeps its text. No comparative measurement had run (`measurementsBefore: 0`).
 const PINS = [
   "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
   "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb",
-  "0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6"
+  "0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6",
+  "c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222"
 ];
 const PINNED_SHA256 = PINS[protocol.amendments.length];
 const FREEZE_KEYS = ["frozenValue", "frozenAt"];
@@ -363,11 +366,11 @@ const amendmentErrors = (candidate, executionDone) => {
 };
 
 test("an amendment says what changed, why, the text it replaces and that no comparative measurement came before it", () => {
-  assert.equal(protocol.amendments.length, 2);
+  assert.equal(protocol.amendments.length, 3);
   assert.equal(executionCriterion.done, false, "the comparative executions have not run: when they do, the amendments after them count measurements");
   assert.deepEqual(amendmentErrors(protocol, executionCriterion.done), []);
-  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09"]);
-  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09", "2026-10-10"]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0, 0]);
   assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
   assert.doesNotMatch(JSON.stringify(protocol.idleReference), /idle median/, "and the protocol no longer says it");
   assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs of the per-frame values/);
