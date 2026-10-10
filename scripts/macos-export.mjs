@@ -6,19 +6,13 @@ import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {createHarness} from "./consumer-harness.mjs";
+import {FABRIC_PAYLOAD, FRAMEWORK_VERSIONS, appEntries, assertPayloadExact, bundleFactsOf, exportFilesLine, frameworkBinaryName, payloadBinaries, payloadOf,
+  payloadSignables} from "./macos-export-payload.mjs";
 import {CIV_LITE_BUNDLE_IDENTIFIER, GOLDEN_HASH, LIMIT as CIV_LITE_LIMIT, TRACE_HASH, civLiteProjectName, removeCivLiteUserData, runCivLiteRuntime} from "./macos-export-civ-lite.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const fixtureChecksPath = fileURLToPath(new URL("./macos-export-checks.json", import.meta.url));
 const expectedBundleIdentifier = "org.journeystudios.godotfabric.exportvalidation";
-const frameworkNames = ["hermesvm.framework", "ReactNativeDependencies.framework"];
-const frameworkVersions = {"hermesvm.framework": "1", "ReactNativeDependencies.framework": "A"};
-const rnResourceBundles = [
-  "ReactNativeDependencies_SocketRocket.bundle",
-  "ReactNativeDependencies_boost.bundle",
-  "ReactNativeDependencies_folly.bundle",
-  "ReactNativeDependencies_glog.bundle",
-];
 const consumerOutputNames = ["consumer-report.json", "consumer-initial.png", "consumer-updated.png", "consumer-resized.png"];
 const fatalOutput = /SCRIPT ERROR|Parse Error|(?:^|\n)ERROR:|Program crashed|Stack overflow|ObjectDB instances leaked|Resources still in use|FABRIC_ERROR|CONSUMER_CHECK_FAILED/;
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
@@ -161,7 +155,7 @@ export async function assertLocalLoadPaths(values, binary, app, label = "binary"
   }
 }
 
-export async function auditAppLoadPaths(harness, app, binaries) {
+export async function auditAppLoadPaths(harness, app, binaries, payload = FABRIC_PAYLOAD) {
   const records = [];
   for (const {label, path: binary} of binaries) {
     const {libraries, rpaths: binaryRpaths} = await machOLoadCommands(harness, binary, label);
@@ -170,32 +164,25 @@ export async function auditAppLoadPaths(harness, app, binaries) {
     records.push({label, binary, libraries, rpaths: binaryRpaths});
   }
 
-  const host = binaries.find(binary => binary.label === "host");
-  assert.ok(host, "load audit omitted the host dylib");
-  const expected = ["@rpath/hermesvm.framework/Versions/1/hermesvm",
-    "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies"].sort();
-  const hostRecord = records.find(record => record.label === "host");
-  const rpathLoads = hostRecord.libraries.filter(value => value.startsWith("@rpath/")).sort();
-  assert.deepEqual(rpathLoads, expected, "host framework load commands differ from the packaged frameworks");
-  assert.ok(hostRecord.rpaths.includes("@loader_path/frameworks"), "host has no @loader_path/frameworks search path");
+  // The host dylib is audited exactly when the payload has one; its frameworks are the payload's.
+  const hosts = binaries.filter(binary => binary.label === "host");
+  assert.equal(hosts.length, payload.hosts.length, "load audit must cover the host dylib exactly when the payload has one");
+  const expected = payload.frameworks.map(name => `@rpath/${name}/Versions/${FRAMEWORK_VERSIONS[name]}/${frameworkBinaryName(name)}`).sort();
   const appRoot = await realpath(app);
-  for (const load of expected) {
-    const suffix = load.slice("@rpath/".length);
-    const candidate = path.resolve(path.dirname(host.path), "frameworks", suffix);
-    const target = await realpath(candidate);
-    assert.ok(isPathInside(appRoot, target), `host framework dependency escapes the app: ${load}`);
-    assert.ok((await stat(target)).isFile(), `host framework dependency is not a file inside the app: ${load}`);
+  for (const host of hosts) {
+    const hostRecord = records.find(record => record.label === "host");
+    const rpathLoads = hostRecord.libraries.filter(value => value.startsWith("@rpath/")).sort();
+    assert.deepEqual(rpathLoads, expected, "host framework load commands differ from the packaged frameworks");
+    assert.ok(hostRecord.rpaths.includes("@loader_path/frameworks"), "host has no @loader_path/frameworks search path");
+    for (const load of expected) {
+      const suffix = load.slice("@rpath/".length);
+      const candidate = path.resolve(path.dirname(host.path), "frameworks", suffix);
+      const target = await realpath(candidate);
+      assert.ok(isPathInside(appRoot, target), `host framework dependency escapes the app: ${load}`);
+      assert.ok((await stat(target)).isFile(), `host framework dependency is not a file inside the app: ${load}`);
+    }
   }
   return records;
-}
-
-async function filesNamed(directory, name, matches = []) {
-  for (const entry of await readdir(directory, {withFileTypes: true})) {
-    const filename = path.join(directory, entry.name);
-    if (entry.name === name) matches.push(filename);
-    if (entry.isDirectory()) await filesNamed(filename, name, matches);
-  }
-  return matches;
 }
 
 async function filesWithExtension(directory, extension, matches = []) {
@@ -207,7 +194,7 @@ async function filesWithExtension(directory, extension, matches = []) {
   return matches;
 }
 
-async function inspectApp(harness, app, sdkPath, expectedIdentifier = expectedBundleIdentifier) {
+async function inspectApp(harness, app, sdkPath, expectedIdentifier = expectedBundleIdentifier, payload = FABRIC_PAYLOAD) {
   const directory = harness.directory;
   const contents = path.join(app, "Contents");
   const executableName = await plistValue(harness, path.join(contents, "Info.plist"), "CFBundleExecutable", directory, "inspect-plist-executable");
@@ -218,75 +205,67 @@ async function inspectApp(harness, app, sdkPath, expectedIdentifier = expectedBu
   assert.notEqual(executableRecord.mode & 0o111, 0, "the exported executable is not executable");
   assert.deepEqual(await architectures(harness, executable, "app-executable"), ["arm64"]);
 
-  const host = path.join(contents, "Frameworks", "fabric_godot.dylib");
-  const sourceHost = path.join(sdkPath, "native", "fabric_godot.dylib");
-  const hostBeforeSigning = await fileRecord(host);
-  const hostSourceRecord = await fileRecord(sourceHost);
-  assert.equal(hostBeforeSigning.sha256, hostSourceRecord.sha256, "exported host does not match the provisioned SDK");
-  assert.deepEqual(await architectures(harness, host, "host"), ["arm64"]);
+  // The payload's host and frameworks (none for a payload without the extension) are inspected; that the app holds nothing else is assertPayloadExact's.
+  const payloadFiles = payloadBinaries(payload, app, sdkPath);
+  const hosts = [];
+  for (const item of payloadFiles.hosts) {
+    const beforeSigning = await fileRecord(item.binary);
+    const source = await fileRecord(item.source);
+    assert.equal(beforeSigning.sha256, source.sha256, "exported host does not match the provisioned SDK");
+    assert.deepEqual(await architectures(harness, item.binary, item.label), ["arm64"]);
+    hosts.push({source, beforeSigning});
+  }
   const frameworks = [];
-  for (const name of frameworkNames) {
-    const framework = path.join(contents, "Frameworks", "frameworks", name);
-    const binaryName = name === "hermesvm.framework" ? "hermesvm" : "ReactNativeDependencies";
-    const binary = path.join(framework, binaryName);
-    const original = path.join(sdkPath, "native", "frameworks", name, binaryName);
-    await assertFrameworkSymlinksStayInside(framework);
-    const record = await fileRecord(binary);
-    const sourceRecord = await fileRecord(original);
-    assert.equal(record.sha256, sourceRecord.sha256, `${name} does not match the provisioned SDK`);
-    const archs = await architectures(harness, binary, name.replaceAll(".", "-"));
-    assert.ok(archs.includes("arm64"), `${name} has no arm64 slice`);
-    frameworks.push({name, framework, binary, source: sourceRecord, beforeSigning: record, architectures: archs});
+  for (const item of payloadFiles.frameworks) {
+    await assertFrameworkSymlinksStayInside(item.bundle);
+    const record = await fileRecord(item.binary);
+    const sourceRecord = await fileRecord(item.source);
+    assert.equal(record.sha256, sourceRecord.sha256, `${item.name} does not match the provisioned SDK`);
+    const archs = await architectures(harness, item.binary, item.label);
+    assert.ok(archs.includes("arm64"), `${item.name} has no arm64 slice`);
+    frameworks.push({name: item.name, framework: item.bundle, binary: item.binary, source: sourceRecord, beforeSigning: record, architectures: archs});
   }
   const loadRecords = await auditAppLoadPaths(harness, app, [
-    {label: "app-executable", path: executable}, {label: "host", path: host},
+    {label: "app-executable", path: executable}, ...payloadFiles.hosts.map(item => ({label: item.label, path: item.binary})),
     ...frameworks.map(item => ({label: item.name.replaceAll(".", "-"), path: item.binary})),
-  ]);
-  const hostLoads = loadRecords.find(record => record.label === "host").libraries;
-  const hostRpaths = loadRecords.find(record => record.label === "host").rpaths;
-  const hostNames = await filesNamed(contents, "fabric_godot.dylib");
-  assert.deepEqual(hostNames, [host], "exported app must contain exactly one host dylib");
+  ], payload);
+  const hostLoadRecord = loadRecords.find(record => record.label === "host");
 
   return {bundleIdentifier, executableName, executable, executableRecord,
-    host: {source: hostSourceRecord, beforeSigning: hostBeforeSigning}, hostLoads, hostRpaths, loadRecords,
+    host: hosts[0] ?? null, hostLoads: hostLoadRecord?.libraries ?? [], hostRpaths: hostLoadRecord?.rpaths ?? [], loadRecords,
     frameworks: frameworks.map(item => ({name: item.name, source: item.source, beforeSigning: item.beforeSigning,
       architectures: item.architectures, bundlePath: path.relative(app, item.framework)})),
     signing: "pending ad-hoc local signing; no distribution or notarization claim"};
 }
 
-export async function verifySignatures(harness, app) {
+export async function verifySignatures(harness, app, payload = FABRIC_PAYLOAD) {
   const contents = path.join(app, "Contents");
   const executableName = await plistValue(harness, path.join(contents, "Info.plist"), "CFBundleExecutable", harness.directory, "signature-plist-executable");
   const executable = path.join(contents, "MacOS", executableName);
-  const frameworkBundles = frameworkNames.map(name => path.join(contents, "Frameworks", "frameworks", name));
-  const resourceBundles = rnResourceBundles.map(name => path.join(contents, "Frameworks", "frameworks",
-    "ReactNativeDependencies.framework", "Versions", "A", name));
-  const signedItems = [...resourceBundles, ...frameworkBundles,
-    path.join(contents, "Frameworks", "fabric_godot.dylib"), executable, app];
+  const signables = payloadSignables(payload, app);
+  const signedItems = [...signables.resourceBundles, ...signables.frameworkBundles, ...signables.hosts, executable, app];
   for (let index = 0; index < signedItems.length; index++)
     await harness.run(`verify-signature-${index}`, "/usr/bin/codesign", ["--verify", "--deep", "--strict", signedItems[index]]);
   return signedItems;
 }
 
-async function signAndVerifyApp(harness, app, inspection) {
-  const contents = path.join(app, "Contents");
-  const host = path.join(contents, "Frameworks", "fabric_godot.dylib");
+async function signAndVerifyApp(harness, app, inspection, payload = FABRIC_PAYLOAD) {
+  const signables = payloadSignables(payload, app);
   const executable = inspection.executable;
-  const frameworkBundles = inspection.frameworks.map(item => path.join(app, item.bundlePath));
-  const resourceBundles = rnResourceBundles.map(name => path.join(contents, "Frameworks", "frameworks",
-    "ReactNativeDependencies.framework", "Versions", "A", name));
-  for (let index = 0; index < resourceBundles.length; index++)
-    await harness.run(`sign-resource-bundle-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", resourceBundles[index]]);
-  for (let index = 0; index < frameworkBundles.length; index++)
-    await harness.run(`sign-framework-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", frameworkBundles[index]]);
-  await harness.run("sign-host", "/usr/bin/codesign", ["--force", "--sign", "-", host]);
+  for (let index = 0; index < signables.resourceBundles.length; index++)
+    await harness.run(`sign-resource-bundle-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", signables.resourceBundles[index]]);
+  for (let index = 0; index < signables.frameworkBundles.length; index++)
+    await harness.run(`sign-framework-${index}`, "/usr/bin/codesign", ["--force", "--sign", "-", signables.frameworkBundles[index]]);
+  for (const host of signables.hosts)
+    await harness.run("sign-host", "/usr/bin/codesign", ["--force", "--sign", "-", host]);
   await harness.run("sign-executable", "/usr/bin/codesign", ["--force", "--sign", "-", executable]);
   await harness.run("sign-app", "/usr/bin/codesign", ["--force", "--sign", "-", app]);
-  await verifySignatures(harness, app);
-  inspection.host.afterSigning = await fileRecord(host);
+  await verifySignatures(harness, app, payload);
+  for (const host of signables.hosts)
+    inspection.host.afterSigning = await fileRecord(host);
   inspection.executableAfterSigning = await fileRecord(executable);
   for (const framework of inspection.frameworks)
-    framework.afterSigning = await fileRecord(path.join(app, framework.bundlePath, framework.name === "hermesvm.framework" ? "hermesvm" : "ReactNativeDependencies"));
+    framework.afterSigning = await fileRecord(path.join(app, framework.bundlePath, frameworkBinaryName(framework.name)));
   inspection.signing = "ad-hoc local signing verified; no distribution or notarization claim";
   return inspection;
 }
@@ -312,10 +291,10 @@ ${ready}`);
   return result;
 }
 
-export function presetText(template, bundleIdentifier, {exportFilter = "all_resources", includeFilter = "", excludeFilter = ""} = {}) {
+export function presetText(template, bundleIdentifier, {exportFilter = "all_resources", includeFilter = "", excludeFilter = "", exportFiles = []} = {}) {
   for (const value of [exportFilter, includeFilter, excludeFilter])
     assert.match(value, /^[^"\\\r\n]*$/, "export filters must be plain text without quotes, backslashes or line breaks");
-  return `[preset.0]\nname="macOS Arm64"\nplatform="macOS"\nrunnable=true\ndedicated_server=false\ncustom_features=""\nexport_filter="${exportFilter}"\ninclude_filter="${includeFilter}"\nexclude_filter="${excludeFilter}"\n\n[preset.0.options]\napplication/bundle_identifier="${bundleIdentifier}"\napplication/short_version="1.0"\napplication/version="1.0"\nbinary_format/architecture="arm64"\ncustom_template/release="${template.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"\ncodesign/codesign=0\n`;
+  return `[preset.0]\nname="macOS Arm64"\nplatform="macOS"\nrunnable=true\ndedicated_server=false\ncustom_features=""\nexport_filter="${exportFilter}"\n${exportFilesLine(exportFiles, exportFilter)}include_filter="${includeFilter}"\nexclude_filter="${excludeFilter}"\n\n[preset.0.options]\napplication/bundle_identifier="${bundleIdentifier}"\napplication/short_version="1.0"\napplication/version="1.0"\nbinary_format/architecture="arm64"\ncustom_template/release="${template.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"\ncodesign/codesign=0\n`;
 }
 
 async function prepareProject(harness, projectName) {
@@ -492,10 +471,10 @@ async function retainRejectedApp(app, harnessDirectory) {
   return rejected;
 }
 
-export async function normalizeFrameworkPackaging(app) {
+export async function normalizeFrameworkPackaging(app, payload = FABRIC_PAYLOAD) {
   const frameworkRoot = path.join(app, "Contents", "Frameworks", "frameworks");
-  const hostPath = path.join(app, "Contents", "Frameworks", "fabric_godot.dylib");
-  const hostBefore = sha256(await readFile(hostPath));
+  const hostPaths = payloadSignables(payload, app).hosts;
+  const hostsBefore = await Promise.all(hostPaths.map(async hostPath => sha256(await readFile(hostPath))));
   const plans = [];
   const frameworkRecords = [];
 
@@ -524,17 +503,17 @@ export async function normalizeFrameworkPackaging(app) {
     return plans[plans.length - 1];
   }
 
-  for (const name of frameworkNames) {
+  for (const name of payload.frameworks) {
     const framework = path.join(frameworkRoot, name);
     const frameworkInfo = await lstat(framework);
     assert.ok(frameworkInfo.isDirectory() && !frameworkInfo.isSymbolicLink(), `framework root is not a real directory: ${name}`);
-    const version = frameworkVersions[name];
-    const binaryName = name === "hermesvm.framework" ? "hermesvm" : "ReactNativeDependencies";
+    const version = FRAMEWORK_VERSIONS[name];
+    const binaryName = frameworkBinaryName(name);
     const versionEntries = (await readdir(path.join(framework, "Versions"))).sort();
     assert.deepEqual(versionEntries, ["Current", version].sort(), `framework version layout changed unexpectedly: ${name}`);
     const expectedRootEntries = new Set(["Versions", "Resources", binaryName]);
     if (name === "ReactNativeDependencies.framework")
-      for (const bundle of rnResourceBundles) expectedRootEntries.add(bundle);
+      for (const bundle of payload.resourceBundles) expectedRootEntries.add(bundle);
     const actualRootEntries = (await readdir(framework)).sort();
     assert.deepEqual(actualRootEntries, [...expectedRootEntries].sort(), `framework root layout changed unexpectedly: ${name}`);
     const beforeTreeSha256 = await hashApp(framework);
@@ -549,7 +528,7 @@ export async function normalizeFrameworkPackaging(app) {
 
     const movedResources = [];
     if (name === "ReactNativeDependencies.framework") {
-      for (const bundleName of rnResourceBundles) {
+      for (const bundleName of payload.resourceBundles) {
         const source = path.join(framework, bundleName);
         const destination = path.join(framework, "Versions", version, bundleName);
         const sourceInfo = await lstat(source);
@@ -608,9 +587,9 @@ export async function normalizeFrameworkPackaging(app) {
     record.afterTreeSha256 = await hashApp(record.framework);
     record.binaryAfter = binaryAfter;
   }
-  const hostAfter = sha256(await readFile(hostPath));
-  assert.equal(hostAfter, hostBefore, "framework normalization modified the exported Godot host");
-  return {hostSha256Before: hostBefore, hostSha256After: hostAfter, frameworks: frameworkRecords.map(record => ({
+  const hostsAfter = await Promise.all(hostPaths.map(async hostPath => sha256(await readFile(hostPath))));
+  assert.deepEqual(hostsAfter, hostsBefore, "framework normalization modified the exported Godot host");
+  return {hostSha256Before: hostsBefore[0], hostSha256After: hostsAfter[0], frameworks: frameworkRecords.map(record => ({
     name: record.name, version: record.version, binaryName: record.binaryName,
     beforeTreeSha256: record.beforeTreeSha256, afterTreeSha256: record.afterTreeSha256,
     binaryBeforeSha256: record.binaryBefore, binaryAfterSha256: record.binaryAfter,
@@ -623,27 +602,36 @@ export async function normalizeFrameworkPackaging(app) {
 
 // The export of an already-prepared Godot project, which is `harness.project`: the caller provisioned it (the addon and its SDK, the project's own files), built its HUD
 // with the editor plugin and checked its payload; this function owns what turns it into a signed Release application and knows nothing of which consumer it is. It writes the
-// export preset (`bundleIdentifier`, and `exportFilter`, `includeFilter` and `excludeFilter` as Godot's preset fields), exports with the arm64 Release template into `staging`
+// export preset (`bundleIdentifier`, and `exportFilter`, `includeFilter`, `excludeFilter` and `exportFiles` as Godot's preset fields), exports with the arm64 Release template into `staging`
 // (a new path of the caller's, which the caller removes if this throws), has the export hook embed the Hermes and React Native frameworks, checks that the exported engine is
 // the template's arm64 member and that the PCK holds `bundle` byte for byte (default: the project's `.godot_fabric/app.js`), audits the load commands of the executable, the
 // host and both frameworks, normalizes the framework layout, signs ad hoc, verifies every signature and asks the exported engine for its version.
+// `exportFiles` (default none) are the `res://` scenes that the "scenes" export filter exports with what their scene files reference, and need that filter. Godot's scenes mode
+// follows the references of scene files, not the `preload()` calls of scripts, and ignores what is not a scene: the GDScript the scenes preload is named by `includeFilter`.
+// `frameworks` (default true) selects the payload (scripts/macos-export-payload.mjs) the app is expected to hold: with the extension (FABRIC_PAYLOAD: host, frameworks, bundle) or
+// without it (`false`, BARE_PAYLOAD: none of them, and no bundle, so none may be passed, and the PCK is inspected by `godot_pack.py --no-bundle`). The same flow runs for both
+// and iterates the payload's lists, which are empty for BARE_PAYLOAD; assertPayloadExact then requires that `Contents/Frameworks` and the PCK hold exactly the payload, so an
+// app of arm A or B that still carries the extension, or an app with it that lost part of it, is refused. It also returns `frameworks` and `pack` (the PCK summary and its paths).
 // `templateMember` is the result of verifyTemplateMember when the caller already inspected the template. `receipt`, when given, receives the stages and facts as they are
-// established (stages, pack, frameworkNormalization, app), so a rejected export keeps what it learned; without one the same record is returned as `receipt`.
+// established (stages, pack, payloadCheck, frameworkNormalization, app), so a rejected export keeps what it learned; without one the same record is returned as `receipt`.
 // Returns {app, executable, pck: {path, sha256}, templateSha256, templateMemberSha256, presetSha256, ...}: the app, its executable and its PCK with their SHA-256 after signing,
 // and the SHA-256 of the template ZIP.
-export async function exportPreparedProject({harness, template, staging, bundleIdentifier = expectedBundleIdentifier, bundle = path.join(harness.project, ".godot_fabric", "app.js"),
-  exportFilter, includeFilter, excludeFilter, templateMember = null, receipt = {stages: []}}) {
+export async function exportPreparedProject({harness, template, staging, bundleIdentifier = expectedBundleIdentifier, bundle,
+  exportFilter, includeFilter, excludeFilter, exportFiles = [], frameworks = true, templateMember = null, receipt = {stages: []}}) {
+  const payload = payloadOf(frameworks);
   assert.ok(path.isAbsolute(staging) && staging.endsWith(".app"), "the staging path must be a new absolute .app path");
   assert.equal(await existsIncludingDangling(staging), false, "the staging path already exists");
+  assert.ok(payload.bundle !== null || bundle === undefined, "an export with frameworks: false has no bundle to check; do not pass one");
+  const bundlePath = payload.bundle === null ? null : bundle ?? path.join(harness.project, payload.bundle);
   receipt.templateMember ??= templateMember ?? await verifyTemplateMember(harness, template);
-  const preset = presetText(template, bundleIdentifier, {exportFilter, includeFilter, excludeFilter});
+  const preset = presetText(template, bundleIdentifier, {exportFilter, includeFilter, excludeFilter, exportFiles});
   await writeFile(path.join(harness.project, "export_presets.cfg"), preset);
   const exportLog = await harness.run("macos-export-release", harness.godot,
     ["--headless", "--path", harness.project, "--export-release", "macOS Arm64", staging], 0, harness.env);
   assert.doesNotMatch(exportLog, fatalOutput);
   assert.ok(await existsIncludingDangling(staging), "Godot export returned success without creating the staged application");
   receipt.stages.push({name: "arm64-release-export", passed: true, logSha256: sha256(Buffer.from(exportLog))});
-  const unsignedInspection = await inspectApp(harness, staging, harness.sdk, bundleIdentifier);
+  const unsignedInspection = await inspectApp(harness, staging, harness.sdk, bundleIdentifier, payload);
   assert.equal(unsignedInspection.executableRecord.sha256, receipt.templateMember.sha256,
     "exported unsigned engine differs from the inspected template member");
   const resources = path.join(staging, "Contents", "Resources");
@@ -651,25 +639,25 @@ export async function exportPreparedProject({harness, template, staging, bundleI
   assert.equal(pckPaths.length, 1, "export must contain exactly one PCK in Contents/Resources");
   const pckPath = pckPaths[0];
   const packLog = await harness.run("macos-export-pck", "/usr/bin/python3",
-    [path.join(root, "scripts/godot_pack.py"), pckPath, bundle], 0, harness.env, {cwd: root});
+    [path.join(root, "scripts/godot_pack.py"), pckPath, bundlePath ?? "--no-bundle"], 0, harness.env, {cwd: root});
   assert.doesNotMatch(packLog, fatalOutput);
   const pack = JSON.parse(packLog);
   assert.equal(pack.format, 4, "exported PCK has an unsupported format");
   assert.ok(Number.isInteger(pack.fileCount) && pack.fileCount > 0, "PCK inspection omitted its file count");
-  assert.equal(pack.bundleEmbeddedByteForByte, true, "PCK does not contain the selected bundle unchanged");
-  assert.equal(pack.buildToolchainExcluded, true, "PCK contains build-only SDK contents");
-  assert.equal(pack.editorScriptsExcluded, true, "PCK contains editor-only SDK scripts");
+  for (const [fact, message] of bundleFactsOf(payload))
+    assert.equal(pack[fact], true, message);
   assert.equal(pack.pckSHA256, sha256(await readFile(pckPath)), "PCK hash differs from the inspector result");
   receipt.pack = {path: path.relative(staging, pckPath).split(path.sep).join("/"), ...pack,
     inspectorLogSha256: sha256(Buffer.from(packLog))};
-  receipt.frameworkNormalization = await normalizeFrameworkPackaging(staging);
-  const appInspection = await signAndVerifyApp(harness, staging, unsignedInspection);
+  receipt.payloadCheck = assertPayloadExact(payload, await appEntries(staging), pack);
+  receipt.frameworkNormalization = await normalizeFrameworkPackaging(staging, payload);
+  const appInspection = await signAndVerifyApp(harness, staging, unsignedInspection, payload);
   const versionOutput = await tool(harness, "exported-engine-version", appInspection.executable, ["--version"], harness.outside);
   assert.match(versionOutput, /^4\.7\.2\.stable(?:\.official\.[^\s]+)?$/);
   receipt.app = {...appInspection, engineVersion: versionOutput};
   return {app: {path: staging, sha256: await hashApp(staging)}, executable: {path: appInspection.executable, sha256: appInspection.executableAfterSigning.sha256},
     pck: {path: pckPath, sha256: pack.pckSHA256}, templateSha256: receipt.templateMember.archiveSha256, templateMemberSha256: receipt.templateMember.sha256,
-    presetSha256: sha256(Buffer.from(preset)), engineVersion: versionOutput, receipt};
+    presetSha256: sha256(Buffer.from(preset)), engineVersion: versionOutput, receipt, frameworks, pack: receipt.pack};
 }
 
 const ownedDataPathOf = projectName => path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
@@ -794,9 +782,8 @@ export async function runMacOSExport({template, output, consumer = "minimal", ed
     const sourceHead = await harness.run("macos-export-source-head", "git", ["rev-parse", "HEAD"], 0, environment, {cwd: root});
     assert.equal(sdkManifest.sourceCommit, sourceHead.trim(), "provisioned SDK source commit differs from this checkout");
     const frameworkSourceHashes = {};
-    for (const name of frameworkNames) {
-      const binary = name === "hermesvm.framework" ? "hermesvm" : "ReactNativeDependencies";
-      frameworkSourceHashes[name] = sha256(await readFile(path.join(harness.sdk, "native/frameworks", name, binary)));
+    for (const name of FABRIC_PAYLOAD.frameworks) {
+      frameworkSourceHashes[name] = sha256(await readFile(path.join(harness.sdk, "native/frameworks", name, frameworkBinaryName(name))));
     }
     receipt.sdk = {manifestSha256: sha256(sdkManifestBytes), sourceCommit: sdkManifest.sourceCommit, sourceDirty: sdkManifest.sourceDirty,
       sourceFiles: sdkManifest.sourceFiles, hostSha256: sdkManifest.nativeSha256, frameworkSourceHashes,
