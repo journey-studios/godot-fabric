@@ -881,6 +881,17 @@ of this record. With the headless half recorded earlier, the `baseline` criterio
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
 recomputed. No 1.0 checkpoint, weight or denominator moves.
 
+**Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
+iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
+The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
+GF-35 without moving any 1.0 number. V05-09 closes only its `decisao` criterion; `g0`,
+`export`, `toque` and `turno` stay open under a blocker. V05-08 is handed back to GF-35
+under a blocker, and its density and safe-area work on `feat/mobile-density` will land as a
+GF-09 slice without claiming it. The `iphone` criteria of V05-02 and V05-10 do not apply, and
+the final comparison covers macOS only. Exit X8 is met by this record. No 1.0 number, task,
+checkpoint, weight or decision moves. The record is in
+[docs/evidence/frontier-device/README.md](docs/evidence/frontier-device/README.md).
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
@@ -4064,6 +4075,23 @@ Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
 [`092dd14`](https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9). On the implementation tree the contracts
 gate (302 Node/13 Python), the type check, static analysis, the publication scan, the animated, frame clock and touchables
 suites, the platform-seams test and the 36 examples pass. No checkpoint, whole GF, weight or denominator closes.
+
+### Screen density and RN's SafeAreaView on the desktop (2026-10-09)
+
+`FabricApplication.density_policy` gives a window the scale of its display (`screen`: a `canvas_items` stretch with no
+content size at `DisplayServer.screen_get_scale`, followed when it changes; `content`, the default, leaves a project as it
+was), and RN's own `SafeAreaView` (its iOS native component and C++ descriptor over the host's View) holds the padding that
+the window's unsafe bands leave of its frame, with UIKit's rule, its pixel rounding and its update threshold. The bands come
+from `get_display_safe_area` only on iOS and Android and are zero elsewhere (macOS's usable rectangle is never read), so a
+test states them through a seam (which refuses a band that is not a finite, non-negative number). The desktop headless lane (149 checks, an independent oracle, the control on main
+`b0e40aa` failing 90 of them and four retained sabotages rejected) also puts the HUD over a Godot world: a full-screen
+SafeAreaView with `pointerEvents="box-none"` leaves the empty area and its padding band to the world, as a View does. A
+windowed run on a Retina display at scale 2 captured three frames and read their pixels. This is the preparation V05-08
+asked for, delivered on the desktop with no simulator or device run, because the iPhone gate of the 0.5 is NO-GO
+(2026-10-09) and mobile goes back to GF-35: it moves GF-09 (density, insets) and GF-18 (SafeAreaView) only that far, closes
+no checkpoint and changes no weight or denominator. The [record](docs/evidence/mobile-density/README.md), the
+[research note](docs/research/mobile-density.md) and implementation
+[`05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6`](https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6) have the numbers.
 
 ## M1 — Complete the native UI tree
 

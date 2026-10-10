@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T20:56:00.000Z",
+  "updatedAt": "2026-10-10T01:32:30.000Z",
   "source": {
-    "commit": "4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
-    "scope": "P8 V05-05 do marco 0.5, critério estabilidade (a fatia 2b, o último dos quatro, e com ele o item completo): 20 aberturas e fechamentos de cada overlay sem vazar nós, listeners nem Windows, foco restaurado, 0 de 100 cliques ao mundo sob o overlay, varredura da HUD contra o manifesto 0.5 e seis ícones por Image, com evidência local em 4ffdb6e (probe e oráculo independentes, controle sobre e108e9d, dezessete sabotagens e sete capturas), mais os recibos hospedados canônicos do #93 (a fatia 2a). CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/100"
+    "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
+    "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 149 checks com oráculo independente, controle sobre b0e40aa (90 falham), quatro sabotagens, a recusa de uma faixa inválida da semente e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em 05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). CI hospedada e Pages desta fatia pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104"
   },
   "phases": [
     {
@@ -3984,7 +3984,7 @@
               "done": true,
               "evidence": [
                 {
-                  "label": "Evidência local (macOS arm64): cada overlay aberto e fechado 20 vezes por entrada real (a tela da cidade 20 vezes por clique e Close e 20 por clique e Escape; o diálogo 20 vezes, de um jogo novo jogado até o turno 5 e as três respostas por toque real, 60 respostas); depois de cada fechamento, em repouso, os nós, os órfãos e as Windows da árvore, as views nativas, as rotas do ponteiro, as subscriptions do registro, as conexões da HUD e do sinal são os do ciclo 1, exatamente, e o heap do Hermes segue a regra do baseline; foco restaurado (o dono do foco da raiz é o mesmo antes e depois, e com o overlay aberto a Window do Modal é a única exclusiva e nenhum Control sob ela tem foco), Escape fecha a cidade e não faz nada no diálogo, e 0 de 100 cliques esquerdos, direitos e giros da roda chegam ao mundo sob o overlay no primeiro e no último ciclo; varredura da HUD contra o manifesto 0.5 (que agora decide o AppRegistry) e seis ícones originais por Image, também dentro da Window do Modal; probe de 41 checks, oráculo independente que rejeita 38 relatórios mutados, 23 casos da varredura (21 mudanças achadas e 2 casos que passam: um import só de tipo e um membro do subconjunto desestruturado), controle sobre e108e9d que falha só nos ícones e 17 sabotagens (5 novas) rejeitadas; CI hospedada desta fatia ainda não existe",
+                  "label": "Evidência local (macOS arm64): cada overlay aberto e fechado 20 vezes por entrada real (a tela da cidade 20 vezes por clique e Close e 20 por clique e Escape; o diálogo 20 vezes, de um jogo novo jogado até o turno 5 e as três respostas por toque real, 60 respostas); depois de cada fechamento, em repouso, os nós, os órfãos e as Windows da árvore, as views nativas, as rotas do ponteiro, as subscriptions do registro, as conexões da HUD e do sinal são os do ciclo 1, exatamente, e o heap do Hermes segue a regra do baseline; foco restaurado (o dono do foco da raiz é o mesmo antes e depois, e com o overlay aberto a Window do Modal é a única exclusiva e nenhum Control sob ela tem foco), Escape fecha a cidade e não faz nada no diálogo, e 0 de 100 cliques esquerdos, direitos e giros da roda chegam ao mundo sob o overlay no primeiro e no último ciclo; varredura da HUD contra o manifesto 0.5 (que agora decide o AppRegistry) e seis ícones originais por Image, também dentro da Window do Modal; probe de 41 checks, oráculo independente que rejeita 38 relatórios mutados, 23 casos da varredura (21 mudanças achadas e 2 casos que passam: um import só de tipo e um membro do subconjunto desestruturado), controle sobre e108e9d que falha só nos ícones e 17 sabotagens (5 novas) rejeitadas",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/evidence/civ-lite-ui/README.md"
                 },
                 {
@@ -4050,6 +4050,14 @@
                 {
                   "label": "Pesquisa: a probe de estabilidade, o que é repouso, o que o host conta (modalRuntimeMembers, objetos), a regra do heap, o foco que este host mede, a varredura e os ícones",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9/docs/research/frontier-hud.md"
+                },
+                {
+                  "label": "CI hospedada: recibo do run 37995325873 (Contracts disparado na main em 916387e, PR #100, oito jobs em success) (hosted-ci.json)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1271bbabd36d55463cd290740b33e415e817110e/docs/evidence/civ-lite-ui/stability/hosted-ci.json"
+                },
+                {
+                  "label": "Pages: recibo do run 37995302878 (push de 916387e, build e deploy em success, deployment 6971658371, migration.json publicado igual ao commitado) (publication.json)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/1271bbabd36d55463cd290740b33e415e817110e/docs/evidence/civ-lite-ui/stability/publication.json"
                 }
               ]
             }
@@ -4184,6 +4192,7 @@
             "V05-02"
           ],
           "acceptance": "Com stretch canvas_items, Dimensions.scale coincide com a escala da tela e um Pressable de 44 pt mede 44 ± 0,5 pt via measureInWindow; a HUD inteira fica dentro dos insets; 20 toques automatizados são 20 onPress sem duplicação. Hoje a densidade sai da transformação de conteúdo do Godot e não há leitura de safe area (get_display_safe_area tem 0 ocorrências em native, sdk e src).",
+          "blocker": "Preparação iOS devolvida ao GF-35 com o NO-GO do aparelho (2026-10-09); a densidade e o SafeAreaView seguem como fatia do GF-09, sem reivindicar este item.",
           "criteria": [
             {
               "id": "densidade",
@@ -4229,6 +4238,7 @@
             "V05-08"
           ],
           "acceptance": "O consumidor do jogo, exportado em Release e assinado com o time Apple do usuário, passa os estágios do gate em um iPhone arm64 físico em paisagem (modelo, iOS e taxa de atualização registrados), com recibo manual nomeado. Um NO-GO fecha o 0.5 como macOS completo. Hoje o script ios-consumer-export.py recusa execução em aparelho e usa CODE_SIGNING_ALLOWED=NO; o estágio G0 (o fixture de fumaça iOS, não o jogo) começa no dia 0.",
+          "blocker": "NO-GO do usuário em 2026-10-09: sem iPhone, Apple Team nem Developer Mode; o 0.5 fecha como macOS completo e o mobile volta ao GF-35, sem alterar a 1.0.",
           "criteria": [
             {
               "id": "g0",
@@ -4257,8 +4267,13 @@
             {
               "id": "decisao",
               "label": "Decisão GO ou NO-GO registrada; NO-GO fecha o 0.5 como macOS completo e devolve o mobile ao GF-35 sem alterar números da 1.0",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Registro do NO-GO do usuário em 2026-10-09 (sem iPhone, Apple Team nem Developer Mode): docs/evidence/frontier-device/README.md",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ]
             }
           ]
         },
@@ -4400,8 +4415,13 @@
         {
           "id": "X8",
           "label": "iPhone: estágios do gate passando no aparelho, ou NO-GO registrado fechando o 0.5 como macOS completo",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Registro do NO-GO do usuário em 2026-10-09: o 0.5 fecha como macOS completo (docs/evidence/frontier-device/README.md)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+            }
+          ]
         },
         {
           "id": "X9",
@@ -4707,6 +4727,29 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-armb-timebox",
+      "at": "2026-10-10T01:58:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério braco-b, antes do braço B começar: uma emenda ao protocolo do comparativo fixa o time-box do braço B. O pré-registro dizia \"o mesmo do braço C mais um passe de otimização\", sem unidade nem medida. A unidade é o tempo ativo dos subagents que implementam e pesquisam o braço (a soma dos intervalos menores que 30 minutos entre eventos dos seus transcripts, um corte num platô: 12,78 h com 30 ou 60 minutos). O braço C, a HUD React Native do V05-05 (#82, #93 e #100), levou 12,8 h; o braço B tem 12,8 h para passar a matriz de contexto e um passe de otimização de até 3,2 h, 16,0 h no total. A mesma emenda registra o NO-GO do iPhone nos itens abertos (o comparativo cobre só o macOS). Pin PINS[2] no teste do protocolo; nenhuma medição comparativa veio antes. O protocolo segue aberto até o congelado do V05-06, e nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e95efa8b567042b1d7de57d9228809c50c33ee72/docs/research/frontier-comparison-protocol.md#amendments"
+    },
+    {
+      "id": "mobile-density-slice-2026-10-09",
+      "at": "2026-10-10T01:32:30.000Z",
+      "taskIds": [
+        "GF-09"
+      ],
+      "message": "Fatia de densidade de tela e SafeAreaView do RN (GF-09 e GF-18, com o que sobra para o GF-35), provada no desktop e SEM afirmar o V05-08. FabricApplication.density_policy (content, o padrão, ou screen: a janela vai para canvas_items com o fator da tela, reaplicado a cada bombeamento) e o SafeAreaView do próprio RN montado pelo host, com o padding do State calculado pela regra do UIKit (display_insets_core.h, 31 asserções em C++ puro) a partir da área segura que o Godot informa ou de uma semente. A lane headless tem 149 checks, um oráculo independente e um controle sobre b0e40aa em que 90 falham, exatamente os normativos; quatro sabotagens do host (15, 6, 23 e 41 checks) são rejeitadas pela sonda e pelo oráculo. A semente validation_safe_area recusa, com um diagnóstico que nomeia a faixa, uma faixa que não é um número finito não negativo (um negativo, um String e um NaN; 17 checks do grupo seam), guarda o padding da última semente válida e segue a próxima. O grupo do mundo (48 checks, 8 casos) mostra que, sob uma raiz box-none, 20 cliques na área vazia e 20 na faixa de padding chegam 20 vezes ao mundo e nenhum à HUD, e que 20 cliques no Pressable o apertam 20 vezes. Uma execução janelada numa tela Retina (escala 2, janela de 1200x720 pixels, 11 checks, três capturas vistas) mostra as barras da HUD dentro do retângulo seguro e, sem a semente, nas bordas da janela. NÃO há simulador nem dispositivo: o portão do iPhone do 0.5 é NO-GO (2026-10-09), o V05-08 voltou ao GF-35 e as faixas são os números da semente, não os de um iPhone. Só macOS arm64; a CI hospedada e o Pages desta fatia seguem pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6/docs/evidence/mobile-density/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-09-nogo",
+      "at": "2026-10-10T01:01:29.000Z",
+      "taskIds": [],
+      "message": "Decisão do usuário em 2026-10-09: NO-GO do gate físico do iPhone do marco 0.5 (V05-09, P7), porque não há aparelho, Apple Team ID nem Developer Mode. O critério decisao de V05-09 e a saída X8 ficam concluídos, com o registro em docs/evidence/frontier-device; g0, export, toque e turno seguem abertos com blocker. V05-08 volta ao GF-35 com blocker, e a densidade e o SafeAreaView de feat/mobile-density entram como fatia do GF-09. O 0.5 passa a fechar como macOS completo, e nenhum número da 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+    },
     {
       "id": "milestone-0-5-v05-06-baseline-191533a",
       "at": "2026-10-09T20:56:00.000Z",

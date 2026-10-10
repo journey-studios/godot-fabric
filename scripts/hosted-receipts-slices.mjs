@@ -208,6 +208,25 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-05-overlays-67c3f16",
   },
+  // The third slice of the HUD, criterion `estabilidade` (V05-05 is complete with it), in a folder of its own inside the first one's. Its
+  // contractsRun is the Contracts run dispatched on main at the squash (a push skips the native suites), and its native steps ran in the job native-suites-runtime.
+  {
+    folder: "civ-lite-ui/stability",
+    pr: 100,
+    squash: "916387e",
+    contractsRun: 37995325873,
+    pagesRun: 37995302878,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-estabilidade-4ffdb6e",
+  },
   {
     folder: "windowed-presence",
     pr: 99,

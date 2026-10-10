@@ -27,9 +27,12 @@ const migration = JSON.parse(read("dashboard/migration.json"));
 //    (`measurementsBefore: 0`). The entry was reworded twice on review before it reached main, so it is one amendment with one pin: its first wording (commit 237b171,
 //    pin 6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0) called the values "CPU times" for both uses, and the second (pin
 //    b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f) called them the intervals for both.
+//  - PINS[2]: the amendment of 2026-10-09, `amendments[1]`: arm B's time-box gets its length (arm C's 12.8 h of subagent active time plus an optimization pass of at
+//    most 3.2 h, 16.0 h in all), and the open item of the iPhone records the NO-GO of V05-09. No comparative measurement had run (`measurementsBefore: 0`).
 const PINS = [
   "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
-  "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb"
+  "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb",
+  "0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6"
 ];
 const PINNED_SHA256 = PINS[protocol.amendments.length];
 const FREEZE_KEYS = ["frozenValue", "frozenAt"];
@@ -441,11 +444,11 @@ const amendmentErrors = (candidate, executionDone) => {
 };
 
 test("an amendment says what changed, why, the text it replaces and that no comparative measurement came before it", () => {
-  assert.equal(protocol.amendments.length, 1);
+  assert.equal(protocol.amendments.length, 2);
   assert.equal(executionCriterion.done, false, "the comparative executions have not run: when they do, the amendments after them count measurements");
   assert.deepEqual(amendmentErrors(protocol, executionCriterion.done), []);
-  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09"]);
-  assert.equal(protocol.amendments[0].measurementsBefore, 0);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09"]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0]);
   assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
   assert.doesNotMatch(JSON.stringify(protocol.idleReference), /idle median/, "and the protocol no longer says it");
   assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs of the per-frame values/);
@@ -461,6 +464,30 @@ test("an amendment says what changed, why, the text it replaces and that no comp
     const section = doc.slice(doc.indexOf("\n## Amendments\n"), doc.indexOf("\n## Reproducing\n"));
     assert.ok(section.includes(amendment.date) && section.includes(PINS[index + 1]), `the research note lists the amendment of ${amendment.date} with its pin`);
   }
+});
+
+test("arm B's time-box has its length, recorded before arm B starts, and the iPhone's open item follows the NO-GO", () => {
+  const [, timeBox] = protocol.amendments;
+  assert.match(timeBox.before, /its length is set and recorded before arm B starts/, "it keeps the text it replaced");
+  assert.match(timeBox.before, /its time-box has no length yet/);
+  assert.match(timeBox.before, /the iPhone depends on the GO or NO-GO of V05-09/);
+  const box = protocol.decisionRule.partialReport.timeBox;
+  assert.match(box, /^the same as arm C's plus one optimization pass, counted as the active time of the subagents/, "the rule of the pre-registration stays its first words");
+  assert.match(box, /gaps shorter than 30 minutes between consecutive timestamped events/);
+  // The three numbers agree with one another: the pass is a quarter of C's time and the box is their sum.
+  const hours = pattern => Number.parseFloat(box.match(pattern)[1]);
+  const armC = hours(/took (\d+\.\d) h by that count/);
+  const pass = hours(/one optimization pass of at most (\d+\.\d) h \(a quarter of C's\)/);
+  const total = hours(/In all (\d+\.\d) h/);
+  assert.deepEqual([armC, pass, total], [12.8, 3.2, 16]);
+  assert.equal(pass.toFixed(1), (armC / 4).toFixed(1));
+  assert.equal(total.toFixed(1), (armC + pass).toFixed(1));
+  assert.match(box, /`parity`/, "arm B is ready when the parity rule passes");
+  const open = Object.fromEntries(protocol.open.map(item => [item.id, item.text]));
+  assert.doesNotMatch(open["arm-b"], /no length yet/);
+  assert.match(open["arm-b"], /decisionRule\.partialReport\.timeBox/);
+  assert.match(open.iphone, /NO-GO/);
+  assert.equal(protocol.iphone.noGo, "the comparison covers macOS only", "the NO-GO branch of the iPhone block is the one that applies, and it does not change");
 });
 
 test("a change of the protocol after the pre-registration fails unless it comes with an amendment and a pin", () => {

@@ -56,6 +56,9 @@ endforeach()
 set(MODULES
   react/debug react/featureflags react/utils react/timing
   react/renderer/core react/renderer/components/view react/renderer/components/root
+  # RN's own SafeAreaView shadow node and State (the padding) and its descriptor; the insets that fill the State are the
+  # host's (display_insets.h).
+  react/renderer/components/safeareaview
   react/renderer/components/scrollview react/renderer/components/text
   react/renderer/textlayoutmanager react/renderer/componentregistry
   react/renderer/components/legacyviewmanagerinterop
@@ -177,6 +180,8 @@ add_executable(scroll_motion_test scroll_motion_test.cpp)
 # The pure performance accounting (series, percentiles, the phases of a pump) needs neither Godot nor RN.
 add_executable(performance_metrics_test performance_metrics_test.cpp)
 add_executable(affine_transform_test affine_transform_test.cpp)
+# The pure safe-area arithmetic (unsafe bands, UIKit's per-view insets, pixel rounding and the update threshold) needs neither Godot nor RN.
+add_executable(display_insets_core_test display_insets_core_test.cpp)
 # The pure HTTP core (URLs, redirects, charsets, base64, multipart) and the blob store need neither Godot nor RN.
 add_executable(http_core_test http_core_test.cpp)
 # The pure image support (source URIs, format sniffing, header sizes, decode targets and the resize-mode geometry) needs neither Godot nor RN.
@@ -228,6 +233,8 @@ target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE
 target_sources(fabric_godot PRIVATE accessibility_info.cpp accessibility_announcer.cpp)
 # LayoutAnimation: RN's LayoutAnimationDriver over the application's frame clock.
 target_sources(fabric_godot PRIVATE layout_animation.cpp)
+# SafeAreaView: the window's unsafe bands from Godot, and the padding that RN's own State carries to Yoga.
+target_sources(fabric_godot PRIVATE display_insets.cpp)
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
 # registered only in this library; the shipped Fabric extension has no probe API.
@@ -256,7 +263,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test performance_metrics_test affine_transform_test http_core_test image_core_test image_effects_test image_cache_test image_network_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test accessibility_info_core_test accessibility_announcement_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test performance_metrics_test affine_transform_test display_insets_core_test http_core_test image_core_test image_effects_test image_cache_test image_network_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test accessibility_info_core_test accessibility_announcement_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

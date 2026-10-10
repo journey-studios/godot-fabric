@@ -81,8 +81,9 @@ func run_probe() -> void:
     "layout/The original Modal fills the host Window despite its smaller FabricSurface")
   check(Vector2(modal.fabricWidth, modal.fabricHeight) == host_size,
     "layout/RN's original ModalHostView state sizes its Yoga node to the host Window")
-  check(not safe_area.is_empty() and safe_area.kind == "view" and not title.is_empty() and title.nativeText == "Modal contents",
-    "children/The original SafeAreaView resolves to Godot's default View and mounts its RN content")
+  check(not safe_area.is_empty() and safe_area.kind == "view" and safe_area.component == "SafeAreaView" and not title.is_empty()
+      and title.nativeText == "Modal contents",
+    "children/RN's SafeAreaView mounts as Godot's View control and its RN content")
   check(not input.is_empty() and input.nativeText == "first" and input.editable,
     "children/The public TextInput adapter is a live editable native LineEdit inside the Modal")
   check(not action.is_empty() and action.kind == "button" and action.nativeText == "Modal action",

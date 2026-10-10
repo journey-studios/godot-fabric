@@ -157,7 +157,8 @@ const viewShared = [
     [viewJs, iosBase], { via: { "aria-labelledby": "accessibilityLabelledBy" } }),
   androidNativeIgnored(["needsOffscreenAlphaCompositing", "hasTVPreferredFocus"]),
 ];
-// View: RN's original View.js over the base view config (src/base-view-config.js).
+// View: RN's original View.js over the base view config (src/base-view-config.js). RN's SafeAreaView (its iOS native component,
+// whose props are ViewProps) is judged by this table too: the facade runs checkProps("View", ...) for it.
 const view = [
   ...viewShared,
   ignored("ios-drops", ["aria-modal"], "RN's View.js does not map it and iOS does not list the name", [viewJs, iosBase]),
