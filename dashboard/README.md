@@ -147,15 +147,15 @@ e critérios de saída próprios, calculados à parte do percentual da 1.0
 - A mensagem de direcionamento está em `activity`, mas ela afunda quando entram
   entradas mais novas: o canal durável é `AGENT_PROMPT.md` e este arquivo.
 
-## Agentes em paralelo (até 5)
+## Agentes em paralelo (até 6)
 
-O painel local mostra até cinco agentes trabalhando ao mesmo tempo, cada um em
+O painel local mostra até seis agentes trabalhando ao mesmo tempo, cada um em
 sua própria worktree: quem é, o que faz, em qual worktree, branch e HEAD está,
 quais áreas reservou e se atrapalha outro agente. Aparece na seção **Agentes**
 e como chips "Agente N" nos itens GF do roadmap.
 
 O registro é um arquivo por agente em `<git-common-dir>/fabric-agents/slot-N.json`
-(N de 1 a 5), no diretório git compartilhado por todas as worktrees do clone.
+(N de 1 a 6), no diretório git compartilhado por todas as worktrees do clone.
 Fica fora do git de propósito: é coordenação ao vivo e local, e um campo no
 `migration.json` divergiria por branch e geraria conflitos de merge. Cada agente
 escreve só o próprio arquivo. `FABRIC_AGENTS_DIR` ou `--agents <dir>` (também no
@@ -185,7 +185,7 @@ Regras:
 
 - Um agente por worktree e uma branch por agente, nunca `main`. A worktree
   (raiz do `git rev-parse --show-toplevel`) identifica o agente; o slot sai do
-  `claim` (primeiro livre, ou `--slot N`). Com os cinco slots ocupados o `claim`
+  `claim` (primeiro livre, ou `--slot N`). Com os seis slots ocupados o `claim`
   é recusado e indica com quem falar.
 - Áreas são exclusivas por prefixo: diretório termina com `/`
   (`src/networking/`), arquivo não (`src/a.js`). Sem caminho absoluto, `..` ou
