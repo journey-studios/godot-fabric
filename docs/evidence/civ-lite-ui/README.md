@@ -29,7 +29,7 @@ Este registro tem **três partes**. A **fatia 1** (as seções até "Em aberto" 
 overlays bloqueantes (critério `overlays`), em `12b6c83` sobre `622102e`: a seção "Fatia 2a" e o objeto `slice2a` do recibo; o PR #93 a levou para a `main`
 como `e108e9d`, e os recibos hospedados dela estão em [`overlays/`](overlays/README.md). A **fatia 2b** é a estabilidade (critério `estabilidade`, o último do
 item, com as capturas e os ícones), em `0a0deca` sobre `e108e9d`: a seção "Fatia 2b" no fim e o objeto `slice2b` do recibo. As oito capturas
-abaixo foram regeneradas na fatia 2a com os mesmos nomes (o git guarda as de `096a018`); as sete da fatia 2b são as `stability-*.png`.
+abaixo foram regeneradas na fatia 2a com os mesmos nomes (o git guarda as de `096a018`); as sete da fatia 2b são as `stability-*.png`. Uma **correção posterior** ao #100, no fim ("Correção do tempo de quadro"), explica a regressão do tempo de quadro do turno que ele trouxe e a corrige na sonda da lane do turno; os recibos dela estão em [`frame-time/`](frame-time/).
 
 ## As capturas
 
@@ -720,3 +720,132 @@ rota do ponteiro, órfão e do que a rodada criou; o heap e os objetos; o foco; 
 - O erro do motor ao sair com um `Modal` aberto (do host), a tarefa à parte.
 - As tabelas de `docs/research/frontier-turn.md`, regravadas pela lane do turno sobre a HUD com ícones.
 - O resto do marco 0.5 (V05-06 em diante e a comparação final).
+
+## Correção do tempo de quadro (regressão do #100)
+
+O #100 (`916387e`) levou seis ícones desenhados por `Image` para a HUD, e a lane janelada do turno (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) passou a medir cada quadro de snapshot acima de um período de 8,33 ms a 120 Hz. Esta seção diz de onde vinha o tempo, o que foi corrigido, a invariante que guarda a correção e o A/B janelado. Os fontes da correção estão fixados no **commit de implementação [`25bdf7a8f2e38be40b9194fca2ade3c121d124c6`](https://github.com/journey-studios/godot-fabric/commit/25bdf7a8f2e38be40b9194fca2ade3c121d124c6)**, sobre a `main` em `0b9fbbf`. A correção **não tem C++** (o host é o mesmo, `addons/fabric_godot.dylib`, SHA-256 `258d1821…`) e **não muda a HUD** (`consumers/civ-lite/ui` é byte a byte o do #100). O que muda é a **sonda da lane do turno** (`tests/frontier-turn-probe.gd`), o oráculo dela e a tabela de sabotagens. Os recibos brutos da investigação estão em [`frame-time/`](frame-time/).
+
+### O sintoma
+
+A/B do Agente 4 (slot 4), na mesma máquina e no mesmo estado (carga de 5,8 a 8,6), 5 de 5 vagas apresentadas por braço; só o `consumers/civ-lite` muda entre os braços. Os números são dele e entram aqui como referência; os recibos estão com ele.
+
+| HUD | Mediana da soma dos 7 quadros do turno | p50 de cada fase |
+| --- | ---: | ---: |
+| antes do #100 (`fb51c07`) | 54,9 ms | 4 a 8 ms |
+| depois do #100 (`916387e`) | 94,7 ms | cerca de 14 ms |
+
+### O que não era
+
+As hipóteses da investigação (recarga ou decode de textura por commit, eventos de carga por snapshot, fonte nova a cada render, o que mais os ícones trouxeram) foram medidas, e a HUD nova não faz mais trabalho de imagem por snapshot do que a antiga. Um processo headless jogava um jogo novo pelos serviços, selecionava um tile e terminava três turnos, e lia os contadores do host antes e depois de cada passo ([`frame-time/diagnostic.json`](frame-time/diagnostic.json), `hostCountersPerStep`):
+
+| Passo | Pedidos ao carregador de imagens | Cargas, decodes e uploads | `onLoadStart`, `onLoad`, `onLoadEnd` | Estados das `Image` (reinscrições) | Updates do host | Redesenhos das `Image` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| selecionar um tile (monta as 4 `Image` do cartão e do painel) | 4 | 4 | 4, 4, 4 | 4 | 0 | 8 |
+| um fim de turno, HUD com ícones (6 commits, 7 snapshots) | **0** | **0** | **0, 0, 0** | **0** | 47 | 18 |
+| um fim de turno, HUD sem ícones (`fb51c07`) | 0 | 0 | 0, 0, 0 | 0 | 29 | 0 |
+
+- **(a) O host não recarrega, decodifica nem reenvia textura por commit.** Os 7 snapshots de um turno pediram 0 cargas: o `GodotImage` só recomeça uma carga quando a fonte muda (`native/image_view.cpp`, `resubscribe`), e a fonte do RN é igual por `type` e `uri` (`ImageSource::operator==`, `ReactCommon/react/renderer/imagemanager/primitives.h`). Uma carga acontece por **montagem** de `Image` (um tile selecionado, o painel de ações, a tela da cidade), nunca por snapshot.
+- **(b) Nenhum evento de carga volta ao JS por snapshot**: `loadStarts`, `loads`, `loadEnds` e `states` das `Image` não mudam num turno.
+- **(c) A fonte nova a cada render não é tratada como mudança** (os mesmos contadores, em 0).
+- **(d) O resto do que os ícones trouxeram não é a causa.** O `Modal` não está montado nos turnos (o contexto é `none`). Os 18 updates e os 18 redesenhos a mais por turno são as 3 `Image` da barra que mudam de posição quando o texto à esquerda (a fase) muda de largura: um `memo(Icon)` de teste (removido depois) deixou os 47 updates e os 18 redesenhos iguais, e o `pump` e o JS do host de um turno se sobrepõem com e sem ícones (14,2 a 15,4 ms de `pump` e 12,3 a 13,2 ms de JS com eles; 13,6 a 16,0 ms e 11,6 a 13,3 ms sem, em cinco execuções janeladas de cada). Cada redesenho é um `canvas_item_clear` e um `texture_rect`: microssegundos.
+
+Os recibos dizem o resto: o intervalo de um quadro do turno, menos o que a sonda gastou dentro dele, é **o mesmo** com e sem ícones (abaixo).
+
+### O que era: a sonda lia o snapshot do Surface em todo quadro cronometrado
+
+`frontier-turn-probe.gd` decide a chegada de um clique e registra o spinner de cada quadro do turno com `mounted()`, que lê o `snapshot()` do `FabricSurface` e o interpreta em GDScript, **duas vezes por quadro**. Esse snapshot não é só a árvore da HUD: é o status inteiro da aplicação, e dentro dele está o **log do carregador de imagens** (`images.jobs`, um registro de ~440 bytes por `Image` montada, até 256: `max_records` em `native/image_loader.cpp`). Com a HUD sem ícones o log estava vazio; com os ícones, cada tile selecionado, painel de ações e tela da cidade acrescenta registros (27 por rodada do tour), e cada leitura passou a pagar o histórico da aplicação e não o que a HUD mostra.
+
+Medido com a sonda remendada para cronometrar as próprias leituras (6 rodadas do tour, 24 turnos estáveis, janelado; [`frame-time/diagnostic.json`](frame-time/diagnostic.json), `timedFrameReads`). Mediana do intervalo entre dois quadros do turno e a parte dele gasta em `mounted()`:
+
+| HUD | Bytes por leitura | `snapshot()` + interpretação | Leituras por quadro | Intervalo | Dentro de `mounted()` | O resto do intervalo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| sem ícones (`fb51c07`) | 25.949 | 0,70 + 0,56 ms | 2 | 7,2 a 7,5 ms | 2,6 a 2,7 ms | 4,4 a 4,8 ms |
+| com ícones (`0b9fbbf`) | 104.924 | 1,19 + 2,11 ms | 2 | 11,1 a 11,9 ms | 6,9 a 7,4 ms | **3,9 a 4,2 ms** |
+
+O quadro do jogo (o resto do intervalo) não ficou mais lento: ficou igual ou um pouco menor. Os +4,5 ms por quadro estão todos nas duas leituras. E a leitura **cresce** com o log, o que a lane headless de 32 rodadas mostra rodada a rodada. A tabela dá a soma dos 7 quadros de um turno (a média dos 4 turnos da rodada) com a sonda de `0b9fbbf`, com a sonda corrigida a que a sabotagem `observed-in-frames` devolve as duas leituras por quadro, e com a correção; os bytes e os registros são os do início da rodada, lidos pela sonda nova ([`frame-time/headless-ramp.json`](frame-time/headless-ramp.json)):
+
+| Rodada | Registros do log | Bytes de uma leitura | Sonda de `0b9fbbf` | Com `observed-in-frames` | Com a correção |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 3 | 31.899 | 51,6 ms | 50,0 ms | 40,6 ms |
+| 1 | 30 | 43.915 | 56,2 ms | 56,2 ms | 39,5 ms |
+| 2 | 57 | 55.937 | 57,8 ms | 61,9 ms | 38,7 ms |
+| 3 | 84 | 67.933 | 57,6 ms | 68,2 ms | 37,7 ms |
+| 4 | 111 | 79.953 | 61,7 ms | 70,7 ms | 37,5 ms |
+| 5 | 138 | 91.988 | 71,0 ms | 77,1 ms | 37,5 ms |
+| 6 | 165 | 104.024 | 76,5 ms | 75,1 ms | 37,2 ms |
+| 7 | 192 | 116.060 | 81,8 ms | 82,6 ms | 37,0 ms |
+| 8 | 219 | 128.097 | 88,4 ms | 86,0 ms | 37,2 ms |
+| 9 | 246 | 140.128 | 93,1 ms | 90,3 ms | 36,9 ms |
+| 10 a 31 | 256 (o limite) | 144.607 a 144.703 | 84,1 a 113,1 ms (e uma parada de 330,7 ms na rodada 12) | 87,0 a 120,3 ms | 36,5 a 37,3 ms |
+
+A soma sobe com o log e para de subir quando o log para de crescer (rodada 10): 51,6 ms no início, perto dos 54,9 ms que o Agente 4 mediu sem ícones, e 90 ms ou mais com o log cheio, perto dos 94,7 ms que ele mediu com ícones. A mediana dos turnos das rodadas 12 a 31 é de **90,1 ms** com a sonda de `0b9fbbf`, **92,4 ms** com a sabotagem e **37,0 ms** com a correção, sem rampa, com o snapshot de 32 KB a 145 KB ao lado. A lane headless reproduz a regressão, então a investigação não precisou de display.
+
+**Por que o log enche.** O host decodifica de novo cada montagem de uma `Image` de asset empacotado: o cache de imagens decodificadas só atende a fontes de rede (`native/image_sources.h`), como no iOS, onde o `RCTLocalAssetImageLoader` responde `shouldCacheLoadedImages` com `NO` (`node_modules/react-native/Libraries/Image/RCTLocalAssetImageLoader.mm`; o iOS tem o cache do próprio `UIImage imageNamed`, que o host não tem). Isso é fiel ao RN e não custa quadro (0 cargas por snapshot), mas deixa um registro por montagem em um log que qualquer leitor por quadro do snapshot paga.
+
+### A correção
+
+- **A sonda lê os Controles, não o snapshot, nos quadros cronometrados.** O host dá a cada Control o nome do `testID` (`set_name` em `native/application_runtime.cpp`) e os Controles de um `Modal` são filhos da `Window` dele, que está na SceneTree: uma busca por nome (`find_children("hud-*", "Control")`) custa a árvore e não o histórico da aplicação. A chegada de um clique (os painéis do contexto, o marcador dele, a escolha da cabeça da fila, a ausência do spinner e o jogo em repouso) e o spinner de cada quadro do turno passam por uma só função, `timed_view()`. A leitura completa do snapshot só acontece em repouso e **uma vez, na chegada**, depois do último quadro cronometrado, e os dois lados têm de concordar (`fullAgrees`).
+- **A HUD e o host não mudam.** A HUD não faz trabalho de imagem por snapshot (tabela acima), e um `memo(Icon)` não mudou nenhum contador do host, então não entrou. O host é fiel ao RN no que faz; o cache de decodificadas para assets empacotados e o `queue_redraw()` incondicional do `GodotImage::apply` ficam em "Em aberto".
+- **As medidas antigas da lane do turno incluíam a leitura da própria sonda** (2,6 ms de cada quadro de 7,2 ms, mesmo na HUD sem ícones). Os números do turno mudam de qualquer jeito com a correção; o A/B abaixo põe os três lado a lado.
+
+### A invariante, o controle e a sabotagem
+
+A regra `observation` do oráculo (`tests/frontier-turn-oracle.mjs`, `verifyObserved`) julga, nas duas lanes (a headless e a janelada), exatamente e sem depender do ritmo:
+
+1. **nenhum intervalo entre dois quadros cronometrados contém uma leitura do snapshot do Surface**: cada clique traz `frameReads` (as leituras feitas em cada intervalo, do mesmo tamanho de `frameUsec`) e cada quadro do turno traz `surfaceReads`, e todos valem 0;
+2. **o que os quadros leem dos Controles e a leitura completa da chegada dizem o mesmo** (`fullAgrees`, em todos os cliques);
+3. **o que uma leitura pesa** é registrado em todo repouso (`surface.bytes` e `surface.loaderRecords`) e fica dentro do que o log guarda (no máximo 256 registros e no máximo os pedidos de carga).
+
+A sonda tem os dois primeiros como checks (`observation/No interval between two timed frames contains a read of the Surface's snapshot…` e `observation/The Controls the timed frames read and the full reading of the Surface say the same…`), com nomes sem contagem. A lane headless passou com a invariante: 0 leituras em todos os intervalos dos 608 cliques (32 rodadas de 19), e a leitura dos Controles concordou com a completa em todos eles.
+
+**O controle causal** não é um host anterior (não há C++), é a sonda de `0b9fbbf`: a sabotagem retida **`observed-in-frames`** (`tests/frontier-turn-sabotages.mjs`) troca o corpo de `timed_view()` pela leitura completa do snapshot, o que devolve às duas leituras por quadro de `0b9fbbf` (a da chegada e a do spinner). A sonda rejeita a sabotagem com 1 check (`observation/No interval between two timed frames contains a read…`) e o oráculo com a regra `observation` e só ela ("round 0 map-stack: and no timed frame contains one (1, 1)"). Os quadros do turno voltam a ler duas vezes cada (`surfaceReads` 1, 2, 2, 2, 2, 2, 2, 2) e a soma deles volta ao que era: a mediana das rodadas 12 a 31 é de 92,4 ms, contra 90,1 ms da sonda de `0b9fbbf` e 37,0 ms da correção (tabela acima). Foram rodadas as cinco sabotagens da lane do turno ([`frame-time/sabotage.json`](frame-time/sabotage.json)): as quatro de antes seguem rejeitadas, cada uma pela regra para a qual foi escrita (`click-misses-panel` agora falha também a regra `observation`, porque a execução cortada não tem chegada para comparar), as fontes voltam byte a byte (o SHA-256 da sonda genuína e o da restaurada são iguais) e a árvore do template é a mesma antes e depois.
+
+Os 6 casos novos do oráculo sobre o relatório gravado (uma leitura num quadro de clique, uma num quadro do turno, o contador que falta, os Controles que discordam da leitura completa, um snapshot sem peso e registros além do log) são rejeitados cada um **pela regra `observation` e só por ela**, e os 5 casos sintéticos da lane janelada (`tests/frontier-turn-graphics.test.mjs`) recusam uma execução com leitura num quadro de clique, num do turno, sem o contador, com ele curto e com os dois lados discordando.
+
+### O A/B janelado
+
+**Como foi rodado.** `caffeinate -d node scripts/frontier-turn-graphics.mjs`, quatro braços de 5 execuções apresentadas, um braço depois do outro na mesma máquina, em 2026-10-10 de 03:50 a 04:35 UTC, depois do aviso no quadro dos agentes e de 2 minutos de espera por objeção. Em todos os braços as 5 vagas foram aceitas na primeira tentativa, com vsync ligado a 120 Hz, referência ociosa de 8,32 a 8,36 ms e 0 quadros sem poder desenhar. O Mac **não estava quieto**: a média de carga de 1 minuto antes de cada execução foi de 4,97 a 12,71 (a carga de cada execução está em [`windowed-summary.json`](frame-time/windowed-summary.json)). Os braços mudam só o conjunto sonda, oráculo e script da lane, e a HUD:
+
+| Braço | Lane | HUD | Recibo |
+| --- | --- | --- | --- |
+| `main` | a de `0b9fbbf` (a sonda lê o snapshot em todo quadro cronometrado) | a do #100, com ícones | [`windowed-main.json`](frame-time/windowed-main.json) |
+| correção | a corrigida (a sonda lê os Controles) | a do #100, com ícones | [`windowed-fix.json`](frame-time/windowed-fix.json) |
+| HUD anterior, sonda corrigida | a corrigida | a de `fb51c07`, que é a de `1bc3a3c` (`git diff 1bc3a3c fb51c07 -- consumers/civ-lite` é vazio), sem ícones | [`windowed-previous-hud-fixed-probe.json`](frame-time/windowed-previous-hud-fixed-probe.json) |
+| HUD anterior, sonda de `0b9fbbf` | a de `0b9fbbf` | a de `fb51c07`, sem ícones: o arranjo das execuções do congelado do V05-06 | [`windowed-previous-hud-old-probe.json`](frame-time/windowed-previous-hud-old-probe.json) |
+
+**As duas janelas do congelado e a conta delas.** Os números abaixo saem do **código do próprio congelado do V05-06**, não de uma definição deste registro: o `scripts/frontier-freeze-receipts.mjs` da `main` em `561251d` (#107), copiado sem mudança para um diretório de rascunho, com as funções `extractTurnRun`, `turnBusySums` e `turnPhaseValues`, e o `nearestRank` e os quartis de `tests/performance-oracle.mjs`, sobre os intervalos crus dos recibos, em microssegundos inteiros. `ai-phase` são os 6 primeiros quadros ocupados do turno (do que aceita o End Turn ao último antes do que entrega `turn_ended`); `event-burst` é o último quadro ocupado (o que entrega `turn_ended`) e os que o registro do turno guarda depois dele, a HUD alcançando. São 120 turnos estáveis por execução (as 2 rodadas de aquecimento ficam de fora), então 720 e 240 quadros ou mais. O p95 de uma execução é por posto mais próximo sobre os intervalos juntos dela, e entre as 5 execuções vale a mediana e o intervalo interquartil (os quartis de cinco por posto mais próximo). O `windowed-summary.json` guarda a conta.
+
+| Braço | Soma dos 7 quadros (mediana das execuções, IQR) | `ai-phase`: p95 (IQR) | `event-burst`: p95 (IQR) |
+| --- | ---: | ---: | ---: |
+| `main` | 92,2 ms (0,2) | **16,66 ms** (0,11) | **16,89 ms** (0,18) |
+| **correção** | **53,4 ms** (0,6) | **13,66 ms** (0,05) | **13,52 ms** (0,05) |
+| HUD anterior, sonda corrigida | 56,4 ms (4,8) | 14,44 ms (0,17) | 14,38 ms (0,29) |
+| HUD anterior, sonda de `0b9fbbf` | 55,7 ms (0,7) | 14,66 ms (0,07) | 14,84 ms (0,07) |
+| referência, do Agente 4 (`fb51c07` / `916387e`) | 54,9 / 94,7 ms | | |
+
+O p50 de cada fase (mediana entre as execuções, em ms):
+
+| Braço | `ai_plan` | `ai_move` | `production` | `growth` | `research` | `refresh` | `idle` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `main` | 7,42 | 13,72 | 13,90 | 13,81 | 13,73 | 13,77 | 13,84 |
+| correção | 2,15 | 11,90 | 4,40 | 12,41 | 4,16 | 12,58 | 3,91 |
+| HUD anterior, sonda corrigida | 3,89 | 5,94 | 7,22 | 5,81 | 12,25 | 5,07 | 12,19 |
+| HUD anterior, sonda de `0b9fbbf` | 4,47 | 7,99 | 7,78 | 7,56 | 7,73 | 7,44 | 7,27 |
+| referência, do Agente 4 | `fb51c07`: 4 a 8 ms; `916387e`: cerca de 14 ms | | | | | | |
+
+**O que a tabela diz.**
+
+- **Contra os 15,5 ms do congelado (p95 nas duas janelas)**, a correção dá 13,66 e 13,52 ms, abaixo dele; o `main` dá 16,66 e 16,89 ms, acima. **Os 18,5 e 18,5 ms do Agente 4 para a HUD do #100 não são um p95 medido**: são o orçamento que a regra do congelado (mediana mais 3 vezes o IQR, para cima a 0,5 ms) deu às execuções dele. O p95 que ele mediu (a mediana entre as execuções do p95 de cada uma), na HUD do #100, é de 16,787 ms no `ai-phase` e de 17,192 ms no `event-burst`, que batem com o `main` daqui (16,66 e 16,89): as duas sessões concordam.
+- **A causa foi o instrumento, e os braços de HUD dizem quanto.** A soma dos 7 quadros vai de 92,2 ms (sonda de `0b9fbbf`) para 53,4 ms (sonda corrigida) **sem mudar uma linha da HUD**, e o p95 das duas janelas cai 3,0 e 3,4 ms. Com a sonda corrigida, a HUD com ícones não é mais lenta que a sem ícones (53,4 contra 56,4 ms de soma, 13,66 contra 14,44 ms e 13,52 contra 14,38 ms de p95; o braço sem ícones teve a carga subindo a 12,7 e duas execuções a 60,4 e 60,6 ms, então a diferença a favor dos ícones é ruído, e o A/B não resolve menos de 1 ms).
+- **Na HUD sem ícones o instrumento quase não pesava**, e por isso o 15,5 do congelado não era inflado por ele: a sonda de `0b9fbbf` dá 55,7 ms de soma e 14,66 e 14,84 ms de p95; a corrigida, 56,4 ms e 14,44 e 14,38 ms. Com 120 Hz o período é de 8,33 ms, e na HUD sem ícones as duas leituras (2,6 ms de um intervalo de 7,2 ms) ainda cabiam dentro do período; com o log do carregador enchendo elas passaram a 7 ms de um intervalo de 11 ms (nas 6 rodadas medidas, e mais com o log cheio), cada quadro perdeu a apresentação e custou dois períodos. A diferença entre os dois braços de HUD anterior (0,2 a 0,5 ms no p95, 0,7 ms na soma) está dentro do ruído.
+- **Para o congelado:** na HUD anterior ao #100, as leituras da sonda antiga moveram as janelas em menos de 1 ms (14,66 e 14,84 ms contra 14,44 e 14,38 ms), então os 15,5 ms congelados se mantêm. Com a correção, os p95 da HUD com ícones (13,66 e 13,52 ms) ficam abaixo deles. **A medição oficial da lane corrigida é do Agente 4 e fica por rodar.**
+- **O p50 por fase volta à faixa de antes só com a sonda de `0b9fbbf` sobre a HUD anterior** (4,5 e 7,3 a 8,0 ms, os "4 a 8 ms" do Agente 4). Com a sonda corrigida os quadros deixam de ter folga artificial e caem nos dois grupos de um loop com vsync a 120 Hz (cerca de 2 a 5 ms e cerca de 12 ms, que `docs/research/frontier-turn.md` já descreve), alternando de uma fase para a seguinte; o p50 de cada fase passa a ser o de um dos dois grupos e **não é o número a ler**. A soma dos 7 quadros (53,4 ms, perto dos 54,9 ms de antes) e o p95 são os estáveis.
+- **Limites do A/B.** Uma máquina, um monitor, um modo de vsync, a máquina carregada por outros agentes o tempo todo (4,97 a 12,71 de carga), cada braço rodado uma vez, em sequência e não alternado, e uma conta de A/B, não o congelado. São intervalos entre quadros de processo, não quadros mostrados.
+
+### Em aberto
+
+- **O cache de imagens decodificadas não atende a assets empacotados**, como o `RCTLocalAssetImageLoader` do iOS; cada montagem decodifica de novo na `WorkerThreadPool` e envia uma textura (27 por rodada do tour). Não custa quadro, mas deixa 27 registros por rodada no log e uma decodificação sem necessidade a cada painel que abre. É uma fatia de host à parte, com o controle do host anterior; esta correção não a tocou.
+- **`GodotImage::apply` chama `queue_redraw()` em todo commit** do nó, mesmo quando só a posição mudou (18 redesenhos por turno, de microssegundos). Também fica de fora.
+- **Qualquer leitor por quadro do snapshot paga o log do carregador**, e isso vale para as sondas da comparação final (V05-10, braço C): elas devem ler o instrumento do #97 (`tests/cpu-time-instrument.gd`), não o snapshot.
+- **Os números do turno anteriores a esta correção**, inclusive os de `docs/research/frontier-turn.md` e os que o Agente 4 vai congelar (V05-06), foram medidos com a sonda que lia o snapshot duas vezes por quadro, na HUD com ou sem ícones. A medição oficial da lane corrigida é do Agente 4 e fica por rodar.
+- A CI hospedada e o Pages desta correção só existem depois do merge.

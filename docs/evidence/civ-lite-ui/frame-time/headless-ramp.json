@@ -1,0 +1,359 @@
+{
+ "format": "godot-fabric.civ-lite-ui-frame-time-ramp/v1",
+ "what": "The headless turn lane (32 rounds of the tour, 2 of them warm-up; the 4 End turn of each round), round by round: what one read of the Surface snapshot weighed at the start of the round, the records the image loader kept in it, and the mean over the round of the sum of the 7 busy frames of a turn (ms), with three probes. probeOf0b9fbbf is the probe of 0b9fbbf (run of 2026-10-10, before the correction; it did not record the weight of a read, so its bytes and records are the ones the observed-in-frames run read at the same rounds); observedInFramesSabotage is the corrected probe with the retained sabotage observed-in-frames, which reads the snapshot twice in every timed frame again; fix is the corrected probe. The bytes and the records are the same in the three, because the HUD is the same.",
+ "loaderRecordsLimit": 256,
+ "rounds": [
+  {
+   "round": 0,
+   "loaderRecords": 3,
+   "loaderRequests": 3,
+   "snapshotBytes": 31899,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 51.6,
+    "observedInFramesSabotage": 50,
+    "fix": 40.6
+   }
+  },
+  {
+   "round": 1,
+   "loaderRecords": 30,
+   "loaderRequests": 30,
+   "snapshotBytes": 43915,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 56.2,
+    "observedInFramesSabotage": 56.2,
+    "fix": 39.5
+   }
+  },
+  {
+   "round": 2,
+   "loaderRecords": 57,
+   "loaderRequests": 57,
+   "snapshotBytes": 55937,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 57.8,
+    "observedInFramesSabotage": 61.9,
+    "fix": 38.7
+   }
+  },
+  {
+   "round": 3,
+   "loaderRecords": 84,
+   "loaderRequests": 84,
+   "snapshotBytes": 67933,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 57.6,
+    "observedInFramesSabotage": 68.2,
+    "fix": 37.7
+   }
+  },
+  {
+   "round": 4,
+   "loaderRecords": 111,
+   "loaderRequests": 111,
+   "snapshotBytes": 79953,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 61.7,
+    "observedInFramesSabotage": 70.7,
+    "fix": 37.5
+   }
+  },
+  {
+   "round": 5,
+   "loaderRecords": 138,
+   "loaderRequests": 138,
+   "snapshotBytes": 91988,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 71,
+    "observedInFramesSabotage": 77.1,
+    "fix": 37.5
+   }
+  },
+  {
+   "round": 6,
+   "loaderRecords": 165,
+   "loaderRequests": 165,
+   "snapshotBytes": 104024,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 76.5,
+    "observedInFramesSabotage": 75.1,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 7,
+   "loaderRecords": 192,
+   "loaderRequests": 192,
+   "snapshotBytes": 116060,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 81.8,
+    "observedInFramesSabotage": 82.6,
+    "fix": 37
+   }
+  },
+  {
+   "round": 8,
+   "loaderRecords": 219,
+   "loaderRequests": 219,
+   "snapshotBytes": 128097,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 88.4,
+    "observedInFramesSabotage": 86,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 9,
+   "loaderRecords": 246,
+   "loaderRequests": 246,
+   "snapshotBytes": 140128,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 93.1,
+    "observedInFramesSabotage": 90.3,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 10,
+   "loaderRecords": 256,
+   "loaderRequests": 273,
+   "snapshotBytes": 144607,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 95.6,
+    "observedInFramesSabotage": 89.1,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 11,
+   "loaderRecords": 256,
+   "loaderRequests": 300,
+   "snapshotBytes": 144631,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 98.6,
+    "observedInFramesSabotage": 95.3,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 12,
+   "loaderRecords": 256,
+   "loaderRequests": 327,
+   "snapshotBytes": 144666,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 330.7,
+    "observedInFramesSabotage": 88.2,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 13,
+   "loaderRecords": 256,
+   "loaderRequests": 354,
+   "snapshotBytes": 144691,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 113.1,
+    "observedInFramesSabotage": 91.1,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 14,
+   "loaderRecords": 256,
+   "loaderRequests": 381,
+   "snapshotBytes": 144698,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 96.3,
+    "observedInFramesSabotage": 89.6,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 15,
+   "loaderRecords": 256,
+   "loaderRequests": 408,
+   "snapshotBytes": 144691,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 104.2,
+    "observedInFramesSabotage": 90.7,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 16,
+   "loaderRecords": 256,
+   "loaderRequests": 435,
+   "snapshotBytes": 144686,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 89.6,
+    "observedInFramesSabotage": 88.1,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 17,
+   "loaderRecords": 256,
+   "loaderRequests": 462,
+   "snapshotBytes": 144692,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 87.4,
+    "observedInFramesSabotage": 94.3,
+    "fix": 37.1
+   }
+  },
+  {
+   "round": 18,
+   "loaderRecords": 256,
+   "loaderRequests": 489,
+   "snapshotBytes": 144692,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 100.7,
+    "observedInFramesSabotage": 104.1,
+    "fix": 37
+   }
+  },
+  {
+   "round": 19,
+   "loaderRecords": 256,
+   "loaderRequests": 516,
+   "snapshotBytes": 144695,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 108.2,
+    "observedInFramesSabotage": 100.1,
+    "fix": 37
+   }
+  },
+  {
+   "round": 20,
+   "loaderRecords": 256,
+   "loaderRequests": 543,
+   "snapshotBytes": 144696,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 84.1,
+    "observedInFramesSabotage": 100.7,
+    "fix": 37
+   }
+  },
+  {
+   "round": 21,
+   "loaderRecords": 256,
+   "loaderRequests": 570,
+   "snapshotBytes": 144702,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 99.5,
+    "observedInFramesSabotage": 100.1,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 22,
+   "loaderRecords": 256,
+   "loaderRequests": 597,
+   "snapshotBytes": 144699,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 93.9,
+    "observedInFramesSabotage": 87.8,
+    "fix": 37.1
+   }
+  },
+  {
+   "round": 23,
+   "loaderRecords": 256,
+   "loaderRequests": 624,
+   "snapshotBytes": 144703,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 85.2,
+    "observedInFramesSabotage": 120.3,
+    "fix": 37.1
+   }
+  },
+  {
+   "round": 24,
+   "loaderRecords": 256,
+   "loaderRequests": 651,
+   "snapshotBytes": 144700,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 84.5,
+    "observedInFramesSabotage": 108.7,
+    "fix": 37.2
+   }
+  },
+  {
+   "round": 25,
+   "loaderRecords": 256,
+   "loaderRequests": 678,
+   "snapshotBytes": 144701,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 93.7,
+    "observedInFramesSabotage": 97.3,
+    "fix": 36.8
+   }
+  },
+  {
+   "round": 26,
+   "loaderRecords": 256,
+   "loaderRequests": 705,
+   "snapshotBytes": 144700,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 93.2,
+    "observedInFramesSabotage": 97.3,
+    "fix": 37
+   }
+  },
+  {
+   "round": 27,
+   "loaderRecords": 256,
+   "loaderRequests": 732,
+   "snapshotBytes": 144699,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 87.4,
+    "observedInFramesSabotage": 91.9,
+    "fix": 37.3
+   }
+  },
+  {
+   "round": 28,
+   "loaderRecords": 256,
+   "loaderRequests": 759,
+   "snapshotBytes": 144698,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 94.8,
+    "observedInFramesSabotage": 102.3,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 29,
+   "loaderRecords": 256,
+   "loaderRequests": 786,
+   "snapshotBytes": 144697,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 90.4,
+    "observedInFramesSabotage": 97.1,
+    "fix": 36.9
+   }
+  },
+  {
+   "round": 30,
+   "loaderRecords": 256,
+   "loaderRequests": 813,
+   "snapshotBytes": 144694,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 90.7,
+    "observedInFramesSabotage": 91.9,
+    "fix": 36.6
+   }
+  },
+  {
+   "round": 31,
+   "loaderRecords": 256,
+   "loaderRequests": 840,
+   "snapshotBytes": 144697,
+   "sumOfSevenMs": {
+    "probeOf0b9fbbf": 89.3,
+    "observedInFramesSabotage": 87,
+    "fix": 36.5
+   }
+  }
+ ]
+}
