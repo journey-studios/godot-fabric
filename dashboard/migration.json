@@ -4763,6 +4763,13 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-v05-10-stress-receipts",
+      "at": "2026-10-10T12:10:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #119, a janela de estresse do comparativo e os contadores do runner, já na main como 151427e. A Contracts disparada na main sobre o squash (run 38044068758) passou nos oito jobs: no native-suites-frontier, npm run test:frontier-stress passou (FRONTIER_STRESS_PASSED: a sonda do nó e do registro); no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs com o estágio de estresse; o job contracts passou 7, 43 e 518 testes de Node. O Pages do push (run 38044064101) publicou o migration.json commitado, com a entrada de atividade da janela. Gerador canônico com 24 fatias e 48 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ad9a527ce7f325703debcb249c7beb4ceb7d47e2/docs/evidence/frontier-stress/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "milestone-0-5-v05-06-soak-note-e0160f3",
       "at": "2026-10-10T09:06:02.000Z",
       "taskIds": [],
