@@ -2,14 +2,16 @@ import { lstat, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { MEASUREMENT_FILES } from "./frontier-comparison-run.mjs";
 
-// The project of each arm of the comparison (V05-10, criterion `execucao`; docs/research/frontier-comparison-entry.md, "The projects of the arms").
+// The project of each arm of the comparison (V05-10, criterion `execucao`; docs/research/frontier-comparison-entry.md, "The projects of the arms" and "The measurement exports").
 //
 // Arms A (no HUD, main_bare.tscn) and B (the HUD in GDScript, main_native.tscn) are built WITHOUT the Fabric extension: no addons/godot_fabric (the addon, the .gdextension, the host and the
 // Hermes and React Native frameworks). The protocol reads the price of each HUD in package size as C - A and B - A, and loading the extension would also enter the execution measures of A and B.
-// Only C (main.tscn) carries it. This file describes those projects (`armProject`, pure) and applies the description to a provisioned copy (`shapeArmProject`). It does not
-// export the game: that is a function of scripts/macos-export.mjs, which takes the directory this one prepares.
+// Only C (main.tscn) carries it. This file describes those projects (`armProject`, pure) and applies the description to a provisioned copy (`shapeArmProject`). It does not export the game: that is
+// `exportPreparedProject` of scripts/macos-export.mjs, which scripts/frontier-comparison-measurement-export.mjs calls with the options this file describes.
 //
-// The filters are written the way export_presets.cfg writes include_filter and exclude_filter: globs relative to res://, separated by commas.
+// An arm is exported with the "scenes" filter: its scene and what the scene FILES reference. Godot's scenes mode does not follow the `preload()` calls of scripts, and it ignores the entries of
+// `exportFiles` that are not scenes, so the scripts and files an arm loads that its scene files do not attach are named by the include filter, the way export_presets.cfg writes it: globs
+// relative to res://, separated by commas. Every pattern has the reason it is there, and was put there because the arm failed or changed its report without it.
 
 const ADDON = "addons/godot_fabric";
 // What the extension and C's HUD leave in a copy that was provisioned and built with them: the list of extensions the editor keeps (the import regenerates it) and the build output of the HUD
@@ -20,25 +22,66 @@ const FABRIC_SECTIONS = ["editor_plugins", "godot_fabric"];
 const MAIN_SCENE_SETTING = "run/main_scene";
 const PROJECT_FILE = "project.godot";
 const MAIN_SCENES = { A: "res://main_bare.tscn", B: "res://main_native.tscn", C: "res://main.tscn" };
+// What each arm's include filter names, with why: [pattern, reason].
+const GAME = ["game/*.gd", "the game's rules: the scripts of the scene (game_services.gd, world.gd) preload them, and a scene file does not name a script's preloads"];
+const SERVICES = ["services/*.gd", "schema.gd and stress.gd, which game_services.gd preloads"];
+const HUD_SCRIPTS = ["hud_*.gd", "the scene attaches hud_validation.gd, which extends res://hud_probe.gd by path, and that one preloads the readers (hud_reader*.gd)"];
+const INCLUDES = {
+  A: [GAME, SERVICES],
+  B: [
+    GAME,
+    SERVICES,
+    ["native_hud/*", "the HUD: hud.gd preloads its bar, menu and panel scenes (.tscn) and the kit and icons scripts, and the HUD's scene file attaches only hud.gd"],
+    HUD_SCRIPTS,
+    ["ui/icons/*", "native_hud/icons.gd preloads the six PNG icons of the HUD"],
+  ],
+  C: [
+    GAME,
+    SERVICES,
+    HUD_SCRIPTS,
+    ["stability_*.gd", "the scene attaches stability_validation.gd, which extends res://stability_judge.gd by path"],
+    ["addons/godot_fabric/*.gdextension", "the extension's manifest, which no scene file references: the export copies the host into Contents/Frameworks only for a manifest it exports, and the engine loads no extension without it"],
+    ["addons/godot_fabric/assets/fonts/*.ttf", "the fonts the host loads for text layout, by path, from res://addons/godot_fabric/assets/fonts: no scene file names them, and C's text has none without them"],
+  ],
+};
 // What the measurement project adds to the product, as a filter names it: a folder (`comparison/*`) or a file (`override.cfg`), read off the files the runner writes into the copy.
 const MEASUREMENT_ENTRIES = [...new Set(Object.keys(MEASUREMENT_FILES).map((file) => (file.includes("/") ? `${file.slice(0, file.indexOf("/"))}/*` : file)))];
+// What the scenario itself loads, in every arm, that the product of an arm may not carry: its HUD helper preloads res://hud_probe.gd, in A too, where the product has no HUD script.
+const MEASUREMENT_INCLUDES = [["hud_*.gd", "the scenario's HUD helper (frontier-comparison-hud.gd) preloads res://hud_probe.gd and, through it, the readers, in every arm"]];
+// The empty main scene of the measurement project: the one scene among the files the runner writes. The scenes mode needs it by name, since only override.cfg points at it.
+const EMPTY_SCENE = `res://${Object.keys(MEASUREMENT_FILES).find((file) => file.endsWith(".tscn"))}`;
 
 const filterOf = (entries) => entries.join(", ");
 
-// The project of an arm: its main scene (the product's), whether it carries the extension, and the export filters of the product (the package the size axis reads: no measurement files) and of
-// the measurement project (the product plus `comparison/` and `override.cfg`, whose settings override the main scene and the main loop).
+// The project of an arm: its main scene (the product's), whether it carries the extension, the include patterns of its set with their reasons, and the options of `exportPreparedProject`
+// ({exportFilter, exportFiles, includeFilter, excludeFilter, frameworks}) for the PRODUCT (the package the size axis reads: the arm's scene and its scripts, no measurement files) and for the
+// MEASUREMENT project (the product plus the empty scene, `comparison/` and `override.cfg`, whose settings override the main scene and the main loop). `frameworks` is false in A and B (an app
+// with no host and no frameworks) and true in C.
 export function armProject(arm) {
   if (typeof arm !== "string" || !Object.hasOwn(MAIN_SCENES, arm)) {
     throw new Error(`unknown arm ${JSON.stringify(arm)}: the arms are ${Object.keys(MAIN_SCENES).join(", ")}`);
   }
   const fabric = arm === "C";
   const withoutFabric = fabric ? [] : [`${ADDON}/*`];
+  const mainScene = MAIN_SCENES[arm];
+  const patterns = INCLUDES[arm].map(([pattern]) => pattern);
+  // What the measurement project adds to the arm's own patterns: the scenario's, unless the arm already has the pattern.
+  const added = MEASUREMENT_INCLUDES.filter(([pattern]) => !patterns.includes(pattern));
+  const measured = [...patterns, ...added.map(([pattern]) => pattern), ...MEASUREMENT_ENTRIES];
   return {
     arm,
-    mainScene: MAIN_SCENES[arm],
+    mainScene,
     fabric,
-    product: { include: "", exclude: filterOf([...MEASUREMENT_ENTRIES, ...withoutFabric]) },
-    measurement: { include: filterOf(MEASUREMENT_ENTRIES), exclude: filterOf(withoutFabric) },
+    includes: INCLUDES[arm].map(([pattern, why]) => ({ pattern, why })),
+    measurementIncludes: added.map(([pattern, why]) => ({ pattern, why })),
+    product: { exportFilter: "scenes", exportFiles: [mainScene], includeFilter: filterOf(patterns), excludeFilter: filterOf([...MEASUREMENT_ENTRIES, ...withoutFabric]), frameworks: fabric },
+    measurement: {
+      exportFilter: "scenes",
+      exportFiles: [mainScene, EMPTY_SCENE],
+      includeFilter: filterOf(measured),
+      excludeFilter: filterOf(withoutFabric),
+      frameworks: fabric,
+    },
   };
 }
 

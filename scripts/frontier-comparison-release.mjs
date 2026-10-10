@@ -19,7 +19,9 @@ import { scriptsOf } from "./frontier-comparison-run.mjs";
 //   scriptFiles      {path: SHA-256}, the scenario's files, the support files it uses and what the runner writes (override.cfg, the entry)
 //   godot            the engine's version, for the record
 //   templateSha256   SHA-256 of the export template the .app was made from
-//   exportBytes      [n, n]: the size of the product's package in one export and in its repeat (the protocol asks for the two to be equal), without the comparison's files
+//   exportBytes      [n, n]: the size of the product's package in one export and in its repeat (the protocol asks for the two to be equal), without the comparison's files. "Package" is the whole .app
+//                    (every regular file of the bundle, the engine and the frameworks included): the `package-size` axis prices the HUD by what the application weighs with it and without it. The probe's
+//                    export has no repeat and no axis reads it: its two numbers are its size twice
 //
 // The paths are relative to the manifest's directory and have no `..`: what a manifest names is inside the folder of its arm.
 //

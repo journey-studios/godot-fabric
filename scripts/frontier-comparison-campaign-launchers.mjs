@@ -12,6 +12,7 @@ import { launchScenario, prepareProject, processOf, registeredOf, runTimed, scen
 //   launcher.build                       "debug" or "release": the build recorded in each execution (the protocol accepts only "release")
 //   launcher.name                        what the launcher is, for the record
 //   launcher.windowed                    whether its processes run in a window or headless: the instrument's self-check runs in the same mode, with the launcher's engine
+//   launcher.rehearsalOnly               true when the launcher can only play a rehearsal (the Release launcher run headless): the campaign refuses it without `rehearsal`; absent: no such limit
 //   launcher.selfCheck                   "unsupported" when the launcher's processes cannot run the instrument's self-check, so that no campaign can start through it; an object ({entry, ...}) that the campaign passes
 //                                        to the self-check when the launcher says how to enter the probe (the Release launcher with the probe's export: {entry: "release", executable}); absent: they can, as the editor's binary
 //   await launcher.prepare()             {engine, registered, packages, deviations}: gets everything ready and says what the campaign registers (the hashes of the binary, the package
@@ -75,10 +76,13 @@ async function readReport(reportFile, log) {
 // override.cfg is inside the pck, so nothing is put in the .app, and the process gets this process's own environment. `run` (the process) and `timeout` are injectable for the tests; `cleanup()` removes
 // only the launcher's own directory, and not even that when it holds a report that could not be read (`readReport`: raw data that the attempt's log points to).
 //
+// `windowed: false` is the REHEARSAL mode, as the Debug launcher's: the processes run headless (`--headless`), a display that draws and paces nothing, the launcher says in its deviations that the
+// rehearsal is no result, and the campaign refuses it unless it is a rehearsal (`rehearsalOnly`). Everything else, the manifests, the hashes and the registration, is the same.
+//
 // The instrument's self-check: when `exportsDirectory` also has the probe's export (probe/frontier-comparison-export.json, `arm` "probe"), `prepare()` validates it the same way (the hashes of its executable
 // and package, the repository's instrument in its files) and checks that its `templateSha256` is that of the three arms: the self-check has to run on the campaign's engine. Then `selfCheck` is
 // `{entry: "release", executable}` and the campaign runs the probe through that .app (scripts/frontier-comparison-campaign-instrument.mjs). Without the probe's export, or before `prepare()`, it stays "unsupported".
-export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeout = RELEASE_TIMEOUT_MS } = {}) {
+export function createReleaseLauncher({ exportsDirectory, windowed = true, run = runTimed, timeout = RELEASE_TIMEOUT_MS } = {}) {
   if (typeof exportsDirectory !== "string" || exportsDirectory === "") {
     throw new Error("the Release launcher needs the directory of the exports: --exports <directory>, with <A|B|C>/frontier-comparison-export.json beside the .app of each arm");
   }
@@ -89,8 +93,9 @@ export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeou
   let selfCheck = "unsupported";
   return {
     build: "release",
-    name: `release: the exports in ${directory} (A/, B/ and C/, each .app run through Contents/MacOS/<executable>)`,
-    windowed: true,
+    name: `release: the exports in ${directory} (A/, B/ and C/, each .app run through Contents/MacOS/<executable>${windowed ? "" : ", headless"})`,
+    windowed,
+    rehearsalOnly: !windowed,
     get selfCheck() {
       return selfCheck;
     },
@@ -139,7 +144,7 @@ export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeou
           })),
         },
         packages: Object.fromEntries(ARMS.map((arm) => [arm, { exportBytes: [...entries[arm].manifest.exportBytes] }])),
-        deviations: [],
+        deviations: windowed ? [] : ["the Release exports ran headless (--headless), a display server that draws and paces nothing, because this is a rehearsal: no window is presented and no vsync mode is read back; a campaign proper runs windowed"],
       };
     },
     async launch({ arm, lane }) {
@@ -154,7 +159,7 @@ export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeou
       }
       const reportFile = path.join(work, `run-${arm}-${lane}.json`);
       await rm(reportFile, { force: true });
-      const ran = await run({ executable: entry.executable, args: scenarioArguments({ arm, lane, windowed: true, out: reportFile }), cwd: work, env: process.env, timeout });
+      const ran = await run({ executable: entry.executable, args: scenarioArguments({ arm, lane, windowed, out: reportFile }), cwd: work, env: process.env, timeout });
       const read = await readReport(reportFile, ran.log);
       keptUnreadable ||= read.kept !== null;
       return {
