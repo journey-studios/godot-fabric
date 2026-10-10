@@ -8,7 +8,7 @@
 Este é o **ato único** que o marco 0.5 Frontier reservou para depois do baseline janelado: congelar o **orçamento de desempenho do V05-06** (critério `congelado`) e os **cinco limiares do protocolo do comparativo final** (V05-10, critério `protocolo`), na mesma data e **antes de qualquer execução comparativa**.
 Os valores saem de uma regra escrita antes (a mediana das cinco execuções mais três vezes o intervalo interquartil, para cima a 0,5 ms), aplicada às **execuções janeladas apresentadas de 2026-10-09 sobre o commit `1bc3a3c`**, por decisão do usuário; três execuções posteriores na `main` corroboram e **não viram limiar**.
 O resultado é recalculável por qualquer um a partir de entradas commitadas e é verificado por um teste. **O critério `congelado` do V05-06 e o critério `protocolo` do V05-10 fecham com este ato**; o registro no painel vem depois deste commit de evidência.
-**A saída X6 (orçamento de desempenho pré-registrado e cumprido) continua aberta**: "cumprido" depende dos braços do comparativo e do diagnóstico da observação (c). Nenhuma medição comparativa rodou, e nada aqui diz que o HUD React Native é mais rápido ou mais lento que qualquer coisa.
+**A saída X6 (orçamento de desempenho pré-registrado e cumprido) continua aberta**: "cumprido" depende dos braços do comparativo e do tempo de CPU por quadro, não do tempo de quadro da faixa do turno ([Depois do congelamento](#depois-do-congelamento-a-faixa-corrigida-do-turno)). Nenhuma medição comparativa rodou, e nada aqui diz que o HUD React Native é mais rápido ou mais lento que qualquer coisa.
 A fatia não muda código de produto: a API pública, o PARITY e a compatibilidade ficam como estavam, e nenhum peso, nota ou denominador do 1.0 se move.
 
 Todo link de código abaixo está fixado no commit [`a6210dc`](https://github.com/journey-studios/godot-fabric/commit/a6210dc2c09ca63155511f36898f72fc56385798): o [script da regra e do `--check`](https://github.com/journey-studios/godot-fabric/blob/a6210dc2c09ca63155511f36898f72fc56385798/scripts/frontier-freeze.mjs), o [da extração dos recibos](https://github.com/journey-studios/godot-fabric/blob/a6210dc2c09ca63155511f36898f72fc56385798/scripts/frontier-freeze-receipts.mjs) e o [teste](https://github.com/journey-studios/godot-fabric/blob/a6210dc2c09ca63155511f36898f72fc56385798/tests/frontier-freeze.test.mjs).
@@ -151,9 +151,10 @@ O amostrador da corroboração leu a média de 1 minuto entre 5,06 e 13,17 e a d
 | Os limites que a regra daria (fase da IA, fim do turno) | 15,5, 15,5 ms | 15,5, 15,0 ms | 18,5, 18,5 ms |
 | p50 de cada um dos sete quadros (mediana entre as execuções) | 3,497 / 6,290 / 7,370 / 7,661 / 7,588 / 7,076 / 7,241 ms | 4,201 / 7,791 / 7,369 / 7,368 / 7,631 / 7,617 / 7,273 ms | 7,420 / 14,390 / 14,393 / 14,195 / 14,044 / 14,102 / 14,026 ms |
 
-O registro diz só o que o A/B mostra: com a HUD do #100 cada quadro depois do primeiro levou cerca de 14 ms na mediana, mais que um período de 8,33 ms, e **o turno na `main` de hoje passa dos limites congelados do turno**. **A causa está em aberto: um diagnóstico em andamento (o do Agente 5, no GF-35) a estuda, e este registro não a afirma.**
-Pode ser a própria HUD (os `Icon` e `Image` re-renderizados a cada snapshot), ou o custo da observação: segundo um diagnóstico preliminar, o probe lê o snapshot da Surface dentro dos quadros medidos, e esse snapshot carrega os registros do carregador de imagens, que cresceram com o #100.
-**O limite não foi afrouxado.** Se a observação também pesava em `1bc3a3c`, o limite congelado inclui esse custo e fica mais largo, não mais apertado: isto é uma limitação dos números congelados. O "cumprido" da saída X6 depende desse diagnóstico.
+O registro diz só o que o A/B mostra: com a HUD do #100 cada quadro depois do primeiro levou cerca de 14 ms na mediana, mais que um período de 8,33 ms, e **o turno na `main` em `916387e` passava dos limites congelados do turno**. **A causa foi confirmada e corrigida no [#108](https://github.com/journey-studios/godot-fabric/pull/108) (commit `09ed8f7`): era a sonda da faixa do turno (a leitura que ela faz do snapshot da Surface), não a HUD nem o host.** A sonda do turno lia o `snapshot()` da Surface duas vezes em cada quadro cronometrado. Esse snapshot é o status inteiro da aplicação, e dentro dele vai o log do carregador de imagens (um registro por `Image` montada, até 256), que os ícones do #100 encheram: uma leitura passou de cerca de 26 KB e 2,6 ms para 105 a 145 KB e cerca de 7 ms, e cada quadro do turno passou do período de 8,33 ms. A parte do jogo no quadro não mudou, e o host não faz trabalho de imagem por snapshot (zero cargas, decodificações ou eventos de carga por snapshot). A sonda corrigida lê os Controles nos quadros cronometrados e o snapshot completo só em repouso e uma vez na chegada; a regra `observation` do oráculo exige zero leituras do snapshot em todo intervalo cronometrado.
+
+As execuções de 2026-10-09 sobre `916387e` tinham esse custo da observação: a sonda lia o snapshot dentro dos quadros medidos. O A/B do Agente 5 sobre a HUD de antes do #100 (os `consumers/civ-lite` de `fb51c07`, idênticos aos de `1bc3a3c`) mostra que as leituras da sonda antiga moveram as janelas em menos de 1 ms: o p95 da fase da IA foi 14,66 ms com a sonda antiga e 14,44 ms com a corrigida, e o do fim do turno, 14,84 e 14,38 ms. [O registro da HUD](../civ-lite-ui/README.md#correção-do-tempo-de-quadro-regressão-do-100) tem esses números, atribuídos ao Agente 5.
+**O limite não foi afrouxado.** Se a observação também pesava em `1bc3a3c`, o limite congelado inclui esse custo e fica mais largo, não mais apertado: isto é uma limitação dos números congelados, que o A/B mede em menos de 1 ms. Os 15,5 ms congelados sobre `1bc3a3c` continuam valendo, e os limites congelados não mudam. O "cumprido" da saída X6 depende dos braços e do tempo de CPU por quadro, não desse custo.
 
 **(d) O baseline é sensível à carga.** O mesmo bundle do baseline rodou na noite de 2026-10-09 com carga maior e foi cerca de 25% mais lento, e é por isso que valem as execuções de carga mais baixa:
 
@@ -168,12 +169,34 @@ Pode ser a própria HUD (os `Icon` e `Image` re-renderizados a cada snapshot), o
 A carga de sistema mais alta é a causa provável (o `fseventsd`, o Spotlight e o `CacheDelete` estavam ocupados); não foi isolada. O turno de antes do #100, medido na mesma noite (a 5,75 a 8,60), quase não mudou diante do congelado (os sete quadros do job somam 54,911 ms no p50, contra 54,234 ms).
 O p99 ocioso fica em 15,329 ms (congelado: 15,213 ms) e um quadro de 100 ms ou mais (de troca ou ocioso) aparece na última execução (nenhum nas congeladas).
 
+## Depois do congelamento: a faixa corrigida do turno
+
+Depois do congelamento, o [#108](https://github.com/journey-studios/godot-fabric/pull/108) (commit [`09ed8f7`](https://github.com/journey-studios/godot-fabric/commit/09ed8f76ade66e6631811060f7b3719902a65105)) corrigiu a sonda da faixa do turno (observação (c)). O principal rodou a faixa janelada do turno de novo, na `main` em `09ed8f76ade66e6631811060f7b3719902a65105`, com a HUD do #100 e a sonda corrigida. O host foi recompilado para esse commit (SHA-256 começa por `131a250e`; o SHA-256 de um dylib depende do caminho do build, então difere do `258d1821…` do registro do Agente 5, que é um build separado, em outra worktree, do mesmo código nativo), e o bundle é `c4b4051a…`.
+
+É **corroboração**, não limiar: não move nenhum valor, nenhum limite e nenhum recibo congelado, e os limites continuam os de `1bc3a3c`. A saída X6 ("cumprido") **continua aberta**, porque depende dos braços do comparativo e do tempo de CPU por quadro, não do tempo de quadro da faixa do turno.
+
+- **Resultado:** apresentada; 5 de 5 vagas aceitas na primeira tentativa, com vsync a 120 Hz.
+- **Recibo bruto:** fora do repositório, SHA-256 `c98243c2f7e47dc42be4f931e44a7720999a861a96628d1e3c92894783cb878f`.
+- **Janelas,** calculadas com as funções do congelado (`extractTurnRun` de `scripts/frontier-freeze-receipts.mjs` e `nearestRank` de `tests/performance-oracle.mjs`):
+
+| Janela | p95 por vaga (ms) | Mediana (ms) | Limite congelado (ms) |
+| --- | --- | ---: | ---: |
+| `ai-phase` | 13,624 / 13,607 / 13,575 / 13,726 / 13,652 | 13,624 | 15,5 (cumprido) |
+| `event-burst` | 13,541 / 13,519 / 13,565 / 13,547 / 13,498 | 13,541 | 15,5 (cumprido) |
+
+- A soma dos sete quadros do job tem p50 de 52,973 a 53,905 ms por vaga (54,2 ms em `1bc3a3c`).
+- A regra daria limites de 14,0 e 14,0 ms, mas isso é só referência: nada é recongelado.
+
+**Carga e contaminação.** A média de carga de 1 minuto ficou entre 6,75 e 14,35 em volta das vagas (`{ 11,30 13,42 13,51 }` antes da primeira e `{ 14,35 11,07 11,70 }` depois da última), sem suíte de agente nas vagas 1 a 3. Nas vagas 4 e 5, entre 05:35 e 05:38 UTC, um ou dois processos de outra sessão casaram com o padrão do amostrador; os p95 dessas vagas (13,726 e 13,652) ficam em linha com os das vagas 1 a 3. O usuário estava ausente.
+
+**Como reproduzir.** Rode `caffeinate -d node scripts/frontier-turn-graphics.mjs` e aplique `extractTurnRun` e `nearestRank` ao `raw` do recibo.
+
 ## Limites
 
 - **Uma máquina, um display, um modo de vsync** (o padrão, lido da janela): Apple M3 Pro, macOS, Compatibility renderer, 120 Hz. Nenhum número vale para outro hardware, e nenhum FPS sem limite é afirmado.
 - **A carga estava muito acima de 2,0** nas execuções que congelam (observação (b)), com outros agentes na máquina e o usuário ausente: os números são pessimistas, e o usuário trabalhando no Mac não está neles. A corroboração mostra que o baseline é sensível à carga (observação (d)).
 - **O fim do turno foi medido em 2 quadros**, e a janela do protocolo tem pelo menos 5: o limite do `event-burst` é o desses dois quadros.
-- **A faixa do turno com a HUD do #100 passa dos limites congelados do turno** e a causa está em aberto (observação (c)); o "cumprido" da saída X6 espera esse diagnóstico e os braços.
+- **A faixa do turno com a HUD do #100 passou dos limites congelados do turno em `916387e`**; a causa foi confirmada e corrigida no #108 (observação (c) e [Depois do congelamento](#depois-do-congelamento-a-faixa-corrigida-do-turno)), e o "cumprido" da saída X6 depende dos braços e do tempo de CPU por quadro.
 - **A janela `stress` não tem orçamento absoluto.** O cenário que enche um log de 200 linhas e uma lista de 100 itens será medido pela primeira vez no comparativo.
 - **O orçamento absoluto compara o tempo de CPU com um limite de tempo de quadro** (observação (a)); a regra relativa decide.
 - **O recibo bruto do turno não tem os campos que o `verifyTurnRecord` lê** (`job`, `spinner`, os totais do host). O turno foi validado pelo `verifyGraphicsReceipt` e pelo `graphicsRunValidity`, que a própria faixa usa, por uma checagem da forma do turno nos dados brutos e pelo recálculo das estatísticas por fase e da soma dos sete quadros, que bateram com o `turnFrames` do recibo ao microssegundo.

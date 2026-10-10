@@ -3,7 +3,7 @@
 Status: documentation, a script, a test and the data they read; the delivery changes no product code and runs no game, so the public API, the PARITY table and the compatibility documents do not change. It is the single act that the 0.5 Frontier milestone had reserved for after
 the windowed baseline: the **budget of V05-06** (criterion `congelado`) and the **five thresholds of the final comparison's protocol** (V05-10, criterion `protocolo`) are frozen together, on 2026-10-10, before any comparative execution. The
 [evidence record](../evidence/frontier-freeze/README.md), with its [`freeze.json`](../evidence/frontier-freeze/freeze.json), holds every value with its derivation, and `node scripts/frontier-freeze.mjs --check` recomputes them from the committed inputs. **The exit criterion X6** (performance budget pre-registered *and met*) **stays open**: "met" depends on the arms of the
-comparison and on the diagnosis in [the observation (c)](#four-observations-that-change-no-rule). This note moves no checkpoint, grade, weight or denominator of the 1.0.
+comparison and on the CPU time per frame, not on the frame time of the turn lane ([after the freeze](#after-the-freeze-the-corrected-turn-lane)). This note moves no checkpoint, grade, weight or denominator of the 1.0.
 
 ## The question
 
@@ -129,8 +129,9 @@ the idle floor of this machine, with the desktop applications open, was never ne
 | The bounds the rule would give (AI phase, end of the turn) | 15.5, 15.5 ms | 15.5, 15.0 ms | 18.5, 18.5 ms |
 | p50 of each of the seven frames (median across the runs) | 3.497 / 6.290 / 7.370 / 7.661 / 7.588 / 7.076 / 7.241 ms | 4.201 / 7.791 / 7.369 / 7.368 / 7.631 / 7.617 / 7.273 ms | 7.420 / 14.390 / 14.393 / 14.195 / 14.044 / 14.102 / 14.026 ms |
 
-The record says only what the A/B shows: with the HUD of #100 each frame after the first took about 14 ms at the median, more than one period of 8.33 ms, and **the turn on today's main is over the frozen bounds of the turn**. **The cause is under diagnosis by another delivery (GF-35) and is not stated here.** It may be the HUD itself (the `Icon` and `Image` re-rendered on every snapshot), or the cost of the observation: according to a preliminary
-diagnosis, the probe reads the Surface's snapshot inside the measured frames, and that snapshot carries the records of the image loader, which grew with #100. **The bounds were not loosened.** If the observation also weighed on `1bc3a3c`, the frozen bounds include that cost and are wider than they would be, not tighter: this is a limitation of the frozen numbers. "Met" for the exit criterion X6 depends on that diagnosis.
+The record says only what the A/B shows: with the HUD of #100 each frame after the first took about 14 ms at the median, more than one period of 8.33 ms, and **the turn on `main` at `916387e` was over the frozen bounds of the turn**. **The cause is confirmed and fixed in [#108](https://github.com/journey-studios/godot-fabric/pull/108) (commit `09ed8f7`): it was the turn lane's probe (its observation of the Surface's snapshot), not the HUD or the host.** The turn's timed probe read the Surface's `snapshot()` twice in every frame it timed. That snapshot is the whole application status, and it carries the image loader's log (one record per mounted `Image`, up to 256), which the icons of #100 filled: one read went from about 26 KB and 2.6 ms to 105 to 145 KB and about 7 ms, so each frame of the turn overran its 8.33 ms period. The game's part of the frame did not change, and the host does no image work per snapshot (zero loads, decodes or load events per snapshot). The corrected probe reads the Controls in the timed frames, and the full snapshot only at rest and once on arrival; the oracle's `observation` rule requires zero snapshot reads in every timed interval.
+
+The executions of 2026-10-09 on `916387e` carried that cost: the probe read the snapshot inside the measured frames. Agent 5's A/B on the HUD before #100 (the `consumers/civ-lite` of `fb51c07`, identical to those of `1bc3a3c`) shows that the old probe moved the windows by less than 1 ms: the `ai-phase` p95 was 14.66 ms with the old probe and 14.44 ms with the corrected one, and the `event-burst` p95 was 14.84 ms and 14.38 ms. [The HUD's record](../evidence/civ-lite-ui/README.md#correção-do-tempo-de-quadro-regressão-do-100) has those numbers, which are Agent 5's. **The bounds were not loosened.** If the observation also weighed on `1bc3a3c`, the frozen bounds include that cost and are wider than they would be, not tighter: this is a limitation of the frozen numbers, and the A/B measures it at less than 1 ms. So the 15.5 ms frozen on `1bc3a3c` still hold, and the frozen limits do not change. "Met" for the exit criterion X6 depends on the arms of the comparison and on the CPU time per frame, not on this cost.
 
 **(d) The baseline is sensitive to load.** The same bundle of the baseline ran on the night of 2026-10-09 at a higher load and was about 25% slower, which is why the executions of the lowest load are the ones that count:
 
@@ -144,6 +145,28 @@ diagnosis, the probe reads the Surface's snapshot inside the measured frames, an
 
 The higher system load is the likely cause (the principal saw `fseventsd`, Spotlight and `CacheDelete` busy); it was not isolated. The turn of before #100, measured the same night (at a load of 5.75 to 8.60), hardly changed from the frozen one (the seven frames of the job add up to 54.911 ms at the p50, against 54.234 ms). The idle p99 stays at 15.329 ms (frozen 15.213 ms) and one frame of 100 ms or more (a swap frame or an idle interval) appears in the last run (none in the frozen runs).
 
+## After the freeze: the corrected turn lane
+
+After the freeze, [#108](https://github.com/journey-studios/godot-fabric/pull/108) (commit [`09ed8f7`](https://github.com/journey-studios/godot-fabric/commit/09ed8f76ade66e6631811060f7b3719902a65105)) corrected the probe of the turn lane (observation (c)). The principal then ran the windowed turn lane on `main` at `09ed8f76ade66e6631811060f7b3719902a65105`, with the HUD of #100 and the corrected probe. The host was recompiled for that commit (SHA-256 begins `131a250e`; a dylib's SHA-256 depends on the build path, so it differs from the `258d1821…` of Agent 5's record, a separate build of the same native code in another worktree), and the bundle is `c4b4051a…`.
+
+This is **corroboration**, not a threshold. It moves no value, no bound and no frozen receipt, and the limits stay those of `1bc3a3c`. The exit criterion X6 ("met") **stays open**: it depends on the arms of the comparison and on the CPU time per frame, not on the frame time of the turn lane.
+
+- **Result:** presented. The five slots were accepted at the first attempt, with vsync on at 120 Hz.
+- **Raw receipt:** outside the repository, SHA-256 `c98243c2f7e47dc42be4f931e44a7720999a861a96628d1e3c92894783cb878f`.
+- **Windows,** computed with the freeze's own functions (`extractTurnRun` of `scripts/frontier-freeze-receipts.mjs` and `nearestRank` of `tests/performance-oracle.mjs`):
+
+| Window | p95 per slot (ms) | Median (ms) | Frozen limit (ms) |
+| --- | --- | ---: | ---: |
+| `ai-phase` | 13.624 / 13.607 / 13.575 / 13.726 / 13.652 | 13.624 | 15.5 (met) |
+| `event-burst` | 13.541 / 13.519 / 13.565 / 13.547 / 13.498 | 13.541 | 15.5 (met) |
+
+- The sum of the seven frames of the job has a p50 of 52.973 to 53.905 ms per slot (54.2 ms on `1bc3a3c`).
+- The rule would give limits of 14.0 and 14.0 ms. That is a reference only: nothing is re-frozen.
+
+**Load and contamination.** The one-minute load average was 6.75 to 14.35 around the slots (`{ 11.30 13.42 13.51 }` before the first and `{ 14.35 11.07 11.70 }` after the last), with no agent suite during slots 1 to 3. In slots 4 and 5, between 05:35 and 05:38 UTC, one or two processes of another session matched the sampler's pattern; the p95 of those slots (13.726 and 13.652) are in line with those of slots 1 to 3. The user was absent.
+
+**How to reproduce.** Run `caffeinate -d node scripts/frontier-turn-graphics.mjs`, and apply `extractTurnRun` and `nearestRank` to the `raw` of the receipt.
+
 ## What does not change
 
 - **The protocol's JSON and its pin**: only the `frozenValue` and `frozenAt` of the five thresholds were filled; `status`, `baseline.windowed` and `open[0]` keep the text of the pre-registration; the test of the protocol still holds the pin of the two amendments and `protocol.amendments.length == 2`.
@@ -156,7 +179,7 @@ The higher system load is the likely cause (the principal saw `fseventsd`, Spotl
 
 - **Arm B** (`braco-b`) does not exist: the relative rule (C against B) needs it. Its time-box of 16.0 h is set ([the protocol's amendment](frontier-comparison-protocol.md#amendments)), and nothing is run.
 - **`execucao`**: the comparative executions, with the instrument wired in the three arms, the scripts and the hashes written first, and a machine within the load limit (observation (b)).
-- **The turn lane with the HUD of #100** over the frozen bounds of the turn (observation (c)): the diagnosis is another delivery's, and the exit criterion X6 ("met") waits for it and for the arms.
+- **The turn lane with the HUD of #100** was over the frozen bounds of the turn on `916387e` (observation (c)). Its cause was confirmed and fixed in #108, and the corrected lane was measured afterwards ([after the freeze](#after-the-freeze-the-corrected-turn-lane)); the exit criterion X6 ("met") waits for the arms of the comparison and for the CPU time per frame.
 - **The stress window** has no absolute budget: it is judged by the relative rule alone, and the scenario that fills a log of 200 lines and a list of 100 items is first measured by the comparison.
 - **The end of a turn** was measured over two frames; the frames after them, which the protocol's window of at least five frames would include, were not.
 - **The iPhone** is a NO-GO (V05-09, 2026-10-09): the comparison covers macOS only.
