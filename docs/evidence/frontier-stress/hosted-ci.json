@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-stress",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-10T10:48:07.772Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38044068758,
+    "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/119",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T10:11:59Z",
+    "updatedAt": "2026-10-10T10:46:46Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114189936893,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:12:03Z",
+        "completedAt": "2026-10-10T10:15:26Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114189936893"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114189936785,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:12:09Z",
+        "completedAt": "2026-10-10T10:21:13Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114189936785"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114191472337,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:21:21Z",
+        "completedAt": "2026-10-10T10:44:08Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114191472337"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114191472372,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:21:21Z",
+        "completedAt": "2026-10-10T10:43:27Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114191472372"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114191472386,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:21:21Z",
+        "completedAt": "2026-10-10T10:46:45Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114191472386"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114191472449,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:21:16Z",
+        "completedAt": "2026-10-10T10:21:44Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114191472449"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114189936890,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:12:03Z",
+        "completedAt": "2026-10-10T10:17:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114189936890"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114189936726,
+        "runAttempt": 1,
+        "headSha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+        "startedAt": "2026-10-10T10:12:10Z",
+        "completedAt": "2026-10-10T10:19:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38044068758/job/114189936726"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "native-cold-start": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "native-suites-frontier": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "native-suites-input": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "native-suites-runtime": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "parity-comparison": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "reference-android": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "reference-ios": "151427e5c788ab5704ace25fd64d6c38958e4963"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T10:12:23Z",
+          "completedAt": "2026-10-10T10:15:23Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 518,
+              "suites": 0,
+              "pass": 518,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T10:15:23Z",
+          "completedAt": "2026-10-10T10:15:23Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T10:15:23Z",
+          "completedAt": "2026-10-10T10:15:24Z",
+          "passed": true,
+          "files": 2068
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:frontier-stress": {
+        "job": "native-suites-frontier",
+        "step": "Run npm run test:frontier-stress",
+        "number": 14,
+        "conclusion": "success",
+        "startedAt": "2026-10-10T10:26:56Z",
+        "completedAt": "2026-10-10T10:26:57Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "the stress mode: three intents outside the game's state, a snapshot that carries it only while it is on, and a registry that allows its one optional field"
+          ],
+          "failedTests": [],
+          "markers": [
+            "# FRONTIER_STRESS_LANE_PASSED: 18 checks"
+          ]
+        }
+      },
+      "test:civ-lite-ui": {
+        "job": "native-suites-runtime",
+        "step": "Run npm run test:civ-lite-ui",
+        "number": 61,
+        "conclusion": "success",
+        "startedAt": "2026-10-10T10:41:18Z",
+        "completedAt": "2026-10-10T10:45:27Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 2,
+              "suites": 0,
+              "pass": 2,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "Frontier's HUD mounts the panels of each context, shows the turn and takes the pointer the World leaves it",
+            "Frontier's native HUD (arm B) shows the table's panels in each of the seven contexts, as the React Native HUD does"
+          ],
+          "failedTests": [],
+          "markers": [
+            "# CIVLITE_UI_LANE_PASSED: 152 + 28 + 41 probe checks; 38 + 23 + 38 oracle mutations and 23 of the scan; controls not run, not run and not run",
+            "# CIVLITE_UI_NATIVE_PASSED: 152 + 28 probe checks on the native HUD; 38 + 23 oracle mutations; control fails [\"content\",\"input\",\"map\",\"panels\",\"phase\",\"stress\"]"
+          ]
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 119,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/119",
+    "title": "feat(frontier): Add the comparison's stress window and the runner's HUD counters (V05-10)",
+    "headSha": "e4cca9d0a8c28c4e63cb1add40c421dcbf35490e",
+    "baseSha": "b03c18e32a8b85b9941df5ad0b826dbb3b449216",
+    "squashMergeCommit": "151427e5c788ab5704ace25fd64d6c38958e4963",
+    "squashCommitSubject": "feat(frontier): Add the comparison's stress window and the runner's HUD counters (V05-10) (#119)",
+    "mergedAt": "2026-10-10T10:11:51Z",
+    "headTreeSha": "55144d0d7f6d800472f87ef0574f94b6c1c16550",
+    "mainTreeSha": "55144d0d7f6d800472f87ef0574f94b6c1c16550",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 7,
+    "commits": [
+      {
+        "sha": "6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35",
+        "subject": "feat(frontier): Add the comparison's stress window and the runner's HUD counters"
+      },
+      {
+        "sha": "bec4d05f850569d5218d4d7289dada780cb5b368",
+        "subject": "docs(frontier): Record the stress window and the runner's counters"
+      },
+      {
+        "sha": "5790265ee0dbb7e8642479ea5e4dac0a617f4176",
+        "subject": "docs(dashboard): Log the stress window on V05-10"
+      },
+      {
+        "sha": "9d42941086a4d655a2bbdef8c26d29d114003b4d",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-stress"
+      },
+      {
+        "sha": "ee96490db72b75e0bcf8a75a50db38487deb7ac3",
+        "subject": "fix(services): Count a binding's delivered revisions once, on its default origin"
+      },
+      {
+        "sha": "b27e55985d10413bed327961053b7f3b7cfbd40f",
+        "subject": "docs(frontier): Repin the stress evidence to ee96490 after the counter fix"
+      },
+      {
+        "sha": "e4cca9d0a8c28c4e63cb1add40c421dcbf35490e",
+        "subject": "docs(dashboard): Point the stress activity at the repinned evidence"
+      }
+    ],
+    "changedFiles": 45,
+    "additions": 2593,
+    "deletions": 76
+  },
+  "artifacts": {
+    "stress": {
+      "available": true,
+      "id": 11666882177,
+      "name": "native-frontier-stress",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 2946,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "5d464e28c71e5dba639431b9bc5f95dd2e854130484e7ccc1d8dd3885e2327cd",
+      "apiDigest": "sha256:5d464e28c71e5dba639431b9bc5f95dd2e854130484e7ccc1d8dd3885e2327cd",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "5d464e28c71e5dba639431b9bc5f95dd2e854130484e7ccc1d8dd3885e2327cd",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-10T10:26:58Z",
+      "expiresAt": "2027-01-08T10:12:00Z",
+      "fileCount": 3,
+      "files": {
+        "frontier-stress-report.json": "0c4addb29ef4512e9637d9488088d42ab3b87d59954690a3e5c6aaa885bf9f5e",
+        "frontier-stress-summary.json": "e0708a0f1b5da437de236eddc73b9f924f5abdda66f4cf86b03c2116a6b33c5b",
+        "frontier-stress.log": "2979de516ed0a1f1d5029df749a142e62bc4949579198831664d593a554997a0"
+      },
+      "markers": [
+        {
+          "file": "frontier-stress.log",
+          "line": "FRONTIER_STRESS_PASSED"
+        }
+      ]
+    },
+    "ui": {
+      "available": true,
+      "id": 11667239503,
+      "name": "civ-lite-ui",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 195995,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "d25c2be866ccbdaf4d887059253246a25c225bbd1c3baf73f079869fec3a02e9",
+      "apiDigest": "sha256:d25c2be866ccbdaf4d887059253246a25c225bbd1c3baf73f079869fec3a02e9",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "d25c2be866ccbdaf4d887059253246a25c225bbd1c3baf73f079869fec3a02e9",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-10T10:46:40Z",
+      "expiresAt": "2027-01-08T10:12:00Z",
+      "fileCount": 23,
+      "files": {
+        "civ-lite-ui-native-control/editor.log": "d9a908190322a8dc275cbdd19ad34a624d2c5257d01e642ddf1e9c0c44f80294",
+        "civ-lite-ui-native-control/native-control.json": "e6282b32c371158d2a06f5965e8ea63a87572de1da66c72abffb79ae1299d8af",
+        "civ-lite-ui-native-control/native-control.log": "123db7235af68b376930c9e0c90916f0e5c26e00f4c49766e5121e6721a310e3",
+        "civ-lite-ui-native-control/provision.log": "d8de8e99804f85e3a1267dfa68090897844fb549af4fe76c805bc94c0248ab48",
+        "civ-lite-ui-native-hud/bare-boot.log": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+        "civ-lite-ui-native-hud/control-observed.json": "62c8972365eb0dc7ee54cfff815ab0f2d8ad27b9aee6d196845ab7596939ed15",
+        "civ-lite-ui-native-hud/editor.log": "1e39419d269083da98f3c42463ea9ae5b4ad1595cd0a9fdd93105a7c0c3240c9",
+        "civ-lite-ui-native-hud/native-headless.json": "f3cdb8cf4c700965341a2b30f0526ba430b0f0a9ee2798b91d3a85b17853f476",
+        "civ-lite-ui-native-hud/native-headless.log": "4ff5f98e08bce55640fe531e52114fce3aebf6a2851f335d37b5f7084638b41b",
+        "civ-lite-ui-native-hud/native-overlays.json": "e9c87a2cf67ed61a666568d9a961b36d70a1b2ac641d572f2debc268675d5ca0",
+        "civ-lite-ui-native-hud/native-overlays.log": "045f518f74863869874d5e72caf95dc619ac03d95c8806a0ba21eafc8aa4b571",
+        "civ-lite-ui-native-hud/provision.log": "1c6da5b406d3f5e462d7827c1e7e4c986e625664a11922835d1756be3da82092",
+        "civ-lite-ui-native-hud/summary.json": "2e516528f23b1ff1c4d6e099a00da92138a12872f4761213811d3b58168d6a16",
+        "civ-lite-ui/editor.log": "f9951ff71d40d11830f1246a5abebfae3bdf66cd15573611fe72ec7343704c35",
+        "civ-lite-ui/headless.json": "08d95b0f563bc759155d05479dda31ae3550dc4431a932fbb7a3af7d76fcffdc",
+        "civ-lite-ui/headless.log": "dd3a7540cec553610f2299f76507d20407281b9d4d7a69f6d05731ff1f2c715a",
+        "civ-lite-ui/overlays.json": "a6b6e6a498643f185b2d882bddd9cbff50ee651939d7c5a5c6b1a0051b7245d1",
+        "civ-lite-ui/overlays.log": "68f2f45a51ff00c9c4a1230878e390ac989416f0098230716888cf580e63022e",
+        "civ-lite-ui/provision.log": "8175eff7bf222e8d9f28049e3964b3165cd33a0972353b0292622b81c53d5d24",
+        "civ-lite-ui/stability-series.json": "60b2c5562a7a2b52ffe630e0d798274e076e92b335135b69c55087d68fc0cdd7",
+        "civ-lite-ui/stability.json": "fc3e9aaf678cd3c64dd37b1a585d74f6fb1745b08deb617f377d17041cc30940",
+        "civ-lite-ui/stability.log": "ffbb400bc8cbbfcf6394d4a291ccc259b6aff0dd6cc48b1e358aecb3f49fb583",
+        "civ-lite-ui/summary.json": "c474da630f6f00f124e9ea22dd316c695f16429625c997d048e59a0ab2334421"
+      },
+      "markers": [
+        {
+          "file": "civ-lite-ui-native-control/editor.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "civ-lite-ui-native-hud/editor.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "civ-lite-ui-native-hud/native-headless.log",
+          "line": "CIVLITE_UI_PASSED"
+        },
+        {
+          "file": "civ-lite-ui-native-hud/native-overlays.log",
+          "line": "CIVLITE_OVERLAYS_PASSED"
+        },
+        {
+          "file": "civ-lite-ui/editor.log",
+          "line": "CONSUMER_EDITOR_BUILD_PASSED"
+        },
+        {
+          "file": "civ-lite-ui/headless.log",
+          "line": "CIVLITE_UI_PASSED"
+        },
+        {
+          "file": "civ-lite-ui/overlays.log",
+          "line": "CIVLITE_OVERLAYS_PASSED"
+        },
+        {
+          "file": "civ-lite-ui/stability.log",
+          "line": "CIVLITE_STABILITY_PASSED"
+        }
+      ]
+    }
+  },
+  "findings": []
+}
