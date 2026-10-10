@@ -1,8 +1,8 @@
 extends PanelContainer
 
 # The tile card: the tile under the pointer while the pointer is over the map (Godot hears it and the node publishes `hover_changed`),
-# otherwise the selected tile of the snapshot. Both are the same card. The units on the tile show their icon beside the text, and a
-# tile with the city shows the city's. Each Control is set only when what it shows has changed.
+# otherwise the selected tile of the snapshot. Both are the same card. The units on the tile show their icon beside the text, a
+# tile with the city shows the city's and an irrigated tile the irrigation's, with "Irrigated" on the units line. Each Control is set only when what it shows has changed.
 
 const Kit := preload("kit.gd")
 const Icons := preload("icons.gd")
@@ -29,7 +29,10 @@ func render(snapshot: Dictionary, hover: Dictionary) -> void:
   Kit.set_text(_yields, "Food %d · Production %d · Science %d · Move %d%s" % [card.food, card.production, card.science, card.move_cost,
     " · City" if int(card.city) == 1 else ""])
   _set_icons(card)
-  Kit.set_text(_units, "No units" if card.units.is_empty() else " · ".join(card.units.map(_unit_text)))
+  var texts: Array = card.units.map(_unit_text)
+  if int(card.irrigated) == 1:
+    texts.append("Irrigated")
+  Kit.set_text(_units, "No units" if texts.is_empty() else " · ".join(texts))
 
 
 func _unit_text(unit: Dictionary) -> String:
@@ -37,11 +40,13 @@ func _unit_text(unit: Dictionary) -> String:
     " fortified" if int(unit.fortified) == 1 else ""]
 
 
-# The icons of the city and of the units on the tile, built again only when the list of them changes.
+# The icons of the city, of the irrigation and of the units on the tile, built again only when the list of them changes.
 func _set_icons(card: Dictionary) -> void:
   var names: Array = []
   if int(card.city) == 1:
     names.append(["hud-tile-city-icon", "city"])
+  if int(card.irrigated) == 1:
+    names.append(["hud-tile-irrigated", "irrigation"])
   for unit: Dictionary in card.units:
     var icon := Icons.unit_icon(unit.kind)
     if icon != "":

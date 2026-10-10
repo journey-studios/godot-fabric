@@ -1,6 +1,6 @@
 extends RefCounted
 
-# The HUD's six icons: the same 32x32 PNGs the React Native HUD draws (ui/icons/, drawn by scripts/civ-lite-icons.mjs), as the textures a
+# The HUD's seven icons: the same 32x32 PNGs the React Native HUD draws (ui/icons/, drawn by scripts/civ-lite-icons.mjs), as the textures a
 # TextureRect shows. `unit_icon` and `item_icon` are the two tables ui/hud/icons.ts holds, word for word.
 
 const TEXTURES := {
@@ -10,6 +10,7 @@ const TEXTURES := {
   "food": preload("res://ui/icons/food.png"),
   "production": preload("res://ui/icons/production.png"),
   "science": preload("res://ui/icons/science.png"),
+  "irrigation": preload("res://ui/icons/irrigation.png"),
 }
 
 

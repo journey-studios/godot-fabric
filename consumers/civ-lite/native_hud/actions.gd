@@ -2,7 +2,7 @@ extends PanelContainer
 
 # The actions of the selection: exactly the `actions` of the snapshot, in the order the game gave them, each with its `enabled` and,
 # for a disabled one, the game's `reason_text`. End turn is one of them in the snapshot and lives on the bar, so it is not here. An action
-# about a unit shows the unit's icon, and founding a city the city's. The list is touched only when what it lists changes, and then row by row.
+# about a unit shows the unit's icon, founding a city the city's and irrigating the irrigation's. The list is touched only when what it lists changes, and then row by row.
 
 signal intent(method: StringName, args: Array)
 
@@ -47,6 +47,8 @@ func _describe(snapshot: Dictionary) -> Array:
 func _icon_of(action: Dictionary, units: Array) -> String:
   if action.id == "found_city":
     return "city"
+  if action.id == "irrigate":
+    return "irrigation"
   if action.id == "select_unit" or action.id == "fortify":
     for unit: Dictionary in units:
       if unit.id == action.args[0]:
