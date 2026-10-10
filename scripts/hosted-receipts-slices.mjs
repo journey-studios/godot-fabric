@@ -264,6 +264,19 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-06-congelado-e1803a9",
   },
+  // The frame-time correction of #100's HUD (#108), in a folder of its own inside the HUD's: the turn lane's probe and oracle changed,
+  // so its native step is the turn lane in the job native-suites-frontier, and its contract test is the windowed lane's verifier.
+  {
+    folder: "civ-lite-ui/frame-time",
+    pr: 108,
+    squash: "09ed8f7",
+    contractsRun: 38027051145,
+    pagesRun: 38027038484,
+    nativeSteps: [{ script: "test:frontier-turn", expect: "tap" }],
+    artifacts: [{ key: "turn", name: "native-frontier-turn" }],
+    contractTests: ["tests/frontier-turn-graphics.test.mjs"],
+    activity: "milestone-0-5-v05-05-frame-time",
+  },
   {
     folder: "frontier-freeze/followup",
     pr: 112,

@@ -41,6 +41,14 @@ import {guardSources} from "./sabotage-sources.mjs";
 //  icon-missing       an icon points at an asset that is not there: its Image fails to load and draws nothing.
 //  import-outside-manifest  the HUD imports TextInput, a name the 0.5 manifest leaves out; nothing runs it, only the static scan sees it.
 //
+// The three of arm B (V05-10 `braco-b`) break the native HUD (consumers/civ-lite/native_hud/) and run the HUD and overlay probes on the second scene
+// (main_native.tscn); the oracles are the same as the React Native HUD's:
+//  native-city-shows-tile   the table of panels mounts the tile card in the city context too, so the city screen is open over a tile card the
+//                     context does not call for.
+//  native-overlay-not-blocking  the overlay no longer stops the pointer: it is still drawn, dimming the game, but it is not a layer that blocks, so
+//                     the World hears the clicks, the right clicks and the wheel under the city screen and the dialog.
+//  native-end-turn-by-phase  End turn is enabled by a rule of the HUD's own (the phase is idle) and not by the game's `end_turn` action.
+//
 // A variant whose run leaves no observed.json (a crash, a failed assertion that came first) is recorded as nothing observed and is not
 // rejected. Run with:
 //   node scripts/civ-lite-ui-sabotage.mjs
@@ -91,6 +99,15 @@ const variants = [
   {name: "disabled-ignored", file: `${template}/ui/hud/kit.tsx`,
     find: "  return <Pressable testID={id} disabled={!enabled} onPress={onPress}\n",
     replace: "  return <Pressable testID={id} onPress={onPress}\n"},
+  {name: "native-city-shows-tile", file: `${template}/native_hud/hud.gd`,
+    find: "  \"city\": [\"city\", \"research\"],\n",
+    replace: "  \"city\": [\"city\", \"research\", \"tile\"],\n"},
+  {name: "native-overlay-not-blocking", file: `${template}/native_hud/overlay.gd`,
+    find: "  mouse_filter = Control.MOUSE_FILTER_STOP\n",
+    replace: "  mouse_filter = Control.MOUSE_FILTER_IGNORE\n"},
+  {name: "native-end-turn-by-phase", file: `${template}/native_hud/bar.gd`,
+    find: "  var enabled: bool = not end_turn.is_empty() and int(end_turn.enabled) == 1\n",
+    replace: "  var enabled: bool = snapshot.phase == \"idle\"\n"},
   {name: "close-leaks-connection", file: `${template}/ui/store.ts`,
     find: "export function send(...call: FrontierCall): Promise<FrontierResult | null> {\n  return record(call[0], callFrontier(...call));\n}\n",
     replace: "export function send(...call: FrontierCall): Promise<FrontierResult | null> {\n  if (call[0] === FRONTIER_CLEAR_SELECTION) {\n"
