@@ -91,7 +91,7 @@ the baseline's 12-swap tour.
 ## Executions
 
 **What is fixed.** The same Mac for every execution of every arm; the Release export, never Debug, with the hashes of the binary, the package and the scenario script recorded in every
-execution; the scenario seed of V05-03 (4242); the 12-turn replay of 73 intents, whose golden hash is the one fixed in `tests/civ-lite-game-native.test.mjs`; the 100-turn soak; and
+execution; the scenario seed of V05-03 (4242); the 12-turn replay of 77 intents, whose golden hash is the one fixed in `tests/civ-lite-game-native.test.mjs`; the 100-turn soak; and
 scripted game intents identical in the three arms, delivered at the game's intent boundary. The only real clicks are the latency pass of B and C. Each execution is a fresh process that
 runs the script once, and no two executions overlap.
 
@@ -234,6 +234,7 @@ The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at eve
 8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c   the pre-registration: no amendments (commit 82f5f43)
 8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb   one amendment: 2026-10-09, the idle reference
 0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6   two amendments: 2026-10-09, arm B's time-box and the iPhone's NO-GO
+c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222   three amendments: 2026-10-10, the replay's 77 intents since #93
 ```
 
 The freeze may fill those two fields of the entries of `thresholds` and nothing else, and the test requires it: no other object may carry them (a freeze field elsewhere would escape the hash), the value and the date are filled together, all the thresholds are frozen
@@ -310,6 +311,16 @@ counted the same way. The orchestrator's own time is counted in neither arm. **T
 - **The NO-GO** of V05-09 was recorded on 2026-10-09 ([its record](../evidence/frontier-device/README.md), #102). The `iphone` block already said that with a NO-GO the comparison covers macOS only.
 
 **What it replaces.** In `decisionRule.partialReport.timeBox`: "the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts". In the open item `arm-b`: "arm B (criterion `braco-b`) does not exist; its time-box has no length yet". In the open item `iphone`: "the iPhone depends on the GO or NO-GO of V05-09".
+
+### 2026-10-10: the replay has 77 intents, since #93
+
+**Commit:** the one that adds this section, the entry `amendments[2]` of the JSON and the fourth pin of the test (the commit is what fixes the date). **Comparative measurements before it: 0**, so no execution is made under the previous text and none needs to be redone. **Pin after it:** `c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222` (the previous one was `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6`).
+
+**What changes.** One text of the JSON changes: `runs.fixed.replay`, whose count of intents goes from 73 to 77. The protocol holds no hash value: its reference to the golden hash, the constant of `tests/civ-lite-game-native.test.mjs`, keeps its text, and that constant holds the hash of the 77-step replay since `e108e9d` (#93). The seed, the script of an execution, the thresholds (with `frozenValue` and `frozenAt`), the windows, the executions, the statistics and the decision rule stay as they were.
+
+**Why.** The pre-registration (`82f5f43`, #84) was written when the 12-turn replay of V05-03 had 73 steps (`consumers/civ-lite/game/replay.gd`). The queue of three events of #93 (`e108e9d`, V05-05 slice 2a) changed the game and its roteiro: the replay resolves the three events in 77 steps, and [the game's note](frontier-game.md) says 77 intents (45 accepted, 32 refused on purpose). The same commit changed the constants `GOLDEN_HASH` and `TRACE_HASH` of `tests/civ-lite-game-native.test.mjs`, which the protocol points to for the golden hash; the comparative runs the replay as it now is, and only the count written in the protocol is brought up to date.
+
+**What it replaces.** In `runs.fixed.replay`: "the 12-turn replay of 73 intents, whose golden hash is the one fixed in tests/civ-lite-game-native.test.mjs".
 
 ## The freeze
 

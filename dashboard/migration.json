@@ -4777,6 +4777,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/04060b260058d4a0adde2e31e325ea57ec099409/docs/evidence/frontier-freeze/followup/README.md"
     },
     {
+      "id": "milestone-0-5-v05-10-amendment-3-0a5f5b4",
+      "at": "2026-10-10T08:06:11.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, terceira emenda do protocolo do comparativo final (commit 0a5f5b4): o replay de 12 turnos passa de 73 para 77 intents em runs.fixed.replay, porque o #93 (e108e9d) mudou o jogo e o roteiro depois do pré-registro, com a fila de três eventos resolvida em 77 passos. A referência ao hash dourado, a constante de tests/civ-lite-game-native.test.mjs, mantém o texto, e essa constante foi atualizada pelo próprio #93. Nenhuma medição comparativa veio antes da emenda (measurementsBefore 0). O pin do protocolo passa a PINS[3] do teste; os valores congelados (frozenValue e frozenAt) não mudam, e nenhum limiar, janela, execução ou regra de decisão muda. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/0a5f5b41895b33f4eef09919974ffd4b5a46dd79/docs/research/frontier-comparison-protocol.json"
+    },
+    {
       "id": "milestone-0-5-v05-10-braco-b",
       "at": "2026-10-10T06:36:00.000Z",
       "taskIds": [],

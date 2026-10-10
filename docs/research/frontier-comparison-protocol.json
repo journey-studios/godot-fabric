@@ -36,6 +36,13 @@
       "why": "The pre-registration said that arm B's time-box is the same as arm C's plus one optimization pass and that its length is set and recorded before arm B starts, but it gave no unit, no measurement of C and no length for the pass. The unit is the active time of the subagents, the only effort of C that carries timestamps: the transcripts of the implementer of #82 and #93 (one agent, 7.35 h), of the implementer of #100 (5.12 h) and of the two researchers (0.12 h and 0.19 h), 12.78 h in all. The cut of 30 minutes is on a plateau: 12.78 h with 30 or 60 minutes, 11.62 h with 20 and 10.50 h with 10, because the gaps under it are native suites that ran for up to 25 minutes with no event, and the only gap above it (305 minutes) is the wait between the first slice and the second. C's 12.8 h also built the game side that B reuses (the event queue, the context in the snapshot, the input blocking under overlays and the probes), so B's box is generous, as a native HUD that is not a straw man needs. The pass is a quarter of C's because C had none and the protocol asks for one round, not a second implementation. The NO-GO of V05-09 was recorded on 2026-10-09 (docs/evidence/frontier-device/README.md, #102), and the `iphone` block already said that with a NO-GO the comparison covers macOS only.",
       "before": "decisionRule.partialReport.timeBox: \"the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts\". open, id arm-b: \"arm B (criterion `braco-b`) does not exist; its time-box has no length yet\". open, id iphone: \"the iPhone depends on the GO or NO-GO of V05-09\".",
       "measurementsBefore": 0
+    },
+    {
+      "date": "2026-10-10",
+      "what": "One text changes: runs.fixed.replay, whose count of intents goes from 73 to 77. The protocol holds no hash value: its reference to the golden hash, the constant of tests/civ-lite-game-native.test.mjs, is the same text, and that constant holds the hash of the 77-step replay since e108e9d (#93). The seed, the script of an execution, the thresholds, frozenValue and frozenAt, the windows, the executions, the statistics and the decision rule do not change.",
+      "why": "The pre-registration (82f5f43, #84) was written when the 12-turn replay of V05-03 had 73 steps (consumers/civ-lite/game/replay.gd). The queue of three events of #93 (e108e9d, V05-05 slice 2a) changed the game and its roteiro: the replay resolves the three events in 77 steps, and docs/research/frontier-game.md says 77 intents (45 accepted, 32 refused on purpose). The same commit changed the constants GOLDEN_HASH and TRACE_HASH of tests/civ-lite-game-native.test.mjs, which the protocol points to for the golden hash; the comparative runs the replay as it now is, and only the count written in the protocol is brought up to date.",
+      "before": "runs.fixed.replay: \"the 12-turn replay of 73 intents, whose golden hash is the one fixed in tests/civ-lite-game-native.test.mjs\"",
+      "measurementsBefore": 0
     }
   ],
   "arms": [
@@ -292,7 +299,7 @@
       "machine": "the same Mac for every execution of every arm",
       "build": "Release export, never Debug; the binary, the package and the script are hashed and every execution records the hashes",
       "gameSeed": "the scenario seed of V05-03 (4242)",
-      "replay": "the 12-turn replay of 73 intents, whose golden hash is the one fixed in tests/civ-lite-game-native.test.mjs",
+      "replay": "the 12-turn replay of 77 intents, whose golden hash is the one fixed in tests/civ-lite-game-native.test.mjs",
       "soak": "100 turns",
       "input": "scripted game intents, identical in the three arms, delivered at the game's intent boundary; the only real clicks are the latency pass of B and C"
     },
