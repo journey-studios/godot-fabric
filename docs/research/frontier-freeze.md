@@ -163,7 +163,7 @@ This is **corroboration**, not a threshold. It moves no value, no bound and no f
 - The sum of the seven frames of the job has a p50 of 52.973 to 53.905 ms per slot (54.2 ms on `1bc3a3c`).
 - The rule would give limits of 14.0 and 14.0 ms. That is a reference only: nothing is re-frozen.
 
-**Load and contamination.** The one-minute load average was 6.75 to 14.35 around the slots (`{ 11.30 13.42 13.51 }` before the first and `{ 14.35 11.07 11.70 }` after the last), with no agent suite during slots 1 to 3. In slots 4 and 5, between 05:35 and 05:38 UTC, one or two processes of another session matched the sampler's pattern; the p95 of those slots (13.726 and 13.652) are in line with those of slots 1 to 3. The user was absent.
+**Load and contamination.** The one-minute load average was 6.75 to 14.35 around the slots (`{ 11.30 13.42 13.51 }` before the first and `{ 14.35 11.07 11.70 }` after the last). Agent 5 reported native work of another agent (an editor build and short headless runs) from about 05:24 to 05:40 UTC, that is, during the whole band; the sampler saw only part of it, in slots 4 and 5. Contention can only raise frame time, so the measured p95s (13.6 and 13.5 ms) are an upper bound, and the conclusion that the corrected band meets 15.5 ms stands, with margin. The user was absent.
 
 **How to reproduce.** Run `caffeinate -d node scripts/frontier-turn-graphics.mjs`, and apply `extractTurnRun` and `nearestRank` to the `raw` of the receipt.
 

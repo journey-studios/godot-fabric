@@ -79,4 +79,21 @@ ou o script mudarem, o teste falha e o relatório se regera com os mesmos comand
 - **A máquina precisa ficar dentro do limite de carga de 2,0** (`runs.load.limit1MinuteAverage`): uma execução com média de 1 minuto acima disso, antes ou depois, é rejeitada e refeita (no máximo 3 tentativas por vaga). As execuções que congelaram os limiares rodaram a 5,3 a 7,6 ([o congelamento](../frontier-freeze/README.md)); o computador de uma campanha real precisa estar bem abaixo.
 - **Leituras do texto do protocolo.** Onde o protocolo escreve uma regra em frase, o código a segue, checa a frase ao rodar e a nota lista a leitura escolhida. Três podem mudar um resultado e foram **decididas pelo líder da revisão**: `other-game` ("a repeat of it in one arm") para a campanha na segunda tentativa rejeitada por ele no mesmo braço, em qualquer faixa; o veredito de `rss` é sobre a leitura do fim da execução e o máximo é descritivo; `fps-unlimited` tem um veredito por janela e é N/A sem execuções com o vsync lido como `DISABLED` em número suficiente.
 - **O que o script não confere:** o conteúdo da matriz de contextos, o começo e o fim de cada janela (da bancada) e o mínimo de 5 quadros do `event-burst`; ele toma os quadros de cada ocorrência como gravados.
-- **Sem host anterior, sem CI hospedado nesta pasta:** a fatia não muda C++ nem código de produto. Os recibos de CI hospedado e de Pages vêm depois do merge.
+- **Sem host anterior:** a fatia não muda C++ nem código de produto; os recibos hospedados e o de Pages estão na seção abaixo.
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `4a73a86` (o squash do #110, com 8 commits e 22 arquivos no PR; run [38030014224](https://github.com/journey-studios/godot-fabric/actions/runs/38030014224) do workflow Contracts, iniciado às 06:10:27 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 36 s), `reference-android` (5 min 58 s) e `reference-ios` (6 min 42 s). Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a linha da fatia não tem passo nativo nem artefato. Os três jobs que rodaram usaram `4a73a86`, e a árvore do head do PR é a árvore do squash.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against b23009d00f5f (--base b23009d00f5f2fe419f4016c1484f1e9039f40c6); X9 clean, X10 clean`. A base é o pai do squash.
+
+**Os testes.** `npm run test:contracts` passou com 7, 43 e 518 testes de Node, todos em `pass`, e 13 de Python. O recibo confere, pelo nome e no log do job `contracts`, os testes de nível superior dos três arquivos que este PR criou ou mudou: `tests/frontier-comparison-analysis.test.mjs` (19 de 19), `tests/frontier-comparison-validity.test.mjs` (7 de 7) e `tests/frontier-comparison-protocol.test.mjs` (18 de 18). `check:static` e `check:publication` também passaram (2.005 arquivos).
+
+**O Pages.** O push de `4a73a86` rodou também o workflow do Pages (run [38030014288](https://github.com/journey-studios/godot-fabric/actions/runs/38030014288), 06:10:27 a 06:11:11 UTC, `build` e `deploy` em success, 43 testes do painel). O [recibo](publication.json) registra o deployment 6976986838 em success e o artefato `github-pages` (id 11662101552, SHA-256 `8c89d3da…`, igual ao digest da API e ao do log de upload). O `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash, e a entrada de atividade da fatia, `milestone-0-5-v05-10-analysis-4592dba`, está nele. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** a análise roda sobre campanhas sintéticas, e nenhuma medição de braço entra nesta fatia; os recibos hospedados provam o código e os testes, não um resultado.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-analysis --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
