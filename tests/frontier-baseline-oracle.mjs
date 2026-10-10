@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
-import {growthOfHalves, nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
+import {growthOfHalves, nearestRank, quartiles, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
 import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
   STABLE_FRAMES, TAB, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
 
@@ -20,8 +20,6 @@ import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE
 // they depend on the pace of the machine (docs/research/frontier-baseline.md).
 const EPSILON = 1e-9;
 const stats = values => ({...summary(values), p99: nearestRank(values, 99)});
-const quartiles = values => ({median: nearestRank(values, 50), q1: nearestRank(values, 25), q3: nearestRank(values, 75),
-  iqr: nearestRank(values, 75) - nearestRank(values, 25), min: Math.min(...values), max: Math.max(...values)});
 const heapOf = reading => reading.performance.hermes.heap.hermes_allocatedBytes;
 const sum = values => values.reduce((total, value) => total + value, 0);
 

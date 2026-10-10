@@ -421,40 +421,47 @@
       "id": "cpu-time-instrument",
       "rule": "one engine-side reading of the main thread's CPU time for the process frame, taken by the same code in the three arms, that excludes the wait for the display; a self-check with a synthetic load of known duration must read it within 10% before any comparative execution",
       "source": "the instrument self-check of V05-10 `execucao`; the host's pump accounting is not used because arms A and B have no host",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": {
+        "quantity": "total_ms = physics_ms + process_ms + setup_ms + render_ms for each process frame, in milliseconds: the monotonic elapsed time between the engine's hooks on the main thread (not the thread's CPU clock of the operating system), every term ending before the frame is presented; the percentile and the windows are the protocol's",
+        "reading": "Time.get_ticks_usec stamped at SceneTree.process_frame, RenderingServer.frame_pre_draw (the last _process when the frame does not draw), SceneTree.physics_frame and the last _physics_process; RenderingServer.get_frame_setup_time_cpu() and viewport_get_measured_render_time_cpu() read at frame_post_draw, with the render measure on for the main window's viewport; never Performance.TIME_PROCESS or TIME_PHYSICS_PROCESS, which are a once-a-second maximum and, for TIME_PROCESS with the vsync on, hold the wait for the display (TIME_PROCESS stays in the samples as a cross-check)",
+        "alignment": "the render reading of a draw is the one taken 6 draws later (Compatibility renderer, Godot 4.7.2, macOS), joined by draw index when the run is over; the harness keeps 6 draws after the last window it needs, and the lag is checked by the render pulse every time the lab probe runs",
+        "observedError": "against a load of known duration, at most 0.16% at 2, 5, 10 and 20 ms headless and at most 1.5% in a presented window (the 2 ms load; 0.22% or less in the others), under the 10% rule; the instrument's floor, the idle total, is about 0.014 ms headless and 0.082 ms in a window, the same in every arm",
+        "gate": "the protocol's `instrument` rule is operational as: tests/cpu-time-instrument.gd is byte-identical to the one the probe and the oracle passed (its hash goes in the provenance), and the probe and the oracle are rerun on the machine, the engine and the renderer of the campaign before it starts",
+        "evidence": {"research": "docs/research/cpu-time-instrument.md", "record": "docs/evidence/cpu-time-instrument/README.md", "pinnedCommit": "e38615da6ad7f9ca774e2ef8c46de33707c1b427"}
+      },
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-ai-phase",
       "unit": "ms",
       "rule": "the median across five presented runs of the window's p95 plus three times its interquartile range, rounded up to 0.5 ms, as the V05-06 proposal derives a presented frame time",
       "source": "V05-06 `turno`: the frame time of a turn with the AI sliced per frame",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-event-burst",
       "unit": "ms",
       "rule": "the same rule, on the frames of the end of a turn",
       "source": "V05-06 `turno`: the frame time of the end of a turn",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-context-switches",
       "unit": "ms",
       "rule": "the same rule, on the swap frame p95 of the presented windowed baseline",
       "source": "V05-06 windowed baseline: swap frame p95, pending until a display presents the window",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": 16,
+      "frozenAt": "2026-10-10"
     },
     {
       "id": "budget-p95-stress",
       "unit": "ms",
       "rule": "the same rule, on the stress scenario's counterpart in V05-06; frozen as N/A with the reason when V05-06 measured none, and then the window is judged by the relative rule alone",
       "source": "V05-06 `turno` or `soak`, whichever measured a log of 200 lines and a production list of 100 items",
-      "frozenValue": null,
-      "frozenAt": null
+      "frozenValue": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+      "frozenAt": "2026-10-10"
     }
   ],
   "invalidation": [

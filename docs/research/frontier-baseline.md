@@ -4,9 +4,10 @@ Status: executed isolated macOS validation (arm64) against pinned RN 0.87.1, Her
 headless for the exact counts and in a real window (local, not in CI) for the frame time; **the display presented the window on 2026-10-09** (commit `1bc3a3c`: five runs, each accepted at its first attempt),
 and the presented frame time is pinned (see [The windowed baseline](#the-windowed-baseline-presented-2026-10-09-1bc3a3c)); the attempts that preceded it were not presented and are kept as history. This is the `baseline` criterion of the
 0.5 Frontier milestone's V05-06: a baseline on the pointer spike's scene, with 50 to 100 native nodes per panel swap, extending the
-GF-30 harness, with a **proposed** budget recorded and not frozen. The `turno`, `soak` and `congelado` criteria of V05-06 are open
-(see [What is left](#what-is-left)). The slice changes no C++, so there is no preceding host to run it on; the control is the
-four retained sabotages. The [evidence record](../evidence/frontier-baseline/README.md) pins the execution, the numbers and the captures. Hosted CI and the Pages publication are pending.
+GF-30 harness, with a budget **proposed** here and frozen later, once, on 2026-10-10 ([the freeze](frontier-freeze.md)). The `turno` and `soak` criteria of V05-06 have their own notes
+and `congelado` is the freeze ([The budget, frozen](#the-budget-frozen-on-2026-10-10); [What is left](#what-is-left)). The slice changes no C++, so there is no preceding host to run it on; the control is the
+four retained sabotages. The [evidence record](../evidence/frontier-baseline/README.md) pins the execution, the numbers and the captures; the hosted CI run and the Pages publication of the push of #77 to main
+are in its `hosted-ci.json` and `publication.json`, and the windowed lane never runs in hosted CI.
 
 ## The question
 
@@ -270,7 +271,7 @@ What the tables say, and no more:
 - No missed frame is read from these intervals (see the protocol), and the vsync was on in every run: FPS without a limit is not claimed.
 
 **The load, and who was there.** The Mac was not quiet: other agents' work ran on it. The one-minute load average (`vm.loadavg`, 11 logical cores) was 5.41 before the lane and 6.79 after it, and 5.26 to 6.16 around the five runs (five-minute 5.60 to 5.92, fifteen-minute 6.82 to 7.08);
-it is in the evidence record for every run. **The numbers are therefore pessimistic**: a quieter machine may show smaller ones, and the `congelado` criterion may need an execution on a quiet machine before the proposal below is frozen. Nobody was at the Mac: the time since the last keyboard or pointer event (`HIDIdleTime`) grew by 234.5 s over the 235 s
+it is in the evidence record for every run. **The numbers are therefore pessimistic**: a quieter machine may show smaller ones. The `congelado` criterion did not wait for one: the freeze of 2026-10-10 took this execution by the user's decision, with the corroboration of the night of 2026-10-09 beside it ([the freeze](frontier-freeze.md#the-inputs)). Nobody was at the Mac: the time since the last keyboard or pointer event (`HIDIdleTime`) grew by 234.5 s over the 235 s
 of the lane, so there was no event. That says nothing of whether anyone looked at the screen, and it means that **a user working on the Mac is not in these numbers**: the presented baseline is that of a machine nobody was using, and loaded by other agents.
 
 ### The first windowed attempts, 2026-10-08: pending (history)
@@ -425,14 +426,22 @@ the base's 1,960,448 that the first mounts raised and then never gave up. Two th
   passes. The oracle records the floors of the halves, `lastMinusFirst`, `highestAboveFloor` and `largestStep` as observations. This reads the criterion ("grows at most the GF-30 limit between the first steady cycle and the
   last") as a statement about the level of the heap at rest and not about two single readings; it is the one place where the slice's method is more than the plain reading of the spec, and it is reported as a deviation.
 
-## The proposed budget
+## The budget, frozen on 2026-10-10
 
-**PROPOSAL, not frozen.** The table has the values the headless baseline and the presented windowed baseline suggest and the rule that derived each, so that the freeze (criterion `congelado`, a separate and single act after this baseline and before
-the first device session) can accept, tighten or drop each. None of it is a gate today except the rows marked **exact**, which the suite already judges. The rules: the CPU time of a swap is the p95 pooled over
-the two headless processes, times 1.25, rounded up to 0.5 ms; the heap a panel holds is the p50 times 1.25, rounded up to 10,000 bytes; a frame time of a presented window is the **median across the five
+**Frozen once, on 2026-10-10.** The table is the proposal that this section made when the windowed baseline was presented, now frozen by [the freeze](frontier-freeze.md): the single act of the criterion `congelado` of V05-06, which also freezes the five thresholds of
+[the final comparison's protocol](frontier-comparison-protocol.md#the-freeze). It is recorded in [`freeze.json`](../evidence/frontier-freeze/freeze.json), which `node scripts/frontier-freeze.mjs --check` recomputes, row by row, from the committed [`inputs.json`](../evidence/frontier-freeze/inputs.json)
+(the intervals of the five runs of the baseline and of the five of the turn, both on `1bc3a3c`). What the freeze did to each row:
+
+- **Kept**: the rows marked **exact**, the headless CPU and heap bounds and the memory row come from the headless lane pinned in #77, which does not change.
+- **Recomputed**: the windowed rows, from the intervals of `1bc3a3c`, the execution the proposal was derived from. They give the same bounds as the proposal: nothing moved between the proposal and the freeze.
+- **Removed**: the rows of the p99 by size (below).
+- **Added**: two rows of the turn, the p95 of the AI phase and the p95 of the end of the turn, which are two of the five thresholds of the protocol.
+
+Changing a frozen bound from now on is a decision of its own, with its record, and not an edit of this table. No suite asserts a time or a heap bound (a hosted runner's pace is not this machine's): the suites judge the **exact** rows, and the windowed frame-time bounds are what the final comparison reads as its absolute budget, reported beside the category for B and for C and never changing it.
+The rules: the CPU time of a swap is the p95 pooled over the two headless processes, times 1.25, rounded up to 0.5 ms; the heap a panel holds is the p50 times 1.25, rounded up to 10,000 bytes; a frame time of a presented window is the **median across the five
 presented runs of the statistic plus three times its interquartile range** (the interquartile range of five by nearest rank is the fourth value minus the second), rounded up to 0.5 ms, applied below to the execution of 2026-10-09 on `1bc3a3c`.
 
-| Metric (lane) | Baseline | Proposed bound | Rule |
+| Metric (lane) | Baseline | Frozen bound | Rule |
 | --- | --- | --- | --- |
 | Native nodes after a swap (headless, **exact**) | the base's 12 plus 0, 50, 75 or 100 | exact | judged now: SceneTree, host and Surface |
 | Nodes a swap creates and deletes (headless, **exact**) | the new panel's and the old one's | exact | judged now |
@@ -443,43 +452,51 @@ presented runs of the statistic plus three times its interquartile range** (the 
 | Heap a mounted panel holds over the base (headless, forced collection) | 249,024 / 327,808 / 406,072 bytes for 50 / 75 / 100 nodes (the same in both processes) | 320,000 / 410,000 / 510,000 bytes | p50 x 1.25, up to 10,000 bytes |
 | Swap frame p50, by nodes created 0 / 50 / 75 / 100 (windowed, the display presents the window, vsync on, 120 Hz; 90 swaps of each size in each of 5 runs) | median of the 5 runs: 3.662 / 8.448 / 11.171 / 13.144 ms | 4.0 / 9.0 / 12.0 / 13.5 ms | median across the 5 runs + 3 IQR, up to 0.5 ms; of a loaded machine nobody was using |
 | Swap frame p95, by nodes created 0 / 50 / 75 / 100 (windowed, same) | 13.714 / 11.052 / 14.080 / 16.577 ms | 14.0 / 12.5 / 20.0 / 17.0 ms | same rule; the 75-node bound is wide because the five runs' p95 are two of about 15.4 ms, one of 14.1 and two of about 13.5 |
-| Swap frame p99, by nodes created 0 / 50 / 75 / 100 (windowed, same) | 14.284 / 15.565 / 19.278 / 24.607 ms | 16.5 / 27.5 / 29.5 / 41.5 ms | same rule; the p99 of 90 swaps is the largest of them, so these are the noisiest bounds (IQR 0.7 to 5.5 ms) |
+| Swap frame p95, all swaps (windowed, same; the protocol's `budget-p95-context-switches`) | 14.835 ms (360 swaps a run, through the four panels) | 16.0 ms | same rule; the 50 swaps of the window go through the seven contexts as the runs of the baseline go through 0, 50, 75 and 100 nodes |
 | Idle frame p99 (windowed, 600 idle intervals in each run) | 15.213 ms | 16.5 ms | same rule; the long group of the vsync's clusters is 13 to 15 ms, so no bound under it is meaningful |
 | Swap frames and idle frames of 100 ms or more (windowed) | 0 of 1,800 swap frames and 0 of 3,000 idle intervals | 0 | median 0 + 3 x IQR 0 (a count, not rounded) |
+| AI phase frame p95 (windowed turn, vsync on, 120 Hz; the first six busy frames of each of the 120 steady turns, 720 a run, in each of 5 runs; the protocol's `budget-p95-ai-phase`) | 14.642 ms (median of the 5 runs) | 15.5 ms | median across the 5 runs + 3 IQR, up to 0.5 ms; of the HUD of `1bc3a3c`, on a loaded machine nobody was using |
+| End-of-turn frame p95 (windowed turn, same; the seventh busy frame, which delivers `turn_ended`, and the frame after it, 240 a run; the protocol's `budget-p95-event-burst`) | 14.847 ms (median of the 5 runs) | 15.5 ms | median across the 5 runs + 3 IQR, up to 0.5 ms; the lane records two frames of the end of a turn, the window of the protocol has at least five, and the others were not measured |
 | Resident memory and Godot's static memory per round | RSS 131 to 192 MB headless; static 369 KB a round (the probe's own readings) | none | recorded: they move by tens of MB and by the probe's bookkeeping, and cannot be a limit |
 
 The rule of the ROADMAP's final comparison (V05-10) holds for the frame time: **FPS without a limit counts only if the vsync mode read back is disabled**. With the vsync on, as in every attempt here, the outcome is
 the **CPU time per frame** (the injection and flush, the pump and its phases, which the headless lane records exactly), and the frame times are read against the refresh period the display reports: 8.33 ms at the
 120 Hz of this display. A 100-node swap's own work (9.2 ms at the median, 12.4 at p95) is more than one such period, so today it cannot fit in a single 120 Hz frame on this machine, and a budget in frames at that
-rate would fail it by construction; the freeze has to choose between a per-swap CPU bound (above), a bound in frames at a lower rate, or a change in what a swap creates (fewer or flatter nodes, a list that mounts
-what is visible). Nothing here decides it. The presented window says the same in frames: the frame that takes a 100-node swap is 13.1 ms at the median (1.6 periods of 120 Hz) and 16.6 ms at p95, and the injection and flush inside it cost 9.4 ms of CPU at the median.
+rate would fail it by construction. The freeze keeps the per-swap CPU bound and the frame-time bounds of the table, and chooses neither a bound in frames at a lower rate nor a change in what a swap creates (fewer or flatter nodes, a list that mounts
+what is visible): that stays a question about the HUD and not about the budget. The presented window says the same in frames: the frame that takes a 100-node swap is 13.1 ms at the median (1.6 periods of 120 Hz) and 16.6 ms at p95, and the injection and flush inside it cost 9.4 ms of CPU at the median.
+
+**The rows that left.** The p99 of the swap frame by size (proposed as 16.5 / 27.5 / 29.5 / 41.5 ms for 0 / 50 / 75 / 100 nodes) is not frozen, for this reason: the p99 of 90 swaps is the largest of them (nearest rank 90), so the bound by size is fixed by one swap a run and is the noisiest (IQR 0.7 to 5.5 ms); the tail is covered by the count of frames of 100 ms or more, which stays. The p95 of the same swaps has an IQR of 0.03 to 1.9 ms across the runs. The count of frames of 100 ms or more is 0 in the five runs. The derivation of the removed rows is kept below, marked as not frozen.
 
 **How the frame-time bounds are derived.** Per statistic, the five runs' values sorted, the nearest-rank quartiles of five (the second, third and fourth values), and the rule. Everything is in milliseconds and was computed on integer microseconds from the raw intervals
-(the all-swaps and idle figures are the receipt's own `summary`, which `summarizeGraphicsRuns` reproduces; the by-size ones are the same statistic over the swaps of one size). The all-swaps rows are for reference; the proposal is by size.
+by `budgetOf` in `scripts/frontier-freeze.mjs` (the swap and idle figures are the receipt's own `summary`, which `summarizeGraphicsRuns` reproduces; the by-size ones are the same statistic over the swaps of one size; the two rows of the turn are the p95 of the frames of each window over the 120 steady turns of a run, from the raw intervals of the turn's receipt). The bounds in bold are frozen; the others are
+derived to be read. Every row of this table is checked against the freeze by `tests/frontier-freeze.test.mjs`.
 
 | Statistic (ms) | The five runs, sorted | Q1 | Median | Q3 | IQR | Median + 3 IQR | Up to 0.5 ms |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Swap frame p50, 0 nodes created | 3.565 / 3.653 / 3.662 / 3.667 / 3.731 | 3.653 | 3.662 | 3.667 | 0.014 | 3.704 | **4.0** |
 | Swap frame p95, 0 nodes created | 13.632 / 13.690 / 13.714 / 13.721 / 13.794 | 13.690 | 13.714 | 13.721 | 0.031 | 13.807 | **14.0** |
-| Swap frame p99, 0 nodes created | 13.897 / 14.251 / 14.284 / 14.983 / 15.141 | 14.251 | 14.284 | 14.983 | 0.732 | 16.480 | **16.5** |
+| Swap frame p99, 0 nodes created | 13.897 / 14.251 / 14.284 / 14.983 / 15.141 | 14.251 | 14.284 | 14.983 | 0.732 | 16.480 | 16.5 |
 | Swap frame p50, 50 nodes created | 8.414 / 8.436 / 8.448 / 8.494 / 8.588 | 8.436 | 8.448 | 8.494 | 0.058 | 8.622 | **9.0** |
 | Swap frame p95, 50 nodes created | 10.688 / 10.713 / 11.052 / 11.116 / 11.843 | 10.713 | 11.052 | 11.116 | 0.403 | 12.261 | **12.5** |
-| Swap frame p99, 50 nodes created | 12.201 / 13.282 / 15.565 / 17.241 / 20.135 | 13.282 | 15.565 | 17.241 | 3.959 | 27.442 | **27.5** |
+| Swap frame p99, 50 nodes created | 12.201 / 13.282 / 15.565 / 17.241 / 20.135 | 13.282 | 15.565 | 17.241 | 3.959 | 27.442 | 27.5 |
 | Swap frame p50, 75 nodes created | 10.926 / 11.053 / 11.171 / 11.197 / 11.534 | 11.053 | 11.171 | 11.197 | 0.144 | 11.603 | **12.0** |
 | Swap frame p95, 75 nodes created | 13.426 / 13.533 / 14.080 / 15.409 / 15.420 | 13.533 | 14.080 | 15.409 | 1.876 | 19.708 | **20.0** |
-| Swap frame p99, 75 nodes created | 18.780 / 18.960 / 19.278 / 22.366 / 24.621 | 18.960 | 19.278 | 22.366 | 3.406 | 29.496 | **29.5** |
+| Swap frame p99, 75 nodes created | 18.780 / 18.960 / 19.278 / 22.366 / 24.621 | 18.960 | 19.278 | 22.366 | 3.406 | 29.496 | 29.5 |
 | Swap frame p50, 100 nodes created | 13.130 / 13.144 / 13.144 / 13.255 / 13.541 | 13.144 | 13.144 | 13.255 | 0.111 | 13.477 | **13.5** |
 | Swap frame p95, 100 nodes created | 14.730 / 16.568 / 16.577 / 16.699 / 19.442 | 16.568 | 16.577 | 16.699 | 0.131 | 16.970 | **17.0** |
-| Swap frame p99, 100 nodes created | 16.615 / 20.404 / 24.607 / 25.918 / 60.024 | 20.404 | 24.607 | 25.918 | 5.514 | 41.149 | **41.5** |
+| Swap frame p99, 100 nodes created | 16.615 / 20.404 / 24.607 / 25.918 / 60.024 | 20.404 | 24.607 | 25.918 | 5.514 | 41.149 | 41.5 |
 | Idle frame p99 | 14.854 / 15.169 / 15.213 / 15.509 / 15.604 | 15.169 | 15.213 | 15.509 | 0.340 | 16.233 | **16.5** |
 | Swap frames of 100 ms or more, per run | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
 | Idle intervals of 100 ms or more, per run | 0 / 0 / 0 / 0 / 0 | 0 | 0 | 0 | 0 | 0 | **0** |
 | Swap frame p50, all swaps (reference) | 10.410 / 10.502 / 10.596 / 10.625 / 10.673 | 10.502 | 10.596 | 10.625 | 0.123 | 10.965 | 11.0 |
-| Swap frame p95, all swaps (reference) | 14.217 / 14.497 / 14.835 / 14.875 / 15.928 | 14.497 | 14.835 | 14.875 | 0.378 | 15.969 | 16.0 |
+| Swap frame p95, all swaps (the protocol's `budget-p95-context-switches`) | 14.217 / 14.497 / 14.835 / 14.875 / 15.928 | 14.497 | 14.835 | 14.875 | 0.378 | 15.969 | **16.0** |
 | Swap frame p99, all swaps (reference) | 15.447 / 17.339 / 18.175 / 18.978 / 19.836 | 17.339 | 18.175 | 18.978 | 1.639 | 23.092 | 23.5 |
+| AI phase p95 (the protocol's `budget-p95-ai-phase`) | 13.784 / 14.539 / 14.642 / 14.799 / 14.928 | 14.539 | 14.642 | 14.799 | 0.260 | 15.422 | **15.5** |
+| End-of-turn p95 (the protocol's `budget-p95-event-burst`) | 14.677 / 14.715 / 14.847 / 14.868 / 14.952 | 14.715 | 14.847 | 14.868 | 0.153 | 15.306 | **15.5** |
 
 **The load makes these numbers pessimistic.** The windowed lane ran with the Mac's one-minute load average at 5.4 to 6.8 on 11 logical cores (other agents' work), so a quiet machine may show smaller frame times and smaller IQRs, and the bounds above may be looser than they need to be. A user working on the machine is not in them either.
-The `congelado` criterion may therefore need an execution of the lane on a quiet machine before any of these rows is frozen; this proposal neither asks for it nor freezes anything.
+The freeze did not wait for a quiet machine: it took this execution by decision, and the corroboration of the night of 2026-10-09 (the same bundle on a machine at a load of 8.3 to 13.6, which was about 25% slower: the p95 of the swap frame over all swaps 18.8 to 20.4 ms against 14.2 to 15.9) shows that the baseline is sensitive to load, which is why the executions of the lowest load are the ones that count
+([the freeze](frontier-freeze.md#four-observations-that-change-no-rule)).
 
 ## The retained sabotages
 
@@ -503,21 +520,21 @@ the host no node is itself worth knowing for HUD panels that are hidden and not 
 
 - **`turno`** (V05-06): the lifecycle, the pause and the frame budget of a whole turn, on the Frontier game, are not measured here. This slice measures one swap.
 - **`soak`** (V05-06): the 100-turn soak on the game and its lifecycle are not run. The 30 steady rounds here (360 swaps) are a soak of the swap, not of the game.
-- **`congelado`** (V05-06): the freeze of the thresholds. The proposal above is the input; the freeze is one act, later, by the principal.
+- **`congelado`** (V05-06): done on 2026-10-10. [The freeze](frontier-freeze.md) took the proposal above as its input and froze it, once, together with the five thresholds of the final comparison's protocol; what stays open is in [its note](frontier-freeze.md#what-is-still-open).
 
 ## Limitations and open
 
 - One machine (an Apple M3 Pro), one display and one vsync mode (the default, enabled, read back); a frame time with the vsync disabled was not measured, so no FPS without a limit is claimed. The Mac was
   loaded (load average 4 to 8 on 11 logical cores) during every run, so the numbers are not a best case and a quieter machine may show smaller ones.
 - **The frame time of a presented window (vsync on, 120 Hz) is pinned from one execution** (2026-10-09, `1bc3a3c`): five runs of one sitting of the lane (about four minutes) with nobody at the Mac and the machine loaded by other agents (load average 5.4 to 6.8 on 11 logical cores), so a user at work and a quiet machine are both missing; the budget rows derived from it
-  are a proposal, and the `congelado` may need an execution on a quiet machine. The attempts before it, which no display presented, and the earlier unpinned reference are history.
+  were frozen from this execution on 2026-10-10, by the user's decision, with a corroboration of the night of 2026-10-09 beside them ([the freeze](frontier-freeze.md)), and a quiet machine may show smaller numbers. The attempts before it, which no display presented, and the earlier unpinned reference are history.
 - Synthetic events through `Input.parse_input_event`; no hardware pointer or touch screen, no iPhone, no mobile export. The numbers are macOS, arm64, Compatibility renderer.
 - The HUD is a fixture of the same shape as the Frontier panels, not the Frontier HUD (V05-05 is open). The panels are 50 to 100 native nodes of `View` and `Text`; panels with images, text inputs, scroll views,
   long text shaping or animations are not measured.
 - Headless time is the CPU cost of an unpaced loop, and the harness's own readings (the forced collection, the process listing for the resident memory) are outside the windows it reports but inside the process;
   Godot's static memory per round (the probe keeps 13 readings a round) is the probe's.
 - Missed frames with the vsync on are not read (see the protocol). The frame times are of process frames, which at 120 Hz with the vsync on come in clusters.
-- Hosted CI is pending: the headless suite is in the native job of `contracts.yml`; the windowed lane is local and never runs there. A hosted runner will show other times; only the exact checks are asked of it.
+- Hosted CI: the headless suite is in the native job of `contracts.yml`, and the push of #77 to main passed it and published Pages (the receipts [`hosted-ci.json`](../evidence/frontier-baseline/hosted-ci.json) and [`publication.json`](../evidence/frontier-baseline/publication.json) of the evidence record); the windowed lane is local and never runs there. A hosted runner will show other times; only the exact checks are asked of it.
 - The previous-host control does not apply: nothing in C++ changed, so there is no host to compare it with. The four retained sabotages are the control.
 - The docs of compatibility (`docs/compatibility/react-native-0.87.1.json`, `BASELINE.md`), `docs/API.md` and `docs/NATIVE_MODULES.md` do not apply: the slice adds no RN name, public API or native module.
 
@@ -528,4 +545,5 @@ npm run test:frontier-baseline                       # the probe in two processe
 node scripts/frontier-baseline-sabotage.mjs          # the four retained sabotages, source restored byte for byte; run nothing else meanwhile
 node tests/frontier-baseline-native.test.mjs --replay=build/frontier-baseline-current-report.json   # judge a recorded report
 caffeinate -d node scripts/frontier-baseline-graphics.mjs   # local only, needs an awake and unlocked display: five windowed runs, the receipt and a capture per panel; exit 3 if not presented
+node scripts/frontier-freeze.mjs --check                   # the frozen budget and thresholds, recomputed from the committed inputs (node --test tests/frontier-freeze.test.mjs)
 ```
