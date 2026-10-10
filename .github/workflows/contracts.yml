@@ -476,6 +476,14 @@ jobs:
             build/modal-stack-membership-probe-bundle.json
             build/modal-discriminators-probe.js
             build/modal-discriminators-probe-bundle.json
+            build/modal-teardown-quit-report.json
+            build/modal-teardown-quit.log
+            build/modal-teardown-change-scene-report.json
+            build/modal-teardown-change-scene.log
+            build/modal-teardown-free-owner-report.json
+            build/modal-teardown-free-owner.log
+            build/modal-teardown-probe.js
+            build/modal-teardown-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       # The density policy and RN's SafeAreaView on the headless host (a GF-09 slice on the desktop; the simulator and device lanes went
       # back to GF-35 with the iPhone NO-GO, see docs/evidence/mobile-density/README.md). It sits with the modal suite, the other
