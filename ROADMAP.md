@@ -1009,6 +1009,14 @@ know goes to an "Other fields" block instead of being dropped. The synthetic exa
 only and synthetic data: **no number in it is a result.** The [record](https://github.com/journey-studios/godot-fabric/blob/e53a05fc4a7240e23d357bd038c5a1123430fca7/docs/evidence/frontier-comparison-analysis/README.md#o-relatório-como-documento-markdown)
 has the section. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `relatorio` stays open, because it needs the real campaign, the words of the decision and of the limitations, and the document generated from the campaign's `report.json`.
 
+**Progress.** V05-10, criterion `execucao`, the entry of the scenario (code at `da7eff5`, record at `bb30d75`): the scenario no longer runs with `-s`, which an export template discards, but as the main loop of the measurement
+project, so that the Debug run and a Release `.app` of the same project enter the same way. The runner writes three files into the provisioned copy of civ-lite (a two-line class that extends the scenario, an empty main scene and an
+`override.cfg` that names both), keeps the settings out of the package's hash and puts them into the scenario's; `override.cfg` is read with `--path` and, in an exported `.app`, from `Contents/MacOS/` or the pack, as the Godot 4.7.2
+source says, and a scratch probe in the pinned release template saw it. The scenario frees the empty scene, so `scene-nodes` counts what it counted through `-s`. In the three arms, Debug and headless, the counts and hashes are the same
+through the entry and through `-s`, and the same as the last rehearsal through `-s`; the times are not compared. **A rehearsal, and no number in it is a result.** The Release launcher still refuses, now saying that the entry is defined
+and that the export of civ-lite in the three arms is missing. The [record](https://github.com/journey-studios/godot-fabric/blob/bb30d75364f4edf50b05ef1710b70c662da9dbdd/docs/evidence/frontier-comparison-entry/README.md) is local evidence. No
+criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to

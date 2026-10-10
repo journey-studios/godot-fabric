@@ -1,0 +1,574 @@
+{
+  "notAResult": "A rehearsal of the entry: Debug, headless, one execution per arm. It compares counts and hashes, never times; no number of it is a measurement of an arm.",
+  "tree": {
+    "commit": "afe52f2234126113441dfeff5b1b3af099c72952",
+    "clean": true
+  },
+  "hashes": {
+    "binary": "c7cccbf8fb143e34e02fd6521e09be2c2b974f0d5db080b19071c9c570718ccf",
+    "package": "314dac74969bbeffe84b0bc35374fba08f46473fb2922a8e2d439a3d10df449e",
+    "script": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768",
+    "protocol": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93"
+  },
+  "scriptFiles": {
+    "tests/frontier-comparison-scenario.gd": "8e00815e8356ae055b619f813e5fc0e315e74afd57a3a9fc6d44903212fc9259",
+    "tests/frontier-comparison-player.gd": "d74499eda974e97a325e83318af72a3724d401dfab2839129f1e07612e926a79",
+    "tests/frontier-comparison-hud.gd": "464dff3237b14368f6a83382ca05502f4330e2de66f0ca32f254c08157330a6c",
+    "tests/frontier-comparison-readings.gd": "19d046222020b07daad52055fdee264a5634893d03785b051c108bf7cbd69b24",
+    "tests/frontier-comparison-cycle.gd": "340d7e66d306038eb2645f7cf3ef64ee83d0c6893e7e6a4c1a89290f6ac3e629",
+    "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/window-presence.gd": "e90c93e748768aab903152d74e8e33b1836e628af218342667f9830832cecbfa",
+    "tests/world-input-driver.gd": "ec07dd93a3a23b1a9d520fbc0aac7b21977dfb55e345748084568d1f29345574",
+    "comparison/frontier-comparison-entry.gd": "db3a43b4899cfb7aff3151dabadf20a1b022ba84684449c9972a549b4b2abc06",
+    "comparison/frontier-comparison-empty.tscn": "89caa232be3c3deebc55224b526538cad3d692f9828ba1ad47573400f354e204",
+    "override.cfg": "53405dd2d4a2fef3bebf622ae3d39316b74fd384bafaa5552f304e30734ba560"
+  },
+  "recordedRehearsal": {
+    "source": "docs/evidence/frontier-comparison-execution/headless/summary.json",
+    "pinned": "7e2e5b13b7a432f25f17fab2d01a6553a2b1327a",
+    "entry": "-s"
+  },
+  "arms": {
+    "A": {
+      "entry": {
+        "exitCode": 0,
+        "mainLoop": "FrontierComparisonEntry",
+        "sceneNodes": 4,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 0,
+          "contexts": {},
+          "matches": false
+        },
+        "counters": {
+          "consumed": -1,
+          "emitted": 2256
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 0,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "control": {
+        "exitCode": 0,
+        "mainLoop": "",
+        "sceneNodes": 4,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 0,
+          "contexts": {},
+          "matches": false
+        },
+        "counters": {
+          "consumed": -1,
+          "emitted": 2256
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 0,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "recorded": {
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakDecisions": 429,
+        "soakTurns": 100,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 0,
+          "contexts": {},
+          "matches": false
+        },
+        "windows": {
+          "ai-phase": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "idleFrames": 600,
+        "latencyClicks": 0
+      },
+      "entryEqualsControl": true,
+      "entryEqualsRecorded": true
+    },
+    "B": {
+      "entry": {
+        "exitCode": 0,
+        "mainLoop": "FrontierComparisonEntry",
+        "sceneNodes": 31,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "counters": {
+          "consumed": 2306,
+          "emitted": 2306
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 30,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "control": {
+        "exitCode": 0,
+        "mainLoop": "",
+        "sceneNodes": 31,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "counters": {
+          "consumed": 2306,
+          "emitted": 2306
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 30,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "recorded": {
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakDecisions": 429,
+        "soakTurns": 100,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "windows": {
+          "ai-phase": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "idleFrames": 600,
+        "latencyClicks": 30
+      },
+      "entryEqualsControl": true,
+      "entryEqualsRecorded": true
+    },
+    "C": {
+      "entry": {
+        "exitCode": 0,
+        "mainLoop": "FrontierComparisonEntry",
+        "sceneNodes": 30,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "counters": {
+          "consumed": 2307,
+          "emitted": 2307
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 30,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "control": {
+        "exitCode": 0,
+        "mainLoop": "",
+        "sceneNodes": 30,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "replaySteps": 77,
+        "replayStepMismatches": 0,
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakTurns": 100,
+        "soakDecisions": 429,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "counters": {
+          "consumed": 2307,
+          "emitted": 2307
+        },
+        "unavailable": {},
+        "switches": 74,
+        "stressRounds": 32,
+        "latencyClicks": 30,
+        "traceByKind": {
+          "context-switch": 74,
+          "end-turn-accepted": 100,
+          "events-settled": 100,
+          "stress-begin": 32,
+          "stress-step": 640,
+          "turn-ended": 100
+        },
+        "idleFrames": 600,
+        "windows": {
+          "ai-phase": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "available": true,
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "available": true,
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "available": true,
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "anomalies": [],
+        "aborted": ""
+      },
+      "recorded": {
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "soakDecisions": 429,
+        "soakTurns": 100,
+        "soakRefusals": 0,
+        "parity": {
+          "checked": 93,
+          "contexts": {
+            "city": true,
+            "dialog": true,
+            "none": true,
+            "settler": true,
+            "stack": true,
+            "tile": true,
+            "warrior": true
+          },
+          "matches": true
+        },
+        "windows": {
+          "ai-phase": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "event-burst": {
+            "occurrences": 100,
+            "measured": 98,
+            "frames": 500
+          },
+          "context-switches": {
+            "occurrences": 74,
+            "measured": 50,
+            "frames": 222
+          },
+          "stress": {
+            "occurrences": 32,
+            "measured": 30,
+            "frames": 736
+          }
+        },
+        "idleFrames": 600,
+        "latencyClicks": 30
+      },
+      "entryEqualsControl": true,
+      "entryEqualsRecorded": true
+    }
+  }
+}
