@@ -179,6 +179,38 @@ estimated and `H3` has no category; every axis is `n/a` for the reason that B is
 registration, the instrument, the vsync readings (of the executions) and the load readings (of every attempt, the ones without a report too), the deviations), `validity`, `primary`, `axes`, `cost-of-change`, `budgets`, `decision`, `limitations` and `reproduction` (the raw data, the hash of
 the campaign file, the seed and the resamples). The words of `decision`, `limitations` and `cost-of-change` come from `text`; without them they are `null`. The report holds no date, path or random number.
 
+## The report as a document
+
+The report is JSON. `scripts/frontier-comparison-report-markdown.mjs` renders it as the Markdown document that a person reads, so that the final report of V05-10 (criterion `relatorio`) is a mechanical step: analysis, `report.json`, document.
+
+```sh
+node scripts/frontier-comparison-report-markdown.mjs <report.json> [--out <file.md>] [--protocol <file>]
+```
+
+Without `--out` the document goes to the standard output. The command reads the protocol (`docs/research/frontier-comparison-protocol.json`, or `--protocol <file>`) and hashes its bytes. `renderReport(report, {protocol, protocolSha256})` is pure and deterministic: the same report and protocol give the same bytes.
+It takes two things from the protocol and copies neither: the ids and the order of the sections (`report.sections`) and the words of the partial report rule (`decisionRule.partialReport`, its `when` and `report`, quoted as they are). It refuses, with the reason, a JSON whose `format` is not `REPORT_FORMAT`,
+a report whose `provenance.protocol.sha256` is not the SHA-256 of the protocol bytes it was given (it was made under another protocol), a report whose `sections` are not the protocol's in the protocol's order, and a protocol section it has no rendering for. **It computes nothing:** no statistic, no rounded verdict, no decision. It formats what the JSON holds.
+
+**The rule of the numbers** is one, with no locale: at most three decimals, no trailing zeros, integers as integers, and the units of the JSON next to the number or in the column. A non-zero number that three decimals would erase shows three significant digits in plain notation (a probability of 0.00009999 reads 0.0001, and 0.00012345 reads 0.000123),
+so that it never reads as 0 and never in exponential notation. The verdicts, the categories and the results (`gain`, `neutral`, `cost`, `inconclusive`, `met`, `exceeded`, `n/a`) are the JSON's words. The texts of `decision`, `limitations` and `cost-of-change` enter as they are, quoted line by line, and a `|` inside a table is escaped.
+
+**What each section shows**, in the order of the report, in English:
+
+- the title and the status: `status`, `why` and, when it is `partial`, the rule of the partial report in the protocol's words (a comparison of A against C that claims no gain);
+- `provenance`: the commit, the machine, the system, the display, the renderer and the adapter; the protocol (SHA-256, amendments, the frozen values with their dates); the registration (seed, golden hashes, the hashes of each arm) and the instrument; the vsync and load readings; the deviations, or "None";
+- `validity`: for each lane a table of arm by planned, accepted, rejected, open, missing and exhausted, and the balance by position; the stops; and the rejected attempts with the rule and the clause of each reason, an attempt that wrote no report marked `reported: false`;
+- `primary`: the method of the interval and of the multiplicity; for each window a table of arm by executions, median and IQR, a table of the pairs with the difference and the interval, and for C against B the category (with the unadjusted one and the Holm downgrade), the `nonInferior` flag, the margin with its formula and value, and the budget;
+- `axes`: one table of the verdicts of C against B by axis (and by window for the FPS), the values behind them (the arms, the FPS readings, the package exports, the four measures of the cost of change) and the descriptive outcomes with medians, IQRs and intervals;
+- `cost-of-change`: the observation of each arm and, because it is one observation per arm, the sentence that it describes the change and makes no statistical claim (`statisticalClaim: false`), then the campaign's words;
+- `budgets`: for each window the frozen budget with its date and, for each arm, the median of the per-run p95 and `met`, `exceeded` or `n/a`;
+- `decision`, `limitations` and `reproduction`: the words of the campaign (and whether the partial report rule applies), and the raw data, the hashes, the seed, the resamples and the commands.
+
+A section with `available: false` is one line with its reason. **Nothing is lost silently:** the per-run values (`perRun`) and the oriented intervals stay in the JSON on purpose, and any other field that the renderer does not know goes, in compact JSON, to an "Other fields" block at the end of
+its section; the test proves that the example of the evidence record has none. The document of the example, [`example-analysis.md`](../evidence/frontier-comparison-analysis/example-analysis.md), is the output of the command on `example-analysis.json` byte for byte (the test checks it) and is **synthetic**: its own words say "SYNTHETIC EXAMPLE".
+
+The final document of V05-10 is generated this way from the `report.json` of the real campaign and never edited by hand. The words of the decision (whether to keep the React Native HUD for games, written even when the result is no gain) and of the limitations are the campaign's `text`,
+written by whoever closes the comparison; the renderer only places them.
+
 ## Where the protocol is a sentence, and the readings chosen
 
 The protocol states some rules in words. The code follows them, the sentence is checked when the script runs (`proseRulesOf`), and these are the readings that were chosen. None of them is a freedom taken with a
