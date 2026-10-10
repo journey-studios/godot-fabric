@@ -616,6 +616,23 @@ jobs:
             build/macos-export-native-*/report.json
             build/macos-export-native-positive-*/Verified.app.tar.gz
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - name: Export Frontier as a signed Release app and replay it to the golden hash in clean profiles
+        env:
+          MACOS_EXPORT_TEMPLATE: ${{ github.workspace }}/.deps/macos-arm64-template.zip
+        run: npm run test:export:civ-lite
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-macos-export-civ-lite
+          path: |
+            build/macos-export-civ-lite-native/report.json
+            build/macos-export-Frontier-*/receipt.json
+            build/macos-export-Frontier-*/sdk-manifest.json
+            build/macos-export-Frontier-*/replay-*.json
+            build/macos-export-Frontier-*/replay-*.log
+            build/macos-export-Frontier-*/hud-app.json
+            build/macos-export-Frontier-*/hud-app.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
