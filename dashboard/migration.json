@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T14:40:00.000Z",
+  "updatedAt": "2026-10-10T15:14:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4779,6 +4779,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-unreported-8817938",
+      "at": "2026-10-10T15:14:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit 8817938): a tentativa cujo processo não escreveu relatório (travamento, estouro de tempo, saída sem relatório) passa a fazer parte dos dados da campanha no formato da análise. Antes, a campanha do #126 a deixava fora de executions, renumerava as outras e a listava só no estado e no summary.json; o relatório da análise contaria menos tentativas do que as feitas, e a regra das 3 tentativas não seria verificável a partir de campaign.json. O formato continua godot-fabric.frontier-comparison-campaign/v1 e ganha o campo opcional unreported (uma entrada por tentativa: braço, faixa, vaga, número, carga antes e depois, como o processo terminou e o SHA-256 do log). É uma mudança do formato, que é da análise, e não uma emenda do protocolo: as regras errors, runs.load.redo e report.sections validity já cobrem o caso. A análise julga a tentativa rejeitada pela regra errors, cláusula no-report, com os valores da entrada; ela conta nas 3 tentativas da vaga e na parada por tentativas esgotadas, e o relatório a mostra com reported: false, a carga e o motivo, sem vsync. A campanha escreve unreported em campaign.json, mantém o número real de cada tentativa (some a renumeração) e deixou de ter a parada própria por vaga esgotada, que a da análise passou a cobrir. Uma saída 0 sem relatório vale como errors também (o cenário só sai com 0 depois de gravar o relatório). O exemplo sintético foi regerado (só ganhou reported: true em cada tentativa) e há um exemplo novo da seção validity com uma tentativa sem relatório, conferido byte a byte por teste. Só Node e dados sintéticos: nenhum número é resultado. O lançador Debug ainda não repassa timedOut (uma linha, no arquivo da entrega do slot que o tem). Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10"
+    },
     {
       "id": "milestone-0-5-v05-10-mudanca",
       "at": "2026-10-10T14:40:00.000Z",
