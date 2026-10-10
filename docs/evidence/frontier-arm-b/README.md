@@ -110,6 +110,83 @@ Dois pedidos do orquestrador, feitos depois de o braço B passar e que não são
 - **O gancho para o executor do Agente 4**: a HUD nativa guarda o último snapshot que mostrou num só lugar (`_applied`, atribuído em `_show_game`) e o devolve por `applied_snapshot()`; o método
   do contrato do executor é trivial de acrescentar sobre ele, e o formato fica para quando o executor o der.
 
+## Passe de otimização
+
+A passada única do protocolo para o braço B (uma rodada: perfil, as mudanças que o perfil justifica, uma nova medida, parar; no máximo 3,2 h; só o B, com meios idiomáticos do Godot, fora de qualquer
+execução comparativa e preservando a paridade). A base é a `main` em `151427e` (a janela de estresse e o `stats()` do #119 já dentro); a implementação está em `960b4adb101647f4794f3c8231f0f7668289886c`.
+Os números brutos de cada execução estão em [optimization.json](optimization.json) e os quadros de cada ocorrência em [optimization-frames.json](optimization-frames.json).
+
+**Como se mediu.** Um arnês de rascunho (não commitado) sobre a cena `main_native.tscn`, headless, um processo do Godot por execução, com o instrumento de tempo de CPU do #97. Ele toca as quatro janelas do protocolo pelo
+nó `GameServices` como o roteiro de execução faz: `ai-phase` e `event-burst` (a segunda fecha quando `stats().events == notifications_emitted()`, depois de pelo menos cinco quadros) em dois jogos de 62 turnos, um sem seleção e um
+com a tela da cidade aberta (o contexto mais pesado); `context-switches` com a rodada de 12 trocas de `tests/frontier-comparison-cycle.gd` (24 de aquecimento e 200 medidas, não as 50 do protocolo, para um p95 mais firme); e `stress`
+(`stress_begin`, 20 `stress_step` um por quadro, dois quadros depois: 23 quadros; 2 rodadas de aquecimento e 30 medidas; `stress_end` fora da janela). O "antes" é o `native_hud` do `origin/main` numa cópia de rascunho, sem a WIP. O
+"depois" é a árvore de trabalho. Foram 5 execuções de cada, alternadas (a ordem se inverte a cada par). Por ser headless não há desenho: o tempo é o de script e de layout. A máquina era compartilhada (carga de 1 minuto entre 4 e 10, longe
+dos 2,0 do protocolo) e andou em estados mais lentos, então um trecho fixo de GDScript, com dados próprios, foi cronometrado entre as fases de cada execução; as colunas "normalizado" dividem cada fase pela média das duas calibrações
+em torno dela sobre 82 µs (o estado mais rápido visto). Nada disto entra em estatística alguma do comparativo.
+
+**O que o perfil mostrou** (na `main`, medianas das execuções):
+
+- **`ai-phase` com a cidade aberta.** O primeiro quadro, o que aceita o End Turn, custa 6,7 ms, dos quais 4,6 ms são o script da HUD: o jogo desabilita todas as escolhas e dá a cada uma o seu motivo, e as listas das ações, da cidade e da
+  pesquisa eram destruídas e refeitas inteiras. É o p95 da janela (7,9 ms).
+- **`context-switches`.** A troca que abre a tela da cidade custa 9,1 ms por ocorrência: instanciar, `add_child` e a primeira renderização de dois painéis (cerca de 1,3 ms de script) e o layout deles. As outras trocas ficam entre 1,4 e 4,3 ms.
+- **`stress`.** O quadro que começa o modo custa 35 ms (16 ms de script: montar 300 Labels) e cada passo, de 1,0 a 2,0 ms por quadro, crescendo com o passo. Do script do passo (0,49 ms), uma renderização que não muda nada já custava 252 µs
+  (derivar as chaves e os textos de 300 linhas por `map`, e perguntar a cada linha se mudou) e criar o Label da linha nova era a maior parte do resto.
+- **`event-burst` e o `ai-phase` sem seleção** são leves (p95 de 0,7 e 1,9 ms) e não pedem mudança.
+
+**O que mudou e por quê.** 240 linhas inseridas e 69 retiradas em 7 arquivos (`git diff origin/main` nos caminhos):
+
+1. **Listas atualizadas no lugar** (`kit.gd` +73 −7, `actions.gd`, `city.gd`, `research.gd`): `Kit.sync_choices` e `Kit.sync_lines` levam as linhas à nova descrição uma a uma (a linha que continua é atualizada onde difere, uma chave nova faz uma linha, uma que saiu perde a sua; o
+   motivo de uma recusa é um Label feito quando é preciso e escondido quando não). Era a WIP, e o perfil a justifica: é o quadro 0 do `ai-phase` com a cidade.
+2. **Painéis guardados fora da árvore** (`hud.gd` +57 −22): um painel que sai do contexto vai inteiro para um pool por nome (`_pool`, `_take`, `_unmount`) e volta com `add_child` mais uma renderização que só toca o que mudou; o diálogo e o menu
+   continuam sendo feitos de novo e liberados, porque cada evento é uma subárvore própria. Também era a WIP; paga na troca para a cidade.
+3. **Painel de estresse incremental** (`stress.gd` +85 −13, novo): compara as listas novas com as últimas mostradas (duas comparações nativas) em vez de perguntar a cada linha; o log que avançou por linhas inteiras não toca nas 199 que ficaram, a linha que sai
+   recebe a chave e o texto da que entra e vai para o fim (um Label é o que um passo tem de mais caro), e só um item de produção que mudou tem o texto reposto; qualquer outra mudança (o modo recomeçou, um salto na sequência) cai na reconciliação completa de antes.
+4. **`scripts/civ-lite-ui-sabotage.mjs`** (+2 −2): a variante `native-stress-rows-rebuilt` procurava um trecho do `stress.gd` que não existe mais; passou a quebrar o trecho novo (descarta as linhas a cada renderização) e continua dizendo a mesma coisa.
+
+Da WIP nada foi descartado, e duas coisas foram consideradas e não feitas: manter o painel de estresse escondido dentro da árvore (poria 330 nós permanentes na leitura de nós do fim da execução) e qualquer virtualização da lista (as linhas precisam ser Controls
+com testID).
+
+**Resultado** (5 execuções de cada; medianas das execuções do p50, p95, média por quadro e soma dos quadros de uma ocorrência; ms):
+
+| Janela | p95 antes → depois | p50 antes → depois | média antes → depois | ocorrência (soma) antes → depois |
+| --- | --- | --- | --- | --- |
+| `ai-phase`, cidade aberta | **7,95 → 3,51 (−56%)** | 0,40 → 0,77 (+89%) | 1,70 → 1,13 (−33%) | 8,48 → 5,65 (−33%) |
+| `ai-phase`, sem seleção | 1,91 → 1,96 (+2%) | 0,49 → 0,54 (+9%) | 0,69 → 0,75 (+8%) | 3,47 → 3,74 (+8%) |
+| `event-burst`, cidade aberta | 1,49 → 1,46 (−2%) | 0,08 → 0,07 (−7%) | 0,27 → 0,30 (+11%) | 1,37 → 1,52 (+11%) |
+| `event-burst`, sem seleção | 0,70 → 0,73 (+4%) | 0,07 → 0,08 (+8%) | 0,16 → 0,19 (+13%) | 0,82 → 0,93 (+13%) |
+| `context-switches` | 4,63 → 4,32 (−7%) | 0,093 → 0,095 (+2%) | 1,09 → 0,96 (−12%) | 3,27 → 2,87 (−12%) |
+| `stress` | 3,50 → 3,41 (−3%) | 1,36 → 0,93 (−31%) | 2,79 → 2,26 (−19%) | 64,2 → 51,9 (−19%) |
+
+Normalizado pela calibração, os mesmos pares dão p95 −62% (`ai-phase`, cidade), −17% (trocas) e −10% (estresse). Os p95 por execução da `ai-phase` com a cidade não se sobrepõem (antes 7,55 a 8,22; depois 3,45 a 3,95); os das trocas
+(3,73 a 4,80 contra 3,85 a 4,44) e os do estresse (2,52 a 20,3 contra 3,32 a 3,57) se sobrepõem, e o que se pode dizer deles é só que não pioraram. O primeiro quadro da `ai-phase` com a cidade aberta caiu de 6,7 para 3,2 ms (o script da HUD nele, de 4,6 para 0,9 ms, numa execução de diagnóstico à parte). A troca `map-city` caiu de 9,1 para 5,6 ms por ocorrência (o pool) e as outras seis
+trocas de seleção ficaram onde estavam; no estresse o script do passo caiu de 492 para 121 µs, os quadros de passo de 1,0–2,0 para 0,7–1,4 ms, e uma renderização sem mudança de 252 µs para 0,8 µs.
+
+**O que não melhorou, ou piorou.**
+
+- Os quatro quadros que seguem o primeiro da `ai-phase` com a cidade aberta custam de 0,1 a 0,3 ms **a mais** (a mediana da janela sobe de 0,40 para 0,77 ms): as linhas que ficam no lugar, com o Label do motivo
+  mostrado e escondido em vez de refeito, deixam mais trabalho de layout nesses quadros. A soma por ocorrência ainda cai um terço. A causa não foi isolada.
+- O quadro que começa o estresse segue em cerca de 30 ms (35 antes): é entrar na árvore com 300 Labels, e o pool só tira a criação. Não pesa no p95 da janela (são 30 dos 690 quadros, menos de 5%), mas pesa no p99 e na média.
+- Desmontar custa um pouco mais de script (o fim do estresse, 0,73 → 1,03 ms; a volta da cidade para nada, 0,28 → 0,43 ms), porque o painel vai ao pool em vez de ser liberado depois.
+- O pool mantém vivos mais objetos (1 640 → 2 419 ao fim da execução; nenhum na árvore, que segue com 32 nós), e isto aparece na memória residente da leitura do fim.
+- `ai-phase` sem seleção e `event-burst` não mudaram (as diferenças ficam dentro da dispersão entre execuções, de uns 10%).
+
+**Paridade e custo do `stats()`.**
+
+- `node --test tests/civ-lite-ui-native.test.mjs` (as duas HUDs, com a etapa de estresse): 2 de 2, na árvore final.
+- As cinco sabotagens nativas pelo filtro de variantes do script (`native-stress-rows-rebuilt` na sonda e no oráculo `stress`, `native-stats-miss-turn-ended` em `stats`, `native-city-shows-tile` em `panels` e `remount`, `native-overlay-not-blocking` em `blocking` e `map`,
+  `native-end-turn-by-phase` em `bar`) foram rejeitadas, o controle passou e as fontes voltaram byte a byte.
+- O custo de uma leitura do `stats()` do B não mudou: o código é o mesmo, e as quatro leituras (20 000 leituras cada) deram 0,50 e 0,90 µs na `main` e 0,87 e 0,95 µs na árvore otimizada; a diferença entre elas é o estado da máquina.
+
+**Tentativas que não contam.** A primeira medida do "depois" foi inválida: a cópia de rascunho não tinha os ícones importados (8 920 erros de carga, scripts que não compilavam) e foi posta de lado. As duas séries seguintes
+(sem calibração dentro da execução) pareciam mostrar um processo mais lento na árvore nova, por causa de um laço de referência do fim da execução (142 a 172 µs contra 82 a 87 µs na `main`); as calibrações entre as fases, acrescentadas depois, deram a mesma
+máquina nas duas árvores (78 a 151 µs em execuções de qualquer uma das duas, a máquina andando em estados mais lentos e mais rápidos), e o que sobrou foi um efeito do laço do fim, que na árvore nova roda depois de renderizações repetidas que agora custam quase nada e não
+mantêm a CPU ocupada (não isolado). Uma série calibrada ainda sobre a árvore anterior à mudança que reaproveita a linha que sai do log também foi posta de lado. Todas estão em `optimization.json`, em `attempts`, com os números; a
+comparação acima é a última, feita com a árvore final.
+
+**Tempo.** **2,18 h** de tempo ativo de subagente, medidas pelo orquestrador sobre a transcrição pela regra da emenda: 0,46 h de 07:25:50 a 07:53:28 UTC (até a parada pedida para a janela de estresse) e 1,72 h de 10:12:34 a 11:55:30 UTC (a retomada), dentro das 3,2 h.
+
+**Uma rodada, com uma ressalva.** As mudanças entraram em dois passos: a reconciliação das listas e o pool de painéis na primeira sessão, e a reciclagem da linha que sai do log do painel de estresse na retomada, acrescentada depois de uma série calibrada intermediária (a posta de lado acima). O painel de estresse só existia desde o #119, depois da primeira sessão, e a medida final (5 contra 5, alternadas) é uma só, sobre a árvore final; mas o registro diz que essa última mudança veio depois de uma medida, e não antes, como uma rodada estrita pediria.
+
 ## Esforço
 
 | | Braço B (HUD nativa) | Braço C (HUD React Native) |
@@ -146,7 +223,7 @@ de menos de 30 minutos entre os eventos com carimbo da transcrição, e o orques
 
 | Item | Dono |
 | --- | --- |
-| Passada de otimização do braço B (no máximo 3,2 h, uma rodada, preservando a paridade) | V05-10 |
+| Passada de otimização do braço B: feita, ver [Passe de otimização](#passe-de-otimização) (o p95 da `ai-phase` com a cidade cai 56%; o resto, ver a tabela) | V05-10 |
 | `execucao`, `metricas`, `mudanca` e `relatorio` | V05-10 |
 
 ## Pins

@@ -441,13 +441,13 @@
     "Local execution on macOS arm64: the headless lane and the captures in a macOS window; hosted CI and Pages receipts of the implementation commit come after the merge",
     "The stability probe is the host's and does not run on arm B: no leak, focus or icon measurement of the native HUD yet",
     "Pointer events are synthetic through the viewport, no physical mouse; no iOS, typed text, IME or network images",
-    "No frame-time, memory, start or package measurement of arm B, no optimization pass and no comparative execution"
+    "No frame-time, memory, start or package measurement of arm B in a comparative execution (the optimization pass measured it headless, outside any execution, on a shared machine); no comparative execution"
   ],
   "openItems": [
     {
       "id": "otimizacao",
       "owner": "V05-10",
-      "meaning": "the optimization pass of arm B, at most 3.2 h, one round, keeping the parity"
+      "meaning": "the optimization pass of arm B: done (one round, see optimization); what remains is the comparative executions that measure it"
     },
     {
       "id": "execucao-metricas-mudanca-relatorio",
@@ -460,6 +460,349 @@
       "meaning": "hosted CI and Pages receipts of the implementation commit"
     }
   ],
+  "optimization": {
+    "implementationCommit": "960b4adb101647f4794f3c8231f0f7668289886c",
+    "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/960b4adb101647f4794f3c8231f0f7668289886c",
+    "baseCommit": "151427e",
+    "status": "one round done: profiled on main, changed, measured once more (5 runs each, alternating), parity kept",
+    "record": {
+      "file": "docs/evidence/frontier-arm-b/optimization.json",
+      "sha256": "d1002572413f97b6b089562f472eebe8569255b81192f0aa8036439a7f43654d",
+      "bytes": 73551
+    },
+    "frames": {
+      "file": "docs/evidence/frontier-arm-b/optimization-frames.json",
+      "sha256": "988811b463e269165e071cbbe7489130330026651078cf768595e6be7ee0df73",
+      "bytes": 689045
+    },
+    "method": "scratch headless harness (not committed) with the #97 instrument playing the four windows of the protocol through the GameServices node; median over 5 runs of each per-run statistic, main and optimized tree alternating; a fixed GDScript calibration between the phases; not a comparative execution (load 4 to 10)",
+    "results": {
+      "ai-phase:soak": {
+        "p95Ms": [
+          1.911,
+          1.956
+        ],
+        "p95Percent": 2.4,
+        "p50Ms": [
+          0.49,
+          0.535
+        ],
+        "p50Percent": 9.2,
+        "meanMs": [
+          0.694,
+          0.747
+        ],
+        "meanPercent": 7.6,
+        "occurrenceSumMs": [
+          3.472,
+          3.736
+        ],
+        "occurrenceSumPercent": 7.6
+      },
+      "ai-phase:soak-city": {
+        "p95Ms": [
+          7.949,
+          3.505
+        ],
+        "p95Percent": -55.9,
+        "p50Ms": [
+          0.404,
+          0.765
+        ],
+        "p50Percent": 89.4,
+        "meanMs": [
+          1.696,
+          1.131
+        ],
+        "meanPercent": -33.3,
+        "occurrenceSumMs": [
+          8.478,
+          5.654
+        ],
+        "occurrenceSumPercent": -33.3
+      },
+      "event-burst:soak": {
+        "p95Ms": [
+          0.703,
+          0.73
+        ],
+        "p95Percent": 3.8,
+        "p50Ms": [
+          0.073,
+          0.079
+        ],
+        "p50Percent": 8.2,
+        "meanMs": [
+          0.164,
+          0.186
+        ],
+        "meanPercent": 13.4,
+        "occurrenceSumMs": [
+          0.82,
+          0.93
+        ],
+        "occurrenceSumPercent": 13.4
+      },
+      "event-burst:soak-city": {
+        "p95Ms": [
+          1.493,
+          1.455
+        ],
+        "p95Percent": -2.5,
+        "p50Ms": [
+          0.076,
+          0.071
+        ],
+        "p50Percent": -6.6,
+        "meanMs": [
+          0.274,
+          0.304
+        ],
+        "meanPercent": 10.9,
+        "occurrenceSumMs": [
+          1.369,
+          1.521
+        ],
+        "occurrenceSumPercent": 11.1
+      },
+      "context-switches:switches": {
+        "p95Ms": [
+          4.63,
+          4.315
+        ],
+        "p95Percent": -6.8,
+        "p50Ms": [
+          0.093,
+          0.095
+        ],
+        "p50Percent": 2.2,
+        "meanMs": [
+          1.089,
+          0.956
+        ],
+        "meanPercent": -12.2,
+        "occurrenceSumMs": [
+          3.267,
+          2.869
+        ],
+        "occurrenceSumPercent": -12.2
+      },
+      "stress:stress": {
+        "p95Ms": [
+          3.502,
+          3.407
+        ],
+        "p95Percent": -2.7,
+        "p50Ms": [
+          1.358,
+          0.931
+        ],
+        "p50Percent": -31.4,
+        "meanMs": [
+          2.791,
+          2.256
+        ],
+        "meanPercent": -19.2,
+        "occurrenceSumMs": [
+          64.203,
+          51.883
+        ],
+        "occurrenceSumPercent": -19.2
+      }
+    },
+    "changes": [
+      {
+        "file": "consumers/civ-lite/native_hud/kit.gd",
+        "change": "Kit.sync_choices and Kit.sync_lines bring a list to its new description row by row (the WIP of 45a3716)"
+      },
+      {
+        "file": "consumers/civ-lite/native_hud/actions.gd, city.gd, research.gd",
+        "change": "the three lists use them; a row is named by its key and the press handler receives the key"
+      },
+      {
+        "file": "consumers/civ-lite/native_hud/hud.gd",
+        "change": "panels that leave the tree go whole to a pool by name and come back with add_child and a render that touches only what changed; the dialog and the menu are still freed (the WIP of 45a3716, merged with the stress panel, stats() and turn_ended of main)"
+      },
+      {
+        "file": "consumers/civ-lite/native_hud/stress.gd",
+        "change": "the lists are compared with the last shown; a log that moved by whole lines leaves the kept rows alone and recycles the row that left as the row that came; a changed item only has its text set; anything else falls to the full reconciliation"
+      },
+      {
+        "file": "scripts/civ-lite-ui-sabotage.mjs",
+        "change": "native-stress-rows-rebuilt moved to the text of the new stress.gd (the sabotage does the same thing)"
+      }
+    ],
+    "notDoneOrDropped": [
+      "nothing of the WIP was dropped",
+      "the stress panel kept hidden inside the tree (330 permanent nodes in the end-of-run node count) was considered and not done",
+      "a virtualized list was not considered: the rows must be Controls with a testID"
+    ],
+    "worse": [
+      "the four frames after the first of the city AI phase cost 0.1 to 0.3 ms more (window median 0.40 to 0.77 ms; the sum of the frames of an occurrence is a third lower)",
+      "the frame that begins the stress mode is still about 30 ms (35 before)",
+      "unmounting costs a little more script (stress end 0.73 to 1.03 ms, city back to none 0.28 to 0.43 ms)",
+      "the pool keeps more objects alive (1 640 to 2 419 at the end; none in the tree, 32 nodes either way)"
+    ],
+    "unchanged": [
+      "p95 of the stress window (-3%, inside the spread of the runs)",
+      "p95 of the context switches (-7%, inside the spread)",
+      "event-burst and ai-phase with no selection"
+    ],
+    "parity": {
+      "lane": {
+        "command": "node --test tests/civ-lite-ui-native.test.mjs",
+        "result": "2 of 2 (the React Native HUD and the native HUD, both with the stress stage), on the final tree"
+      },
+      "nativeSabotages": {
+        "command": "node scripts/civ-lite-ui-sabotage.mjs native-stress-rows-rebuilt native-stats-miss-turn-ended native-city-shows-tile native-overlay-not-blocking native-end-turn-by-phase",
+        "control": 0,
+        "variants": [
+          {
+            "name": "native-stress-rows-rebuilt",
+            "rejected": true,
+            "failedChecks": 1,
+            "categories": [
+              "stress"
+            ]
+          },
+          {
+            "name": "native-stats-miss-turn-ended",
+            "rejected": true,
+            "failedChecks": 2,
+            "categories": [
+              "stats"
+            ]
+          },
+          {
+            "name": "native-city-shows-tile",
+            "rejected": true,
+            "failedChecks": 14,
+            "categories": [
+              "panels",
+              "remount"
+            ]
+          },
+          {
+            "name": "native-overlay-not-blocking",
+            "rejected": true,
+            "failedChecks": 5,
+            "categories": [
+              "blocking",
+              "map"
+            ]
+          },
+          {
+            "name": "native-end-turn-by-phase",
+            "rejected": true,
+            "failedChecks": 2,
+            "categories": [
+              "bar"
+            ]
+          }
+        ],
+        "sourcesRestored": true,
+        "note": "native-stress-rows-rebuilt was moved to the new stress.gd (the text it searched for no longer exists); with names on the command line the script writes no receipt, so this block is its record"
+      },
+      "statsReadUs": {
+        "what": "one read of the runner stats() on HudRoot, 20 000 reads in 10 rounds, medians of the rounds; the code is the same in both trees",
+        "main": [
+          0.503,
+          0.896
+        ],
+        "optimized": [
+          0.868,
+          0.951
+        ],
+        "note": "the spread between the readings is the machine state (calibration), not the HUD"
+      }
+    },
+    "attempts": [
+      {
+        "label": "before",
+        "dir": null,
+        "runs": 5,
+        "status": "kept as the baseline before any change"
+      },
+      {
+        "label": "after",
+        "dir": "invalid/",
+        "runs": 5,
+        "status": "rejected"
+      },
+      {
+        "label": "beforeB",
+        "dir": "invalid/",
+        "runs": 5,
+        "status": "rejected"
+      },
+      {
+        "label": "after",
+        "dir": null,
+        "runs": 5,
+        "status": "set aside"
+      },
+      {
+        "label": "beforeB",
+        "dir": null,
+        "runs": 5,
+        "status": "set aside"
+      },
+      {
+        "label": "afterv",
+        "dir": null,
+        "runs": 5,
+        "status": "set aside"
+      },
+      {
+        "label": "diagA",
+        "dir": null,
+        "runs": 5,
+        "status": "set aside"
+      },
+      {
+        "label": "diagB",
+        "dir": null,
+        "runs": 5,
+        "status": "set aside"
+      }
+    ],
+    "effort": {
+      "wallClockHours": {
+        "firstSession": 0.49,
+        "secondSession": 1.7,
+        "total": 2.19,
+        "timeBox": 3.2
+      },
+      "note": "wall clock of the implementer in two sessions (04:25 to 04:54 and 07:12 to 08:55, local time of 2026-10-10); the protocol time is the orchestrator's measure on the transcript"
+    },
+    "sourcePins": {
+      "consumers/civ-lite/native_hud/kit.gd": "770265a7298cd6c2626cf2854dbd2e44da0331d6da96150d7f1c947557c2de12",
+      "consumers/civ-lite/native_hud/hud.gd": "abd7a1522f2dbf005f8cd02acc0afe2c65dc3782626db6654116218238d4ff23",
+      "consumers/civ-lite/native_hud/actions.gd": "04ee32ff1257b128cc2d7a1ebc7af05b7fd9dfe848251807605cbff9684831be",
+      "consumers/civ-lite/native_hud/city.gd": "03fcb1510e4d0a205190caba0132989c56e678d0d23432c10556006e4d2558ec",
+      "consumers/civ-lite/native_hud/research.gd": "c2e0cbbc660acabf72e5e3ca74687ee5fcba305d172adb6f540116f72501398b",
+      "consumers/civ-lite/native_hud/stress.gd": "577308649c0ef7f9a761c990de5d84ddfe845f1ebf43db0dc87b7e2cb84563da",
+      "scripts/civ-lite-ui-sabotage.mjs": "6ab1648e4be8c059091ce4f75dbc185d6936b27347cd6b3d769dee5a4d6335c3"
+    },
+    "activeTimeHours": {
+      "measured": 2.18,
+      "sessions": [
+        {
+          "from": "2026-10-10T07:25:50Z",
+          "to": "2026-10-10T07:53:28Z",
+          "hours": 0.46
+        },
+        {
+          "from": "2026-10-10T10:12:34Z",
+          "to": "2026-10-10T11:55:30Z",
+          "hours": 1.72
+        }
+      ],
+      "rule": "the amendment of 2026-10-09: the sum of the gaps under 30 minutes between consecutive timestamped events of the subagent's transcript",
+      "timeBoxHours": 3.2
+    },
+    "roundNote": "the changes came in two steps: the list reconciliation and the panel pool in the first session, and the stress panel's row recycling in the second, added after an intermediate calibrated series (set aside in attempts); the stress panel existed only from #119, after the first session; the final 5-against-5 measurement is one, on the final tree"
+  },
   "implementationPinVerification": {
     "method": "git show <implementationCommit>:<path> SHA-256 equals the pin; to be run by whoever replaces d8bd678285efb13681e1a5d39fdec394069888b7",
     "mismatches": null
