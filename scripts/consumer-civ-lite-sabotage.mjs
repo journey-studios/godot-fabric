@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/consumer-civ-lite-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the Frontier consumer: each breaks one source of the template on purpose, runs
@@ -26,24 +27,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 // not rejected. Run with:
 //   node scripts/consumer-civ-lite-sabotage.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
-const template = "consumers/civ-lite";
-const variants = [
-  {name: "hud-leak", file: `${template}/ui/store.ts`,
-    find: "function disconnect() {\n  for (const connection of connections) {\n    connection.remove();\n  }\n  connections.clear();\n  view = NOT_CONNECTED;\n}\n",
-    replace: "function disconnect() {\n  view = NOT_CONNECTED;\n}\n"},
-  {name: "orphan", file: `${template}/services/game_services.gd`,
-    find: "  remove_child(world)\n  world.queue_free()\n",
-    replace: "  remove_child(world)\n"},
-  {name: "epoch-reset", file: `${template}/services/game_services.gd`,
-    find: "func reload_world() -> Dictionary:\n  _drop_world()\n  return new_game()\n",
-    replace: "func reload_world() -> Dictionary:\n  _drop_world()\n  epoch = 0\n  return new_game()\n"},
-  {name: "no-facade", file: `${template}/main.tscn`,
-    find: "fabric_api=ExtResource(\"2\")\n",
-    replace: ""},
-  {name: "job-dies-with-menu", file: `${template}/services/game_services.gd`,
-    find: "func _process(_delta: float) -> void:\n  advance_job()\n",
-    replace: "func _process(_delta: float) -> void:\n  if world_scene != null and get_node_or_null(WORLD_NAME) == null:\n    _abandon_job()\n    return\n  advance_job()\n"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
 const sources = guardSources(root, files);

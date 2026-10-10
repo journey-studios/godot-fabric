@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/images-visual-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the visual Images work: each breaks one behavior of the host on purpose, runs the probe and the independent
@@ -24,24 +25,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "mask-borders", argument: "--sabotage=mask-borders", hostDirectory: "build/images-visual-sabotage-mask-borders-host",
-    file: "native/image_effects_core.h",
-    find: "  clip.inner = {content, fit_corners({content.width, content.height}, corner_insets(radii, widths))};",
-    replace: "  clip.inner = {content, fit_corners({content.width, content.height}, corner_insets(radii, {}))};"},
-  {name: "blur-passes", argument: "--sabotage=blur-passes", hostDirectory: "build/images-visual-sabotage-blur-passes-host",
-    file: "native/image_effects_core.h",
-    find: "  box_pass(scratch.data(), pixels, width, height, kernel);\n  for (std::size_t i = 0; i < count; ++i) {\n    for (std::size_t channel = 0; channel < 3; ++channel) pixels[i * 4 + channel] = straightened(",
-    replace: "  box_pass(scratch.data(), pixels, width, height, kernel);\n  box_pass(pixels, scratch.data(), width, height, kernel);\n  std::copy(scratch.begin(), scratch.end(), pixels);\n  for (std::size_t i = 0; i < count; ++i) {\n    for (std::size_t channel = 0; channel < 3; ++channel) pixels[i * 4 + channel] = straightened("},
-  {name: "blur-cache", argument: "--sabotage=blur-cache", hostDirectory: "build/images-visual-sabotage-blur-cache-host",
-    file: "native/image_loader.cpp",
-    find: "!job.measure_only && !job.prefetch && !job.blurs()); }",
-    replace: "!job.measure_only && !job.prefetch); }"},
-  {name: "nine-patch-scale", argument: "--sabotage=nine-patch-scale", hostDirectory: "build/images-visual-sabotage-nine-patch-scale-host",
-    file: "native/image_effects_core.h",
-    find: "  margins.left = std::min(positive(insets.left * scale), pixels.width);",
-    replace: "  margins.left = std::min(positive(insets.left), pixels.width);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

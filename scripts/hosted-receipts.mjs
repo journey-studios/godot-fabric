@@ -140,13 +140,21 @@ function tapSummaries(lines) {
   return summaries.map((summary) => Object.fromEntries(SUMMARY_FIELDS.map((name) => [name, summary[name] ?? 0])));
 }
 
+// A top-level test that the reporter skipped reads `ok N - <description> # SKIP <reason>`.
+const SKIPPED_TEST = /^ok \d+ - (.*?) # SKIP(?: (.*))?$/;
+
 function stepResult(lines) {
   const topLevel = lines.map((line) => /^(not )?ok \d+ - (.*)$/.exec(line)).filter(Boolean);
+  const skippedTests = lines
+    .map((line) => SKIPPED_TEST.exec(line))
+    .filter(Boolean)
+    .map((match) => ({ description: tapDescription(match[1]), reason: (match[2] ?? "").trim() }));
   return {
     tap: tapSummaries(lines),
     tests: topLevel.filter((match) => !match[1]).map((match) => match[2]),
     failedTests: topLevel.filter((match) => match[1]).map((match) => match[2]),
     markers: lines.filter((line) => MARKER.test(line)),
+    skippedTests,
   };
 }
 
@@ -407,6 +415,7 @@ function contractsRecord(slice, squash, squashParent, job, lines) {
       "test:contracts": {
         ...test,
         tap: result.tap,
+        skippedTests: result.skippedTests,
         failedTests: result.failedTests,
         markers: result.markers,
         pythonContractTests: python ? parseInt(python[1], 10) : null,

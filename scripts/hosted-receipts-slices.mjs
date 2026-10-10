@@ -385,4 +385,22 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-execution-2-f952152",
   },
+  // The attempts that wrote no report (#129, squash 1ef98a4): no native step, its four contract test files, and both runs are on the push of main.
+  {
+    folder: "frontier-comparison-analysis/unreported",
+    pr: 129,
+    squash: "1ef98a4",
+    contractsRun: 38063973873,
+    pagesRun: 38063973837,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-analysis.test.mjs",
+      "tests/frontier-comparison-validity.test.mjs",
+      "tests/frontier-comparison-campaign.test.mjs",
+      "tests/frontier-comparison-campaign-state.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-unreported-8817938",
+  },
 ];

@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/native-animated-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the native Animated slice: each breaks the host on
@@ -27,16 +28,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "frames", argument: "--sabotage", hostDirectory: "build/native-animated-sabotage-host",
-    file: "native/native_animated.cpp",
-    find: "onAnimationFrame(rn::AnimationTimestamp(timestamp_ms));",
-    replace: "onAnimationFrame(rn::AnimationTimestamp(timestamp_ms / 1000.0));"},
-  {name: "persistence", argument: "--sabotage=persistence", hostDirectory: "build/native-animated-sabotage-persistence-host",
-    file: "native/application_runtime.cpp",
-    find: "rn::ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(true);",
-    replace: "rn::ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(false);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

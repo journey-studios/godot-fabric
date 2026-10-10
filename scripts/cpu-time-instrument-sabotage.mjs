@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {readFileSync, rmSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/cpu-time-instrument-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the CPU-time instrument. Each breaks one source on purpose, runs the headless suite on it
@@ -27,15 +28,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 //   node scripts/cpu-time-instrument-sabotage.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
 const test = "tests/cpu-time-instrument-native.test.mjs";
-const instrument = "tests/cpu-time-instrument.gd";
-const probe = "tests/cpu-time-instrument-probe.gd";
-const PROCESS_TERM = "    process_ms[index] = float((_pre_draw_usec[index] if did_draw else _last_process_usec[index]) - _start_usec[index]) / 1000.0";
-// A variant is a list of edits of one file, each made in exactly one place.
-const variants = [
-  {name: "reads-interval", file: instrument, edits: [{find: PROCESS_TERM, replace: "    process_ms[index] = interval_ms[index]"}]},
-  {name: "load-outside-frame", file: probe, edits: [{find: 'const LOAD_PLACEMENT := "in-frame"', replace: 'const LOAD_PLACEMENT := "before-frame"'}]},
-  {name: "reads-monitor", file: instrument, edits: [{find: PROCESS_TERM, replace: "    process_ms[index] = _monitor_ms[index]"}]},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
 const guard = guardSources(root, files);
