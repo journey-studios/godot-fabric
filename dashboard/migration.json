@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T03:19:33.000Z",
+  "updatedAt": "2026-10-10T04:31:33.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4131,8 +4131,13 @@
             {
               "id": "congelado",
               "label": "Orçamento congelado uma única vez depois da baseline macOS e antes da primeira medição no iPhone",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, janela apresentada, 120 Hz): orçamento congelado uma única vez em 2026-10-10 sobre as execuções do commit 1bc3a3c (5 de 5 apresentadas por faixa, máquina carregada, média de carga de 5,3 a 7,6), pela regra da proposta (mediana das cinco execuções mais 3 IQR, para cima a 0,5 ms): p95 do quadro da troca sobre todas as trocas de 16,0 ms, p95 da fase da IA e do fim do turno de 15,5 ms cada, janela de estresse N/A e o instrumento de tempo de CPU com a recomendação do seu registro; as linhas de p99 por tamanho saem do orçamento; o --check refaz os valores do extrato commitado; a faixa do turno com a HUD do #100 passa dos limites do turno, causa em diagnóstico",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md"
+                }
+              ]
             }
           ]
         },
@@ -4296,8 +4301,21 @@
             {
               "id": "protocolo",
               "label": "Protocolo e hipóteses pré-registrados antes de qualquer medição: desfecho primário (tempo de CPU por quadro p95 nas janelas ativas: fase da IA, rajada de eventos e troca de contexto), margem de não-inferioridade, número de execuções, regra de decisão e limiares, commitados e congelados a partir da baseline do V05-06",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Pré-registro do protocolo antes de qualquer medição comparativa (#84): o JSON com as hipóteses, o desfecho primário, as janelas, a estatística, a regra de decisão e os cinco limiares nulos, lido pelo teste de contrato que guarda o pin do arquivo sem os campos de congelamento",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/82f5f43ee7defdd0a8bf61d18368ae0070f5414a/docs/research/frontier-comparison-protocol.json"
+                },
+                {
+                  "label": "Emendas de 2026-10-09, ambas sem medição comparativa antes (a referência ociosa, #94, e o time-box do braço B, #103): o JSON fixado em 807f426 já carrega as duas, com o pin do teste em PINS[2]",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/807f426e78a80bb829d678285ad4359a2f6c8cca/docs/research/frontier-comparison-protocol.json"
+                },
+                {
+                  "label": "Congelamento dos cinco limiares em 2026-10-10, uma única vez e antes de qualquer execução comparativa: só frozenValue e frozenAt preenchidos (16,0, 15,5 e 15,5 ms, estresse N/A e o instrumento), o pin não se move e o --check do registro confere que o protocolo os carrega, na mesma data",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md"
+                }
+              ]
             },
             {
               "id": "braco-b",
@@ -4727,6 +4745,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-congelado-e1803a9",
+      "at": "2026-10-10T04:31:33.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, critério congelado, e V05-10, critério protocolo: o orçamento de desempenho e os cinco limiares do protocolo do comparativo final foram congelados uma única vez, em 2026-10-10, antes de qualquer execução comparativa, pela regra da proposta (a mediana das cinco execuções mais 3 IQR, para cima a 0,5 ms) sobre as execuções janeladas apresentadas do commit 1bc3a3c, por decisão do usuário (5 de 5 vagas na primeira tentativa em cada faixa). O p95 do quadro da troca sobre todas as trocas dá 16,0 ms (budget-p95-context-switches), o p95 da fase da IA e o do fim do turno dão 15,5 ms cada (o turno grava 2 quadros do fim do turno e a janela do protocolo tem pelo menos 5), a janela de estresse é N/A (o V05-06 não mediu um log de 200 linhas nem uma lista de produção de 100 itens) e o instrumento de tempo de CPU congela a recomendação do seu registro (commit e38615d). As linhas de p99 por tamanho saem do orçamento (o p99 de 90 trocas é o máximo delas) e as demais linhas janeladas dão os limites da proposta. Só frozenValue e frozenAt dos limiares foram preenchidos: o pin do protocolo não se move, e node scripts/frontier-freeze.mjs --check refaz cada valor do extrato commitado dos recibos. Com baseline, turno e soak já fechados, o V05-06 fecha os quatro critérios, e o protocolo do V05-10 fecha. Três execuções da noite de 2026-10-09 na main (916387e) corroboram e não viram limiar: a faixa do turno com a HUD do #100 passa dos limites congelados do turno (a soma dos sete quadros do job é de 94,7 ms no p50, contra 54,2 ms congelados e 54,9 ms com a HUD de antes do #100), a causa está em diagnóstico e não é afirmada, e o baseline é sensível à carga. As execuções que congelaram rodaram com média de carga de 1 minuto de 5,3 a 7,6, acima do limite de 2,0 de uma execução comparativa. A saída X6 continua aberta: o cumprido espera os braços do comparativo e esse diagnóstico; o braço B, a execução e o iPhone (NO-GO) seguem abertos. Nenhum checkpoint, nota, peso ou denominador do 1.0 se move. A CI hospedada e o Pages desta entrega saem depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md"
+    },
     {
       "id": "mobile-density-receipts-8cd2491",
       "at": "2026-10-10T03:35:00.000Z",

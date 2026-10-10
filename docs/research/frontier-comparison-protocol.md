@@ -8,6 +8,9 @@ or equal to anything. The rules and the formulas are closed. The numbers that de
 criterion of V05-06. **The `protocolo` criterion therefore stays open**: it closes when those numbers are frozen. This slice moves no checkpoint, grade,
 weight or denominator of the 1.0.
 
+**Update, 2026-10-10:** those numbers were frozen, once, by [the freeze](frontier-freeze.md) (see [The freeze](#the-freeze) below), which closes the `protocolo` criterion. The paragraph above and the rest of this note describe the protocol as pre-registered; the freeze fills only the
+`frozenValue` and `frozenAt` of the five thresholds and the pin does not move.
+
 ## The question
 
 The same Frontier game runs in three arms with the same seed, the same replay and the same scripted input, in a Release export on the same machine:
@@ -185,7 +188,7 @@ otherwise, and the report says it is one observation per arm and supports a desc
   | `budget-p95-context-switches` | the same rule, on the swap frame p95 of the presented windowed baseline | V05-06 windowed baseline, pending until a display presents the window | null |
   | `budget-p95-stress` | the same rule on the stress counterpart in V05-06; frozen as N/A with the reason if V05-06 measured none, and then the window is judged by the relative rule alone | V05-06 `turno` or `soak` | null |
 
-  Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date.
+  Each threshold in the JSON has `rule`, `source`, `frozenValue: null` and `frozenAt: null`. The freeze fills only `frozenValue` and `frozenAt`, all together and on one date. **That was done on 2026-10-10** ([The freeze](#the-freeze)); the table above is the pre-registration's.
 - **Arm B** (`braco-b`) does not exist yet. Its time-box is set: 16.0 h, by the amendment of 2026-10-09 below.
 - **The instrument** of the CPU time per frame is chosen and checked by `execucao`, then frozen as `cpu-time-instrument`. The instrument and its self-check are written in [cpu-time-instrument.md](cpu-time-instrument.md); the threshold stays unfrozen here.
 - **Missed frames with the vsync on** need presentation timestamps that Godot does not give; the band is N/A until an instrument exists.
@@ -306,8 +309,29 @@ counted the same way. The orchestrator's own time is counted in neither arm. **T
 
 **What it replaces.** In `decisionRule.partialReport.timeBox`: "the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts". In the open item `arm-b`: "arm B (criterion `braco-b`) does not exist; its time-box has no length yet". In the open item `iphone`: "the iPhone depends on the GO or NO-GO of V05-09".
 
+## The freeze
+
+**2026-10-10.** The five thresholds were frozen **once**, together with the `congelado` criterion of V05-06 and before any comparative execution, as `preRegistration.freeze` provides: only the `frozenValue` and `frozenAt` of each entry of `thresholds` were filled, on one date, and nothing else of the JSON changed.
+The pin did not move: the test still holds `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6` for the two amendments, and the freeze is not an amendment. The act, its inputs, the rule and each derivation are in [the freeze note](frontier-freeze.md) and in [its evidence record](../evidence/frontier-freeze/README.md);
+`node scripts/frontier-freeze.mjs --check` recomputes the numbers from the committed inputs and requires them to be the protocol's, on one date, and `tests/frontier-freeze.test.mjs` runs it.
+
+| Threshold | Frozen value | Where it comes from |
+| --- | --- | --- |
+| `cpu-time-instrument` | an object: the quantity, the reading, the alignment, the observed error, the gate and the evidence | the five points that [the instrument's note](cpu-time-instrument.md#what-cpu-time-instrument-should-freeze) recommends, condensed, with the commit that its record pins |
+| `budget-p95-ai-phase` | **15.5 ms** | the p95 of the 720 frames of the window in each of the five runs of the windowed turn of `1bc3a3c` (the first six busy frames of 120 steady turns), by the rule of the proposal |
+| `budget-p95-event-burst` | **15.5 ms** | the same rule on the frames of the end of the turn that the lane records (the seventh busy frame and the one after it, 240 a run; the window has at least five frames and the later ones were not measured) |
+| `budget-p95-context-switches` | **16.0 ms** | the swap frame p95 over all the swaps of each of the five runs of the windowed baseline of `1bc3a3c`, by the same rule |
+| `budget-p95-stress` | **N/A**, with the reason | V05-06 measured no log of 200 lines and no production list of 100 items, so the window is judged by the relative rule alone |
+
+**What still says the pre-registration's words, on purpose.** The JSON's `status`, `baseline.windowed` and the first `open` item (and `baseline.freezeCriterion` and `preRegistration`) keep the text they had when the protocol was pre-registered, and so do the `rule` and the `source` of each threshold: the pin hashes them, and changing a letter of them would be an amendment. They describe the state at the pre-registration, not the
+one after the freeze, which is this section, [the freeze note](frontier-freeze.md) and the dashboard's record of the criteria `congelado` and `protocolo`.
+
+**Two things the freeze notes and does not change.** The `absoluteBudget` compares the p95 of the *CPU time* per frame of an arm with a bound derived from the *frame time* of a presented window, which includes the wait for the display, so the bound is wide for the CPU time by construction and the relative rule (C against B) is what decides.
+And the comparative executions need a 1-minute load average of 2.0 or less (`runs.load.limit1MinuteAverage`), while the executions the freeze read ran at 5.3 to 7.6: the `execucao` criterion needs a machine within that limit ([the freeze note](frontier-freeze.md#four-observations-that-change-no-rule)).
+
 ## Reproducing
 
 ```sh
 node --test tests/frontier-comparison-protocol.test.mjs   # the schema, the decision rule, the order of the executions, the bootstrap, the pin; part of npm run test:contracts
+node scripts/frontier-freeze.mjs --check                  # the frozen values of the thresholds, recomputed from the committed inputs; node --test tests/frontier-freeze.test.mjs
 ```

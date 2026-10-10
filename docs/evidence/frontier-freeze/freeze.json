@@ -1,0 +1,760 @@
+{
+  "format": "godot-fabric.frontier-freeze/v1",
+  "frozenAt": "2026-10-10",
+  "act": "the single freeze of the V05-06 budget (criterion `congelado`) and of the five thresholds of the V05-10 protocol (criterion `protocolo`), before any comparative execution",
+  "rule": {
+    "statement": "For a statistic, its value in each of the five runs, in integer microseconds from the raw intervals, sorted; the median is the third, Q1 the second and Q3 the fourth (quartiles of five by nearest rank); the bound is the median plus three times the IQR (Q3 minus Q1), rounded up to 0.5 ms. A count of frames of 100 ms or more follows the same rule without rounding.",
+    "function": "budgetOf, scripts/frontier-freeze.mjs",
+    "roundingUsec": 500
+  },
+  "sources": {
+    "headless-77": "the headless lane pinned in #77: docs/evidence/frontier-baseline/README.md",
+    "baseline-1bc3a3c": "the windowed baseline on 1bc3a3c: receipt `baseline`, committed as docs/evidence/frontier-baseline/windowed-presented-raw.json",
+    "turn-1bc3a3c": "the windowed turn on 1bc3a3c: receipt `turn`, outside the repository, its SHA-256 in inputs.json"
+  },
+  "inputs": {
+    "baseline": {
+      "kind": "baseline",
+      "what": "the presented windowed baseline of V05-06, on the commit of the proposal",
+      "commit": "1bc3a3cc7d5d1a160f2158a87a5f8c623b504130",
+      "sha256": "36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7",
+      "bytes": 437679,
+      "committedAs": "docs/evidence/frontier-baseline/windowed-presented-raw.json",
+      "format": "godot-fabric.frontier-baseline-graphics/v2",
+      "bundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+      "hostSha256": "212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e",
+      "presented": true,
+      "runsAccepted": 5,
+      "attempts": 5,
+      "rejectedAttempts": 0,
+      "refreshRate": 120,
+      "vsyncMode": "enabled",
+      "laneLoad": {"before": "{ 5.41 5.71 7.07 }", "after": "{ 6.79 6.05 6.87 }"},
+      "load": {
+        "attempts": [
+          {"slot": 1, "attempt": 1, "before": "{ 5.70 5.76 7.08 }", "after": "{ 5.38 5.66 6.97 }", "seconds": 46.4},
+          {"slot": 2, "attempt": 2, "before": "{ 5.38 5.66 6.97 }", "after": "{ 5.26 5.60 6.89 }", "seconds": 45.7},
+          {"slot": 3, "attempt": 3, "before": "{ 5.26 5.60 6.89 }", "after": "{ 5.79 5.69 6.85 }", "seconds": 45.6},
+          {"slot": 4, "attempt": 4, "before": "{ 5.79 5.69 6.85 }", "after": "{ 6.04 5.82 6.84 }", "seconds": 45.3},
+          {"slot": 5, "attempt": 5, "before": "{ 6.04 5.82 6.84 }", "after": "{ 6.16 5.92 6.82 }", "seconds": 45.2}
+        ],
+        "oneMinute": {"min": 5.26, "max": 6.16}
+      }
+    },
+    "turn": {
+      "kind": "turn",
+      "what": "the presented windowed turn of V05-06, measured on the same commit right after the baseline",
+      "commit": "1bc3a3cc7d5d1a160f2158a87a5f8c623b504130",
+      "sha256": "8dd6ec9cf4776a8026c3056c337da9a9bb7c811b6b529f05c1ecee3ca111e90f",
+      "bytes": 1539885,
+      "committedAs": null,
+      "format": "godot-fabric.frontier-turn-graphics/v1",
+      "bundleSha256": "fce50a0af3c77e2b803bc49d66c19262cbb00dfa5af9922612fc40c4e3c9a3d3",
+      "hostSha256": "212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e",
+      "presented": true,
+      "runsAccepted": 5,
+      "attempts": 5,
+      "rejectedAttempts": 0,
+      "refreshRate": 120,
+      "vsyncMode": "enabled",
+      "laneLoad": {"before": "{ 5.70 5.85 6.78 }", "after": "{ 5.77 6.18 6.44 }"},
+      "load": {
+        "attempts": [
+          {"slot": 1, "attempt": 1, "before": "{ 5.94 5.91 6.76 }", "after": "{ 5.35 5.72 6.57 }", "seconds": 119.8},
+          {"slot": 2, "attempt": 2, "before": "{ 5.35 5.72 6.57 }", "after": "{ 5.61 5.76 6.48 }", "seconds": 119.1},
+          {"slot": 3, "attempt": 3, "before": "{ 5.61 5.76 6.48 }", "after": "{ 5.36 5.73 6.38 }", "seconds": 119.5},
+          {"slot": 4, "attempt": 4, "before": "{ 5.36 5.73 6.38 }", "after": "{ 7.55 6.28 6.50 }", "seconds": 119.7},
+          {"slot": 5, "attempt": 5, "before": "{ 7.55 6.28 6.50 }", "after": "{ 5.71 6.19 6.44 }", "seconds": 119.1}
+        ],
+        "oneMinute": {"min": 5.35, "max": 7.55}
+      }
+    },
+    "baseline-main": {
+      "kind": "baseline",
+      "what": "corroboration: the baseline again, on main, with no suite, build or export of another agent running and a higher system load (the same bundle as the frozen one)",
+      "commit": "916387e349d3933e2ecfb417f9be8e332358a803",
+      "sha256": "9959a269a61b615d5ccfff3864f262732f2fd28bcbf240f01987c29e3027e9f4",
+      "bytes": 439244,
+      "committedAs": null,
+      "format": "godot-fabric.frontier-baseline-graphics/v2",
+      "bundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+      "hostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+      "presented": true,
+      "runsAccepted": 5,
+      "attempts": 5,
+      "rejectedAttempts": 0,
+      "refreshRate": 120,
+      "vsyncMode": "enabled",
+      "laneLoad": {"before": "{ 8.78 9.37 8.62 }", "after": "{ 8.29 9.34 8.81 }"},
+      "load": {
+        "attempts": [
+          {"slot": 1, "attempt": 1, "before": "{ 8.48 9.30 8.60 }", "after": "{ 8.79 9.30 8.64 }", "seconds": 46.5},
+          {"slot": 2, "attempt": 2, "before": "{ 8.79 9.30 8.64 }", "after": "{ 8.34 9.09 8.60 }", "seconds": 46.4},
+          {"slot": 3, "attempt": 3, "before": "{ 8.34 9.09 8.60 }", "after": "{ 13.55 10.22 9.03 }", "seconds": 46},
+          {"slot": 4, "attempt": 4, "before": "{ 13.55 10.22 9.03 }", "after": "{ 10.62 9.88 8.96 }", "seconds": 46},
+          {"slot": 5, "attempt": 5, "before": "{ 10.62 9.88 8.96 }", "after": "{ 8.58 9.41 8.83 }", "seconds": 45.9}
+        ],
+        "oneMinute": {"min": 8.34, "max": 13.55}
+      }
+    },
+    "turn-main": {
+      "kind": "turn",
+      "what": "corroboration: the turn on main with the HUD of #100 (the current one)",
+      "commit": "916387e349d3933e2ecfb417f9be8e332358a803",
+      "sha256": "4708f22b7dc62544a1e22b1c7e1e4f96cc7895216ae7b68c9f4ff62a4da370ca",
+      "bytes": 1548415,
+      "committedAs": null,
+      "format": "godot-fabric.frontier-turn-graphics/v1",
+      "bundleSha256": "54b8af7da9c36da5924498d2a6584a9a92ef0009bbff74f59c964aebe0e76510",
+      "hostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+      "presented": true,
+      "runsAccepted": 5,
+      "attempts": 5,
+      "rejectedAttempts": 0,
+      "refreshRate": 120,
+      "vsyncMode": "enabled",
+      "laneLoad": {"before": "{ 8.29 9.34 8.81 }", "after": "{ 7.52 7.45 8.06 }"},
+      "load": {
+        "attempts": [
+          {"slot": 1, "attempt": 1, "before": "{ 8.94 9.37 8.83 }", "after": "{ 7.96 8.97 8.76 }", "seconds": 139.5},
+          {"slot": 2, "attempt": 2, "before": "{ 7.96 8.97 8.76 }", "after": "{ 10.53 9.10 8.81 }", "seconds": 139.3},
+          {"slot": 3, "attempt": 3, "before": "{ 10.53 9.10 8.81 }", "after": "{ 7.81 8.46 8.59 }", "seconds": 139},
+          {"slot": 4, "attempt": 4, "before": "{ 7.81 8.46 8.59 }", "after": "{ 6.56 7.88 8.34 }", "seconds": 138.1},
+          {"slot": 5, "attempt": 5, "before": "{ 6.56 7.88 8.34 }", "after": "{ 7.81 7.50 8.08 }", "seconds": 137.8}
+        ],
+        "oneMinute": {"min": 6.56, "max": 10.53}
+      }
+    },
+    "turn-main-pre-100-hud": {
+      "kind": "turn",
+      "what": "corroboration, the A/B: the turn on main with only consumers/civ-lite restored to the commit before #100",
+      "commit": "916387e349d3933e2ecfb417f9be8e332358a803",
+      "consumerCommit": "fb51c07162bb52eb418f3a3c5c4a19798b148eab",
+      "sha256": "244f6ffd37eef631df4587abc8eb5542af3d89524a130e7a7771cd7ef0c13545",
+      "bytes": 1538986,
+      "committedAs": null,
+      "format": "godot-fabric.frontier-turn-graphics/v1",
+      "bundleSha256": "fce50a0af3c77e2b803bc49d66c19262cbb00dfa5af9922612fc40c4e3c9a3d3",
+      "hostSha256": "497e4f950fbea8138f48e7887edc285de4ca0b80fad9753425de50d50c104e6e",
+      "presented": true,
+      "runsAccepted": 5,
+      "attempts": 5,
+      "rejectedAttempts": 0,
+      "refreshRate": 120,
+      "vsyncMode": "enabled",
+      "laneLoad": {"before": "{ 8.18 7.72 8.12 }", "after": "{ 8.35 7.87 7.89 }"},
+      "load": {
+        "attempts": [
+          {"slot": 1, "attempt": 1, "before": "{ 8.60 7.82 8.13 }", "after": "{ 7.26 7.61 8.01 }", "seconds": 120.1},
+          {"slot": 2, "attempt": 2, "before": "{ 7.26 7.61 8.01 }", "after": "{ 7.88 7.85 8.06 }", "seconds": 120.4},
+          {"slot": 3, "attempt": 3, "before": "{ 7.88 7.85 8.06 }", "after": "{ 5.75 7.13 7.75 }", "seconds": 120.5},
+          {"slot": 4, "attempt": 4, "before": "{ 5.75 7.13 7.75 }", "after": "{ 7.00 7.01 7.61 }", "seconds": 120},
+          {"slot": 5, "attempt": 5, "before": "{ 7.00 7.01 7.61 }", "after": "{ 8.43 7.87 7.89 }", "seconds": 120}
+        ],
+        "oneMinute": {"min": 5.75, "max": 8.6}
+      }
+    }
+  },
+  "derivations": [
+    {
+      "id": "swap-frame-p50-0",
+      "label": "Swap frame p50, 0 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [3565, 3667, 3653, 3662, 3731],
+      "sorted": [3565, 3653, 3662, 3667, 3731],
+      "q1": 3653,
+      "median": 3662,
+      "q3": 3667,
+      "iqr": 14,
+      "medianPlus3Iqr": 3704,
+      "limit": 4000
+    },
+    {
+      "id": "swap-frame-p95-0",
+      "label": "Swap frame p95, 0 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [13794, 13714, 13721, 13632, 13690],
+      "sorted": [13632, 13690, 13714, 13721, 13794],
+      "q1": 13690,
+      "median": 13714,
+      "q3": 13721,
+      "iqr": 31,
+      "medianPlus3Iqr": 13807,
+      "limit": 14000
+    },
+    {
+      "id": "swap-frame-p99-0",
+      "label": "Swap frame p99, 0 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [15141, 14284, 13897, 14983, 14251],
+      "sorted": [13897, 14251, 14284, 14983, 15141],
+      "q1": 14251,
+      "median": 14284,
+      "q3": 14983,
+      "iqr": 732,
+      "medianPlus3Iqr": 16480,
+      "limit": 16500
+    },
+    {
+      "id": "swap-frame-p50-50",
+      "label": "Swap frame p50, 50 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [8414, 8436, 8494, 8448, 8588],
+      "sorted": [8414, 8436, 8448, 8494, 8588],
+      "q1": 8436,
+      "median": 8448,
+      "q3": 8494,
+      "iqr": 58,
+      "medianPlus3Iqr": 8622,
+      "limit": 9000
+    },
+    {
+      "id": "swap-frame-p95-50",
+      "label": "Swap frame p95, 50 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [11052, 10688, 11843, 10713, 11116],
+      "sorted": [10688, 10713, 11052, 11116, 11843],
+      "q1": 10713,
+      "median": 11052,
+      "q3": 11116,
+      "iqr": 403,
+      "medianPlus3Iqr": 12261,
+      "limit": 12500
+    },
+    {
+      "id": "swap-frame-p99-50",
+      "label": "Swap frame p99, 50 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [13282, 12201, 20135, 17241, 15565],
+      "sorted": [12201, 13282, 15565, 17241, 20135],
+      "q1": 13282,
+      "median": 15565,
+      "q3": 17241,
+      "iqr": 3959,
+      "medianPlus3Iqr": 27442,
+      "limit": 27500
+    },
+    {
+      "id": "swap-frame-p50-75",
+      "label": "Swap frame p50, 75 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [11053, 10926, 11171, 11197, 11534],
+      "sorted": [10926, 11053, 11171, 11197, 11534],
+      "q1": 11053,
+      "median": 11171,
+      "q3": 11197,
+      "iqr": 144,
+      "medianPlus3Iqr": 11603,
+      "limit": 12000
+    },
+    {
+      "id": "swap-frame-p95-75",
+      "label": "Swap frame p95, 75 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [15420, 14080, 15409, 13533, 13426],
+      "sorted": [13426, 13533, 14080, 15409, 15420],
+      "q1": 13533,
+      "median": 14080,
+      "q3": 15409,
+      "iqr": 1876,
+      "medianPlus3Iqr": 19708,
+      "limit": 20000
+    },
+    {
+      "id": "swap-frame-p99-75",
+      "label": "Swap frame p99, 75 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [22366, 18780, 18960, 19278, 24621],
+      "sorted": [18780, 18960, 19278, 22366, 24621],
+      "q1": 18960,
+      "median": 19278,
+      "q3": 22366,
+      "iqr": 3406,
+      "medianPlus3Iqr": 29496,
+      "limit": 29500
+    },
+    {
+      "id": "swap-frame-p50-100",
+      "label": "Swap frame p50, 100 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [13144, 13130, 13144, 13255, 13541],
+      "sorted": [13130, 13144, 13144, 13255, 13541],
+      "q1": 13144,
+      "median": 13144,
+      "q3": 13255,
+      "iqr": 111,
+      "medianPlus3Iqr": 13477,
+      "limit": 13500
+    },
+    {
+      "id": "swap-frame-p95-100",
+      "label": "Swap frame p95, 100 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [16568, 16577, 19442, 14730, 16699],
+      "sorted": [14730, 16568, 16577, 16699, 19442],
+      "q1": 16568,
+      "median": 16577,
+      "q3": 16699,
+      "iqr": 131,
+      "medianPlus3Iqr": 16970,
+      "limit": 17000
+    },
+    {
+      "id": "swap-frame-p99-100",
+      "label": "Swap frame p99, 100 nodes created",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [20404, 25918, 60024, 16615, 24607],
+      "sorted": [16615, 20404, 24607, 25918, 60024],
+      "q1": 20404,
+      "median": 24607,
+      "q3": 25918,
+      "iqr": 5514,
+      "medianPlus3Iqr": 41149,
+      "limit": 41500
+    },
+    {
+      "id": "idle-frame-p99",
+      "label": "Idle frame p99",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [15604, 15169, 14854, 15213, 15509],
+      "sorted": [14854, 15169, 15213, 15509, 15604],
+      "q1": 15169,
+      "median": 15213,
+      "q3": 15509,
+      "iqr": 340,
+      "medianPlus3Iqr": 16233,
+      "limit": 16500
+    },
+    {
+      "id": "swap-frames-100ms",
+      "label": "Swap frames of 100 ms or more, per run",
+      "unit": "count",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [0, 0, 0, 0, 0],
+      "sorted": [0, 0, 0, 0, 0],
+      "q1": 0,
+      "median": 0,
+      "q3": 0,
+      "iqr": 0,
+      "medianPlus3Iqr": 0,
+      "limit": 0
+    },
+    {
+      "id": "idle-intervals-100ms",
+      "label": "Idle intervals of 100 ms or more, per run",
+      "unit": "count",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [0, 0, 0, 0, 0],
+      "sorted": [0, 0, 0, 0, 0],
+      "q1": 0,
+      "median": 0,
+      "q3": 0,
+      "iqr": 0,
+      "medianPlus3Iqr": 0,
+      "limit": 0
+    },
+    {
+      "id": "swap-frame-p50-all",
+      "label": "Swap frame p50, all swaps (reference)",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [10410, 10502, 10625, 10596, 10673],
+      "sorted": [10410, 10502, 10596, 10625, 10673],
+      "q1": 10502,
+      "median": 10596,
+      "q3": 10625,
+      "iqr": 123,
+      "medianPlus3Iqr": 10965,
+      "limit": 11000
+    },
+    {
+      "id": "swap-frame-p95-all",
+      "label": "Swap frame p95, all swaps (the protocol's `budget-p95-context-switches`)",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": true,
+      "perRun": [14835, 14497, 15928, 14217, 14875],
+      "sorted": [14217, 14497, 14835, 14875, 15928],
+      "q1": 14497,
+      "median": 14835,
+      "q3": 14875,
+      "iqr": 378,
+      "medianPlus3Iqr": 15969,
+      "limit": 16000
+    },
+    {
+      "id": "swap-frame-p99-all",
+      "label": "Swap frame p99, all swaps (reference)",
+      "unit": "usec",
+      "source": "baseline",
+      "frozen": false,
+      "perRun": [18175, 18978, 19836, 15447, 17339],
+      "sorted": [15447, 17339, 18175, 18978, 19836],
+      "q1": 17339,
+      "median": 18175,
+      "q3": 18978,
+      "iqr": 1639,
+      "medianPlus3Iqr": 23092,
+      "limit": 23500
+    },
+    {
+      "id": "ai-phase-p95",
+      "label": "AI phase p95 (the protocol's `budget-p95-ai-phase`)",
+      "unit": "usec",
+      "source": "turn",
+      "frozen": true,
+      "perRun": [14642, 14539, 14799, 14928, 13784],
+      "sorted": [13784, 14539, 14642, 14799, 14928],
+      "q1": 14539,
+      "median": 14642,
+      "q3": 14799,
+      "iqr": 260,
+      "medianPlus3Iqr": 15422,
+      "limit": 15500
+    },
+    {
+      "id": "event-burst-p95",
+      "label": "End-of-turn p95 (the protocol's `budget-p95-event-burst`)",
+      "unit": "usec",
+      "source": "turn",
+      "frozen": true,
+      "perRun": [14677, 14847, 14868, 14952, 14715],
+      "sorted": [14677, 14715, 14847, 14868, 14952],
+      "q1": 14715,
+      "median": 14847,
+      "q3": 14868,
+      "iqr": 153,
+      "medianPlus3Iqr": 15306,
+      "limit": 15500
+    }
+  ],
+  "protocolThresholds": [
+    {
+      "id": "cpu-time-instrument",
+      "receipt": null,
+      "frozenValue": {
+        "quantity": "total_ms = physics_ms + process_ms + setup_ms + render_ms for each process frame, in milliseconds: the monotonic elapsed time between the engine's hooks on the main thread (not the thread's CPU clock of the operating system), every term ending before the frame is presented; the percentile and the windows are the protocol's",
+        "reading": "Time.get_ticks_usec stamped at SceneTree.process_frame, RenderingServer.frame_pre_draw (the last _process when the frame does not draw), SceneTree.physics_frame and the last _physics_process; RenderingServer.get_frame_setup_time_cpu() and viewport_get_measured_render_time_cpu() read at frame_post_draw, with the render measure on for the main window's viewport; never Performance.TIME_PROCESS or TIME_PHYSICS_PROCESS, which are a once-a-second maximum and, for TIME_PROCESS with the vsync on, hold the wait for the display (TIME_PROCESS stays in the samples as a cross-check)",
+        "alignment": "the render reading of a draw is the one taken 6 draws later (Compatibility renderer, Godot 4.7.2, macOS), joined by draw index when the run is over; the harness keeps 6 draws after the last window it needs, and the lag is checked by the render pulse every time the lab probe runs",
+        "observedError": "against a load of known duration, at most 0.16% at 2, 5, 10 and 20 ms headless and at most 1.5% in a presented window (the 2 ms load; 0.22% or less in the others), under the 10% rule; the instrument's floor, the idle total, is about 0.014 ms headless and 0.082 ms in a window, the same in every arm",
+        "gate": "the protocol's `instrument` rule is operational as: tests/cpu-time-instrument.gd is byte-identical to the one the probe and the oracle passed (its hash goes in the provenance), and the probe and the oracle are rerun on the machine, the engine and the renderer of the campaign before it starts",
+        "evidence": {
+          "research": "docs/research/cpu-time-instrument.md",
+          "record": "docs/evidence/cpu-time-instrument/README.md",
+          "pinnedCommit": "e38615da6ad7f9ca774e2ef8c46de33707c1b427"
+        }
+      },
+      "frozenAt": "2026-10-10",
+      "derivation": null,
+      "window": null
+    },
+    {
+      "id": "budget-p95-ai-phase",
+      "receipt": "turn",
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10",
+      "derivation": "ai-phase-p95",
+      "window": "the first six busy frames of each steady turn: 720 a run, 6 a turn"
+    },
+    {
+      "id": "budget-p95-event-burst",
+      "receipt": "turn",
+      "frozenValue": 15.5,
+      "frozenAt": "2026-10-10",
+      "derivation": "event-burst-p95",
+      "window": "the seventh busy frame, which delivers turn_ended, and the frame after it: 240 a run, 2 a turn; the window of the protocol has at least five and the lane records no more"
+    },
+    {
+      "id": "budget-p95-context-switches",
+      "receipt": "baseline",
+      "frozenValue": 16,
+      "frozenAt": "2026-10-10",
+      "derivation": "swap-frame-p95-all",
+      "window": "all the 360 steady swaps of a run"
+    },
+    {
+      "id": "budget-p95-stress",
+      "receipt": null,
+      "frozenValue": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+      "frozenAt": "2026-10-10",
+      "derivation": null,
+      "window": null
+    }
+  ],
+  "budget": [
+    {
+      "id": "native-nodes-after-swap",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "nodes-created-and-deleted",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "one-click-one-swap",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "heap-at-rest",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "frames-click-to-panel",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "cpu-time-of-the-swap",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "heap-of-a-mounted-panel",
+      "decision": "kept",
+      "reason": "the headless lane pinned in #77 does not change",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "swap-frame-p50-by-nodes",
+      "decision": "recomputed",
+      "reason": "from the intervals of the windowed baseline on 1bc3a3c, the execution the proposal came from, by the same rule",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["swap-frame-p50-0", "swap-frame-p50-50", "swap-frame-p50-75", "swap-frame-p50-100"],
+      "unit": "ms",
+      "bounds": [4, 9, 12, 13.5]
+    },
+    {
+      "id": "swap-frame-p95-by-nodes",
+      "decision": "recomputed",
+      "reason": "from the intervals of the windowed baseline on 1bc3a3c, the execution the proposal came from, by the same rule",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["swap-frame-p95-0", "swap-frame-p95-50", "swap-frame-p95-75", "swap-frame-p95-100"],
+      "unit": "ms",
+      "bounds": [14, 12.5, 20, 17]
+    },
+    {
+      "id": "swap-frame-p95-all",
+      "decision": "recomputed",
+      "reason": "from the intervals of the windowed baseline on 1bc3a3c, the execution the proposal came from, by the same rule",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["swap-frame-p95-all"],
+      "unit": "ms",
+      "bounds": [16]
+    },
+    {
+      "id": "idle-frame-p99",
+      "decision": "recomputed",
+      "reason": "from the intervals of the windowed baseline on 1bc3a3c, the execution the proposal came from, by the same rule",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["idle-frame-p99"],
+      "unit": "ms",
+      "bounds": [16.5]
+    },
+    {
+      "id": "frames-of-100-ms-or-more",
+      "decision": "recomputed",
+      "reason": "from the intervals of the windowed baseline on 1bc3a3c, the execution the proposal came from, by the same rule",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["swap-frames-100ms", "idle-intervals-100ms"],
+      "unit": "count",
+      "bounds": [0, 0]
+    },
+    {
+      "id": "ai-phase-p95",
+      "decision": "added",
+      "reason": "a row of the turn that a threshold of the protocol freezes",
+      "source": "turn-1bc3a3c",
+      "derivations": ["ai-phase-p95"],
+      "unit": "ms",
+      "bounds": [15.5]
+    },
+    {
+      "id": "event-burst-p95",
+      "decision": "added",
+      "reason": "a row of the turn that a threshold of the protocol freezes",
+      "source": "turn-1bc3a3c",
+      "derivations": ["event-burst-p95"],
+      "unit": "ms",
+      "bounds": [15.5]
+    },
+    {
+      "id": "resident-and-static-memory",
+      "decision": "kept",
+      "reason": "recorded and never a limit: it moves by tens of MB and by the probe's bookkeeping",
+      "source": "headless-77",
+      "derivations": []
+    },
+    {
+      "id": "swap-frame-p99-by-nodes",
+      "decision": "removed",
+      "reason": "the p99 of 90 swaps is the largest of them (nearest rank 90), so one swap a run fixes the bound and it is the noisiest; the tail is covered by the count of frames of 100 ms or more",
+      "source": "baseline-1bc3a3c",
+      "derivations": ["swap-frame-p99-0", "swap-frame-p99-50", "swap-frame-p99-75", "swap-frame-p99-100"],
+      "unit": "ms",
+      "bounds": null,
+      "proposedBounds": [16.5, 27.5, 29.5, 41.5]
+    }
+  ],
+  "loads": {
+    "limit1MinuteAverage": 2,
+    "frozen": {
+      "baseline": {
+        "min": 5.26,
+        "max": 6.16,
+        "lane": {"before": "{ 5.41 5.71 7.07 }", "after": "{ 6.79 6.05 6.87 }"}
+      },
+      "turn": {
+        "min": 5.35,
+        "max": 7.55,
+        "lane": {"before": "{ 5.70 5.85 6.78 }", "after": "{ 5.77 6.18 6.44 }"}
+      }
+    },
+    "everyFrozenReadingAboveTheLimit": true
+  },
+  "corroboration": {
+    "frozenTurn": {
+      "busySumP50": [53711, 55055, 54234, 53612, 55575],
+      "phaseP50": [3497, 6290, 7370, 7661, 7588, 7076, 7241],
+      "framesAfterTheEndOfTheTurn": [1]
+    },
+    "roles": {
+      "baseline-main": {
+        "kind": "baseline",
+        "swapFrameAllP95": {
+          "perRun": [18776, 19874, 20377, 20354, 19808],
+          "sorted": [18776, 19808, 19874, 20354, 20377],
+          "q1": 19808,
+          "median": 19874,
+          "q3": 20354,
+          "iqr": 546,
+          "medianPlus3Iqr": 21512,
+          "limit": 22000
+        },
+        "swapFrameP50BySize": {"0": 4954, "50": 11529, "75": 14115, "100": 16758},
+        "swapFrameP95BySize": {"0": 13484, "50": 13233, "75": 16778, "100": 20915},
+        "idleFrameP99": {
+          "perRun": [15372, 15318, 15329, 15454, 15323],
+          "sorted": [15318, 15323, 15329, 15372, 15454],
+          "q1": 15323,
+          "median": 15329,
+          "q3": 15372,
+          "iqr": 49,
+          "medianPlus3Iqr": 15476,
+          "limit": 15500
+        },
+        "injectionP50": [8343, 8776, 8540, 9035, 8818],
+        "framesAtLeast100ms": [0, 0, 0, 0, 1],
+        "frozenRuns": {
+          "swapFrameAllP95": [14835, 14497, 15928, 14217, 14875],
+          "injectionP50": [6824, 6850, 6904, 7010, 7305]
+        }
+      },
+      "turn-main": {
+        "kind": "turn",
+        "aiPhaseP95": {
+          "perRun": [17111, 17123, 16787, 16639, 16561],
+          "sorted": [16561, 16639, 16787, 17111, 17123],
+          "q1": 16639,
+          "median": 16787,
+          "q3": 17111,
+          "iqr": 472,
+          "medianPlus3Iqr": 18203,
+          "limit": 18500
+        },
+        "eventBurstP95": {
+          "perRun": [17922, 17278, 16954, 17192, 16855],
+          "sorted": [16855, 16954, 17192, 17278, 17922],
+          "q1": 16954,
+          "median": 17192,
+          "q3": 17278,
+          "iqr": 324,
+          "medianPlus3Iqr": 18164,
+          "limit": 18500
+        },
+        "busySumP50": [99748, 98939, 94688, 92107, 92486],
+        "phaseP50": [7420, 14390, 14393, 14195, 14044, 14102, 14026],
+        "framesAfterTheEndOfTheTurn": [1],
+        "againstTheFrozenBounds": {
+          "aiPhase": {"medianOfPerRunP95": 16787, "bound": 15500, "met": false},
+          "eventBurst": {"medianOfPerRunP95": 17192, "bound": 15500, "met": false}
+        }
+      },
+      "turn-main-pre-100-hud": {
+        "kind": "turn",
+        "aiPhaseP95": {
+          "perRun": [14602, 14506, 14541, 14787, 14695],
+          "sorted": [14506, 14541, 14602, 14695, 14787],
+          "q1": 14541,
+          "median": 14602,
+          "q3": 14695,
+          "iqr": 154,
+          "medianPlus3Iqr": 15064,
+          "limit": 15500
+        },
+        "eventBurstP95": {
+          "perRun": [14795, 14766, 14740, 14784, 14832],
+          "sorted": [14740, 14766, 14784, 14795, 14832],
+          "q1": 14766,
+          "median": 14784,
+          "q3": 14795,
+          "iqr": 29,
+          "medianPlus3Iqr": 14871,
+          "limit": 15000
+        },
+        "busySumP50": [54911, 54933, 54690, 55082, 53974],
+        "phaseP50": [4201, 7791, 7369, 7368, 7631, 7617, 7273],
+        "framesAfterTheEndOfTheTurn": [1],
+        "againstTheFrozenBounds": {
+          "aiPhase": {"medianOfPerRunP95": 14602, "bound": 15500, "met": true},
+          "eventBurst": {"medianOfPerRunP95": 14784, "bound": 15500, "met": true}
+        }
+      }
+    }
+  }
+}

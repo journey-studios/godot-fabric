@@ -892,6 +892,23 @@ of this record. With the headless half recorded earlier, the `baseline` criterio
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
 recomputed. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-06, criterion `congelado`, closed, and V05-10, criterion `protocolo`, closed: the performance budget and the five thresholds of the
+final comparison's protocol were frozen once, on 2026-10-10, before any comparative execution, by the rule that the proposal wrote beforehand (the median
+across the five runs plus three times the interquartile range, up to 0.5 ms), on the presented windowed baseline and turn of commit `1bc3a3c`, by the user's
+decision (five of five slots accepted at the first attempt in each lane). The swap frame's p95 over all swaps freezes at 16.0 ms
+(`budget-p95-context-switches`), the p95 of the AI phase and of the end of the turn at 15.5 ms each (the lane records two frames of the end of a turn, and the
+protocol's window has at least five), the stress window as N/A (V05-06 measured no log of 200 lines and no production list of 100 items), and the CPU-time
+instrument freezes the recommendation of its record. The proposal's rows of the p99 by size leave the budget (the p99 of 90 swaps is its maximum) and the other
+windowed rows give the proposal's bounds. Only `frozenValue` and `frozenAt` of the thresholds were filled, so the protocol's pin does not move, and
+`node scripts/frontier-freeze.mjs --check` recomputes every value from the committed extract of the receipts. With `baseline`, `turno` and `soak` already closed,
+V05-06 has its four criteria closed. Three executions of the night of 2026-10-09 on `916387e` corroborate and become no threshold: the turn lane with the HUD of
+#100 is over the frozen bounds of the turn (the seven frames of the job add up to 94.7 ms at the p50, against 54.2 ms frozen and 54.9 ms with the HUD of before
+#100), the cause is under diagnosis and is not stated, and the baseline is sensitive to load. The executions that froze ran at a 1-minute load average of 5.3 to
+7.6 on 11 logical cores, above the 2.0 that a comparative execution requires. **Exit X6 stays open**: "met" waits for the arms of the comparison and for that
+diagnosis, and arm B, `execucao` and the iPhone (a no-go) are open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md) is local macOS arm64 evidence, and its hosted CI run and Pages
+publication come after the merge. No 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
