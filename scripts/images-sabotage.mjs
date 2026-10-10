@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/images-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the Images slice: each breaks one behavior of the host's image pipeline on purpose, runs the
@@ -21,16 +22,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "main-thread", argument: "--sabotage=main-thread", hostDirectory: "build/images-sabotage-main-thread-host",
-    file: "native/image_loader.cpp",
-    find: '      job->task = WorkerThreadPool::get_singleton()->add_native_task(&State::run_task, arguments, false, "Godot Fabric image load");',
-    replace: "      State::run_task(arguments);"},
-  {name: "stale-request", argument: "--sabotage=stale-request", hostDirectory: "build/images-sabotage-stale-request-host",
-    file: "native/image_view.cpp",
-    find: "  if (state_) state_->getData().getImageRequest().getObserverCoordinator().removeObserver(observer_);\n  state_ = state;",
-    replace: "  state_ = state;"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

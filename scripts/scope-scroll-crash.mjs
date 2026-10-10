@@ -1,6 +1,7 @@
 import {readFileSync, rmSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES} from "../tests/scope-sabotages.mjs";
 import {ensureGodotBinary} from "./godot-binary.mjs";
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
@@ -15,13 +16,15 @@ import {guardSources} from "./sabotage-sources.mjs";
 //
 // It writes build/scope-scroll-crash.log and prints the group that was being driven when the host stopped.
 const root = fileURLToPath(new URL("..", import.meta.url));
-const contract = "src/scroll-view-contract.mjs";
+// The sabotage is the scope lane's own (tests/scope-sabotages.mjs), so that the two cannot part.
+const sabotage = SABOTAGES.find(entry => entry.name === "scroll");
+const contract = sabotage.file;
 const [only, valueArgument] = process.argv.slice(2);
 if (valueArgument !== undefined) {
   JSON.parse(valueArgument);
 }
 const sources = guardSources(root, [contract]);
-const broken = sources.sabotaged({name: "scroll", file: contract, find: '  checkProps("ScrollView", props);\n', replace: ""});
+const broken = sources.sabotaged(sabotage);
 
 let fixture = readFileSync(path.join(root, "tests/scope-0.5-fixture.jsx"), "utf8");
 const edit = (find, replace) => {

@@ -9,7 +9,7 @@ export function bundleLayoutAnimationProbe() {
   return bundleNativeProbe({name: "layout-animation", entryPoint: "tests/layout-animation-fixture.jsx",
     sources: ["tests/layout-animation-fixture.jsx", "tests/layout-animation-cases.mjs", "tests/layout-animation-probe.gd",
       "tests/layout-animation-native.test.mjs", "tests/layout-animation-oracle.mjs", "scripts/layout-animation-bundle.mjs",
-      "scripts/layout-animation-sabotage.mjs", "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx",
+      "scripts/layout-animation-sabotage.mjs", "tests/layout-animation-sabotages.mjs", "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx",
       "src/private-interface.js", "sdk/toolchain/platform-plugin.mjs", ...layoutAnimationNativeProducers],
     seams: ["src/react-native-platform.jsx", "src/private-interface.js"],
     // The original modules this bundle runs: LayoutAnimation (configureNext, create and Presets) and the flag it reads.

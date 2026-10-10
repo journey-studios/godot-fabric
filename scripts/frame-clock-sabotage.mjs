@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/frame-clock-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the frame clock slice: each breaks the clock's decision on
@@ -28,15 +29,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const genuine = "    const bool tick = consumer && (pacing == Pacing::Presentation || due);";
-const variants = [
-  {name: "always", argument: "--sabotage", hostDirectory: "build/frame-clock-sabotage-always-host",
-    file: "native/frame_clock.h", find: genuine, replace: "    const bool tick = consumer;"},
-  {name: "idle", argument: "--sabotage=idle", hostDirectory: "build/frame-clock-sabotage-idle-host",
-    file: "native/frame_clock.h", find: genuine, replace: "    const bool tick = pacing == Pacing::Presentation || due;"},
-  {name: "presentation", argument: "--sabotage=presentation", hostDirectory: "build/frame-clock-sabotage-presentation-host",
-    file: "native/frame_clock.h", find: genuine, replace: "    const bool tick = consumer && due;"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/performance-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the performance slice: each breaks one thing the host reports on purpose,
@@ -24,17 +25,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "leak", argument: "--sabotage=leak", hostDirectory: "build/performance-sabotage-leak-host",
-    file: "native/application_runtime.cpp", find: "      memdelete(it->second.control);\n",
-    replace: "      (void)it->second.control;\n"},
-  {name: "heap", argument: "--sabotage=heap", hostDirectory: "build/performance-sabotage-heap-host",
-    file: "native/application_runtime.cpp", find: "    const auto info = runtime->instrumentation().getHeapInfo(false);\n",
-    replace: "    static const auto info = runtime->instrumentation().getHeapInfo(false);\n"},
-  {name: "phase", argument: "--sabotage=phase", hostDirectory: "build/performance-sabotage-phase-host",
-    file: "native/performance_metrics.h", find: "        phases_[index].add(local_[index]);\n",
-    replace: "        phases_[index].add(local_[index]);\n        phases_[index].add(local_[index]);\n"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

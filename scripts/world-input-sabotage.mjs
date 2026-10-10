@@ -4,6 +4,7 @@ import {createHash} from "node:crypto";
 import {readFileSync, rmSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as sourceVariants, SURFACE as surface} from "../tests/world-input-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained controls of the pointer spike. Each runs the same bundle, probe and independent oracle, and each must be
@@ -37,13 +38,6 @@ const cmake = path.join(root, ".deps/python/bin/cmake");
 const a1Host = path.join(root, "build/world-input-a1-host/fabric_godot.dylib");
 const previousHost = path.join(root, "build/world-input-previous-host/fabric_godot.dylib");
 const test = "tests/world-input-native.test.mjs";
-const surface = "native/fabric_surface.cpp";
-const claimCall = "owner->get_runtime()->claims(surface_id, event))";
-const inputCall = "owner->get_runtime()->input(surface_id, event))";
-const sourceVariants = [
-  {name: "claim-all", file: surface, find: claimCall, replace: "(owner->get_runtime()->claims(surface_id, event) || true))"},
-  {name: "before-gui", file: surface, find: inputCall, replace: "(owner->get_runtime()->input(surface_id, event) || owner->get_runtime()->claims(surface_id, event)))"},
-];
 // Each sabotage must fail the checks that prove its reason, not only fail something.
 const sceneVariants = [
   {name: "surface-stop", must: ["a/void: 100 of 100 left presses"]},
@@ -52,8 +46,6 @@ const sceneVariants = [
   {name: "views-ignore", must: ["a/native Switch: 100 left inputs", "a/native Switch: 100 touch inputs", "a/hover: a control of the HUD"]},
   {name: "unhandled-off", must: ["a/L1 hit slop: 100 left", "a/L4 bar: 100 wheel ticks"]},
 ];
-sourceVariants[0].must = ["a/void: 100 of 100 left presses"];
-sourceVariants[1].must = ["a/native Switch: 100 left inputs", "a/native Switch: 100 touch inputs"];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const remove = file => rmSync(path.join(root, file), {force: true});
 const readReport = lane => {

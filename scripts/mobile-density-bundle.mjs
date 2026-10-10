@@ -12,7 +12,7 @@ export const mobileDensityNativeProducers = ["native/display_insets_core.h", "na
 
 const mobileDensitySources = ["tests/mobile-density-fixture.jsx", "tests/mobile-density-probe.gd", "tests/mobile-density-native.test.mjs",
   "tests/mobile-density-oracle.mjs", "scripts/mobile-density-bundle.mjs", "scripts/mobile-density-sabotage.mjs",
-  "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx", "sdk/toolchain/platform-plugin.mjs", ...mobileDensityNativeProducers];
+  "tests/mobile-density-sabotages.mjs", "scripts/native-probe-bundle.mjs", "src/react-native-platform.jsx", "sdk/toolchain/platform-plugin.mjs", ...mobileDensityNativeProducers];
 
 // The fixture over the SDK in src/ (the default) or over another one: the control that bundles the SDK of main before this slice
 // names its directory in platformRoot (build/mobile-density-previous/src), where RN's SafeAreaView is still the View.

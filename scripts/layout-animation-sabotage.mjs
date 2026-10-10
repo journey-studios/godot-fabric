@@ -4,6 +4,7 @@ import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import {existsSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/layout-animation-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained controls of the layout animation slice. Each runs tests/layout-animation-native.test.mjs, whose probe and
@@ -34,31 +35,10 @@ const host = path.join(root, "addons/fabric_godot.dylib");
 const previousHost = path.join(root, "build/layout-animation-previous-host/fabric_godot.dylib");
 const genuineCopy = path.join(root, "build/layout-animation-genuine-host/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const module = "native/layout_animation.cpp";
-const runtime = "native/application_runtime.cpp";
-const variants = [
-  {name: "seconds-clock", argument: "--sabotage=seconds-clock", hostDirectory: "build/layout-animation-sabotage-seconds-clock-host", file: module,
-    find: "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms);",
-    replace: "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms / 1000.0);"},
-  {name: "no-register-surface", argument: "--sabotage=no-register-surface", hostDirectory: "build/layout-animation-sabotage-no-register-surface-host", file: module,
-    find: "  tree.getMountingCoordinator()->setMountingOverrideDelegate(state_->recorder);\n",
-    replace: ""},
-  {name: "no-consumer", argument: "--sabotage=no-consumer", hostDirectory: "build/layout-animation-sabotage-no-consumer-host", file: runtime,
-    find: " || (layout_animation && layout_animation->active());",
-    replace: ";"},
-  {name: "drop-callback", argument: "--sabotage=drop-callback", hostDirectory: "build/layout-animation-sabotage-drop-callback-host", file: module,
-    find: "    executor(std::move(callback));\n",
-    replace: "    static_cast<void>(callback);\n"},
-  {name: "unguarded-tick", argument: "--sabotage=unguarded-tick", hostDirectory: "build/layout-animation-sabotage-unguarded-tick-host", file: module,
-    find: "  if (!active()) {\n    return;\n  }\n  clock(frame_ms);\n",
-    replace: "  if (state_->stopped) {\n    return;\n  }\n  clock(frame_ms);\n"},
-  {name: "no-rearm", argument: "--sabotage=no-rearm", hostDirectory: "build/layout-animation-sabotage-no-rearm-host", file: module,
-    find: "    if (state_->stale && state_->driver->shouldOverridePullTransaction()) {\n      state_->animating = true;\n    }\n",
-    replace: ""},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));
-const sources = guardSources(root, [module, runtime]);
+const files = [...new Set(variants.map(variant => variant.file))];
+const sources = guardSources(root, files);
 
 async function build(name) {
   const result = await sources.run(cmake, ["--build", ".deps/build", "--parallel", "4", "--target", "fabric_godot"]);
