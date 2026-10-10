@@ -917,6 +917,8 @@ escape of `#` in test descriptions, which had kept a test named with `#100` from
 squash. The [evidence index](https://github.com/journey-studios/godot-fabric/blob/7099e2b050e71ce57056cf529c56de10df3b8c79/docs/evidence/README.md)
 links the two receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The cause that the freeze's turn-lane observation left under diagnosis is confirmed and fixed in #108 (`09ed8f7`): the turn lane's probe read the Surface's snapshot twice in every timed frame, and that snapshot carries the image loader's log, which the icons of #100 filled. It was the probe, not the HUD or the host. On `09ed8f7`, the corrected lane gives, as corroboration, a median across five presented slots of the p95 of 13.62 ms for the AI phase and 13.54 ms for the end of the turn, against the 15.5 ms frozen on `1bc3a3c`. The [record](https://github.com/journey-studios/godot-fabric/blob/3fb94871fd95fbfab40bc625fc03957d3bd4b963/docs/evidence/frontier-freeze/README.md) has the load and the contamination of the slots. No frozen value moves, the corroboration becomes no threshold, and **exit X6 stays open**: it waits for the arms of the comparison and for the CPU time per frame, not for the turn lane. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
