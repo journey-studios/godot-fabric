@@ -14,11 +14,18 @@ import { judgeCpuTimeInstrumentReport } from "../tests/cpu-time-instrument-oracl
 // campaign proper, whose presented lane needs a display and whose unlimited lane needs a window to read the vsync back) is checked in a window, which is what
 // `npm run bench:cpu-time-instrument-graphics` runs (scripts/cpu-time-instrument-graphics.mjs, a command line that cannot be imported: it is the same probe, the same flags and the same oracle).
 // A window that no display presented is not a measurement, so the oracle's `presented` must be true for a windowed check to pass; that script exits with 3 for it, and this one does not pass it.
+//
+// The entry of the check, three ways to start the same probe: "script" (the default, `--script` in the editor's binary over this checkout, which `npm run test:cpu-time-instrument` runs), "main-loop"
+// (the editor's binary over the probe project, `--path <probeProject>` and no `--script`: the probe is the project's main loop, scripts/frontier-comparison-probe-project.mjs) and "release" (the executable
+// of an exported .app of the probe project, which an export template starts without `--path` or `--script`, from a working directory outside the .app). The last two give the probe an absolute
+// `--report=<file>` in `outDirectory`. All three go through the same judgement: the probe's process, its checks, its log, the oracle, `presented` in a window and the instrument's SHA-256.
 
 const INSTRUMENT_FILE = "tests/cpu-time-instrument.gd";
 const PROBE = "res://tests/cpu-time-instrument-probe.gd";
 const REPORT_NAME = "cpu-time-instrument-campaign-report.json";
+const KEPT_REPORT = "probe-report.json";
 const PROBE_TIMEOUT_MS = 900000;
+const ENTRIES = ["script", "main-loop", "release"];
 
 const parsedJson = async (file) => {
   try {
@@ -31,18 +38,63 @@ const parsedJson = async (file) => {
   }
 };
 
-// Runs the probe with `engine` (headless, or in a window with `windowed`) and judges its raw report with the oracle. `outDirectory` gets the probe's report and log. The answer is what the
+// The SHA-256 of a file, or null when it is not there; any other error is the caller's.
+async function sha256Of(file) {
+  try {
+    return sha256(await readFile(file));
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return null;
+    }
+    throw error;
+  }
+}
+
+// The arguments after the executable of the probe's process for an entry, pure. "script" gives `--report=<name>` (the probe writes it under res://build); the other two give an absolute `report`
+// and no `--script`: "main-loop" has `--path` at the probe project, and "release" has no `--path` either.
+export function selfCheckArguments({ entry = "script", windowed = false, project = root, probeProject, report }) {
+  const mode = windowed ? "--windowed" : "--headless";
+  if (entry === "script") {
+    return ["--path", project, mode, "--script", PROBE, "--", `--report=${report}`];
+  }
+  if (!ENTRIES.includes(entry)) {
+    throw new Error(`unknown entry of the self-check: ${entry} (${ENTRIES.join(", ")})`);
+  }
+  if (!path.isAbsolute(report)) {
+    throw new Error(`--report must be an absolute path for the ${entry} entry: ${report}`);
+  }
+  if (entry === "main-loop") {
+    if (typeof probeProject !== "string" || probeProject === "") {
+      throw new Error("the main-loop entry needs the probe project: probeProject");
+    }
+    return ["--path", probeProject, mode, "--", `--report=${report}`];
+  }
+  return [mode, "--", `--report=${report}`];
+}
+
+// Runs the probe through `entry` and judges its raw report with the oracle. "script" runs `engine` (headless, or in a window with `windowed`) over `project`; "main-loop" runs `engine` over `probeProject`;
+// "release" runs `executable`, with `outDirectory` as its working directory. `outDirectory` gets the probe's report and log. The answer is what the
 // campaign's state keeps: whether the check passed (the probe's process and its own checks, the log without a hidden error, the oracle's verdict, and in a window that a display presented it),
-// and why not, the lane, the instrument's SHA-256 and the engine's provenance. `project`, `spawn` and `judge` are the checkout, the process and the oracle, injectable for the tests.
-export async function runSelfCheck({ engine, windowed = false, outDirectory, project = root, spawn = spawnSync, judge = judgeCpuTimeInstrumentReport }) {
-  const reportFile = path.join(project, "build", REPORT_NAME);
-  await mkdir(path.join(project, "build"), { recursive: true });
+// and why not, the entry, the lane, the instrument's SHA-256 and the engine's provenance. `project`, `spawn` and `judge` are the checkout, the process and the oracle, injectable for the tests, and
+// so is the `timeout` of the process.
+export async function runSelfCheck({
+  engine, windowed = false, outDirectory, project = root, spawn = spawnSync, judge = judgeCpuTimeInstrumentReport, entry = "script", probeProject, executable, timeout = PROBE_TIMEOUT_MS,
+}) {
+  const out = path.resolve(outDirectory);
+  const kept = path.join(out, KEPT_REPORT);
+  const reportFile = entry === "script" ? path.join(project, "build", REPORT_NAME) : kept;
+  const args = selfCheckArguments({ entry, windowed, project, probeProject, report: entry === "script" ? REPORT_NAME : kept });
+  if (entry === "release" && (typeof executable !== "string" || executable === "")) {
+    throw new Error("the release entry needs the executable of the exported probe: executable");
+  }
+  await mkdir(path.dirname(reportFile), { recursive: true });
+  await mkdir(out, { recursive: true });
   await rm(reportFile, { force: true });
   const started = Date.now();
-  const result = spawn(engine, ["--path", project, windowed ? "--windowed" : "--headless", "--script", PROBE, "--", `--report=${REPORT_NAME}`], { encoding: "utf8", timeout: PROBE_TIMEOUT_MS, maxBuffer: 64 * 1024 * 1024 });
+  const options = { encoding: "utf8", timeout, maxBuffer: 64 * 1024 * 1024 };
+  const result = entry === "release" ? spawn(executable, args, { ...options, cwd: out }) : spawn(engine, args, options);
   const log = (result.stdout ?? "") + (result.stderr ?? "");
-  await mkdir(outDirectory, { recursive: true });
-  await writeFile(path.join(outDirectory, "probe.log"), log);
+  await writeFile(path.join(out, "probe.log"), log);
   const report = await parsedJson(reportFile);
   const why = [];
   if (result.status !== 0) {
@@ -63,7 +115,9 @@ export async function runSelfCheck({ engine, windowed = false, outDirectory, pro
   let oracle = { judged: false, violations: [] };
   let provenance = null;
   if (report !== null) {
-    await copyFile(reportFile, path.join(outDirectory, "probe-report.json"));
+    if (entry === "script") {
+      await copyFile(reportFile, kept);
+    }
     probe = { exitCode: result.status ?? -1, checks: report.checks.length, failed: report.checks.filter((row) => !row.passed).map((row) => row.name) };
     if (probe.failed.length > 0 || report.allCurrentAssertionsPassed !== true) {
       why.push(`the probe's checks failed: ${probe.failed.join(", ") || "allCurrentAssertionsPassed is not true"}`);
@@ -80,11 +134,22 @@ export async function runSelfCheck({ engine, windowed = false, outDirectory, pro
     }
     provenance = report.provenance;
   }
+  const instrumentSha256 = sha256(await readFile(path.join(project, INSTRUMENT_FILE)));
+  // The sha256 below is the repository's. The main-loop entry runs the copy in the probe project, which has to be the same file; the release entry's export is checked against it by the Release launcher.
+  if (entry === "main-loop") {
+    const copy = await sha256Of(path.join(probeProject, INSTRUMENT_FILE));
+    if (copy === null) {
+      why.push(`the probe project has no ${INSTRUMENT_FILE}`);
+    } else if (copy !== instrumentSha256) {
+      why.push(`the probe project carries another ${INSTRUMENT_FILE} than the repository's (${instrumentSha256})`);
+    }
+  }
   return {
     passed: why.length === 0,
     why,
+    entry,
     lane: windowed ? "windowed" : "headless",
-    sha256: sha256(await readFile(path.join(project, INSTRUMENT_FILE))),
+    sha256: instrumentSha256,
     seconds: Math.round((Date.now() - started) / 100) / 10,
     probe,
     oracle,

@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T17:55:00.000Z",
+  "updatedAt": "2026-10-10T17:59:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4805,6 +4805,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-probe-entry-ef18579",
+      "at": "2026-10-10T17:59:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit c489a01, registro no ef18579): o autoteste do instrumento passa a entrar pelo main loop de um projeto de sonda, para poder rodar num template Release. O autoteste (a sonda tests/cpu-time-instrument-probe.gd e o oráculo) é o portão de toda campanha, e o congelado pede que ele rode de novo no motor da campanha; num template oficial o -s/--script é descartado e o --path aborta, então a sonda, que é um SceneTree, passa a ser o main loop de um projeto pequeno, como o roteiro. scripts/frontier-comparison-probe-project.mjs (prepareProbeProject) faz um diretório novo com um project.godot mínimo (gl_compatibility, o renderizador do civ-lite), a sonda e o instrumento copiados nos mesmos caminhos, um invólucro CpuTimeInstrumentProbeEntry que estende a sonda, uma cena vazia e um override.cfg com run/main_scene e run/main_loop_type, e roda o --import; devolve os caminhos e os SHA-256 dos arquivos, e o do instrumento é o do repositório (4bdcda83…), que não foi tocado. A única mudança na sonda: --report=<caminho absoluto> grava nesse caminho, e --report=<nome> segue gravando em res://build/<nome>. O runSelfCheck ganha a entrada (script, o padrão de antes; main-loop, o binário do editor com --path no projeto de sonda e sem --script; release, o executável de um .app exportado, com o diretório de trabalho fora do .app), e as três passam pelo mesmo julgamento: o oráculo, o log, presented na janela e o SHA-256 do instrumento. O lançador Release, quando o diretório de exports tem probe/frontier-comparison-export.json (arm probe), confere os hashes do .app da sonda, o instrumento do repositório nos arquivos dela e que o template é o dos três braços, e passa a declarar selfCheck {entry: release, executable} em vez de unsupported; sem esse arquivo a recusa é a de antes, e a campanha só passa o selfCheck do lançador ao runSelfCheck. É uma verificação da entrada, Debug e headless, no binário do editor, e nenhum número dela é resultado: o autoteste pelo main loop e pelo --script passa com os mesmos 10 checks pelos nomes, o oráculo os julga sem violações e os tempos não se comparam. Dois controles negativos (o projeto sem o override.cfg, em que o motor diz que não há cena principal e fica parado, e com um override.cfg que só nomeia a cena vazia) não escrevem relatório e falham com the probe wrote no report. A entrada release rodou só contra um .app falso, em Node: a sonda não foi exportada (isso vem com os conjuntos por braço, sem os frameworks), nenhuma janela abriu e nenhuma campanha rodou. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-11-ea5fcea",
       "at": "2026-10-10T17:55:00.000Z",
