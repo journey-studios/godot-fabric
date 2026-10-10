@@ -43,12 +43,12 @@ test("the dump is of this tree: the report was made from the sources the types a
 });
 
 test("the TypeScript types and the schemas Godot registered declare the same names, fields and types", () => {
-  assert.equal(typescript.registrations.length, 15, "two states (the snapshot and the hover), one signal and 12 methods");
+  assert.equal(typescript.registrations.length, 18, "two states (the snapshot and the hover), one signal and 15 methods");
   assert.deepEqual(diffRegistrations(typescript.registrations, report.registered), []);
   // The name constants are the registered names: a constant that named nothing would be a call to a missing service.
   assert.deepEqual(Object.values(typescript.constants).sort(), typescript.registrations.map(entry => entry.name).sort());
   assert.deepEqual(report.registered.map(entry => entry.kind).sort(), ["method", "method", "method", "method", "method", "method", "method", "method", "method",
-    "method", "method", "method", "signal", "state", "state"]);
+    "method", "method", "method", "method", "method", "method", "signal", "state", "state"]);
   // The shapes the HUD leans on, spelled out once more.
   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
   // The hover is the card of the tile under the pointer: the same DTO as the snapshot's `tile`, on both sides.
@@ -63,7 +63,7 @@ test("the TypeScript types and the schemas Godot registered declare the same nam
   // One result for every method: the job a call started is 0 for all but an accepted end_turn.
   assert.deepEqual(named(typescript.registrations, "frontier.end_turn").result, {object: {ok: "integer", code: "string", text: "string", job: "integer"}});
   assert.deepEqual(typescript.registrations.filter(entry => entry.kind === "method").map(entry => entry.result),
-    Array(12).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
+    Array(15).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
 });
 
 // Each case changes one thing at a path and says what the comparison must report. `side` is the side that is changed.
@@ -149,7 +149,6 @@ test("a name registered on one side only, or of another kind, fails the parity",
 
 test("the extractor reads the convention and refuses what the schema language cannot say", () => {
   const variants = [
-    ["an optional field", text => text.replace("readonly rate: Int;", "readonly rate?: Int;"), /Stock\.rate: an optional field has no schema/],
     ["any", text => text.replace("readonly label: string;\n  /**\n   * The intent's positional", "readonly label: any;\n  /**\n   * The intent's positional"), /Action\.label: AnyKeyword is not in the schema language/],
     ["unknown", text => text.replace("readonly detail: string;", "readonly detail: unknown;"), /Choice\.detail: UnknownKeyword is not in the schema language/],
     ["a union", text => text.replace("readonly code: string;", "readonly code: string | null;"), /FrontierResult\.code: UnionType is not in the schema language/],
@@ -164,6 +163,13 @@ test("the extractor reads the convention and refuses what the schema language ca
     assert.notEqual(changed, typesText, `${name}: the variant must change the text`);
     assert.throws(() => extractFrontierSchemas(changed), pattern, name);
   }
+  // An optional field is `{optional: schema}`, and the parity names it against Godot's registration: the snapshot's `stress` is the one the types declare.
+  const optionalRate = extractFrontierSchemas(typesText.replace("readonly rate: Int;", "readonly rate?: Int;"));
+  assert.deepEqual(at(named(optionalRate.registrations, "frontier.snapshot").value, ["resources", "food"]).object.rate, {optional: "integer"});
+  assert.ok(diffRegistrations(optionalRate.registrations, report.registered).some(line => /stock\.rate: TypeScript declares/.test(line) || /\.rate: TypeScript declares/.test(line)),
+    "a field optional in TypeScript and required in Godot is a difference");
+  assert.equal(at(named(typescript.registrations, "frontier.snapshot").value, ["stress"]).optional.object.log.array, "string", "the snapshot's stress is optional in TypeScript");
+  assert.deepEqual(at(named(report.registered, "frontier.snapshot").value, ["stress"]), at(named(typescript.registrations, "frontier.snapshot").value, ["stress"]), "and in Godot's schema");
   // A bare `number` is read as `number`, and the parity then names the field against Godot's `integer`.
   const bare = extractFrontierSchemas(typesText.replace("readonly epoch: Int;", "readonly epoch: number;"));
   assert.ok(diffRegistrations(bare.registrations, report.registered).includes("frontier.snapshot.epoch: TypeScript declares \"number\", Godot registers \"integer\""));
@@ -178,9 +184,14 @@ test("the validator the oracle uses rejects a snapshot with a field more or less
   const snapshotSchema = named(typescript.registrations, "frontier.snapshot").value;
   const received = JSON.parse(report.steps[16].jsSnapshot);
   conforms(received, snapshotSchema, "snapshot");
+  // The optional field is accepted when it is absent (the snapshot above) and when it is there with the declared shape.
+  conforms({...received, stress: {log: ["00001 a line"], production: [{id: 0, label: "Item 00", progress: 0, cost: 100}]}}, snapshotSchema, "snapshot");
   const cases = [
-    ["a field removed", value => delete value.epoch, /snapshot has exactly the declared fields/],
-    ["a field added", value => { value.city.gold = 1; }, /snapshot\.city has exactly the declared fields/],
+    ["a field removed", value => delete value.epoch, /snapshot has the required fields and no field the declaration does not name/],
+    ["a field added", value => { value.city.gold = 1; }, /snapshot\.city has the required fields and no field the declaration does not name/],
+    ["a stress overlay of another shape", value => { value.stress = {log: "x", production: []}; }, /snapshot\.stress\.log must be an array/],
+    ["a stress overlay with a field more", value => { value.stress = {log: [], production: [], gold: 1}; }, /snapshot\.stress has the required fields and no field the declaration does not name/],
+    ["a stress overlay without its list", value => { value.stress = {log: []}; }, /snapshot\.stress has the required fields and no field the declaration does not name/],
     ["an integer turned into a string", value => { value.resources.food.stock = "3"; }, /snapshot\.resources\.food\.stock must be an integer/],
     ["a fraction", value => { value.turn = 1.5; }, /snapshot\.turn must be an integer/],
     ["a string turned into an integer", value => { value.actions[0].label = 1; }, /snapshot\.actions\[0\]\.label must be a string/],

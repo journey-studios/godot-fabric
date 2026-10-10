@@ -17,7 +17,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
 // others, then 3 after them. The headed run adds the three of its captures.
 const CYCLES = 10;
 const NEW_GAMES_PER_CYCLE = 3;
-const BINDINGS = 15;
+const BINDINGS = 18;
 // The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
 const CALLS_PER_CYCLE = 7;
 const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
@@ -28,7 +28,7 @@ const SABOTAGES = {
   "hud-leak": { failed: [/the connections the HUD holds are the first cycle's/, /the registry's subscriptions are the first cycle's/, /in the menu the HUD showed it/], grows: ["hudSubscriptions", "subscriptions"] },
   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
-  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 12 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 15 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
   "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);

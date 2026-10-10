@@ -28,6 +28,13 @@ extends Node
 # to is gone, and no `turn_ended` fires for it. `finished_jobs` counts how many times each job finished. The job follows the
 # game's clock: it stops while the tree is paused, like the rest of the game.
 #
+# The stress mode. For the final comparison the node also owns `stress`, an overlay (stress.gd) that is not the game's: `stress_begin`, `stress_step` and
+# `stress_end` enter it, change it and leave it, and while it is on every snapshot the node publishes carries a log of 200 lines and a production list
+# of 100 items. The game's state, its hash, its own log and the replay do not know it, and leaving it leaves the snapshot as it was.
+#
+# The counters. `notifications_emitted()` counts what the node emits (a snapshot, a hover card, the end of a turn), and `context_at(revision)` keeps the
+# context of each snapshot by the registry's revision number: a HUD's `stats()` is read against them without evaluating anything in JavaScript.
+#
 # The pointer. `frontier.hover` is a state of its own, the card of the tile under the pointer (the snapshot's `tile` DTO, with
 # `present` 0 over no tile). The World, which hears the pointer, calls `set_hover` (and `refresh_hover` after each snapshot); they are
 # not services and not part of the game, so the snapshot, its emission rule and the hashes are what they were. `hover_changed` fires
@@ -49,6 +56,9 @@ extends Node
 const Rules := preload("../game/rules.gd")
 const Game := preload("../game/game.gd")
 const Schema := preload("schema.gd")
+const Snapshot := preload("../game/snapshot.gd")
+const Stress := preload("stress.gd")
+const Context := preload("../game/context.gd")
 
 const PREFIX := "frontier."
 const SNAPSHOT_NAME := PREFIX + "snapshot"
@@ -57,6 +67,8 @@ const HOVER_NAME := PREFIX + "hover"
 const WORLD_NAME := "World"
 # How many finished jobs `finished_jobs` remembers: the node runs as long as the game does.
 const FINISHED_KEPT := 256
+# How many published snapshots the node remembers the context of (see `context_at`).
+const CONTEXTS_KEPT := 256
 
 signal snapshot_changed(snapshot: Dictionary)
 signal hover_changed(card: Dictionary)
@@ -85,6 +97,16 @@ var hover := Vector2i(-1, -1)
 var hover_card: Dictionary = {}
 # job id -> how many times it finished (exactly 1 for a job that finished well), for the last FINISHED_KEPT jobs.
 var finished_jobs := {}
+# The stress overlay (stress.gd), null while the mode is off. It is the node's and not the game's: the snapshot carries it only while it is on.
+var stress: RefCounted
+# How many notifications the node has emitted: a snapshot (`snapshot_changed`), a card of the hovered tile (`hover_changed`) and the end of a
+# turn (`turn_ended`). A HUD that has consumed them all has `stats().events` equal to it.
+var _notifications := 0
+# The registry numbers the revisions of the snapshot binding from the moment it is made; this numbers the node's publications the same way, and
+# keeps the context each one carried, so that the context a React Native HUD shows (the last revision the registry delivered) can be read
+# without a copy of the snapshot: `context_at(revision)`.
+var _snapshot_revision := 0
+var _contexts := {}
 
 
 func _init() -> void:
@@ -107,6 +129,9 @@ func _exit_tree() -> void:
 
 
 func _bind_services(runtime: Node) -> void:
+  # The registry numbers the revisions of its bindings from here.
+  _snapshot_revision = 0
+  _contexts.clear()
   if fabric_api == null:
     push_error("FABRIC_ERROR: GameServices has no fabric_api; the scene's owner injects the facade script (godot_fabric.gd), so no service was registered")
     return
@@ -130,7 +155,17 @@ func _bind_services(runtime: Node) -> void:
 # --- State ---------------------------------------------------------------------------------------------------------
 
 func get_snapshot() -> Dictionary:
-  return game.snapshot()
+  return _published()
+
+
+# How many notifications the node has emitted since it began (the counter above): the emitting side of a HUD's `stats().events`.
+func notifications_emitted() -> int:
+  return _notifications
+
+
+# The context of the snapshot the registry numbered `revision`, and the game's own now for a revision the node does not remember (none yet).
+func context_at(revision: int) -> String:
+  return _contexts.get(revision, Context.derive(game.state))
 
 
 # The card of the tile under the pointer; the absent card (`present` 0) over none.
@@ -145,7 +180,7 @@ func set_hover(x: int, y: int) -> void:
     return
   hover = next
   hover_card = get_hover()
-  hover_changed.emit(hover_card)
+  _notify_hover()
 
 
 # A published snapshot can change what the card of the hovered tile says (a unit moved onto it). The World, which hears every
@@ -156,7 +191,7 @@ func refresh_hover() -> void:
   var card := get_hover()
   if card != hover_card:
     hover_card = card
-    hover_changed.emit(card)
+    _notify_hover()
 
 
 # A new game, the menu or a reload: the World that heard the pointer is gone, and with it the tile it pointed at.
@@ -165,7 +200,7 @@ func _clear_hover() -> void:
     return
   hover = Vector2i(-1, -1)
   hover_card = get_hover()
-  hover_changed.emit(hover_card)
+  _notify_hover()
 
 
 # --- Intents -------------------------------------------------------------------------------------------------------
@@ -206,6 +241,41 @@ func resolve_event(choice_id: String) -> Dictionary:
   return _intent("resolve_event", game.resolve_event(choice_id))
 
 
+# --- The stress mode -----------------------------------------------------------------------------------------------
+
+# Enters the stress mode of the comparison: in the frame that receives it, the snapshot begins to carry a log of 200 lines and a production
+# list of 100 items. It is not an intent of the game and changes nothing of its state. Refused while a turn runs and when the mode is on.
+func stress_begin() -> Dictionary:
+  _count("stress_begin")
+  if job != 0:
+    return _plain(_refusal("turn_in_progress"))
+  if stress != null:
+    return _plain(_refusal("stress_on"))
+  stress = Stress.new()
+  _publish()
+  return _plain(_accepted())
+
+
+# One update of the mode: a line appended (the log stays at 200) and one item changed. Each call publishes a snapshot.
+func stress_step() -> Dictionary:
+  _count("stress_step")
+  if stress == null:
+    return _plain(_refusal("stress_off"))
+  stress.step()
+  _publish()
+  return _plain(_accepted())
+
+
+# Leaves the mode: the snapshot is the one it was before `stress_begin`, and it is published.
+func stress_end() -> Dictionary:
+  _count("stress_end")
+  if stress == null:
+    return _plain(_refusal("stress_off"))
+  stress = null
+  _publish()
+  return _plain(_accepted())
+
+
 # Accepts the end of the turn as a job. The game starts the turn (`begin_end_turn`): its phase becomes the first one and every
 # intent is refused until the last has run. The answer is the acceptance, with the job's id; a refusal (an event waiting, a
 # turn already in progress) starts nothing and answers job 0. The snapshot is published once, because the state changed:
@@ -218,7 +288,7 @@ func end_turn() -> Dictionary:
   job = next_job
   next_job += 1
   job_phases = []
-  snapshot_changed.emit(game.snapshot())
+  _publish()
   return _plain(started, job)
 
 
@@ -236,7 +306,7 @@ func advance_job() -> void:
   var ran: Dictionary = game.advance_phase()
   job_phases.append({"name": ran.name, "tasks": ran.tasks, "events": ran.events})
   if ran.done == 0:
-    snapshot_changed.emit(game.snapshot())
+    _publish()
     return
   _finish_job()
 
@@ -252,8 +322,9 @@ func _finish_job() -> void:
   finished_jobs[finished] = int(finished_jobs.get(finished, 0)) + 1
   while finished_jobs.size() > FINISHED_KEPT:
     finished_jobs.erase(finished_jobs.keys()[0])
+  _notifications += 1
   turn_ended.emit(summary)
-  snapshot_changed.emit(game.snapshot())
+  _publish()
 
 
 # The session the job was driving is gone: nothing finishes it and no `turn_ended` fires for it.
@@ -267,11 +338,12 @@ func _abandon_job() -> void:
 func new_game() -> Dictionary:
   _count("new_game")
   _abandon_job()
+  stress = null
   epoch += 1
   game = Game.new(Rules.SEED, epoch)
   _clear_hover()
   _ensure_world()
-  snapshot_changed.emit(game.snapshot())
+  _publish()
   return _plain({"ok": 1, "code": "ok", "text": ""})
 
 
@@ -317,13 +389,49 @@ func _drop_world() -> void:
   world.queue_free()
 
 
+# --- Publishing ----------------------------------------------------------------------------------------------------
+
+# The snapshot as the node publishes it: the game's, and the stress overlay while the mode is on (frozen like the rest of it). With the mode
+# off it is the game's own snapshot, untouched.
+func _published() -> Dictionary:
+  var snapshot: Dictionary = game.snapshot()
+  if stress == null:
+    return snapshot
+  var carried := snapshot.duplicate()
+  carried["stress"] = stress.dto()
+  Snapshot.freeze(carried)
+  return carried
+
+
+func _publish() -> void:
+  var snapshot := _published()
+  _notifications += 1
+  _snapshot_revision += 1
+  _contexts[_snapshot_revision] = snapshot.context
+  _contexts.erase(_snapshot_revision - CONTEXTS_KEPT)
+  snapshot_changed.emit(snapshot)
+
+
+func _notify_hover() -> void:
+  _notifications += 1
+  hover_changed.emit(hover_card)
+
+
 # --- Results -------------------------------------------------------------------------------------------------------
+
+func _accepted() -> Dictionary:
+  return {"ok": 1, "code": "ok", "text": ""}
+
+
+func _refusal(code: String) -> Dictionary:
+  return {"ok": 0, "code": code, "text": Rules.reason_text(code)}
+
 
 # An accepted intent changed the state, so the snapshot is published once; a refused one changed nothing.
 func _intent(method: String, result: Dictionary) -> Dictionary:
   _count(method)
   if result.ok == 1:
-    snapshot_changed.emit(game.snapshot())
+    _publish()
   return _plain(result)
 
 

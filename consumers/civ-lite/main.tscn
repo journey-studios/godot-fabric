@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://services/game_services.gd" id="1"]
 [ext_resource type="Script" path="res://addons/godot_fabric/godot_fabric.gd" id="2"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://hud_validation.gd" id="7"]
 [ext_resource type="Script" path="res://overlay_validation.gd" id="8"]
 [ext_resource type="Script" path="res://stability_validation.gd" id="9"]
+[ext_resource type="Script" path="res://hud_stats.gd" id="10"]
 
 [node name="GameServices" type="Node"]
 script=ExtResource("1")
@@ -31,6 +32,9 @@ grow_horizontal=2
 grow_vertical=2
 application_path=NodePath("../../Application/Runtime")
 component_name="FrontierHUD"
+
+[node name="HudStats" type="Node" parent="."]
+script=ExtResource("10")
 
 [node name="Validation" type="Node" parent="."]
 script=ExtResource("6")

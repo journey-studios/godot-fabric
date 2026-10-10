@@ -41,7 +41,7 @@ const REPORT := "res://build/frontier-services-report.json"
 const UNMOUNT_AFTER_TURNS := 3
 const NEW_GAMES := 3
 # What the registry must hold: the state, the signal and one method per intent, plus open_menu, which the scene answers.
-const BINDINGS := 15
+const BINDINGS := 18
 # An accepted end_turn publishes the snapshot of the first phase, and each of the six phases publishes the next one: the last
 # is the turn that begins, at rest.
 const JOB_SNAPSHOTS := 7
@@ -673,6 +673,8 @@ func run_stress() -> Dictionary:
     "stress: %d more module-scope subscribers of the snapshot connected, with nothing left pending" % STRESS_SUBSCRIBERS)
   var arrivals_from := int(counts().arrivals)
   var initial_revision := int(js("FrontierServicesProbe.latest()").revision)
+  # What the host counts of the snapshot binding, natively (`service_delivery`): with the extra subscribers each publication is handed to every one.
+  var delivery_before: Dictionary = application.call("service_delivery", "frontier.snapshot")
 
   # One phase at a time.
   shadow.end_turn()
@@ -688,6 +690,7 @@ func run_stress() -> Dictionary:
     drains.append(await drain(phase))
   services.set_process(true)
   var isolated := await delivery(arrivals_from)
+  var delivery_isolated: Dictionary = application.call("service_delivery", "frontier.snapshot")
   check(accepted.ok == 1 and accepted.job == isolated_job and services.job == 0 and int(services.finished_jobs.get(isolated_job, 0)) == 1
     and int(services.game.state.turn) == turn_before + 1 and services.game.state_hash() == shadow.state_hash(),
     "stress: the job driven a phase at a time finished once and left the reference session's state")
@@ -717,12 +720,19 @@ func run_stress() -> Dictionary:
     last_sent = sent
     pending_series.append(int(now.get("pendingEvents", -1)))
   var free := await delivery(free_arrivals_from)
+  var delivery_free: Dictionary = application.call("service_delivery", "frontier.snapshot")
   var free_total := last_sent - free_sent_from
   check(free_accepted.ok == 1 and free_accepted.job == free_job and services.job == 0 and int(services.finished_jobs.get(free_job, 0)) == 1
     and services.game.state_hash() == shadow.state_hash(),
     "stress: the job driven by the node, a phase a frame, finished once and left the reference session's state")
   check(free_pumps.size() == ceili(free_total / float(EVENT_BUDGET)) and free_pumps.all(within_budget) and int(registry().get("pendingEvents", -1)) == 0,
     "stress: a job that outran the pump (a phase a frame) drained in ceil(events / 128) pumps and left nothing pending")
+
+  var sent_isolated := int(delivery_isolated.sent) - int(delivery_before.sent)
+  var sent_free := int(delivery_free.sent) - int(delivery_isolated.sent)
+  check(sent_isolated == JOB_SNAPSHOTS and sent_free == JOB_SNAPSHOTS and int(delivery_free.emitted) - int(delivery_before.emitted) == 2 * JOB_SNAPSHOTS
+    and int(delivery_free.delivered) == int(delivery_free.emitted) and free_total > JOB_SNAPSHOTS * STRESS_SUBSCRIBERS,
+    "stress: with %d more subscribers a publication moves the host's count of snapshots handed to JavaScript by one, as it moves the node's, and not by the number of subscriptions" % STRESS_SUBSCRIBERS)
 
   run_js("FrontierServicesProbe.removeSubscribers()")
   await settle(6)
@@ -731,7 +741,8 @@ func run_stress() -> Dictionary:
   return {"subscribers": STRESS_SUBSCRIBERS, "panelConnected": panel_connected, "initialRevision": initial_revision, "subscriptionsBase": subscriptions_base,
     "isolated": {"job": isolated_job, "accepted": accepted, "drains": drains, "arrivals": isolated.arrivals, "received": isolated.received},
     "free": {"job": free_job, "accepted": free_accepted, "pumps": free_pumps, "pending": pending_series, "eventsSent": free_total,
-      "arrivals": free.arrivals, "received": free.received}}
+      "arrivals": free.arrivals, "received": free.received},
+    "delivery": {"before": delivery_before, "isolated": delivery_isolated, "free": delivery_free}}
 
 # A job that is sent every kind of call while it runs, and the budgets under many subscribers.
 func run_job_lane() -> Dictionary:
@@ -787,7 +798,7 @@ func run_probe() -> void:
   var initial_ok := check(int(started.snapshots) == 1 and first is Dictionary and canon(first.value) == canon(services.game.snapshot()) and int(first.value.epoch) == 1,
     "registration: the first connection received the initial snapshot of epoch 1")
   check(int(started.stepsReceived) == Replay.STEPS.size(), "registration: the roteiro reached the JavaScript side as a prop, from replay.gd")
-  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 15 bindings")
+  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 18 bindings")
   check(native().errors.is_empty(), "registration: the application reports no error")
   var registration := {"application": started.application, "snapshots": started.snapshots, "inTime": registered_in_time}
   if registered_in_time and connected and initial_ok and rule_lane_only:
@@ -837,7 +848,7 @@ func run_probe() -> void:
     and services.next_job == expected_jobs + 1, "jobs: the game finished each of its %d jobs exactly once, and none is left" % expected_jobs)
 
   var final_native := native()
-  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 15 bindings are still there")
+  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 18 bindings are still there")
   var report := {"scenario": "frontier-services", "reactNative": "0.87.1", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
     "checks": checks, "sabotage": sabotage, "allPassed": checks.all(func(row: Dictionary) -> bool: return row.passed),
     "registered": registered_before_mount, "registration": registration, "bindings": BINDINGS, "steps": steps_report, "roteiroSteps": Replay.STEPS.size(),

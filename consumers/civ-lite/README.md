@@ -83,6 +83,12 @@ godot --path . --headless res://main_native.tscn -- --validate-hud        # the 
 godot --path . --headless res://main_native.tscn -- --validate-overlays   # the queue, the blocking overlays, Escape, a new game
 ```
 
+**The stress mode.** For the comparison's `stress` window the node also owns a stress overlay (`services/stress.gd`) that is not the game's: `stress_begin`, `stress_step` and
+`stress_end` enter it, change it and leave it, and while it is on the snapshot carries a log of 200 lines and a production list of 100 items (`stress`, the one optional field of the
+schema). Both HUDs show it in `hud-stress` in every context, outside the table of panels, and the execution runner reads `stats()` on either, in the same shape: on the native HUD
+node, and on `HudStats` (`hud_stats.gd`) in `main.tscn`, which reads the registry's own counters and no JavaScript
+([docs/research/frontier-stress.md](../../docs/research/frontier-stress.md)).
+
 `main_bare.tscn` is the third scene, for the comparison's arm A: `GameServices` and the `World` and nothing else, so no `HUDLayer`, no
 `Application` and no `FabricSurface`. The validations are not in it; the game plays on the node's methods and publishes its snapshots as in the other two.
 
@@ -102,6 +108,7 @@ has three for the native HUD. The stability probe is the React Native host's and
 - `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_probe.gd`, `hud_validation.gd`, `overlay_validation.gd`, `stability_validation.gd`,
   `stability_judge.gd`: the scene, the HUD and the validations described above (`hud_probe.gd` is what the three HUD probes share).
 - `native_hud/`, `main_native.tscn`, `main_bare.tscn`, `hud_reader*.gd`: the native HUD, its scene, the scene with no HUD and the readers the probes look at either HUD through.
+- `services/stress.gd`, `hud_stats.gd`: the stress mode's overlay and the runner's `stats()` for the React Native HUD.
 - `ui/icons/`: the six icons of the HUD (settler, warrior, city, food, production, science), 32x32 PNGs drawn from shapes by
   `scripts/civ-lite-icons.mjs` (original art, no third-party image). `ui/hud/icons.ts` imports each as an asset (`ui/assets.d.ts` declares
   `*.png`) and `Icon` in `ui/hud/kit.tsx` draws it with an `Image`: the resources of the bar, the unit actions, the units and the city of the
