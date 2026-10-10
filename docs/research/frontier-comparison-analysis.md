@@ -30,7 +30,7 @@ checked against the sentence they come from, so that an amendment that rewrites 
 | `scripts/frontier-comparison-report.mjs` | The report: the sections in the protocol's order, the status. |
 | `scripts/frontier-comparison-analysis.mjs` | The command line. |
 | `tests/frontier-comparison-analysis.test.mjs`, `tests/frontier-comparison-validity.test.mjs` | The tests, on synthetic campaigns. |
-| `tests/frontier-comparison-synthetic.mjs` | The generator of the synthetic campaigns and the helpers of the tests; run as `node tests/frontier-comparison-synthetic.mjs <campaign.json>`, it writes the example campaign of the evidence record. |
+| `tests/frontier-comparison-synthetic.mjs` | The generator of the synthetic campaigns and the helpers of the tests; run as `node tests/frontier-comparison-synthetic.mjs <campaign.json>`, it writes the example campaign of the evidence record; with `--unreported` the same campaign with an attempt that wrote no report, and with `--unreported-validity` the `validity` section of its report. |
 
 The statistics and the decision functions that used to live, private, in `tests/frontier-comparison-protocol.test.mjs` (`holds`, `orient`, `categoriesOf`, `classify`, `nonInferior`, `marginOf`, `holmStands`,
 `guarded`, `claimPValue`, `mulberry32`, `ascending`, `nearestRank`, `median`, `iqr`, `bootstrapDifferences`, `intervalOf`) moved to the modules above and that test imports them (the decision functions bound to its
@@ -46,7 +46,7 @@ node scripts/frontier-comparison-analysis.mjs --check-format <campaign.json> [--
 ```
 
 The report goes to `--out` or to the standard output, and it is the same bytes for the same campaign file and protocol file. `--check-format` validates the campaign and prints
-`FRONTIER_COMPARISON_FORMAT_PASSED`, or one `FAIL` line for each problem (the first 50, then a count) and exits 1. An analysis that cannot proceed (a protocol this analysis does not understand, a campaign out of the format,
+`FRONTIER_COMPARISON_FORMAT_PASSED` with the number of attempts (every attempt, and when some wrote no report the split, "74 attempts (73 with a report, 1 without)"), or one `FAIL` line for each problem (the first 50, then a count) and exits 1. An analysis that cannot proceed (a protocol this analysis does not understand, a campaign out of the format,
 attempts that contradict one another) exits 1 with the reasons. A campaign that is valid and has no statistic to give (the campaign stopped, or an arm has too few executions) is a report with `status` `stopped` or
 `incomplete`, not an error.
 
@@ -69,7 +69,8 @@ microseconds, the readings are in the protocol's units.
 | `provenance.{commit, machine, system, display, renderer, adapter}` | free text, copied to the report | `runs.provenance`, `report.sections` `provenance` |
 | `provenance.rawData` | where the raw data are kept | `runs.rawData`, `report.sections` `reproduction` |
 | `provenance.deviations` | every deviation from the protocol; `[]` says there is none | `report.sections` `provenance` |
-| `executions` | every attempt of every slot of both lanes, rejected ones included (below) | `runs.load.redo` (the rejected attempt stays in the raw data) |
+| `executions` | every attempt of every slot of both lanes that wrote a report, rejected ones included (below) | `runs.load.redo` (the rejected attempt stays in the raw data) |
+| `unreported?` | the attempts whose process wrote no report the analysis can read, one entry each (below); absent or `[]` when there is none | `runs.load.redo`; `invalidation` `errors` |
 | `packages.<arm>.exportBytes` | the size of the exported Release package in bytes, twice: the export and its repeat; required for every planned arm | `secondaryOutcomes` `package-size`; `decisionRule.deterministic` |
 | `changeCost.<B,C>.{files, lines, timeMinutes, tests}` | the single observation of the cost of change, optional until it is made; the time is in minutes | `secondaryOutcomes` `change-cost`; `decisionRule.singleObservation` |
 | `text.{decision, limitations, costOfChange}` | the words of the people who write the report, optional | `report.sections` `decision`, `limitations`, `cost-of-change` |
@@ -99,6 +100,22 @@ microseconds, the readings are in the protocol's units.
 | `readings.sceneNodes?` | the nodes of the SceneTree | `scene-nodes` |
 | `readings.timeToInteractiveHudMs?` | the time to the interactive HUD, in ms (B and C) | `time-to-interactive-hud` |
 
+**An attempt of `unreported`.** A process that crashed, hit its time limit or ended without writing a report has no execution to hold (a refresh rate cannot be made up), so the entry holds what was read of the attempt:
+
+| Field | Holds | Read by |
+| --- | --- | --- |
+| `arm`, `lane`, `slot`, `attempt` | as in `executions`; the arm must be the one the order puts in the slot, and the numbering `attempt` 1, 2, ... of a slot is **over `executions` and `unreported` together** | `runs.sequence`, `runs.load.redo` |
+| `load.{before, after}` | the 1-minute load average before the process starts and after it ends | `runs.load` (recorded; the attempt is rejected by `errors`) |
+| `errors.crashed` | whether the process was killed by a signal or its log shows a crash (the same reading as `errors.crashed` of an execution) | `invalidation` `errors` |
+| `errors.timedOut` | whether the launcher killed the process at its time limit | `invalidation` `errors` |
+| `errors.exitCode?` | the exit code, when the process exited by itself; absent when it died by a signal | `invalidation` `errors` |
+| `errors.signal?` | the signal that killed it; absent when it exited by itself | `invalidation` `errors` |
+| `logSha256` | the SHA-256 of the process's log, kept in the raw data | `runs.load.redo` (the rejected attempt stays in the raw data) |
+
+The entry must say how the process ended: it crashed, it timed out, or it has an exit code (which may be 0; reading 15). Of `errors.exitCode` and `errors.signal` an entry has exactly one, or neither when the process crashed or timed out without either; both together are refused. An attempt appears once, in `executions` or in `unreported`. The attempt that wrote no report is rejected by `errors`, clause `no-report`, and counts as an attempt of its slot like any other (below).
+
+**The format changed on 2026-10-10 to hold it** (V05-10 `execucao`, the orchestrator of #126). The campaign of that delivery left such an attempt out of `executions`, renumbered the others 1, 2, ... and listed it only in its own state and summary, so the report of the analysis counted fewer attempts than were made and the stop on three used-up attempts could not be checked from `campaign.json`. Now the attempt is in the data and the analysis judges it. This is not an amendment of the protocol: `errors`, `runs.load.redo` and `report.sections` `validity` ("the executions planned, accepted and redone for every slot, with each reason") already cover the case, and only the data format, which is the analysis', changed. The format is still `godot-fabric.frontier-comparison-campaign/v1`: the field is optional, no real campaign exists yet and every campaign written before (the example and the rehearsals) is still valid. In the report, the record of every attempt in `validity.slots[].attempts[]` has `reported` (`true` for an execution, `false` for an attempt without a report, which has its `load` and no `vsync`).
+
 The readings an arm has are those of `secondaryOutcomes[].arms`: a reading an arm does not have is refused, and one it has is required. Every execution carries all its windows, even in the unlimited lane, because the
 `incomplete` rule is about the windows; the unlimited lane's CPU times are validated and not analysed (the `presented` lane reads every outcome except the FPS; the `unlimited` lane reads the FPS only).
 
@@ -106,7 +123,7 @@ The readings an arm has are those of `secondaryOutcomes[].arms`: a reading an ar
 
 Each item cites the rule of the protocol that it implements; the same citation is in the code.
 
-**Validity** (`invalidation`, `runs`). For every slot of both lanes, the attempts in order and, for each, the reasons that reject it. A reason is `{rule, clause, ...values}`: the protocol's id, the part of the rule and
+**Validity** (`invalidation`, `runs`). For every slot of both lanes, the attempts in order (the executions and the attempts without a report together, numbered 1, 2, ... without gaps) and, for each, the reasons that reject it. A reason is `{rule, clause, ...values}`: the protocol's id, the part of the rule and
 the numbers that decided it; the script writes no sentence. The rules that can be computed from the data:
 
 - `load`: the load average above `runs.load.limit1MinuteAverage` before or after (above, not at).
@@ -114,14 +131,14 @@ the numbers that decided it; the script writes no sentence. The rules that can b
   `idle.intervalsUsec` (the median of the half-sums of the consecutive pairs, `idleReference.rule`) is not under half of the refresh period read back.
 - `not-the-registered-build`: a Debug build; a binary, package or script whose hash differs from the registered one of the arm; a seed that is not the registered one; and a protocol hash that is not the SHA-256 of
   the file being analysed.
-- `other-game`, `errors`, `parity`.
+- `other-game`, `errors`, `parity`. An attempt that wrote no report (`unreported`) is rejected by `errors` with the clause `no-report` and the values of its entry (`crashed`, `timedOut`, `exitCode` or `signal`): it is judged by this rule alone (the others read the execution it lacks), and it counts in the totals and in the slot like any other attempt.
 - `incomplete`: a window with fewer measured occurrences than its protocol number, or an idle window with fewer than `idleReference.frames` frames.
 
 `vsync-reading` is not a rejection (the unlimited lane's FPS is N/A for that execution, with the reading recorded) and `instrument` belongs to the campaign. A slot is `accepted` at its first attempt that no rule
 rejects, `open` while its last attempt is rejected and waits for the redo, `exhausted` when `maxAttempts` (3) attempts are rejected, `missing` with no attempt and `not-planned` for an arm that is not ready. Per lane and
 arm the report gives the planned, accepted, rejected, open, missing and exhausted counts, and the planned against the accepted executions by position in the block (`runs.balance`).
 
-**The campaign that stops** produces no statistic: a slot that used its attempts (or has a fourth one) with none accepted (`runs.load.redo`); a repeat of `other-game` in one arm (`invalidation` `other-game`); an
+**The campaign that stops** produces no statistic: a slot that used its attempts (or has a fourth one) with none accepted (`runs.load.redo`; the attempts that wrote no report count, so three of them in a slot stop the campaign by this rule); a repeat of `other-game` in one arm (`invalidation` `other-game`); an
 instrument whose self-check did not pass or whose file is not the one it passed (`invalidation` `instrument`, "no comparative execution counts"). The status is `stopped` and `why` says which. An arm with fewer accepted
 presented-lane executions than `runs.minimumPerArm` leaves the status `incomplete`. Otherwise the status is `complete`, or `partial` when `armB.ready` is false.
 
@@ -159,7 +176,7 @@ it never changes it.
 estimated and `H3` has no category; every axis is `n/a` for the reason that B is not ready; no gain is claimed anywhere (the test searches the `primary` section for a category and finds none).
 
 **The report** (`report.sections`). A JSON with `format`, `status`, `why` and `sections` keyed by the protocol's ids in its order: `provenance` (the hash of the protocol file, the frozen values with their dates, the
-registration, the instrument, the vsync and load readings, the deviations), `validity`, `primary`, `axes`, `cost-of-change`, `budgets`, `decision`, `limitations` and `reproduction` (the raw data, the hash of
+registration, the instrument, the vsync readings (of the executions) and the load readings (of every attempt, the ones without a report too), the deviations), `validity`, `primary`, `axes`, `cost-of-change`, `budgets`, `decision`, `limitations` and `reproduction` (the raw data, the hash of
 the campaign file, the seed and the resamples). The words of `decision`, `limitations` and `cost-of-change` come from `text`; without them they are `null`. The report holds no date, path or random number.
 
 ## Where the protocol is a sentence, and the readings chosen
@@ -192,6 +209,12 @@ stand as the implementer documented them.
     (`decisionRule.partialReport.timeBox`), not computed here.
 14. **The budgets** are compared for the three arms in `budgets`; the number of an arm is the median of its per-run p95 in ms, the quantity the protocol compares (and the freeze's note (a) says the bound is wide for it).
 
+15. **An attempt that wrote no report.** The protocol's `errors` names an unhandled error, a script error or an error in Godot's log, a crash and an exit code that is not 0; it does not say what a process that wrote
+    no report is. It is read as `errors` whatever its exit code was, with the clause `no-report`: the scenario writes its report before it exits 0 (`tests/frontier-comparison-scenario.gd` exits 2 on a bad command line, 1 when it cannot write the report or when it aborts, and 0 only after the report is written), so a process
+    that ends cleanly without one did not complete the scenario. "No report" covers a report the scenario's format cannot read as well as none at all. Only `errors` judges such an attempt, because every other rule reads
+    the execution that it lacks, and its load readings are recorded, not judged. The format asks the entry to say how the process ended (crashed, timed out or an exit code, which may be 0), and refuses one that says none of them.
+    *This reading can change a result only when a process exits 0 without a report.* It is put to the lead's review with the delivery of 2026-10-10.
+
 ## What stays for `execucao` and for `relatorio`
 
 For `execucao` (criterion `execucao`): the scenario script that plays the 100-turn soak, the context switches, the latency pass and the stress rounds; the three arms (A and B do not exist yet); the instrument's
@@ -213,7 +236,8 @@ The script computes the numbers and invents no sentence.
 
 ## Reproducing
 
-The synthetic example of the [evidence record](../evidence/frontier-comparison-analysis/README.md) is regenerated by the first two commands of its README and checked byte for byte by the analysis test.
+The synthetic example of the [evidence record](../evidence/frontier-comparison-analysis/README.md) is regenerated by the first two commands of its README and checked byte for byte by the analysis test; so is the `validity`
+section of the example with an attempt that wrote no report (`node tests/frontier-comparison-synthetic.mjs --unreported-validity <file>`).
 
 ```sh
 node --test tests/frontier-comparison-analysis.test.mjs tests/frontier-comparison-validity.test.mjs tests/frontier-comparison-protocol.test.mjs   # part of npm run test:contracts

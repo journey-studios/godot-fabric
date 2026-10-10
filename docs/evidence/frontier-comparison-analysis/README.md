@@ -58,7 +58,7 @@ O relatório parcial (o braço B não ficou pronto no time-box) tem só H1 e nen
 
 ## O exemplo e como regerá-lo
 
-[`example-analysis.json`](example-analysis.json) (125 KB) é o relatório que o script produz de uma campanha **sintética** com a semente fixa `example`: 12 execuções por braço, a ordem do protocolo, as duas faixas e os três braços. O cenário foi escolhido para mostrar as quatro categorias lado a lado
+[`example-analysis.json`](example-analysis.json) (127 KB) é o relatório que o script produz de uma campanha **sintética** com a semente fixa `example`: 12 execuções por braço, a ordem do protocolo, as duas faixas e os três braços. O cenário foi escolhido para mostrar as quatro categorias lado a lado
 (`ai-phase` ganho, `event-burst` neutro, `context-switches` custo, `stress` inconclusivo, com B e C de variância grande), uma carga acima do limite refeita na vaga 4 da faixa apresentada, e uma janela (`ai-phase`) em que C tem mais quadros por segundo sem limite que B. O texto de `decision`, `limitations` e `cost-of-change` diz "SYNTHETIC EXAMPLE".
 A campanha em si, de 1,9 MB, **não está no repositório**: ela se regera, e o relatório registra o SHA-256 dos bytes dela em `sections.reproduction.campaignSha256`, junto com o `protocolSha256`; esse hash muda quando o protocolo muda, porque a campanha embute o pin do protocolo, e o valor vigente é o do próprio relatório.
 
@@ -69,6 +69,21 @@ node scripts/frontier-comparison-analysis.mjs example-campaign.json --out docs/e
 
 O primeiro comando grava a campanha sintética (compacta, com uma quebra de linha no fim); o segundo a analisa. O teste `tests/frontier-comparison-analysis.test.mjs` roda **esses dois comandos** num diretório temporário e exige que o relatório seja o `example-analysis.json` desta pasta byte a byte; se o protocolo (o hash do arquivo está no relatório)
 ou o script mudarem, o teste falha e o relatório se regera com os mesmos comandos. Apague o `example-campaign.json` depois.
+
+## A tentativa sem relatório (2026-10-10)
+
+A campanha de `execucao` (#126) deixava de fora da campanha a tentativa cujo processo não escreveu relatório (travamento, estouro de tempo), e o relatório contava menos tentativas do que as feitas. O formato ganhou o campo opcional `unreported`
+(a mudança é do formato, que é da análise; o protocolo não muda e o formato continua `.../v1`): uma entrada por tentativa, com o braço, a faixa, a vaga, o número da tentativa, a carga antes e depois, como o processo terminou (`crashed`, `timedOut` e `exitCode` ou `signal`) e o SHA-256 do `.log` guardado.
+A análise julga essa tentativa rejeitada pela regra `errors`, cláusula `no-report`, com esses valores; ela conta nas 3 tentativas da vaga e na parada por tentativas esgotadas, e o relatório a mostra em `validity.slots[].attempts[]` com `reported: false`, a carga e sem `vsync`.
+Por isso toda tentativa do relatório agora tem `reported`, e o [`example-analysis.json`](example-analysis.json) foi regerado pelos dois comandos acima: a única diferença é o `"reported": true` em cada tentativa.
+
+[`example-unreported-validity.json`](example-unreported-validity.json) (41 KB) é **só a seção `validity`** do relatório do mesmo cenário sintético com uma tentativa sem relatório: o processo da tentativa 1 da vaga 7 da faixa apresentada (braço B) travou com `SIGSEGV`, e a tentativa 2 foi aceita (`rejected: 1`). É sintético, e nenhum número dele é resultado.
+
+```sh
+node tests/frontier-comparison-synthetic.mjs --unreported-validity docs/evidence/frontier-comparison-analysis/example-unreported-validity.json
+```
+
+O comando gera a campanha, analisa-a e grava a seção; o teste `tests/frontier-comparison-analysis.test.mjs` o roda e exige o arquivo desta pasta byte a byte, e confere que o script de análise, sobre a campanha que `node tests/frontier-comparison-synthetic.mjs --unreported <campaign.json>` grava, produz a mesma seção.
 
 ## Os limites
 

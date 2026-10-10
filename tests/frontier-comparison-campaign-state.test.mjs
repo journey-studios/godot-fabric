@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { defaultClock, waitForLoad } from "../scripts/frontier-comparison-campaign-load.mjs";
 import {
-  campaignExecutions, engineDifferences, engineOf, nextStep, optionsErrors, parseSlots, planOf, resumeProblems, stopsOf, unavailableLanes,
+  campaignExecutions, engineDifferences, engineOf, nextStep, optionsErrors, parseSlots, planOf, resumeProblems, stopsOf, unavailableLanes, unreportedEntries,
 } from "../scripts/frontier-comparison-campaign-state.mjs";
 import { fakeClock, registeredOf, scriptedLoad, sha } from "./frontier-comparison-campaign-fake.mjs";
 import { readProtocol } from "./frontier-comparison-synthetic.mjs";
@@ -50,16 +50,16 @@ test("the next step is the first slot without an accepted attempt: its redo befo
   assert.deepEqual(next(stateOf(whole)), { kind: "launch", lane: "unlimited", slot: 1, arm: "A", block: 0, position: 0, attempt: 1 });
 });
 
-test("the analysis' stops stop it, a slot whose attempts are used up counts the ones that wrote no report, and what the analysis cannot see stops it too", () => {
+test("the analysis' stops stop it, a slot whose attempts are used up is the analysis' stop alone, and what the analysis cannot see stops it too", () => {
   const analysisStop = { rule: "other-game", arm: "B", rejected: 2 };
   assert.deepEqual(nextStep(stateOf([]), protocol, { stopped: [analysisStop] }), { kind: "stopped", why: [analysisStop] });
-  // Three attempts in a slot, the first of which wrote no report (so the analysis counts two): the state machine counts three.
+  // Three attempts in a slot, the first of which wrote no report: the campaign holds all three (the first in `unreported`), so the analysis counts them and stops it. The state adds no stop
+  // of its own for the attempts (tests/frontier-comparison-campaign.test.mjs plays three attempts without a report to the stop of the analysis).
   const used = stateOf([["presented", 1, 1, false, { execution: null }], ["presented", 1, 2, false], ["presented", 1, 3, false]]);
-  assert.deepEqual(stopsOf(used, protocol, noStops), [{ rule: "attempts", lane: "presented", slot: 1, arm: "A", attempts: 3, limit: 3 }]);
-  assert.deepEqual(stopsOf(stateOf([["presented", 1, 1, false], ["presented", 1, 2, false]]), protocol, noStops), []);
-  const same = { rule: "attempts", lane: "presented", slot: 1, arm: "A", attempts: 3, limit: 3 };
-  assert.deepEqual(stopsOf(used, protocol, { stopped: [same] }), [same], "the analysis' own stop is not counted twice");
-  assert.deepEqual(stopsOf({ ...used, rehearsal: true }, protocol, noStops), [], "a rehearsal redoes nothing, so it uses nothing up");
+  assert.deepEqual(stopsOf(used, protocol, noStops), []);
+  const stop = { rule: "attempts", lane: "presented", slot: 1, arm: "A", attempts: 3, limit: 3 };
+  assert.deepEqual(stopsOf(used, protocol, { stopped: [stop] }), [stop], "the analysis' stop is the only one");
+  assert.deepEqual(nextStep(used, protocol, { stopped: [stop] }), { kind: "stopped", why: [stop] });
   // The scenario waited with other numbers than the protocol's.
   const problem = { code: "config-waits", message: "waits: the scenario waited with {}" };
   const wrong = stateOf([["presented", 1, 1, true, { configProblems: [problem] }]]);
@@ -81,11 +81,22 @@ test("the unlimited lane is N/A from the first attempt whose vsync did not read 
   assert.deepEqual(unavailableLanes(stateOf([["unlimited", 1, 1, true, { execution: { vsync: { mode: "DISABLED" } } }]]), protocol), {});
 });
 
-test("the executions of a campaign are the attempts that have one, numbered 1, 2, ... in each slot", () => {
+test("the executions of a campaign are the attempts that have one, in the order they ran, each with the number of its attempt; the others are the entries of its unreported", () => {
   const state = stateOf([
-    ["presented", 1, 1, false, { execution: null }], ["presented", 1, 2, false, { execution: { id: "second" } }], ["presented", 2, 1, true, { execution: { id: "other slot" } }], ["presented", 1, 3, true, { execution: { id: "third" } }],
+    ["presented", 1, 1, false, { arm: "A", execution: null, load: { before: 0.9, after: 1 }, crashed: true, timedOut: false, exitCode: -1, signal: "SIGSEGV", logSha256: sha("log 1") }],
+    ["presented", 1, 2, false, { execution: { id: "second", attempt: 2 } }],
+    ["presented", 2, 1, false, { arm: "B", execution: null, load: { before: 5.3, after: 1 }, crashed: false, timedOut: false, exitCode: 0, signal: null, logSha256: sha("log 2") }],
+    ["presented", 2, 2, true, { execution: { id: "other slot", attempt: 2 } }],
+    ["presented", 1, 3, true, { execution: { id: "third", attempt: 3 } }],
+    ["unlimited", 3, 1, false, { arm: "C", execution: null, load: { before: 1, after: 1 }, crashed: true, timedOut: true, exitCode: -1, signal: "SIGTERM", logSha256: sha("log 3") }],
   ]);
-  assert.deepEqual(campaignExecutions(state), [{ id: "second", attempt: 1 }, { id: "other slot", attempt: 1 }, { id: "third", attempt: 2 }]);
+  assert.deepEqual(campaignExecutions(state), [{ id: "second", attempt: 2 }, { id: "other slot", attempt: 2 }, { id: "third", attempt: 3 }], "no renumbering: an attempt keeps its own number");
+  // A process killed by a signal has no exit code, one that exited has no signal.
+  assert.deepEqual(unreportedEntries(state), [
+    { arm: "A", lane: "presented", slot: 1, attempt: 1, load: { before: 0.9, after: 1 }, errors: { crashed: true, timedOut: false, signal: "SIGSEGV" }, logSha256: sha("log 1") },
+    { arm: "B", lane: "presented", slot: 2, attempt: 1, load: { before: 5.3, after: 1 }, errors: { crashed: false, timedOut: false, exitCode: 0 }, logSha256: sha("log 2") },
+    { arm: "C", lane: "unlimited", slot: 3, attempt: 1, load: { before: 1, after: 1 }, errors: { crashed: true, timedOut: true, signal: "SIGTERM" }, logSha256: sha("log 3") },
+  ]);
 });
 
 test("a resume checks the hashes of the protocol, the script, the binary and the package, what was registered, and the options", () => {

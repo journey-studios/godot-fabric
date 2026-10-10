@@ -113,7 +113,7 @@ test("a load above the limit, an undrawn presented window and an incomplete wind
   assert.deepEqual([result.summary.lanes.presented.B.attempts, result.summary.lanes.presented.C.attempts], [2, 4]);
 });
 
-test("an error and a process that wrote no report are rejected by the errors rule and redone; the one without a report counts against the slot's attempts and is not an execution of the format", async () => {
+test("an error and a process that wrote no report are rejected by the errors rule and redone; the one without a report is in the campaign's unreported, counts in its slot and in the report", async () => {
   const plan = { "presented/3/1": attempts.failing, "presented/4/1": attempts.crashed };
   const { result, out } = await play({ plan, lanes: ["presented"], slots: [1, 5] });
   assert.equal(result.status, "done");
@@ -121,21 +121,69 @@ test("an error and a process that wrote no report are rejected by the errors rul
   const state = await read(out, "campaign-state.json");
   const crashed = state.attempts.find((attempt) => attempt.slot === 4 && attempt.attempt === 1);
   assert.deepEqual([crashed.execution, crashed.raw, crashed.verdict.accepted], [null, null, false]);
-  assert.deepEqual(crashed.verdict.reasons, [{ rule: "errors", clause: "no-report", exitCode: -1, signal: "SIGSEGV" }]);
+  // The verdict is the analysis': the clause, whether the process crashed or timed out, and its signal (a process killed by one has no exit code).
+  const reason = { rule: "errors", clause: "no-report", crashed: true, timedOut: false, signal: "SIGSEGV" };
+  assert.deepEqual(crashed.verdict.reasons, [reason]);
   assert.ok(await exists(path.join(out, crashed.log)), "its log is kept");
+  assert.equal(crashed.logSha256, sha("Program crashed\n"), "the SHA-256 of the log kept under raw/");
   assert.equal(state.attempts.find((attempt) => attempt.slot === 4 && attempt.attempt === 2).verdict.accepted, true);
-  // The format has no execution for it: the campaign numbers the attempts of the slot 1, 2, ... among the ones it holds, and says so.
-  assert.deepEqual(result.campaign.executions.filter((execution) => execution.slot === 4).map((execution) => execution.attempt), [1]);
+  // campaign.json holds the attempt in `unreported`, with its own number; the redo is attempt 2 of `executions`, and the campaign is in the format with no deviation to say.
+  const campaign = await read(out, "campaign.json");
+  assert.deepEqual(campaign.unreported, [{ arm: "C", lane: "presented", slot: 4, attempt: 1, load: { before: 0.9, after: 1 }, errors: { crashed: true, timedOut: false, signal: "SIGSEGV" }, logSha256: sha("Program crashed\n") }]);
+  assert.deepEqual(campaign.executions.filter((execution) => execution.slot === 4).map((execution) => execution.attempt), [2]);
   assert.deepEqual(result.formatErrors, []);
-  assert.match(result.campaign.provenance.deviations.join("\n"), /1 attempt wrote no report the format can hold \(presented slot 4 attempt 1\)/);
-  assert.deepEqual([slotRecord(result, "presented", 4).state, slotRecord(result, "presented", 4).accepted], ["accepted", 1]);
-  // The state and the summary list the attempts that the campaign leaves out of executions, one by one: the slot, the attempt, the reason, the exit code and the log that was kept.
-  const listed = {
-    lane: "presented", slot: 4, arm: "C", attempt: 1, reasons: [{ rule: "errors", clause: "no-report", exitCode: -1, signal: "SIGSEGV" }], exitCode: -1, signal: "SIGSEGV", log: "raw/presented-4-1.log",
-  };
+  assert.doesNotMatch(campaign.provenance.deviations.join("\n"), /wrote no report/);
+  // report.json counts the attempt in its slot and its totals, with the reason and no vsync.
+  const report = await read(out, "report.json");
+  const slot = report.sections.validity.slots.find((candidate) => candidate.lane === "presented" && candidate.slot === 4);
+  assert.deepEqual([slot.state, slot.accepted, slot.rejected], ["accepted", 2, 1]);
+  assert.deepEqual(slot.attempts.map((attempt) => [attempt.attempt, attempt.reported, attempt.status]), [[1, false, "rejected"], [2, true, "accepted"]]);
+  assert.deepEqual(slot.attempts[0].reasons, [reason]);
+  assert.ok(!("vsync" in slot.attempts[0]));
+  assert.equal(report.sections.validity.totals.presented.C.rejected, 2, "the error of slot 3 and the attempt without a report of slot 4, both of arm C");
+  assert.deepEqual(slot, slotRecord(result, "presented", 4));
+  // The state and the summary list the same attempt, with the reasons of the report, the exit code and signal as the launcher read them, and the log.
+  const listed = { lane: "presented", slot: 4, arm: "C", attempt: 1, reasons: [reason], exitCode: -1, signal: "SIGSEGV", log: "raw/presented-4-1.log" };
   assert.deepEqual(state.unreported, [listed]);
   assert.deepEqual(result.summary.unreported, [listed]);
   assert.deepEqual((await read(out, "summary.json")).unreported, [listed]);
+  assert.deepEqual([listed.lane, listed.slot, listed.attempt], [slot.lane, slot.slot, slot.attempts[0].attempt], "the report and the summary count the same attempt");
+});
+
+test("a process that timed out and one that exited 0 without a report are unreported too, each with how it ended", async () => {
+  const plan = { "presented/2/1": attempts.timedOut, "presented/3/1": attempts.silent };
+  const { result, out } = await play({ plan, lanes: ["presented"], slots: [1, 4] });
+  assert.equal(result.status, "done");
+  assert.deepEqual(result.formatErrors, []);
+  const campaign = await read(out, "campaign.json");
+  assert.deepEqual(campaign.unreported.map((entry) => [entry.slot, entry.attempt, entry.errors]), [
+    [2, 1, { crashed: true, timedOut: true, signal: "SIGTERM" }],
+    [3, 1, { crashed: false, timedOut: false, exitCode: 0 }],
+  ]);
+  assert.deepEqual(slotRecord(result, "presented", 2).attempts[0].reasons, [{ rule: "errors", clause: "no-report", crashed: true, timedOut: true, signal: "SIGTERM" }]);
+  assert.deepEqual(slotRecord(result, "presented", 3).attempts[0].reasons, [{ rule: "errors", clause: "no-report", crashed: false, timedOut: false, exitCode: 0 }]);
+  assert.deepEqual([slotRecord(result, "presented", 2).accepted, slotRecord(result, "presented", 3).accepted], [2, 2], "each is redone in its slot");
+  assert.deepEqual(result.summary.unreported.map((entry) => [entry.slot, entry.attempt, entry.exitCode, entry.signal]), [[2, 1, -1, "SIGTERM"], [3, 1, 0, null]]);
+});
+
+test("three attempts that wrote no report in a slot stop the campaign by the attempts rule of the analysis, as three rejected executions do", async () => {
+  const plan = { "presented/4/1": attempts.crashed, "presented/4/2": attempts.timedOut, "presented/4/3": attempts.silent };
+  const { result, launcher, out } = await play({ plan });
+  assert.equal(result.status, "stopped");
+  assert.equal(launcher.calls.length, 6, "slots 1 to 3, then the three attempts of slot 4, and nothing after them");
+  // The same stop, in the same shape, as the one that three rejected executions give: the analysis' alone, listed once.
+  const stop = { rule: "attempts", lane: "presented", slot: 4, arm: "C", attempts: 3, limit: 3 };
+  assert.deepEqual(result.state.stopped, [stop]);
+  assert.deepEqual((await read(out, "campaign-state.json")).stopped, [stop]);
+  assert.deepEqual(result.analysis.why, [stop]);
+  assert.equal(result.analysis.status, "stopped");
+  assert.equal(slotRecord(result, "presented", 4).state, "exhausted");
+  const campaign = await read(out, "campaign.json");
+  assert.deepEqual(campaign.unreported.map((entry) => entry.attempt), [1, 2, 3]);
+  assert.deepEqual(campaign.executions.filter((execution) => execution.slot === 4), []);
+  assert.deepEqual(result.formatErrors, []);
+  assert.equal(result.summary.unreported.length, 3);
+  assert.deepEqual(result.summary.stopped, [stop]);
 });
 
 test("three rejected attempts in a slot stop the campaign: the later slots do not run, the stop is recorded and the analysis produces no statistic", async () => {
@@ -222,8 +270,8 @@ test("a campaign interrupted after the k-th attempt, or twice, resumes from the 
     assert.deepEqual(now.resumes.map((resume) => resume.attempts), resumes);
     assert.deepEqual({ ...(await read(out, "summary.json")), resumes: 0 }, JSON.parse(kept["summary.json"]));
   };
-  // Killed after the k-th attempt: in the middle of a redo (2), after the first slot (1), at the end of the presented lane (38) and one before the end (74).
-  for (const k of [1, 2, 38, 74]) {
+  // Killed after the k-th attempt: in the middle of a redo (2), after the first slot (1), right after the process that wrote no report (7), at the end of the presented lane (38) and one before the end (74).
+  for (const k of [1, 2, 7, 38, 74]) {
     await rm(out, { recursive: true });
     await assert.rejects(play({ plan, out, launcher: fakeLauncher({ protocol, plan, interruptBefore: k }) }), /simulated interruption/);
     const saved = await read(out, "campaign-state.json");

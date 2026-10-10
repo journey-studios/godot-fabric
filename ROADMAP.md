@@ -992,6 +992,14 @@ is a result.** The Release launcher (V05-07), a quiet window with the load at 2.
 [record](https://github.com/journey-studios/godot-fabric/blob/f952152793b4e33660655715779145d2f8154c95/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
 Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-10, criterion `execucao`, the attempt that wrote no report (code at `8817938`): an attempt whose process crashed, hit its time limit or ended without a report is now part of the campaign's data in the analysis'
+format, instead of being left out of `executions`, renumbered around and listed only in the campaign's own state. The format stays `godot-fabric.frontier-comparison-campaign/v1` and gains the optional field `unreported`; this is a change of
+the data format, which is the analysis', and not an amendment of the protocol, whose rules `errors`, `runs.load.redo` and `report.sections` `validity` already cover the case. The analysis rejects the attempt by `errors` (clause `no-report`),
+counts it in the 3 attempts of its slot and in the stop on used-up attempts, and the report shows it with `reported: false`; the campaign keeps the real number of each attempt, and its own stop for that case was dropped as redundant. The
+synthetic example was regenerated (it only gained `reported: true`) and a new example of the `validity` section with an attempt that wrote no report is checked byte for byte by a test. Node only and synthetic data: **no number in it is a
+result.** The [record](https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10) has the section. No criterion changes state,
+and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to

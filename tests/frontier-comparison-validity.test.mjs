@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {campaignErrors} from "../scripts/frontier-comparison-format.mjs";
-import {REJECTING_RULES} from "../scripts/frontier-comparison-validity.mjs";
-import {executionsOf, harness, overLoaded, readProtocol, redoSlot, sha256, slotRecord as slotOf, withResamples} from "./frontier-comparison-synthetic.mjs";
+import {REJECTING_RULES, assessValidity} from "../scripts/frontier-comparison-validity.mjs";
+import {ENDINGS, executionsOf, harness, noReportSlot, overLoaded, readProtocol, redoSlot, sha256, slotRecord as slotOf, withResamples} from "./frontier-comparison-synthetic.mjs";
 
 // Which executions of a campaign count (V05-10): the invalidation rules of docs/research/frontier-comparison-protocol.json that can be computed from the raw data, the redo of a rejected
 // execution in its slot, the limit of attempts per slot, the campaign that stops, the order and balance of the executions, and the refusal of data that are not in the format. The campaigns are
@@ -234,5 +234,174 @@ test("attempts that contradict one another, or data that are not in the format, 
     copy.armB = {ready: false};
   }).filter(error => /declared not ready/.test(error)).length, 12 + 1, "an arm declared not ready has no execution and no cost of change");
   assert.throws(() => analyze(Object.assign(structuredClone(campaign), {format: "godot-fabric.frontier-comparison-campaign/v0"})), /format: godot-fabric.frontier-comparison-campaign\/v0 is not/);
+});
+
+// ---- the attempts that wrote no report (`unreported`) ----
+
+test("an attempt that wrote no report is in the format: a valid entry is accepted and each wrong field is refused", () => {
+  const campaign = noReportSlot(build({lanes: ["presented"]}), "presented", 4);
+  assert.deepEqual(campaignErrors(campaign, protocol), []);
+  assert.deepEqual(campaign.unreported, [{arm: "C", lane: "presented", slot: 4, attempt: 1, load: campaign.unreported[0].load, errors: ENDINGS.crash, logSha256: sha256("log/presented/4/1")}]);
+  const errors = mutate => {
+    const copy = structuredClone(campaign);
+    mutate(copy.unreported[0], copy);
+    return campaignErrors(copy, protocol);
+  };
+  // The types of each field.
+  assert.deepEqual(errors(entry => {
+    entry.arm = 3;
+  }), ["$.unreported[0].arm: expected string, got number 3"]);
+  assert.deepEqual(errors(entry => {
+    entry.slot = 0;
+  }), ["$.unreported[0].slot: expected positive, got number 0"]);
+  assert.deepEqual(errors(entry => {
+    entry.attempt = "1";
+  }), ["$.unreported[0].attempt: expected positive, got string \"1\""]);
+  assert.deepEqual(errors(entry => {
+    entry.load.after = -1;
+  }), ["$.unreported[0].load.after: expected measure, got number -1"]);
+  assert.deepEqual(errors(entry => {
+    entry.errors.crashed = "yes";
+  }), ["$.unreported[0].errors.crashed: expected boolean, got string \"yes\""]);
+  assert.deepEqual(errors(entry => {
+    delete entry.errors.timedOut;
+  }), ["$.unreported[0].errors.timedOut: missing"]);
+  assert.deepEqual(errors(entry => {
+    entry.errors.exitCode = 1.5;
+  }), ["$.unreported[0].errors.exitCode: expected integer, got number 1.5"]);
+  assert.deepEqual(errors(entry => {
+    entry.errors.signal = 11;
+  }), ["$.unreported[0].errors.signal: expected string, got number 11"]);
+  assert.deepEqual(errors(entry => {
+    entry.logSha256 = "abc";
+  }), ["$.unreported[0].logSha256: expected sha256, got string \"abc\""]);
+  assert.deepEqual(errors(entry => {
+    entry.extra = 1;
+  }), ["$.unreported[0].extra: not part of the format"]);
+  assert.deepEqual(errors((entry, copy) => {
+    copy.unreported = entry;
+  }), ["$.unreported: expected an array, got an object"]);
+  // The place in the order of the executions: the arm of the slot, a lane of the protocol, a slot of the order.
+  assert.deepEqual(errors(entry => {
+    entry.arm = "B";
+  }), ["unreported[0]: slot 4 is arm C in the order of the executions, not B"]);
+  assert.deepEqual(errors(entry => {
+    entry.arm = "Z";
+  }), ["unreported[0].arm: Z is not an arm of the protocol"]);
+  assert.deepEqual(errors(entry => {
+    entry.lane = "windowed";
+  }), ["unreported[0].lane: windowed is not a lane of the protocol"]);
+  assert.deepEqual(errors(entry => {
+    entry.slot = 37;
+  }), ["unreported[0].slot: 37 is not a slot of the order of the executions"]);
+  // The entry says how the process ended: it crashed, it timed out or it has an exit code (which may be 0: it ended cleanly and left no report). One that says none of them is refused.
+  const noReason = ["unreported[0].errors: no reason for the missing report: the process did not crash, did not time out and has no exit code"];
+  assert.deepEqual(errors(entry => {
+    entry.errors = {crashed: false, timedOut: false};
+  }), noReason);
+  assert.deepEqual(errors(entry => {
+    entry.errors = {crashed: false, timedOut: false, signal: "SIGSEGV"};
+  }), noReason, "a signal that is neither a crash nor a time-out says nothing");
+  for (const errorsOfProcess of [ENDINGS.silent, ENDINGS.timeout, {crashed: false, timedOut: true}, {crashed: false, timedOut: false, exitCode: 3}]) {
+    assert.deepEqual(errors(entry => {
+      entry.errors = errorsOfProcess;
+    }), [], JSON.stringify(errorsOfProcess));
+  }
+  // A process that exited has an exit code and one that was killed has a signal, never both; neither is fine when it crashed or timed out.
+  assert.deepEqual(errors(entry => {
+    entry.errors.exitCode = -1;
+  }), ["unreported[0].errors: exitCode and signal are both present: a process that exited has an exit code and one that was killed has a signal"]);
+  assert.deepEqual(errors(entry => {
+    entry.errors = {crashed: true, timedOut: false};
+  }), []);
+  // An attempt is in one of the two lists, once.
+  assert.deepEqual(errors((entry, copy) => {
+    copy.unreported.push(structuredClone(entry));
+  }), ["unreported[1]: lane presented, slot 4 and attempt 1 appear twice"]);
+  assert.deepEqual(errors(entry => {
+    entry.attempt = 2;
+  }), ["unreported[0]: lane presented, slot 4 and attempt 2 appear twice"], "attempt 2 is the execution that redid it");
+  // Arm B declared not ready has no attempt, reported or not.
+  const unready = build({lanes: ["presented"], armBReady: false});
+  unready.unreported = [{arm: "B", lane: "presented", slot: 2, attempt: 1, load: {before: 1, after: 1}, errors: ENDINGS.crash, logSha256: sha256("log")}];
+  assert.deepEqual(campaignErrors(unready, protocol), ["unreported[0]: arm B is declared not ready and has an attempt"]);
+});
+
+test("an attempt that wrote no report is rejected by the errors rule with its clause and values, counts as an attempt of its slot, and has its load readings and no vsync", () => {
+  const clean = analyze(build());
+  const crashed = analyze(noReportSlot(build(), "presented", 4));
+  const slot = slotOf(crashed, "presented", 4);
+  assert.deepEqual([slot.arm, slot.state, slot.accepted, slot.rejected], ["C", "accepted", 2, 1]);
+  assert.deepEqual(slot.attempts.map(attempt => [attempt.attempt, attempt.reported, attempt.status]), [[1, false, "rejected"], [2, true, "accepted"]]);
+  assert.deepEqual(slot.attempts[0].reasons, [{rule: "errors", clause: "no-report", crashed: true, timedOut: false, signal: "SIGSEGV"}]);
+  assert.deepEqual(Object.keys(slot.attempts[0]), ["attempt", "reported", "load", "status", "reasons"], "the record of the attempt has its load readings and no vsync");
+  assert.deepEqual(Object.keys(slot.attempts[1]), ["attempt", "reported", "load", "vsync", "status", "reasons"]);
+  assert.deepEqual(slotOf(clean, "presented", 4).attempts.map(attempt => attempt.reported), [true], "an execution is reported: true");
+  const totals = crashed.sections.validity.totals.presented.C;
+  assert.deepEqual([totals.planned, totals.accepted, totals.rejected, totals.open, totals.exhausted], [12, 12, 1, 0, 0]);
+  assert.equal(crashed.status, "complete");
+  assert.deepEqual(crashed.sections.primary, clean.sections.primary, "the accepted attempt is the same measurement: nothing of the attempt without a report reached the statistics");
+  // The other ways in which a process ends without a report are the same rule, each with its values.
+  const reasonsOf = ending => slotOf(analyze(noReportSlot(build(), "presented", 4, [ending])), "presented", 4).attempts[0].reasons;
+  assert.deepEqual(reasonsOf(ENDINGS.timeout), [{rule: "errors", clause: "no-report", crashed: true, timedOut: true, signal: "SIGTERM"}]);
+  assert.deepEqual(reasonsOf({crashed: false, timedOut: false, exitCode: 3}), [{rule: "errors", clause: "no-report", crashed: false, timedOut: false, exitCode: 3}]);
+  assert.deepEqual(reasonsOf(ENDINGS.silent), [{rule: "errors", clause: "no-report", crashed: false, timedOut: false, exitCode: 0}], "a process that exits 0 and leaves no report did not complete the scenario");
+  // The provenance reads the load of every attempt and the vsync of the executions: the attempt without a report has the first and not the second.
+  const loaded = noReportSlot(build(), "presented", 4);
+  loaded.unreported[0].load.before = 7.5;
+  const provenance = analyze(loaded).sections.provenance;
+  assert.ok(clean.sections.provenance.load.highestBefore < 7.5);
+  assert.equal(provenance.load.highestBefore, 7.5);
+  assert.deepEqual(provenance.vsync, clean.sections.provenance.vsync);
+});
+
+test("the attempts of a slot are numbered 1, 2, ... without gaps over the executions and the unreported together; a gap, a repeat or an attempt after the accepted one is a problem", () => {
+  const problemsOf = campaign => assessValidity(campaign, protocol, protocolSha256).problems;
+  const where = "lane presented, slot 4";
+  assert.deepEqual(problemsOf(noReportSlot(build(), "presented", 4)), []);
+  assert.deepEqual(problemsOf(noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.timeout])), []);
+  // A gap: the redo is attempt 3 and there is no attempt 2.
+  const gap = noReportSlot(build(), "presented", 4);
+  gap.executions.find(execution => execution.slot === 4).attempt = 3;
+  assert.deepEqual(problemsOf(gap), [`${where}: the attempts are not numbered 1, 2, ... without gaps`]);
+  assert.throws(() => analyze(gap), /not numbered 1, 2, \.\.\. without gaps/);
+  // The same attempt in the two lists, and twice in one of them.
+  const between = noReportSlot(build(), "presented", 4);
+  between.unreported[0].attempt = 2;
+  assert.ok(problemsOf(between).includes(`${where}: attempt 2 appears twice`));
+  const twice = noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.timeout]);
+  twice.unreported[1].attempt = 1;
+  assert.ok(problemsOf(twice).includes(`${where}: attempt 1 appears twice`));
+  assert.throws(() => analyze(twice), /attempt 1 appear twice/);
+  // An attempt that wrote no report after the accepted one.
+  const late = noReportSlot(build(), "presented", 4);
+  late.executions.find(execution => execution.slot === 4).attempt = 1;
+  late.unreported[0].attempt = 2;
+  assert.deepEqual(problemsOf(late), [`${where}: attempt 2 comes after the accepted attempt 1`]);
+  assert.throws(() => analyze(late), /attempt 2 comes after the accepted attempt 1/);
+});
+
+test("three attempts that wrote no report use up the slot and stop the campaign by the attempts rule of the analysis, and a fourth is over the limit", () => {
+  const stop = {rule: "attempts", lane: "presented", slot: 4, arm: "C", attempts: 3, limit: 3};
+  const exhausted = noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.timeout, ENDINGS.silent], {redone: false});
+  assert.deepEqual(campaignErrors(exhausted, protocol), []);
+  const stopped = analyze(exhausted);
+  assert.deepEqual([stopped.status, stopped.why], ["stopped", [stop]]);
+  const slot = slotOf(stopped, "presented", 4);
+  assert.deepEqual([slot.state, slot.accepted, slot.rejected, slot.attempts.length], ["exhausted", null, 3, 3]);
+  assert.equal(stopped.sections.validity.totals.presented.C.exhausted, 1);
+  assert.deepEqual(stopped.sections.primary, {available: false, reason: "stopped"});
+  // Two are not enough to stop it: the slot waits for its redo.
+  const two = analyze(noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.timeout], {redone: false}));
+  assert.deepEqual([two.status, slotOf(two, "presented", 4).state, two.sections.validity.totals.presented.C.open], ["complete", "open", 1]);
+  // Rejected executions and an attempt that wrote no report count together.
+  const mixed = redoSlot(build(), "presented", 5, [overLoaded, overLoaded]);
+  const [redo] = mixed.executions.splice(mixed.executions.findIndex(execution => execution.lane === "presented" && execution.slot === 5 && execution.attempt === 3), 1);
+  mixed.unreported = [{arm: redo.arm, lane: "presented", slot: 5, attempt: 3, load: redo.load, errors: ENDINGS.crash, logSha256: sha256("log")}];
+  assert.deepEqual(analyze(mixed).why, [{...stop, slot: 5, arm: "A"}]);
+  // A fourth attempt is over the limit even if its data are fine.
+  const fourth = analyze(noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.crash, ENDINGS.crash]));
+  assert.deepEqual(slotOf(fourth, "presented", 4).attempts[3].reasons, [{rule: "attempts", clause: "beyond-the-limit", limit: 3}]);
+  assert.deepEqual(fourth.why, [{...stop, attempts: 4}]);
 });
 

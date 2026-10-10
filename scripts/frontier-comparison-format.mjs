@@ -93,6 +93,16 @@ function campaignShape(protocol) {
     windows: keyed(windowShape, protocol.windows.map((window) => window.id)),
     readings: Object.fromEntries(Object.values(READINGS).map(({ key, shape }) => [`${key}?`, shape])),
   };
+  // An attempt whose process wrote no report the analysis can read (it crashed, timed out, or ended without one) has no execution to hold: the entry holds what was read of the attempt.
+  const unreported = {
+    arm: "string",
+    lane: "string",
+    slot: "positive",
+    attempt: "positive",
+    load: { before: "measure", after: "measure" },
+    errors: { crashed: "boolean", timedOut: "boolean", "exitCode?": "integer", "signal?": "string" },
+    logSha256: "sha256",
+  };
   const changeArms = protocol.secondaryOutcomes.find((outcome) => outcome.id === "change-cost").arms;
   return {
     format: "string",
@@ -107,6 +117,7 @@ function campaignShape(protocol) {
     armB: { ready: "boolean", "reason?": "string" },
     provenance: { commit: "string", machine: "string", system: "string", display: "string", renderer: "string", adapter: "string", rawData: "string", deviations: ["string"] },
     executions: [execution],
+    "unreported?": [unreported],
     packages: keyed({ exportBytes: ["count"] }, arms, true),
     "changeCost?": keyed(CHANGE_MEASURES, changeArms),
     "text?": { "decision?": "string", "limitations?": "string", "costOfChange?": "string" },
@@ -119,23 +130,35 @@ export function plannedArms(campaign, protocol) {
   return protocol.arms.map((arm) => arm.id).filter((id) => campaign.armB.ready || id !== reference);
 }
 
+// The attempts that wrote no report (`unreported`, optional in the format): none when the campaign has none.
+export const unreportedAttempts = (campaign) => campaign.unreported ?? [];
+
 // The measured occurrences of a window of an execution: the ones not flagged as warm-up (runs.warmup: flagged in the raw data and left out of every statistic).
 export const measuredOf = (window) => window.occurrences.filter((occurrence) => !occurrence.warmup);
 
-function executionErrors(execution, where, protocol) {
-  const errors = [];
-  const arm = protocol.arms.find((candidate) => candidate.id === execution.arm);
-  const slot = slotsOf(protocol)[execution.slot - 1];
-  if (arm === undefined) {
-    return [`${where}.arm: ${execution.arm} is not an arm of the protocol`];
+// Where an attempt sits in the order of the executions: its arm, its lane and its slot, which must be the arm's.
+function placeErrors(attempt, where, protocol) {
+  if (!protocol.arms.some((candidate) => candidate.id === attempt.arm)) {
+    return [`${where}.arm: ${attempt.arm} is not an arm of the protocol`];
   }
-  if (!protocol.runs.lanes.some((lane) => lane.id === execution.lane)) {
-    errors.push(`${where}.lane: ${execution.lane} is not a lane of the protocol`);
+  const errors = [];
+  const slot = slotsOf(protocol)[attempt.slot - 1];
+  if (!protocol.runs.lanes.some((lane) => lane.id === attempt.lane)) {
+    errors.push(`${where}.lane: ${attempt.lane} is not a lane of the protocol`);
   }
   if (slot === undefined) {
-    errors.push(`${where}.slot: ${execution.slot} is not a slot of the order of the executions`);
-  } else if (slot.arm !== execution.arm) {
-    errors.push(`${where}: slot ${execution.slot} is arm ${slot.arm} in the order of the executions, not ${execution.arm}`);
+    errors.push(`${where}.slot: ${attempt.slot} is not a slot of the order of the executions`);
+  } else if (slot.arm !== attempt.arm) {
+    errors.push(`${where}: slot ${attempt.slot} is arm ${slot.arm} in the order of the executions, not ${attempt.arm}`);
+  }
+  return errors;
+}
+
+function executionErrors(execution, where, protocol) {
+  const arm = protocol.arms.find((candidate) => candidate.id === execution.arm);
+  const errors = placeErrors(execution, where, protocol);
+  if (arm === undefined) {
+    return errors;
   }
   if (!["release", "debug"].includes(execution.build)) {
     errors.push(`${where}.build: ${execution.build} is neither release nor debug`);
@@ -167,6 +190,22 @@ function executionErrors(execution, where, protocol) {
   }
   for (const window of protocol.windows) {
     errors.push(...windowErrors(execution, execution.windows[window.id], `${where}.windows.${window.id}`, window, protocol));
+  }
+  return errors;
+}
+
+// An attempt that wrote no report says how its process ended, which is why there is no report: it crashed (killed by a signal, or a crash in its log), it timed out, or it exited with a
+// code. The code may be 0: the scenario writes its report before it exits 0, so a process that ends cleanly without one did not complete the scenario, and the validity rejects it like any
+// other attempt without a report (`errors`, clause `no-report`; reading 15 of docs/research/frontier-comparison-analysis.md). What the format refuses is an entry that says none of the three.
+function unreportedErrors(entry, where, protocol) {
+  const errors = placeErrors(entry, where, protocol);
+  const { crashed, timedOut } = entry.errors;
+  if (!crashed && !timedOut && !Object.hasOwn(entry.errors, "exitCode")) {
+    errors.push(`${where}.errors: no reason for the missing report: the process did not crash, did not time out and has no exit code`);
+  }
+  // A process that exited has an exit code and one that was killed has a signal, never both (the campaign writes the signal when there is one and the exit code otherwise).
+  if (Object.hasOwn(entry.errors, "exitCode") && Object.hasOwn(entry.errors, "signal")) {
+    errors.push(`${where}.errors: exitCode and signal are both present: a process that exited has an exit code and one that was killed has a signal`);
   }
   return errors;
 }
@@ -215,16 +254,28 @@ function semanticErrors(campaign, protocol) {
   const { reference } = rolesOf(protocol);
   const planned = plannedArms(campaign, protocol);
   const seen = new Set();
-  campaign.executions.forEach((execution, index) => {
-    const where = `executions[${index}]`;
-    const key = `${execution.lane}/${execution.slot}/${execution.attempt}`;
+  // The attempts of a slot are numbered across both lists: an attempt is in `executions` or in `unreported`, once.
+  const noRepeat = (attempt, where) => {
+    const key = `${attempt.lane}/${attempt.slot}/${attempt.attempt}`;
     if (seen.has(key)) {
-      errors.push(`${where}: lane ${execution.lane}, slot ${execution.slot} and attempt ${execution.attempt} appear twice`);
+      errors.push(`${where}: lane ${attempt.lane}, slot ${attempt.slot} and attempt ${attempt.attempt} appear twice`);
     }
     seen.add(key);
+  };
+  campaign.executions.forEach((execution, index) => {
+    const where = `executions[${index}]`;
+    noRepeat(execution, where);
     errors.push(...executionErrors(execution, where, protocol));
     if (!campaign.armB.ready && execution.arm === reference) {
       errors.push(`${where}: arm ${reference} is declared not ready and has an execution`);
+    }
+  });
+  unreportedAttempts(campaign).forEach((entry, index) => {
+    const where = `unreported[${index}]`;
+    noRepeat(entry, where);
+    errors.push(...unreportedErrors(entry, where, protocol));
+    if (!campaign.armB.ready && entry.arm === reference) {
+      errors.push(`${where}: arm ${reference} is declared not ready and has an attempt`);
     }
   });
   for (const arm of planned) {
