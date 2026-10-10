@@ -11,11 +11,19 @@ import { scriptsOf } from "../scripts/frontier-comparison-run.mjs";
 // edges and nothing else: it reads the arguments after `--`, appends the arguments and its working directory to a log of launches (so a test sees what was run, with what, where, and that
 // nothing was), writes a minimal report to `--out`, prints a line and exits. A program says what it does (`sleepMs` to be killed at a timeout, `exitCode`, `log`, `report`: an object written as it
 // is, `null` for none; absent, a report that holds only the format, the arm and the lane; `rawReport`: a text written to `--out` as it is, for a report that is not JSON). Nothing here was measured, and no number of it says anything about an arm.
+//
+// With `probe` the directory also has <directory>/probe: the fake `.app` of the instrument's probe project, with the manifest `arm: "probe"` of the same format. Its executable writes where `--report=` says
+// (the probe's flag, as `--out=` is the scenario's), so its `program` gives the probe's report and log (PROBE_PROGRAM passes the checks of the probe: the oracle is the test's, injected). Its
+// template is the arms' unless `probe.templateSha256` says another.
 
 const SCENARIO_FORMAT = "godot-fabric.frontier-comparison-scenario/v1";
 const INSTRUMENT_FILE = "tests/cpu-time-instrument.gd";
 const instrumentFile = fileURLToPath(new URL(`../${INSTRUMENT_FILE}`, import.meta.url));
 const FAKE_ARMS = ["A", "B", "C"];
+const PROBE_PROGRAM = {
+  log: "CPU_TIME_INSTRUMENT_PASSED: 1\n",
+  report: { checks: [{ name: "fake", passed: true }], allCurrentAssertionsPassed: true, provenance: { godot: "4.7.2.stable.fake", displayServer: "fake" }, fake: true },
+};
 
 // The script of the fake executable. `process.getBuiltinModule` serves a file that Node reads as CommonJS or as a module alike (an extensionless file takes the type of the package around it).
 const executableOf = (arm, program, launches) => `#!/usr/bin/env node
@@ -27,38 +35,43 @@ const option = (name) => args.find((argument) => argument.startsWith("--" + name
 fs.appendFileSync(${JSON.stringify(launches)}, JSON.stringify({ arguments: args, cwd: process.cwd() }) + "\\n");
 setTimeout(() => {
   const report = "report" in program ? program.report : { format: ${JSON.stringify(SCENARIO_FORMAT)}, arm: option("arm"), lane: option("lane"), fake: true };
+  const out = option("out") ?? option("report");
   if ("rawReport" in program) {
-    fs.writeFileSync(option("out"), program.rawReport);
+    fs.writeFileSync(out, program.rawReport);
   } else if (report !== null) {
-    fs.writeFileSync(option("out"), JSON.stringify(report));
+    fs.writeFileSync(out, JSON.stringify(report));
   }
   process.stdout.write(program.log);
   process.exit(program.exitCode);
 }, program.sleepMs);
 `;
 
-// The exports of arms A, B and C under `<parent>/exports`, and the log of launches `<parent>/launches.jsonl` (each fake executable appends to it). `programs` maps an arm to the program of its
-// executable. Returns where everything is: {directory, launchesFile, launches(), apps: {A: {manifestFile, app, executable, pck}, ...}}.
-export async function createFakeExports(parent, { programs = {} } = {}) {
+// The exports of arms A, B and C under `<parent>/exports`, and the log of launches `<parent>/launches.jsonl` (each fake executable appends to it). `programs` maps an arm (or "probe") to the program of its
+// executable. `probe` is null (no export of the probe project), or {templateSha256?} to add it. Returns where everything is: {directory, launchesFile, launches(), apps: {A: {manifestFile, app, executable, pck}, ...}}.
+export async function createFakeExports(parent, { programs = {}, probe = null } = {}) {
   const directory = path.join(parent, "exports");
   const launchesFile = path.join(parent, "launches.jsonl");
   const instrumentSha256 = sha256(readFileSync(instrumentFile));
   const apps = {};
-  for (const arm of FAKE_ARMS) {
-    const name = `civ-${arm.toLowerCase()}`;
+  const template = sha256("fake template");
+  const exported = FAKE_ARMS.map((arm) => ({ arm, name: `civ-${arm.toLowerCase()}`, templateSha256: template }));
+  if (probe !== null) {
+    exported.push({ arm: "probe", name: "civ-probe", templateSha256: probe.templateSha256 ?? template });
+  }
+  for (const { arm, name, templateSha256 } of exported) {
     const folder = path.join(directory, arm);
     const app = path.join(folder, `${name}.app`);
     const executable = path.join(app, "Contents", "MacOS", name);
     const pck = path.join(app, "Contents", "Resources", `${name}.pck`);
     await mkdir(path.dirname(executable), { recursive: true });
     await mkdir(path.dirname(pck), { recursive: true });
-    const script = executableOf(arm, programs[arm] ?? {}, launchesFile);
+    const script = executableOf(arm, programs[arm] ?? (arm === "probe" ? PROBE_PROGRAM : {}), launchesFile);
     const bytes = `fake package of arm ${arm}\n`;
     await writeFile(executable, script);
     await chmod(executable, 0o755);
     await writeFile(pck, bytes);
     const scriptFiles = {
-      "tests/frontier-comparison-scenario.gd": sha256("fake scenario"),
+      [arm === "probe" ? "tests/cpu-time-instrument-probe.gd" : "tests/frontier-comparison-scenario.gd"]: sha256(`fake ${arm === "probe" ? "probe" : "scenario"}`),
       [INSTRUMENT_FILE]: instrumentSha256,
       "override.cfg": sha256("fake override"),
     };
@@ -74,7 +87,7 @@ export async function createFakeExports(parent, { programs = {} } = {}) {
       scriptSha256: scriptsOf(scriptFiles).sha256,
       scriptFiles,
       godot: "4.7.2.stable.fake",
-      templateSha256: sha256("fake template"),
+      templateSha256,
       exportBytes: [bytes.length, bytes.length],
     };
     await writeFile(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`);

@@ -27,8 +27,9 @@ import { machine } from "./frontier-turn-lane.mjs";
 //        [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]
 //
 // `--build debug` is a rehearsal: it needs `--rehearsal`, which marks the campaign as one (a rehearsal redoes nothing, and says in the campaign's deviations that it is not a result). `--build release`
-// needs `--exports <dir>`, the exports of the three arms with their manifests (scripts/frontier-comparison-release.mjs): the Release launcher reads and validates them, and the campaign then refuses to start,
-// because the instrument's self-check cannot run in a template yet (`launcher.selfCheck` is "unsupported"). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
+// needs `--exports <dir>`, the exports of the three arms with their manifests (scripts/frontier-comparison-release.mjs): the Release launcher reads and validates them, and the campaign then refuses to start
+// unless the directory also has the export of the instrument's probe project (probe/frontier-comparison-export.json), the only way to run the self-check in a template (`launcher.selfCheck` is "unsupported"
+// without it, and `{entry: "release", executable}` with it). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
 // .log (the scenario's report and the process's log of each attempt), self-check/ (the instrument's probe report and log), and at the end campaign.json (strictly the analysis' format),
 // report.json (the analysis' report), summary.json and, in a rehearsal, rehearsal.json.
 
@@ -235,7 +236,7 @@ export async function runCampaign({
   const release = await acquireLock({ file: lockFile, out });
   try {
     const prepared = await launcher.prepare();
-    // A launcher whose processes cannot run the instrument's self-check (the Release one: a template discards `-s`) cannot start a campaign, because the gate has nothing to run. Nothing was launched or written.
+    // A launcher whose processes cannot run the instrument's self-check (the Release one without the probe's export: a template discards `-s`) cannot start a campaign, because the gate has nothing to run. Nothing was launched or written.
     if (launcher.selfCheck === "unsupported") {
       throw new Error(RELEASE_SELF_CHECK_REFUSAL);
     }
@@ -249,7 +250,7 @@ export async function runCampaign({
     // The gate: the instrument's self-check runs at the start of a campaign, and again only if it did not pass. If it fails, nothing runs.
     if (state.selfCheck?.passed !== true) {
       log(`the instrument's self-check (probe and oracle), ${launcher.windowed ? "in a window" : "headless"}`);
-      state.selfCheck = { at: isoOf(clock), ...(await runCheck({ engine: prepared.engine, windowed: launcher.windowed, outDirectory: path.join(out, "self-check") })) };
+      state.selfCheck = { at: isoOf(clock), ...(await runCheck({ engine: prepared.engine, windowed: launcher.windowed, outDirectory: path.join(out, "self-check"), ...launcher.selfCheck })) };
       log(`the instrument's self-check ${state.selfCheck.passed ? "passed" : `FAILED: ${state.selfCheck.why.join("; ")}`}`);
       await save();
     }

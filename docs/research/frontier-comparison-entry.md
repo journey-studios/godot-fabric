@@ -103,7 +103,7 @@ That is the Release path of the entry, seen in a template. It is **not** the exp
 - **The export of civ-lite as a Release `.app` in the three arms.** The entry is defined and tried in a template with a probe; the Release launcher still refuses until the game is exported ([What is missing](frontier-comparison-execution.md#what-is-missing-for-the-campaign)).
 - **Where the export puts `override.cfg`.** In the pack, it depends on what the export includes (not tried); beside the executable, it sits in `Contents/MacOS/` (the probe's case), and what that does to the bundle's signature was
   not tried. The export slice decides it.
-- **The instrument's self-check in a template.** Its probe is run with `-s` in the editor's binary today and needs the same entry there.
+- **The instrument's self-check in a template.** Its probe needs the same entry, and [has it now](#the-instruments-self-check-through-the-main-loop) in the editor's binary; as an exported `.app` it is not made yet.
 - The official templates are taken not to set `disable_overrides`; the probe is what shows it for the macOS release template of 4.7.2. The other platforms were not looked at.
 
 ## Reproducing
@@ -206,4 +206,80 @@ It shows that the checks above can fail, and that A and B, which come out clean,
 ```sh
 node --test tests/frontier-comparison-arms.test.mjs     # Node only: the description, the filters, the edit of the real project.godot
 npm run test:frontier-comparison-arms                    # native, headless: both arms with and without the extension on one copy, and the control
+```
+
+## The instrument's self-check through the main loop
+
+Status: code (`scripts/frontier-comparison-probe-project.mjs`, the entries of `runSelfCheck` in `scripts/frontier-comparison-campaign-instrument.mjs`, the probe's manifest in `scripts/frontier-comparison-release.mjs` and the Release launcher), their tests and a native check. It belongs to the
+criterion `execucao` of V05-10 and **closes nothing**: **the probe project was not exported, no campaign was run, and this section states no result.** The native check is a Debug, headless one on the editor's binary; no time of it is compared.
+
+### The question
+
+The instrument's self-check is the gate of every campaign (`frozenValue.gate` of `cpu-time-instrument`): the probe (`tests/cpu-time-instrument-probe.gd`) and the oracle run again on the campaign's machine, with the campaign's engine and renderer. In a Release campaign
+the engine is the export template, which discards `-s`/`--script` and aborts on `--path` ([above](#why--s-does-not-work-in-an-export-template)). The probe is `extends SceneTree` and takes its flags from `OS.get_cmdline_user_args()`, so it can be what the scenario already is: **the main loop of a project.**
+Until now the Release launcher declared `selfCheck: "unsupported"` and the campaign refused after reading the exports.
+
+### The probe project
+
+`prepareProbeProject(directory)` makes a new directory (it refuses one that is not empty) with six files and runs the editor's `--import` on it. `tests/cpu-time-instrument.gd` is not edited: it is copied, and its SHA-256 is checked to be the repository's.
+
+| File in the project | What it is | SHA-256 |
+| --- | --- | --- |
+| `project.godot` | `config_version=5`, the name "Frontier instrument probe" and `renderer/rendering_method="gl_compatibility"`, the renderer of civ-lite and of the repository's own project. No main scene. | `f4254b28…` |
+| `tests/cpu-time-instrument-probe.gd` | The probe, at its own path: it preloads `res://tests/cpu-time-instrument.gd`, the only `preload` or `load` in it or in the instrument. | `c75adee5…` |
+| `tests/cpu-time-instrument.gd` | The instrument the probe vouches for, at its own path. **The repository's file**, byte for byte. | `4bdcda83…` |
+| `tests/cpu-time-instrument-probe-entry.gd` | `class_name CpuTimeInstrumentProbeEntry` and `extends "cpu-time-instrument-probe.gd"` (the probe, by its relative name, so it sits beside it). | `08ed6856…` |
+| `tests/cpu-time-instrument-probe-empty.tscn` | The main scene: one empty `Node`. | `a0da9963…` |
+| `override.cfg` | `run/main_scene` (the empty scene) and `run/main_loop_type="CpuTimeInstrumentProbeEntry"`, as the measurement project's ([above](#what-the-runner-writes-into-the-copy)). | `19be22c9…` |
+
+The texts are constants of the script (`PROBE_PROJECT_FILES`), so a change to one changes the hash of the set (`scripts`, `scriptsOf`: `5909a074…`). The entry class is new to the project, which is why the import runs: it fills `.godot/global_script_class_cache.cfg`.
+The project is 84 KB with its cache. The probe's hash is the one of the file as of this slice: it changes with the probe.
+
+### The entries of the self-check
+
+`runSelfCheck` takes `entry`, and the three go through the same judgement (the probe's process, its own checks, the log with no hidden error, the oracle, `presented` in a window, and the instrument's SHA-256):
+
+| `entry` | Runs | Report |
+| --- | --- | --- |
+| `script` (the default, as before) | `engine --path <repository> --headless\|--windowed --script res://tests/cpu-time-instrument-probe.gd -- --report=<name>` | `build/<name>` in the checkout, then copied to the check's directory |
+| `main-loop` (`{engine, probeProject}`) | `engine --path <probe project> --headless\|--windowed -- --report=<absolute>`, no `--script` | the absolute file, in the check's directory |
+| `release` (`{executable}`) | the executable of an exported `.app`, `--headless\|--windowed -- --report=<absolute>`, with the check's directory as its working directory (outside the `.app`) | the same |
+
+The arguments are a pure function (`selfCheckArguments`). The result gains `entry`; the process' `timeout` is injectable. For `main-loop` the check also refuses a probe project whose instrument is not the repository's; the hash it records is the repository's.
+`runTimed` of the scenario's runner was not used: the self-check's process is injected as `spawnSync` is, for the guards' tests, and it reads no load.
+
+### The report at an absolute path
+
+The probe's only change: `--report=<name>` still writes `res://build/<name>`, and `--report=<an absolute path>` (`String.is_absolute_path()`) writes there, since an exported project's `res://` is read-only. `npm run test:cpu-time-instrument` (headless, the existing native test) passes as before.
+
+### What the native check shows
+
+`npm run test:frontier-comparison-probe` (`tests/frontier-comparison-probe-native.test.mjs`) prepares a probe project in a temporary directory and runs, headless, the check through `main-loop` on the editor's binary and through `script` on this checkout. The process of `main-loop` has
+no `--script` and its report is at the absolute path. Both pass, with **the same ten checks, by name** (the schedule, the instrument's frames and terms, the busy loop, the four accuracy checks, the idle CPU and the process term), the oracle judges both and finds no violation. Their times are not compared.
+The summary is in the [evidence record](../evidence/frontier-comparison-probe-entry/README.md).
+
+**The negative controls**, with a limit of 15 s for the process:
+
+- the probe project without `override.cfg`: the engine prints `Error: Can't run project: no main scene defined in the project.` and **idles** (it does not run an empty scene, as there is none), so the check kills it and fails with "the probe ended with signal SIGTERM" and "the probe wrote no report";
+- with an `override.cfg` that names the empty scene and no `run/main_loop_type`: the empty scene runs, the probe is not entered, and the check fails the same way.
+
+### The probe's manifest and the Release launcher
+
+An exports directory may have `probe/frontier-comparison-export.json`, in the format of the arms' manifest ([the launcher](frontier-comparison-execution.md#the-launcher)) with `arm: "probe"`: the `.app` of the probe project, exported with the same template. `readProbeExport` reads it
+(none when the file is not there; a wrong one is refused naming every problem). With it, `prepare()` also checks the hashes of the probe's executable and package, that its files carry the repository's instrument, and that its `templateSha256` is the one of **each** of the three arms, which is what the gate
+asks for ("the campaign's engine"). Then `selfCheck` is `{entry: "release", executable}` and the campaign hands it to `runSelfCheck` (one line of `scripts/frontier-comparison-campaign.mjs`: `...launcher.selfCheck` in the call of `runCheck`). Without the probe's export it stays `"unsupported"` and the campaign refuses as before. The tests
+(Node, a fake `.app` of the probe and an oracle the test injects): with the probe the campaign runs the check through the `release` entry and goes on to the first execution; without it, it refuses; with another template, it refuses and starts nothing.
+
+### What is not shown
+
+- **The probe project as a Release `.app`.** It is not exported: the export of the arms' sets comes next, with `frameworks: false` (the probe has no host, and the React Native frameworks would only make the `.app` heavier), `exportFiles` and its manifest. Whether `Contents/MacOS/override.cfg` or the pack carries `override.cfg`, and
+  whether a template accepts `--report=<absolute>` and `--headless` the way the editor's binary does, are for that slice; the `release` entry was run against a fake `.app` only.
+- **The windowed self-check**, for real: nothing here opened a window.
+
+### Reproducing
+
+```sh
+node --test tests/frontier-comparison-probe-project.test.mjs tests/frontier-comparison-release.test.mjs   # Node only: the project, the three entries, the probe's manifest
+npm run test:frontier-comparison-probe                                                                       # native, headless: main-loop and script judge the same checks; the controls
+npm run test:cpu-time-instrument                                                                             # native, headless: the probe as before
 ```

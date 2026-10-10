@@ -8,15 +8,18 @@ import test, { after, before } from "node:test";
 import { fileURLToPath } from "node:url";
 import { parseArguments, runCampaign } from "../scripts/frontier-comparison-campaign.mjs";
 import { RELEASE_SELF_CHECK_REFUSAL, createReleaseLauncher } from "../scripts/frontier-comparison-campaign-launchers.mjs";
-import { MANIFEST_FILE, MANIFEST_FORMAT, hashesOf, hashProblems, manifestErrors, readExports } from "../scripts/frontier-comparison-release.mjs";
+import { runSelfCheck } from "../scripts/frontier-comparison-campaign-instrument.mjs";
+import { MANIFEST_FILE, MANIFEST_FORMAT, PROBE_ARM, hashesOf, hashProblems, manifestErrors, readExports, readProbeExport } from "../scripts/frontier-comparison-release.mjs";
 import { SEED, SOAK_FINAL_HASH, goldenReplayHash, sha256 } from "../scripts/frontier-comparison-run-campaign.mjs";
 import { scriptsOf } from "../scripts/frontier-comparison-run.mjs";
+import { fakeClock, scriptedLoad, where } from "./frontier-comparison-campaign-fake.mjs";
 import { createFakeExports, editManifest } from "./frontier-comparison-release-fake-app.mjs";
 
 // The Release launcher of the comparative campaign (V05-10, `execucao`, part 2), Node only, over FAKE exports (tests/frontier-comparison-release-fake-app.mjs): three `.app` whose executable is a
 // script that writes a minimal report, with the manifests that the measuring script writes beside them. The manifest and its checks, what `prepare()` refuses and registers, the arguments and the
 // directory of a launch, the hashes checked again at every launch, the timeout, what `cleanup()` leaves alone, and the campaign that reads the exports and then refuses because the instrument's
-// self-check cannot run in a template. Nothing here was measured, and the real export of civ-lite does not exist yet.
+// self-check cannot run in a template, unless the exports have the export of the instrument's probe project (the manifest of `probe/`, read and checked like an arm's, its template the arms' own),
+// which then runs the self-check through the `release` entry. Nothing here was measured, and the real export of civ-lite does not exist yet.
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const protocolBytes = readFileSync(path.join(root, "docs", "research", "frontier-comparison-protocol.json"));
 const protocol = JSON.parse(protocolBytes);
@@ -376,4 +379,155 @@ test("the command line: --build release needs --exports, which a Debug rehearsal
   assert.equal(missing.status, 1);
   assert.match(missing.stderr, /arm C: .*frontier-comparison-export\.json is missing/);
   assert.ok(!(await exists(out)));
+});
+
+// ---- the export of the instrument's probe project ----
+
+// A judge that finds nothing wrong in a window that was presented: the oracle is the test's, the process is the fake probe `.app`.
+const presented = () => ({ judged: true, presented: true, violations: [] });
+const probeLauncher = (exports) => createReleaseLauncher({ exportsDirectory: exports.directory, run: neverRun });
+
+test("the probe's export is read like an arm's when the directory has it, and is none when it does not", async () => {
+  assert.equal(PROBE_ARM, "probe");
+  assert.equal(await readProbeExport((await exportsIn()).directory), null, "no manifest in probe/, no probe");
+  const exports = await exportsIn({ probe: {} });
+  const probe = await readProbeExport(exports.directory);
+  assert.deepEqual([probe.arm, probe.app, probe.executable, probe.pck], ["probe", exports.apps.probe.app, exports.apps.probe.executable, exports.apps.probe.pck]);
+  assert.equal((await readManifest(exports, "probe")).arm, "probe");
+  assert.deepEqual(manifestErrors(probe.manifest, "probe"), []);
+  assert.deepEqual(manifestErrors(probe.manifest, "A"), [`arm is "probe", but this is the export of arm A`]);
+  assert.deepEqual(Object.keys(await readExports(exports.directory)), ["A", "B", "C"], "the probe is not an arm");
+  // A manifest that is there and is wrong is refused, naming the arm "probe", and is not taken for a missing one.
+  await editManifest(exports, "probe", (m) => (m.exportBytes = [1, 2]));
+  await assert.rejects(readProbeExport(exports.directory), (error) => /^the probe's export in .* is refused:\narm probe: .*exportBytes are 1 and 2/.test(error.message));
+  await writeFile(exports.apps.probe.manifestFile, "{");
+  await assert.rejects(readProbeExport(exports.directory), /arm probe: .* is not JSON/);
+});
+
+test("prepare() with the probe's export makes the launcher's self-check the exported probe, and without it the self-check stays unsupported", async () => {
+  const without = probeLauncher(await exportsIn());
+  assert.equal(without.selfCheck, "unsupported");
+  await without.prepare();
+  assert.equal(without.selfCheck, "unsupported", "no probe in the exports");
+  const exports = await exportsIn({ probe: {} });
+  const launcher = probeLauncher(exports);
+  assert.equal(launcher.selfCheck, "unsupported", "before prepare() nothing is known");
+  const prepared = await launcher.prepare();
+  assert.deepEqual(launcher.selfCheck, { entry: "release", executable: exports.apps.probe.executable });
+  assert.equal(prepared.engine, exports.apps.C.executable, "the campaign's engine is still arm C's executable");
+  assert.deepEqual(Object.keys(prepared.registered.arms), ["A", "B", "C"], "the probe is not registered as an arm");
+  assert.deepEqual(prepared.deviations, []);
+  assert.deepEqual(await exports.launches(), [], "prepare() starts nothing");
+  // A second prepare() over exports that lost the probe is unsupported again.
+  await rm(exports.apps.probe.manifestFile);
+  await launcher.prepare();
+  assert.equal(launcher.selfCheck, "unsupported");
+  await launcher.cleanup();
+  await without.cleanup();
+});
+
+test("prepare() refuses a probe export that is not the registered one, or that is not from the arms' template, and the self-check stays unsupported", async () => {
+  const otherTemplate = sha256("another template");
+  const refusals = [
+    ["a probe executable that is not the registered one", {}, async (e) => appendFile(e.apps.probe.executable, "// changed\n"), /arm probe: the executable .*civ-probe has the SHA-256 [0-9a-f]{64}, and the manifest registered/],
+    ["a probe package that is not there", {}, async (e) => rm(e.apps.probe.pck), /arm probe: the package .*civ-probe\.pck is not a file/],
+    [
+      "another instrument than the repository's",
+      {},
+      async (e) => editManifest(e, "probe", (m) => {
+        m.scriptFiles[INSTRUMENT_FILE] = sha256("another instrument");
+        m.scriptSha256 = scriptsOf(m.scriptFiles).sha256;
+      }),
+      /the probe's export carries another tests\/cpu-time-instrument\.gd than the repository's/,
+    ],
+    ["a probe from another template", { probe: { templateSha256: otherTemplate } }, async () => undefined, new RegExp(`the probe's export was made from the template ${otherTemplate}, and arm A's from ${sha256("fake template")}`)],
+    ["an arm from another template than the probe's", {}, async (e) => editManifest(e, "B", (m) => (m.templateSha256 = otherTemplate)), new RegExp(`the probe's export was made from the template ${sha256("fake template")}, and arm B's from ${otherTemplate}`)],
+  ];
+  for (const [what, options, damage, pattern] of refusals) {
+    const exports = await exportsIn({ probe: {}, ...options });
+    await damage(exports);
+    const launcher = probeLauncher(exports);
+    await assert.rejects(launcher.prepare(), (error) => pattern.test(error.message) && /^the Release exports in .* are refused:\n/.test(error.message), what);
+    assert.equal(launcher.selfCheck, "unsupported", what);
+    assert.deepEqual(await exports.launches(), [], what);
+    await launcher.cleanup();
+  }
+  // The template is compared with each of the three arms: a probe that matches only one is refused for the other two.
+  const exports = await exportsIn({ probe: { templateSha256: otherTemplate } });
+  await editManifest(exports, "C", (m) => (m.templateSha256 = otherTemplate));
+  await assert.rejects(probeLauncher(exports).prepare(), (error) => /arm A's/.test(error.message) && /arm B's/.test(error.message) && !/arm C's/.test(error.message));
+});
+
+test("the self-check through the release entry runs the probe's .app with --report, in a directory outside the .app and the exports, and judges it as the other entries do", async () => {
+  const exports = await exportsIn({ probe: {} });
+  const out = path.join(scratch, `self-check-${counter++}`);
+  const result = await runSelfCheck({ engine: exports.apps.C.executable, windowed: true, outDirectory: out, entry: "release", executable: exports.apps.probe.executable, judge: presented });
+  assert.deepEqual([result.passed, result.why, result.entry, result.lane], [true, [], "release", "windowed"]);
+  assert.equal(result.sha256, sha256(readFileSync(path.join(root, INSTRUMENT_FILE))));
+  assert.deepEqual(result.files, { report: "probe-report.json", log: "probe.log" });
+  const [launch] = await exports.launches();
+  assert.deepEqual(launch.arguments, ["--windowed", "--", `--report=${path.join(out, "probe-report.json")}`]);
+  assert.ok(!launch.arguments.includes("-s") && !launch.arguments.includes("--script") && !launch.arguments.includes("--path"), "a template takes neither -s nor --path");
+  assert.equal(await realpath(launch.cwd), await realpath(out), "the working directory is the self-check's own");
+  for (const outside of [exports.apps.probe.app, exports.directory]) {
+    assert.ok(path.relative(await realpath(outside), launch.cwd).startsWith(".."), `the process ran outside ${outside}`);
+  }
+  assert.equal(JSON.parse(await readFile(path.join(out, "probe-report.json"), "utf8")).fake, true);
+  assert.match(await readFile(path.join(out, "probe.log"), "utf8"), /CPU_TIME_INSTRUMENT_PASSED: 1/);
+  // A probe that fails is not a pass: its exit code, and no report at all.
+  const failing = await exportsIn({ probe: {}, programs: { probe: { exitCode: 1, report: null, log: "SCRIPT ERROR: fake\n" } } });
+  const failed = await runSelfCheck({ engine: failing.apps.C.executable, windowed: true, outDirectory: path.join(scratch, `self-check-${counter++}`), entry: "release", executable: failing.apps.probe.executable, judge: presented });
+  assert.equal(failed.passed, false);
+  assert.match(failed.why.join("\n"), /the probe ended with exit 1/);
+  assert.match(failed.why.join("\n"), /the probe wrote no report/);
+});
+
+test("the campaign with the probe's export runs the self-check through the release entry and goes on; with another template it refuses and runs nothing", async () => {
+  const unreported = { A: { report: null }, B: { report: null }, C: { report: null } };
+  const exports = await exportsIn({ probe: {}, programs: unreported });
+  const out = path.join(scratch, "campaign-probe-out");
+  const requests = [];
+  const runCheck = async (request) => {
+    requests.push(request);
+    return runSelfCheck({ ...request, judge: presented });
+  };
+  const result = await runCampaign({
+    launcher: createReleaseLauncher({ exportsDirectory: exports.directory }),
+    protocol,
+    protocolSha256: sha256(protocolBytes),
+    out,
+    lanes: ["presented"],
+    slots: [1, 1],
+    rehearsal: true,
+    runCheck,
+    read: scriptedLoad([0.5]),
+    clock: fakeClock(),
+    where,
+    lockFile: path.join(scratch, "campaign-probe.lock"),
+  });
+  assert.deepEqual(requests, [{ engine: exports.apps.C.executable, windowed: true, outDirectory: path.join(out, "self-check"), entry: "release", executable: exports.apps.probe.executable }]);
+  assert.deepEqual([result.state.selfCheck.passed, result.state.selfCheck.entry, result.state.selfCheck.lane], [true, "release", "windowed"]);
+  assert.ok(await exists(path.join(out, "self-check", "probe-report.json")));
+  const launches = (await exports.launches()).map((launch) => launch.arguments);
+  assert.equal(launches.length, 2, "the probe, then the one execution of slot 1");
+  assert.deepEqual(launches[0].slice(0, 2), ["--windowed", "--"]);
+  assert.match(launches[0][2], /^--report=\/.+probe-report\.json$/);
+  assert.deepEqual(launches[1].slice(0, 4), ["--windowed", "--", "--arm=A", "--lane=presented"]);
+  assert.equal(result.state.attempts.length, 1, "the campaign went on past the gate");
+  // Another template: refused by prepare(), before the state, the self-check or any process.
+  const other = await exportsIn({ probe: { templateSha256: sha256("another template") } });
+  const refusedOut = path.join(scratch, "campaign-probe-refused");
+  await assert.rejects(
+    runCampaign({ launcher: createReleaseLauncher({ exportsDirectory: other.directory }), protocol, protocolSha256: sha256(protocolBytes), out: refusedOut, lanes: ["presented"], lockFile: path.join(scratch, "campaign-probe.lock"), runCheck: neverRun }),
+    /the probe's export was made from the template [0-9a-f]{64}, and arm A's from/,
+  );
+  assert.deepEqual(await other.launches(), [], "no process was launched");
+  assert.ok(!(await exists(refusedOut)), "no directory was made");
+  // Without the probe the refusal is the one of before.
+  const without = await exportsIn();
+  await assert.rejects(
+    runCampaign({ launcher: createReleaseLauncher({ exportsDirectory: without.directory }), protocol, protocolSha256: sha256(protocolBytes), out: refusedOut, lanes: ["presented"], lockFile: path.join(scratch, "campaign-probe.lock"), runCheck: neverRun }),
+    (error) => error.message === RELEASE_SELF_CHECK_REFUSAL,
+  );
+  assert.match(RELEASE_SELF_CHECK_REFUSAL, /probe\/frontier-comparison-export\.json/);
 });

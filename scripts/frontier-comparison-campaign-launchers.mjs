@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { root } from "./consumer-harness.mjs";
-import { ARMS, hashesOf, hashProblems, readExports } from "./frontier-comparison-release.mjs";
+import { ARMS, hashesOf, hashProblems, readExports, readProbeExport } from "./frontier-comparison-release.mjs";
 import { goldenReplayHash, SEED, sha256, SOAK_FINAL_HASH } from "./frontier-comparison-run-campaign.mjs";
 import { launchScenario, prepareProject, processOf, registeredOf, runTimed, scenarioArguments } from "./frontier-comparison-run.mjs";
 
@@ -12,7 +12,8 @@ import { launchScenario, prepareProject, processOf, registeredOf, runTimed, scen
 //   launcher.build                       "debug" or "release": the build recorded in each execution (the protocol accepts only "release")
 //   launcher.name                        what the launcher is, for the record
 //   launcher.windowed                    whether its processes run in a window or headless: the instrument's self-check runs in the same mode, with the launcher's engine
-//   launcher.selfCheck                   "unsupported" when the launcher's processes cannot run the instrument's self-check, so that no campaign can start through it (absent: they can)
+//   launcher.selfCheck                   "unsupported" when the launcher's processes cannot run the instrument's self-check, so that no campaign can start through it; an object ({entry, ...}) that the campaign passes
+//                                        to the self-check when the launcher says how to enter the probe (the Release launcher with the probe's export: {entry: "release", executable}); absent: they can, as the editor's binary
 //   await launcher.prepare()             {engine, registered, packages, deviations}: gets everything ready and says what the campaign registers (the hashes of the binary, the package
 //                                        and the script of each arm, the seed, the game's hashes and the instrument's file), the sizes of the packages, and each way in which this launcher
 //                                        deviates from the protocol. It may refuse: the Release launcher does, when an export is missing or is not the one its manifest registered.
@@ -27,12 +28,14 @@ import { launchScenario, prepareProject, processOf, registeredOf, runTimed, scen
 // The Debug launcher is the part 1 rehearsal's own: a provisioned copy of civ-lite, the scenario copied into it with its entry and the engine's executable, run with `--path`. The scenario enters as
 // the main loop of the measurement project (never `-s`: an export template discards it), and the arguments after the executable are `scenarioArguments`, which the Release launcher reuses for
 // `Contents/MacOS/<executable>` of an exported .app. The Release launcher runs the three .app of an exports directory through the manifests that sit beside them (scripts/frontier-comparison-release.mjs);
-// a campaign does not start through it yet, because the instrument's self-check cannot run in a template. A fake launcher in the tests plays programmable executions.
+// a campaign starts through it only when the directory also has the export of the instrument's probe project (<exports>/probe/frontier-comparison-export.json), whose .app runs the self-check, since a
+// template discards `-s`. A fake launcher in the tests plays programmable executions.
 
 export const RELEASE_SELF_CHECK_REFUSAL = [
   "The Release exports were read and validated (the manifests of the three arms, and the SHA-256 of each executable and package against them), but the campaign does not start:",
   "the instrument's self-check is the gate of every campaign and it runs the probe with `--script` (`-s`) in the engine's executable, which an export template discards,",
-  "so there is no self-check of the instrument in a template yet (docs/research/frontier-comparison-execution.md, \"What is missing\"). Nothing was run and no campaign directory was made.",
+  "so, without the export of the instrument's probe project in <exports>/probe/frontier-comparison-export.json (its .app, from the same template as the three arms, which runs the probe as its main loop),",
+  "there is no self-check of the instrument in a template (docs/research/frontier-comparison-execution.md, \"What is missing\"). Nothing was run and no campaign directory was made.",
   "Until then, use `--build debug --rehearsal` for a rehearsal of the campaign.",
 ].join(" ");
 
@@ -71,6 +74,10 @@ async function readReport(reportFile, log) {
 // registered), and then runs `Contents/MacOS/<executable>` with `scenarioArguments` (windowed, `--out` an absolute file in a private directory), in that directory, outside the .app. The
 // override.cfg is inside the pck, so nothing is put in the .app, and the process gets this process's own environment. `run` (the process) and `timeout` are injectable for the tests; `cleanup()` removes
 // only the launcher's own directory, and not even that when it holds a report that could not be read (`readReport`: raw data that the attempt's log points to).
+//
+// The instrument's self-check: when `exportsDirectory` also has the probe's export (probe/frontier-comparison-export.json, `arm` "probe"), `prepare()` validates it the same way (the hashes of its executable
+// and package, the repository's instrument in its files) and checks that its `templateSha256` is that of the three arms: the self-check has to run on the campaign's engine. Then `selfCheck` is
+// `{entry: "release", executable}` and the campaign runs the probe through that .app (scripts/frontier-comparison-campaign-instrument.mjs). Without the probe's export, or before `prepare()`, it stays "unsupported".
 export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeout = RELEASE_TIMEOUT_MS } = {}) {
   if (typeof exportsDirectory !== "string" || exportsDirectory === "") {
     throw new Error("the Release launcher needs the directory of the exports: --exports <directory>, with <A|B|C>/frontier-comparison-export.json beside the .app of each arm");
@@ -79,13 +86,18 @@ export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeou
   let exported = null;
   let work = null;
   let keptUnreadable = false;
+  let selfCheck = "unsupported";
   return {
     build: "release",
     name: `release: the exports in ${directory} (A/, B/ and C/, each .app run through Contents/MacOS/<executable>)`,
     windowed: true,
-    selfCheck: "unsupported",
+    get selfCheck() {
+      return selfCheck;
+    },
     async prepare() {
+      selfCheck = "unsupported";
       const entries = await readExports(directory);
+      const probe = await readProbeExport(directory);
       const problems = [];
       for (const arm of ARMS) {
         problems.push(...hashProblems(entries[arm], await hashesOf(entries[arm])));
@@ -97,10 +109,22 @@ export function createReleaseLauncher({ exportsDirectory, run = runTimed, timeou
           problems.push(`arm ${arm}: the export carries another ${INSTRUMENT_FILE} than the repository's (${instrumentSha256}): export again`);
         }
       }
+      if (probe !== null) {
+        problems.push(...hashProblems(probe, await hashesOf(probe)));
+        if (probe.manifest.scriptFiles[INSTRUMENT_FILE] !== instrumentSha256) {
+          problems.push(`the probe's export carries another ${INSTRUMENT_FILE} than the repository's (${instrumentSha256}): export again`);
+        }
+        for (const arm of ARMS) {
+          if (probe.manifest.templateSha256 !== entries[arm].manifest.templateSha256) {
+            problems.push(`the probe's export was made from the template ${probe.manifest.templateSha256}, and arm ${arm}'s from ${entries[arm].manifest.templateSha256}: the self-check has to run on the campaign's engine`);
+          }
+        }
+      }
       if (problems.length > 0) {
         throw new Error(`the Release exports in ${directory} are refused:\n${problems.join("\n")}`);
       }
       exported = entries;
+      selfCheck = probe === null ? "unsupported" : { entry: "release", executable: probe.executable };
       work ??= await mkdtemp(path.join(tmpdir(), "frontier-comparison-release-"));
       return {
         engine: entries.C.executable,

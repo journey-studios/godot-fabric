@@ -22,10 +22,14 @@ import { scriptsOf } from "./frontier-comparison-run.mjs";
 //   exportBytes      [n, n]: the size of the product's package in one export and in its repeat (the protocol asks for the two to be equal), without the comparison's files
 //
 // The paths are relative to the manifest's directory and have no `..`: what a manifest names is inside the folder of its arm.
+//
+// The instrument's probe project, exported with the same template, has a manifest of the same format in <exports>/probe/ with `arm` "probe": the `.app` that the instrument's self-check runs through its
+// main loop (scripts/frontier-comparison-probe-project.mjs). It is optional: an exports directory without it can still be read, and the campaign then has no self-check in a template.
 
 export const MANIFEST_FILE = "frontier-comparison-export.json";
 export const MANIFEST_FORMAT = "godot-fabric.frontier-comparison-export/v1";
 export const ARMS = ["A", "B", "C"];
+export const PROBE_ARM = "probe";
 
 const HEX = /^[0-9a-f]{64}$/;
 const isObject = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -96,6 +100,30 @@ export function manifestErrors(manifest, arm) {
   return problems;
 }
 
+// The manifest of `arm` in <base>/<arm>, read, checked and with its paths resolved: {entry} when it is good, {problems} (sentences, each naming the arm) when it is missing, is not JSON or is not good,
+// and {problems, missing: true} when there is no file there.
+async function readEntry(base, arm) {
+  const file = path.join(base, arm, MANIFEST_FILE);
+  let manifest;
+  try {
+    manifest = JSON.parse(await readFile(file, "utf8"));
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return { problems: [`arm ${arm}: ${file} is missing`], missing: true };
+    }
+    if (error instanceof SyntaxError) {
+      return { problems: [`arm ${arm}: ${file} is not JSON (${error.message})`] };
+    }
+    throw error;
+  }
+  const found = manifestErrors(manifest, arm);
+  if (found.length > 0) {
+    return { problems: found.map((problem) => `arm ${arm}: ${file}: ${problem}`) };
+  }
+  const directory = path.join(base, arm);
+  return { entry: { arm, manifest, app: path.join(directory, manifest.app), executable: path.join(directory, manifest.executable), pck: path.join(directory, manifest.pck) } };
+}
+
 // The manifests of arms A, B and C in `directory`, read, checked and with their paths resolved: {A: {arm, manifest, app, executable, pck}, B, C}, the three paths absolute. It throws, naming every
 // problem of every arm, if a manifest is missing, is not JSON or is not good: nothing is half-read.
 export async function readExports(directory) {
@@ -103,33 +131,31 @@ export async function readExports(directory) {
   const entries = {};
   const problems = [];
   for (const arm of ARMS) {
-    const file = path.join(base, arm, MANIFEST_FILE);
-    let manifest;
-    try {
-      manifest = JSON.parse(await readFile(file, "utf8"));
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        problems.push(`arm ${arm}: ${file} is missing`);
-        continue;
-      }
-      if (error instanceof SyntaxError) {
-        problems.push(`arm ${arm}: ${file} is not JSON (${error.message})`);
-        continue;
-      }
-      throw error;
+    const read = await readEntry(base, arm);
+    if (read.entry === undefined) {
+      problems.push(...read.problems);
+    } else {
+      entries[arm] = read.entry;
     }
-    const found = manifestErrors(manifest, arm);
-    if (found.length > 0) {
-      problems.push(...found.map((problem) => `arm ${arm}: ${file}: ${problem}`));
-      continue;
-    }
-    const folder = path.join(base, arm);
-    entries[arm] = { arm, manifest, app: path.join(folder, manifest.app), executable: path.join(folder, manifest.executable), pck: path.join(folder, manifest.pck) };
   }
   if (problems.length > 0) {
     throw new Error(`the Release exports in ${base} are refused:\n${problems.join("\n")}`);
   }
   return entries;
+}
+
+// The probe's export in <directory>/probe, as an entry of `readExports` with `arm` "probe", or null when the directory has no manifest of it. A manifest that is there and is not good throws, naming
+// every problem.
+export async function readProbeExport(directory) {
+  const base = path.resolve(directory);
+  const read = await readEntry(base, PROBE_ARM);
+  if (read.entry !== undefined) {
+    return read.entry;
+  }
+  if (read.missing === true) {
+    return null;
+  }
+  throw new Error(`the probe's export in ${base} is refused:\n${read.problems.join("\n")}`);
 }
 
 // The SHA-256 of a file, or null when there is no file there.
