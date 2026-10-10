@@ -505,4 +505,17 @@ export const SLICES = [
     contractTests: ["tests/macos-export-civ-lite-oracle.test.mjs"],
     activity: "milestone-0-5-v05-07-replay-7207170",
   },
+  // Export options of the macOS app without the Fabric extension (#145, V05-10, squash 5b60789): no native step, since its native tests run only locally, and its contract test file; both runs are on the push of main.
+  {
+    folder: "macos-export-options",
+    pr: 145,
+    squash: "5b60789",
+    contractsRun: 38081266792,
+    pagesRun: 38081266834,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/macos-export-options.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-export-options-ecf637e",
+  },
 ];
