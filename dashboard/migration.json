@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T16:09:00.000Z",
+  "updatedAt": "2026-10-10T16:46:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4805,6 +4805,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-10-ddb887f",
+      "at": "2026-10-10T16:46:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de duas fatias do V05-10, já na main: a entrada do roteiro como main loop do projeto de medição (#133, critério execucao, squash 81eaa0a) e o relatório da comparação como documento Markdown (#132, critério relatorio, squash 01118ad). A Contracts do push de cada squash passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque nenhuma das duas fatias tem passo nativo nem artefato (runs 38067297038 e 38068135735). A guarda de marco passou contra o pai de cada squash. O test:contracts deu 7, 43 e 629 testes no #133 e 7, 43 e 646 no #132, com um skipped cada, o export nativo do macOS, aceito pela allowlist. tests/frontier-comparison-run.test.mjs passou 22 de 22 e tests/frontier-comparison-report-markdown.test.mjs passou 17 de 17. O Pages dos dois pushes (runs 38067297023 e 38068135660) publicou o migration.json commitado, com as entradas de atividade das duas fatias. Gerador canônico com 30 fatias e 60 recibos. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ddb887f7e618362294018641b6904d609b15af70/docs/evidence/frontier-comparison-entry/README.md#ci-hospedada-e-pages"
+    },
     {
       "id": "milestone-0-5-v05-10-entry-bb30d75",
       "at": "2026-10-10T16:09:00.000Z",
