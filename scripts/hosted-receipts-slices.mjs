@@ -355,4 +355,17 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-execution-1-f77d81d",
   },
+  // Arm B's single optimization pass (#121), in a folder of its own inside arm B's: the native HUD changed, so its native step is the HUD lane
+  // with both arms in the job native-suites-runtime.
+  {
+    folder: "frontier-arm-b/optimization",
+    pr: 121,
+    squash: "e7fcf1c",
+    contractsRun: 38053834754,
+    pagesRun: 38053830063,
+    nativeSteps: [{ script: "test:civ-lite-ui", expect: "tap" }],
+    artifacts: [{ key: "ui", name: "civ-lite-ui" }],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-braco-b-otimizacao",
+  },
 ];
