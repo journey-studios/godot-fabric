@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T04:31:33.000Z",
+  "updatedAt": "2026-10-10T05:00:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4745,6 +4745,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-5-7099e2b",
+      "at": "2026-10-10T05:00:00.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedado e de Pages do #107, o congelado do V05-06 e o protocolo do V05-10, a partir do push da main em 561251d: o run Contracts 38025095171 passou na primeira tentativa, com contracts, reference-android e reference-ios em success e os cinco jobs nativos pulados. A fatia não tem passo nativo. A guarda X9 e X10 passou contra o pai do squash, e tests/frontier-freeze.test.mjs passou 21 de 21 no log do job contracts. O Pages (run 38025095215) publicou o migration.json commitado byte a byte, com a entrada de atividade do #107 (milestone-0-5-v05-06-congelado-e1803a9). O gerador passou a desfazer o escape do TAP nas descrições: um # vira \\# no log, e antes isso impedia achar pelo nome o teste com #100. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7099e2b050e71ce57056cf529c56de10df3b8c79/docs/evidence/frontier-freeze/hosted-ci.json"
+    },
     {
       "id": "milestone-0-5-v05-05-frame-time",
       "at": "2026-10-10T04:40:00.000Z",

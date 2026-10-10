@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { matchContractTests, tapDescription } from "../scripts/hosted-receipts.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const script = path.join(root, "scripts", "hosted-receipts.mjs");
@@ -28,6 +29,7 @@ const FOLDERS = [
   "civ-lite-ui/stability",
   "windowed-presence",
   "mobile-density",
+  "frontier-freeze",
 ];
 
 // The check reads committed files only. A PATH without `gh` proves that it asks GitHub nothing.
@@ -36,7 +38,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 36 receipts that a test may break without touching the committed ones.
+// A copy of the 38 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -66,11 +68,36 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the eighteen Frontier slices are coherent, offline", () => {
+test("the committed receipts of the nineteen Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 18 slices, 36 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 19 slices, 38 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
+});
+
+test("a TAP description reads back the name it escapes, one escape at a time", () => {
+  // The log of #107's Contracts run writes the `#` of "#100" as `\#`, so its test was not found by name.
+  assert.equal(tapDescription("the turn before \\#100 reproduces the frozen one"), "the turn before #100 reproduces the frozen one");
+  // A backslash is written `\\`: one pass gives one backslash, and an escaped backslash before `#` is not read twice.
+  assert.equal(tapDescription("a \\\\ b"), "a \\ b");
+  assert.equal(tapDescription("a \\\\\\# b"), "a \\# b");
+  // A description without escapes is the same text.
+  assert.equal(tapDescription("the freeze is the one the inputs give by the rule"), "the freeze is the one the inputs give by the rule");
+});
+
+test("a test of a source is matched by the TAP description of its ok line, and a missing ok is refused", () => {
+  const file = "tests/turn.test.mjs";
+  const source = 'test("the turn before #100 reproduces the frozen one", () => {});\n';
+  assert.deepEqual(matchContractTests(file, source, ["ok 7 - the turn before \\#100 reproduces the frozen one"]), {
+    file,
+    tests: 1,
+    passed: 1,
+    topLevel: ["the turn before #100 reproduces the frozen one"],
+  });
+  const two = 'test("first", () => {});\ntest("second", () => {});\n';
+  assert.throws(() => matchContractTests(file, two, ["ok 1 - first"]), {
+    message: `${file}: 1 of its 2 top-level tests passed in the contracts job log`,
+  });
 });
 
 test("a receipt that carries the SHA of another slice is rejected", () => {
