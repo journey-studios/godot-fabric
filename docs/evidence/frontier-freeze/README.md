@@ -187,7 +187,7 @@ Depois do congelamento, o [#108](https://github.com/journey-studios/godot-fabric
 - A soma dos sete quadros do job tem p50 de 52,973 a 53,905 ms por vaga (54,2 ms em `1bc3a3c`).
 - A regra daria limites de 14,0 e 14,0 ms, mas isso é só referência: nada é recongelado.
 
-**Carga e contaminação.** A média de carga de 1 minuto ficou entre 6,75 e 14,35 em volta das vagas (`{ 11,30 13,42 13,51 }` antes da primeira e `{ 14,35 11,07 11,70 }` depois da última), sem suíte de agente nas vagas 1 a 3. Nas vagas 4 e 5, entre 05:35 e 05:38 UTC, um ou dois processos de outra sessão casaram com o padrão do amostrador; os p95 dessas vagas (13,726 e 13,652) ficam em linha com os das vagas 1 a 3. O usuário estava ausente.
+**Carga e contaminação.** A média de carga de 1 minuto ficou entre 6,75 e 14,35 em volta das vagas (`{ 11,30 13,42 13,51 }` antes da primeira e `{ 14,35 11,07 11,70 }` depois da última). O Agente 5 informou trabalho nativo de outro agente (um build do editor e execuções headless curtas) de cerca de 05:24 a 05:40 UTC, isto é, durante toda a faixa; o amostrador só o viu em parte, nas vagas 4 e 5. A contenção só pode aumentar o tempo de quadro, então os p95 medidos (13,6 e 13,5 ms) são um limite superior, e a conclusão de que a faixa corrigida cumpre os 15,5 ms fica de pé, com folga. O usuário estava ausente.
 
 **Como reproduzir.** Rode `caffeinate -d node scripts/frontier-turn-graphics.mjs` e aplique `extractTurnRun` e `nearestRank` ao `raw` do recibo.
 
@@ -221,6 +221,8 @@ O que o run prova, conferido pelo `--check` do script e pelos logs:
 O [Pages](publication.json) rodou sobre o mesmo squash (run [38025095215](https://github.com/journey-studios/godot-fabric/actions/runs/38025095215), `build` e `deploy` em success, 43 testes do painel). O deployment 6976226964 está em success, o artefato `github-pages` (id 11659958434, SHA-256 `62e7446a…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash (SHA-256 `0b15733b…`) e a entrada de atividade `milestone-0-5-v05-06-congelado-e1803a9`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
 
 O `--check` roda na CI pelo teste `tests/frontier-freeze.test.mjs`, que faz parte do `test:contracts`; a extração `--from-receipts` só roda localmente, porque os recibos brutos ficam fora do repositório.
+
+Os recibos hospedados do acompanhamento do congelado (#112, `b23009d`) ficam na subpasta [`followup/`](followup/README.md), com o seu próprio run de Contracts e de Pages.
 
 ## Reproduzindo
 

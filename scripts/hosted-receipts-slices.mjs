@@ -277,4 +277,51 @@ export const SLICES = [
     contractTests: ["tests/frontier-turn-graphics.test.mjs"],
     activity: "milestone-0-5-v05-05-frame-time",
   },
+  // Arm B of V05-10 (#113): the native HUD runs in the HUD lane beside the React Native one, so the native steps are the lane's and the
+  // consumer's, in the job native-suites-runtime, and the lane's artifact carries the native HUD's reports.
+  {
+    folder: "frontier-arm-b",
+    pr: 113,
+    squash: "4c3abb7",
+    contractsRun: 38034333213,
+    pagesRun: 38034328997,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-braco-b",
+  },
+  {
+    folder: "frontier-freeze/followup",
+    pr: 112,
+    squash: "b23009d",
+    contractsRun: 38029448318,
+    pagesRun: 38029448288,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-freeze.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-06-congelado-followup-3fb9487",
+  },
+  {
+    folder: "frontier-comparison-analysis",
+    pr: 110,
+    squash: "4a73a86",
+    contractsRun: 38030014224,
+    pagesRun: 38030014288,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-analysis.test.mjs",
+      "tests/frontier-comparison-validity.test.mjs",
+      "tests/frontier-comparison-protocol.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-analysis-4592dba",
+  },
 ];

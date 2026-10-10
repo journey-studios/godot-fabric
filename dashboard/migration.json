@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T08:51:00.000Z",
+  "updatedAt": "2026-10-10T09:06:02.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4329,6 +4329,14 @@
                 {
                   "label": "Nota de desenho do braço B: sinais do GameServices, painéis montados pela tabela de contexto, só o que mudou é tocado, o overlay como Control que para o ponteiro (e o giro da roda que o GUI deixa passar), o leitor único pelo qual as sondas leem as duas HUDs e o que difere do braço C",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/research/frontier-arm-b.md"
+                },
+                {
+                  "label": "CI hospedada do #113 (squash 4c3abb7): a Contracts disparada na main (run 38034333213) passou nos oito jobs; no native-suites-runtime a lane da HUD rodou as duas HUDs e imprimiu CIVLITE_UI_NATIVE_PASSED: 144 + 28, com o controle falhando a matriz",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do #113: o deployment do push de 4c3abb7 publicou o migration.json commitado, com a entrada de atividade do braço B",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/publication.json"
                 }
               ]
             },
@@ -4755,11 +4763,46 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-v05-06-soak-note-e0160f3",
+      "at": "2026-10-10T09:06:02.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, nota do soak no commit e0160f3: a nota marca os hashes antigos (final a35c55f2…, trilha fe9d4f36…) como os de antes do #93 (e108e9d), que enfileirou três eventos no turno 5, e aponta para a seção da corrida depois dessa fila (final 0b21c332…, trilha 4d6d3c4c…). Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e0160f3b098b85058facbf22ee26e72bbae9b371/docs/research/frontier-soak.md"
+    },
+    {
       "id": "milestone-0-5-v05-10-stress-window",
       "at": "2026-10-10T08:51:00.000Z",
       "taskIds": [],
       "message": "V05-10 do marco 0.5, a serviço de execucao e metricas (nenhum critério fecha): a janela stress do protocolo do comparativo final passou a existir, por decisão do usuário, e o executor ganhou o gancho stats(). O modo de estresse é uma sobreposição do nó GameServices fora do estado do jogo (stress_begin, stress_step e stress_end, com o código novo stress_on e stress_off e o turn_in_progress do jogo): o snapshot traz um log de 200 linhas e uma lista de produção de 100 itens só enquanto o modo está ligado e, depois de stress_end, é byte a byte o de antes; o estado, o hash dourado e o log do jogo não se movem. O esquema ganhou o primeiro campo opcional ({optional: schema}, só como campo de objeto), no registro nativo, no espelho TypeScript e no extrator da paridade. As duas HUDs têm o painel hud-stress em todos os contextos, fora da tabela de painéis (a matriz roda com o modo desligado e tem o mesmo veredito): a React Native com ScrollView e Text chaveados, a nativa com ScrollContainer e Labels reconciliados por chave; depois de 20 passos, um por quadro, as linhas que já estavam são os mesmos Controls nas duas. O stats() tem o mesmo formato nos dois braços (snapshots, context, events), sem avaliar JavaScript nem ler o snapshot da Surface: no B conta nos manipuladores de sinais do nó da HUD (0,9 µs por leitura) e no C lê os contadores que o registro nativo mantém por serviço, com FabricApplication.service_delivery (4,8 µs por leitura, contra 144 µs do evaluate e 579 µs do snapshot da Surface que o caminho evita); o custo do contador por notificação no C ficou dentro da dispersão entre execuções (mediana do ai-phase 3,22 ms antes e depois). A lane tem a etapa de estresse nos dois braços (152 verificações), 11 mutações do oráculo, uma sonda do nó e do registro sem JavaScript (17 verificações), cinco sabotagens retidas e o controle no host anterior (a HUD React Native falha 139 de 145 verificações). Sem medição, sem executor e sem a passada de otimização do braço B, que agora cobre quatro janelas.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/bec4d05f850569d5218d4d7289dada780cb5b368/docs/evidence/frontier-stress/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-10-amendment-4-e78e38c",
+      "at": "2026-10-10T08:41:29.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, quarta emenda do protocolo do comparativo final (commit e78e38c): na janela context-switches, a ocorrência do diálogo passa a ser o último resolve_event, que o fecha (dialog -> none), e não uma seleção. Só um End Turn abre o diálogo; o evento nasce na fase de refresh, fora da janela de 3 quadros, e toda seleção é recusada enquanto ele está aberto. As seis primeiras trocas seguem com o intent de seleção. Nenhuma medição comparativa veio antes da emenda (measurementsBefore 0). O pin do protocolo passa a PINS[4] do teste; os valores congelados (frozenValue e frozenAt) não mudam, e nenhum limiar, execução ou regra de decisão muda. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e78e38c7982be9bd021c673939ce0ad0e8f7752e/docs/research/frontier-comparison-protocol.json"
+    },
+    {
+      "id": "milestone-0-5-v05-10-braco-b-receipts",
+      "at": "2026-10-10T08:20:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #113, o braço B do V05-10 (a HUD nativa do Godot), já na main como 4c3abb7. A Contracts disparada na main sobre o squash (run 38034333213) passou nos oito jobs: no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs (CIVLITE_UI_LANE_PASSED: 144 + 28 + 41 na React Native e CIVLITE_UI_NATIVE_PASSED: 144 + 28 na nativa, com o controle que ignora o contexto falhando a matriz) e test:consumer:civ-lite passou; o job contracts passou 7, 43 e 518 testes de Node. O Pages do push (run 38034328997) publicou o migration.json commitado, com a entrada de atividade do braço B. Gerador canônico com 21 fatias e 42 recibos. As capturas e as sabotagens seguem só locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-6-04060b2",
+      "at": "2026-10-10T08:07:00.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedados e de Pages do #112, o acompanhamento do congelado (subpasta frontier-freeze/followup), a partir do push da main em b23009d, e do #110, o script de análise do comparativo, a partir do push da main em 4a73a86. Os dois runs de Contracts (38029448318 e 38030014224) passaram na primeira tentativa, com contracts, reference-android e reference-ios em success e os cinco jobs nativos pulados; as duas fatias não têm passo nativo nem artefato. A guarda X9 e X10 passou contra o pai de cada squash. tests/frontier-freeze.test.mjs passou 21 de 21, e os testes de análise, validade e protocolo passaram todos (19, 7 e 18), no log do job contracts. Os Pages (runs 38029448288 e 38030014288) publicaram o migration.json commitado byte a byte, com a entrada de atividade de cada fatia. O registro do acompanhamento passou a dizer que o trabalho nativo de outro agente (um build do editor e execuções headless, de cerca de 05:24 a 05:40 UTC) rodou durante toda a faixa corrigida, que o amostrador só viu em parte; a contenção só pode aumentar o tempo de quadro, então os p95 medidos (13,6 e 13,5 ms) são um limite superior, e a conclusão de que a faixa corrigida cumpre os 15,5 ms segue de pé, com folga. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/04060b260058d4a0adde2e31e325ea57ec099409/docs/evidence/frontier-freeze/followup/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-10-amendment-3-0a5f5b4",
+      "at": "2026-10-10T08:06:11.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, terceira emenda do protocolo do comparativo final (commit 0a5f5b4): o replay de 12 turnos passa de 73 para 77 intents em runs.fixed.replay, porque o #93 (e108e9d) mudou o jogo e o roteiro depois do pré-registro, com a fila de três eventos resolvida em 77 passos. A referência ao hash dourado, a constante de tests/civ-lite-game-native.test.mjs, mantém o texto, e essa constante foi atualizada pelo próprio #93. Nenhuma medição comparativa veio antes da emenda (measurementsBefore 0). O pin do protocolo passa a PINS[3] do teste; os valores congelados (frozenValue e frozenAt) não mudam, e nenhum limiar, janela, execução ou regra de decisão muda. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/0a5f5b41895b33f4eef09919974ffd4b5a46dd79/docs/research/frontier-comparison-protocol.json"
     },
     {
       "id": "milestone-0-5-v05-10-braco-b",

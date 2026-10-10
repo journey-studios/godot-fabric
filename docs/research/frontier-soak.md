@@ -100,6 +100,8 @@ The pinned run, in the three executions (the strategy the panel is closed with, 
 The trail hash (the SHA-256 of the 100 turn hashes, one per line) is `fe9d4f367b796b2743118aa37755c92541e88d5a7155ed0ac0d24eefd0b16e0f` in all three, and so is the hash of every turn. The game ends at turn 101 with the one city
 (size 3, the three buildings), six units of the player and the scripted faction's Warrior, 333 events logged.
 
+These are the numbers before #93 (`e108e9d`); since its queue of three events the soak gives other hashes, in [After the queue of three events](#after-the-queue-of-three-events-2026-10-09).
+
 **The resident memory** moves by tens of MB and falls as well as rises (GF-30 saw 90 to 188 MB across its soaks), so it cannot be an exact limit. Within one execution of the pinned run the resident memory of the steady turns spans a band
 of 136, 34 and 89 MB (104 to 240, 162 to 195 and 152 to 241 MB), and the medians of the two halves differ by **-96.5, -15.8 and -37.5 MB**: it fell in all three, as it did in the development runs where the OS compressed the process as it went.
 Over the four runs of this code that were made, with 12 executions in all, the half-to-half difference went from -96.5 to **+10.1 MB** (the other runs: +10.1, -1.4 and +1.2; -0.6, +5.4 and -2.4; -84.3, +2.3 and -12.7), and the band within a run from 34 to 137 MB. The
