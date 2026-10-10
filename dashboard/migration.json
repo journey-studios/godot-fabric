@@ -4763,6 +4763,13 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-v05-10-mudanca-preregistration",
+      "at": "2026-10-10T13:20:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério mudanca, pré-registrado antes de qualquer implementação: o pedido (Irrigar, uma ação nova do Settler, com o ícone no botão e a marca no cartão do tile), a base comum que nenhum braço paga (a regra do jogo, o ícone e a extensão da lane, que falha nos dois braços), o que conta para cada braço (arquivos, linhas, o tempo ativo de um subagente novo e os testes próprios do braço) e por que o experimento fica fora da main (o jogo que a campanha da execucao mede não muda). O critério segue aberto até as duas implementações e as contagens.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7f09e76b860cbaecd0c34f895a917cb50e239dfa/docs/research/frontier-change-cost.md"
+    },
+    {
       "id": "milestone-0-5-hosted-receipts-7-1205949",
       "at": "2026-10-10T12:23:00.000Z",
       "taskIds": [],
