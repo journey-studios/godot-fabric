@@ -1,8 +1,8 @@
 # Density, safe-area insets and landscape for the Frontier HUD
 
 Status: source investigation against pinned RN 0.87.1 and official Godot 4.7.2 (`4.7.2-stable`), plus two executed lanes on
-the desktop: the headless lane (`npm run test:mobile-density`, macOS arm64: 132 checks, an independent oracle, the control on
-main before the slice with 74 checks failing, exactly the normative ones, and four retained host sabotages that the probe and
+the desktop: the headless lane (`npm run test:mobile-density`, macOS arm64: 149 checks, an independent oracle, the control on
+main before the slice with 90 checks failing, exactly the normative ones, and four retained host sabotages that the probe and
 the oracle both reject) and a local windowed run on a Retina display at scale 2 (11 checks with pixels read back from three
 captures). **The iOS simulator lane that was planned was not run, and will not be in the 0.5**: the user's decision of
 2026-10-09 is a NO-GO for the iPhone gate, the 0.5 closes as a complete macOS milestone, and mobile goes back to GF-35
@@ -144,7 +144,13 @@ The base `DisplayServer::get_display_safe_area()` is `screen_get_usable_rect()` 
 - There is no change signal for the safe area; the pump polls, as `update_viewport` does for the rest of the window.
 
 Because the desktop cannot report a safe area, the lane states the bands through `validation_safe_area` (a Dictionary of
-`left`, `top`, `right`, `bottom` in points), honored on any OS; removing the meta returns to the platform. The
+`left`, `top`, `right`, `bottom` in points), honored on any OS; removing the meta returns to the platform. A band that is
+missing is 0; one that is there has to be an int or a float, finite and not below zero
+(`native/fabric_application.cpp`, `unsafe_edges`), or the host refuses the seam with
+`validation_safe_area.<side> must be a finite non-negative number`, keeps the last valid bands (and so the padding of every
+SafeAreaView) and follows the next valid seam. Without that check a NaN band reached RN's State and aborted the process
+when the host serialized its snapshot. The sibling seam `validation_screen_scale` needs no check: a String, a NaN, a
+negative or an infinity all fall back to scale 1 in `apply_density_policy` (a numeric String such as "3" is read as 3). The
 conversion from pixels, and the iOS reading itself, are the part of the rule only the simulator can exercise.
 
 ## 4. Orientation

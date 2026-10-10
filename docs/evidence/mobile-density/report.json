@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "scenario": "mobile-density",
   "status": "verified-local-headless-lane-windowed-captures-causal-control-and-retained-sabotages-no-simulator-no-device",
-  "at": "2026-10-10T02:00:27Z",
+  "at": "2026-10-10T02:40:34Z",
   "slice": {
     "delivers": "the density policy, RN's own SafeAreaView and the desktop lanes that prove them, as a slice of GF-09 (density, insets) and GF-18 (the pinned SafeAreaView), leaving the rest to GF-35 (mobile)",
     "claimsV05_08": false,
     "v05_08": "blocked in PR #102; the iPhone gate of the 0.5 is NO-GO (2026-10-09), so the 0.5 closes as a complete macOS milestone and mobile returns to GF-35",
     "deviceRecord": "docs/evidence/frontier-device/README.md"
   },
-  "executionBaseCommit": "fb622675a07036c29a7300c29ae2f887e05995e3",
-  "implementationCommit": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
-  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325",
+  "executionBaseCommit": "d1ce9cd33e122e976fa1c6969c11e63ec92823ac",
+  "implementationCommit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
   "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104",
   "pinVerification": {
     "method": "git show <implementationCommit>:<path> SHA-256 equals the pin in sourcePins; the pins were taken from the working tree that the lanes ran from and are re-verified against the commit once it exists",
@@ -26,7 +26,7 @@
     "platform": "macOS arm64 26.6.2",
     "displayServerHeadlessLane": "headless",
     "windowedLane": "macOS, gl_compatibility, Apple M3 Pro",
-    "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+    "nativeHostSha256": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470"
   },
   "screenshots": {
     "count": 3,
@@ -58,23 +58,27 @@
   },
   "commands": [
     {
+      "command": ".deps/python/bin/cmake --build .deps/build --parallel 4 --target fabric_godot display_insets_core_test",
+      "result": "passed: the host's SHA-256 is 692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470"
+    },
+    {
       "command": ".deps/build/display_insets_core_test",
       "result": "DISPLAY_INSETS_CORE_PASSED (31 assertions)"
     },
     {
       "command": "npm run test:mobile-density",
-      "result": "passed: 132 checks"
+      "result": "passed: 149 checks"
     },
     {
       "command": "node tests/mobile-density-native.test.mjs --previous",
-      "result": "passed: 74 of 132 checks fail on the host of b0e40aa, the normative ones"
+      "result": "passed: 90 of 149 checks fail on the host of b0e40aa, the normative ones"
     },
     {
       "command": "node scripts/mobile-density-sabotage.mjs",
       "result": "passed: the previous host and 4 sabotages, each rejected; sources restored byte for byte"
     },
     {
-      "command": "node scripts/mobile-density-graphics.mjs",
+      "command": "npm run bench:mobile-density-graphics",
       "result": "passed: 11 checks, 3 captures"
     },
     {
@@ -122,11 +126,11 @@
     "headless": {
       "command": "npm run test:mobile-density",
       "displayServer": "headless",
-      "checks": 132,
-      "passed": 132,
+      "checks": 149,
+      "passed": 149,
       "failed": 0,
-      "normativeChecks": 74,
-      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
+      "normativeChecks": 90,
+      "checkIdDigest": "29af8af97ac203dba884f7811eb5a8d1aee04ee414f55a83b026e33759f9ae0d",
       "groups": {
         "cleanup": 2,
         "cleared": 10,
@@ -138,6 +142,7 @@
         "report": 1,
         "scale-2": 10,
         "scale-3": 10,
+        "seam": 17,
         "sub-threshold": 10,
         "world": 48
       },
@@ -219,6 +224,9 @@
           "edge-top",
           "hud"
         ],
+        "seam": {
+          "faults": 3
+        },
         "world": {
           "cases": 8,
           "points": 24
@@ -250,8 +258,39 @@
         "the SafeAreaView root shifts the bar by exactly the seam's insets; the View root does not"
       ]
     },
+    "seamFaults": {
+      "checks": 17,
+      "faults": [
+        {
+          "kind": "negative",
+          "side": "left",
+          "refusal": "validation_safe_area.left must be a finite non-negative number"
+        },
+        {
+          "kind": "string",
+          "side": "top",
+          "refusal": "validation_safe_area.top must be a finite non-negative number"
+        },
+        {
+          "kind": "not-a-number",
+          "side": "right",
+          "refusal": "validation_safe_area.right must be a finite non-negative number"
+        }
+      ],
+      "normativeChecks": 16,
+      "oracle": {
+        "faults": 3
+      },
+      "invariants": [
+        "the band is refused with a diagnostic that names it, once",
+        "the host keeps the bands of the last valid seam",
+        "every SafeAreaView keeps the padding the last valid bands gave it",
+        "no SafeAreaView holds a NaN or a negative padding",
+        "a valid seam after the refused one is followed again"
+      ]
+    },
     "windowed": {
-      "command": "node scripts/mobile-density-graphics.mjs",
+      "command": "npm run bench:mobile-density-graphics",
       "checks": 11,
       "passed": 11,
       "facts": {
@@ -279,29 +318,29 @@
           720
         ]
       },
-      "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
+      "nativeHostSha256": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470",
       "bundleSha256": "61e20326f5d197eb7e36896e8b6dc61ec5d7043746a0ba558acdbefaae6d5b64"
     }
   },
   "reports": {
     "current": {
       "file": "build/mobile-density-current-report.json",
-      "sha256": "52fdaf7963e9650a9a8dd24845d3f5570c73287480ec25adfff9cb62deab99d5",
-      "bytes": 492098,
-      "checks": 132,
-      "passed": 132,
+      "sha256": "2e892b8e29f1666ea1f7455d5fcf55d4ca5f90cdbfbb30b16cbaa3a45dadd74f",
+      "bytes": 517652,
+      "checks": 149,
+      "passed": 149,
       "failed": 0,
-      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
-      "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+      "checkIdDigest": "29af8af97ac203dba884f7811eb5a8d1aee04ee414f55a83b026e33759f9ae0d",
+      "nativeHostSha256": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470"
     },
     "previous": {
       "file": "build/mobile-density-previous-report.json",
-      "sha256": "ea47fa87154f4eebee7bbbb3ac88527b45d11126ce97f59e8bd455063b8f1d80",
-      "bytes": 475575,
-      "checks": 132,
-      "passed": 58,
-      "failed": 74,
-      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
+      "sha256": "acb38c6d19bfb2590a9710c7006f9d14f9eb792a78e813ffd17426494df10e37",
+      "bytes": 495088,
+      "checks": 149,
+      "passed": 59,
+      "failed": 90,
+      "checkIdDigest": "29af8af97ac203dba884f7811eb5a8d1aee04ee414f55a83b026e33759f9ae0d",
       "nativeHostSha256": "bec9ec4be7299461b03e0b51edf3e361a78b69f0220bf03ffc9e7cc530bc5fda",
       "failedIds": [
         "content/density_policy is content unless the project says otherwise",
@@ -366,6 +405,22 @@
         "platform-scale/A State changes when a side moved by the threshold and nothing is requested otherwise",
         "policy/density_policy cannot change after the application initializes",
         "cleanup/The host forgets its SafeAreaViews once they unmount",
+        "seam/The valid bands are followed before any is refused",
+        "seam/negative/The band is refused with a diagnostic that names it, once",
+        "seam/negative/The host keeps the bands of the last valid seam",
+        "seam/negative/Every SafeAreaView keeps the padding the last valid bands gave it",
+        "seam/negative/No SafeAreaView holds a NaN or a negative padding",
+        "seam/negative/A valid seam after the refused one is followed again",
+        "seam/string/The band is refused with a diagnostic that names it, once",
+        "seam/string/The host keeps the bands of the last valid seam",
+        "seam/string/Every SafeAreaView keeps the padding the last valid bands gave it",
+        "seam/string/No SafeAreaView holds a NaN or a negative padding",
+        "seam/string/A valid seam after the refused one is followed again",
+        "seam/not-a-number/The band is refused with a diagnostic that names it, once",
+        "seam/not-a-number/The host keeps the bands of the last valid seam",
+        "seam/not-a-number/Every SafeAreaView keeps the padding the last valid bands gave it",
+        "seam/not-a-number/No SafeAreaView holds a NaN or a negative padding",
+        "seam/not-a-number/A valid seam after the refused one is followed again",
         "world/scale 1/box-none/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not",
         "world/scale 1/box-none/safe/void/A click on the empty HUD reaches the world 20 times and the HUD none",
         "world/scale 1/box-none/safe/band/A click in the padding band reaches the world 20 times and the HUD none",
@@ -388,10 +443,10 @@
       "commit": "b0e40aa",
       "extractedBy": "git archive b0e40aa src into build/mobile-density-previous/src"
     },
-    "checks": 132,
-    "failed": 74,
+    "checks": 149,
+    "failed": 90,
     "expectedFailuresEqualObserved": true,
-    "failedOutsideTheWorldGroup": 62,
+    "failedOutsideTheWorldGroup": 78,
     "failedInTheWorldGroup": 12,
     "worldGroupMeaning": "8: the empty area and the padding band of a box-none root never reach the world (the Surface of b0e40aa predates the pointer spike and takes the pointer); 4: nothing pads the SafeAreaView root",
     "observedWindowScaleOnEveryStage": [
@@ -401,23 +456,23 @@
   "retainedSabotages": {
     "receipt": "build/mobile-density-sabotage.json",
     "hostSha256": {
-      "genuine": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
-      "restored": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+      "genuine": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470",
+      "restored": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470"
     },
     "variants": [
       {
         "name": "ignore-frame",
         "file": "native/display_insets_core.h",
         "runStatus": 0,
-        "hostSha256": "703e127a3b8c34483c8c1517b2ff7e5b2b3de940c5188362993d964c314cce4a",
-        "failedChecks": 11,
+        "hostSha256": "0eea43d043e345caba8e96ce472b6a2c88c7f4bfaeaebb2fd559ad412f00f89a",
+        "failedChecks": 15,
         "oracleRejection": "content: the layout of bleed shows (left 47, top 20, right 48, bottom 21), the rules give (left 20, top 0, right 0, bottom 0)"
       },
       {
         "name": "no-threshold",
         "file": "native/display_insets_core.h",
         "runStatus": 0,
-        "hostSha256": "802dbbb27f8436ef199d35baaa4c37104e31a2e88e1d5fbe489a4dca895c1edf",
+        "hostSha256": "2c97a2e874289b13b59032d916f4edb7e694379fe0d5e922178b20dfbe370491",
         "failedChecks": 6,
         "oracleRejection": "scale-3: the State of hud holds (left 47, top 20, right 47.6666679382324, bottom 21), the rules give (left 47, top 20, right 47.5, bottom 21)"
       },
@@ -425,7 +480,7 @@
         "name": "no-reapply",
         "file": "native/fabric_application.cpp",
         "runStatus": 0,
-        "hostSha256": "52eeb0dd40ddd6490bdccf99a4a82f37aca7e67bfe7de7cd908d4776636084ef",
+        "hostSha256": "6cd05bd88bb1b4188fcbf03dacb3db0c9c938f4daf34a8c2ac80bcea8a8310b1",
         "failedChecks": 23,
         "oracleRejection": "scale-3: Dimensions.window.scale is 3, not 2"
       },
@@ -434,7 +489,7 @@
         "file": "native/fabric_application.cpp",
         "runStatus": 0,
         "hostSha256": "1ab18d1276ab3bc6bebefe1d0342633b1f752290c1dfd7a5f54a4386e1e7cf07",
-        "failedChecks": 28,
+        "failedChecks": 41,
         "oracleRejection": "content: the layout of hud shows (left 0, top 0, right 0, bottom 0), the rules give (left 47, top 20, right 48, bottom 21)"
       }
     ],
@@ -453,15 +508,31 @@
         "edge-top",
         "hud"
       ],
+      "seam": {
+        "faults": 3
+      },
       "world": {
         "cases": 8,
         "points": 24
       }
     }
   },
+  "seamValidation": {
+    "finding": "native/fabric_application.cpp, FabricApplication::unsafe_edges: a band of validation_safe_area was cast to double with no type or range check",
+    "rule": "a band that is there is an int or a float, finite and not below zero; a band that is missing is 0; anything else throws std::runtime_error('validation_safe_area.<side> must be a finite non-negative number'), which the pump reports once and which leaves the last valid metrics in place",
+    "oneOffOnTheOldReading": {
+      "retained": false,
+      "what": "the lane run once against a host built with the unchecked static_cast<double>(value) in place of the check, the source restored afterwards",
+      "result": "the negative fault fails 4 of its 5 checks (refusal, bands kept, padding kept, no negative padding), the String fault fails 3 (refusal, bands kept, padding kept: the String reads as a valid number), and the NaN fault aborts the Godot process (folly::toJson: JSON object value was a NaN when serializing displayInsets.unsafe.right) so the lane writes no report"
+    },
+    "validationScreenScale": {
+      "verdict": "no hole, left as it was",
+      "observed": "run once: a String ('abc'), NaN, a negative and an infinity all leave the window at content scale factor 1 (apply_density_policy falls back for a non-finite or non-positive value); a numeric String ('3') is read as 3"
+    }
+  },
   "hostBinary": {
     "file": "addons/fabric_godot.dylib",
-    "sha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
+    "sha256": "692997dcfb4783f3f4d45a9d2a33687cc841b8c4f90a37b412572d001d0bf470",
     "note": "the same host ran the current lane, the sabotage restore and the windowed run; the sabotaged hosts and the previous host are the controls"
   },
   "bundle": {
@@ -476,7 +547,7 @@
     "native/display_insets_core_test.cpp": "cab13fad205d9b226c7e2715f6eb4c47940fe7f0d4b09daf318a85912d288968",
     "native/window_metrics.h": "81206988264c18c59466be5a4083cf20945a9ed19ac4a62f5773235709f1c2fe",
     "native/fabric_application.h": "5797f187cd92001cbdf96cc3f1cf8d066af11eef94eea157de62fdc51772802e",
-    "native/fabric_application.cpp": "49fd64c2a55a611d41df295c9f26bef7ef82a063f0edae44a06e87c2843bfd4f",
+    "native/fabric_application.cpp": "742cd01085b15b3fc171a2c26d352c606390cb276c22354128547269418eaf46",
     "native/application_runtime.cpp": "b310a5f676011201d94fb1d45002111c533d396c68b26b27be756be1980b31d9",
     "native/CMakeLists.txt": "9cffa72fb40cc4f906c1f09c24ca6e2a9a41cae74f614154871f62646e9eb192",
     "src/react-native-platform.jsx": "f371fc9c3d8d8f19325871592d4e9535fb8f775b6b44b7e19b94af0246f77d77",
@@ -484,9 +555,9 @@
     "types/react-native.ts": "a53a82b757afbc67eba39a73a30220c91e0ba802af076b290f9c8aa03afc7a35",
     "docs/compatibility/scope-0.5.json": "a4e29551ec5edc558669ad8229d6f79fec23e7e64f3307754230e4da990815bc",
     "tests/mobile-density-fixture.jsx": "660df45a9f456fa4dcf0cb5c2593774795dd944b3c409e1b8361f88b05132aaf",
-    "tests/mobile-density-probe.gd": "23db06990878e46ba071ed65270ec80641633b43ead742023ac977e2917dc25e",
-    "tests/mobile-density-oracle.mjs": "dc8dd8fe4b13001ecf01fea344ba338fb18aa6c0835b05edcbdb1b251ba2ee2a",
-    "tests/mobile-density-native.test.mjs": "81f715704afa75f1f90a6617174953cf8661f7fa3d587393253905409758d8d0",
+    "tests/mobile-density-probe.gd": "78426a2a8a4ed0e96841b3bd651f4c11cb73edbbe1a1952367258cda4356cc9a",
+    "tests/mobile-density-oracle.mjs": "91e797c729dec3ca25e4b14f361dbf8cfd62dc74f6eaa99073c18810a28cb839",
+    "tests/mobile-density-native.test.mjs": "c396abd0afab55ec213ac0dd28b0a27dfb04ec8c5864382ae2316b4133454741",
     "tests/mobile-density-graphics-probe.gd": "3fbf9904d7dd2c919a12c41aa63a17a7b5cedc818594d2c84bdf3d5b6ac7d2d2",
     "scripts/mobile-density-bundle.mjs": "156241394057907f30fa5bcbf0d0517b66afa9d2d872cb9eff01fc785cfb24eb",
     "scripts/mobile-density-sabotage.mjs": "27c17dd2575f831e6780e834f55a5aabdc5529e0f6f23151dce27381f6c97c47",

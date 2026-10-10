@@ -14,7 +14,7 @@ mostra a HUD dentro do notch. Os "insets" desta fatia são **números que o test
 `validation_safe_area`), não os de um iPhone.
 
 Tudo aqui foi executado **a partir do commit de implementação
-[`cf565a81b7518f793d6f1f6bbac57241eb6db325`](https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325)**, sobre a base `fb62267` (a `main` mergeada na
+[`05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6`](https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6)**, sobre a base `d1ce9cd` (a `main` com o #102 e o #103 mergeada na
 branch `feat/mobile-density`, com os controles em `b0e40aa`, o squash do PR #74). A árvore em que cada lane rodou é a da
 implementação; os arquivos de **evidência** deste registro (`README.md`, `report.json`, as três capturas), o
 `docs/API.md`, o `docs/research/mobile-density.md`, o `ROADMAP.md` e o dashboard foram escritos depois e **não são
@@ -39,7 +39,10 @@ passam a ser compilados e registrados; o componente monta como o mesmo Control `
 que o RN pede, calculado por `native/display_insets_core.h` com a regra do UIKit (a parte de cada faixa que o frame da
 view alcança, arredondada ao pixel, e um limiar de `1/escala + 0,01` abaixo do qual o `State` não muda), com o teste de
 C++ puro `native/display_insets_core_test.cpp` (31 asserções). O host só lê `get_display_safe_area` no iOS e no Android;
-no macOS a janela nunca é acolchoada pelo Dock, e no headless a leitura é vazia. As diferenças em relação ao RN iOS (a
+no macOS a janela nunca é acolchoada pelo Dock, e no headless a leitura é vazia. A semente `validation_safe_area` é
+um Dictionary de `left`, `top`, `right` e `bottom`: uma faixa ausente vale 0, e uma faixa presente tem de ser um int ou um
+float finito e não negativo, senão o host a recusa com `validation_safe_area.<lado> must be a finite non-negative number`,
+guarda as faixas (e o padding) da última semente válida e segue a próxima semente válida. As diferenças em relação ao RN iOS (a
 atualização a cada bombeamento, o arredondamento na escala do conteúdo, a ausência dos mapeamentos de `View.js` e a view
 que pende para fora da janela) estão em `departuresFromRN` do recibo e na seção 2 da nota de pesquisa.
 
@@ -48,43 +51,58 @@ que pende para fora da janela) estão em `departuresFromRN` do recibo e na seç�
 | Lane | Comando | Resultado |
 | --- | --- | --- |
 | C++ puro | `.deps/build/display_insets_core_test` | `DISPLAY_INSETS_CORE_PASSED`, 31 asserções |
-| Headless atual | `npm run test:mobile-density` | **132 checks** passando |
-| Controle causal | `node tests/mobile-density-native.test.mjs --previous` | **74 de 132** falham no host e no SDK de `b0e40aa`, exatamente os checks normativos |
+| Headless atual | `npm run test:mobile-density` | **149 checks** passando |
+| Controle causal | `node tests/mobile-density-native.test.mjs --previous` | **90 de 149** falham no host e no SDK de `b0e40aa`, exatamente os checks normativos |
 | Sabotagens retidas | `node scripts/mobile-density-sabotage.mjs` | quatro sabotagens do host, cada uma rejeitada pela sonda e pelo oráculo; fontes restauradas byte a byte |
 | Janelada (local) | `npm run bench:mobile-density-graphics` | **11 checks** com pixels lidos de três capturas |
 
-**Headless atual (132 checks).** Uma sonda GDScript monta a HUD de [`tests/mobile-density-fixture.jsx`](../../../tests/mobile-density-fixture.jsx)
+**Headless atual (149 checks).** Uma sonda GDScript monta a HUD de [`tests/mobile-density-fixture.jsx`](../../../tests/mobile-density-fixture.jsx)
 (seis `SafeAreaView`: a raiz, um que sangra 20 pontos para fora da janela, um aninhado, um flutuante, um na borda de
 cima e um no canto) em sete estágios, que são os nomes dos grupos abaixo: `mount` (escala 2, insets 47, 20, 47,5 e 21 pontos), `scale-3`
 (a escala vira 3), `sub-threshold` (a esquerda anda 0,3 ponto, abaixo do limiar de 0,343), `moved` (os quatro lados
 andam: 50, 24, 44 e 30), `cleared` (sem semente de insets), `scale-2` (a escala volta a 2) e `platform-scale` (sem
 semente de escala: a que o display server dá, 1 no headless). Os checks por grupo: `mount` 11, `scale-2` 10, `scale-3` 10,
-`platform-scale` 10, `sub-threshold` 10, `moved` 10, `cleared` 10, `content` 7, `policy` 3, `cleanup` 2, `report` 1 e o
-grupo do mundo, `world`, 48. Entre eles: `Dimensions.window.scale` igual à escala, a janela em pontos igual aos seus
+`platform-scale` 10, `sub-threshold` 10, `moved` 10, `cleared` 10, `content` 7, `policy` 3, `cleanup` 2, `report` 1, o
+grupo das faltas da semente, `seam`, 17, e o grupo do mundo, `world`, 48. Entre eles: `Dimensions.window.scale` igual à escala, a janela em pontos igual aos seus
 pixels sobre a escala, nenhum `didUpdateDimensions` quando só os insets mudam, o padding de cada `SafeAreaView` igual ao
 da regra do UIKit, o layout mostrando esse padding, a HUD inteira dentro do retângulo seguro, o `State` sem pedido novo
 abaixo do limiar, a política recusando um valor desconhecido e a mudança depois da inicialização, e `density_policy`
 `content` deixando as configurações de stretch do projeto como estavam.
 
+**As faltas da semente (grupo `seam`, 17 checks).** Uma aplicação própria, em escala 2, recebe três sementes em que uma
+faixa não é um número finito não negativo, cada uma num lado: um negativo (`left`), um String (`top`) e um NaN (`right`).
+Entre elas a semente volta a ser válida, e para cada falta a sonda espera o estado, não um número de quadros (o diagnóstico
+no host, depois dois bombeamentos do próprio host). Os checks, que não carregam contagem no nome: o host recusa a faixa com
+um diagnóstico que a nomeia, uma única vez; mantém as faixas da última semente válida; todo `SafeAreaView` mantém o padding
+que ela deu; nenhum `SafeAreaView` guarda um NaN nem um negativo; e a semente válida seguinte é seguida de novo. Mais o
+mount e o acompanhamento das faixas válidas antes da primeira falta. Sem a validação, rodei esta lane uma vez contra o
+código antigo da leitura (um `static_cast<double>` direto, sem retenção): as quatro checagens do negativo e três do String
+falham, e o NaN derruba o processo do Godot (`folly::toJson: JSON object value was a NaN`, ao serializar o snapshot do
+host). Essa execução foi avulsa, não é uma sabotagem retida.
+
 **O oráculo.** [`tests/mobile-density-oracle.mjs`](../../../tests/mobile-density-oracle.mjs) foi escrito a partir do RN e
 do UIKit, não da sonda nem do host: do relatório cru (os frames de `measureInWindow`, a semente, a escala, o `State`) ele
 recalcula a densidade, os eventos, o padding de cada view e o lado de cada clique, e julga. Aceitou o relatório atual
-(7 estágios, 6 views, 3 estágios sem mudança, 8 casos do mundo) e rejeitou os das sabotagens.
+(7 estágios, 6 views, 3 estágios sem mudança, 3 faltas da semente, 8 casos do mundo) e rejeitou os das sabotagens. Para
+as faltas ele fixa as três faltas e as sementes válidas entre elas (não as lê do relatório), exige as mensagens de
+diagnóstico, as faixas e o padding mantidos, nenhum valor não finito ou negativo, e recalcula com a regra do UIKit o
+padding que a semente seguinte deve dar.
 
 **O controle causal.** Roda a mesma lane contra o dylib que a `main` tinha em `b0e40aa` (SHA-256 do host
-`bec9ec4b…`) e o SDK desse commit, extraído do git. **74 de 132 checks falham, e são exatamente os normativos** (a lista
-completa está em `reports.previous.failedIds` do recibo): 62 fora do grupo do mundo (sem `density_policy` a escala
-medida fica em 1 nos sete estágios, e o `SafeAreaView` é um `View` sem padding, como era) e 12 no grupo do mundo. Os 58 restantes passam nos dois hosts, o que
+`bec9ec4b…`) e o SDK desse commit, extraído do git. **90 de 149 checks falham, e são exatamente os normativos** (a lista
+completa está em `reports.previous.failedIds` do recibo): 78 fora do grupo do mundo (sem `density_policy` a escala
+medida fica em 1 nos sete estágios, e o `SafeAreaView` é um `View` sem padding, como era; mais 16 do grupo `seam`, que o host
+antigo não tem como satisfazer) e 12 no grupo do mundo. Os 59 restantes passam nos dois hosts, o que
 mostra que a lane não afirma o que o host antigo já fazia.
 
 **As quatro sabotagens do host** (a lane restaura a fonte byte a byte e confere o SHA-256 do dylib genuíno depois):
 
 | Sabotagem | Arquivo | Checks que falham | Primeira rejeição do oráculo |
 | --- | --- | ---: | --- |
-| `ignore-frame` (o padding ignora o frame da view) | `native/display_insets_core.h` | 11 | o layout de `bleed` mostra (47, 20, 48, 21) e a regra dá (20, 0, 0, 0) |
+| `ignore-frame` (o padding ignora o frame da view) | `native/display_insets_core.h` | 15 | o layout de `bleed` mostra (47, 20, 48, 21) e a regra dá (20, 0, 0, 0) |
 | `no-threshold` (o `State` muda a cada diferença) | `native/display_insets_core.h` | 6 | o `State` de `hud` guarda 47,667 à direita e a regra dá 47,5 |
 | `no-reapply` (a escala não é reaplicada) | `native/fabric_application.cpp` | 23 | `Dimensions.window.scale` é 3, não 2 |
-| `ignore-seam` (a semente dos insets é ignorada) | `native/fabric_application.cpp` | 28 | o layout de `hud` mostra zero e a regra dá (47, 20, 48, 21) |
+| `ignore-seam` (a semente dos insets é ignorada) | `native/fabric_application.cpp` | 41 | o layout de `hud` mostra zero e a regra dá (47, 20, 48, 21) |
 
 **O grupo do mundo (48 checks, 8 casos).** Uma HUD de tela cheia sobre um mundo mínimo que conta os cliques esquerdos que
 chegam ao seu `_unhandled_input`, com a raiz `SafeAreaView` e, como controle, a raiz `View`, cada uma `box-none` e
