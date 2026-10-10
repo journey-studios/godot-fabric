@@ -515,8 +515,8 @@ test("the evidence record is pinned, has the inputs, the account of every value 
   for (const heading of ["As entradas", "A regra", "Os valores congelados", "As decisões", "Quatro observações que não mudam nenhuma regra", "Limites", "CI hospedada e Pages", "Reproduzindo"]) {
     assert.match(record, new RegExp(`^## ${heading}$`, "m"), heading);
   }
-  // The cause of the turn's frames over the frozen bounds is open, and the record says whose diagnosis it waits for.
-  assert.match(record, /\*\*A causa está em aberto: um diagnóstico em andamento \(o do Agente 5, no GF-35\) a estuda, e este registro não a afirma\.\*\*/);
+  // The cause of the turn's frames over the frozen bounds is confirmed and fixed in #108, and the record says it was the turn lane's probe, not the HUD or the host.
+  assert.match(record, /\*\*A causa foi confirmada e corrigida no \[#108\]\(https:\/\/github\.com\/journey-studios\/godot-fabric\/pull\/108\) \(commit `09ed8f7`\): era a sonda da faixa do turno \(a leitura que ela faz do snapshot da Surface\), não a HUD nem o host\.\*\*/);
   assert.match(record, /--check/);
   assert.match(record, /--from-receipts/);
   assert.match(record, /\*\*A saída X6 \(orçamento de desempenho pré-registrado e cumprido\) continua aberta\*\*/);

@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T05:50:00.000Z",
+  "updatedAt": "2026-10-10T06:01:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4747,10 +4747,17 @@
   "activity": [
     {
       "id": "milestone-0-5-v05-10-analysis-4592dba",
-      "at": "2026-10-10T05:50:00.000Z",
+      "at": "2026-10-10T06:01:00.000Z",
       "taskIds": [],
       "message": "V05-10 do marco 0.5, preparação dos critérios execucao e relatorio, antes de qualquer execução comparativa: o script de análise do comparativo foi escrito e testado, como o protocolo exige que fique commitado antes da primeira execução (statistics.analysis; open, id scripts). Dos dados brutos de uma campanha, no formato godot-fabric.frontier-comparison-campaign/v1, ele produz todos os números do relatório final como o protocolo os define, lendo o JSON do protocolo ao rodar: a validade de cada vaga (as rejeições computáveis dos dados, o refazer na vaga, o limite de 3 tentativas e a campanha que para), o p95 por execução e por janela com as medianas e os IQR, os doze intervalos de 95% pelo bootstrap percentil (mulberry32, semente 20261009, 10.000 resamples) e, em C menos B, a margem, a categoria, o nonInferior e o rebaixamento pelo Holm, o veredito de cada eixo, os descritivos, os orçamentos congelados e o relatório parcial sem o braço B; ele não escreve nenhuma frase da decisão. Foi verificado só em campanhas sintéticas (os testes de análise, 19, de validade, 7, e do protocolo, 18, que segue com os exemplos e o intervalo fixados intactos, e um relatório de exemplo de 125 KB que um teste regera byte a byte), e nenhum número é resultado: os braços B e A ainda não existem e nenhuma execução comparativa rodou. Nenhum critério muda: execucao e relatorio seguem abertos (o script do cenário, os braços e uma máquina dentro do limite de carga de 2,0 são de execucao; o texto da decisão é de relatorio), e nenhum peso, nota ou denominador do 1.0 se move. Três leituras das frases do protocolo que podem mudar um resultado (other-game, rss e fps-unlimited) foram decididas pelo líder na revisão. A CI hospedada e o Pages vêm depois do merge.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/4592dba920d8cc106ed97b96ad04322c842f7851/docs/evidence/frontier-comparison-analysis/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-06-congelado-followup-3fb9487",
+      "at": "2026-10-10T05:50:45.000Z",
+      "taskIds": [],
+      "message": "Depois do congelado (commit 3fb9487), a causa da faixa do turno acima dos limites congelados foi confirmada e corrigida no #108 (09ed8f7): a sonda da faixa lia o snapshot da Surface duas vezes em cada quadro cronometrado, e esse snapshot carrega o log do carregador de imagens, que os ícones do #100 encheram. Não era a HUD nem o host. Como corroboração, a faixa corrigida na main em 09ed8f7 dá, na mediana dos p95 por vaga (cinco vagas apresentadas, vsync a 120 Hz), 13,62 ms na fase da IA e 13,54 ms no fim do turno, contra os 15,5 ms congelados; a carga e a contaminação estão descritas no registro. Nenhum valor congelado muda, e a corroboração não vira limiar. O X6 (orçamento pré-registrado e cumprido) segue aberto, porque depende dos braços do comparativo e do tempo de CPU por quadro. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3fb94871fd95fbfab40bc625fc03957d3bd4b963/docs/evidence/frontier-freeze/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-5-7099e2b",
