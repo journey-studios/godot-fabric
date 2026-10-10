@@ -881,6 +881,17 @@ of this record. With the headless half recorded earlier, the `baseline` criterio
 is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
 recomputed. No 1.0 checkpoint, weight or denominator moves.
 
+**Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
+iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
+The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
+GF-35 without moving any 1.0 number. V05-09 closes only its `decisao` criterion; `g0`,
+`export`, `toque` and `turno` stay open under a blocker. V05-08 is handed back to GF-35
+under a blocker, and its density and safe-area work on `feat/mobile-density` will land as a
+GF-09 slice without claiming it. The `iphone` criteria of V05-02 and V05-10 do not apply, and
+the final comparison covers macOS only. Exit X8 is met by this record. No 1.0 number, task,
+checkpoint, weight or decision moves. The record is in
+[docs/evidence/frontier-device/README.md](docs/evidence/frontier-device/README.md).
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
