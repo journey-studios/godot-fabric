@@ -848,4 +848,4 @@ O p50 de cada fase (mediana entre as execuções, em ms):
 - **`GodotImage::apply` chama `queue_redraw()` em todo commit** do nó, mesmo quando só a posição mudou (18 redesenhos por turno, de microssegundos). Também fica de fora.
 - **Qualquer leitor por quadro do snapshot paga o log do carregador**, e isso vale para as sondas da comparação final (V05-10, braço C): elas devem ler o instrumento do #97 (`tests/cpu-time-instrument.gd`), não o snapshot.
 - **Os números do turno anteriores a esta correção**, inclusive os de `docs/research/frontier-turn.md` e os que o Agente 4 vai congelar (V05-06), foram medidos com a sonda que lia o snapshot duas vezes por quadro, na HUD com ou sem ícones. A medição oficial da lane corrigida é do Agente 4 e fica por rodar.
-- A CI hospedada e o Pages desta correção só existem depois do merge.
+- A CI hospedada e o Pages desta correção, que entrou na `main` como `09ed8f7` (#108), estão nos [recibos](frame-time/README.md#ci-hospedada-e-pages): a Contracts disparada 38027051145 passou nos oito jobs, com a lane do turno em `native-suites-frontier`.
