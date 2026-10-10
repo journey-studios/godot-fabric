@@ -1,9 +1,10 @@
 # The execution of the final comparison, part 1: the scenario, the player and the rehearsal in the three arms
 
 Status: documentation, a scenario in GDScript, a scripted player, a runner in Node and their tests. It is the first part of the criterion `execucao` of V05-10 and **closes nothing**: no comparative execution has
-happened, and **this note states no result**. The rehearsal it describes ran the scenario once in each arm, in a Debug build, headless, on a provisioned copy of the consumer; the object it produces is marked as a
-rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal must show. No number in this note is a measurement of an arm for the
-comparison. The campaign needs the Release export of the game in the three arms (V05-07), the second part of this criterion and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)).
+happened, and **this note states no result**. The rehearsal it describes ran the scenario once in each arm, in a Debug build, on a provisioned copy of the consumer, three times (headless, and windowed in the
+presented and in the unlimited lane); the object it produces is marked as a rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal
+must show. No number in this note is a measurement of an arm for the comparison. The three rehearsals, with their summaries, the machine's load and the user's absence, are recorded in
+[`docs/evidence/frontier-comparison-execution/`](../evidence/frontier-comparison-execution/README.md), pinned at `7e2e5b1`. The campaign needs the Release export of the game in the three arms (V05-07), the second part of this criterion and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)).
 This slice moves no checkpoint, grade, weight or denominator of the 1.0.
 
 ## The question
@@ -209,8 +210,8 @@ window to what a consumer of the game does in any case, and does the rest in fra
 
 | Window | What happens in its frames | Cost, measured |
 | --- | --- | --- |
-| `ai-phase` | In the first frame: `Engine.get_process_frames()`, the call of `GameServices.end_turn()` (the intent itself, which the game and the HUDs pay for) and one trace entry. In the others: waiting for the next frame and comparing two integers. The player's decision, with the snapshot it reads, is taken in a frame of rest before. | a trace entry is 0.3 to 0.8 µs |
-| `event-burst` | The handler of `turn_ended` (a counter, the frame number, one trace entry). From the fifth frame of the burst on, one read of each counter per frame: `stats()` of the HUD and `notifications_emitted()` of the game; arm A, which has no HUD, reads only the second, from the fourth frame, to have two readings to compare. | `stats()` is **0.86 µs in B and 4.5 µs in C** per read (the record of the slice that delivered it: [provenance of the reads](#provenance-of-the-reads)); `notifications_emitted()` 0.1 to 0.2 µs |
+| `ai-phase` | In the first frame: `Engine.get_process_frames()`, the call of `GameServices.end_turn()` (the intent itself, which the game and the HUDs pay for) and one trace entry. In the others: waiting for the next frame and comparing two integers. The player's decision, with the snapshot it reads, is taken in a frame of rest before. | a trace entry is 0.28 to 0.63 µs |
+| `event-burst` | The handler of `turn_ended` (a counter, the frame number, one trace entry). From the fifth frame of the burst on, one read of each counter per frame: `stats()` of the HUD and `notifications_emitted()` of the game; arm A, which has no HUD, reads only the second, from the fourth frame, to have two readings to compare. | `stats()` is **0.86 µs in B and 4.5 µs in C** per read (the record of the slice that delivered it: [provenance of the reads](#provenance-of-the-reads)); `notifications_emitted()` 0.11 to 0.19 µs |
 | `context-switches` | In the first frame: one trace entry and the call of the intent. In the other two: waiting. The context reached is read after the window, at rest. | the same trace entry |
 | `stress` | In every frame: one trace entry and the call of the hook (the answers are kept and read after the window). | the same trace entry; the hook itself is the game's own work and is what the window measures |
 | idle | Waiting for the next frame, as everywhere. | none |
@@ -222,19 +223,19 @@ a process in a window. In C the only call into the host's JavaScript side is the
 
 ## What each reading costs, and where it falls
 
-Measured by the scenario in the rehearsal, on a machine that was not quiet, headless; they are the costs of the readings and not of any arm. Only the last row can fall inside a measured frame.
-The two cost figures of `stats()` are those of the record of the slice that delivered it; what the scenario measured of the same reads in its own runs is beside them.
+Measured by the scenario in the three rehearsals (nine executions: headless, and windowed in the two lanes), on a machine that was not quiet; the ranges are over those nine executions, and they are the costs of the readings and not of any arm.
+Only the last row can fall inside a measured frame. The two cost figures of `stats()` are those of the record of the slice that delivered it; what the scenario measured of the same reads in its own runs is beside them.
 
 | Reading | When it is taken | Cost | In a measured frame? |
 | --- | --- | --- | --- |
-| Resident memory (`ps -o rss=`) | At rest, after the boot, the idle, the replay, the soak, the switches, the latency, the stress and the end; the report keeps the last (`end`) and the maximum (`max`) | 4.6 to 16.6 ms (a process is spawned) | No. Taken in a frame that belongs to no window; the idle window begins six frames after the one that spawned the process |
-| Nodes of the SceneTree | At the end | 3 to 75 µs | No |
-| Hermes' live heap after a forced collection, and the Fabric native views (arm C) | At the end, after the drain, by the turn lane's reading at rest (`Sampler.sample()`) | 15 to 26 ms | No |
-| Parity (the visible panels against the context matrix) | At rest, after each switch of the cycle, after each setup and at the boot: 93 checks in a run, in the seven contexts | one walk of the SceneTree for the Controls named `hud-*`, 9 to 22 µs | No |
+| Resident memory (`ps -o rss=`) | At rest, after the boot, the idle, the replay, the soak, the switches, the latency, the stress and the end; the report keeps the last (`end`) and the maximum (`max`) | 4.9 to 45.2 ms (a process is spawned) | No. Taken in a frame that belongs to no window; the idle window begins six frames after the one that spawned the process |
+| Nodes of the SceneTree | At the end | 2 to 73 µs | No |
+| Hermes' live heap after a forced collection, and the Fabric native views (arm C) | At the end, after the drain, by the turn lane's reading at rest (`Sampler.sample()`) | 15.7 to 22.1 ms | No |
+| Parity (the visible panels against the context matrix) | At rest, after each switch of the cycle, after each setup and at the boot: 93 checks in a run, in the seven contexts | one walk of the SceneTree for the Controls named `hud-*`, 9.0 to 13.5 µs (B and C) | No |
 | Time to the interactive HUD | At the boot | the frame's own clock reading | No: the boot belongs to no window |
-| The player's snapshot (`get_snapshot()`) | At rest, before each decision, and after each switch | 50 to 133 µs | No |
+| The player's snapshot (`get_snapshot()`) | At rest, before each decision, and after each switch | 48.8 to 85.5 µs | No |
 | The flags of validity (drew after every measured intent, the idle frames drawn) | After the run, from the instrument's columns | none during the run | No |
-| `stats()` of the HUD and `notifications_emitted()` of the game | Each frame of the event burst from its fifth on | `stats()`: 0.86 µs in B and 4.5 µs in C (the record); 1.0 µs in B and 4.3 µs in C in the scenario's runs. `notifications_emitted()`: 0.1 to 0.2 µs | Yes, by design: the window ends when they agree |
+| `stats()` of the HUD and `notifications_emitted()` of the game | Each frame of the event burst from its fifth on | `stats()`: 0.86 µs in B and 4.5 µs in C (the record); 0.65 to 1.0 µs in B and 4.3 to 4.8 µs in C in the scenario's runs. `notifications_emitted()`: 0.11 to 0.19 µs | Yes, by design: the window ends when they agree |
 
 ## The validation nodes of `main.tscn`
 
@@ -298,11 +299,12 @@ Every execution comes out rejected with `not-the-registered-build` (clause `buil
 **The refresh rate.** A headless display reads `-1` and the format requires a positive one (and the analysis refuses `refreshHz <= 0`), so the headless rehearsal is given `--assume-refresh-hz 60`; the value is
 written in the campaign's deviations and in `rehearsal.json`. Without it the runner stops with the format's own error. The windowed rehearsal reads the real one.
 
-**What it ran** (headless, Debug, one execution per arm, on a machine with a load above 5; the seconds include the 600 idle frames, the replay, the soak, the switches, the latency and the readings):
+**What it ran** (headless, Debug, one execution per arm, on a machine with a load above 5; the seconds include the 600 idle frames, the replay, the soak, the switches, the latency and the readings; this is the
+headless rehearsal of the [evidence record](../evidence/frontier-comparison-execution/README.md), run at `7e2e5b1`):
 
 | | A | B | C |
 | --- | ---: | ---: | ---: |
-| Seconds | 52.3 | 56.9 | 75.0 |
+| Seconds | 51.8 | 56.7 | 75.4 |
 | Process frames | 7,449 | 8,042 | 8,168 |
 | Replay: steps and golden hash | 77, `cb7ab974…` | 77, `cb7ab974…` | 77, `cb7ab974…` |
 | Soak: turns, decisions, final hash | 100, 429, `0b21c332…` | 100, 429, `0b21c332…` | 100, 429, `0b21c332…` |
@@ -313,14 +315,19 @@ written in the campaign's deviations and in `rehearsal.json`. Without it the run
 | `stress` | 32 rounds (2 + 30), 736 frames: 23 each | the same | the same |
 | Latency clicks | not measured in A | 2 + 30 | 2 + 30 |
 | Parity | not measured in A | 93 checks, 7 contexts, all match | 93 checks, 7 contexts, all match |
-| Time to the interactive HUD (ms, headless, not a result) | not measured in A | 291 | 419 |
+| Time to the interactive HUD (ms, headless, not a result) | not measured in A | 295 | 404 |
 | Notifications the game emitted, and the HUD consumed, at rest at the end | 2,256, no consumer | 2,306 and 2,306 | 2,307 and 2,307 |
 | Scene nodes at the end | 4 | 31 | 30 |
-| Hermes heap, native views | | | 2,338,264 bytes, 17 |
+| Hermes heap, native views | | | 2,332,440 bytes, 17 |
 | Errors (script, Godot log, JavaScript), exit code | 0, 0, 0, exit 0 | 0, 0, 0, exit 0 | 0, 0, 0, exit 0 |
 
 The unlimited lane was run on arm A: the vsync was requested `DISABLED` and read back, and the headless display server keeps `ENABLED`, which the scenario records (`vsync-reading`: the FPS band is N/A for that execution).
-**Nothing above says how an arm performs.** The windowed rehearsal, which is what shows a presented loop, waits for the user's pause.
+**Nothing above says how an arm performs.**
+
+**The windowed rehearsal** ran afterwards, at the same commit, in both lanes (`--windowed`, `presented` and `unlimited`), on a 3024 × 1964 display at scale 2 with a 1080 × 600 window at 120 Hz, with the user away. The
+three arms were presented in both lanes (the display drew after every measured intent and the 600 idle frames), the unlimited lane's vsync read back `DISABLED` and its FPS band is filled, and every counted window is
+what the headless one counted (500, 500, 222 and 736 frames; no burst longer than its minimum of five, C included), the parity matched in its 93 checks, and the replay and the soak reached the same hashes. The only
+rejections are `load` (the 1-minute average was 4.9 to 6.0 around the executions, and 4.87 to 6.83 in the sampler) and the Debug build. The loads, the sampler and the user's absence are in the evidence record.
 
 ## Readings of the protocol that were chosen
 
@@ -346,18 +353,20 @@ Where the protocol is a sentence, or says nothing, and the scenario had to decid
   first execution, the raw data under `docs/evidence/`, and the unlimited lane's reading of the vsync.
 - **V05-07, the Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice. The scenario is a `SceneTree` script that is run with
   `-s` from a project; how it starts inside an exported package (an export template may not run `-s`, and the scenario may have to be the exported project's main scene or an autoload) is **open** and belongs to that
-  slice.
+  slice. The question was put to the owner of that slice and has no answer yet.
 - **The instrument's self-check** on the campaign's machine, and its hash registered (`cpu-time-instrument` `gate`).
-- **A quiet machine**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window; the repository's other lanes run on this one.
-- **The windowed rehearsal**, once, when the user pauses the board.
+- **A quiet machine**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window, with the user away; the repository's other lanes run on this one, and the windowed
+  rehearsal ran at 4.87 to 6.83.
 
 ## Limits
 
-- Every number of the rehearsal is a headless Debug number on a busy machine. They show that the script runs and what it counts, nothing of how an arm performs, and no analysis has run on the data of a campaign.
-- The six frames of rest are a rule, not a check that the React Native HUD has finished: the windowed rehearsal is the first run in which a pump that is still busy would show in the frames after a window.
+- Every number of the rehearsals is a Debug number on a busy machine, one execution per arm. They show that the script runs and what it counts, nothing of how an arm performs, and no analysis has run on the data of a campaign.
+- The six frames of rest are a rule, not a check that the React Native HUD has finished: the windowed rehearsal was the first run in which a pump that is still busy would show in the frames after a window; it
+  recorded no anomaly and every parity check matched, which does not prove that the pump was idle.
 - Arms A and B have no host, so the scenario's readings of C that need it (the heap, the views, the errors) exist only there, as the protocol says.
-- The event burst and the stress window are measured in the three arms, headless: in the burst the counters agree at the first read in every turn, so every burst is the minimum of five frames. A windowed loop, with the
-  host's pump and the JavaScript runtime draining at the pace of a display, may show a burst longer than five frames in C; that is what the rule is for, and it has not been seen yet.
+- The event burst and the stress window are measured in the three arms: in the burst the counters agree at the first read in every turn, so every burst is the minimum of five frames, headless and windowed alike
+  (C included, in both lanes). A windowed loop, with the host's pump and the JavaScript runtime draining at the pace of a display, may show a burst longer than five frames in C; that is what the rule is for, and
+  it has not been seen yet.
 
 ## Reproducing
 
@@ -366,4 +375,6 @@ node --test tests/frontier-comparison-run.test.mjs                   # Node only
 npm run test:frontier-comparison-run                                   # native, headless: the player, the rehearsal in the three arms
 node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane presented --assume-refresh-hz 60 --out build/frontier-comparison-rehearsal
 node scripts/frontier-comparison-analysis.mjs --check-format build/frontier-comparison-rehearsal/campaign.json
+node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane presented --windowed --out <directory>   # windowed: opens a window in front, the user must be away
+node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane unlimited --windowed --out <directory>
 ```
