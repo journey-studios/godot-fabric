@@ -10,6 +10,33 @@ from typing import Optional
 ADDON_PREFIX = "addons/godot_fabric/"
 
 
+def canonical_path(raw: str) -> str:
+    """The path Godot registers for a PCK entry (4.7.2, core/io/file_access_pack.cpp).
+
+    PackedData::add_path does `p_path.simplify_path().trim_prefix("res://")`, so an
+    entry such as `res://addons/other/../godot_fabric/x` is registered under
+    addons/godot_fabric/. String::simplify_path (core/string/ustring.cpp) turns
+    backslashes into slashes, collapses repeated slashes and drops empty and `.`
+    segments, and a `..` cancels the segment before it. For a res:// path it keeps a
+    `..` that climbs above the root (its source calls that a FIXME); such an entry
+    cannot be a resource of the project, so it is an error here, not a path.
+    """
+    path = raw[len("res://"):] if raw.startswith("res://") else raw
+    segments = []
+    for segment in path.replace("\\", "/").split("/"):
+        if segment in ("", "."):
+            continue
+        if segment == "..":
+            if not segments:
+                raise RuntimeError(f"PCK entry climbs above the project root: {raw}")
+            segments.pop()
+            continue
+        segments.append(segment)
+    if not segments:
+        raise RuntimeError(f"PCK entry path is empty: {raw}")
+    return "/".join(segments)
+
+
 def inspect_pack(pack: Path, bundle: Optional[Path] = None) -> dict:
     # Layout: upstream core/io/file_access_pack.cpp. Never execute the package
     # against another platform's GDExtension to inspect its contents.
@@ -42,7 +69,7 @@ def inspect_pack(pack: Path, bundle: Optional[Path] = None) -> dict:
         cursor += 4
         if size == 0 or cursor + size > len(data):
             raise RuntimeError("Truncated PCK entry path")
-        name = data[cursor:cursor + size].rstrip(b"\0").decode("utf8").removeprefix("res://")
+        name = canonical_path(data[cursor:cursor + size].rstrip(b"\0").decode("utf8"))
         cursor += size
         offset, length = unpack("<QQ", cursor)
         entry_flags, = unpack("<I", cursor + 32)

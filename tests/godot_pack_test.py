@@ -154,6 +154,58 @@ class GodotPackTests(unittest.TestCase):
         self.assertEqual({key: bundleless[key] for key in ("format", "fileCount", "fabricAddonExcluded", "paths", "pckSHA256")},
                          {key: result[key] for key in ("format", "fileCount", "fabricAddonExcluded", "paths", "pckSHA256")})
 
+    # Godot registers a PCK entry under String::simplify_path(path) without res:// (PackedData::add_path, 4.7.2),
+    # so the inspector must judge the path Godot registers, not the spelling in the file.
+    def test_without_bundle_counts_a_dotdot_entry_as_the_addon_it_resolves_to(self):
+        write_pack(self.pack, [("res://main_bare.tscn.remap", b"remap"), ("res://addons/other/../godot_fabric/native/x.gdextension", b"x")])
+        result = godot_pack.inspect_pack(self.pack)
+        self.assertFalse(result["fabricAddonExcluded"])
+        self.assertEqual(result["paths"], ["addons/godot_fabric/native/x.gdextension", "main_bare.tscn.remap"])
+
+    def test_without_bundle_counts_dot_slash_and_repeated_slash_and_backslash_entries_as_the_addon(self):
+        for spelling in ("./addons//godot_fabric/x", "res://./addons//godot_fabric/x", "res:///addons/godot_fabric/x",
+                         "res://addons\\godot_fabric\\x", "res://addons/godot_fabric/./x", "res://addons/godot_fabric/a/../x"):
+            with self.subTest(spelling=spelling):
+                write_pack(self.pack, [(spelling, b"x")])
+                result = godot_pack.inspect_pack(self.pack)
+                self.assertFalse(result["fabricAddonExcluded"])
+                self.assertEqual(result["paths"], ["addons/godot_fabric/x"])
+
+    def test_paths_are_reported_as_godot_registers_them(self):
+        write_pack(self.pack, [("res://./game//canon.gd", b"c"), ("world/../world/world.gd", b"w"), ("res://main_bare.tscn.remap", b"r")])
+        self.assertEqual(godot_pack.inspect_pack(self.pack)["paths"], ["game/canon.gd", "main_bare.tscn.remap", "world/world.gd"])
+
+    def test_a_dotdot_entry_that_leaves_the_addon_is_not_the_addon(self):
+        write_pack(self.pack, [("res://addons/godot_fabric/../other/x.gd", b"x"), ("res://addons/godot_fabric_other/x.gd", b"y")])
+        result = godot_pack.inspect_pack(self.pack)
+        self.assertTrue(result["fabricAddonExcluded"])
+        self.assertEqual(result["paths"], ["addons/godot_fabric_other/x.gd", "addons/other/x.gd"])
+
+    def test_an_entry_that_climbs_above_the_root_is_rejected(self):
+        for spelling in ("res://../x", "res://addons/../../x", "../x", "res://a/../../b", "res://.."):
+            with self.subTest(spelling=spelling):
+                write_pack(self.pack, [("res://main_bare.tscn.remap", b"remap"), (spelling, b"x")])
+                with self.assertRaisesRegex(RuntimeError, "climbs above the project root"):
+                    godot_pack.inspect_pack(self.pack)
+
+    def test_an_entry_with_no_path_left_is_rejected(self):
+        for spelling in ("res://", "res://./", "res://a/.."):
+            with self.subTest(spelling=spelling):
+                write_pack(self.pack, [(spelling, b"x")])
+                with self.assertRaisesRegex(RuntimeError, "path is empty"):
+                    godot_pack.inspect_pack(self.pack)
+
+    def test_entries_that_resolve_to_the_same_path_are_duplicates(self):
+        with self.assertRaisesRegex(RuntimeError, "Duplicate PCK entry"):
+            self.inspect([("res://a/../b.gd", b"1"), ("res://./b.gd", b"2")])
+
+    def test_bundle_mode_judges_the_resolved_path_of_a_leak_and_finds_the_bundle_through_one(self):
+        with self.assertRaisesRegex(RuntimeError, "Build-only SDK contents leaked"):
+            self.inspect([("res://.godot_fabric/app.js", self.bundle.read_bytes()), ("res://addons/other/../godot_fabric/toolchain/build.mjs", b"x")])
+        result = self.inspect([("res://./.godot_fabric//app.js", self.bundle.read_bytes()), ("res://addons/godot_fabric/native/x.gdextension", b"x")])
+        self.assertTrue(result["bundleEmbeddedByteForByte"])
+        self.assertEqual(result["paths"], [".godot_fabric/app.js", "addons/godot_fabric/native/x.gdextension"])
+
 
 if __name__ == "__main__":
     unittest.main()
