@@ -181,7 +181,7 @@ the campaign file, the seed and the resamples). The words of `decision`, `limita
 
 ## The report as a document
 
-The report is JSON. `scripts/frontier-comparison-report-markdown.mjs` renders it as the Markdown document that a person reads, so that the final report of V05-10 (criterion `relatorio`) is a mechanical step: analysis, `report.json`, document.
+The report is JSON. `scripts/frontier-comparison-report-markdown.mjs` renders it as the Markdown document that a person reads, so that the closing of V05-10's criterion `relatorio` becomes a mechanical step: analysis, `report.json`, document. This prepares the closing and does not close it: the criterion stays open until the real campaign and the text of its decision.
 
 ```sh
 node scripts/frontier-comparison-report-markdown.mjs <report.json> [--out <file.md>] [--protocol <file>]

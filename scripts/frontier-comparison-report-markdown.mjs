@@ -80,6 +80,12 @@ const entryLines = (object, depth) =>
     isRecord(value) ? [`${"  ".repeat(depth)}- ${key}:`, ...entryLines(value, depth + 1)] : [`${"  ".repeat(depth)}- ${key}: ${inline(value)}`],
   );
 
+// A fenced code block whose fence is longer than any run of backticks in the text, so that the text cannot close it.
+const fenced = (language, text) => {
+  const fence = "`".repeat(Math.max(3, ...(text.match(/`+/g) ?? []).map((run) => run.length + 1)));
+  return `${fence}${language}\n${text}\n${fence}`;
+};
+
 // The fields of the JSON that a section does not know, kept in compact JSON by their path so that nothing is lost silently.
 function tracker(id) {
   const found = {};
@@ -95,9 +101,7 @@ function tracker(id) {
       if (Object.keys(found).length === 0) {
         return [];
       }
-      const json = JSON.stringify(found);
-      const fence = "`".repeat(Math.max(3, ...(json.match(/`+/g) ?? []).map((run) => run.length + 1)));
-      return ["**Other fields** (in the report JSON, not formatted above):", `${fence}json\n${json}\n${fence}`];
+      return ["**Other fields** (in the report JSON, not formatted above):", fenced("json", JSON.stringify(found))];
     },
   };
 }
@@ -435,7 +439,6 @@ const limitationsBody = (section, extras) => {
 
 function reproductionBody(section, extras) {
   extras.check("", section, ["rawData", "campaignSha256", "protocolSha256", "seed", "resamples", "commands"]);
-  const commands = section.commands.join("\n");
   return [
     bullets([
       `Raw data: ${inline(section.rawData)}`,
@@ -445,7 +448,7 @@ function reproductionBody(section, extras) {
       `Resamples: ${show(section.resamples)}`,
     ]),
     "**Commands**",
-    `\`\`\`sh\n${commands}\n\`\`\``,
+    fenced("sh", section.commands.join("\n")),
   ];
 }
 

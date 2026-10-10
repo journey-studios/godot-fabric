@@ -88,7 +88,7 @@ O comando gera a campanha, analisa-a e grava a seção; o teste `tests/frontier-
 ## O relatório como documento (Markdown)
 
 [`example-analysis.md`](example-analysis.md) é o `example-analysis.json` lido por uma pessoa: o renderizador `scripts/frontier-comparison-report-markdown.mjs` transforma o JSON do relatório em Markdown, em inglês, com uma seção por seção do relatório e na ordem do protocolo.
-O V05-10 fecha o critério `relatorio` com este passo mecânico: análise → `report.json` → documento. O exemplo continua **sintético**, e o próprio texto do JSON (`decision`, `limitations`, `cost-of-change`) diz "SYNTHETIC EXAMPLE"; nenhum número dele é resultado de qualquer braço.
+Este passo prepara o fechamento do critério `relatorio` do V05-10 e não o fecha: o fechamento passa a ser mecânico (análise → `report.json` → documento), mas o critério segue aberto até a campanha real e o texto da decisão. O exemplo continua **sintético**, e o próprio texto do JSON (`decision`, `limitations`, `cost-of-change`) diz "SYNTHETIC EXAMPLE"; nenhum número dele é resultado de qualquer braço.
 
 ```sh
 node scripts/frontier-comparison-report-markdown.mjs docs/evidence/frontier-comparison-analysis/example-analysis.json --out docs/evidence/frontier-comparison-analysis/example-analysis.md

@@ -88,9 +88,23 @@ function assertRectangularTables(markdown) {
     }
   }
 }
+// Every fenced block of the document is closed by its own fence (a line of backticks at least as long as the opening one) and the last line of the document is not inside one.
+function assertFencesHold(markdown) {
+  let open = null;
+  for (const line of markdown.split("\n")) {
+    const opening = /^(`{3,})\w*$/.exec(line);
+    if (open === null && opening !== null) {
+      open = opening[1].length;
+    } else if (open !== null && /^`+$/.test(line) && line.length >= open) {
+      open = null;
+    }
+  }
+  assert.equal(open, null, "every fenced block is closed");
+}
 const assertSound = (report, markdown) => {
   assertNoInventedNumbers(report, markdown);
   assertRectangularTables(markdown);
+  assertFencesHold(markdown);
   assert.doesNotMatch(markdown, /other fields/i);
 };
 
@@ -411,6 +425,18 @@ test("a field the renderer does not know is not dropped: it goes to an Other fie
   const unavailable = example();
   unavailable.sections.primary = {available: false, reason: "stopped", novelty: 1};
   assert.match(sectionOf(renderExample(unavailable), "Primary outcome"), /^## Primary outcome\n\nNot available: stopped\.\n\n\*\*Other fields\*\* .*:\n\n```json\n\{"primary\.novelty":1\}\n```\n$/);
+});
+
+test("a command with a run of backticks stays inside its fence: the fence of the document is longer than the run", () => {
+  const report = example();
+  report.sections.reproduction.commands = ["```", "echo ```` four", "node scripts/frontier-comparison-analysis.mjs <campaign.json> --out <report.json>"];
+  const markdown = renderExample(report);
+  assert.match(sectionOf(markdown, "Reproduction"), /\n`````sh\n```\necho ```` four\nnode scripts\/frontier-comparison-analysis\.mjs <campaign\.json> --out <report\.json>\n`````\n$/, "five backticks, one more than the longest run of the commands");
+  assertSound(report, markdown);
+  const shortRuns = example();
+  shortRuns.sections.reproduction.commands = ["echo ``` three"];
+  assert.match(sectionOf(renderExample(shortRuns), "Reproduction"), /\n````sh\necho ``` three\n````\n$/);
+  assert.match(sectionOf(renderExample(example()), "Reproduction"), /\n```sh\nnode scripts\/frontier-comparison-analysis\.mjs <campaign\.json> --out <report\.json>\n```\n$/, "a command with no backticks keeps the plain fence of three");
 });
 
 // ---- the documents ----
