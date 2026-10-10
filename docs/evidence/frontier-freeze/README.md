@@ -173,7 +173,7 @@ O p99 ocioso fica em 15,329 ms (congelado: 15,213 ms) e um quadro de 100 ms ou m
 - **Uma máquina, um display, um modo de vsync** (o padrão, lido da janela): Apple M3 Pro, macOS, Compatibility renderer, 120 Hz. Nenhum número vale para outro hardware, e nenhum FPS sem limite é afirmado.
 - **A carga estava muito acima de 2,0** nas execuções que congelam (observação (b)), com outros agentes na máquina e o usuário ausente: os números são pessimistas, e o usuário trabalhando no Mac não está neles. A corroboração mostra que o baseline é sensível à carga (observação (d)).
 - **O fim do turno foi medido em 2 quadros**, e a janela do protocolo tem pelo menos 5: o limite do `event-burst` é o desses dois quadros.
-- **A HUD do #100 passa dos limites congelados do turno** e a causa está em aberto (observação (c)); o "cumprido" da saída X6 espera esse diagnóstico e os braços.
+- **A faixa do turno com a HUD do #100 passa dos limites congelados do turno** e a causa está em aberto (observação (c)); o "cumprido" da saída X6 espera esse diagnóstico e os braços.
 - **A janela `stress` não tem orçamento absoluto.** O cenário que enche um log de 200 linhas e uma lista de 100 itens será medido pela primeira vez no comparativo.
 - **O orçamento absoluto compara o tempo de CPU com um limite de tempo de quadro** (observação (a)); a regra relativa decide.
 - **O recibo bruto do turno não tem os campos que o `verifyTurnRecord` lê** (`job`, `spinner`, os totais do host). O turno foi validado pelo `verifyGraphicsReceipt` e pelo `graphicsRunValidity`, que a própria faixa usa, por uma checagem da forma do turno nos dados brutos e pelo recálculo das estatísticas por fase e da soma dos sete quadros, que bateram com o `turnFrames` do recibo ao microssegundo.

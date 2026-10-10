@@ -335,7 +335,7 @@ test("the corroboration shows what the notes say of it: the turn before #100 rep
   const current = roles["turn-main"];
   assert.equal(sumP50(current.busySumP50), "94.688");
   assert.deepEqual([current.aiPhaseP95.limit, current.eventBurstP95.limit], [18500, 18500]);
-  assert.deepEqual([current.againstTheFrozenBounds.aiPhase.met, current.againstTheFrozenBounds.eventBurst.met], [false, false], "the HUD of #100 is over the frozen bounds of the turn");
+  assert.deepEqual([current.againstTheFrozenBounds.aiPhase.met, current.againstTheFrozenBounds.eventBurst.met], [false, false], "the turn lane with the HUD of #100 is over the frozen bounds of the turn");
   assert.ok(current.phaseP50.slice(1).every(value => value > 14000 && value < 14400), "each phase after the first has a p50 of about 14 ms, over the 8.33 ms period");
   const quiet = roles["baseline-main"];
   assert.ok(quiet.injectionP50.every(value => value >= 8300 && value <= 9100), "the injection and flush p50: 8.3 to 9.0 ms against 6.8 to 7.3");

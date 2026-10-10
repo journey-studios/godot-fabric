@@ -118,7 +118,7 @@ A budget of about two periods will rarely be exceeded by a CPU time; **the relat
 turn at 5.35 to 7.55; the corroboration ran at 8.34 to 13.55 (the baseline), 6.56 to 10.53 (the turn) and 5.75 to 8.60 (the A/B). The sampler of the corroboration read the 1-minute average between 5.06 and 13.17 and the 5-minute average between 6.97 and 10.09 with no agent suite running:
 the idle floor of this machine, with the desktop applications open, was never near 2. The `execucao` criterion will need a machine within the limit, and an execution that does not meet it is redone by the protocol's own rule.
 
-**(c) With the HUD of #100 the turn is over the frozen bounds.** The turn with the HUD of before #100, measured on `916387e` (the A/B: the same machine, the same night and the same main, only `consumers/civ-lite` differs), reproduces `1bc3a3c`; with the HUD of #100 every frame of the turn after the first took about 6 ms more (about 14 ms at the median against about 7.5):
+**(c) The turn lane with the HUD of #100 is over the frozen bounds.** The turn with the HUD of before #100, measured on `916387e` (the A/B: the same machine, the same night and the same main, only `consumers/civ-lite` differs), reproduces `1bc3a3c`; with the HUD of #100 every frame of the turn after the first took about 6 ms more (about 14 ms at the median against about 7.5):
 
 | Turn (windowed, five runs each) | `1bc3a3c`, frozen | main, HUD before #100 | main, HUD of #100 |
 | --- | --- | --- | --- |
@@ -156,7 +156,7 @@ The higher system load is the likely cause (the principal saw `fseventsd`, Spotl
 
 - **Arm B** (`braco-b`) does not exist: the relative rule (C against B) needs it. Its time-box of 16.0 h is set ([the protocol's amendment](frontier-comparison-protocol.md#amendments)), and nothing is run.
 - **`execucao`**: the comparative executions, with the instrument wired in the three arms, the scripts and the hashes written first, and a machine within the load limit (observation (b)).
-- **The HUD of #100** over the frozen bounds of the turn (observation (c)): the diagnosis is another delivery's, and the exit criterion X6 ("met") waits for it and for the arms.
+- **The turn lane with the HUD of #100** over the frozen bounds of the turn (observation (c)): the diagnosis is another delivery's, and the exit criterion X6 ("met") waits for it and for the arms.
 - **The stress window** has no absolute budget: it is judged by the relative rule alone, and the scenario that fills a log of 200 lines and a list of 100 items is first measured by the comparison.
 - **The end of a turn** was measured over two frames; the frames after them, which the protocol's window of at least five frames would include, were not.
 - **The iPhone** is a NO-GO (V05-09, 2026-10-09): the comparison covers macOS only.
