@@ -368,4 +368,21 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-10-braco-b-otimizacao",
   },
+  // The whole comparative campaign (#126, squash c6dea50): no native step, since its tests run only locally, and its three contract test files; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-campaign",
+    pr: 126,
+    squash: "c6dea50",
+    contractsRun: 38061346890,
+    pagesRun: 38061346857,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-campaign.test.mjs",
+      "tests/frontier-comparison-campaign-state.test.mjs",
+      "tests/frontier-comparison-campaign-guards.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-execution-2-f952152",
+  },
 ];
