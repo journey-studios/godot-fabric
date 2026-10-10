@@ -252,4 +252,16 @@ export const SLICES = [
     contractTests: [],
     activity: "mobile-density-slice-2026-10-09",
   },
+  {
+    folder: "frontier-freeze",
+    pr: 107,
+    squash: "561251d",
+    contractsRun: 38025095171,
+    pagesRun: 38025095215,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-freeze.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-06-congelado-e1803a9",
+  },
 ];

@@ -363,10 +363,15 @@ function artifactRecord(descriptor, runArtifacts, nativeLog, workDir, runId) {
   };
 }
 
+// TAP escapes a backslash as `\\` and a `#` as `\#` in a test description. One pass undoes both, so no escape is read twice.
+export function tapDescription(text) {
+  return text.replace(/\\(.)/g, "$1");
+}
+
 function contractTestRecord(file, squash, lines) {
   const source = ghBuffer(`repos/${REPOSITORY}/contents/${file}?ref=${squash}`, "application/vnd.github.raw").toString("utf8");
   const names = [...source.matchAll(/^test\((["'`])(.+?)\1,/gm)].map((match) => match[2]);
-  const ok = new Set(lines.map((line) => /^ok \d+ - (.*)$/.exec(line)?.[1]).filter(Boolean));
+  const ok = new Set(lines.map((line) => /^ok \d+ - (.*)$/.exec(line)?.[1]).filter(Boolean).map((text) => tapDescription(text)));
   const passed = names.filter((name) => ok.has(name));
   if (names.length === 0 || passed.length !== names.length) {
     throw new Error(`${file}: ${passed.length} of its ${names.length} top-level tests passed in the contracts job log`);
