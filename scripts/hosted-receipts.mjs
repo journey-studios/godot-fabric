@@ -459,9 +459,12 @@ function hostedCiReceipt(slice, workDir) {
   const squashParent = slice.guard ? ghJson(`repos/${REPOSITORY}/git/commits/${squash}`).parents[0].sha : null;
   const nativeSteps = {};
   for (const wanted of slice.nativeSteps) {
-    const name = `Run npm run ${wanted.script}`;
+    // The log groups a step under its command whatever its name; the job's step list names a step with no `name:` after its
+    // command too, and a named one by the name the row gives.
+    const command = `Run npm run ${wanted.script}`;
+    const name = wanted.step ?? command;
     const native = nativeJobOf(jobs, logs, `step "${name}"`, (job) => job.steps.some((step) => step.name === name));
-    const result = stepResult(stepSection(logs.get(native.name), name));
+    const result = stepResult(stepSection(logs.get(native.name), command));
     nativeSteps[wanted.script] = { ...(run.event === "push" ? {} : { job: native.name }), ...stepRecord(native, name), result };
   }
   const runArtifacts = ghPages(`repos/${REPOSITORY}/actions/runs/${slice.contractsRun}/artifacts`, "artifacts");
