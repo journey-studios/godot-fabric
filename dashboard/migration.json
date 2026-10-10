@@ -4753,6 +4753,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/4592dba920d8cc106ed97b96ad04322c842f7851/docs/evidence/frontier-comparison-analysis/README.md"
     },
     {
+      "id": "milestone-0-5-v05-05-frame-time-receipts",
+      "at": "2026-10-10T05:58:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #108, a correção da lane do turno (a regressão de tempo de quadro atribuída ao #100 era a sonda lendo o snapshot inteiro do Surface em cada quadro cronometrado), já na main como 09ed8f7. A Contracts disparada na main sobre o squash (run 38027051145) passou nos oito jobs: no native-suites-frontier, npm run test:frontier-turn passou com FRONTIER_TURN_PASSED: 27 no artefato native-frontier-turn, com a regra observation; o job contracts passou 7, 43 e 490 testes de Node, entre eles os 18 do verificador da lane janelada. O Pages do push (run 38027038484) publicou o migration.json commitado, com a entrada de atividade da correção. Gerador canônico com 20 fatias e 40 recibos. O A/B janelado e o diagnóstico seguem só locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/de618102dc5ed27b415ff2b059bccd8f60ead055/docs/evidence/civ-lite-ui/frame-time/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "milestone-0-5-v05-06-congelado-followup-3fb9487",
       "at": "2026-10-10T05:50:45.000Z",
       "taskIds": [],
