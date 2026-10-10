@@ -85,6 +85,23 @@ node tests/frontier-comparison-synthetic.mjs --unreported-validity docs/evidence
 
 O comando gera a campanha, analisa-a e grava a seção; o teste `tests/frontier-comparison-analysis.test.mjs` o roda e exige o arquivo desta pasta byte a byte, e confere que o script de análise, sobre a campanha que `node tests/frontier-comparison-synthetic.mjs --unreported <campaign.json>` grava, produz a mesma seção.
 
+## O relatório como documento (Markdown)
+
+[`example-analysis.md`](example-analysis.md) é o `example-analysis.json` lido por uma pessoa: o renderizador `scripts/frontier-comparison-report-markdown.mjs` transforma o JSON do relatório em Markdown, em inglês, com uma seção por seção do relatório e na ordem do protocolo.
+Este passo prepara o fechamento do critério `relatorio` do V05-10 e não o fecha: o fechamento passa a ser mecânico (análise → `report.json` → documento), mas o critério segue aberto até a campanha real e o texto da decisão. O exemplo continua **sintético**, e o próprio texto do JSON (`decision`, `limitations`, `cost-of-change`) diz "SYNTHETIC EXAMPLE"; nenhum número dele é resultado de qualquer braço.
+
+```sh
+node scripts/frontier-comparison-report-markdown.mjs docs/evidence/frontier-comparison-analysis/example-analysis.json --out docs/evidence/frontier-comparison-analysis/example-analysis.md
+```
+
+Sem `--out` o documento vai para a saída padrão. O comando lê também o protocolo (`docs/research/frontier-comparison-protocol.json`, ou `--protocol <arquivo>`) e calcula o SHA-256 dos bytes dele: os ids e a ordem das seções e as palavras da regra do relatório parcial (`decisionRule.partialReport`) são do protocolo, não do renderizador,
+e um relatório cujo `sections.provenance.protocol.sha256` não seja o do protocolo lido é recusado (foi feito sob outro protocolo). **O `.md` não se edita à mão:** ele é a saída do comando sobre o `.json` desta pasta, byte a byte, e o teste `tests/frontier-comparison-report-markdown.test.mjs` exige isso. Mudou o relatório ou o renderizador, o teste falha e o documento se regera com o mesmo comando.
+O mesmo vale para o documento final da campanha real: ele sai do `report.json` dela, e as palavras da decisão e das limitações são o campo `text` da campanha, escritas por quem fecha o comparativo.
+
+O renderizador não calcula estatística, não arredonda veredito e não decide nada; só formata o que o JSON tem. Os números seguem uma regra única, sem locale: até 3 casas decimais, sem zeros à direita, os inteiros como inteiros e as unidades do JSON ao lado
+(um número diferente de zero que 3 casas apagariam, como um p-valor de 0,00009999, mostra 3 algarismos significativos em notação plana: 0.0001, nunca 0 e nunca exponencial). Os vereditos e as categorias aparecem com as palavras do JSON. O que o JSON tem e o documento não repete, de propósito, são os valores por execução (`perRun`) e os intervalos orientados; um campo que o renderizador não conhece vai para um bloco "Other fields", em JSON compacto, no fim da seção dele,
+e o teste prova que o exemplo desta pasta não cai nesse bloco. O teste confere ainda os quatro `status` (`complete`, `partial`, `incomplete` e `stopped`), a tentativa sem relatório marcada na validade (`reported: false`), o escape de `|` em tabela, a recusa de um JSON de outro formato, de um relatório feito sob outro protocolo (outro SHA-256) ou com as seções fora da ordem do protocolo, e que nenhum número do documento falta no JSON.
+
 ## Os limites
 
 - **É sintético, e nenhum número dele é resultado.** Os testes provam que o script calcula o que o protocolo diz que ele calcula; não provam nada sobre um braço nem sobre como os dados reais vão se parecer. A primeira campanha real vai exercitar caminhos (uma carga rejeitada, uma campanha que para) que as sintéticas só simulam.

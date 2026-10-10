@@ -1002,6 +1002,13 @@ synthetic example was regenerated (it only gained `reported: true`) and a new ex
 result.** The [record](https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10) has the section. No criterion changes state,
 and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `relatorio`, the report as a document (code at `e53a05f`): `scripts/frontier-comparison-report-markdown.mjs` renders the JSON of the analysis' report as a Markdown document that a person reads, so that the closing
+of the criterion becomes a mechanical step (analysis, `report.json`, document). `renderReport(report, {protocol, protocolSha256})` is pure and deterministic and computes nothing: the ids and order of the sections and the words of the partial report rule come from
+the protocol, a report made under another protocol (another SHA-256 in its provenance) or with its sections out of order is refused, the numbers follow one rule (at most three decimals, no trailing zeros, the JSON's units), and a field it does not
+know goes to an "Other fields" block instead of being dropped. The synthetic example of the evidence record gained `example-analysis.md`, checked byte for byte by a test, and the research note gained the section "The report as a document". Node
+only and synthetic data: **no number in it is a result.** The [record](https://github.com/journey-studios/godot-fabric/blob/e53a05fc4a7240e23d357bd038c5a1123430fca7/docs/evidence/frontier-comparison-analysis/README.md#o-relatório-como-documento-markdown)
+has the section. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `relatorio` stays open, because it needs the real campaign, the words of the decision and of the limitations, and the document generated from the campaign's `report.json`.
+
 **Progress.** V05-10, criterion `execucao`, the entry of the scenario (code at `da7eff5`, record at `bb30d75`): the scenario no longer runs with `-s`, which an export template discards, but as the main loop of the measurement
 project, so that the Debug run and a Release `.app` of the same project enter the same way. The runner writes three files into the provisioned copy of civ-lite (a two-line class that extends the scenario, an empty main scene and an
 `override.cfg` that names both), keeps the settings out of the package's hash and puts them into the scenario's; `override.cfg` is read with `--path` and, in an exported `.app`, from `Contents/MacOS/` or the pack, as the Godot 4.7.2
