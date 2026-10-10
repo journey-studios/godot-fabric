@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T08:06:11.000Z",
+  "updatedAt": "2026-10-10T08:20:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4329,6 +4329,14 @@
                 {
                   "label": "Nota de desenho do braço B: sinais do GameServices, painéis montados pela tabela de contexto, só o que mudou é tocado, o overlay como Control que para o ponteiro (e o giro da roda que o GUI deixa passar), o leitor único pelo qual as sondas leem as duas HUDs e o que difere do braço C",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/research/frontier-arm-b.md"
+                },
+                {
+                  "label": "CI hospedada do #113 (squash 4c3abb7): a Contracts disparada na main (run 38034333213) passou nos oito jobs; no native-suites-runtime a lane da HUD rodou as duas HUDs e imprimiu CIVLITE_UI_NATIVE_PASSED: 144 + 28, com o controle falhando a matriz",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do #113: o deployment do push de 4c3abb7 publicou o migration.json commitado, com a entrada de atividade do braço B",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/publication.json"
                 }
               ]
             },
@@ -4754,6 +4762,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-braco-b-receipts",
+      "at": "2026-10-10T08:20:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #113, o braço B do V05-10 (a HUD nativa do Godot), já na main como 4c3abb7. A Contracts disparada na main sobre o squash (run 38034333213) passou nos oito jobs: no native-suites-runtime, npm run test:civ-lite-ui rodou as duas HUDs (CIVLITE_UI_LANE_PASSED: 144 + 28 + 41 na React Native e CIVLITE_UI_NATIVE_PASSED: 144 + 28 na nativa, com o controle que ignora o contexto falhando a matriz) e test:consumer:civ-lite passou; o job contracts passou 7, 43 e 518 testes de Node. O Pages do push (run 38034328997) publicou o migration.json commitado, com a entrada de atividade do braço B. Gerador canônico com 21 fatias e 42 recibos. As capturas e as sabotagens seguem só locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/84b1484eee1ae8268c1a788d0bd7f9ab5ed98cd6/docs/evidence/frontier-arm-b/README.md#ci-hospedada-e-pages"
+    },
     {
       "id": "milestone-0-5-v05-10-amendment-3-0a5f5b4",
       "at": "2026-10-10T08:06:11.000Z",
