@@ -135,7 +135,7 @@ de menos de 30 minutos entre os eventos com carimbo da transcrição, e o orques
 
 ## Limites
 
-- Execução local em macOS arm64 (a lane headless e as capturas em janela); a CI hospedada e o Pages do commit de implementação ficam para os recibos depois do merge.
+- Execução local em macOS arm64 (a lane headless e as capturas em janela). A CI hospedada e o Pages do squash `4c3abb7` estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages).
 - A sonda de estabilidade (20 aberturas e fechamentos, vazamentos, foco, ícones) é do host React Native e não roda no braço B. O braço B não tem o equivalente medido de vazamento, foco e
   ícones; isto fica aberto para a passada de otimização e para as execuções.
 - O hover e o clique foram exercitados com eventos sintéticos pela viewport (e em janela, nas capturas), sem mouse físico. iOS, texto digitado e IME, imagens de rede e outras
@@ -148,8 +148,31 @@ de menos de 30 minutos entre os eventos com carimbo da transcrição, e o orques
 | --- | --- |
 | Passada de otimização do braço B (no máximo 3,2 h, uma rodada, preservando a paridade) | V05-10 |
 | `execucao`, `metricas`, `mudanca` e `relatorio` | V05-10 |
-| Recibos da CI hospedada e do Pages do commit de implementação | depois do merge |
 
 ## Pins
 
 O commit de implementação é `d8bd678285efb13681e1a5d39fdec394069888b7`. O `report.json` guarda o SHA-256 de cada fonte que as lanes rodaram, dos relatórios e das capturas.
+
+## CI hospedada e Pages
+
+**O run.** Desde o #88 um push da `main` não roda as suítes nativas, então o recibo vem do workflow Contracts **disparado à mão** sobre a `main` em
+`4c3abb7`, o squash do #113 (run [38034333213](https://github.com/journey-studios/godot-fabric/actions/runs/38034333213), evento `workflow_dispatch`,
+ramo `main`). O run passou nos **oito jobs**, todos com o checkout em `4c3abb7`.
+
+**Os passos.** Os dois rodaram no job `native-suites-runtime`:
+
+- `npm run test:civ-lite-ui` (passo 61, 3 min 35 s) passou os seus dois testes (TAP 2 de 2): o da HUD React Native, que imprime `CIVLITE_UI_LANE_PASSED: 144 + 28 + 41 probe checks`, e o da HUD nativa, que imprime `CIVLITE_UI_NATIVE_PASSED: 144 + 28 probe checks on the native HUD; 27 + 23 oracle mutations; control fails ["content","input","map","panels","phase"]`: a mesma matriz e a mesma sonda de overlays, julgadas pelos mesmos oráculos, e o controle que ignora o contexto falhando a matriz também na CI.
+- `npm run test:consumer:civ-lite` (passo 60) imprime `CONSUMER_CHECK_PASSED: civ-lite: 20 build/ownership checks; 165 native checks; 10 cycles`.
+
+O artefato `civ-lite-ui` (id 11664316123, 143.689 bytes, SHA-256 `d48d3007…`, 23 arquivos) traz os relatórios das duas HUDs, e `independent-civ-lite-consumer` (id 11664421091, SHA-256 `e8b4388e…`) os do consumidor. O job `contracts` passou `npm run test:contracts` (7, 43 e 518 testes de Node). O [recibo](hosted-ci.json) guarda os jobs, os passos, os digests e os arquivos dos artefatos.
+
+**O Pages.** O push de `4c3abb7` rodou o workflow do Pages (run [38034328997](https://github.com/journey-studios/godot-fabric/actions/runs/38034328997), `build` e `deploy` em success, 43 testes do painel passando). O [recibo](publication.json) registra o deployment 6977719677 em success, o artefato `github-pages` que ele usou (id 11663099234, SHA-256 `001c9e0c…`) e que o `migration.json` publicado é o commitado em `4c3abb7`, com a entrada de atividade do braço B.
+
+**O que continua só local:** as capturas, as sabotagens retidas da lane e a medida do tempo ativo sobre a transcrição.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-arm-b --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
+node scripts/hosted-receipts.mjs --check
+```
