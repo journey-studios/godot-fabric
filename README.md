@@ -559,7 +559,7 @@ replaced by a real click on a button of the bar. Headless, in two processes, eve
 with the base's nodes plus the new panel's, creates the new panel's nodes and deletes the old one's, swaps once and never
 reaches the map, and the live heap at rest stays within the GF-30 limit; four retained sabotages are rejected and an
 independent oracle recomputes it all. A swap that creates 100 nodes costs 9.2 ms of CPU at the median and 12.4 ms at p95 (headless, pinned run), more than a 120 Hz period (8.33 ms).
-The CPU and heap limits were a proposal and were frozen on 2026-10-10 ([the freeze](docs/research/frontier-freeze.md)). The local windowed lane
+The CPU and heap limits were a proposal and were frozen on 2026-10-10 ([the freeze](docs/research/frontier-freeze.md), [evidence](docs/evidence/frontier-freeze/README.md)). The local windowed lane
 (`node scripts/frontier-baseline-graphics.mjs`) refuses a run that no display paced; with the display off it ended as
 not presented (exit code 3, no frame-time statistic), and on 2026-10-09 the display presented the window (five runs, commit `1bc3a3c`), so the
 frame time of a presented window (vsync on, 120 Hz) is pinned from that one execution: a swap that creates 100 nodes takes a frame of 13.1 ms at the median and 16.6 ms at p95,

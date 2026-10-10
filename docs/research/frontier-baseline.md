@@ -429,7 +429,7 @@ the base's 1,960,448 that the first mounts raised and then never gave up. Two th
 ## The budget, frozen on 2026-10-10
 
 **Frozen once, on 2026-10-10.** The table is the proposal that this section made when the windowed baseline was presented, now frozen by [the freeze](frontier-freeze.md): the single act of the criterion `congelado` of V05-06, which also freezes the five thresholds of
-[the final comparison's protocol](frontier-comparison-protocol.md#the-freeze). It is recorded in [`freeze.json`](../evidence/frontier-freeze/freeze.json), which `node scripts/frontier-freeze.mjs --check` recomputes, row by row, from the committed [`inputs.json`](../evidence/frontier-freeze/inputs.json)
+[the final comparison's protocol](frontier-comparison-protocol.md#the-freeze). It is recorded in [the evidence record](../evidence/frontier-freeze/README.md), whose [`freeze.json`](../evidence/frontier-freeze/freeze.json) `node scripts/frontier-freeze.mjs --check` recomputes, row by row, from the committed [`inputs.json`](../evidence/frontier-freeze/inputs.json)
 (the intervals of the five runs of the baseline and of the five of the turn, both on `1bc3a3c`). What the freeze did to each row:
 
 - **Kept**: the rows marked **exact**, the headless CPU and heap bounds and the memory row come from the headless lane pinned in #77, which does not change.

@@ -2,7 +2,7 @@
 
 Status: documentation, a script, a test and the data they read; the delivery changes no product code and runs no game, so the public API, the PARITY table and the compatibility documents do not change. It is the single act that the 0.5 Frontier milestone had reserved for after
 the windowed baseline: the **budget of V05-06** (criterion `congelado`) and the **five thresholds of the final comparison's protocol** (V05-10, criterion `protocolo`) are frozen together, on 2026-10-10, before any comparative execution. The
-[evidence record](../evidence/frontier-freeze/freeze.json) holds every value with its derivation, and `node scripts/frontier-freeze.mjs --check` recomputes them from the committed inputs. **The exit criterion X6** (performance budget pre-registered *and met*) **stays open**: "met" depends on the arms of the
+[evidence record](../evidence/frontier-freeze/README.md), with its [`freeze.json`](../evidence/frontier-freeze/freeze.json), holds every value with its derivation, and `node scripts/frontier-freeze.mjs --check` recomputes them from the committed inputs. **The exit criterion X6** (performance budget pre-registered *and met*) **stays open**: "met" depends on the arms of the
 comparison and on the diagnosis in [the observation (c)](#four-observations-that-change-no-rule). This note moves no checkpoint, grade, weight or denominator of the 1.0.
 
 ## The question

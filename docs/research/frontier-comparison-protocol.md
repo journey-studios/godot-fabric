@@ -312,7 +312,7 @@ counted the same way. The orchestrator's own time is counted in neither arm. **T
 ## The freeze
 
 **2026-10-10.** The five thresholds were frozen **once**, together with the `congelado` criterion of V05-06 and before any comparative execution, as `preRegistration.freeze` provides: only the `frozenValue` and `frozenAt` of each entry of `thresholds` were filled, on one date, and nothing else of the JSON changed.
-The pin did not move: the test still holds `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6` for the two amendments, and the freeze is not an amendment. The act, its inputs, the rule and each derivation are in [the freeze note](frontier-freeze.md);
+The pin did not move: the test still holds `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6` for the two amendments, and the freeze is not an amendment. The act, its inputs, the rule and each derivation are in [the freeze note](frontier-freeze.md) and in [its evidence record](../evidence/frontier-freeze/README.md);
 `node scripts/frontier-freeze.mjs --check` recomputes the numbers from the committed inputs and requires them to be the protocol's, on one date, and `tests/frontier-freeze.test.mjs` runs it.
 
 | Threshold | Frozen value | Where it comes from |

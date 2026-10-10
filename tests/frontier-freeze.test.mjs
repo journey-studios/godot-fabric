@@ -476,6 +476,9 @@ test("the protocol note's section The freeze names the five thresholds and what 
     }
   }
   assert.match(freezeNote, /\]\(\.\.\/evidence\/frontier-freeze\/freeze\.json\)/);
+  for (const note of [freezeNote, baselineNote, protocolNote]) {
+    assert.match(note, /\]\(\.\.\/evidence\/frontier-freeze\/README\.md\)/, "each note points to the evidence record");
+  }
 });
 
 test("the freeze note's table of values has the five thresholds and the numbers of the freeze", () => {
@@ -484,6 +487,44 @@ test("the freeze note's table of values has the five thresholds and the numbers 
     assert.ok(freezeNote.includes(`| ${each.sorted.map(ms).join(" / ")} |`) || freezeNote.includes(each.sorted.map(ms).join(" / ")), `the freeze note shows the five runs of ${id}`);
     assert.ok(freezeNote.includes(ms(each.medianPlus3Iqr)), `the freeze note shows the median plus three IQR of ${id}`);
   }
+});
+
+// ---- the evidence record, in Portuguese, and the index ----
+test("the evidence record is pinned, has the inputs, the account of every value and the open cause, and the index lists it", () => {
+  const record = read("docs/evidence/frontier-freeze/README.md");
+  assert.ok(record.includes("a6210dc2c09ca63155511f36898f72fc56385798"), "pinned at the implementation commit");
+  assert.ok(record.includes(freeze.frozenAt));
+  assert.doesNotMatch(record, /\/Users\/|\/private\//, "no local path");
+  for (const receipt of Object.values(inputs.receipts)) {
+    assert.ok(record.includes(receipt.sha256), `the record has the SHA-256 ${receipt.sha256}`);
+  }
+  for (const threshold of protocol.thresholds) {
+    assert.ok(record.includes(`\`${threshold.id}\``), `the record names \`${threshold.id}\``);
+  }
+  // Every row of the derivation table is in the record with the numbers of the freeze (its labels are in Portuguese and its decimal separator is the comma).
+  const lines = record.split("\n");
+  for (const each of freeze.derivations) {
+    const row = derivationRow(each);
+    const cells = row.slice(row.indexOf(" | ", 2)).replaceAll(".", ",");
+    assert.ok(lines.some(line => line.endsWith(cells)), `the record has the derivation of ${each.id}: ${cells}`);
+  }
+  const decisions = {kept: "mantida", recomputed: "recalculada", added: "adicionada", removed: "**removida**"};
+  for (const row of freeze.budget) {
+    assert.ok(lines.some(line => line.startsWith(`| \`${row.id}\` | ${decisions[row.decision]} |`)), `the record has the budget row ${row.id}`);
+  }
+  for (const heading of ["As entradas", "A regra", "Os valores congelados", "As decisões", "Quatro observações que não mudam nenhuma regra", "Limites", "CI hospedada e Pages", "Reproduzindo"]) {
+    assert.match(record, new RegExp(`^## ${heading}$`, "m"), heading);
+  }
+  // The cause of the turn's frames over the frozen bounds is open, and the record says whose diagnosis it waits for.
+  assert.match(record, /\*\*A causa está em aberto: um diagnóstico em andamento \(o do Agente 5, no GF-35\) a estuda, e este registro não a afirma\.\*\*/);
+  assert.match(record, /--check/);
+  assert.match(record, /--from-receipts/);
+  assert.match(record, /\*\*A saída X6 \(orçamento de desempenho pré-registrado e cumprido\) continua aberta\*\*/);
+  for (const target of linksOf(record)) {
+    assert.ok(fs.existsSync(path.join(root, "docs/evidence/frontier-freeze", target)), `the record links to ${target}, which is not there`);
+  }
+  const index = read("docs/evidence/README.md");
+  assert.match(index, /The \[freeze record\]\(frontier-freeze\/README\.md\), pinned at `a6210dc`/);
 });
 
 test("this test and the script are part of the contracts", () => {
