@@ -31,13 +31,18 @@ const presenceOf = undrawable => ({windowed: true, opened: {windowed: true, alwa
   stableFrames: 12, waitLimitUsec: 3_000_000}, sampledFrames: 5000, undrawableFrames: undrawable, spanCount: undrawable > 0 ? 1 : 0,
 spans: undrawable > 0 ? [[300, undrawable, 2_400_000, 2_400_000 + undrawable * 7000]] : [], canDrawAtEnd: undrawable === 0});
 
+// What the Surface's snapshot weighed at a rest of a round (the probe's `surface` row): its bytes, the records of the loader's log it carried and the loads asked for, the log filling
+// 27 records a round up to its limit of 256.
+const weighed = round => ({bytes: 31_000 + 12_000 * round, loaderRecords: Math.min(256, 3 + 27 * round), loaderRequests: 3 + 27 * round});
+
 function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true, refreshRate = 120, frameUsec = 7000, presence} = {}) {
   let job = 0;
   const rounds = Array.from({length: WARMUP_ROUNDS + STEADY_ROUNDS}, (_, round) => ({round, steps: STEPS.map((step, index) => ({
     round, step: index, id: step.id, kind: step.kind, from: step.from, to: step.to, intent: step.intent, frames: step.kind === "turn" ? 8 : 2, flushUsec: 800,
     latencyUsec: step.kind === "turn" ? 52000 : 9000, drawUsec: drawn ? 11000 : null, frameUsec: [8000, 8000], frameReads: [0, 0], fullAgrees: true, callbacks: {[step.intent]: 1},
     worldEvents: step.kind === "map" ? 2 : 0, worldClicks: step.kind === "map" ? 2 : 0, shown: CONTEXT_PANELS[step.to], dialog: dialogOf(step), contextAtArrival: step.to,
-    rest: {context: step.to, panels: CONTEXT_PANELS[step.to], surface: {nativeTags: NATIVE[step.to]}}, turn: step.kind === "turn" ? turnOf(++job, frameUsec) : null}))}));
+    rest: {context: step.to, panels: CONTEXT_PANELS[step.to], surface: {nativeTags: NATIVE[step.to], ...weighed(round)}}, turn: step.kind === "turn" ? turnOf(++job, frameUsec) : null})),
+    start: {surface: {nativeTags: NATIVE.none, ...weighed(round)}}}));
   return {scenario: "frontier-turn-graphics", lane: "windowed", run, godot: "4.7.2-stable (official)", checks: [{name: "click/Every click showed", passed: true}],
     stages: {config: {steps: STEPS, warmupRounds: WARMUP_ROUNDS, rounds: STEADY_ROUNDS, idleFrames: IDLE_FRAMES, clickFrameLimit: CLICK_FRAME_LIMIT, turnFrameLimit: TURN_FRAME_LIMIT},
       provenance: {godot: "4.7.2-stable (official)", hermes: "250829098.0.17", architecture: "arm64", os: "macOS", displayServer: "macOS", renderingDriver: "metal",
@@ -112,6 +117,20 @@ test("a run in which the probe read the Surface's snapshot inside a timed frame 
   const another = syntheticReport();
   another.stages.rounds[4].steps[8].fullAgrees = false;
   assert.throws(() => verifyTurnGraphicsRun(another), /say the same when the click arrives/);
+  // And what a read of the snapshot weighs at a rest, in the windowed lane as in the headless one: a round start or a step's rest with no measurement, no bytes, or more records than
+  // the log keeps or than the loads asked for, is not a run of this lane.
+  const unweighed = syntheticReport();
+  delete unweighed.stages.rounds[4].start.surface.loaderRecords;
+  assert.throws(() => verifyTurnGraphicsRun(unweighed), /round 4 start: the snapshot read at rest weighs/);
+  const pastTheLog = syntheticReport();
+  Object.assign(pastTheLog.stages.rounds[12].start.surface, {loaderRecords: 257, loaderRequests: 400});
+  assert.throws(() => verifyTurnGraphicsRun(pastTheLog), /round 12 start: the snapshot read at rest weighs .* 257 records/);
+  const pastTheLoads = syntheticReport();
+  pastTheLoads.stages.rounds[2].steps[5].rest.surface.loaderRecords = pastTheLoads.stages.rounds[2].steps[5].rest.surface.loaderRequests + 1;
+  assert.throws(() => verifyTurnGraphicsRun(pastTheLoads), /the snapshot read at rest weighs/);
+  const weightless = syntheticReport();
+  weightless.stages.rounds[3].steps[0].rest.surface.bytes = 0;
+  assert.throws(() => verifyTurnGraphicsRun(weightless), /the snapshot read at rest weighs 0 bytes/);
 });
 
 test("the turn's frames: a phase in each frame, a snapshot in each, the end once, and the HUD catching up after", () => {

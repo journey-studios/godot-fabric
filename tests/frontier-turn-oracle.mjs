@@ -182,16 +182,19 @@ function verifyObserved(record, label) {
   assert.equal(record.fullAgrees, true, `${label}: and the Controls the frames read and the full reading of the Surface say the same when the click arrives`);
 }
 
+// What a read of the snapshot weighs, recorded at every rest of both lanes: its bytes, and the records of the loader's log it carries, which only grow with the Images mounted
+// and are never more than the log keeps nor more than the loads asked for.
+function verifySnapshotWeight(rest, label) {
+  const {bytes, loaderRecords, loaderRequests} = rest.surface;
+  assert.ok(Number.isInteger(bytes) && bytes > 0 && Number.isInteger(loaderRecords) && loaderRecords >= 0 && loaderRecords <= Math.min(loaderRequests, LOADER_RECORDS_LIMIT),
+    `${label}: the snapshot read at rest weighs ${bytes} bytes and carries ${loaderRecords} records of the loader's log, of ${loaderRequests} loads asked for`);
+}
+
 function verifyObservation(stages) {
   const records = recordsOf(stages);
   records.forEach(record => verifyObserved(record, `round ${record.round} ${record.id}`));
-  // What a read of the snapshot weighs, recorded at every rest: its bytes, and the records of the loader's log it carries, which only grow with the Images mounted and are
-  // never more than the log keeps nor more than the loads asked for.
-  const rests = Object.values(seriesOf(stages)).flat();
-  for (const rest of rests) {
-    const {bytes, loaderRecords, loaderRequests} = rest.surface;
-    assert.ok(Number.isInteger(bytes) && bytes > 0 && Number.isInteger(loaderRecords) && loaderRecords >= 0 && loaderRecords <= Math.min(loaderRequests, LOADER_RECORDS_LIMIT),
-      `the snapshot read at rest weighs ${bytes} bytes and carries ${loaderRecords} records of the loader's log, of ${loaderRequests} loads asked for`);
+  for (const [name, rests] of Object.entries(seriesOf(stages))) {
+    rests.forEach((rest, round) => verifySnapshotWeight(rest, `${name}, round ${round}`));
   }
   return {timedFrames: records.reduce((total, record) => total + record.frameReads.length, 0), readsInTimedFrames: 0};
 }
@@ -406,6 +409,7 @@ export function verifyTurnGraphicsRun(report) {
   assert.equal(stages.scene.mounted, true);
   for (const row of stages.rounds) {
     assert.equal(row.steps.length, STEPS.length, `round ${row.round}: every step`);
+    verifySnapshotWeight(row.start, `run ${report.run} round ${row.round} start`);
     row.steps.forEach((record, index) => {
       const label = `run ${report.run} round ${row.round} ${record.id}`;
       assert.deepEqual([record.id, record.kind, record.from, record.to, record.intent], [STEPS[index].id, STEPS[index].kind, STEPS[index].from, STEPS[index].to, STEPS[index].intent],
@@ -420,6 +424,7 @@ export function verifyTurnGraphicsRun(report) {
       assert.ok(Number.isInteger(record.flushUsec) && record.flushUsec > 0, `${label}: and so was the injection`);
       assert.ok(record.drawUsec === null || (Number.isInteger(record.drawUsec) && record.drawUsec > 0), `${label}: the time to the first drawn frame, when one was seen`);
       verifyObserved(record, label);
+      verifySnapshotWeight(record.rest, label);
       if (record.kind === "turn") {
         verifyTurnRecord(record, label);
       }
