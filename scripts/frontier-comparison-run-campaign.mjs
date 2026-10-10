@@ -31,10 +31,10 @@ export function goldenReplayHash(root) {
 // ---- the analysis of a scenario report ----
 
 // The report of the scenario with everything this side derives from it (scripts/frontier-comparison-run-windows.mjs: the windows, the microseconds, the idle window, whether every measured
-// intent was drawn), and the problems that make it not one to analyse. `derived` is null when the report is not in the scenario's format.
+// intent was drawn), and the problems ({code, message}) that make it not one to analyse. `derived` is null when the report is not in the scenario's format.
 export function analyse(report, protocol) {
   if (report.format !== SCENARIO_FORMAT) {
-    return { derived: null, problems: [`format: ${report.format} is not ${SCENARIO_FORMAT}`] };
+    return { derived: null, problems: [{ code: "report-format", message: `format: ${report.format} is not ${SCENARIO_FORMAT}` }] };
   }
   const derived = derivedOf(report, protocol);
   return { derived, problems: derived.problems };

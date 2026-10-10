@@ -104,19 +104,25 @@ function frameTable(columns) {
   };
 }
 
+// What is wrong with a report that makes it not one to analyse: a `code` that a caller chooses by and a `message` for the people who read it. The codes are the CONFIGURATION ones (the scenario
+// is not the protocol's: nothing about the arm can be learned from the report, and every report of the scenario would be the same), `occurrence-unended` (an occurrence of a window that did not
+// end), `sample-missing` (a frame of an occurrence or of the idle window that has no complete sample) and `idle-frames` (an idle window of another length).
+export const CONFIGURATION_PROBLEMS = ["config-waits", "config-idle-frames"];
+const problemOf = (code, message) => ({ code, message });
+
 // The occurrences of a window: the first `warmup` flagged and the rest measured (runs.warmup), each the CPU time of its frames. An occurrence that did not end, or whose frames the run lacks, is
 // left out and said in `problems`, so that the window has fewer occurrences than the protocol asks for and the analysis rejects the execution as incomplete.
 function occurrencesOf(table, ranges, warmup, where, problems) {
   const out = [];
   ranges.forEach((range, index) => {
     if (range.last === null) {
-      problems.push(`${where}[${index}]: the occurrence that began at frame ${range.first} did not end`);
+      problems.push(problemOf("occurrence-unended", `${where}[${index}]: the occurrence that began at frame ${range.first} did not end`));
       return;
     }
     const frameUsec = [];
     for (let frame = range.first; frame <= range.last; frame += 1) {
       if (!table.has(frame)) {
-        problems.push(`${where}[${index}]: frame ${frame} has no complete sample`);
+        problems.push(problemOf("sample-missing", `${where}[${index}]: frame ${frame} has no complete sample`));
         return;
       }
       frameUsec.push(table.totalUsec(frame));
@@ -130,14 +136,14 @@ function occurrencesOf(table, ranges, warmup, where, problems) {
 function idleOf(table, idle, protocol, problems) {
   const frames = idle.last - idle.first + 1;
   if (frames !== protocol.idleReference.frames) {
-    problems.push(`idle: ${frames} frames, the protocol says ${protocol.idleReference.frames}`);
+    problems.push(problemOf("idle-frames", `idle: ${frames} frames, the protocol says ${protocol.idleReference.frames}`));
   }
   const cpuUsec = [];
   const intervalsUsec = [];
   let drawnFrames = 0;
   for (let frame = idle.first; frame <= idle.last; frame += 1) {
     if (!table.has(frame)) {
-      problems.push(`idle: frame ${frame} has no complete sample`);
+      problems.push(problemOf("sample-missing", `idle: frame ${frame} has no complete sample`));
       return { cpuUsec: [], intervalsUsec: [], drawnFrames: 0 };
     }
     cpuUsec.push(table.totalUsec(frame));
@@ -169,17 +175,17 @@ function drewAfterEveryIntent(table, windows, ranges, protocol) {
 }
 
 // Everything the orchestrator derives from a scenario's report: the frames of each occurrence (`ranges`), the windows with their occurrences in microseconds, the idle window, whether every
-// measured intent was drawn, the table of the samples, and the `problems` that make the report not one to analyse: numbers the scenario waited with that are not the protocol's, an idle
-// window of another length, an occurrence that did not end or lacks a frame. A window the scenario recorded as unavailable has no occurrence and says why.
+// measured intent was drawn, the table of the samples, and the `problems` ({code, message}) that make the report not one to analyse: numbers the scenario waited with that are not the
+// protocol's, an idle window of another length, an occurrence that did not end or lacks a frame. A window the scenario recorded as unavailable has no occurrence and says why.
 export function derivedOf(report, protocol) {
   const rules = windowRulesOf(protocol);
   const problems = [];
   const waited = report.config.waits;
   if (waited.burstMinimumFrames !== rules.burstMinimumFrames || waited.switchFrames !== rules.switchFrames || waited.stressSteps !== rules.stressSteps || waited.stressTail !== rules.stressTail) {
-    problems.push(`waits: the scenario waited with ${JSON.stringify(waited)}, the protocol says ${JSON.stringify(rules)}`);
+    problems.push(problemOf("config-waits", `waits: the scenario waited with ${JSON.stringify(waited)}, the protocol says ${JSON.stringify(rules)}`));
   }
   if (report.config.idleFrames !== protocol.idleReference.frames) {
-    problems.push(`idleFrames: ${report.config.idleFrames}, the protocol says ${protocol.idleReference.frames}`);
+    problems.push(problemOf("config-idle-frames", `idleFrames: ${report.config.idleFrames}, the protocol says ${protocol.idleReference.frames}`));
   }
   const table = frameTable(report.frames);
   const ranges = windowFramesOf(report.trace, rules);
