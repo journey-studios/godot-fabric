@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-stress",
+  "status": "verified-local-headless-and-headed-causal-control-retained-sabotages-and-regressions",
+  "at": "2026-10-10T09:27:07Z",
+  "item": "V05-10",
+  "criteria": [],
+  "criteriaNote": "no criterion closes: this slice serves execucao and metricas (the stress window and the runner's stats())",
+  "executionBaseCommit": "4c3abb7",
+  "implementationCommit": "6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35",
+  "environment": {
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": {
+      "lane": "headless",
+      "captures": "macOS window"
+    },
+    "nativeHostSha256": "bf64406b771fb43bca0a58340a52442c9328d44b0dbffc949ecef96381138d29",
+    "previousHostSha256": "84d6ab94ea0c79cfaf16f8e009ab682899c8c8b5953ac9eaa5d4ac3e938b2c43",
+    "nativeHostNote": "the host was rebuilt in this worktree for the optional field and the delivery counters; the previous host is the one of 4c3abb7's native sources"
+  },
+  "screenshots": {
+    "count": 2,
+    "files": {
+      "stress-rn": {
+        "file": "docs/evidence/frontier-stress/stress-rn.png",
+        "sha256": "6754a08cba65b182fa040c43998fe0778606fcf3985b33388049e15a8663d7d1",
+        "bytes": 93933
+      },
+      "stress-native": {
+        "file": "docs/evidence/frontier-stress/stress-native.png",
+        "sha256": "2909178f9477a9ac20194eee6e24a9724473773b5b224892edf1713395077da3",
+        "bytes": 96330
+      }
+    }
+  },
+  "lane": {
+    "hudProbeChecks": {
+      "rn": 152,
+      "native": 152
+    },
+    "arms": {
+      "rn": "rn",
+      "native": "native"
+    },
+    "stressStage": {
+      "rn": [
+        "again",
+        "begun",
+        "ended",
+        "final",
+        "off",
+        "snapshots",
+        "steps",
+        "turn"
+      ],
+      "native": [
+        "again",
+        "begun",
+        "ended",
+        "final",
+        "off",
+        "snapshots",
+        "steps",
+        "turn"
+      ]
+    },
+    "stats": {
+      "rn": {
+        "before": {
+          "context": "none",
+          "events": 73,
+          "snapshots": 67
+        },
+        "after": {
+          "context": "none",
+          "events": 81,
+          "snapshots": 74
+        },
+        "emitted": [
+          73,
+          81
+        ],
+        "published": 7,
+        "final": {
+          "emitted": 103,
+          "stats": {
+            "context": "none",
+            "events": 103,
+            "snapshots": 96
+          }
+        }
+      },
+      "native": {
+        "before": {
+          "context": "none",
+          "events": 73,
+          "snapshots": 67
+        },
+        "after": {
+          "context": "none",
+          "events": 81,
+          "snapshots": 74
+        },
+        "emitted": [
+          73,
+          81
+        ],
+        "published": 7,
+        "final": {
+          "emitted": 103,
+          "stats": {
+            "context": "none",
+            "events": 103,
+            "snapshots": 96
+          }
+        }
+      }
+    },
+    "oracleMutations": {
+      "hud": 38,
+      "overlays": 23
+    },
+    "stressProbe": {
+      "checks": 17,
+      "bindings": 18,
+      "counters": {
+        "emitted": 22,
+        "errors": [],
+        "published": 22,
+        "revisionsAfter": {
+          "bound": true,
+          "delivered": 0,
+          "emitted": 29,
+          "sent": 0
+        },
+        "revisionsBefore": {
+          "bound": true,
+          "delivered": 0,
+          "emitted": 7,
+          "sent": 0
+        }
+      }
+    }
+  },
+  "reports": {
+    "civ-lite-ui/headless": {
+      "file": "build/civ-lite-ui/headless.json",
+      "sha256": "386c40a9214aa4b9f7cc94e79d3a944790a5bcda6a0dd3c9158d506a5a407f01",
+      "bytes": 1280561
+    },
+    "civ-lite-ui-native-hud/native-headless": {
+      "file": "build/civ-lite-ui-native-hud/native-headless.json",
+      "sha256": "c1c5f6dcbb88c1c38181e2b986e0babe3ce00e2cb9e5aeb9ce0ec9d8642221e9",
+      "bytes": 1192948
+    },
+    "frontier-stress-report": {
+      "file": "build/frontier-stress-report.json",
+      "sha256": "bab508102e3556827b5c130817fa0dcd2a914f75162f3e512cae0eafd38e8420",
+      "bytes": 7780
+    },
+    "civ-lite-ui-native-hud/summary": {
+      "file": "build/civ-lite-ui-native-hud/summary.json",
+      "sha256": "2e516528f23b1ff1c4d6e099a00da92138a12872f4761213811d3b58168d6a16",
+      "bytes": 9397
+    }
+  },
+  "causalControl": {
+    "host": "the previous host (build/stress-previous-host/fabric_godot.dylib), same bundle and probes",
+    "hudProbe": {
+      "checks": 145,
+      "failed": 139
+    },
+    "stressProbe": {
+      "checks": 6,
+      "failed": 3,
+      "bindings": 17
+    },
+    "reports": {
+      "hud": {
+        "file": "build/civ-lite-ui-stress-previous-host-report.json",
+        "sha256": "18e5785f15538389b41f19e1f9d5522ccbaee6a24eba6d75d419f633186b0c9c",
+        "bytes": 407910
+      },
+      "stress": {
+        "file": "build/frontier-stress-previous-host-report.json",
+        "sha256": "91be53fac49d11c786888a871550d3fd3c679d1db8245baf6806dbbaf2397e95",
+        "bytes": 1895
+      }
+    }
+  },
+  "retainedSabotages": {
+    "receipt": {
+      "file": "build/civ-lite-ui-sabotage.json",
+      "sha256": "6abd2a936e32afc01dab70ba8b68570bca49d305f73439056208d836b9da54e4",
+      "bytes": 35627
+    },
+    "variants": 25,
+    "allRejected": true,
+    "controlStatus": 0,
+    "restoredEqualsGenuine": true,
+    "stress": [
+      {
+        "name": "stress-rows-rebuilt",
+        "file": "consumers/civ-lite/ui/hud/stress.tsx",
+        "rejected": true,
+        "failedChecks": 1,
+        "categories": [
+          "stress"
+        ],
+        "firstFailedCheck": "Twenty steps, one a frame, leave the HUD with the game's 200 lines and 100 items, and every row that was there is the same Control: one line mounted and one dropped for each step, no row built again"
+      },
+      {
+        "name": "native-stress-rows-rebuilt",
+        "file": "consumers/civ-lite/native_hud/stress.gd",
+        "rejected": true,
+        "failedChecks": 1,
+        "categories": [
+          "stress"
+        ],
+        "firstFailedCheck": "Twenty steps, one a frame, leave the HUD with the game's 200 lines and 100 items, and every row that was there is the same Control: one line mounted and one dropped for each step, no row built again"
+      },
+      {
+        "name": "stress-end-keeps-overlay",
+        "file": "consumers/civ-lite/services/game_services.gd",
+        "rejected": true,
+        "failedChecks": 1,
+        "categories": [
+          "stress"
+        ],
+        "firstFailedCheck": "Leaving the mode removes the panel, the context's panels are shown again and the snapshot is byte for byte the one before the mode began"
+      },
+      {
+        "name": "stats-miss-turn-ended",
+        "file": "consumers/civ-lite/hud_stats.gd",
+        "rejected": true,
+        "failedChecks": 2,
+        "categories": [
+          "stats"
+        ],
+        "firstFailedCheck": "Over a whole turn the runner's stats() counts the notifications the node emitted and the snapshots it published, and no others"
+      },
+      {
+        "name": "native-stats-miss-turn-ended",
+        "file": "consumers/civ-lite/native_hud/hud.gd",
+        "rejected": true,
+        "failedChecks": 2,
+        "categories": [
+          "stats"
+        ],
+        "firstFailedCheck": "Over a whole turn the runner's stats() counts the notifications the node emitted and the snapshots it published, and no others"
+      }
+    ]
+  },
+  "costs": {
+    "file": "docs/evidence/frontier-stress/costs.json",
+    "sha256": "75025bee82a5e8655239ba91c21c422377659927acf0161980c54a5dad11a98d",
+    "bytes": 9108
+  },
+  "gameUnchanged": "git diff 4c3abb7 on context.gd, game.gd, snapshot.gd, replay.gd, canon.gd, world/, the golden-hash test and the protocol is empty",
+  "sourcePins": {
+    "native/game_service_registry.cpp": "472d44aeace827abde1415f82fce9557d9e5c0e7e904cd006adafd288135e8b6",
+    "native/game_service_registry.h": "7c519adb4296df4ed142eac34dfb2893b6d3e82905739b3f8a96f5a09d950914",
+    "native/fabric_application.cpp": "0234b623a0376af455f5b880bfaa10f2d2ed1d0cc1e134d4abdd72c980a1206f",
+    "native/fabric_application.h": "ec44868d121cd52ec4e568bb338dc268c98ff00a7d56827152de393d03059b2e",
+    "consumers/civ-lite/services/stress.gd": "13e2428f8d705718624fdbda2e0925a1781bf69c27156cb10f7cbadd9a247c79",
+    "consumers/civ-lite/services/game_services.gd": "6507038421230b8e5116b01dc2de648e5beb602eb8351b0a2fe9aa2d3d6bf125",
+    "consumers/civ-lite/services/schema.gd": "37b4ad510b08420f5cbf12f5d56f3910db2bd684aaf35184b1dc06cad2a73dc6",
+    "consumers/civ-lite/game/rules.gd": "6fdfb2122fcca7971d7e663ca417535d4139d5555f5dcbf6c91a6963fa269da4",
+    "consumers/civ-lite/ui/frontier-types.ts": "1f8f56360c500df58341c972c1da279d034226d46ab7c38a3e372c751efb9b06",
+    "consumers/civ-lite/ui/hud/stress.tsx": "f81aa9bc4700fa4e82c0d40d5e1b65486e78a9cc22e9aa83c1f066c8bab7321d",
+    "consumers/civ-lite/ui/hud/hud.tsx": "b392986677c93c1f83b23fba58965827722b4ef4a347fefd1489a5836142293b",
+    "consumers/civ-lite/hud_stats.gd": "637304ca332cd5cd38f2f2450031bfb7e7a8189978172602430412b0d2efaeb5",
+    "consumers/civ-lite/main.tscn": "819d749e15bf7dc922330fcfcd4191d58774ae5f9c5d8b364559f2e1b032e7e1",
+    "consumers/civ-lite/native_hud/stress.gd": "e9a01bc4af3779d75ff311b04d6a866f8356363d88901b191e3986bc2e74b35e",
+    "consumers/civ-lite/native_hud/stress.tscn": "8ee2e90fa5f5e85af831e2e29baa916d7b7e8dc93e7cdaf065a2e05b1f72f707",
+    "consumers/civ-lite/native_hud/hud.gd": "b37b42654b2238ed0883560994639d3c7aaf46cc0a6df078c807f8b9b96919b7",
+    "consumers/civ-lite/hud_validation.gd": "0f2a0f6ea803f87d77a722e90485466c7c620d36d1e181cf214e347400b18ee9",
+    "consumers/civ-lite/hud_reader.gd": "fd743f6a7ad61d054b268be779956fc956c0c69148499b809081b9af24ec20e4",
+    "consumers/civ-lite/hud_reader_host.gd": "9d7037cf0bc44ea64934fd8aa4359e396876b21f65d802f8d80ae1ae225f7487",
+    "consumers/civ-lite/hud_reader_native.gd": "168c8e570a4aad2835c7622fc20d523e528e53ddcbcd69e85c502c18873847ee",
+    "consumers/civ-lite/validation.gd": "d6c08d254e8b782e6d90196156f755b446408bc01d73ba0ec56abebcc068fa07",
+    "tests/frontier-stress-probe.gd": "b1b9ff0c6b9eabf7fbcc79353683a57589927c06264ca579195493cdef566465",
+    "tests/frontier-stress-native.test.mjs": "e0f738b5dd5077e10b10233536785be4f09ef8abe3a64ed64f182fda7fe21929",
+    "tests/civ-lite-ui-oracle.mjs": "e743d46fe7c3ec9a0d41a86c63a26ebf327539ae29896501083bff248de0d1cc",
+    "tests/civ-lite-ui-native.test.mjs": "d0cd0dda1fb12757535d3381d74e348912268e0722b77348ec8da1da8d837c66",
+    "tests/civ-lite-stability-oracle.mjs": "3e48e62a916b47d1484259e64e1e067195253da4b492ba1c96321d3e0128854d",
+    "tests/frontier-services-oracle.mjs": "ec3b185f2d08c2d63f4f3c5cac94f4beed1c8b2840abba81566fcf19a3a2d077",
+    "tests/frontier-services-parity.test.mjs": "78ee187acd852fa8ba1ea8a9d9226093ce6795489672a7f74889f863d6178546",
+    "tests/frontier-services-probe.gd": "b6b28cb9cccc06e92fda77a89c9e000f7611c317997364a2a6a12952fedc08c2",
+    "tests/frontier-soak-probe.gd": "60da22b20d700a4fd81b9e9c4bc2d4173eda7454d8bb3cdc292685ba883114b1",
+    "tests/frontier-soak-oracle.mjs": "1df2633f2b0a85de20401688229b4e5258bac0819ae8b5bdb5af4f1b88d1e4f7",
+    "tests/types/frontier-services.tsx": "82ca1af55826a9f7c15b61e113b6059081a83640bd8750bc86724e233f5ab622",
+    "scripts/civ-lite-ui-sabotage.mjs": "badcc5f9b124e8a7e8e0af39a1749147756188db0d3df5dd0cbf5f0e78231e06",
+    "scripts/consumer-civ-lite-check.mjs": "df73fb41e29b6a8752e21fe079eaaf7c53eeba6a9c33a928c23602374ea93674",
+    ".github/workflows/contracts.yml": "f727cc82f964ba3f198a69a198b594ca685db66ba582e116a0c881368ce5dd88",
+    "package.json": "b5e964464eabf756f3875b613cf05646537da5dc0e411e297d89335d31046787",
+    "docs/GAME_SERVICES.md": "d191806fc286ffe185b9c84e793f91ddb9fc3f0d5b7a5ba54eca354c43230c7c",
+    "docs/research/frontier-stress.md": "d75d1dd607c89652fb4ca86ed2dc74541fc68007ca462439efbb61d8e27a2d8c",
+    "consumers/civ-lite/README.md": "3db1d262f43c1796738d5fe5372c579e2296d4289241778c57f16e31f1bc5545"
+  },
+  "effort": {
+    "armB": {
+      "stressPanel": {
+        "lines": 109,
+        "files": [
+          "native_hud/stress.gd (52)",
+          "native_hud/stress.tscn (57)"
+        ],
+        "plusInHud": "about 8 lines of native_hud/hud.gd"
+      },
+      "stats": {
+        "lines": "about 22 lines of native_hud/hud.gd and 5 of the reader"
+      },
+      "activeTimeHoursEstimated": 0.25
+    },
+    "armC": {
+      "stressPanel": {
+        "lines": 34,
+        "files": [
+          "ui/hud/stress.tsx (34)"
+        ],
+        "plusInHud": "4 lines of ui/hud/hud.tsx"
+      },
+      "stats": {
+        "lines": "hud_stats.gd (32), 4 of main.tscn and 5 of the reader"
+      },
+      "activeTimeHoursEstimated": 0.25
+    },
+    "shared": {
+      "note": "the game's overlay (stress.gd, 46 lines), the intents, the publisher and the counters in game_services.gd (+110 -9), the schema, the TypeScript mirror, the C++ of the optional field and the delivery counters (about 60 lines), the stress stage of the HUD probe (153 lines), the oracle's rules (77), the node probe (251) and the sabotages"
+    },
+    "activeTimeHoursEstimated": {
+      "total": 1.5,
+      "note": "the protocol's measure is the orchestrator's, from the transcript"
+    }
+  }
+}
