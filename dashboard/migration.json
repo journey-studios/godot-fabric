@@ -4762,6 +4762,34 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/evidence/frontier-arm-b/README.md"
     },
     {
+      "id": "milestone-0-5-v05-10-analysis-4592dba",
+      "at": "2026-10-10T06:01:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, preparação dos critérios execucao e relatorio, antes de qualquer execução comparativa: o script de análise do comparativo foi escrito e testado, como o protocolo exige que fique commitado antes da primeira execução (statistics.analysis; open, id scripts). Dos dados brutos de uma campanha, no formato godot-fabric.frontier-comparison-campaign/v1, ele produz todos os números do relatório final como o protocolo os define, lendo o JSON do protocolo ao rodar: a validade de cada vaga (as rejeições computáveis dos dados, o refazer na vaga, o limite de 3 tentativas e a campanha que para), o p95 por execução e por janela com as medianas e os IQR, os doze intervalos de 95% pelo bootstrap percentil (mulberry32, semente 20261009, 10.000 resamples) e, em C menos B, a margem, a categoria, o nonInferior e o rebaixamento pelo Holm, o veredito de cada eixo, os descritivos, os orçamentos congelados e o relatório parcial sem o braço B; ele não escreve nenhuma frase da decisão. Foi verificado só em campanhas sintéticas (os testes de análise, 19, de validade, 7, e do protocolo, 18, que segue com os exemplos e o intervalo fixados intactos, e um relatório de exemplo de 125 KB que um teste regera byte a byte), e nenhum número é resultado: os braços B e A ainda não existem e nenhuma execução comparativa rodou. Nenhum critério muda: execucao e relatorio seguem abertos (o script do cenário, os braços e uma máquina dentro do limite de carga de 2,0 são de execucao; o texto da decisão é de relatorio), e nenhum peso, nota ou denominador do 1.0 se move. Três leituras das frases do protocolo que podem mudar um resultado (other-game, rss e fps-unlimited) foram decididas pelo líder na revisão. A CI hospedada e o Pages vêm depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4592dba920d8cc106ed97b96ad04322c842f7851/docs/evidence/frontier-comparison-analysis/README.md"
+    },
+    {
+      "id": "milestone-0-5-v05-05-frame-time-receipts",
+      "at": "2026-10-10T05:58:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #108, a correção da lane do turno (a regressão de tempo de quadro atribuída ao #100 era a sonda lendo o snapshot inteiro do Surface em cada quadro cronometrado), já na main como 09ed8f7. A Contracts disparada na main sobre o squash (run 38027051145) passou nos oito jobs: no native-suites-frontier, npm run test:frontier-turn passou com FRONTIER_TURN_PASSED: 27 no artefato native-frontier-turn, com a regra observation; o job contracts passou 7, 43 e 490 testes de Node, entre eles os 18 do verificador da lane janelada. O Pages do push (run 38027038484) publicou o migration.json commitado, com a entrada de atividade da correção. Gerador canônico com 20 fatias e 40 recibos. O A/B janelado e o diagnóstico seguem só locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/de618102dc5ed27b415ff2b059bccd8f60ead055/docs/evidence/civ-lite-ui/frame-time/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-06-congelado-followup-3fb9487",
+      "at": "2026-10-10T05:50:45.000Z",
+      "taskIds": [],
+      "message": "Depois do congelado (commit 3fb9487), a causa da faixa do turno acima dos limites congelados foi confirmada e corrigida no #108 (09ed8f7): a sonda da faixa lia o snapshot da Surface duas vezes em cada quadro cronometrado, e esse snapshot carrega o log do carregador de imagens, que os ícones do #100 encheram. Não era a HUD nem o host. Como corroboração, a faixa corrigida na main em 09ed8f7 dá, na mediana dos p95 por vaga (cinco vagas apresentadas, vsync a 120 Hz), 13,62 ms na fase da IA e 13,54 ms no fim do turno, contra os 15,5 ms congelados; a carga e a contaminação estão descritas no registro. Nenhum valor congelado muda, e a corroboração não vira limiar. O X6 (orçamento pré-registrado e cumprido) segue aberto, porque depende dos braços do comparativo e do tempo de CPU por quadro. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3fb94871fd95fbfab40bc625fc03957d3bd4b963/docs/evidence/frontier-freeze/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-5-7099e2b",
+      "at": "2026-10-10T05:00:00.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedado e de Pages do #107, o congelado do V05-06 e o protocolo do V05-10, a partir do push da main em 561251d: o run Contracts 38025095171 passou na primeira tentativa, com contracts, reference-android e reference-ios em success e os cinco jobs nativos pulados. A fatia não tem passo nativo. A guarda X9 e X10 passou contra o pai do squash, e tests/frontier-freeze.test.mjs passou 21 de 21 no log do job contracts. O Pages (run 38025095215) publicou o migration.json commitado byte a byte, com a entrada de atividade do #107 (milestone-0-5-v05-06-congelado-e1803a9). O gerador passou a desfazer o escape do TAP nas descrições: um # vira \\# no log, e antes isso impedia achar pelo nome o teste com #100. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7099e2b050e71ce57056cf529c56de10df3b8c79/docs/evidence/frontier-freeze/hosted-ci.json"
+    },
+    {
       "id": "milestone-0-5-v05-05-frame-time",
       "at": "2026-10-10T04:40:00.000Z",
       "taskIds": [],
