@@ -11,6 +11,8 @@ weight or denominator of the 1.0.
 **Update, 2026-10-10:** those numbers were frozen, once, by [the freeze](frontier-freeze.md) (see [The freeze](#the-freeze) below), which closes the `protocolo` criterion. The paragraph above and the rest of this note describe the protocol as pre-registered; the freeze fills only the
 `frozenValue` and `frozenAt` of the five thresholds and the pin does not move.
 
+**Update, 2026-10-10 (the analysis):** the analysis script that the protocol requires before the first comparative execution is written and tested on synthetic campaigns, with the format of the raw data it reads: see [the analysis note](frontier-comparison-analysis.md); the scenario script, the arms and the hashes of the binary and the package are still to come.
+
 ## The question
 
 The same Frontier game runs in three arms with the same seed, the same replay and the same scripted input, in a Release export on the same machine:

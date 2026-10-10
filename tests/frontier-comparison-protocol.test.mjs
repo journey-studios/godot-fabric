@@ -4,6 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {decisionRuleOf} from "../scripts/frontier-comparison-decision.mjs";
+import {ascending, bootstrapDifferences, claimPValue, guarded, holmStands, intervalOf, iqr, median, mulberry32, nearestRank} from "../scripts/frontier-comparison-statistics.mjs";
 
 // The pre-registered protocol of the final comparison of the 0.5 (V05-10, criterion `protocolo`): the game without a HUD (A), with a native Godot HUD (B) and
 // with the React Native HUD (C). The protocol is docs/research/frontier-comparison-protocol.json, read by machines, and
@@ -156,30 +158,8 @@ const schema = {
 };
 
 // ---- the decision rule, evaluated from the JSON ----
-const compare = {"<": (a, b) => a < b, "<=": (a, b) => a <= b, ">": (a, b) => a > b, ">=": (a, b) => a >= b};
-const holds = (condition, interval, margin) => {
-  if (Object.hasOwn(condition, "all")) {
-    return condition.all.every(inner => holds(inner, interval, margin));
-  }
-  if (Object.hasOwn(condition, "any")) {
-    return condition.any.some(inner => holds(inner, interval, margin));
-  }
-  const endpoint = {lower: interval[0], upper: interval[1]}[condition.endpoint];
-  const bound = {margin, "-margin": -margin}[condition.bound];
-  assert.ok(endpoint !== undefined && bound !== undefined && Object.hasOwn(compare, condition.op), `a well-formed leaf: ${JSON.stringify(condition)}`);
-  return compare[condition.op](endpoint, bound);
-};
-const orient = (interval, orientation) => (orientation === "higherIsBetter" ? [-interval[1], -interval[0]] : interval);
-const categoriesOf = (interval, margin, orientation = "lowerIsBetter", categories = protocol.decisionRule.categories) => {
-  const oriented = orient(interval, orientation);
-  return categories.filter(category => holds(category.when, oriented, margin)).map(category => category.id);
-};
-const classify = (interval, margin, orientation) => {
-  const held = categoriesOf(interval, margin, orientation);
-  assert.equal(held.length, 1, `exactly one category for [${interval}] with margin ${margin}: ${held}`);
-  return held[0];
-};
-const nonInferior = (interval, margin, orientation = "lowerIsBetter") => holds(protocol.decisionRule.nonInferior.when, orient(interval, orientation), margin);
+// The functions live in scripts/frontier-comparison-decision.mjs, bound to the protocol under test.
+const {categoriesOf, classify, nonInferior, marginOf} = decisionRuleOf(protocol);
 // The same four categories coded by hand, to be compared with the JSON's.
 const reference = (lower, upper, margin) => {
   if (upper < -margin) {
@@ -193,7 +173,6 @@ const reference = (lower, upper, margin) => {
   }
   return "inconclusive";
 };
-const marginOf = (medianOfB, rule = protocol.decisionRule.margin) => Math.max(rule.relative * medianOfB, rule.floor.value);
 const close = (actual, expected) => Math.abs(actual - expected) < 1e-12;
 const signed = value => (value > 0 ? `+${value}` : String(value));
 const shown = interval => `[${signed(interval[0])}, ${signed(interval[1])}]`;
@@ -209,66 +188,6 @@ const EXAMPLES = [
   {medianOfB: 3, margin: 0.5, interval: [-0.4, 0.4], category: "neutral", nonInferior: true},
   {medianOfB: 3, margin: 0.5, interval: [0.6, 1.1], category: "cost", nonInferior: false}
 ];
-
-// ---- the Holm guard ----
-const holmStands = (pValues, alpha) => {
-  const order = pValues.map((p, index) => [p, index]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const stands = pValues.map(() => false);
-  for (let rank = 0; rank < order.length; ++rank) {
-    if (order[rank][0] > alpha / (order.length - rank)) {
-      break;
-    }
-    stands[order[rank][1]] = true;
-  }
-  return stands;
-};
-const guarded = (categories, stands) => categories.map((category, index) => (stands[index] ? category : "inconclusive"));
-const claimPValue = (differences, margin) => {
-  const count = predicate => differences.filter(predicate).length;
-  const total = differences.length + 1;
-  const gain = (1 + count(d => d >= -margin)) / total;
-  const cost = (1 + count(d => d <= margin)) / total;
-  const neutral = Math.max((1 + count(d => d <= -margin)) / total, (1 + count(d => d >= margin)) / total);
-  return Math.min(gain, cost, neutral);
-};
-
-// ---- the statistics ----
-const mulberry32 = seed => {
-  let a = seed | 0;
-  return () => {
-    a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-};
-const ascending = values => [...values].sort((a, b) => a - b);
-const nearestRank = (values, percent) => ascending(values)[Math.ceil(percent * values.length / 100) - 1];
-const median = values => {
-  const sorted = ascending(values);
-  const middle = sorted.length / 2;
-  return sorted.length % 2 === 1 ? sorted[Math.floor(middle)] : (sorted[middle - 1] + sorted[middle]) / 2;
-};
-const iqr = values => {
-  const sorted = ascending(values);
-  return sorted[Math.ceil(3 * sorted.length / 4) - 1] - sorted[Math.ceil(sorted.length / 4) - 1];
-};
-const bootstrapDifferences = (minuend, subtrahend, {seed, resamples}) => {
-  const next = mulberry32(seed);
-  const resample = values => values.map(() => values[Math.floor(next() * values.length)]);
-  const differences = [];
-  for (let index = 0; index < resamples; ++index) {
-    const drawnMinuend = resample(minuend);
-    const drawnSubtrahend = resample(subtrahend);
-    differences.push(median(drawnMinuend) - median(drawnSubtrahend));
-  }
-  return differences;
-};
-const intervalOf = (differences, level) => {
-  const sorted = ascending(differences);
-  const lowerRank = Math.round(sorted.length * (1 - level) / 2);
-  return [sorted[lowerRank - 1], sorted[sorted.length - lowerRank - 1]];
-};
 
 const positionsOf = sequence => {
   const positions = [{A: 0, B: 0, C: 0}, {A: 0, B: 0, C: 0}, {A: 0, B: 0, C: 0}];
