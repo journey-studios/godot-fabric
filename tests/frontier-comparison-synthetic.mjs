@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { CAMPAIGN_FORMAT } from "../scripts/frontier-comparison-format.mjs";
 import { slotsOf } from "../scripts/frontier-comparison-protocol.mjs";
 import { buildReport } from "../scripts/frontier-comparison-report.mjs";
@@ -195,3 +197,41 @@ export function harness(protocol, protocolSha256) {
 
 export const executionsOf = (campaign, arm, lane = "presented") => campaign.executions.filter((execution) => execution.arm === arm && execution.lane === lane);
 export const slotRecord = (report, lane, slot) => report.sections.validity.slots.find((candidate) => candidate.lane === lane && candidate.slot === slot);
+
+// ---- the example of the evidence record ----
+
+// The synthetic campaign of docs/evidence/frontier-comparison-analysis/: the committed `example-report.json` is the analysis of exactly these bytes. A scenario that shows the four categories and
+// the Holm guard side by side (a gain, a neutral, a cost and an inconclusive window), one load that was redone, one window in which the arm with the React Native HUD draws more frames per second
+// without a limit, and the words of a report that say the data are made up. Nothing here was measured: no number of it is a result of any arm.
+const EXAMPLE_TEXT = {
+  decision: "SYNTHETIC EXAMPLE: no decision was made. The data of this campaign were made up to exercise the analysis script, and none of them is a result of any arm.",
+  limitations: "SYNTHETIC EXAMPLE: nothing was measured; there is no machine, no display and no iPhone behind these numbers.",
+  costOfChange: "SYNTHETIC EXAMPLE: the single observation of each arm was made up.",
+};
+const EXAMPLE_WINDOWS = {
+  "ai-phase": { A: [5, 0.05], B: [8, 0.05], C: [6, 0.05] },
+  "event-burst": { A: [5, 0.05], B: [8, 0.05], C: [8.05, 0.05] },
+  "context-switches": { A: [5, 0.05], B: [8, 0.05], C: [10, 0.05] },
+  stress: { A: [5, 0.05], B: [8, 3], C: [8, 3] },
+};
+
+function exampleCampaign(protocol, protocolSha256) {
+  const campaign = syntheticCampaign(protocol, protocolSha256, { seed: "example", windows: EXAMPLE_WINDOWS, fps: { "ai-phase": { C: [1400, 10] } }, text: EXAMPLE_TEXT });
+  return redoSlot(campaign, "presented", 4, [overLoaded]);
+}
+
+// The bytes of a campaign file: compact JSON and a final newline. The report records the SHA-256 of these bytes.
+const serializeCampaign = (campaign) => `${JSON.stringify(campaign)}\n`;
+
+// node tests/frontier-comparison-synthetic.mjs <campaign.json>: writes the example campaign of the evidence record, which scripts/frontier-comparison-analysis.mjs then analyses.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const [file] = process.argv.slice(2);
+  if (file === undefined) {
+    console.error("use: node tests/frontier-comparison-synthetic.mjs <campaign.json>");
+    process.exitCode = 1;
+  } else {
+    const { protocol, protocolSha256 } = readProtocol();
+    fs.writeFileSync(file, serializeCampaign(exampleCampaign(protocol, protocolSha256)));
+    console.log(`FRONTIER_COMPARISON_EXAMPLE_CAMPAIGN_WRITTEN: ${file}`);
+  }
+}

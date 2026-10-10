@@ -461,6 +461,42 @@ test("the command line writes the report of a campaign file, checks its format a
   }
 });
 
+// ---- the evidence record ----
+const EVIDENCE = "docs/evidence/frontier-comparison-analysis";
+const EXAMPLE_COMMANDS = [
+  "node tests/frontier-comparison-synthetic.mjs example-campaign.json",
+  `node scripts/frontier-comparison-analysis.mjs example-campaign.json --out ${EVIDENCE}/example-report.json`
+];
+test("the example report of the evidence record is the exact output of the script for the synthetic campaign regenerated with the same seed, by the commands of its README", () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "frontier-comparison-example-"));
+  try {
+    const campaignFile = path.join(directory, "example-campaign.json");
+    const reportFile = path.join(directory, "example-report.json");
+    const run = args => spawnSync(process.execPath, args, {encoding: "utf8", maxBuffer: 1 << 28});
+    const written = run([path.join(root, "tests/frontier-comparison-synthetic.mjs"), campaignFile]);
+    assert.equal(written.status, 0, written.stderr);
+    const analysed = run([SCRIPT, campaignFile, "--out", reportFile]);
+    assert.equal(analysed.status, 0, analysed.stderr);
+    const committed = fs.readFileSync(path.join(root, EVIDENCE, "example-report.json"), "utf8");
+    assert.equal(fs.readFileSync(reportFile, "utf8"), committed, "the committed report is the script's output, byte for byte; regenerate it with the commands of the README if the protocol or the script changed");
+    const report = JSON.parse(committed);
+    assert.deepEqual([report.status, report.why, report.sections.reproduction.campaignSha256], ["complete", [], sha256(fs.readFileSync(campaignFile))], "the report records the hash of the campaign bytes it analysed");
+    assert.equal(report.sections.reproduction.protocolSha256, protocolSha256);
+    // The example says it is made up, in the words of the campaign and in the data it carries, and it shows the four categories and a redone load.
+    assert.match(JSON.stringify([report.sections.decision, report.sections.limitations, report.sections["cost-of-change"].text]), /SYNTHETIC EXAMPLE/);
+    assert.deepEqual([report.sections.provenance.commit, report.sections.provenance.machine], ["synthetic-commit", "synthetic machine"]);
+    assert.deepEqual(protocol.windows.map(({id}) => pairOf(report, id, "C-B").category), ["gain", "neutral", "cost", "inconclusive"]);
+    assert.deepEqual([slotOf(report, "presented", 4).state, slotOf(report, "presented", 4).rejected], ["accepted", 1]);
+    assert.equal(axisOf(report, "fps-unlimited").windows[0].category, "gain");
+    const readme = fs.readFileSync(path.join(root, EVIDENCE, "README.md"), "utf8");
+    for (const command of EXAMPLE_COMMANDS) {
+      assert.ok(readme.includes(command), `the README gives the command: ${command}`);
+    }
+  } finally {
+    fs.rmSync(directory, {recursive: true, force: true});
+  }
+});
+
 // ---- the shape of the delivery ----
 test("the protocol's test imports the functions from the modules, and the tests are part of the contracts", () => {
   const protocolTest = fs.readFileSync(path.join(root, "tests/frontier-comparison-protocol.test.mjs"), "utf8");
