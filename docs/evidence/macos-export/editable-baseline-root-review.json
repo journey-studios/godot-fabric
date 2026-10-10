@@ -1,0 +1,1010 @@
+{
+  "format": "godot-fabric.root-minimal-baseline-review/v1",
+  "status": "passed",
+  "reviewedAtUtc": "2026-10-08T18:29:43.318773+00:00",
+  "invocationReceiptSha256": "fdf68ba39365a5510931e97a22e8f6f891b479e669d7ad7d7c3baade0c1bcc6f",
+  "baselineReceiptSha256": "aed7fd3be607e88cbbd2feab63dc45af8e9291daad76d01e56cc85d2835ace74",
+  "checks": [
+    {
+      "name": "actual baseline exit and receipt successful",
+      "passed": true
+    },
+    {
+      "name": "invocation log bound",
+      "passed": true
+    },
+    {
+      "name": "runner current and receipt bound",
+      "passed": true
+    },
+    {
+      "name": "preparation manifest bound",
+      "passed": true
+    },
+    {
+      "name": "source commit and SDK agree",
+      "passed": true
+    },
+    {
+      "name": "SDK clean tracked source declaration",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance dependencies.json",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance fabric.gdextension",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/CMakeLists.txt",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_announcement_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_announcement_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_announcer.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_announcer.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_info.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_info.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_info_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessibility_info_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessible_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/accessible_view.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/activity_indicator_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/activity_indicator_view.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/adapter_loader.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/adapter_loader.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/adapter_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/adapter_registry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/affine_transform.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/affine_transform_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/app_lifecycle.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/appearance_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/appearance_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/application_runtime.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/application_runtime.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/blob_store.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/coordinate_transform.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/device_services.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/device_services.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/device_services_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/device_services_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/fabric_application.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/fabric_application.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/fabric_surface.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/fabric_surface.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/frame_clock.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/frame_clock_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/game_service_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/game_service_registry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot-profile.json",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_component.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_device_backend.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_device_backend.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_dom.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_dom.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_http_transport.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_http_transport.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_image_manager.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_image_manager.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_tls.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_websocket_connection.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_websocket_connection.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_websocket_transport.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/godot_websocket_transport.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/http_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/http_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/http_transport.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_cache.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_cache_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_effects.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_effects.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_effects_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_effects_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_geometry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_loader.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_loader.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_loader_module.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_loader_module.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_network.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_network.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_network_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_sources.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_sources.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/image_view.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/input_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/input_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/modal_host_view_component_descriptor.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/modal_presentation.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/modal_presentation.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/modal_window_stack.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/modal_window_stack.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/native_animated.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/native_animated.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/networking_modules.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/networking_modules.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/networking_state.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/paragraph_layout.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/paragraph_layout.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/paragraph_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/paragraph_view.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/performance_metrics.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/performance_metrics_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/physical_embedding.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/physical_embedding.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_event.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_geometry.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_geometry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_geometry_history.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_geometry_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_processor_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/pointer_projection_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/register.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_motion.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_motion_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_offset.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/scroll_throttle.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/smoke.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/stoppable_invoker.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/svg_node.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/svg_node.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/switch_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/switch_view.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/system_appearance.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/text_layout.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/text_layout.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/timer_registry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/timer_registry_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/transform_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/transform_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/turbo_module_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/turbo_module_registry.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_core.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_handshake.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_handshake_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_module.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_module.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_transport.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/websocket_transport_test_fixture.cpp",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance native/window_metrics.h",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance package-lock.json",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance scripts/adapter-manifest.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance scripts/codegen-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance scripts/codegen.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance scripts/pack-addon.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/.gdignore",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/README.md",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/application_node.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/application_resource.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/build.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/godot_fabric.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/ios_export.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/plugin.cfg",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/addon/plugin.gd",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/adapter-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/asset-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/build.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/native-compiler.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/native-typecheck.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/nativewind-compile.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/platform-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/platform-resolution.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/project-config.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/project-resolution.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/project-typecheck.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/rn-event-target-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance sdk/toolchain/tailwind-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/accessibility-info.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/accessibility-view-config.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/animated-exports.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/app-registry.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/app-state.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/base-view-config.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/components.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/control-contracts.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/device-services.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/godot-fabric.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/image-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/image.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/initialize.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/list-props.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/lists.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/native-module-runtime.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/native-modules.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/nativewind.css",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/os-specific.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/platform-color-value-types.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/platform-environment.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/platform.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/pointer-listener-query.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/private-interface.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/public-input.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/react-native-platform.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/render-application.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/renderer-proxy.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/runtime.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/scroll-view-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/scroll-view-native-config.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/scroll-view.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/svg-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/svg.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/text-input-state.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/text.jsx",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/ui-manager.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/unsupported-reanimated.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/unsupported-safe-area.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance src/window-dimensions.js",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance types/godot-fabric.ts",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance types/nativewind.ts",
+      "passed": true
+    },
+    {
+      "name": "SDK source provenance types/react-native.ts",
+      "passed": true
+    },
+    {
+      "name": "retained SDK manifest exact",
+      "passed": true
+    },
+    {
+      "name": "actual provisioned native host identity",
+      "passed": true
+    },
+    {
+      "name": "original canonical consumer oracle unchanged",
+      "passed": true
+    },
+    {
+      "name": "headless exact count and all checks passed",
+      "passed": true
+    },
+    {
+      "name": "headless actual display server",
+      "passed": true
+    },
+    {
+      "name": "headless raw report equals receipt",
+      "passed": true
+    },
+    {
+      "name": "headed-capture exact count and all checks passed",
+      "passed": true
+    },
+    {
+      "name": "headed-capture actual display server",
+      "passed": true
+    },
+    {
+      "name": "headed-capture raw report equals receipt",
+      "passed": true
+    },
+    {
+      "name": "headed source-check inventory and order match headless",
+      "passed": true
+    },
+    {
+      "name": "provision actual log no runtime errors",
+      "passed": true
+    },
+    {
+      "name": "editor-cold actual log no runtime errors",
+      "passed": true
+    },
+    {
+      "name": "headless actual log no runtime errors",
+      "passed": true
+    },
+    {
+      "name": "headless actual success marker",
+      "passed": true
+    },
+    {
+      "name": "graphical actual log no runtime errors",
+      "passed": true
+    },
+    {
+      "name": "graphical actual success marker",
+      "passed": true
+    },
+    {
+      "name": "copied actual bundle bound to report and runtime receipt",
+      "passed": true
+    },
+    {
+      "name": "raw build report bound and expected resource path",
+      "passed": true
+    },
+    {
+      "name": "initial real PNG dimensions",
+      "passed": true
+    },
+    {
+      "name": "initial actual generated image identity",
+      "passed": true
+    },
+    {
+      "name": "updated real PNG dimensions",
+      "passed": true
+    },
+    {
+      "name": "updated actual generated image identity",
+      "passed": true
+    },
+    {
+      "name": "resized real PNG dimensions",
+      "passed": true
+    },
+    {
+      "name": "resized actual generated image identity",
+      "passed": true
+    },
+    {
+      "name": "tracked state remains clean",
+      "passed": true
+    },
+    {
+      "name": "new root review receipt",
+      "passed": true
+    }
+  ],
+  "visualReview": {
+    "performed": true,
+    "captures": [
+      "initial.png",
+      "updated.png",
+      "resized.png"
+    ],
+    "observations": [
+      "Both independent panels visible with complete labels and controls",
+      "Updated HUD local state and shared state reflected in both panels",
+      "Resized inventory remains legible, independent HUD geometry and local state preserved"
+    ]
+  },
+  "limits": [
+    "Editable-project positive baseline only; no exported app launched",
+    "Does not accept P2 plugin/signature/replay/clean-machine criteria"
+  ]
+}

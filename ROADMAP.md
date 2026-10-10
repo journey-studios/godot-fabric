@@ -619,6 +619,30 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
+`29969eb0d64201a1797e6e866a2ef650b1282fde` exports and publishes a signed macOS arm64
+Release minimal consumer after relocation, exact 40/43 assertions and three 540×300 captures
+of the complete 1080×600 logical canvas at scale 0.5, identical to an independently executed
+editable baseline. Frameworks resolve inside the app; deep/strict signature verification,
+idempotent layout normalization and four real rejected mutations passed. The native lane
+passed 13/13 without skips. [Evidence](docs/evidence/macos-export/fixed-window/README.md)
+retains SDK/build/PCK bindings, all 220 producer source pins, a 280-check local archive audit
+and a 24-check independent baseline review. The earlier failed hosted run and unexplained
+local remount failure remain recorded; new hosted CI and delivery review are pending. The Frontier
+12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
+
+**Follow-up, V05-07 (local, symlink containment).** Clean producer `5596acb1cf975ff470acf531c0843fef19706e70` adds a copied-app `LC_RPATH` symlink escape control; the six native controls pass and the local archive audit passes 285 checks. The exact 40/43 consumer checks and 220 SDK source pins remain bound to this producer. [Evidence](docs/evidence/macos-export/symlink-review/README.md). Hosted CI/review and the remaining V05-07 scope stay separate; no 1.0 checkpoint changes.
+
+**Follow-up, V05-07 (local, symlink-parent review).** Clean producer
+`6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc` passes 14/14 native tests, the same
+40/43 consumer checks, and all seven copied-app controls. A physical `LC_RPATH`
+symlink resolving outside the app is rejected before its target is loaded; the
+independent review verifies the host hash and RPATH and all 220 SDK source pins.
+The [new record](docs/evidence/macos-export/symlink-parent-review/README.md)
+preserves this run and the continuation recovery incident. This remains local
+evidence: hosted CI, final review, Pages, the Frontier replay and clean-profile/
+second-machine scope remain pending. No 1.0 checkpoint, weight or denominator changes.
+
 **Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
 provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
 the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the
@@ -955,6 +979,26 @@ V05-07 (how the scenario runs in an exported `.app` is open) and a quiet window 
 publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** The hosted CI and Pages receipts of the comparative execution's part 1 (#120, GF-30) are recorded from the push of main at `c3892ac`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/12059499a3dd5c9135f8f8ded1b5586adacc87ec/docs/evidence/frontier-comparison-execution/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, `tests/frontier-comparison-run.test.mjs` passed 17 of 17 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** The hosted CI and Pages receipts of the whole comparative campaign (#126, GF-30) are recorded from the push of main at `c6dea50`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/40dd07d58eed6de68f9f008320fe472623b5f8e6/docs/evidence/frontier-comparison-campaign/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, the three contract test files of the campaign passed 35 of 35 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** V05-10, criterion `execucao`, part 2: the orchestrator of the whole comparative campaign is written and tested (code at `f9aabb3`). It plays the protocol's sequence in both
+lanes, one fresh process per attempt, judges each attempt with the analysis' own `assessValidity`, redoes a rejected attempt in its slot (at most 3 attempts), waits for the 1-minute load to be
+at most 2.0, runs only if the instrument's self-check passes (headless for a headless launcher, in a window for a windowed one, the campaign's), writes its state atomically after every attempt so
+that `--resume` continues an interrupted campaign (refused if the protocol, script, binary or package hash changed), keeps a lock against a second campaign on the machine, and runs through a
+swappable launcher whose Release path refuses until V05-07 says how the scenario runs in an exported `.app`. A short rehearsal of 3 slots in Debug, headless, ran with the real self-check and
+the expected rejections (Debug build, window not presented, load); one killed with `SIGKILL` was resumed, and a resume with another package hash was refused. **A rehearsal, and no number in it
+is a result.** The Release launcher (V05-07), a quiet window with the load at 2.0 or less and the windowed self-check run for real are missing, and `execucao` stays open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/f952152793b4e33660655715779145d2f8154c95/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
+Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, criterion `execucao`, the attempt that wrote no report (code at `8817938`): an attempt whose process crashed, hit its time limit or ended without a report is now part of the campaign's data in the analysis'
+format, instead of being left out of `executions`, renumbered around and listed only in the campaign's own state. The format stays `godot-fabric.frontier-comparison-campaign/v1` and gains the optional field `unreported`; this is a change of
+the data format, which is the analysis', and not an amendment of the protocol, whose rules `errors`, `runs.load.redo` and `report.sections` `validity` already cover the case. The analysis rejects the attempt by `errors` (clause `no-report`),
+counts it in the 3 attempts of its slot and in the stop on used-up attempts, and the report shows it with `reported: false`; the campaign keeps the real number of each attempt, and its own stop for that case was dropped as redundant. The
+synthetic example was regenerated (it only gained `reported: true`) and a new example of the `validity` section with an attempt that wrote no report is checked byte for byte by a test. Node only and synthetic data: **no number in it is a
+result.** The [record](https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10) has the section. No criterion changes state,
+and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.

@@ -1,0 +1,5 @@
+cannot resume build/frontier-comparison-campaign-evidence-kill, which is not the campaign that was interrupted:
+arm A package: the state registered 9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34, now ea5dbecf95c6c9f89fc92ca5d6afa565e518c749e4fda773077927312d79a475
+arm B package: the state registered 9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34, now ea5dbecf95c6c9f89fc92ca5d6afa565e518c749e4fda773077927312d79a475
+arm C package: the state registered 9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34, now ea5dbecf95c6c9f89fc92ca5d6afa565e518c749e4fda773077927312d79a475
+exit 1

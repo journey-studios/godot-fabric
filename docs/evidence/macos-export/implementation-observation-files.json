@@ -1,0 +1,55 @@
+{
+  "format": "godot-fabric.macos-export-payload-observation-files/v1",
+  "scope": "Actual builder report compatibility and preflight refusal; no exported application acceptance",
+  "files": [
+    {
+      "path": "actual-baseline-preflight.json",
+      "originalObservationSha256": "b0effb63dd1fd42e6516f0152fa0a1bd7aba715f7d5309e18375c8202724cfb6",
+      "sha256": "5d7207da824af834f41d1ac2f0df2d91f829b108367605a8a08b6f9957ec1b83",
+      "bytes": 1183,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "actual-baseline-preflight.log",
+      "originalObservationSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "sha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "bytes": 138,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "actual-assets-preflight.json",
+      "originalObservationSha256": "7e3c3c1cc61728ab7ff19f4633514b2751dcafe93cb7f019f3c5088341b627cd",
+      "sha256": "b62a5dfda54f61e22eaeb413e63b14a8d62f8a2d6c037851c5aeaca1d6b86123",
+      "bytes": 2782,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "actual-assets-manifest.json",
+      "originalObservationSha256": "651e41c28d1c9c533a7b34e43791c7bb14a85ecaa312f8702106960825a1b723",
+      "sha256": "651e41c28d1c9c533a7b34e43791c7bb14a85ecaa312f8702106960825a1b723",
+      "bytes": 836,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "actual-asset-builder.log",
+      "originalObservationSha256": "d8ddbbe2dca12f7d7616394f60753b6cc5934255edce187447ac6cba16f5e660",
+      "sha256": "039f6e17b3f37ae6129716ebf9ca7262d82189eeab0a1ccd824d15e58abfb5d6",
+      "bytes": 498,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "actual-assets-positive.log",
+      "originalObservationSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "sha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "bytes": 138,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "actual-assets-missing-manifest.log",
+      "originalObservationSha256": "c7d82b1de7f0553bc1a79e52a2ddbb5501dd1bbd45d521084b70b394f77c710b",
+      "sha256": "c7d82b1de7f0553bc1a79e52a2ddbb5501dd1bbd45d521084b70b394f77c710b",
+      "bytes": 179,
+      "localPathsRedacted": false
+    }
+  ]
+}

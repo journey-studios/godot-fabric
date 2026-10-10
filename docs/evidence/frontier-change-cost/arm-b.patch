@@ -1,0 +1,84 @@
+diff --git a/consumers/civ-lite/native_hud/actions.gd b/consumers/civ-lite/native_hud/actions.gd
+index 35c3945..f289e70 100644
+--- a/consumers/civ-lite/native_hud/actions.gd
++++ b/consumers/civ-lite/native_hud/actions.gd
+@@ -2,7 +2,7 @@ extends PanelContainer
+ 
+ # The actions of the selection: exactly the `actions` of the snapshot, in the order the game gave them, each with its `enabled` and,
+ # for a disabled one, the game's `reason_text`. End turn is one of them in the snapshot and lives on the bar, so it is not here. An action
+-# about a unit shows the unit's icon, and founding a city the city's. The list is touched only when what it lists changes, and then row by row.
++# about a unit shows the unit's icon, founding a city the city's and irrigating the irrigation's. The list is touched only when what it lists changes, and then row by row.
+ 
+ signal intent(method: StringName, args: Array)
+ 
+@@ -47,6 +47,8 @@ func _describe(snapshot: Dictionary) -> Array:
+ func _icon_of(action: Dictionary, units: Array) -> String:
+   if action.id == "found_city":
+     return "city"
++  if action.id == "irrigate":
++    return "irrigation"
+   if action.id == "select_unit" or action.id == "fortify":
+     for unit: Dictionary in units:
+       if unit.id == action.args[0]:
+diff --git a/consumers/civ-lite/native_hud/icons.gd b/consumers/civ-lite/native_hud/icons.gd
+index 2fa7dba..cafe38e 100644
+--- a/consumers/civ-lite/native_hud/icons.gd
++++ b/consumers/civ-lite/native_hud/icons.gd
+@@ -1,6 +1,6 @@
+ extends RefCounted
+ 
+-# The HUD's six icons: the same 32x32 PNGs the React Native HUD draws (ui/icons/, drawn by scripts/civ-lite-icons.mjs), as the textures a
++# The HUD's seven icons: the same 32x32 PNGs the React Native HUD draws (ui/icons/, drawn by scripts/civ-lite-icons.mjs), as the textures a
+ # TextureRect shows. `unit_icon` and `item_icon` are the two tables ui/hud/icons.ts holds, word for word.
+ 
+ const TEXTURES := {
+@@ -10,6 +10,7 @@ const TEXTURES := {
+   "food": preload("res://ui/icons/food.png"),
+   "production": preload("res://ui/icons/production.png"),
+   "science": preload("res://ui/icons/science.png"),
++  "irrigation": preload("res://ui/icons/irrigation.png"),
+ }
+ 
+ 
+diff --git a/consumers/civ-lite/native_hud/tile.gd b/consumers/civ-lite/native_hud/tile.gd
+index 3bf7df6..4571891 100644
+--- a/consumers/civ-lite/native_hud/tile.gd
++++ b/consumers/civ-lite/native_hud/tile.gd
+@@ -1,8 +1,8 @@
+ extends PanelContainer
+ 
+ # The tile card: the tile under the pointer while the pointer is over the map (Godot hears it and the node publishes `hover_changed`),
+-# otherwise the selected tile of the snapshot. Both are the same card. The units on the tile show their icon beside the text, and a
+-# tile with the city shows the city's. Each Control is set only when what it shows has changed.
++# otherwise the selected tile of the snapshot. Both are the same card. The units on the tile show their icon beside the text, a
++# tile with the city shows the city's and an irrigated tile the irrigation's, with "Irrigated" on the units line. Each Control is set only when what it shows has changed.
+ 
+ const Kit := preload("kit.gd")
+ const Icons := preload("icons.gd")
+@@ -29,7 +29,10 @@ func render(snapshot: Dictionary, hover: Dictionary) -> void:
+   Kit.set_text(_yields, "Food %d · Production %d · Science %d · Move %d%s" % [card.food, card.production, card.science, card.move_cost,
+     " · City" if int(card.city) == 1 else ""])
+   _set_icons(card)
+-  Kit.set_text(_units, "No units" if card.units.is_empty() else " · ".join(card.units.map(_unit_text)))
++  var texts: Array = card.units.map(_unit_text)
++  if int(card.irrigated) == 1:
++    texts.append("Irrigated")
++  Kit.set_text(_units, "No units" if texts.is_empty() else " · ".join(texts))
+ 
+ 
+ func _unit_text(unit: Dictionary) -> String:
+@@ -37,11 +40,13 @@ func _unit_text(unit: Dictionary) -> String:
+     " fortified" if int(unit.fortified) == 1 else ""]
+ 
+ 
+-# The icons of the city and of the units on the tile, built again only when the list of them changes.
++# The icons of the city, of the irrigation and of the units on the tile, built again only when the list of them changes.
+ func _set_icons(card: Dictionary) -> void:
+   var names: Array = []
+   if int(card.city) == 1:
+     names.append(["hud-tile-city-icon", "city"])
++  if int(card.irrigated) == 1:
++    names.append(["hud-tile-irrigated", "irrigation"])
+   for unit: Dictionary in card.units:
+     var icon := Icons.unit_icon(unit.kind)
+     if icon != "":

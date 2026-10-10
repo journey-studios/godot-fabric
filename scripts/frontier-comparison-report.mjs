@@ -1,6 +1,6 @@
 import { axesSection, costOfChangeSection } from "./frontier-comparison-axes.mjs";
 import { decisionRuleOf } from "./frontier-comparison-decision.mjs";
-import { campaignErrors, plannedArms } from "./frontier-comparison-format.mjs";
+import { campaignErrors, plannedArms, unreportedAttempts } from "./frontier-comparison-format.mjs";
 import { readingValues, windowMeasures, windowSeriesOf } from "./frontier-comparison-measures.mjs";
 import { budgetsSection, primarySection, primaryValues } from "./frontier-comparison-primary.mjs";
 import { PRESENTED, protocolErrors, rolesOf } from "./frontier-comparison-protocol.mjs";
@@ -30,7 +30,8 @@ function statusOf(validity, campaign, arms) {
   return { status: campaign.armB.ready ? "complete" : "partial", why: [] };
 }
 
-// The readings of the vsync (the mode and the refresh rate read back) and of the load, over every attempt, rejected ones included.
+// The readings of the vsync (the mode and the refresh rate read back, of the executions that wrote a report) and of the load, over every attempt, rejected ones and the ones that wrote no report
+// included.
 function readingsOf(campaign, protocol) {
   const vsync = [];
   for (const { lane, vsync: reading } of campaign.executions) {
@@ -41,7 +42,8 @@ function readingsOf(campaign, protocol) {
       found.executions += 1;
     }
   }
-  const highest = (when) => (campaign.executions.length === 0 ? null : Math.max(...campaign.executions.map((execution) => execution.load[when])));
+  const loads = [...campaign.executions, ...unreportedAttempts(campaign)].map((attempt) => attempt.load);
+  const highest = (when) => (loads.length === 0 ? null : Math.max(...loads.map((load) => load[when])));
   return {
     vsync,
     load: { command: protocol.runs.load.command, limit1MinuteAverage: protocol.runs.load.limit1MinuteAverage, highestBefore: highest("before"), highestAfter: highest("after") },

@@ -23,7 +23,7 @@ import { loadAverage, machine } from "./frontier-turn-lane.mjs";
 const TEMPLATE = "civ-lite";
 const RUNNER = "res://comparison/frontier-comparison-scenario.gd";
 const PROJECT_DIRECTORY = "comparison";
-const PROTOCOL_FILE = path.join(root, "docs", "research", "frontier-comparison-protocol.json");
+export const PROTOCOL_FILE = path.join(root, "docs", "research", "frontier-comparison-protocol.json");
 // The files of the scenario, copied into the provisioned copy next to one another (the scenario preloads them by name), and the files the scenario uses that other lanes own.
 const SCENARIO_FILES = [
   "tests/frontier-comparison-scenario.gd",
@@ -138,14 +138,27 @@ export function launchScenario({ prepared, arm, lane, windowed = false, timeout 
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
 
+// What a scenario's report says of the display and the renderer it ran on, as the campaign's provenance words it ("none" before any report).
+export function environmentOf(report) {
+  if (report === undefined) {
+    return { display: "none", renderer: "none", adapter: "none: the headless display server names no adapter" };
+  }
+  const { provenance } = report;
+  return {
+    display: `${provenance.displayServer}, ${provenance.screenSize.join("x")} at scale ${provenance.screenScale}, window ${provenance.windowSize.join("x")}`,
+    renderer: `${provenance.renderingDriver} (${provenance.renderingMethod})`,
+    adapter: provenance.adapter === "" ? "none: the headless display server names no adapter" : provenance.adapter,
+  };
+}
+
 // The registration of a rehearsal. A rehearsal registers nothing in advance: it registers what it measured, so that the rules that compare with the registered values judge the other
 // things (the build, the game, the errors), and `not-the-registered-build` is left with the one reason that is true, the Debug build.
-function registeredOf(prepared, replayGoldenHash) {
+export function registeredOf(prepared, replayGoldenHash) {
   const entry = { binarySha256: prepared.binarySha256, packageSha256: prepared.package.sha256, scriptSha256: prepared.scripts.sha256 };
   return { seed: SEED, replayGoldenHash, soakFinalHash: SOAK_FINAL_HASH, instrumentSha256: prepared.instrumentSha256, arms: { A: entry, B: entry, C: entry } };
 }
 
-const git = (args) => {
+export const git = (args) => {
   const result = spawnSync("git", args, { cwd: root, encoding: "utf8", timeout: 30000 });
   return result.status === 0 ? result.stdout.trim() : "unknown";
 };
@@ -171,7 +184,7 @@ export async function rehearse({ prepared, arms, lane, windowed = false, assumeR
     const report = await readJson(run.reportFile);
     run.report = report;
     const { derived, problems: found } = analyse(report, protocol);
-    problems.push(...found.map((problem) => `arm ${arm}: ${problem}`));
+    problems.push(...found.map((problem) => `arm ${arm}: ${problem.message}`));
     problems.push(...report.anomalies.map((anomaly) => `arm ${arm}: ${anomaly}`));
     if (derived === null) {
       continue;
@@ -198,9 +211,7 @@ export async function rehearse({ prepared, arms, lane, windowed = false, assumeR
       commit: git(["rev-parse", "HEAD"]),
       machine: `${hardware.chip}, ${hardware.logicalCores} cores, ${hardware.memoryGb} GB`,
       system: hardware.os,
-      display: first === undefined ? "none" : `${first.provenance.displayServer}, ${first.provenance.screenSize.join("x")} at scale ${first.provenance.screenScale}, window ${first.provenance.windowSize.join("x")}`,
-      renderer: first === undefined ? "none" : `${first.provenance.renderingDriver} (${first.provenance.renderingMethod})`,
-      adapter: first === undefined || first.provenance.adapter === "" ? "none: the headless display server names no adapter" : first.provenance.adapter,
+      ...environmentOf(first),
       rawData: path.relative(root, prepared.harness.directory),
       deviations: [
         "REHEARSAL: not a comparative execution and not a campaign; no number of it is a result of any arm",

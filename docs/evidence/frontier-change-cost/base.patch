@@ -1,0 +1,1995 @@
+diff --git a/consumers/civ-lite/README.md b/consumers/civ-lite/README.md
+index 2633fdb..64bf139 100644
+--- a/consumers/civ-lite/README.md
++++ b/consumers/civ-lite/README.md
+@@ -109,8 +109,8 @@ has three for the native HUD. The stability probe is the React Native host's and
+   `stability_judge.gd`: the scene, the HUD and the validations described above (`hud_probe.gd` is what the three HUD probes share).
+ - `native_hud/`, `main_native.tscn`, `main_bare.tscn`, `hud_reader*.gd`: the native HUD, its scene, the scene with no HUD and the readers the probes look at either HUD through.
+ - `services/stress.gd`, `hud_stats.gd`: the stress mode's overlay and the runner's `stats()` for the React Native HUD.
+-- `ui/icons/`: the six icons of the HUD (settler, warrior, city, food, production, science), 32x32 PNGs drawn from shapes by
+-  `scripts/civ-lite-icons.mjs` (original art, no third-party image). `ui/hud/icons.ts` imports each as an asset (`ui/assets.d.ts` declares
++- `ui/icons/`: the seven icons of the set (settler, warrior, city, food, production, science and irrigation), 32x32 PNGs drawn from shapes by
++  `scripts/civ-lite-icons.mjs` (original art, no third-party image); irrigation is the Irrigate action's and the irrigated tile's. `ui/hud/icons.ts` imports each of the first six as an asset (`ui/assets.d.ts` declares
+   `*.png`) and `Icon` in `ui/hud/kit.tsx` draws it with an `Image`: the resources of the bar, the unit actions, the units and the city of the
+   tile card, and the city screen's title and production items, which are inside the Modal's window.
+ 
+diff --git a/consumers/civ-lite/game/economy.gd b/consumers/civ-lite/game/economy.gd
+index eb2f16e..a93f016 100644
+--- a/consumers/civ-lite/game/economy.gd
++++ b/consumers/civ-lite/game/economy.gd
+@@ -14,9 +14,11 @@ static func city(state: Dictionary) -> Dictionary:
+   return state.cities[0]
+ 
+ 
++# What a tile yields: its terrain's, and one more food while it is irrigated.
+ static func tile_yield(state: Dictionary, x: int, y: int) -> Dictionary:
+   var terrain: Dictionary = Rules.TERRAIN[World.terrain_at(state, x, y)]
+-  return {"x": x, "y": y, "food": terrain.food, "production": terrain.production, "science": terrain.science}
++  var food: int = terrain.food + (Rules.IRRIGATION_FOOD if World.is_irrigated(state, x, y) else 0)
++  return {"x": x, "y": y, "food": food, "production": terrain.production, "science": terrain.science}
+ 
+ 
+ # The in-map neighbours of the city, best first: by total yield, then production, then food, then row, then column.
+diff --git a/consumers/civ-lite/game/game.gd b/consumers/civ-lite/game/game.gd
+index 8b11a16..3ba6c7d 100644
+--- a/consumers/civ-lite/game/game.gd
++++ b/consumers/civ-lite/game/game.gd
+@@ -56,6 +56,11 @@ func fortify(unit_id: int) -> Dictionary:
+   return _decide(Intents.check_fortify(state, unit_id), func() -> void: Intents.apply_fortify(state, unit_id))
+ 
+ 
++# The Settler irrigates the Plain it stands on: the tile yields one more food from now on, and the Settler has no moves left this turn.
++func irrigate(unit_id: int) -> Dictionary:
++  return _decide(Intents.check_irrigate(state, unit_id), func() -> void: Intents.apply_irrigate(state, unit_id))
++
++
+ # Puts an item in a slot of the city's queue: slot 0 is what it is building, and a slot equal to the queue's length
+ # appends.
+ func set_production(item_id: String, slot: int) -> Dictionary:
+diff --git a/consumers/civ-lite/game/intents.gd b/consumers/civ-lite/game/intents.gd
+index 308d518..6c6f569 100644
+--- a/consumers/civ-lite/game/intents.gd
++++ b/consumers/civ-lite/game/intents.gd
+@@ -155,6 +155,41 @@ static func apply_fortify(state: Dictionary, unit_id: int) -> void:
+   World.emit(state, "unit_fortified", unit_id, 0)
+ 
+ 
++# A Settler irrigates the Plain it stands on. The checks run in this order, so a Settler that has just irrigated is told the tile is
++# already irrigated and not that it has no moves left: the unit, the tile, then the moves.
++static func check_irrigate(state: Dictionary, unit_id: int) -> String:
++  var guard := check_guard(state)
++  if guard != "":
++    return guard
++  var unit_reason := _unit_reason(state, unit_id)
++  if unit_reason != "":
++    return unit_reason
++  var unit := World.unit_by_id(state, unit_id)
++  if unit.kind != "settler":
++    return "not_a_settler"
++  var x := int(unit.x)
++  var y := int(unit.y)
++  if World.terrain_at(state, x, y) != Rules.PLAIN:
++    return "not_a_plain"
++  if not World.water_beside(state, x, y):
++    return "no_water_nearby"
++  if World.is_irrigated(state, x, y):
++    return "already_irrigated"
++  if int(unit.moves) == 0:
++    return "no_moves_left"
++  return ""
++
++
++# The tile joins the irrigated ones (kept ascending) and the Settler spends all of its remaining moves.
++static func apply_irrigate(state: Dictionary, unit_id: int) -> void:
++  var unit := World.unit_by_id(state, unit_id)
++  var tile := World.index(int(unit.x), int(unit.y))
++  state.irrigated.append(tile)
++  state.irrigated.sort()
++  unit.moves = 0
++  World.emit(state, "tile_irrigated", unit_id, tile)
++
++
+ static func check_set_production(state: Dictionary, item_id: String, slot: int) -> String:
+   var guard := check_guard(state)
+   if guard != "":
+diff --git a/consumers/civ-lite/game/rules.gd b/consumers/civ-lite/game/rules.gd
+index c50d8b9..82ca217 100644
+--- a/consumers/civ-lite/game/rules.gd
++++ b/consumers/civ-lite/game/rules.gd
+@@ -34,6 +34,10 @@ const UNITS := {
+   "warrior": {"name": "Warrior", "moves": 3},
+ }
+ 
++# Irrigation: a Settler irrigates the Plain it stands on when Water is one of the tile's four neighbours (not the diagonals) and the tile is not
++# irrigated yet. It spends all of the Settler's remaining moves, and the tile yields this much more food for the rest of the game.
++const IRRIGATION_FOOD := 1
++
+ # The city centre adds this on top of its own tile.
+ const CENTER_FOOD := 1
+ const CENTER_PRODUCTION := 1
+@@ -121,7 +125,10 @@ const REASONS := {
+   "not_enough_moves": "Not enough movement points for that terrain.",
+   "cannot_fortify": "Settlers cannot fortify.",
+   "already_fortified": "The unit is already fortified.",
+-  "not_a_settler": "Only a Settler can found a city.",
++  "not_a_settler": "Only a Settler can do that.",
++  "not_a_plain": "Only a Plain can be irrigated.",
++  "no_water_nearby": "Irrigation needs Water on one of the tile's four sides.",
++  "already_irrigated": "This tile is already irrigated.",
+   "city_exists": "This scenario allows a single city.",
+   "too_close_to_edge": "A city needs open ground on every side.",
+   "no_city": "There is no city to manage yet.",
+diff --git a/consumers/civ-lite/game/snapshot.gd b/consumers/civ-lite/game/snapshot.gd
+index 00c7baa..21ca0f6 100644
+--- a/consumers/civ-lite/game/snapshot.gd
++++ b/consumers/civ-lite/game/snapshot.gd
+@@ -68,8 +68,11 @@ static func is_frozen(value: Variant) -> bool:
+ 
+ # An action is an intent the HUD can offer. `enabled` and `reason` come from the intent's own check, so the two agree.
+ # `args` are the intent's positional arguments, an array of integers in the order the intent takes them: [unit_id] for
+-# select_unit, found_city and fortify, [] for clear_selection and end_turn. A caller sends them back as they are, under the
++# select_unit, found_city, irrigate and fortify, [] for clear_selection and end_turn. A caller sends them back as they are, under the
+ # action's id as the intent's name, and needs no knowledge of which intent takes what.
++#
++# The order of the actions is the game's, and the HUDs list them as they come. The Settler's: found_city, irrigate, fortify, then the two every
++# context with a selection has (clear_selection and end_turn). A Warrior's: fortify. A stack's: one select_unit for each of the player's units.
+ static func action(id: String, label: String, args: Array, reason: String) -> Dictionary:
+   return {"id": id, "label": label, "args": args, "enabled": 1 if reason == "" else 0, "reason": reason, "reason_text": Rules.reason_text(reason)}
+ 
+@@ -79,6 +82,7 @@ static func _actions(state: Dictionary, context: String) -> Array:
+   var unit_id := int(state.sel.unit)
+   if context == "settler":
+     actions.append(action("found_city", "Found city", [unit_id], Intents.check_found_city(state, unit_id)))
++    actions.append(action("irrigate", "Irrigate", [unit_id], Intents.check_irrigate(state, unit_id)))
+     actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
+   elif context == "warrior":
+     actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
+@@ -103,19 +107,21 @@ static func _tile(state: Dictionary) -> Dictionary:
+ 
+ 
+ # The card of one tile: the selected tile's in the snapshot, and the tile under the pointer in frontier.hover (the pointer is the
+-# World's and is outside the state). A coordinate outside the map is the absent card.
++# World's and is outside the state). A coordinate outside the map is the absent card. `irrigated` is 0 or 1, and the card's `food`
++# is what the tile yields, the irrigation's food included.
+ static func tile_card(state: Dictionary, x: int, y: int) -> Dictionary:
+   if not World.in_bounds(x, y):
+     return {"present": 0, "x": -1, "y": -1, "terrain": -1, "terrain_name": "", "food": 0, "production": 0, "science": 0, "move_cost": 0,
+-      "city": 0, "units": []}
++      "city": 0, "irrigated": 0, "units": []}
+   var terrain_id := World.terrain_at(state, x, y)
+   var terrain: Dictionary = Rules.TERRAIN[terrain_id]
++  var yields := Economy.tile_yield(state, x, y)
+   var units := []
+   for unit: Dictionary in World.units_at(state, x, y):
+     units.append(_unit_card(unit))
+-  return {"present": 1, "x": x, "y": y, "terrain": terrain_id, "terrain_name": terrain.name, "food": terrain.food,
+-    "production": terrain.production, "science": terrain.science, "move_cost": terrain.move,
+-    "city": 0 if World.city_at(state, x, y).is_empty() else 1, "units": units}
++  return {"present": 1, "x": x, "y": y, "terrain": terrain_id, "terrain_name": terrain.name, "food": yields.food,
++    "production": yields.production, "science": yields.science, "move_cost": terrain.move,
++    "city": 0 if World.city_at(state, x, y).is_empty() else 1, "irrigated": 1 if World.is_irrigated(state, x, y) else 0, "units": units}
+ 
+ 
+ static func _city(state: Dictionary, rates: Dictionary) -> Dictionary:
+diff --git a/consumers/civ-lite/game/world.gd b/consumers/civ-lite/game/world.gd
+index c6063d0..3bb405b 100644
+--- a/consumers/civ-lite/game/world.gd
++++ b/consumers/civ-lite/game/world.gd
+@@ -27,6 +27,8 @@ static func new_state(seed_value: int) -> Dictionary:
+   ]
+   state["next_unit"] = 4
+   state["cities"] = []
++  # The irrigated tiles as indexes into the map, ascending: a set, so one state has one spelling whatever the order they were irrigated in.
++  state["irrigated"] = []
+   state["res"] = {"food": 0, "production": 0, "science": 0}
+   state["research"] = {"done": 0, "current": ""}
+   state["events"] = {"queue": [], "resolved": []}
+@@ -90,6 +92,18 @@ static func terrain_at(state: Dictionary, x: int, y: int) -> int:
+   return state.map.terrain[index(x, y)]
+ 
+ 
++static func is_irrigated(state: Dictionary, x: int, y: int) -> bool:
++  return state.irrigated.has(index(x, y))
++
++
++# Whether Water is on one of the tile's four sides. The diagonals do not count, and a side outside the map is not water.
++static func water_beside(state: Dictionary, x: int, y: int) -> bool:
++  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:
++    if in_bounds(x + side.x, y + side.y) and terrain_at(state, x + side.x, y + side.y) == Rules.WATER:
++      return true
++  return false
++
++
+ # The unit with this id, or an empty Dictionary. The result is the state's own entry, not a copy.
+ static func unit_by_id(state: Dictionary, id: int) -> Dictionary:
+   for unit: Dictionary in state.units:
+diff --git a/consumers/civ-lite/hud_reader.gd b/consumers/civ-lite/hud_reader.gd
+index 11c1653..d713fad 100644
+--- a/consumers/civ-lite/hud_reader.gd
++++ b/consumers/civ-lite/hud_reader.gd
+@@ -5,8 +5,9 @@ extends RefCounted
+ # its Controls, and both answer in the same shape, so the probes' logic and the independent oracle are the same for both arms.
+ #
+ #   observe()      {nodes, stoppers}: a row for each Control with a testID that is on screen (testID, kind, visible, text, rect, stops,
+-#                  disabled, animating, modal, instance), and, apart, every Control that stops the pointer, testID or not (testID, rect,
++#                  disabled, animating, modal, instance, asset), and, apart, every Control that stops the pointer, testID or not (testID, rect,
+ #                  modal). `modal` is "inside the blocking overlay": the Modal's Window for the host, the overlay Control for the native HUD.
++#                  `asset` is the file name of the picture an image row draws ("irrigation.png"), and "" for every other row.
+ #   control_of(id) the Control behind a testID, or null when it is not on screen.
+ #   stats()        what the HUD counted of itself for the validation (`calls`: the intents it sent).
+ #   runner_stats() the execution runner's `stats()`: {snapshots, context, events}, in the same shape for both arms (docs/research/frontier-stress.md).
+diff --git a/consumers/civ-lite/hud_reader_host.gd b/consumers/civ-lite/hud_reader_host.gd
+index e41e31a..60f4d22 100644
+--- a/consumers/civ-lite/hud_reader_host.gd
++++ b/consumers/civ-lite/hud_reader_host.gd
+@@ -37,7 +37,7 @@ func observe() -> Dictionary:
+     if entry.testID != "":
+       nodes.append({"testID": entry.testID, "kind": entry.kind, "visible": control.is_visible_in_tree(), "text": entry.get("nativeText", ""),
+         "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "stops": stops, "disabled": bool(descriptor.get("disabled", false)),
+-        "animating": bool(activity.get("animating", false)), "modal": in_modal, "instance": int(entry.id)})
++        "animating": bool(activity.get("animating", false)), "modal": in_modal, "instance": int(entry.id), "asset": _asset_of(entry)})
+   return {"nodes": nodes, "stoppers": stoppers}
+ 
+ 
+@@ -77,3 +77,10 @@ func mount() -> void:
+ func errors() -> Array:
+   var state: Variant = JSON.parse_string(application.call("snapshot"))
+   return state.get("errors", []) if state is Dictionary else ["no snapshot"]
++
++
++# The file name of the picture an Image draws, from the source the host reports for it; "" for a node that is not an Image.
++func _asset_of(entry: Dictionary) -> String:
++  var image: Dictionary = entry.get("image", {})
++  var source: Dictionary = image.get("source", {})
++  return str(source.get("uri", "")).get_file()
+diff --git a/consumers/civ-lite/hud_reader_native.gd b/consumers/civ-lite/hud_reader_native.gd
+index b801ebf..46d70d3 100644
+--- a/consumers/civ-lite/hud_reader_native.gd
++++ b/consumers/civ-lite/hud_reader_native.gd
+@@ -74,24 +74,31 @@ func _read(node: Node, nodes: Array, stoppers: Array) -> void:
+       nodes.append(_row(control, id, area, stops, modal))
+       var button := control as Button
+       if button != null:
+-        nodes.append(_part(button, id + "-label", "text", button.text, area, modal))
++        nodes.append(_part(button, id + "-label", "text", button.text, "", area, modal))
+         if button.icon != null:
+-          nodes.append(_part(button, id + "-icon", "image", "", area, modal))
++          nodes.append(_part(button, id + "-icon", "image", "", _file_of(button.icon), area, modal))
+     _read(control, nodes, stoppers)
+ 
+ 
+ func _row(control: Control, id: String, area: Array, stops: bool, modal: bool) -> Dictionary:
+   var label := control as Label
+   var button := control as Button
++  var texture_rect := control as TextureRect
+   var animating: bool = control.has_method("is_animating") and control.is_animating()
+   return {"testID": id, "kind": _kind_of(control), "visible": control.is_visible_in_tree(), "text": label.text if label != null else (button.text if button != null else ""),
+-    "rect": area, "stops": stops, "disabled": button != null and button.disabled, "animating": animating, "modal": modal, "instance": control.get_instance_id()}
++    "rect": area, "stops": stops, "disabled": button != null and button.disabled, "animating": animating, "modal": modal, "instance": control.get_instance_id(),
++    "asset": _file_of(texture_rect.texture) if texture_rect != null else ""}
+ 
+ 
+ # A part of a Button the host's tree has as a child of its own.
+-func _part(button: Button, id: String, kind: String, text: String, area: Array, modal: bool) -> Dictionary:
++func _part(button: Button, id: String, kind: String, text: String, asset: String, area: Array, modal: bool) -> Dictionary:
+   return {"testID": id, "kind": kind, "visible": button.is_visible_in_tree(), "text": text, "rect": area, "stops": false, "disabled": false, "animating": false,
+-    "modal": modal, "instance": button.get_instance_id()}
++    "modal": modal, "instance": button.get_instance_id(), "asset": asset}
++
++
++# The file name of the picture a texture draws ("irrigation.png"): the resource it was loaded from, or "" for a texture that has none.
++func _file_of(texture: Texture2D) -> String:
++  return texture.resource_path.get_file() if texture != null else ""
+ 
+ 
+ func _kind_of(control: Control) -> String:
+diff --git a/consumers/civ-lite/hud_validation.gd b/consumers/civ-lite/hud_validation.gd
+index f063b88..e63aeb2 100644
+--- a/consumers/civ-lite/hud_validation.gd
++++ b/consumers/civ-lite/hud_validation.gd
+@@ -22,6 +22,10 @@ extends "res://hud_probe.gd"
+ #            items are the game's), ended (the panel gone, the contexts' panels back, the snapshot byte for byte as it was) and refused when
+ #            the mode is off; and the runner's `stats()` against what the node emitted.
+ #
++#   irrigation  the request of the cost-of-change experiment (docs/research/frontier-change-cost.md), asked of either HUD the same way: a Settler on a
++#            Plain with Water beside it is offered Irrigate, enabled, with the irrigation icon; a real press on it irrigates the tile; and the card of
++#            the irrigated tile shows the irrigation icon and says Irrigated on its units line, with the food the game gives, the bonus included.
++#
+ #   --capture    saves one PNG per context, one during the AI phase and one with the stress panel full (a headed run)
+ 
+ const LAST_STEP := 45
+@@ -55,6 +59,7 @@ func run_probe() -> void:
+   await run_phase()
+   await run_stress()
+   await run_input()
++  await run_irrigation()
+ 
+ 
+ # --- Matrix: the seven contexts ------------------------------------------------------------------------------------
+@@ -342,6 +347,119 @@ func judge_stress(stress: Dictionary) -> void:
+   check(int(final.stats.events) == int(final.emitted), "The runner's stats() has consumed every notification the node emitted")
+ 
+ 
++# --- Irrigation: the experiment's request ----------------------------------------------------------------------------
++
++# The route to an irrigable Plain is the start: the player's Settler (unit 1) begins on tile (6, 8), a Plain with Water at (5, 8), so selecting it
++# through the services is the whole of it, and every run takes the same one. The pointer is first taken off the map, so that the tile card is the
++# selected tile's. The press is a real click through the viewport; if the HUD does not send the intent, the probe sends it through the services so
++# that what the HUD shows of an irrigated tile is still looked at, and the press is recorded as having failed.
++const IRRIGATION_UNIT := 1
++const IRRIGATION_TILE := Vector2i(6, 8)
++const IRRIGATION_ACTION := "hud-actions-irrigate-1"
++const IRRIGATION_ASSET := "irrigation.png"
++# The tile card's mark of an irrigated tile: the irrigation icon (an Image).
++const IRRIGATION_MARK := "hud-tile-irrigated"
++# The tile's four sides, north, east, south and west.
++const SIDES := [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
++
++
++func tile_index(tile: Vector2i) -> int:
++  return tile.y * 24 + tile.x
++
++
++# The rows of the HUD that are about the action and the tile card: what the stage reads.
++func irrigation_rows(seen: Dictionary) -> Array:
++  return seen.nodes.filter(func(entry: Dictionary) -> bool: return entry.testID.begins_with(IRRIGATION_ACTION) or entry.testID.begins_with("hud-tile"))
++
++
++# What the game says and what the HUD shows, now.
++func irrigation_view() -> Dictionary:
++  var state: Dictionary = services.game.state
++  var snapshot := game_snapshot()
++  var sides: Array = SIDES.map(func(side: Vector2i) -> int: return int(state.map.terrain[tile_index(IRRIGATION_TILE + side)]))
++  return {"snapshot": {"context": snapshot.context, "selection": snapshot.selection, "tile": snapshot.tile,
++      "actions": snapshot.actions.filter(func(action: Dictionary) -> bool: return action.id == "irrigate")},
++    "game": {"irrigated": state.irrigated.duplicate(), "moves": int(unit_by_id(IRRIGATION_UNIT).get("moves", -1)), "terrain": int(state.map.terrain[tile_index(IRRIGATION_TILE)]),
++      "sides": sides},
++    "nodes": irrigation_rows(observe())}
++
++
++func is_irrigated(tile: Vector2i) -> bool:
++  return services.game.state.irrigated.has(tile_index(tile))
++
++
++func run_irrigation() -> void:
++  services.new_game()
++  await settle()
++  await move_to(Vector2(610, 300))
++  await wait_until(func() -> bool: return services.hover.x < 0)
++  var selected: Dictionary = services.select_unit(IRRIGATION_UNIT)
++  var in_context := await wait_until(func() -> bool: return game_snapshot().context == "settler")
++  await settle()
++  var before := irrigation_view()
++  var irrigate_calls := int(services.callbacks.get("irrigate", 0))
++  var hud_calls := int(hud_stats().get("calls", 0))
++  var pressed := await press(IRRIGATION_ACTION)
++  var by_press := await wait_until(func() -> bool: return is_irrigated(IRRIGATION_TILE))
++  var pushed := {"pressed": pressed, "irrigatedByPress": by_press, "irrigateCalls": int(services.callbacks.get("irrigate", 0)) - irrigate_calls,
++    "hudCalls": int(hud_stats().get("calls", 0)) - hud_calls}
++  if not by_press:
++    services.irrigate(IRRIGATION_UNIT)
++  await settle()
++  var after := irrigation_view()
++  var irrigation := {"unit": IRRIGATION_UNIT, "tile": [IRRIGATION_TILE.x, IRRIGATION_TILE.y], "selected": selected, "inContext": in_context, "before": before,
++    "press": pushed, "after": after}
++  report["irrigation"] = irrigation
++  judge_irrigation(irrigation)
++
++
++func irrigation_node(view: Dictionary, id: String) -> Dictionary:
++  for entry: Dictionary in view.nodes:
++    if entry.testID == id:
++      return entry
++  return {}
++
++
++# An Image of the irrigation icon that is on screen: visible, with a rect that has an area, and drawing the file the generator made.
++func irrigation_icon(view: Dictionary, id: String) -> bool:
++  var entry := irrigation_node(view, id)
++  return (not entry.is_empty() and entry.visible and entry.kind == "image" and entry.asset == IRRIGATION_ASSET and float(entry.rect[2]) > 0.0 and float(entry.rect[3]) > 0.0)
++
++
++func judge_irrigation(irrigation: Dictionary) -> void:
++  var before: Dictionary = irrigation.before
++  var after: Dictionary = irrigation.after
++  var pushed: Dictionary = irrigation.press
++  var offered: Dictionary = before.snapshot.actions[0] if before.snapshot.actions.size() == 1 else {}
++  var button := irrigation_node(before, IRRIGATION_ACTION)
++  check(irrigation.inContext and before.game.terrain == 1 and before.game.sides.has(0) and before.game.irrigated.is_empty()
++    and not offered.is_empty() and int(offered.enabled) == 1 and not button.is_empty() and button.visible and not button.disabled
++    and irrigation_node(before, IRRIGATION_ACTION + "-label").get("text", "") == offered.label,
++    "Irrigate: a Settler on a Plain with Water beside it is offered Irrigate in the actions panel, enabled, with the game's label")
++  check(irrigation_icon(before, IRRIGATION_ACTION + "-icon"), "Irrigate: the action shows the irrigation icon, drawn")
++  check(pushed.pressed and pushed.irrigatedByPress and pushed.irrigateCalls == 1 and pushed.hudCalls == 1,
++    "Irrigate: a real press on the enabled action irrigated the tile, with one call to the game")
++  var card: Dictionary = after.snapshot.tile
++  check(after.game.irrigated == [tile_index(IRRIGATION_TILE)] and after.game.moves == 0 and int(card.irrigated) == 1
++    and int(card.food) == int(before.snapshot.tile.food) + 1 and int(card.production) == int(before.snapshot.tile.production),
++    "Irrigate: the game irrigated the tile, spent all of the Settler's moves and gave the tile one more food")
++  var gone: Dictionary = after.snapshot.actions[0] if after.snapshot.actions.size() == 1 else {}
++  var done := irrigation_node(after, IRRIGATION_ACTION)
++  check(not gone.is_empty() and int(gone.enabled) == 0 and gone.reason == "already_irrigated" and not done.is_empty() and done.disabled
++    and irrigation_node(after, IRRIGATION_ACTION + "-reason").get("text", "") == gone.reason_text,
++    "Irrigate: once the tile is irrigated the action is disabled, with the game's reason beside it")
++  var yields := "Food %d · Production %d · Science %d · Move %d%s" % [card.food, card.production, card.science, card.move_cost, " · City" if int(card.city) == 1 else ""]
++  check(irrigation_node(after, "hud-tile-yields").get("text", "") == yields,
++    "Irrigate: the tile card's food is the game's, the irrigation's included")
++  var units_before: String = irrigation_node(before, "hud-tile-units").get("text", "")
++  check(not irrigation_node(before, IRRIGATION_MARK).get("visible", false) and not units_before.contains("Irrigated"),
++    "Irrigate: before it is irrigated the tile card shows no irrigation icon and its units line does not say Irrigated")
++  check(irrigation_icon(after, IRRIGATION_MARK), "Irrigate: the card of the irrigated tile shows the irrigation icon, drawn")
++  var units: String = irrigation_node(after, "hud-tile-units").get("text", "")
++  check(units.contains("Irrigated") and card.units.all(func(unit: Dictionary) -> bool: return units.contains(unit.name)),
++    "Irrigate: the units line of the irrigated tile says Irrigated and still lists its units")
++
++
+ # --- Input: real pointer events -------------------------------------------------------------------------------------
+ 
+ func snapshot_of_input(label: String, extra: Dictionary = {}) -> Dictionary:
+diff --git a/consumers/civ-lite/services/game_services.gd b/consumers/civ-lite/services/game_services.gd
+index 4d62bb7..ce85097 100644
+--- a/consumers/civ-lite/services/game_services.gd
++++ b/consumers/civ-lite/services/game_services.gd
+@@ -229,6 +229,10 @@ func fortify(unit_id: int) -> Dictionary:
+   return _intent("fortify", game.fortify(unit_id))
+ 
+ 
++func irrigate(unit_id: int) -> Dictionary:
++  return _intent("irrigate", game.irrigate(unit_id))
++
++
+ func set_production(item_id: String, slot: int) -> Dictionary:
+   return _intent("set_production", game.set_production(item_id, slot))
+ 
+diff --git a/consumers/civ-lite/services/schema.gd b/consumers/civ-lite/services/schema.gd
+index dd80205..7fd0e68 100644
+--- a/consumers/civ-lite/services/schema.gd
++++ b/consumers/civ-lite/services/schema.gd
+@@ -21,7 +21,7 @@ const ACTION_ARGS := {"array": INT}
+ const ACTION := {"object": {"id": STR, "label": STR, "args": ACTION_ARGS, "enabled": INT, "reason": STR, "reason_text": STR}}
+ const UNIT_CARD := {"object": {"id": INT, "owner": INT, "kind": STR, "name": STR, "moves": INT, "max_moves": INT, "fortified": INT}}
+ const TILE_CARD := {"object": {"present": INT, "x": INT, "y": INT, "terrain": INT, "terrain_name": STR, "food": INT, "production": INT,
+-  "science": INT, "move_cost": INT, "city": INT, "units": {"array": UNIT_CARD}}}
++  "science": INT, "move_cost": INT, "city": INT, "irrigated": INT, "units": {"array": UNIT_CARD}}}
+ const QUEUE_ENTRY := {"object": {"slot": INT, "item": STR, "label": STR, "cost": INT, "stock": INT}}
+ const ITEM := {"object": {"id": STR, "label": STR, "kind": STR, "cost": INT, "tech": STR, "enabled": INT, "reason": STR, "reason_text": STR}}
+ const GARRISON_ENTRY := {"object": {"id": INT, "kind": STR}}
+@@ -71,6 +71,7 @@ const METHOD_ARGS := {
+   "move_unit": [INT, INT, INT],
+   "found_city": [INT],
+   "fortify": [INT],
++  "irrigate": [INT],
+   "set_production": [STR, INT],
+   "set_research": [STR],
+   "resolve_event": [STR],
+diff --git a/consumers/civ-lite/stability_validation.gd b/consumers/civ-lite/stability_validation.gd
+index 11cf020..b5b1584 100644
+--- a/consumers/civ-lite/stability_validation.gd
++++ b/consumers/civ-lite/stability_validation.gd
+@@ -311,7 +311,7 @@ func icons_now(label: String, modals: int) -> Dictionary:
+   var actions: Array = snapshot.actions.map(func(action: Dictionary) -> Dictionary: return {"id": action.id, "args": action.args})
+   var units: Array = snapshot.tile.units.map(func(unit: Dictionary) -> Dictionary: return {"id": unit.id, "kind": unit.kind})
+   var items: Array = snapshot.city.items.map(func(item: Dictionary) -> String: return item.id)
+-  return {"label": label, "rested": rested, "snapshot": {"context": snapshot.context, "actions": actions, "tile": {"city": snapshot.tile.city, "units": units}, "cityItems": items},
++  return {"label": label, "rested": rested, "snapshot": {"context": snapshot.context, "actions": actions, "tile": {"city": snapshot.tile.city, "irrigated": snapshot.tile.get("irrigated", 0), "units": units}, "cityItems": items},
+     "images": images_of(surface())}
+ 
+ 
+diff --git a/consumers/civ-lite/ui/frontier-types.ts b/consumers/civ-lite/ui/frontier-types.ts
+index 747a13f..af7b5fa 100644
+--- a/consumers/civ-lite/ui/frontier-types.ts
++++ b/consumers/civ-lite/ui/frontier-types.ts
+@@ -44,7 +44,7 @@ export interface Action {
+   readonly id: string;
+   readonly label: string;
+   /**
+-   * The intent's positional arguments, in order: `[unit_id]` for select_unit, found_city and fortify, `[]` for
++   * The intent's positional arguments, in order: `[unit_id]` for select_unit, found_city, irrigate and fortify, `[]` for
+    * clear_selection and end_turn. The HUD sends them back as they are, `GodotFabric.call("frontier." + id, args)`, and
+    * needs no knowledge of which intent takes what.
+    */
+@@ -81,6 +81,8 @@ export interface TileCard {
+   readonly move_cost: Int;
+   /** 0 or 1. */
+   readonly city: Int;
++  /** 0 or 1: the tile is irrigated, and the `food` above already includes the one more food that gives. */
++  readonly irrigated: Int;
+   readonly units: readonly UnitCard[];
+ }
+ 
+@@ -258,6 +260,7 @@ export const FRONTIER_CLEAR_SELECTION = "frontier.clear_selection";
+ export const FRONTIER_MOVE_UNIT = "frontier.move_unit";
+ export const FRONTIER_FOUND_CITY = "frontier.found_city";
+ export const FRONTIER_FORTIFY = "frontier.fortify";
++export const FRONTIER_IRRIGATE = "frontier.irrigate";
+ export const FRONTIER_SET_PRODUCTION = "frontier.set_production";
+ export const FRONTIER_SET_RESEARCH = "frontier.set_research";
+ export const FRONTIER_RESOLVE_EVENT = "frontier.resolve_event";
+@@ -291,6 +294,8 @@ export interface FrontierMethods {
+   readonly "frontier.move_unit": [unit_id: Int, x: Int, y: Int];
+   readonly "frontier.found_city": [unit_id: Int];
+   readonly "frontier.fortify": [unit_id: Int];
++  /** A Settler irrigates the Plain it stands on (Water beside it, not irrigated yet): all its moves are spent and the tile yields one more food. */
++  readonly "frontier.irrigate": [unit_id: Int];
+   readonly "frontier.set_production": [item_id: string, slot: Int];
+   readonly "frontier.set_research": [tech_id: string];
+   readonly "frontier.resolve_event": [choice_id: string];
+diff --git a/consumers/civ-lite/ui/icons/irrigation.png b/consumers/civ-lite/ui/icons/irrigation.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..26bc67e60cc544a7f5c2d799b6b7ad5fb19af58e
+GIT binary patch
+literal 4196
+zcmd^9J!lj`7~LR93<R%MkVViY2|2G2LD4gu#0wIGsD+5E76F?eT%iPnBLPE12nuOz
+z7KtE&B&A6}7E=WTEyO|u7eNcL*v2Yo#`lJqW%e(3#qOQr!MmCH=9~B4e6ut26XT=(
+zef#<>%j&P6tzAHC6TQ3f-<Y2MX<4O#dhPVZJ3T#i$qx|yhkv_nKB*F2+XBRWqALa<
+z?ChC(CJ6RBY65~KAUL-8UQ`~wrGbF4j+ua1b8q8?xW2k2!9HUhF#sVO2x{)<(7?&Z
+zA9WS%!c9Qj-GBFGD6Xr(80QK#0D&?f#-4sn7+{QZ%qh$S$i2gJ8wqh;1$*Wd4S0nZ
+z0PzGME-eR{1~|tY=H_k!q&}~l-fdPp_+XO;@_n2@$R}5vfBwCt0p>85Yuc{D*wVQw
+zumaoy?D#^EIV5F?-4DOTyB|WVf7wnoV;qAM=OMS!pjI_9kAMpZ1t0AKAkWe?@cP@f
+zG(Zz+#}GF_4#h=I&7Zukm@EN-k;G(<dG+M=<AZbm%`ZU{tVEgt^(gTO%3P~Bw6Nw(
+zf3}g_1az_#*JT2spY{O7O{fPc{0LJ_G&N^xiv_+i;g|_9Ag|$0?*QkJM?|h6_#DL<
+z8Z)^g{o&?u@96v~FA`J(5W5uME?H`xH^IKzImMIbi}mCrcN%Xbc5tfV5s{!V;O+pQ
+zMq*$rvU6jZ)rvRFZ8s5O{4jYviE>Dg(P@{reWw{hS>eCmfOF!2ASyS8B=k71HqM)<
+z6onpLD~l_WM<m$K6DBXUG7T(T9TxX44;BJ)b5lDSXw(nMguF^`@{qfwfv#5|&vVb>
+j$~*$ITt)X2AK`x+7+6~CU7!7Qn+2$!8LusmI5U3$N)yR*
+
+literal 0
+HcmV?d00001
+
+diff --git a/consumers/civ-lite/validation.gd b/consumers/civ-lite/validation.gd
+index df6aab9..9f7c836 100644
+--- a/consumers/civ-lite/validation.gd
++++ b/consumers/civ-lite/validation.gd
+@@ -16,7 +16,7 @@ extends Node
+ #   --sabotage   a retained sabotage runs this scene: a failed check is the rejection, not an error
+ 
+ const CYCLES := 10
+-const BINDINGS := 18
++const BINDINGS := 19
+ # What the HUD holds while the game screen is up: the connection to the snapshot and the one to the tile under the pointer.
+ const HUD_CONNECTIONS := 2
+ # What the HUD sees of a turn that is processed: the phase of each snapshot as it changes, from the turn at rest to the turn at rest.
+@@ -265,7 +265,7 @@ func run() -> void:
+     "The scene injects the addon's facade into the GameServices node: no path to a laboratory SDK")
+   var evaluated := check(initial.bundleEvaluations == 1 and initial.errors.is_empty(), "The provisioned application evaluates its bundle once and reports no error")
+   var registered := check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false and services.registered.size() == BINDINGS,
+-    "The node registered the two states, the signal and the 15 methods while the application entered the tree: 18 bindings")
++    "The node registered the two states, the signal and the 16 methods while the application entered the tree: 19 bindings")
+   var scened := check(worlds() == 1 and world() != null and world().get_parent() == services, "The scene starts with one World, a child of the GameServices node")
+   var shown := check(connected and text("hud-bar-turn") == "Turn 1 · epoch 1" and int(hud_stats().subscriptions) == HUD_CONNECTIONS,
+     "The public TSX HUD connected to the snapshot of epoch 1 and to the hover, two subscriptions")
+@@ -403,7 +403,7 @@ func run_cycle(cycle: int) -> void:
+   check(in_menu.screen == "menu" and in_menu.world == false and in_menu.hudSubscriptions == 0,
+     label + ": in the menu the HUD showed it, the scene had no World and the HUD held no connection")
+   check(row.freed == [true, true], label + ": the two Worlds the cycle dropped (the reload's and the menu's) are freed")
+-  check(row.bindings == BINDINGS, label + ": the registry still holds the 18 bindings")
++  check(row.bindings == BINDINGS, label + ": the registry still holds the 19 bindings")
+   check(row.pendingHostTasks == 0 and row.pendingEvents == 0, label + ": no host task and no event is pending")
+   check(runtime_errors.is_empty() and int(stats.problemCount) == 0, label + ": the application and the HUD report no error")
+   check(row.worlds == 1 and world() != null and world().get_parent() == services and world_connected(),
+diff --git a/docs/evidence/frontier-change-cost/base.md b/docs/evidence/frontier-change-cost/base.md
+new file mode 100644
+index 0000000..401491d
+--- /dev/null
++++ b/docs/evidence/frontier-change-cost/base.md
+@@ -0,0 +1,163 @@
++# A base comum do custo de mudança (V05-10, `mudanca`)
++
++Registro da base do experimento pré-registrado em [frontier-change-cost.md](../../research/frontier-change-cost.md): tudo o que é igual para os dois braços
++e que nenhum deles paga. Foi escrito na branch `exp/change-cost-base`, criada a partir de `6c7e8ba` (a `main` com o pré-registro, #124), que nunca entra na
++`main`. Entram na `main` só este registro, os patches e as contagens, em `docs/evidence/frontier-change-cost/`.
++
++A base termina com a lane da HUD **vermelha nos dois braços**, e só pelo que o pedido acrescenta. Nada da implementação de nenhum braço existe nela:
++nenhuma linha mudou em `consumers/civ-lite/native_hud/`, em `consumers/civ-lite/ui/hud/`, em `ui/store.ts` ou em `ui/telemetry.ts`.
++
++## Os commits da base
++
++| Commit | Assunto |
++| --- | --- |
++| `f5c834d` | `feat(frontier): Draw the irrigation icon` |
++| `9ebca52` | `feat(frontier): Add the Irrigate rule to the game` |
++| `0677dd9` | `test(frontier): Add the Irrigate stage to the HUD lane` |
++| o da cabeça da branch | este registro (`docs(frontier): Record the base of the change-cost experiment`); a base que os braços recebem é a cabeça, `git rev-parse exp/change-cost-base` |
++
++`git diff --stat 6c7e8ba..0677dd9` mostra 37 arquivos, 765 linhas acrescentadas e 85 removidas. A contagem dos braços é `git diff --name-only base..braço` contra a cabeça da
++branch, então nada do que está aqui é cobrado a nenhum deles.
++
++## A regra do jogo: Irrigar
++
++O texto do pré-registro é o da regra: uma Settler pode irrigar a Planície em que está quando a Planície tem Água em um dos quatro vizinhos e ainda não está
++irrigada; irrigar gasta todos os movimentos que restam à Settler, e a casa rende um alimento a mais pelo resto do jogo.
++
++**Intenção.** `irrigate(unit_id)` em `game/intents.gd` (`check_irrigate` e `apply_irrigate`), em `game/game.gd` e registrada em `GameServices` como `frontier.irrigate`
++com um argumento inteiro: 19 vínculos onde havia 18 (dois estados, um sinal e 16 métodos). Os vizinhos são o norte, o leste, o sul e o oeste; as diagonais não
++contam, e um lado fora do mapa não é Água.
++
++**Verificações, na ordem em que rodam.** A ordem faz uma Settler que acaba de irrigar ouvir que a casa já está irrigada, e não que está sem movimentos.
++
++| Ordem | Código | Texto | Origem |
++| --- | --- | --- | --- |
++| 1 | `turn_in_progress` | The turn is being processed. | existente |
++| 2 | `event_pending` | A decision is waiting. Resolve the event first. | existente |
++| 3 | `unknown_unit` | No such unit. | existente |
++| 4 | `not_your_unit` | That unit belongs to another faction. | existente |
++| 5 | `not_a_settler` | Only a Settler can do that. | existente; o texto dizia "found a city" e passou a servir às duas intenções |
++| 6 | `not_a_plain` | Only a Plain can be irrigated. | novo |
++| 7 | `no_water_nearby` | Irrigation needs Water on one of the tile's four sides. | novo |
++| 8 | `already_irrigated` | This tile is already irrigated. | novo |
++| 9 | `no_moves_left` | The unit has no movement points left. | existente |
++
++**Estado e hash.** O estado ganhou `irrigated`: as casas irrigadas como índices do mapa (`y * 24 + x`), em ordem crescente, um conjunto que não guarda a ordem em que as casas
++foram irrigadas. Está em todo estado, vazio em todos os estados do roteiro, e faz parte do hash.
++
++**Rendimento.** `Economy.tile_yield` soma `Rules.IRRIGATION_FOOD` (1) à casa irrigada. Por isso o `food` do cartão da casa, a classificação dos vizinhos da cidade e as taxas da
++cidade usam o bônus: uma Planície irrigada ao lado da cidade (3 de alimento, 1 de produção) passa à frente de todos os vizinhos e a cidade a trabalha.
++
++**Snapshot.**
++
++- A ordem das ações no contexto `settler` é `found_city`, `irrigate`, `fortify`, `clear_selection`, `end_turn`; `irrigate` tem `args: [unit_id]`, `enabled` e `reason_text` do jogo.
++  Nos outros contextos a lista não mudou.
++- Os cartões de casa (o `tile` do snapshot e o `frontier.hover`) ganharam `irrigated` (0 ou 1), e o `food` deles já inclui o bônus.
++- `services/schema.gd` e o espelho de tipos `ui/frontier-types.ts` mudaram juntos (o campo, a constante `FRONTIER_IRRIGATE` e o método). O espelho é o contrato dos serviços,
++  não trabalho de HUD, e é o único arquivo de `ui/` que a base tocou.
++
++**Hashes.** O hash dourado e o da trilha do roteiro se moveram uma vez, e só pelo campo novo:
++
++| | Antes | Depois |
++| --- | --- | --- |
++| Hash dourado | `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d` | `0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1` |
++| Hash da trilha | `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e` | `a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba` |
++
++Tirando `"irrigated":[],` de cada uma das 77 serializações, os hashes antigos voltam. Estão fixados em `tests/civ-lite-game-native.test.mjs` e
++`tests/frontier-services-native.test.mjs`. A campanha de execução mede o jogo como está na `main`, com os hashes antigos; esta base não o altera.
++
++**Testes do jogo.** Provam a regra, os códigos, o rendimento e o registro:
++
++- `tests/civ-lite-game-probe.gd` joga nove cenários construídos para a regra (a casa inicial, a Floresta e a Colina, a Settler sem movimentos, a Água nos quatro lados e só numa
++  diagonal, o rendimento da cidade com e sem irrigação, uma casa que a cidade não trabalha, uma cidade fundada sobre a casa irrigada) e confere cada ação contra a sua intenção;
++  `tests/civ-lite-game-oracle.mjs` julga cada passo com a regra escrita de novo em Node e confere os invariantes do estado (casas irrigadas em ordem, cada uma uma Planície com Água ao lado).
++- `scripts/civ-lite-game-sabotage.mjs` retém quatro sabotagens (`irrigation-diagonal`, `irrigation-keeps-moves`, `irrigation-unsorted`, `irrigation-no-yield`), rejeitadas pela sonda e pelo oráculo.
++- A lane dos serviços (`frontier-services-oracle.mjs`, `-parity.test.mjs`, `-probe.gd`) conta 19 vínculos e 16 métodos, conhece os três códigos novos, exige `irrigate` entre as ações que
++  voltam como chamadas, e a paridade com o TypeScript cobre o campo `irrigated` e o método `frontier.irrigate`. Os outros pins de 18 vínculos (`validation.gd`,
++  `consumer-civ-lite-check.mjs`, o oráculo de estabilidade, as sondas de estresse e de soak) passaram a 19.
++
++## O ícone
++
++`irrigation` é o sétimo desenho de `scripts/civ-lite-icons.mjs`: uma gota de água sobre um canteiro com um broto de cada lado, 32x32, original. O PNG em
++`consumers/civ-lite/ui/icons/irrigation.png` é o que o gerador escreve, byte a byte, e a lane exige os sete arquivos. A base não o liga a nenhuma HUD: a tabela de ícones da B
++(`native_hud/icons.gd`) e a da C (`ui/hud/icons.ts`) continuam com seis, e listá-lo é trabalho dos braços.
++
++## A expectativa da lane, igual nos dois braços
++
++O estágio `irrigation` de `consumers/civ-lite/hud_validation.gd` roda nas duas HUDs pela costura do leitor (`hud_probe.gd`) e é julgado de novo por `tests/civ-lite-ui-oracle.mjs`.
++
++**A rota até uma Planície irrigável.** A Settler do jogador (unidade 1) começa na casa (6, 8), uma Planície com Água em (5, 8). Chegar lá é selecionar a unidade
++pelos serviços (`services.select_unit(1)`), depois de um jogo novo e com o ponteiro fora do mapa; é determinística, igual em toda execução e nos dois braços.
++
++**O que o estágio espera.**
++
++| Item | testID | Esperado |
++| --- | --- | --- |
++| O botão | `hud-actions-irrigate-1` | listado, habilitado, com o rótulo "Irrigate" do jogo e sem motivo |
++| O ícone da ação | `hud-actions-irrigate-1-icon` | uma imagem de `irrigation.png`, visível e com área |
++| O clique | o do botão, por um clique real pelo viewport | uma chamada ao jogo, enviada pela HUD, e a casa irrigada |
++| O efeito no jogo | | a casa em `irrigated`, a Settler com 0 movimentos, a casa com um alimento a mais |
++| A ação depois | `hud-actions-irrigate-1` e `-reason` | desabilitada, com o motivo `already_irrigated` do jogo ao lado |
++| A marca no cartão | `hud-tile-irrigated` | uma imagem de `irrigation.png`, visível e com área, só na casa irrigada |
++| A linha de unidades | `hud-tile-units` | contém "Irrigated" e continua listando as unidades |
++| O alimento | `hud-tile-yields` | `Food 3 · …`, o do jogo, com o bônus |
++
++A marca do cartão se chama `hud-tile-irrigated`, como no pré-registro, e não leva o sufixo `-icon` que os outros ícones do cartão (`hud-tile-city-icon`, `hud-tile-unit-<id>-icon`) levam.
++Os ícones das ações seguem a convenção (`hud-actions-<chave>-icon`).
++
++**O que a costura ganhou.** As linhas que os leitores devolvem ganharam `asset`, o nome do arquivo que uma imagem desenha (`irrigation.png`): o leitor do host o tira da fonte da imagem,
++o do braço nativo do recurso da textura. Assim a lane confere que é o ícone novo, e não qualquer ícone. Se a HUD não enviar a intenção, a sonda a envia pelos serviços para
++que o cartão da casa irrigada ainda seja observado, e o clique fica registrado como falho.
++
++**O oráculo** julga o estágio só pelas observações cruas e rejeita onze cópias mutadas do relatório (`tests/civ-lite-ui-native.test.mjs`, categoria `irrigation`). O oráculo de estabilidade,
++que só a C roda, passou a esperar os mesmos ícones no contexto `settler` e a marca numa casa irrigada. A conta de checks da sonda da HUD passou de 152 a 161 (nove do estágio).
++A matriz de contextos continua passando nos dois braços: as ações esperadas saem do snapshot, que agora lista `irrigate` no contexto `settler`.
++
++## O que falha em cada braço, como estão
++
++`node --test tests/civ-lite-ui-native.test.mjs` falha nos dois testes, no primeiro `assert` (os checks da sonda). Os demais checks da sonda e todos os julgamentos do oráculo, fora o do estágio, passam.
++
++| Check do estágio | B (nativa) | C (React Native) |
++| --- | --- | --- |
++| `Irrigate: a Settler on a Plain with Water beside it is offered Irrigate in the actions panel, enabled, with the game's label` | passa | passa |
++| `Irrigate: the action shows the irrigation icon, drawn` | **falha** | **falha** |
++| `Irrigate: a real press on the enabled action irrigated the tile, with one call to the game` | passa | **falha** |
++| `Irrigate: the game irrigated the tile, spent all of the Settler's moves and gave the tile one more food` | passa | passa |
++| `Irrigate: once the tile is irrigated the action is disabled, with the game's reason beside it` | passa | passa |
++| `Irrigate: the tile card's food is the game's, the irrigation's included` | passa | passa |
++| `Irrigate: before it is irrigated the tile card shows no irrigation icon and its units line does not say Irrigated` | passa | passa |
++| `Irrigate: the card of the irrigated tile shows the irrigation icon, drawn` | **falha** | **falha** |
++| `Irrigate: the units line of the irrigated tile says Irrigated and still lists its units` | **falha** | **falha** |
++
++O botão já aparece nas duas, porque as duas listam as ações do snapshot de forma genérica. O clique falha só na C: a loja (`ui/store.ts`) traduz cada id de ação
++numa chamada tipada, e um id que não conhece é um problema contado e nenhuma chamada sai; a B despacha pelo nome do método, e a chamada já funciona. O que é pedido de cada braço
++é, então, fazer a mesma lane passar; nesse sentido a diferença de custo do clique é uma medida do experimento, não da base.
++
++## O que as HUDs precisam respeitar e que o pedido não diz
++
++- A lane lê o código-fonte da C com expressões regulares (`tests/civ-lite-ui-native.test.mjs`): `hud/actions.tsx` precisa continuar com `icon={iconOf(action, units)}`, `hud/tile.tsx` com
++  `<Icon key={unit.id} id={`hud-tile-unit-${unit.id}-icon`}`, `hud/bar.tsx` e `hud/city.tsx` com as formas que já têm, e `hud/kit.tsx` com o `Image` do `Icon`. Os importadores também passam pelo
++  manifesto 0.5: só os nomes e as propriedades que ele decide.
++- O texto do cartão não mudou onde não há irrigação: os checks da matriz comparam a linha de unidades e a de rendimentos com o texto exato do snapshot.
++- As sabotagens retidas da HUD (`scripts/civ-lite-ui-sabotage.mjs`) não foram alteradas e seguem rejeitadas pela lane como estão; os braços não precisam tocá-las.
++
++## Verificação da base
++
++| Comando | Resultado |
++| --- | --- |
++| `npm run test:civ-lite-game` e `node scripts/civ-lite-game-sabotage.mjs` | passam (12 sabotagens rejeitadas, controle restaurado) |
++| `npm run test:frontier-services` | 11 testes passam |
++| `npm run test:consumer:civ-lite` | passa (20 checks de construção, 165 checks nativos, 10 ciclos) |
++| `npm run test:frontier-stress` e `npm run test:frontier-soak` | passam (19 vínculos) |
++| `npm run test:contracts`, `npm run type-check` e `npm run check:static` | passam |
++| `node scripts/civ-lite-ui-sabotage.mjs actions-reversed icon-missing native-end-turn-by-phase` | as três rejeitadas, controle restaurado |
++| `node --test tests/civ-lite-ui-native.test.mjs` | falha nos dois braços só no estágio `irrigation`, como na tabela acima |
++
++Para mostrar que a lane é satisfazível, uma alteração descartável de cada HUD (feita fora de qualquer commit e revertida antes dele) a fez passar por inteiro: 161 + 28 + 41 checks
++de sonda, as 49 + 23 + 38 mutações do oráculo e os controles na C, e 161 + 28 checks e as 49 + 23 mutações na B. Essas alterações não fazem parte de nenhuma branch.
++
++## Limites
++
++- `scripts/frontier-services-sabotage.mjs` já não roda na `main` (`6c7e8ba`): a âncora da sabotagem `late-register` procura o `_enter_tree` anterior à cena nativa e não existe mais. A base não o
++  corrige, e as lanes de serviços e de paridade que ela afeta passam.
++- A base mede o pedido numa só observação por braço, como o pré-registro diz; a ordem (B antes de C) segue a nota.
+diff --git a/docs/research/frontier-game.md b/docs/research/frontier-game.md
+index 217b0ae..ddbee10 100644
+--- a/docs/research/frontier-game.md
++++ b/docs/research/frontier-game.md
+@@ -76,6 +76,7 @@ lower-case ASCII.
+ | `map` | object | `w` (24), `h` (16), `terrain` (int[384], row-major: index `y * 24 + x`; 0 water, 1 plain, 2 forest, 3 hill). |
+ | `units` | object[], ascending `id` | `id`, `owner` (1 player, 2 faction), `kind` (`"settler"` or `"warrior"`), `x`, `y`, `moves` (points left, 0 to the kind's allowance), `fortified` (0 or 1). |
+ | `next_unit` | int | The id the next unit gets. |
++| `irrigated` | int[], ascending | The irrigated tiles as indexes into `map.terrain` (`y * 24 + x`): a set, kept sorted, so the order they were irrigated in is not part of the state. Each is a Plain with Water on one of its four sides. Empty in every state of the replay. |
+ | `cities` | object[], 0 or 1 | `name`, `x`, `y`, `size` (1 to 3), `queue` (item ids, at most 3), `buildings` (item ids in completion order). |
+ | `res` | object | `food`, `production`, `science`: the stocks, never negative. |
+ | `research` | object | `done` (technologies learned, a prefix of the list) and `current` (a technology id, or `""`). |
+@@ -102,6 +103,12 @@ The selection is part of the state because the context is derived from it and th
+   does not depend on what the generator drew there, while the rest of the map still depends on the PRNG.
+ - **Movement.** A unit moves to an adjacent tile (8 directions) if it can pay the terrain's cost from its points. Moving
+   ends a fortification. Points refresh to the allowance at the end of every turn.
++- **Irrigation.** A Settler can irrigate the Plain it stands on when Water is one of the tile's four neighbours (north, east, south,
++  west: not the diagonals; a side outside the map is not water) and the tile is not irrigated yet. It spends all of the Settler's remaining
++  moves, and the tile yields one more food (`Rules.IRRIGATION_FOOD`) for the rest of the game, wherever it is read: the tile card's `food`, the
++  ranking of the city's neighbours and the city's rates. So an irrigated Plain next to the city (2 + 1 food, 1 production) outranks every other
++  neighbour and the city works it. The state gained `irrigated` for this, which moved the golden and trace hashes below once and for no other
++  reason (taking the field out of every serialization of the replay brings the previous hashes back).
+ - **City.** It works its own tile plus as many neighbours as its size, best first (total yield, then production, then
+   food, then row, then column: a total order). The centre adds 1 food, 1 production and 2 science. A building adds its
+   own yields.
+@@ -171,6 +178,7 @@ returns `{"ok": 1, "code": "ok", "text": ""}` plus the fields noted. All argumen
+ | `move_unit` | `unit_id`, `x`, `y` | Moves one step to an adjacent tile, paying its cost. |
+ | `found_city` | `unit_id` | The Settler becomes the city on its tile; the city is selected. |
+ | `fortify` | `unit_id` | Fortifies a Warrior and ends its movement for the turn. |
++| `irrigate` | `unit_id` | A Settler irrigates the Plain it stands on (Water on one of its four sides, not irrigated yet): all its moves are spent and the tile yields one more food. The checks run in this order: the guard, the unit (`unknown_unit`, `not_your_unit`), `not_a_settler`, `not_a_plain`, `no_water_nearby`, `already_irrigated`, `no_moves_left`. So a Settler that has just irrigated is told the tile is already irrigated. |
+ | `set_production` | `item_id`, `slot` | Puts an item in a slot of the queue: slot 0 is what is being built, a slot equal to the queue's length appends. The stock already made is kept. |
+ | `set_research` | `tech_id` | Starts the next technology of the list. |
+ | `resolve_event` | `choice_id` | Answers the head of the event queue with one of its own choices; the next event becomes the head. |
+@@ -197,11 +205,14 @@ it), then its own checks as listed.
+ | `not_adjacent` | The destination is not an adjacent tile. | `move_unit` not exactly one tile away |
+ | `impassable_terrain` | Land units cannot enter water. | `move_unit` into water |
+ | `tile_occupied` | A foreign unit blocks that tile. | `move_unit` onto the faction's unit |
+-| `no_moves_left` | The unit has no movement points left. | `move_unit` or `found_city` with 0 points |
++| `no_moves_left` | The unit has no movement points left. | `move_unit`, `found_city` or `irrigate` with 0 points |
+ | `not_enough_moves` | Not enough movement points for that terrain. | `move_unit` with fewer points than the cost |
+ | `cannot_fortify` | Settlers cannot fortify. | `fortify` on a Settler |
+ | `already_fortified` | The unit is already fortified. | `fortify` on a fortified unit |
+-| `not_a_settler` | Only a Settler can found a city. | `found_city` with another kind |
++| `not_a_settler` | Only a Settler can do that. | `found_city` or `irrigate` with another kind |
++| `not_a_plain` | Only a Plain can be irrigated. | `irrigate` on a Forest or a Hill (Water is never stood on) |
++| `no_water_nearby` | Irrigation needs Water on one of the tile's four sides. | `irrigate` on a Plain with no Water to its north, east, south or west |
++| `already_irrigated` | This tile is already irrigated. | `irrigate` on an irrigated tile |
+ | `city_exists` | This scenario allows a single city. | `found_city` with a city already founded |
+ | `too_close_to_edge` | A city needs open ground on every side. | `found_city` on the outer ring of tiles |
+ | `no_city` | There is no city to manage yet. | `set_production` before a city exists |
+@@ -266,7 +277,7 @@ lists, so the TypeScript mirror needs no optional fields. Types below are `int`,
+ **Resources**: `food`, `production`, `science`, each `{stock: int, rate: int}`. The rate is 0 until the city exists.
+ 
+ **Action**: `id` (string, the intent's name), `label` (string), `args` (`int[]`, the intent's positional arguments in the
+-order it takes them: `[unit_id]` for `select_unit`, `found_city` and `fortify`, `[]` for `clear_selection` and `end_turn`; a
++order it takes them: `[unit_id]` for `select_unit`, `found_city`, `irrigate` and `fortify`, `[]` for `clear_selection` and `end_turn`; a
+ caller turns an action into a call as it is, the intent named `id` with `args`, and needs no knowledge of which intent takes
+ what), `enabled` (0 or 1), `reason` (string, the refusal code, `""` when enabled) and `reason_text` (string, what the HUD
+ shows next to a disabled action). `enabled` is exactly "the intent would be accepted now": it comes from the same check the
+@@ -277,7 +288,7 @@ context:
+ | --- | --- |
+ | `none` | `end_turn` |
+ | `tile`, `city` | `clear_selection`, `end_turn` |
+-| `settler` | `found_city`, `fortify`, `clear_selection`, `end_turn` |
++| `settler` | `found_city`, `irrigate`, `fortify`, `clear_selection`, `end_turn` |
+ | `warrior` | `fortify`, `clear_selection`, `end_turn` |
+ | `stack` | one `select_unit` per unit of the player on the tile, `clear_selection`, `end_turn` |
+ | `dialog` | `end_turn`, disabled with `event_pending` (the choices are in `dialog`) |
+@@ -286,7 +297,8 @@ context:
+ enabled there (the dialog blocks it).
+ 
+ **TileCard**: `present` (0 or 1), `x`, `y`, `terrain` (int id, `-1` if absent), `terrain_name`, `food`, `production`,
+-`science`, `move_cost` (0: cannot be entered), `city` (0 or 1) and `units` (UnitCard[], every faction, in id order).
++`science`, `move_cost` (0: cannot be entered), `city` (0 or 1), `irrigated` (0 or 1: `food` already includes the one more food an
++irrigated tile yields; the snapshot's `tile` and `frontier.hover` carry it alike) and `units` (UnitCard[], every faction, in id order).
+ **UnitCard**: `id`, `owner`, `kind`, `name`, `moves`, `max_moves`, `fortified`.
+ 
+ **CityScreen**: `present`, `name`, `x`, `y`, `size`, `max_size`, `food_needed` (0 without a city), `food_rate`,
+@@ -311,7 +323,7 @@ it must produce. A refused step also proves it changed nothing. The state after
+ the **golden hash**, fixed in `tests/civ-lite-game-native.test.mjs`:
+ 
+ ```
+-cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d
++0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1
+ ```
+ 
+ It changes only when a rule, the map or the roteiro changes the state the replay ends in; the new value is then reviewed, not
+@@ -322,6 +334,10 @@ records under `docs/evidence/frontier-{game,services,authority}/` keep describin
+ which recomputes the state after each of the 77 steps from the table of events and PCG32 written again in Node, and agreed with the game at every step
+ before the hashes were re-pinned.
+ 
++The Irrigate rule (the base of the cost-of-change experiment, on a branch that never reaches `main`) moved both hashes once more by adding the
++state's `irrigated` list, empty in every state of the roteiro and nowhere else different: with `"irrigated":[],` taken out of each of the 77
++serializations, the hashes come back to `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d` (golden) and `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e` (trace).
++
+ Adding `clear_selection` and four steps that use it (two accepted, `nothing_selected`, and `event_pending` while the dialog is
+ open) **did not change the golden hash**: the intent only changes the selection and emits no event, and every `end_turn`
+ clears the selection, so the state the twelfth turn ends in is the same. What did change is the state after each of those
+@@ -329,7 +345,7 @@ steps. The test therefore fixes a second hash, the **trace hash**, the SHA-256 o
+ line, which pins how the replay got there:
+ 
+ ```
+-ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e
++a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba
+ ```
+ 
+ The oracle judges every one of those states regardless.
+diff --git a/docs/research/frontier-services.md b/docs/research/frontier-services.md
+index aedfbc5..e4c0af3 100644
+--- a/docs/research/frontier-services.md
++++ b/docs/research/frontier-services.md
+@@ -389,8 +389,8 @@ process, which the services never touch, plays the same steps and is the referen
+   `production`, `growth`, `research`, `refresh`) and the job, before the snapshot of the turn that begins, which carries
+   `last_job`. The probe waits for each job before the next step. The state of the node is the reference's at every step, and the
+   final hash is the P3 golden hash
+-  `cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d`; the hashes of all 77 steps make the P3 trace hash
+-  `ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e`. (The package's own run, which the record under
++  `0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1`; the hashes of all 77 steps make the P3 trace hash
++  `a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba`. (The package's own run, which the record under
+   `docs/evidence/frontier-services/` keeps, had 73 steps and the hashes `275b7c61…` and `fba99004…`: the queue of three events of 2026-10-09 added four
+   steps to turn 5 and moved both hashes; see [frontier-game.md](frontier-game.md), "The replay".)
+ - **Persistence.** The surface is unmounted in the frame after the node accepted the third `end_turn`, with the job's first phase
+diff --git a/scripts/civ-lite-game-sabotage.mjs b/scripts/civ-lite-game-sabotage.mjs
+index af77641..306ef87 100644
+--- a/scripts/civ-lite-game-sabotage.mjs
++++ b/scripts/civ-lite-game-sabotage.mjs
+@@ -33,6 +33,14 @@ import {guardSources} from "./sabotage-sources.mjs";
+ //         probe's check of the wait's event fails, and the oracle, which judges the log entries a turn appended against
+ //         the events the rules give the faction's phases, rejects it.
+ //
++//  irrigation-diagonal  Water on a diagonal counts as Water beside the tile: a Settler with Water only on a corner irrigates. The roteiro
++//         never irrigates, so its states and its golden hash are unchanged; the irrigation scenarios built for the four sides fail the probe's
++//         checks, and the oracle finds an irrigation its rule refuses.
++//  irrigation-keeps-moves  irrigating does not spend the Settler's moves: the Settler that irrigated can still found a city, move or irrigate.
++//  irrigation-unsorted  the irrigated tiles stay in the order they were irrigated in, not ascending: the same set has two spellings, and so two hashes.
++//  irrigation-no-yield  the tile does not yield the bonus: the card's food and the city's yields are the terrain's. The irrigated tile is
++//         recorded in the state, so only the yields tell.
++//
+ //  events-out-of-order  an answered event leaves the queue by its tail and not by its head: the first event is answered and is
+ //         still the head, so the second never comes up. The replay's refusals and contexts at the queue steps do not happen, the
+ //         golden hash is lost and the oracle finds the first answer that did not take the head out.
+@@ -54,6 +62,13 @@ const variants = [
+   {name: "ai-city", file: `${game}/turn.gd`,
+     find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
+     replace: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty()\n"},
++  {name: "irrigation-diagonal", file: `${game}/world.gd`,
++    find: "  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]:\n",
++    replace: "  for side: Vector2i in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(1, -1), Vector2i(1, 1), Vector2i(-1, 1)]:\n"},
++  {name: "irrigation-keeps-moves", file: `${game}/intents.gd`, find: "  state.irrigated.sort()\n  unit.moves = 0\n", replace: "  state.irrigated.sort()\n"},
++  {name: "irrigation-unsorted", file: `${game}/intents.gd`, find: "  state.irrigated.sort()\n", replace: ""},
++  {name: "irrigation-no-yield", file: `${game}/economy.gd`,
++    find: "  var food: int = terrain.food + (Rules.IRRIGATION_FOOD if World.is_irrigated(state, x, y) else 0)\n", replace: "  var food: int = terrain.food\n"},
+   {name: "events-out-of-order", file: `${game}/intents.gd`, find: "  state.events.queue.remove_at(0)\n", replace: "  state.events.queue.pop_back()\n"},
+   {name: "ai-wrong-event", file: `${game}/turn.gd`, find: "    World.emit(state, \"ai_blocked\", ai.tx, ai.ty)\n",
+     replace: "    World.emit(state, \"ai_moved\", ai.tx, ai.ty)\n"},
+diff --git a/scripts/civ-lite-icons.mjs b/scripts/civ-lite-icons.mjs
+index c7abbd2..06216e9 100644
+--- a/scripts/civ-lite-icons.mjs
++++ b/scripts/civ-lite-icons.mjs
+@@ -3,7 +3,7 @@ import {mkdir, writeFile} from "node:fs/promises";
+ import path from "node:path";
+ import {fileURLToPath} from "node:url";
+ 
+-// The six icons of Frontier's HUD (consumers/civ-lite/ui/icons/): original art, drawn here from shapes, with no third-party image. Each is
++// The seven icons of Frontier's icon set (consumers/civ-lite/ui/icons/): original art, drawn here from shapes, with no third-party image. Each is
+ // 32x32 with a transparent background, drawn with coverage sampled 4x4 per pixel, and written as a PNG whose zlib stream holds stored
+ // (uncompressed) blocks, so the bytes depend on nothing but this file: not on the zlib of the Node that runs it. The lane
+ // (tests/civ-lite-ui-native.test.mjs) draws them again and requires the committed files to be these bytes.
+@@ -51,6 +51,10 @@ const GREEN = [74, 163, 76];
+ const RED = [220, 68, 68];
+ const STEEL = [203, 213, 225];
+ const CYAN = [34, 211, 238];
++const SOIL = [146, 94, 48];
++const SOIL_DARK = [96, 60, 30];
++const LEAF_DARK = [34, 110, 50];
++const DROP_LIGHT = [207, 235, 255];
+ 
+ // Their names are the files'.
+ const ICONS = {
+@@ -113,6 +117,19 @@ const ICONS = {
+     [disc(19, 21, 1.1), [207, 250, 254]],
+     [without(disc(16, 9, 2.4), disc(16, 9, 1.2)), BLUE_DARK],
+   ],
++  // Irrigation: a drop of water over a furrowed bed, with a sprout on each side.
++  irrigation: [
++    [box(2, 23, 30, 30), SOIL_DARK],
++    [box(3, 24, 29, 29), SOIL],
++    [stroke(5, 26.5, 27, 26.5, 1.4), SOIL_DARK],
++    [stroke(5, 24, 5, 17, 1.6), LEAF_DARK],
++    [stroke(27, 24, 27, 17, 1.6), LEAF_DARK],
++    [polygon([[5, 19], [1.5, 13], [8.5, 15]]), GREEN],
++    [polygon([[27, 19], [30.5, 13], [23.5, 15]]), GREEN],
++    [either(polygon([[16, 1], [22.4, 12.5], [9.6, 12.5]]), disc(16, 14, 6.4)), BLUE_DARK],
++    [either(polygon([[16, 3.5], [21, 12.5], [11, 12.5]]), disc(16, 14, 4.9)), BLUE],
++    [disc(13.6, 14.4, 1.5), DROP_LIGHT],
++  ],
+ };
+ 
+ // The RGBA pixels of an icon: for each pixel, the colour of the last shape under each of its samples, averaged, and the coverage as alpha.
+@@ -197,7 +214,7 @@ function pngOf(shapes) {
+   return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk("IHDR", header), chunk("IDAT", stored(rows)), chunk("IEND", Buffer.alloc(0))]);
+ }
+ 
+-/** The six icons as the files the template holds: name -> bytes. */
++/** The seven icons as the files the template holds: name -> bytes. */
+ export const renderIcons = () => Object.fromEntries(Object.entries(ICONS).map(([name, shapes]) => [`${name}.png`, pngOf(shapes)]));
+ 
+ if (process.argv[1] === fileURLToPath(import.meta.url)) {
+diff --git a/scripts/consumer-civ-lite-check.mjs b/scripts/consumer-civ-lite-check.mjs
+index d5b2a8b..7d39055 100644
+--- a/scripts/consumer-civ-lite-check.mjs
++++ b/scripts/consumer-civ-lite-check.mjs
+@@ -17,7 +17,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
+ // others, then 3 after them. The headed run adds the three of its captures.
+ const CYCLES = 10;
+ const NEW_GAMES_PER_CYCLE = 3;
+-const BINDINGS = 18;
++const BINDINGS = 19;
+ // The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
+ const CALLS_PER_CYCLE = 7;
+ const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
+@@ -28,7 +28,7 @@ const SABOTAGES = {
+   "hud-leak": { failed: [/the connections the HUD holds are the first cycle's/, /the registry's subscriptions are the first cycle's/, /in the menu the HUD showed it/], grows: ["hudSubscriptions", "subscriptions"] },
+   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
+   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
+-  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 15 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
++  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 16 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+   "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
+ };
+ assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
+@@ -62,7 +62,7 @@ try {
+   const projectFile = await readFile(path.join(project, "project.godot"), "utf8");
+   verify(["project.godot", "main.tscn", "validation.gd", "hud_validation.gd", "hud_probe.gd", "overlay_validation.gd", "stability_validation.gd", "stability_judge.gd", "package.json", "package-lock.json", "tsconfig.json", "ui/application.tres", "ui/index.tsx",
+     "ui/frontier-types.ts", "ui/store.ts", "ui/telemetry.ts", "ui/assets.d.ts", "ui/hud/hud.tsx", "ui/hud/overlay.tsx", "ui/hud/bar.tsx", "ui/hud/actions.tsx", "ui/hud/tile.tsx", "ui/hud/city.tsx",
+-    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "ui/hud/kit.tsx", "ui/hud/icons.ts", "ui/icons/settler.png", "ui/icons/warrior.png", "ui/icons/city.png", "ui/icons/food.png", "ui/icons/production.png", "ui/icons/science.png", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
++    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "ui/hud/kit.tsx", "ui/hud/icons.ts", "ui/icons/settler.png", "ui/icons/warrior.png", "ui/icons/city.png", "ui/icons/food.png", "ui/icons/production.png", "ui/icons/science.png", "ui/icons/irrigation.png", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
+     && ["sdk", "tests", "build", "consumers", "examples", "src", "native"].every(directory => !existsSync(path.join(project, directory))),
+   "The provisioned project is the template plus the addon, with no laboratory directory");
+   verify(/application="res:\/\/ui\/application\.tres"/.test(projectFile) && /res:\/\/addons\/godot_fabric\/plugin\.cfg/.test(projectFile),
+@@ -129,7 +129,7 @@ try {
+     verify(series.every(row => ["nodes", "orphans", "subscriptions", "connections", "hudSubscriptions"].every(name => row[name] === baseline[name])),
+       `Nodes (${baseline.nodes}), orphans (${baseline.orphans}), subscriptions (${baseline.subscriptions}), snapshot_changed connections (${baseline.connections}) and HUD connections (${baseline.hudSubscriptions}) are the first cycle's after every cycle`);
+     verify(series.every(row => row.bindings === BINDINGS && row.pendingHostTasks === 0 && row.pendingEvents === 0 && row.worlds === 1),
+-      "Every cycle ends with the 14 bindings, nothing pending and exactly one World");
++      "Every cycle ends with the 19 bindings, nothing pending and exactly one World");
+     verify(series.every((row, index) => row.epoch === 1 + NEW_GAMES_PER_CYCLE * (index + 1) && row.hudEpoch === row.epoch
+       && JSON.stringify(row.epochsSeen) === JSON.stringify([row.epoch - 2, row.epoch - 1, row.epoch])),
+     "The epoch rises by exactly the three new games of each cycle, strictly, and the HUD and Godot agree on it");
+diff --git a/tests/civ-lite-game-native.test.mjs b/tests/civ-lite-game-native.test.mjs
+index 0c936a4..17abcda 100644
+--- a/tests/civ-lite-game-native.test.mjs
++++ b/tests/civ-lite-game-native.test.mjs
+@@ -18,17 +18,22 @@ import {verifyFrontierReport} from "./civ-lite-game-oracle.mjs";
+ const root = fileURLToPath(new URL("..", import.meta.url));
+ const EXECUTIONS = 3;
+ // The state after the 12th end_turn of replay.gd. It changes when a rule, the map or the roteiro changes, and then
+-// the new value is reviewed, not accepted.
+-const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
++// the new value is reviewed, not accepted. It moved once for the Irrigate rule (the cost-of-change experiment's base): the state gained
++// `irrigated`, an empty list in every state of the roteiro, and nothing else of any of its states changed: with that field taken out of each
++// serialization, the previous golden hash (cb7ab974...) and trace hash (ed43495e...) come back.
++const GOLDEN_HASH = "0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1";
+ // SHA-256 of the state hashes after every step of the roteiro, one per line. The golden hash pins where the replay ends;
+ // this one pins how it got there, selection included, which every end_turn resets and the final state does not show.
+-const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
++const TRACE_HASH = "a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba";
+ const CONTEXTS = ["none", "tile", "settler", "warrior", "stack", "city", "dialog"];
+ // The refusal codes the roteiro plays, and those the probe builds a state for because the scenario cannot reach them.
+ const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
+   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot", "unknown_tech",
+   "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"];
+ const BUILT_REFUSALS = ["city_exists", "too_close_to_edge", "tile_occupied", "queue_full"];
++// The refusals of the Irrigate rule, played by the irrigation scenarios (the roteiro never irrigates): the three codes it adds, and the ones it reuses.
++const IRRIGATION_REFUSALS = ["already_irrigated", "no_moves_left", "no_water_nearby", "not_a_plain", "not_a_settler", "not_your_unit", "unknown_unit"];
++const IRRIGATION_SCENARIOS = ["start-plain", "forest", "hill", "no-moves-left", "four-sides", "city-yield", "city-control", "far-tile", "city-on-irrigated"];
+ // The turns the probe builds states for, because the roteiro never puts the player on the faction's route.
+ const WAIT_CASES = ["city-on-route", "city-on-route-next-turn", "unit-on-route"];
+ const GAME_DIRECTORY = "consumers/civ-lite/game";
+@@ -52,7 +57,7 @@ const SNAPSHOT_SHAPE = {
+   resources: {food: {stock: "int", rate: "int"}, production: {stock: "int", rate: "int"}, science: {stock: "int", rate: "int"}},
+   actions: [ACTION],
+   tile: {present: "int", x: "int", y: "int", terrain: "int", terrain_name: "string", food: "int", production: "int", science: "int", move_cost: "int",
+-    city: "int", units: [UNIT_CARD]},
++    city: "int", irrigated: "int", units: [UNIT_CARD]},
+   city: {present: "int", name: "string", x: "int", y: "int", size: "int", max_size: "int", food_needed: "int", food_rate: "int",
+     production_rate: "int", science_rate: "int",
+     queue: [{slot: "int", item: "string", label: "string", cost: "int", stock: "int"}], queue_max: "int",
+@@ -177,6 +182,14 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
+       }
+       return;
+     }
++    if (sabotage.startsWith("irrigation-")) {
++      // The roteiro never irrigates, so its states and its golden hash are the genuine ones: the scenarios built for the rule tell, to the probe's
++      // checks and to the oracle, which judges every step of a scenario by the rules written again in Node.
++      assert.ok(!rejections.goldenHashDiffers && !rejections.executionsDiffer, "The roteiro does not irrigate");
++      assert.ok(failed.some(name => /^irrigation[: ]/.test(name)), failed.join("\n"));
++      assert.ok(oracle.every(message => /^irrigation /.test(message)), oracle.join("\n"));
++      return;
++    }
+     assert.ok(rejections.goldenHashDiffers, "The golden hash rejects the sabotaged game");
+     if (sabotage === "prng") {
+       // A generator that is not the game's own gives a different map every process.
+@@ -246,16 +259,17 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
+   const actions = context => report.snapshots[`cover-${context}`].actions.map(action => [action.id, action.enabled, action.reason]);
+   assert.deepEqual(actions("none"), [["end_turn", 1, ""]]);
+   assert.deepEqual(actions("tile"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+-  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["fortify", 0, "cannot_fortify"], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
++  // Irrigate sits between found_city and fortify; at the covering step the Settler is on the start Plain, with Water beside it and moves to spend.
++  assert.deepEqual(actions("settler"), [["found_city", 1, ""], ["irrigate", 1, ""], ["fortify", 0, "cannot_fortify"], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+   assert.deepEqual(actions("warrior"), [["fortify", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+   assert.deepEqual(actions("stack"), [["select_unit", 1, ""], ["select_unit", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+   assert.deepEqual(actions("city"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
+   assert.deepEqual(actions("dialog"), [["end_turn", 0, "event_pending"]]);
+-  // The args are the intent's positional arguments: [unit_id] for select_unit, found_city and fortify, and [] for the
+-  // others. For found_city and fortify the unit is the selected one; for select_unit it is one of the tile's own units.
++  // The args are the intent's positional arguments: [unit_id] for select_unit, found_city, irrigate and fortify, and [] for the
++  // others. For found_city, irrigate and fortify the unit is the selected one; for select_unit it is one of the tile's own units.
+   for (const [name, snapshot] of Object.entries(report.snapshots)) {
+     for (const action of snapshot.actions) {
+-      if (["found_city", "fortify"].includes(action.id)) {
++      if (["found_city", "irrigate", "fortify"].includes(action.id)) {
+         assert.deepEqual(action.args, [snapshot.selection.unit], `${name} ${action.id}: args are [the selected unit's id]`);
+         assert.ok(snapshot.selection.unit > 0, `${name} ${action.id}: a unit is selected`);
+       } else if (action.id === "select_unit") {
+@@ -278,6 +292,23 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
+   assert.deepEqual(Object.keys(verified.refusals).sort(), [...ROTEIRO_REFUSALS].sort(), "The roteiro refuses with every code it documents");
+   assert.deepEqual(report.unreachableRefusals.map(entry => entry.code).sort(), [...BUILT_REFUSALS].sort());
+ 
++  // The Irrigate rule: each case played on a game built for it and judged by the oracle step by step; the refusals it plays, in the game's table; and the
++  // cards the HUDs show, as the snapshot and the hover give them.
++  assert.deepEqual(verified.irrigation.scenarios, IRRIGATION_SCENARIOS, "The irrigation scenarios were all played and judged");
++  assert.deepEqual(Object.keys(verified.irrigation.refusals).sort(), IRRIGATION_REFUSALS, "The irrigation scenarios are refused with every code the rule documents");
++  const cards = report.irrigation.cards;
++  for (const [name, snapshot] of [["before", cards.before], ["after", cards.after]]) {
++    conforms(snapshot, SNAPSHOT_SHAPE, `irrigation ${name} snapshot`);
++  }
++  for (const [name, card] of [["irrigated", cards.hoverIrrigated], ["plain", cards.hoverPlain], ["water", cards.hoverWater], ["outside", cards.hoverOutside]]) {
++    conforms(card, SNAPSHOT_SHAPE.tile, `irrigation ${name} hover card`);
++  }
++  assert.deepEqual([cards.before.tile.irrigated, cards.before.tile.food, cards.after.tile.irrigated, cards.after.tile.food], [0, 2, 1, 3],
++    "Irrigating a Plain turns its card's irrigated flag on and its food from 2 to 3");
++  assert.deepEqual(cards.before.actions.map(action => [action.id, action.enabled, action.reason]).slice(0, 3), [["found_city", 1, ""], ["irrigate", 1, ""], ["fortify", 0, "cannot_fortify"]]);
++  assert.deepEqual(cards.after.actions.map(action => [action.id, action.enabled, action.reason]).slice(0, 3), [["found_city", 0, "no_moves_left"], ["irrigate", 0, "already_irrigated"], ["fortify", 0, "cannot_fortify"]]);
++  assert.deepEqual([cards.hoverIrrigated, cards.hoverPlain, cards.hoverWater].map(card => [card.irrigated, card.food]), [[1, 3], [0, 2], [0, 1]], "The hover's card says which tile is irrigated, its food with the bonus");
++
+   // The faction's wait: a city and a unit of the player on its route, on states built for it, judged by the oracle.
+   assert.deepEqual(verified.waitCases, WAIT_CASES, "The faction waits in every case built for it");
+   for (const entry of report.waitCases) {
+@@ -291,5 +322,5 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
+     goldenHash: GOLDEN_HASH, traceHash, executions: runs.map((run, position) => ({execution: position + 1, status: run.result.status, finalHash: run.report.finalHash,
+       checks: run.report.checks.length, reportSha256: digest(run.text)})),
+     byteIdentical: true, steps: report.steps.length, turns: verified.turns, rngDraws: verified.draws, coverage, refusals: verified.refusals,
+-    unreachableRefusals: report.unreachableRefusals, waitCases: verified.waitCases, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
++    unreachableRefusals: report.unreachableRefusals, waitCases: verified.waitCases, irrigation: verified.irrigation, oracle: {accepted: true, contexts: verified.contexts}, sourceSha256: pinned}, null, 2) + "\n");
+ });
+diff --git a/tests/civ-lite-game-oracle.mjs b/tests/civ-lite-game-oracle.mjs
+index 916c82c..1c3d5f3 100644
+--- a/tests/civ-lite-game-oracle.mjs
++++ b/tests/civ-lite-game-oracle.mjs
+@@ -59,7 +59,11 @@ const FORCED_TILES = [
+ ];
+ // PCG's published reference outputs for the generator seeded with state 42 and sequence 54.
+ const PCG_REFERENCE = [0xa15c02b7, 0x7b47f409, 0xba1d3330, 0x83d2f293, 0xbfa4784b, 0xcbed606e];
+-const STATE_KEYS = ["ai", "cities", "events", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
++const STATE_KEYS = ["ai", "cities", "events", "irrigated", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
++// Irrigation: a Settler irrigates the Plain it stands on when Water is on one of the tile's four sides (not the diagonals) and the tile is not
++// irrigated yet; it spends all of the Settler's moves, and the tile yields one more food for the rest of the game.
++const IRRIGATION_FOOD = 1;
++const SIDES = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+ 
+ const M64 = (1n << 64n) - 1n;
+ const MULTIPLIER = 6364136223846793005n;
+@@ -147,6 +151,8 @@ const unitAt = (state, x, y, owner = 0) => state.units.filter(unit => unit.x ===
+ const unitById = (state, id) => state.units.find(unit => unit.id === id);
+ const cityAt = (state, x, y) => state.cities.find(city => city.x === x && city.y === y);
+ const terrainAt = (state, x, y) => state.map.terrain[index(x, y)];
++const irrigatedAt = (state, x, y) => state.irrigated.includes(index(x, y));
++const waterBeside = (state, x, y) => SIDES.some(([dx, dy]) => inBounds(x + dx, y + dy) && terrainAt(state, x + dx, y + dy) === WATER);
+ const techIndex = id => TECHS.findIndex(entry => entry.id === id);
+ const known = (state, id) => techIndex(id) >= 0 && techIndex(id) < state.research.done;
+ 
+@@ -174,7 +180,10 @@ function rates(state) {
+   if (city === undefined) {
+     return {food: 0, production: 0, science: 0, tiles: 0};
+   }
+-  const tile = (x, y) => ({x, y, ...TERRAIN[terrainAt(state, x, y)]});
++  const tile = (x, y) => {
++    const terrain = TERRAIN[terrainAt(state, x, y)];
++    return {x, y, ...terrain, food: terrain.food + (irrigatedAt(state, x, y) ? IRRIGATION_FOOD : 0)};
++  };
+   const neighbors = [];
+   for (let dy = -1; dy <= 1; dy += 1) {
+     for (let dx = -1; dx <= 1; dx += 1) {
+@@ -270,6 +279,25 @@ function refusal(state, intent, args) {
+       }
+       return unit.fortified === 1 ? "already_fortified" : "";
+     }
++    case "irrigate": {
++      if (unitReason(args[0]) !== "") {
++        return unitReason(args[0]);
++      }
++      const unit = unitById(state, args[0]);
++      if (unit.kind !== "settler") {
++        return "not_a_settler";
++      }
++      if (terrainAt(state, unit.x, unit.y) !== PLAIN) {
++        return "not_a_plain";
++      }
++      if (!waterBeside(state, unit.x, unit.y)) {
++        return "no_water_nearby";
++      }
++      if (irrigatedAt(state, unit.x, unit.y)) {
++        return "already_irrigated";
++      }
++      return unit.moves === 0 ? "no_moves_left" : "";
++    }
+     case "set_production": {
+       const [item, slot] = args;
+       const city = state.cities[0];
+@@ -366,6 +394,12 @@ function accept(state, intent, args) {
+       unit.moves = 0;
+       break;
+     }
++    case "irrigate": {
++      const unit = unitById(next, args[0]);
++      next.irrigated = [...next.irrigated, index(unit.x, unit.y)].sort((a, b) => a - b);
++      unit.moves = 0;
++      break;
++    }
+     case "set_production": {
+       const queue = next.cities[0].queue;
+       if (args[1] === queue.length) {
+@@ -548,6 +582,11 @@ function checkInvariants(state, where) {
+     assert.ok(unit.fortified === 0 || unit.fortified === 1, `${where} unit ${unit.id} fortified flag`);
+   }
+   assert.ok(state.next_unit > previous, `${where} next unit id`);
++  // The irrigated tiles are a set kept ascending, and each is a Plain with Water on one of its four sides (the only tiles the rule irrigates; the terrain never changes).
++  assert.ok(state.irrigated.every((tile, position) => Number.isInteger(tile) && tile >= 0 && tile < WIDTH * HEIGHT && (position === 0 || tile > state.irrigated[position - 1])),
++    `${where} the irrigated tiles are indexes into the map, ascending and without repeats`);
++  assert.ok(state.irrigated.every(tile => state.map.terrain[tile] === PLAIN && waterBeside(state, tile % WIDTH, Math.floor(tile / WIDTH))),
++    `${where} every irrigated tile is a Plain with Water on one of its four sides`);
+   assert.ok(state.cities.length <= 1, `${where} at most one city`);
+   for (const city of state.cities) {
+     assert.ok(inBounds(city.x, city.y) && terrainAt(state, city.x, city.y) !== WATER, `${where} the city stands on land`);
+@@ -612,6 +651,80 @@ function appendedEntries(before, after, phases, aiEvents, where) {
+   return entries;
+ }
+ 
++// One state of a scenario against the one before it, as a step of the roteiro is judged: the intent is accepted or refused with the code the
++// rules give, a refusal changes nothing, and an acceptance leaves the state the rules compute. Answers the refusal, or "".
++function judgeScenarioStep(previous, previousText, step, where, generator) {
++  const state = parseState(step.serialization, where);
++  checkInvariants(state, where);
++  assert.deepEqual(state.rng, generator.record(), `${where}: no step of a scenario draws from the PRNG`);
++  assert.equal(step.hash, digest(step.serialization), `${where}: the hash is SHA-256 of the serialization`);
++  assert.equal(step.turn, state.turn, where);
++  const reason = refusal(previous, step.intent, step.args);
++  assert.equal(step.code, reason === "" ? "ok" : reason, `${where} must be ${reason === "" ? "accepted" : "refused with " + reason}`);
++  assert.equal(step.ok, reason === "" ? 1 : 0, where);
++  if (reason !== "") {
++    assert.equal(step.serialization, previousText, `${where} was refused and must change nothing`);
++  } else {
++    const {next, phases, aiEvents} = accept(previous, step.intent, step.args);
++    assert.deepEqual(withoutLog(state), withoutLog(next), `${where} must leave the state the rules compute from the state before it`);
++    appendedEntries(previous, state, phases, aiEvents, where);
++    const emitted = state.log_seq - previous.log_seq;
++    if (step.intent === "end_turn") {
++      assert.deepEqual(step.phases, phases, `${where}: each phase reports the tasks it ran and the events it emitted`);
++      assert.equal(emitted, phases.reduce((sum, phase) => sum + phase.events, 0), `${where}: the log grows by the events the phases reported`);
++    } else if (["select_tile", "select_unit", "clear_selection"].includes(step.intent)) {
++      assert.equal(emitted, 0, `${where}: a selection change emits no event`);
++    } else {
++      assert.equal(emitted, 1, `${where}: an accepted intent emits one event`);
++    }
++  }
++  assert.equal(step.context, contextOf(state), `${where}: the context is derived from the state`);
++  return {state, reason};
++}
++
++// The irrigation scenarios: games the probe built for each case of the rule (open land placed with Water on one side, a city next to the
++// Settler), played through the same intents and judged step by step with the rules written again here. A scenario's first state is the fresh
++// game with its setup applied, so its map is not the generator's: the invariants judge it, and the rules judge every step after.
++function verifyIrrigation(irrigation) {
++  assert.ok(Array.isArray(irrigation?.scenarios) && irrigation.scenarios.length > 0, "the report holds the irrigation scenarios");
++  const refusals = {};
++  const last = {};
++  for (const scenario of irrigation.scenarios) {
++    const initial = parseState(scenario.initial, `irrigation ${scenario.name} initial`);
++    checkInvariants(initial, `irrigation ${scenario.name} initial`);
++    const generator = Pcg32.seeded(SEED, PRNG_SEQUENCE);
++    while (generator.draws < initial.rng.draws) {
++      generator.next();
++    }
++    assert.deepEqual(initial.rng, generator.record(), `irrigation ${scenario.name}: the PRNG is what the map's draws left`);
++    assert.deepEqual([initial.turn, initial.irrigated], [1, []], `irrigation ${scenario.name}: a scenario begins on turn 1 with no tile irrigated`);
++    let previous = initial;
++    let previousText = scenario.initial;
++    for (const step of scenario.steps) {
++      const where = `irrigation ${scenario.name} step ${step.index} ${step.intent}(${step.args.join(", ")})`;
++      const judged = judgeScenarioStep(previous, previousText, step, where, generator);
++      if (judged.reason !== "") {
++        refusals[judged.reason] = (refusals[judged.reason] ?? 0) + 1;
++      }
++      previous = judged.state;
++      previousText = step.serialization;
++    }
++    last[scenario.name] = previous;
++  }
++  // What each scenario is for, said again in the oracle's own terms.
++  assert.deepEqual(last["start-plain"].irrigated, [index(6, 8)], "the start tile, and only it, is irrigated");
++  assert.deepEqual(last["four-sides"].irrigated, [index(4, 4), index(7, 4), index(10, 4), index(13, 4)], "Water on each of the four sides irrigates, the diagonal does not, whatever the order");
++  assert.deepEqual([last.forest.irrigated, last.hill.irrigated], [[], []], "no Forest and no Hill is irrigated");
++  assert.deepEqual(last["no-moves-left"].irrigated, [index(6, 8)], "the Settler that regained its moves irrigated the tile");
++  // The irrigated Plain next to the city outranks the other neighbours: the city works it, and a turn later its food stock is the larger rate.
++  assert.equal(last["city-yield"].res.food - last["city-control"].res.food, 2, "the irrigated tile the city works gives it two more food a turn than the Forest it worked");
++  assert.deepEqual(last["city-yield"].irrigated, [index(6, 8)]);
++  assert.equal(last["far-tile"].cities.length, 1, "the far tile's scenario has the city");
++  assert.equal(rates(last["far-tile"]).food, rates({...last["far-tile"], irrigated: []}).food, "an irrigated Plain the city does not work changes none of its yields");
++  assert.equal(rates(last["city-on-irrigated"]).food - rates({...last["city-on-irrigated"], irrigated: []}).food, IRRIGATION_FOOD, "a city founded on an irrigated Plain works it as its centre");
++  return {scenarios: irrigation.scenarios.map(scenario => scenario.name), refusals};
++}
++
+ export function verifyFrontierReport(report) {
+   assert.equal(report.scenario, "civ-lite-game");
+   assert.equal(report.displayServer, "headless");
+@@ -640,7 +753,7 @@ export function verifyFrontierReport(report) {
+   assert.equal(initial.turn, 1);
+   assert.deepEqual(initial.units.map(unit => [unit.id, unit.owner, unit.kind, unit.x, unit.y, unit.moves, unit.fortified]),
+     [[1, PLAYER, "settler", 6, 8, 2, 0], [2, PLAYER, "warrior", 6, 8, 3, 0], [3, FACTION, "warrior", 17, 8, 3, 0]]);
+-  assert.deepEqual([initial.cities.length, initial.res, initial.events.queue, initial.events.resolved], [0, {food: 0, production: 0, science: 0}, [], []]);
++  assert.deepEqual([initial.cities.length, initial.res, initial.events.queue, initial.events.resolved, initial.irrigated], [0, {food: 0, production: 0, science: 0}, [], [], []]);
+ 
+   const seen = new Set();
+   const refusals = {};
+@@ -721,6 +834,7 @@ export function verifyFrontierReport(report) {
+       `${where}: exactly one ai_blocked, at the tile the faction could not enter`);
+     assert.equal(entries.filter(entry => entry.code === "ai_moved").length, 0, `${where}: the faction that waits does not report a move`);
+   }
++  const irrigation = verifyIrrigation(report.irrigation);
+   return {steps: report.steps.length, turns, finalHash: report.finalHash, contexts: [...seen].sort(), refusals, draws: previous.rng.draws,
+-    waitCases: report.waitCases.map(entry => entry.name)};
++    waitCases: report.waitCases.map(entry => entry.name), irrigation};
+ }
+diff --git a/tests/civ-lite-game-probe.gd b/tests/civ-lite-game-probe.gd
+index 74fda32..b023007 100644
+--- a/tests/civ-lite-game-probe.gd
++++ b/tests/civ-lite-game-probe.gd
+@@ -7,6 +7,9 @@ extends SceneTree
+ # judges the raw observations without trusting any verdict here. There is no extension, no Control and no frame: the
+ # rules are plain GDScript.
+ #
++# It also plays the irrigation scenarios (the Irrigate rule, the base of the cost-of-change experiment, docs/research/frontier-change-cost.md):
++# games built for each case of the rule, played through the same intents, with the state after every step in the report for the oracle.
++#
+ #   --out=<path>   where the report goes, relative to the project (default build/civ-lite-game-report.json)
+ 
+ const Rules := preload("res://consumers/civ-lite/game/rules.gd")
+@@ -152,7 +155,7 @@ func check_turn_slicing() -> void:
+   var before: String = game.serialize()
+   check(game.begin_end_turn().ok == 1 and game.state.phase == Rules.PHASES[0], "turn: begin_end_turn stops at the first phase")
+   var refused := true
+-  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["clear_selection", []], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]],
++  var calls := [["select_tile", [6, 8]], ["select_unit", [1]], ["clear_selection", []], ["move_unit", [1, 7, 8]], ["found_city", [1]], ["fortify", [2]], ["irrigate", [1]],
+     ["set_production", ["warrior", 0]], ["set_research", ["alphabet"]], ["resolve_event", ["welcome"]], ["end_turn", []], ["begin_end_turn", []]]
+   var mid: String = game.serialize()
+   for call: Array in calls:
+@@ -242,6 +245,168 @@ func check_faction_waits() -> Array:
+   return cases
+ 
+ 
++# --- Irrigation -----------------------------------------------------------------------------------------------------------
++
++# The actions of the Settler's context, in the game's order.
++const SETTLER_ACTIONS := ["found_city", "irrigate", "fortify", "clear_selection", "end_turn"]
++
++
++# A Settler on open land for the scenarios: the 3x3 around it is Plain, with Water on the one tile given and nowhere else, so what the
++# tile has beside it is exactly that. Answers the Settler's id.
++func place_settler(game: RefCounted, tile: Vector2i, water: Vector2i) -> int:
++  for dy in range(-1, 2):
++    for dx in range(-1, 2):
++      game.state.map.terrain[World.index(tile.x + dx, tile.y + dy)] = Rules.PLAIN
++  game.state.map.terrain[World.index(water.x, water.y)] = Rules.WATER
++  var id := int(game.state.next_unit)
++  game.state.units.append(World.make_unit(id, Rules.OWNER_PLAYER, "settler", tile.x, tile.y))
++  game.state.next_unit = id + 1
++  return id
++
++
++func add_city(game: RefCounted) -> void:
++  game.state.cities.append({"name": Rules.CITY_NAME, "x": 7, "y": 8, "size": 1, "queue": [], "buildings": []})
++
++
++# Settlers 4 to 8, with Water north, east, south and west of the first four and on a diagonal only of the fifth.
++func setup_four_sides(game: RefCounted) -> void:
++  place_settler(game, Vector2i(4, 4), Vector2i(4, 3))
++  place_settler(game, Vector2i(7, 4), Vector2i(8, 4))
++  place_settler(game, Vector2i(10, 4), Vector2i(10, 5))
++  place_settler(game, Vector2i(13, 4), Vector2i(12, 4))
++  place_settler(game, Vector2i(16, 4), Vector2i(17, 5))
++
++
++func setup_far_tile(game: RefCounted) -> void:
++  add_city(game)
++  place_settler(game, Vector2i(14, 4), Vector2i(14, 3))
++
++
++# The scenarios: a setup that builds the game, and the steps [intent, args, code] it plays. The start tile (6, 8) is a Plain with Water at
++# (5, 8), and (6, 9) another with Water at (5, 9); the Forest (7, 8) and the Hill (7, 7) are next to it.
++func irrigation_scenarios() -> Array:
++  return [
++    {"name": "start-plain", "steps": [["irrigate", [99], "unknown_unit"], ["irrigate", [3], "not_your_unit"], ["irrigate", [2], "not_a_settler"],
++      ["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["irrigate", [1], "already_irrigated"], ["end_turn", [], "ok"], ["irrigate", [1], "already_irrigated"]]},
++    # The Settler has no moves left after the forest (2 of 2), and the refusal is still the tile's: the checks run unit, tile, moves.
++    {"name": "forest", "steps": [["move_unit", [1, 7, 8], "ok"], ["irrigate", [1], "not_a_plain"]]},
++    {"name": "hill", "steps": [["move_unit", [1, 7, 7], "ok"], ["irrigate", [1], "not_a_plain"]]},
++    {"name": "no-moves-left", "steps": [["move_unit", [1, 6, 9], "ok"], ["move_unit", [1, 6, 8], "ok"], ["irrigate", [1], "no_moves_left"], ["end_turn", [], "ok"],
++      ["irrigate", [1], "ok"]]},
++    # Water on each of the four sides irrigates, in whatever order the Settlers go; Water on a diagonal only does not.
++    {"name": "four-sides", "setup": setup_four_sides,
++      "steps": [["irrigate", [6], "ok"], ["irrigate", [4], "ok"], ["irrigate", [8], "no_water_nearby"], ["irrigate", [7], "ok"], ["irrigate", [5], "ok"]]},
++    # The city's yields use the bonus: the irrigated Plain next to the city outranks every neighbour, so the city works it.
++    {"name": "city-yield", "setup": add_city, "steps": [["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["end_turn", [], "ok"]]},
++    {"name": "city-control", "setup": add_city, "steps": [["select_unit", [1], "ok"], ["end_turn", [], "ok"]]},
++    # An irrigated Plain that the city does not work changes nothing of its yields.
++    {"name": "far-tile", "setup": setup_far_tile,
++      "steps": [["select_unit", [4], "ok"], ["irrigate", [4], "ok"]]},
++    # The city founded on an irrigated Plain works it as its centre.
++    {"name": "city-on-irrigated", "steps": [["select_unit", [1], "ok"], ["irrigate", [1], "ok"], ["end_turn", [], "ok"], ["found_city", [1], "ok"], ["end_turn", [], "ok"]]},
++  ]
++
++
++# Plays one scenario on a game built for it. The state after every step goes to the report; the snapshots stay here for the checks of the case.
++func play_irrigation(entry: Dictionary) -> Dictionary:
++  var game = Game.new(Rules.SEED, SESSION_EPOCH)
++  if entry.has("setup"):
++    entry.setup.call(game)
++  var initial: String = game.serialize()
++  check(initial != "", "irrigation %s: the game built for the case serializes" % entry.name)
++  var records := []
++  var snapshots := []
++  for index in entry.steps.size():
++    var step: Array = entry.steps[index]
++    var name := "irrigation %s step %02d %s%s" % [entry.name, index, step[0], JSON.stringify(step[1])]
++    var before: String = game.serialize()
++    var result: Dictionary = game.callv(step[0], step[1])
++    var after: String = game.serialize()
++    check(result.code == step[2], name + " answers " + step[2])
++    if result.ok == 0:
++      check(after == before, name + " refused: the state is untouched")
++      check(result.text == Rules.reason_text(result.code) and result.text != "", name + " refused: the text is the code's")
++    var snapshot: Dictionary = game.snapshot()
++    check(Snapshot.is_frozen(snapshot) and Canon.encode(snapshot) != "", name + " snapshot is immutable and integers and strings only")
++    check(intents_agree_with_snapshot(game, snapshot), name + " every enabled action is an accepted intent and the reverse")
++    if snapshot.context == "settler":
++      check(snapshot.actions.map(func(action: Dictionary) -> String: return action.id) == SETTLER_ACTIONS, name + " the Settler's actions are in the game's order")
++    var record := {"index": index, "intent": step[0], "args": step[1], "ok": result.ok, "code": result.code, "context": game.context(), "turn": game.state.turn,
++      "serialization": after, "hash": Canon.hash_text(after)}
++    if result.has("phases"):
++      record["phases"] = result.phases
++    records.append(record)
++    snapshots.append(snapshot)
++  return {"name": entry.name, "initial": initial, "steps": records, "snapshots": snapshots, "game": game}
++
++
++# The irrigation of the start tile, seen in the snapshot, the card and the hover: the numbers the HUDs show.
++func check_start_plain(played: Dictionary) -> Dictionary:
++  var snapshots: Array = played.snapshots
++  var game = played.game
++  var offered: Dictionary = snapshots[3].actions[1]
++  check(snapshots[3].context == "settler" and offered.id == "irrigate" and offered.label == "Irrigate" and offered.args == [1] and offered.enabled == 1 and offered.reason == "",
++    "irrigation: a Settler on a Plain with Water beside it is offered Irrigate, enabled, for its own id")
++  check(snapshots[3].tile.irrigated == 0 and snapshots[3].tile.food == 2 and snapshots[3].tile.production == 1,
++    "irrigation: the tile card of a Plain that is not irrigated says so and yields its terrain's")
++  var done: Dictionary = snapshots[4].actions[1]
++  check(done.enabled == 0 and done.reason == "already_irrigated" and done.reason_text == Rules.reason_text("already_irrigated"),
++    "irrigation: once irrigated the action is disabled with already_irrigated and the game's text")
++  check(snapshots[4].tile.irrigated == 1 and snapshots[4].tile.food == 3 and snapshots[4].tile.production == 1 and snapshots[4].tile.science == 0,
++    "irrigation: the card of the irrigated tile says so and its food has the bonus")
++  var settler: Dictionary = snapshots[4].tile.units.filter(func(unit: Dictionary) -> bool: return unit.id == 1)[0]
++  check(settler.moves == 0 and settler.max_moves == 2, "irrigation: irrigating spends all of the Settler's remaining moves")
++  check(game.state.irrigated == [World.index(6, 8)], "irrigation: the state holds the tile as an index into the map")
++  # Two turns on, the Settler has its moves back and the tile is still irrigated: the refusal is the tile's, not the moves'.
++  check(World.unit_by_id(game.state, 1).moves == 2 and game.state.turn == 2 and game.tile_card(6, 8).food == 3, "irrigation: the tile stays irrigated across the turn")
++  var hover_irrigated: Dictionary = game.tile_card(6, 8)
++  var hover_plain: Dictionary = game.tile_card(9, 8)
++  var hover_water: Dictionary = game.tile_card(5, 8)
++  var hover_outside: Dictionary = game.tile_card(-1, 8)
++  check(hover_irrigated.irrigated == 1 and hover_irrigated.food == 3 and hover_plain.irrigated == 0 and hover_plain.food == 2 and hover_water.irrigated == 0
++    and hover_water.food == 1 and hover_outside.present == 0 and hover_outside.irrigated == 0, "irrigation: the hover's card says it too, tile by tile, and the absent card is not irrigated")
++  var fresh = Game.new()
++  var changed = Game.new()
++  changed.state.irrigated.append(World.index(6, 8))
++  check(fresh.state.irrigated.is_empty() and fresh.state_hash() != changed.state_hash() and fresh.serialize().contains("\"irrigated\":[]"),
++    "irrigation: a fresh game holds no irrigated tile, and the irrigated tiles are part of the state's hash")
++  return {"before": snapshots[3], "after": snapshots[4], "hoverIrrigated": hover_irrigated, "hoverPlain": hover_plain, "hoverWater": hover_water, "hoverOutside": hover_outside}
++
++
++func check_irrigation_yields(by_name: Dictionary) -> void:
++  var yield_case: Dictionary = by_name["city-yield"]
++  var control: Dictionary = by_name["city-control"]
++  var before: Dictionary = yield_case.snapshots[0]
++  var after: Dictionary = yield_case.snapshots[1]
++  check(before.city.food_rate == 3 and before.city.production_rate == 5 and after.city.food_rate == 5 and after.city.production_rate == 4,
++    "irrigation: the city works the irrigated Plain, which outranks its other neighbours: two more food and one less production")
++  check(after.resources.food.rate == after.city.food_rate and yield_case.snapshots[2].resources.food.stock == 5 and control.snapshots[1].resources.food.stock == 3,
++    "irrigation: the turn after, the city's food stock has the irrigated yield, and the same turn without it has the other")
++  var far_before: Dictionary = by_name["far-tile"].snapshots[0]
++  var far_after: Dictionary = by_name["far-tile"].snapshots[1]
++  check(far_before.city.food_rate == far_after.city.food_rate and far_after.tile.irrigated == 1 and far_after.tile.food == 3,
++    "irrigation: an irrigated Plain the city does not work leaves the city's yields as they were, and its card has the bonus")
++  var founded: Dictionary = by_name["city-on-irrigated"].snapshots[3]
++  check(founded.city.present == 1 and founded.city.food_rate == 5, "irrigation: a city founded on an irrigated Plain works it as its centre")
++
++
++func check_irrigation() -> Dictionary:
++  var scenarios := []
++  var by_name := {}
++  for entry: Dictionary in irrigation_scenarios():
++    var played := play_irrigation(entry)
++    by_name[entry.name] = played
++    scenarios.append({"name": played.name, "initial": played.initial, "steps": played.steps})
++  var cards := check_start_plain(by_name["start-plain"])
++  check_irrigation_yields(by_name)
++  var four: Dictionary = by_name["four-sides"]
++  check(four.game.state.irrigated == [100, 103, 106, 109], "irrigation: four tiles with Water on each of the four sides are irrigated, kept ascending whatever the order")
++  check(World.unit_by_id(four.game.state, 8).moves == 2 and World.unit_by_id(four.game.state, 6).moves == 0,
++    "irrigation: the Settler that was refused keeps its moves and the ones that irrigated spent them")
++  check(by_name["forest"].game.state.irrigated.is_empty() and by_name["hill"].game.state.irrigated.is_empty(), "irrigation: no Forest and no Hill is irrigated")
++  return {"scenarios": scenarios, "cards": cards}
++
++
+ func check_epoch(primary: Dictionary) -> void:
+   var other = Game.new(Rules.SEED, SESSION_EPOCH + 1)
+   check(other.snapshot().epoch == SESSION_EPOCH + 1 and primary.snapshots.final.epoch == SESSION_EPOCH, "epoch: the snapshot carries the session's epoch")
+@@ -254,6 +419,7 @@ func _init() -> void:
+   check_turn_slicing()
+   var unreachable := check_unreachable_refusals()
+   var waits := check_faction_waits()
++  var irrigation := check_irrigation()
+   var primary := play(false, SESSION_EPOCH, true)
+   var repeated := play(false, SESSION_EPOCH, false)
+   var sliced := play(true, SESSION_EPOCH, false)
+@@ -268,7 +434,7 @@ func _init() -> void:
+   var final_hash: String = hashes[hashes.size() - 1]
+   var report := {"scenario": "civ-lite-game", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
+     "seed": Rules.SEED, "epoch": SESSION_EPOCH, "prng": {"vector": Prng.reference_vector()}, "initial": primary.initial,
+-    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "waitCases": waits, "finalHash": final_hash, "checks": checks,
++    "steps": primary.steps, "snapshots": primary.snapshots, "unreachableRefusals": unreachable, "waitCases": waits, "irrigation": irrigation, "finalHash": final_hash, "checks": checks,
+     "allPassed": failures.is_empty()}
+   DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://build"))
+   var output := FileAccess.open(output_path(), FileAccess.WRITE)
+diff --git a/tests/civ-lite-stability-oracle.mjs b/tests/civ-lite-stability-oracle.mjs
+index c6a2b83..0e6c7ba 100644
+--- a/tests/civ-lite-stability-oracle.mjs
++++ b/tests/civ-lite-stability-oracle.mjs
+@@ -4,7 +4,7 @@ import {growthOfHalves} from "./performance-oracle.mjs";
+ // The independent oracle of Frontier's stability lane: opening and closing each overlay twenty times. It judges the raw observations of
+ // consumers/civ-lite/stability_validation.gd (a measure at rest after every close and open, the focus the host can say, the bursts at the
+ // map, the Images the HUD mounts) and none of the probe's verdicts. What a screen at rest holds is written here, apart from the probe:
+-// the registry's 18 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
++// the registry's 19 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
+ // the ones the game had before, and the first cycle's numbers for everything else, exactly. The icons each context must show are derived
+ // from the game's own snapshot that the report carries, with this file's table of which asset each icon is.
+ //
+@@ -29,9 +29,9 @@ const CYCLES = 20;
+ const BURST_CYCLES = [1, 20];
+ const EVENTS = ["wanderers", "traders", "scholar"];
+ const PICKS = ["welcome", "buy_tools", "send_on"];
+-// The registry holds one binding for each state, signal and method the node registers: 18 since the stress mode (15 before it, which a control run
+-// on an older tree says with `{bindings: 15}`).
+-const BINDINGS = 18;
++// The registry holds one binding for each state, signal and method the node registers: 19 since the Irrigate rule (18 with the stress mode and 15 before it,
++// which a control run on an older tree says with `{bindings: 15}`).
++const BINDINGS = 19;
+ const HUD_CONNECTIONS = 2;
+ const HEAP_LIMIT_BYTES = 2048;
+ const OBJECTS_LIMIT = 1;
+@@ -49,6 +49,8 @@ const CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dialog-1", "di
+ // Which asset each icon is: the bar's, the units' (by the kind the game gives the unit), the city's, and what each production item is.
+ const RESOURCE_ICONS = {food: "food.png", production: "production.png", science: "science.png"};
+ const UNIT_ICONS = {settler: "settler.png", warrior: "warrior.png"};
++// The icon of the Irrigate action and of an irrigated tile's card (the cost-of-change experiment's base).
++const IRRIGATION_ICON = "irrigation.png";
+ const ITEM_ICONS = {warrior: "warrior.png", granary: "food.png", workshop: "production.png", library: "science.png"};
+ const CONTEXT_ORDER = ["none", "stack", "settler", "city"];
+ const ACTIONS_IN = ["settler", "warrior", "stack"];
+@@ -64,6 +66,7 @@ function expectedIcons(snapshot) {
+   if (ACTIONS_IN.includes(snapshot.context)) {
+     for (const action of snapshot.actions) {
+       const file = action.id === "found_city" ? "city.png"
++        : action.id === "irrigate" ? IRRIGATION_ICON
+         : action.id === "select_unit" || action.id === "fortify" ? UNIT_ICONS[unitKind(action.args[0])] : undefined;
+       if (file !== undefined) {
+         icons.set(`hud-actions-${keyOf(action)}-icon`, {file, modal: false});
+@@ -77,6 +80,9 @@ function expectedIcons(snapshot) {
+     for (const unit of snapshot.tile.units) {
+       icons.set(`hud-tile-unit-${unit.id}-icon`, {file: UNIT_ICONS[unit.kind], modal: false});
+     }
++    if (snapshot.tile.irrigated === 1) {
++      icons.set("hud-tile-irrigated", {file: IRRIGATION_ICON, modal: false});
++    }
+   }
+   if (snapshot.context === "city") {
+     icons.set("hud-city-icon", {file: "city.png", modal: true});
+diff --git a/tests/civ-lite-ui-native.test.mjs b/tests/civ-lite-ui-native.test.mjs
+index 00471b2..6730397 100644
+--- a/tests/civ-lite-ui-native.test.mjs
++++ b/tests/civ-lite-ui-native.test.mjs
+@@ -66,8 +66,8 @@ const CONTROL_COMMIT = "5e1f6a1";
+ // The commit before the queue and the overlays: the game and the HUD of slice 1.
+ const OVERLAY_CONTROL_COMMIT = "622102e";
+ const CONTROL_SHA256 = "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346";
+-// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the HUD probe's last eight are the stress stage's, the overlay probe's last two are the Escape checks), and the captures a headed run adds (nine, and four).
+-const EXPECTED_CHECKS = 152;
++// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the HUD probe's last nine are the irrigation stage's, the eight before them the stress stage's, the overlay probe's last two are the Escape checks), and the captures a headed run adds (nine, and four).
++const EXPECTED_CHECKS = 161;
+ const EXPECTED_OVERLAY_CHECKS = 28;
+ // What stability_validation.gd counts: 41 in a run with no capture, and the seven pictures and the comparison of the last cycle's a headed run adds.
+ const EXPECTED_STABILITY_CHECKS = 41;
+@@ -77,6 +77,9 @@ const STABILITY_CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dial
+ // The commit before this slice: its HUD has no icons and its manifest does not decide AppRegistry.
+ const STABILITY_CONTROL_COMMIT = "e108e9d";
+ const ICON_NAMES = ["settler", "warrior", "city", "food", "production", "science"];
++// The generator draws one more, which neither HUD has to import to load: the Irrigate action's and the irrigated tile's (the cost-of-change experiment's base).
++// What each arm does with it is measured by the lane's irrigation stage, which looks at the Images and Controls the HUD shows.
++const DRAWN_ICON_NAMES = [...ICON_NAMES, "irrigation"];
+ // What each retained sabotage must make the probe and the oracle say. `failed` are patterns of the probe's failed checks and
+ // `categories` the oracle's categories that must be among the findings (scripts/civ-lite-ui-sabotage.mjs says what each breaks).
+ const SABOTAGES = {
+@@ -176,6 +179,7 @@ const manifestNow = async () => JSON.parse(await readFile(path.join(root, "docs"
+ const row = (report, context) => report.matrix[COVERING[context]];
+ const node = (observed, id) => observed.nodes.find(entry => entry.testID === id);
+ const inputStep = (report, label) => report.input.find(entry => entry.label === label);
++const irrigationNode = (view, id) => view.nodes.find(entry => entry.testID === id);
+ const MUTATIONS = [
+   {name: "a panel the context mounts is missing", category: "panels", change: report => { node(row(report, "city").observed, "hud-city").visible = false; }},
+   {name: "a panel the context does not mount is shown", category: "panels", change: report => { row(report, "none").observed.nodes.push({testID: "hud-tile", kind: "view", visible: true, text: "", rect: [24, 416, 576, 92], stops: true, disabled: false, animating: false, modal: false}); }},
+@@ -212,6 +216,18 @@ const MUTATIONS = [
+   {name: "a click on a panel reached the World", category: "input", change: report => { inputStep(report, "click-on-panels").panelClicks[0].heardAfter.buttons += 2; }},
+   {name: "a tick of the wheel on a panel reached the World", category: "input", change: report => { inputStep(report, "click-on-panels-after-menu").panelClicks[1].heardAfterWheel.buttons += 2; }},
+   {name: "the node published the same hover card twice running", category: "input", change: report => { report.hoverPublished.splice(1, 0, structuredClone(report.hoverPublished[0])); }},
++  // The irrigation stage (the request of the cost-of-change experiment): the icon of the action, the press, and the card of the irrigated tile.
++  {name: "the Irrigate action shows no icon", category: "irrigation", change: report => { report.irrigation.before.nodes = report.irrigation.before.nodes.filter(entry => entry.testID !== "hud-actions-irrigate-1-icon"); }},
++  {name: "the Irrigate action draws another picture", category: "irrigation", change: report => { irrigationNode(report.irrigation.before, "hud-actions-irrigate-1-icon").asset = "city.png"; }},
++  {name: "the Irrigate action's icon has no area", category: "irrigation", change: report => { irrigationNode(report.irrigation.before, "hud-actions-irrigate-1-icon").rect[2] = 0; }},
++  {name: "a press on Irrigate was not sent by the HUD", category: "irrigation", change: report => { report.irrigation.press.hudCalls = 0; }},
++  {name: "a press on Irrigate did not irrigate the tile", category: "irrigation", change: report => { report.irrigation.press.irrigatedByPress = false; }},
++  {name: "Irrigate stays enabled once the tile is irrigated", category: "irrigation", change: report => { irrigationNode(report.irrigation.after, "hud-actions-irrigate-1").disabled = false; }},
++  {name: "the irrigated tile's card shows no irrigation icon", category: "irrigation", change: report => { report.irrigation.after.nodes = report.irrigation.after.nodes.filter(entry => entry.testID !== "hud-tile-irrigated"); }},
++  {name: "the irrigation icon of the card is not on screen", category: "irrigation", change: report => { irrigationNode(report.irrigation.after, "hud-tile-irrigated").visible = false; }},
++  {name: "the card shows the irrigation icon before the tile is irrigated", category: "irrigation", change: report => { report.irrigation.before.nodes.push({testID: "hud-tile-irrigated", kind: "image", visible: true, text: "", rect: [24, 416, 18, 18], stops: false, disabled: false, animating: false, modal: false, asset: "irrigation.png"}); }},
++  {name: "the units line of the irrigated tile does not say Irrigated", category: "irrigation", change: report => { const units = irrigationNode(report.irrigation.after, "hud-tile-units"); units.text = units.text.replaceAll("Irrigated", ""); }},
++  {name: "the card's food leaves out the irrigation's", category: "irrigation", change: report => { const yields = irrigationNode(report.irrigation.after, "hud-tile-yields"); yields.text = yields.text.replace(/Food \d+/, "Food 2"); }},
+   {name: "a bar that forgot the game's reason", category: "bar", change: report => { node(row(report, "dialog").observed, "hud-bar-end-turn-reason").text = ""; }},
+   {name: "a press on a disabled action asked the game", category: "input", change: report => { inputStep(report, "press-disabled-fortify").callbacksTotalAfter += 1; }},
+   {name: "the World came back behind the HUD's layer", category: "input", change: report => { const menu = inputStep(report, "after-menu"); menu.worldIndex = menu.layerIndex + 1; }},
+@@ -391,9 +407,9 @@ if (sabotage === null) {
+     const changesFound = SCAN_MUTATIONS.filter(mutation => mutation.clean !== true).length;
+     verify(true, `The scan finds each of ${changesFound} changes of a copy of the HUD (an import out of scope or by a subpath, a refused or unknown or ignored prop, a member out of the subset, read by destructuring, by an alias or by a loose use) and lets ${SCAN_MUTATIONS.length - changesFound} others through (a type-only import, a member of the subset destructured)`);
+ 
+-    // The icons: six PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, each imported by the HUD as an asset an Image draws.
++    // The icons: seven PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, six of them imported by the HUD as assets an Image draws.
+     const drawn = renderIcons();
+-    assert.deepEqual(Object.keys(drawn).sort(), ICON_NAMES.map(name => `${name}.png`).sort());
++    assert.deepEqual(Object.keys(drawn).sort(), DRAWN_ICON_NAMES.map(name => `${name}.png`).sort());
+     for (const [file, bytes] of Object.entries(drawn)) {
+       const committed = await readFile(path.join(ui, "icons", file));
+       assert.ok(committed.equals(bytes), `ui/icons/${file} is what the generator draws`);
+@@ -410,7 +426,7 @@ if (sabotage === null) {
+       ["hud/tile.tsx", /<Icon key=\{unit\.id\} id=\{`hud-tile-unit-\$\{unit\.id\}-icon`\}/], ["hud/city.tsx", /icon=\{itemIcon\(item\.id\)\}/]]) {
+       assert.match(await source(file), pattern, `${file} shows its icons`);
+     }
+-    verify(true, "The six icons (settler, warrior, city, food, production, science) are 32x32 PNGs the generator draws, imported as assets and shown by Images in the bar, the actions, the tile card and the city screen");
++    verify(true, "The seven icons (settler, warrior, city, food, production, science, irrigation) are 32x32 PNGs the generator draws; the first six are imported as assets and shown by Images in the bar, the actions, the tile card and the city screen");
+ 
+     // The genuine run, headless.
+     const {log, report} = await probe(harness, "headless");
+diff --git a/tests/civ-lite-ui-oracle.mjs b/tests/civ-lite-ui-oracle.mjs
+index ff5aeb7..8ad5da1 100644
+--- a/tests/civ-lite-ui-oracle.mjs
++++ b/tests/civ-lite-ui-oracle.mjs
+@@ -25,6 +25,9 @@
+ //                every row that was there the same Control; ended, the panel is gone and the snapshot is byte for byte the one before
+ //   stats        the runner's `stats()` has the contract's three keys, counts over a turn exactly the notifications the node emitted and the
+ //                snapshots it published, and ends equal to what the node emitted
++//   irrigation  the request of the cost-of-change experiment (docs/research/frontier-change-cost.md), judged the same on either HUD: a Settler on a Plain with
++//                Water beside it is offered Irrigate, enabled, with the irrigation icon drawn; a real press on it irrigates the tile (one call, from the
++//                HUD); and the card of the irrigated tile shows the irrigation icon and Irrigated on its units line, with the game's food
+ //   input        a real click on a tile selects the tile the geometry gives; the pointer over a tile publishes the hover and the
+ //                card shows it; over a panel or off the map it is cleared; a click on a panel does not reach the World; an enabled
+ //                action is performed by a real press and a disabled one is not, with its reason shown; after the menu the World is
+@@ -77,6 +80,9 @@ function panelOf(testID) {
+   return PANEL_NAMES.find(name => testID === panelId(name) || testID.startsWith(`${panelId(name)}-`)) ?? null;
+ }
+ const NOT_PANELS = ["hud-root", "hud-connecting"];
++// The irrigation stage (docs/research/frontier-change-cost.md): the Settler and the tile it stands on, the action's testID and the icon's file. The tile card's mark
++// of an irrigated tile is the Image `hud-tile-irrigated`.
++const IRRIGATION = {unit: 1, tile: [6, 8], action: "hud-actions-irrigate-1", mark: "hud-tile-irrigated", asset: "irrigation.png"};
+ // The panels that live in the Modal's window: the contexts that have an overlay, and what each shows there.
+ const OVERLAY_PANELS = {city: ["city", "research"], dialog: ["dialog"]};
+ 
+@@ -194,6 +200,59 @@ export function judgeHudReport(report) {
+     }
+   }
+ 
++  // The stage's own words, written from the rule and the request and not from what any HUD said: the units the card lists, the line of its yields.
++  const unitText = unit => `${unit.name} (${unit.owner === 1 ? "yours" : "foreign"}) ${unit.moves}/${unit.max_moves}${unit.fortified === 1 ? " fortified" : ""}`;
++  const yieldsText = card => `Food ${card.food} · Production ${card.production} · Science ${card.science} · Move ${card.move_cost}${card.city === 1 ? " · City" : ""}`;
++  const drawn = entry => entry !== undefined && entry.visible === true && entry.kind === "image" && entry.asset === IRRIGATION.asset && entry.rect[2] > 0 && entry.rect[3] > 0;
++
++  function judgeIrrigation(irrigation) {
++    if (irrigation === undefined) {
++      fail("irrigation", "the report has no irrigation stage");
++      return;
++    }
++    const {before, after, press} = irrigation;
++    const tileIndex = IRRIGATION.tile[1] * map.columns + IRRIGATION.tile[0];
++    const chosen = before.snapshot.selection;
++    same("irrigation", [irrigation.unit, irrigation.tile, irrigation.inContext, before.snapshot.context, [chosen.x, chosen.y, chosen.unit]],
++      [IRRIGATION.unit, IRRIGATION.tile, true, "settler", [IRRIGATION.tile[0], IRRIGATION.tile[1], IRRIGATION.unit]],
++      "the Settler was brought to its tile and selected through the services");
++    // The route's end: a Plain with Water on one of its four sides, not irrigated yet.
++    same("irrigation", [before.game.terrain, before.game.sides.includes(0), before.game.irrigated], [1, true, []], "the Settler's tile is a Plain with Water beside it and is not irrigated");
++    const offered = before.snapshot.actions;
++    same("irrigation", offered.map(action => [action.id, action.label, action.args, action.enabled, action.reason]), [["irrigate", "Irrigate", [IRRIGATION.unit], 1, ""]],
++      "the game offers the Settler Irrigate, enabled");
++    const button = nodeOf(before, IRRIGATION.action);
++    same("irrigation", [button?.visible, button?.disabled, textOf(before, `${IRRIGATION.action}-label`), nodeOf(before, `${IRRIGATION.action}-reason`)],
++      [true, false, "Irrigate", undefined], "the actions panel lists Irrigate, enabled, with the game's label and no reason");
++    if (!drawn(nodeOf(before, `${IRRIGATION.action}-icon`))) {
++      fail("irrigation", `the Irrigate action must show the irrigation icon, an image of ${IRRIGATION.asset} that is on screen and has an area: ${JSON.stringify(nodeOf(before, `${IRRIGATION.action}-icon`))}`);
++    }
++    // The press: a real click, which the HUD turned into one call to the game.
++    same("irrigation", [press.pressed, press.irrigatedByPress, press.irrigateCalls, press.hudCalls], [true, true, 1, 1],
++      "a real press on the enabled Irrigate must irrigate the tile, with one call that the HUD sent");
++    // What the game did.
++    const card = after.snapshot.tile;
++    same("irrigation", [after.game.irrigated, after.game.moves, card.irrigated, card.food - before.snapshot.tile.food, card.production - before.snapshot.tile.production],
++      [[tileIndex], 0, 1, 1, 0], "the game irrigated the tile, spent all of the Settler's moves and gave the tile one more food");
++    // What the HUD shows of it.
++    const gone = after.snapshot.actions;
++    same("irrigation", gone.map(action => [action.id, action.enabled, action.reason]), [["irrigate", 0, "already_irrigated"]], "the game turns Irrigate off with already_irrigated");
++    const done = nodeOf(after, IRRIGATION.action);
++    same("irrigation", [done?.visible, done?.disabled, textOf(after, `${IRRIGATION.action}-reason`)], [true, true, gone[0]?.reason_text],
++      "the actions panel shows Irrigate disabled, with the game's reason beside it");
++    same("irrigation", [textOf(after, "hud-tile-title"), textOf(after, "hud-tile-yields")], [`Selected · (${card.x}, ${card.y}) ${card.terrain_name}`, yieldsText(card)],
++      "the tile card is the selected tile's and its food is the game's, the irrigation's included");
++    same("irrigation", [nodeOf(before, IRRIGATION.mark)?.visible ?? false, (textOf(before, "hud-tile-units") ?? "").includes("Irrigated")], [false, false],
++      "before the tile is irrigated its card shows no irrigation icon and its units line does not say Irrigated");
++    if (!drawn(nodeOf(after, IRRIGATION.mark))) {
++      fail("irrigation", `the card of the irrigated tile must show the irrigation icon (${IRRIGATION.mark}), an image of ${IRRIGATION.asset} that is on screen and has an area: ${JSON.stringify(nodeOf(after, IRRIGATION.mark))}`);
++    }
++    const units = textOf(after, "hud-tile-units") ?? "";
++    if (!units.includes("Irrigated") || !card.units.every(unit => units.includes(unitText(unit)))) {
++      fail("irrigation", `the units line of the irrigated tile must say Irrigated and still list its units: ${JSON.stringify(units)}, the units being ${JSON.stringify(card.units.map(unitText))}`);
++    }
++  }
++
+   // --- The matrix ---------------------------------------------------------------------------------------------------
+   same("coverage", report.matrix.map(row => row.index), Array.from({length: LAST_STEP + 1}, (_, index) => index), "the steps played");
+   for (const [context, index] of Object.entries(COVERING)) {
+@@ -381,6 +440,9 @@ export function judgeHudReport(report) {
+   // --- The stress mode and the runner's stats() ----------------------------------------------------------------------------
+   judgeStress(report.stress);
+ 
++  // --- The Irrigate request ----------------------------------------------------------------------------------------------
++  judgeIrrigation(report.irrigation);
++
+   // --- Real input -----------------------------------------------------------------------------------------------------
+   const step = Object.fromEntries(report.input.map(entry => [entry.label, entry]));
+   const required = ["click-tile-6-8", "click-tile-9-8", "hover-tile-12-4", "hover-over-bar", "hover-off-map", "click-on-panels", "press-select-warrior",
+diff --git a/tests/frontier-services-native.test.mjs b/tests/frontier-services-native.test.mjs
+index 48b2cf7..108a584 100644
+--- a/tests/frontier-services-native.test.mjs
++++ b/tests/frontier-services-native.test.mjs
+@@ -38,8 +38,8 @@ const lane = sabotage === null ? "current" : `sabotage-${sabotage}`;
+ const EXECUTIONS = 2;
+ // The golden and trace hashes of the game (tests/civ-lite-game-native.test.mjs). The services must leave the same state
+ // the game's own replay leaves, and pass through the same states on the way; the test below proves these are the game's.
+-const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
+-const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
++const GOLDEN_HASH = "0949b36d7438ce57c86f3952c9cfa47bb8ef6874edc762b5caf8d8ba4fbddbf1";
++const TRACE_HASH = "a36c0f32707e9a8439bf276548d907d6bcc0821351a6014ab46ab617bf6b31ba";
+ const digest = value => createHash("sha256").update(value).digest("hex");
+ // A schema spelled out in the node itself would be a second source: the node registers from schema.gd and nowhere else.
+ const INLINE_SCHEMA = /"(object|array|integer)"/;
+diff --git a/tests/frontier-services-oracle.mjs b/tests/frontier-services-oracle.mjs
+index 66bd5e1..818a0fc 100644
+--- a/tests/frontier-services-oracle.mjs
++++ b/tests/frontier-services-oracle.mjs
+@@ -43,7 +43,7 @@ const TASK_LIMIT = 64;
+ const EVENT_LIMIT = 128;
+ const NODE_LIMIT = 10000;
+ const DEPTH_LIMIT = 32;
+-const BINDINGS = 18;
++const BINDINGS = 19;
+ const NEW_GAMES = 3;
+ const JOB_SNAPSHOTS = 7;
+ const STRESS_SUBSCRIBERS = 150;
+@@ -66,7 +66,10 @@ const REFUSALS = {
+   not_enough_moves: "Not enough movement points for that terrain.",
+   cannot_fortify: "Settlers cannot fortify.",
+   already_fortified: "The unit is already fortified.",
+-  not_a_settler: "Only a Settler can found a city.",
++  not_a_settler: "Only a Settler can do that.",
++  not_a_plain: "Only a Plain can be irrigated.",
++  no_water_nearby: "Irrigation needs Water on one of the tile's four sides.",
++  already_irrigated: "This tile is already irrigated.",
+   city_exists: "This scenario allows a single city.",
+   too_close_to_edge: "A city needs open ground on every side.",
+   no_city: "There is no city to manage yet.",
+@@ -83,11 +86,12 @@ const REFUSALS = {
+   no_event: "There is no event to resolve.",
+   unknown_choice: "That is not one of the choices.",
+ };
+-// The 24 codes the roteiro plays; the other four of the table cannot be reached in the scenario.
++// The 24 codes the roteiro plays; the others of the table cannot be reached in it: four need a state the scenario never has, and the Irrigate rule's
++// (not_a_plain, no_water_nearby and already_irrigated) are played by the game's own scenarios (tests/civ-lite-game-native.test.mjs), not by this roteiro.
+ const ROTEIRO_REFUSALS = ["out_of_bounds", "not_adjacent", "impassable_terrain", "not_your_unit", "unknown_unit", "no_moves_left", "not_enough_moves",
+   "cannot_fortify", "already_fortified", "not_a_settler", "no_city", "unknown_item", "tech_required", "already_built", "already_queued", "bad_slot",
+   "unknown_tech", "tech_known", "research_out_of_order", "already_researching", "event_pending", "unknown_choice", "no_event", "nothing_selected"].sort();
+-const UNIT_INTENTS = ["select_unit", "found_city", "fortify"];
++const UNIT_INTENTS = ["select_unit", "found_city", "irrigate", "fortify"];
+ 
+ const digest = value => createHash("sha256").update(value).digest("hex");
+ 
+@@ -491,8 +495,8 @@ function differences(left, right, where = "") {
+ // The same first intents of the game on the genuine rules and on rules with one constant mutated, read from the snapshots
+ // JavaScript received. The only thing that differs is what Godot decided: the same bundle ran in both. The expected
+ // differences are derived here from the genuine snapshots and the one constant, and must be exactly what changed: the
+-// Settler's card (moves and max_moves) wherever it is shown, and found_city, which the game's own rule turns off with
+-// no_moves_left once the Settler has none.
++// Settler's card (moves and max_moves) wherever it is shown, and found_city and irrigate, which the game's own rule turns off with
++// no_moves_left once the Settler has none (the start tile is a Plain with Water beside it, so irrigate is enabled when it has moves to spend).
+ export function verifyRuleLane(genuine, mutated, {genuineMoves, mutatedMoves, typesText, bundleSha256, genuineRulesSha256, mutatedRulesSha256}) {
+   assert.notEqual(genuineMoves, mutatedMoves, "the mutation changes the Settler's movement points");
+   assert.equal(mutatedMoves, 0, "the mutation takes the Settler's movement points to 0, so that found_city is turned off from the start");
+@@ -531,14 +535,22 @@ export function verifyRuleLane(genuine, mutated, {genuineMoves, mutatedMoves, ty
+   assert.ok(foundCity >= 0 && settler.actions[foundCity].enabled === 1 && settler.actions[foundCity].reason === "", "genuine: found_city is enabled for a Settler with points");
+   assert.deepEqual(settlerMutated.actions[foundCity], {id: "found_city", label: "Found city", args: [1], enabled: 0, reason: "no_moves_left", reason_text: REFUSALS.no_moves_left},
+     "mutated: found_city is turned off by the game's rule with no_moves_left");
++  const irrigate = settler.actions.findIndex(action => action.id === "irrigate");
++  assert.ok(irrigate === foundCity + 1 && settler.actions[irrigate].enabled === 1 && settler.actions[irrigate].reason === "",
++    "genuine: irrigate follows found_city and is enabled for a Settler with points, on a Plain with Water beside it");
++  assert.deepEqual(settlerMutated.actions[irrigate], {id: "irrigate", label: "Irrigate", args: [1], enabled: 0, reason: "no_moves_left", reason_text: REFUSALS.no_moves_left},
++    "mutated: irrigate is turned off by the game's rule with no_moves_left");
+   assert.deepEqual(differences(settler, settlerMutated), [
+     {path: `actions[${foundCity}].enabled`, from: 1, to: 0},
+     {path: `actions[${foundCity}].reason`, from: "", to: "no_moves_left"},
+     {path: `actions[${foundCity}].reason_text`, from: "", to: REFUSALS.no_moves_left},
++    {path: `actions[${irrigate}].enabled`, from: 1, to: 0},
++    {path: `actions[${irrigate}].reason`, from: "", to: "no_moves_left"},
++    {path: `actions[${irrigate}].reason_text`, from: "", to: REFUSALS.no_moves_left},
+     {path: `${card}.max_moves`, from: genuineMoves, to: mutatedMoves},
+     {path: `${card}.moves`, from: genuineMoves, to: mutatedMoves},
+   ],
+-  "selecting the Settler: found_city, its reason and the Settler's card are all that differ, exactly as the rule predicts");
++  "selecting the Settler: found_city, irrigate, their reasons and the Settler's card are all that differ, exactly as the rule predicts");
+ 
+   // The intent the rule decides: the same move is accepted with points and refused without.
+   const [, , , moving] = genuine.ruleLane.rows;
+@@ -647,7 +659,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
+       if (UNIT_INTENTS.includes(action.id)) {
+         assert.ok(action.args[0] > 0, `${where}: ${action.id} names a unit`);
+       }
+-      if (action.id === "found_city" || action.id === "fortify") {
++      if (action.id === "found_city" || action.id === "irrigate" || action.id === "fortify") {
+         assert.deepEqual(action.args, [received.selection.unit], `${where}: ${action.id} is for the selected unit`);
+       }
+       const tried = step.actionsTried[index];
+diff --git a/tests/frontier-services-parity.test.mjs b/tests/frontier-services-parity.test.mjs
+index 3651cb5..ec4ef17 100644
+--- a/tests/frontier-services-parity.test.mjs
++++ b/tests/frontier-services-parity.test.mjs
+@@ -43,12 +43,12 @@ test("the dump is of this tree: the report was made from the sources the types a
+ });
+ 
+ test("the TypeScript types and the schemas Godot registered declare the same names, fields and types", () => {
+-  assert.equal(typescript.registrations.length, 18, "two states (the snapshot and the hover), one signal and 15 methods");
++  assert.equal(typescript.registrations.length, 19, "two states (the snapshot and the hover), one signal and 16 methods");
+   assert.deepEqual(diffRegistrations(typescript.registrations, report.registered), []);
+   // The name constants are the registered names: a constant that named nothing would be a call to a missing service.
+   assert.deepEqual(Object.values(typescript.constants).sort(), typescript.registrations.map(entry => entry.name).sort());
+   assert.deepEqual(report.registered.map(entry => entry.kind).sort(), ["method", "method", "method", "method", "method", "method", "method", "method", "method",
+-    "method", "method", "method", "method", "method", "method", "signal", "state", "state"]);
++    "method", "method", "method", "method", "method", "method", "method", "signal", "state", "state"]);
+   // The shapes the HUD leans on, spelled out once more.
+   const snapshot = named(typescript.registrations, "frontier.snapshot").value;
+   // The hover is the card of the tile under the pointer: the same DTO as the snapshot's `tile`, on both sides.
+@@ -63,7 +63,7 @@ test("the TypeScript types and the schemas Godot registered declare the same nam
+   // One result for every method: the job a call started is 0 for all but an accepted end_turn.
+   assert.deepEqual(named(typescript.registrations, "frontier.end_turn").result, {object: {ok: "integer", code: "string", text: "string", job: "integer"}});
+   assert.deepEqual(typescript.registrations.filter(entry => entry.kind === "method").map(entry => entry.result),
+-    Array(15).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
++    Array(16).fill({object: {ok: "integer", code: "string", text: "string", job: "integer"}}));
+ });
+ 
+ // Each case changes one thing at a path and says what the comparison must report. `side` is the side that is changed.
+@@ -114,6 +114,10 @@ const mutations = [
+     expected: {godot: "frontier.snapshot.dialog.count: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.snapshot.dialog.count: TypeScript declares \"string\", Godot registers \"integer\""}},
+   {name: "a hover card field removed", target: "frontier.hover", change: value => delete at(value, []).object.terrain_name,
+     expected: {godot: "frontier.hover.terrain_name: declared in TypeScript, missing from Godot's schema", typescript: "frontier.hover.terrain_name: registered by Godot, missing from the TypeScript types"}},
++  {name: "the irrigated flag removed from the card", target: "frontier.hover", change: value => delete at(value, []).object.irrigated,
++    expected: {godot: "frontier.hover.irrigated: declared in TypeScript, missing from Godot's schema", typescript: "frontier.hover.irrigated: registered by Godot, missing from the TypeScript types"}},
++  {name: "the irrigate method's unit argument removed", target: "frontier.irrigate", change: value => value.args.pop(),
++    expected: {godot: "frontier.irrigate: TypeScript declares 1 arguments, Godot registers 0", typescript: "frontier.irrigate: TypeScript declares 0 arguments, Godot registers 1"}},
+   {name: "a hover card unit's type swapped", target: "frontier.hover", change: value => { at(value, ["units", "[]"]).object.moves = "string"; },
+     expected: {godot: "frontier.hover.units[].moves: TypeScript declares \"integer\", Godot registers \"string\"", typescript: "frontier.hover.units[].moves: TypeScript declares \"string\", Godot registers \"integer\""}},
+   {name: "the job's type swapped", target: "frontier.end_turn", change: value => { value.result.object.job = "string"; },
+@@ -283,7 +287,7 @@ test("the rule lane's oracle accepts what the mutation predicts and rejects anyt
+       snapshot.resources.food.stock += 1;
+       other.ruleLane.rows[2].snapshot = JSON.stringify(snapshot);
+       return [genuine, other, options];
+-    }, /found_city, its reason and the Settler's card are all that differ/],
++    }, /found_city, irrigate, their reasons and the Settler's card are all that differ/],
+     ["the rule did not change the snapshot", () => {
+       const other = clone(mutated);
+       other.ruleLane.rows[2].snapshot = genuine.ruleLane.rows[2].snapshot;
+diff --git a/tests/frontier-services-probe.gd b/tests/frontier-services-probe.gd
+index c3aa4cf..b52baed 100644
+--- a/tests/frontier-services-probe.gd
++++ b/tests/frontier-services-probe.gd
+@@ -41,7 +41,7 @@ const REPORT := "res://build/frontier-services-report.json"
+ const UNMOUNT_AFTER_TURNS := 3
+ const NEW_GAMES := 3
+ # What the registry must hold: the state, the signal and one method per intent, plus open_menu, which the scene answers.
+-const BINDINGS := 18
++const BINDINGS := 19
+ # An accepted end_turn publishes the snapshot of the first phase, and each of the six phases publishes the next one: the last
+ # is the turn that begins, at rest.
+ const JOB_SNAPSHOTS := 7
+@@ -788,7 +788,7 @@ func run_probe() -> void:
+   var registered_before_mount: Array = services.registered.duplicate(true)
+   var registered_in_time := check(services.registered.size() == BINDINGS and services.bindings.size() == BINDINGS
+     and services.bindings.all(func(binding: Variant) -> bool: return binding != null),
+-    "registration: the node registered the two states, the signal and the 12 methods while the application entered the tree")
++    "registration: the node registered the two states, the signal and the 16 methods while the application entered the tree")
+   await wait_for(func() -> bool: return int(counts().snapshots) >= 1 or not counts().application.errors.is_empty(), 6000)
+   await settle(8)
+   var started := counts()
+@@ -798,7 +798,7 @@ func run_probe() -> void:
+   var initial_ok := check(int(started.snapshots) == 1 and first is Dictionary and canon(first.value) == canon(services.game.snapshot()) and int(first.value.epoch) == 1,
+     "registration: the first connection received the initial snapshot of epoch 1")
+   check(int(started.stepsReceived) == Replay.STEPS.size(), "registration: the roteiro reached the JavaScript side as a prop, from replay.gd")
+-  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 18 bindings")
++  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 19 bindings")
+   check(native().errors.is_empty(), "registration: the application reports no error")
+   var registration := {"application": started.application, "snapshots": started.snapshots, "inTime": registered_in_time}
+   if registered_in_time and connected and initial_ok and rule_lane_only:
+@@ -848,7 +848,7 @@ func run_probe() -> void:
+     and services.next_job == expected_jobs + 1, "jobs: the game finished each of its %d jobs exactly once, and none is left" % expected_jobs)
+ 
+   var final_native := native()
+-  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 18 bindings are still there")
++  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 19 bindings are still there")
+   var report := {"scenario": "frontier-services", "reactNative": "0.87.1", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
+     "checks": checks, "sabotage": sabotage, "allPassed": checks.all(func(row: Dictionary) -> bool: return row.passed),
+     "registered": registered_before_mount, "registration": registration, "bindings": BINDINGS, "steps": steps_report, "roteiroSteps": Replay.STEPS.size(),
+diff --git a/tests/frontier-soak-oracle.mjs b/tests/frontier-soak-oracle.mjs
+index 7f56b4b..4c4cbb4 100644
+--- a/tests/frontier-soak-oracle.mjs
++++ b/tests/frontier-soak-oracle.mjs
+@@ -27,7 +27,7 @@ const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refre
+ // What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the fifteen methods (one for each
+ // intent, `new_game`, `open_menu` and the three of the stress mode). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82); the soak asserts the count the node
+ // registers, it does not depend on what the services are.
+-const BINDINGS = 18;
++const BINDINGS = 19;
+ 
+ // The nodes of the heavy panel from its shape: a root, a header and two nodes a chip (the View and its Text).
+ const PANEL_NODES = 2 + 2 * PANEL_SHAPE.chips;
+diff --git a/tests/frontier-soak-probe.gd b/tests/frontier-soak-probe.gd
+index 93c78b2..20a26d0 100644
+--- a/tests/frontier-soak-probe.gd
++++ b/tests/frontier-soak-probe.gd
+@@ -51,7 +51,7 @@ const FRAME_LIMIT := 600
+ const JOB_SNAPSHOTS := 7
+ # What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the fifteen methods (one for each
+ # intent, `new_game`, `open_menu` and the three of the stress mode). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82) and is a count, not a rule of this soak.
+-const BINDINGS := 18
++const BINDINGS := 19
+ # How long Hermes' tracker may take to report a promise rejected with no handler (2000 ms for an Error, as the `promise` library does; see the fixture's
+ # control), and a little more.
+ const TRACKER_DELAY_MS := 2300
+diff --git a/tests/frontier-stress-native.test.mjs b/tests/frontier-stress-native.test.mjs
+index 8495739..5ebdb19 100644
+--- a/tests/frontier-stress-native.test.mjs
++++ b/tests/frontier-stress-native.test.mjs
+@@ -40,7 +40,7 @@ test("the stress mode: three intents outside the game's state, a snapshot that c
+   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed/);
+ 
+   // The raw observations, judged again from the rules of the mode.
+-  assert.equal(report.bindings, 18);
++  assert.equal(report.bindings, 19);
+   assert.deepEqual([report.off.step.code, report.off.end.code, report.off.published], ["stress_off", "stress_off", 0]);
+   assert.deepEqual([report.during.refused.ok, report.during.refused.code, report.during.carried], [0, "turn_in_progress", false]);
+   assert.deepEqual([report.begun.result.code, report.begun.log, report.begun.production, report.begun.published, report.begun.frozen], ["ok", 200, 100, 1, true]);
+diff --git a/tests/frontier-stress-probe.gd b/tests/frontier-stress-probe.gd
+index 1762bc9..d59ef36 100644
+--- a/tests/frontier-stress-probe.gd
++++ b/tests/frontier-stress-probe.gd
+@@ -83,7 +83,7 @@ func run() -> void:
+   application = stand_in.get_node("Runtime")
+   await frames(4)
+   report["bindings"] = int(registry().get("bindings", -1))
+-  check(report.bindings == 18 and errors().is_empty(), "The node registered the two states, the signal and 15 methods (the three of the stress mode among them) and the registry took the snapshot's schema, its optional field included")
++  check(report.bindings == 19 and errors().is_empty(), "The node registered the two states, the signal and 16 methods (the three of the stress mode among them) and the registry took the snapshot's schema, its optional field included")
+   await run_mode()
+   await run_validator()
+   finish()
+diff --git a/tests/types/frontier-services.tsx b/tests/types/frontier-services.tsx
+index a142f16..820b60e 100644
+--- a/tests/types/frontier-services.tsx
++++ b/tests/types/frontier-services.tsx
+@@ -5,6 +5,7 @@ import {
+   FRONTIER_END_TURN,
+   FRONTIER_FORTIFY,
+   FRONTIER_FOUND_CITY,
++  FRONTIER_IRRIGATE,
+   FRONTIER_MOVE_UNIT,
+   FRONTIER_NEW_GAME,
+   FRONTIER_RESOLVE_EVENT,
+@@ -49,10 +50,15 @@ const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ val
+   void carried;
+   const reason: string = value.actions[0].reason;
+   const terrain: string = value.tile.terrain_name;
++  // The tile card says whether the tile is irrigated (0 or 1); its `food` already has the irrigation's.
++  const irrigated: number = value.tile.irrigated;
+   const queued: string = value.city.queue[0].item;
+   const tech: string = value.research.techs[0].state;
+   const choice: string = value.dialog.choices[0].label;
+-  void [epoch, lastJob, phase, context, turn, foodStock, foodRate, unitId, reason, terrain, queued, tech, choice, revision, generation];
++  void [epoch, lastJob, phase, context, turn, foodStock, foodRate, unitId, reason, terrain, irrigated, queued, tech, choice, revision, generation];
++  // @ts-expect-error irrigated is a number, not a boolean
++  const flag: boolean = value.tile.irrigated;
++  void flag;
+   // @ts-expect-error the snapshot has no gold
+   value.gold;
+   // @ts-expect-error resources have no gold stock
+@@ -109,6 +115,7 @@ void callFrontier(FRONTIER_SET_PRODUCTION, ["warrior", 0]);
+ void callFrontier(FRONTIER_CLEAR_SELECTION, []);
+ void callFrontier(FRONTIER_FOUND_CITY, [1]);
+ void callFrontier(FRONTIER_FORTIFY, [2]);
++void callFrontier(FRONTIER_IRRIGATE, [1]);
+ void callFrontier(FRONTIER_SET_RESEARCH, ["alphabet"]);
+ void callFrontier(FRONTIER_RESOLVE_EVENT, ["welcome"]);
+ void callFrontier(FRONTIER_END_TURN, []);
+@@ -146,6 +153,8 @@ void callFrontier(FRONTIER_SELECT_TILE, [6, 8, 1]);
+ void callFrontier(FRONTIER_END_TURN, [1]);
+ // @ts-expect-error set_production takes (item, slot), not (slot, item)
+ void callFrontier(FRONTIER_SET_PRODUCTION, [0, "warrior"]);
++// @ts-expect-error irrigate takes the Settler's id and nothing else
++void callFrontier(FRONTIER_IRRIGATE, [1, 6]);
+ // @ts-expect-error select_unit takes an integer, not an object
+ void callFrontier(FRONTIER_SELECT_UNIT, [{ unit_id: 1 }]);
+ // @ts-expect-error there is no such method

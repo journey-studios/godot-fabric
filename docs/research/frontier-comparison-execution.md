@@ -4,7 +4,8 @@ Status: documentation, a scenario in GDScript, a scripted player, a runner in No
 happened, and **this note states no result**. The rehearsal it describes ran the scenario once in each arm, in a Debug build, on a provisioned copy of the consumer, three times (headless, and windowed in the
 presented and in the unlimited lane); the object it produces is marked as a rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal
 must show. No number in this note is a measurement of an arm for the comparison. The three rehearsals, with their summaries, the machine's load and the user's absence, are recorded in
-[`docs/evidence/frontier-comparison-execution/`](../evidence/frontier-comparison-execution/README.md), pinned at `7e2e5b1`. The campaign needs the Release export of the game in the three arms (V05-07), the second part of this criterion and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)).
+[`docs/evidence/frontier-comparison-execution/`](../evidence/frontier-comparison-execution/README.md), pinned at `7e2e5b1`. The campaign needs the Release export of the game in the three arms (V05-07) and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)).
+Part 2, the orchestrator of the whole campaign (the sequence in both lanes, the attempts and the redo, the wait for the load, the instrument's self-check as the gate, the state that makes it resumable and a launcher that can be swapped), is [below](#the-campaign), with its rehearsal recorded in [`docs/evidence/frontier-comparison-campaign/`](../evidence/frontier-comparison-campaign/README.md), pinned at `f9aabb3`; it too closes nothing and states no result.
 This slice moves no checkpoint, grade, weight or denominator of the 1.0.
 
 ## The question
@@ -347,16 +348,196 @@ Where the protocol is a sentence, or says nothing, and the scenario had to decid
 12. **A rest** is six frames (`SETTLE_FRAMES`) between intents, the same number as the turn lane's rule for a quiet application (`STABLE_FRAMES` of `tests/frontier-turn-probe.gd`), and the same in the three arms. It is a rule and not a check that the React Native pump is idle.
 13. **The package** is the provisioned copy as built (without the engine's import cache and without the scenario), the **script** is the hash of the scenario's files and its support files, and the binary is the engine's executable: a rehearsal's stand-ins for the Release export's.
 
+## The campaign
+
+Part 2 of the criterion `execucao`: the orchestrator of the whole comparative campaign, which plays the protocol's sequence in the two lanes (`runs.sequence`, `runs.lanes`), judges every attempt, redoes
+the rejected ones in their slots, waits for a quiet machine, keeps its state after every attempt so that an interrupted campaign continues, gates everything on the instrument's self-check, and runs through
+a launcher that can be swapped. **No campaign was run**: it needs the Release launcher (V05-07) and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)). What was
+run is the campaign against a fake launcher (Node), and a short headless rehearsal in Debug (below). Nothing in this section states a result.
+
+| File | What it holds |
+| --- | --- |
+| `scripts/frontier-comparison-campaign.mjs` | The command line and the orchestrator (`runCampaign`): the loop, the files it writes, the resume. |
+| `scripts/frontier-comparison-campaign-state.mjs` | The state machine, pure: the plan, the verdict of an attempt, the stops, the next step, the checks of a resume, the summary. |
+| `scripts/frontier-comparison-campaign-load.mjs` | The wait for the load, with the clock and the reading injectable. |
+| `scripts/frontier-comparison-campaign-instrument.mjs` | The self-check as the gate: the probe in the campaign's engine, headless or in a window, then the oracle. |
+| `scripts/frontier-comparison-campaign-lock.mjs` | The lock against two campaigns on one machine. |
+| `scripts/frontier-comparison-campaign-launchers.mjs` | The launcher interface; the Debug launcher (over part 1's runner) and the Release launcher (an extension point that refuses). |
+| `tests/frontier-comparison-campaign.test.mjs` | Node only: the whole campaign against a fake launcher (part of `npm run test:contracts`). |
+| `tests/frontier-comparison-campaign-state.test.mjs` | Node only: the plan, the next step on states written by hand, the stops, the resume's checks, the wait for the load. |
+| `tests/frontier-comparison-campaign-guards.test.mjs` | Node only: the lock, and the self-check in a headless or a windowed lane against a probe and an oracle the test supplies. |
+| `tests/frontier-comparison-campaign-fake.mjs` | The fake launcher, a self-check that passes or fails, a clock and a load average the tests control. |
+| `tests/frontier-comparison-campaign-native.test.mjs` | Native: the short rehearsal (`npm run test:frontier-comparison-run`). |
+
+`scripts/frontier-comparison-run.mjs` now exports three things that were its own (`PROTOCOL_FILE`, `registeredOf`, `git`) and one it factored out of `rehearse` (`environmentOf`, the display, renderer and adapter
+that its provenance words); `rehearse` behaves as before. Part 1's window rule (`scripts/frontier-comparison-run-windows.mjs`, `derivedOf`) now returns its `problems` as `{code, message}`
+(`config-waits`, `config-idle-frames`, `occurrence-unended`, `sample-missing`, `idle-frames`; `analyse` adds `report-format`), so that the campaign chooses by the code and not by the words of a message; the
+messages are the same and the rehearsal's behaviour is unchanged. **Nothing was exported from the analysis' modules**: `assessValidity`, `campaignErrors`, `proseRulesOf` and `slotsOf` were already exported,
+and no rule of validity is written here.
+
+```sh
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <dir> [--resume] [--max-wait <s>]
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out <dir>
+```
+
+`--build debug` needs `--rehearsal`, which marks the campaign as one; `--slots` and `--assume-refresh-hz` are rehearsal-only (a campaign runs every slot and reads the refresh rate back, never assumes it);
+`--build release` uses the Release launcher. `--max-wait` is the seconds to wait for a quiet machine before each execution (default 1800).
+
+### The state machine
+
+```text
+prepare launcher ─▶ self-check ─▶ [failed: nothing runs; stopped by `instrument`]
+        └▶ next slot of the plan ─▶ wait for load ─▶ launch (a fresh process) ─▶ record ─▶ judge ─▶ write the state ─┐
+                 ▲                                                                                                    │
+                 └───── accepted: the next slot │ rejected: the same slot, attempt + 1 (at most 3) │ stopped │ done ◀──┘
+```
+
+- **The plan** is the sequence of the protocol (`ABC CAB BCA` four times, 36 slots) in the first lane, then in the next; `--slots a-b` limits the slots of each lane (a rehearsal's short run).
+- **The verdict** of an attempt is the analysis': the campaign that the state makes (its executions and its `unreported` attempts, each with its own number) goes through `assessValidity`, and the attempt is accepted if no rule
+  rejects it. `load`, `not-presented`, `not-the-registered-build`, `other-game`, `errors`, `parity` and `incomplete` are the analysis' (`scripts/frontier-comparison-validity.mjs`); the reasons are its
+  `{rule, clause, ...values}`. A rejected attempt stays in the state and in `raw/` with its load readings and its reasons.
+- **The redo** takes the place of the rejected attempt: the next launch is the same slot with the next attempt number, before the slot after it.
+- **The stops** are the ones the analysis reports (`validity.stopped`: a slot whose attempts are used up, **counting the attempts that wrote no report**, which are in the campaign; a second `other-game` in one arm; an instrument
+  that did not pass), plus two that it cannot see: a scenario that waited with numbers other than the protocol's (the problems coded `config-waits` and `config-idle-frames`), and an engine or a display that is not
+  the one the self-check ran on. The state keeps no stop of its own for the attempts of a slot: it had one while the attempts that wrote no report were not in the campaign, and with them in it the analysis' covers every case. A stopped
+  campaign still writes its campaign and its report (status `stopped`, no statistic).
+- **The unlimited lane** is N/A from the first attempt whose vsync did not read back `DISABLED`, and its remaining slots do not run (`runs.lanes`).
+- **A rehearsal redoes nothing**: each slot runs once, whatever the rules said, so that the rejections it exists to show (the Debug build, the headless display, the load of a busy machine) can be seen.
+
+### The self-check gate
+
+At the start of a campaign (not of a resume, unless the check had not passed) the probe `tests/cpu-time-instrument-probe.gd` runs in the engine of the launcher, and the oracle
+`tests/cpu-time-instrument-oracle.mjs` judges its raw report: the probe's process, its own checks, a log with no hidden error and the oracle's verdict must all pass. The campaign records
+`instrument.selfCheckPassed` and `instrument.sha256`, the SHA-256 of `tests/cpu-time-instrument.gd` (beside `registered.instrumentSha256`, which the analysis compares: a file that changed after the check
+makes the instrument not pass). If the check fails, **no execution runs**, the stop `instrument` is recorded, and the campaign and its report say so.
+
+**The lane of the check is the launcher's.** The gate asks for the engine and the renderer of the campaign, and the campaign proper runs in a window (the presented lane needs a display, and the unlimited lane needs
+a window to read the vsync back as `DISABLED`). A launcher that runs in a window (`launcher.windowed`, which the Release launcher will be) gets the windowed check: the same probe with `--windowed`, the same oracle,
+and, as in `scripts/cpu-time-instrument-graphics.mjs` (a command line that cannot be imported, so the campaign's `runSelfCheck` runs the same two programs), a window that no display presented is not a measurement and
+does not pass (that script exits with 3 for it; the campaign treats it as a failure and stops). A launcher that runs headless, as the Debug one does, gets the headless check (`npm run test:cpu-time-instrument`'s),
+and the campaign's deviations say so. The state keeps the probe's provenance, and the campaign **stops if a scenario reports another engine build, display server, rendering driver or method, or adapter than the probe
+did**, so a headless check cannot vouch for a window. The windowed check has been tested with the probe and the oracle replaced (`tests/frontier-comparison-campaign-guards.test.mjs`); it has not been run for real.
+
+### The load
+
+Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (2.0, read from the protocol; the rule rejects what is
+above the limit) or `--max-wait` seconds have passed. The wait goes into the state (`waited`: the first and last reading, the number of readings, the seconds, whether it timed out). If it runs out the attempt runs anyway:
+the readings that the rule judges are the launcher's, taken right before the process starts and right after it ends, and they are recorded exactly as read (`load.before`, `load.after`). The wait is a courtesy to
+the attempts of a slot, not a guarantee. The clock and the reading are injectable, which is how the tests drive it. A protocol whose `runs.load.limit1MinuteAverage` is missing, a string or not above zero is
+refused before anything runs: `load <= limit` would be false for every reading, and every attempt would wait the whole `--max-wait`.
+
+### The lock
+
+A lock file in the system's temporary directory (`godot-fabric-frontier-comparison-campaign.lock`) holds the pid, a token that only the campaign that wrote it has (`randomUUID()`) and the `--out` of the
+campaign that is running. A campaign, or a resume, that finds the lock held by a live pid refuses to begin and names the holder; the lock is released when the campaign ends, however it ends, and only if it
+is still that campaign's (the token is compared, not the pid). A lock that cannot be read is refused rather than guessed at. It is taken before the launcher is prepared, because provisioning a copy of the
+consumer is a Godot process too. It guards one machine against two campaigns; the protocol's load rule is what catches the other lanes of the repository.
+
+**The takeover of a dead holder's lock** is automatic, because a `--resume` after a `SIGKILL` finds exactly that, and it is a compare-and-claim under a mutex. A first version removed the stale lock and wrote
+its own, which let two campaigns that read the same dead holder both remove and both write: the first removes the stale lock and takes it, the second's removal then removes the first's *live* lock, and both
+run (found in the review of the delivery, #126). Now: (1) a lock whose pid is alive refuses; (2) for a dead pid the taker creates `<lock>.takeover` exclusively, and a second taker, or a takeover that was
+interrupted, finds the file and refuses, naming it, with the instruction to remove it by hand if no campaign is running; (3) under the mutex the lock is read again and removed only if its bytes are exactly the
+ones read as stale, so a live campaign's lock, or no lock, is left alone; (4) the mutex is removed in a `finally`; (5) the exclusive write of the lock follows, and if it finds a lock, that is a fresh
+campaign's, whose holder is alive, and the loop (bounded to three writes) refuses. The tests (`tests/frontier-comparison-campaign-guards.test.mjs`) run 60 rounds of two simultaneous takers on one stale lock
+(exactly one wins), let a second taker's whole takeover land between the first's reading of the stale lock and its mutex (the first refuses and the live lock stays), release the lock while a takeover waits (no
+live lock is removed) and leave a mutex behind (the next campaign refuses, naming it).
+
+### The state and the resume
+
+`<out>/campaign-state.json` is written after every attempt, atomically (a temporary file, renamed over it), and holds: the options, the protocol's hash, the launcher's registration (the seed, the game's
+hashes, the instrument's file and, for each arm, the binary, package and script), the self-check, the engine, and every attempt (its slot, arm and number, the wait, the load before and after, the hashes of the files
+it ran, the exit code and signal, whether the process crashed or timed out, the execution object the analysis reads, the verdict, the anomalies, the paths of `raw/<lane>-<slot>-<attempt>.json` and `.log` and the SHA-256 of the log), and `unreported`,
+the list of the attempts that wrote no report ([below](#the-attempt-that-wrote-no-report)). The raw files are written before the state, so the state never names a file that is not there. `--resume` reads it, runs the launcher's `prepare()` again and **refuses** unless the protocol, the script, the binary and the package have the same hashes (and the rest
+of what was registered, and the options that decide which executions exist), then continues from the first slot without an accepted attempt; the self-check is not repeated unless it had not passed. A campaign
+resumed after an interruption ends with the same `campaign.json` and `report.json`, byte for byte, as one that was never interrupted (`tests/frontier-comparison-campaign.test.mjs`, which kills the fake
+launcher after 1, 2, 38 and 74 attempts and twice in one campaign). The record of a resume is in the state (`resumes`), never in the campaign.
+
+At the end: `campaign.json` (strictly the analysis' format), `report.json` (the analysis' report), `summary.json` (which also carries `unreported`) and, in a rehearsal, `rehearsal.json` (the mark, beside the campaign, as in part 1).
+
+### The attempt that wrote no report
+
+A process that crashed, hit its time limit or ended without a report in the scenario's format has no execution object (a refresh rate cannot be made up), but it is an attempt of its slot. Since 2026-10-10 the analysis' format holds it
+(`unreported`, [the note of the analysis](frontier-comparison-analysis.md#the-campaign-format): the arm, lane, slot and number of the attempt, its load readings, `errors.{crashed, timedOut, exitCode?, signal?}` and `logSha256`), and the campaign writes it:
+
+- `campaign.json` has `unreported` beside `executions` (`[]` when every attempt wrote a report), and **each attempt keeps its own number**: the redo of a slot whose attempt 1 wrote no report is attempt 2 in `executions`.
+  The campaign no longer renumbers, and no longer says in `provenance.deviations` that attempts were left out.
+- The analysis judges the entry rejected by `errors`, clause `no-report`, with `crashed`, `timedOut` and the `exitCode` or the `signal`; it counts in the slot (`rejected`), in the totals and in the stop on three used-up attempts,
+  and `report.json` shows it with `reported: false`, its load and no vsync. `crashed` is the reading of the process as for every execution (`processOf`: a signal, or a crash in the log); `timedOut` is the launcher's
+  (`launch()` may return `timedOut: true` for a process it killed at its time limit; a launcher that does not say reads as `false`). A process killed by a signal has no exit code in the entry, and one that exited has no signal.
+  **The Debug launcher does not pass `timedOut` on yet**: it is `result.error?.code === "ETIMEDOUT"` of its `spawnSync`, one line in `scripts/frontier-comparison-campaign-launchers.mjs`, which was another slice's file when this
+  was written. Until it does, a process the Debug launcher kills at the limit reads `crashed: true` (its signal) and `timedOut: false`; the fake launcher of the tests says it.
+  A process that exits 0 and leaves no report, or one that leaves a report the scenario's format cannot read, is the same rule (reading 15 of the analysis note).
+- `logSha256` is the SHA-256 of the `.log` kept under `raw/`; `summary.json` and `campaign-state.json` keep `unreported`, the list for whoever reads them (the slot, the arm, the attempt, the reasons of the analysis, the exit code and signal as
+  the launcher read them, and the path of the log), now the same attempts and reasons that `campaign.json` and `report.json` hold.
+
+### The launcher
+
+```text
+launcher.build                    "debug" | "release", the build recorded in each execution
+launcher.windowed                 whether its processes run in a window; the self-check runs in the same mode
+await launcher.prepare()          {engine, registered, packages, deviations}: ready, and what is registered before the first execution; may refuse
+await launcher.launch({arm, lane, slot, attempt})
+                                  {report, exitCode, signal, timedOut?, log, load: {before, after}, hashes: {binary, package, script}, seconds}: ONE fresh process;
+                                  `timedOut` is true for a process the launcher killed at its time limit (absent reads as false)
+await launcher.cleanup()
+```
+
+- **Debug** reuses part 1: the provisioned copy of civ-lite with the HUD built and the scenario copied in (`prepareProject`), and `launchScenario` (`--path`, headless). It registers what it measured, as the rehearsal
+  does, and its deviations say so.
+- **Release** is an extension point and **refuses**: "The Release launcher is not defined yet: the campaign needs the Release export of the civ-lite game in the three arms (V05-07 ...)". It refuses in
+  `prepare()`, before the self-check, before any directory is made and before any process starts. When V05-07 says how the scenario runs inside an exported `.app`, it is this launcher that gets the path; the campaign does not change.
+- **The fake**, in the tests, plays programmable synthetic executions: a load above the limit, an undrawn presented window, an error, another game, an incomplete window, a process that wrote no report, a vsync
+  that reads back `ENABLED`, and an interruption.
+
+### Readings of the protocol that part 2 chose
+
+None changes a number of the protocol; each decides how a sentence meets the orchestrator.
+
+1. **The lanes run one after the other**, the presented lane's 36 slots and then the unlimited lane's (the protocol says only that the unlimited lane "keeps the same sequence"). The presented lane carries the decision, so
+   it comes first and a stop there spares the second lane.
+2. **"Above the limit" is the limit of 2.0 itself being quiet**, in the wait as in the rule (`tests/frontier-comparison-validity.test.mjs` pins the rule).
+3. **The unlimited lane is N/A for the lane, not only for the execution**, when the vsync does not read back `DISABLED` ("the lane is N/A and is not run further"); `vsync-reading` still does not reject the attempt.
+4. **An attempt whose process wrote no report** (a crash, a timeout, a clean exit without one) is a rejection by `errors` that the campaign counts against the 3 attempts and redoes. The format has no execution object for it
+   and the campaign does not invent one (a refresh rate cannot be made up), so since 2026-10-10 it is in the campaign's `unreported` ([above](#the-attempt-that-wrote-no-report)) with its own number, and the analysis counts it
+   in the slot and in the stop on three used-up attempts. Before that amendment of the format (#126) it was left out of `executions`, which were renumbered 1, 2, ... among the ones that existed, and listed only in the state and
+   in `summary.json`; the renumbering and the campaign's own stop for those attempts are gone.
+5. **`aborted` and `anomalies` of the scenario's report are recorded and reject nothing**: the list of invalidation rules is closed, and an aborted scenario already ends with exit code 1 (`errors`).
+6. **A rehearsal redoes nothing** (above), so its three slots are three attempts.
+7. **A resume with another instrument file is refused**: the file is part of the script's hash, so the executions after it would not be the same experiment, and the registration cannot be redone in the middle of a campaign.
+8. **`--windowed` is not offered by the campaign's command line**: a window needs the user away, and part 1's runner already does the windowed rehearsals. The Debug launcher is headless; a launcher that is
+   windowed (the Release one) gets the windowed self-check, and the engine comparison covers the display.
+
+### The short rehearsal
+
+`npm run test:frontier-comparison-run` runs it (`tests/frontier-comparison-campaign-native.test.mjs`): `--slots 1-3` of the presented lane, headless, in Debug, with the real self-check, the real load and the real
+clock, on the machine of the other lanes (the 1-minute load was 4.3 to 6.8). It is a rehearsal and **no number of it is a measurement of an arm**. On the run kept in the
+[evidence record](../evidence/frontier-comparison-campaign/README.md) (the pinned `f9aabb3` merged with `origin/main`, working tree clean): the self-check (probe and oracle) passed in about 20 s (20.4 to 20.7 over the runs) and recorded the instrument's SHA-256 `4bdcda83…`, and the engine, display server, driver, method and adapter that the probe
+recorded were the scenario's, so the campaign did not stop on them; the three attempts (A, B, C, one slot each; about 52, 57 and 75 to 82 s over the runs) exited 0 with no anomaly and no problem; the campaign passed `campaignErrors` and the analysis read it (status `incomplete`: no attempt was accepted, so no arm has the 10 accepted executions the presented lane asks for). Each attempt was rejected for
+the reasons a rehearsal must show: `not-the-registered-build:build` (Debug), `not-presented` (a headless display draws nothing and paces nothing: `intent-not-drawn`, `idle-not-drawn`, `not-paced`) and `load` (before and
+after). Nothing else fired, and the waits (`--max-wait 0`) timed out on the busy machine, which is what they were given zero seconds to avoid.
+
+The same rehearsal through the command line gave the same three rejections, and the analysis' own command line (`scripts/frontier-comparison-analysis.mjs`) read the written `campaign.json` and produced a
+`report.json` of the same bytes. **A real interruption** was tried twice, by hand: the command line was killed with `SIGKILL` while the second attempt was running (the state on disk held the first), and
+`--resume` provisioned the consumer again, found the protocol, script, binary and package with the registered hashes, did not repeat the self-check, started at slot 2 and ended with the three attempts, in the
+format. **And the refusal was seen for real, twice.** The Debug launcher's package is the provisioned copy, and `scripts/pack-addon.mjs` writes into it a `manifest.json` that holds the repository's `HEAD` and whether
+its working tree is dirty (`sourceCommit`, `sourceDirty`), and a copy of the repository's `node_modules`. So the package hash changes with a commit, with any change in the working tree (a new untracked folder is
+enough: the resume of the evidence record's interrupted rehearsal, with its folder in `docs/evidence/` untracked, was refused with "arm A package: the state registered 9a12994c…, now ea5dbecf…", and accepted once
+the tree was clean again) and with a write into `node_modules` (a finished rehearsal resumed after `npm run check:static` was refused with "e658b3bb…, now b837c07d…"; the one file of the copied inputs that was newer
+than the rehearsal was `node_modules/@fallow-cli/darwin-arm64/.fallow-verified`, which `fallow` writes the first time it runs). Two copies provisioned back to back, with nothing between them, hash the same. **A
+Debug rehearsal can therefore be resumed only if the commit, the working tree and `node_modules` are as they were when it began;** a Release export is one file and has no such dependence. The second interruption and the second
+refusal (the ones on the merged tree) are recorded in the [evidence record](../evidence/frontier-comparison-campaign/README.md).
+
 ## What is missing for the campaign
 
-- **The second part of the criterion**: the sequence of 36 executions in each lane (the Latin square), the attempts (at most 3 a slot) and the redo by the load, the two lanes, the registration of the hashes before the
-  first execution, the raw data under `docs/evidence/`, and the unlimited lane's reading of the vsync.
-- **V05-07, the Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice. The scenario is a `SceneTree` script that is run with
-  `-s` from a project; how it starts inside an exported package (an export template may not run `-s`, and the scenario may have to be the exported project's main scene or an autoload) is **open** and belongs to that
-  slice. The question was put to the owner of that slice and has no answer yet.
-- **The instrument's self-check** on the campaign's machine, and its hash registered (`cpu-time-instrument` `gate`).
-- **A quiet machine**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window, with the user away; the repository's other lanes run on this one, and the windowed
-  rehearsal ran at 4.87 to 6.83.
+- **V05-07, the Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice, **and the Release launcher** (above). The scenario is a
+  `SceneTree` script that is run with `-s` from a project; how it starts inside an exported package (an export template may not run `-s`, and the scenario may have to be the exported project's main scene or an
+  autoload) is **open** and belongs to that slice. The question was put to the owner of that slice and has no answer yet. Until it does, `--build release` refuses.
+- **A quiet machine and the user away**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window for the 36 executions of the presented lane; the repository's other lanes
+  run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one). The campaign waits for the load but cannot make the machine quiet.
+- **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
+  it does not pass or no display presented the window; the code is there and tested with the probe replaced, and was never run. The Debug rehearsal runs the headless check and says so in its deviations.
+- **The registration before the first execution** for the Release: a rehearsal registers what it measured; a campaign needs the Release launcher to register the hashes of the three exports in `prepare()`.
+- **The raw data under `docs/evidence/`**: a campaign's `raw/` holds about 0.3 MB per attempt (about 22 MB for 75 attempts); where it is kept and how it is published is for the slice that runs it.
 
 ## Limits
 
@@ -364,6 +545,9 @@ Where the protocol is a sentence, or says nothing, and the scenario had to decid
 - The six frames of rest are a rule, not a check that the React Native HUD has finished: the windowed rehearsal was the first run in which a pump that is still busy would show in the frames after a window; it
   recorded no anomaly and every parity check matched, which does not prove that the pump was idle.
 - Arms A and B have no host, so the scenario's readings of C that need it (the heap, the views, the errors) exist only there, as the protocol says.
+- The campaign has run against a fake launcher (72 to 75 synthetic attempts, in Node) and a Debug rehearsal of three attempts. The Release launcher, the 72 attempts of a real campaign and a wait that ends because
+  the machine became quiet have not been seen, and a resume after a real interruption was seen once, in the Debug rehearsal ([above](#the-short-rehearsal)). The fake proves the orchestrator's logic, not the machine's behaviour.
+- The lock keeps a second campaign from starting on the machine; it cannot keep another lane of the repository (a suite, an export) from running, and the load rule is what catches that.
 - The event burst and the stress window are measured in the three arms: in the burst the counters agree at the first read in every turn, so every burst is the minimum of five frames, headless and windowed alike
   (C included, in both lanes). A windowed loop, with the host's pump and the JavaScript runtime draining at the pace of a display, may show a burst longer than five frames in C; that is what the rule is for, and
   it has not been seen yet.
@@ -377,4 +561,9 @@ node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane present
 node scripts/frontier-comparison-analysis.mjs --check-format build/frontier-comparison-rehearsal/campaign.json
 node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane presented --windowed --out <directory>   # windowed: opens a window in front, the user must be away
 node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane unlimited --windowed --out <directory>
+node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-campaign-state.test.mjs   # Node only, fake launcher; part of npm run test:contracts
+npm run test:frontier-comparison-run                                   # also the campaign's short rehearsal: headless, Debug, --slots 1-3 of the presented lane, the real self-check
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal --resume
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <directory>   # refuses until V05-07 defines the Release launcher
 ```

@@ -1,0 +1,644 @@
+{
+  "format": "godot-fabric.macos-arm64-export/v1",
+  "status": "passed",
+  "startedAt": "2026-10-09T13:23:50.007Z",
+  "output": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/Verified.app",
+  "template": "{WORKTREE}/build/macos-arm64-template.zip",
+  "limitations": [
+    "local ad-hoc signing only",
+    "not a distribution/notarization claim",
+    "no mobile or second-machine claim"
+  ],
+  "stages": [
+    {
+      "name": "provision",
+      "passed": true
+    },
+    {
+      "name": "editor-build",
+      "passed": true,
+      "logSha256": "be02f2dea54d2b43ca866c64c5fe673ef865c20f870abf8f69e1b96e3d420722"
+    },
+    {
+      "name": "payload-preflight",
+      "passed": true,
+      "logSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c"
+    },
+    {
+      "name": "arm64-release-export",
+      "passed": true,
+      "logSha256": "ed89f87190d595181a06e36093b66e06e06826e62be2f44a0e7eb9327ea26be6"
+    }
+  ],
+  "removedDyldEnvironmentKeys": [],
+  "templateMember": {
+    "member": "macos_template.app/Contents/MacOS/godot_macos_release.arm64",
+    "bytes": 82920128,
+    "sha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "mode": 493,
+    "architectures": [
+      "arm64"
+    ],
+    "archiveSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+    "extractedPath": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/template-engine/macos_template.app/Contents/MacOS/godot_macos_release.arm64"
+  },
+  "sdk": {
+    "manifestSha256": "691c1ba4f9b2feed6e362bd497576a2918858d3f33125a4f8bce681afb023e16",
+    "sourceCommit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+    "sourceDirty": false,
+    "sourceFiles": {
+      "dependencies.json": "5886eae13e153475bf7498f61c2ac0925b3d9c167410a397303483e065a8f82e",
+      "fabric.gdextension": "a637bbd04639fd4240a90b7ad9a71f21328b82aca35bc00717688ae1ba9dd6f0",
+      "native/CMakeLists.txt": "2c9ac84915b2ac83e877f56ab18ed9c05d4f6bd8311b7da2253c9608f00741bf",
+      "native/accessibility_announcement_core.h": "36f2c59e3b672e1e8c3def6539bd011232cdb7934b42b9b9a1b08ef80fd29947",
+      "native/accessibility_announcement_core_test.cpp": "241593c9a3a69bbe390cfaf0f621d818f6cc08e5130ff097f4b0c1b3fb7b554e",
+      "native/accessibility_announcer.cpp": "62b602183beea27f2786aa0b97cd8d70549f6a7a19364d794fd5a9e86bb881da",
+      "native/accessibility_announcer.h": "343ab7a8e2d5ac8098063d4fb8e32e1d9ffb27450563a37c6ff33f67377ce963",
+      "native/accessibility_core.h": "3ea9b42a852a186da46db9b7c265dbec29d84359867e65fcbb5e962766ad0821",
+      "native/accessibility_core_test.cpp": "626965f3e41c9043dea9e819900ee44480b17d86badf5d9b805f8af7b01fa674",
+      "native/accessibility_info.cpp": "4c1c8dcd7afc523a462f72ce8f6b2d3348d9ea1fd84a8991d718a928d5cc3bf3",
+      "native/accessibility_info.h": "c14c8988f09cfa2094635d1a09db387284852804f3f1fb3d7b8f2897467a32ed",
+      "native/accessibility_info_core.h": "7d78e20d6314781ce77b1dac8a63f73475addf96bbcffa7bdb9924b95a1efb3b",
+      "native/accessibility_info_core_test.cpp": "59068c7ed7a9bcf22713b71ad9758463c83db1ce93a725daa5f6fe01222e2d1f",
+      "native/accessible_view.cpp": "cc67fcfd9f9b7f9fffdceb9c7f98d5ab78bffed7ce027e6ef5f0a3e7c3dc3cf4",
+      "native/accessible_view.h": "e9c9bb8ad6e05ba349cb4ce42b059731b23a7bd19e71636966665c07ccbbea7f",
+      "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+      "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+      "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+      "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+      "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+      "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+      "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+      "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+      "native/app_lifecycle.h": "52caf77bc818b0d5c3456ff47836871c81e56395579efd83251cac2b6f466fe8",
+      "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+      "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+      "native/application_runtime.cpp": "cb5ae4780c5598dcdae5cdc8c70cae8cde01a3680e131e020287a6685bdd9983",
+      "native/application_runtime.h": "d88303dc5563f3f2f4d8a8d38d022d32cb846cb7aea0a10d85f56f793b5878f2",
+      "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+      "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+      "native/device_services.cpp": "0e5bac9688de941c2becf44354fefba9b524b14df71c4cd426c7313d07b32c5b",
+      "native/device_services.h": "01e5ac09983f821602fc828e6aec11e374cfa6635e2828c061c50be4a0b3bd40",
+      "native/device_services_core.h": "e78e359827d67d8436e4c86476fb342ea6c4d1fc622e8ec0b1358f8b0288b0d9",
+      "native/device_services_core_test.cpp": "3410d829e4d899b81c915b878effba6cea5cc0aab153c60938f0d2e9fbfa700f",
+      "native/fabric_application.cpp": "73def9bf38c3bf67a6711264100c150ed406c465744b617b0c08ff83bc73b97b",
+      "native/fabric_application.h": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
+      "native/fabric_surface.cpp": "054ccf769e34075760cdf7d3a7bb2f97fb275d028d515e15e085f0548c62c051",
+      "native/fabric_surface.h": "d7f15c2a22b9f75a348290ac3db540984f9cb6442d905629a3dbf3be3a0c1723",
+      "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+      "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+      "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+      "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+      "native/godot-profile.json": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+      "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+      "native/godot_device_backend.cpp": "a2562eecd247fd04e841ea4b9ddce78d1dd0e094e81ecc689f4386f100985f06",
+      "native/godot_device_backend.h": "3a57b370eb9bc1d47b36c615a1c9c90b265351b8801cb131b314a50884d0d109",
+      "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+      "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+      "native/godot_http_transport.cpp": "f734bf964ce9bd73b9096a6574e5b1efb2b95be62270f24a44e36cb9d5dd3a92",
+      "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+      "native/godot_image_manager.cpp": "55fcddd8048389ed6b9b7cade3e1c2721e7da751bdd87e5b7afe4a219498e315",
+      "native/godot_image_manager.h": "c30443fc43e044df41ee18c8e7bbc00b636600343f2344027ab29c63c537166e",
+      "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+      "native/godot_websocket_connection.cpp": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+      "native/godot_websocket_connection.h": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+      "native/godot_websocket_transport.cpp": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+      "native/godot_websocket_transport.h": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+      "native/http_core.h": "b74f06fc71706c517796ec1d78d931b3c93fe478ee8b2da3c95a97bfbf76ed0e",
+      "native/http_core_test.cpp": "0f39053aaae91104c03bdcd0cee13a395f52e1047f12fc7a997a416d7ac4e177",
+      "native/http_transport.h": "04caf1a8a8bc098f9620d6959257296ae4c8d212fc5b5add7a840289a837925e",
+      "native/image_cache.h": "6c5dec5176b17a042ce80659bbb72a1a0378a13842c53141439fcc1e7147d426",
+      "native/image_cache_test.cpp": "98ce48fdc5bf6525a060a5192aa54f2c4daad108a63a3474cce95e5f72704d94",
+      "native/image_core.h": "50badde2b8aabfaf3716f5ffff63b238ed8a00f78a8e6ba44af781b539e6ef75",
+      "native/image_core_test.cpp": "8b90b75733fcb4d411f0d945c2df5bdc6e3901b889d8c0933e5bbe9e7e4eab4d",
+      "native/image_effects.cpp": "1ef32651bbb9bccc455dc470bddbc753721b10a8a782e96fedd6e93d3e6d4677",
+      "native/image_effects.h": "d55bbae551d4328ad471515d4a3de353294a081229b270ed4e5a3d39abf18a17",
+      "native/image_effects_core.h": "20877a745567c0e2d02b5871dc7c4c87114dea63055f0117724e6b0deb87814e",
+      "native/image_effects_test.cpp": "5d8ecbbea22eca3ae4708715c18291e940187846b87f61a031e29abf3156b464",
+      "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+      "native/image_loader.cpp": "b04b194b34a436ae9aa157f7ac07341a06435dda3655e70b95ae03c8348e3969",
+      "native/image_loader.h": "8368ebf3657fbff12a921a3c91df9c8bbdb41b4052f9fd5f065f6d7cb48793ca",
+      "native/image_loader_module.cpp": "4ef62cbfb773af9a8b7db4bffa560c733b260d1ef8ebed8439f563106bcc37f2",
+      "native/image_loader_module.h": "301c602a7a92b878b2d632faaa2acb093ea1f3e0d8b9b21a08a2ac95a005e68f",
+      "native/image_network.cpp": "7a2c3d68637efb804f71c38c7fe7e623232888846f25fafac6a6474b7b78b05e",
+      "native/image_network.h": "76ce61479cb577d81c96fdfd38830decb4476ed8a507da6714bd75153668b61e",
+      "native/image_network_test.cpp": "c837bc010fc5f8c695c1e61f5e987e3675dfc58f2b121718b4c009c7570df821",
+      "native/image_sources.cpp": "02d7d7f22a436200c5d7a5311b671d7b9f51e3ef341bba11027768ea1c1aa967",
+      "native/image_sources.h": "2f44ceb4a27a5284828dd0ab2fdeb23e0cbdae5cb9bf50f216da987f173c4619",
+      "native/image_view.cpp": "b726fc61b2a009fc72dbbab2626ca71c6e9d5e5d2b80d864e7905239d57dda97",
+      "native/image_view.h": "01aba3c46d83f58954a852faaa3a44e68ec39b3d5a884e58ae574f9b2d78b767",
+      "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+      "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+      "native/layout_animation.cpp": "052ca83e43f14e005ca7b54c34b652e18f6f04be49864fb668bbdd6f36a47fed",
+      "native/layout_animation.h": "31c819eed19816b2c37ffda08e2afecbf07a587bf5e5b072f6233bffae96a32b",
+      "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+      "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+      "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+      "native/modal_window_stack.cpp": "adafe56c48c9b70bbd38a4f27d5c328c5fcec34dc919bd1612b8d047d7f08ff4",
+      "native/modal_window_stack.h": "294de77895275de27fa4bb4f387accab88a0a6621f691e487ec2836357b959aa",
+      "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+      "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+      "native/networking_modules.cpp": "07874740c7a5d979dbeed459de956d9b2e25cd21469b8ebb0ba33267f7c8d809",
+      "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+      "native/networking_state.h": "a3bfd49fa52fab4100b5981fab9921650ae5444f93c1b34765f968ce1f67653c",
+      "native/paragraph_layout.cpp": "951aad9a951b418021860162888ab2aa227978719b5770cebf6127443202e2f8",
+      "native/paragraph_layout.h": "d88650f2c089945614b399c1424b8510ee8b4d72ec90c762dbfc5f1e5ea87a9e",
+      "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+      "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+      "native/performance_metrics.h": "2e77b0851cea85b0af42c206194a407d9699f8c4c14892ca984cfa3b574d9f77",
+      "native/performance_metrics_test.cpp": "2e7dd0cc2a5ae0e4f152f79e72f027dec1250913b9eb3e9a94e724d4c6a4e670",
+      "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+      "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+      "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+      "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+      "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+      "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+      "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+      "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+      "native/register.cpp": "81685ff042b3129f5b8c9fd7e4c53159a2c8264578f81b0c9e2963455f84e8b6",
+      "native/scroll_adapter.cpp": "9e956863c215f5a1348fdd280b8cad4091c26d1e6f566e17175ff1acf5041a48",
+      "native/scroll_adapter.h": "cf5564dbd0b7f2caf63cce3c62e44ef95fb54befe9e009663087e370c6544fd4",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_motion_test.cpp": "7f32c4256745f3b9c886236786491984ceeb2ff560665edf2c28056bd3da4757",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4",
+      "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+      "native/stoppable_invoker.h": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+      "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+      "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+      "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+      "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+      "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+      "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+      "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp": "3a2622449236244167511078388db81ee2d760740c94696ce1e241ed92daea69",
+      "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h": "53734eedcf8e3a415894b907b341318235b447f263cfd9b2d390e1a010e1ec7c",
+      "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+      "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+      "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+      "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+      "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+      "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+      "native/websocket_core.h": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+      "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+      "native/websocket_handshake.h": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+      "native/websocket_handshake_test.cpp": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+      "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+      "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+      "native/websocket_transport.h": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+      "native/websocket_transport_test_fixture.cpp": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+      "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+      "package-lock.json": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5",
+      "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+      "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+      "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+      "scripts/pack-addon.mjs": "b7f9e7e5209283aa9ac0e401652dd40ae15a88d998dca4bdbbe8fef01e269485",
+      "sdk/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sdk/README.md": "927769d9a8bd6bcf8469099db04da4acf14e27dcce6a421821610faadd4ef009",
+      "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2",
+      "sdk/addon/application_resource.gd": "1c02b968903d490dcd51f21de2ebc9de9339f5b647f47e0a1bc791f0e586ad95",
+      "sdk/addon/build.gd": "42381651d22d3e4d3959b44ac6680243cd9c24354c5e07890594ea895d1999a2",
+      "sdk/addon/export_payload.gd": "2ed5f11ef739c62c92a4abe8b91686e2c24dd79bdb56296bd446a83888fedca5",
+      "sdk/addon/export_preflight.gd": "348a5f2a691c4679824763fca9ba55b1943d7d4e3410e3dce8f30e20e689c253",
+      "sdk/addon/godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+      "sdk/addon/ios_export.gd": "fb0336b0540f96f26da9d980baaee4864f5fb26db961fd3a3aea2d41a045ce48",
+      "sdk/addon/macos_export.gd": "6a9e45327fa30fe83bf8a63a1bc3f50e442a3854d654886e9a184e06f4640281",
+      "sdk/addon/plugin.cfg": "4c1263a8bc0a0af4f97f3059e1e81c54c14daa2997a85c1752cfe9acf63e80d7",
+      "sdk/addon/plugin.gd": "69c8551ec8860c40acad418b3c3b11f8da86eb3e8327e8539e30c363d379e30b",
+      "sdk/toolchain/adapter-plugin.mjs": "40b215b4bcb69490050cc5b36c3589fa85da91f4e72eaecd5aa2b230775a4c63",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "sdk/toolchain/build.mjs": "a89af21bf46a26eeba1a05410ce0007b32cab8f5a6d6398507a615584fdbdd9f",
+      "sdk/toolchain/native-compiler.mjs": "c69c82581496dce152a64a9c788d4cbe6deb3fb48042608254f45e95eaab2eec",
+      "sdk/toolchain/native-typecheck.mjs": "47a8c0cf591eca1001fa879c8bcfb607db2b1eeadba134afd1b559ae3dc79f1c",
+      "sdk/toolchain/nativewind-compile.mjs": "a256b6b350b82de4c351df56d41b4be4408c0a69e41dcc0c1fe77808facc1bc9",
+      "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+      "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+      "sdk/toolchain/project-config.mjs": "6057cd12daaf93ee42df9310e87f6a2793ef4356e43ceb82d72265692fd784e2",
+      "sdk/toolchain/project-resolution.mjs": "f1f78e75bff1315da766c951fee7036a628c216e9e9f40080b688f5342c76705",
+      "sdk/toolchain/project-typecheck.mjs": "fb283a0bfa55a080eb8a11308dbd5c4e8d2db977b889ca7c7d6af2b153782131",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/tailwind-plugin.mjs": "d6a399285d4bff0a7877ae7f41e6085d381f5b22ef57270bf74e7be957318fe1",
+      "src/accessibility-info.js": "8fab7a7c3804e1535c203dd1c2119ed70636bc804d97ba988c25191ce9d121d3",
+      "src/accessibility-view-config.js": "440348f775f67fef2ca042f97a30c993b1da629d85a78758f9a50c43c3f2d854",
+      "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+      "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+      "src/app-state.js": "4a630422e09310dd3bdb9cad8428dc816af1edb0097c08ed6513528e60d2efa8",
+      "src/base-view-config.js": "c3f1565770fcef7f7586face406dac8ee8d53203b0a3093daa833d910f934e56",
+      "src/components.jsx": "2f8f8404609c9f2fc5f1da40eb81a10ca01190f9c9aeb2316b095d3fd65ae331",
+      "src/control-contracts.mjs": "777e4a764a65265b478631c5d5c53c8dd5750a770eaf8427c99c509e6dd7244b",
+      "src/device-services.js": "c8c77c2877d947b4b5a901b9eee4d403ff364d30e63c7c164ccf2494cea2caa6",
+      "src/godot-fabric.js": "dd6bc4004ba89e2417bdf3a937ee01dc72eed8078615fffc6bd128dccf7baf79",
+      "src/image-contract.mjs": "2b2373b33f77adb3b966c41c943ab2ead491e1464f2b6f69b739a49a9d3993cd",
+      "src/image.jsx": "5d1c9e23d7b47fc7b478dcb3824f2e3415736ae96232e442f67308381982a548",
+      "src/initialize.js": "9f375e74c5e76853ed32a0b3a4d1238c132ff79e9a2caff3a9c84012a0785e80",
+      "src/list-props.mjs": "1f18f3ab95a2ec2313c2b0a1d4e72caed64916d461fecdd1557d7be762a56255",
+      "src/lists.js": "380a2e3590431db354441740e5e9d8c5b9f476d093dfbc3e9e39bd99e9cc418f",
+      "src/native-module-runtime.js": "2af346160e265ee65892d05fb051d20b8cc06de2a79b655d4f38ac78ad6907f3",
+      "src/native-modules.js": "21f658161bea9c98e95c9f5e0e0ef455cbca9a44c03de560eb5f421ae291d393",
+      "src/nativewind.css": "cc1a7ad0d019ddb1d32d0ecb588ba0ac26ce41d8625dd6c366348b25f83a28ec",
+      "src/os-specific.js": "866c898c84bc7810614a8ae1257e1fcd87dbde7e145c31697cfd929491540aa5",
+      "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+      "src/platform-environment.js": "29b494105084bdf2996893f85a0513cacbccf144d0f1a3550e32450ecac78f18",
+      "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "src/private-interface.js": "7413c7cb1b2228bc2c4afbd6852074b148219c883bea854a7bf7e2080179a7bb",
+      "src/prop-scope.mjs": "90b9376208b362bd7f36c09dbb0fc634c92d3718f6939f0107cf0c2b4a0b3984",
+      "src/public-input.jsx": "051dc0be7bdf80eb5464cfd189171f4c7adf65eeb62b349318adac0c07ebebb5",
+      "src/react-native-platform.jsx": "f7720d6ce52cfbfdb60439ec9631f94dac3681492f93951cc0e4ad516897b776",
+      "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+      "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+      "src/runtime.js": "3da190a8f7e39baa1b97ea31774ac8db87b914c4167e759c2b85141b8fa1864c",
+      "src/scroll-view-contract.mjs": "e0a5af0cdb9ad43ecdf7e4a92e24eb5ac2f43bb14bbc99bdf9915607c3da3fd4",
+      "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
+      "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
+      "src/svg-contract.mjs": "b9b78a864ca065925a45ebc4bb882aa8f04a21021a493a6270c9f5719f79404f",
+      "src/svg.jsx": "02cce209d3cf7d1b120173dfd62eab2d231e2f39628ce57d70552616cfb99f3b",
+      "src/text-input-state.js": "7fc27f7ea5f103750a11a8c0a935238f32c4d29875e2f655917a162c1c513a52",
+      "src/text.jsx": "b22bcffd45fc09569aef01682ab121393d7caac3a74f7f9bd3b4f08e63bfbe68",
+      "src/ui-manager.js": "74e917cabdd6c61d2255dcd17f744d55a2b85c4dcd69ccdeff812f2b6e53704d",
+      "src/unsupported-reanimated.js": "addae9e2157e684a39ca4b60cfeedf2e2ce7ac4d30794112133c38b9a4f3c564",
+      "src/unsupported-safe-area.js": "6436fd1148bc907767463556dfc33e06c382a614809ae6698c60046d65aa926a",
+      "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a",
+      "types/godot-fabric.ts": "782f8f2ffdb9160bb200051c81be9d97eda378bf5ad40c4e0e96cb6f4a836da1",
+      "types/nativewind.ts": "72bd079d68c820e51d950518e22240d61d8dcd42891b42c2b6b7ad97bd69ff66",
+      "types/react-native.ts": "942065751f62e99c4071a142318de38ae0acaef38d28a1447be0d309b90fea81"
+    },
+    "hostSha256": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+    "frameworkSourceHashes": {
+      "hermesvm.framework": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+      "ReactNativeDependencies.framework": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+    },
+    "provisionLogSha256": "69b5f5b19ede5d943e88a57861a16141e754dbfce5d099fad3ff2b856be5e4a2"
+  },
+  "fixture": {
+    "canonicalProjectSha256": "1127b6ff2a55610d6c72c7f23d0758a3a4dafb4dc30ad98d04bd306fb8a12dce",
+    "adaptedProjectSha256": "c33a269d5d7bd663556ea0aff7c5f4b080561a75f1502ea6446f891cec085751",
+    "canonicalValidationSha256": "17fbd9ff76ec51a31e1750d3918c8feaf2242c1a8c9669e640531b0c173f56bc",
+    "adaptedValidationSha256": "88656339d7f5815a46793ca6f53937ed796c2782fd3b153f9dd7681a5f48d875",
+    "validationDiff": "--- {WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/validation-original.gd\t2026-10-09 10:24:12\n+++ {WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/validation-adapted.gd\t2026-10-09 10:24:12\n@@ -9,6 +9,7 @@\n   checks.append({\"name\": message, \"passed\": condition})\n   if not condition:\n     push_error(\"CONSUMER_CHECK_FAILED: \" + message)\n+    print(\"MACOS_EXPORT_FAILED_SNAPSHOT:\" + JSON.stringify({\"check\": message, \"hud\": state(hud), \"inventory\": state(inventory)}))\n \n func damage_events_equal(actual: Array, expected: Array) -> bool:\n   if actual.size() != expected.size():\n@@ -71,8 +72,13 @@\n   if not OS.get_cmdline_user_args().has(\"--capture\"):\n     return\n   await RenderingServer.frame_post_draw\n-  check(get_viewport().get_texture().get_image().save_png(\"res://consumer-\" + stage + \".png\") == OK, \"Consumer capture saved: \" + stage)\n+  check(get_viewport().get_texture().get_image().save_png(\"user://consumer-\" + stage + \".png\") == OK, \"Consumer capture saved: \" + stage)\n \n+func _enter_tree() -> void:\n+  super._enter_tree()\n+  if DisplayServer.get_name() != \"headless\":\n+    get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS\n+\n func _ready() -> void:\n   if not OS.get_cmdline_user_args().has(\"--validate\"):\n     return\n@@ -184,8 +190,9 @@\n   await frames()\n   check(services().damages == before_late_signal and services().errors.is_empty(), \"Stopped consumer handlers cannot receive later game signals\")\n   var report := {\"schemaVersion\": 1, \"host\": \"independent-consumer\", \"displayServer\": DisplayServer.get_name(), \"checks\": checks, \"beforeStop\": initial, \"afterStop\": state(hud), \"geometry\": geometry_observations}\n-  var output := FileAccess.open(\"res://consumer-report.json\", FileAccess.WRITE)\n+  var output := FileAccess.open(\"user://consumer-report.json\", FileAccess.WRITE)\n   output.store_string(JSON.stringify(report, \"  \") + \"\\n\")\n   var success := checks.all(func(entry: Dictionary) -> bool: return entry.passed)\n+  print(\"MACOS_EXPORT_USER_DATA_DIR:\" + OS.get_user_data_dir())\n   print(\"CONSUMER_VALIDATION_PASSED\" if success else \"CONSUMER_VALIDATION_FAILED\")\n   get_tree().quit(0 if success else 1)\n",
+    "validationDiffSha256": "de54723bfd25679903c13469444ef33ee2a8aaf3cb1e12254f978dc031da8161",
+    "projectDiff": "--- {WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/project-original.godot\t2026-10-09 10:24:12\n+++ {WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/project-adapted.godot\t2026-10-09 10:24:12\n@@ -1,14 +1,20 @@\n config_version=5\n \n [application]\n-config/name=\"Godot Fabric Consumer\"\n+config/name=\"Godot Fabric Export 81954-1791552229977-b86fd3\"\n run/main_scene=\"res://main.tscn\"\n \n [display]\n window/size/viewport_width=1080\n window/size/viewport_height=600\n+window/size/window_width_override=540\n+window/size/window_height_override=300\n+window/size/resizable=false\n+window/stretch/aspect=\"keep\"\n \n [rendering]\n+textures/vram_compression/import_s3tc_bptc=true\n+textures/vram_compression/import_etc2_astc=true\n renderer/rendering_method=\"gl_compatibility\"\n environment/defaults/default_clear_color=Color(0.035, 0.047, 0.075, 1)\n \n",
+    "projectDiffSha256": "ce2261527588936cbbdd226980235b9e72f22b57f1d75a459a4f8bf2db76d91c",
+    "presetSha256": "029fb8dc0a0a4b0430ea22a5d1db00fc44a93bfd6cc56a44cd8430ebd89b2cf8",
+    "projectName": "Godot Fabric Export 81954-1791552229977-b86fd3",
+    "supportedChecks": "the unchanged 40/43 names/order are pinned in scripts/macos-export-checks.json",
+    "checkInventorySha256": "0a341a27628c86f55104ad03e74c6e6fa13d111d364fefbf985972ed4f3e2833"
+  },
+  "bundle": {
+    "path": "res://.godot_fabric/app.js",
+    "sha256": "a34cdb96c311d11cfdb14bfc1db511c533c9244fbaf47a5e2f2a3b69804314c3",
+    "reportSha256": "554c182e3d6facec887c91c08716463ed8c4f195edb86f20e0f2688ee00e8ee9",
+    "assets": null,
+    "adapterSelection": null,
+    "sdkSourceCommit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc"
+  },
+  "pack": {
+    "path": "Contents/Resources/Godot Fabric Export 81954-1791552229977-b86fd3.pck",
+    "format": 4,
+    "fileCount": 27,
+    "bundleEmbeddedByteForByte": true,
+    "buildToolchainExcluded": true,
+    "editorScriptsExcluded": true,
+    "pckSHA256": "e1fa5063ccd3bdb994bacf04a10e179b86197fad7283561f5810449eede1ed36",
+    "inspectorLogSha256": "b0bd8afa5e164ccbddefc4a8407f06964cdb631ecf351fafcc56426477b66daf"
+  },
+  "frameworkNormalization": {
+    "hostSha256Before": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+    "hostSha256After": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+    "frameworks": [
+      {
+        "name": "hermesvm.framework",
+        "version": "1",
+        "binaryName": "hermesvm",
+        "beforeTreeSha256": "bf8fccc81277f177c58c501343e884fd89f51cd95d79f68259954f7b8d6c637b",
+        "afterTreeSha256": "bf8fccc81277f177c58c501343e884fd89f51cd95d79f68259954f7b8d6c637b",
+        "binaryBeforeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+        "binaryAfterSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+        "aliases": [
+          {
+            "alias": "Versions/Current",
+            "linkTarget": "1",
+            "action": "retained-symlink",
+            "previousLink": "1"
+          },
+          {
+            "alias": "Resources",
+            "linkTarget": "Versions/Current/Resources",
+            "action": "retained-symlink",
+            "previousLink": "Versions/Current/Resources"
+          },
+          {
+            "alias": "hermesvm",
+            "linkTarget": "Versions/Current/hermesvm",
+            "action": "retained-symlink",
+            "previousLink": "Versions/Current/hermesvm"
+          }
+        ],
+        "resourceBundles": []
+      },
+      {
+        "name": "ReactNativeDependencies.framework",
+        "version": "A",
+        "binaryName": "ReactNativeDependencies",
+        "beforeTreeSha256": "29ff3daa56a4e140b93d99e514de1e6d346e06d41d5968a67794d5054038d430",
+        "afterTreeSha256": "0969bb0713103b632a9c406cf1598652c3d4e063a167db251d73f753bc244538",
+        "binaryBeforeSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+        "binaryAfterSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+        "aliases": [
+          {
+            "alias": "Versions/Current",
+            "linkTarget": "A",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "627e8f3c0941dfa26f306b98f75ec763d70fd8ec19a1b3f0d651b152d92148bc",
+            "canonicalSha256": "627e8f3c0941dfa26f306b98f75ec763d70fd8ec19a1b3f0d651b152d92148bc"
+          },
+          {
+            "alias": "Resources",
+            "linkTarget": "Versions/Current/Resources",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "5fd9d179d0d1169882486d2be228ed350b73268716b4cf058d54e9db06658ea1",
+            "canonicalSha256": "5fd9d179d0d1169882486d2be228ed350b73268716b4cf058d54e9db06658ea1"
+          },
+          {
+            "alias": "ReactNativeDependencies",
+            "linkTarget": "Versions/Current/ReactNativeDependencies",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+            "canonicalSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+          }
+        ],
+        "resourceBundles": [
+          {
+            "name": "ReactNativeDependencies_SocketRocket.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "6e1c38198ed416f2f339d064ed66aa762c3b29b6b5fd6eeeec441669c521137c",
+            "target": "Versions/A/ReactNativeDependencies_SocketRocket.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_SocketRocket.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_boost.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "85b48cc62811b184c760f73f8babc5327092fab8ea39b1f0e779f7b75b2f2994",
+            "target": "Versions/A/ReactNativeDependencies_boost.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_boost.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_folly.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "e16557af696f6f4ea95c13f9f8a968cbf0a3cf78309e13f7c94018cf74aa6cd6",
+            "target": "Versions/A/ReactNativeDependencies_folly.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_folly.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_glog.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "54b73b1a662eb52ea5b058bd877e3785ec339d6b776c5d302b914cd06020b54c",
+            "target": "Versions/A/ReactNativeDependencies_glog.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_glog.bundle"
+          }
+        ]
+      }
+    ]
+  },
+  "app": {
+    "bundleIdentifier": "org.journeystudios.godotfabric.exportvalidation",
+    "executableName": "Godot Fabric Export 81954-1791552229977-b86fd3",
+    "executable": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/MacOS/Godot Fabric Export 81954-1791552229977-b86fd3",
+    "executableRecord": {
+      "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/MacOS/Godot Fabric Export 81954-1791552229977-b86fd3",
+      "bytes": 82920128,
+      "sha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+      "mode": 493
+    },
+    "host": {
+      "source": {
+        "path": "{DISPOSABLE_PROJECT}/project/addons/godot_fabric/native/fabric_godot.dylib",
+        "bytes": 6716720,
+        "sha256": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+        "mode": 493
+      },
+      "beforeSigning": {
+        "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/fabric_godot.dylib",
+        "bytes": 6716720,
+        "sha256": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+        "mode": 420
+      },
+      "afterSigning": {
+        "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/fabric_godot.dylib",
+        "bytes": 6695792,
+        "sha256": "95ebe7a7e82b9c704e43c5d7ee22ef4e54eb7a424c74175a0c7398ddd1e59645",
+        "mode": 420
+      }
+    },
+    "hostLoads": [
+      "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+      "@rpath/hermesvm.framework/Versions/1/hermesvm",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ],
+    "hostRpaths": [
+      "@loader_path/frameworks"
+    ],
+    "loadRecords": [
+      {
+        "label": "app-executable",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/MacOS/Godot Fabric Export 81954-1791552229977-b86fd3",
+        "libraries": [
+          "/System/Library/Frameworks/ForceFeedback.framework/Versions/A/ForceFeedback",
+          "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa",
+          "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon",
+          "/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit",
+          "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+          "/System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI",
+          "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+          "/System/Library/Frameworks/GameController.framework/Versions/A/GameController",
+          "/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
+          "/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+          "/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation",
+          "/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+          "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+          "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+          "/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+          "/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+          "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+          "/System/Library/Frameworks/MetalFX.framework/Versions/A/MetalFX",
+          "/System/Library/Frameworks/MetalKit.framework/Versions/A/MetalKit",
+          "/usr/lib/libSystem.B.dylib",
+          "/usr/lib/libz.1.dylib",
+          "/usr/lib/libc++.1.dylib",
+          "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+          "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+          "/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+          "/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": [
+          "@executable_path/../Frameworks",
+          "@executable_path"
+        ]
+      },
+      {
+        "label": "host",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/fabric_godot.dylib",
+        "libraries": [
+          "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+          "@rpath/hermesvm.framework/Versions/1/hermesvm",
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libSystem.B.dylib"
+        ],
+        "rpaths": [
+          "@loader_path/frameworks"
+        ]
+      },
+      {
+        "label": "hermesvm-framework",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+        "libraries": [
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libSystem.B.dylib",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": []
+      },
+      {
+        "label": "ReactNativeDependencies-framework",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+        "libraries": [
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libc++abi.dylib",
+          "/usr/lib/libSystem.B.dylib",
+          "/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": []
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "hermesvm.framework",
+        "source": {
+          "path": "{DISPOSABLE_PROJECT}/project/addons/godot_fabric/native/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12004952,
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "mode": 493
+        },
+        "beforeSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12004952,
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "mode": 420
+        },
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "bundlePath": "Contents/Frameworks/frameworks/hermesvm.framework",
+        "afterSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12070224,
+          "sha256": "ffc34452c10ab1697e1776b70979e597755c97d913ae1039d9b0e72312dd2d9b",
+          "mode": 420
+        }
+      },
+      {
+        "name": "ReactNativeDependencies.framework",
+        "source": {
+          "path": "{DISPOSABLE_PROJECT}/project/addons/godot_fabric/native/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2468408,
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "mode": 420
+        },
+        "beforeSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2468408,
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "mode": 420
+        },
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "bundlePath": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "afterSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2512032,
+          "sha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1",
+          "mode": 420
+        }
+      }
+    ],
+    "signing": "ad-hoc local signing verified; no distribution or notarization claim",
+    "executableAfterSigning": {
+      "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.staging-81954-1791552229977-b86fd3.app/Contents/MacOS/Godot Fabric Export 81954-1791552229977-b86fd3",
+      "bytes": 82439632,
+      "sha256": "b1689445be5c1a1a3a773aced86c383accd9a8221e17571c5b7649ebb3c15e34",
+      "mode": 493
+    },
+    "engineVersion": "4.7.2.stable.official.ed1daf0bf"
+  },
+  "relocation": {
+    "completedBeforeRuntime": true,
+    "path": "{WORKTREE}/build/macos-export-native-positive-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/.Verified.runtime-81954-1791552229977-b86fd3.app"
+  },
+  "runtimes": [
+    {
+      "displayServer": "headless",
+      "checkCount": 40,
+      "logSha256": "d65310d7f658ee0fad23163305999b2abb3fda006d57790d507dc6e58bdbd241"
+    },
+    {
+      "displayServer": "macOS",
+      "checkCount": 43,
+      "logSha256": "c22c259b38a0e4eae03e50a798158483d619744ffbd000700464926d679e7428"
+    }
+  ],
+  "captures": [
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/initial.png",
+      "bytes": 24826,
+      "sha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+      "mode": 420,
+      "dimensions": {
+        "width": 540,
+        "height": 300
+      }
+    },
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/updated.png",
+      "bytes": 28929,
+      "sha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+      "mode": 420,
+      "dimensions": {
+        "width": 540,
+        "height": 300
+      }
+    },
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-81954-1791552229977-b86fd3/resized.png",
+      "bytes": 31963,
+      "sha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+      "mode": 420,
+      "dimensions": {
+        "width": 540,
+        "height": 300
+      }
+    }
+  ],
+  "publishedAppSha256": "b59347f942ff5a2ef52e08563b14c93dd79048125ec73a6b28cd664bbb65b34c",
+  "completedAt": "2026-10-09T13:24:32.086Z",
+  "published": true,
+  "publishedAt": "2026-10-09T13:24:32.086Z"
+}

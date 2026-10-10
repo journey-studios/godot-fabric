@@ -1,0 +1,180 @@
+{
+  "rehearsal": true,
+  "notAResult": "This is a rehearsal of the campaign. No number in it is a measurement of an arm for the comparison, and no campaign was run.",
+  "format": "godot-fabric.frontier-comparison-campaign/v1",
+  "status": "done",
+  "stopped": [],
+  "options": {
+    "lanes": [
+      "presented"
+    ],
+    "slots": [
+      1,
+      3
+    ],
+    "build": "debug",
+    "maxWaitSeconds": 0,
+    "assumeRefreshHz": 60
+  },
+  "protocolSha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
+  "launcher": {
+    "name": "debug: the provisioned copy of civ-lite, run with --path in the engine's executable",
+    "build": "debug",
+    "registered": {
+      "seed": 4242,
+      "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+      "instrumentSha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+      "arms": {
+        "A": {
+          "binarySha256": "c7cccbf8fb143e34e02fd6521e09be2c2b974f0d5db080b19071c9c570718ccf",
+          "packageSha256": "9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34",
+          "scriptSha256": "ec1789425c93432f8885690671dca8a0e588b7e68ac62a663301cc6f4ce19029"
+        },
+        "B": {
+          "binarySha256": "c7cccbf8fb143e34e02fd6521e09be2c2b974f0d5db080b19071c9c570718ccf",
+          "packageSha256": "9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34",
+          "scriptSha256": "ec1789425c93432f8885690671dca8a0e588b7e68ac62a663301cc6f4ce19029"
+        },
+        "C": {
+          "binarySha256": "c7cccbf8fb143e34e02fd6521e09be2c2b974f0d5db080b19071c9c570718ccf",
+          "packageSha256": "9a12994c9d7c8ab638c301df0a21bd281523ed6a1610ec14e273346c49d12b34",
+          "scriptSha256": "ec1789425c93432f8885690671dca8a0e588b7e68ac62a663301cc6f4ce19029"
+        }
+      }
+    }
+  },
+  "selfCheck": {
+    "passed": true,
+    "why": [],
+    "sha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "lane": "headless",
+    "seconds": 20.4
+  },
+  "unavailableLanes": {},
+  "unreported": [],
+  "lanes": {
+    "presented": {
+      "A": {
+        "slots": 1,
+        "started": 1,
+        "accepted": 0,
+        "attempts": 1,
+        "rejected": [
+          {
+            "slot": 1,
+            "attempt": 1,
+            "reasons": [
+              "load:before",
+              "load:after",
+              "not-presented:intent-not-drawn",
+              "not-presented:idle-not-drawn",
+              "not-presented:not-paced",
+              "not-the-registered-build:build"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "slots": 1,
+        "started": 1,
+        "accepted": 0,
+        "attempts": 1,
+        "rejected": [
+          {
+            "slot": 2,
+            "attempt": 1,
+            "reasons": [
+              "load:before",
+              "load:after",
+              "not-presented:intent-not-drawn",
+              "not-presented:idle-not-drawn",
+              "not-presented:not-paced",
+              "not-the-registered-build:build"
+            ]
+          }
+        ]
+      },
+      "C": {
+        "slots": 1,
+        "started": 1,
+        "accepted": 0,
+        "attempts": 1,
+        "rejected": [
+          {
+            "slot": 3,
+            "attempt": 1,
+            "reasons": [
+              "load:before",
+              "load:after",
+              "not-presented:intent-not-drawn",
+              "not-presented:idle-not-drawn",
+              "not-presented:not-paced",
+              "not-the-registered-build:build"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "waits": {
+    "attempts": 3,
+    "seconds": 0,
+    "timedOut": 3
+  },
+  "anomalies": 0,
+  "resumes": 0,
+  "formatErrors": [],
+  "analysis": {
+    "status": "incomplete",
+    "why": [
+      {
+        "rule": "minimum-per-arm",
+        "arm": "A",
+        "accepted": 0,
+        "required": 10
+      },
+      {
+        "rule": "minimum-per-arm",
+        "arm": "B",
+        "accepted": 0,
+        "required": 10
+      },
+      {
+        "rule": "minimum-per-arm",
+        "arm": "C",
+        "accepted": 0,
+        "required": 10
+      }
+    ]
+  },
+  "provenance": {
+    "commit": "a618d0e36568cc157b34c3998606b643a71af6fa",
+    "machine": "Apple M3 Pro, 11 cores, 18 GB",
+    "system": "macOS 26.6.2 (25G83)",
+    "rawData": "build/frontier-comparison-campaign-evidence",
+    "display": "headless, 0x0 at scale 1, window 0x0",
+    "renderer": "opengl3 (gl_compatibility)",
+    "adapter": "none: the headless display server names no adapter",
+    "engine": {
+      "godot": "4.7.2-stable (official)",
+      "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "architecture": "arm64",
+      "displayServer": "headless",
+      "renderingDriver": "opengl3",
+      "renderingMethod": "gl_compatibility",
+      "adapter": ""
+    },
+    "readCosts": {
+      "source": "docs/evidence/frontier-stress/costs.json",
+      "statsUsec": {
+        "B": 0.86,
+        "C": 4.5
+      },
+      "notTaken": {
+        "evaluateUsec": 100,
+        "surfaceSnapshotUsec": 570
+      }
+    }
+  }
+}

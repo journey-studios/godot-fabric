@@ -1,0 +1,24 @@
+{
+  "format": "godot-fabric.symlink-parent-independent-review/v1",
+  "at": "2026-10-09T13:16:34.458Z",
+  "oldHead": "0c03dd9c03cbbc8ec1c8a0bf5be54c330dae778d",
+  "producer": "daba1d57690babcc4d213541505b2ab7444facf4",
+  "results": [
+    {
+      "value": "@loader_path/jump/../shadow.dylib",
+      "priorAccepted": true,
+      "currentRejected": true,
+      "lexical": "{WORKTREE}/build/p2-continuation-review/causal-fixture/Test.app/Contents/Frameworks/shadow.dylib",
+      "physical": "{WORKTREE}/build/p2-continuation-review/causal-fixture/outside/shadow.dylib",
+      "reason": "binary resolves outside the .app through @loader_path/jump/../shadow.dylib"
+    },
+    {
+      "value": "@executable_path/jump/../shadow.dylib",
+      "priorAccepted": true,
+      "currentRejected": true,
+      "lexical": "{WORKTREE}/build/p2-continuation-review/causal-fixture/Test.app/Contents/MacOS/shadow.dylib",
+      "physical": "{WORKTREE}/build/p2-continuation-review/causal-fixture/outside/shadow.dylib",
+      "reason": "binary resolves outside the .app through @executable_path/jump/../shadow.dylib"
+    }
+  ]
+}

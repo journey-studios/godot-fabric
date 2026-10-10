@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-change-cost",
+  "item": "V05-10",
+  "criterion": "mudanca",
+  "preRegistration": {
+    "note": "docs/research/frontier-change-cost.md",
+    "commit": "6c7e8ba9a89cde60e3507178acab613408829960",
+    "pr": 124
+  },
+  "request": "Irrigate: a Settler irrigates the Plain it stands on when it has Water among its four neighbours and is not irrigated; it spends the Settler's remaining moves and the tile yields one more food; the HUD lists the action with the irrigation icon and the tile card shows the icon and 'Irrigated' on its units line",
+  "base": {
+    "branch": "exp/change-cost-base",
+    "from": "6c7e8ba9a89cde60e3507178acab613408829960",
+    "head": "2f52c6b",
+    "patch": {
+      "file": "docs/evidence/frontier-change-cost/base.patch",
+      "sha256": "e52c3c33a03ab77b32ef50f1ee6a5c7a22069d860f9a00c10afa322bda317803"
+    },
+    "record": "docs/evidence/frontier-change-cost/base.md",
+    "laneOnBase": {
+      "B": "fails only the stage's icon and units-line checks (3)",
+      "C": "fails the same 3 and the press check (the store's typed switch of actions answered 'The HUD does not know the action irrigate')"
+    }
+  },
+  "arms": {
+    "B": {
+      "hud": "native Godot HUD (consumers/civ-lite/native_hud/)",
+      "branch": "exp/change-cost-b",
+      "commit": "387ff71",
+      "patch": {
+        "file": "docs/evidence/frontier-change-cost/arm-b.patch",
+        "sha256": "f63b541a0e7fb199054390e169f7a30f5c1bf146f163516002fb917ff63774ef"
+      },
+      "filesChanged": [
+        "consumers/civ-lite/native_hud/actions.gd",
+        "consumers/civ-lite/native_hud/icons.gd",
+        "consumers/civ-lite/native_hud/tile.gd"
+      ],
+      "files": 3,
+      "lines": 20,
+      "added": 14,
+      "removed": 6,
+      "timeHours": 0.048,
+      "tests": 0,
+      "subagentActiveTime": {
+        "from": "2026-10-10T14:06:33Z",
+        "to": "2026-10-10T14:09:27Z",
+        "minutes": 2.9,
+        "longestGapMinutes": 1.9,
+        "laneRunSeconds": 114
+      },
+      "laneAfter": "CIVLITE_UI_NATIVE_PASSED: 161 + 28 probe checks on the native HUD; 49 + 23 oracle mutations (rerun by the orchestrator on the branch)"
+    },
+    "C": {
+      "hud": "React Native HUD (consumers/civ-lite/ui/)",
+      "branch": "exp/change-cost-c",
+      "commit": "a43dc24",
+      "patch": {
+        "file": "docs/evidence/frontier-change-cost/arm-c.patch",
+        "sha256": "94f69309dd5c9fd65aaf046402a633d9f017f573da2cabaeee25395d95abd191"
+      },
+      "filesChanged": [
+        "consumers/civ-lite/ui/hud/actions.tsx",
+        "consumers/civ-lite/ui/hud/icons.ts",
+        "consumers/civ-lite/ui/hud/tile.tsx",
+        "consumers/civ-lite/ui/store.ts"
+      ],
+      "files": 4,
+      "lines": 24,
+      "added": 17,
+      "removed": 7,
+      "timeHours": 0.096,
+      "tests": 0,
+      "subagentActiveTime": {
+        "from": "2026-10-10T14:10:06Z",
+        "to": "2026-10-10T14:15:51Z",
+        "minutes": 5.7,
+        "longestGapMinutes": 4.6,
+        "laneRunSeconds": 276
+      },
+      "laneAfter": "CIVLITE_UI_LANE_PASSED: 161 + 28 + 41 probe checks; 49 + 23 + 38 oracle mutations and 23 of the scan (rerun by the orchestrator on the branch)"
+    }
+  },
+  "measures": {
+    "files": {
+      "B": 3,
+      "C": 4,
+      "difference": 1,
+      "margin": 0.3,
+      "category": "cost"
+    },
+    "lines": {
+      "B": 20,
+      "C": 24,
+      "difference": 4,
+      "margin": 2.0,
+      "category": "cost"
+    },
+    "timeHours": {
+      "B": 0.048,
+      "C": 0.096,
+      "difference": 0.048,
+      "margin": 0.0048,
+      "category": "cost"
+    },
+    "tests": {
+      "B": 0,
+      "C": 0,
+      "difference": 0,
+      "margin": 0.0,
+      "category": "neutral"
+    }
+  },
+  "rule": "decisionRule.singleObservation of the protocol: one implementation per arm, so no interval; each measure's category from the difference C - B against 10% of B's value (gain below -margin, cost above +margin, neutral within); the axis takes a category only when the four agree",
+  "axisCategory": "inconclusive",
+  "confounds": [
+    "the order is fixed (B first, C second), not drawn, and with one observation per arm it is not balanced",
+    "the time includes the HUD lane's run, and the lane file runs both arms: on each arm's branch the other arm is the one still red, and it fails at a different point, so the lane took about 114 s on B's branch and 276 s on C's; without the lane the two arms took about 1.0 and 1.1 minutes",
+    "the base already holds the game rule, the icon and the lane's expectation, so each arm's work is the HUD's part only; the request is small, and a single small request says little about larger ones",
+    "the two HUDs differ structurally on one point the request touched: the native HUD dispatches an action by its method name, while the React Native store dispatches through a typed switch, so C had to add a case to ui/store.ts and B had nothing to add there",
+    "a case the lane does not cover: on an irrigated tile with no units, arm B's units line shows only 'Irrigated' and arm C's shows 'No units · Irrigated'; the request did not fix that case and the lane's stage only visits a tile with units, so both readings pass; the patches stay as delivered, as the experiment's record"
+  ],
+  "statement": "one observation per arm: it supports a description, not a statistical claim"
+}

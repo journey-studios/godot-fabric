@@ -1,0 +1,87 @@
+{
+  "format": "godot-fabric.macos-export-pre-implementation-files/v1",
+  "scope": "Editable minimal baseline and stock export observations; no V05-07 acceptance",
+  "files": [
+    {
+      "path": "editable-baseline-receipt.json",
+      "originalObservationSha256": "aed7fd3be607e88cbbd2feab63dc45af8e9291daad76d01e56cc85d2835ace74",
+      "originalObservationBytes": 15537,
+      "sha256": "aebbdbb6d769754ce711981524ec78946a36978c5249ac5448f8786731972ac2",
+      "bytes": 15425,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "editable-baseline-root-review.json",
+      "originalObservationSha256": "0647b05b70dd8c9ca7e6ea6738dfc2e9ec3ccc0aa6af42214d975e9faef53f23",
+      "originalObservationBytes": 25218,
+      "sha256": "0647b05b70dd8c9ca7e6ea6738dfc2e9ec3ccc0aa6af42214d975e9faef53f23",
+      "bytes": 25218,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "stock-export-inventory.json",
+      "originalObservationSha256": "1792f4c94eae8b196de7e7ba18f12739dad4a15d0afd76ada4138e0f77875810",
+      "originalObservationBytes": 3048,
+      "sha256": "366916e70e52fd8c45bcd961f7f63706a59b2d94b540b339cd0569ee1892af6c",
+      "bytes": 2992,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "stock-export-invocation.json",
+      "originalObservationSha256": "e2a7de9e07470a3a3642cbcd2f4fd385c88207f5caf752c39c06841948d3991d",
+      "originalObservationBytes": 1362,
+      "sha256": "dde3629b9ceb093910bcc49f4dddada2a1774d63b0e803a684d4d89efc53c370",
+      "bytes": 1138,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "stock-export.log",
+      "originalObservationSha256": "a8e7e1c94912d9793e4b42bc1509ccb66addc77c3c355bc496ab7475c6ad2997",
+      "originalObservationBytes": 4718,
+      "sha256": "a8e7e1c94912d9793e4b42bc1509ccb66addc77c3c355bc496ab7475c6ad2997",
+      "bytes": 4718,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "stock-setup-failure-invocation.json",
+      "originalObservationSha256": "eaba482d735bef8a61ba255aa1c6b84f7c41c8aff3d013e6f8d4a31a5803af43",
+      "originalObservationBytes": 1350,
+      "sha256": "f5a528a6f6c3257504c4dba815af17c26c11da99e2d7571ff479b37f86229aa0",
+      "bytes": 1126,
+      "localPathsRedacted": true
+    },
+    {
+      "path": "stock-setup-failure.log",
+      "originalObservationSha256": "9989fc4d3a86745ff098e3c698244d7acb62e579abbac055f5dd275ebc1c9849",
+      "originalObservationBytes": 2556,
+      "sha256": "9989fc4d3a86745ff098e3c698244d7acb62e579abbac055f5dd275ebc1c9849",
+      "bytes": 2556,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "editable-initial.png",
+      "originalObservationSha256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "originalObservationBytes": 47765,
+      "sha256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "bytes": 47765,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "editable-updated.png",
+      "originalObservationSha256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "originalObservationBytes": 55198,
+      "sha256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "bytes": 55198,
+      "localPathsRedacted": false
+    },
+    {
+      "path": "editable-resized.png",
+      "originalObservationSha256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "originalObservationBytes": 57698,
+      "sha256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "bytes": 57698,
+      "localPathsRedacted": false
+    }
+  ],
+  "curation": "Only workstation/export-template absolute path prefixes are replaced by named placeholders. Original byte-identical observations remain under ignored build/; originals and public copies have separate SHA-256 values."
+}

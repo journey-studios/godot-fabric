@@ -1,0 +1,90 @@
+{
+  "format": "godot-fabric.root-macos-export-review/v1",
+  "status": "passed",
+  "reviewedAt": "2026-10-08T20:07:03.822255+00:00",
+  "producer": "58f527193039222b19794960e7b662cb34c65e74",
+  "rawReceiptPath": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/receipt.json",
+  "rawReceiptSHA256": "63d1c9995fce14be0108762ba9bd90d18bcf6f1f3eb0871cafcb22b250ffaa74",
+  "controlsPath": "build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/report.json",
+  "controlsSHA256": "eda031c52d5f528d984cc1f2f1048fe3e22e17bd67a754baa38d5b132b56d7dd",
+  "sdkSourceFileCount": 219,
+  "checks": [
+    {
+      "name": "actual app published only after accepted gates",
+      "passed": true
+    },
+    {
+      "name": "SDK actual clean producer matches exact commit",
+      "passed": true
+    },
+    {
+      "name": "retained SDK manifest exact bytes bound",
+      "passed": true
+    },
+    {
+      "name": "all 219 SDK source pins match producer Git blobs",
+      "passed": true
+    },
+    {
+      "name": "actual builder report exact bytes bound",
+      "passed": true
+    },
+    {
+      "name": "builder, SDK producer and actual bundle bind",
+      "passed": true
+    },
+    {
+      "name": "canonical minimal fixture is asset-free without external adapters",
+      "passed": true
+    },
+    {
+      "name": "PCK independently embeds exact retained bundle and excludes editor/build files",
+      "passed": true
+    },
+    {
+      "name": "unsigned exported host binds native SDK source",
+      "passed": true
+    },
+    {
+      "name": "unsigned engine binds exact inspected arm64 template",
+      "passed": true
+    },
+    {
+      "name": "actual runtimes preserve baseline40/43",
+      "passed": true
+    },
+    {
+      "name": "independent exact ordered headless assertions",
+      "passed": true
+    },
+    {
+      "name": "independent exact ordered headed assertions",
+      "passed": true
+    },
+    {
+      "name": "actual exported initial capture byte-identical to editable baseline",
+      "passed": true
+    },
+    {
+      "name": "actual exported updated capture byte-identical to editable baseline",
+      "passed": true
+    },
+    {
+      "name": "actual exported resized capture byte-identical to editable baseline",
+      "passed": true
+    },
+    {
+      "name": "positive layout idempotency and four actual rejection controls passed",
+      "passed": true
+    },
+    {
+      "name": "independent final-path signature verification",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "same macOS host and fresh per-app user data, not a clean OS profile or second machine",
+    "minimal consumer, not Frontier twelve-turn game replay",
+    "ad-hoc local signing, not distribution/notarization/mobile"
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-campaign",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T15:02:28.068Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38061346890,
+    "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/126",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T14:52:33Z",
+    "updatedAt": "2026-10-10T15:01:37Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114240077090,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "startedAt": "2026-10-10T14:52:36Z",
+        "completedAt": "2026-10-10T14:55:32Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077090"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114240077944,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077944"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114240078072,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240078072"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114240077992,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077992"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114240077976,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077976"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114241819241,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114241819241"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114240077192,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "startedAt": "2026-10-10T14:52:36Z",
+        "completedAt": "2026-10-10T14:57:51Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077192"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114240077166,
+        "runAttempt": 1,
+        "headSha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+        "startedAt": "2026-10-10T14:52:42Z",
+        "completedAt": "2026-10-10T15:01:36Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38061346890/job/114240077166"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+      "reference-android": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+      "reference-ios": "c6dea50486a57ece9843266298f5a70ad0134b2b"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T14:52:52Z",
+          "completedAt": "2026-10-10T14:52:52Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 0cbee8448b96 (--base 0cbee8448b968034f589e98105c2cecf1905cae8); X9 clean, X10 clean"
+          ],
+          "base": "0cbee8448b968034f589e98105c2cecf1905cae8"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T14:52:52Z",
+          "completedAt": "2026-10-10T14:55:29Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 570,
+              "suites": 0,
+              "pass": 570,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T14:55:29Z",
+          "completedAt": "2026-10-10T14:55:29Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T14:55:29Z",
+          "completedAt": "2026-10-10T14:55:30Z",
+          "passed": true,
+          "files": 2122
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-campaign.test.mjs",
+          "tests": 18,
+          "passed": 18,
+          "topLevel": [
+            "a campaign plays the protocol's sequence in both lanes, once per slot, one process at a time, balanced by position, and its campaign is in the format the analysis reads",
+            "a load above the limit, an undrawn presented window and an incomplete window are each rejected with their reason, kept in the raw data and redone in the same slot",
+            "an error and a process that wrote no report are rejected by the errors rule and redone; the one without a report counts against the slot's attempts and is not an execution of the format",
+            "three rejected attempts in a slot stop the campaign: the later slots do not run, the stop is recorded and the analysis produces no statistic",
+            "the other game once is redone; the second time in the same arm stops the campaign",
+            "a scenario that waited with numbers other than the protocol's stops the campaign, chosen by the problem's code, and the analysis alone would not have seen it",
+            "a protocol whose load limit is not a finite positive number is refused before anything runs, because the wait could never tell a quiet machine",
+            "the wait for the load reads it every few seconds until it is under the limit, records the wait, and a wait that runs out lets the attempt run to be judged by the rule",
+            "a campaign interrupted after the k-th attempt, or twice, resumes from the first open slot and ends as a campaign that was never interrupted",
+            "a campaign is not resumed if the protocol, the script, the binary, the package or the instrument has another hash, or the options are not the same; nothing runs and the state stays as it was",
+            "the self-check is the gate: if it fails nothing runs, the stop is recorded, and a resume repeats it until it passes",
+            "an engine or a renderer other than the one the self-check ran on stops the campaign",
+            "the self-check runs in the lane the launcher runs in: a window for a launcher that opens one, headless for one that does not, and a check in the other lane is not the campaign's renderer",
+            "the unlimited lane whose vsync does not read back DISABLED is N/A and is not run further, and says so",
+            "a rehearsal redoes nothing, is marked as one and says in its deviations that it is not a result",
+            "the Release launcher refuses with the reason, before anything is run or written",
+            "the command line: --build debug and --slots are for a rehearsal, the numbers are checked, and a campaign needs its build and its directory",
+            "a file is written whole or not at all"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-campaign-state.test.mjs",
+          "tests": 7,
+          "passed": 7,
+          "topLevel": [
+            "the plan is the protocol's sequence in each lane in turn, limited to the slots asked for",
+            "the next step is the first slot without an accepted attempt: its redo before the next slot, no redo in a rehearsal",
+            "the analysis' stops stop it, a slot whose attempts are used up counts the ones that wrote no report, and what the analysis cannot see stops it too",
+            "the unlimited lane is N/A from the first attempt whose vsync did not read back DISABLED, and its slots do not run",
+            "the executions of a campaign are the attempts that have one, numbered 1, 2, ... in each slot",
+            "a resume checks the hashes of the protocol, the script, the binary and the package, what was registered, and the options",
+            "the wait for the load stops at the first reading under the limit, gives up when the time is spent, and the limit itself is quiet enough"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-campaign-guards.test.mjs",
+          "tests": 10,
+          "passed": 10,
+          "topLevel": [
+            "the lock is taken with the pid, a token and the directory of the campaign, refuses a live holder, takes over a dead one's and is released only by its holder",
+            "a process is alive if a signal can be asked of it, and the default lock is in the system's temporary directory",
+            "two campaigns that take over one stale lock at the same time: exactly one holds it afterwards, whatever the interleaving, and no mutex is left",
+            "a second campaign's whole takeover lands between the first's reading of the stale lock and its mutex: the first refuses and the live lock is not removed",
+            "a lock released by the campaign that took it while another takeover was waiting removes no live lock, and the waiting campaign takes the free lock",
+            "a mutex left by an interrupted takeover, or held by one that is going on, refuses the next campaign, naming it, and changes nothing",
+            "a campaign does not start while another is alive on the machine, whatever its directory, and starts when the lock is free",
+            "a lock left by a campaign that was killed is taken over, and the lock is released when a campaign fails",
+            "the self-check runs the probe headless or in a window as it is asked, and a check that passed records the lane and the hash of the instrument's file",
+            "a window that no display presented, an oracle that rejects, a probe that fails or writes nothing, and a log with a hidden error do not pass the check"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 126,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/126",
+    "title": "feat(perf): Run the whole comparative campaign, resumable, behind the instrument's self-check",
+    "headSha": "372ff860cf2fce62e9d4a848910ea6d9925d348f",
+    "baseSha": "0cbee8448b968034f589e98105c2cecf1905cae8",
+    "squashMergeCommit": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+    "squashCommitSubject": "feat(perf): Run the whole comparative campaign, resumable, behind the instrument's self-check (#126)",
+    "mergedAt": "2026-10-10T14:52:31Z",
+    "headTreeSha": "e39b2318d27cfb22ad437d537f386e1a3b87dd7c",
+    "mainTreeSha": "e39b2318d27cfb22ad437d537f386e1a3b87dd7c",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 7,
+    "commits": [
+      {
+        "sha": "f9aabb3c8110dc963afd587589919f03dd901fbe",
+        "subject": "feat(perf): Run the whole comparative campaign, resumable, behind the instrument's self-check"
+      },
+      {
+        "sha": "a618d0e36568cc157b34c3998606b643a71af6fa",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-campaign"
+      },
+      {
+        "sha": "c6bebd0498108a6edc0f5bcbf799c048b025eaab",
+        "subject": "docs(evidence): Record the campaign orchestrator's short rehearsal"
+      },
+      {
+        "sha": "2f5fb69adb417bd6b103262ba8b735561753317f",
+        "subject": "docs(dashboard): Register part 2 of the comparative execution"
+      },
+      {
+        "sha": "f952152793b4e33660655715779145d2f8154c95",
+        "subject": "fix(perf): Take over a stale campaign lock only under a mutex"
+      },
+      {
+        "sha": "b63fd60c524b4d14d94c4e9ff2f289f24281bf8c",
+        "subject": "docs(dashboard): Pin part 2's activity to the record with the checks"
+      },
+      {
+        "sha": "372ff860cf2fce62e9d4a848910ea6d9925d348f",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-campaign"
+      }
+    ],
+    "changedFiles": 25,
+    "additions": 2648,
+    "deletions": 36
+  },
+  "artifacts": {},
+  "findings": []
+}

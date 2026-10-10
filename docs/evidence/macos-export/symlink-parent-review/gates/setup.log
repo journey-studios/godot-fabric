@@ -1,0 +1,80 @@
+
+> godot-fabric@0.1.0 setup
+> python3 scripts/setup.py
+
+Godot 4.7.2.stable preflight passed
+Collecting cmake==3.31.6
+  Using cached cmake-3.31.6-py3-none-macosx_10_10_universal2.whl.metadata (6.3 kB)
+Using cached cmake-3.31.6-py3-none-macosx_10_10_universal2.whl (47.2 MB)
+Installing collected packages: cmake
+Successfully installed cmake-3.31.6
+
+[notice] A new release of pip is available: 26.0 -> 26.2.1
+[notice] To update, run: {WORKTREE}/.deps/python/bin/python -m pip install --upgrade pip
+
+added 392 packages, and audited 393 packages in 9s
+
+51 packages are looking for funding
+  run `npm fund` for details
+
+21 vulnerabilities (1 low, 4 moderate, 16 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> godot-fabric@0.1.0 bundle
+> node scripts/bundle.mjs
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Bundled upstream ReactFabric-prod, React 19.2.3 and Godot platform components.
+-- The C compiler identification is AppleClang 17.0.0.17000603
+-- The CXX compiler identification is AppleClang 17.0.0.17000603
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Deprecation Warning at {WORKTREE}/.deps/wslay-0e7d106ff89ad6638090fd811a9b2e4c5dda8d40/lib/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- Looking for arpa/inet.h
+-- Looking for arpa/inet.h - found
+-- Looking for netinet/in.h
+-- Looking for netinet/in.h - found
+-- Looking for winsock2.h
+-- Looking for winsock2.h - not found
+-- Found Python3: /opt/homebrew/Frameworks/Python.framework/Versions/3.14/bin/python3.14 (found suitable version "3.14.3", minimum required is "3.4") found components: Interpreter
+-- Auto-detected 11 CPU cores available for build parallelism.
+-- If not already cached, setting CMAKE_MSVC_RUNTIME_LIBRARY.
+	For more information please read godot-cpp/cmake/windows.cmake
+-- Using all cores. You can override this at configure time by using -j <n> or --parallel <n> in the build command.
+--   eg. cmake --build . -j 7  ...
+-- Using build profile to trim api file
+-- 	BUILD_PROFILE = '{WORKTREE}/native/godot-profile.json'
+-- 	API_SOURCE = 'gdextension/extension_api.json'
+-- GODOTCPP_GDEXTENSION_API_FILE = '{WORKTREE}/.deps/build/godot-cpp/extension_api.json'
+-- There are 182 Files to generate
+-- Configuring done (1.6s)
+-- Generating done (0.2s)
+-- Build files have been written to: {WORKTREE}/.deps/build
+Compiling upstream Fabric and Godot bindings; output in .deps/compile.log
+Hermes=3 Fabric=View tag=42
+Hermes, Fabric, Yoga and the Godot extension are ready. Godot was not rebuilt.
