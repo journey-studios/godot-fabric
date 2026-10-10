@@ -6,6 +6,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { matchContractTests, tapDescription } from "../scripts/hosted-receipts.mjs";
+import { mayBeSkipped } from "../scripts/hosted-receipts-check.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const script = path.join(root, "scripts", "hosted-receipts.mjs");
@@ -537,4 +538,72 @@ test("each evidence page links its two receipts and the index links them too", (
     assert.doesNotMatch(text, /CI hospedada[^\n]{0,40}pendente|ainda não rodaram na CI hospedada|publicação no Pages estão pendentes/, `${folder} still says the hosted CI is pending`);
     assert.ok(index.includes(`(${folder}/hosted-ci.json)`) && index.includes(`(${folder}/publication.json)`), `the index does not link the receipts of ${folder}`);
   }
+});
+
+// `macos-clean-run` (the clean-machine replay of the Frontier app) is an optional ninth job. All the committed receipts list eight jobs and pass without it. A receipt that
+// lists it passes when a dispatched run ran it successfully or when a push skipped it, like the opt-in native jobs; any other extra job is refused.
+const CLEAN_RUN_JOB = "macos-clean-run";
+
+function addJob(receipt, name, conclusion) {
+  const template = receipt.run.jobs.find((job) => job.name === "contracts");
+  const job = { ...template, name, conclusion, databaseId: template.databaseId + 1000 + receipt.run.jobs.length };
+  if (conclusion === "skipped") {
+    delete job.startedAt;
+    delete job.completedAt;
+  } else {
+    receipt.run.jobCheckouts[name] = receipt.run.headSha;
+  }
+  receipt.run.jobs.push(job);
+}
+
+test("the committed receipts list eight jobs, and the writer lets a push skip macos-clean-run as well as the opt-in native jobs", () => {
+  for (const folder of FOLDERS) {
+    assert.equal(read(evidence, folder, "hosted-ci.json").run.jobs.some((job) => job.name === CLEAN_RUN_JOB), false, `${folder} predates ${CLEAN_RUN_JOB}`);
+  }
+  for (const name of [CLEAN_RUN_JOB, "native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"]) {
+    assert.equal(mayBeSkipped(name), true, name);
+  }
+  for (const name of ["contracts", "reference-ios", "reference-android", "build", "deploy"]) {
+    assert.equal(mayBeSkipped(name), false, name);
+  }
+});
+
+test("on a dispatched run, macos-clean-run is accepted when it succeeded and refused when it failed, was skipped or is another job", () => {
+  const dispatched = (conclusion, name = CLEAN_RUN_JOB) => (receipt) => {
+    asDispatch(receipt);
+    addJob(receipt, name, conclusion);
+  };
+  const accepted = mutate("frontier-soak", "hosted-ci.json", dispatched("success"));
+  assert.equal(accepted.status, 0, accepted.stderr);
+  assertRejected(mutate("frontier-soak", "hosted-ci.json", dispatched("failure")), /frontier-soak: hosted-ci\.json: job macos-clean-run is completed\/failure, not completed\/success/);
+  assertRejected(mutate("frontier-soak", "hosted-ci.json", dispatched("skipped")), /frontier-soak: hosted-ci\.json: only a push may skip jobs, and exactly the opt-in native ones/);
+  // A ninth job that is not the optional one is as unknown as before.
+  assertRejected(mutate("frontier-soak", "hosted-ci.json", dispatched("success", "extra-job")), /frontier-soak: hosted-ci\.json: the jobs are not contracts, native-cold-start, native-suites-frontier/);
+  // The job checked out the squash like the others: a run that lists it without the checkout does not show that.
+  assertRejected(
+    mutate("frontier-soak", "hosted-ci.json", (receipt) => {
+      dispatched("success")(receipt);
+      delete receipt.run.jobCheckouts[CLEAN_RUN_JOB];
+    }),
+    /frontier-soak: hosted-ci\.json: not every job checked out the squash/,
+  );
+});
+
+test("on a push, macos-clean-run is listed as skipped or not at all, and a push that lists it as run or lists another job is refused", () => {
+  // The committed push of idle-reference lists eight jobs with five skipped; it passes as it is (the first test of this file) and with the optional job skipped as well.
+  const listed = mutate("idle-reference", "hosted-ci.json", (receipt) => addJob(receipt, CLEAN_RUN_JOB, "skipped"));
+  assert.equal(listed.status, 0, listed.stderr);
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => addJob(receipt, CLEAN_RUN_JOB, "success")),
+    /idle-reference: hosted-ci\.json: job macos-clean-run is listed in a push but did not skip, and a push does not run it/,
+  );
+  assertRejected(
+    mutate("idle-reference", "hosted-ci.json", (receipt) => addJob(receipt, "extra-job", "skipped")),
+    /idle-reference: hosted-ci\.json: only a push may skip jobs, and exactly the opt-in native ones/,
+  );
+  // Only the optional job skipped, with the native jobs of the run not skipped, is no opt-in push.
+  assertRejected(
+    mutate("frontier-game", "hosted-ci.json", (receipt) => addJob(receipt, CLEAN_RUN_JOB, "skipped")),
+    /frontier-game: hosted-ci\.json: (only a push may skip jobs|the jobs are not)/,
+  );
 });

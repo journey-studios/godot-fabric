@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
-import { CONTRACTS_JOBS, GUARD_STEP, OPT_IN_JOBS, checkReceipts } from "./hosted-receipts-check.mjs";
+import { CONTRACTS_JOBS, GUARD_STEP, checkReceipts, mayBeSkipped } from "./hosted-receipts-check.mjs";
 import { REPOSITORY, REPOSITORY_URL, SLICES } from "./hosted-receipts-slices.mjs";
 
 // Hosted receipts of the 0.5 Frontier slices that already reached main.
@@ -451,7 +451,7 @@ function hostedCiReceipt(slice, workDir) {
     throw new Error(`${slice.folder}: run ${slice.contractsRun} is not a Contracts push or dispatch of main at ${slice.squash}`);
   }
   const withoutNative = run.event === "push" && slice.nativeSteps.length === 0 && slice.artifacts.length === 0;
-  const skippedOnPurpose = (job) => job.conclusion === "skipped" && withoutNative && OPT_IN_JOBS.includes(job.name);
+  const skippedOnPurpose = (job) => job.conclusion === "skipped" && withoutNative && mayBeSkipped(job.name);
   if (run.status !== "completed" || run.conclusion !== "success" || jobs.some((job) => job.conclusion !== "success" && !skippedOnPurpose(job))) {
     throw new Error(`${slice.folder}: run ${slice.contractsRun} did not succeed in every job (a push skips the native jobs; dispatch the run, or use a slice with no native step)`);
   }

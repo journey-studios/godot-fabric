@@ -24,7 +24,12 @@ export const CONTRACTS_JOBS = {
 // Since the native suites became opt-in, a push of main lists the dispatch's eight jobs and skips these five (the cold build, the three suite
 // jobs that restore its host and the parity comparison that needs the cold build). A skipped job has no log, so a receipt of such a run proves
 // only what the other jobs ran: it is valid for a slice with no native step and no native artifact.
-export const OPT_IN_JOBS = ["native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"];
+const OPT_IN_JOBS = ["native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"];
+// `macos-clean-run` (the clean-machine replay of the Frontier app, .github/workflows/contracts.yml) came after the first receipts, which list eight jobs. A receipt may
+// list it or not: a dispatched run that lists it ran it and it succeeded, and a push that lists it skipped it, like the other opt-in jobs. Any other extra job is refused.
+const OPTIONAL_JOBS = ["macos-clean-run"];
+// What a push of main may skip: the five opt-in jobs, and the optional one when the run lists it.
+export const mayBeSkipped = (name) => OPT_IN_JOBS.includes(name) || OPTIONAL_JOBS.includes(name);
 const PAGES_JOBS = ["build", "deploy"];
 
 // The step of the `contracts` job that runs the milestone exit guards. The API names the step; its log group is headed by the first line of its script.
@@ -180,11 +185,17 @@ function checkHostedCi(slice, ci, problems) {
   }
   const jobs = Array.isArray(run.jobs) ? run.jobs : [];
   // A push that skipped the opt-in native jobs lists the dispatch's eight jobs; any other skipped job, or a skipped job of another event, is refused below.
+  // The optional job is listed by a run that has it, on a dispatch or on a push that skipped the native jobs, and is not part of the five exact opt-in jobs.
   const skipped = jobs.filter((job) => job.conclusion === "skipped").map((job) => job.name).sort();
+  const skippedOptIn = skipped.filter((name) => !OPTIONAL_JOBS.includes(name));
+  const optionalListed = OPTIONAL_JOBS.filter((name) => jobs.some((job) => job.name === name));
   const optIn = skipped.length > 0 && run.event === "push";
   let expectedJobs = Object.hasOwn(CONTRACTS_JOBS, run.event) ? CONTRACTS_JOBS[run.event] : null;
   if (optIn) {
     expectedJobs = CONTRACTS_JOBS.workflow_dispatch;
+  }
+  if (expectedJobs && (run.event === "workflow_dispatch" || optIn)) {
+    expectedJobs = [...expectedJobs, ...optionalListed].sort();
   }
   if (!expectedJobs || run.branch !== "main" || run.workflow !== "Contracts" || run.status !== "completed" || run.conclusion !== "success" || run.attemptCount !== 1) {
     problems.push(`${label}: the run is not a completed, successful, first-attempt Contracts push or dispatch of main`);
@@ -192,8 +203,12 @@ function checkHostedCi(slice, ci, problems) {
   if (run.mergedPullRequest !== `${REPOSITORY_URL}/pull/${slice.pr}`) {
     problems.push(`${label}: the merged pull request is not #${slice.pr}`);
   }
-  if (skipped.length > 0 && (!optIn || JSON.stringify(skipped) !== JSON.stringify(OPT_IN_JOBS))) {
-    problems.push(`${label}: only a push may skip jobs, and exactly the opt-in native ones (${OPT_IN_JOBS.join(", ")}), not ${skipped.join(", ")}`);
+  if (skipped.length > 0 && (!optIn || JSON.stringify(skippedOptIn) !== JSON.stringify(OPT_IN_JOBS))) {
+    problems.push(`${label}: only a push may skip jobs, and exactly the opt-in native ones (${OPT_IN_JOBS.join(", ")}; ${OPTIONAL_JOBS.join(", ")} may also be skipped), not ${skipped.join(", ")}`);
+  }
+  // A push never runs the optional job (it is dispatch-only): a push that lists it lists it skipped.
+  for (const name of optionalListed.filter((candidate) => run.event === "push" && !skipped.includes(candidate))) {
+    problems.push(`${label}: job ${name} is listed in a push but did not skip, and a push does not run it`);
   }
   if (optIn && (slice.nativeSteps.length > 0 || slice.artifacts.length > 0)) {
     problems.push(`${label}: a run that skipped the native jobs cannot prove the native steps or artifacts of the table`);

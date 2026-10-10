@@ -142,6 +142,14 @@ does. In an exported game `--validate-hud` writes its report to `user://` too (`
 `node scripts/macos-export.mjs --consumer civ-lite` runs the gate three times in the provisioned project and three times in a copy of the signed
 Release `.app` ([docs/MACOS_BUILD.md](../../docs/MACOS_BUILD.md)).
 
+**On another machine.** In CI the signed `.app` is then archived (`node scripts/macos-clean-run.mjs pack`, a `tar` that keeps the symlinks, modes and extended
+attributes the ad-hoc signature covers) and replayed by the `macos-clean-run` job on a different hosted runner: a new VM and a clean user, with no Godot, no `.deps`
+and no installed dependencies. The runner's own Node only judges; the app starts under `env -i` with `HOME`, `USER`, `TMPDIR` and `PATH=/usr/bin:/bin:/usr/sbin:/sbin`,
+three times, each in a user-data directory that did not exist, and every report must reach the pinned hashes. The job also requires a tampered copy, a wrong pin and a
+dirty profile to be rejected, so it cannot pass without its judge biting. The runner image still ships Node and Xcode: the app is shown not to use them (its environment
+holds neither, and its load commands name only its bundle and the system), not built without them. `node scripts/macos-clean-run.mjs run --local ...` rehearses the same
+steps on a development Mac and claims nothing.
+
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global
 Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. `npm run test:civ-lite-ui` does the
 same for the HUD (`--validate-hud`, `--validate-overlays` and `--validate-stability`, each judged again by an independent oracle, a static scan of the
