@@ -109,9 +109,32 @@ MACOS_EXPORT_TEMPLATE="$PWD/build/macos-arm64-template.zip" node scripts/macos-e
 O lane não está em `test:contracts`; a metade sem template é `tests/macos-export-civ-lite-oracle.test.mjs`. O `.app` publicado fica em `build/macos-export-civ-lite-native/Frontier.app`
 (o executável é `Contents/MacOS/Frontier Export <token>`); `Frontier.app/Contents/MacOS/* --headless -- --validate-replay` roda o replay num `.app` exportado.
 
+## CI hospedada e Pages
+
+**O run.** Desde o #88, um push da `main` não roda as suítes nativas. Por isso o recibo vem do workflow Contracts **disparado à mão** sobre a `main` em `02e7868`, o squash do #135: run [38076585188](https://github.com/journey-studios/godot-fabric/actions/runs/38076585188), evento `workflow_dispatch`, ramo `main`, primeira tentativa. O run passou nos **oito jobs**, todos com o checkout em `02e7868`.
+
+**O passo.** No job `native-suites-runtime`, o passo 72 ("Export Frontier as a signed Release app and replay it to the golden hash in clean profiles") roda `npm run test:export:civ-lite` com o template arm64 de Release derivado na própria CI.
+- Passou no seu teste, sem pulos (TAP 1 de 1): o export assinado, as 6 execuções do replay no hash dourado (3 no projeto, 3 na cópia do `.app`, cada uma em perfil limpo), a matriz da HUD no `.app` e a auditoria do app publicado. É a auditoria corrigida pela execução hospedada anterior (ver "Execução").
+- O artefato `native-macos-export-civ-lite` (id 11679920376, SHA-256 `f9889d3e…`, 17 arquivos) traz o resumo do lane, os recibos e os relatórios e logs das execuções.
+- O job `contracts` passou `npm run test:contracts` (7, 43 e 693 testes de Node, com o único pulo da lista explícita, o do export nativo do minimal sem o template). A metade do lane sem template, `tests/macos-export-civ-lite-oracle.test.mjs`, passou 10 de 10 no log.
+- O [recibo](hosted-ci.json) guarda os jobs, os passos, os digests e os arquivos do artefato.
+
+**O Pages.** O push de `02e7868` rodou o workflow do Pages: run [38076571354](https://github.com/journey-studios/godot-fabric/actions/runs/38076571354), com `build` e `deploy` em success e 43 testes do painel passando. O [recibo](publication.json) registra:
+- o deployment 6985208695, em success;
+- o artefato `github-pages` que ele usou (id 11679465840, SHA-256 `d1e089ac…`);
+- que o `migration.json` publicado é o commitado em `02e7868`, com a entrada de atividade do critério (`milestone-0-5-v05-07-replay-7207170`).
+
+**O que continua só local:** a sabotagem retida, as capturas do Movie Maker e a execução na árvore limpa de `5da4e77` registrada acima.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice macos-export/civ-lite --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
+node scripts/hosted-receipts.mjs --check
+```
+
 ## Abertos
 
 - `limpa`: a prova em um segundo Mac ou VM sem Node, Godot e Xcode. O limite "mesmo Mac, perfil limpo" está no recibo (`limitations`).
 - Developer ID e notarização, e o iPhone (NO-GO registrado no X8), fora deste registro.
 - Os braços A e B da comparação exportam sem `addons/godot_fabric` e sem os frameworks, como o protocolo os define (o A é o controle sem HUD, o B a HUD nativa em GDScript). O script de medição do slot 3 faz esse export pela função `exportPreparedProject`, e ele ainda está por construir.
-- A CI hospedada do lane (passo novo em `native-suites-runtime`) e o Pages vêm depois do merge.

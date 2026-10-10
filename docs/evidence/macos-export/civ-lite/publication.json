@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "scenario": "macos-export/civ-lite",
+  "status": "verified",
+  "at": "2026-10-10T19:16:19.748Z",
+  "repository": "journey-studios/godot-fabric",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/135",
+  "mainCommit": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+  "run": 38076571354,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38076571354",
+  "event": "push",
+  "branch": "main",
+  "startedAt": "2026-10-10T18:38:09Z",
+  "completedAt": "2026-10-10T18:38:47Z",
+  "triggeredBy": "wallynm",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "attempts": 1,
+  "buildCheckout": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+  "dashboardTestsTap": {
+    "pass": 43,
+    "fail": 0
+  },
+  "deployment": {
+    "id": 6985208695,
+    "sha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+    "state": "success",
+    "at": "2026-10-10T18:38:47Z",
+    "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+  },
+  "deployedArtifact": {
+    "available": true,
+    "name": "github-pages",
+    "id": 11679465840,
+    "zipSizeBytes": 1493597,
+    "zipSha256": "d1e089ac28030e9fb9879170002d40911e912cea83e2567dc89e89944d3ea884",
+    "apiDigest": "sha256:d1e089ac28030e9fb9879170002d40911e912cea83e2567dc89e89944d3ea884",
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "zipSha256EqualsUploadLogDigest": true,
+    "deploymentUsedThisArtifact": true,
+    "files": [
+      ".nojekyll",
+      "AGENT_PROMPT.md",
+      "agents-view.mjs",
+      "agents.css",
+      "agents.mjs",
+      "app.mjs",
+      "fonts/JetBrainsMono.ttf",
+      "fonts/NotoSans.ttf",
+      "fonts/OFL-JetBrainsMono.txt",
+      "fonts/OFL-NotoSans.txt",
+      "format.mjs",
+      "index.html",
+      "migration.json",
+      "model.mjs",
+      "style.css"
+    ],
+    "migrationJsonSha256": "5d1bef1e4cfec40d330501168768e9b3f3bf8bde7f289a28ff94b235739d7d45",
+    "publicationMetadataPresent": false
+  },
+  "committedMigrationJsonSha256": "5d1bef1e4cfec40d330501168768e9b3f3bf8bde7f289a28ff94b235739d7d45",
+  "deployedJSONBytesEqualCommittedBytes": true,
+  "deployedJSONEqualsCommittedData": true,
+  "deployedBytesEqualCanonicalSerializationOfCommittedData": true,
+  "sliceActivity": {
+    "id": "milestone-0-5-v05-07-replay-7207170",
+    "taskIds": [],
+    "presentInCommittedJson": true,
+    "presentInDeployedJson": true
+  },
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "compared": false,
+    "note": "a later push to main replaces the deployment, so the public site serves a later deployment's data and is not the evidence"
+  },
+  "findings": []
+}
