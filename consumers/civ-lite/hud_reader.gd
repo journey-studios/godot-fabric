@@ -5,8 +5,9 @@ extends RefCounted
 # its Controls, and both answer in the same shape, so the probes' logic and the independent oracle are the same for both arms.
 #
 #   observe()      {nodes, stoppers}: a row for each Control with a testID that is on screen (testID, kind, visible, text, rect, stops,
-#                  disabled, animating, modal, instance), and, apart, every Control that stops the pointer, testID or not (testID, rect,
+#                  disabled, animating, modal, instance, asset), and, apart, every Control that stops the pointer, testID or not (testID, rect,
 #                  modal). `modal` is "inside the blocking overlay": the Modal's Window for the host, the overlay Control for the native HUD.
+#                  `asset` is the file name of the picture an image row draws ("irrigation.png"), and "" for every other row.
 #   control_of(id) the Control behind a testID, or null when it is not on screen.
 #   stats()        what the HUD counted of itself for the validation (`calls`: the intents it sent).
 #   runner_stats() the execution runner's `stats()`: {snapshots, context, events}, in the same shape for both arms (docs/research/frontier-stress.md).

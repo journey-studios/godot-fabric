@@ -25,6 +25,9 @@
 //                every row that was there the same Control; ended, the panel is gone and the snapshot is byte for byte the one before
 //   stats        the runner's `stats()` has the contract's three keys, counts over a turn exactly the notifications the node emitted and the
 //                snapshots it published, and ends equal to what the node emitted
+//   irrigation  the request of the cost-of-change experiment (docs/research/frontier-change-cost.md), judged the same on either HUD: a Settler on a Plain with
+//                Water beside it is offered Irrigate, enabled, with the irrigation icon drawn; a real press on it irrigates the tile (one call, from the
+//                HUD); and the card of the irrigated tile shows the irrigation icon and Irrigated on its units line, with the game's food
 //   input        a real click on a tile selects the tile the geometry gives; the pointer over a tile publishes the hover and the
 //                card shows it; over a panel or off the map it is cleared; a click on a panel does not reach the World; an enabled
 //                action is performed by a real press and a disabled one is not, with its reason shown; after the menu the World is
@@ -77,6 +80,9 @@ function panelOf(testID) {
   return PANEL_NAMES.find(name => testID === panelId(name) || testID.startsWith(`${panelId(name)}-`)) ?? null;
 }
 const NOT_PANELS = ["hud-root", "hud-connecting"];
+// The irrigation stage (docs/research/frontier-change-cost.md): the Settler and the tile it stands on, the action's testID and the icon's file. The tile card's mark
+// of an irrigated tile is the Image `hud-tile-irrigated`.
+const IRRIGATION = {unit: 1, tile: [6, 8], action: "hud-actions-irrigate-1", mark: "hud-tile-irrigated", asset: "irrigation.png"};
 // The panels that live in the Modal's window: the contexts that have an overlay, and what each shows there.
 const OVERLAY_PANELS = {city: ["city", "research"], dialog: ["dialog"]};
 
@@ -191,6 +197,59 @@ export function judgeHudReport(report) {
     }
     if ("stress" in JSON.parse(stress.snapshots.before) || "stress" in JSON.parse(stress.snapshots.after)) {
       fail("stress", "a snapshot outside the mode carries a stress field");
+    }
+  }
+
+  // The stage's own words, written from the rule and the request and not from what any HUD said: the units the card lists, the line of its yields.
+  const unitText = unit => `${unit.name} (${unit.owner === 1 ? "yours" : "foreign"}) ${unit.moves}/${unit.max_moves}${unit.fortified === 1 ? " fortified" : ""}`;
+  const yieldsText = card => `Food ${card.food} · Production ${card.production} · Science ${card.science} · Move ${card.move_cost}${card.city === 1 ? " · City" : ""}`;
+  const drawn = entry => entry !== undefined && entry.visible === true && entry.kind === "image" && entry.asset === IRRIGATION.asset && entry.rect[2] > 0 && entry.rect[3] > 0;
+
+  function judgeIrrigation(irrigation) {
+    if (irrigation === undefined) {
+      fail("irrigation", "the report has no irrigation stage");
+      return;
+    }
+    const {before, after, press} = irrigation;
+    const tileIndex = IRRIGATION.tile[1] * map.columns + IRRIGATION.tile[0];
+    const chosen = before.snapshot.selection;
+    same("irrigation", [irrigation.unit, irrigation.tile, irrigation.inContext, before.snapshot.context, [chosen.x, chosen.y, chosen.unit]],
+      [IRRIGATION.unit, IRRIGATION.tile, true, "settler", [IRRIGATION.tile[0], IRRIGATION.tile[1], IRRIGATION.unit]],
+      "the Settler was brought to its tile and selected through the services");
+    // The route's end: a Plain with Water on one of its four sides, not irrigated yet.
+    same("irrigation", [before.game.terrain, before.game.sides.includes(0), before.game.irrigated], [1, true, []], "the Settler's tile is a Plain with Water beside it and is not irrigated");
+    const offered = before.snapshot.actions;
+    same("irrigation", offered.map(action => [action.id, action.label, action.args, action.enabled, action.reason]), [["irrigate", "Irrigate", [IRRIGATION.unit], 1, ""]],
+      "the game offers the Settler Irrigate, enabled");
+    const button = nodeOf(before, IRRIGATION.action);
+    same("irrigation", [button?.visible, button?.disabled, textOf(before, `${IRRIGATION.action}-label`), nodeOf(before, `${IRRIGATION.action}-reason`)],
+      [true, false, "Irrigate", undefined], "the actions panel lists Irrigate, enabled, with the game's label and no reason");
+    if (!drawn(nodeOf(before, `${IRRIGATION.action}-icon`))) {
+      fail("irrigation", `the Irrigate action must show the irrigation icon, an image of ${IRRIGATION.asset} that is on screen and has an area: ${JSON.stringify(nodeOf(before, `${IRRIGATION.action}-icon`))}`);
+    }
+    // The press: a real click, which the HUD turned into one call to the game.
+    same("irrigation", [press.pressed, press.irrigatedByPress, press.irrigateCalls, press.hudCalls], [true, true, 1, 1],
+      "a real press on the enabled Irrigate must irrigate the tile, with one call that the HUD sent");
+    // What the game did.
+    const card = after.snapshot.tile;
+    same("irrigation", [after.game.irrigated, after.game.moves, card.irrigated, card.food - before.snapshot.tile.food, card.production - before.snapshot.tile.production],
+      [[tileIndex], 0, 1, 1, 0], "the game irrigated the tile, spent all of the Settler's moves and gave the tile one more food");
+    // What the HUD shows of it.
+    const gone = after.snapshot.actions;
+    same("irrigation", gone.map(action => [action.id, action.enabled, action.reason]), [["irrigate", 0, "already_irrigated"]], "the game turns Irrigate off with already_irrigated");
+    const done = nodeOf(after, IRRIGATION.action);
+    same("irrigation", [done?.visible, done?.disabled, textOf(after, `${IRRIGATION.action}-reason`)], [true, true, gone[0]?.reason_text],
+      "the actions panel shows Irrigate disabled, with the game's reason beside it");
+    same("irrigation", [textOf(after, "hud-tile-title"), textOf(after, "hud-tile-yields")], [`Selected · (${card.x}, ${card.y}) ${card.terrain_name}`, yieldsText(card)],
+      "the tile card is the selected tile's and its food is the game's, the irrigation's included");
+    same("irrigation", [nodeOf(before, IRRIGATION.mark)?.visible ?? false, (textOf(before, "hud-tile-units") ?? "").includes("Irrigated")], [false, false],
+      "before the tile is irrigated its card shows no irrigation icon and its units line does not say Irrigated");
+    if (!drawn(nodeOf(after, IRRIGATION.mark))) {
+      fail("irrigation", `the card of the irrigated tile must show the irrigation icon (${IRRIGATION.mark}), an image of ${IRRIGATION.asset} that is on screen and has an area: ${JSON.stringify(nodeOf(after, IRRIGATION.mark))}`);
+    }
+    const units = textOf(after, "hud-tile-units") ?? "";
+    if (!units.includes("Irrigated") || !card.units.every(unit => units.includes(unitText(unit)))) {
+      fail("irrigation", `the units line of the irrigated tile must say Irrigated and still list its units: ${JSON.stringify(units)}, the units being ${JSON.stringify(card.units.map(unitText))}`);
     }
   }
 
@@ -380,6 +439,9 @@ export function judgeHudReport(report) {
 
   // --- The stress mode and the runner's stats() ----------------------------------------------------------------------------
   judgeStress(report.stress);
+
+  // --- The Irrigate request ----------------------------------------------------------------------------------------------
+  judgeIrrigation(report.irrigation);
 
   // --- Real input -----------------------------------------------------------------------------------------------------
   const step = Object.fromEntries(report.input.map(entry => [entry.label, entry]));

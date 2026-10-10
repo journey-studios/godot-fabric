@@ -66,8 +66,8 @@ const CONTROL_COMMIT = "5e1f6a1";
 // The commit before the queue and the overlays: the game and the HUD of slice 1.
 const OVERLAY_CONTROL_COMMIT = "622102e";
 const CONTROL_SHA256 = "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346";
-// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the HUD probe's last eight are the stress stage's, the overlay probe's last two are the Escape checks), and the captures a headed run adds (nine, and four).
-const EXPECTED_CHECKS = 152;
+// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the HUD probe's last nine are the irrigation stage's, the eight before them the stress stage's, the overlay probe's last two are the Escape checks), and the captures a headed run adds (nine, and four).
+const EXPECTED_CHECKS = 161;
 const EXPECTED_OVERLAY_CHECKS = 28;
 // What stability_validation.gd counts: 41 in a run with no capture, and the seven pictures and the comparison of the last cycle's a headed run adds.
 const EXPECTED_STABILITY_CHECKS = 41;
@@ -179,6 +179,7 @@ const manifestNow = async () => JSON.parse(await readFile(path.join(root, "docs"
 const row = (report, context) => report.matrix[COVERING[context]];
 const node = (observed, id) => observed.nodes.find(entry => entry.testID === id);
 const inputStep = (report, label) => report.input.find(entry => entry.label === label);
+const irrigationNode = (view, id) => view.nodes.find(entry => entry.testID === id);
 const MUTATIONS = [
   {name: "a panel the context mounts is missing", category: "panels", change: report => { node(row(report, "city").observed, "hud-city").visible = false; }},
   {name: "a panel the context does not mount is shown", category: "panels", change: report => { row(report, "none").observed.nodes.push({testID: "hud-tile", kind: "view", visible: true, text: "", rect: [24, 416, 576, 92], stops: true, disabled: false, animating: false, modal: false}); }},
@@ -215,6 +216,18 @@ const MUTATIONS = [
   {name: "a click on a panel reached the World", category: "input", change: report => { inputStep(report, "click-on-panels").panelClicks[0].heardAfter.buttons += 2; }},
   {name: "a tick of the wheel on a panel reached the World", category: "input", change: report => { inputStep(report, "click-on-panels-after-menu").panelClicks[1].heardAfterWheel.buttons += 2; }},
   {name: "the node published the same hover card twice running", category: "input", change: report => { report.hoverPublished.splice(1, 0, structuredClone(report.hoverPublished[0])); }},
+  // The irrigation stage (the request of the cost-of-change experiment): the icon of the action, the press, and the card of the irrigated tile.
+  {name: "the Irrigate action shows no icon", category: "irrigation", change: report => { report.irrigation.before.nodes = report.irrigation.before.nodes.filter(entry => entry.testID !== "hud-actions-irrigate-1-icon"); }},
+  {name: "the Irrigate action draws another picture", category: "irrigation", change: report => { irrigationNode(report.irrigation.before, "hud-actions-irrigate-1-icon").asset = "city.png"; }},
+  {name: "the Irrigate action's icon has no area", category: "irrigation", change: report => { irrigationNode(report.irrigation.before, "hud-actions-irrigate-1-icon").rect[2] = 0; }},
+  {name: "a press on Irrigate was not sent by the HUD", category: "irrigation", change: report => { report.irrigation.press.hudCalls = 0; }},
+  {name: "a press on Irrigate did not irrigate the tile", category: "irrigation", change: report => { report.irrigation.press.irrigatedByPress = false; }},
+  {name: "Irrigate stays enabled once the tile is irrigated", category: "irrigation", change: report => { irrigationNode(report.irrigation.after, "hud-actions-irrigate-1").disabled = false; }},
+  {name: "the irrigated tile's card shows no irrigation icon", category: "irrigation", change: report => { report.irrigation.after.nodes = report.irrigation.after.nodes.filter(entry => entry.testID !== "hud-tile-irrigated"); }},
+  {name: "the irrigation icon of the card is not on screen", category: "irrigation", change: report => { irrigationNode(report.irrigation.after, "hud-tile-irrigated").visible = false; }},
+  {name: "the card shows the irrigation icon before the tile is irrigated", category: "irrigation", change: report => { report.irrigation.before.nodes.push({testID: "hud-tile-irrigated", kind: "image", visible: true, text: "", rect: [24, 416, 18, 18], stops: false, disabled: false, animating: false, modal: false, asset: "irrigation.png"}); }},
+  {name: "the units line of the irrigated tile does not say Irrigated", category: "irrigation", change: report => { const units = irrigationNode(report.irrigation.after, "hud-tile-units"); units.text = units.text.replaceAll("Irrigated", ""); }},
+  {name: "the card's food leaves out the irrigation's", category: "irrigation", change: report => { const yields = irrigationNode(report.irrigation.after, "hud-tile-yields"); yields.text = yields.text.replace(/Food \d+/, "Food 2"); }},
   {name: "a bar that forgot the game's reason", category: "bar", change: report => { node(row(report, "dialog").observed, "hud-bar-end-turn-reason").text = ""; }},
   {name: "a press on a disabled action asked the game", category: "input", change: report => { inputStep(report, "press-disabled-fortify").callbacksTotalAfter += 1; }},
   {name: "the World came back behind the HUD's layer", category: "input", change: report => { const menu = inputStep(report, "after-menu"); menu.worldIndex = menu.layerIndex + 1; }},

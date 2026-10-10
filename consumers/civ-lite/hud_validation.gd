@@ -22,6 +22,10 @@ extends "res://hud_probe.gd"
 #            items are the game's), ended (the panel gone, the contexts' panels back, the snapshot byte for byte as it was) and refused when
 #            the mode is off; and the runner's `stats()` against what the node emitted.
 #
+#   irrigation  the request of the cost-of-change experiment (docs/research/frontier-change-cost.md), asked of either HUD the same way: a Settler on a
+#            Plain with Water beside it is offered Irrigate, enabled, with the irrigation icon; a real press on it irrigates the tile; and the card of
+#            the irrigated tile shows the irrigation icon and says Irrigated on its units line, with the food the game gives, the bonus included.
+#
 #   --capture    saves one PNG per context, one during the AI phase and one with the stress panel full (a headed run)
 
 const LAST_STEP := 45
@@ -55,6 +59,7 @@ func run_probe() -> void:
   await run_phase()
   await run_stress()
   await run_input()
+  await run_irrigation()
 
 
 # --- Matrix: the seven contexts ------------------------------------------------------------------------------------
@@ -340,6 +345,119 @@ func judge_stress(stress: Dictionary) -> void:
     "Leaving the mode removes the panel, the context's panels are shown again and the snapshot is byte for byte the one before the mode began")
   var final: Dictionary = stress.final
   check(int(final.stats.events) == int(final.emitted), "The runner's stats() has consumed every notification the node emitted")
+
+
+# --- Irrigation: the experiment's request ----------------------------------------------------------------------------
+
+# The route to an irrigable Plain is the start: the player's Settler (unit 1) begins on tile (6, 8), a Plain with Water at (5, 8), so selecting it
+# through the services is the whole of it, and every run takes the same one. The pointer is first taken off the map, so that the tile card is the
+# selected tile's. The press is a real click through the viewport; if the HUD does not send the intent, the probe sends it through the services so
+# that what the HUD shows of an irrigated tile is still looked at, and the press is recorded as having failed.
+const IRRIGATION_UNIT := 1
+const IRRIGATION_TILE := Vector2i(6, 8)
+const IRRIGATION_ACTION := "hud-actions-irrigate-1"
+const IRRIGATION_ASSET := "irrigation.png"
+# The tile card's mark of an irrigated tile: the irrigation icon (an Image).
+const IRRIGATION_MARK := "hud-tile-irrigated"
+# The tile's four sides, north, east, south and west.
+const SIDES := [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+
+
+func tile_index(tile: Vector2i) -> int:
+  return tile.y * 24 + tile.x
+
+
+# The rows of the HUD that are about the action and the tile card: what the stage reads.
+func irrigation_rows(seen: Dictionary) -> Array:
+  return seen.nodes.filter(func(entry: Dictionary) -> bool: return entry.testID.begins_with(IRRIGATION_ACTION) or entry.testID.begins_with("hud-tile"))
+
+
+# What the game says and what the HUD shows, now.
+func irrigation_view() -> Dictionary:
+  var state: Dictionary = services.game.state
+  var snapshot := game_snapshot()
+  var sides: Array = SIDES.map(func(side: Vector2i) -> int: return int(state.map.terrain[tile_index(IRRIGATION_TILE + side)]))
+  return {"snapshot": {"context": snapshot.context, "selection": snapshot.selection, "tile": snapshot.tile,
+      "actions": snapshot.actions.filter(func(action: Dictionary) -> bool: return action.id == "irrigate")},
+    "game": {"irrigated": state.irrigated.duplicate(), "moves": int(unit_by_id(IRRIGATION_UNIT).get("moves", -1)), "terrain": int(state.map.terrain[tile_index(IRRIGATION_TILE)]),
+      "sides": sides},
+    "nodes": irrigation_rows(observe())}
+
+
+func is_irrigated(tile: Vector2i) -> bool:
+  return services.game.state.irrigated.has(tile_index(tile))
+
+
+func run_irrigation() -> void:
+  services.new_game()
+  await settle()
+  await move_to(Vector2(610, 300))
+  await wait_until(func() -> bool: return services.hover.x < 0)
+  var selected: Dictionary = services.select_unit(IRRIGATION_UNIT)
+  var in_context := await wait_until(func() -> bool: return game_snapshot().context == "settler")
+  await settle()
+  var before := irrigation_view()
+  var irrigate_calls := int(services.callbacks.get("irrigate", 0))
+  var hud_calls := int(hud_stats().get("calls", 0))
+  var pressed := await press(IRRIGATION_ACTION)
+  var by_press := await wait_until(func() -> bool: return is_irrigated(IRRIGATION_TILE))
+  var pushed := {"pressed": pressed, "irrigatedByPress": by_press, "irrigateCalls": int(services.callbacks.get("irrigate", 0)) - irrigate_calls,
+    "hudCalls": int(hud_stats().get("calls", 0)) - hud_calls}
+  if not by_press:
+    services.irrigate(IRRIGATION_UNIT)
+  await settle()
+  var after := irrigation_view()
+  var irrigation := {"unit": IRRIGATION_UNIT, "tile": [IRRIGATION_TILE.x, IRRIGATION_TILE.y], "selected": selected, "inContext": in_context, "before": before,
+    "press": pushed, "after": after}
+  report["irrigation"] = irrigation
+  judge_irrigation(irrigation)
+
+
+func irrigation_node(view: Dictionary, id: String) -> Dictionary:
+  for entry: Dictionary in view.nodes:
+    if entry.testID == id:
+      return entry
+  return {}
+
+
+# An Image of the irrigation icon that is on screen: visible, with a rect that has an area, and drawing the file the generator made.
+func irrigation_icon(view: Dictionary, id: String) -> bool:
+  var entry := irrigation_node(view, id)
+  return (not entry.is_empty() and entry.visible and entry.kind == "image" and entry.asset == IRRIGATION_ASSET and float(entry.rect[2]) > 0.0 and float(entry.rect[3]) > 0.0)
+
+
+func judge_irrigation(irrigation: Dictionary) -> void:
+  var before: Dictionary = irrigation.before
+  var after: Dictionary = irrigation.after
+  var pushed: Dictionary = irrigation.press
+  var offered: Dictionary = before.snapshot.actions[0] if before.snapshot.actions.size() == 1 else {}
+  var button := irrigation_node(before, IRRIGATION_ACTION)
+  check(irrigation.inContext and before.game.terrain == 1 and before.game.sides.has(0) and before.game.irrigated.is_empty()
+    and not offered.is_empty() and int(offered.enabled) == 1 and not button.is_empty() and button.visible and not button.disabled
+    and irrigation_node(before, IRRIGATION_ACTION + "-label").get("text", "") == offered.label,
+    "Irrigate: a Settler on a Plain with Water beside it is offered Irrigate in the actions panel, enabled, with the game's label")
+  check(irrigation_icon(before, IRRIGATION_ACTION + "-icon"), "Irrigate: the action shows the irrigation icon, drawn")
+  check(pushed.pressed and pushed.irrigatedByPress and pushed.irrigateCalls == 1 and pushed.hudCalls == 1,
+    "Irrigate: a real press on the enabled action irrigated the tile, with one call to the game")
+  var card: Dictionary = after.snapshot.tile
+  check(after.game.irrigated == [tile_index(IRRIGATION_TILE)] and after.game.moves == 0 and int(card.irrigated) == 1
+    and int(card.food) == int(before.snapshot.tile.food) + 1 and int(card.production) == int(before.snapshot.tile.production),
+    "Irrigate: the game irrigated the tile, spent all of the Settler's moves and gave the tile one more food")
+  var gone: Dictionary = after.snapshot.actions[0] if after.snapshot.actions.size() == 1 else {}
+  var done := irrigation_node(after, IRRIGATION_ACTION)
+  check(not gone.is_empty() and int(gone.enabled) == 0 and gone.reason == "already_irrigated" and not done.is_empty() and done.disabled
+    and irrigation_node(after, IRRIGATION_ACTION + "-reason").get("text", "") == gone.reason_text,
+    "Irrigate: once the tile is irrigated the action is disabled, with the game's reason beside it")
+  var yields := "Food %d · Production %d · Science %d · Move %d%s" % [card.food, card.production, card.science, card.move_cost, " · City" if int(card.city) == 1 else ""]
+  check(irrigation_node(after, "hud-tile-yields").get("text", "") == yields,
+    "Irrigate: the tile card's food is the game's, the irrigation's included")
+  var units_before: String = irrigation_node(before, "hud-tile-units").get("text", "")
+  check(not irrigation_node(before, IRRIGATION_MARK).get("visible", false) and not units_before.contains("Irrigated"),
+    "Irrigate: before it is irrigated the tile card shows no irrigation icon and its units line does not say Irrigated")
+  check(irrigation_icon(after, IRRIGATION_MARK), "Irrigate: the card of the irrigated tile shows the irrigation icon, drawn")
+  var units: String = irrigation_node(after, "hud-tile-units").get("text", "")
+  check(units.contains("Irrigated") and card.units.all(func(unit: Dictionary) -> bool: return units.contains(unit.name)),
+    "Irrigate: the units line of the irrigated tile says Irrigated and still lists its units")
 
 
 # --- Input: real pointer events -------------------------------------------------------------------------------------

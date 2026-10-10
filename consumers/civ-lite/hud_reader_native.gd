@@ -74,24 +74,31 @@ func _read(node: Node, nodes: Array, stoppers: Array) -> void:
       nodes.append(_row(control, id, area, stops, modal))
       var button := control as Button
       if button != null:
-        nodes.append(_part(button, id + "-label", "text", button.text, area, modal))
+        nodes.append(_part(button, id + "-label", "text", button.text, "", area, modal))
         if button.icon != null:
-          nodes.append(_part(button, id + "-icon", "image", "", area, modal))
+          nodes.append(_part(button, id + "-icon", "image", "", _file_of(button.icon), area, modal))
     _read(control, nodes, stoppers)
 
 
 func _row(control: Control, id: String, area: Array, stops: bool, modal: bool) -> Dictionary:
   var label := control as Label
   var button := control as Button
+  var texture_rect := control as TextureRect
   var animating: bool = control.has_method("is_animating") and control.is_animating()
   return {"testID": id, "kind": _kind_of(control), "visible": control.is_visible_in_tree(), "text": label.text if label != null else (button.text if button != null else ""),
-    "rect": area, "stops": stops, "disabled": button != null and button.disabled, "animating": animating, "modal": modal, "instance": control.get_instance_id()}
+    "rect": area, "stops": stops, "disabled": button != null and button.disabled, "animating": animating, "modal": modal, "instance": control.get_instance_id(),
+    "asset": _file_of(texture_rect.texture) if texture_rect != null else ""}
 
 
 # A part of a Button the host's tree has as a child of its own.
-func _part(button: Button, id: String, kind: String, text: String, area: Array, modal: bool) -> Dictionary:
+func _part(button: Button, id: String, kind: String, text: String, asset: String, area: Array, modal: bool) -> Dictionary:
   return {"testID": id, "kind": kind, "visible": button.is_visible_in_tree(), "text": text, "rect": area, "stops": false, "disabled": false, "animating": false,
-    "modal": modal, "instance": button.get_instance_id()}
+    "modal": modal, "instance": button.get_instance_id(), "asset": asset}
+
+
+# The file name of the picture a texture draws ("irrigation.png"): the resource it was loaded from, or "" for a texture that has none.
+func _file_of(texture: Texture2D) -> String:
+  return texture.resource_path.get_file() if texture != null else ""
 
 
 func _kind_of(control: Control) -> String:

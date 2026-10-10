@@ -37,7 +37,7 @@ func observe() -> Dictionary:
     if entry.testID != "":
       nodes.append({"testID": entry.testID, "kind": entry.kind, "visible": control.is_visible_in_tree(), "text": entry.get("nativeText", ""),
         "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "stops": stops, "disabled": bool(descriptor.get("disabled", false)),
-        "animating": bool(activity.get("animating", false)), "modal": in_modal, "instance": int(entry.id)})
+        "animating": bool(activity.get("animating", false)), "modal": in_modal, "instance": int(entry.id), "asset": _asset_of(entry)})
   return {"nodes": nodes, "stoppers": stoppers}
 
 
@@ -77,3 +77,10 @@ func mount() -> void:
 func errors() -> Array:
   var state: Variant = JSON.parse_string(application.call("snapshot"))
   return state.get("errors", []) if state is Dictionary else ["no snapshot"]
+
+
+# The file name of the picture an Image draws, from the source the host reports for it; "" for a node that is not an Image.
+func _asset_of(entry: Dictionary) -> String:
+  var image: Dictionary = entry.get("image", {})
+  var source: Dictionary = image.get("source", {})
+  return str(source.get("uri", "")).get_file()

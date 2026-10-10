@@ -311,7 +311,7 @@ func icons_now(label: String, modals: int) -> Dictionary:
   var actions: Array = snapshot.actions.map(func(action: Dictionary) -> Dictionary: return {"id": action.id, "args": action.args})
   var units: Array = snapshot.tile.units.map(func(unit: Dictionary) -> Dictionary: return {"id": unit.id, "kind": unit.kind})
   var items: Array = snapshot.city.items.map(func(item: Dictionary) -> String: return item.id)
-  return {"label": label, "rested": rested, "snapshot": {"context": snapshot.context, "actions": actions, "tile": {"city": snapshot.tile.city, "units": units}, "cityItems": items},
+  return {"label": label, "rested": rested, "snapshot": {"context": snapshot.context, "actions": actions, "tile": {"city": snapshot.tile.city, "irrigated": snapshot.tile.get("irrigated", 0), "units": units}, "cityItems": items},
     "images": images_of(surface())}
 
 

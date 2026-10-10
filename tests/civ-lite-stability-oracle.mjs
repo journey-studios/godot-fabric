@@ -49,6 +49,8 @@ const CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dialog-1", "di
 // Which asset each icon is: the bar's, the units' (by the kind the game gives the unit), the city's, and what each production item is.
 const RESOURCE_ICONS = {food: "food.png", production: "production.png", science: "science.png"};
 const UNIT_ICONS = {settler: "settler.png", warrior: "warrior.png"};
+// The icon of the Irrigate action and of an irrigated tile's card (the cost-of-change experiment's base).
+const IRRIGATION_ICON = "irrigation.png";
 const ITEM_ICONS = {warrior: "warrior.png", granary: "food.png", workshop: "production.png", library: "science.png"};
 const CONTEXT_ORDER = ["none", "stack", "settler", "city"];
 const ACTIONS_IN = ["settler", "warrior", "stack"];
@@ -64,6 +66,7 @@ function expectedIcons(snapshot) {
   if (ACTIONS_IN.includes(snapshot.context)) {
     for (const action of snapshot.actions) {
       const file = action.id === "found_city" ? "city.png"
+        : action.id === "irrigate" ? IRRIGATION_ICON
         : action.id === "select_unit" || action.id === "fortify" ? UNIT_ICONS[unitKind(action.args[0])] : undefined;
       if (file !== undefined) {
         icons.set(`hud-actions-${keyOf(action)}-icon`, {file, modal: false});
@@ -76,6 +79,9 @@ function expectedIcons(snapshot) {
     }
     for (const unit of snapshot.tile.units) {
       icons.set(`hud-tile-unit-${unit.id}-icon`, {file: UNIT_ICONS[unit.kind], modal: false});
+    }
+    if (snapshot.tile.irrigated === 1) {
+      icons.set("hud-tile-irrigated", {file: IRRIGATION_ICON, modal: false});
     }
   }
   if (snapshot.context === "city") {
