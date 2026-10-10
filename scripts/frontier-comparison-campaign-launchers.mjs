@@ -13,25 +13,29 @@ import { launchScenario, prepareProject, registeredOf } from "./frontier-compari
 //                                        and the script of each arm, the seed, the game's hashes and the instrument's file), the sizes of the packages, and each way in which this launcher
 //                                        deviates from the protocol. It may refuse: the Release launcher does.
 //   await launcher.launch({arm, lane, slot, attempt})
-//                                        runs ONE fresh process of the scenario and returns {report, exitCode, signal, log, load: {before, after}, hashes: {binary, package, script}, seconds}:
-//                                        `report` is the scenario's report (null when the process wrote none), the load is the 1-minute average read right before the process starts and right
-//                                        after it ends, and the hashes are those of the files the process ran. The campaign adds the protocol's hash and judges everything.
+//                                        runs ONE fresh process of the scenario and returns {report, exitCode, signal, timedOut, log, load: {before, after}, hashes: {binary, package, script}, seconds}:
+//                                        `report` is the scenario's report (null when the process wrote none), `timedOut` is true when the launcher killed the process at its timeout (absent means
+//                                        false), the load is the 1-minute average read right before the process starts and right after it ends, and the hashes are those of the files the process
+//                                        ran. The campaign adds the protocol's hash and judges everything.
 //   await launcher.cleanup()
 //
-// The Debug launcher is the part 1 rehearsal's own: a provisioned copy of civ-lite, the scenario copied into it and the engine's executable, run with `--path`. The Release launcher is an
-// extension point that refuses until V05-07 says how the scenario runs inside an exported package. A fake launcher in the tests plays programmable executions.
+// The Debug launcher is the part 1 rehearsal's own: a provisioned copy of civ-lite, the scenario copied into it with its entry and the engine's executable, run with `--path`. The scenario enters as
+// the main loop of the measurement project (never `-s`: an export template discards it), and the arguments after the executable are `scenarioArguments`, which the Release launcher will reuse for
+// `Contents/MacOS/<executable>` of an exported .app. The Release launcher is an extension point that refuses until the civ-lite game is exported in the three arms. A fake launcher in the tests plays
+// programmable executions.
 
 export const RELEASE_REFUSAL = [
-  "The Release launcher is not defined yet: the campaign needs the Release export of the civ-lite game in the three arms (V05-07, the macOS export), and that slice has not said how the scenario",
-  "(tests/frontier-comparison-scenario.gd, a SceneTree script run with `-s`) runs inside an exported .app, where an export template may not run `-s`. Nothing was run and no campaign directory was made.",
-  "Until V05-07 defines the path, use `--build debug --rehearsal` for a rehearsal of the campaign.",
+  "The Release launcher is not defined yet. The entry of the scenario is defined: it is the main loop of the measurement project (override.cfg, `application/run/main_loop_type`), which a Release .app runs the same way as the Debug",
+  "launcher does (docs/research/frontier-comparison-execution.md, \"The entry\"). What is missing is the Release export of the civ-lite game in the three arms (V05-07 is the macOS export; exporting civ-lite is a later slice)",
+  "and the decision on the package size of arms A and B, which the export plugin would load with the React Native frameworks. Nothing was run and no campaign directory was made.",
+  "Until then, use `--build debug --rehearsal` for a rehearsal of the campaign.",
 ].join(" ");
 
 export function createReleaseLauncher() {
   const refuse = () => {
     throw new Error(RELEASE_REFUSAL);
   };
-  return { build: "release", name: "release (V05-07: not defined)", windowed: true, prepare: refuse, launch: refuse, cleanup: async () => undefined };
+  return { build: "release", name: "release (the export of civ-lite in the three arms: not defined)", windowed: true, prepare: refuse, launch: refuse, cleanup: async () => undefined };
 }
 
 // The Debug launcher over the part 1 runner: provisions the consumer, builds its HUD, copies the scenario and its support files in, and runs a Godot process per attempt. A rehearsal registers
@@ -63,6 +67,8 @@ export function createDebugLauncher({ name = "frontier-comparison-campaign", pre
         report,
         exitCode: ran.process.exitCode,
         signal: ran.result.signal,
+        // spawnSync's timeout kills the process with SIGTERM and sets `error.code` to ETIMEDOUT.
+        timedOut: ran.result.error?.code === "ETIMEDOUT",
         log: ran.log,
         load: ran.load,
         hashes: { binary: prepared.binarySha256, package: prepared.package.sha256, script: prepared.scripts.sha256 },

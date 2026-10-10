@@ -1,20 +1,23 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { createDebugLauncher, RELEASE_REFUSAL } from "../scripts/frontier-comparison-campaign-launchers.mjs";
 import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { buildReport } from "../scripts/frontier-comparison-report.mjs";
 import { analyse, campaignOf, executionOf, fpsOf, goldenReplayHash, sha256, slotOf } from "../scripts/frontier-comparison-run-campaign.mjs";
 import { CONFIGURATION_PROBLEMS, derivedOf, TRACE_KINDS, usecOf, windowFramesOf, windowRulesOf } from "../scripts/frontier-comparison-run-windows.mjs";
-import { loadNumber, processOf, readCostsOf } from "../scripts/frontier-comparison-run.mjs";
+import { digest, loadNumber, MEASUREMENT_FILES, PACKAGE_EXCLUDED, processOf, readCostsOf, scenarioArguments, scriptsOf } from "../scripts/frontier-comparison-run.mjs";
 import { syntheticReport, syntheticTrace, totalMsOf } from "./frontier-comparison-run-synthetic.mjs";
 
 // The runner of the comparative execution (V05-10, `execucao`), Node only: the window rule (there is one, in JavaScript), the numbers the scenario waits with, the conversion to microseconds and
 // the assembly of the campaign from executions in the scenario's format. Every report and trace here is synthetic: their numbers were made up to exercise the code and say nothing about an
 // arm. The scenario itself, the player and the rehearsal in the three arms are tested by `npm run test:frontier-comparison-run` (tests/frontier-comparison-player.test.mjs and
-// tests/frontier-comparison-run-native.test.mjs).
+// tests/frontier-comparison-run-native.test.mjs). The entry of the scenario (the main loop of the measurement project, never `-s`) is tested here in its text, its arguments and its hashes.
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const protocolFile = path.join(root, "docs", "research", "frontier-comparison-protocol.json");
@@ -125,6 +128,105 @@ test("the player's constants are the soak's own", () => {
   assert.equal(constant(player, "GARRISON_CAP"), parseInt(/GARRISON_CAP = (\d+)/.exec(fixture)[1], 10));
   const start = /START_TILE = \{x: (\d+), y: (\d+)\}/.exec(fixture);
   assert.ok(player.includes(`const START_TILE := Vector2i(${start[1]}, ${start[2]})`));
+});
+
+// ---- the entry: the scenario is the main loop of the measurement project ----
+
+const ENTRY = "comparison/frontier-comparison-entry.gd";
+const EMPTY_SCENE = "comparison/frontier-comparison-empty.tscn";
+
+test("the arguments after the executable enter the scenario as the main loop: no -s, the user arguments after --, and an absolute --out", () => {
+  const out = "/tmp/frontier-comparison/run-A-presented.json";
+  for (const lane of ["presented", "unlimited"]) {
+    for (const windowed of [false, true]) {
+      for (const arm of ["A", "B", "C"]) {
+        const args = scenarioArguments({ arm, lane, windowed, out });
+        assert.deepEqual(args, [windowed ? "--windowed" : "--headless", "--", `--arm=${arm}`, `--lane=${lane}`, `--out=${out}`]);
+        assert.ok(!args.includes("-s") && !args.includes("--script"), "the engine's script argument is not passed: an export template discards it");
+        assert.ok(args.indexOf("--") < args.indexOf(`--arm=${arm}`), "the scenario's arguments are user arguments");
+      }
+    }
+  }
+  assert.equal(scenarioArguments({ arm: "A", lane: "presented", out })[0], "--headless", "headless is the default");
+  assert.throws(() => scenarioArguments({ arm: "A", lane: "presented", out: "run-A-presented.json" }), /--out must be an absolute path/);
+});
+
+test("the entry is two lines that extend the scenario, the main scene is one empty node, and the settings name both", () => {
+  assert.deepEqual(Object.keys(MEASUREMENT_FILES), [ENTRY, EMPTY_SCENE, "override.cfg"]);
+  assert.equal(MEASUREMENT_FILES[ENTRY], 'class_name FrontierComparisonEntry\nextends "frontier-comparison-scenario.gd"\n');
+  assert.equal(MEASUREMENT_FILES[EMPTY_SCENE], '[gd_scene format=3]\n\n[node name="FrontierComparisonEmpty" type="Node"]\n');
+  assert.equal(MEASUREMENT_FILES["override.cfg"], 'config_version=5\n\n[application]\n\nrun/main_scene="res://comparison/frontier-comparison-empty.tscn"\nrun/main_loop_type="FrontierComparisonEntry"\n');
+  const scenario = text("tests/frontier-comparison-scenario.gd");
+  assert.match(scenario, /^extends SceneTree\n/, "the entry extends a SceneTree script, which is what a main loop is");
+  assert.doesNotMatch(scenario, /^class_name /m, "the scenario registers no global class: the entry does, in the copy only");
+  // The scenario frees the main scene by the path the settings give it, and says in its header how it is started: no -s.
+  assert.ok(scenario.includes('const EMPTY_SCENE := "res://comparison/frontier-comparison-empty.tscn"'));
+  assert.match(MEASUREMENT_FILES["override.cfg"], /run\/main_scene="res:\/\/comparison\/frontier-comparison-empty\.tscn"/);
+  const header = scenario.split("\n").slice(0, 12).join("\n");
+  assert.match(header, /godot --path <project> \[--headless\|--windowed\] -- --arm=A\|B\|C --lane=presented\|unlimited --out=<absolute file>/);
+  assert.doesNotMatch(header, / -s res:/);
+});
+
+test("override.cfg is left out of the package's hash and the entry, the scene and the settings are in the scenario's", async () => {
+  const copy = await mkdtemp(path.join(tmpdir(), "frontier-comparison-entry-"));
+  try {
+    await mkdir(path.join(copy, "game"), { recursive: true });
+    await writeFile(path.join(copy, "project.godot"), "config_version=5\n\n[application]\n\nrun/main_scene=\"res://main.tscn\"\n");
+    await writeFile(path.join(copy, "game", "rules.gd"), "extends RefCounted\n");
+    const product = await digest(copy, PACKAGE_EXCLUDED);
+    assert.equal(product.files, 2);
+    // What the runner writes (and the engine's cache) does not change the package: it is the product as it ships.
+    await mkdir(path.join(copy, "comparison"), { recursive: true });
+    await mkdir(path.join(copy, ".godot"), { recursive: true });
+    await writeFile(path.join(copy, ".godot", "global_script_class_cache.cfg"), "x");
+    for (const [file, content] of Object.entries(MEASUREMENT_FILES)) {
+      await writeFile(path.join(copy, file), content);
+    }
+    assert.deepEqual(await digest(copy, PACKAGE_EXCLUDED), product);
+    // Without the exclusion the settings would be in the hash, and a product's own file still is.
+    assert.notEqual((await digest(copy, new Set([".godot", "comparison"]))).sha256, product.sha256);
+    await writeFile(path.join(copy, "project.godot"), "config_version=5\n");
+    assert.notEqual((await digest(copy, PACKAGE_EXCLUDED)).sha256, product.sha256);
+  } finally {
+    await rm(copy, { recursive: true, force: true });
+  }
+  const files = { "tests/frontier-comparison-scenario.gd": "1".repeat(64), ...Object.fromEntries(Object.entries(MEASUREMENT_FILES).map(([file, content]) => [file, sha256(content)])) };
+  const scripts = scriptsOf(files);
+  assert.match(scripts.sha256, /^[0-9a-f]{64}$/);
+  assert.deepEqual(Object.keys(scripts.files).slice(1), [ENTRY, EMPTY_SCENE, "override.cfg"]);
+  for (const file of [ENTRY, EMPTY_SCENE, "override.cfg"]) {
+    assert.notEqual(scriptsOf({ ...files, [file]: sha256(`${MEASUREMENT_FILES[file]}\n; edited`) }).sha256, scripts.sha256, `${file} is in the scenario's hash`);
+  }
+  assert.equal(scriptsOf(Object.fromEntries(Object.entries(files).reverse())).sha256, scripts.sha256, "the hash does not depend on the order of the files");
+});
+
+test("the Debug launcher says that the process was killed at its timeout, and only then", async () => {
+  const prepared = { harness: { godot: "godot", cleanup: async () => undefined }, package: { sha256: "2".repeat(64), bytes: 10 }, scripts: { sha256: "3".repeat(64) }, binarySha256: "1".repeat(64), instrumentSha256: "4".repeat(64) };
+  const ran = (result) => ({ reportFile: path.join(tmpdir(), "frontier-comparison-no-such-report.json"), process: { exitCode: result.status ?? -1 }, result, log: "", load: { before: 1, after: 1 }, seconds: 1 });
+  const launched = async (result) => {
+    const launcher = createDebugLauncher({ prepare: async () => prepared, run: () => ran(result) });
+    await launcher.prepare();
+    return launcher.launch({ arm: "A", lane: "presented" });
+  };
+  // spawnSync's timeout kills the process with SIGTERM and sets `error.code` to ETIMEDOUT; it leaves no report.
+  const timedOut = await launched({ status: null, signal: "SIGTERM", error: { code: "ETIMEDOUT" } });
+  assert.deepEqual([timedOut.timedOut, timedOut.signal, timedOut.exitCode, timedOut.report], [true, "SIGTERM", -1, null]);
+  const normal = await launched({ status: 0, signal: null });
+  assert.deepEqual([normal.timedOut, normal.signal, normal.exitCode], [false, null, 0]);
+  // A process that died of a signal of its own, or whose spawn failed for another reason, did not time out.
+  assert.equal((await launched({ status: null, signal: "SIGSEGV" })).timedOut, false);
+  assert.equal((await launched({ status: null, signal: null, error: { code: "ENOENT" } })).timedOut, false);
+});
+
+test("the Release launcher still refuses, and says that the entry is defined and what is missing", () => {
+  assert.match(RELEASE_REFUSAL, /entry of the scenario is defined/);
+  assert.match(RELEASE_REFUSAL, /main loop of the measurement project/);
+  assert.match(RELEASE_REFUSAL, /application\/run\/main_loop_type/);
+  assert.match(RELEASE_REFUSAL, /Release export of the civ-lite game in the three arms/);
+  assert.match(RELEASE_REFUSAL, /V05-07/);
+  assert.match(RELEASE_REFUSAL, /package size of arms A and B/);
+  assert.match(RELEASE_REFUSAL, /Nothing was run and no campaign directory was made/);
+  assert.doesNotMatch(RELEASE_REFUSAL, /may not run `-s`|has not said how the scenario/, "the old reason is gone: the scenario no longer needs `-s`");
 });
 
 test("a CPU time becomes integer microseconds as Math.round(totalMs * 1000)", () => {

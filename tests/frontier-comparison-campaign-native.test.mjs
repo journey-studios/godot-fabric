@@ -58,6 +58,7 @@ test("the rehearsal drives the real launcher through one slot of each arm, with 
     assert.ok(Object.values(attempt.hashes).every((hash) => /^[0-9a-f]{64}$/.test(hash)), JSON.stringify(attempt.hashes));
     assert.ok(Number.isFinite(attempt.load.before) && Number.isFinite(attempt.load.after), "the load before and after, as numbers");
     assert.ok(await exists(path.join(out, attempt.raw)) && (await exists(path.join(out, attempt.log))), "the raw report and the log of the attempt");
+    assert.equal((await read(attempt.raw)).provenance.mainLoop, "FrontierComparisonEntry", `arm ${attempt.arm}: the scenario ran as the main loop of the measurement project, without -s`);
   }
 });
 

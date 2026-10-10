@@ -18,7 +18,7 @@ This is the piece between them: the script that plays one execution in one Godot
 
 | File | What it holds |
 | --- | --- |
-| `tests/frontier-comparison-scenario.gd` | The scenario: a `SceneTree` script, `--arm=A\|B\|C --lane=presented\|unlimited --out=<file>`. The eight steps of the script; it writes the trace, the instrument's samples and the rest of the report. It derives no window. |
+| `tests/frontier-comparison-scenario.gd` | The scenario: a `SceneTree` script that is the **main loop** of the measurement project, never `-s` ([the entry](frontier-comparison-entry.md)), `-- --arm=A\|B\|C --lane=presented\|unlimited --out=<absolute file>`. The eight steps of the script; it writes the trace, the instrument's samples and the rest of the report. It derives no window. |
 | `tests/frontier-comparison-player.gd` | The scripted player of the soak: the port of `decide` of `tests/frontier-soak-fixture.jsx`. |
 | `tests/frontier-comparison-hud.gd` | What the scenario knows of an arm: its scene, the live Controls, the context matrix, the real click, the hooks and whether they exist. |
 | `tests/frontier-comparison-cycle.gd` | The cycle of the `context-switches` window. |
@@ -464,8 +464,7 @@ A process that crashed, hit its time limit or ended without a report in the scen
 - The analysis judges the entry rejected by `errors`, clause `no-report`, with `crashed`, `timedOut` and the `exitCode` or the `signal`; it counts in the slot (`rejected`), in the totals and in the stop on three used-up attempts,
   and `report.json` shows it with `reported: false`, its load and no vsync. `crashed` is the reading of the process as for every execution (`processOf`: a signal, or a crash in the log); `timedOut` is the launcher's
   (`launch()` may return `timedOut: true` for a process it killed at its time limit; a launcher that does not say reads as `false`). A process killed by a signal has no exit code in the entry, and one that exited has no signal.
-  **The Debug launcher does not pass `timedOut` on yet**: it is `result.error?.code === "ETIMEDOUT"` of its `spawnSync`, one line in `scripts/frontier-comparison-campaign-launchers.mjs`, which was another slice's file when this
-  was written. Until it does, a process the Debug launcher kills at the limit reads `crashed: true` (its signal) and `timedOut: false`; the fake launcher of the tests says it.
+  The Debug launcher passes it on (`result.error?.code === "ETIMEDOUT"` of its `spawnSync`, with the SIGTERM signal that `spawnSync` leaves); the fake launcher of the tests says it too.
   A process that exits 0 and leaves no report, or one that leaves a report the scenario's format cannot read, is the same rule (reading 15 of the analysis note).
 - `logSha256` is the SHA-256 of the `.log` kept under `raw/`; `summary.json` and `campaign-state.json` keep `unreported`, the list for whoever reads them (the slot, the arm, the attempt, the reasons of the analysis, the exit code and signal as
   the launcher read them, and the path of the log), now the same attempts and reasons that `campaign.json` and `report.json` hold.
@@ -482,10 +481,11 @@ await launcher.launch({arm, lane, slot, attempt})
 await launcher.cleanup()
 ```
 
-- **Debug** reuses part 1: the provisioned copy of civ-lite with the HUD built and the scenario copied in (`prepareProject`), and `launchScenario` (`--path`, headless). It registers what it measured, as the rehearsal
+- **Debug** reuses part 1: the provisioned copy of civ-lite with the HUD built and the scenario copied in with its entry (`prepareProject`), and `launchScenario` (`--path`, headless). It registers what it measured, as the rehearsal
   does, and its deviations say so.
-- **Release** is an extension point and **refuses**: "The Release launcher is not defined yet: the campaign needs the Release export of the civ-lite game in the three arms (V05-07 ...)". It refuses in
-  `prepare()`, before the self-check, before any directory is made and before any process starts. When V05-07 says how the scenario runs inside an exported `.app`, it is this launcher that gets the path; the campaign does not change.
+- **Release** is an extension point and **refuses**: "The Release launcher is not defined yet. The entry of the scenario is defined: it is the main loop of the measurement project (override.cfg, ...) ... What is missing is the Release export of
+  the civ-lite game in the three arms ...". It refuses in `prepare()`, before the self-check, before any directory is made and before any process starts. The entry is defined ([the entry](frontier-comparison-entry.md)): the launcher will
+  run `Contents/MacOS/<executable>` of the exported `.app` with `scenarioArguments` (`scripts/frontier-comparison-run.mjs`), the arguments the Debug launcher also uses after `--path <copy>`; the campaign does not change.
 - **The fake**, in the tests, plays programmable synthetic executions: a load above the limit, an undrawn presented window, an error, another game, an incomplete window, a process that wrote no report, a vsync
   that reads back `ENABLED`, and an interruption.
 
@@ -529,9 +529,12 @@ refusal (the ones on the merged tree) are recorded in the [evidence record](../e
 
 ## What is missing for the campaign
 
-- **V05-07, the Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice, **and the Release launcher** (above). The scenario is a
-  `SceneTree` script that is run with `-s` from a project; how it starts inside an exported package (an export template may not run `-s`, and the scenario may have to be the exported project's main scene or an
-  autoload) is **open** and belongs to that slice. The question was put to the owner of that slice and has no answer yet. Until it does, `--build release` refuses.
+- **The Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice, **and the Release launcher** (above). **The entry is defined**
+  ([the entry](frontier-comparison-entry.md)): the scenario is the project's main loop through `override.cfg`, which a Release `.app` reads from `Contents/MacOS/` or from its pack, so the launcher only has to run
+  `Contents/MacOS/<executable>` with `scenarioArguments`. What is missing is the export of civ-lite itself: the export plugin of V05-07 (#75) is on `main`, and exporting the game in the three arms comes after it. Until it does, `--build release` refuses.
+- **The package size in arms A and B.** The export plugin always embeds the React Native frameworks, so A and B would carry them in the `package-size` axis. It has to be decided between exporting A and B without the frameworks
+  and recording the package as it comes out (saying so in the deviations).
+- **The instrument's self-check in a Release template.** The probe runs today with `-s` in the editor's binary; a template discards `-s`, so there it needs the same entry, the probe as the main loop of a project.
 - **A quiet machine and the user away**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window for the 36 executions of the presented lane; the repository's other lanes
   run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one). The campaign waits for the load but cannot make the machine quiet.
 - **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
@@ -565,5 +568,5 @@ node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-compariso
 npm run test:frontier-comparison-run                                   # also the campaign's short rehearsal: headless, Debug, --slots 1-3 of the presented lane, the real self-check
 node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal
 node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal --resume
-node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <directory>   # refuses until V05-07 defines the Release launcher
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <directory>   # refuses until the civ-lite game is exported in the three arms (the entry is defined)
 ```

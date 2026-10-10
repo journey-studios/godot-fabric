@@ -1,0 +1,30 @@
+Template probe (scratch, run once; the binary and the .app were deleted afterwards for lack of disk)
+
+What it is: whether the main loop named by an override.cfg runs in the official release export template of Godot 4.7.2-stable.
+It is NOT the export of civ-lite and the app is NOT signed.
+
+Method
+- Probe project: project.godot (run/main_scene = res://main.tscn), main.tscn with a script that prints PROBE_MAIN_SCENE and quits,
+  and probe_loop.gd (class_name ProbeLoop, extends SceneTree) whose _initialize prints PROBE_MAIN_LOOP and quits.
+- A pack exported from it by the editor binary (--export-pack, a Linux preset only to write the pack).
+  pack SHA-256: 51418ac8dbd1311f172b8fc3f84e6094ccaccf266c31e8b9df96822d18b8aa9e
+- Probe.app: the godot_macos_release.universal of templates/macos.zip of the pinned export templates (dependencies.json export_templates,
+  SHA-256 f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011), renamed Probe, with the Info.plist of the template and the pack in
+  Contents/Resources/Probe.pck.
+  binary SHA-256: 6135ad137facbb26cd73a5f7f7d541d334a84fc81650e870ef075cdd14a129cd
+- Run from another working directory (/tmp), headless, the executable of the .app directly.
+
+Case 1: no override.cfg
+  Probe --headless -- --probe=1
+  PROBE_MAIN_SCENE cmdline=[] user=["--probe=1"] build=release
+
+Case 2: -s passed to the template, no override.cfg
+  Probe --headless -s res://probe_loop.gd -- --probe=2
+  PROBE_MAIN_SCENE cmdline=["-s", "res://probe_loop.gd"] user=["--probe=2"] build=release
+
+Case 3: Probe.app/Contents/MacOS/override.cfg
+  config_version=5 / [application] / run/main_scene="res://main.tscn" / run/main_loop_type="ProbeLoop"
+  Probe --headless -- --probe=3
+  PROBE_MAIN_LOOP cmdline=[] user=["--probe=3"] current_scene=Main build=release
+  PROBE_MAIN_SCENE cmdline=[] user=["--probe=3"] build=release
+  (both lines are printed, in this order: the main loop's _initialize, which sees the main scene as current_scene, then the main scene's _ready)

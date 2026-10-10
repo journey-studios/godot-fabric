@@ -58,7 +58,7 @@ atualizam o Pages.
 
 ## Trabalho em paralelo
 
-Até cinco agentes trabalham ao mesmo tempo, cada um na própria worktree e branch
+Até seis agentes trabalham ao mesmo tempo, cada um na própria worktree e branch
 (nunca `main`). Siga este protocolo, na sua worktree:
 
 1. `npm run agents -- claim --task GF-xx --title "..." --area caminho/` antes de
@@ -80,7 +80,7 @@ Até cinco agentes trabalham ao mesmo tempo, cada um na própria worktree e bran
    mantendo os dois lados.
 5. `npm run agents -- release` ao entregar.
 
-Detalhes, regras e o formato do registro estão em "Agentes em paralelo (até 5)"
+Detalhes, regras e o formato do registro estão em "Agentes em paralelo (até 6)"
 no `dashboard/README.md`. O quadro é local e não aparece no GitHub Pages.
 
 ## Publicar progresso sem merge
