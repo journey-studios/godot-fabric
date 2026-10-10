@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-freeze",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T04:56:21.674Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38025095171,
+    "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/107",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T04:44:10Z",
+    "updatedAt": "2026-10-10T04:51:42Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114134152859,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "startedAt": "2026-10-10T04:44:14Z",
+        "completedAt": "2026-10-10T04:47:22Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134152859"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114134153431,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134153431"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114134153457,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134153457"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114134153429,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134153429"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114134153660,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134153660"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114135445434,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114135445434"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114134152809,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "startedAt": "2026-10-10T04:44:14Z",
+        "completedAt": "2026-10-10T04:50:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134152809"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114134152709,
+        "runAttempt": 1,
+        "headSha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+        "startedAt": "2026-10-10T04:44:19Z",
+        "completedAt": "2026-10-10T04:51:42Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38025095171/job/114134152709"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+      "reference-android": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+      "reference-ios": "561251df1ddcf22e2e55d22c292330be43c5d87d"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T04:44:32Z",
+          "completedAt": "2026-10-10T04:44:32Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 2b2972607f9f (--base 2b2972607f9f5372530d151cedf4a1c0ceee5034); X9 clean, X10 clean"
+          ],
+          "base": "2b2972607f9f5372530d151cedf4a1c0ceee5034"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T04:44:32Z",
+          "completedAt": "2026-10-10T04:47:18Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 489,
+              "suites": 0,
+              "pass": 489,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T04:47:18Z",
+          "completedAt": "2026-10-10T04:47:19Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T04:47:19Z",
+          "completedAt": "2026-10-10T04:47:20Z",
+          "passed": true,
+          "files": 1978
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-freeze.test.mjs",
+          "tests": 21,
+          "passed": 21,
+          "topLevel": [
+            "budgetOf reproduces the rows of the derivation table of the baseline note, from the five values of each run",
+            "the rounding is up to 0.5 ms: an exact multiple stays, one microsecond more goes to the next, and the values are not changed",
+            "the quartiles of five are the second, third and fourth values by nearest rank, those of the performance oracle that the script and this test import",
+            "the freeze is the one the inputs give by the rule, and the protocol carries its values: the check passes, in the module and as the command",
+            "the committed files are what the writer writes, so that nobody edited them by hand",
+            "the inputs are the executions registered: their SHA-256, commits, bundles and hosts, and the raw baseline receipt is the one committed byte for byte",
+            "the three numeric thresholds are the rule applied to the raw intervals, recomputed here with the performance oracle's own functions",
+            "the budget rows: kept, recomputed, added and removed, each with its reason, and the p99 by size is out",
+            "a changed value of an execution changes a bound, and the check accuses it",
+            "a freeze that was edited by hand, or a protocol that does not carry it, is accused",
+            "the protocol has its five thresholds frozen on one date, the stress as N/A with its reason and the instrument with its six keys",
+            "the corroboration shows what the notes say of it: the turn before #100 reproduces the frozen one and the one with its HUD is over the bounds",
+            "every execution of the freeze ran above the protocol's load limit, and the freeze says so",
+            "the AI phase is the first six busy frames of a steady turn and the end of the turn is the seventh and the frames after it, the warm-up left out",
+            "a turn whose frames do not advance one phase each, publish a snapshot each and end the turn once is refused",
+            "--from-receipts refuses a receipt whose SHA-256 is not the registered one, and writes nothing",
+            "the baseline note's budget is the frozen one: its heading, its table and its derivation are the freeze's rows",
+            "the protocol note's section The freeze names the five thresholds and what stays as the pre-registration wrote it, and the freeze note is the whole account",
+            "the freeze note's table of values has the five thresholds and the numbers of the freeze",
+            "the evidence record is pinned, has the inputs, the account of every value and the open cause, and the index lists it",
+            "this test and the script are part of the contracts"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 107,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/107",
+    "title": "feat(perf): Freeze the Frontier budget and the comparison's thresholds once",
+    "headSha": "e888adb9994f8c538d2dfc681eaf807778f50dbb",
+    "baseSha": "2b2972607f9f5372530d151cedf4a1c0ceee5034",
+    "squashMergeCommit": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+    "squashCommitSubject": "feat(perf): Freeze the Frontier budget and the comparison's thresholds once (#107)",
+    "mergedAt": "2026-10-10T04:44:08Z",
+    "headTreeSha": "36ae54b0e838e7fc81707a81659a1f94d2bca057",
+    "mainTreeSha": "36ae54b0e838e7fc81707a81659a1f94d2bca057",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 4,
+    "commits": [
+      {
+        "sha": "a6210dc2c09ca63155511f36898f72fc56385798",
+        "subject": "feat(perf): Freeze the Frontier budget and the comparison's thresholds once"
+      },
+      {
+        "sha": "e1803a93e075996d1e38770113b095315f8b5ea2",
+        "subject": "docs(evidence): Record the freeze of the Frontier budget"
+      },
+      {
+        "sha": "4ef4bbbbca9d90bcb44e5a6d179f98c54a5eac4b",
+        "subject": "docs(dashboard): Close V05-06 congelado and V05-10 protocolo with the freeze"
+      },
+      {
+        "sha": "e888adb9994f8c538d2dfc681eaf807778f50dbb",
+        "subject": "Merge remote-tracking branch 'origin/main' into docs/frontier-freeze-budget"
+      }
+    ],
+    "changedFiles": 17,
+    "additions": 6658,
+    "deletions": 47
+  },
+  "artifacts": {},
+  "findings": []
+}

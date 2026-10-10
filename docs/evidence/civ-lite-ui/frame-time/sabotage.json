@@ -1,0 +1,142 @@
+{
+  "format": "godot-fabric.frontier-turn-sabotage/v1",
+  "sourceSha256": {
+    "genuine": {
+      "tests/frontier-turn-probe.gd": "e564c73a277a0f2a7bb0936c2bfa9f0d8df2311513f8310e3542196efb90341f"
+    },
+    "restored": {
+      "tests/frontier-turn-probe.gd": "e564c73a277a0f2a7bb0936c2bfa9f0d8df2311513f8310e3542196efb90341f"
+    }
+  },
+  "variants": [
+    {
+      "name": "skipped-phase",
+      "target": "copy",
+      "where": "the provisioned copy of services/game_services.gd",
+      "breaks": "the game node advances the turn's job twice in a frame, so a frame runs two phases",
+      "find": "func _process(_delta: float) -> void:\n  advance_job()\n",
+      "replace": "func _process(_delta: float) -> void:\n  advance_job()\n  advance_job()\n",
+      "sourceSha256": null,
+      "runStatus": 0,
+      "verdictPresent": true,
+      "probeFailures": [
+        "turn/The game advances one phase in each frame, in the order of the service, and ends at idle",
+        "turn/A snapshot is published in each of the seven frames of the turn",
+        "turn/The end of the turn is published exactly once, in the frame that finishes the last phase"
+      ],
+      "oracleRules": [
+        "turns"
+      ],
+      "expectedRules": [
+        "turns"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "leaky-transition",
+      "target": "probe",
+      "where": "tests/frontier-turn-probe.gd",
+      "breaks": "every click leaves a Godot node behind that nothing frees",
+      "find": "  click_at(point)\n  var flushed := Time.get_ticks_usec()\n",
+      "replace": "  click_at(point)\n  var leaked := Node.new()\n  var flushed := Time.get_ticks_usec()\n",
+      "sourceSha256": "f0928abf09cb3259f16405946265e0b4022afeb321f4ce45658a3de94e002ab3",
+      "runStatus": 0,
+      "verdictPresent": true,
+      "probeFailures": [
+        "rest/Godot counts no orphan node at rest"
+      ],
+      "oracleRules": [
+        "rests"
+      ],
+      "expectedRules": [
+        "rests"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "click-misses-panel",
+      "target": "probe",
+      "where": "tests/frontier-turn-probe.gd",
+      "breaks": "the click is delivered far from the tile or the button",
+      "find": "func click_at(point: Vector2) -> void:\n",
+      "replace": "func click_at(requested: Vector2) -> void:\n  var point := requested + Vector2(-2000, 0)\n",
+      "sourceSha256": "80c8d480b583411c8f1f5dc56e7b84680c0d3871725d88ba09e0b0193aa350f9",
+      "runStatus": 0,
+      "verdictPresent": true,
+      "probeFailures": [
+        "click/Every click shows the panels of its context within a ceiling of frames, and the run was not cut short",
+        "click/When the HUD shows the panels the game is in the context the click leads to",
+        "click/Every click makes exactly one call to the game, the intent of its step",
+        "click/A click on the map reaches the World (its press and release) and a click on a panel or button does not",
+        "click/A click on a panel or button is one call of the HUD, and a click on the map is none",
+        "queue/Every step that opens an event of the queue shows its position and its own two choices, in the order of the game's table",
+        "queue/The three answers of every round are real clicks on the dialog's choices, and the last one closes it",
+        "rest/Every series (the start of a round and each step) has a reading at rest in every round",
+        "turn/The probe pressed End turn four times in every round",
+        "observation/The Controls the timed frames read and the full reading of the Surface say the same when a click arrives",
+        "heap/The live heap at rest, by the median of the last half of the steady rounds, is within 2048 bytes of the first half's, for every series"
+      ],
+      "oracleRules": [
+        "shape",
+        "clicks",
+        "rests",
+        "observation",
+        "heap",
+        "rss",
+        "turns"
+      ],
+      "expectedRules": [
+        "shape",
+        "clicks"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "observed-in-frames",
+      "target": "probe",
+      "where": "tests/frontier-turn-probe.gd",
+      "breaks": "the timed frames read the HUD from the Surface's snapshot, the whole application's status, as they did before the Controls: two full reads in every frame, the one that decides the arrival and the one that records the spinner",
+      "find": "func timed_view() -> Dictionary:\n  return live_views()\n",
+      "replace": "func timed_view() -> Dictionary:\n  return mounted()\n",
+      "sourceSha256": "d6115fe20f1875e49beed86cd91e6ca33a2ef45d89dae39cb436da0a1f3929c7",
+      "runStatus": 0,
+      "verdictPresent": true,
+      "probeFailures": [
+        "observation/No interval between two timed frames contains a read of the Surface's snapshot, which carries everything the application has accumulated"
+      ],
+      "oracleRules": [
+        "observation"
+      ],
+      "expectedRules": [
+        "observation"
+      ],
+      "rejected": true
+    },
+    {
+      "name": "heap-leak",
+      "target": "copy",
+      "where": "the provisioned copy of ui/hud/hud.tsx",
+      "breaks": "the HUD keeps 64 numbers of every render for ever, a JavaScript leak that grows with every transition",
+      "find": "function GameScreen() {\n",
+      "replace": "const turnLeak: number[][] = [];\n\nfunction GameScreen() {\n  turnLeak.push(new Array<number>(64).fill(0));\n",
+      "sourceSha256": null,
+      "runStatus": 0,
+      "verdictPresent": true,
+      "probeFailures": [
+        "heap/The live heap at rest, by the median of the last half of the steady rounds, is within 2048 bytes of the first half's, for every series"
+      ],
+      "oracleRules": [
+        "heap"
+      ],
+      "expectedRules": [
+        "heap"
+      ],
+      "rejected": true
+    }
+  ],
+  "templateSha256": {
+    "before": "8192c9c1c8bf579455dcbbfd0a6a1b693a536e8ec3eaf6102210c06e2c997d94",
+    "after": "8192c9c1c8bf579455dcbbfd0a6a1b693a536e8ec3eaf6102210c06e2c997d94"
+  },
+  "genuineRunStatus": 0
+}

@@ -184,7 +184,20 @@ O p99 ocioso fica em 15,329 ms (congelado: 15,213 ms) e um quadro de 100 ms ou m
 
 ## CI hospedada e Pages
 
-**Pendentes.** A entrega ainda não está na `main`: o recibo da CI hospedada e o do Pages saem da ferramenta de recibos (`scripts/hosted-receipts.mjs`), em registro próprio, depois do merge. O `--check` roda na CI pelo teste `tests/frontier-freeze.test.mjs`, que faz parte do `test:contracts`; a extração `--from-receipts` só roda localmente, porque os recibos brutos ficam fora do repositório.
+O push da `main` em `561251d` (o squash do #107; run [38025095171](https://github.com/journey-studios/godot-fabric/actions/runs/38025095171) do workflow Contracts) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 8 s), `reference-android` (6 min 16 s) e `reference-ios` (7 min 23 s). Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**. O [recibo](hosted-ci.json) registra esses cinco como `skipped` e não como falha, e só os aceita porque a linha da fatia não tem passo nativo nem artefato.
+
+A fatia não tem passo nativo: o congelamento é um contrato em Node, e o recibo não certifica nenhum build nativo.
+
+O que o run prova, conferido pelo `--check` do script e pelos logs:
+
+- **O checkout.** Os três jobs que rodaram usaram `561251d`. A árvore do head do PR (`e888adb`) é a mesma árvore do squash.
+- **O passo da guarda.** "Milestone exit guards (X9 and X10)" (passo 5 do job `contracts`) passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 2b2972607f9f (--base 2b2972607f9f5372530d151cedf4a1c0ceee5034); X9 clean, X10 clean`. A base é o pai do squash.
+- **Os testes.** `npm run test:contracts` (passo 6) passou com 489 testes de Node, `# fail 0`, e `PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values`. O recibo confere, pelo nome e no log do job `contracts`, os 21 testes de nível superior de `tests/frontier-freeze.test.mjs`: 21 de 21. O TAP escreve `\#` nos nomes com `#`, e o gerador desfaz esse escape antes de comparar, porque um nome deste arquivo tem `#100`.
+- **Os checks.** `check:static` e `check:publication` também passaram (1.978 arquivos).
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run [38025095215](https://github.com/journey-studios/godot-fabric/actions/runs/38025095215), `build` e `deploy` em success, 43 testes do painel). O deployment 6976226964 está em success, o artefato `github-pages` (id 11659958434, SHA-256 `62e7446a…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash (SHA-256 `0b15733b…`) e a entrada de atividade `milestone-0-5-v05-06-congelado-e1803a9`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+O `--check` roda na CI pelo teste `tests/frontier-freeze.test.mjs`, que faz parte do `test:contracts`; a extração `--from-receipts` só roda localmente, porque os recibos brutos ficam fora do repositório.
 
 ## Reproduzindo
 

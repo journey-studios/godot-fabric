@@ -909,6 +909,14 @@ diagnosis, and arm B, `execucao` and the iPhone (a no-go) are open. The
 [record](https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md) is local macOS arm64 evidence, and its hosted CI run and Pages
 publication come after the merge. No 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the freeze (#107, the `congelado` act of V05-06 and the `protocolo` of V05-10, GF-30) are
+recorded. The push of main at its squash commit `561251d` passed the Contracts workflow on the first attempt: `contracts`, `reference-android`
+and `reference-ios` succeeded, and the five native jobs are recorded as skipped, accepted because the slice has no native step. The milestone
+guard passed against the squash's parent, and `tests/frontier-freeze.test.mjs` passed 21 of 21 in the job's log. The generator now undoes TAP's
+escape of `#` in test descriptions, which had kept a test named with `#100` from being found by name. Its Pages run built and deployed the same
+squash. The [evidence index](https://github.com/journey-studios/godot-fabric/blob/7099e2b050e71ce57056cf529c56de10df3b8c79/docs/evidence/README.md)
+links the two receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
