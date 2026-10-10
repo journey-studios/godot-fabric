@@ -1,0 +1,2048 @@
+{
+  "maxAttempts": 3,
+  "minimumPerArm": 10,
+  "totals": {
+    "presented": {
+      "A": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 0,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      },
+      "B": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 1,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      },
+      "C": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 1,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      }
+    },
+    "unlimited": {
+      "A": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 0,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      },
+      "B": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 0,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      },
+      "C": {
+        "planned": 12,
+        "accepted": 12,
+        "rejected": 0,
+        "open": 0,
+        "missing": 0,
+        "exhausted": 0
+      }
+    }
+  },
+  "balance": {
+    "presented": {
+      "planned": [
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        }
+      ],
+      "accepted": [
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        }
+      ],
+      "balanced": true
+    },
+    "unlimited": {
+      "planned": [
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        }
+      ],
+      "accepted": [
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        },
+        {
+          "A": 4,
+          "B": 4,
+          "C": 4
+        }
+      ],
+      "balanced": true
+    }
+  },
+  "stopped": [],
+  "slots": [
+    {
+      "lane": "presented",
+      "slot": 1,
+      "block": 0,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.18,
+            "after": 0.71
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 2,
+      "block": 0,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.42,
+            "after": 1.24
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 3,
+      "block": 0,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.46,
+            "after": 0.55
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 4,
+      "block": 1,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 2,
+      "rejected": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 5.3,
+            "after": 0.53
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "rejected",
+          "reasons": [
+            {
+              "rule": "load",
+              "clause": "before",
+              "value": 5.3,
+              "limit": 2
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "reported": true,
+          "load": {
+            "before": 0.99,
+            "after": 0.53
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 5,
+      "block": 1,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.83,
+            "after": 0.56
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 6,
+      "block": 1,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.94,
+            "after": 1.02
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 7,
+      "block": 2,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 2,
+      "rejected": 1,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": false,
+          "load": {
+            "before": 0.55,
+            "after": 0.7
+          },
+          "status": "rejected",
+          "reasons": [
+            {
+              "rule": "errors",
+              "clause": "no-report",
+              "crashed": true,
+              "timedOut": false,
+              "signal": "SIGSEGV"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "reported": true,
+          "load": {
+            "before": 0.55,
+            "after": 0.7
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 8,
+      "block": 2,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.4,
+            "after": 0.83
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 9,
+      "block": 2,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.83,
+            "after": 0.57
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 10,
+      "block": 3,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.49,
+            "after": 0.87
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 11,
+      "block": 3,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.84,
+            "after": 0.53
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 12,
+      "block": 3,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.42,
+            "after": 1.12
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 13,
+      "block": 4,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.67,
+            "after": 0.61
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 14,
+      "block": 4,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.41,
+            "after": 0.75
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 15,
+      "block": 4,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.56,
+            "after": 0.72
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 16,
+      "block": 5,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.63,
+            "after": 0.67
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 17,
+      "block": 5,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.81,
+            "after": 0.96
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 18,
+      "block": 5,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.12,
+            "after": 0.69
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 19,
+      "block": 6,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.04,
+            "after": 0.73
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 20,
+      "block": 6,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.67,
+            "after": 1.11
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 21,
+      "block": 6,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.01,
+            "after": 0.58
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 22,
+      "block": 7,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.73,
+            "after": 0.93
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 23,
+      "block": 7,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.62,
+            "after": 1.21
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 24,
+      "block": 7,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.84,
+            "after": 1.19
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 25,
+      "block": 8,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.47,
+            "after": 0.86
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 26,
+      "block": 8,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.5,
+            "after": 0.71
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 27,
+      "block": 8,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.19,
+            "after": 0.89
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 28,
+      "block": 9,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.47,
+            "after": 0.57
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 29,
+      "block": 9,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.64,
+            "after": 0.83
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 30,
+      "block": 9,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.13,
+            "after": 1.28
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 31,
+      "block": 10,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.14,
+            "after": 0.95
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 32,
+      "block": 10,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.05,
+            "after": 1.11
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 33,
+      "block": 10,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.52,
+            "after": 1.08
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 34,
+      "block": 11,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.56,
+            "after": 1.02
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 35,
+      "block": 11,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.87,
+            "after": 0.9
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "presented",
+      "slot": 36,
+      "block": 11,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.1,
+            "after": 0.76
+          },
+          "vsync": {
+            "mode": "ENABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 1,
+      "block": 0,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.08,
+            "after": 1.09
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 2,
+      "block": 0,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.4,
+            "after": 1.11
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 3,
+      "block": 0,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.49,
+            "after": 0.52
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 4,
+      "block": 1,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.53,
+            "after": 1.06
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 5,
+      "block": 1,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.1,
+            "after": 1.03
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 6,
+      "block": 1,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.08,
+            "after": 1.05
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 7,
+      "block": 2,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.09,
+            "after": 0.55
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 8,
+      "block": 2,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.83,
+            "after": 0.55
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 9,
+      "block": 2,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.92,
+            "after": 0.63
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 10,
+      "block": 3,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.19,
+            "after": 1.2
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 11,
+      "block": 3,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.86,
+            "after": 0.88
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 12,
+      "block": 3,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.5,
+            "after": 0.62
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 13,
+      "block": 4,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.94,
+            "after": 1.28
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 14,
+      "block": 4,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.05,
+            "after": 0.97
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 15,
+      "block": 4,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.56,
+            "after": 0.98
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 16,
+      "block": 5,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.75,
+            "after": 0.97
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 17,
+      "block": 5,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.05,
+            "after": 0.91
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 18,
+      "block": 5,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.16,
+            "after": 0.99
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 19,
+      "block": 6,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.61,
+            "after": 0.75
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 20,
+      "block": 6,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.47,
+            "after": 0.62
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 21,
+      "block": 6,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.49,
+            "after": 1.14
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 22,
+      "block": 7,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.73,
+            "after": 0.86
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 23,
+      "block": 7,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.02,
+            "after": 0.71
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 24,
+      "block": 7,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.16,
+            "after": 1.11
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 25,
+      "block": 8,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.67,
+            "after": 0.57
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 26,
+      "block": 8,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.41,
+            "after": 1.01
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 27,
+      "block": 8,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.94,
+            "after": 0.79
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 28,
+      "block": 9,
+      "position": 0,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.41,
+            "after": 1.25
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 29,
+      "block": 9,
+      "position": 1,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.78,
+            "after": 1.06
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 30,
+      "block": 9,
+      "position": 2,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.06,
+            "after": 0.74
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 31,
+      "block": 10,
+      "position": 0,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.96,
+            "after": 0.94
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 32,
+      "block": 10,
+      "position": 1,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 1.17,
+            "after": 0.65
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 33,
+      "block": 10,
+      "position": 2,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.67,
+            "after": 0.94
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 34,
+      "block": 11,
+      "position": 0,
+      "arm": "B",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.74,
+            "after": 0.65
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 35,
+      "block": 11,
+      "position": 1,
+      "arm": "C",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.65,
+            "after": 1.05
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "lane": "unlimited",
+      "slot": 36,
+      "block": 11,
+      "position": 2,
+      "arm": "A",
+      "state": "accepted",
+      "accepted": 1,
+      "rejected": 0,
+      "attempts": [
+        {
+          "attempt": 1,
+          "reported": true,
+          "load": {
+            "before": 0.88,
+            "after": 1.14
+          },
+          "vsync": {
+            "mode": "DISABLED",
+            "refreshHz": 120
+          },
+          "status": "accepted",
+          "reasons": []
+        }
+      ]
+    }
+  ]
+}

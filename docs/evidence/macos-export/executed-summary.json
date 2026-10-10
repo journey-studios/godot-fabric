@@ -1,0 +1,35 @@
+{
+  "producer": "58f527193039222b19794960e7b662cb34c65e74",
+  "startedAt": "2026-10-08T20:04:52.883Z",
+  "completedAt": "2026-10-08T20:05:27.433Z",
+  "appRegularFileBytes": 106438140,
+  "runtimeCounts": [
+    40,
+    43
+  ],
+  "sdkSourceFiles": 219,
+  "versions": {
+    "react": "19.2.3",
+    "reactNative": "0.87.1",
+    "hermes": "250829098.0.17",
+    "godot": "4.7.2.stable.official.ed1daf0bf"
+  },
+  "rawReportDirectory": "build/macos-export-Verified-66418-1791489892857-0c4aea",
+  "localGates": {
+    "nativeExportTests": {
+      "tests": 7,
+      "passed": 7,
+      "skipped": 0
+    },
+    "contractsNode": {
+      "tests": 327,
+      "passed": 326,
+      "skipped": 1,
+      "skip": "real export requires explicit template in native lane"
+    },
+    "contractsPython": {
+      "tests": 23,
+      "passed": 23
+    }
+  }
+}

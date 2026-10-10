@@ -5,15 +5,15 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "5",
-    "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
+    "focusSequence": "6",
+    "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T14:40:00.000Z",
+  "updatedAt": "2026-10-10T15:14:00.000Z",
   "source": {
-    "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
-    "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 149 checks com oráculo independente, controle sobre b0e40aa (90 falham), quatro sabotagens, a recusa de uma faixa inválida da semente e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em 05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). A CI hospedada (Contracts disparada 38018685996, oito jobs, MOBILE_DENSITY_PASSED: 149) e o Pages (38018671228) do squash 8cd2491 passaram, com recibos canônicos em docs/evidence/mobile-density/.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104"
+    "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+    "scope": "P2 V05-07 do marco 0.5: curadoria local da execução macOS symlink-parent no produtor limpo 6c2169a; export 14/14, runtime 40/43, sete controles nativos e revisão física de host/RPATH/220 pins. Evidência aditiva; replay Frontier, perfil limpo/segunda máquina, CI hospedada, revisão final e Pages permanecem pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/75"
   },
   "phases": [
     {
@@ -4153,19 +4153,45 @@
             "GF-38"
           ],
           "dependsOn": [],
-          "acceptance": "O .app Release exportado executa o replay de 12 turnos com o mesmo hash dourado do editor, em perfil de usuário limpo, sem Node, Godot nem Xcode; codesign --verify ad hoc passa; hash, tamanho e versões (RN 0.87.1, React 19.2.3, Hermes 250829098.0.17, Godot 4.7.2) registrados. Hoje só existe sdk/addon/ios_export.gd: não há export macOS nem .app executado.",
+          "acceptance": "O .app Release exportado executa o replay de 12 turnos com o mesmo hash dourado do editor, em perfil de usuário limpo, sem Node, Godot nem Xcode; codesign --verify ad hoc passa; hash, tamanho e versões (RN 0.87.1, React 19.2.3, Hermes 250829098.0.17, Godot 4.7.2) registrados. Estado inicial do marco: só existia sdk/addon/ios_export.gd, sem export macOS nem .app executado.",
           "criteria": [
             {
               "id": "plugin",
               "label": "Plugin de export macOS: o .app Release de consumers/minimal executa os checks existentes (começa no dia 0)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Prova local do produtor 29969eb: export Release minimal, 40/43 checks e 3 PNG físicos 540×300, idênticos à execução editável; 220 pins SDK auditados; nova CI pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/README.md"
+                },
+                {
+                  "label": "Recibo real do app assinado e relocável, com SDK/build/PCK vinculados e RN lógico 1080×600 a scale 0.5",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/export/receipt.json"
+                },
+                {
+                  "label": "Nova execução local no produtor limpo 6c2169a: 14/14 testes nativos, 40/43 checks e três capturas verificadas; critérios replay e perfil limpo continuam abertos.",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
+                }
+              ]
             },
             {
               "id": "assinatura",
               "label": "Frameworks Hermes e RN embutidos com rpath correto, codesign --verify --deep --strict ad hoc e nenhum caminho absoluto de desenvolvimento (otool -L e check:publication)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Auditoria local do arquivo tar: 280 checks, incluindo deep/strict, links, modos e 220 pins; sem certificação de CI",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/local-audit/audit.json"
+                },
+                {
+                  "label": "Normalização idempotente e quatro mutações reais rejeitadas no produtor 29969eb",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/controls/report.json"
+                },
+                {
+                  "label": "Sete controles nativos e revisão física confirmam rejeição de LC_RPATH via symlink para fora do app antes da carga; host/RPATH e 220 pins verificados localmente.",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
+                }
+              ]
             },
             {
               "id": "replay",
@@ -4780,6 +4806,20 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-v05-10-unreported-8817938",
+      "at": "2026-10-10T15:14:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit 8817938): a tentativa cujo processo não escreveu relatório (travamento, estouro de tempo, saída sem relatório) passa a fazer parte dos dados da campanha no formato da análise. Antes, a campanha do #126 a deixava fora de executions, renumerava as outras e a listava só no estado e no summary.json; o relatório da análise contaria menos tentativas do que as feitas, e a regra das 3 tentativas não seria verificável a partir de campaign.json. O formato continua godot-fabric.frontier-comparison-campaign/v1 e ganha o campo opcional unreported (uma entrada por tentativa: braço, faixa, vaga, número, carga antes e depois, como o processo terminou e o SHA-256 do log). É uma mudança do formato, que é da análise, e não uma emenda do protocolo: as regras errors, runs.load.redo e report.sections validity já cobrem o caso. A análise julga a tentativa rejeitada pela regra errors, cláusula no-report, com os valores da entrada; ela conta nas 3 tentativas da vaga e na parada por tentativas esgotadas, e o relatório a mostra com reported: false, a carga e o motivo, sem vsync. A campanha escreve unreported em campaign.json, mantém o número real de cada tentativa (some a renumeração) e deixou de ter a parada própria por vaga esgotada, que a da análise passou a cobrir. Uma saída 0 sem relatório vale como errors também (o cenário só sai com 0 depois de gravar o relatório). O exemplo sintético foi regerado (só ganhou reported: true em cada tentativa) e há um exemplo novo da seção validity com uma tentativa sem relatório, conferido byte a byte por teste. Só Node e dados sintéticos: nenhum número é resultado. O lançador Debug ainda não repassa timedOut (uma linha, no arquivo da entrega do slot que o tem). Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-8-40dd07d",
+      "at": "2026-10-10T15:06:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #126, a campanha comparativa inteira (a parte 2 do critério execucao), já na main como c6dea50. A Contracts do push da main em c6dea50 (run 38061346890) passou na primeira tentativa: os jobs contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque a linha da fatia não tem passo nativo nem artefato. A guarda de marco passou, e o job contracts rodou os três arquivos de contrato da campanha com 35 de 35 testes no log. O Pages do push (run 38061346857) publicou o migration.json commitado, com a entrada de atividade da fatia. Nenhum critério muda; a execução comparativa segue aberta. Gerador canônico com 27 fatias e 54 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/40dd07d58eed6de68f9f008320fe472623b5f8e6/docs/evidence/frontier-comparison-campaign/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "milestone-0-5-v05-10-mudanca",
       "at": "2026-10-10T14:40:00.000Z",
       "taskIds": [],
@@ -5057,6 +5097,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09"
     },
     {
+      "id": "milestone-0-5-p2-symlink-parent-6c2169a",
+      "at": "2026-10-09T13:31:13.000Z",
+      "taskIds": [],
+      "message": "P2 V05-07, critérios plugin e assinatura: execução macOS local no produtor limpo 6c2169a, com 14/14 testes nativos, 40/43 runtime checks, sete controles e revisão física do symlink-parent/RPATH; os 220 pins SDK e três capturas foram verificados. Incidente de recuperação e hashes estão curados sem reescrever históricos. Replay Frontier, perfil limpo/segunda máquina, CI hospedada, revisão final e Pages continuam pendentes; nenhum critério ou denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/9c5aa275f3978847ed28af22e53600f73bfa9255/docs/evidence/macos-export/symlink-parent-review/README.md"
+    },
+    {
       "id": "milestone-0-5-exit-guards-b02e2a5",
       "at": "2026-10-09T12:17:14.000Z",
       "taskIds": [],
@@ -5132,6 +5179,29 @@
       "taskIds": [],
       "message": "V05-06 do marco 0.5, critério baseline, só a faixa headless e com evidência local (macOS arm64, pinada em ebfe8a0 sobre a implementação de 346146d): na cena de prova do V05-02, um clique real num botão da barra troca o painel por uma árvore de 50, 75 ou 100 nós nativos, em dois processos Godot, com 12 trocas por volta, 2 voltas de aquecimento e 30 estáveis (720 trocas estáveis). A medição sai do amostrador compartilhado do GF-30 (tests/performance-sampler.gd, extraído do performance-probe sem duplicá-lo): contagens do motor, heap do Hermes depois de coleta forçada, RSS e proveniência. Os invariantes exatos passam nas 720 trocas: os nós depois de uma troca são os da base mais os do painel novo, cada troca cria os nós do painel novo e apaga os do antigo, um clique troca uma vez e nunca chega ao mapa, a volta termina na base e o heap em repouso fica dentro do limite do GF-30 (julgado sobre o piso de janelas de 5 voltas); o host monta o painel dentro do flush do clique, 0 quadros depois. Um oráculo independente recalcula tamanhos e percentis, e quatro sabotagens retidas são rejeitadas (leaky-panel com opacidade 0, no-gc, world-leak e no-key); display none não monta nó, então não serve de vazamento. Custo de CPU da troca no laço headless, mediana e p95 sobre 180 trocas por tamanho: 2,2 e 3,2 ms (só apaga), 5,9 e 8,6 ms (cria 50 nós), 7,7 e 10,6 ms (75) e 9,2 e 12,4 ms (100), de modo que uma troca de 100 nós custa mais que o período de 8,33 ms de uma tela de 120 Hz. A PROPOSTA de orçamento, não congelada, traz CPU por troca de 4,5, 11,0, 13,5 e 16,0 ms (p95 vezes 1,25, arredondado para cima a 0,5 ms), heap por painel de 320.000, 410.000 e 510.000 bytes, e nós e latência exatos (0 quadros). A faixa janelada, só local, foi recusada pela nova regra de execução pareada: a tela não apresentava a janela (quadro ocioso de 0,70 ms contra os 4,17 ms exigidos), as três tentativas foram rejeitadas como unpaced, a lane saiu com código 3 e o recibo tem presented false, sem tempo de quadro. O critério baseline continua aberto até uma execução janelada apresentada; turno, soak e congelado continuam abertos. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ebfe8a095fda185af7e20e2a2d47e26c641579c0/docs/evidence/frontier-baseline/README.md"
+    },
+    {
+      "id": "macos-export-symlink-review-5596acb",
+      "at": "2026-10-08T23:51:02.819Z",
+      "taskIds": [],
+      "message": "V05-07: acompanhamento local de contenção de symlinks no produtor 5596acb; export 14/14, consumidor 40/43, seis controles e auditoria local 285/285. CI/revisão finais e o escopo ampliado permanecem separados; nenhum critério ou denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
+    },
+    {
+      "id": "milestone-0-5-p2-containment-review-881a711",
+      "at": "2026-10-08T23:19:38.019Z",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "P2 V05-07: revisão CodeRabbit consolidou três verificações de caminhos. Nova execução real no produtor limpo 881a711 passou 13/13 testes nativos, 40/43 checks do runtime e 284/284 verificações da auditoria independente. Os 220 pins do SDK e as três capturas continuam iguais à baseline. Critérios adicionais continuam abertos; CI do head final pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/75"
+    },
+    {
+      "id": "milestone-0-5-p2-fixed-window-29969eb",
+      "at": "2026-10-08T22:55:24.948Z",
+      "taskIds": [],
+      "message": "P2, critérios plugin e assinatura: produtor local 29969eb passou 13/13 testes nativos e o app assinado/relocado passou os mesmos 40/43 checks. As três capturas físicas 540×300 mostram o canvas lógico 1080×600 a scale 0.5 e são idênticas à execução editável independente. Root verificou 220 pins SDK, o tar local em 280 checks e a baseline em 24 checks. Contratos: 395 Node PASS + 1 skip explícito e 23 Python PASS; static/publication PASS. Evidências e falhas anteriores preservadas por hashes; o remount antigo continua sem causa comprovada. A CI anterior 7c6a4f8 está vermelha; nova CI e revisão pendentes. Replay do jogo, perfil limpo, segundo Mac/VM e critérios de saída continuam abertos. Nenhum done, checkpoint, peso ou denominador da 1.0 mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ead6ad46a68083c0ba9fd10e82d296d93750ac23/docs/evidence/macos-export/fixed-window/README.md"
     },
     {
       "id": "milestone-0-5-v05-03-consumidor-b9a40cb",

@@ -169,6 +169,37 @@ export const overLoaded = (execution) => {
   execution.load.before = 5.3;
 };
 
+// How the process of an attempt that wrote no report ended, as the entry of `unreported` says it: killed by a signal, killed at the launcher's time limit, or exited 0 with no report.
+export const ENDINGS = {
+  crash: { crashed: true, timedOut: false, signal: "SIGSEGV" },
+  timeout: { crashed: true, timedOut: true, signal: "SIGTERM" },
+  silent: { crashed: false, timedOut: false, exitCode: 0 },
+};
+
+// Attempts of (lane, slot) that wrote no report, one for each of `endings` and in that order, put before the slot's execution, which becomes the next attempt; with `redone: false` the
+// execution is dropped instead, so that the slot ends with no accepted attempt. The entry takes the arm and the load readings of the execution, and a log hash made up from its key.
+// Returns the campaign.
+export function noReportSlot(campaign, lane, slot, endings = [ENDINGS.crash], { redone = true } = {}) {
+  const index = campaign.executions.findIndex((candidate) => candidate.lane === lane && candidate.slot === slot);
+  const execution = campaign.executions[index];
+  const entries = endings.map((errors, position) => ({
+    arm: execution.arm,
+    lane,
+    slot,
+    attempt: position + 1,
+    load: { ...execution.load },
+    errors: { ...errors },
+    logSha256: sha(`log/${lane}/${slot}/${position + 1}`),
+  }));
+  campaign.unreported = [...(campaign.unreported ?? []), ...entries];
+  if (redone) {
+    execution.attempt = entries.length + 1;
+  } else {
+    campaign.executions.splice(index, 1);
+  }
+  return campaign;
+}
+
 // ---- the helpers of the tests that analyse a synthetic campaign ----
 
 export const sha256 = (data) => createHash("sha256").update(data).digest("hex");
@@ -220,18 +251,36 @@ function exampleCampaign(protocol, protocolSha256) {
   return redoSlot(campaign, "presented", 4, [overLoaded]);
 }
 
+// The example campaign with a process that crashed and wrote no report in the first attempt of the presented lane's slot 7 (arm B), which the second attempt redid: the attempt is in `unreported`.
+const unreportedExampleCampaign = (protocol, protocolSha256) => noReportSlot(exampleCampaign(protocol, protocolSha256), "presented", 7);
+
 // The bytes of a campaign file: compact JSON and a final newline. The report records the SHA-256 of these bytes.
 const serializeCampaign = (campaign) => `${JSON.stringify(campaign)}\n`;
 
+// The `validity` section of the report of that campaign, as the report writes it (two-space JSON and a final newline).
+function unreportedValidity(protocol, protocolSha256) {
+  const campaign = unreportedExampleCampaign(protocol, protocolSha256);
+  const report = buildReport({ campaign, protocol, protocolSha256, campaignSha256: sha256(serializeCampaign(campaign)) });
+  return `${JSON.stringify(report.sections.validity, null, 2)}\n`;
+}
+
 // node tests/frontier-comparison-synthetic.mjs <campaign.json>: writes the example campaign of the evidence record, which scripts/frontier-comparison-analysis.mjs then analyses.
+// With --unreported, the same campaign with an attempt that wrote no report; with --unreported-validity, the file is the `validity` section of the report of that campaign.
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const [file] = process.argv.slice(2);
+  const [first, second] = process.argv.slice(2);
+  const mode = first === "--unreported" || first === "--unreported-validity" ? first : null;
+  const file = mode === null ? first : second;
   if (file === undefined) {
-    console.error("use: node tests/frontier-comparison-synthetic.mjs <campaign.json>");
+    console.error("use: node tests/frontier-comparison-synthetic.mjs [--unreported | --unreported-validity] <file.json>");
     process.exitCode = 1;
   } else {
     const { protocol, protocolSha256 } = readProtocol();
-    fs.writeFileSync(file, serializeCampaign(exampleCampaign(protocol, protocolSha256)));
-    console.log(`FRONTIER_COMPARISON_EXAMPLE_CAMPAIGN_WRITTEN: ${file}`);
+    if (mode === "--unreported-validity") {
+      fs.writeFileSync(file, unreportedValidity(protocol, protocolSha256));
+      console.log(`FRONTIER_COMPARISON_EXAMPLE_UNREPORTED_VALIDITY_WRITTEN: ${file}`);
+    } else {
+      fs.writeFileSync(file, serializeCampaign(mode === null ? exampleCampaign(protocol, protocolSha256) : unreportedExampleCampaign(protocol, protocolSha256)));
+      console.log(`FRONTIER_COMPARISON_EXAMPLE_CAMPAIGN_WRITTEN: ${file}`);
+    }
   }
 }

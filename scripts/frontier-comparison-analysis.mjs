@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { campaignErrors } from "./frontier-comparison-format.mjs";
+import { campaignErrors, unreportedAttempts } from "./frontier-comparison-format.mjs";
 import { protocolErrors } from "./frontier-comparison-protocol.mjs";
 import { buildReport, serializeReport } from "./frontier-comparison-report.mjs";
 
@@ -77,7 +77,10 @@ function main(argv) {
       throw new Error(`${problems.length} problem(s) in the campaign`);
     }
     const { campaign } = readInputs(options.campaign, options.protocolFile);
-    console.log(`FRONTIER_COMPARISON_FORMAT_PASSED: ${campaign.executions.length} attempts, arm B ${campaign.armB.ready ? "ready" : "not ready"}`);
+    // Every attempt counts: the executions (a report) and the ones that wrote no report (`unreported`); the split is said only when there are the latter.
+    const [reported, unreported] = [campaign.executions.length, unreportedAttempts(campaign).length];
+    const attempts = unreported === 0 ? `${reported} attempts` : `${reported + unreported} attempts (${reported} with a report, ${unreported} without)`;
+    console.log(`FRONTIER_COMPARISON_FORMAT_PASSED: ${attempts}, arm B ${campaign.armB.ready ? "ready" : "not ready"}`);
     return;
   }
   const report = analyzeFiles(options.campaign, options.protocolFile);

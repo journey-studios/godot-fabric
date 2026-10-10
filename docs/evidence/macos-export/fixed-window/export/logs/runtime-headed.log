@@ -1,0 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 4.1 Metal - 90.5 - Compatibility - Using Device: Apple - Apple M3 Pro
+
+HERMES: Running "HUD"
+HERMES: Running "Inventory"
+HERMES: Updating props for Surface "HUD" with {"rootTag":1,"initialProps":{"title":"Props from Godot","panel":"hud"},"fabric":true}
+HERMES: Running "Inventory"
+MACOS_EXPORT_USER_DATA_DIR:{HOME}/Library/Application Support/Godot/app_userdata/Godot Fabric Export 33220-1791499097327-6e5eb0
+CONSUMER_VALIDATION_PASSED
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+W1008 19:38:47.760270 4187611520 UIManagerBinding.cpp:61] UIManagerBinding::~UIManagerBinding() was called (address: 0x879f29818).
+W1008 19:38:47.760301 4187611520 UIManager.cpp:57] UIManager::~UIManager() was called (address: 0x878266a18).

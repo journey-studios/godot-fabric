@@ -55,8 +55,9 @@ function currentMachine() {
   return { commit: git(["rev-parse", "HEAD"]), machine: `${hardware.chip}, ${hardware.logicalCores} cores, ${hardware.memoryGb} GB`, system: hardware.os };
 }
 
-// What one attempt came to, for the state: the wait, the process, the files kept, and the execution object the analysis reads (null when the process wrote no report in the scenario's format,
-// which the format has no object for). The verdict is filled in once the analysis has judged the campaign with this attempt in it.
+// What one attempt came to, for the state: the wait, the process, the files kept, and the execution object the analysis reads (null when the process wrote no report in the scenario's format:
+// the attempt is then the campaign's `unreported` entry, made from the process's readings below: whether it crashed, whether it timed out (the launcher says so, `launched.timedOut`), its exit
+// code or signal and the SHA-256 of its log). The verdict is filled in once the analysis has judged the campaign with this attempt in it.
 async function attemptOf({ step, launched, waited, startedAt, endedAt, out, protocol, protocolSha256, build, assumeRefreshHz }) {
   const key = `${step.lane}-${step.slot}-${step.attempt}`;
   await mkdir(path.join(out, "raw"), { recursive: true });
@@ -66,6 +67,7 @@ async function attemptOf({ step, launched, waited, startedAt, endedAt, out, prot
     await writeAtomic(path.join(out, "raw", `${key}.json`), JSON.stringify(report));
   }
   const signal = launched.signal ?? null;
+  const ended = processOf({ status: launched.exitCode, signal }, launched.log);
   const record = {
     lane: step.lane,
     slot: step.slot,
@@ -79,8 +81,11 @@ async function attemptOf({ step, launched, waited, startedAt, endedAt, out, prot
     hashes: { ...launched.hashes, protocol: protocolSha256 },
     exitCode: launched.exitCode,
     signal,
+    crashed: ended.crashed,
+    timedOut: launched.timedOut === true,
     raw: report === null ? null : `raw/${key}.json`,
     log: `raw/${key}.log`,
+    logSha256: sha256(launched.log),
     aborted: report?.aborted ?? "",
     anomalies: report?.anomalies ?? [],
     unavailable: report?.unavailable ?? {},
@@ -93,7 +98,6 @@ async function attemptOf({ step, launched, waited, startedAt, endedAt, out, prot
   const analysed = report === null ? null : analyse(report, protocol);
   if (analysed === null || analysed.derived === null) {
     record.problems = analysed === null ? [] : analysed.problems;
-    record.verdict = { accepted: false, reasons: [{ rule: "errors", clause: report === null ? "no-report" : "unreadable-report", exitCode: launched.exitCode, signal }] };
     return record;
   }
   record.problems = analysed.problems;
@@ -101,7 +105,7 @@ async function attemptOf({ step, launched, waited, startedAt, endedAt, out, prot
   record.configProblems = analysed.problems.filter((problem) => CONFIGURATION_PROBLEMS.includes(problem.code));
   const execution = executionOf({
     report, derived: analysed.derived, protocol, slot: step.slot, attempt: step.attempt, build, load: launched.load, hashes: record.hashes,
-    ended: processOf({ status: launched.exitCode, signal }, launched.log),
+    ended,
   });
   if (execution.vsync.refreshHz <= 0 && assumeRefreshHz !== null) {
     record.assumedRefreshHz = { read: execution.vsync.refreshHz, assumed: assumeRefreshHz };
@@ -202,7 +206,7 @@ async function playAttempt({ launcher, step, state, protocol, protocolSha256, ou
     state.environment = environmentOf(launched.report);
   }
   const validity = assess(state, protocol);
-  attempt.verdict ??= verdictOf(validity, state, attempt);
+  attempt.verdict = verdictOf(validity, attempt);
   log(`  ${attempt.verdict.accepted ? "accepted" : `rejected (${reasonsOf(attempt.verdict)})`}${attempt.seconds === null ? "" : `, ${attempt.seconds} s`}`);
   return validity;
 }

@@ -1,0 +1,112 @@
+{
+  "format": "godot-fabric.root-editable-fixed-window-review/v1",
+  "status": "passed",
+  "reviewedAt": "2026-10-08T22:43:37.457273+00:00",
+  "producer": "29969eb0d64201a1797e6e866a2ef650b1282fde",
+  "rawResultSha256": "39f199b2405837c6eb89d1a917159bcdb7ad449a31aea2ff521f70e7ff420338",
+  "runnerSha256": "ffa88e7a94903027949b79d7287a6b819b17512fa7a3f228aadb06656c52ebdf",
+  "sdkManifestSha256": "4c7ce4d2b8a41cbe47e2d44076ee6ba297f20753dbb245acf0fd831722b1c2cc",
+  "checks": [
+    {
+      "name": "observed-result-binds-export-receipt",
+      "passed": true
+    },
+    {
+      "name": "validation-diff-only-adds-inherited-headed-scale-hook",
+      "passed": true
+    },
+    {
+      "name": "project-diff-only-adds-unique-name-and-fixed-window",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:.gitignore",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:game.gd",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:main.tscn",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:package-lock.json",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:package.json",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:tsconfig.json",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:ui/application.tres",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:ui/index.tsx",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:ui/platform.godot.ts",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:ui/platform.native.ts",
+      "passed": true
+    },
+    {
+      "name": "canonical-consumer-file:ui/store.ts",
+      "passed": true
+    },
+    {
+      "name": "baseline-sdk-is-clean-same-producer-and-exact-source-map",
+      "passed": true
+    },
+    {
+      "name": "baseline-builder-report-binds-same-producer-and-export-bundle",
+      "passed": true
+    },
+    {
+      "name": "headless-checks-match-exact-canonical-order-and-all-pass",
+      "passed": true
+    },
+    {
+      "name": "headless-actual-log-has-pass-and-no-fatal-marker",
+      "passed": true
+    },
+    {
+      "name": "headed-checks-match-exact-canonical-order-and-all-pass",
+      "passed": true
+    },
+    {
+      "name": "headed-actual-log-has-pass-and-no-fatal-marker",
+      "passed": true
+    },
+    {
+      "name": "headed-metrics-logical-1080x600-at-uniform-half-scale",
+      "passed": true
+    },
+    {
+      "name": "initial-actual-png-is-540x300-and-byte-identical-to-export",
+      "passed": true
+    },
+    {
+      "name": "updated-actual-png-is-540x300-and-byte-identical-to-export",
+      "passed": true
+    },
+    {
+      "name": "resized-actual-png-is-540x300-and-byte-identical-to-export",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Editable baseline, not a second exported application or hosted CI.",
+    "The runner records image equality without asserting it; this independent review asserts all three actual byte comparisons.",
+    "The raw result omits a startedAt timestamp; none is inferred."
+  ]
+}

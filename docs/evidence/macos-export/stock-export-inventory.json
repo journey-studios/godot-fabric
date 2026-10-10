@@ -1,0 +1,95 @@
+{
+  "format": "godot-fabric.root-stock-sdk-export-inspection/v1",
+  "status": "observation-complete",
+  "inspectedAtUtc": "2026-10-08T18:53:54.011126+00:00",
+  "invocationReceiptSha256": "e2a7de9e07470a3a3642cbcd2f4fd385c88207f5caf752c39c06841948d3991d",
+  "appPath": "{WORKTREE}/build/scroll-view-root/p2-minimal-stock-sdk-export-preparation/staging-v2/GodotFabricMinimalStock.app",
+  "executableArchitecture": "arm64",
+  "missingRequiredFrameworks": [
+    "Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+    "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies"
+  ],
+  "files": [
+    {
+      "path": "Contents/Frameworks/fabric_godot.dylib",
+      "bytes": 6625024,
+      "mode": "0o644",
+      "sha256": "da3f9d4ff1d77917919bc711ea1d3289f8332cdc6b9258933de78b4328f07db2"
+    },
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 1851,
+      "mode": "0o644",
+      "sha256": "8f8ec73328721a5e907176a97723a643f8a001985be73d8d7b40a905c9c7cfec"
+    },
+    {
+      "path": "Contents/MacOS/Godot Fabric P2 Stock SDK Export",
+      "bytes": 82920128,
+      "mode": "0o755",
+      "sha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06"
+    },
+    {
+      "path": "Contents/PkgInfo",
+      "bytes": 9,
+      "mode": "0o644",
+      "sha256": "7e50a30efad50208a173203ced60818d693bb61266b75aa10927d1a2adce80cb"
+    },
+    {
+      "path": "Contents/Resources/Godot Fabric P2 Stock SDK Export.pck",
+      "bytes": 1628696,
+      "mode": "0o644",
+      "sha256": "d4f53dd41674a4e9e086c45749c16384580680d7ce71dc52ce8c51d17150a009"
+    },
+    {
+      "path": "Contents/Resources/PrivacyInfo.xcprivacy",
+      "bytes": 229,
+      "mode": "0o644",
+      "sha256": "0535353bb08c25b8ce5ed9ac7e442a5994f402e0f6cbc4bed668cfc63c2ceac3"
+    },
+    {
+      "path": "Contents/Resources/icon.icns",
+      "bytes": 67500,
+      "mode": "0o644",
+      "sha256": "779ff524928785811d6d4c61f47a26491160b1092db9b610e85fcdfd9b2d2b2a"
+    }
+  ],
+  "checks": [
+    {
+      "name": "actual stock export CLI0 without timeout",
+      "passed": true
+    },
+    {
+      "name": "actual export log bound",
+      "passed": true
+    },
+    {
+      "name": "actual executable arm64 only",
+      "passed": true
+    },
+    {
+      "name": "actual executable equals private thin template member",
+      "passed": true
+    },
+    {
+      "name": "actual executable has execute mode",
+      "passed": true
+    },
+    {
+      "name": "actual automatically collected host equals producer",
+      "passed": true
+    },
+    {
+      "name": "host collected exactly once",
+      "passed": true
+    },
+    {
+      "name": "both required dependency frameworks missing from actual stock app",
+      "passed": true
+    }
+  ],
+  "classification": "Stock macOS arm64 export succeeds and collects one host, but omits both required dependency frameworks",
+  "appLaunched": false,
+  "codesignDisabled": true,
+  "p2Acceptance": false,
+  "bundlePckInventoryInspected": false
+}

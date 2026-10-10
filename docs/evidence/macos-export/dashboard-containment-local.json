@@ -1,0 +1,27 @@
+{
+  "format": "godot-fabric.local-dashboard-capture/v1",
+  "recordedAt": "2026-10-08T23:21:06.447153+00:00",
+  "url": "http://127.0.0.1:4317/#milestones",
+  "sourceCommit": "881a711b9972421017e98997539e56615586d1e1",
+  "dashboardDataSha256": "8163b372457dbd0bca009ee2f3be7f86bee954ffc1bcf63c39937ffb6c3fcbd5",
+  "image": {
+    "path": "dashboard-containment-local.jpg",
+    "bytes": 99497,
+    "sha256": "eb384840786c8e3f06bf5b5ad5f1e88171e3800ace8459ba585075254f3ee6b0"
+  },
+  "observed": {
+    "p2Progress": "50%",
+    "p2Open": [
+      "Frontier game replay in clean OS profile",
+      "Second Mac or VM"
+    ],
+    "milestoneProgress": "31%",
+    "releaseProgress": "20.5%",
+    "releaseDone": "0/39"
+  },
+  "limits": [
+    "Local browser capture; not a public Pages deployment",
+    "P2 criterion evidence links retain the unchanged fixed-window producer29969eb proof",
+    "Review delta adds no done value"
+  ]
+}

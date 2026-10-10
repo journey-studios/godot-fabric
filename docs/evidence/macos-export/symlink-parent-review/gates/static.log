@@ -1,0 +1,8 @@
+
+> godot-fabric@0.1.0 check:static
+> fallow dead-code --root . --config .fallowrc.json
+
+loaded config: .fallowrc.json
+  337 entry points detected (146 package.json, 111 plugin, 80 manual entry)
+
+✓ No issues found (0.19s)

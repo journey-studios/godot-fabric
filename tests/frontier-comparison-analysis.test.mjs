@@ -487,11 +487,47 @@ test("the example report of the evidence record is the exact output of the scrip
     assert.deepEqual([report.sections.provenance.commit, report.sections.provenance.machine], ["synthetic-commit", "synthetic machine"]);
     assert.deepEqual(protocol.windows.map(({id}) => pairOf(report, id, "C-B").category), ["gain", "neutral", "cost", "inconclusive"]);
     assert.deepEqual([slotOf(report, "presented", 4).state, slotOf(report, "presented", 4).rejected], ["accepted", 1]);
+    assert.ok(report.sections.validity.slots.flatMap(slot => slot.attempts).every(attempt => attempt.reported === true), "every attempt of this campaign wrote a report");
     assert.equal(axisOf(report, "fps-unlimited").windows[0].category, "gain");
     const readme = fs.readFileSync(path.join(root, EVIDENCE, "README.md"), "utf8");
     for (const command of EXAMPLE_COMMANDS) {
       assert.ok(readme.includes(command), `the README gives the command: ${command}`);
     }
+  } finally {
+    fs.rmSync(directory, {recursive: true, force: true});
+  }
+});
+
+const UNREPORTED_COMMAND = `node tests/frontier-comparison-synthetic.mjs --unreported-validity ${EVIDENCE}/example-unreported-validity.json`;
+test("the unreported example of the evidence record is the exact output of its command, and is the validity section of the report of a campaign with an attempt that wrote no report", () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "frontier-comparison-unreported-"));
+  try {
+    const synthetic = path.join(root, "tests/frontier-comparison-synthetic.mjs");
+    const validityFile = path.join(directory, "example-unreported-validity.json");
+    const campaignFile = path.join(directory, "example-unreported-campaign.json");
+    const reportFile = path.join(directory, "example-unreported-report.json");
+    const run = args => spawnSync(process.execPath, args, {encoding: "utf8", maxBuffer: 1 << 28});
+    const written = run([synthetic, "--unreported-validity", validityFile]);
+    assert.equal(written.status, 0, written.stderr);
+    const committed = fs.readFileSync(path.join(root, EVIDENCE, "example-unreported-validity.json"), "utf8");
+    assert.equal(fs.readFileSync(validityFile, "utf8"), committed, "the committed file is the command's output, byte for byte; regenerate it with the command of the README if the script changed");
+    // It is the `validity` section of the report that the script's own command line gives for the campaign that the other option writes, which is in the format.
+    assert.equal(run([synthetic, "--unreported", campaignFile]).status, 0);
+    const checked = run([SCRIPT, "--check-format", campaignFile]);
+    assert.deepEqual([checked.status, checked.stdout], [0, "FRONTIER_COMPARISON_FORMAT_PASSED: 74 attempts (73 with a report, 1 without), arm B ready\n"], "every attempt counts, with the split; without an attempt that wrote no report the message is the old one");
+    assert.equal(run([SCRIPT, campaignFile, "--out", reportFile]).status, 0);
+    const section = JSON.parse(committed);
+    assert.deepEqual(JSON.parse(fs.readFileSync(reportFile, "utf8")).sections.validity, section);
+    // The attempt that wrote no report is attempt 1 of the presented lane's slot 7, rejected by `errors` with the clause and the values; the redo is accepted.
+    const slot = section.slots.find(candidate => candidate.lane === "presented" && candidate.slot === 7);
+    assert.deepEqual([slot.arm, slot.state, slot.accepted, slot.rejected], ["B", "accepted", 2, 1]);
+    assert.deepEqual(slot.attempts.map(attempt => [attempt.attempt, attempt.reported, attempt.status]), [[1, false, "rejected"], [2, true, "accepted"]]);
+    assert.deepEqual(slot.attempts[0].reasons, [{rule: "errors", clause: "no-report", crashed: true, timedOut: false, signal: "SIGSEGV"}]);
+    assert.ok(!("vsync" in slot.attempts[0]));
+    assert.deepEqual(section.totals.presented.B, {planned: 12, accepted: 12, rejected: 1, open: 0, missing: 0, exhausted: 0});
+    assert.deepEqual(section.stopped, []);
+    const readme = fs.readFileSync(path.join(root, EVIDENCE, "README.md"), "utf8");
+    assert.ok(readme.includes(UNREPORTED_COMMAND), `the README gives the command: ${UNREPORTED_COMMAND}`);
   } finally {
     fs.rmSync(directory, {recursive: true, force: true});
   }

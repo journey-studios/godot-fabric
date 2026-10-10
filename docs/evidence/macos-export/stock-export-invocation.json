@@ -1,0 +1,27 @@
+{
+  "format": "godot-fabric.stock-sdk-export-invocation/v2",
+  "argv": [
+    "/Applications/Godot.app/Contents/MacOS/Godot",
+    "--headless",
+    "--path",
+    "{WORKTREE}/build/scroll-view-root/p2-minimal-stock-sdk-export-preparation/project-v2",
+    "--export-release",
+    "macOS Arm64",
+    "{WORKTREE}/build/scroll-view-root/p2-minimal-stock-sdk-export-preparation/staging-v2/GodotFabricMinimalStock.app"
+  ],
+  "cwd": "{WORKTREE}/build/scroll-view-root/p2-minimal-stock-sdk-export-preparation/project-v2",
+  "manifestSha256": "b42551a9396d7a06102ba2e0e4a6196134bb152c8f39b3c82cde72d6489f3fcd",
+  "startedAtUtc": "2026-10-08T18:51:34.419326+00:00",
+  "completedAtUtc": "2026-10-08T18:51:39.757539+00:00",
+  "elapsedSeconds": 5.338143667031545,
+  "timeoutSeconds": 180,
+  "timedOut": false,
+  "exitCode": 0,
+  "log": "{WORKTREE}/build/scroll-view-root/p2-minimal-stock-sdk-export-preparation/stock-export-v2.log",
+  "logSha256": "a8e7e1c94912d9793e4b42bc1509ccb66addc77c3c355bc496ab7475c6ad2997",
+  "removedDyldEnvironmentKeys": [],
+  "childPath": "/usr/bin:/bin",
+  "nodePath": "",
+  "appLaunched": false,
+  "p2Acceptance": false
+}

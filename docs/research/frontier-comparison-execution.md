@@ -393,13 +393,13 @@ prepare launcher ─▶ self-check ─▶ [failed: nothing runs; stopped by `ins
 ```
 
 - **The plan** is the sequence of the protocol (`ABC CAB BCA` four times, 36 slots) in the first lane, then in the next; `--slots a-b` limits the slots of each lane (a rehearsal's short run).
-- **The verdict** of an attempt is the analysis': the campaign that the state makes (its executions, numbered 1, 2, ... in each slot) goes through `assessValidity`, and the attempt is accepted if no rule
+- **The verdict** of an attempt is the analysis': the campaign that the state makes (its executions and its `unreported` attempts, each with its own number) goes through `assessValidity`, and the attempt is accepted if no rule
   rejects it. `load`, `not-presented`, `not-the-registered-build`, `other-game`, `errors`, `parity` and `incomplete` are the analysis' (`scripts/frontier-comparison-validity.mjs`); the reasons are its
   `{rule, clause, ...values}`. A rejected attempt stays in the state and in `raw/` with its load readings and its reasons.
 - **The redo** takes the place of the rejected attempt: the next launch is the same slot with the next attempt number, before the slot after it.
-- **The stops** are the ones the analysis reports (`validity.stopped`: a slot whose attempts are used up, a second `other-game` in one arm, an instrument that did not pass), plus three that it cannot see: a slot
-  used up counting an attempt that wrote no report, a scenario that waited with numbers other than the protocol's (the problems coded `config-waits` and `config-idle-frames`), and an engine or a display that is not
-  the one the self-check ran on. A stopped
+- **The stops** are the ones the analysis reports (`validity.stopped`: a slot whose attempts are used up, **counting the attempts that wrote no report**, which are in the campaign; a second `other-game` in one arm; an instrument
+  that did not pass), plus two that it cannot see: a scenario that waited with numbers other than the protocol's (the problems coded `config-waits` and `config-idle-frames`), and an engine or a display that is not
+  the one the self-check ran on. The state keeps no stop of its own for the attempts of a slot: it had one while the attempts that wrote no report were not in the campaign, and with them in it the analysis' covers every case. A stopped
   campaign still writes its campaign and its report (status `stopped`, no statistic).
 - **The unlimited lane** is N/A from the first attempt whose vsync did not read back `DISABLED`, and its remaining slots do not run (`runs.lanes`).
 - **A rehearsal redoes nothing**: each slot runs once, whatever the rules said, so that the rejections it exists to show (the Debug build, the headless display, the load of a busy machine) can be seen.
@@ -446,13 +446,29 @@ live lock is removed) and leave a mutex behind (the next campaign refuses, namin
 
 `<out>/campaign-state.json` is written after every attempt, atomically (a temporary file, renamed over it), and holds: the options, the protocol's hash, the launcher's registration (the seed, the game's
 hashes, the instrument's file and, for each arm, the binary, package and script), the self-check, the engine, and every attempt (its slot, arm and number, the wait, the load before and after, the hashes of the files
-it ran, the exit code, the execution object the analysis reads, the verdict, the anomalies and the paths of `raw/<lane>-<slot>-<attempt>.json` and `.log`), and `unreported`, the list of the attempts that wrote no report
-(below). The raw files are written before the state, so the state never names a file that is not there. `--resume` reads it, runs the launcher's `prepare()` again and **refuses** unless the protocol, the script, the binary and the package have the same hashes (and the rest
+it ran, the exit code and signal, whether the process crashed or timed out, the execution object the analysis reads, the verdict, the anomalies, the paths of `raw/<lane>-<slot>-<attempt>.json` and `.log` and the SHA-256 of the log), and `unreported`,
+the list of the attempts that wrote no report ([below](#the-attempt-that-wrote-no-report)). The raw files are written before the state, so the state never names a file that is not there. `--resume` reads it, runs the launcher's `prepare()` again and **refuses** unless the protocol, the script, the binary and the package have the same hashes (and the rest
 of what was registered, and the options that decide which executions exist), then continues from the first slot without an accepted attempt; the self-check is not repeated unless it had not passed. A campaign
 resumed after an interruption ends with the same `campaign.json` and `report.json`, byte for byte, as one that was never interrupted (`tests/frontier-comparison-campaign.test.mjs`, which kills the fake
 launcher after 1, 2, 38 and 74 attempts and twice in one campaign). The record of a resume is in the state (`resumes`), never in the campaign.
 
 At the end: `campaign.json` (strictly the analysis' format), `report.json` (the analysis' report), `summary.json` (which also carries `unreported`) and, in a rehearsal, `rehearsal.json` (the mark, beside the campaign, as in part 1).
+
+### The attempt that wrote no report
+
+A process that crashed, hit its time limit or ended without a report in the scenario's format has no execution object (a refresh rate cannot be made up), but it is an attempt of its slot. Since 2026-10-10 the analysis' format holds it
+(`unreported`, [the note of the analysis](frontier-comparison-analysis.md#the-campaign-format): the arm, lane, slot and number of the attempt, its load readings, `errors.{crashed, timedOut, exitCode?, signal?}` and `logSha256`), and the campaign writes it:
+
+- `campaign.json` has `unreported` beside `executions` (`[]` when every attempt wrote a report), and **each attempt keeps its own number**: the redo of a slot whose attempt 1 wrote no report is attempt 2 in `executions`.
+  The campaign no longer renumbers, and no longer says in `provenance.deviations` that attempts were left out.
+- The analysis judges the entry rejected by `errors`, clause `no-report`, with `crashed`, `timedOut` and the `exitCode` or the `signal`; it counts in the slot (`rejected`), in the totals and in the stop on three used-up attempts,
+  and `report.json` shows it with `reported: false`, its load and no vsync. `crashed` is the reading of the process as for every execution (`processOf`: a signal, or a crash in the log); `timedOut` is the launcher's
+  (`launch()` may return `timedOut: true` for a process it killed at its time limit; a launcher that does not say reads as `false`). A process killed by a signal has no exit code in the entry, and one that exited has no signal.
+  **The Debug launcher does not pass `timedOut` on yet**: it is `result.error?.code === "ETIMEDOUT"` of its `spawnSync`, one line in `scripts/frontier-comparison-campaign-launchers.mjs`, which was another slice's file when this
+  was written. Until it does, a process the Debug launcher kills at the limit reads `crashed: true` (its signal) and `timedOut: false`; the fake launcher of the tests says it.
+  A process that exits 0 and leaves no report, or one that leaves a report the scenario's format cannot read, is the same rule (reading 15 of the analysis note).
+- `logSha256` is the SHA-256 of the `.log` kept under `raw/`; `summary.json` and `campaign-state.json` keep `unreported`, the list for whoever reads them (the slot, the arm, the attempt, the reasons of the analysis, the exit code and signal as
+  the launcher read them, and the path of the log), now the same attempts and reasons that `campaign.json` and `report.json` hold.
 
 ### The launcher
 
@@ -461,7 +477,8 @@ launcher.build                    "debug" | "release", the build recorded in eac
 launcher.windowed                 whether its processes run in a window; the self-check runs in the same mode
 await launcher.prepare()          {engine, registered, packages, deviations}: ready, and what is registered before the first execution; may refuse
 await launcher.launch({arm, lane, slot, attempt})
-                                  {report, exitCode, signal, log, load: {before, after}, hashes: {binary, package, script}, seconds}: ONE fresh process
+                                  {report, exitCode, signal, timedOut?, log, load: {before, after}, hashes: {binary, package, script}, seconds}: ONE fresh process;
+                                  `timedOut` is true for a process the launcher killed at its time limit (absent reads as false)
 await launcher.cleanup()
 ```
 
@@ -480,11 +497,10 @@ None changes a number of the protocol; each decides how a sentence meets the orc
    it comes first and a stop there spares the second lane.
 2. **"Above the limit" is the limit of 2.0 itself being quiet**, in the wait as in the rule (`tests/frontier-comparison-validity.test.mjs` pins the rule).
 3. **The unlimited lane is N/A for the lane, not only for the execution**, when the vsync does not read back `DISABLED` ("the lane is N/A and is not run further"); `vsync-reading` still does not reject the attempt.
-4. **An attempt whose process wrote no report** (a crash, a timeout) is a rejection by `errors` that the campaign counts against the 3 attempts and redoes, but the format has no execution object for a run with no
-   report and the campaign does not invent one (a refresh rate cannot be made up). It stays in the state and in `raw/<...>.log`, is left out of `executions`, which are renumbered 1, 2, ... among the ones that
-   exist, and the campaign's deviations name it. The analysis then sees fewer attempts than were made; the stop on three used-up attempts is the orchestrator's. **The state and `summary.json` list these
-   attempts one by one** (`unreported`: the slot, the arm, the attempt, the `errors` reason with its clause, the exit code, the signal and the path of the log), so that whoever reads the summary sees every
-   attempt that was made.
+4. **An attempt whose process wrote no report** (a crash, a timeout, a clean exit without one) is a rejection by `errors` that the campaign counts against the 3 attempts and redoes. The format has no execution object for it
+   and the campaign does not invent one (a refresh rate cannot be made up), so since 2026-10-10 it is in the campaign's `unreported` ([above](#the-attempt-that-wrote-no-report)) with its own number, and the analysis counts it
+   in the slot and in the stop on three used-up attempts. Before that amendment of the format (#126) it was left out of `executions`, which were renumbered 1, 2, ... among the ones that existed, and listed only in the state and
+   in `summary.json`; the renumbering and the campaign's own stop for those attempts are gone.
 5. **`aborted` and `anomalies` of the scenario's report are recorded and reject nothing**: the list of invalidation rules is closed, and an aborted scenario already ends with exit code 1 (`errors`).
 6. **A rehearsal redoes nothing** (above), so its three slots are three attempts.
 7. **A resume with another instrument file is refused**: the file is part of the script's hash, so the executions after it would not be the same experiment, and the registration cannot be redone in the middle of a campaign.
@@ -520,9 +536,6 @@ refusal (the ones on the merged tree) are recorded in the [evidence record](../e
   run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one). The campaign waits for the load but cannot make the machine quiet.
 - **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
   it does not pass or no display presented the window; the code is there and tested with the probe replaced, and was never run. The Debug rehearsal runs the headless check and says so in its deviations.
-- **A representation, in the analysis' format, of an attempt that wrote no report.** The format holds an execution object, whose refresh rate must be positive and whose windows and readings must exist; a process that
-  crashed or hit its timeout has none of that, and the campaign does not make it up. Such an attempt counts against the 3 attempts of its slot, is redone, and is left out of `executions`; **if it happens in the real
-  campaign, `summary.json` and `campaign-state.json` carry it** (`unreported`, with the log kept under `raw/`), and the report's counts of attempts are lower by those. An amendment of the format would put it in the data.
 - **The registration before the first execution** for the Release: a rehearsal registers what it measured; a campaign needs the Release launcher to register the hashes of the three exports in `prepare()`.
 - **The raw data under `docs/evidence/`**: a campaign's `raw/` holds about 0.3 MB per attempt (about 22 MB for 75 attempts); where it is kept and how it is published is for the slice that runs it.
 

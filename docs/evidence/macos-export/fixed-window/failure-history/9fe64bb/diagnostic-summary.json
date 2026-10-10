@@ -1,0 +1,240 @@
+{
+  "format": "godot-fabric.remount-diagnostic-summary/v1",
+  "status": "diagnostic-only-nonreproduction",
+  "sourceCommit": "9fe64bb0ae5f48ac0b020b0f6b8d9089a9e99369",
+  "nativeHostSha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+  "bundleSha256": "a34cdb96c311d11cfdb14bfc1db511c533c9244fbaf47a5e2f2a3b69804314c3",
+  "buildReportSha256": "1106dabb0730a68abe17fb524e893dbed66b2f4e51cb9d026fc2194c988d2ce9",
+  "failedExportReceipt": {
+    "path": "build/macos-export-Verified-8526-1791497669931-4e8d9d/receipt.json",
+    "sha256": "7aa3e521505b98efe38be3c838b7ba10670ec82c689c10000e36d1f4ffa282c7",
+    "status": "failed",
+    "originalFailure": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\nOpenGL API 4.1 Metal - 90.5 - Compatibility - Using Device: Apple - Apple M3 Pro\n\nHERMES: Running \"HUD\"\nHERMES: Running \"Inventory\"\nHERMES: Updating props for Surface \"HUD\" with {\"rootTag\":1,\"initialProps\":{\"title\":\"Props from Godot\",\"panel\":\"hud\"},\"fabric\":true}\nHERMES: Running \"Inventory\"\nMACOS_EXPORT_USER_DATA_DIR:{HOME}/Library/Application Support/Godot/app_userdata/Godot Fabric Export 8526-1791497669931-4e8d9d\nCONSUMER_VALIDATION_FAILED\nERROR: CONSUMER_CHECK_FAILED: Remount resets local state and preserves the project store\n   at: push_error (core/variant/variant_utility.cpp:1023)\nWARNING: Logging before InitGoogleLogging() is written to STDERR\nW1008 19:15:29.650564 4187611520 UIManagerBinding.cpp:61] UIManagerBinding::~UIManagerBinding() was called (address: 0xc8202e898).\nW1008 19:15:29.650591 4187611520 UIManager.cpp:57] UIManager::~UIManager() was called (address: 0xc81b27018).\n\n\n1 !== 0\n"
+  },
+  "originalFailedAttempt": {
+    "headedLogPath": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/runtime-headed.log",
+    "headedLogSha256": "d8b2c37bd1ac6d11da5c3bb6ec6ddb5ec09fa7cf52a5889cba49601a0f1b416e",
+    "reportAndCapturesEmitted": false,
+    "reason": "The copied app had already completed capture/report writes before printing MACOS_EXPORT_USER_DATA_DIR and CONSUMER_VALIDATION_FAILED. runExportedConsumer then failed its process/check assertion before reading those outputs into runtime-headed.json; the runner finally cleared its own four consumer files. The raw app outputs were therefore emitted but not retained, and are unavailable now.",
+    "appOutputsWritten": true,
+    "runnerCollectedOutputs": false
+  },
+  "rejectedApp": {
+    "path": "{WORKTREE}/build/macos-export-Verified-8526-1791497669931-4e8d9d/rejected.app",
+    "signatureVerificationLog": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/replay-exported-app-codesign.log",
+    "signatureVerificationExit": 0,
+    "signedExecutableSha256": "636c22c03495cc51496fb0390a26bc5c577dc48afc523197d193c6680fbfa0d7",
+    "unsignedTemplateExecutableSha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06"
+  },
+  "exportedAppReplay": {
+    "runner": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/replay-exported-app.mjs",
+    "runnerSha256": "20ab839b0efd672de71e26a7eccbc6a119fbd4a20c34648a9c101e0cbce398de",
+    "invocationLog": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/replay-invocation.log",
+    "invocationExit": 1,
+    "invocationExitExplanation": "postcondition incorrectly expected headed exit 1; raw headed log and report show the app actually exited 0 and all checks passed; no second invocation was made",
+    "headless": {
+      "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/exported-app-replay/headless-report.json",
+      "sha256": "f789bf47810f6d4401ed4f31a5162597610e42e9c6f0710102358490851022f8",
+      "displayServer": "headless",
+      "checkCount": 40,
+      "passed": 40,
+      "failedChecks": [],
+      "remountCheck": {
+        "name": "Remount resets local state and preserves the project store",
+        "passed": true
+      }
+    },
+    "headed": {
+      "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/exported-app-replay/headed-report.json",
+      "sha256": "e45c30e603511756ee86b03cd43ff1f9dc873bb494a59ec5178f84a92dd557bd",
+      "displayServer": "macOS",
+      "checkCount": 43,
+      "passed": 43,
+      "failedChecks": [],
+      "remountCheck": {
+        "name": "Remount resets local state and preserves the project store",
+        "passed": true
+      }
+    },
+    "captures": [
+      {
+        "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/exported-app-replay/headed-initial.png",
+        "sha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+        "bytes": 24826
+      },
+      {
+        "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/exported-app-replay/headed-resized.png",
+        "sha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+        "bytes": 31963
+      },
+      {
+        "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/exported-app-replay/headed-updated.png",
+        "sha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+        "bytes": 28929
+      }
+    ],
+    "headlessLogSha256": "5ed885c01597a1d2f59bacf325ddb7dfe665b8ea07a28a3e6682caf38e347727",
+    "headedLogSha256": "8a2d86230410ac8f1b8aa20214ebbb73acd47b26c3e7a9758825a61d50f6b52e",
+    "progressSha256": "a5f81c4b3f87937ff32491e52c67ce51c7c6a75e4f4d380f2ee1a0e3aa43f677",
+    "availableSnapshotCommitCounts": {
+      "headless": {
+        "beforeStop": 2.0,
+        "afterStop": 8.0,
+        "note": "these are snapshots before the probe and after runtime stop; no remount-time commit field was recorded in this successful replay"
+      },
+      "headed": {
+        "beforeStop": 2.0,
+        "afterStop": 8.0,
+        "note": "these are snapshots before the probe and after runtime stop; no remount-time commit field was recorded in this successful replay"
+      }
+    },
+    "engineVersionObserved": {
+      "headless": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+      "headed": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    }
+  },
+  "editorDiagnostic": {
+    "resultPath": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/diagnostic-result.json",
+    "resultSha256": "55f7bc31f093fd0b606f6457ec326e68d597c640cf505b92cf2471c32fcdb6f0",
+    "runner": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/run-remount-values.mjs",
+    "runnerSha256": "48b2c764a6aabce4a01a44c366ddbc4c8935b7e3d93a7f6f2fc7f06ca29a27b6",
+    "editorEngineVersion": null,
+    "native": {
+      "sourceCommit": "9fe64bb0ae5f48ac0b020b0f6b8d9089a9e99369",
+      "sourceDirty": false,
+      "hostSha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+      "expectedHostSha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2"
+    },
+    "bundle": {
+      "buildReportBundle": "res://.godot_fabric/app.js",
+      "bundleSha256": "a34cdb96c311d11cfdb14bfc1db511c533c9244fbaf47a5e2f2a3b69804314c3",
+      "buildReportSha256": "1106dabb0730a68abe17fb524e893dbed66b2f4e51cb9d026fc2194c988d2ce9",
+      "expectedBundleSha256": "a34cdb96c311d11cfdb14bfc1db511c533c9244fbaf47a5e2f2a3b69804314c3",
+      "expectedBuildReportSha256": "1106dabb0730a68abe17fb524e893dbed66b2f4e51cb9d026fc2194c988d2ce9"
+    },
+    "runtimes": [
+      {
+        "label": "remount-values-headless",
+        "checks": 40,
+        "failures": [],
+        "remountCheck": {
+          "name": "Remount resets local state and preserves the project store",
+          "passed": true
+        },
+        "remountValues": {
+          "activePanels": 2,
+          "hudLocal": "Local: 1",
+          "hudRuntimeId": 28152169952,
+          "hudShared": "Shared: 1",
+          "hudSurfaceId": 1,
+          "inventoryLocal": "Local: 0",
+          "inventoryRuntimeId": 28152169952,
+          "inventoryShared": "Shared: 1",
+          "inventorySurfaceId": 21,
+          "panelMounts": 3
+        },
+        "commitsAtRemount": "not recorded in the successful diagnostic print; future failed checks now log full HUD and Inventory snapshots after registering the error"
+      },
+      {
+        "label": "remount-values-headed",
+        "checks": 43,
+        "failures": [],
+        "remountCheck": {
+          "name": "Remount resets local state and preserves the project store",
+          "passed": true
+        },
+        "remountValues": {
+          "activePanels": 2,
+          "hudLocal": "Local: 1",
+          "hudRuntimeId": 28621932002,
+          "hudShared": "Shared: 1",
+          "hudSurfaceId": 1,
+          "inventoryLocal": "Local: 0",
+          "inventoryRuntimeId": 28621932002,
+          "inventoryShared": "Shared: 1",
+          "inventorySurfaceId": 21,
+          "panelMounts": 3
+        },
+        "commitsAtRemount": "not recorded in the successful diagnostic print; future failed checks now log full HUD and Inventory snapshots after registering the error"
+      }
+    ],
+    "captures": [
+      {
+        "stage": "initial",
+        "path": "{WORKTREE}/build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/remount-values-headed-initial.png",
+        "bytes": 24826,
+        "sha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+        "width": 540,
+        "height": 300
+      },
+      {
+        "stage": "updated",
+        "path": "{WORKTREE}/build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/remount-values-headed-updated.png",
+        "bytes": 28929,
+        "sha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+        "width": 540,
+        "height": 300
+      },
+      {
+        "stage": "resized",
+        "path": "{WORKTREE}/build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/remount-values-headed-resized.png",
+        "bytes": 31963,
+        "sha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+        "width": 540,
+        "height": 300
+      }
+    ],
+    "headlessReport": {
+      "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/remount-values-headless-report.json",
+      "sha256": "5fb5ee205dc28af29fdad7fccefaa7b0ee0ec587636c1071f521408953b53e52",
+      "displayServer": "headless",
+      "checkCount": 40,
+      "passed": 40,
+      "failedChecks": [],
+      "remountCheck": {
+        "name": "Remount resets local state and preserves the project store",
+        "passed": true
+      }
+    },
+    "headedReport": {
+      "path": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/editor-values-reproduction/remount-values-headed-report.json",
+      "sha256": "b17decb12c44a7e1b092b98603e7554e1e7033a3c124bd011abba972fcd46236",
+      "displayServer": "macOS",
+      "checkCount": 43,
+      "passed": 43,
+      "failedChecks": [],
+      "remountCheck": {
+        "name": "Remount resets local state and preserves the project store",
+        "passed": true
+      }
+    },
+    "availableSnapshotCommitCounts": {
+      "headless": {
+        "beforeStop": 2,
+        "afterStop": 8,
+        "note": "these are snapshots before the probe and after runtime stop; no remount-time commit field was recorded in this successful replay"
+      },
+      "headed": {
+        "beforeStop": 2,
+        "afterStop": 8,
+        "note": "these are snapshots before the probe and after runtime stop; no remount-time commit field was recorded in this successful replay"
+      }
+    },
+    "engineVersionObserved": {
+      "headless": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+      "headed": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    "snapshotFieldNote": "Canonical snapshot field is commits; commitCount is not present."
+  },
+  "checkInventories": {
+    "headlessCount": 40,
+    "headlessNamesSha256": "e08d90f82ececadbc5836467f217e04c7722e3ac0123b486e2e2ff851f0bdea0",
+    "headedCount": 43,
+    "headedNamesSha256": "0e8fdc16639a652db998cc145e7f6ecf8622d082973d95164d671cf9d4f7c2ee"
+  },
+  "limitations": [
+    "The first failing headed attempt wrote its report and PNGs in the app user-data directory before emitting the failure markers. The wrapper failed before collecting them, then its finally cleanup removed those four owned files; only the raw log and failed receipt remain, and no outputs were reconstructed.",
+    "The same signed rejected app and same host/bundle passed on sequential headless and headed replay, and the editor diagnostic also passed; this does not identify why the original run failed.",
+    "The diagnostic/replay runs did not edit production source or change checks/tolerances. The output-retention correction was made afterward; no export was rerun for this diagnosis and no app was published or accepted."
+  ]
+}
