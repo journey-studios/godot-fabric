@@ -4843,7 +4843,7 @@
   ],
   "activity": [
     {
-      "id": "milestone-0-5-hosted-receipts-94-9e95bc6",
+      "id": "milestone-0-5-hosted-receipts-15-9e95bc6",
       "at": "2026-10-10T22:10:00.000Z",
       "taskIds": [],
       "message": "Recibos de CI hospedada e de Pages do #150, o registro do V05-07 limpa (o .app Release do Frontier noutro runner hospedado), já na main como 7e6f0b1. A Contracts do push da main em 7e6f0b1 (run 38089562271) passou na primeira tentativa: contracts, reference-android e reference-ios em success, e os jobs nativos e o macos-clean-run pulados, porque o registro não tem passo nativo próprio. A guarda de marco passou contra o pai do squash. O Pages do push de 7e6f0b1 (run 38089562266) publicou o migration.json commitado em 7e6f0b1, com a entrada de atividade do critério (milestone-0-5-v05-07-limpa-813e9b3); esta entrada vem depois e não está naquela publicação. A prova do critério é o run disparado 38085526897, descrito no registro. Nenhum critério muda. Gerador canônico com 38 fatias e 76 recibos.",
