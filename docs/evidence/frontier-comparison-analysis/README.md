@@ -60,7 +60,7 @@ O relatório parcial (o braço B não ficou pronto no time-box) tem só H1 e nen
 
 [`example-analysis.json`](example-analysis.json) (125 KB) é o relatório que o script produz de uma campanha **sintética** com a semente fixa `example`: 12 execuções por braço, a ordem do protocolo, as duas faixas e os três braços. O cenário foi escolhido para mostrar as quatro categorias lado a lado
 (`ai-phase` ganho, `event-burst` neutro, `context-switches` custo, `stress` inconclusivo, com B e C de variância grande), uma carga acima do limite refeita na vaga 4 da faixa apresentada, e uma janela (`ai-phase`) em que C tem mais quadros por segundo sem limite que B. O texto de `decision`, `limitations` e `cost-of-change` diz "SYNTHETIC EXAMPLE".
-A campanha em si, de 1,9 MB, **não está no repositório**: ela se regera, e o relatório registra o SHA-256 dos bytes dela (`sections.reproduction.campaignSha256`, `5e26c425…`).
+A campanha em si, de 1,9 MB, **não está no repositório**: ela se regera, e o relatório registra o SHA-256 dos bytes dela em `sections.reproduction.campaignSha256`, junto com o `protocolSha256`; esse hash muda quando o protocolo muda, porque a campanha embute o pin do protocolo, e o valor vigente é o do próprio relatório.
 
 ```sh
 node tests/frontier-comparison-synthetic.mjs example-campaign.json
