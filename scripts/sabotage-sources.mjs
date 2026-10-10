@@ -13,6 +13,10 @@ import path from "node:path";
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const GRACE_MS = 5000;
 
+// How many places a text is found in. A sabotage has to replace exactly one: the guard refuses any other when it runs, and
+// tests/sabotage-anchors.test.mjs asks the same of every table without a run.
+export const occurrences = (text, find) => text.split(find).length - 1;
+
 export function guardSources(root, files) {
   const originals = new Map(files.map(file => [file, readFileSync(path.join(root, file))]));
   const genuine = Object.fromEntries([...originals].map(([file, content]) => [file, digest(content)]));
@@ -126,7 +130,7 @@ export function guardSources(root, files) {
     // The source of a variant with its one replacement made. A function replaces, so that `$` in the text means nothing.
     sabotaged({name, file, find, replace}) {
       const text = originals.get(file).toString("utf8");
-      if (text.split(find).length !== 2) {
+      if (occurrences(text, find) !== 1) {
         throw new Error(`The ${name} sabotage must replace exactly one place in ${file}`);
       }
       return text.replace(find, () => replace);

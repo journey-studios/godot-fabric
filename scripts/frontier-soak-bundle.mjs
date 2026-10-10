@@ -12,7 +12,7 @@ export const frontierSoakNativeProducers = [...new Set([...frontierBaselineNativ
 export const frontierSoakSources = ["tests/frontier-soak-fixture.jsx", "tests/frontier-soak-cases.mjs", "tests/frontier-soak-probe.gd",
   "tests/frontier-soak-oracle.mjs", "tests/frontier-soak-native.test.mjs", "tests/frontier-baseline-cases.mjs", "tests/frontier-baseline-oracle.mjs",
   "tests/performance-sampler.gd", "tests/performance-cases.mjs", "tests/performance-oracle.mjs", "tests/world-input-driver.gd", "examples/world-input/world.gd",
-  "examples/world-input/world.tscn", "scripts/frontier-soak-bundle.mjs", "scripts/frontier-soak-sabotage.mjs", "scripts/frontier-baseline-bundle.mjs",
+  "examples/world-input/world.tscn", "scripts/frontier-soak-bundle.mjs", "scripts/frontier-soak-sabotage.mjs", "tests/frontier-soak-sabotages.mjs", "scripts/frontier-baseline-bundle.mjs",
   "scripts/frontier-services-bundle.mjs", "scripts/native-probe-bundle.mjs", "consumers/civ-lite/ui/frontier-types.ts", "src/godot-fabric.js",
   "src/react-native-platform.jsx", "sdk/addon/godot_fabric.gd", "sdk/toolchain/platform-plugin.mjs", ...frontierServicesGameSources, ...frontierSoakNativeProducers];
 

@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {readFileSync, rmSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/frontier-soak-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the 100-turn soak. Each breaks one source on purpose, runs the headless suite on it (tests/frontier-soak-native.test.mjs
@@ -28,20 +29,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 //   node scripts/frontier-soak-sabotage.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
 const test = "tests/frontier-soak-native.test.mjs";
-const fixture = "tests/frontier-soak-fixture.jsx";
-const probe = "tests/frontier-soak-probe.gd";
-// A variant is a list of edits of one file, each made in exactly one place, the text the oracle's rejection must match and whether the probe's own checks
-// must fail too (they cannot for a game that is legal in each run).
-const variants = [
-  {name: "listener-leak", file: fixture, probeMustFail: true, expected: /same subscriptions at every reading|live heap at rest rose/,
-    edits: [{find: "  counts.turnEnded += 1;\n", replace: "  counts.turnEnded += 1;\n  GodotFabric.connect(FRONTIER_SNAPSHOT, () => {});\n"}]},
-  {name: "nondeterministic-player", file: fixture, probeMustFail: false, expected: /Execution 2: the final hash is the first's/,
-    edits: [{find: 'takes("production") && s.city.queue.length === 0', replace: 'takes("production") && s.city.queue.length === 0 && Math.random() < 0.5'}]},
-  {name: "pause-kills-ui", file: probe, probeMustFail: true, expected: /HUD answered while the game was paused/,
-    edits: [{find: "hud.process_mode = Node.PROCESS_MODE_ALWAYS", replace: "hud.process_mode = Node.PROCESS_MODE_PAUSABLE"}]},
-  {name: "leaky-hide", file: fixture, probeMustFail: true, expected: /the HUD holds the native views its state gives/,
-    edits: [{find: "opacity: hidden ? 0 : 1,", replace: 'display: hidden ? "none" : "flex",'}]},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
 const guard = guardSources(root, files);
