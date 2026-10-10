@@ -518,4 +518,21 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-export-options-ecf637e",
   },
+  // The Release exports of the arms A, B and C and of the probe, each with its manifest (#148, squash 86703c5): no native step, since its native test runs only locally, and its three contract test files; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-measurement-exports",
+    pr: 148,
+    squash: "86703c5",
+    contractsRun: 38086564677,
+    pagesRun: 38086564656,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-measurement-export.test.mjs",
+      "tests/frontier-comparison-arms.test.mjs",
+      "tests/frontier-comparison-campaign-state.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-measurement-exports-3cddd82",
+  },
 ];

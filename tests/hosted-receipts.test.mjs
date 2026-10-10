@@ -48,6 +48,7 @@ const FOLDERS = [
   "frontier-comparison-probe-entry",
   "macos-export/civ-lite",
   "macos-export-options",
+  "frontier-comparison-measurement-exports",
 ];
 
 // The check reads committed files only. A PATH without `gh` proves that it asks GitHub nothing.
@@ -56,7 +57,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 72 receipts that a test may break without touching the committed ones.
+// A copy of the 74 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -86,10 +87,10 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the thirty-six Frontier slices are coherent, offline", () => {
+test("the committed receipts of the thirty-seven Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 36 slices, 72 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 37 slices, 74 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
 });
 
@@ -540,7 +541,7 @@ test("each evidence page links its two receipts and the index links them too", (
   }
 });
 
-// `macos-clean-run` (the clean-machine replay of the Frontier app) is an optional ninth job. All the committed receipts list eight jobs and pass without it. A receipt that
+// `macos-clean-run` (the clean-machine replay of the Frontier app) is an optional ninth job. The older committed receipts list eight jobs and predate it; the newest push lists it skipped. A receipt that
 // lists it passes when a dispatched run ran it successfully or when a push skipped it, like the opt-in native jobs; any other extra job is refused.
 const CLEAN_RUN_JOB = "macos-clean-run";
 
@@ -556,9 +557,10 @@ function addJob(receipt, name, conclusion) {
   receipt.run.jobs.push(job);
 }
 
-test("the committed receipts list eight jobs, and the writer lets a push skip macos-clean-run as well as the opt-in native jobs", () => {
+test("the committed receipts list eight or nine jobs, and the writer lets a push skip macos-clean-run as well as the opt-in native jobs", () => {
   for (const folder of FOLDERS) {
-    assert.equal(read(evidence, folder, "hosted-ci.json").run.jobs.some((job) => job.name === CLEAN_RUN_JOB), false, `${folder} predates ${CLEAN_RUN_JOB}`);
+    const job = read(evidence, folder, "hosted-ci.json").run.jobs.find((candidate) => candidate.name === CLEAN_RUN_JOB);
+    assert.ok(job === undefined || job.conclusion === "skipped", `${folder} lists ${CLEAN_RUN_JOB} as ${job?.conclusion}`);
   }
   for (const name of [CLEAN_RUN_JOB, "native-cold-start", "native-suites-frontier", "native-suites-input", "native-suites-runtime", "parity-comparison"]) {
     assert.equal(mayBeSkipped(name), true, name);

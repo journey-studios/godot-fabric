@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-measurement-exports",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T21:20:16.360Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38086564677,
+    "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/148",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T21:09:57Z",
+    "updatedAt": "2026-10-10T21:19:01Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114314196702,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "startedAt": "2026-10-10T21:10:01Z",
+        "completedAt": "2026-10-10T21:13:39Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314196702"
+      },
+      {
+        "name": "macos-clean-run",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114314197825,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314197825"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114314197404,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314197404"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114314197533,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314197533"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114314197625,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314197625"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114314197831,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314197831"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114315909864,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114315909864"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114314196786,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "startedAt": "2026-10-10T21:10:01Z",
+        "completedAt": "2026-10-10T21:16:17Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314196786"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114314196792,
+        "runAttempt": 1,
+        "headSha": "86703c5b419eca4791ff05d537c3234298391535",
+        "startedAt": "2026-10-10T21:10:20Z",
+        "completedAt": "2026-10-10T21:19:00Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38086564677/job/114314196792"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "86703c5b419eca4791ff05d537c3234298391535",
+      "reference-android": "86703c5b419eca4791ff05d537c3234298391535",
+      "reference-ios": "86703c5b419eca4791ff05d537c3234298391535"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:10:21Z",
+          "completedAt": "2026-10-10T21:10:22Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 4767cd1f682d (--base 4767cd1f682dcbe540fa444b9af14f27790db6a1); X9 clean, X10 clean"
+          ],
+          "base": "4767cd1f682dcbe540fa444b9af14f27790db6a1"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:10:22Z",
+          "completedAt": "2026-10-10T21:13:34Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 736,
+              "suites": 0,
+              "pass": 735,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 37
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:13:34Z",
+          "completedAt": "2026-10-10T21:13:35Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T21:13:35Z",
+          "completedAt": "2026-10-10T21:13:35Z",
+          "passed": true,
+          "files": 2407
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-measurement-export.test.mjs",
+          "tests": 6,
+          "passed": 6,
+          "topLevel": [
+            "each arm is exported with its own options: the measurement project once, with the measurement files in the copy, and the product twice, without them",
+            "the manifest of each export is written beside its app, and the launcher's own readers read the four back",
+            "what the script refuses: unequal product sizes, a copy that is not the script's, a stale class cache, too little disk and a name that is not an export",
+            "an --out that already holds an earlier export is refused up front, before anything is provisioned or exported, and nothing in it is touched",
+            "a manifest that is not good is not written, the size of an app counts its files and no link, and the paths are relative to the arm's folder",
+            "the Release launcher in its rehearsal mode runs the exports headless, says so, and a campaign refuses it unless it is a rehearsal"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-arms.test.mjs",
+          "tests": 11,
+          "passed": 11,
+          "topLevel": [
+            "each arm has its product's main scene, its set of files for the product and for the measurement project, and only C carries the extension",
+            "every pattern of a set says why it is there, and no pattern is repeated",
+            "an unknown arm is refused, by the description and by the function that shapes a copy, before anything is touched",
+            "the filters keep the measurement files out of the product, and the extension out of A and B",
+            "the real project.godot of civ-lite is the shape the edit expects",
+            "A and B lose the two sections of the extension and take their main scene, and the rest of the real project.godot is the same bytes",
+            "C keeps the project.godot it has, byte for byte, because its main scene already is main.tscn",
+            "the edit is idempotent, and it touches nothing but the sections it names",
+            "a project.godot without a main scene to write is refused, and so is one without the section",
+            "shaping a copy for A or B removes the addon, the artifacts of the extension and the sections, writes the scene and the measurement files, and says what it did",
+            "shaping a copy for C without the measurement changes nothing, and shaping it for B without the measurement writes no measurement file"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-campaign-state.test.mjs",
+          "tests": 8,
+          "passed": 8,
+          "topLevel": [
+            "the plan is the protocol's sequence in each lane in turn, limited to the slots asked for",
+            "the next step is the first slot without an accepted attempt: its redo before the next slot, no redo in a rehearsal",
+            "the analysis' stops stop it, a slot whose attempts are used up is the analysis' stop alone, and what the analysis cannot see stops it too",
+            "the unlimited lane is N/A from the first attempt whose vsync did not read back DISABLED, and its slots do not run",
+            "the executions of a campaign are the attempts that have one, in the order they ran, each with the number of its attempt; the others are the entries of its unreported",
+            "a resume checks the hashes of the protocol, the script, the binary and the package, what was registered, and the options",
+            "the wait for the load stops at the first reading under the limit, gives up when the time is spent, and the limit itself is quiet enough",
+            "the rehearsal's deviation names what that rehearsal shows: the Debug build only for the Debug launcher, the headless display only when its processes ran headless"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 148,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/148",
+    "title": "feat(perf): Export the comparison's arms and probe as Release apps and rehearse the campaign on them",
+    "headSha": "71e37d923e097a79ac7872169a3733b56aee7eb6",
+    "baseSha": "4767cd1f682dcbe540fa444b9af14f27790db6a1",
+    "squashMergeCommit": "86703c5b419eca4791ff05d537c3234298391535",
+    "squashCommitSubject": "feat(perf): Export the comparison's arms and probe as Release apps and rehearse the campaign on them (#148)",
+    "mergedAt": "2026-10-10T21:09:55Z",
+    "headTreeSha": "9e8650224af6a22f9f783a2dd5751af2b8a560f4",
+    "mainTreeSha": "9e8650224af6a22f9f783a2dd5751af2b8a560f4",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 12,
+    "commits": [
+      {
+        "sha": "a44d5520a822fd8e3126e7ef1be712c9f7b991a8",
+        "subject": "feat(export): Export a macOS app without the Fabric extension, with only its own scenes"
+      },
+      {
+        "sha": "ecf637e2a05f6b07fa3920edd61c1b4a43700305",
+        "subject": "docs(export): Record the export without the Fabric extension and its scene selection"
+      },
+      {
+        "sha": "6fd277e0a2ad5132902a9089438dcb8b9f1c4027",
+        "subject": "docs(dashboard): Register the export without the Fabric extension"
+      },
+      {
+        "sha": "bba92c222e214b48af64d4ba88b4844afe2caecd",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-export-options"
+      },
+      {
+        "sha": "b5d01079f018f06a05ffd5a9a946ca3be95709a5",
+        "subject": "fix(export): Judge a PCK by its canonical entry paths"
+      },
+      {
+        "sha": "d60df5275dceacd43258def6e22f9478d74646bd",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-measurement-exports"
+      },
+      {
+        "sha": "d88684cb910df2420a6adf6308d0a8f85a50eb7b",
+        "subject": "feat(perf): Export the comparison's arms and probe as Release apps and rehearse the campaign on them"
+      },
+      {
+        "sha": "3cddd82cf690c189ac3e837b173221cbf59098b6",
+        "subject": "docs(evidence): Record the comparison's Release exports and the rehearsal on them"
+      },
+      {
+        "sha": "f3f655751593e758137179844908932467def2e8",
+        "subject": "docs(dashboard): Register the comparison's Release exports and the rehearsal on them"
+      },
+      {
+        "sha": "1716b286d806ab5094b8bfad6bc569bf802d9f98",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-measurement-exports"
+      },
+      {
+        "sha": "ae12df422100b59c99c113c6ac621908e7084f8d",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-measurement-exports"
+      },
+      {
+        "sha": "71e37d923e097a79ac7872169a3733b56aee7eb6",
+        "subject": "fix(perf): Refuse an export run whose output already holds an export"
+      }
+    ],
+    "changedFiles": 23,
+    "additions": 3038,
+    "deletions": 86
+  },
+  "artifacts": {},
+  "findings": []
+}

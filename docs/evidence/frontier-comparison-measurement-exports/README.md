@@ -135,7 +135,6 @@ Nenhum `.app` e nenhum relatório bruto (os de prova têm ~0,3 MB cada) foram gu
 - **A janela quieta.** Nada daqui rodou numa máquina quieta nem numa janela: a carga ficou em 5 a 7 e nenhuma execução foi apresentada.
 - **O autoteste janelado**, rodado de verdade na máquina da campanha (a sonda com `--windowed`, uma janela na frente, o usuário fora). O desta pasta é headless.
 - **A campanha real**, com os exports refeitos pelo script a partir de uma árvore commitada na máquina da campanha, e as 72 execuções.
-- A CI hospedada deste commit e a publicação das páginas vêm depois do merge.
 
 ## Reprodução
 
@@ -146,3 +145,22 @@ node scripts/frontier-comparison-measurement-export.mjs --out build/frontier-com
 ```
 
 O lane nativo grava `export-summary.json` e `native-report.json` em `build/frontier-comparison-measurement-exports/` e apaga os quatro `.app` ao fim.
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `86703c5` (o squash do #148; run [38086564677](https://github.com/journey-studios/godot-fabric/actions/runs/38086564677) do workflow Contracts, iniciado às 21:09:57 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 38 s), `reference-android` (6 min 16 s) e `reference-ios` (8 min 40 s), todos com checkout em `86703c5`. Os cinco jobs nativos opt-in (`native-cold-start`, os três `native-suites-*` e `parity-comparison`) e o `macos-clean-run` aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a fatia não tem passo nativo nem artefato. A cabeça da PR (`71e37d9`) tem a mesma árvore que o squash (`9e86502`), e o recibo confere isso.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 4767cd1 (--base 4767cd1f682dcbe540fa444b9af14f27790db6a1); X9 clean, X10 clean`. A base é o pai do squash.
+
+**Os testes.** `npm run test:contracts` rodou com 7, 43 e 736 testes de Node: os blocos de 7 e 43 passaram todos; no de 736, 735 passaram e 1 saiu como skipped pela allowlist do check (`ALLOWED_SKIPS`): "native macOS arm64 export and copied-app rejection controls", o teste de export macOS do #75, com o motivo "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template". Os 37 testes de Python passaram, e o inventário de paridade confirmou 8.113 contratos e 97 valores públicos. `check:static` e `check:publication` também passaram (2.407 arquivos). O recibo confere, pelo nome e no log do job `contracts`, os 25 testes dos três arquivos desta fatia, todos passados: 6 de [`tests/frontier-comparison-measurement-export.test.mjs`](../../../tests/frontier-comparison-measurement-export.test.mjs), 11 de [`tests/frontier-comparison-arms.test.mjs`](../../../tests/frontier-comparison-arms.test.mjs) e 8 de [`tests/frontier-comparison-campaign-state.test.mjs`](../../../tests/frontier-comparison-campaign-state.test.mjs). O teste nativo (`test:frontier-comparison-exports`) roda só localmente.
+
+**O Pages.** O push de `86703c5` rodou também o workflow do Pages (run [38086564656](https://github.com/journey-studios/godot-fabric/actions/runs/38086564656), de 21:09:57 a 21:10:40 UTC, `build` e `deploy` em success, 43 testes do painel). O [recibo](publication.json) registra o deployment 6986915114 em success e o artefato `github-pages` que ele usou (id 11682707640, 1.495.644 bytes, SHA-256 `882ebd85…`, igual ao digest da API e ao do log de upload). O `migration.json` de dentro tem os mesmos bytes do commitado (SHA-256 `6d877b6b…`), com as 292 entradas de atividade que a `main` tem nesse commit. A única que o squash acrescentou em relação à `4767cd1` (291 entradas) é a desta fatia, `milestone-0-5-v05-10-measurement-exports-3cddd82`, e o [recibo](publication.json) confere que ela está no arquivo publicado (`presentInDeployedJson: true`). Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** os quatro `.app` deste lane e o teste nativo (`test:frontier-comparison-exports`) rodam só localmente, com o template Release. A CI não exporta nada nesta fatia; os recibos provam os testes de contrato, a guarda e a publicação, não um export.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-measurement-exports --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
