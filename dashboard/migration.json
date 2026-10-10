@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T20:52:00.000Z",
+  "updatedAt": "2026-10-10T21:40:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4211,8 +4211,17 @@
             {
               "id": "limpa",
               "label": "Prova em segundo Mac ou VM sem Node, Godot e Xcode; sem ela, o limite 'mesmo Mac, perfil limpo' fica registrado no recibo",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Replay de 12 turnos no hash dourado cb7ab974… e no de trilha ed43495e… em 3 de 3 execuções do .app Release num runner macOS hospedado diferente do que o exportou (outra VM, usuário limpo, sem Godot nem dependências do projeto; perfil de dados limpo em cada execução, ambiente zerado por env -i). Limite: a imagem do runner traz Node e Xcode, e o app é mostrado sem usá-los, não rodado sem eles",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/813e9b30795a2126cf63cd70c1f15fede849c45e/docs/evidence/macos-export/clean-machine/README.md"
+                },
+                {
+                  "label": "Run 38085526897 do Contracts, disparado na main em 4767cd1: os nove jobs passaram na primeira tentativa; o job macos-clean-run, noutro runner, julgou o app baixado (SHA-256 do arquivo e hash do bundle iguais aos do uploader, codesign ad hoc antes e depois, load commands só do bundle e do sistema, três controles negativos rejeitados)",
+                  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38085526897"
+                }
+              ]
             }
           ]
         },
@@ -4833,6 +4842,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-07-limpa-813e9b3",
+      "at": "2026-10-10T21:40:00.000Z",
+      "taskIds": [],
+      "message": "V05-07 do marco 0.5, critério limpa (código no commit 4767cd1, #147; registro no 813e9b3): o .app Release do Frontier, assinado ad hoc, foi arquivado pelo job native-suites-runtime e tocou o replay de 12 turnos três vezes noutra máquina. O job macos-clean-run do run 38085526897 do Contracts (disparado na main em 4767cd1, os nove jobs em success na primeira tentativa) baixa o arquivo num runner macOS hospedado diferente (outra VM, usuário limpo, sem Godot, sem .deps e sem dependências do projeto instaladas; o job não instala nada) e roda o app com o ambiente zerado por env -i (HOME, USER, TMPDIR e PATH=/usr/bin:/bin:/usr/sbin:/sbin), cada execução num perfil de dados que não existia e foi removido depois. As três chegaram ao hash dourado cb7ab974… e ao de trilha ed43495e…, com 246 de 246 checks e relatórios idênticos byte a byte; o SHA-256 do arquivo e o hash do bundle são os do uploader, codesign --verify --deep --strict passa antes e depois das execuções e os load commands só nomeiam o bundle e o sistema. Três controles negativos retidos no job (um pin errado, um byte do PCK trocado e um perfil que já existe) foram rejeitados. O limite, sem rodeios: o runner é outra VM com usuário limpo, mas a imagem dele traz Node e Xcode; o app é mostrado sem usá-los (ambiente zerado e load commands), não rodado sem eles, e o Node só julgou. Developer ID e notarização seguem fora, e o iPhone segue NO-GO. O critério limpa passa a done nesse limite; nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/813e9b30795a2126cf63cd70c1f15fede849c45e/docs/evidence/macos-export/clean-machine/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-measurement-exports-3cddd82",
       "at": "2026-10-10T20:52:00.000Z",
