@@ -4777,6 +4777,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/ad9a527ce7f325703debcb249c7beb4ceb7d47e2/docs/evidence/frontier-stress/README.md#ci-hospedada-e-pages"
     },
     {
+      "id": "milestone-0-5-v05-10-braco-b-otimizacao",
+      "at": "2026-10-10T11:52:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, passe de otimização do braço B (nenhum critério muda): a passada única do protocolo, uma rodada, só no B e com meios do Godot, medida sobre a main em 151427e nas quatro janelas (5 execuções de cada, alternadas, headless, fora de qualquer execução comparativa). Três custos saíram: as listas das ações, da cidade e da pesquisa eram refeitas inteiras quando o jogo desabilita as escolhas (agora são atualizadas linha a linha), um painel que saía da árvore era liberado e feito de novo (agora vai para um pool; o diálogo e o menu seguem sendo feitos a cada vez) e o painel de estresse perguntava a cada uma das 300 linhas se tinha mudado (agora compara as listas e reaproveita a linha que sai). O p95 da ai-phase com a cidade aberta caiu de 7,95 para 3,51 ms (−56%), o quadro médio do estresse 19% e a troca que abre a cidade de 9,1 para 5,6 ms; o p95 do estresse (−3%) e o das trocas (−7%) ficaram dentro da dispersão, o event-burst e a ai-phase sem seleção não mudaram, os quatro quadros depois do primeiro do turno com a cidade custam de 0,1 a 0,3 ms a mais e o pool mantém mais objetos vivos. Paridade: as duas HUDs passam a lane e as cinco sabotagens nativas são rejeitadas; o custo do stats() não mudou. As tentativas inválidas ficam registradas. Cerca de 2,2 h de relógio das 3,2 h. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c6ea5c7acfa7370fbff45a45abe3ec2b84378f83/docs/evidence/frontier-arm-b/README.md#passe-de-otimização"
+    },
+    {
       "id": "milestone-0-5-v05-10-execution-1-f77d81d",
       "at": "2026-10-10T11:23:00.000Z",
       "taskIds": [],

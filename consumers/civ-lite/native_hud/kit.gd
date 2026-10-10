@@ -43,18 +43,84 @@ static func choice(id: String, text: String, enabled: bool, icon_name: String = 
   return button
 
 
-# A choice and, when the game refused it, the refusal beside it.
-static func row(button: Button, reason_id: String, reason: String) -> HBoxContainer:
+# Keeps a list of choices in step with the description of it (`rows`: key, label, enabled, reason, icon). A row whose key is still listed is
+# updated where it differs, a key that is new makes a row, a key that is gone loses its row, and the rows keep the order of the description:
+# nothing is built again for what only changed (a turn in progress disables every choice and gives each its reason, and ends by undoing it).
+# `on_press` is called with the key of the row that was pressed.
+static func sync_choices(list: Container, prefix: String, rows: Array, on_press: Callable) -> void:
+  var stale := {}
+  for box in list.get_children():
+    stale[box.name] = box
+  for index in range(rows.size()):
+    var row: Dictionary = rows[index]
+    var id: String = prefix + row.key
+    var box: HBoxContainer = stale.get("Row-" + id)
+    if box == null:
+      box = _new_row(id, row, on_press)
+      list.add_child(box)
+    else:
+      stale.erase("Row-" + id)
+    _update_row(box, id, row)
+    if box.get_index() != index:
+      list.move_child(box, index)
+  for box: Node in stale.values():
+    list.remove_child(box)
+    box.queue_free()
+
+
+# The same for a list of lines (`lines`: key, text).
+static func sync_lines(list: Container, prefix: String, lines: Array) -> void:
+  var stale := {}
+  for label in list.get_children():
+    stale[label.name] = label
+  for index in range(lines.size()):
+    var entry: Array = lines[index]
+    var id: String = prefix + str(entry[0])
+    var label: Label = stale.get(id)
+    if label == null:
+      label = line(id, entry[1])
+      list.add_child(label)
+    else:
+      stale.erase(id)
+      set_text(label, entry[1])
+    if label.get_index() != index:
+      list.move_child(label, index)
+  for label: Node in stale.values():
+    list.remove_child(label)
+    label.queue_free()
+
+
+static func _new_row(id: String, row: Dictionary, on_press: Callable) -> HBoxContainer:
+  var button := choice(id, row.label, row.enabled, row.icon)
+  button.pressed.connect(on_press.bind(row.key))
   var box := HBoxContainer.new()
-  box.name = "Row-" + button.name
+  box.name = "Row-" + id
   box.mouse_filter = Control.MOUSE_FILTER_IGNORE
   box.add_theme_constant_override("separation", 10)
   box.add_child(button)
-  if reason != "":
-    var label := line(reason_id, reason, &"ReasonLabel")
-    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    box.add_child(label)
   return box
+
+
+# The button, and the refusal beside it when the game gave one: a Label made when it is first needed and hidden when it is not.
+static func _update_row(box: HBoxContainer, id: String, row: Dictionary) -> void:
+  var button: Button = box.get_child(0)
+  if button.text != row.label:
+    button.text = row.label
+  set_disabled(button, not row.enabled)
+  var icon := Icons.texture(row.icon)
+  if button.icon != icon:
+    button.icon = icon
+  var reason: Label = box.get_node_or_null(id + "-reason")
+  if row.reason != "":
+    if reason == null:
+      reason = line(id + "-reason", row.reason, &"ReasonLabel")
+      reason.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+      box.add_child(reason)
+    else:
+      set_text(reason, row.reason)
+      set_shown(reason, true)
+  elif reason != null:
+    set_shown(reason, false)
 
 
 static func set_text(label: Label, text: String) -> void:

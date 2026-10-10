@@ -2,9 +2,9 @@
 
 Status: the native Godot HUD of arm B exists and passes the context matrix, which is the invalidation rule `parity` of
 [the comparison's protocol](frontier-comparison-protocol.md) ("in B or C, the visible testIDs differ from the table of the context matrix in
-any of the seven contexts → reject and redo; B is not ready until it passes"). It is a delivery of effort and a lane, **not a measurement**: no
-comparative execution has run, the optimization pass (at most 3.2 h, one round) has not been done, and nothing here says that either HUD is
-faster, slower or cheaper than the other. The record of the runs, the captures and the effort is
+any of the seven contexts → reject and redo; B is not ready until it passes"). It is a delivery of effort and a lane, **not a comparative measurement**: no
+comparative execution has run. The optimization pass (at most 3.2 h, one round) has run and measured arm B alone, headless and outside any comparative
+execution ([the optimization pass](#the-optimization-pass)); nothing here says that either HUD is faster, slower or cheaper than the other. The record of the runs, the captures and the effort is
 [docs/evidence/frontier-arm-b/](../evidence/frontier-arm-b/README.md).
 
 The protocol defines arm B as "idiomatic GDScript (Controls, signals, updating only what changed) with the same 6 panels, 7 contexts and testIDs as
@@ -54,13 +54,16 @@ straight to them.
 
 **Mounting by context.** `PANELS` in `hud.gd` is the table of `ui/hud/hud.tsx` word for word (`none`: bar; `tile`: bar, tile; `settler`, `warrior`,
 `stack`: bar, actions, tile; `city`: bar, city, research; `dialog`: bar, dialog). A panel is instantiated when the context calls for it and taken out of the
-tree with `remove_child` and freed when it does not, so what the probes see in the tree is what the table says. The city screen with the research
+tree with `remove_child` when it does not, so what the probes see in the tree is what the table says. A panel that left is kept, whole and out of the tree,
+in a pool by name, and the next time the context calls for it mounting is an `add_child` and a `render` that touches only what changed (after the optimization
+pass, see below); the dialog and the menu are not kept, because each event is a subtree of its own. The city screen with the research
 list and the dialog live inside an overlay that exists exactly while one of its panels does. The dialog is made for the head of the queue (`event_id`) and
 replaced when the head changes: each event is a subtree of its own, and "1 of 3" is the game's `index` and `count`.
 
 **Updating only what changed.** A Label is set through `Kit.set_text`, which compares first; a Button's `disabled` and a Control's `visible` likewise. A list
-(the actions, the city's queue and items, the research, the icons of the tile card) keeps the description it was built from and is built again only when
-the new description differs from it. The tile card is the only panel the hover touches: `hover_changed` renders it alone. The spinner is hidden at rest and
+(the actions, the city's queue and items, the research, the icons of the tile card) keeps the description it was built from and is touched only when
+the new description differs from it, and then row by row (`Kit.sync_choices`, `Kit.sync_lines`): a row whose key is still listed is updated where it differs,
+a new key makes a row, a key that went loses its row. The tile card is the only panel the hover touches: `hover_changed` renders it alone. The spinner is hidden at rest and
 does not process while hidden.
 
 **The overlay.** The city screen and the dialog are blocking, as C's `Modal`s are, and the choice is a full-screen `ColorRect` with
@@ -135,6 +138,20 @@ writes into the report and the oracle requires to be exactly the arm's.
 - **A reader must not ask the node it reads for the tree.** The host reader's first version used the Control's own `get_tree()`, which is null for a
   Control the host is unmounting; it uses the HUD's.
 
+## The optimization pass
+
+The protocol's single pass for arm B (one round: profile, the changes the profile justifies, one more measurement, stop; B alone, with Godot's own means, outside any comparative
+execution) ran against `main` at 151427e with the four windows of the protocol played through the services the way the execution's script plays them. It found three costs and removed them: the
+lists of the actions, the city and the research were destroyed and rebuilt whole when the game disabled every choice at the start of a turn (the frame that accepts End Turn with the city open cost 6.7 ms, 4.6 ms of it HUD
+script), they are now brought to the new description row by row (`Kit.sync_choices`, `Kit.sync_lines`); a panel that left the tree was freed and made again, it now goes whole to a pool by name (the dialog and the menu are still
+made each time, one subtree per event); and the stress panel asked each of its 300 rows whether it had changed and made a Label for every new line, it now compares the new lists with the last shown, leaves the 199 rows that stayed
+and gives the row that left the key and text of the line that came. The p95 of `ai-phase` with the city open fell from 7.95 to 3.51 ms (−56%, per-run ranges 7.55 to 8.22 against 3.45 to 3.95), the stress window's mean frame from 2.79 to 2.26 ms (−19%) and its median
+frame by 31% (the script of a step from 492 to 121 µs), the switch that opens the city from 9.1 to 5.6 ms. What did not move: the p95 of the stress window (3.50 to 3.41 ms, inside the spread between runs: the layout of 200 rows that all shift by one
+line, and the frame that begins the mode, about 30 ms of entering the tree with 300 Labels, which is under 5% of the window's frames and so is not its p95), the p95 of the context switches (−7%, also inside the spread), `event-burst` and
+`ai-phase` with no selection. The price: the four frames after the first of the city turn cost 0.1 to 0.3 ms more each (the median of that window rises from 0.40 to 0.77 ms, while its frames sum to a third less), unmounting costs a little more script, and
+the pool keeps more objects alive (1 640 to 2 419 at the end of a run; none in the tree). The runner's `stats()` is untouched. The evidence, the raw numbers and the attempts that do not count (a first "after" taken on a scratch copy without
+the icons imported; two series read as a slower process that were an artifact of a reference loop) are in [the evidence record](../evidence/frontier-arm-b/README.md#passe-de-otimização).
+
 ## Controls and sabotages
 
 - **The causal control.** The same lane on a native HUD that ignores the context (its table mounts the actions and the tile card in all seven) fails the
@@ -147,6 +164,6 @@ writes into the report and the oracle requires to be exactly the arm's.
 
 ## Not in this slice
 
-The optimization pass, the comparative executions and their metrics, the cost of change, the report, Release exports, arm A, the stability probe on B, typed text
+The comparative executions and their metrics, the cost of change, the report, Release exports, arm A, the stability probe on B, typed text
 and IME, network images and other platforms. The effort is recorded, not judged: it is a number for the `braco-b` criterion, and the report decides what
 it means.
