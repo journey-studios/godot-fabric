@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "scenario": "mobile-density",
+  "status": "verified-completed-hosted-workflow-and-slice-artifacts",
+  "at": "2026-10-10T03:30:42.290Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38018685996,
+    "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+    "event": "workflow_dispatch",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/104",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T02:54:47Z",
+    "updatedAt": "2026-10-10T03:29:19Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114114641355,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T02:54:51Z",
+        "completedAt": "2026-10-10T02:58:11Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114114641355"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114114641527,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T02:54:57Z",
+        "completedAt": "2026-10-10T03:02:11Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114114641527"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114115993359,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T03:02:20Z",
+        "completedAt": "2026-10-10T03:25:14Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114115993359"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114115993358,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T03:02:21Z",
+        "completedAt": "2026-10-10T03:25:34Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114115993358"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114115993337,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T03:02:19Z",
+        "completedAt": "2026-10-10T03:29:18Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114115993337"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114116020482,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T03:02:23Z",
+        "completedAt": "2026-10-10T03:02:50Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114116020482"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114114641518,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T02:54:51Z",
+        "completedAt": "2026-10-10T02:59:31Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114114641518"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114114641575,
+        "runAttempt": 1,
+        "headSha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+        "startedAt": "2026-10-10T02:54:58Z",
+        "completedAt": "2026-10-10T03:02:20Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38018685996/job/114114641575"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "native-cold-start": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "native-suites-frontier": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "native-suites-input": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "native-suites-runtime": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "parity-comparison": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "reference-android": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "reference-ios": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb"
+    },
+    "contractsJob": {
+      "steps": {
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T02:55:13Z",
+          "completedAt": "2026-10-10T02:58:06Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 467,
+              "suites": 0,
+              "pass": 467,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T02:58:06Z",
+          "completedAt": "2026-10-10T02:58:07Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T02:58:07Z",
+          "completedAt": "2026-10-10T02:58:08Z",
+          "passed": true,
+          "files": 1967
+        }
+      },
+      "sliceContractTests": []
+    },
+    "referenceParity": {
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeSteps": {
+      "test:mobile-density": {
+        "job": "native-suites-runtime",
+        "step": "Run npm run test:mobile-density",
+        "number": 56,
+        "conclusion": "success",
+        "startedAt": "2026-10-10T03:19:49Z",
+        "completedAt": "2026-10-10T03:19:59Z",
+        "result": {
+          "tap": [
+            {
+              "tests": 1,
+              "suites": 0,
+              "pass": 1,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "tests": [
+            "density_policy screen follows the screen's scale and RN's SafeAreaView follows the unsafe bands, on the headless host"
+          ],
+          "failedTests": [],
+          "markers": []
+        }
+      }
+    }
+  },
+  "pullRequest": {
+    "number": 104,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/104",
+    "title": "feat(density): Follow the screen's density and RN's SafeAreaView insets on the desktop (GF-09)",
+    "headSha": "2a4307643b2f06ea7275a51dab7d602c1a435407",
+    "baseSha": "807f426e78a80bb829d678285ad4359a2f6c8cca",
+    "squashMergeCommit": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+    "squashCommitSubject": "feat(density): Follow the screen's density and RN's SafeAreaView insets on the desktop (GF-09) (#104)",
+    "mergedAt": "2026-10-10T02:54:29Z",
+    "headTreeSha": "f1534a9a2c7dfeba475d12564eb7862e62674630",
+    "mainTreeSha": "f1534a9a2c7dfeba475d12564eb7862e62674630",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 14,
+    "commits": [
+      {
+        "sha": "d594cbe3825032e1e9b8a8a89660376f1411fe15",
+        "subject": "feat(frontier): Follow the screen's density and RN's SafeAreaView insets"
+      },
+      {
+        "sha": "77ce06ed7fcf73c6de5da836af6cd74b9e2798f0",
+        "subject": "docs(frontier): Record the hosted CI and Pages receipts of #74"
+      },
+      {
+        "sha": "03ad6f8583c70cf7d83b68d3fc184079d5572e23",
+        "subject": "docs(dashboard): Record #74's receipts in V05-04"
+      },
+      {
+        "sha": "97d823eab4f20fde285fb060d2830d219b16142d",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/mobile-density"
+      },
+      {
+        "sha": "9aaab67f2fa758078a7d75c45d3343d11e52bc06",
+        "subject": "test(frontier): Keep the HUD's SafeAreaView root from taking the world's clicks"
+      },
+      {
+        "sha": "56d80ed5dd9fe91248f5941a6c8903771c21e09e",
+        "subject": "docs(frontier): Leave #74's receipts to the canonical generator"
+      },
+      {
+        "sha": "fb622675a07036c29a7300c29ae2f887e05995e3",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/mobile-density"
+      },
+      {
+        "sha": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
+        "subject": "test(density): Capture the HUD at scale 2 with stated insets in a window"
+      },
+      {
+        "sha": "ba9d60474b5cc4335bfc3ab68f880a5a72d17467",
+        "subject": "docs(density): Record the desktop density and SafeAreaView slice (GF-09)"
+      },
+      {
+        "sha": "f0da286d31c7fb38dcb10044ec8f0c144a24db9a",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/mobile-density"
+      },
+      {
+        "sha": "9736e7126f812b065c9c5e9287cc6ff01a922071",
+        "subject": "docs(density): Name #104 as the slice's implementation PR"
+      },
+      {
+        "sha": "d1ce9cd33e122e976fa1c6969c11e63ec92823ac",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/mobile-density"
+      },
+      {
+        "sha": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
+        "subject": "fix(density): Refuse a seam band that is not a finite non-negative number"
+      },
+      {
+        "sha": "2a4307643b2f06ea7275a51dab7d602c1a435407",
+        "subject": "docs(density): Repin the slice's evidence to 05ff576 with the seam group"
+      }
+    ],
+    "changedFiles": 39,
+    "additions": 3365,
+    "deletions": 54
+  },
+  "artifacts": {
+    "density": {
+      "available": true,
+      "id": 11657841383,
+      "name": "native-mobile-density",
+      "sameNameArtifactsInTheRun": 1,
+      "zipSizeBytes": 64549,
+      "zipSizeBytesEqualsArtifactAPISize": true,
+      "zipSha256": "1159e08abbe076c0ba3aed8069bcb51da9ceaa5f80703f63e551fbd278d97a0c",
+      "apiDigest": "sha256:1159e08abbe076c0ba3aed8069bcb51da9ceaa5f80703f63e551fbd278d97a0c",
+      "zipSha256EqualsArtifactAPIDigest": true,
+      "uploadLogDigest": "1159e08abbe076c0ba3aed8069bcb51da9ceaa5f80703f63e551fbd278d97a0c",
+      "zipSha256EqualsUploadLogDigest": true,
+      "uploadedAt": "2026-10-10T03:20:01Z",
+      "expiresAt": "2027-01-08T02:54:48Z",
+      "fileCount": 5,
+      "files": {
+        "mobile-density-comparison.json": "8fc7862861049bf73ca9cead1765a655db4bab774ff044932b9c1718832a6aa4",
+        "mobile-density-current-report.json": "5e557d03e822f216c29891fd7bf527fe4fce2918f3a13ab08f73a5d1577fb5f5",
+        "mobile-density-current.log": "0a83c712ad0068d74ccda9747ef62719d8dd5392cbaaa4efddf411301987bdcc",
+        "mobile-density-probe-bundle.json": "ea69b88ff2b5fcb6474be5a393cb6fb682399fca891dc4e15b81b83029febcb9",
+        "mobile-density-report.json": "d100bc1c8be030987f7d42b15517523133a87ba05462a3f62623f946a6b83101"
+      },
+      "markers": [
+        {
+          "file": "mobile-density-current.log",
+          "line": "MOBILE_DENSITY_PASSED: 149"
+        }
+      ]
+    }
+  },
+  "findings": []
+}

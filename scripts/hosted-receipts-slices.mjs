@@ -227,4 +227,17 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-05-estabilidade-4ffdb6e",
   },
+  // The density and SafeAreaView slice of GF-09 (#104): contractsRun is the Contracts run dispatched on main at the squash, and its
+  // native step ran in the job native-suites-runtime, beside the modal suite.
+  {
+    folder: "mobile-density",
+    pr: 104,
+    squash: "8cd2491",
+    contractsRun: 38018685996,
+    pagesRun: 38018671228,
+    nativeSteps: [{ script: "test:mobile-density", expect: "tap" }],
+    artifacts: [{ key: "density", name: "native-mobile-density" }],
+    contractTests: [],
+    activity: "mobile-density-slice-2026-10-09",
+  },
 ];
