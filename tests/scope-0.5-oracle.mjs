@@ -344,6 +344,20 @@ export function verifyScopeReport(report, {manifest, inventory, original = false
     undeclaredCases: outcomes.undeclared};
 }
 
+// The signals by which a process dies of its own fault: an abort (an uncaught C++ exception), a bad access, an illegal instruction, an
+// arithmetic fault and a trap. A SIGKILL or a SIGTERM comes from outside (the out-of-memory killer, a person, CI cancelling the job),
+// so it says nothing about the host refusing the SDK and must not pass as the sabotage's rejection.
+const HOST_CRASH_SIGNALS = ["SIGABRT", "SIGBUS", "SIGSEGV", "SIGILL", "SIGFPE", "SIGTRAP"];
+
+// For a sabotaged run that wrote no report: whether the host itself refused the SDK. A refused prop that reaches the host throws
+// inside RN's C++ prop conversion and the process dies by one of its own crash signals: SIGABRT with Godot's crash text on most runs,
+// SIGBUS with no text on some (1 run in 14 on the machine that found it). The signal is the rejection and the text is not needed; a
+// probe that stops by itself leaves `SCRIPT ERROR`. A run that ends without a report, a crash signal or a text rejected nothing,
+// whatever its exit code.
+export function hostRejected({signal}, log) {
+  return HOST_CRASH_SIGNALS.includes(signal) || /Program crashed|SCRIPT ERROR/.test(log);
+}
+
 // For a sabotaged run: why the oracle does not accept the report, or null when it does.
 export function oracleRejection(report, context) {
   try {
