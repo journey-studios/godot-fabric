@@ -5,8 +5,8 @@ mesmos 6 painéis, 7 contextos e testIDs da HUD React Native do V05-05 (braço C
 [protocolo](../../research/frontier-comparison-protocol.md): em cada um dos sete contextos os testIDs visíveis são os da tabela da matriz. Implementação em `d8bd678285efb13681e1a5d39fdec394069888b7`
 (<https://github.com/journey-studios/godot-fabric/commit/d8bd678285efb13681e1a5d39fdec394069888b7>). O desenho e o que difere do braço C estão em [docs/research/frontier-arm-b.md](../../research/frontier-arm-b.md).
 
-**Este registro não afirma nenhum resultado de medição.** Nenhuma execução comparativa rodou, a passada de otimização do braço B (no máximo 3,2 h, uma rodada) não foi
-feita, e nada aqui diz que uma HUD é mais rápida, mais lenta ou mais barata que a outra. O esforço está registrado, não julgado. Fecham-se só o critério `braco-b` do V05-10
+**Este registro não afirma nenhum resultado comparativo.** Nenhuma execução comparativa rodou. A passada de otimização do braço B (no máximo 3,2 h, uma rodada) foi feita e
+mediu só o braço B, em headless e fora de qualquer execução comparativa ([Passe de otimização](#passe-de-otimização)); nada aqui diz que uma HUD é mais rápida, mais lenta ou mais barata que a outra. O esforço está registrado, não julgado. Fecham-se só o critério `braco-b` do V05-10
 (sem tarefa, fase, sequência, checklist nem decisão tocados) e nenhuma tarefa do GF.
 
 ## O que foi executado
@@ -214,10 +214,10 @@ de menos de 30 minutos entre os eventos com carimbo da transcrição, e o orques
 
 - Execução local em macOS arm64 (a lane headless e as capturas em janela). A CI hospedada e o Pages do squash `4c3abb7` estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages).
 - A sonda de estabilidade (20 aberturas e fechamentos, vazamentos, foco, ícones) é do host React Native e não roda no braço B. O braço B não tem o equivalente medido de vazamento, foco e
-  ícones; isto fica aberto para a passada de otimização e para as execuções.
+  ícones; isto fica aberto para as execuções.
 - O hover e o clique foram exercitados com eventos sintéticos pela viewport (e em janela, nas capturas), sem mouse físico. iOS, texto digitado e IME, imagens de rede e outras
   plataformas estão fora.
-- Nenhuma medição de tempo de quadro, memória, partida ou pacote do braço B: é a `execucao` e a `metricas`.
+- As medidas de tempo de quadro do braço B são só as do passe de otimização (headless, máquina compartilhada, B sozinho) e não entram em estatística nenhuma do comparativo. Memória, partida, pacote e as medidas comparativas são da `execucao` e da `metricas`.
 
 ## Abertos
 

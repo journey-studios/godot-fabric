@@ -2,9 +2,9 @@
 
 Status: the native Godot HUD of arm B exists and passes the context matrix, which is the invalidation rule `parity` of
 [the comparison's protocol](frontier-comparison-protocol.md) ("in B or C, the visible testIDs differ from the table of the context matrix in
-any of the seven contexts → reject and redo; B is not ready until it passes"). It is a delivery of effort and a lane, **not a measurement**: no
-comparative execution has run, the optimization pass (at most 3.2 h, one round) has not been done, and nothing here says that either HUD is
-faster, slower or cheaper than the other. The record of the runs, the captures and the effort is
+any of the seven contexts → reject and redo; B is not ready until it passes"). It is a delivery of effort and a lane, **not a comparative measurement**: no
+comparative execution has run. The optimization pass (at most 3.2 h, one round) has run and measured arm B alone, headless and outside any comparative
+execution ([the optimization pass](#the-optimization-pass)); nothing here says that either HUD is faster, slower or cheaper than the other. The record of the runs, the captures and the effort is
 [docs/evidence/frontier-arm-b/](../evidence/frontier-arm-b/README.md).
 
 The protocol defines arm B as "idiomatic GDScript (Controls, signals, updating only what changed) with the same 6 panels, 7 contexts and testIDs as
@@ -164,6 +164,6 @@ the icons imported; two series read as a slower process that were an artifact of
 
 ## Not in this slice
 
-The optimization pass, the comparative executions and their metrics, the cost of change, the report, Release exports, arm A, the stability probe on B, typed text
+The comparative executions and their metrics, the cost of change, the report, Release exports, arm A, the stability probe on B, typed text
 and IME, network images and other platforms. The effort is recorded, not judged: it is a number for the `braco-b` criterion, and the report decides what
 it means.
