@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T08:20:00.000Z",
+  "updatedAt": "2026-10-10T08:41:29.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4762,6 +4762,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-amendment-4-e78e38c",
+      "at": "2026-10-10T08:41:29.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, quarta emenda do protocolo do comparativo final (commit e78e38c): na janela context-switches, a ocorrência do diálogo passa a ser o último resolve_event, que o fecha (dialog -> none), e não uma seleção. Só um End Turn abre o diálogo; o evento nasce na fase de refresh, fora da janela de 3 quadros, e toda seleção é recusada enquanto ele está aberto. As seis primeiras trocas seguem com o intent de seleção. Nenhuma medição comparativa veio antes da emenda (measurementsBefore 0). O pin do protocolo passa a PINS[4] do teste; os valores congelados (frozenValue e frozenAt) não mudam, e nenhum limiar, execução ou regra de decisão muda. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e78e38c7982be9bd021c673939ce0ad0e8f7752e/docs/research/frontier-comparison-protocol.json"
+    },
     {
       "id": "milestone-0-5-v05-10-braco-b-receipts",
       "at": "2026-10-10T08:20:00.000Z",

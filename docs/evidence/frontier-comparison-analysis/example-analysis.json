@@ -7,8 +7,8 @@
       "protocol": {
         "id": "frontier-comparison-protocol",
         "item": "V05-10",
-        "sha256": "08c7aea3cb51c695898642fb12940035cee1142b09fecf30c07e03f7e1ffaa4c",
-        "amendments": 3,
+        "sha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
+        "amendments": 4,
         "frozen": [
           {
             "id": "cpu-time-instrument",
@@ -4714,8 +4714,8 @@
     },
     "reproduction": {
       "rawData": "synthetic: no raw data",
-      "campaignSha256": "99cc240fe1d92abc6be3f902c1fca0468fabee8d42ff57f7eb3f11f15549e48d",
-      "protocolSha256": "08c7aea3cb51c695898642fb12940035cee1142b09fecf30c07e03f7e1ffaa4c",
+      "campaignSha256": "62eccb0534b33f16192da2d06eed2e474289c14377f7da893bd293725e129eed",
+      "protocolSha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
       "seed": 20261009,
       "resamples": 10000,
       "commands": [
