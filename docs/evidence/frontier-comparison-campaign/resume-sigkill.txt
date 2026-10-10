@@ -1,0 +1,14 @@
+# 1. the rehearsal, killed with SIGKILL while slot 2 was running (the command line's own output up to there)
+the instrument's self-check (probe and oracle), headless
+the instrument's self-check passed
+presented slot 1 (A) attempt 1: the load stayed at 7.62 after 0 s, going on
+  rejected (load:before, load:after, not-presented:intent-not-drawn, not-presented:idle-not-drawn, not-presented:not-paced, not-the-registered-build:build), 51.7 s
+presented slot 2 (B) attempt 1: the load stayed at 5.49 after 0 s, going on
+# 2. the same command with --resume, on the same --out, with the working tree clean again
+resuming after 1 attempt(s)
+presented slot 2 (B) attempt 1: the load stayed at 4.32 after 0 s, going on
+  rejected (load:before, load:after, not-presented:intent-not-drawn, not-presented:idle-not-drawn, not-presented:not-paced, not-the-registered-build:build), 56.6 s
+presented slot 3 (C) attempt 1: the load stayed at 5.11 after 0 s, going on
+  rejected (load:before, load:after, not-presented:intent-not-drawn, not-presented:idle-not-drawn, not-presented:not-paced, not-the-registered-build:build), 75.6 s
+FRONTIER_COMPARISON_CAMPAIGN_DONE: build/frontier-comparison-campaign-evidence-kill, 3 attempt(s), analysis incomplete
+exit 0

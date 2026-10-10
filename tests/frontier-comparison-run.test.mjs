@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { buildReport } from "../scripts/frontier-comparison-report.mjs";
 import { analyse, campaignOf, executionOf, fpsOf, goldenReplayHash, sha256, slotOf } from "../scripts/frontier-comparison-run-campaign.mjs";
-import { derivedOf, TRACE_KINDS, usecOf, windowFramesOf, windowRulesOf } from "../scripts/frontier-comparison-run-windows.mjs";
+import { CONFIGURATION_PROBLEMS, derivedOf, TRACE_KINDS, usecOf, windowFramesOf, windowRulesOf } from "../scripts/frontier-comparison-run-windows.mjs";
 import { loadNumber, processOf, readCostsOf } from "../scripts/frontier-comparison-run.mjs";
 import { syntheticReport, syntheticTrace, totalMsOf } from "./frontier-comparison-run-synthetic.mjs";
 
@@ -254,26 +254,36 @@ test("the windows are derived from the trace and the samples, and a report that 
 
   const rewritten = fresh();
   rewritten.config.waits.burstMinimumFrames = 4;
-  assert.match(derivedOf(rewritten, protocol).problems.join("\n"), /waits: the scenario waited with/);
+  // A problem is a code, which a caller chooses by, and a message. The two that say the scenario is not the protocol's are the configuration ones.
+  const configured = derivedOf(rewritten, protocol).problems;
+  assert.deepEqual(configured.map((problem) => problem.code), ["config-waits"]);
+  assert.match(configured[0].message, /waits: the scenario waited with/);
+  assert.ok(CONFIGURATION_PROBLEMS.includes(configured[0].code));
   const shorter = fresh();
   shorter.config.idleFrames = 599;
   shorter.idle.last = 599;
-  assert.match(derivedOf(shorter, protocol).problems.join("\n"), /idleFrames: 599[\s\S]*idle: 599 frames/);
+  const idleProblems = derivedOf(shorter, protocol).problems;
+  assert.deepEqual(idleProblems.map((problem) => problem.code), ["config-idle-frames", "idle-frames"]);
+  assert.match(idleProblems.map((problem) => problem.message).join("\n"), /idleFrames: 599[\s\S]*idle: 599 frames/);
+  assert.deepEqual(idleProblems.filter((problem) => CONFIGURATION_PROBLEMS.includes(problem.code)).map((problem) => problem.code), ["config-idle-frames"], "an idle window of another length is not a configuration problem by itself");
   const foreign = fresh();
   foreign.format = "something/else";
-  assert.deepEqual(analyse(foreign, protocol), { derived: null, problems: ["format: something/else is not godot-fabric.frontier-comparison-scenario/v1"] });
+  assert.deepEqual(analyse(foreign, protocol), { derived: null, problems: [{ code: "report-format", message: "format: something/else is not godot-fabric.frontier-comparison-scenario/v1" }] });
 
   // A frame the run lacks, or whose render reading never arrived, is not a sample: the occurrence that needs it is left out, and the report says so.
   const lacking = fresh();
   lacking.frames.renderKnown[lacking.frames.frame.indexOf(derived.ranges["context-switches"][30].first + 1)] = 0;
   const lost = derivedOf(lacking, protocol);
-  assert.match(lost.problems.join("\n"), /context-switches\[30\]: frame \d+ has no complete sample/);
+  assert.deepEqual(lost.problems.map((problem) => problem.code), ["sample-missing"]);
+  assert.match(lost.problems[0].message, /context-switches\[30\]: frame \d+ has no complete sample/);
   assert.equal(lost.windows["context-switches"].occurrences.length, 73);
   const idling = fresh();
   for (const column of Object.values(idling.frames)) {
     column.splice(10, 1);
   }
-  assert.match(derivedOf(idling, protocol).problems.join("\n"), /idle: frame 11 has no complete sample/);
+  const missingIdle = derivedOf(idling, protocol).problems;
+  assert.deepEqual(missingIdle.map((problem) => problem.code), ["sample-missing"]);
+  assert.match(missingIdle[0].message, /idle: frame 11 has no complete sample/);
 
   // A display that drew nothing in a measured occurrence says so.
   const dark = fresh();
@@ -286,7 +296,8 @@ test("the windows are derived from the trace and the samples, and a report that 
 test("an event burst that never settles leaves the window one occurrence short, and the analysis calls the execution incomplete", () => {
   const { problems, execution } = executionIn("A", "presented", { trace: { unsettled: [57] } });
   assert.equal(problems.length, 1);
-  assert.match(problems[0], /^event-burst\[57\]: the occurrence that began at frame \d+ did not end$/);
+  assert.equal(problems[0].code, "occurrence-unended");
+  assert.match(problems[0].message, /^event-burst\[57\]: the occurrence that began at frame \d+ did not end$/);
   assert.equal(execution.windows["event-burst"].occurrences.length, 99);
   const analysed = buildReport({ campaign: campaignIn([execution]), protocol, protocolSha256, campaignSha256: sha256("x") });
   const reasons = analysed.sections.validity.slots.find((slot) => slot.lane === "presented" && slot.arm === "A").attempts[0].reasons;
