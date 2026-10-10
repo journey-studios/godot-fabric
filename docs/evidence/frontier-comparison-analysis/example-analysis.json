@@ -1,0 +1,4726 @@
+{
+  "format": "godot-fabric.frontier-comparison-report/v1",
+  "status": "complete",
+  "why": [],
+  "sections": {
+    "provenance": {
+      "protocol": {
+        "id": "frontier-comparison-protocol",
+        "item": "V05-10",
+        "sha256": "1e122ac3f7457fc3bf28ef1cd33ef8d0e91b0d6d93d722e5463d399eec94c280",
+        "amendments": 2,
+        "frozen": [
+          {
+            "id": "cpu-time-instrument",
+            "frozenValue": {
+              "quantity": "total_ms = physics_ms + process_ms + setup_ms + render_ms for each process frame, in milliseconds: the monotonic elapsed time between the engine's hooks on the main thread (not the thread's CPU clock of the operating system), every term ending before the frame is presented; the percentile and the windows are the protocol's",
+              "reading": "Time.get_ticks_usec stamped at SceneTree.process_frame, RenderingServer.frame_pre_draw (the last _process when the frame does not draw), SceneTree.physics_frame and the last _physics_process; RenderingServer.get_frame_setup_time_cpu() and viewport_get_measured_render_time_cpu() read at frame_post_draw, with the render measure on for the main window's viewport; never Performance.TIME_PROCESS or TIME_PHYSICS_PROCESS, which are a once-a-second maximum and, for TIME_PROCESS with the vsync on, hold the wait for the display (TIME_PROCESS stays in the samples as a cross-check)",
+              "alignment": "the render reading of a draw is the one taken 6 draws later (Compatibility renderer, Godot 4.7.2, macOS), joined by draw index when the run is over; the harness keeps 6 draws after the last window it needs, and the lag is checked by the render pulse every time the lab probe runs",
+              "observedError": "against a load of known duration, at most 0.16% at 2, 5, 10 and 20 ms headless and at most 1.5% in a presented window (the 2 ms load; 0.22% or less in the others), under the 10% rule; the instrument's floor, the idle total, is about 0.014 ms headless and 0.082 ms in a window, the same in every arm",
+              "gate": "the protocol's `instrument` rule is operational as: tests/cpu-time-instrument.gd is byte-identical to the one the probe and the oracle passed (its hash goes in the provenance), and the probe and the oracle are rerun on the machine, the engine and the renderer of the campaign before it starts",
+              "evidence": {
+                "research": "docs/research/cpu-time-instrument.md",
+                "record": "docs/evidence/cpu-time-instrument/README.md",
+                "pinnedCommit": "e38615da6ad7f9ca774e2ef8c46de33707c1b427"
+              }
+            },
+            "frozenAt": "2026-10-10"
+          },
+          {
+            "id": "budget-p95-ai-phase",
+            "frozenValue": 15.5,
+            "frozenAt": "2026-10-10"
+          },
+          {
+            "id": "budget-p95-event-burst",
+            "frozenValue": 15.5,
+            "frozenAt": "2026-10-10"
+          },
+          {
+            "id": "budget-p95-context-switches",
+            "frozenValue": 16,
+            "frozenAt": "2026-10-10"
+          },
+          {
+            "id": "budget-p95-stress",
+            "frozenValue": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+            "frozenAt": "2026-10-10"
+          }
+        ]
+      },
+      "commit": "synthetic-commit",
+      "machine": "synthetic machine",
+      "system": "synthetic system",
+      "display": "synthetic display",
+      "renderer": "synthetic renderer",
+      "adapter": "synthetic adapter",
+      "registered": {
+        "seed": 4242,
+        "replayGoldenHash": "synthetic-replay-golden-hash",
+        "soakFinalHash": "synthetic-soak-final-hash",
+        "instrumentSha256": "089a5b553289f7e7da18edda5aa2e06f43c76155fee0f01c33a3478736ca5430",
+        "arms": {
+          "A": {
+            "binarySha256": "cf39dd3ee65299004d02024fd66e38d6ef4171eacad33aa26969c3bf39ec707d",
+            "packageSha256": "1ebfda2e1030aa75f400326e0c3341600e59c9c93a291120f87d266376607dae",
+            "scriptSha256": "b3af84aaa32d4a3a45f0b326a3919b054cc51c97d4253e748d47926ff7692b64"
+          },
+          "B": {
+            "binarySha256": "53a5c0478ca709f0d026a5b3e6beb3ea3dfaf8af5a9b3abee9b8e1874ae85a91",
+            "packageSha256": "5efd9ecaaaa2d8d28c1e122807a10753ecc492922224116ecc72e5149b5aee8f",
+            "scriptSha256": "d4337483dd7a15623eb1454a24ec3e9e38d48647c599394841a534f6541eec40"
+          },
+          "C": {
+            "binarySha256": "bbbd38669ecfd3fee53329cc6a1a2a24f183fa06348cf3cf538e82c11931e930",
+            "packageSha256": "84e856108c12c705a5581dbb59779daec52dc00e84ed2a21b07d77485e46681b",
+            "scriptSha256": "838166bc268392e5656db7515d416dea08b5abb7459499ca4e251389682f7f30"
+          }
+        }
+      },
+      "instrument": {
+        "selfCheckPassed": true,
+        "sha256": "089a5b553289f7e7da18edda5aa2e06f43c76155fee0f01c33a3478736ca5430",
+        "registeredSha256": "089a5b553289f7e7da18edda5aa2e06f43c76155fee0f01c33a3478736ca5430",
+        "unchangedAfterSelfCheck": true,
+        "passed": true
+      },
+      "vsync": [
+        {
+          "lane": "presented",
+          "mode": "ENABLED",
+          "refreshHz": 120,
+          "executions": 37
+        },
+        {
+          "lane": "unlimited",
+          "mode": "DISABLED",
+          "refreshHz": 120,
+          "executions": 36
+        }
+      ],
+      "load": {
+        "command": "sysctl vm.loadavg",
+        "limit1MinuteAverage": 2,
+        "highestBefore": 5.3,
+        "highestAfter": 1.28
+      },
+      "deviations": []
+    },
+    "validity": {
+      "maxAttempts": 3,
+      "minimumPerArm": 10,
+      "totals": {
+        "presented": {
+          "A": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 0,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          },
+          "B": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 0,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          },
+          "C": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 1,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          }
+        },
+        "unlimited": {
+          "A": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 0,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          },
+          "B": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 0,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          },
+          "C": {
+            "planned": 12,
+            "accepted": 12,
+            "rejected": 0,
+            "open": 0,
+            "missing": 0,
+            "exhausted": 0
+          }
+        }
+      },
+      "balance": {
+        "presented": {
+          "planned": [
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            }
+          ],
+          "accepted": [
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            }
+          ],
+          "balanced": true
+        },
+        "unlimited": {
+          "planned": [
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            }
+          ],
+          "accepted": [
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            },
+            {
+              "A": 4,
+              "B": 4,
+              "C": 4
+            }
+          ],
+          "balanced": true
+        }
+      },
+      "stopped": [],
+      "slots": [
+        {
+          "lane": "presented",
+          "slot": 1,
+          "block": 0,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.18,
+                "after": 0.71
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 2,
+          "block": 0,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.42,
+                "after": 1.24
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 3,
+          "block": 0,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.46,
+                "after": 0.55
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 4,
+          "block": 1,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 2,
+          "rejected": 1,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 5.3,
+                "after": 0.53
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "rejected",
+              "reasons": [
+                {
+                  "rule": "load",
+                  "clause": "before",
+                  "value": 5.3,
+                  "limit": 2
+                }
+              ]
+            },
+            {
+              "attempt": 2,
+              "load": {
+                "before": 0.99,
+                "after": 0.53
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 5,
+          "block": 1,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.83,
+                "after": 0.56
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 6,
+          "block": 1,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.94,
+                "after": 1.02
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 7,
+          "block": 2,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.55,
+                "after": 0.7
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 8,
+          "block": 2,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.4,
+                "after": 0.83
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 9,
+          "block": 2,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.83,
+                "after": 0.57
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 10,
+          "block": 3,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.49,
+                "after": 0.87
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 11,
+          "block": 3,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.84,
+                "after": 0.53
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 12,
+          "block": 3,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.42,
+                "after": 1.12
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 13,
+          "block": 4,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.67,
+                "after": 0.61
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 14,
+          "block": 4,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.41,
+                "after": 0.75
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 15,
+          "block": 4,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.56,
+                "after": 0.72
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 16,
+          "block": 5,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.63,
+                "after": 0.67
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 17,
+          "block": 5,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.81,
+                "after": 0.96
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 18,
+          "block": 5,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.12,
+                "after": 0.69
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 19,
+          "block": 6,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.04,
+                "after": 0.73
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 20,
+          "block": 6,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.67,
+                "after": 1.11
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 21,
+          "block": 6,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.01,
+                "after": 0.58
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 22,
+          "block": 7,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.73,
+                "after": 0.93
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 23,
+          "block": 7,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.62,
+                "after": 1.21
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 24,
+          "block": 7,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.84,
+                "after": 1.19
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 25,
+          "block": 8,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.47,
+                "after": 0.86
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 26,
+          "block": 8,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.5,
+                "after": 0.71
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 27,
+          "block": 8,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.19,
+                "after": 0.89
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 28,
+          "block": 9,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.47,
+                "after": 0.57
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 29,
+          "block": 9,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.64,
+                "after": 0.83
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 30,
+          "block": 9,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.13,
+                "after": 1.28
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 31,
+          "block": 10,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.14,
+                "after": 0.95
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 32,
+          "block": 10,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.05,
+                "after": 1.11
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 33,
+          "block": 10,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.52,
+                "after": 1.08
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 34,
+          "block": 11,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.56,
+                "after": 1.02
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 35,
+          "block": 11,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.87,
+                "after": 0.9
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "presented",
+          "slot": 36,
+          "block": 11,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.1,
+                "after": 0.76
+              },
+              "vsync": {
+                "mode": "ENABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 1,
+          "block": 0,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.08,
+                "after": 1.09
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 2,
+          "block": 0,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.4,
+                "after": 1.11
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 3,
+          "block": 0,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.49,
+                "after": 0.52
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 4,
+          "block": 1,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.53,
+                "after": 1.06
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 5,
+          "block": 1,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.1,
+                "after": 1.03
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 6,
+          "block": 1,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.08,
+                "after": 1.05
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 7,
+          "block": 2,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.09,
+                "after": 0.55
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 8,
+          "block": 2,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.83,
+                "after": 0.55
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 9,
+          "block": 2,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.92,
+                "after": 0.63
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 10,
+          "block": 3,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.19,
+                "after": 1.2
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 11,
+          "block": 3,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.86,
+                "after": 0.88
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 12,
+          "block": 3,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.5,
+                "after": 0.62
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 13,
+          "block": 4,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.94,
+                "after": 1.28
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 14,
+          "block": 4,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.05,
+                "after": 0.97
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 15,
+          "block": 4,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.56,
+                "after": 0.98
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 16,
+          "block": 5,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.75,
+                "after": 0.97
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 17,
+          "block": 5,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.05,
+                "after": 0.91
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 18,
+          "block": 5,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.16,
+                "after": 0.99
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 19,
+          "block": 6,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.61,
+                "after": 0.75
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 20,
+          "block": 6,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.47,
+                "after": 0.62
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 21,
+          "block": 6,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.49,
+                "after": 1.14
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 22,
+          "block": 7,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.73,
+                "after": 0.86
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 23,
+          "block": 7,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.02,
+                "after": 0.71
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 24,
+          "block": 7,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.16,
+                "after": 1.11
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 25,
+          "block": 8,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.67,
+                "after": 0.57
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 26,
+          "block": 8,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.41,
+                "after": 1.01
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 27,
+          "block": 8,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.94,
+                "after": 0.79
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 28,
+          "block": 9,
+          "position": 0,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.41,
+                "after": 1.25
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 29,
+          "block": 9,
+          "position": 1,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.78,
+                "after": 1.06
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 30,
+          "block": 9,
+          "position": 2,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.06,
+                "after": 0.74
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 31,
+          "block": 10,
+          "position": 0,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.96,
+                "after": 0.94
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 32,
+          "block": 10,
+          "position": 1,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 1.17,
+                "after": 0.65
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 33,
+          "block": 10,
+          "position": 2,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.67,
+                "after": 0.94
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 34,
+          "block": 11,
+          "position": 0,
+          "arm": "B",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.74,
+                "after": 0.65
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 35,
+          "block": 11,
+          "position": 1,
+          "arm": "C",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.65,
+                "after": 1.05
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "lane": "unlimited",
+          "slot": 36,
+          "block": 11,
+          "position": 2,
+          "arm": "A",
+          "state": "accepted",
+          "accepted": 1,
+          "rejected": 0,
+          "attempts": [
+            {
+              "attempt": 1,
+              "load": {
+                "before": 0.88,
+                "after": 1.14
+              },
+              "vsync": {
+                "mode": "DISABLED",
+                "refreshHz": 120
+              },
+              "status": "accepted",
+              "reasons": []
+            }
+          ]
+        }
+      ]
+    },
+    "primary": {
+      "available": true,
+      "outcome": "cpu-time-p95",
+      "unit": "ms",
+      "orientation": "lowerIsBetter",
+      "interval": {
+        "level": 0.95,
+        "method": "percentile bootstrap of the difference of the medians",
+        "resamples": 10000,
+        "seed": 20261009,
+        "prng": "mulberry32"
+      },
+      "multiplicity": {
+        "family": "the four primary windows of H3 (C minus B)",
+        "method": "Holm",
+        "alphaOneSided": 0.025
+      },
+      "windows": [
+        {
+          "id": "ai-phase",
+          "label": "AI phase",
+          "arms": {
+            "A": {
+              "executions": 12,
+              "median": 5.0035,
+              "iqr": 0.03399999999999981,
+              "perRun": [
+                4.999,
+                5.008,
+                4.994,
+                4.958,
+                5.042,
+                4.99,
+                5.015,
+                5.022,
+                4.988,
+                5.033,
+                4.978,
+                5.037
+              ]
+            },
+            "B": {
+              "executions": 12,
+              "median": 7.999499999999999,
+              "iqr": 0.06299999999999972,
+              "perRun": [
+                7.96,
+                7.963,
+                8.022,
+                8.028,
+                8.008,
+                7.986,
+                7.958,
+                8.026,
+                7.991,
+                7.991,
+                8.038,
+                8.038
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 5.9935,
+              "iqr": 0.05799999999999983,
+              "perRun": [
+                5.987,
+                5.976,
+                6.015,
+                5.989,
+                6.031,
+                6.028,
+                6.049,
+                5.953,
+                5.955,
+                6.039,
+                5.97,
+                5.998
+              ]
+            }
+          },
+          "pairs": [
+            {
+              "id": "C-A",
+              "hypothesis": "H1",
+              "minuend": "C",
+              "subtrahend": "A",
+              "difference": 0.9900000000000002,
+              "interval": [
+                0.9595000000000002,
+                1.0305
+              ]
+            },
+            {
+              "id": "B-A",
+              "hypothesis": "H2",
+              "minuend": "B",
+              "subtrahend": "A",
+              "difference": 2.9959999999999996,
+              "interval": [
+                2.9625000000000004,
+                3.032000000000001
+              ]
+            },
+            {
+              "id": "C-B",
+              "hypothesis": "H3",
+              "minuend": "C",
+              "subtrahend": "B",
+              "difference": -2.0059999999999993,
+              "interval": [
+                -2.0425000000000004,
+                -1.9615
+              ],
+              "margin": {
+                "value": 0.7999499999999999,
+                "relative": 0.1,
+                "floor": {
+                  "value": 0.5,
+                  "unit": "ms"
+                },
+                "medianOfReference": 7.999499999999999,
+                "formula": "max(relative x the median of B, floor)"
+              },
+              "unadjustedCategory": "gain",
+              "category": "gain",
+              "downgraded": false,
+              "nonInferior": true,
+              "pValue": 0.00009999000099990002,
+              "holmStands": true,
+              "budget": {
+                "threshold": "budget-p95-ai-phase",
+                "value": 15.5,
+                "B": {
+                  "median": 7.999499999999999,
+                  "result": "met"
+                },
+                "C": {
+                  "median": 5.9935,
+                  "result": "met"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "event-burst",
+          "label": "End-of-turn event burst",
+          "arms": {
+            "A": {
+              "executions": 12,
+              "median": 5.01,
+              "iqr": 0.04300000000000015,
+              "perRun": [
+                5.01,
+                4.986,
+                5.03,
+                5.01,
+                4.982,
+                5.01,
+                5.031,
+                4.996,
+                5.022,
+                5.029,
+                4.979,
+                5.032
+              ]
+            },
+            "B": {
+              "executions": 12,
+              "median": 8.0125,
+              "iqr": 0.04300000000000015,
+              "perRun": [
+                8.013,
+                8.018,
+                7.997,
+                7.974,
+                8.012,
+                8.03,
+                7.997,
+                8.027,
+                7.979,
+                8.043,
+                8.022,
+                7.963
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 8.046,
+              "iqr": 0.034000000000000696,
+              "perRun": [
+                8.079,
+                8.035,
+                8.067,
+                8.045,
+                8.037,
+                8.061,
+                8.047,
+                8.008,
+                8.049,
+                8.089,
+                8.024,
+                8.027
+              ]
+            }
+          },
+          "pairs": [
+            {
+              "id": "C-A",
+              "hypothesis": "H1",
+              "minuend": "C",
+              "subtrahend": "A",
+              "difference": 3.0359999999999996,
+              "interval": [
+                3.0105000000000013,
+                3.0589999999999993
+              ]
+            },
+            {
+              "id": "B-A",
+              "hypothesis": "H2",
+              "minuend": "B",
+              "subtrahend": "A",
+              "difference": 3.0024999999999995,
+              "interval": [
+                2.9684999999999997,
+                3.0220000000000002
+              ]
+            },
+            {
+              "id": "C-B",
+              "hypothesis": "H3",
+              "minuend": "C",
+              "subtrahend": "B",
+              "difference": 0.033500000000000085,
+              "interval": [
+                0.014499999999999957,
+                0.06400000000000006
+              ],
+              "margin": {
+                "value": 0.80125,
+                "relative": 0.1,
+                "floor": {
+                  "value": 0.5,
+                  "unit": "ms"
+                },
+                "medianOfReference": 8.0125,
+                "formula": "max(relative x the median of B, floor)"
+              },
+              "unadjustedCategory": "neutral",
+              "category": "neutral",
+              "downgraded": false,
+              "nonInferior": true,
+              "pValue": 0.00009999000099990002,
+              "holmStands": true,
+              "budget": {
+                "threshold": "budget-p95-event-burst",
+                "value": 15.5,
+                "B": {
+                  "median": 8.0125,
+                  "result": "met"
+                },
+                "C": {
+                  "median": 8.046,
+                  "result": "met"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "context-switches",
+          "label": "50 consecutive context switches",
+          "arms": {
+            "A": {
+              "executions": 12,
+              "median": 4.9895,
+              "iqr": 0.055000000000000604,
+              "perRun": [
+                4.987,
+                5.017,
+                5.048,
+                4.977,
+                4.963,
+                5.05,
+                4.979,
+                4.965,
+                5.03,
+                5.03,
+                4.992,
+                4.975
+              ]
+            },
+            "B": {
+              "executions": 12,
+              "median": 7.9975,
+              "iqr": 0.04899999999999949,
+              "perRun": [
+                7.955,
+                7.99,
+                8.018,
+                7.987,
+                8.002,
+                8.004,
+                7.994,
+                8.001,
+                8.011,
+                8.014,
+                7.951,
+                7.954
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 10.000499999999999,
+              "iqr": 0.04499999999999993,
+              "perRun": [
+                10,
+                10.016,
+                9.969,
+                10.001,
+                9.985,
+                10.03,
+                10.043,
+                9.958,
+                10.021,
+                9.976,
+                10.029,
+                9.982
+              ]
+            }
+          },
+          "pairs": [
+            {
+              "id": "C-A",
+              "hypothesis": "H1",
+              "minuend": "C",
+              "subtrahend": "A",
+              "difference": 5.010999999999999,
+              "interval": [
+                4.961499999999999,
+                5.041499999999999
+              ]
+            },
+            {
+              "id": "B-A",
+              "hypothesis": "H2",
+              "minuend": "B",
+              "subtrahend": "A",
+              "difference": 3.008,
+              "interval": [
+                2.9615,
+                3.026
+              ]
+            },
+            {
+              "id": "C-B",
+              "hypothesis": "H3",
+              "minuend": "C",
+              "subtrahend": "B",
+              "difference": 2.0029999999999992,
+              "interval": [
+                1.9784999999999986,
+                2.037000000000001
+              ],
+              "margin": {
+                "value": 0.79975,
+                "relative": 0.1,
+                "floor": {
+                  "value": 0.5,
+                  "unit": "ms"
+                },
+                "medianOfReference": 7.9975,
+                "formula": "max(relative x the median of B, floor)"
+              },
+              "unadjustedCategory": "cost",
+              "category": "cost",
+              "downgraded": false,
+              "nonInferior": false,
+              "pValue": 0.00009999000099990002,
+              "holmStands": true,
+              "budget": {
+                "threshold": "budget-p95-context-switches",
+                "value": 16,
+                "B": {
+                  "median": 7.9975,
+                  "result": "met"
+                },
+                "C": {
+                  "median": 10.000499999999999,
+                  "result": "met"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "stress",
+          "label": "Stress: a log of 200 lines and a production list of 100 items",
+          "arms": {
+            "A": {
+              "executions": 12,
+              "median": 5.005000000000001,
+              "iqr": 0.055000000000000604,
+              "perRun": [
+                5,
+                4.967,
+                5.022,
+                5.038,
+                5.029,
+                5.009,
+                5.015,
+                5.001,
+                4.99,
+                5.04,
+                4.951,
+                4.963
+              ]
+            },
+            "B": {
+              "executions": 12,
+              "median": 8.5715,
+              "iqr": 3.8439999999999994,
+              "perRun": [
+                10.559,
+                6.555,
+                10.158,
+                6.327,
+                8.126,
+                6.327,
+                10.255,
+                6.16,
+                9.017,
+                10.974,
+                10.171,
+                7.7
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 7.75,
+              "iqr": 2.214999999999999,
+              "perRun": [
+                9.747,
+                8.24,
+                5.755,
+                6.594,
+                6.425,
+                7.26,
+                8.463,
+                10.949,
+                7.136,
+                8.809,
+                7,
+                10.739
+              ]
+            }
+          },
+          "pairs": [
+            {
+              "id": "C-A",
+              "hypothesis": "H1",
+              "minuend": "C",
+              "subtrahend": "A",
+              "difference": 2.744999999999999,
+              "interval": [
+                1.7919999999999998,
+                4.272999999999998
+              ]
+            },
+            {
+              "id": "B-A",
+              "hypothesis": "H2",
+              "minuend": "B",
+              "subtrahend": "A",
+              "difference": 3.5664999999999996,
+              "interval": [
+                1.4399999999999995,
+                5.208500000000001
+              ]
+            },
+            {
+              "id": "C-B",
+              "hypothesis": "H3",
+              "minuend": "C",
+              "subtrahend": "B",
+              "difference": -0.8215000000000003,
+              "interval": [
+                -3.09,
+                1.8610000000000007
+              ],
+              "margin": {
+                "value": 0.8571500000000001,
+                "relative": 0.1,
+                "floor": {
+                  "value": 0.5,
+                  "unit": "ms"
+                },
+                "medianOfReference": 8.5715,
+                "formula": "max(relative x the median of B, floor)"
+              },
+              "unadjustedCategory": "inconclusive",
+              "category": "inconclusive",
+              "downgraded": false,
+              "nonInferior": false,
+              "pValue": 0.4948505149485051,
+              "holmStands": false,
+              "budget": {
+                "threshold": "budget-p95-stress",
+                "value": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+                "B": {
+                  "median": 8.5715,
+                  "result": "n/a"
+                },
+                "C": {
+                  "median": 7.75,
+                  "result": "n/a"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "axes": {
+      "available": true,
+      "verdicts": [
+        {
+          "id": "click-to-panel",
+          "label": "Click to panel latency",
+          "unit": "frames",
+          "kind": "interval",
+          "arms": {
+            "B": {
+              "executions": 12,
+              "median": 3,
+              "iqr": 0,
+              "perRun": [
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 3,
+              "iqr": 0,
+              "perRun": [
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3
+              ]
+            }
+          },
+          "difference": 0,
+          "interval": [
+            0,
+            0
+          ],
+          "orientation": "lowerIsBetter",
+          "orientedInterval": [
+            0,
+            0
+          ],
+          "margin": {
+            "value": 1,
+            "relative": 0.1,
+            "floor": {
+              "value": 1,
+              "unit": "frames"
+            },
+            "medianOfReference": 3
+          },
+          "category": "neutral",
+          "nonInferior": true
+        },
+        {
+          "id": "rss",
+          "label": "Resident memory of the process",
+          "unit": "MB",
+          "kind": "interval",
+          "arms": {
+            "A": {
+              "executions": 12,
+              "median": 300.3708515204489,
+              "iqr": 2.135275302454829,
+              "perRun": [
+                301.1390820275992,
+                301.4162429571152,
+                299.73885151650757,
+                299.84129389189184,
+                299.665319818072,
+                298.11690878123045,
+                301.72282317094505,
+                301.51957841031253,
+                301.01203895453364,
+                299.0038067251444,
+                300.900409149006,
+                298.1345075890422
+              ]
+            },
+            "B": {
+              "executions": 12,
+              "median": 309.4881195095368,
+              "iqr": 1.9633369781076908,
+              "perRun": [
+                310.0016564447433,
+                310.0354170370847,
+                308.03692848421633,
+                310.56656167283654,
+                308.97458257433027,
+                308.16222982201725,
+                310.12556680012494,
+                308.82966411393136,
+                310.5302427029237,
+                310.52088877372444,
+                308.92136631533504,
+                308.0301271593198
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 329.9468613085337,
+              "iqr": 1.4840454906225204,
+              "perRun": [
+                331.8298517046496,
+                328.3372671753168,
+                329.85891879722476,
+                328.55700050108135,
+                330.04104599170387,
+                329.9396899463609,
+                330.58330473769456,
+                329.9540326707065,
+                331.41125794593245,
+                328.04382620565593,
+                330.0199577063322,
+                328.81812739931047
+              ]
+            }
+          },
+          "difference": 20.458741798996925,
+          "interval": [
+            18.816470954567194,
+            21.494421001058072
+          ],
+          "orientation": "lowerIsBetter",
+          "orientedInterval": [
+            18.816470954567194,
+            21.494421001058072
+          ],
+          "margin": {
+            "value": 30.94881195095368,
+            "relative": 0.1,
+            "floor": null,
+            "medianOfReference": 309.4881195095368
+          },
+          "category": "neutral",
+          "nonInferior": true
+        },
+        {
+          "id": "time-to-interactive-hud",
+          "label": "Time to the interactive HUD",
+          "unit": "ms",
+          "kind": "interval",
+          "arms": {
+            "B": {
+              "executions": 12,
+              "median": 399.8942141281441,
+              "iqr": 2.9825406465679407,
+              "perRun": [
+                396.747446173802,
+                397.8153099436313,
+                400.3711362350732,
+                398.01277451589704,
+                399.41729202121496,
+                400.995315162465,
+                398.4256542623043,
+                403.00357263348997,
+                403.77691289037466,
+                398.935241246596,
+                401.6522413101047,
+                400.95510691963136
+              ]
+            },
+            "C": {
+              "executions": 12,
+              "median": 422.2201914237812,
+              "iqr": 5.069718576967716,
+              "perRun": [
+                423.9326649364084,
+                417.6344557572156,
+                423.24591585062444,
+                416.62053059227765,
+                422.9826212208718,
+                421.4577616266906,
+                423.02112068608403,
+                418.9901810642332,
+                418.73723825253546,
+                423.7762070186436,
+                423.19767899252474,
+                418.127960415557
+              ]
+            }
+          },
+          "difference": 22.32597729563713,
+          "interval": [
+            17.7821313329041,
+            24.576216691173613
+          ],
+          "orientation": "lowerIsBetter",
+          "orientedInterval": [
+            17.7821313329041,
+            24.576216691173613
+          ],
+          "margin": {
+            "value": 39.98942141281441,
+            "relative": 0.1,
+            "floor": null,
+            "medianOfReference": 399.8942141281441
+          },
+          "category": "neutral",
+          "nonInferior": true
+        },
+        {
+          "id": "fps-unlimited",
+          "label": "FPS without a limit, per window",
+          "unit": "frames per second",
+          "kind": "interval-per-window",
+          "readings": {
+            "A": {
+              "accepted": 12,
+              "withFps": 12,
+              "modes": {
+                "DISABLED": 12
+              }
+            },
+            "B": {
+              "accepted": 12,
+              "withFps": 12,
+              "modes": {
+                "DISABLED": 12
+              }
+            },
+            "C": {
+              "accepted": 12,
+              "withFps": 12,
+              "modes": {
+                "DISABLED": 12
+              }
+            }
+          },
+          "windows": [
+            {
+              "window": "ai-phase",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 3001.5299999999997,
+                  "iqr": 11.090000000000146,
+                  "perRun": [
+                    2996.7,
+                    3003.37,
+                    3018.36,
+                    2999.54,
+                    2991.15,
+                    3008.34,
+                    3014.88,
+                    2999.35,
+                    3012.55,
+                    3001.58,
+                    3001.48,
+                    2997.25
+                  ]
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 998.065,
+                  "iqr": 6.959999999999923,
+                  "perRun": [
+                    996.26,
+                    1004.74,
+                    999.08,
+                    996.13,
+                    1005.43,
+                    994.26,
+                    1004.72,
+                    1000.28,
+                    995.45,
+                    993.66,
+                    1002.41,
+                    997.05
+                  ]
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1396.395,
+                  "iqr": 12.079999999999927,
+                  "perRun": [
+                    1404.23,
+                    1409.55,
+                    1405.71,
+                    1393.63,
+                    1395.76,
+                    1406.97,
+                    1395.83,
+                    1391.11,
+                    1407.82,
+                    1396.45,
+                    1396.34,
+                    1390.51
+                  ]
+                }
+              },
+              "difference": 398.3299999999999,
+              "interval": [
+                392.885,
+                409.18000000000006
+              ],
+              "orientation": "higherIsBetter",
+              "orientedInterval": [
+                -409.18000000000006,
+                -392.885
+              ],
+              "margin": {
+                "value": 99.80650000000001,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 998.065
+              },
+              "category": "gain",
+              "nonInferior": true,
+              "excludesZero": true
+            },
+            {
+              "window": "event-burst",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 3003.495,
+                  "iqr": 15.210000000000036,
+                  "perRun": [
+                    3013.17,
+                    3008.88,
+                    3005.79,
+                    2993.37,
+                    3007.95,
+                    2993.67,
+                    2990.59,
+                    3013.9,
+                    3001.2,
+                    2998.95,
+                    3019.63,
+                    3000.1
+                  ]
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 1002.1800000000001,
+                  "iqr": 8.740000000000009,
+                  "perRun": [
+                    1002.24,
+                    1004.17,
+                    1001.42,
+                    990.9,
+                    997.47,
+                    1006.93,
+                    995.43,
+                    1006.24,
+                    1003.87,
+                    1007.69,
+                    990.02,
+                    1002.12
+                  ]
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1003.78,
+                  "iqr": 10.480000000000018,
+                  "perRun": [
+                    1002.38,
+                    1005.18,
+                    1005.28,
+                    1005.22,
+                    1009.84,
+                    999.5,
+                    1007.07,
+                    995.51,
+                    991.55,
+                    990.64,
+                    994.8,
+                    1009.91
+                  ]
+                }
+              },
+              "difference": 1.599999999999909,
+              "interval": [
+                -7.545000000000073,
+                7.75
+              ],
+              "orientation": "higherIsBetter",
+              "orientedInterval": [
+                -7.75,
+                7.545000000000073
+              ],
+              "margin": {
+                "value": 100.21800000000002,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 1002.1800000000001
+              },
+              "category": "neutral",
+              "nonInferior": true,
+              "excludesZero": false
+            },
+            {
+              "window": "context-switches",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 3008.06,
+                  "iqr": 28.820000000000164,
+                  "perRun": [
+                    3011.61,
+                    3008.43,
+                    2981.93,
+                    3018.63,
+                    2984.8,
+                    3007.69,
+                    2986.56,
+                    2986.98,
+                    3015.38,
+                    2991.34,
+                    3018.15,
+                    3017.9
+                  ]
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 999.47,
+                  "iqr": 7.819999999999936,
+                  "perRun": [
+                    999.85,
+                    1008.21,
+                    995.19,
+                    994.82,
+                    1001.03,
+                    993.73,
+                    1002.92,
+                    996.74,
+                    1009.77,
+                    1005.53,
+                    999.09,
+                    995.1
+                  ]
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 998.9100000000001,
+                  "iqr": 10.110000000000014,
+                  "perRun": [
+                    993.75,
+                    1005.35,
+                    990.14,
+                    998.27,
+                    999.5,
+                    990.4,
+                    1008.17,
+                    1006.82,
+                    997.12,
+                    1002.15,
+                    998.32,
+                    1003.86
+                  ]
+                }
+              },
+              "difference": -0.5599999999999454,
+              "interval": [
+                -5.954999999999927,
+                6.959999999999923
+              ],
+              "orientation": "higherIsBetter",
+              "orientedInterval": [
+                -6.959999999999923,
+                5.954999999999927
+              ],
+              "margin": {
+                "value": 99.947,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 999.47
+              },
+              "category": "neutral",
+              "nonInferior": true,
+              "excludesZero": false
+            },
+            {
+              "window": "stress",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 2994.52,
+                  "iqr": 19.809999999999945,
+                  "perRun": [
+                    2995.38,
+                    2993.63,
+                    2993.05,
+                    3011.05,
+                    3009.5,
+                    3009.61,
+                    2993.66,
+                    2984.51,
+                    2984.5,
+                    2989.8,
+                    3014.63,
+                    3019.42
+                  ]
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 995.0799999999999,
+                  "iqr": 12.379999999999995,
+                  "perRun": [
+                    995.89,
+                    991.4,
+                    1003.97,
+                    993.06,
+                    1009.56,
+                    991.59,
+                    1000.68,
+                    1004.99,
+                    992.89,
+                    994.27,
+                    1008.03,
+                    991.53
+                  ]
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1002.2750000000001,
+                  "iqr": 9.68999999999994,
+                  "perRun": [
+                    995.01,
+                    1008.85,
+                    991.91,
+                    998.76,
+                    1001.65,
+                    1007.55,
+                    1002.57,
+                    996.86,
+                    1007.99,
+                    1003.97,
+                    1001.98,
+                    1006.55
+                  ]
+                }
+              },
+              "difference": 7.195000000000164,
+              "interval": [
+                -3.009999999999991,
+                12.910000000000082
+              ],
+              "orientation": "higherIsBetter",
+              "orientedInterval": [
+                -12.910000000000082,
+                3.009999999999991
+              ],
+              "margin": {
+                "value": 99.508,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 995.0799999999999
+              },
+              "category": "neutral",
+              "nonInferior": true,
+              "excludesZero": false
+            }
+          ]
+        },
+        {
+          "id": "package-size",
+          "label": "Size of the exported Release package",
+          "unit": "bytes",
+          "kind": "deterministic",
+          "arms": {
+            "A": {
+              "exportBytes": [
+                40000000,
+                40000000
+              ],
+              "equal": true
+            },
+            "B": {
+              "exportBytes": [
+                41000000,
+                41000000
+              ],
+              "equal": true
+            },
+            "C": {
+              "exportBytes": [
+                55000000,
+                55000000
+              ],
+              "equal": true
+            }
+          },
+          "difference": 14000000,
+          "interval": [
+            14000000,
+            14000000
+          ],
+          "orientation": "lowerIsBetter",
+          "orientedInterval": [
+            14000000,
+            14000000
+          ],
+          "margin": {
+            "value": 4100000,
+            "relative": 0.1,
+            "floor": null,
+            "medianOfReference": 41000000
+          },
+          "category": "cost",
+          "nonInferior": false
+        },
+        {
+          "id": "change-cost",
+          "label": "Cost of change: one new action for the Settler",
+          "unit": "files, lines, time and tests",
+          "kind": "single-observation",
+          "observationsPerArm": 1,
+          "measures": [
+            {
+              "measure": "files",
+              "B": 3,
+              "C": 3,
+              "difference": 0,
+              "margin": {
+                "value": 0.30000000000000004,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 3
+              },
+              "category": "neutral",
+              "nonInferior": true
+            },
+            {
+              "measure": "lines",
+              "B": 120,
+              "C": 100,
+              "difference": -20,
+              "margin": {
+                "value": 12,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 120
+              },
+              "category": "gain",
+              "nonInferior": true
+            },
+            {
+              "measure": "timeMinutes",
+              "B": 90,
+              "C": 85,
+              "difference": -5,
+              "margin": {
+                "value": 9,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 90
+              },
+              "category": "neutral",
+              "nonInferior": true
+            },
+            {
+              "measure": "tests",
+              "B": 4,
+              "C": 4,
+              "difference": 0,
+              "margin": {
+                "value": 0.4,
+                "relative": 0.1,
+                "floor": null,
+                "medianOfReference": 4
+              },
+              "category": "neutral",
+              "nonInferior": true
+            }
+          ],
+          "agree": false,
+          "category": "inconclusive"
+        }
+      ],
+      "descriptive": [
+        {
+          "id": "cpu-time-p50",
+          "label": "CPU time per frame, 50th percentile, per window",
+          "series": [
+            {
+              "id": "cpu-time-p50",
+              "window": "ai-phase",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 2.0015,
+                  "iqr": 0.01399999999999979
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 3.1995,
+                  "iqr": 0.02499999999999991
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 2.3975,
+                  "iqr": 0.02300000000000013
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0.3959999999999999,
+                  "interval": [
+                    0.3839999999999999,
+                    0.4119999999999999
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 1.198,
+                  "interval": [
+                    1.1845000000000003,
+                    1.2125000000000004
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": -0.802,
+                  "interval": [
+                    -0.8170000000000002,
+                    -0.7845
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p50",
+              "window": "event-burst",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 2.004,
+                  "iqr": 0.018000000000000016
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 3.205,
+                  "iqr": 0.016999999999999904
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 3.2184999999999997,
+                  "iqr": 0.013000000000000345
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 1.2144999999999997,
+                  "interval": [
+                    1.2040000000000002,
+                    1.2240000000000002
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 1.201,
+                  "interval": [
+                    1.1875,
+                    1.209
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0.013499999999999623,
+                  "interval": [
+                    0.005999999999999783,
+                    0.025000000000000355
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p50",
+              "window": "context-switches",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 1.996,
+                  "iqr": 0.02200000000000002
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 3.199,
+                  "iqr": 0.020000000000000018
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 4,
+                  "iqr": 0.017999999999999794
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 2.004,
+                  "interval": [
+                    1.9845000000000002,
+                    2.0159999999999996
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 1.2029999999999998,
+                  "interval": [
+                    1.1844999999999999,
+                    1.2105
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0.8010000000000002,
+                  "interval": [
+                    0.7910000000000004,
+                    0.8145000000000002
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p50",
+              "window": "stress",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 2.002,
+                  "iqr": 0.021999999999999797
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 3.4285,
+                  "iqr": 1.5369999999999995
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 3.0999999999999996,
+                  "iqr": 0.8860000000000001
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 1.0979999999999999,
+                  "interval": [
+                    0.7170000000000001,
+                    1.7095000000000002
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 1.4265000000000003,
+                  "interval": [
+                    0.5765000000000002,
+                    2.083
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": -0.32850000000000046,
+                  "interval": [
+                    -1.2359999999999998,
+                    0.7450000000000001
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cpu-time-p99",
+          "label": "CPU time per frame, 99th percentile, per window",
+          "series": [
+            {
+              "id": "cpu-time-p99",
+              "window": "ai-phase",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 5.0035,
+                  "iqr": 0.03399999999999981
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 7.999499999999999,
+                  "iqr": 0.06299999999999972
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 5.9935,
+                  "iqr": 0.05799999999999983
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0.9900000000000002,
+                  "interval": [
+                    0.9595000000000002,
+                    1.0305
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 2.9959999999999996,
+                  "interval": [
+                    2.9625000000000004,
+                    3.032000000000001
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": -2.0059999999999993,
+                  "interval": [
+                    -2.0425000000000004,
+                    -1.9615
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p99",
+              "window": "event-burst",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 5.01,
+                  "iqr": 0.04300000000000015
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 8.0125,
+                  "iqr": 0.04300000000000015
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 8.046,
+                  "iqr": 0.034000000000000696
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 3.0359999999999996,
+                  "interval": [
+                    3.0105000000000013,
+                    3.0589999999999993
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 3.0024999999999995,
+                  "interval": [
+                    2.9684999999999997,
+                    3.0220000000000002
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0.033500000000000085,
+                  "interval": [
+                    0.014499999999999957,
+                    0.06400000000000006
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p99",
+              "window": "context-switches",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 4.9895,
+                  "iqr": 0.055000000000000604
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 7.9975,
+                  "iqr": 0.04899999999999949
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 10.000499999999999,
+                  "iqr": 0.04499999999999993
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 5.010999999999999,
+                  "interval": [
+                    4.961499999999999,
+                    5.041499999999999
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 3.008,
+                  "interval": [
+                    2.9615,
+                    3.026
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 2.0029999999999992,
+                  "interval": [
+                    1.9784999999999986,
+                    2.037000000000001
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "cpu-time-p99",
+              "window": "stress",
+              "unit": "ms",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 5.005000000000001,
+                  "iqr": 0.055000000000000604
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 8.5715,
+                  "iqr": 3.8439999999999994
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 7.75,
+                  "iqr": 2.214999999999999
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 2.744999999999999,
+                  "interval": [
+                    1.7919999999999998,
+                    4.272999999999998
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 3.5664999999999996,
+                  "interval": [
+                    1.4399999999999995,
+                    5.208500000000001
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": -0.8215000000000003,
+                  "interval": [
+                    -3.09,
+                    1.8610000000000007
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "frames-above-twice-idle-reference",
+          "label": "Frames of a window whose CPU time is above twice the run's idle reference (the median of the half-sums of consecutive pairs of the CPU time per frame of the idle window)",
+          "series": [
+            {
+              "id": "frames-above-twice-idle-reference.count",
+              "window": "ai-phase",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.count",
+              "window": "event-burst",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 588,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.count",
+              "window": "context-switches",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 150,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 150,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 150,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.count",
+              "window": "stress",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 660,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 660,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 660,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.share",
+              "window": "ai-phase",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.share",
+              "window": "event-burst",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.share",
+              "window": "context-switches",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-twice-idle-reference.share",
+              "window": "stress",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 1,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "frames-above-100-ms",
+          "label": "Frames of a window whose CPU time is above 100 ms",
+          "series": [
+            {
+              "id": "frames-above-100-ms.count",
+              "window": "ai-phase",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.count",
+              "window": "event-burst",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.count",
+              "window": "context-switches",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.count",
+              "window": "stress",
+              "unit": "frames",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.share",
+              "window": "ai-phase",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.share",
+              "window": "event-burst",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.share",
+              "window": "context-switches",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "frames-above-100-ms.share",
+              "window": "stress",
+              "unit": "share",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 0,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 0,
+                  "interval": [
+                    0,
+                    0
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rss",
+          "label": "Resident memory of the process",
+          "series": [
+            {
+              "id": "rss.max",
+              "window": null,
+              "unit": "MB",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 312.4042864460498,
+                  "iqr": 1.4657921576872468
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 321.63092026440427,
+                  "iqr": 2.7495432402938604
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 341.2719618403353,
+                  "iqr": 1.6145286029204726
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 28.86767539428547,
+                  "interval": [
+                    27.918564029969275,
+                    30.186073976103216
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 9.226633818354458,
+                  "interval": [
+                    7.733352420851588,
+                    10.960426449775696
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 19.641041575931013,
+                  "interval": [
+                    18.1229999945499,
+                    21.250934488140047
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hermes-heap",
+          "label": "Hermes live heap after a forced collection, and the Fabric native views",
+          "series": [
+            {
+              "id": "hermes-heap.bytes",
+              "window": null,
+              "unit": "bytes",
+              "arms": {
+                "C": {
+                  "executions": 12,
+                  "median": 5004129,
+                  "iqr": 30449
+                }
+              },
+              "pairs": []
+            },
+            {
+              "id": "hermes-heap.nativeViews",
+              "window": null,
+              "unit": "nodes",
+              "arms": {
+                "C": {
+                  "executions": 12,
+                  "median": 150,
+                  "iqr": 0
+                }
+              },
+              "pairs": []
+            }
+          ]
+        },
+        {
+          "id": "scene-nodes",
+          "label": "Nodes of the SceneTree",
+          "series": [
+            {
+              "id": "scene-nodes",
+              "window": null,
+              "unit": "nodes",
+              "arms": {
+                "A": {
+                  "executions": 12,
+                  "median": 120,
+                  "iqr": 0
+                },
+                "B": {
+                  "executions": 12,
+                  "median": 180,
+                  "iqr": 0
+                },
+                "C": {
+                  "executions": 12,
+                  "median": 190,
+                  "iqr": 0
+                }
+              },
+              "pairs": [
+                {
+                  "id": "C-A",
+                  "difference": 70,
+                  "interval": [
+                    70,
+                    70
+                  ]
+                },
+                {
+                  "id": "B-A",
+                  "difference": 60,
+                  "interval": [
+                    60,
+                    60
+                  ]
+                },
+                {
+                  "id": "C-B",
+                  "difference": 10,
+                  "interval": [
+                    10,
+                    10
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cost-of-change": {
+      "available": true,
+      "observationsPerArm": 1,
+      "statisticalClaim": false,
+      "observation": {
+        "B": {
+          "files": 3,
+          "lines": 120,
+          "timeMinutes": 90,
+          "tests": 4
+        },
+        "C": {
+          "files": 3,
+          "lines": 100,
+          "timeMinutes": 85,
+          "tests": 4
+        }
+      },
+      "text": "SYNTHETIC EXAMPLE: the single observation of each arm was made up."
+    },
+    "budgets": {
+      "available": true,
+      "windows": [
+        {
+          "id": "ai-phase",
+          "threshold": "budget-p95-ai-phase",
+          "unit": "ms",
+          "budget": 15.5,
+          "frozenAt": "2026-10-10",
+          "arms": {
+            "A": {
+              "median": 5.0035,
+              "result": "met"
+            },
+            "B": {
+              "median": 7.999499999999999,
+              "result": "met"
+            },
+            "C": {
+              "median": 5.9935,
+              "result": "met"
+            }
+          }
+        },
+        {
+          "id": "event-burst",
+          "threshold": "budget-p95-event-burst",
+          "unit": "ms",
+          "budget": 15.5,
+          "frozenAt": "2026-10-10",
+          "arms": {
+            "A": {
+              "median": 5.01,
+              "result": "met"
+            },
+            "B": {
+              "median": 8.0125,
+              "result": "met"
+            },
+            "C": {
+              "median": 8.046,
+              "result": "met"
+            }
+          }
+        },
+        {
+          "id": "context-switches",
+          "threshold": "budget-p95-context-switches",
+          "unit": "ms",
+          "budget": 16,
+          "frozenAt": "2026-10-10",
+          "arms": {
+            "A": {
+              "median": 4.9895,
+              "result": "met"
+            },
+            "B": {
+              "median": 7.9975,
+              "result": "met"
+            },
+            "C": {
+              "median": 10.000499999999999,
+              "result": "met"
+            }
+          }
+        },
+        {
+          "id": "stress",
+          "threshold": "budget-p95-stress",
+          "unit": "ms",
+          "budget": "N/A: V05-06 measured no log of 200 lines and no production list of 100 items (the turn's tour and the soak's 100 turns keep the game's state small), so the stress window is judged by the relative rule alone",
+          "frozenAt": "2026-10-10",
+          "arms": {
+            "A": {
+              "median": 5.005000000000001,
+              "result": "n/a"
+            },
+            "B": {
+              "median": 8.5715,
+              "result": "n/a"
+            },
+            "C": {
+              "median": 7.75,
+              "result": "n/a"
+            }
+          }
+        }
+      ]
+    },
+    "decision": {
+      "text": "SYNTHETIC EXAMPLE: no decision was made. The data of this campaign were made up to exercise the analysis script, and none of them is a result of any arm.",
+      "partialReport": {
+        "applies": false,
+        "reason": null
+      }
+    },
+    "limitations": {
+      "text": "SYNTHETIC EXAMPLE: nothing was measured; there is no machine, no display and no iPhone behind these numbers."
+    },
+    "reproduction": {
+      "rawData": "synthetic: no raw data",
+      "campaignSha256": "5e26c4253b66f3ad72004eaa25415317414de47e9ae2c64425f401ca98f58d54",
+      "protocolSha256": "1e122ac3f7457fc3bf28ef1cd33ef8d0e91b0d6d93d722e5463d399eec94c280",
+      "seed": 20261009,
+      "resamples": 10000,
+      "commands": [
+        "node scripts/frontier-comparison-analysis.mjs <campaign.json> --out <report.json>"
+      ]
+    }
+  }
+}
