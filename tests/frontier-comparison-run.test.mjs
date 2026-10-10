@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { createDebugLauncher, RELEASE_REFUSAL } from "../scripts/frontier-comparison-campaign-launchers.mjs";
+import { createDebugLauncher } from "../scripts/frontier-comparison-campaign-launchers.mjs";
 import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { buildReport } from "../scripts/frontier-comparison-report.mjs";
 import { analyse, campaignOf, executionOf, fpsOf, goldenReplayHash, sha256, slotOf } from "../scripts/frontier-comparison-run-campaign.mjs";
@@ -218,15 +218,29 @@ test("the Debug launcher says that the process was killed at its timeout, and on
   assert.equal((await launched({ status: null, signal: null, error: { code: "ENOENT" } })).timedOut, false);
 });
 
-test("the Release launcher still refuses, and says that the entry is defined and what is missing", () => {
-  assert.match(RELEASE_REFUSAL, /entry of the scenario is defined/);
-  assert.match(RELEASE_REFUSAL, /main loop of the measurement project/);
-  assert.match(RELEASE_REFUSAL, /application\/run\/main_loop_type/);
-  assert.match(RELEASE_REFUSAL, /Release export of the civ-lite game in the three arms/);
-  assert.match(RELEASE_REFUSAL, /V05-07/);
-  assert.match(RELEASE_REFUSAL, /package size of arms A and B/);
-  assert.match(RELEASE_REFUSAL, /Nothing was run and no campaign directory was made/);
-  assert.doesNotMatch(RELEASE_REFUSAL, /may not run `-s`|has not said how the scenario/, "the old reason is gone: the scenario no longer needs `-s`");
+test("the Debug launcher takes a report that is not JSON for no report, keeps the file beside itself and says where in the log", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "frontier-comparison-unreadable-"));
+  try {
+    const reportFile = path.join(directory, "run-A-presented.json");
+    const prepared = { harness: { godot: "godot", cleanup: async () => undefined }, package: { sha256: "2".repeat(64), bytes: 10 }, scripts: { sha256: "3".repeat(64) }, binarySha256: "1".repeat(64), instrumentSha256: "4".repeat(64) };
+    const launcher = createDebugLauncher({ prepare: async () => prepared, run: () => ({ reportFile, process: { exitCode: 0 }, result: { status: 0, signal: null }, log: "STARTED", load: { before: 1, after: 1 }, seconds: 1 }) });
+    await launcher.prepare();
+    // A good report is read as before.
+    await writeFile(reportFile, '{"format":"x"}');
+    assert.deepEqual((await launcher.launch({ arm: "A", lane: "presented" })).report, { format: "x" });
+    // A process killed while it wrote its report left a file that is not JSON: no report, no crash of the campaign, and the file is raw data.
+    const truncated = '{"format":"godot-fabric.frontier-comparison-scenario/v1","frames":{"frame":[1,2';
+    for (const [attempt, kept] of [[1, "run-A-presented.unreadable.json"], [2, "run-A-presented.unreadable-2.json"]]) {
+      await writeFile(reportFile, truncated);
+      const launched = await launcher.launch({ arm: "A", lane: "presented", attempt });
+      assert.deepEqual([launched.report, launched.exitCode, launched.timedOut], [null, 0, false]);
+      const says = `STARTED\nFRONTIER_COMPARISON_REPORT_UNREADABLE: ${path.join(directory, kept)} (`;
+      assert.ok(launched.log.startsWith(says) && launched.log.endsWith(")\n"), launched.log);
+      assert.equal(readFileSync(path.join(directory, kept), "utf8"), truncated, "the file is kept, and a later one does not overwrite it");
+    }
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test("a CPU time becomes integer microseconds as Math.round(totalMs * 1000)", () => {

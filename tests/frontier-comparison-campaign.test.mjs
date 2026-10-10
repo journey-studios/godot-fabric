@@ -1,22 +1,18 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test, { after, before } from "node:test";
-import { fileURLToPath } from "node:url";
 import { parseArguments, runCampaign, writeAtomic } from "../scripts/frontier-comparison-campaign.mjs";
-import { RELEASE_REFUSAL, createReleaseLauncher } from "../scripts/frontier-comparison-campaign-launchers.mjs";
 import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { HEADLESS_ENGINE, INSTRUMENT_SHA256, attempts, fakeClock, fakeLauncher, registeredOf, scriptedLoad, selfCheck, sha, where } from "./frontier-comparison-campaign-fake.mjs";
 import { readProtocol, withResamples } from "./frontier-comparison-synthetic.mjs";
 
 // The orchestrator of the whole comparative campaign (V05-10, `execucao`, part 2), Node only, with a FAKE launcher that plays synthetic executions (tests/frontier-comparison-campaign-fake.mjs):
 // the sequence and its balance, the redo of a rejected attempt in its slot by the analysis' own rules, the limit of 3 attempts and the campaign that stops, the wait for a quiet machine, the state
-// written after every attempt and the resume, the instrument's self-check as the gate, and the Release launcher that refuses. Nothing runs and nothing here was measured: the real launcher is
+// written after every attempt and the resume, the instrument's self-check as the gate (the Release launcher is in tests/frontier-comparison-release.test.mjs). Nothing runs and nothing here was measured: the real launcher is
 // tested by tests/frontier-comparison-campaign-native.test.mjs (`npm run test:frontier-comparison-run`), a short headless rehearsal.
 const { protocol, protocolSha256 } = withResamples(readProtocol().protocol, 200);
-const scriptFile = fileURLToPath(new URL("../scripts/frontier-comparison-campaign.mjs", import.meta.url));
 
 let scratch = null;
 let counter = 0;
@@ -164,6 +160,21 @@ test("a process that timed out and one that exited 0 without a report are unrepo
   assert.deepEqual(slotRecord(result, "presented", 3).attempts[0].reasons, [{ rule: "errors", clause: "no-report", crashed: false, timedOut: false, exitCode: 0 }]);
   assert.deepEqual([slotRecord(result, "presented", 2).accepted, slotRecord(result, "presented", 3).accepted], [2, 2], "each is redone in its slot");
   assert.deepEqual(result.summary.unreported.map((entry) => [entry.slot, entry.attempt, entry.exitCode, entry.signal]), [[2, 1, -1, "SIGTERM"], [3, 1, 0, null]]);
+});
+
+test("a process killed while it wrote its report (a file that is not JSON) is unreported too, and its log says where the launcher kept the file", async () => {
+  const { result, out } = await play({ plan: { "presented/2/1": attempts.unreadableReport }, lanes: ["presented"], slots: [1, 3] });
+  assert.equal(result.status, "done");
+  assert.deepEqual(result.formatErrors, []);
+  const campaign = await read(out, "campaign.json");
+  assert.deepEqual(campaign.unreported.map((entry) => [entry.slot, entry.attempt, entry.errors]), [[2, 1, { crashed: true, timedOut: false, signal: "SIGKILL" }]]);
+  assert.deepEqual(slotRecord(result, "presented", 2).attempts[0].reasons, [{ rule: "errors", clause: "no-report", crashed: true, timedOut: false, signal: "SIGKILL" }]);
+  assert.equal(slotRecord(result, "presented", 2).accepted, 2, "it is redone in its slot");
+  const attempt = (await read(out, "campaign-state.json")).attempts.find((candidate) => candidate.slot === 2 && candidate.attempt === 1);
+  assert.deepEqual([attempt.raw, attempt.execution], [null, null]);
+  const log = await readFile(path.join(out, attempt.log), "utf8");
+  assert.match(log, /^FRONTIER_COMPARISON_REPORT_UNREADABLE: \/tmp\/run-B-presented\.unreadable\.json \(Unexpected end of JSON input\)$/m);
+  assert.equal(attempt.logSha256, sha(log));
 });
 
 test("three attempts that wrote no report in a slot stop the campaign by the attempts rule of the analysis, as three rejected executions do", async () => {
@@ -404,27 +415,13 @@ test("a rehearsal redoes nothing, is marked as one and says in its deviations th
   assert.equal(slotRecord(result, "presented", 1).state, "open");
 });
 
-test("the Release launcher refuses with the reason, before anything is run or written", async () => {
-  const out = path.join(scratch, "release");
-  await assert.rejects(runCampaign({ launcher: createReleaseLauncher(), protocol, protocolSha256, out, lanes: ["presented"], lockFile: lock() }), (error) => error.message === RELEASE_REFUSAL);
-  assert.match(RELEASE_REFUSAL, /V05-07/);
-  assert.match(RELEASE_REFUSAL, /Nothing was run and no campaign directory was made/);
-  assert.ok(!(await exists(lock())), "the lock that the refusal took was released");
-  assert.ok(!(await exists(out)), "no directory was created");
-  // The command line takes the lock in the system's temporary directory: a private one keeps this test from meeting a campaign that is really running.
-  const run = spawnSync(process.execPath, [scriptFile, "--campaign", "--lanes", "presented,unlimited", "--build", "release", "--out", out], { encoding: "utf8", env: { ...process.env, TMPDIR: scratch } });
-  assert.equal(run.status, 1);
-  assert.match(run.stderr, /V05-07/);
-  assert.ok(!(await exists(out)));
-});
-
 test("the command line: --build debug and --slots are for a rehearsal, the numbers are checked, and a campaign needs its build and its directory", () => {
   const ok = (...argv) => parseArguments(["--campaign", ...argv], protocol);
-  const defaults = ok("--build", "release", "--out", "/tmp/campaign");
-  assert.deepEqual([defaults.lanes, defaults.build, defaults.out, defaults.resume, defaults.rehearsal, defaults.slots, defaults.maxWaitSeconds], [["presented", "unlimited"], "release", "/tmp/campaign", false, false, null, 1800]);
+  const defaults = ok("--build", "release", "--out", "/tmp/campaign", "--exports", "/tmp/exports");
+  assert.deepEqual([defaults.lanes, defaults.build, defaults.out, defaults.exports, defaults.resume, defaults.rehearsal, defaults.slots, defaults.maxWaitSeconds], [["presented", "unlimited"], "release", "/tmp/campaign", "/tmp/exports", false, false, null, 1800]);
   const rehearsal = ok("--lanes", "presented", "--build", "debug", "--rehearsal", "--slots", "1-3", "--assume-refresh-hz", "60", "--max-wait", "0", "--out", "/tmp/rehearsal");
   assert.deepEqual([rehearsal.lanes, rehearsal.slots, rehearsal.assumeRefreshHz, rehearsal.maxWaitSeconds, rehearsal.rehearsal], [["presented"], [1, 3], 60, 0, true]);
-  assert.equal(ok("--build", "release", "--out", "/tmp/campaign", "--resume").resume, true);
+  assert.equal(ok("--build", "release", "--out", "/tmp/campaign", "--exports", "/tmp/exports", "--resume").resume, true);
   assert.throws(() => parseArguments(["--build", "release", "--out", "x"], protocol), /use --campaign/);
   assert.throws(() => ok("--build", "debug", "--out", "x"), /--build debug is only for a rehearsal/);
   assert.throws(() => ok("--build", "release", "--out", "x", "--slots", "1-3"), /--slots limits the slots of a rehearsal/);

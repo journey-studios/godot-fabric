@@ -352,7 +352,7 @@ Where the protocol is a sentence, or says nothing, and the scenario had to decid
 
 Part 2 of the criterion `execucao`: the orchestrator of the whole comparative campaign, which plays the protocol's sequence in the two lanes (`runs.sequence`, `runs.lanes`), judges every attempt, redoes
 the rejected ones in their slots, waits for a quiet machine, keeps its state after every attempt so that an interrupted campaign continues, gates everything on the instrument's self-check, and runs through
-a launcher that can be swapped. **No campaign was run**: it needs the Release launcher (V05-07) and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)). What was
+a launcher that can be swapped. **No campaign was run**: it needs the Release export of civ-lite (V05-07), the instrument's self-check in a template and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)). What was
 run is the campaign against a fake launcher (Node), and a short headless rehearsal in Debug (below). Nothing in this section states a result.
 
 | File | What it holds |
@@ -362,11 +362,13 @@ run is the campaign against a fake launcher (Node), and a short headless rehears
 | `scripts/frontier-comparison-campaign-load.mjs` | The wait for the load, with the clock and the reading injectable. |
 | `scripts/frontier-comparison-campaign-instrument.mjs` | The self-check as the gate: the probe in the campaign's engine, headless or in a window, then the oracle. |
 | `scripts/frontier-comparison-campaign-lock.mjs` | The lock against two campaigns on one machine. |
-| `scripts/frontier-comparison-campaign-launchers.mjs` | The launcher interface; the Debug launcher (over part 1's runner) and the Release launcher (an extension point that refuses). |
+| `scripts/frontier-comparison-campaign-launchers.mjs` | The launcher interface; the Debug launcher (over part 1's runner) and the Release launcher (over the manifests of an exports directory). |
+| `scripts/frontier-comparison-release.mjs` | The export's manifest: its format, `manifestErrors`, `readExports`, and the hashes of the files against it. |
 | `tests/frontier-comparison-campaign.test.mjs` | Node only: the whole campaign against a fake launcher (part of `npm run test:contracts`). |
 | `tests/frontier-comparison-campaign-state.test.mjs` | Node only: the plan, the next step on states written by hand, the stops, the resume's checks, the wait for the load. |
 | `tests/frontier-comparison-campaign-guards.test.mjs` | Node only: the lock, and the self-check in a headless or a windowed lane against a probe and an oracle the test supplies. |
 | `tests/frontier-comparison-campaign-fake.mjs` | The fake launcher, a self-check that passes or fails, a clock and a load average the tests control. |
+| `tests/frontier-comparison-release.test.mjs`, `tests/frontier-comparison-release-fake-app.mjs` | Node only: the Release launcher over three fake `.app` and their manifests (part of `npm run test:contracts`). |
 | `tests/frontier-comparison-campaign-native.test.mjs` | Native: the short rehearsal (`npm run test:frontier-comparison-run`). |
 
 `scripts/frontier-comparison-run.mjs` now exports three things that were its own (`PROTOCOL_FILE`, `registeredOf`, `git`) and one it factored out of `rehearse` (`environmentOf`, the display, renderer and adapter
@@ -376,12 +378,12 @@ messages are the same and the rehearsal's behaviour is unchanged. **Nothing was 
 and no rule of validity is written here.
 
 ```sh
-node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <dir> [--resume] [--max-wait <s>]
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --exports <dir> --out <dir> [--resume] [--max-wait <s>]
 node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out <dir>
 ```
 
 `--build debug` needs `--rehearsal`, which marks the campaign as one; `--slots` and `--assume-refresh-hz` are rehearsal-only (a campaign runs every slot and reads the refresh rate back, never assumes it);
-`--build release` uses the Release launcher. `--max-wait` is the seconds to wait for a quiet machine before each execution (default 1800).
+`--build release` uses the Release launcher and needs `--exports <dir>` (a Debug rehearsal takes none). `--max-wait` is the seconds to wait for a quiet machine before each execution (default 1800).
 
 ### The state machine
 
@@ -412,7 +414,7 @@ At the start of a campaign (not of a resume, unless the check had not passed) th
 makes the instrument not pass). If the check fails, **no execution runs**, the stop `instrument` is recorded, and the campaign and its report say so.
 
 **The lane of the check is the launcher's.** The gate asks for the engine and the renderer of the campaign, and the campaign proper runs in a window (the presented lane needs a display, and the unlimited lane needs
-a window to read the vsync back as `DISABLED`). A launcher that runs in a window (`launcher.windowed`, which the Release launcher will be) gets the windowed check: the same probe with `--windowed`, the same oracle,
+a window to read the vsync back as `DISABLED`). A launcher that runs in a window (`launcher.windowed`, which the Release launcher is) gets the windowed check: the same probe with `--windowed`, the same oracle,
 and, as in `scripts/cpu-time-instrument-graphics.mjs` (a command line that cannot be imported, so the campaign's `runSelfCheck` runs the same two programs), a window that no display presented is not a measurement and
 does not pass (that script exits with 3 for it; the campaign treats it as a failure and stops). A launcher that runs headless, as the Debug one does, gets the headless check (`npm run test:cpu-time-instrument`'s),
 and the campaign's deviations say so. The state keeps the probe's provenance, and the campaign **stops if a scenario reports another engine build, display server, rendering driver or method, or adapter than the probe
@@ -465,7 +467,8 @@ A process that crashed, hit its time limit or ended without a report in the scen
   and `report.json` shows it with `reported: false`, its load and no vsync. `crashed` is the reading of the process as for every execution (`processOf`: a signal, or a crash in the log); `timedOut` is the launcher's
   (`launch()` may return `timedOut: true` for a process it killed at its time limit; a launcher that does not say reads as `false`). A process killed by a signal has no exit code in the entry, and one that exited has no signal.
   The Debug launcher passes it on (`result.error?.code === "ETIMEDOUT"` of its `spawnSync`, with the SIGTERM signal that `spawnSync` leaves); the fake launcher of the tests says it too.
-  A process that exits 0 and leaves no report, or one that leaves a report the scenario's format cannot read, is the same rule (reading 15 of the analysis note).
+  A process that exits 0 and leaves no report, or one that leaves a report the scenario's format cannot read, is the same rule (reading 15 of the analysis note). So is a report file that is not JSON (a process killed while writing it): both
+  launchers return `report: null`, keep the file as `<name>.unreadable.json` and end the log with a `FRONTIER_COMPARISON_REPORT_UNREADABLE` line that says where.
 - `logSha256` is the SHA-256 of the `.log` kept under `raw/`; `summary.json` and `campaign-state.json` keep `unreported`, the list for whoever reads them (the slot, the arm, the attempt, the reasons of the analysis, the exit code and signal as
   the launcher read them, and the path of the log), now the same attempts and reasons that `campaign.json` and `report.json` hold.
 
@@ -474,6 +477,7 @@ A process that crashed, hit its time limit or ended without a report in the scen
 ```text
 launcher.build                    "debug" | "release", the build recorded in each execution
 launcher.windowed                 whether its processes run in a window; the self-check runs in the same mode
+launcher.selfCheck                "unsupported" when its processes cannot run the self-check: no campaign starts through it
 await launcher.prepare()          {engine, registered, packages, deviations}: ready, and what is registered before the first execution; may refuse
 await launcher.launch({arm, lane, slot, attempt})
                                   {report, exitCode, signal, timedOut?, log, load: {before, after}, hashes: {binary, package, script}, seconds}: ONE fresh process;
@@ -483,9 +487,17 @@ await launcher.cleanup()
 
 - **Debug** reuses part 1: the provisioned copy of civ-lite with the HUD built and the scenario copied in with its entry (`prepareProject`), and `launchScenario` (`--path`, headless). It registers what it measured, as the rehearsal
   does, and its deviations say so.
-- **Release** is an extension point and **refuses**: "The Release launcher is not defined yet. The entry of the scenario is defined: it is the main loop of the measurement project (override.cfg, ...) ... What is missing is the Release export of
-  the civ-lite game in the three arms ...". It refuses in `prepare()`, before the self-check, before any directory is made and before any process starts. The entry is defined ([the entry](frontier-comparison-entry.md)): the launcher will
-  run `Contents/MacOS/<executable>` of the exported `.app` with `scenarioArguments` (`scripts/frontier-comparison-run.mjs`), the arguments the Debug launcher also uses after `--path <copy>`; the campaign does not change.
+- **Release** runs the `.app` of an exports directory (`--exports <dir>`) through the manifests beside them. The measuring script (V05-07's export function, over a prepared measurement project) writes
+  `<dir>/<A|B|C>/frontier-comparison-export.json` (`scripts/frontier-comparison-release.mjs`, format `godot-fabric.frontier-comparison-export/v1`): `arm`; the paths `app`, `executable` (`Contents/MacOS/<exe>`) and `pck`,
+  relative to the manifest's directory with no `..`; `binarySha256` and `packageSha256`; `scriptSha256` and the `scriptFiles` it hashes (as `scriptsOf` computes it); `godot` and `templateSha256`; and `exportBytes`, the product's
+  package in an export and in its repeat (two equal positive integers, as the protocol asks). `override.cfg` is inside the `.pck` ([the entry](frontier-comparison-entry.md)); the launcher puts nothing in the `.app`.
+  - **`prepare()`** validates the three manifests (`manifestErrors`), recomputes the SHA-256 of every executable and package, and **refuses, naming every problem and starting nothing,** when a manifest is missing, wrong or not
+    the file's (or an export carries another `tests/cpu-time-instrument.gd` than the repository's). It registers each manifest's hashes, with the seed, the game's hashes and the instrument's file from the Debug launcher's sources;
+    the packages are the `exportBytes`, the engine is C's executable, and there are no deviations.
+  - **`launch()`** hashes the executable and the package **again** and throws if either is not the registered one (a file swapped after `prepare()` stops the campaign), then runs `Contents/MacOS/<exe>` with
+    `scenarioArguments` (`--windowed -- --arm --lane --out`, `--out` absolute) in a private directory outside the `.app`, with a 30-minute timeout and `timedOut` as the Debug launcher's. `cleanup()` removes only that directory.
+  - **The campaign does not start through it yet.** The launcher says `selfCheck: "unsupported"`, and `runCampaign` refuses right after `prepare()`, before the state, the output directory or any process: the exports were read and validated, but
+    the self-check runs the probe with `-s`, which a template discards. It was tried against a fake `.app` only (`tests/frontier-comparison-release-fake-app.mjs`); no real export exists.
 - **The fake**, in the tests, plays programmable synthetic executions: a load above the limit, an undrawn presented window, an error, another game, an incomplete window, a process that wrote no report, a vsync
   that reads back `ENABLED`, and an interruption.
 
@@ -529,17 +541,18 @@ refusal (the ones on the merged tree) are recorded in the [evidence record](../e
 
 ## What is missing for the campaign
 
-- **The Release export of the civ-lite game** in the three arms (A and B too): the hashes of the binary and the package, the size of the export twice, **and the Release launcher** (above). **The entry is defined**
-  ([the entry](frontier-comparison-entry.md)): the scenario is the project's main loop through `override.cfg`, which a Release `.app` reads from `Contents/MacOS/` or from its pack, so the launcher only has to run
-  `Contents/MacOS/<executable>` with `scenarioArguments`. What is missing is the export of civ-lite itself: the export plugin of V05-07 (#75) is on `main`, and exporting the game in the three arms comes after it. Until it does, `--build release` refuses.
+- **The Release export of the civ-lite game** in the three arms (A and B too), with the manifests of [the launcher](#the-launcher): the hashes of the binary and the package, the size of the export twice. **The entry is defined**
+  ([the entry](frontier-comparison-entry.md)) and **the Release launcher exists** (it runs `Contents/MacOS/<executable>` with `scenarioArguments`, over a fake `.app` in the tests). What is missing is the export of civ-lite itself: the
+  export plugin of V05-07 (#75) is on `main`, and exporting the game in the three arms comes after it. Until then there are no real manifests to give `--exports`.
 - **The package size in arms A and B.** The export plugin always embeds the React Native frameworks, so A and B would carry them in the `package-size` axis. It has to be decided between exporting A and B without the frameworks
   and recording the package as it comes out (saying so in the deviations).
-- **The instrument's self-check in a Release template.** The probe runs today with `-s` in the editor's binary; a template discards `-s`, so there it needs the same entry, the probe as the main loop of a project.
+- **The instrument's self-check in a Release template.** The probe runs today with `-s` in the editor's binary; a template discards `-s`, so there it needs the same entry, the probe as the main loop of a project. **It is what holds the Release back:** the launcher
+  reads the exports and then the campaign refuses (`selfCheck: "unsupported"`), so no campaign starts through a `.app` until it exists.
 - **A quiet machine and the user away**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window for the 36 executions of the presented lane; the repository's other lanes
   run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one). The campaign waits for the load but cannot make the machine quiet.
 - **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
   it does not pass or no display presented the window; the code is there and tested with the probe replaced, and was never run. The Debug rehearsal runs the headless check and says so in its deviations.
-- **The registration before the first execution** for the Release: a rehearsal registers what it measured; a campaign needs the Release launcher to register the hashes of the three exports in `prepare()`.
+- **The registration before the first execution** for the Release: a rehearsal registers what it measured; the Release launcher registers the hashes of the three exports in `prepare()`, from their manifests, once the real ones exist.
 - **The raw data under `docs/evidence/`**: a campaign's `raw/` holds about 0.3 MB per attempt (about 22 MB for 75 attempts); where it is kept and how it is published is for the slice that runs it.
 
 ## Limits
@@ -548,7 +561,7 @@ refusal (the ones on the merged tree) are recorded in the [evidence record](../e
 - The six frames of rest are a rule, not a check that the React Native HUD has finished: the windowed rehearsal was the first run in which a pump that is still busy would show in the frames after a window; it
   recorded no anomaly and every parity check matched, which does not prove that the pump was idle.
 - Arms A and B have no host, so the scenario's readings of C that need it (the heap, the views, the errors) exist only there, as the protocol says.
-- The campaign has run against a fake launcher (72 to 75 synthetic attempts, in Node) and a Debug rehearsal of three attempts. The Release launcher, the 72 attempts of a real campaign and a wait that ends because
+- The campaign has run against a fake launcher (72 to 75 synthetic attempts, in Node) and a Debug rehearsal of three attempts. The Release launcher has run only a fake `.app`; a real export, the 72 attempts of a real campaign and a wait that ends because
   the machine became quiet have not been seen, and a resume after a real interruption was seen once, in the Debug rehearsal ([above](#the-short-rehearsal)). The fake proves the orchestrator's logic, not the machine's behaviour.
 - The lock keeps a second campaign from starting on the machine; it cannot keep another lane of the repository (a suite, an export) from running, and the load rule is what catches that.
 - The event burst and the stress window are measured in the three arms: in the burst the counters agree at the first read in every turn, so every burst is the minimum of five frames, headless and windowed alike
@@ -564,9 +577,9 @@ node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane present
 node scripts/frontier-comparison-analysis.mjs --check-format build/frontier-comparison-rehearsal/campaign.json
 node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane presented --windowed --out <directory>   # windowed: opens a window in front, the user must be away
 node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane unlimited --windowed --out <directory>
-node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-campaign-state.test.mjs   # Node only, fake launcher; part of npm run test:contracts
+node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-campaign-state.test.mjs tests/frontier-comparison-release.test.mjs   # Node only, fake launcher and fake .app; part of npm run test:contracts
 npm run test:frontier-comparison-run                                   # also the campaign's short rehearsal: headless, Debug, --slots 1-3 of the presented lane, the real self-check
 node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal
 node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build debug --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out build/frontier-comparison-campaign-rehearsal --resume
-node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --out <directory>   # refuses until the civ-lite game is exported in the three arms (the entry is defined)
+node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --exports <directory> --out <directory>   # reads and validates the exports, then refuses: no self-check of the instrument in a template
 ```

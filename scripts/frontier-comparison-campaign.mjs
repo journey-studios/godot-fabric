@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { root } from "./consumer-harness.mjs";
 import { runSelfCheck } from "./frontier-comparison-campaign-instrument.mjs";
-import { createDebugLauncher, createReleaseLauncher } from "./frontier-comparison-campaign-launchers.mjs";
+import { RELEASE_SELF_CHECK_REFUSAL, createDebugLauncher, createReleaseLauncher } from "./frontier-comparison-campaign-launchers.mjs";
 import { acquireLock } from "./frontier-comparison-campaign-lock.mjs";
 import { defaultClock, readLoad, waitForLoad } from "./frontier-comparison-campaign-load.mjs";
 import {
@@ -23,11 +23,12 @@ import { machine } from "./frontier-turn-lane.mjs";
 // interrupted campaign continues with --resume. The campaign in the analysis' format and its report are written at the end. The state machine is in
 // scripts/frontier-comparison-campaign-state.mjs, the wait in -load.mjs and the instrument's self-check, the gate that runs first, in -instrument.mjs.
 //
-//   node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release|debug --out <dir> [--resume] [--max-wait <s>]
+//   node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release|debug --out <dir> [--exports <dir>] [--resume] [--max-wait <s>]
 //        [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]
 //
 // `--build debug` is a rehearsal: it needs `--rehearsal`, which marks the campaign as one (a rehearsal redoes nothing, and says in the campaign's deviations that it is not a result). `--build release`
-// uses the Release launcher, which refuses until the civ-lite game is exported in the three arms (the scenario's entry is defined: the main loop of the project). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
+// needs `--exports <dir>`, the exports of the three arms with their manifests (scripts/frontier-comparison-release.mjs): the Release launcher reads and validates them, and the campaign then refuses to start,
+// because the instrument's self-check cannot run in a template yet (`launcher.selfCheck` is "unsupported"). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
 // .log (the scenario's report and the process's log of each attempt), self-check/ (the instrument's probe report and log), and at the end campaign.json (strictly the analysis' format),
 // report.json (the analysis' report), summary.json and, in a rehearsal, rehearsal.json.
 
@@ -234,6 +235,10 @@ export async function runCampaign({
   const release = await acquireLock({ file: lockFile, out });
   try {
     const prepared = await launcher.prepare();
+    // A launcher whose processes cannot run the instrument's self-check (the Release one: a template discards `-s`) cannot start a campaign, because the gate has nothing to run. Nothing was launched or written.
+    if (launcher.selfCheck === "unsupported") {
+      throw new Error(RELEASE_SELF_CHECK_REFUSAL);
+    }
     const state = await openState({ launcher, prepared, protocolSha256, out, statePath, options: { lanes, slots, rehearsal, assumeRefreshHz }, maxWaitSeconds, resume, clock, where, log });
     const save = async () => {
       state.updated = isoOf(clock);
@@ -269,13 +274,13 @@ export async function runCampaign({
 const FLAGS = new Set(["--campaign", "--resume", "--rehearsal"]);
 
 export function parseArguments(argv, protocol) {
-  const options = { campaign: false, lanes: DEFAULT_LANES, build: null, out: null, resume: false, rehearsal: false, slots: null, maxWaitSeconds: DEFAULT_MAX_WAIT_SECONDS, assumeRefreshHz: null };
+  const options = { campaign: false, lanes: DEFAULT_LANES, build: null, out: null, exports: null, resume: false, rehearsal: false, slots: null, maxWaitSeconds: DEFAULT_MAX_WAIT_SECONDS, assumeRefreshHz: null };
   const text = {};
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (FLAGS.has(argument)) {
       options[argument.slice(2)] = true;
-    } else if (["--lanes", "--build", "--out", "--slots", "--max-wait", "--assume-refresh-hz"].includes(argument)) {
+    } else if (["--lanes", "--build", "--out", "--exports", "--slots", "--max-wait", "--assume-refresh-hz"].includes(argument)) {
       if (index + 1 >= argv.length || argv[index + 1].startsWith("--")) {
         throw new Error(`${argument} takes a value`);
       }
@@ -285,11 +290,12 @@ export function parseArguments(argv, protocol) {
     }
   }
   if (!options.campaign) {
-    throw new Error("use --campaign --lanes presented,unlimited --build release|debug --out <directory> [--resume] [--max-wait <seconds>] [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]");
+    throw new Error("use --campaign --lanes presented,unlimited --build release|debug --out <directory> [--exports <directory>] [--resume] [--max-wait <seconds>] [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]");
   }
   options.lanes = text["--lanes"] === undefined ? DEFAULT_LANES : text["--lanes"].split(",");
   options.build = text["--build"] ?? null;
   options.out = text["--out"] === undefined ? null : path.resolve(text["--out"]);
+  options.exports = text["--exports"] === undefined ? null : path.resolve(text["--exports"]);
   if (!["release", "debug"].includes(options.build)) {
     throw new Error("use --build release|debug");
   }
@@ -317,6 +323,12 @@ export function parseArguments(argv, protocol) {
       throw new Error("--max-wait takes a number of seconds, 0 or more");
     }
   }
+  if (options.build === "release" && options.exports === null) {
+    throw new Error("--build release needs --exports <directory>: the exports of the three arms, <A|B|C>/frontier-comparison-export.json beside the .app of each");
+  }
+  if (options.build === "debug" && options.exports !== null) {
+    throw new Error("--exports is for --build release: a Debug rehearsal provisions its own copy of civ-lite");
+  }
   return options;
 }
 
@@ -324,7 +336,7 @@ async function main(argv) {
   const bytes = await readFile(PROTOCOL_FILE);
   const protocol = JSON.parse(bytes);
   const options = parseArguments(argv, protocol);
-  const launcher = options.build === "release" ? createReleaseLauncher() : createDebugLauncher();
+  const launcher = options.build === "release" ? createReleaseLauncher({ exportsDirectory: options.exports }) : createDebugLauncher();
   const result = await runCampaign({
     launcher, protocol, protocolSha256: sha256(bytes), out: options.out, lanes: options.lanes, slots: options.slots, rehearsal: options.rehearsal, resume: options.resume,
     maxWaitSeconds: options.maxWaitSeconds, assumeRefreshHz: options.assumeRefreshHz, log: (line) => console.log(line),
