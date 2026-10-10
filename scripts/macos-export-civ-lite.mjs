@@ -53,7 +53,8 @@ export async function removeCivLiteUserData(projectName) {
 }
 
 // What a run's log and report say, as one record. `profile` is the clean-profile observation of the run that made it.
-function replayRecord({label, lane, run, report, reportSha256, profile}) {
+// Exported for scripts/macos-clean-run.mjs, which judges the same kind of run on another machine with judgeReplayRun.
+export function replayRecord({label, lane, run, report, reportSha256, profile}) {
   const hashes = run.log.match(/^CIVLITE_REPLAY_HASHES: golden=([0-9a-f]{64}) trace=([0-9a-f]{64})$/m);
   return {label, lane, status: run.status, signal: run.signal,
     passedMarker: /^CIVLITE_REPLAY_PASSED: \d+$/m.test(run.log), fatalOutput: fatalOutput.test(run.log),
