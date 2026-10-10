@@ -1114,6 +1114,8 @@ in the turn, in the first live execution of the turn's path with the helper. **N
 opens a window the engine can draw and that the record is written and verified, not that it keeps the window drawing against interference: that needs a run with the user at the Mac. A locked or asleep display is not covered, and the captures run still waits
 for `frame_post_draw` with no limit of its own. The raw receipts (`SHA-256 36b32e0d…` and `8dd6ec9c…`) stay outside the repository in this record (the baseline's, `36b32e0d…`, was committed later, byte for byte, in the [Frontier baseline record](frontier-baseline/windowed-presented-raw.json)); the frame-time statistics they hold belong to the delivery that closes the `baseline` criterion, and this record changes none.
 
+The [Frontier device decision record](frontier-device/README.md), pinned at `4ff7547`, records the user's NO-GO of 2026-10-09 for the physical iPhone gate of the 0.5 milestone (V05-09, package P7): there is no iPhone, Apple Team ID or Developer Mode available. It closes only the `decisao` criterion of V05-09 and exit X8; `g0`, `export`, `toque` and `turno` stay open under a blocker, V05-08 is handed back to GF-35 under a blocker, and the 0.5 closes as macOS-complete with no 1.0 number moved. It is a decision record, with no measurement and no captures.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

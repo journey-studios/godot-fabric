@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T20:56:00.000Z",
+  "updatedAt": "2026-10-10T01:01:29.000Z",
   "source": {
     "commit": "4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
     "url": "https://github.com/journey-studios/godot-fabric/commit/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
@@ -4184,6 +4184,7 @@
             "V05-02"
           ],
           "acceptance": "Com stretch canvas_items, Dimensions.scale coincide com a escala da tela e um Pressable de 44 pt mede 44 ± 0,5 pt via measureInWindow; a HUD inteira fica dentro dos insets; 20 toques automatizados são 20 onPress sem duplicação. Hoje a densidade sai da transformação de conteúdo do Godot e não há leitura de safe area (get_display_safe_area tem 0 ocorrências em native, sdk e src).",
+          "blocker": "Preparação iOS devolvida ao GF-35 com o NO-GO do aparelho (2026-10-09); a densidade e o SafeAreaView seguem como fatia do GF-09, sem reivindicar este item.",
           "criteria": [
             {
               "id": "densidade",
@@ -4229,6 +4230,7 @@
             "V05-08"
           ],
           "acceptance": "O consumidor do jogo, exportado em Release e assinado com o time Apple do usuário, passa os estágios do gate em um iPhone arm64 físico em paisagem (modelo, iOS e taxa de atualização registrados), com recibo manual nomeado. Um NO-GO fecha o 0.5 como macOS completo. Hoje o script ios-consumer-export.py recusa execução em aparelho e usa CODE_SIGNING_ALLOWED=NO; o estágio G0 (o fixture de fumaça iOS, não o jogo) começa no dia 0.",
+          "blocker": "NO-GO do usuário em 2026-10-09: sem iPhone, Apple Team nem Developer Mode; o 0.5 fecha como macOS completo e o mobile volta ao GF-35, sem alterar a 1.0.",
           "criteria": [
             {
               "id": "g0",
@@ -4257,8 +4259,13 @@
             {
               "id": "decisao",
               "label": "Decisão GO ou NO-GO registrada; NO-GO fecha o 0.5 como macOS completo e devolve o mobile ao GF-35 sem alterar números da 1.0",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Registro do NO-GO do usuário em 2026-10-09 (sem iPhone, Apple Team nem Developer Mode): docs/evidence/frontier-device/README.md",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ]
             }
           ]
         },
@@ -4400,8 +4407,13 @@
         {
           "id": "X8",
           "label": "iPhone: estágios do gate passando no aparelho, ou NO-GO registrado fechando o 0.5 como macOS completo",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Registro do NO-GO do usuário em 2026-10-09: o 0.5 fecha como macOS completo (docs/evidence/frontier-device/README.md)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+            }
+          ]
         },
         {
           "id": "X9",
@@ -4707,6 +4719,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-09-nogo",
+      "at": "2026-10-10T01:01:29.000Z",
+      "taskIds": [],
+      "message": "Decisão do usuário em 2026-10-09: NO-GO do gate físico do iPhone do marco 0.5 (V05-09, P7), porque não há aparelho, Apple Team ID nem Developer Mode. O critério decisao de V05-09 e a saída X8 ficam concluídos, com o registro em docs/evidence/frontier-device; g0, export, toque e turno seguem abertos com blocker. V05-08 volta ao GF-35 com blocker, e a densidade e o SafeAreaView de feat/mobile-density entram como fatia do GF-09. O 0.5 passa a fechar como macOS completo, e nenhum número da 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+    },
     {
       "id": "milestone-0-5-v05-06-baseline-191533a",
       "at": "2026-10-09T20:56:00.000Z",
