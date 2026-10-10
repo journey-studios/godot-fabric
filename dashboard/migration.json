@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T08:41:29.000Z",
+  "updatedAt": "2026-10-10T09:06:02.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4762,6 +4762,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-06-soak-note-e0160f3",
+      "at": "2026-10-10T09:06:02.000Z",
+      "taskIds": [],
+      "message": "V05-06 do marco 0.5, nota do soak no commit e0160f3: a nota marca os hashes antigos (final a35c55f2…, trilha fe9d4f36…) como os de antes do #93 (e108e9d), que enfileirou três eventos no turno 5, e aponta para a seção da corrida depois dessa fila (final 0b21c332…, trilha 4d6d3c4c…). Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e0160f3b098b85058facbf22ee26e72bbae9b371/docs/research/frontier-soak.md"
+    },
     {
       "id": "milestone-0-5-v05-10-amendment-4-e78e38c",
       "at": "2026-10-10T08:41:29.000Z",
