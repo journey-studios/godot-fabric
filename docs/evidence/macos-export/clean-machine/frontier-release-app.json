@@ -1,0 +1,62 @@
+{
+  "format": "godot-fabric.frontier-release-app/v1",
+  "sourceCommit": "4767cd1f682dcbe540fa444b9af14f27790db6a1",
+  "packedAt": "2026-10-10T21:31:42.299Z",
+  "archive": {
+    "name": "Frontier.app.tar.gz",
+    "bytes": 36667093,
+    "sha256": "b7ebb7ba361a17bc1ab54f29f3c347b168bc8cd095e8e35146fc5d4ce1f0f564",
+    "packer": "tar -czf Frontier.app.tar.gz -C <parent> Frontier.app"
+  },
+  "app": {
+    "name": "Frontier.app",
+    "bundleSha256": "48f648b1a635168bb4fde237b1382ff6be3ae7b8b23236aa46d75a1d3f8d4339",
+    "executableName": "Frontier Export 48950-1791667829893-dfb748",
+    "projectName": "Frontier Export 48950-1791667829893-dfb748",
+    "bundleIdentifier": "org.journeystudios.godotfabric.frontier",
+    "pckSha256": "f59ca9ae311cad1417f09b5d46022e4692d2f0a73fe1284684daf134959d0111"
+  },
+  "roundTrip": {
+    "unpackedBundleSha256": "48f648b1a635168bb4fde237b1382ff6be3ae7b8b23236aa46d75a1d3f8d4339",
+    "signatureStatuses": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "pins": {
+    "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+    "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e"
+  },
+  "uploader": {
+    "runnerName": "GitHub Actions 1000008063",
+    "runnerOs": "macOS",
+    "runnerArch": "ARM64",
+    "imageOs": "macos15",
+    "imageVersion": "20260907.0337.1",
+    "workflowRunId": "38085526897",
+    "workflowRunAttempt": "1",
+    "workflowJob": "native-suites-runtime",
+    "uname": "Darwin iad20-gt1019-5286744e-8bd0-4073-9caf-440b95d077d2-7E1795242394.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Jul 21 20:51:34 PDT 2026; root:xnu-11417.140.69.711.44~1/RELEASE_ARM64_VMAPPLE arm64",
+    "swVers": {
+      "ProductName": "macOS",
+      "ProductVersion": "15.7.9",
+      "BuildVersion": "24G830"
+    },
+    "bootTimeSec": 1791665892,
+    "hostnameSha256": "e712a8944114e286e881564ed197bec0fd2f49215e57357d6563b54225b27f09",
+    "user": "runner",
+    "hardware": {
+      "modelName": "Apple Virtual Machine 1",
+      "modelIdentifier": "VirtualMac2,1",
+      "chip": "Apple M1 (Virtual)",
+      "cores": "3",
+      "memory": "7 GB",
+      "serialSha256": "75a3a7e0dbb840829c3b73a6afd4efb2b708f4074a676f701f0126aebce52572",
+      "hardwareUuidSha256": "f241f0376b9f0f3c0d84bc5f1338771a44f59ea04508df5c88cb644b105ab230",
+      "provisioningUdidSha256": "fba4155b1cd2c23ba5e2f61a19b23f5e0d29e241660698700bbb95665f3e779f"
+    }
+  }
+}

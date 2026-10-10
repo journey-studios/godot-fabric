@@ -135,6 +135,6 @@ node scripts/hosted-receipts.mjs --check
 
 ## Abertos
 
-- `limpa`: a prova em um segundo Mac ou VM sem Node, Godot e Xcode. O limite "mesmo Mac, perfil limpo" está no recibo (`limitations`).
+- `limpa`: a prova em um segundo Mac ou VM sem Node, Godot e Xcode. O limite "mesmo Mac, perfil limpo" está no recibo (`limitations`). Este registro não a reivindica; o [registro da máquina limpa](../clean-machine/README.md) a cobre, no limite de um runner hospedado (outra VM, usuário limpo, sem Godot nem dependências do projeto, mas com Node e Xcode na imagem, que o app é mostrado sem usar).
 - Developer ID e notarização, e o iPhone (NO-GO registrado no X8), fora deste registro.
 - Os braços A e B da comparação exportam sem `addons/godot_fabric` e sem os frameworks, como o protocolo os define (o A é o controle sem HUD, o B a HUD nativa em GDScript). O script de medição do slot 3 faz esse export pela função `exportPreparedProject`, e ele ainda está por construir.
