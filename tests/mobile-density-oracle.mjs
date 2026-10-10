@@ -190,6 +190,49 @@ function judgeWorld(report) {
   return {cases: cases.length, points: cases.length * 3};
 }
 
+// The faults of the seam: one band of validation_safe_area that is not a finite non-negative number is refused with a diagnostic that names
+// it, not turned into a padding. The host keeps the bands, and with them the padding of every SafeAreaView, of the last valid seam; no
+// NaN and no negative ever reaches a State; and the next valid seam is followed again. The three faults and the valid seams between them
+// are stated here, not taken from the report, and the padding is recomputed from the frames with UIKit's rule.
+const MOVED = {left: 50, top: 24, right: 44, bottom: 30};
+const SEAM_FAULTS = [["negative", "left"], ["string", "top"], ["not-a-number", "right"]];
+const SEAM_VALID = [INSETS, MOVED, INSETS, MOVED];
+const refusal = side => `validation_safe_area.${side} must be a finite non-negative number`;
+const sound = edges => SIDES.every(side => Number.isFinite(edges?.[side]) && edges[side] >= 0);
+
+function judgeSeamFaults(report) {
+  const faults = report.seamFaults;
+  assert.deepEqual(faults.map(fault => [fault.kind, fault.side]), SEAM_FAULTS, "the seam faults are a negative, a String and a NaN, each on its own side");
+  assert.deepEqual(report.expectedErrors.slice(2), SEAM_FAULTS.map(([, side]) => refusal(side)), "the diagnostics the probe provoked name the band");
+  faults.forEach((fault, index) => {
+    const label = `seam ${fault.kind}`;
+    const scale = fault.scale;
+    assert.ok(near(scale, 2) && near(fault.window.scale, scale), `${label}: the faults run at scale 2`);
+    assert.deepEqual(fault.validSeam, SEAM_VALID[index], `${label}: the last valid seam`);
+    assert.deepEqual(fault.recoverySeam, SEAM_VALID[index + 1], `${label}: the valid seam that follows`);
+    assert.deepEqual(fault.errors, SEAM_FAULTS.slice(0, index + 1).map(([, side]) => refusal(side)),
+      `${label}: the host reported ${JSON.stringify(fault.errors)}, one diagnostic per refused band`);
+    assert.ok(sameEdges(fault.unsafe, fault.validSeam), `${label}: the host kept the bands of the last valid seam, not (${describe(fault.unsafe)})`);
+    assert.ok(sound(fault.unsafe), `${label}: the bands the host holds are finite and not negative`);
+    for (const id of VIEWS) {
+      const frame = fault.frames[id];
+      assert.ok(frame, `${label}: ${id} was measured`);
+      // The last valid seam's padding, to within the update threshold (the State only moves by a pixel and 0.01).
+      const target = Object.fromEntries(SIDES.map(side => [side, pixel(reached(frame, fault.window, fault.validSeam)[side], scale)]));
+      assert.ok(sameEdges(fault.before[id], target, 1 / scale + 0.011), `${label}: ${id} held (${describe(fault.before[id])}) before the fault, the rules give (${describe(target)})`);
+      assert.deepEqual(fault.kept[id], fault.before[id], `${label}: ${id} kept its padding (${describe(fault.kept[id])}) through the refusal`);
+      assert.ok(sound(fault.kept[id]), `${label}: ${id} holds a finite, non-negative padding (${describe(fault.kept[id])})`);
+      // The valid seam after the fault moves the State by the rules, as if the fault had never happened.
+      const next = Object.fromEntries(SIDES.map(side => [side, pixel(reached(fault.recovered.frames[id], fault.window, fault.recoverySeam)[side], scale)]));
+      const expected = moved(fault.kept[id], next, scale) ? next : fault.kept[id];
+      assert.ok(sameEdges(fault.recovered.padding[id], expected), `${label}: ${id} holds (${describe(fault.recovered.padding[id])}) after the next seam, the rules give (${describe(expected)})`);
+    }
+    const nextHud = Object.fromEntries(SIDES.map(side => [side, pixel(reached(fault.recovered.frames.hud, fault.window, fault.recoverySeam)[side], scale)]));
+    assert.ok(moved(fault.kept.hud, nextHud, scale), `${label}: the seam after the fault moves the HUD, so the host is shown to follow it`);
+  });
+  return {faults: faults.length};
+}
+
 // Throws on the first difference between a report of the current host and the rules.
 export function verifyMobileDensityReport(report) {
   assert.equal(report.scenario, "native-mobile-density");
@@ -264,12 +307,13 @@ export function verifyMobileDensityReport(report) {
   // Diagnostics and cleanup.
   const diagnostics = report.stages.find(stage => stage.name === "diagnostics");
   assert.deepEqual(diagnostics.errors, [report.expectedErrors[1]], "the policy refused a change after the application started, with a diagnostic");
-  assert.equal(report.expectedErrors.length, 2);
+  assert.equal(report.expectedErrors.length, 2 + SEAM_FAULTS.length, "two diagnostics of the policy and one per refused band");
   const cleanup = report.stages.find(stage => stage.name === "cleanup");
   assert.equal(cleanup.native.nativeTags, 0, "cleanup: every native Control was released");
   assert.equal(cleanup.native.displayInsets.views, 0, "cleanup: the host forgot its SafeAreaViews");
+  const seam = judgeSeamFaults(report);
   const world = judgeWorld(report);
-  return {stages: stages.length, views: VIEWS.length, unchangedStages: seen.unchanged, changedViews: [...seen.changed].sort(), world};
+  return {stages: stages.length, views: VIEWS.length, unchangedStages: seen.unchanged, changedViews: [...seen.changed].sort(), seam, world};
 }
 
 // The first complaint of the oracle about a report whose checks all claim to pass, or null when it accepts it.

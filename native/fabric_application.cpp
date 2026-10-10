@@ -201,7 +201,16 @@ fabric_godot::display_insets::Edges FabricApplication::unsafe_edges(Window &wind
   const Variant seam = get_meta(validation_safe_area);
   if (seam.get_type() != Variant::DICTIONARY) throw std::runtime_error("validation_safe_area must be a Dictionary of left, top, right and bottom");
   const Dictionary bands = seam;
-  const auto band = [&bands](const char *name) { return static_cast<double>(bands.get(name, 0.0)); };
+  // A band that is there is a number of points: an int or a float, finite, not below zero. A String, a NaN or a negative would
+  // otherwise become the padding RN's State holds. A band that is not there is 0.
+  const auto band = [&bands](const char *name) {
+    if (!bands.has(name)) return 0.0;
+    const Variant value = bands.get(name, Variant());
+    const bool number = value.get_type() == Variant::INT || value.get_type() == Variant::FLOAT;
+    const double points = number ? static_cast<double>(value) : 0.0;
+    if (!number || !std::isfinite(points) || points < 0) throw std::runtime_error(std::string("validation_safe_area.") + name + " must be a finite non-negative number");
+    return points;
+  };
   return {band("left"), band("top"), band("right"), band("bottom")};
 }
 fabric_godot::ApplicationRuntime *FabricApplication::get_runtime() const { return runtime.get(); }

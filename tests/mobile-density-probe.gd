@@ -16,6 +16,11 @@ extends SceneTree
 # The counts are invariants of the events, not of the pace: N clicks give N to the world and none to the HUD, or N presses and none to
 # the world. Only the pump that follows the burst is waited for, by the host's own frame counter.
 #
+# The seam faults put one band of validation_safe_area that is not a finite non-negative number (a negative, a String, a NaN) in front of
+# the host: it refuses the seam with a diagnostic that names the band, keeps the bands and so the padding of the last valid seam, never lets
+# a NaN or a negative reach RN's State, and follows the next valid seam. Each fault is on its own side, so the host's one diagnostic per
+# message reports every one of them; every wait is for a state, and the pumps after the refusal are counted by the host's frame counter.
+#
 # A check is normative when it needs this slice's host (the policy, the seams, RN's SafeAreaView); the control on the previous
 # host (--allow-original-negative) must fail exactly those. --sabotage runs on a host that was broken on purpose and must fail.
 const WINDOW := Vector2i(1200, 720)
@@ -27,6 +32,14 @@ const INSETS := {"left": 47.0, "top": 20.0, "right": 47.5, "bottom": 21.0}
 const SUB_THRESHOLD := {"left": 47.3, "top": 20.0, "right": 47.5, "bottom": 21.0}
 const MOVED := {"left": 50.0, "top": 24.0, "right": 44.0, "bottom": 30.0}
 const CANVAS_ITEMS := 1
+# The faults of the seam: the kind, and the side whose band is the invalid one. The value comes from fault_value.
+const SEAM_FAULTS := [
+  {"kind": "negative", "side": "left"},
+  {"kind": "string", "side": "top"},
+  {"kind": "not-a-number", "side": "right"},
+]
+# The valid seams between the faults: the one before fault i is SEAM_VALID[i], the one that follows it SEAM_VALID[i + 1].
+const SEAM_VALID := [INSETS, MOVED, INSETS, MOVED]
 # The world group: clicks per point, the pointerEvents of the root, and the scales it runs at.
 const CLICKS := 20
 const WORLD_EVENTS := ["box-none", "auto"]
@@ -57,6 +70,7 @@ var held: Dictionary = {}
 var expected_errors: Array = []
 var platform_scale := 1.0
 var world_cases: Array = []
+var seam_faults: Array = []
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -499,6 +513,102 @@ func screen_case() -> void:
   stages.append({"name": "cleanup", "native": native_snapshot()})
   await remove_application()
 
+# The invalid band of a fault: not a finite number of points, or below zero.
+func fault_value(kind: String) -> Variant:
+  match kind:
+    "negative":
+      return -5.0
+    "string":
+      return "20"
+  return NAN
+
+# The padding of every SafeAreaView as the host holds it: {} for a view the host gave no padding to (a host that has none).
+func paddings(native: Dictionary) -> Dictionary:
+  var nodes := nodes_by_id(native)
+  var result := {}
+  for id: String in VIEWS:
+    var padding: Variant = nodes.get(id, {}).get("safeArea", null)
+    result[id] = padding if padding is Dictionary else {}
+  return result
+
+# What the next stage starts from: the padding held, zero where there is none.
+func held_of(raw: Dictionary) -> Dictionary:
+  var result := {}
+  for id: String in VIEWS:
+    result[id] = raw[id] if not (raw[id] as Dictionary).is_empty() else zero()
+  return result
+
+func sound_edges(edges: Variant) -> bool:
+  if not edges is Dictionary:
+    return false
+  for side: String in SIDES:
+    var value: Variant = edges.get(side, null)
+    if not (value is float or value is int) or is_nan(float(value)) or is_inf(float(value)) or float(value) < 0.0:
+      return false
+  return true
+
+func sound_paddings(raw: Dictionary) -> bool:
+  for id: String in VIEWS:
+    if not sound_edges(raw[id]):
+      return false
+  return true
+
+func seam_case() -> void:
+  restore_window()
+  add_application("SeamApplication", "screen")
+  application.set_meta("validation_screen_scale", 2.0)
+  application.set_meta("validation_safe_area", INSETS)
+  add_surface("SeamSurface", "SeamApplication")
+  var ready: bool = await wait_for(mounted, 30.0, true)
+  check(ready, "seam/The HUD mounts through the original AppRegistry")
+  held = {}
+  var settled: bool = await wait_for(func() -> bool: return held_matches(js_snapshot(), native_snapshot(), INSETS, 2.0))
+  normative(settled, "seam/The valid bands are followed before any is refused")
+  held = held_of(paddings(native_snapshot()))
+  var diagnostics: Array = []
+  for index in range(SEAM_FAULTS.size()):
+    var fault: Dictionary = SEAM_FAULTS[index]
+    var kind: String = fault.kind
+    var side: String = fault.side
+    var message := "validation_safe_area.%s must be a finite non-negative number" % side
+    var good: Dictionary = SEAM_VALID[index]
+    var next: Dictionary = SEAM_VALID[index + 1]
+    var broken := good.duplicate()
+    broken[side] = fault_value(kind)
+    var before := paddings(native_snapshot())
+    diagnostics.append(message)
+    expected_errors.append(message)
+    application.set_meta("validation_safe_area", broken)
+    var refused: bool = await wait_for(func() -> bool: return (native_snapshot().get("errors", []) as Array) == diagnostics)
+    # The pumps that ran after the refusal are the evidence that nothing was applied: wait for two more of the host's own.
+    var pumps := frames_run()
+    await wait_for(func() -> bool: return frames_run() >= pumps + 2)
+    var js := js_snapshot()
+    var native := native_snapshot()
+    var kept := paddings(native)
+    var unsafe: Variant = native.get("displayInsets", {}).get("unsafe", {})
+    var unchanged: bool = not is_zero(held.hud)
+    for id: String in VIEWS:
+      unchanged = unchanged and same(kept[id], before[id], 1e-9)
+    normative(refused and (native.get("errors", []) as Array) == diagnostics,
+      "seam/%s/The band is refused with a diagnostic that names it, once" % kind)
+    normative(unsafe is Dictionary and same(unsafe, good), "seam/%s/The host keeps the bands of the last valid seam" % kind)
+    normative(unchanged, "seam/%s/Every SafeAreaView keeps the padding the last valid bands gave it" % kind)
+    normative(sound_paddings(kept) and sound_edges(unsafe), "seam/%s/No SafeAreaView holds a NaN or a negative padding" % kind)
+    # As soon as the seam is valid again it is followed again.
+    application.set_meta("validation_safe_area", next)
+    var recovered: bool = await wait_for(func() -> bool: return held_matches(js_snapshot(), native_snapshot(), next, 2.0))
+    normative(recovered, "seam/%s/A valid seam after the refused one is followed again" % kind)
+    var after_js := js_snapshot()
+    var after := paddings(native_snapshot())
+    seam_faults.append({"kind": kind, "side": side, "scale": 2.0, "validSeam": good, "recoverySeam": next,
+      "window": js.get("dimensions", {}).get("window", {}), "frames": js.get("frames", {}), "before": before, "kept": kept,
+      "unsafe": unsafe if unsafe is Dictionary else {}, "errors": native.get("errors", []),
+      "recovered": {"frames": after_js.get("frames", {}), "padding": after}})
+    held = held_of(after)
+  await remove_application()
+  restore_window()
+
 func _initialize() -> void:
   var arguments := OS.get_cmdline_user_args()
   allow_original_negative = arguments.has("--allow-original-negative")
@@ -512,6 +622,7 @@ func run_probe() -> void:
   await content_case()
   restore_window()
   await screen_case()
+  await seam_case()
   await world_group()
   await finish()
 
@@ -525,7 +636,7 @@ func finish() -> void:
   var original_negative_observed := allow_original_negative and observed == expected and not failures.is_empty()
   var report := {"scenario": "native-mobile-density", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "window": [WINDOW.x, WINDOW.y], "platformScale": platform_scale,
-    "checks": checks, "content": content, "stages": stages, "world": world_cases, "expectedErrors": expected_errors,
+    "checks": checks, "content": content, "stages": stages, "world": world_cases, "seamFaults": seam_faults, "expectedErrors": expected_errors,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": original_negative_observed, "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"densityPolicy": "screen", "safeAreaSeam": "validation_safe_area", "screenScaleSeam": "validation_screen_scale",

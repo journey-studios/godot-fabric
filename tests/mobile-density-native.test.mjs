@@ -103,10 +103,15 @@ test("density_policy screen follows the screen's scale and RN's SafeAreaView fol
   const failures = report.checks.filter(row => !row.passed).map(row => row.name);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual(sorted(checkErrors), sorted(failures));
-  // The two diagnostics of the policy (an unknown value, a change after the start) are provoked on purpose; the previous host has
-  // no policy to refuse anything. No other diagnostic may appear.
+  // The two diagnostics of the policy (an unknown value, a change after the start) and the one per refused band of the seam are provoked
+  // on purpose; the previous host has neither to refuse anything. No other diagnostic may appear.
   const fabricErrors = [...log.matchAll(/^ERROR: FABRIC_ERROR: (.+)$/gm)].map(match => match[1]);
-  assert.deepEqual(fabricErrors, previous ? [] : report.expectedErrors, "The only host diagnostics are the ones the probe provoked");
+  if (sabotage !== null) {
+    // A host broken on purpose may not refuse what the probe provoked (ignore-seam never reads the bands), but it reports nothing else.
+    assert.deepEqual(fabricErrors.filter(message => !report.expectedErrors.includes(message)), [], "A sabotaged host reports only diagnostics the probe provoked");
+  } else {
+    assert.deepEqual(fabricErrors, previous ? [] : report.expectedErrors, "The only host diagnostics are the ones the probe provoked");
+  }
   assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length + fabricErrors.length, "No script or engine error is hidden");
   for (const file of Object.keys(bundle.sources)) {
     assert.match(bundle.sources[file], /^[0-9a-f]{64}$/, "Pin every executed producer: " + file);
