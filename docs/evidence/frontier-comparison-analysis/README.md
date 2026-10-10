@@ -47,7 +47,7 @@ Uma linha por seção do relatório (`report.sections` do protocolo, na ordem do
 | `decision`, `limitations` | só o texto que veio da campanha (`null` sem ele); o script não inventa texto; `decision` diz se o relatório é parcial | `decisionRule.partialReport` |
 | `reproduction` | onde estão os dados brutos, o SHA-256 da campanha e do protocolo, a semente, os resamples, o comando | `statistics.analysis`, `runs.rawData` |
 
-O relatório parcial (o braço B não ficou pronto no time-box) tem só H1 e nenhuma categoria em H3. Uma campanha que para (uma vaga sem tentativas, uma repetição de `other-game` num braço, um instrumento que não passou) ou a que tem um braço com menos de 10 execuções aceitas não produz estatística: o relatório diz o `status` e por quê.
+O relatório parcial (o braço B não ficou pronto no time-box) tem só H1 e nenhuma categoria em H3. Uma campanha que para (uma vaga que esgotou as tentativas sem nenhuma aceita, uma repetição de `other-game` num braço, um instrumento que não passou) ou a que tem um braço com menos de 10 execuções aceitas não produz estatística: o relatório diz o `status` e por quê.
 
 ## O formato da campanha
 
