@@ -37,8 +37,9 @@ func flag() -> String:
   return "--validate-hud"
 
 
+# An exported game cannot write to res://: there the report goes to the user's data directory (scripts/macos-export.mjs reads it from there).
 func report_path() -> String:
-  return "res://civ-lite-ui-report.json"
+  return "user://civ-lite-ui-report.json" if OS.has_feature("template") else "res://civ-lite-ui-report.json"
 
 
 func marker() -> String:
