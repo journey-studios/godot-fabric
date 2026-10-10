@@ -70,6 +70,10 @@ Pela regra do protocolo (`decisionRule.singleObservation`), a categoria de cada 
 - **O tempo inclui a lane, e a lane pesa diferente em cada branch.** O arquivo da lane roda os dois braços. Em cada branch, o braço que continua vermelho é o outro, e ele falha num ponto diferente: a lane levou cerca de 114 s na branch do B e 276 s na do C. Sem a lane, os dois braços levaram cerca de 1,0 e 1,1 minuto. A maior parte da diferença de tempo é a lane, não o trabalho.
 - **O pedido é pequeno e chega pronto do lado do jogo.** A base já trazia a regra, o ícone e a expectativa da lane, então cada braço fez só a parte da HUD. Um pedido pequeno diz pouco sobre pedidos grandes.
 - **Uma diferença de estrutura é real e apareceu.** A HUD nativa despacha uma ação pelo nome do método. O store da HUD React Native despacha por um `switch` tipado, que dá segurança de tipo a cada ação e cobra uma linha por ação nova. Daí o arquivo a mais do C.
+- **Uma divergência que a lane não cobre.** Num tile irrigado e sem unidades, o braço B mostra só "Irrigated" na linha das unidades, e o braço C mostra
+  "No units · Irrigated". O pedido diz "a palavra 'Irrigated' na linha das unidades" e não fixa o caso sem unidades, e o estágio da lane só passa por um tile
+  com unidades, então as duas leituras passam. Os patches ficam como foram entregues, porque são o registro do experimento; a diferença fica registrada
+  aqui, e o achado é do pedido (uma especificação que deixou um caso aberto), não de um braço.
 
 ## Fora da `main`
 
