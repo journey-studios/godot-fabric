@@ -13,7 +13,7 @@
     "commit": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
     "url": "https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325",
     "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 132 checks com oráculo independente, controle sobre b0e40aa (74 falham), quatro sabotagens e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em cf565a81b7518f793d6f1f6bbac57241eb6db325. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": null
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104"
   },
   "phases": [
     {

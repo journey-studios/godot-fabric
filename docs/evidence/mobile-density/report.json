@@ -12,7 +12,7 @@
   "executionBaseCommit": "fb622675a07036c29a7300c29ae2f887e05995e3",
   "implementationCommit": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
   "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325",
-  "implementationPr": null,
+  "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104",
   "pinVerification": {
     "method": "git show <implementationCommit>:<path> SHA-256 equals the pin in sourcePins; the pins were taken from the working tree that the lanes ran from and are re-verified against the commit once it exists",
     "against": "working tree on top of executionBaseCommit, before the implementation commit",
