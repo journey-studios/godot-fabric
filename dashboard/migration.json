@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T06:01:00.000Z",
+  "updatedAt": "2026-10-10T06:36:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4320,8 +4320,17 @@
             {
               "id": "braco-b",
               "label": "Braço B: HUD nativa do Godot idiomática (Controls, sinais, atualizando só o que mudou) com os mesmos 6 painéis, 7 contextos e testIDs equivalentes; paridade funcional provada pela mesma matriz de contexto; esforço registrado (linhas, arquivos, horas de agente)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64, headless e em janela): a HUD nativa do Godot do braço B (22 arquivos e 1 310 linhas, contra 13 arquivos e 698 linhas da HUD React Native) passa a matriz de contexto pela mesma sonda, pelo mesmo oráculo independente e pelos mesmos 46 passos: os painéis da tabela nos sete contextos, as ações, a barra, o spinner e a entrada real (144 verificações, 0 achados), mais a fila de três eventos, o bloqueio dos overlays, o Escape e o jogo novo (28). Contra-controle numa HUD que ignora o contexto falha a matriz, três sabotagens retidas rejeitadas (20 de 20 na receita), oito capturas dos contextos e quatro dos overlays lidas. Sem medição: a passada de otimização e as execuções ficam abertas",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/evidence/frontier-arm-b/README.md"
+                },
+                {
+                  "label": "Nota de desenho do braço B: sinais do GameServices, painéis montados pela tabela de contexto, só o que mudou é tocado, o overlay como Control que para o ponteiro (e o giro da roda que o GUI deixa passar), o leitor único pelo qual as sondas leem as duas HUDs e o que difere do braço C",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/research/frontier-arm-b.md"
+                }
+              ]
             },
             {
               "id": "execucao",
@@ -4745,6 +4754,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-braco-b",
+      "at": "2026-10-10T06:36:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério braco-b: a HUD nativa do Godot do braço B passou a regra de invalidação parity do protocolo do comparativo final, dentro do time-box de 12,8 h: 1,71 h de tempo ativo de subagente, medidas sobre a transcrição pela regra da emenda, já contando os dois extras pedidos no meio do trabalho (a cena main_bare.tscn do braço A e o applied_snapshot()). A mesma sonda, o mesmo oráculo independente e os mesmos 46 passos da matriz mostram, na cena main_native.tscn, exatamente os painéis da tabela nos sete contextos, com as ações, a barra, o spinner, o Escape e a fila de três eventos como os do braço C. O leitor das sondas é um só ponto de leitura com um leitor para o host React Native e outro para os Controls, sem 'se braço' nas sondas; o que o braço B não diz (a lista de erros da aplicação) está escrito no oráculo. Contra-controle numa HUD que ignora o contexto falha a matriz e três sabotagens retidas (a cidade mostra o cartão do ladrilho, o overlay não bloqueia o mapa, o End turn pela fase) são rejeitadas pela sonda e pelo oráculo; a receita das 20 sabotagens da lane passou. Achados: uma cena sem Application não era silenciosa (o GameServices ganhou uma busca que a tolera, quatro linhas), o ícone de um Button some com expand_icon e o giro da roda atravessa um Control que para o ponteiro. Esforço registrado: 22 arquivos e 1 310 linhas do B (736 de script, 371 de cena e 179 de tema) contra 13 arquivos e 698 linhas do C. Sem medição, sem passada de otimização e sem execução comparativa; os demais critérios do V05-10 seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/905c310ce144af2992b797f917394491d4049b35/docs/evidence/frontier-arm-b/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-analysis-4592dba",
       "at": "2026-10-10T06:01:00.000Z",

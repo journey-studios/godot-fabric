@@ -13,6 +13,8 @@ extends "res://hud_probe.gd"
 #              second event, "2 of 3"; the queue goes on to the third. The city screen is remounted the same way.
 #   blocking   with each overlay open, 100 real left clicks, 100 right clicks and 100 wheel ticks on the map reach the World 0 times
 #              and the overlay's Pressables work; with it closed they reach the World again.
+#   escape     the Escape key on the city screen is the game's `clear_selection` (its Close button's call), and on the dialog it does nothing,
+#              because the event has to be answered.
 #   new game   the new session of a game dropped with events waiting has no queue until its own turn 5.
 #
 #   --capture    saves the city overlay and the dialog at 1 of 3, at 2 of 3 after the remount and at 3 of 3 (a headed run)
@@ -56,6 +58,7 @@ func run_probe() -> void:
   await run_queue()
   await run_remount()
   await run_blocking()
+  await run_escape()
   await run_new_game()
   # The run ends with no overlay open: the engine logs an error when the application quits with a Modal's window still mounted
   # (`remove_child` on a root that is already being freed), which is the host's and not what this probe measures.
@@ -79,11 +82,6 @@ func dialog_view(seen: Dictionary) -> Dictionary:
   return {"shown": not panel.is_empty() and panel.visible, "modal": bool(panel.get("modal", false)), "instance": int(panel.get("instance", 0)),
     "position": text_of(seen, "hud-dialog-position"), "title": text_of(seen, "hud-dialog-title"), "text": text_of(seen, "hud-dialog-text"),
     "choices": choices.map(func(choice: Dictionary) -> Dictionary: return {"id": choice.id, "label": choice.label, "detail": choice.detail, "disabled": choice.disabled})}
-
-
-func app_errors() -> Array:
-  var state: Variant = JSON.parse_string(application.call("snapshot"))
-  return state.get("errors", []) if state is Dictionary else ["no snapshot"]
 
 
 func queue_state() -> Dictionary:
@@ -171,17 +169,17 @@ func judge_queue(rounds: Array) -> void:
 # Unmounts the HUD's Surface and mounts it again, observing every frame from the mount until the HUD shows `wanted`.
 func remount(wanted: String) -> Dictionary:
   var unmounted_context: String = game_snapshot().context
-  hud.call("unmount")
+  reader.unmount()
   var gone := await wait_until(func() -> bool: return observe().nodes.is_empty())
   var while_unmounted := {"context": game_snapshot().context, "dialog": game_snapshot().dialog.duplicate(true), "events": queue_state()}
   samples = []
   recording = true
-  hud.call("mount")
+  reader.mount()
   var back := await wait_until(func() -> bool: return shown(observe(), wanted))
   var settled := await settle()
   recording = false
   return {"context": unmounted_context, "gone": gone, "whileUnmounted": while_unmounted, "back": back, "settled": settled, "samples": samples.duplicate(true),
-    "hud": dialog_view(observe()), "dialog": game_snapshot().dialog.duplicate(true), "panels": panels_shown(observe()), "errors": app_errors()}
+    "hud": dialog_view(observe()), "dialog": game_snapshot().dialog.duplicate(true), "panels": panels_shown(observe()), "errors": reader.errors()}
 
 
 func run_remount() -> void:
@@ -200,6 +198,7 @@ func run_remount() -> void:
   var city_seen := observe()
   city["modal"] = bool(find_node(city_seen, "hud-city").get("modal", false))
   city["research"] = shown(city_seen, "hud-research")
+  report["notApplicable"] = reader.not_applicable()
   report["remount"] = {"first": first, "remounted": remounted, "rest": rest, "city": city}
   judge_remount(first, remounted, rest, city)
 
@@ -265,6 +264,41 @@ func judge_blocking(city_open: Array, city_press: Dictionary, city_closed_ok: bo
   check(answers.size() == 3 and answers.all(func(pressed: bool) -> bool: return pressed), "With the dialog open, its Pressables work: the three events were answered by real presses")
   check(reached(dialog_after[0]) and dialog_after[0].selectCalls == CLICKS and reached(dialog_after[1]) and reached(dialog_after[2]),
     "With the queue answered, %d of %d left clicks reach the World again, and so do the right clicks and the wheel" % [CLICKS, CLICKS])
+
+
+# --- Escape ----------------------------------------------------------------------------------------------------------
+
+# What Escape did with `panel` open: the context and the head before and after, the calls the game counted, whether the state changed and
+# whether the panel is still on screen.
+func escape_on(panel: String) -> Dictionary:
+  var head: Dictionary = game_snapshot().dialog.duplicate(true)
+  var row := {"panel": panel, "contextBefore": game_snapshot().context, "shownBefore": shown(observe(), panel)}
+  var hash_before: String = services.game.state_hash()
+  var calls_before := total_calls()
+  var clears_before := int(services.callbacks.get("clear_selection", 0))
+  await press_escape()
+  await settle()
+  row["contextAfter"] = game_snapshot().context
+  row["shownAfter"] = shown(observe(), panel)
+  row["clearCalls"] = int(services.callbacks.get("clear_selection", 0)) - clears_before
+  row["calls"] = total_calls() - calls_before
+  row["unchanged"] = services.game.state_hash() == hash_before
+  # The control runs this probe on an older game whose dialog has no `index`: an absent field is the same absent field.
+  var after: Dictionary = game_snapshot().dialog
+  row["sameHead"] = after.get("id", "") == head.get("id", "") and after.get("index", -1) == head.get("index", -1)
+  return row
+
+
+func run_escape() -> void:
+  await play_to(CITY_STEP)
+  var city := await escape_on("hud-city")
+  await play_to(EVENT_STEP)
+  var dialog := await escape_on("hud-dialog")
+  report["escape"] = {"city": city, "dialog": dialog}
+  check(city.contextBefore == "city" and city.shownBefore and city.clearCalls == 1 and city.contextAfter == "none" and not city.shownAfter,
+    "Escape on the city screen is the game's clear_selection, once: the context leaves the city and the overlay is gone")
+  check(dialog.contextBefore == "dialog" and dialog.shownBefore and dialog.sameHead and dialog.calls == 0 and dialog.unchanged and dialog.contextAfter == "dialog" and dialog.shownAfter,
+    "Escape on the dialog does nothing: the same event is still the head, no call reached the game and the dialog is still open")
 
 
 # --- A new game with events waiting ----------------------------------------------------------------------------------

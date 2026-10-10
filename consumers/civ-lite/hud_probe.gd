@@ -4,13 +4,16 @@ extends Node
 # tests/civ-lite-ui-native.test.mjs with its own flag): reading the HUD's tree as the native host reports it, waiting for state, playing
 # the replay through the services, pushing real pointer events through the viewport (single ones and bursts), and the report. A probe
 # drives the real game scene and writes what the HUD showed as raw observations, which the lane's oracle judges again on its own; it
-# decides nothing the HUD should decide. The HUD is read from the host's snapshot (`hud.call("snapshot")`), not from
-# the scene tree: the Controls of a Modal are children of the Modal's own Window, which `hud.find_child` does not reach.
+# decides nothing the HUD should decide. The HUD is read through a reader (hud_reader.gd), the one seam between a probe and the HUD it
+# looks at: the React Native HUD's reader takes its rows from the host's snapshot (hud_reader_host.gd), the native HUD's from its Controls
+# (hud_reader_native.gd), and the scene says which of the two it is (`Application/Runtime` is the host's). The probes run unchanged on both.
 #
 #   --capture    saves the screenshots of a headed run
 #   --sabotage   a retained sabotage or the control runs this scene: a failed check is the rejection, not an error
 
 const Replay := preload("game/replay.gd")
+const HostReader := preload("hud_reader_host.gd")
+const NativeReader := preload("hud_reader_native.gd")
 
 const SIZE := Vector2i(1080, 600)
 const DEVICE := 1001
@@ -38,6 +41,7 @@ var capture := false
 var services: Node
 var application: Node
 var hud: Control
+var reader: RefCounted
 
 
 func check(condition: bool, message: String) -> bool:
@@ -49,40 +53,16 @@ func check(condition: bool, message: String) -> bool:
 
 # --- Reading the HUD ------------------------------------------------------------------------------------------------
 
-# Every Control the host mounted for the HUD that has a testID, with its text, its place on screen, whether it stops the pointer,
-# whether it is disabled and whether it is in a Modal's Window; and, apart, every Control that stops the pointer, testID or not. A
-# Modal's Controls are in a Window of their own, over the root's, which is what makes them block.
+# Every Control of the HUD that has a testID and is on screen, with its text, its place, whether it stops the pointer, whether it is
+# disabled and whether it is inside the blocking overlay; and, apart, every Control that stops the pointer, testID or not. Which Controls
+# those are is the reader's to say (hud_reader.gd).
 func observe() -> Dictionary:
-  var tree: Dictionary = JSON.parse_string(hud.call("snapshot"))
-  var nodes: Array = []
-  var stoppers: Array = []
-  # A surface that is not mounted reports no nodes.
-  for entry: Dictionary in tree.get("nodes", []):
-    var control := instance_from_id(int(entry.id)) as Control
-    if control == null:
-      continue
-    var rect := control.get_global_rect()
-    var stops := control.mouse_filter == Control.MOUSE_FILTER_STOP
-    var in_modal := control.get_window() != get_tree().root
-    var access: Dictionary = entry.get("accessibility", {})
-    var descriptor: Dictionary = access.get("descriptor", {})
-    var activity: Dictionary = entry.get("activity", {})
-    if stops:
-      stoppers.append({"testID": entry.testID, "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "modal": in_modal})
-    if entry.testID != "":
-      nodes.append({"testID": entry.testID, "kind": entry.kind, "visible": control.is_visible_in_tree(), "text": entry.get("nativeText", ""),
-        "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y], "stops": stops, "disabled": bool(descriptor.get("disabled", false)),
-        "animating": bool(activity.get("animating", false)), "modal": in_modal, "instance": int(entry.id)})
-  return {"nodes": nodes, "stoppers": stoppers}
+  return reader.observe()
 
 
-# The Control the host mounted for a testID, wherever it is: in the root's Window or in a Modal's. Null when there is none.
+# The Control the HUD mounted for a testID, wherever it is. Null when there is none.
 func control_of(id: String) -> Control:
-  var tree: Dictionary = JSON.parse_string(hud.call("snapshot"))
-  for entry: Dictionary in tree.get("nodes", []):
-    if entry.testID == id:
-      return instance_from_id(int(entry.id)) as Control
-  return null
+  return reader.control_of(id)
 
 
 func find_node(seen: Dictionary, id: String) -> Dictionary:
@@ -198,9 +178,7 @@ func play_to(step: int) -> void:
 
 
 func hud_stats() -> Dictionary:
-  var text: String = application.call("evaluate", "JSON.stringify(FrontierHud.stats())")
-  var value: Variant = JSON.parse_string(text)
-  return value if value is Dictionary else {}
+  return reader.stats()
 
 
 # --- The pointer ----------------------------------------------------------------------------------------------------
@@ -237,6 +215,17 @@ func click_at(point: Vector2) -> void:
     event.position = point
     event.global_position = point
     event.button_index = MOUSE_BUTTON_LEFT
+    event.pressed = down
+    get_viewport().push_input(event, true)
+    await frames(2)
+
+
+# The Escape key, pressed and released through the viewport.
+func press_escape() -> void:
+  for down in [true, false]:
+    var event := InputEventKey.new()
+    event.keycode = KEY_ESCAPE
+    event.physical_keycode = KEY_ESCAPE
     event.pressed = down
     get_viewport().push_input(event, true)
     await frames(2)
@@ -359,11 +348,13 @@ func _ready() -> void:
   services = get_parent()
   application = services.get_node_or_null("Application/Runtime")
   hud = services.get_node_or_null("HUDLayer/HUD")
-  if application == null or hud == null:
-    push_error("CONSUMER_CHECK_FAILED: the scene has no running application or HUD")
+  # The scene with an Application is the React Native HUD's; without one, the HUD is the native one's.
+  if hud == null or (application == null and not hud.has_method("stats")):
+    push_error("CONSUMER_CHECK_FAILED: the scene has no HUD, or a HUD this probe does not read")
     get_tree().quit(0 if sabotage else 1)
     return
-  hud.set_meta("validation_input_device", DEVICE)
+  reader = NativeReader.new(hud) if application == null else HostReader.new(hud, application)
+  reader.prepare(DEVICE)
   # A headless run has a 64x64 window; the HUD is laid out for the game's 1080x600.
   get_tree().root.size = SIZE
   run()
@@ -373,7 +364,7 @@ func run() -> void:
   # Whatever HUD is mounted shows something with a testID once it has the first snapshot; what it shows is judged by the probe.
   var connected := await wait_until(func() -> bool: return not observe().nodes.is_empty())
   check(connected, "The HUD mounted for the game's first snapshot")
-  report = {"schemaVersion": 1, "displayServer": DisplayServer.get_name(), "capture": capture, "sabotage": sabotage, "viewport": [SIZE.x, SIZE.y],
+  report = {"schemaVersion": 1, "arm": reader.arm(), "displayServer": DisplayServer.get_name(), "capture": capture, "sabotage": sabotage, "viewport": [SIZE.x, SIZE.y],
     "map": {"origin": [MAP_ORIGIN.x, MAP_ORIGIN.y], "tile": MAP_TILE, "columns": 24, "rows": 16}}
   if connected:
     await run_probe()

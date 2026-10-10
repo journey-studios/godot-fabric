@@ -14,7 +14,17 @@
 //             with no other event in any frame, and the queue goes on to the third; the city screen comes back as an overlay
 //   blocking  with the city screen open and with the dialog open, 100 real left clicks, right clicks and wheel ticks on the map reach the world
 //             0 times and select nothing, the overlay's Pressables work, and with it closed the same 100 reach the world again
+//   escape    the Escape key on the city screen is the game's `clear_selection`, once, and the overlay is gone; on the dialog it changes nothing:
+//             the same event is the head, no call reaches the game and the dialog stays open
 //   newgame   a new session started with events waiting has no queue until its own turn 5, and then raises its own three
+//
+// The probe runs on both arms of the 0.5 comparison, and the report says which (`arm`: "rn" for the React Native HUD, "native" for the Godot
+// one). What the native arm cannot say is listed in the report by the probe (`notApplicable`) and written here, so that a check the oracle
+// skips is a check on record: the oracle requires the list to be exactly the arm's, and skips only what is on it.
+
+// What each arm cannot say. The host's HUD has an Application whose error list the remount reads; the native HUD has none.
+const APPLICATION_ERRORS = "the application's error list after a remount (there is no Application node)";
+const NOT_APPLICABLE = {rn: [], native: [APPLICATION_ERRORS]};
 
 const EVENTS = [
   {id: "wanderers", title: "Wanderers at the gate", text: "A band of wanderers asks to settle beside your city.", choices: [
@@ -49,6 +59,13 @@ export function judgeOverlayReport(report) {
     fail("queue", "the report is not the overlay probe's: it has no queue, remount, blocking or newGame");
     return findings;
   }
+  // The probe names the arm it ran on (hud_probe.gd writes it into every report), so a report without one is not this probe's.
+  const {arm} = report;
+  if (!Object.hasOwn(NOT_APPLICABLE, arm)) {
+    fail("queue", `the report names the arm ${JSON.stringify(arm)}, which is neither "rn" nor "native"`);
+    return findings;
+  }
+  same("queue", report.notApplicable ?? [], NOT_APPLICABLE[arm], "what the probe says the arm cannot say");
   const words = event => ({title: event.title, text: event.text});
   const choicesOf = event => event.choices.map(choice => ({id: choice.id, label: choice.label, detail: choice.detail, disabled: false}));
   const position = round => `${round + 1} of ${EVENTS.length}`;
@@ -117,7 +134,9 @@ export function judgeOverlayReport(report) {
       fail("remount", `frame ${index} after the mount shows "${sample.position}" "${sample.title}": another event than the second`);
     }
   });
-  same("remount", remount.remounted.errors, [], "the application reports no error after the remount");
+  if (!NOT_APPLICABLE[arm].includes(APPLICATION_ERRORS)) {
+    same("remount", remount.remounted.errors, [], "the application reports no error after the remount");
+  }
   same("remount", remount.rest.map(row => [row.dialog.id, row.pressed, row.moved, row.resolveCalls]), [[EVENTS[1].id, true, true, 1], [EVENTS[2].id, true, true, 1]],
     "after the remount the queue went on, by real presses, to the third event");
   same("remount", [remount.rest.at(-1)?.after.context, remount.rest.at(-1)?.after.events.queue, remount.rest.at(-1)?.after.events.resolved.map(answer => answer.id)],
@@ -155,6 +174,17 @@ export function judgeOverlayReport(report) {
       fail("blocking", `with the queue answered ${row.count} ${row.kind} inputs on the map must reach the world ${CLICKS} of ${CLICKS} times${row.kind === "left" ? " and select" : ""}: ${JSON.stringify(row)}`);
     }
   });
+
+  // --- Escape ------------------------------------------------------------------------------------------------------------
+  const escape = report.escape;
+  if (escape === undefined) {
+    fail("escape", "the report has no escape section");
+  } else {
+    same("escape", [escape.city.contextBefore, escape.city.shownBefore, escape.city.clearCalls, escape.city.contextAfter, escape.city.shownAfter], ["city", true, 1, "none", false],
+      "Escape on the city screen is the game's clear_selection, once, and the overlay is gone");
+    same("escape", [escape.dialog.contextBefore, escape.dialog.shownBefore, escape.dialog.sameHead, escape.dialog.calls, escape.dialog.unchanged, escape.dialog.contextAfter, escape.dialog.shownAfter],
+      ["dialog", true, true, 0, true, "dialog", true], "Escape on the dialog does nothing");
+  }
 
   // --- A new game with events waiting --------------------------------------------------------------------------------------
   const game = report.newGame;
