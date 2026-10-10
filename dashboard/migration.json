@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T18:50:00.000Z",
+  "updatedAt": "2026-10-10T19:21:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4833,6 +4833,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-export-options-ecf637e",
+      "at": "2026-10-10T19:21:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit a44d552, registro no ecf637e): o export do macOS ganha as duas opções que faltavam aos braços A e B do comparativo, que não levam a extensão Fabric. exportPreparedProject e presetText (scripts/macos-export.mjs) passam a aceitar exportFiles, as cenas do filtro scenes (export_files do preset, logo depois de export_filter, só com esse filtro e com caminhos res:// sem aspas, barra invertida, quebra de linha nem ..), e frameworks: false, o export de um projeto sem a extensão. O que um .app carrega da extensão virou dado (scripts/macos-export-payload.mjs): FABRIC_PAYLOAD (o host, os dois frameworks, os quatro pacotes de recursos e o bundle JS) e BARE_PAYLOAD (listas vazias, sem bundle). A opção só escolhe um; a inspeção, a assinatura, a verificação de assinatura, a auditoria de caminhos de carga e a normalização dos frameworks iteram as listas do payload num fluxo só, sem ramo por recurso. Uma checagem exata, assertPayloadExact, vale para os dois modos: Contents/Frameworks e a pasta frameworks têm exatamente o que o payload tem, nenhum outro arquivo tem o nome do host, e o PCK tem entradas em addons/godot_fabric/ se e somente se o payload carrega a extensão. O inspetor do PCK ganhou --no-bundle e os dois modos passam a informar fabricAddonExcluded e a lista ordenada paths. O Frontier preparado como o braço A (shapeArmProject, do #138) exporta como um .app Release arm64 assinado ad hoc, sem frameworks, sem host e com um PCK de 37 arquivos que não tem main.tscn, main_native.tscn, ui/ nem native_hud/; o mesmo export sobre a cópia com o addon (o arm C, construído pelo editor) é recusado pela checagem exata, com o texto no registro. Achado: o modo scenes do Godot 4.7.2 segue as referências dos arquivos de cena e não os preload() dos scripts, e ignora entradas de export_files que não são cenas; a cena sozinha exporta 11 arquivos, sem game/*.gd, e os scripts entram pelo includeFilter (37 arquivos). O caminho padrão não mudou: o texto do preset é byte a byte o de antes (quatro SHA-256 da função anterior), npm run test:export:macos passou 14 de 14 e npm run test:export:civ-lite 1 de 1 no commit, e npm run test:export:options passou 1 de 1. O SHA-256 do PCK varia de uma execução para outra com os mesmos arquivos. É uma capacidade do export, não um resultado do comparativo: o .app de A não foi executado, nenhum tamanho ou tempo foi comparado, e a CI hospedada e as Pages vêm depois do merge. Nenhum critério muda: execucao segue aberto, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ecf637e2a05f6b07fa3920edd61c1b4a43700305/docs/evidence/macos-export-options/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-13-f1bdaae",
       "at": "2026-10-10T18:50:00.000Z",
