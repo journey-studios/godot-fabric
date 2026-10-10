@@ -73,6 +73,15 @@ function anchorProblems({table, entries, bases = {}, readText = read}) {
   return problems;
 }
 
+// The names a script's imports of tests/*-sabotages.mjs bring in that nothing else in the script mentions (import statements and comments left out): a runner that
+// imports its table and then applies another list of its own would pass the check of the path alone.
+function unusedTableBindings(text) {
+  const imports = [...text.matchAll(/import\s*\{([^}]*)\}\s*from\s*"\.\.\/tests\/([a-z0-9-]+-sabotages\.mjs)";?/g)];
+  const rest = imports.reduce((left, [statement]) => left.replace(statement, ""), text).replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  return imports.flatMap(([, specifiers, table]) => specifiers.split(",").map(specifier => specifier.trim()).filter(Boolean)
+    .map(specifier => ({table, binding: specifier.split(/\s+as\s+/).pop()})).filter(({binding}) => !new RegExp(`\\b${binding}\\b`).test(rest)));
+}
+
 const load = async table => (await import(pathToFileURL(path.join(root, "tests", table)).href)).SABOTAGES;
 
 test("there are retained sabotage tables to check", () => {
@@ -96,6 +105,7 @@ test("every sabotage script and every table is wired to the other", () => {
       assert.ok(importedBy.has(table), `scripts/${name} imports tests/${table}, which does not exist`);
       importedBy.get(table).push(name);
     }
+    assert.deepEqual(unusedTableBindings(read(`scripts/${name}`)), [], `scripts/${name} imports a name of a table and never uses it: its runner applies something else`);
   }
   for (const name of sabotageScripts) {
     const served = SERVED_BY[name];
@@ -109,6 +119,17 @@ test("every sabotage script and every table is wired to the other", () => {
   for (const [table, users] of importedBy) {
     assert.ok(users.length > 0, `tests/${table} is read by no script: its sabotages are never run`);
   }
+});
+
+test("the wiring check bites: an imported table that the script never uses is found, one that it uses is not", () => {
+  const imported = 'import {SABOTAGES as variants, SURFACE as surface} from "../tests/x-sabotages.mjs";\n';
+  const unused = (...names) => names.map(binding => ({table: "x-sabotages.mjs", binding}));
+  assert.deepEqual(unusedTableBindings(`${imported}const local = [];\nfor (const variant of local) {}\n`), unused("variants", "surface"));
+  // A mention in a comment is not a use.
+  assert.deepEqual(unusedTableBindings(`${imported}use(variants);\n// surface\n/* surface */\n`), unused("surface"));
+  assert.deepEqual(unusedTableBindings(`${imported}use(variants, surface);\n`), []);
+  assert.deepEqual(unusedTableBindings('import {SABOTAGES} from "../tests/x-sabotages.mjs";\nSABOTAGES.find(Boolean);\n'), []);
+  assert.deepEqual(unusedTableBindings('import {SABOTAGES} from "../tests/x-sabotages.mjs";\n'), unused("SABOTAGES"));
 });
 
 test("the check bites: a table with a text that is not in its source, or twice, or unchanged, or a file that is not there, fails", async () => {
