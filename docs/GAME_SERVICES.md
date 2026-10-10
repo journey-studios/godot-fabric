@@ -117,7 +117,15 @@ GF-25/1.0 gap; explicit rejection prevents silent data loss and does not close i
 
 Scalar schemas are `null`, `boolean`, `number`, `integer` or `string`. Composite
 schemas are `{array: schema}` or `{object: {field: schema, ...}}`; object fields
-are exact, with no implicit coercion or optional/union support in this slice.
+are exact, with no implicit coercion and no union. A field of an object may be
+declared `{optional: schema}`: the value may omit it, and when it is there it
+must match `schema`; a value still carries no field the declaration does not
+name, and an `optional` anywhere but an object's field (the root, an array's
+element, an argument) is refused when the schema is registered with
+`E_SERVICE_SCHEMA`. `FabricApplication.service_delivery(name)` reads, in place
+and with no JSON or JavaScript, what the binding with that name has ingested
+(`emitted`, its revision) and handed to the JavaScript runtime (`sent`, and
+`delivered`, the revision of the last value a subscription got).
 Argument schemas are ordered Arrays matching the declared signal/method tuple.
 
 The current DTO budget is depth 32 and 10,000 value nodes. A call's argument

@@ -82,7 +82,7 @@ the pacing check of the presented lane (`not-presented`). It is not the median o
 | --- | --- | --- | ---: | ---: |
 | `ai-phase` | the frame in which the End Turn intent is accepted (`frontier.end_turn` answers with a job id) | the last frame before the frame that delivers `frontier.turn_ended` | 2 turns | 98 of the soak's 100 |
 | `event-burst` | the frame that delivers `frontier.turn_ended` | the first frame after which every event of that turn has been delivered to its consumers (the HUD's subscribers in B and C, the harness's own counter in A), and at least 5 frames from the start | 2 turns | 98 of the soak's 100 |
-| `context-switches` | the frame that receives the selection intent that changes the game's context | the second frame after the starting frame (3 frames) | 24 switches | 50 consecutive switches through the seven contexts |
+| `context-switches` | the frame that receives the intent that changes the game's context: a selection intent for the six first contexts; for the dialog, which only an End Turn opens (its event is raised in the refresh phase, outside a 3-frame window) and in which every selection is refused, the occurrence is the last `resolve_event`, which closes the dialog (dialog -> none) | the second frame after the starting frame (3 frames) | 24 switches | 50 consecutive switches through the seven contexts |
 | `stress` | the frame that receives the intent that fills a log with 200 lines and a production list with 100 items | the second frame after the last of 20 consecutive per-frame updates (a log line appended and an item changed in each) | 2 rounds | 30 rounds |
 
 The warm-up follows the V05-06 baseline protocol: the first 2 occurrences are thrown away, kept in the raw data and flagged; the context switches discard 24, which are 2 rounds of
@@ -91,7 +91,7 @@ the baseline's 12-swap tour.
 ## Executions
 
 **What is fixed.** The same Mac for every execution of every arm; the Release export, never Debug, with the hashes of the binary, the package and the scenario script recorded in every
-execution; the scenario seed of V05-03 (4242); the 12-turn replay of 73 intents, whose golden hash is the one fixed in `tests/civ-lite-game-native.test.mjs`; the 100-turn soak; and
+execution; the scenario seed of V05-03 (4242); the 12-turn replay of 77 intents, whose golden hash is the one fixed in `tests/civ-lite-game-native.test.mjs`; the 100-turn soak; and
 scripted game intents identical in the three arms, delivered at the game's intent boundary. The only real clicks are the latency pass of B and C. Each execution is a fresh process that
 runs the script once, and no two executions overlap.
 
@@ -113,7 +113,7 @@ Each arm runs 12 times and 4 times in each position of a block. Position is bala
 2. `idle`: 600 frames with nothing injected; their CPU time per frame gives the idle reference of the secondary outcome, and the elapsed intervals between their process frames give the pacing check of the presented lane.
 3. `replay`: the 12-turn replay; its golden hash must match; its frames are kept in the raw data and belong to no window.
 4. `soak`: 100 turns of scripted End Turn intents; the windows `ai-phase` and `event-burst`.
-5. `context-switches`: 24 warm-up and 50 measured consecutive selection intents through the seven contexts (none, tile, Settler, Warrior, stack of two units, city, dialog).
+5. `context-switches`: 24 warm-up and 50 measured context switches through the seven contexts (none, tile, Settler, Warrior, stack of two units, city, dialog) in the order fixed by the script: a selection intent for six of them, and for the dialog its last `resolve_event`, after an End Turn opens it. The End Turns and the earlier `resolve_event` calls that set the dialog up, and any new game the cycle needs, belong to no window.
 6. `latency`: B and C only; 2 warm-up and 30 measured real clicks on HUD controls found by testID, injected through `Input.parse_input_event` and flushed as in the V05-06 baseline.
 7. `stress`: 2 warm-up and 30 measured rounds.
 8. `end`: reads the resident memory, the SceneTree's nodes and, in C, the Hermes heap after a forced collection and the native views; records the exit code.
@@ -234,6 +234,8 @@ The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at eve
 8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c   the pre-registration: no amendments (commit 82f5f43)
 8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb   one amendment: 2026-10-09, the idle reference
 0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6   two amendments: 2026-10-09, arm B's time-box and the iPhone's NO-GO
+c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222   three amendments: 2026-10-10, the replay's 77 intents since #93
+6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f   four amendments: 2026-10-10, the dialog's context switch ends at its last resolve_event
 ```
 
 The freeze may fill those two fields of the entries of `thresholds` and nothing else, and the test requires it: no other object may carry them (a freeze field elsewhere would escape the hash), the value and the date are filled together, all the thresholds are frozen
@@ -310,6 +312,26 @@ counted the same way. The orchestrator's own time is counted in neither arm. **T
 - **The NO-GO** of V05-09 was recorded on 2026-10-09 ([its record](../evidence/frontier-device/README.md), #102). The `iphone` block already said that with a NO-GO the comparison covers macOS only.
 
 **What it replaces.** In `decisionRule.partialReport.timeBox`: "the same as arm C's plus one optimization pass; its length is set and recorded before arm B starts". In the open item `arm-b`: "arm B (criterion `braco-b`) does not exist; its time-box has no length yet". In the open item `iphone`: "the iPhone depends on the GO or NO-GO of V05-09".
+
+### 2026-10-10: the replay has 77 intents, since #93
+
+**Commit:** the one that adds this section, the entry `amendments[2]` of the JSON and the fourth pin of the test (the commit is what fixes the date). **Comparative measurements before it: 0**, so no execution is made under the previous text and none needs to be redone. **Pin after it:** `c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222` (the previous one was `0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6`).
+
+**What changes.** One text of the JSON changes: `runs.fixed.replay`, whose count of intents goes from 73 to 77. The protocol holds no hash value: its reference to the golden hash, the constant of `tests/civ-lite-game-native.test.mjs`, keeps its text, and that constant holds the hash of the 77-step replay since `e108e9d` (#93). The seed, the script of an execution, the thresholds (with `frozenValue` and `frozenAt`), the windows, the executions, the statistics and the decision rule stay as they were.
+
+**Why.** The pre-registration (`82f5f43`, #84) was written when the 12-turn replay of V05-03 had 73 steps (`consumers/civ-lite/game/replay.gd`). The queue of three events of #93 (`e108e9d`, V05-05 slice 2a) changed the game and its roteiro: the replay resolves the three events in 77 steps, and [the game's note](frontier-game.md) says 77 intents (45 accepted, 32 refused on purpose). The same commit changed the constants `GOLDEN_HASH` and `TRACE_HASH` of `tests/civ-lite-game-native.test.mjs`, which the protocol points to for the golden hash; the comparative runs the replay as it now is, and only the count written in the protocol is brought up to date.
+
+**What it replaces.** In `runs.fixed.replay`: "the 12-turn replay of 73 intents, whose golden hash is the one fixed in tests/civ-lite-game-native.test.mjs".
+
+### 2026-10-10: the dialog's context switch is its last `resolve_event`
+
+**Commit:** the one that adds this section, the entry `amendments[3]` of the JSON and the fifth pin of the test (the commit is what fixes the date). **Comparative measurements before it: 0**, so no execution is made under the previous text and none needs to be redone. **Pin after it:** `6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f` (the previous one was `c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222`).
+
+**What changes.** Two texts of the JSON change. `windows[context-switches].starts`, the frame that opens each of the 50 measured switches, takes a selection intent for the six first contexts; for the dialog, which only an End Turn opens, the occurrence is its last `resolve_event`, the one that closes it (dialog -> none). The step `context-switches` of `runs.script` says the same: 24 warm-up and 50 measured context switches through the seven contexts in the order fixed by the script, a selection intent for six of them and the last `resolve_event` for the dialog, and the End Turns and the earlier `resolve_event` calls that set the dialog up, and any new game the cycle needs, belong to no window. The ends, the occurrences, the counts and the arms of the window, and the rest of the protocol, stay as they were.
+
+**Why.** Read in the source, the start of the window is wrong for the dialog, which is one of the seven contexts it measures. An End Turn opens the dialog, not a selection: the refresh phase sets the turn to 5, which is `Rules.EVENT_TURN` (`consumers/civ-lite/game/rules.gd:66`), and queues the three events (`consumers/civ-lite/game/turn.gd:126-137`: the turn at line 129, the queue at lines 133-136). Refresh is the sixth and last phase of the end of the turn (`rules.gd:101`), and the job runs one phase per frame (`consumers/civ-lite/game/game.gd:89-105`; `consumers/civ-lite/services/game_services.gd:213-243`, with `_process` at line 226). The prototype's runner measured it on arm A: the replay up to step 43 (0-based), then the End Turn of turn 4; the dialog is published at N+5 and seen at N+6, N being the frame that accepts the End Turn, so it falls outside a window of 3 frames. In the dialog no selection enters: `select_tile`, `select_unit` and `clear_selection` all pass `check_guard` (`consumers/civ-lite/game/intents.gd:24-27`, `44-48`, `56-59`), which refuses every intent with `event_pending` while the queue of events is not empty (`intents.gd:16-21`), and the context is `dialog` exactly while the queue is not empty (`consumers/civ-lite/game/context.gd:18-19`). The replay checks those refusals (`consumers/civ-lite/game/replay.gd:61-63`, the 0-based steps 45 to 47; `select_unit` is covered by the same guard and the replay does not play it in the dialog), and `consumers/civ-lite/overlay_validation.gd:151-152` checks that every intent but `resolve_event` is refused while an event waits. The only intent that goes past the dialog is `resolve_event` (`intents.gd:189`), and the answer to the third event, which empties the queue, takes the context from dialog to none (`replay.gd:70`, 0-based step 53). So the occurrence of the dialog is that last `resolve_event`, with the window's 3 frames counted from the frame that receives it. The six other contexts keep the selection intent. The step `context-switches` of `runs.script` said 50 consecutive selection intents through the seven contexts, which the dialog does not take: a round opens it with the End Turn of the fourth turn and then answers the three events (`tests/frontier-turn-cases.mjs:41-42`), so that End Turn and the earlier `resolve_event` calls are outside the window.
+
+**What it replaces.** In `windows[context-switches].starts`: "the frame that receives the selection intent that changes the game's context"; and in the step `context-switches` of `runs.script`: "24 warm-up and 50 measured consecutive selection intents through the seven contexts; the window context-switches".
 
 ## The freeze
 

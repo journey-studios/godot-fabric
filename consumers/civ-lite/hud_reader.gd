@@ -8,7 +8,8 @@ extends RefCounted
 #                  disabled, animating, modal, instance), and, apart, every Control that stops the pointer, testID or not (testID, rect,
 #                  modal). `modal` is "inside the blocking overlay": the Modal's Window for the host, the overlay Control for the native HUD.
 #   control_of(id) the Control behind a testID, or null when it is not on screen.
-#   stats()        what the HUD counted of itself (`calls`: the intents it sent).
+#   stats()        what the HUD counted of itself for the validation (`calls`: the intents it sent).
+#   runner_stats() the execution runner's `stats()`: {snapshots, context, events}, in the same shape for both arms (docs/research/frontier-stress.md).
 #   prepare(device) readies the HUD for pointer events pushed by device `device`.
 #   unmount()/mount()  take the HUD out of the tree and put it back.
 #   errors()       what the HUD's runtime reports as errors.
@@ -34,6 +35,10 @@ func control_of(_id: String) -> Control:
 
 
 func stats() -> Dictionary:
+  return {}
+
+
+func runner_stats() -> Dictionary:
   return {}
 
 

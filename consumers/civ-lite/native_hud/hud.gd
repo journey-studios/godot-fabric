@@ -27,6 +27,7 @@ const SCENES := {
   "city": preload("city.tscn"),
   "research": preload("research.tscn"),
   "dialog": preload("dialog.tscn"),
+  "stress": preload("stress.tscn"),
 }
 
 # The context to panels table (ui/hud/hud.tsx, `panelsOf`); the bar is in all of them.
@@ -53,6 +54,9 @@ var _applied: Dictionary = {}
 var _hover: Dictionary = {}
 var _answer := ""
 var _calls := 0
+# What the runner reads in `stats()`: the snapshots applied and the notifications consumed (snapshots, hover cards and ends of turn), since boot.
+var _snapshots := 0
+var _events := 0
 var _in_menu := false
 # What is mounted: the bar, the menu, and the panels and overlays by name.
 var _bar: Control
@@ -69,6 +73,7 @@ func _enter_tree() -> void:
   services = get_node(services_path)
   services.snapshot_changed.connect(_on_snapshot_changed)
   services.hover_changed.connect(_on_hover_changed)
+  services.turn_ended.connect(_on_turn_ended)
   _snapshot = services.get_snapshot()
   _hover = services.get_hover()
   # The HUD put back in the tree shows the game as it is now before its first frame.
@@ -84,16 +89,24 @@ func _exit_tree() -> void:
   if is_instance_valid(services):
     services.snapshot_changed.disconnect(_on_snapshot_changed)
     services.hover_changed.disconnect(_on_hover_changed)
+    services.turn_ended.disconnect(_on_turn_ended)
+
+
+# What the execution runner reads, in the shape the three arms share: how many snapshots the HUD applied since boot, the context it shows now,
+# and how many notifications of the game it consumed (snapshots, hover cards and ends of turn). Three reads of variables: it costs no
+# evaluation and no copy, so a runner may read it in a measured frame.
+func stats() -> Dictionary:
+  return {"snapshots": _snapshots, "context": String(_applied.get("context", "")), "events": _events}
+
+
+# How many intents the HUD has sent: what the validation counts, apart from the runner's `stats()`.
+func intents_sent() -> int:
+  return _calls
 
 
 # The snapshot the panels last showed. A runner that asks whether the HUD has caught up with the game compares it with the node's.
 func applied_snapshot() -> Dictionary:
   return _applied
-
-
-# What the validation reads; the HUD never reads it back.
-func stats() -> Dictionary:
-  return {"calls": _calls, "screen": "menu" if _in_menu else "game", "context": _snapshot.get("context", "")}
 
 
 # The GUI hands a click to the Control under the pointer and marks it handled, but a tick of the wheel goes on to `_unhandled_input`, where the
@@ -106,13 +119,20 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_snapshot_changed(snapshot: Dictionary) -> void:
   _snapshot = snapshot
+  _snapshots += 1
+  _events += 1
   _render()
 
 
 func _on_hover_changed(card: Dictionary) -> void:
   _hover = card
+  _events += 1
   if _panels.has("tile"):
     _panels.tile.render(_snapshot, _hover)
+
+
+func _on_turn_ended(_summary: Dictionary) -> void:
+  _events += 1
 
 
 # --- Mounting --------------------------------------------------------------------------------------------------------------
@@ -140,7 +160,11 @@ func _show_game() -> void:
     _bar = _take("bar", _new_bar)
     add_child(_bar)
     _bar.show_answer(_answer)
-  _sync_panels(PANELS.get(_snapshot.context, []))
+  # The stress panel is the comparison's, not the table's: it is mounted in every context while the snapshot carries the mode.
+  var wanted: Array = PANELS.get(_snapshot.context, []).duplicate()
+  if _snapshot.has("stress"):
+    wanted.append("stress")
+  _sync_panels(wanted)
   _bar.render(_snapshot, _hover)
   for panel in _panels.values():
     panel.render(_snapshot, _hover)
@@ -162,6 +186,9 @@ func _sync_panels(wanted: Array) -> void:
     if wanted.has(panel_name) and not _panels.has(panel_name):
       var panel: Control = _take(panel_name, _new_panel.bind(panel_name))
       _parent_of(panel_name).add_child(panel)
+      # Under the overlays and the bar, which come after the column.
+      if panel_name == "stress":
+        move_child(panel, _column.get_index() + 1)
       _panels[panel_name] = panel
 
 
@@ -187,7 +214,7 @@ func _new_bar() -> Control:
 
 func _new_panel(panel_name: String) -> Control:
   var panel: Control = SCENES[panel_name].instantiate()
-  # The tile card only shows; the others send intents.
+  # The tile card and the stress panel only show; the others send intents.
   if panel.has_signal(&"intent"):
     panel.intent.connect(_send)
   return panel
