@@ -129,7 +129,7 @@ opcional e dos contadores (cerca de 60 linhas), a etapa de estresse na sonda da 
 
 ## Limites
 
-- Execução local em macOS arm64 (as lanes headless e as capturas em janela); a CI hospedada e o Pages do commit de implementação ficam para os recibos depois do merge.
+- Execução local em macOS arm64 (as lanes headless e as capturas em janela). A CI hospedada e o Pages do squash `151427e` estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages).
 - O log não rola até o fim em nenhuma das HUDs (o C não pode, sem ref nem efeito, que a varredura do manifesto proíbe; o B faz igual).
 - O `stats()` do C conta o que o registro entregou ao runtime de JavaScript: os ouvintes da store rodam no mesmo passo, quando o Hermes esvazia a fila, então o contador pode estar à frente da store por esse passo e nunca
   atrás. A HUD React Native não tem ouvinte de `turn_ended`, e o fim de turno conta para ela quando o registro o absorve; o conjunto de notificações é snapshot, cartão de hover e fim de turno (a nota de pesquisa explica a leitura).
@@ -142,8 +142,31 @@ opcional e dos contadores (cerca de 60 linhas), a etapa de estresse na sonda da 
 | O executor, o jogador do soak, o ciclo de contextos e a harness do braço A | V05-10 (Agente 4) |
 | A passada de otimização do braço B, agora sobre as quatro janelas | V05-10 |
 | `execucao`, `metricas`, `mudanca` e `relatorio` | V05-10 |
-| Recibos da CI hospedada e do Pages do commit de implementação | depois do merge |
 
 ## Pins
 
 O commit de implementação é `ee96490db72b75e0bcf8a75a50db38487deb7ac3`. O `report.json` guarda o SHA-256 de cada fonte que as lanes rodaram, dos relatórios e das capturas; `costs.json` guarda os números brutos do custo.
+
+## CI hospedada e Pages
+
+**O run.** Desde o #88 um push da `main` não roda as suítes nativas, então o recibo vem do workflow Contracts **disparado à mão** sobre a `main` em
+`151427e`, o squash do #119 (run [38044068758](https://github.com/journey-studios/godot-fabric/actions/runs/38044068758), evento `workflow_dispatch`,
+ramo `main`). O run passou nos **oito jobs**, todos com o checkout em `151427e`.
+
+**Os passos.**
+
+- `npm run test:frontier-stress` rodou no job `native-suites-frontier` (passo 14) e passou o seu único teste (TAP 1 de 1): a sonda do nó e do registro, com os códigos das três intenções, a identidade byte a byte do snapshot, o hash do estado parado, os contadores de entrega e o campo opcional do schema. O artefato `native-frontier-stress` (id 11666882177, SHA-256 `5d464e28…`, 3 arquivos) traz o log, que imprime `FRONTIER_STRESS_PASSED`.
+- `npm run test:civ-lite-ui` rodou no job `native-suites-runtime` (passo 61) e passou os seus dois testes (TAP 2 de 2), as duas HUDs com o estágio de estresse e o `stats()`. O artefato `civ-lite-ui` (id 11667239503, SHA-256 `d25c2be8…`, 23 arquivos) traz os relatórios.
+
+O job `contracts` passou `npm run test:contracts` (7, 43 e 518 testes de Node). O [recibo](hosted-ci.json) guarda os jobs, os passos, os digests e os arquivos dos artefatos.
+
+**O Pages.** O push de `151427e` rodou o workflow do Pages (run [38044064101](https://github.com/journey-studios/godot-fabric/actions/runs/38044064101), `build` e `deploy` em success, 43 testes do painel passando). O [recibo](publication.json) registra o deployment 6979311173 em success, o artefato `github-pages` que ele usou (id 11667550739, SHA-256 `e69a9cab…`) e que o `migration.json` publicado é o commitado em `151427e`, com a entrada de atividade da janela de estresse.
+
+**O que continua só local:** as capturas, as sabotagens retidas, o controle sobre o host anterior e a medida do custo de `stats()`.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-stress --work-dir "${TMPDIR:-/tmp}/godot-fabric-hosted-receipts"
+node scripts/hosted-receipts.mjs --check
+```
