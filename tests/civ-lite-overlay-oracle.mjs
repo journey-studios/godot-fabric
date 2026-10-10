@@ -59,8 +59,9 @@ export function judgeOverlayReport(report) {
     fail("queue", "the report is not the overlay probe's: it has no queue, remount, blocking or newGame");
     return findings;
   }
-  const arm = report.arm ?? "rn";
-  if (!(arm in NOT_APPLICABLE)) {
+  // The probe names the arm it ran on (hud_probe.gd writes it into every report), so a report without one is not this probe's.
+  const {arm} = report;
+  if (!Object.hasOwn(NOT_APPLICABLE, arm)) {
     fail("queue", `the report names the arm ${JSON.stringify(arm)}, which is neither "rn" nor "native"`);
     return findings;
   }
