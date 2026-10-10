@@ -1,0 +1,303 @@
+{
+  "format": "godot-fabric.macos-export-civ-lite-evidence/v1",
+  "criterion": "V05-07 replay (exits X1, X2, X7)",
+  "implementationCommit": "5da4e7729b71e427e4dfd80a612bf0d5a6c2a3b9",
+  "limit": "mesmo Mac, perfil limpo: o perfil é o diretório de dados do aplicativo, que não existia antes de cada execução e foi removido depois; não é um usuário limpo do macOS, um segundo Mac nem uma VM. O critério `limpa` não é reivindicado.",
+  "execution": {
+    "host": "macOS arm64 (o Mac do desenvolvedor)",
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "startedAt": "2026-10-10T16:30:59.567Z",
+    "completedAt": "2026-10-10T16:31:43.392Z",
+    "sdkSourceCommit": "5da4e7729b71e427e4dfd80a612bf0d5a6c2a3b9",
+    "sdkSourceDirty": false,
+    "cleanTree": true,
+    "lanes": {
+      "npm run test:export:civ-lite": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0
+      },
+      "npm run test:export:macos": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "skipped": 0,
+        "includes": "o export positivo do minimal (40/43 checks, três capturas) e os sete controles rejeitados"
+      },
+      "node scripts/macos-export-civ-lite-sabotage.mjs": {
+        "marker": "MACOS_EXPORT_CIVLITE_SABOTAGE_REJECTED: game-seed"
+      }
+    }
+  },
+  "pins": {
+    "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+    "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+    "steps": 77,
+    "turns": 12,
+    "pinnedIn": [
+      "tests/civ-lite-game-native.test.mjs",
+      "tests/frontier-services-native.test.mjs"
+    ]
+  },
+  "runs": [
+    {
+      "label": "replay-editor-1",
+      "lane": "editor",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "e8dae09fc23b5c379c583b468a336399f9844ec06abdef4d5a175b1b3bf6e203",
+      "logSha256": "ab1f4ffa2224d4eaf10c2f282408e0a3e30c77c6f26398005f0121b43d73ccde",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    },
+    {
+      "label": "replay-editor-2",
+      "lane": "editor",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "e8dae09fc23b5c379c583b468a336399f9844ec06abdef4d5a175b1b3bf6e203",
+      "logSha256": "48c2c948f29d580490d9c17fbe082254278ab9349a06b7c7fb128aff9ba9767c",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    },
+    {
+      "label": "replay-editor-3",
+      "lane": "editor",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "e8dae09fc23b5c379c583b468a336399f9844ec06abdef4d5a175b1b3bf6e203",
+      "logSha256": "4551b4847552ad0a971633243a24440933d097a7db7eebf52aee4cdb147933df",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    },
+    {
+      "label": "replay-app-1",
+      "lane": "app",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "9762fe75772c721a22b0883ad6dcd154294635dfd6e6ba15a85996e4b01ae2df",
+      "logSha256": "a4c478c0ada34cb2203c26d6894116ef0b7d8bd0cef41f628aca9e8cb69fb11c",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    },
+    {
+      "label": "replay-app-2",
+      "lane": "app",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "9762fe75772c721a22b0883ad6dcd154294635dfd6e6ba15a85996e4b01ae2df",
+      "logSha256": "7ded180d16db379fdd87646383b93bb6ad194b0e21f05298df5627350cc81414",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    },
+    {
+      "label": "replay-app-3",
+      "lane": "app",
+      "exitStatus": 0,
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "reportSha256": "9762fe75772c721a22b0883ad6dcd154294635dfd6e6ba15a85996e4b01ae2df",
+      "logSha256": "29cbf1bf80775b7f55bc61d5daf95b7e103862b05a44ad18a9dbd8a48abfda17",
+      "profile": {
+        "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+        "existedBefore": false,
+        "removedAfter": true
+      }
+    }
+  ],
+  "hud": {
+    "flag": "--validate-hud",
+    "checks": 152,
+    "matrixRows": 46,
+    "contexts": [
+      "city",
+      "dialog",
+      "none",
+      "settler",
+      "stack",
+      "tile",
+      "warrior"
+    ],
+    "panels": [
+      "hud-bar",
+      "hud-actions",
+      "hud-tile",
+      "hud-city",
+      "hud-research",
+      "hud-dialog"
+    ],
+    "judgedBy": "tests/civ-lite-ui-oracle.mjs (assertHudReport)",
+    "reportSha256": "2f6d88df69d89c6861d6d8672bcaf3a820fab122dbf325d7b2d0fc99ac0a0eb7",
+    "logSha256": "b4d539528fff7c28a0c95af61f5f8635779c65834b80366b81428e712bdd3892",
+    "profile": {
+      "path": "~/Library/Application Support/Godot/app_userdata/Frontier Export <token>",
+      "existedBefore": false,
+      "removedAfter": true
+    }
+  },
+  "app": {
+    "name": "Frontier.app",
+    "sha256": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "executableName": "Frontier Export <token>",
+    "executableSha256": "2f8f9744c579cfa2d665aea2fe64aa8d065b9027f78f0227ed18b8fac0c928a0",
+    "executableUnsignedSha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "pckSha256": "02e708011bdc4ac6acadc1f341617f8dba5367b8ec0870ae7362cf15426fe64a",
+    "bundleIdentifier": "org.journeystudios.godotfabric.frontier",
+    "engineVersion": "4.7.2.stable.official.ed1daf0bf",
+    "signing": "ad hoc (codesign --verify --deep --strict passou na cópia, antes e depois das execuções, e no app publicado)",
+    "hostSha256": "09948ed21b921466c960f9d6f3ca6e75adcefbfe6b3509c33d0ba9e6dc8d9731",
+    "frameworks": {
+      "hermesvm.framework": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+      "ReactNativeDependencies.framework": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+    },
+    "bundleSha256": "4ca3d28ad219ecb27377f7e40c7c0eb9ec98d624a51b133e65a5647bc86df4e4",
+    "assets": {
+      "path": ".godot_fabric/app.js.assets.json",
+      "files": 6
+    }
+  },
+  "copy": {
+    "sourceSha256": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "beforeRunsSha256": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "afterRunsSha256": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "signaturesVerifiedAfterRuns": true,
+    "removedAfterRuns": true,
+    "where": "um diretório temporário fora do checkout, clonado do app publicado"
+  },
+  "template": {
+    "archiveSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+    "memberSha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "member": "macos_template.app/Contents/MacOS/godot_macos_release.arm64"
+  },
+  "audit": {
+    "codesign": {
+      "verified": true,
+      "signature": "adhoc"
+    },
+    "loadCommands": [
+      {
+        "binary": "Contents/MacOS/Frontier Export <token>",
+        "loads": 30,
+        "rpaths": [
+          "@executable_path/../Frameworks",
+          "@executable_path"
+        ]
+      },
+      {
+        "binary": "Contents/Frameworks/fabric_godot.dylib",
+        "loads": 5,
+        "rpaths": [
+          "@loader_path/frameworks"
+        ]
+      },
+      {
+        "binary": "Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+        "loads": 6,
+        "rpaths": []
+      },
+      {
+        "binary": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+        "loads": 9,
+        "rpaths": []
+      }
+    ],
+    "developmentPathsInNonBinaryFiles": []
+  },
+  "sabotage": {
+    "name": "game-seed",
+    "file": "consumers/civ-lite/game/rules.gd",
+    "find": "const SEED := 4242\n",
+    "replace": "const SEED := 4243\n",
+    "rejected": true,
+    "published": false,
+    "runsRejected": 6,
+    "goldenHash": "06f416ee8943b22f883c0408e05db0ce4c44c47cbc46d72507264f7634fdcf6d",
+    "traceHash": "29de813ce27eaa229e4dca08752e93b776ee63272d94586dd114819ce36e1212",
+    "selfChecksPassed": true,
+    "templateTreeSha256": {
+      "before": "cb87dbc5f8ec4f3ea13d3da1f9ddc1452cf342a763b2bad675f03d46ef368d3f",
+      "after": "cb87dbc5f8ec4f3ea13d3da1f9ddc1452cf342a763b2bad675f03d46ef368d3f"
+    },
+    "templateTreeUnchanged": true
+  },
+  "sources": {
+    "consumers/civ-lite/replay_validation.gd": "73c74e63df041e2a9061329ebe79de8de999f463df5d8aadf5832574579f4952",
+    "consumers/civ-lite/main.tscn": "befd9330687dda579e988cb9ddc8b7551c4ef315aadd80991db77ee44763df3c",
+    "consumers/civ-lite/hud_validation.gd": "eeae85801b02cad47154e9851ddd894499c9bce794c0b4d8422923462e5f5155",
+    "consumers/civ-lite/game/replay.gd": "d5860674f32ef31f2cf89938ae2a026bd344c270458d51c77d9dfea402d60196",
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "scripts/macos-export.mjs": "51affd01816d87ba44e807379152fd27b6783eaf66a6bdfba954e638cdc69963",
+    "scripts/macos-export-civ-lite.mjs": "f2179518cdb65fa34de0775ed994189eae72b4b306e4a52f30d7928fc35bd663",
+    "scripts/macos-export-civ-lite-sabotage.mjs": "6941809384781158ff69c0d9a26922f4efa9bf87403f62ce8aa37c09b6df3270",
+    "tests/macos-export-civ-lite.test.mjs": "5632747ff4050c104f1093cf2354586066e6c955e4d9b88ad2aade65b44fb4f8",
+    "tests/macos-export-civ-lite-oracle.mjs": "b8236b894233d3de6b50b5ca2be36f41aac9d12d93303fc9ada6ad9c967e1188",
+    "tests/macos-export-civ-lite-oracle.test.mjs": "fd0a49a1e33221506eaf0f56493aaab87c2d8ee92498bba09e54bb622543a3dd",
+    "tests/macos-export-civ-lite-sabotages.mjs": "bada5166b684d70af76fe85ec4647d73b36967626165942c822e81279f297eac",
+    "tests/civ-lite-game-native.test.mjs": "c34a841d57827786d7d3082da659f3ea03c0d63021fbadc07848e225c5d9cdda",
+    "tests/civ-lite-ui-oracle.mjs": "e743d46fe7c3ec9a0d41a86c63a26ebf327539ae29896501083bff248de0d1cc",
+    ".github/workflows/contracts.yml": "7332940b62016bffe61e1f5c3af351bc60d30e7f0299283b14b53889e58f4062",
+    "package.json": "dd81abd4c38d100bced1c14ec08b26a06c0e08596a92e9be834054e0d9979457",
+    "docs/MACOS_BUILD.md": "63019326af22dd0da8a07a6eb83aea2103bdf278606bfe8a83f0374da9daa9f9"
+  },
+  "captures": {
+    "command": "\"<app>/Contents/MacOS/\"* --write-movie <diretório fora do repositório>/frame.png --fixed-fps 60 -- --validate-replay",
+    "mode": "headed (Movie Maker do Godot, sem mudança de código)",
+    "resolution": "1080x600",
+    "fps": 60,
+    "framesRecorded": 73,
+    "framesKept": 3,
+    "bundleSha256": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "bundleSha256AfterCapture": "21c248a67cbf8d960e706581c4f88b585ebe9b6cb8b841c2e6705ed3fccbd16a",
+    "replayHashes": {
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "checks": 246,
+      "equalToPins": true
+    },
+    "files": [
+      {
+        "file": "app-start.png",
+        "frame": 2,
+        "sha256": "032c43b611f09c5ff2e8101fe47afd806b6391a46a9cad597dcf67b742a8d705"
+      },
+      {
+        "file": "app-mid.png",
+        "frame": 24,
+        "sha256": "1cb13007cee1a85e232c198a98536b2ed899b8f935f85d5a95419375da6e1e44"
+      },
+      {
+        "file": "app-end.png",
+        "frame": 72,
+        "sha256": "44462f6ee71ae05b4d164c2538dee8cbad9426a0b39d1687f0b516110ac1f897"
+      }
+    ],
+    "note": "ilustram o replay; não são a evidência do lane, que é o das seis execuções em perfil limpo"
+  }
+}
