@@ -38,6 +38,7 @@ const FOLDERS = [
   "frontier-comparison-execution",
   "frontier-arm-b/optimization",
   "frontier-comparison-campaign",
+  "frontier-comparison-analysis/unreported",
 ];
 
 // The check reads committed files only. A PATH without `gh` proves that it asks GitHub nothing.
@@ -46,7 +47,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 54 receipts that a test may break without touching the committed ones.
+// A copy of the 56 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -76,10 +77,10 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the twenty-seven Frontier slices are coherent, offline", () => {
+test("the committed receipts of the twenty-eight Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 27 slices, 54 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 28 slices, 56 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
 });
 
@@ -473,6 +474,47 @@ test("an artifact that is gone is recorded as such, never as a verified digest",
       delete receipt.findings;
     }),
     /frontier-soak: publication\.json: the status or the findings contradict an available artifact/,
+  );
+});
+
+// A skipped test is accepted only from ALLOWED_SKIPS, with its description and its reason, and the summaries count exactly the skips recorded.
+test("a skipped test is accepted only from ALLOWED_SKIPS, and the summaries count the skips that are recorded", () => {
+  const folder = "frontier-comparison-analysis/unreported";
+  const contracts = (receipt) => receipt.run.contractsJob.steps["test:contracts"];
+  const summary590 = (receipt) => contracts(receipt).tap.find((summary) => summary.tests === 590);
+  assert.equal(mutate(folder, "hosted-ci.json", () => {}).status, 0, "the committed skip, with its recorded reason, must be accepted");
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      delete contracts(receipt).skippedTests;
+    }),
+    /frontier-comparison-analysis\/unreported: hosted-ci\.json: test:contracts: the TAP summaries count 1 skipped test\(s\), and the receipt records 0/,
+  );
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      contracts(receipt).skippedTests[0].description = "native macOS arm64 export";
+    }),
+    /test:contracts: skipped test "native macOS arm64 export" is not in ALLOWED_SKIPS/,
+  );
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      contracts(receipt).skippedTests[0].reason = "the runner has no disk left";
+    }),
+    /test:contracts: skipped test "native macOS arm64 export and copied-app rejection controls" is not in ALLOWED_SKIPS \(reason: "the runner has no disk left"\)/,
+  );
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      summary590(receipt).pass -= 1;
+      summary590(receipt).skipped += 1;
+    }),
+    /test:contracts: the TAP summaries count 2 skipped test\(s\), and the receipt records 1/,
+  );
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      summary590(receipt).pass -= 1;
+      summary590(receipt).skipped += 1;
+      contracts(receipt).skippedTests.push({ ...contracts(receipt).skippedTests[0] });
+    }),
+    /test:contracts: skipped test "native macOS arm64 export and copied-app rejection controls" is recorded 2 times, and an allowed skip counts at most once per step/,
   );
 });
 

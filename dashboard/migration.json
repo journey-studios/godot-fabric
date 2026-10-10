@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T15:14:00.000Z",
+  "updatedAt": "2026-10-10T15:48:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4805,6 +4805,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-9-f832739",
+      "at": "2026-10-10T15:48:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages da fatia das tentativas sem relatório do #129 (V05-10, critério execucao), já na main como 1ef98a4. A Contracts do push da main em 1ef98a4 (run 38063973873) passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque a fatia não tem passo nativo nem artefato. O Pages do push (run 38063973837) publicou o migration.json commitado, com a entrada de atividade da fatia. Os recibos agora aceitam um teste skipped só de uma allowlist explícita, registrada teste a teste em cada recibo, e ela contém o teste de export nativo do macOS do #75, que pula sem o template de Release arm64 revisado. Gerador canônico com 28 fatias e 56 recibos. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f832739b500cd4c9cb3bb4d3056d0f8822e348b8/docs/evidence/frontier-comparison-analysis/unreported/README.md#ci-hospedada-e-pages"
+    },
     {
       "id": "milestone-0-5-v05-10-unreported-8817938",
       "at": "2026-10-10T15:14:00.000Z",
