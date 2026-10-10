@@ -26,6 +26,7 @@ const FOLDERS = [
   "cpu-time-instrument",
   "civ-lite-ui/overlays",
   "civ-lite-ui/stability",
+  "windowed-presence",
   "mobile-density",
 ];
 
@@ -35,7 +36,7 @@ const runCheck = (evidenceDir) => spawnSync(process.execPath, [script, "--check"
 const read = (directory, folder, file) => JSON.parse(readFileSync(path.join(directory, folder, file), "utf8"));
 const write = (directory, folder, file, value) => writeFileSync(path.join(directory, folder, file), `${JSON.stringify(value, null, 2)}\n`);
 
-// A copy of the 34 receipts that a test may break without touching the committed ones.
+// A copy of the 36 receipts that a test may break without touching the committed ones.
 function withCopy(body) {
   const copy = mkdtempSync(path.join(tmpdir(), "hosted-receipts-test-"));
   try {
@@ -65,10 +66,10 @@ function assertRejected(result, expected) {
   assert.match(result.stderr, expected);
 }
 
-test("the committed receipts of the seventeen Frontier slices are coherent, offline", () => {
+test("the committed receipts of the eighteen Frontier slices are coherent, offline", () => {
   const result = runCheck(evidence);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 17 slices, 34 receipts$/m);
+  assert.match(result.stdout, /^HOSTED_RECEIPTS_CHECK_PASSED: 18 slices, 36 receipts$/m);
   assert.equal(withCopy((copy) => runCheck(copy).status), 0, "an untouched copy of the receipts must pass");
 });
 
@@ -131,6 +132,21 @@ test("a job that is not in success is rejected, in the Contracts run and in the 
       receipt.run.conclusion = "failure";
     }),
     /frontier-baseline: hosted-ci\.json: the run is not a completed, successful, first-attempt Contracts push or dispatch of main/,
+  );
+});
+
+test("a skipped job keeps no times, and a job that ran completes no earlier than it starts", () => {
+  assertRejected(
+    mutate("windowed-presence", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "native-cold-start").startedAt = "2026-10-09T20:44:49Z";
+    }),
+    /windowed-presence: hosted-ci\.json: job native-cold-start is skipped, so it has no startedAt or completedAt/,
+  );
+  assertRejected(
+    mutate("windowed-presence", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "contracts").completedAt = "2026-10-09T20:40:00Z";
+    }),
+    /windowed-presence: hosted-ci\.json: job contracts ran but has no valid startedAt and completedAt, or completedAt is before startedAt/,
   );
 });
 

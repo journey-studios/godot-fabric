@@ -36,8 +36,6 @@
         "databaseId": 113923150954,
         "runAttempt": 1,
         "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
-        "startedAt": "2026-10-09T16:41:15Z",
-        "completedAt": "2026-10-09T16:41:09Z",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923150954"
       },
       {
@@ -47,8 +45,6 @@
         "databaseId": 113923114111,
         "runAttempt": 1,
         "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
-        "startedAt": "2026-10-09T16:41:09Z",
-        "completedAt": "2026-10-09T16:41:09Z",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923114111"
       },
       {
@@ -58,8 +54,6 @@
         "databaseId": 113923113432,
         "runAttempt": 1,
         "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
-        "startedAt": "2026-10-09T16:41:09Z",
-        "completedAt": "2026-10-09T16:41:09Z",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923113432"
       },
       {
@@ -69,8 +63,6 @@
         "databaseId": 113923151123,
         "runAttempt": 1,
         "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
-        "startedAt": "2026-10-09T16:41:15Z",
-        "completedAt": "2026-10-09T16:41:09Z",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923151123"
       },
       {
@@ -80,8 +72,6 @@
         "databaseId": 113926025123,
         "runAttempt": 1,
         "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
-        "startedAt": "2026-10-09T16:48:21Z",
-        "completedAt": "2026-10-09T16:48:21Z",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113926025123"
       },
       {

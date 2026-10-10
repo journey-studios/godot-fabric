@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T01:32:30.000Z",
+  "updatedAt": "2026-10-10T03:19:33.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4735,6 +4735,13 @@
       ],
       "message": "Recibos de CI hospedada e de Pages do #104, a fatia de densidade de tela e SafeAreaView do RN (GF-09, sem afirmar o V05-08), já na main como 8cd2491. A Contracts disparada na main sobre o squash (run 38018685996) passou nos oito jobs: no native-suites-runtime, npm run test:mobile-density passou com MOBILE_DENSITY_PASSED: 149 no log do artefato native-mobile-density; o native-cold-start, que roda o teste de C++ puro display_insets_core_test, passou; o job contracts passou 7, 43 e 467 testes de Node e 13 de Python. O Pages do push (run 38018671228) publicou o migration.json commitado byte a byte, com a entrada de atividade da fatia. Recibos gerados pelo gerador canônico (scripts/hosted-receipts.mjs), agora com 17 fatias e 34 recibos. A execução janelada, o controle causal e as sabotagens seguem só locais.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/d191af9b8089f6b32fce107a03956079e69fede1/docs/evidence/mobile-density/README.md"
+    },
+    {
+      "id": "milestone-0-5-hosted-receipts-4-2c4a822",
+      "at": "2026-10-10T03:19:33.000Z",
+      "taskIds": [],
+      "message": "Registrados os recibos hospedado e de Pages do #99 (a janela desenhável das faixas janeladas, o achado do V05-06 sobre GF-30): o run Contracts do push da main em ffeeb5c passou na primeira tentativa, com contracts, reference-android e reference-ios em success e os cinco jobs nativos pulados; a guarda X9 e X10 passou contra o pai do squash, e os 23 e 17 testes de contrato dos dois arquivos que o PR mudou passaram. Os passos nativos (test:frontier-baseline, test:frontier-turn e test:cpu-time-instrument) não rodaram na CI hospedada desse squash, e a faixa janelada segue local. O Pages publicou os dados da main no mesmo squash. O #101 (baseline apresentado, fb51c07) não tem par de recibos: o run do push teve duas tentativas, com o reference-android reexecutado depois de uma falha de download do NDK, e o gerador só registra runs de uma tentativa; os recibos da pasta frontier-baseline são os do #77. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/2c4a822c4d3fcd59b99453325323bdd1746fd97e/docs/evidence/windowed-presence/hosted-ci.json"
     },
     {
       "id": "milestone-0-5-v05-10-armb-timebox",
