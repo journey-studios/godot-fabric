@@ -508,6 +508,14 @@ test("a skipped test is accepted only from ALLOWED_SKIPS, and the summaries coun
     }),
     /test:contracts: the TAP summaries count 2 skipped test\(s\), and the receipt records 1/,
   );
+  assertRejected(
+    mutate(folder, "hosted-ci.json", (receipt) => {
+      summary590(receipt).pass -= 1;
+      summary590(receipt).skipped += 1;
+      contracts(receipt).skippedTests.push({ ...contracts(receipt).skippedTests[0] });
+    }),
+    /test:contracts: skipped test "native macOS arm64 export and copied-app rejection controls" is recorded 2 times, and an allowed skip counts at most once per step/,
+  );
 });
 
 test("each evidence page links its two receipts and the index links them too", () => {

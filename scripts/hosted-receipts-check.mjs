@@ -47,7 +47,8 @@ const ALLOWED_SKIPS = [
 ];
 
 // A TAP summary is all-pass when each of its tests passed or was skipped by ALLOWED_SKIPS: pass + skipped equals tests, and the skips the
-// summaries count of the step are exactly the skipped tests the receipt records (a receipt with no `skippedTests` records none).
+// summaries count of the step are exactly the skipped tests the receipt records (a receipt with no `skippedTests` records none), each
+// allowed skip at most once per step.
 function checkTap(label, summaries, skippedTests, problems) {
   if (!Array.isArray(summaries) || summaries.length === 0) {
     problems.push(`${label}: no TAP summary was recorded`);
@@ -68,10 +69,18 @@ function checkTap(label, summaries, skippedTests, problems) {
   if (counted !== skippedTests.length) {
     problems.push(`${label}: the TAP summaries count ${counted} skipped test(s), and the receipt records ${skippedTests.length}`);
   }
+  const recorded = new Map();
   for (const test of skippedTests) {
-    const allowed = ALLOWED_SKIPS.some((entry) => entry.description === test.description && test.reason.startsWith(entry.reasonPrefix));
-    if (!allowed) {
+    const entry = ALLOWED_SKIPS.find((candidate) => candidate.description === test.description && test.reason.startsWith(candidate.reasonPrefix));
+    if (!entry) {
       problems.push(`${label}: skipped test "${test.description}" is not in ALLOWED_SKIPS (reason: "${test.reason}")`);
+    } else {
+      recorded.set(entry, (recorded.get(entry) ?? 0) + 1);
+    }
+  }
+  for (const [entry, count] of recorded) {
+    if (count > 1) {
+      problems.push(`${label}: skipped test "${entry.description}" is recorded ${count} times, and an allowed skip counts at most once per step`);
     }
   }
 }
