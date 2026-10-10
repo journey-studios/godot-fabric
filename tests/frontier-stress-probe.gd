@@ -229,10 +229,32 @@ func run_validator() -> void:
     broken = broken
     # Each refusal is logged by the application (FABRIC_ERROR) and registers nothing.
     refusals[label] = int(registry().get("bindings", -1)) == before
-  report["validator"] = {"accepted": binding != null, "errorsAfterValid": after_valid, "rejected": rejected, "refusals": refusals}
+  # The counters of a name are the default origin's: a binding of the same name under another origin (one that sorts before it) is another service.
+  var mine := Source.new()
+  mine.name = "OriginDefault"
+  root.add_child(mine)
+  var other := Source.new()
+  other.name = "OriginOther"
+  root.add_child(other)
+  sources.append(mine)
+  sources.append(other)
+  var same_schema := {"object": {"a": "integer"}}
+  var bound_other = api.bind_state("validator.same", other.read, other.changed, same_schema, {"origin": "a-other"})
+  var bound_default = api.bind_state("validator.same", mine.read, mine.changed, same_schema)
+  other.publish({"a": 1})
+  other.publish({"a": 2})
+  await frames(2)
+  var after_other: Dictionary = application.call("service_delivery", "validator.same")
+  mine.publish({"a": 1})
+  await frames(2)
+  var after_mine: Dictionary = application.call("service_delivery", "validator.same")
+  var origins := {"bothBound": bound_other != null and bound_default != null, "afterOther": int(after_other.emitted), "afterMine": int(after_mine.emitted), "bound": bool(after_mine.bound)}
+  report["validator"] = {"origins": origins, "accepted": binding != null, "errorsAfterValid": after_valid, "rejected": rejected, "refusals": refusals}
   check(binding != null and after_valid == 0, "The registry accepts a value with the optional field absent and with it present")
   check(rejected.values().all(func(ok: bool) -> bool: return ok), "The registry refuses an optional field of the wrong type, a field the declaration does not name and a missing required field: " + str(rejected))
   check(refusals.values().all(func(ok: bool) -> bool: return ok), "The registry refuses a schema whose optional is not an object's field: " + str(refusals))
+  check(origins.bothBound and origins.afterOther == 0 and origins.afterMine == 1 and origins.bound,
+    "service_delivery reads the default origin's binding: two emissions of a same-name binding under another origin move nothing, and one of the default's moves it by one: " + str(origins))
 
 
 func finish() -> void:

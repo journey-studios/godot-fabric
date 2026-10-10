@@ -64,6 +64,7 @@ test("the stress mode: three intents outside the game's state, a snapshot that c
   assert.deepEqual(report.validator.rejected, {wrongType: true, unknownField: true, missingRequired: true});
   assert.deepEqual(report.validator.refusals, {root: true, element: true, argument: true});
   assert.equal(report.validator.errorsAfterValid, 0);
+  assert.deepEqual(report.validator.origins, {bothBound: true, afterOther: 0, afterMine: 1, bound: true}, "the counters of a name are the default origin's, whatever other origin has the name");
   const sources = Object.fromEntries(await Promise.all(["tests/frontier-stress-probe.gd", "consumers/civ-lite/services/game_services.gd", "consumers/civ-lite/services/stress.gd",
     "consumers/civ-lite/services/schema.gd", "native/game_service_registry.cpp", "native/fabric_application.cpp"].map(async file => [file, digest(await readFile(path.join(root, file)))])));
   await writeFile(path.join(root, "build/frontier-stress-summary.json"), JSON.stringify({checks: report.checks.length, nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))), sources}, null, 2) + "\n");

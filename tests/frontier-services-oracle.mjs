@@ -456,6 +456,14 @@ function verifyStress(stress, {firstJob}) {
   assert.equal(sum(free.pumps), total, "stress: the pumps sent every event");
   assert.ok(free.pumps.every(sent => sent <= EVENT_LIMIT), "stress: no pump sent more than 128");
   assert.equal(free.pumps.length, Math.ceil(total / EVENT_LIMIT), `stress: a job that outran the pump drained in ceil(${total} / 128) pumps`);
+  // The host's own count of the snapshots it handed to JavaScript (`service_delivery`) counts distinct revisions: a publication that reaches
+  // 150 more subscriptions moves it by one, and it follows the revisions the registry numbered.
+  const {before, isolated: afterIsolated, free: afterFree} = stress.delivery;
+  assert.equal(afterIsolated.sent - before.sent, JOB_SNAPSHOTS, "stress: the seven publications of the isolated job are seven snapshots handed to JavaScript, whatever the subscribers");
+  assert.equal(afterFree.sent - afterIsolated.sent, JOB_SNAPSHOTS, "stress: and the seven of the node's own driver are seven more");
+  assert.equal(afterFree.emitted - before.emitted, 2 * JOB_SNAPSHOTS, "stress: the registry ingested the fourteen");
+  assert.equal(afterFree.delivered, afterFree.emitted, "stress: the last revision a subscription got is the last the registry numbered");
+  assert.ok(free.eventsSent > JOB_SNAPSHOTS * STRESS_SUBSCRIBERS, "stress: while the events sent to subscriptions were many times as many");
   assert.equal(free.pending[0], perPublication, "stress: the acceptance left one publication waiting");
   assert.ok(Math.max(...free.pending) > EVENT_LIMIT && free.pending.at(-1) === 0, "stress: the backlog grew beyond one pump while the job ran, and drained completely");
   free.received.forEach((entries, subscriber) => {

@@ -84,9 +84,13 @@ are measured:
 - **The native counter** costs a map lookup and two increments for each event the registry hands to JavaScript, and nothing in JavaScript. It needed C++, a test, a rebuild and the
   previous-host control, and the schema's optional field needed all of that anyway.
 
-`FabricApplication.service_delivery(name)` (new, `native/fabric_application.cpp`) reads, for the binding with that name, `emitted` (its revision: every emission the registry ingested), `sent`
-(the events the pump handed to the JavaScript runtime for a subscription of it) and `delivered` (the revision of the last value a subscription got, the initial read included). It returns
-a Dictionary of integers, with no JSON and no JavaScript, and **it does not read the application's snapshot**, which is the whole status of the host (32 KB at rest: see below). `hud_stats.gd`, a
+`FabricApplication.service_delivery(name)` (new, `native/fabric_application.cpp`) reads, for the binding of the default origin with that name (the registry's own default, the one the game's services
+register under; a same-name binding under another origin is another service and is not read), `emitted` (its revision: every emission the registry ingested), `sent` (the **distinct revisions** of it that the pump
+handed to the JavaScript runtime for any subscription: one emission that reaches three subscriptions counts once, and the initial read of a subscription is not an emission and counts none) and `delivered` (the revision of the last
+value a subscription got, the initial read included). It returns a Dictionary of integers, with no JSON and no JavaScript, and **it does not read the application's snapshot**, which is the whole status of the host (32 KB at rest: see below).
+The registry does not coalesce: every emission queues one event for each live subscription, the pump hands them on in order and drops none of a live subscription's, and the runtime's own filter only skips a revision it already
+has. So with one HUD subscription `sent` is the number of values the store's listener is called with, which is what B's handler counts; with more subscriptions it stays the number of values. If a later registry ever coalesced
+revisions (the store seeing fewer values than the node emitted), `sent` would count against the emissions and not against the handler calls, and the pair would have to be re-decided. `hud_stats.gd`, a
 `Node` of `main.tscn` named `HudStats`, is what the runner holds for C: `snapshots` is `sent` of the snapshot binding, `events` is `sent` of the snapshot and of the hover plus `emitted` of
 `turn_ended`, and `context` is `GameServices.context_at(delivered)`, the context of the snapshot revision the registry last delivered (the node numbers its publications the way the registry numbers the
 binding, and keeps the context of the last 256).
@@ -103,14 +107,15 @@ The costs of the paths the runner must not take in a measured frame are measured
 | Read | Cost per read |
 | --- | ---: |
 | B: `stats()` on the native HUD | 0.9 µs (median over the rounds; 95th percentile 1.1 µs) |
-| C: `stats()` on `HudStats` (three counter reads and a context lookup) | 4.8 µs (median; 95th percentile 10.8 µs) |
-| C, the path not taken: `application.evaluate("JSON.stringify(FrontierHud.stats())")` | 144 µs |
-| C, the path not taken: the Surface's `snapshot()` (the host's status, 32 344 bytes at rest) | 579 µs |
+| C: `stats()` on `HudStats` (three counter reads and a context lookup) | 4.5 µs (median; 95th percentile 10.2 µs) |
+| C, the path not taken: `application.evaluate("JSON.stringify(FrontierHud.stats())")` | 130 µs |
+| C, the path not taken: the Surface's `snapshot()` (the host's status, 32 347 bytes at rest) | 581 µs |
 
 The counters' own cost in C, per notification, was measured as the difference of the soak's frames between the tree before this slice on the previous host (no counters) and the tree after it on the new one,
-with the same harness (5 runs of 60 turns each way, the CPU-time instrument of #97): the median of the `ai-phase` frames is 3.22 ms before and 3.22 ms after, the 95th percentile 6.98 ms and 7.04 ms, and the `event-burst`
-median 0.065 ms and 0.086 ms: **inside the run-to-run spread** (the medians of single runs span 0.4 ms), so the cost per notification is below what the instrument can see and bounded by that spread over
-about eight notifications a turn. By construction it is a few instructions. B pays three increments per notification.
+with the same harness (5 runs of 60 turns each way, alternating, the CPU-time instrument of #97): the median of the `ai-phase` frames is 3.22 ms before and 3.22 ms after, the 95th percentile 6.98 ms and 7.04 ms, and the `event-burst`
+median 0.065 ms and 0.086 ms: **inside the run-to-run spread** (the medians of single runs span 0.4 ms). After the review's fix (the counter counts distinct revisions: one more comparison per event) the per-read costs above were
+measured again, and the new tree alone gave an `ai-phase` median of 3.44 ms over 5 runs (3.43 to 3.46): 0.2 ms over the first measurement of the same tree, which is the drift between two sessions of measurement on this machine and as large as any
+difference the counters could make. The cost per notification is below what the instrument can see, and by construction it is a few instructions. B pays three increments per notification.
 
 ## Proof
 
@@ -118,9 +123,11 @@ about eight notifications a turn. By construction it is a few instructions. B pa
   begin, with 200 and 100 rows in the context's own panels; a second begin; twenty steps one frame apart with the identity check; end, with the panel gone and the snapshot byte for byte as it was; and the final
   `stats()` against the node's counter. The oracle (`tests/civ-lite-ui-oracle.mjs`) writes the lines and the items from the rules, apart from the game, and judges the raw rows; 11 mutations of a copy of the report
   are rejected in the two categories it adds, `stress` and `stats`.
-- **The registry and the node** (`tests/frontier-stress-probe.gd`, `npm run test:frontier-stress`, 17 checks, no JavaScript): the three intents and their codes and texts, the snapshots they publish, the game's state hash
+- **The registry and the node** (`tests/frontier-stress-probe.gd`, `npm run test:frontier-stress`, 18 checks, no JavaScript): the three intents and their codes and texts, the snapshots they publish, the game's state hash
   unmoved, the byte identity, the counters, a new game leaving the mode, and the optional field of the schema through real bindings: accepted absent and present, and refused with the wrong type, with a field the declaration
-  does not name, with a required field missing, and as an optional that is not an object's field.
+  does not name, with a required field missing, and as an optional that is not an object's field; and the accessor reads the default origin's binding (two emissions of a same-name binding under another
+  origin that sorts first move nothing, one of the default's moves it by one). The services lane's many-subscriber case checks the other half: with 150 more subscriptions of the snapshot, a job's seven publications move
+  `sent` by seven, as they move `emitted`, while the events sent to subscriptions are a hundred times as many.
 - **Five retained sabotages** (`scripts/civ-lite-ui-sabotage.mjs`, which now also runs only the variants named on its command line): the stress panel's rows rebuilt on every step, in C and in B; `stress_end` that leaves the overlay;
   and a `stats()` that does not count the end of a turn, in C and in B. Each is rejected by the probe and by the oracle for the rule it breaks.
 - **The causal control: the previous host.** The same bundle on the host built before the optional field refuses the snapshot's schema, so the HUD never receives a snapshot: the HUD probe fails 139 of its 145 checks

@@ -256,13 +256,15 @@ bool owner_live(uint64_t id) {
   const auto *object = id ? ObjectDB::get_instance(ObjectID(id)) : nullptr;
   return object && !object->is_queued_for_deletion();
 }
+// The origin a registration has when its options name none: the one the facade and the Godot-side registrations use.
+constexpr const char *default_origin = "default";
 struct Registration {
   Key key;
   std::string response{"completion"};
 };
 Registration options(const String &name, const Dictionary &values, bool method) {
   const auto data = VariantDTO{}.copy(values);
-  Registration result{{"default", utf8(name)}};
+  Registration result{{default_origin, utf8(name)}};
   if (result.key.second.empty()) error("E_SERVICE_ADDRESS", "Service name must not be empty");
   for (const auto &item : data.items()) {
     if (item.first == "origin" && item.second.isString() && !item.second.asString().empty()) result.key.first = item.second.asString();
@@ -343,10 +345,11 @@ struct GameServiceRegistry::State : public std::enable_shared_from_this<GameServ
   struct Binding {
     Registration registration;
     Kind kind;
-    // `revision` counts what the binding ingested (every emission of its signal) and `sent` what the pump handed to the JavaScript
-    // runtime for a subscription of it: the two counters a HUD's `stats()` reads without evaluating anything in JS.
-    // `delivered` is the revision of the last value a subscription received, as the initial read or as an event.
-    uint64_t generation{}, revision{}, sent{}, delivered{}, signal_owner{}, callable_owner{};
+    // `revision` counts what the binding ingested (every emission of its signal). `sent` counts the distinct revisions of it that the pump handed to
+    // the JavaScript runtime for any subscription (an emission that reaches three subscriptions is one), and `counted` is the highest of them: the
+    // counters a HUD's `stats()` reads without evaluating anything in JS. `delivered` is the revision of the last value a subscription received, as
+    // the initial read or as an event; an initial read is not an emission, so it moves `delivered` and not `sent`.
+    uint64_t generation{}, revision{}, sent{}, counted{}, delivered{}, signal_owner{}, callable_owner{};
     Signal signal;
     Callable receiver, callable;
     folly::dynamic args = folly::dynamic::array(), result = nullptr;
@@ -643,7 +646,7 @@ void GameServiceRegistry::connect(uint64_t id, folly::dynamic target, bool initi
           ("generation", std::to_string(binding->generation))("revision", revision);
       if (initial) acknowledgement["value"] = std::move(value);
       resolve(std::move(acknowledgement));
-      if (initial) binding->delivered = revision;
+      if (initial) binding->delivered = std::max(binding->delivered, revision);
       for (auto &payload : current->second.pending) {
         if (initial && payload["revision"].asInt() <= static_cast<int64_t>(revision)) continue;
         state->events.emplace_back(Permit{id, generation, false}, std::move(payload));
@@ -713,8 +716,13 @@ void GameServiceRegistry::pump_host(size_t task_budget, size_t event_budget) {
     state->gate->emitting.reset();
     ++state->events_sent;
     if (delivered) if (auto found = state->bindings.find(*delivered); found != state->bindings.end()) {
-      ++found->second->sent;
-      found->second->delivered = delivered_revision;
+      auto &binding = *found->second;
+      // Each subscription of a binding gets the same revision, in order: the first to be handed it counts it.
+      if (delivered_revision > binding.counted) {
+        ++binding.sent;
+        binding.counted = delivered_revision;
+      }
+      binding.delivered = std::max(binding.delivered, delivered_revision);
     }
   }
   state->pumping = false;
@@ -746,14 +754,14 @@ Dictionary GameServiceRegistry::delivery(const String &name) const {
   result["emitted"] = static_cast<int64_t>(0);
   result["sent"] = static_cast<int64_t>(0);
   result["delivered"] = static_cast<int64_t>(0);
-  const auto wanted = utf8(name);
-  for (const auto &[key, binding] : state->bindings) {
-    if (key.second != wanted) continue;
+  // The binding of the default origin: the one the game's services register under. A binding of the same name under another origin is another
+  // service and is not read here.
+  if (const auto found = state->bindings.find({default_origin, utf8(name)}); found != state->bindings.end()) {
+    const auto &binding = *found->second;
     result["bound"] = true;
-    result["emitted"] = static_cast<int64_t>(binding->revision);
-    result["sent"] = static_cast<int64_t>(binding->sent);
-    result["delivered"] = static_cast<int64_t>(binding->delivered);
-    break;
+    result["emitted"] = static_cast<int64_t>(binding.revision);
+    result["sent"] = static_cast<int64_t>(binding.sent);
+    result["delivered"] = static_cast<int64_t>(binding.delivered);
   }
   return result;
 }
