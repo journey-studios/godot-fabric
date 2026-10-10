@@ -852,6 +852,17 @@ open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db17
 other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
 denominator moves.
 
+**Progress.** The hosted CI and Pages receipts of the window presence (#99, the drawable window of the windowed lanes, the finding of V05-06
+and GF-30) are recorded. The push of main at its squash commit `ffeeb5c` passed the Contracts workflow on the first attempt:
+`contracts`, `reference-android` and `reference-ios` succeeded, and the five native jobs are recorded as skipped, accepted because the
+slice has no native step. The milestone guard passed against the squash's parent, the 23 and 17 contract tests of the two files the PR
+changed passed, and its Pages run built and deployed. The native steps of that squash did not run in its hosted CI, so the windowed
+lane and the native suites stay local evidence. The presented baseline (#101) has no receipt pair: its push ran in two attempts, with
+`reference-android` rerun after a failed NDK download, and the generator records only one-attempt runs, so the receipts of its folder
+are still #77's. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/2c4a822c4d3fcd59b99453325323bdd1746fd97e/docs/evidence/README.md)
+links the two receipts of the slice. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-06, the windowed lanes of the baseline and of the turn: the window they measure in is now put where the system has no
 reason to stop drawing it, and the frames in which the engine could not draw it are recorded. The finding: on macOS an occluded window
 makes the engine skip the draw (`window_can_draw()` reads the flag that the window delegate clears, `Main::iteration` does not call

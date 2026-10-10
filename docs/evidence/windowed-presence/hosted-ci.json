@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "scenario": "windowed-presence",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T01:57:12.077Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37989027813,
+    "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/99",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T20:44:48Z",
+    "updatedAt": "2026-10-09T20:51:58Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114018173418,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "startedAt": "2026-10-09T20:44:52Z",
+        "completedAt": "2026-10-09T20:48:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018173418"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114018174864,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018174864"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114018175362,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018175362"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114018175880,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018175880"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114018175566,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018175566"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114020801675,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114020801675"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114018173390,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "startedAt": "2026-10-09T20:44:51Z",
+        "completedAt": "2026-10-09T20:50:49Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018173390"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114018173085,
+        "runAttempt": 1,
+        "headSha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+        "startedAt": "2026-10-09T20:44:57Z",
+        "completedAt": "2026-10-09T20:51:57Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37989027813/job/114018173085"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+      "reference-android": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+      "reference-ios": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T20:45:13Z",
+          "completedAt": "2026-10-09T20:45:14Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against decc2ad0eec6 (--base decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d); X9 clean, X10 clean"
+          ],
+          "base": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T20:45:14Z",
+          "completedAt": "2026-10-09T20:48:00Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 466,
+              "suites": 0,
+              "pass": 466,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T20:48:00Z",
+          "completedAt": "2026-10-09T20:48:01Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T20:48:01Z",
+          "completedAt": "2026-10-09T20:48:01Z",
+          "passed": true,
+          "files": 1920
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-baseline-graphics.test.mjs",
+          "tests": 23,
+          "passed": 23,
+          "topLevel": [
+            "a window that draws and idles at the refresh period is a measurement",
+            "the idle reference is the median of the half-sums of consecutive pairs",
+            "a presented window at 120 Hz whose idle median falls in the low group is a measurement (attempt A8 of the baseline)",
+            "a window that draws but that no display paces is rejected as unpaced",
+            "a single large stall in a loop that nothing paces does not make it paced",
+            "the threshold is half of the refresh period that the window read back",
+            "a presented window at 60 Hz is a measurement, whichever way its intervals fall",
+            "a window that does not draw is rejected as undrawn, whatever its pace",
+            "the statistics across runs refuse an unpaced run, and say which value failed",
+            "the frames above twice the idle reference do not depend on the group the median falls in",
+            "a receipt with an unpaced accepted run is refused",
+            "a receipt written under the idle reference accepts a run whose median is in the low group",
+            "a receipt recorded before the idle reference is judged by the median it was judged by, and still verifies",
+            "a count above twice the idle reference that is not a count of the samples is refused",
+            "a lane that was not presented reports no frame-time statistic, and keeps what it rejected",
+            "a lane that claims to be presented has all its runs and their statistics",
+            "a run refused for not drawing says whether the engine could draw the window",
+            "a run recorded without the presence is refused with the plain reason, and has no count",
+            "the rule of validity does not read the presence: a run that drew is valid whatever the engine said, and one that did not is refused",
+            "the presence a run carries adds up",
+            "a receipt keeps the count of each attempt, and a refusal for not drawing in it says what the engine said",
+            "a receipt recorded before the presence has no count and verifies as it always did",
+            "the count of each attempt is the one of the presence of its own raw run, accepted or rejected"
+          ]
+        },
+        {
+          "file": "tests/frontier-turn-graphics.test.mjs",
+          "tests": 17,
+          "passed": 17,
+          "topLevel": [
+            "a synthetic run of the windowed probe is accepted, and the run in the baseline's shape has the clicks of the tour",
+            "a run that is not a run of the tour in a window is refused",
+            "the turn's frames: a phase in each frame, a snapshot in each, the end once, and the HUD catching up after",
+            "a window that draws and idles at the refresh period is a measurement",
+            "a window that draws but that no display paces is rejected as unpaced",
+            "the threshold is half of the refresh period that the window read back",
+            "a window that does not draw is rejected as undrawn, whatever its pace",
+            "the statistics across runs refuse an unpaced run, and a presented one is summarized",
+            "the frames of the turn are summarized per phase, across runs by their median and range",
+            "a receipt with an unpaced accepted run is refused",
+            "a lane that was not presented reports no frame-time statistic, and keeps what it rejected",
+            "the receipt takes its build, window and viewport from an accepted run, else from the last rejected attempt, else from the captures",
+            "a lane that claims to be presented has all its runs and their statistics",
+            "the tour of the queue and the Modals: the cases' steps are accepted, and each rule has a mutation that only it refuses",
+            "a run of the turn's probe carries the window's presence, and a refusal for not drawing says what the engine said",
+            "a receipt of the turn keeps the count of each attempt and the presence of the runs",
+            "a receipt of the turn binds the count of each attempt to the presence of its raw run"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 99,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/99",
+    "title": "feat(perf): Keep the windowed lanes' window drawable and record why it was not",
+    "headSha": "2f986b2cdbcc59fe33aff7ddfd0020c872650dad",
+    "baseSha": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d",
+    "squashMergeCommit": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+    "squashCommitSubject": "feat(perf): Keep the windowed lanes' window drawable and record why it was not (#99)",
+    "mergedAt": "2026-10-09T20:44:45Z",
+    "headTreeSha": "f1b8a44db8bc71f3ac2a7078da29714abae6f149",
+    "mainTreeSha": "f1b8a44db8bc71f3ac2a7078da29714abae6f149",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 4,
+    "commits": [
+      {
+        "sha": "1bc3a3cc7d5d1a160f2158a87a5f8c623b504130",
+        "subject": "feat(perf): Keep the windowed lanes' window drawable and record why it was not"
+      },
+      {
+        "sha": "59cd006f80471cd8cb1a39184511b2649f45e045",
+        "subject": "docs(perf): Pin the windowed presence runs to 1bc3a3c"
+      },
+      {
+        "sha": "9737044c5a592354ac9feff93d615c881dd8130c",
+        "subject": "docs(dashboard): Record the windowed lanes' drawable window"
+      },
+      {
+        "sha": "2f986b2cdbcc59fe33aff7ddfd0020c872650dad",
+        "subject": "fix(perf): Blame a skipped draw only where the window could not draw"
+      }
+    ],
+    "changedFiles": 19,
+    "additions": 1353,
+    "deletions": 31
+  },
+  "artifacts": {},
+  "findings": []
+}

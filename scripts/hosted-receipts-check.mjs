@@ -168,8 +168,16 @@ function checkHostedCi(slice, ci, problems) {
     if (job.status !== "completed" || (job.conclusion !== "success" && job.conclusion !== "skipped")) {
       problems.push(`${label}: job ${job.name} is ${job.status}/${job.conclusion}, not completed/success`);
     }
-    if (job.headSha !== run.headSha || job.runAttempt !== 1 || !isCount(job.databaseId) || !isTime(job.startedAt) || !isTime(job.completedAt)) {
-      problems.push(`${label}: job ${job.name} has another head, another attempt or no id and times`);
+    if (job.headSha !== run.headSha || job.runAttempt !== 1 || !isCount(job.databaseId)) {
+      problems.push(`${label}: job ${job.name} has another head, another attempt or no id`);
+    }
+    // A skipped job never ran, so the receipt keeps no times for it; a job that ran has both, and its completion is not before its start.
+    if (job.conclusion === "skipped") {
+      if (Object.hasOwn(job, "startedAt") || Object.hasOwn(job, "completedAt")) {
+        problems.push(`${label}: job ${job.name} is skipped, so it has no startedAt or completedAt`);
+      }
+    } else if (!isTime(job.startedAt) || !isTime(job.completedAt) || Date.parse(job.startedAt) > Date.parse(job.completedAt)) {
+      problems.push(`${label}: job ${job.name} ran but has no valid startedAt and completedAt, or completedAt is before startedAt`);
     }
   }
   // A skipped job has no log, so it has no checkout either.
