@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T12:23:00.000Z",
+  "updatedAt": "2026-10-10T14:12:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4770,6 +4770,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-execution-2-c6bebd0",
+      "at": "2026-10-10T14:12:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, parte 2 do critério execucao (código no commit f9aabb3, registro no c6bebd0): está escrito e testado o orquestrador da campanha comparativa inteira. Ele joga a sequência do protocolo (ABC CAB BCA quatro vezes) nas duas faixas, um processo novo por tentativa; julga cada tentativa pelas regras da própria análise (assessValidity, sem reescrever regra nenhuma), refaz a rejeitada na mesma vaga (no máximo 3 tentativas) e para onde a análise manda parar; espera a média de carga de 1 minuto ficar em 2,0 ou menos antes de cada execução; só começa se o autoteste do instrumento passar (o probe e o oráculo no motor do lançador, headless para um lançador headless e janelado para um janelado, que é o da campanha real) e para se um cenário relata outro motor ou display que o do autoteste; grava o estado de forma atômica depois de cada tentativa, e a retomada (--resume) recusa se o protocolo, o roteiro, o binário ou o pacote mudaram de hash e termina igual a uma campanha nunca interrompida; uma trava no diretório temporário impede duas campanhas na mesma máquina; e o lançador é trocável: o Debug reaproveita o runner da parte 1, e o Release recusa, com a razão, até o V05-07 definir como o cenário roda num .app exportado. Os testes só de Node (91, com os do run, da análise, da validade e do protocolo) usam um lançador falso e provam a ordem e o equilíbrio por posição, o refazer por carga, por janela não apresentada, por incompleta e por erro, o limite de 3 tentativas, a parada por other-game repetido, a espera de carga com relógio e loadavg injetados, a retomada depois de interrupções simuladas, a recusa com hash mudado, o autoteste que falha e bloqueia e a recusa do Release. Um ensaio curto de 3 vagas da faixa apresentada, uma por braço, rodou em Debug e headless, com o autoteste real (passou em 20,4 s): as três tentativas foram rejeitadas pela análise, como um ensaio deve mostrar (o build Debug, a janela não apresentada e a carga, de 3,39 a 11,05 contra o limite de 2,0); um ensaio morto com SIGKILL durante a vaga 2 foi retomado e terminou, e uma retomada com o hash do pacote mudado foi recusada. É um ensaio, e nenhum número dele é resultado. Faltam o export Release do V05-07, uma janela quieta com a carga em 2,0 ou menos que o usuário vai reservar e o autoteste janelado rodado de verdade. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move. A CI hospedada e o Pages vêm depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c6bebd0498108a6edc0f5bcbf799c048b025eaab/docs/evidence/frontier-comparison-campaign/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-braco-b-otimizacao-receipts",
       "at": "2026-10-10T13:45:00.000Z",

@@ -956,6 +956,16 @@ publication come after the merge. No criterion changes state, and no 1.0 checkpo
 
 **Progress.** The hosted CI and Pages receipts of the comparative execution's part 1 (#120, GF-30) are recorded from the push of main at `c3892ac`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/12059499a3dd5c9135f8f8ded1b5586adacc87ec/docs/evidence/frontier-comparison-execution/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, `tests/frontier-comparison-run.test.mjs` passed 17 of 17 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `execucao`, part 2: the orchestrator of the whole comparative campaign is written and tested (code at `f9aabb3`). It plays the protocol's sequence in both
+lanes, one fresh process per attempt, judges each attempt with the analysis' own `assessValidity`, redoes a rejected attempt in its slot (at most 3 attempts), waits for the 1-minute load to be
+at most 2.0, runs only if the instrument's self-check passes (headless for a headless launcher, in a window for a windowed one, the campaign's), writes its state atomically after every attempt so
+that `--resume` continues an interrupted campaign (refused if the protocol, script, binary or package hash changed), keeps a lock against a second campaign on the machine, and runs through a
+swappable launcher whose Release path refuses until V05-07 says how the scenario runs in an exported `.app`. A short rehearsal of 3 slots in Debug, headless, ran with the real self-check and
+the expected rejections (Debug build, window not presented, load); one killed with `SIGKILL` was resumed, and a resume with another package hash was refused. **A rehearsal, and no number in it
+is a result.** The Release launcher (V05-07), a quiet window with the load at 2.0 or less and the windowed self-check run for real are missing, and `execucao` stays open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/c6bebd0498108a6edc0f5bcbf799c048b025eaab/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
+Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
