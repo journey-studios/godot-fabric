@@ -423,14 +423,24 @@ did**, so a headless check cannot vouch for a window. The windowed check has bee
 Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (2.0, read from the protocol; the rule rejects what is
 above the limit) or `--max-wait` seconds have passed. The wait goes into the state (`waited`: the first and last reading, the number of readings, the seconds, whether it timed out). If it runs out the attempt runs anyway:
 the readings that the rule judges are the launcher's, taken right before the process starts and right after it ends, and they are recorded exactly as read (`load.before`, `load.after`). The wait is a courtesy to
-the attempts of a slot, not a guarantee. The clock and the reading are injectable, which is how the tests drive it.
+the attempts of a slot, not a guarantee. The clock and the reading are injectable, which is how the tests drive it. A protocol whose `runs.load.limit1MinuteAverage` is missing, a string or not above zero is
+refused before anything runs: `load <= limit` would be false for every reading, and every attempt would wait the whole `--max-wait`.
 
 ### The lock
 
-A lock file in the system's temporary directory (`godot-fabric-frontier-comparison-campaign.lock`) holds the pid and the `--out` of the campaign that is running. A campaign, or a resume, that finds the lock held by
-a live pid refuses to begin and names the holder; a lock whose pid is dead belongs to a campaign that was killed and is taken over; the lock is released when the campaign ends, however it ends, and only by the campaign
-that holds it. A lock that cannot be read is refused rather than guessed at. It is taken before the launcher is prepared, because provisioning a copy of the consumer is a Godot process too. It guards one machine
-against two campaigns; the protocol's load rule is what catches the other lanes of the repository.
+A lock file in the system's temporary directory (`godot-fabric-frontier-comparison-campaign.lock`) holds the pid, a token that only the campaign that wrote it has (`randomUUID()`) and the `--out` of the
+campaign that is running. A campaign, or a resume, that finds the lock held by a live pid refuses to begin and names the holder; the lock is released when the campaign ends, however it ends, and only if it
+is still that campaign's (the token is compared, not the pid). A lock that cannot be read is refused rather than guessed at. It is taken before the launcher is prepared, because provisioning a copy of the
+consumer is a Godot process too. It guards one machine against two campaigns; the protocol's load rule is what catches the other lanes of the repository.
+
+**The takeover of a dead holder's lock** is automatic, because a `--resume` after a `SIGKILL` finds exactly that, and it is a compare-and-claim under a mutex. A first version removed the stale lock and wrote
+its own, which let two campaigns that read the same dead holder both remove and both write: the first removes the stale lock and takes it, the second's removal then removes the first's *live* lock, and both
+run (found in the review of the delivery, #126). Now: (1) a lock whose pid is alive refuses; (2) for a dead pid the taker creates `<lock>.takeover` exclusively, and a second taker, or a takeover that was
+interrupted, finds the file and refuses, naming it, with the instruction to remove it by hand if no campaign is running; (3) under the mutex the lock is read again and removed only if its bytes are exactly the
+ones read as stale, so a live campaign's lock, or no lock, is left alone; (4) the mutex is removed in a `finally`; (5) the exclusive write of the lock follows, and if it finds a lock, that is a fresh
+campaign's, whose holder is alive, and the loop (bounded to three writes) refuses. The tests (`tests/frontier-comparison-campaign-guards.test.mjs`) run 60 rounds of two simultaneous takers on one stale lock
+(exactly one wins), let a second taker's whole takeover land between the first's reading of the stale lock and its mutex (the first refuses and the live lock stays), release the lock while a takeover waits (no
+live lock is removed) and leave a mutex behind (the next campaign refuses, naming it).
 
 ### The state and the resume
 

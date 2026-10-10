@@ -29,17 +29,25 @@ const lockPath = (name) => path.join(scratch, `${name}.lock`);
 // The pid of a process that has ended: nothing lives under it.
 const deadPid = () => spawnSync(process.execPath, ["-e", ""]).pid;
 
-test("the lock is taken with the pid and the directory of the campaign, refuses a live holder, takes over a dead one's and is released", async () => {
+// A pid that no campaign has: the holder of the stale locks, dead for `alive` and for every test that takes its lock over.
+const STALE = 4000;
+const aliveExceptStale = (pid) => pid !== STALE;
+const staleText = () => `${JSON.stringify({ pid: STALE, token: "stale", out: "/campaigns/killed" })}\n`;
+const holderOf = async (file) => JSON.parse(await readFile(file, "utf8"));
+
+test("the lock is taken with the pid, a token and the directory of the campaign, refuses a live holder, takes over a dead one's and is released only by its holder", async () => {
   const file = lockPath("unit");
-  const release = await acquireLock({ file, out: "/campaigns/first", pid: 4001, alive: () => false });
-  assert.deepEqual(JSON.parse(await readFile(file, "utf8")), { pid: 4001, out: "/campaigns/first" });
-  // A holder that is alive refuses the second campaign and is left alone.
-  await assert.rejects(acquireLock({ file, out: "/campaigns/second", pid: 4002, alive: (pid) => pid === 4001 }), /another campaign is running on this machine \(pid 4001, --out \/campaigns\/first\)/);
-  assert.equal(JSON.parse(await readFile(file, "utf8")).pid, 4001);
-  // A holder that is dead was killed: the lock is old, and the second campaign takes it.
-  const taken = await acquireLock({ file, out: "/campaigns/second", pid: 4002, alive: () => false });
-  assert.deepEqual(JSON.parse(await readFile(file, "utf8")), { pid: 4002, out: "/campaigns/second" });
-  // The first one's release finds the lock no longer its own and leaves it; the second's removes it.
+  const release = await acquireLock({ file, out: "/campaigns/first", pid: 4001, token: "first", alive: () => false });
+  assert.deepEqual(await holderOf(file), { pid: 4001, token: "first", out: "/campaigns/first" });
+  // A holder that is alive refuses the second campaign and is left alone, and no takeover is begun.
+  await assert.rejects(acquireLock({ file, out: "/campaigns/second", pid: 4002, token: "second", alive: (pid) => pid === 4001 }), /another campaign is running on this machine \(pid 4001, --out \/campaigns\/first\)/);
+  assert.equal((await holderOf(file)).token, "first");
+  assert.ok(!(await exists(`${file}.takeover`)));
+  // A holder that is dead was killed: the lock is old, and the second campaign takes it over and leaves no mutex behind.
+  const taken = await acquireLock({ file, out: "/campaigns/second", pid: 4002, token: "second", alive: () => false });
+  assert.deepEqual(await holderOf(file), { pid: 4002, token: "second", out: "/campaigns/second" });
+  assert.ok(!(await exists(`${file}.takeover`)));
+  // The first one's release finds the lock no longer its own (another token) and leaves it; the second's removes it.
   await release();
   assert.ok(await exists(file));
   await taken();
@@ -54,6 +62,74 @@ test("a process is alive if a signal can be asked of it, and the default lock is
   assert.equal(isAlive(process.pid), true);
   assert.equal(isAlive(deadPid()), false);
   assert.equal(path.dirname(defaultLockFile()), tmpdir());
+});
+
+test("two campaigns that take over one stale lock at the same time: exactly one holds it afterwards, whatever the interleaving, and no mutex is left", async () => {
+  for (let round = 0; round < 60; round += 1) {
+    const file = lockPath(`race-${round}`);
+    await writeFile(file, staleText());
+    const results = await Promise.allSettled([
+      acquireLock({ file, out: "/campaigns/a", pid: 5001, token: "a", alive: aliveExceptStale }),
+      acquireLock({ file, out: "/campaigns/b", pid: 5002, token: "b", alive: aliveExceptStale }),
+    ]);
+    const winners = results.filter((result) => result.status === "fulfilled");
+    const refused = results.filter((result) => result.status === "rejected");
+    assert.deepEqual([winners.length, refused.length], [1, 1], `round ${round}: ${results.map((result) => result.status)}`);
+    assert.match(refused[0].reason.message, /another campaign is running on this machine|another campaign is taking over the lock/);
+    const winner = results[0].status === "fulfilled" ? { pid: 5001, token: "a" } : { pid: 5002, token: "b" };
+    assert.deepEqual({ pid: (await holderOf(file)).pid, token: (await holderOf(file)).token }, winner, `round ${round}: the live lock is the winner's`);
+    assert.ok(!(await exists(`${file}.takeover`)), `round ${round}: the mutex was removed`);
+    await winners[0].value();
+    assert.ok(!(await exists(file)));
+  }
+});
+
+test("a second campaign's whole takeover lands between the first's reading of the stale lock and its mutex: the first refuses and the live lock is not removed", async () => {
+  const file = lockPath("window");
+  await writeFile(file, staleText());
+  let second = null;
+  const first = acquireLock({
+    file, out: "/campaigns/first", pid: 5001, token: "first", alive: aliveExceptStale,
+    beforeTakeover: async () => {
+      second = await acquireLock({ file, out: "/campaigns/second", pid: 5002, token: "second", alive: aliveExceptStale });
+    },
+  });
+  await assert.rejects(first, /another campaign is running on this machine \(pid 5002, --out \/campaigns\/second\)/);
+  assert.notEqual(second, null, "the second campaign took the lock inside the first's window");
+  assert.deepEqual(await holderOf(file), { pid: 5002, token: "second", out: "/campaigns/second" }, "the lock the first would have removed is the second's, alive, and stays");
+  assert.ok(!(await exists(`${file}.takeover`)));
+  await second();
+  assert.ok(!(await exists(file)));
+});
+
+test("a lock released by the campaign that took it while another takeover was waiting removes no live lock, and the waiting campaign takes the free lock", async () => {
+  const file = lockPath("released");
+  await writeFile(file, staleText());
+  let second = null;
+  const first = await acquireLock({
+    file, out: "/campaigns/first", pid: 5001, token: "first", alive: aliveExceptStale,
+    beforeTakeover: async () => {
+      second = await acquireLock({ file, out: "/campaigns/second", pid: 5002, token: "second", alive: aliveExceptStale });
+      await second();
+      assert.ok(!(await exists(file)), "the second campaign released the lock before the first's takeover began");
+    },
+  });
+  assert.deepEqual(await holderOf(file), { pid: 5001, token: "first", out: "/campaigns/first" }, "the first took the free lock; the stale one it had read was gone");
+  // The second's release, called again, finds the lock the first holds and leaves it.
+  await second();
+  assert.equal((await holderOf(file)).token, "first");
+  await first();
+  assert.ok(!(await exists(file)));
+});
+
+test("a mutex left by an interrupted takeover, or held by one that is going on, refuses the next campaign, naming it, and changes nothing", async () => {
+  const file = lockPath("mutex");
+  const mutex = `${file}.takeover`;
+  await writeFile(file, staleText());
+  await writeFile(mutex, `${JSON.stringify({ pid: 5009, token: "interrupted" })}\n`);
+  await assert.rejects(acquireLock({ file, out: "/campaigns/next", pid: 5001, token: "next", alive: aliveExceptStale }), (error) => error.message.includes(`${mutex} exists`) && /taking over the lock, or a takeover was interrupted/.test(error.message) && error.message.includes(`remove ${mutex} by hand`));
+  assert.equal((await holderOf(file)).token, "stale");
+  assert.equal((await holderOf(mutex)).token, "interrupted");
 });
 
 // A campaign of two slots against the fake launcher, with the lock at `lockFile`.
@@ -80,6 +156,7 @@ test("a lock left by a campaign that was killed is taken over, and the lock is r
   const taken = await run({ lockFile: file, out: path.join(scratch, "stale-campaign") });
   assert.equal(taken.status, "done");
   assert.ok(!(await exists(file)));
+  assert.ok(!(await exists(`${file}.takeover`)), "the takeover left no mutex");
   await assert.rejects(run({ lockFile: file, out: path.join(scratch, "failing-campaign"), launcher: fakeLauncher({ protocol, interruptBefore: 1 }) }), /simulated interruption/);
   assert.ok(!(await exists(file)), "released although the campaign failed");
 });

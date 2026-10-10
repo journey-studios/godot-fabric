@@ -215,6 +215,11 @@ export async function runCampaign({
   runCheck = runSelfCheck, read = readLoad, clock = defaultClock, where = currentMachine, lockFile = undefined, log = () => undefined,
 }) {
   const problems = [...protocolErrors(protocol), ...optionsErrors(protocol, { lanes, slots })];
+  // The wait for a quiet machine compares the load with this limit: a limit that is missing, a string or not above zero makes `load <= limit` false for every reading, and every attempt would wait the whole --max-wait.
+  const limit = protocol.runs?.load?.limit1MinuteAverage;
+  if (!(Number.isFinite(limit) && limit > 0)) {
+    problems.push(`runs.load.limit1MinuteAverage is not a finite positive number (${JSON.stringify(limit) ?? "missing"}): the wait for the load cannot tell a quiet machine`);
+  }
   if (problems.length > 0) {
     throw new Error(`cannot run the campaign:\n${problems.join("\n")}`);
   }

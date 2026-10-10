@@ -174,6 +174,20 @@ test("a scenario that waited with numbers other than the protocol's stops the ca
   assert.equal(slotRecord(result, "presented", 2).state, "accepted", "no rule of the analysis rejects it");
 });
 
+test("a protocol whose load limit is not a finite positive number is refused before anything runs, because the wait could never tell a quiet machine", async () => {
+  const limits = [[(load) => delete load.limit1MinuteAverage, "missing"], [(load) => (load.limit1MinuteAverage = "2"), '"2"'], [(load) => (load.limit1MinuteAverage = 0), "0"], [(load) => (load.limit1MinuteAverage = -1), "-1"], [(load) => (load.limit1MinuteAverage = null), "null"]];
+  for (const [change, shown] of limits) {
+    const mutated = structuredClone(protocol);
+    change(mutated.runs.load);
+    const launcher = fakeLauncher({ protocol });
+    const out = path.join(scratch, `bad-limit-${counter++}`);
+    await assert.rejects(play({ protocol: mutated, launcher, out }), (error) => error.message.includes("runs.load.limit1MinuteAverage is not a finite positive number") && error.message.includes(`(${shown})`));
+    assert.equal(launcher.calls.length, 0, `${shown}: no process was started`);
+    assert.ok(!(await exists(out)), `${shown}: nothing was written`);
+    assert.ok(!(await exists(lock())), `${shown}: the lock was never taken`);
+  }
+});
+
 test("the wait for the load reads it every few seconds until it is under the limit, records the wait, and a wait that runs out lets the attempt run to be judged by the rule", async () => {
   const quiet = await play({ lanes: ["presented"], slots: [1, 2], load: scriptedLoad([3, 2.5, 1.5]), maxWaitSeconds: 600 });
   const [first, second] = (await read(quiet.out, "campaign-state.json")).attempts;

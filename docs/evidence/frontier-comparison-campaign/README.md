@@ -118,6 +118,8 @@ A carga não ficou dentro de 2,0 em nenhum momento (a de depois da vaga 3, 11,05
 
 Um arquivo em `os.tmpdir()` (`godot-fabric-frontier-comparison-campaign.lock`) guarda o pid e o `--out` da campanha que está rodando. Uma campanha, ou uma retomada, que acha a trava com um pid vivo **recusa começar** e diz quem a tem; uma trava de pid morto é de uma campanha que foi morta e é tomada; uma trava ilegível é recusada em vez de adivinhada; a trava é solta no fim, qualquer que seja o fim, e só por quem a tem. Ela é tomada antes do `prepare()` do lançador, porque provisionar uma cópia também é um processo do Godot. Protege uma máquina de duas campanhas; o que pega as outras faixas do repositório é a regra da carga.
 
+**A tomada da trava de um pid morto foi mudada pela revisão (#126), depois do commit fixado `f9aabb3`.** A versão do commit fixado removia a trava velha e escrevia a sua, o que deixava duas campanhas que liam o mesmo dono morto removerem e escreverem as duas (a segunda removeria a trava viva da primeira). Agora a tomada é um compare-and-claim sob um mutex (`<trava>.takeover`, com `wx`) e a trava leva um token único; ver a [nota de pesquisa](../../research/frontier-comparison-execution.md#the-lock). Os números do ensaio não dependem disso: ele rodou com a trava livre.
+
 ## O lançador
 
 ```text
@@ -184,4 +186,19 @@ Os números do ensaio mudam de uma rodada para outra (a carga, os segundos, o ha
 
 ## As verificações do commit de evidência
 
-Preenchidas no commit de evidência, depois deste README.
+As verificações do **repositório** (não as do código fixado, que estão no [começo](#o-que-há-nesta-pasta)), com o resultado real de cada rodada e de qual rodada vem cada número. Há três rodadas: a do **commit de evidência** `c6bebd0` (rodada em 2026-10-10 sobre a árvore dele antes do commit, com esta pasta já adicionada), a do **commit do registro** `2f5fb69` (a `activity` do `dashboard/migration.json` e o `**Progress.**` do `ROADMAP.md`, também antes do commit) e a da **árvore corrigida pela revisão do #126** (o `2f5fb69` mais a tomada da trava por compare-and-claim, o limite de carga validado e este quadro; rodada antes do commit, depois da qual o `origin/main` continuava em `5683a5b`).
+
+| Verificação | Resultado | Rodada |
+| --- | --- | --- |
+| `npm run check:publication` | `passed: true`, 2.116 arquivos, nenhuma falha | as três (o mesmo número: os arquivos desta pasta já estavam adicionados no `c6bebd0`, e a revisão só altera arquivos que já existiam) |
+| `npm run check:static` | `No issues found` | `c6bebd0` e a árvore corrigida |
+| `npm run test:dashboard` | 43 testes, verdes | as três |
+| `node scripts/migration-dashboard.mjs check` | saída 0, `valid: true`, 40 itens, 32 de 156 checkpoints, 20,51% (nada se move) | `2f5fb69` e a árvore corrigida |
+| `node scripts/milestone-guards.mjs --check --base origin/main` | `MILESTONE_GUARDS_CHECK_PASSED`, contra `5683a5b`, X9 clean e X10 clean | `2f5fb69` e a árvore corrigida |
+| `npm run test:contracts` | verde: 7 testes do parity, 43 do dashboard, **565** no bloco principal e 13 do Python (`OK`) | `2f5fb69` |
+| `npm run test:contracts` | verde: 7, 43, **570** no bloco principal (os 5 a mais são os testes novos da trava e do limite de carga) e 13 do Python (`OK`) | a árvore corrigida |
+| `node --test` da campanha (`campaign`, `campaign-state`, `campaign-guards`), do run, da análise, da validade e do protocolo | 96 testes, verdes | a árvore corrigida (eram 91 no `f9aabb3`) |
+| `npm run type-check` | limpo | a árvore corrigida (e dentro do `test:contracts` das outras rodadas) |
+| `node $BOARD check` (o quadro de agentes) | `Agente 3: sem conflitos` (os avisos de `package.json`, `docs/evidence/README.md` e `dashboard/migration.json` são de arquivos compartilhados, esperados) | `c6bebd0` e a árvore corrigida |
+
+Nada nativo foi rodado nesta rodada de verificação: o ensaio curto e o nativo (16 testes, 741 s, do líder) são os do commit fixado e estão no [começo](#o-que-há-nesta-pasta). A CI hospedada e o Pages vêm depois do merge.
