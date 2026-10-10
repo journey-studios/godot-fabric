@@ -27,7 +27,7 @@ import { machine } from "./frontier-turn-lane.mjs";
 //        [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]
 //
 // `--build debug` is a rehearsal: it needs `--rehearsal`, which marks the campaign as one (a rehearsal redoes nothing, and says in the campaign's deviations that it is not a result). `--build release`
-// uses the Release launcher, which refuses until V05-07 defines how the scenario runs in the export. The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
+// uses the Release launcher, which refuses until the civ-lite game is exported in the three arms (the scenario's entry is defined: the main loop of the project). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
 // .log (the scenario's report and the process's log of each attempt), self-check/ (the instrument's probe report and log), and at the end campaign.json (strictly the analysis' format),
 // report.json (the analysis' report), summary.json and, in a rehearsal, rehearsal.json.
 
