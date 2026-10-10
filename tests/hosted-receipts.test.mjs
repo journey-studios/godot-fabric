@@ -134,6 +134,21 @@ test("a job that is not in success is rejected, in the Contracts run and in the 
   );
 });
 
+test("a skipped job keeps no times, and a job that ran completes no earlier than it starts", () => {
+  assertRejected(
+    mutate("windowed-presence", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "native-cold-start").startedAt = "2026-10-09T20:44:49Z";
+    }),
+    /windowed-presence: hosted-ci\.json: job native-cold-start is skipped, so it has no startedAt or completedAt/,
+  );
+  assertRejected(
+    mutate("windowed-presence", "hosted-ci.json", (receipt) => {
+      receipt.run.jobs.find((job) => job.name === "contracts").completedAt = "2026-10-09T20:40:00Z";
+    }),
+    /windowed-presence: hosted-ci\.json: job contracts ran but has no valid startedAt and completedAt, or completedAt is before startedAt/,
+  );
+});
+
 // Since the native suites became opt-in, a push of main skips them and the receipt comes from a dispatched run, whose
 // native suites are split between the cold build and three suite jobs.
 function asDispatch(receipt) {
