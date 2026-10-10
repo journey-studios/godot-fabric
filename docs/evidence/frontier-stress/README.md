@@ -2,8 +2,8 @@
 
 Registro da entrega que dá ao jogo, às duas HUDs e ao executor o que a janela `stress` do [protocolo](../../research/frontier-comparison-protocol.md) precisa: o modo de estresse do jogo
 (um log de 200 linhas e uma lista de produção de 100 itens, preenchidos num quadro e atualizados por 20 quadros seguidos), um painel `hud-stress` nas duas HUDs (a React Native, braço C, e a nativa do
-Godot, braço B) e o `stats()` que o executor lê nos quadros medidos, com o mesmo formato nos dois braços. Implementação em `6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35`
-(<https://github.com/journey-studios/godot-fabric/commit/6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35>). O desenho, o caminho do `stats()` no C e o que cada escolha custa estão em
+Godot, braço B) e o `stats()` que o executor lê nos quadros medidos, com o mesmo formato nos dois braços. Implementação em `ee96490db72b75e0bcf8a75a50db38487deb7ac3`
+(<https://github.com/journey-studios/godot-fabric/commit/ee96490db72b75e0bcf8a75a50db38487deb7ac3>). O desenho, o caminho do `stats()` no C e o que cada escolha custa estão em
 [docs/research/frontier-stress.md](../../research/frontier-stress.md).
 
 **Este registro não afirma nenhum resultado de medição.** Nenhuma execução comparativa rodou; os números abaixo são o custo do gancho (`stats()`) e das lanes, não o custo de uma HUD. Nenhum critério do V05-10
@@ -19,7 +19,7 @@ guardado em `build/stress-previous-host/` para o controle causal.
 | --- | --- |
 | `node --test tests/civ-lite-ui-native.test.mjs` (as duas HUDs) | passou: HUD React Native 152 + 28 + 41 verificações, HUD nativa 152 + 28; 38 mutações do relatório da HUD, 23 do de overlays |
 | `node tests/civ-lite-ui-native.test.mjs --capture` | passou: mais as 9 capturas de cada braço e as 4 dos overlays, em janela |
-| `npm run test:frontier-stress` (novo) | passou: 17 verificações da sonda do nó e do registro, sem JavaScript |
+| `npm run test:frontier-stress` (novo) | passou: 18 verificações da sonda do nó e do registro, sem JavaScript |
 | `node scripts/civ-lite-ui-sabotage.mjs` | passou: as 25 variantes da lane (20 de antes e as 5 desta entrega) rejeitadas pela sonda e pelo oráculo, as fontes restauradas byte a byte e a lane limpa passando depois (status 0) |
 | `npm run test:civ-lite-game` | passou: o hash dourado do replay não mudou |
 | `npm run test:frontier-services` | passou: 11 testes, a paridade TypeScript e Godot do campo opcional inclusive |
@@ -61,7 +61,7 @@ stats() -> {snapshots: int, context: String, events: int}
 ```
 
 Nos dois braços, com o mesmo formato. **B:** o nó da HUD (`HUDLayer/HUD`) conta nos próprios manipuladores de sinais (o `stats()` antigo, de validação, virou `intents_sent()` e fica atrás do leitor). **C:** o nó `HudStats`
-(`hud_stats.gd`, em `main.tscn`) lê os contadores que o registro nativo mantém para cada serviço (`FabricApplication.service_delivery`, novo): o que o registro absorveu e o que entregou ao runtime de JavaScript.
+(`hud_stats.gd`, em `main.tscn`) lê os contadores que o registro nativo mantém para cada serviço (`FabricApplication.service_delivery`, novo, que lê o vínculo da origem padrão): o que o registro absorveu e as revisões distintas que entregou ao runtime de JavaScript (uma emissão que chega a várias assinaturas conta uma vez; o registro não funde revisões).
 `GameServices.notifications_emitted()` conta, do lado de quem emite, o mesmo conjunto (snapshot, cartão de hover e fim de turno), e o executor fecha `event-burst` onde `events == notifications_emitted()`.
 
 **O caminho do C é o contador nativo, não um empurrão da store**, porque é o único que não custa nada ao C nos quadros medidos: o empurrão é uma chamada de JavaScript, uma tarefa do registro e uma invocação em Godot por
@@ -75,14 +75,16 @@ comparativas). Números brutos em [costs.json](costs.json).
 | Leitura | Custo por leitura |
 | --- | ---: |
 | B: `stats()` do nó da HUD | 0,9 µs (mediana; p95 1,1 µs) |
-| C: `stats()` do `HudStats` (três leituras de contador e uma busca do contexto) | 4,8 µs (mediana; p95 10,8 µs) |
-| C, o caminho não tomado: `application.evaluate("JSON.stringify(FrontierHud.stats())")` | 144 µs |
-| C, o caminho não tomado: o `snapshot()` da Surface (32 344 bytes em repouso) | 579 µs |
+| C: `stats()` do `HudStats` (três leituras de contador e uma busca do contexto) | 4,5 µs (mediana; p95 10,2 µs) |
+| C, o caminho não tomado: `application.evaluate("JSON.stringify(FrontierHud.stats())")` | 130 µs |
+| C, o caminho não tomado: o `snapshot()` da Surface (32 347 bytes em repouso) | 581 µs |
 
 **O custo do contador nativo por notificação, no C,** foi medido como a diferença dos quadros do soak entre a árvore de antes (`main.tscn` de `4c3abb7` no host anterior, sem contadores) e a de depois (no host novo), com o
-mesmo arnês, o instrumento de tempo de CPU do #97 e 5 execuções de 60 turnos de cada lado: a mediana dos quadros de `ai-phase` é 3,22 ms antes e 3,22 ms depois, o p95 6,98 e 7,04 ms, e a mediana de `event-burst`
-0,065 e 0,086 ms: **dentro da dispersão entre execuções** (as medianas de execuções soltas variam 0,4 ms). O custo por notificação está abaixo do que o instrumento enxerga, e por construção são poucas instruções.
-O B paga três incrementos por notificação. Na etapa de estresse da lane os dois braços contam os mesmos números (de 73 a 81 eventos e de 67 a 74 snapshots num turno, 103 eventos no fim).
+mesmo arnês, o instrumento de tempo de CPU do #97 e 5 execuções de 60 turnos de cada lado, alternadas: a mediana dos quadros de `ai-phase` é 3,22 ms antes e 3,22 ms depois, o p95 6,98 e 7,04 ms, e a mediana de `event-burst`
+0,065 e 0,086 ms: **dentro da dispersão entre execuções** (as medianas de execuções soltas variam 0,4 ms). Depois da correção da revisão (o contador conta revisões distintas: uma comparação a mais por evento), as leituras acima
+foram medidas de novo, e a árvore nova sozinha deu mediana de `ai-phase` de 3,44 ms em 5 execuções (3,43 a 3,46): 0,2 ms acima da primeira medida da mesma árvore, que é a deriva entre duas sessões de medida nesta máquina e
+tão grande quanto qualquer diferença que os contadores pudessem fazer. O custo por notificação está abaixo do que o instrumento enxerga, e por construção são poucas instruções. O B paga três incrementos por notificação.
+Na etapa de estresse da lane os dois braços contam os mesmos números (de 73 a 81 eventos e de 67 a 74 snapshots num turno, 103 eventos no fim).
 
 ## Prova
 
@@ -144,4 +146,4 @@ opcional e dos contadores (cerca de 60 linhas), a etapa de estresse na sonda da 
 
 ## Pins
 
-O commit de implementação é `6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35`. O `report.json` guarda o SHA-256 de cada fonte que as lanes rodaram, dos relatórios e das capturas; `costs.json` guarda os números brutos do custo.
+O commit de implementação é `ee96490db72b75e0bcf8a75a50db38487deb7ac3`. O `report.json` guarda o SHA-256 de cada fonte que as lanes rodaram, dos relatórios e das capturas; `costs.json` guarda os números brutos do custo.

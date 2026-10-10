@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "scenario": "frontier-stress",
   "status": "verified-local-headless-and-headed-causal-control-retained-sabotages-and-regressions",
-  "at": "2026-10-10T09:27:07Z",
+  "at": "2026-10-10T09:56:51Z",
   "item": "V05-10",
   "criteria": [],
   "criteriaNote": "no criterion closes: this slice serves execucao and metricas (the stress window and the runner's stats())",
   "executionBaseCommit": "4c3abb7",
-  "implementationCommit": "6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35",
-  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/6c5dae84a2b8b551d3cc3dcf66d45e3ac0d43d35",
+  "implementationCommit": "ee96490db72b75e0bcf8a75a50db38487deb7ac3",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/ee96490db72b75e0bcf8a75a50db38487deb7ac3",
   "environment": {
     "godot": "4.7.2.stable.official.ed1daf0bf",
     "node": "v22.23.3",
@@ -17,7 +17,7 @@
       "lane": "headless",
       "captures": "macOS window"
     },
-    "nativeHostSha256": "bf64406b771fb43bca0a58340a52442c9328d44b0dbffc949ecef96381138d29",
+    "nativeHostSha256": "09948ed21b921466c960f9d6f3ca6e75adcefbfe6b3509c33d0ba9e6dc8d9731",
     "previousHostSha256": "84d6ab94ea0c79cfaf16f8e009ab682899c8c8b5953ac9eaa5d4ac3e938b2c43",
     "nativeHostNote": "the host was rebuilt in this worktree for the optional field and the delivery counters; the previous host is the one of 4c3abb7's native sources"
   },
@@ -124,7 +124,7 @@
       "overlays": 23
     },
     "stressProbe": {
-      "checks": 17,
+      "checks": 18,
       "bindings": 18,
       "counters": {
         "emitted": 22,
@@ -148,7 +148,7 @@
   "reports": {
     "civ-lite-ui/headless": {
       "file": "build/civ-lite-ui/headless.json",
-      "sha256": "386c40a9214aa4b9f7cc94e79d3a944790a5bcda6a0dd3c9158d506a5a407f01",
+      "sha256": "89a8cade2d82ef2c0c27a7f6f190df27676ceffd6de128d63b79453e9d075a5f",
       "bytes": 1280561
     },
     "civ-lite-ui-native-hud/native-headless": {
@@ -158,8 +158,8 @@
     },
     "frontier-stress-report": {
       "file": "build/frontier-stress-report.json",
-      "sha256": "bab508102e3556827b5c130817fa0dcd2a914f75162f3e512cae0eafd38e8420",
-      "bytes": 7780
+      "sha256": "0c4addb29ef4512e9637d9488088d42ab3b87d59954690a3e5c6aaa885bf9f5e",
+      "bytes": 8190
     },
     "civ-lite-ui-native-hud/summary": {
       "file": "build/civ-lite-ui-native-hud/summary.json",
@@ -256,15 +256,15 @@
   },
   "costs": {
     "file": "docs/evidence/frontier-stress/costs.json",
-    "sha256": "75025bee82a5e8655239ba91c21c422377659927acf0161980c54a5dad11a98d",
-    "bytes": 9108
+    "sha256": "c73c7ad8145ffba4505066d62453e8ebad5e5f1a7e10346e94cf893efd835b2b",
+    "bytes": 15811
   },
   "gameUnchanged": "git diff 4c3abb7 on context.gd, game.gd, snapshot.gd, replay.gd, canon.gd, world/, the golden-hash test and the protocol is empty",
   "sourcePins": {
-    "native/game_service_registry.cpp": "472d44aeace827abde1415f82fce9557d9e5c0e7e904cd006adafd288135e8b6",
-    "native/game_service_registry.h": "7c519adb4296df4ed142eac34dfb2893b6d3e82905739b3f8a96f5a09d950914",
+    "native/game_service_registry.cpp": "309aa331f8cb68b1ef17e0a8fc06c3e586d614c133f43c5f48754f99762d47b0",
+    "native/game_service_registry.h": "ef8403df02d31797490d14b4d937eea94955b4e89e2ec2412b14ffd26b63992e",
     "native/fabric_application.cpp": "0234b623a0376af455f5b880bfaa10f2d2ed1d0cc1e134d4abdd72c980a1206f",
-    "native/fabric_application.h": "ec44868d121cd52ec4e568bb338dc268c98ff00a7d56827152de393d03059b2e",
+    "native/fabric_application.h": "f52bfabbba416fc7710c465ed254d436bda3614c739a08225e257bc998349112",
     "consumers/civ-lite/services/stress.gd": "13e2428f8d705718624fdbda2e0925a1781bf69c27156cb10f7cbadd9a247c79",
     "consumers/civ-lite/services/game_services.gd": "6507038421230b8e5116b01dc2de648e5beb602eb8351b0a2fe9aa2d3d6bf125",
     "consumers/civ-lite/services/schema.gd": "37b4ad510b08420f5cbf12f5d56f3910db2bd684aaf35184b1dc06cad2a73dc6",
@@ -282,14 +282,14 @@
     "consumers/civ-lite/hud_reader_host.gd": "9d7037cf0bc44ea64934fd8aa4359e396876b21f65d802f8d80ae1ae225f7487",
     "consumers/civ-lite/hud_reader_native.gd": "168c8e570a4aad2835c7622fc20d523e528e53ddcbcd69e85c502c18873847ee",
     "consumers/civ-lite/validation.gd": "d6c08d254e8b782e6d90196156f755b446408bc01d73ba0ec56abebcc068fa07",
-    "tests/frontier-stress-probe.gd": "b1b9ff0c6b9eabf7fbcc79353683a57589927c06264ca579195493cdef566465",
-    "tests/frontier-stress-native.test.mjs": "e0f738b5dd5077e10b10233536785be4f09ef8abe3a64ed64f182fda7fe21929",
+    "tests/frontier-stress-probe.gd": "5234c379524616b147aa61aeb511966b67d228c577c7b80e0414c3da12a62f4f",
+    "tests/frontier-stress-native.test.mjs": "ee20949c581e9ec831d8ac11e692e67b1b93f48d716e5183c369bac03c6d54b4",
     "tests/civ-lite-ui-oracle.mjs": "e743d46fe7c3ec9a0d41a86c63a26ebf327539ae29896501083bff248de0d1cc",
     "tests/civ-lite-ui-native.test.mjs": "d0cd0dda1fb12757535d3381d74e348912268e0722b77348ec8da1da8d837c66",
     "tests/civ-lite-stability-oracle.mjs": "3e48e62a916b47d1484259e64e1e067195253da4b492ba1c96321d3e0128854d",
-    "tests/frontier-services-oracle.mjs": "ec3b185f2d08c2d63f4f3c5cac94f4beed1c8b2840abba81566fcf19a3a2d077",
+    "tests/frontier-services-oracle.mjs": "5628fd61e8ea98daf022073f9484c2b3203ff8c36617cf48114d1ca26a341b9c",
     "tests/frontier-services-parity.test.mjs": "78ee187acd852fa8ba1ea8a9d9226093ce6795489672a7f74889f863d6178546",
-    "tests/frontier-services-probe.gd": "b6b28cb9cccc06e92fda77a89c9e000f7611c317997364a2a6a12952fedc08c2",
+    "tests/frontier-services-probe.gd": "117954c633e9494a63fc126d4c72163f12520df7dce26e202e148b2a4e7da675",
     "tests/frontier-soak-probe.gd": "60da22b20d700a4fd81b9e9c4bc2d4173eda7454d8bb3cdc292685ba883114b1",
     "tests/frontier-soak-oracle.mjs": "1df2633f2b0a85de20401688229b4e5258bac0819ae8b5bdb5af4f1b88d1e4f7",
     "tests/types/frontier-services.tsx": "82ca1af55826a9f7c15b61e113b6059081a83640bd8750bc86724e233f5ab622",
@@ -298,7 +298,7 @@
     ".github/workflows/contracts.yml": "f727cc82f964ba3f198a69a198b594ca685db66ba582e116a0c881368ce5dd88",
     "package.json": "b5e964464eabf756f3875b613cf05646537da5dc0e411e297d89335d31046787",
     "docs/GAME_SERVICES.md": "d191806fc286ffe185b9c84e793f91ddb9fc3f0d5b7a5ba54eca354c43230c7c",
-    "docs/research/frontier-stress.md": "d75d1dd607c89652fb4ca86ed2dc74541fc68007ca462439efbb61d8e27a2d8c",
+    "docs/research/frontier-stress.md": "0e479fcfe9aa156caac350003bec83020dc6093fd0c9a658f20ef3b33fbd6c76",
     "consumers/civ-lite/README.md": "3db1d262f43c1796738d5fe5372c579e2296d4289241778c57f16e31f1bc5545"
   },
   "effort": {
@@ -330,7 +330,7 @@
       "activeTimeHoursEstimated": 0.25
     },
     "shared": {
-      "note": "the game's overlay (stress.gd, 46 lines), the intents, the publisher and the counters in game_services.gd (+110 -9), the schema, the TypeScript mirror, the C++ of the optional field and the delivery counters (about 60 lines), the stress stage of the HUD probe (153 lines), the oracle's rules (77), the node probe (251) and the sabotages"
+      "note": "the game's overlay (stress.gd, 46 lines), the intents, the publisher and the counters in game_services.gd (+110 -9), the schema, the TypeScript mirror, the C++ of the optional field and the delivery counters (about 70 lines), the stress stage of the HUD probe (153 lines), the oracle's rules (77), the node probe (273) and the sabotages"
     },
     "activeTimeHoursEstimated": {
       "total": 1.5,
