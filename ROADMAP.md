@@ -963,7 +963,7 @@ that `--resume` continues an interrupted campaign (refused if the protocol, scri
 swappable launcher whose Release path refuses until V05-07 says how the scenario runs in an exported `.app`. A short rehearsal of 3 slots in Debug, headless, ran with the real self-check and
 the expected rejections (Debug build, window not presented, load); one killed with `SIGKILL` was resumed, and a resume with another package hash was refused. **A rehearsal, and no number in it
 is a result.** The Release launcher (V05-07), a quiet window with the load at 2.0 or less and the windowed self-check run for real are missing, and `execucao` stays open. The
-[record](https://github.com/journey-studios/godot-fabric/blob/c6bebd0498108a6edc0f5bcbf799c048b025eaab/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
+[record](https://github.com/journey-studios/godot-fabric/blob/f952152793b4e33660655715779145d2f8154c95/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
 Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
