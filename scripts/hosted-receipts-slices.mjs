@@ -208,4 +208,16 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-v05-05-overlays-67c3f16",
   },
+  {
+    folder: "windowed-presence",
+    pr: 99,
+    squash: "ffeeb5c",
+    contractsRun: 37989027813,
+    pagesRun: 37989027744,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-baseline-graphics.test.mjs", "tests/frontier-turn-graphics.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-windowed-presence-59cd006",
+  },
 ];
