@@ -41,6 +41,11 @@ import {renderIcons} from "../scripts/civ-lite-icons.mjs";
 //   - with --sabotage=<name> the same test runs a project whose source scripts/civ-lite-ui-sabotage.mjs broke on purpose, and it passes
 //     only if the probe's checks and the oracle both reject it, each for the reason it was broken.
 //
+// Arm B of the 0.5 comparison (V05-10, `braco-b`): the same game with a native Godot HUD (consumers/civ-lite/native_hud/), on the second scene
+// main_native.tscn. A second test below runs the same probes on it, through the reader seam (hud_reader.gd), and judges them with the same
+// oracles: the same table of panels per context, the same 46 steps of the matrix, the same rules. Its causal control is a native HUD that ignores
+// the context, and its retained sabotages (the `native-*` ones below) break the native HUD on purpose.
+//
 // --capture adds the headed runs: one PNG per context (seven) and one during the AI phase with the spinner, and the city overlay and the
 // dialog at 1 of 3, at 2 of 3 after the remount and at 3 of 3; and, of the stability run, the bar, the actions and the city screen with their icons, and the
 // city screen and the dialog in the first and in the last cycle.
@@ -55,13 +60,15 @@ const PROBES = {
   stability: {flag: "--validate-stability", report: "civ-lite-stability-report.json", marker: "CIVLITE_STABILITY"},
 };
 const CONTEXTS = Object.keys(TABLE);
+// The second scene: the game with the native HUD, no Application and no Surface.
+const NATIVE_SCENE = "res://main_native.tscn";
 const CONTROL_COMMIT = "5e1f6a1";
 // The commit before the queue and the overlays: the game and the HUD of slice 1.
 const OVERLAY_CONTROL_COMMIT = "622102e";
 const CONTROL_SHA256 = "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346";
-// What hud_validation.gd and overlay_validation.gd count in a run with no capture, and the captures a headed run adds (eight, and four).
+// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the overlay probe's last two are the Escape checks), and the captures a headed run adds (eight, and four).
 const EXPECTED_CHECKS = 144;
-const EXPECTED_OVERLAY_CHECKS = 26;
+const EXPECTED_OVERLAY_CHECKS = 28;
 // What stability_validation.gd counts: 41 in a run with no capture, and the seven pictures and the comparison of the last cycle's a headed run adds.
 const EXPECTED_STABILITY_CHECKS = 41;
 const CAPTURES = [...CONTEXTS, "ai-phase"];
@@ -85,6 +92,11 @@ const SABOTAGES = {
   "position-in-js": {categories: ["queue"], failed: [/the HUD showed the position the game gave/]},
   "city-in-tree": {categories: ["panels", "map", "blocking"], failed: [/The Modal covers the whole map in every step of the city and dialog contexts/, /With the city screen open, 100 left clicks, 100 right clicks and 100 wheel ticks on the map reach the World 0 times/]},
   "dialog-unkeyed": {categories: ["queue"], failed: [/Each event of the queue was a subtree of its own/]},
+  // The sabotages of arm B break the native HUD (`arm: "native"`): the same two probes run on main_native.tscn.
+  "native-city-shows-tile": {arm: "native", categories: ["panels"], failed: [/the HUD showed .* for the city context/]},
+  "native-overlay-not-blocking": {arm: "native", categories: ["map", "blocking"], failed: [/The Modal covers the whole map in every step of the city and dialog contexts/,
+    /With the city screen open, 100 left clicks, 100 right clicks and 100 wheel ticks on the map reach the World 0 times/]},
+  "native-end-turn-by-phase": {arm: "native", categories: ["bar"], failed: [/the bar's End turn is enabled exactly as the game's end_turn action says/]},
   // The sabotages of the stability lane run its probe alone (`mode: "stability"`), or only the static scan (`mode: "scan"`, `categories` are then the findings' kinds).
   "close-leaks-connection": {mode: "stability", categories: ["leak"], failed: [/the registry's subscriptions and pending work, the HUD's connections and the signal's are the first cycle's/]},
   "modal-stays-mounted": {mode: "stability", categories: ["leak", "coverage"], failed: [/after every close the screen is at rest with the Windows the game had before/]},
@@ -107,10 +119,10 @@ const assertNamesDoNotDependOnPace = (label, report) => assert.deepEqual(namesOf
 const assertSameNamesAsHeadless = (label, headed, headless) => assert.deepEqual(namesOf(headed).filter(name => !name.startsWith("Capture saved: ")), namesOf(headless), `${label}: the headed run has the checks of the headless one, with the same names`);
 
 // One probe run on a provisioned project: the log and the report it wrote, both kept in build/<lane>/.
-async function probe(harness, label, {mode = "hud", headed = false, expectFailures = false} = {}) {
+async function probe(harness, label, {mode = "hud", headed = false, expectFailures = false, scene = null} = {}) {
   const {flag, report: reportFile} = PROBES[mode];
   await rm(path.join(harness.project, reportFile), {force: true});
-  const log = await harness.run(label, harness.godot, ["--path", harness.project, ...(headed ? [] : ["--headless"]), "--", flag,
+  const log = await harness.run(label, harness.godot, ["--path", harness.project, ...(headed ? [] : ["--headless"]), ...(scene === null ? [] : [scene]), "--", flag,
     ...(headed ? ["--capture"] : []), ...(expectFailures ? ["--sabotage"] : [])]);
   const report = JSON.parse(await readFile(path.join(harness.project, reportFile), "utf8"));
   await writeFile(path.join(harness.directory, `${label}.json`), JSON.stringify(report, null, 2) + "\n");
@@ -209,6 +221,9 @@ const OVERLAY_MUTATIONS = [
   {name: "a wheel tick selected a tile under the dialog", category: "blocking", change: report => { report.blocking.dialogOpen[2].selectCalls = 1; }},
   {name: "the clicks do not reach the world after the overlay closed", category: "blocking", change: report => { report.blocking.cityAfter[0].heardAfter.buttons -= 2; }},
   {name: "a Pressable in the overlay does nothing", category: "blocking", change: report => { report.blocking.cityPress.calls = 0; }},
+  {name: "Escape on the city screen did not clear the selection", category: "escape", change: report => { report.escape.city.clearCalls = 0; }},
+  {name: "Escape on the dialog answered the event", category: "escape", change: report => { report.escape.dialog.sameHead = false; }},
+  {name: "Escape on the dialog reached the game", category: "escape", change: report => { report.escape.dialog.calls = 1; }},
   {name: "the new session kept the queue", category: "newgame", change: report => { report.newGame.fresh.events.queue = ["scholar"]; }},
   {name: "the new session did not raise its own events", category: "newgame", change: report => { report.newGame.raised.events.queue = []; }},
 ];
@@ -627,6 +642,166 @@ if (sabotage === null) {
     assert.ok(existsSync(path.join(directory, "headless.json")));
     console.log(`CIVLITE_UI_LANE_PASSED: ${report.checks.length} + ${overlays.report.checks.length} + ${stability.report.checks.length} probe checks; ${MUTATIONS.length} + ${OVERLAY_MUTATIONS.length} + ${STABILITY_MUTATIONS.length} oracle mutations and ${SCAN_MUTATIONS.length} of the scan; controls ${controlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(controlSummary.categories)}`}, ${overlayControlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(overlayControlSummary.categories)}`} and ${stabilityControlSummary.categories === undefined ? "not run" : `fail ${JSON.stringify(stabilityControlSummary.categories)}`}`);
   });
+
+  // Arm B: the native Godot HUD on the second scene, held to parity by the same matrix and the same oracles.
+  test("Frontier's native HUD (arm B) shows the table's panels in each of the seven contexts, as the React Native HUD does", {timeout: 1500000}, async t => {
+    const harness = await createHarness({template: "civ-lite", name: "civ-lite-ui-native-hud"});
+    t.after(() => harness.cleanup());
+    const {directory, project, verify} = harness;
+    await harness.provision();
+
+    // The second scene mirrors main.tscn without the Application and without the Surface, and the HUD is Godot's own: a scene with a script for each
+    // panel, no TSX, no host and no registered service.
+    const scene = await readFile(path.join(project, "main_native.tscn"), "utf8");
+    assert.match(scene, /^\[node name="GameServices" type="Node"\]/m);
+    assert.match(scene, /\[node name="World" parent="\." instance=ExtResource\("\d+"\)\]/);
+    assert.match(scene, /\[node name="HUD" parent="HUDLayer" instance=ExtResource\("\d+"\)\]/);
+    assert.doesNotMatch(scene, /Application|FabricSurface|godot_fabric|fabric_api/, "the native scene has no Application, no Surface and no facade");
+    assert.ok(scene.indexOf('name="World"') < scene.indexOf('name="HUDLayer"'), "the World is ahead of the HUD's layer, as in main.tscn");
+    const hudFolder = path.join(project, "native_hud");
+    const hudScripts = readdirSync(hudFolder).filter(file => file.endsWith(".gd"));
+    for (const file of ["hud", "bar", "actions", "tile", "city", "research", "dialog", "overlay", "menu"]) {
+      assert.ok(existsSync(path.join(hudFolder, `${file}.gd`)), `native_hud/${file}.gd exists`);
+    }
+    for (const file of ["hud", "bar", "actions", "tile", "city", "research", "dialog", "menu"]) {
+      assert.ok(existsSync(path.join(hudFolder, `${file}.tscn`)), `native_hud/${file}.tscn exists`);
+    }
+    for (const file of hudScripts) {
+      assert.doesNotMatch((await readFile(path.join(hudFolder, file), "utf8")).replace(/#.*$/gm, ""), /\b(GodotFabric|FabricSurface|fabric_api|runtime_available)\b/,
+        `native_hud/${file} talks to no React Native host`);
+    }
+    verify(true, `The second scene is the game with a native HUD: GameServices, the World ahead of the HUD's layer and ${hudScripts.length} scripts of the HUD, with no Application, no Surface and no facade`);
+    await harness.editor("editor");
+
+    // Arm A's scene, the game with no HUD (GameServices and the World), boots with no error and exits 0.
+    const bare = await harness.run("bare-boot", harness.godot, ["--path", project, "--headless", "res://main_bare.tscn", "--quit-after", "60"]);
+    assert.doesNotMatch(bare, /(?:^|\n)ERROR:|FABRIC_ERROR/, "the bare scene logs no engine error");
+    verify(true, "main_bare.tscn, the game with no HUD for arm A, boots headless with no error and exits 0");
+
+    // The genuine run, headless: the same probe, the same checks, the same report, judged by the same oracle.
+    const {log, report} = await probe(harness, "native-headless", {scene: NATIVE_SCENE});
+    assert.match(log, /CIVLITE_UI_PASSED/);
+    assert.doesNotMatch(log, /(?:^|\n)ERROR:|FABRIC_ERROR/, "the native run logs no engine error");
+    assert.deepEqual(failedChecks(report), [], "every check of the probe passed on the native HUD");
+    assert.equal(report.arm, "native");
+    assert.equal(report.checks.length, EXPECTED_CHECKS, "the probe ran the same checks on both arms");
+    assertNamesDoNotDependOnPace("the HUD probe on the native HUD", report);
+    verify(report.checks.length > 0 && report.displayServer === "headless", `The probe ran ${report.checks.length} checks headless on the native HUD and every one passed`);
+    assertHudReport(report);
+    verify(true, "The independent oracle accepts the native run: the panels of the seven contexts, the actions, the bar, the turn, the pointer");
+    assert.equal(report.matrix.length, 46);
+    assert.deepEqual(Object.fromEntries(CONTEXTS.map(context => [context, row(report, context).snapshot.context])), Object.fromEntries(CONTEXTS.map(context => [context, context])));
+    const parity = {};
+    for (const context of CONTEXTS) {
+      assert.deepEqual(row(report, context).panels.map(id => id.slice("hud-".length)), TABLE[context], `${context} mounts ${TABLE[context].join(", ")}`);
+      parity[context] = row(report, context).panels;
+    }
+    verify(true, "The seven covering steps (stack 2, settler 3, warrior 9, city 18, tile 32, none 33, dialog 45) showed exactly the table's panels on the native HUD");
+
+    // The oracle can fail on the native report as it does on the host's: each mutation of a copy is rejected in the category it breaks.
+    assert.deepEqual(judgeHudReport(report), []);
+    for (const mutation of MUTATIONS) {
+      const mutated = structuredClone(report);
+      mutation.change(mutated);
+      assert.notDeepEqual(mutated, report, `${mutation.name}: the mutation changed nothing`);
+      const found = judgeHudReport(mutated);
+      assert.ok(categoriesOf(found).includes(mutation.category), `${mutation.name}: the oracle must report ${mutation.category} on the native report, and found ${JSON.stringify(categoriesOf(found))}`);
+    }
+    verify(true, `The oracle rejects each of ${MUTATIONS.length} mutated copies of the native report, in the category each breaks`);
+    const summary = {format: "godot-fabric.civ-lite-ui-native/v1", arm: "native", scene: NATIVE_SCENE, steps: report.matrix.length, checks: report.checks.length, covering: report.covering, parity,
+      published: report.phase.published.map(entry => entry.phase), framesObserved: report.phase.free.samples.length,
+      mutations: MUTATIONS.map(mutation => ({name: mutation.name, category: mutation.category}))};
+
+    // The overlay probe on the native HUD: the queue of three, the blocking overlays and a new game. What the arm cannot say is on record.
+    const overlays = await probe(harness, "native-overlays", {mode: "overlays", scene: NATIVE_SCENE});
+    assert.match(overlays.log, /CIVLITE_OVERLAYS_PASSED/);
+    assert.doesNotMatch(overlays.log, /(?:^|\n)ERROR:|FABRIC_ERROR/, "the native overlay run logs no engine error");
+    assert.deepEqual(failedChecks(overlays.report), [], "every check of the overlay probe passed on the native HUD");
+    assert.equal(overlays.report.arm, "native");
+    assert.equal(overlays.report.checks.length, EXPECTED_OVERLAY_CHECKS, "the overlay probe ran the same checks on both arms");
+    assertNamesDoNotDependOnPace("the overlay probe on the native HUD", overlays.report);
+    assertOverlayReport(overlays.report);
+    assert.deepEqual(overlays.report.notApplicable, ["the application's error list after a remount (there is no Application node)"]);
+    verify(true, `The overlay probe ran ${overlays.report.checks.length} checks on the native HUD and the independent oracle accepts them: the queue of three in order, the HUD taken out of the tree and put back, the blocking overlays, a new game`);
+    for (const mutation of OVERLAY_MUTATIONS) {
+      const mutated = structuredClone(overlays.report);
+      mutation.change(mutated);
+      assert.notDeepEqual(mutated, overlays.report, `${mutation.name}: the mutation changed nothing`);
+      const found = judgeOverlayReport(mutated);
+      assert.ok(categoriesOf(found).includes(mutation.category), `${mutation.name}: the overlay oracle must report ${mutation.category} on the native report, and found ${JSON.stringify(categoriesOf(found))}`);
+    }
+    const unlisted = structuredClone(overlays.report);
+    unlisted.notApplicable = [];
+    assert.ok(judgeOverlayReport(unlisted).length > 0, "an arm that skips a check without listing it is rejected");
+    verify(true, `The overlay oracle rejects each of ${OVERLAY_MUTATIONS.length} mutated copies of the native report, and a native report that does not list what it cannot say`);
+    summary.overlays = {checks: overlays.report.checks.length, rounds: overlays.report.queue.rounds.map(entry => [entry.dialog.id, entry.dialog.index, entry.dialog.count, entry.pick]),
+      remountFrames: overlays.report.remount.remounted.samples.length, notApplicable: overlays.report.notApplicable, mutations: OVERLAY_MUTATIONS.map(mutation => ({name: mutation.name, category: mutation.category}))};
+
+    // The causal control: a native HUD that ignores the context (it mounts the actions and the tile card in all seven) on the same scene and probe.
+    const control = await createHarness({template: "civ-lite", name: "civ-lite-ui-native-control"});
+    t.after(() => control.cleanup());
+    await control.provision();
+    const hudSource = path.join(control.project, "native_hud", "hud.gd");
+    const genuine = await readFile(hudSource, "utf8");
+    const table = /const PANELS := \{[^}]*\}\n/;
+    assert.match(genuine, table, "the HUD has its table of panels");
+    const ignoring = genuine.replace(table, `const PANELS := {${CONTEXTS.map(context => `"${context}": ["actions", "tile"]`).join(", ")}}\n`);
+    assert.notEqual(ignoring, genuine);
+    await writeFile(hudSource, ignoring);
+    await control.editor("editor");
+    const controlRun = await probe(control, "native-control", {scene: NATIVE_SCENE, expectFailures: true});
+    const controlFindings = judgeHudReport(controlRun.report);
+    const controlFailed = failedChecks(controlRun.report);
+    assert.ok(controlFailed.length > 0 && controlFindings.length > 0, "a native HUD that ignores the context must fail the matrix");
+    assert.ok(categoriesOf(controlFindings).includes("panels") && categoriesOf(controlFindings).includes("map"), `the broken native HUD fails the panels and the map: ${JSON.stringify(categoriesOf(controlFindings))}`);
+    const panelsFailed = controlFailed.filter(name => /the HUD showed .* for the (none|city|dialog) context/.test(name));
+    assert.ok(panelsFailed.length > 0, "the probe's own matrix check fails for the contexts that mount other panels");
+    await writeFile(path.join(directory, "control-observed.json"), JSON.stringify({
+      format: "godot-fabric.civ-lite-ui-native-control/v1", broken: "a native HUD whose table mounts the actions and the tile card in all seven contexts", failedChecks: controlFailed, categories: categoriesOf(controlFindings),
+      findingCounts: Object.fromEntries(categoriesOf(controlFindings).map(category => [category, controlFindings.filter(finding => finding.category === category).length])),
+      findings: controlFindings.filter(finding => finding.category !== "phase").slice(0, 40).map(finding => `[${finding.category}] ${finding.message.slice(0, 240)}`),
+      matrixSteps: controlRun.report.matrix.length, panelsShownAtCovering: Object.fromEntries(CONTEXTS.map(context => [context, row(controlRun.report, context).panels])),
+    }, null, 2) + "\n");
+    verify(true, `A native HUD that ignores the context fails the matrix: ${JSON.stringify(categoriesOf(controlFindings))} (${controlFailed.length} checks of the probe)`);
+    summary.control = {categories: categoriesOf(controlFindings), failedChecks: controlFailed.length};
+
+    if (capture) {
+      const {log: headedLog, report: headed} = await probe(harness, "native-graphical", {headed: true, scene: NATIVE_SCENE});
+      assert.match(headedLog, /CIVLITE_UI_PASSED/);
+      assert.deepEqual(failedChecks(headed), [], "every check of the headed native run passed");
+      assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed native run adds the eight captures");
+      assertSameNamesAsHeadless("the HUD probe on the native HUD", headed, report);
+      assertHudReport(headed);
+      summary.captures = {};
+      for (const stage of CAPTURES) {
+        const file = path.join(directory, `${stage}.png`);
+        await copyFile(path.join(project, `civ-lite-ui-${stage}.png`), file);
+        const bytes = await readFile(file);
+        assert.deepEqual([...bytes.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `${stage}.png is a PNG`);
+        summary.captures[stage] = {sha256: hash(bytes), bytes: bytes.length};
+      }
+      assert.equal(new Set(Object.values(summary.captures).map(entry => entry.sha256)).size, CAPTURES.length, "the eight captures are eight different pictures");
+      const overlaysHeaded = await probe(harness, "native-overlays-graphical", {mode: "overlays", headed: true, scene: NATIVE_SCENE});
+      assert.match(overlaysHeaded.log, /CIVLITE_OVERLAYS_PASSED/);
+      assert.deepEqual(failedChecks(overlaysHeaded.report), [], "every check of the headed native overlay run passed");
+      assert.equal(overlaysHeaded.report.checks.length, overlays.report.checks.length + OVERLAY_CAPTURES.length);
+      assertSameNamesAsHeadless("the overlay probe on the native HUD", overlaysHeaded.report, overlays.report);
+      assertOverlayReport(overlaysHeaded.report);
+      summary.overlayCaptures = {};
+      for (const stage of OVERLAY_CAPTURES) {
+        const file = path.join(directory, `overlay-${stage}.png`);
+        await copyFile(path.join(project, `civ-lite-overlay-${stage}.png`), file);
+        const bytes = await readFile(file);
+        assert.deepEqual([...bytes.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `overlay-${stage}.png is a PNG`);
+        summary.overlayCaptures[stage] = {sha256: hash(bytes), bytes: bytes.length};
+      }
+      assert.equal(new Set(Object.values(summary.overlayCaptures).map(entry => entry.sha256)).size, OVERLAY_CAPTURES.length, "the four overlay captures are four different pictures");
+      verify(true, `The headed native run saved ${CAPTURES.length} captures (one per context and one in the AI phase) and ${OVERLAY_CAPTURES.length} of the overlays`);
+    }
+
+    await writeFile(path.join(directory, "summary.json"), JSON.stringify({...summary, checks: harness.checks}, null, 2) + "\n");
+    console.log(`CIVLITE_UI_NATIVE_PASSED: ${report.checks.length} + ${overlays.report.checks.length} probe checks on the native HUD; ${MUTATIONS.length} + ${OVERLAY_MUTATIONS.length} oracle mutations; control fails ${JSON.stringify(summary.control.categories)}`);
+  });
 } else {
   // A retained sabotage: the project was broken on purpose, and the probe and the oracle must both reject it.
   test(`the ${sabotage} sabotage is rejected by the probe and by the oracle`, {timeout: 600000}, async t => {
@@ -645,8 +820,9 @@ if (sabotage === null) {
     } else {
       await harness.editor("editor");
       // The probes run on the broken project, each with the verdict of its own; what they and the oracles say is added up.
+      const scene = expected.arm === "native" ? NATIVE_SCENE : null;
       const runs = expected.mode === "stability" ? [[await probe(harness, "stability", {mode: "stability", expectFailures: true}), judgeStabilityReport]]
-        : [[await probe(harness, "headless", {expectFailures: true}), judgeHudReport], [await probe(harness, "overlays", {mode: "overlays", expectFailures: true}), judgeOverlayReport]];
+        : [[await probe(harness, "headless", {expectFailures: true, scene}), judgeHudReport], [await probe(harness, "overlays", {mode: "overlays", expectFailures: true, scene}), judgeOverlayReport]];
       failed = runs.flatMap(([run]) => failedChecks(run.report));
       findings = runs.flatMap(([run, judge]) => judge(run.report));
       for (const [run] of runs) {

@@ -9,7 +9,7 @@ extends Node
 # consumers/minimal/game.gd does: that signal fires while the application enters the tree, before any surface mounts and
 # before the bundle evaluates, and `_ready` would be too late. The bindings belong to this node and the application, not
 # to a surface: unmounting and remounting a FabricSurface leaves the bindings, the state and the epoch as they were.
-# `_exit_tree` removes them.
+# `_exit_tree` removes them. A scene without an Application child (the native HUD's, main_native.tscn) registers nothing.
 #
 # Epoch. The session's epoch is an integer that lives here. It starts at 1 and `new_game` raises it by 1; it is handed to
 # the game, so it reaches the snapshot, and it never enters the state or its hash.
@@ -92,7 +92,10 @@ func _init() -> void:
 
 
 func _enter_tree() -> void:
-  $Application.runtime_available.connect(_bind_services)
+  # A scene with a native HUD (main_native.tscn) has no Application: nothing is registered, and the HUD plays on the node's methods and signals.
+  var application := get_node_or_null("Application")
+  if application != null:
+    application.runtime_available.connect(_bind_services)
 
 
 func _exit_tree() -> void:

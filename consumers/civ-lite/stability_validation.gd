@@ -257,16 +257,6 @@ func fill_telemetry() -> void:
 
 # --- Driving ---------------------------------------------------------------------------------------------------------
 
-func press_escape() -> void:
-  for down in [true, false]:
-    var event := InputEventKey.new()
-    event.keycode = KEY_ESCAPE
-    event.physical_keycode = KEY_ESCAPE
-    event.pressed = down
-    get_viewport().push_input(event, true)
-    await frames(2)
-
-
 # The Window that is exclusive in the snapshot: the Modal's.
 func modal_window() -> Window:
   for entry: Dictionary in surface().get("nodes", []):
