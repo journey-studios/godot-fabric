@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {UNPACED, graphicsRunValidity, summarizeGraphicsRuns, verifyGraphicsReceipt} from "./frontier-baseline-oracle.mjs";
-import {CLICK_FRAME_LIMIT, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
-import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
+import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GRAPHICS_RUNS, IDLE_FRAMES, PHASES, STEADY_ROUNDS, STEPS, CONTEXT_PANELS, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
+import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTourOfTheQueue, verifyTurnGraphicsRun, verifyTurnRecord} from "./frontier-turn-oracle.mjs";
 
 // The windowed lane of the turn on synthetic runs (no Godot, no display): the validity rule is the baseline's, imported, and what this file shows is that the
 // turn's runs fit it. A frame time exists only if a display presents the window: a run whose window did not draw, or whose idle frame median is under half of
@@ -11,32 +11,47 @@ import {graphicsReceiptSource, graphicsRunOf, summarizeTurnFrames, verifyTurnGra
 const PRESENTED_IDLE_USEC = 7800;
 const UNPACED_IDLE_USEC = 530;
 const NATIVE = {none: 14, tile: 18, settler: 27, warrior: 24, stack: 26, city: 42, dialog: 24};
+// The dialog as the HUD shows it when a step arrives: the event at the head of the queue the step leads to, with its position, or nothing.
+const dialogOf = step => {
+  const head = EVENT_QUEUE.findIndex(event => event.choices[0] === step.head);
+  return step.to === "dialog" ? {choices: EVENT_QUEUE[head].choices.map(choice => `hud-dialog-choice-${choice}`).sort(), position: `${head + 1} of ${EVENT_QUEUE.length}`} : {choices: [], position: ""};
+};
 
 // The end of a turn as the probe records it: seven frames that advance a phase each and publish a snapshot each, and one more in which the HUD catches up.
 const turnOf = (job, frameUsec) => ({job, snapshots: PHASES.length, turnEnded: 1, finishedJob: 1,
   ended: {job, phases: PHASES.slice(0, 6).map(name => ({name, tasks: 1, events: 1}))},
-  frames: [...PHASES.map((phase, index) => ({phase, job: index < 6 ? job : 0, usec: frameUsec + index * 100, nodes: 56, snapshots: 1, turnEnded: index === 6 ? 1 : 0, spinner: index > 0, stamp: 1})),
-    {phase: "idle", job: 0, usec: frameUsec, nodes: 24, snapshots: 0, turnEnded: 0, spinner: false, stamp: 2}],
+  frames: [...PHASES.map((phase, index) => ({phase, job: index < 6 ? job : 0, usec: frameUsec + index * 100, nodes: 56, snapshots: 1, turnEnded: index === 6 ? 1 : 0, spinner: index > 0, surfaceReads: 0, stamp: 1})),
+    {phase: "idle", job: 0, usec: frameUsec, nodes: 24, snapshots: 0, turnEnded: 0, spinner: false, surfaceReads: 0, stamp: 2}],
   host: {commits: 8, creates: 4, deletes: 32, updates: 20, pumpMs: 24, jsMs: 21, mountMs: 2, layoutMs: 1, pumpCount: 10, jsCount: 8, mountCount: 3, layoutCount: 3},
   pumpWindowMs: Array(10).fill(2)});
 
 // A run of the windowed probe, as tests/frontier-turn-probe.gd --lane=windowed writes it.
-function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true, refreshRate = 120, frameUsec = 7000} = {}) {
+// The record of the window's presence as tests/window-presence.gd writes it: `undrawable` frames of 5000 in which the engine could not draw, in one span.
+const presenceOf = undrawable => ({windowed: true, opened: {windowed: true, alwaysOnTop: true, focused: true, mode: 0, canDraw: true, waitedFrames: 12, waitedUsec: 101_000,
+  stableFrames: 12, waitLimitUsec: 3_000_000}, sampledFrames: 5000, undrawableFrames: undrawable, spanCount: undrawable > 0 ? 1 : 0,
+spans: undrawable > 0 ? [[300, undrawable, 2_400_000, 2_400_000 + undrawable * 7000]] : [], canDrawAtEnd: undrawable === 0});
+
+// What the Surface's snapshot weighed at a rest of a round (the probe's `surface` row): its bytes, the records of the loader's log it carried and the loads asked for, the log filling
+// 27 records a round up to its limit of 256.
+const weighed = round => ({bytes: 31_000 + 12_000 * round, loaderRecords: Math.min(256, 3 + 27 * round), loaderRequests: 3 + 27 * round});
+
+function syntheticReport({run = 1, idleUsec = PRESENTED_IDLE_USEC, drawn = true, refreshRate = 120, frameUsec = 7000, presence} = {}) {
   let job = 0;
   const rounds = Array.from({length: WARMUP_ROUNDS + STEADY_ROUNDS}, (_, round) => ({round, steps: STEPS.map((step, index) => ({
     round, step: index, id: step.id, kind: step.kind, from: step.from, to: step.to, intent: step.intent, frames: step.kind === "turn" ? 8 : 2, flushUsec: 800,
-    latencyUsec: step.kind === "turn" ? 52000 : 9000, drawUsec: drawn ? 11000 : null, frameUsec: [8000, 8000], callbacks: {[step.intent]: 1},
-    worldEvents: step.kind === "map" ? 2 : 0, worldClicks: step.kind === "map" ? 2 : 0, shown: CONTEXT_PANELS[step.to], contextAtArrival: step.to,
-    rest: {context: step.to, panels: CONTEXT_PANELS[step.to], surface: {nativeTags: NATIVE[step.to]}}, turn: step.kind === "turn" ? turnOf(++job, frameUsec) : null}))}));
+    latencyUsec: step.kind === "turn" ? 52000 : 9000, drawUsec: drawn ? 11000 : null, frameUsec: [8000, 8000], frameReads: [0, 0], fullAgrees: true, callbacks: {[step.intent]: 1},
+    worldEvents: step.kind === "map" ? 2 : 0, worldClicks: step.kind === "map" ? 2 : 0, shown: CONTEXT_PANELS[step.to], dialog: dialogOf(step), contextAtArrival: step.to,
+    rest: {context: step.to, panels: CONTEXT_PANELS[step.to], surface: {nativeTags: NATIVE[step.to], ...weighed(round)}}, turn: step.kind === "turn" ? turnOf(++job, frameUsec) : null})),
+    start: {surface: {nativeTags: NATIVE.none, ...weighed(round)}}}));
   return {scenario: "frontier-turn-graphics", lane: "windowed", run, godot: "4.7.2-stable (official)", checks: [{name: "click/Every click showed", passed: true}],
     stages: {config: {steps: STEPS, warmupRounds: WARMUP_ROUNDS, rounds: STEADY_ROUNDS, idleFrames: IDLE_FRAMES, clickFrameLimit: CLICK_FRAME_LIMIT, turnFrameLimit: TURN_FRAME_LIMIT},
       provenance: {godot: "4.7.2-stable (official)", hermes: "250829098.0.17", architecture: "arm64", os: "macOS", displayServer: "macOS", renderingDriver: "metal",
         renderingMethod: "gl_compatibility", processor: "Apple M3 Pro", vsyncMode: 1, vsyncModeName: "enabled", refreshRate},
       scene: {mounted: true}, aborted: null, rounds, idle: {frames: IDLE_FRAMES, intervalsUsec: Array(IDLE_FRAMES).fill(idleUsec), draws: drawn ? IDLE_FRAMES + 1 : 0},
-      frames: {processed: 5000, drawn: drawn ? 4996 : 0}}};
+      frames: {processed: 5000, drawn: drawn ? 4996 : 0}, ...(presence === undefined ? {} : {presence})}};
 }
 
-const rawOf = report => ({run: report.run, attempt: report.run, idleIntervalsUsec: report.stages.idle.intervalsUsec});
+const rawOf = report => ({run: report.run, attempt: report.run, presence: report.stages.presence ?? null, idleIntervalsUsec: report.stages.idle.intervalsUsec});
 
 // A receipt as scripts/frontier-turn-graphics.mjs writes it, from the runs it accepted and the attempts it rejected.
 function receiptOf({accepted, rejected = [], presented}) {
@@ -76,13 +91,50 @@ test("a run that is not a run of the tour in a window is refused", () => {
   const skipped = syntheticReport();
   skipped.stages.rounds[4].steps[12].turn.frames.splice(3, 1);
   assert.throws(() => verifyTurnGraphicsRun(skipped), /one phase in each frame/);
+  const wrongEvent = syntheticReport();
+  wrongEvent.stages.rounds[4].steps[STEPS.findIndex(step => step.id === "answer-event-2")].dialog.position = "1 of 3";
+  assert.throws(() => verifyTurnGraphicsRun(wrongEvent), /the dialog showed the event 3 of the queue/);
   const failedCheck = syntheticReport();
   failedCheck.checks[0].passed = false;
   assert.throws(() => verifyTurnGraphicsRun(failedCheck), /Every check of the run passed/);
 });
 
+// What a timed frame measures is the game's and the HUD's, and nothing that the probe adds by looking: a read of the Surface's snapshot (the whole application's status, among it the
+// loader's log of every image) inside an interval between two timed frames, or a count that is missing, is not a run of this lane.
+test("a run in which the probe read the Surface's snapshot inside a timed frame is refused", () => {
+  const inAClick = syntheticReport();
+  inAClick.stages.rounds[4].steps[2].frameReads = [0, 1];
+  assert.throws(() => verifyTurnGraphicsRun(inAClick), /no timed frame contains one/);
+  const inATurn = syntheticReport();
+  inATurn.stages.rounds[4].steps[12].turn.frames[2].surfaceReads = 1;
+  assert.throws(() => verifyTurnGraphicsRun(inATurn), /nor does any frame of the turn/);
+  const uncounted = syntheticReport();
+  delete uncounted.stages.rounds[4].steps[2].frameReads;
+  assert.throws(() => verifyTurnGraphicsRun(uncounted), /counted in every timed frame/);
+  const shortCount = syntheticReport();
+  shortCount.stages.rounds[4].steps[2].frameReads = [0];
+  assert.throws(() => verifyTurnGraphicsRun(shortCount), /counted in every timed frame/);
+  const another = syntheticReport();
+  another.stages.rounds[4].steps[8].fullAgrees = false;
+  assert.throws(() => verifyTurnGraphicsRun(another), /say the same when the click arrives/);
+  // And what a read of the snapshot weighs at a rest, in the windowed lane as in the headless one: a round start or a step's rest with no measurement, no bytes, or more records than
+  // the log keeps or than the loads asked for, is not a run of this lane.
+  const unweighed = syntheticReport();
+  delete unweighed.stages.rounds[4].start.surface.loaderRecords;
+  assert.throws(() => verifyTurnGraphicsRun(unweighed), /round 4 start: the snapshot read at rest weighs/);
+  const pastTheLog = syntheticReport();
+  Object.assign(pastTheLog.stages.rounds[12].start.surface, {loaderRecords: 257, loaderRequests: 400});
+  assert.throws(() => verifyTurnGraphicsRun(pastTheLog), /round 12 start: the snapshot read at rest weighs .* 257 records/);
+  const pastTheLoads = syntheticReport();
+  pastTheLoads.stages.rounds[2].steps[5].rest.surface.loaderRecords = pastTheLoads.stages.rounds[2].steps[5].rest.surface.loaderRequests + 1;
+  assert.throws(() => verifyTurnGraphicsRun(pastTheLoads), /the snapshot read at rest weighs/);
+  const weightless = syntheticReport();
+  weightless.stages.rounds[3].steps[0].rest.surface.bytes = 0;
+  assert.throws(() => verifyTurnGraphicsRun(weightless), /the snapshot read at rest weighs 0 bytes/);
+});
+
 test("the turn's frames: a phase in each frame, a snapshot in each, the end once, and the HUD catching up after", () => {
-  const record = syntheticReport().stages.rounds[3].steps[11];
+  const record = syntheticReport().stages.rounds[3].steps[STEPS.findIndex(step => step.id === "end-turn-1")];
   assert.equal(verifyTurnRecord(record, "synthetic").busy.length, PHASES.length);
   const twice = structuredClone(record);
   twice.turn.frames[6].turnEnded = 2;
@@ -196,4 +248,93 @@ test("a lane that claims to be presented has all its runs and their statistics",
   receipt.status = "presented";
   receipt.summary = null;
   assert.throws(() => verifyGraphicsReceipt(receipt), /all its runs/);
+});
+
+// The rules of the tour itself, on mutated copies of the cases' steps and not through a report (a report whose steps differ from the cases fails the oracle's config rule before these
+// rules run on it): the tour the oracle accepts is the cases', and each copy breaks one rule and is refused with the message of that rule.
+const tourWith = change => {
+  const steps = structuredClone(STEPS);
+  change(steps, id => steps.find(step => step.id === id));
+  return steps;
+};
+
+test("the tour of the queue and the Modals: the cases' steps are accepted, and each rule has a mutation that only it refuses", () => {
+  verifyTourOfTheQueue(STEPS);
+  // Nothing is clicked on the map or on the bar while a Modal is open.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("map-city").from = "city"; })), /no click of the map or of the bar while a Modal is open \(city\)/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("end-turn-1").from = "dialog"; })), /no click of the map or of the bar while a Modal is open \(dialog\)/);
+  // Each time the city screen opens the next click is its Close.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("close-city").target = "hud-bar-end-turn"; })), /the city screen opens and the next click is its Close/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith(steps => steps.splice(steps.findIndex(step => step.id === "close-city-again"), 1))), /the city screen opens and the next click is its Close/);
+  // The answers are the three events in the order of the queue, each with its first choice, and each leads to the head that follows.
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => {
+    [step("answer-event-1").target, step("answer-event-2").target] = [step("answer-event-2").target, step("answer-event-1").target];
+  })), /answers the three events in the order of the queue/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-1").head = "host"; })), /names the first choice of the head it leads to/);
+  assert.throws(() => verifyTourOfTheQueue(tourWith((_, step) => { step("answer-event-3").to = "dialog"; })), /the last answer closes the dialog/);
+});
+
+// ----------------------------------------------------------------------------------------------------- the window's presence (tests/window-presence.gd)
+test("a run of the turn's probe carries the window's presence, and a refusal for not drawing says what the engine said", () => {
+  const withPresence = syntheticReport({presence: presenceOf(112)});
+  verifyTurnGraphicsRun(withPresence);
+  assert.equal(graphicsRunOf(withPresence).presence.undrawableFrames, 112, "the run in the baseline's shape carries it");
+  assert.equal(graphicsRunOf(syntheticReport()).presence, undefined, "a run recorded before it has none");
+  verifyTurnGraphicsRun(syntheticReport());
+  const covered = validity(syntheticReport({drawn: false, presence: presenceOf(2400)}));
+  assert.equal(covered.valid, false);
+  assert.match(covered.reason, /^undrawn: .*\(window_can_draw\(\) was false in 2400 of 5000 sampled frames, in 1 span: .*read from the spans\)$/);
+  assert.equal(covered.undrawableFrames, 2400);
+  assert.equal(covered.sampledFrames, 5000);
+  const capable = validity(syntheticReport({drawn: false, presence: presenceOf(0)}));
+  assert.equal(capable.valid, false, "a window the engine could draw that was not drawn is refused all the same");
+  assert.match(capable.reason, /^undrawn: .*\(window_can_draw\(\) was never false in the 5000 sampled frames: the engine believed it could draw, and the cause is open\)$/);
+  assert.equal(validity(syntheticReport({drawn: false})).reason, "undrawn: the window did not draw throughout", "and a run without the presence has the plain reason");
+  assert.equal(validity(syntheticReport({presence: presenceOf(30)})).valid, true, "the rule does not read the presence: a run that drew is valid");
+  const malformed = syntheticReport({presence: presenceOf(112)});
+  malformed.stages.presence.undrawableFrames = 6000;
+  assert.throws(() => verifyTurnGraphicsRun(malformed), /a count of the sampled ones/);
+});
+
+test("a receipt of the turn keeps the count of each attempt and the presence of the runs", () => {
+  const rejected = [1, 2, 3].map(attempt => syntheticReport({run: attempt, drawn: false, presence: presenceOf(2400)}));
+  const attempts = rejected.map((report, index) => ({slot: 1, attempt: 100 + index, ...validity(report)}));
+  const receipt = {presented: false, status: `not presented: ${attempts.at(-1).reason} (slot 1, 3 attempts)`, provenance: {refreshRate: 120}, attempts, raw: [], summary: null,
+    rejectedAttempts: attempts.map((attempt, index) => ({...attempt, raw: rawOf(rejected[index])}))};
+  verifyGraphicsReceipt(receipt);
+  assert.deepEqual(receipt.attempts.map(attempt => attempt.undrawableFrames), [2400, 2400, 2400]);
+  assert.equal(receipt.rejectedAttempts[0].raw.presence.spans[0][1], 2400);
+  const unsaid = structuredClone(receipt);
+  unsaid.attempts[0].reason = "undrawn: the window did not draw throughout";
+  assert.throws(() => verifyGraphicsReceipt(unsaid), /was refused for not drawing and its reason says what the engine said/);
+  const before = structuredClone(receipt);
+  for (const attempt of before.attempts) {
+    delete attempt.undrawableFrames;
+    delete attempt.sampledFrames;
+    attempt.reason = "undrawn: the window did not draw throughout";
+  }
+  verifyGraphicsReceipt(before);
+});
+
+test("a receipt of the turn binds the count of each attempt to the presence of its raw run", () => {
+  const rejected = [1, 2, 3].map(attempt => syntheticReport({run: attempt, drawn: false, presence: presenceOf(2400)}));
+  const attempts = rejected.map((report, index) => ({slot: 1, attempt: 100 + index, ...validity(report)}));
+  const receipt = {presented: false, status: `not presented: ${attempts.at(-1).reason} (slot 1, 3 attempts)`, provenance: {refreshRate: 120}, attempts, raw: [], summary: null,
+    rejectedAttempts: attempts.map((attempt, index) => ({...attempt, raw: rawOf(rejected[index])}))};
+  verifyGraphicsReceipt(receipt);
+  const zero = structuredClone(receipt);
+  zero.attempts[0].undrawableFrames = 0;
+  assert.equal(zero.rejectedAttempts[0].raw.presence.undrawableFrames, 2400);
+  assert.throws(() => verifyGraphicsReceipt(zero), /Attempt 100 says 0 frames the engine could not draw and its raw run says 2400/);
+  const sampled = structuredClone(receipt);
+  sampled.attempts[2].sampledFrames = 4000;
+  assert.throws(() => verifyGraphicsReceipt(sampled), /Attempt 102 says 4000 sampled frames and its raw run says 5000/);
+  // A receipt whose attempts carry no count (the turn's earlier one) is not asked for one.
+  const before = structuredClone(receipt);
+  for (const attempt of before.attempts) {
+    delete attempt.undrawableFrames;
+    delete attempt.sampledFrames;
+    attempt.reason = "undrawn: the window did not draw throughout";
+  }
+  verifyGraphicsReceipt(before);
 });

@@ -13,10 +13,18 @@
 //   bar          the bar shows the turn, the phase and the three resources, End turn is the `end_turn` action (enabled by the game's
 //                flag, with its reason) and the spinner is there exactly while the phase is not idle
 //   content      the tile card, the city screen, the research panel and the dialog say what their part of the snapshot says
-//   map          no Control that stops the pointer and no panel covers a tile of the map
+//   map          nothing of the tree that stops the pointer and no in-tree panel covers a tile of the map; the Modal's window covers the
+//                whole map exactly in the city and dialog contexts, the two that have an overlay (the city screen with the research
+//                list, and the event dialog, which are in the Modal's window and the other panels are not)
 //   phase        every published snapshot of a turn in progress disables End turn; every frame of the job shows spinner and disabled
 //                End turn exactly while the phase is not idle and only phases the game published; held at an AI phase the spinner
 //                spins and a press on the disabled End turn asks nothing of the game; released, the turn is at rest again
+//   stress       the comparison's stress mode: refused while a turn runs and when it is off (stress_off) or already on (stress_on); begun, the snapshot
+//                carries the log of 200 lines and the 100 items the oracle derives from the rules and the HUD shows exactly those in `hud-stress`
+//                with the contexts' panels untouched; twenty steps one frame apart leave the game's last line and the changed items in the HUD,
+//                every row that was there the same Control; ended, the panel is gone and the snapshot is byte for byte the one before
+//   stats        the runner's `stats()` has the contract's three keys, counts over a turn exactly the notifications the node emitted and the
+//                snapshots it published, and ends equal to what the node emitted
 //   input        a real click on a tile selects the tile the geometry gives; the pointer over a tile publishes the hover and the
 //                card shows it; over a panel or off the map it is cleared; a click on a panel does not reach the World; an enabled
 //                action is performed by a real press and a disabled one is not, with its reason shown; after the menu the World is
@@ -41,6 +49,14 @@ const AI_PHASES = ["ai_plan", "ai_move"];
 const TURN_IN_PROGRESS = "The turn is being processed.";
 
 const panelId = name => `hud-${name}`;
+// The stress mode's content as the rules write it (consumers/civ-lite/services/stress.gd): a line is its five-digit sequence number and a text that
+// is a function of it; an item is its id, its progress (one more each time a step changes it) and its cost.
+const STRESS_LINES = 200;
+const STRESS_ITEMS = 100;
+const STRESS_STEPS = 20;
+const stressLine = number => `${String(number).padStart(5, "0")} · the watch counts ${(number * 7919) % 997} bags of grain at gate ${number % 12}`;
+const stressItem = (id, progress) => `Item ${String(id).padStart(2, "0")} ${progress}/${100 + id}`;
+const range = (from, count) => Array.from({length: count}, (_, index) => from + index);
 const signed = value => (value >= 0 ? `+${value}` : `${value}`);
 
 function nodeOf(observed, id) {
@@ -48,6 +64,7 @@ function nodeOf(observed, id) {
 }
 const shown = (observed, id) => nodeOf(observed, id)?.visible === true;
 const textOf = (observed, id) => nodeOf(observed, id)?.text;
+const rectCovers = (outer, inner) => outer[0] <= inner[0] && outer[1] <= inner[1] && outer[0] + outer[2] >= inner[0] + inner[2] && outer[1] + outer[3] >= inner[1] + inner[3];
 const rectOverlaps = (a, b) => a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3];
 const inside = (point, rect) => point[0] >= rect[0] && point[0] < rect[0] + rect[2] && point[1] >= rect[1] && point[1] < rect[1] + rect[3];
 
@@ -60,6 +77,8 @@ function panelOf(testID) {
   return PANEL_NAMES.find(name => testID === panelId(name) || testID.startsWith(`${panelId(name)}-`)) ?? null;
 }
 const NOT_PANELS = ["hud-root", "hud-connecting"];
+// The panels that live in the Modal's window: the contexts that have an overlay, and what each shows there.
+const OVERLAY_PANELS = {city: ["city", "research"], dialog: ["dialog"]};
 
 // The key the HUD names an action's Pressable by: the id and the arguments, joined.
 const actionKey = action => [action.id, ...action.args].join("-");
@@ -69,7 +88,7 @@ function renderedActions(observed) {
   const rows = [];
   for (const entry of observed.nodes) {
     const id = entry.testID;
-    if (!entry.visible || !id.startsWith("hud-actions-") || id === "hud-actions-title" || id.endsWith("-label") || id.endsWith("-reason")) {
+    if (!entry.visible || !id.startsWith("hud-actions-") || id === "hud-actions-title" || id.endsWith("-label") || id.endsWith("-reason") || id.endsWith("-icon")) {
       continue;
     }
     rows.push({key: id.slice("hud-actions-".length), label: textOf(observed, `${id}-label`) ?? "", enabled: !entry.disabled,
@@ -115,6 +134,66 @@ export function judgeHudReport(report) {
   const tileAt = point => [Math.floor((point[0] - map.origin[0]) / map.tile), Math.floor((point[1] - map.origin[1]) / map.tile)];
   const onMap = tile => tile[0] >= 0 && tile[0] < map.columns && tile[1] >= 0 && tile[1] < map.rows;
 
+  function judgeStress(stress) {
+    if (stress === undefined) {
+      fail("stress", "the report has no stress stage");
+      return;
+    }
+    const contextPanels = context => (TABLE[context] ?? []).map(panelId);
+    const keysOf = rows => rows.map(row => row.key);
+    const textsOf = rows => rows.map(row => row.text);
+    // The runner's stats(): exactly the contract's three keys, two integers and a context of the table.
+    const shapeOk = stats => JSON.stringify(Object.keys(stats).sort()) === JSON.stringify(["context", "events", "snapshots"])
+      && Number.isSafeInteger(stats.snapshots) && Number.isSafeInteger(stats.events) && typeof stats.context === "string" && stats.context in TABLE;
+    // A turn in flight: the mode is refused, with the game's own code.
+    const turn = stress.turn;
+    same("stress", [turn.accepted, turn.refused.ok, turn.refused.code, turn.carried], ["ok", 0, "turn_in_progress", false], "begin while a turn runs is refused with turn_in_progress and the snapshot carries nothing");
+    same("stats", [shapeOk(turn.statsBefore), shapeOk(turn.statsAfter), shapeOk(stress.final.stats)], [true, true, true], "the runner's stats() has the three keys of the contract");
+    if (turn.statsAfter.events - turn.statsBefore.events !== turn.emittedAfter - turn.emittedBefore || turn.statsAfter.snapshots - turn.statsBefore.snapshots !== turn.snapshotsPublished
+        || !(turn.snapshotsPublished > 0)) {
+      fail("stats", `over a turn stats() must count the notifications the node emitted and the snapshots it published: ${JSON.stringify({before: turn.statsBefore, after: turn.statsAfter,
+        emitted: [turn.emittedBefore, turn.emittedAfter], published: turn.snapshotsPublished})}`);
+    }
+    if (stress.final.stats.events !== stress.final.emitted) {
+      fail("stats", `the runner's stats().events ${stress.final.stats.events} must equal the notifications the node emitted, ${stress.final.emitted}`);
+    }
+    same("stress", [stress.off.step.ok, stress.off.step.code, stress.off.end.ok, stress.off.end.code], [0, "stress_off", 0, "stress_off"], "step and end with the mode off");
+    same("stress", [stress.again.ok, stress.again.code], [0, "stress_on"], "a second begin");
+    // Begun: the rules' own lines and items, shown row by row.
+    const begun = stress.begun;
+    same("stress", [begun.result.ok, begun.result.code, begun.carried, begun.settled, begun.panelShown], [1, "ok", true, true, true], "begin");
+    same("stress", begun.lines, range(1, STRESS_LINES).map(stressLine), "the log the snapshot carries");
+    same("stress", begun.items.map(item => [item.id, item.progress, item.cost, item.label]), range(0, STRESS_ITEMS).map(id => [id, 0, 100 + id, `Item ${String(id).padStart(2, "0")}`]), "the production list the snapshot carries");
+    same("stress", [keysOf(begun.log), textsOf(begun.log)], [range(1, STRESS_LINES).map(number => String(number).padStart(5, "0")), range(1, STRESS_LINES).map(stressLine)], "the log rows the HUD shows");
+    same("stress", [keysOf(begun.production), textsOf(begun.production)], [range(0, STRESS_ITEMS).map(id => String(id).padStart(2, "0")), range(0, STRESS_ITEMS).map(id => stressItem(id, 0))], "the production rows the HUD shows");
+    same("stress", begun.panels, contextPanels(begun.context), `the panels of the ${begun.context} context while the mode is on: the table is not changed`);
+    // Twenty steps: the last line, the changed items and the Controls that were there.
+    const steps = stress.steps;
+    same("stress", steps.results.map(result => [result.ok, result.code]), Array(STRESS_STEPS).fill([1, "ok"]), "the twenty steps");
+    same("stress", steps.settled, true, "the HUD caught up with the twenty steps");
+    same("stress", steps.view.lines, range(1 + STRESS_STEPS, STRESS_LINES).map(stressLine), "the log after twenty steps: the oldest twenty dropped, the next twenty appended");
+    same("stress", steps.view.items.map(item => item.progress), range(0, STRESS_ITEMS).map(id => (id < STRESS_STEPS ? 1 : 0)), "the progress of the items after twenty steps: one more for the first twenty");
+    same("stress", [keysOf(steps.view.log), textsOf(steps.view.log)], [range(1 + STRESS_STEPS, STRESS_LINES).map(number => String(number).padStart(5, "0")), range(1 + STRESS_STEPS, STRESS_LINES).map(stressLine)],
+      "the log rows the HUD shows after twenty steps (the last line is the game's)");
+    same("stress", [keysOf(steps.view.production), textsOf(steps.view.production)], [range(0, STRESS_ITEMS).map(id => String(id).padStart(2, "0")), range(0, STRESS_ITEMS).map(id => stressItem(id, id < STRESS_STEPS ? 1 : 0))],
+      "the production rows the HUD shows after twenty steps (the changed items are the game's)");
+    const instanceOf = (rows, key) => rows.find(row => row.key === key)?.instance;
+    const keptLog = steps.view.log.filter(row => instanceOf(begun.log, row.key) === row.instance).length;
+    const keptProduction = steps.view.production.filter(row => instanceOf(begun.production, row.key) === row.instance).length;
+    same("stress", [keptLog, keptProduction], [STRESS_LINES - STRESS_STEPS, STRESS_ITEMS], "the rows that were there are the same Controls after twenty steps: a step builds no row again");
+    same("stress", steps.view.panels, contextPanels(steps.view.context), "the context's panels after the steps");
+    // Ended: the panel gone, the snapshot as it was.
+    const ended = stress.ended;
+    same("stress", [ended.result.ok, ended.result.code, ended.carried, ended.panelShown, ended.log.length, ended.production.length, ended.settled], [1, "ok", false, false, 0, 0, true], "end");
+    same("stress", ended.panels, contextPanels(ended.context), `the panels of the ${ended.context} context are back`);
+    if (stress.snapshots.before !== stress.snapshots.after) {
+      fail("stress", "the snapshot after the mode ended is not byte for byte the one before it began");
+    }
+    if ("stress" in JSON.parse(stress.snapshots.before) || "stress" in JSON.parse(stress.snapshots.after)) {
+      fail("stress", "a snapshot outside the mode carries a stress field");
+    }
+  }
+
   // --- The matrix ---------------------------------------------------------------------------------------------------
   same("coverage", report.matrix.map(row => row.index), Array.from({length: LAST_STEP + 1}, (_, index) => index), "the steps played");
   for (const [context, index] of Object.entries(COVERING)) {
@@ -152,16 +231,29 @@ export function judgeHudReport(report) {
         fail("panels", `${label}: ${entry.testID} is shown and belongs to the ${owner} panel, which the ${snapshot.context} context does not mount`);
       }
     }
+    const overlayPanels = OVERLAY_PANELS[snapshot.context] ?? [];
     for (const name of PANEL_NAMES) {
       const entry = nodeOf(seen, panelId(name));
-      if (entry !== undefined && entry.visible && rectOverlaps(entry.rect, mapRect)) {
+      if (entry === undefined || !entry.visible) {
+        continue;
+      }
+      // An overlay's panels are in the Modal's window and every other panel is in the tree.
+      if (entry.modal !== overlayPanels.includes(name)) {
+        fail("panels", `${label}: the ${name} panel is ${entry.modal ? "in the Modal's window" : "in the tree"}, and the ${snapshot.context} context says the other`);
+      }
+      if (!entry.modal && rectOverlaps(entry.rect, mapRect)) {
         fail("map", `${label}: the ${name} panel covers a tile of the map`);
       }
     }
     for (const stopper of seen.stoppers) {
-      if (rectOverlaps(stopper.rect, mapRect)) {
-        fail("map", `${label}: a Control that stops the pointer (${stopper.testID === "" ? "no testID" : stopper.testID}) covers a tile of the map`);
+      if (!stopper.modal && rectOverlaps(stopper.rect, mapRect)) {
+        fail("map", `${label}: a Control in the tree that stops the pointer (${stopper.testID === "" ? "no testID" : stopper.testID}) covers a tile of the map`);
       }
+    }
+    // The Modal's window is what blocks the map: it covers all of it in the contexts that have an overlay and exists in no other.
+    const blocks = seen.stoppers.some(stopper => stopper.modal && rectCovers(stopper.rect, mapRect));
+    if (blocks !== (overlayPanels.length > 0) || (overlayPanels.length === 0 && seen.stoppers.some(stopper => stopper.modal))) {
+      fail("map", `${label}: the overlay must block the whole map exactly in the city and dialog contexts (blocks: ${blocks}, expected ${overlayPanels.length > 0})`);
     }
     // The bar.
     if (shown(seen, "hud-bar")) {
@@ -211,6 +303,9 @@ export function judgeHudReport(report) {
         `Garrison: ${city.garrison.length === 0 ? "none" : city.garrison.map(unit => `${unit.kind} #${unit.id}`).join(", ")}`], `${label}: the city screen`);
       same("content", city.queue.map(entry => textOf(seen, `hud-city-queue-${entry.slot}`)),
         city.queue.map(entry => `${entry.slot + 1}. ${entry.label} ${entry.stock}/${entry.cost}`), `${label}: the city's queue`);
+      if (!shown(seen, "hud-city-close") || nodeOf(seen, "hud-city-close").disabled) {
+        fail("content", `${label}: the city screen's Close must be shown and enabled`);
+      }
       same("content", renderedRows(seen, "hud-city-item-", city.items.map(item => item.id)),
         expectedRows(city.items, item => `${item.label} (${item.cost})`), `${label}: the city's items`);
     }
@@ -225,7 +320,8 @@ export function judgeHudReport(report) {
     }
     if (expectedPanels.includes("dialog")) {
       const dialog = snapshot.dialog;
-      same("content", [textOf(seen, "hud-dialog-title"), textOf(seen, "hud-dialog-text")], [dialog.title, dialog.text], `${label}: the dialog`);
+      same("content", [textOf(seen, "hud-dialog-position"), textOf(seen, "hud-dialog-title"), textOf(seen, "hud-dialog-text")],
+        [`${dialog.index} of ${dialog.count}`, dialog.title, dialog.text], `${label}: the dialog`);
       same("content", dialog.choices.map(choice => [textOf(seen, `hud-dialog-choice-${choice.id}-label`), textOf(seen, `hud-dialog-choice-${choice.id}-detail`),
         nodeOf(seen, `hud-dialog-choice-${choice.id}`)?.disabled]), dialog.choices.map(choice => [choice.label, choice.detail, false]), `${label}: the dialog's choices`);
     }
@@ -281,6 +377,9 @@ export function judgeHudReport(report) {
   if (!held.finished || !held.settledAfter || held.idleAfter.spinner || held.idleAfter.endTurnDisabled || held.idleAfter.phase !== "idle" || held.turnAfter !== free.turnBefore + 2) {
     fail("phase", `released, the held job must finish with the spinner gone and End turn enabled: ${JSON.stringify(held.idleAfter)}`);
   }
+
+  // --- The stress mode and the runner's stats() ----------------------------------------------------------------------------
+  judgeStress(report.stress);
 
   // --- Real input -----------------------------------------------------------------------------------------------------
   const step = Object.fromEntries(report.input.map(entry => [entry.label, entry]));

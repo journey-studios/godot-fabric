@@ -1,0 +1,54 @@
+{
+  "format": "private-macos-symlink-control-review/v1",
+  "status": "passed",
+  "producerCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+  "controlsPath": "{WORKTREE}/build/macos-export-native-controls-1c011807-b800-408b-8755-8e9ffb141e11/report.json",
+  "controlsSha256": "721413fe2f4f7ab945736f4f21d417c5a8924a636d961dcda24ec5e101afde17",
+  "app": "{WORKTREE}/build/macos-export-native-controls-1c011807-b800-408b-8755-8e9ffb141e11/symlink-rpath.app",
+  "link": "{WORKTREE}/build/macos-export-native-controls-1c011807-b800-408b-8755-8e9ffb141e11/symlink-rpath.app/Contents/Frameworks/external-search",
+  "target": "{WORKTREE}/build/macos-export-native-controls-1c011807-b800-408b-8755-8e9ffb141e11/external-search",
+  "hostSha256": "1d3d13dd51be0491391d99543ae155ea71f5489930e51fbc911984bc31feb0af",
+  "otoolOutputSha256": "55c6bf39fab808a73597ca136f40422576237debaebe12e08d682aeb4d4c93c8",
+  "checks": [
+    {
+      "name": "clean-producer",
+      "passed": true
+    },
+    {
+      "name": "actual-link-is-symlink",
+      "passed": true
+    },
+    {
+      "name": "actual-link-target",
+      "passed": true
+    },
+    {
+      "name": "physical-target-outside-copy",
+      "passed": true
+    },
+    {
+      "name": "owned-external-target-under-controls",
+      "passed": true
+    },
+    {
+      "name": "actual-host-hash-matches-report",
+      "passed": true
+    },
+    {
+      "name": "actual-host-was-mutated",
+      "passed": true
+    },
+    {
+      "name": "actual-mutated-rpath-present",
+      "passed": true
+    },
+    {
+      "name": "expected-auditor-rejection",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "Local physical copied-app control; no external library was executed.",
+    "The mutated app was rejected before signature verification."
+  ]
+}

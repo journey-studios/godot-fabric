@@ -1,0 +1,72 @@
+{
+  "format": "godot-fabric.actual-asset-builder-preflight/v1",
+  "scope": "Actual private provisioned SDK build in disposable adapted fixture; payload preflight only, no export or app runtime",
+  "project": "{DISPOSABLE_PROJECT}",
+  "sdkProducer": "5148df64d7bbe2b44244c036fef7fe09ff8e82f9",
+  "helperSha256": "2ed5f11ef739c62c92a4abe8b91686e2c24dd79bdb56296bd446a83888fedca5",
+  "originalEntrySha256": "9005d20f207ea19ca2cf334516f62b0c9a6093917777f6eb47c4914b8876bf9b",
+  "adaptedEntrySha256": "501dc21abaeafa039840a56eeca1e6703eccc9ebb20c3266b9170967961ac4b6",
+  "bundleSha256": "42c52c87cf47af2133c3d0b690410c0f2f3633aa6525dd254f6b169d96e16f0d",
+  "buildReportSha256": "293929d36c74076652b7cd0b3fa38fb90385b5d03558d8a62dafd31ef1f9eeb4",
+  "manifestSha256": "651e41c28d1c9c533a7b34e43791c7bb14a85ecaa312f8702106960825a1b723",
+  "files": [
+    {
+      "path": "assets/ui/export-icon.png",
+      "sha256": "3e66a63204c1245775d7af2e08dc899097e7a3f12aef45948396dd776a7664f6",
+      "bytes": 103
+    },
+    {
+      "path": "assets/ui/export-icon@2x.png",
+      "sha256": "a6e07b350240cfd8b902dc67f420eb8cc6c32e574398256c0b0289f58445bccb",
+      "bytes": 130
+    }
+  ],
+  "commands": [
+    {
+      "label": "actual-builder",
+      "argv": [
+        "{DISPOSABLE_PROJECT}/addons/godot_fabric/toolchain/node/bin/node",
+        "{DISPOSABLE_PROJECT}/addons/godot_fabric/toolchain/build.mjs",
+        "{DISPOSABLE_PROJECT}",
+        "res://ui/index.tsx",
+        "res://.godot_fabric/app.js"
+      ],
+      "startedAtUtc": "2026-10-08T19:17:31.318614+00:00",
+      "completedAtUtc": "2026-10-08T19:17:37.284840+00:00",
+      "exitCode": 0,
+      "logSha256": "d8ddbbe2dca12f7d7616394f60753b6cc5934255edce187447ac6cba16f5e660"
+    },
+    {
+      "label": "asset-positive",
+      "argv": [
+        "/Applications/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--path",
+        "{DISPOSABLE_PROJECT}",
+        "--script",
+        "res://addons/godot_fabric/export_preflight.gd"
+      ],
+      "startedAtUtc": "2026-10-08T19:17:37.286506+00:00",
+      "completedAtUtc": "2026-10-08T19:17:39.383663+00:00",
+      "exitCode": 0,
+      "logSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c"
+    },
+    {
+      "label": "asset-missing-manifest",
+      "argv": [
+        "/Applications/Godot.app/Contents/MacOS/Godot",
+        "--headless",
+        "--path",
+        "{DISPOSABLE_PROJECT}",
+        "--script",
+        "res://addons/godot_fabric/export_preflight.gd"
+      ],
+      "startedAtUtc": "2026-10-08T19:17:39.384144+00:00",
+      "completedAtUtc": "2026-10-08T19:17:39.644574+00:00",
+      "exitCode": 1,
+      "logSha256": "c7d82b1de7f0553bc1a79e52a2ddbb5501dd1bbd45d521084b70b394f77c710b"
+    }
+  ],
+  "removedDyldKeys": [],
+  "passed": true
+}

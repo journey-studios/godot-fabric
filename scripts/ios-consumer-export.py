@@ -14,12 +14,13 @@ import os
 from pathlib import Path
 import plistlib
 import shutil
-import struct
 import subprocess
 import sys
 import time
 import uuid
 import zipfile
+
+from godot_pack import inspect_pack
 
 ROOT = Path(__file__).resolve().parents[1]
 NAME = "FabricIOSSmoke"
@@ -215,44 +216,6 @@ def inputs(require_current: bool = True, architecture: str = "arm64") -> dict:
             raise RuntimeError(f"Packaged archive differs from build manifest: {target}")
         manifests[target] = value
     return manifests
-
-
-def inspect_pack(pack: Path, bundle: Path) -> dict:
-    """Read the bounded, unencrypted standalone PCK v4 written by Godot 4.7.2.
-
-    Layout follows upstream core/io/file_access_pack.cpp; this does not execute
-    a desktop engine against iOS GDExtension resources to inspect their bytes.
-    """
-    data = pack.read_bytes()
-    magic, version, _major, _minor, _patch, flags = struct.unpack_from("<6I", data)
-    if magic != 0x43504447 or version != 4 or flags != 2:
-        raise RuntimeError("Expected an unencrypted standalone Godot PCK v4")
-    file_base, directory = struct.unpack_from("<QQ", data, 24)
-    count = struct.unpack_from("<I", data, directory)[0]
-    cursor = directory + 4
-    entries = {}
-    for _ in range(count):
-        size = struct.unpack_from("<I", data, cursor)[0]
-        cursor += 4
-        path = data[cursor:cursor + size].rstrip(b"\0").decode("utf8").removeprefix("res://")
-        cursor += size
-        offset, length = struct.unpack_from("<QQ", data, cursor)
-        entry_flags = struct.unpack_from("<I", data, cursor + 32)[0]
-        if entry_flags != 0:
-            raise RuntimeError("Unexpected encrypted/delta PCK entry")
-        entries[path] = data[file_base + offset:file_base + offset + length]
-        cursor += 36
-    expected = ".godot_fabric/app.js"
-    if entries.get(expected) != bundle.read_bytes():
-        raise RuntimeError("Generated JS bundle is absent or modified in exported PCK")
-    for path in entries:
-        if any(path.startswith("addons/godot_fabric/" + prefix) for prefix in ["toolchain/", "src/", "types/"]):
-            raise RuntimeError(f"Build-only SDK contents leaked into PCK: {path}")
-        if path in ["addons/godot_fabric/" + file + suffix for file in ["plugin", "ios_export", "build"]
-                    for suffix in [".gd", ".gdc", ".gd.remap"]]:
-            raise RuntimeError(f"Editor-only SDK script leaked into PCK: {path}")
-    return {"format": version, "fileCount": count, "bundleEmbeddedByteForByte": True,
-            "buildToolchainExcluded": True, "editorScriptsExcluded": True, "pckSHA256": sha(pack)}
 
 
 def prepare(output: Path, godot: Path, manifests: dict, bundle_id: str, target: str, architecture: str) -> Path:

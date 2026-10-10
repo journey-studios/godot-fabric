@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-freeze/followup",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T07:54:47.599Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38029448318,
+    "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/112",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T06:00:42Z",
+    "updatedAt": "2026-10-10T06:07:07Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114147115640,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "startedAt": "2026-10-10T06:00:46Z",
+        "completedAt": "2026-10-10T06:03:59Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147115640"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114147116650,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147116650"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114147116640,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147116640"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114147116599,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147116599"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114147116833,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147116833"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114148222873,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114148222873"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114147115750,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "startedAt": "2026-10-10T06:00:46Z",
+        "completedAt": "2026-10-10T06:06:51Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147115750"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114147115873,
+        "runAttempt": 1,
+        "headSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+        "startedAt": "2026-10-10T06:00:53Z",
+        "completedAt": "2026-10-10T06:07:06Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38029448318/job/114147115873"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+      "reference-android": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+      "reference-ios": "b23009d00f5f2fe419f4016c1484f1e9039f40c6"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:01:06Z",
+          "completedAt": "2026-10-10T06:01:07Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against c4cab408af06 (--base c4cab408af06d2042921a723323970c7f088d5de); X9 clean, X10 clean"
+          ],
+          "base": "c4cab408af06d2042921a723323970c7f088d5de"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:01:07Z",
+          "completedAt": "2026-10-10T06:03:54Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 492,
+              "suites": 0,
+              "pass": 492,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:03:54Z",
+          "completedAt": "2026-10-10T06:03:55Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:03:55Z",
+          "completedAt": "2026-10-10T06:03:55Z",
+          "passed": true,
+          "files": 1989
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-freeze.test.mjs",
+          "tests": 21,
+          "passed": 21,
+          "topLevel": [
+            "budgetOf reproduces the rows of the derivation table of the baseline note, from the five values of each run",
+            "the rounding is up to 0.5 ms: an exact multiple stays, one microsecond more goes to the next, and the values are not changed",
+            "the quartiles of five are the second, third and fourth values by nearest rank, those of the performance oracle that the script and this test import",
+            "the freeze is the one the inputs give by the rule, and the protocol carries its values: the check passes, in the module and as the command",
+            "the committed files are what the writer writes, so that nobody edited them by hand",
+            "the inputs are the executions registered: their SHA-256, commits, bundles and hosts, and the raw baseline receipt is the one committed byte for byte",
+            "the three numeric thresholds are the rule applied to the raw intervals, recomputed here with the performance oracle's own functions",
+            "the budget rows: kept, recomputed, added and removed, each with its reason, and the p99 by size is out",
+            "a changed value of an execution changes a bound, and the check accuses it",
+            "a freeze that was edited by hand, or a protocol that does not carry it, is accused",
+            "the protocol has its five thresholds frozen on one date, the stress as N/A with its reason and the instrument with its six keys",
+            "the corroboration shows what the notes say of it: the turn before #100 reproduces the frozen one and the one with its HUD is over the bounds",
+            "every execution of the freeze ran above the protocol's load limit, and the freeze says so",
+            "the AI phase is the first six busy frames of a steady turn and the end of the turn is the seventh and the frames after it, the warm-up left out",
+            "a turn whose frames do not advance one phase each, publish a snapshot each and end the turn once is refused",
+            "--from-receipts refuses a receipt whose SHA-256 is not the registered one, and writes nothing",
+            "the baseline note's budget is the frozen one: its heading, its table and its derivation are the freeze's rows",
+            "the protocol note's section The freeze names the five thresholds and what stays as the pre-registration wrote it, and the freeze note is the whole account",
+            "the freeze note's table of values has the five thresholds and the numbers of the freeze",
+            "the evidence record is pinned, has the inputs, the account of every value and the open cause, and the index lists it",
+            "this test and the script are part of the contracts"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 112,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/112",
+    "title": "docs(perf): Record the confirmed cause and the corrected turn lane after the freeze",
+    "headSha": "4702c8e7e316b2d923b941ae5c0871c0d763597d",
+    "baseSha": "c4cab408af06d2042921a723323970c7f088d5de",
+    "squashMergeCommit": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+    "squashCommitSubject": "docs(perf): Record the confirmed cause and the corrected turn lane after the freeze (#112)",
+    "mergedAt": "2026-10-10T06:00:40Z",
+    "headTreeSha": "ec65af9bdbd2f1a815ea5d1da5b5898104c4395a",
+    "mainTreeSha": "ec65af9bdbd2f1a815ea5d1da5b5898104c4395a",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 2,
+    "commits": [
+      {
+        "sha": "3fb94871fd95fbfab40bc625fc03957d3bd4b963",
+        "subject": "docs(perf): Record the confirmed cause and the corrected turn lane after the freeze"
+      },
+      {
+        "sha": "4702c8e7e316b2d923b941ae5c0871c0d763597d",
+        "subject": "docs(dashboard): Register the confirmed cause and the corrected turn lane"
+      }
+    ],
+    "changedFiles": 6,
+    "additions": 68,
+    "deletions": 13
+  },
+  "artifacts": {},
+  "findings": []
+}

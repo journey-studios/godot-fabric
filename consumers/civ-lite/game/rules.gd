@@ -59,18 +59,25 @@ const TECHS := [
   {"id": "writing", "label": "Writing", "cost": 12},
 ]
 
-# The one blocking event. It is raised once, when this turn begins.
+# The blocking events: a queue of three. All of them are raised together, in this order, when EVENT_TURN begins, once, and the player
+# answers them one at a time, the head of the queue first. Each has choices of its own (a choice id belongs to one event, so the
+# choice of another is refused as unknown), and each choice adds `amount` to one stock, plus a draw of `spread` from the game's PRNG
+# when `spread` is not 0. Only welcoming the wanderers draws, so the PRNG's draws are what they were with the one event.
 const EVENT_TURN := 5
-const EVENT_ID := "wanderers"
-const EVENT_TITLE := "Wanderers at the gate"
-const EVENT_TEXT := "A band of wanderers asks to settle beside your city."
-const EVENT_CHOICES := [
-  {"id": "welcome", "label": "Welcome them", "detail": "Food +6 to +9"},
-  {"id": "turn_away", "label": "Turn them away", "detail": "Production +4"},
+const EVENTS := [
+  {"id": "wanderers", "title": "Wanderers at the gate", "text": "A band of wanderers asks to settle beside your city.", "choices": [
+    {"id": "welcome", "label": "Welcome them", "detail": "Food +6 to +9", "resource": "food", "amount": 6, "spread": 4},
+    {"id": "turn_away", "label": "Turn them away", "detail": "Production +4", "resource": "production", "amount": 4, "spread": 0},
+  ]},
+  {"id": "traders", "title": "Traders at the crossroads", "text": "A caravan stops outside the walls and offers to sell what it carries.", "choices": [
+    {"id": "buy_grain", "label": "Buy grain", "detail": "Food +3", "resource": "food", "amount": 3, "spread": 0},
+    {"id": "buy_tools", "label": "Buy tools", "detail": "Production +3", "resource": "production", "amount": 3, "spread": 0},
+  ]},
+  {"id": "scholar", "title": "A scholar asks for shelter", "text": "A wandering scholar offers to teach in exchange for a roof.", "choices": [
+    {"id": "host", "label": "Host the scholar", "detail": "Science +3", "resource": "science", "amount": 3, "spread": 0},
+    {"id": "send_on", "label": "Send the scholar on", "detail": "Food +2", "resource": "food", "amount": 2, "spread": 0},
+  ]},
 ]
-const WELCOME_BASE := 6
-const WELCOME_SPREAD := 4
-const TURN_AWAY_PRODUCTION := 4
 
 # The scripted faction: its Warrior walks this closed route, one step a turn, and starts on the first tile.
 const ROUTE := [[17, 8], [18, 8], [19, 8], [19, 9], [19, 10], [18, 10], [17, 10], [17, 9]]
@@ -130,6 +137,9 @@ const REASONS := {
   "already_researching": "That technology is already being researched.",
   "no_event": "There is no event to resolve.",
   "unknown_choice": "That is not one of the choices.",
+  # The comparison's stress mode, which is not a rule of the game (services/stress.gd).
+  "stress_on": "The stress mode is already on.",
+  "stress_off": "The stress mode is not on.",
 }
 
 
@@ -140,6 +150,13 @@ static func reason_text(code: String) -> String:
 static func item_index(item_id: String) -> int:
   for index in ITEMS.size():
     if ITEMS[index].id == item_id:
+      return index
+  return -1
+
+
+static func event_index(event_id: String) -> int:
+  for index in EVENTS.size():
+    if EVENTS[index].id == event_id:
       return index
   return -1
 

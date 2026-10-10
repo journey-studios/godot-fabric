@@ -1,0 +1,1 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool: warning: changes being made to the file will invalidate the code signature in: {WORKTREE}/build/macos-export-native-controls-ad9f0aa7-f7bb-4410-920d-3c3caa1535e4/symlink-parent-rpath.app/Contents/Frameworks/fabric_godot.dylib

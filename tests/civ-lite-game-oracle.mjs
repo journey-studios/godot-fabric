@@ -38,8 +38,15 @@ const ITEMS = {
   library: {kind: "building", cost: 16, tech: "writing", food: 0, production: 0, science: 2},
 };
 const TECHS = [{id: "alphabet", cost: 6}, {id: "bronze_working", cost: 9}, {id: "writing", cost: 12}];
+// The three events, raised together in this order on turn 5 and answered one at a time, the head first. Each event's choices are its own;
+// a choice adds `base` to one stock and, when `spread` is not 0, a draw below `spread` from the PRNG (only welcoming the wanderers draws).
 const EVENT_TURN = 5;
-const CHOICES = ["welcome", "turn_away"];
+const EVENTS = [
+  {id: "wanderers", choices: {welcome: {stock: "food", base: 6, spread: 4}, turn_away: {stock: "production", base: 4, spread: 0}}},
+  {id: "traders", choices: {buy_grain: {stock: "food", base: 3, spread: 0}, buy_tools: {stock: "production", base: 3, spread: 0}}},
+  {id: "scholar", choices: {host: {stock: "science", base: 3, spread: 0}, send_on: {stock: "food", base: 2, spread: 0}}},
+];
+const eventOf = id => EVENTS.find(event => event.id === id);
 const ROUTE = [[17, 8], [18, 8], [19, 8], [19, 9], [19, 10], [18, 10], [17, 10], [17, 9]];
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
 const CONTEXTS = ["none", "tile", "settler", "warrior", "stack", "city", "dialog"];
@@ -52,7 +59,7 @@ const FORCED_TILES = [
 ];
 // PCG's published reference outputs for the generator seeded with state 42 and sequence 54.
 const PCG_REFERENCE = [0xa15c02b7, 0x7b47f409, 0xba1d3330, 0x83d2f293, 0xbfa4784b, 0xcbed606e];
-const STATE_KEYS = ["ai", "cities", "event", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
+const STATE_KEYS = ["ai", "cities", "events", "log", "log_seq", "map", "next_unit", "phase", "res", "research", "rng", "sel", "seed", "turn", "units", "v"].sort();
 
 const M64 = (1n << 64n) - 1n;
 const MULTIPLIER = 6364136223846793005n;
@@ -145,7 +152,7 @@ const known = (state, id) => techIndex(id) >= 0 && techIndex(id) < state.researc
 
 // The context the HUD shows, derived again from a serialized state.
 function contextOf(state) {
-  if (state.event.pending === 1) {
+  if (state.events.queue.length > 0) {
     return "dialog";
   }
   const unit = state.sel.unit === 0 ? undefined : unitById(state, state.sel.unit);
@@ -196,7 +203,7 @@ function rates(state) {
 // Why the intent must be refused in this state, or "" when it must be accepted. The checks are in the order the
 // documentation lists them.
 function refusal(state, intent, args) {
-  if (state.event.pending === 1 && intent !== "resolve_event") {
+  if (state.events.queue.length > 0 && intent !== "resolve_event") {
     return "event_pending";
   }
   const unitReason = id => {
@@ -300,10 +307,11 @@ function refusal(state, intent, args) {
       return state.research.current === args[0] ? "already_researching" : "";
     }
     case "resolve_event":
-      if (state.event.pending !== 1) {
+      if (state.events.queue.length === 0) {
         return "no_event";
       }
-      return CHOICES.includes(args[0]) ? "" : "unknown_choice";
+      // Only the head of the queue is answered, with its own choices.
+      return Object.hasOwn(eventOf(state.events.queue[0]).choices, args[0]) ? "" : "unknown_choice";
     case "end_turn":
       return "";
     default:
@@ -372,15 +380,12 @@ function accept(state, intent, args) {
       break;
     case "resolve_event": {
       const generator = Pcg32.fromRecord(next.rng);
-      if (args[0] === "welcome") {
-        next.res.food += 6 + generator.below(4);
-      } else {
-        next.res.production += 4;
-      }
+      const head = next.events.queue[0];
+      const effect = eventOf(head).choices[args[0]];
+      next.res[effect.stock] += effect.base + (effect.spread === 0 ? 0 : generator.below(effect.spread));
       next.rng = generator.record();
-      next.event.pending = 0;
-      next.event.resolved = 1;
-      next.event.choice = args[0];
+      next.events.queue = next.events.queue.slice(1);
+      next.events.resolved = [...next.events.resolved, {id: head, choice: args[0]}];
       break;
     }
     case "end_turn":
@@ -470,9 +475,9 @@ function endTurn(state, phases, aiEvents) {
   state.turn += 1;
   state.sel = {x: -1, y: -1, unit: 0};
   let raised = 0;
-  if (state.turn === EVENT_TURN && state.event.pending === 0 && state.event.resolved === 0) {
-    state.event.pending = 1;
-    raised = 1;
+  if (state.turn === EVENT_TURN && state.events.queue.length === 0 && state.events.resolved.length === 0) {
+    state.events.queue = EVENTS.map(event => event.id);
+    raised = EVENTS.length;
   }
   phase("refresh", state.units.length, 1 + raised);
 }
@@ -555,11 +560,14 @@ function checkInvariants(state, where) {
   assert.deepEqual(Object.keys(state.res).sort(), ["food", "production", "science"], where);
   assert.ok(state.research.done >= 0 && state.research.done <= TECHS.length, `${where} research is a prefix of the list`);
   assert.ok(state.research.current === "" || state.research.current === TECHS[state.research.done]?.id, `${where} only the next technology is researched`);
-  const event = state.event;
-  assert.ok((event.pending === 0 || event.pending === 1) && (event.resolved === 0 || event.resolved === 1) && event.pending + event.resolved <= 1, `${where} event flags`);
-  assert.equal(event.choice === "", event.resolved === 0, `${where} the event's choice is set exactly when it is resolved`);
-  assert.ok(event.resolved === 0 || CHOICES.includes(event.choice), `${where} event choice`);
-  assert.ok(event.pending === 0 || state.turn >= EVENT_TURN, `${where} the event is not raised before its turn`);
+  const events = state.events;
+  assert.deepEqual(Object.keys(events).sort(), ["queue", "resolved"], `${where} the event record has a queue and the answered ones`);
+  // The answered events then the waiting ones are the table in its order, all three or none (they are raised together), and each
+  // answer is a choice of its own event.
+  const order = [...events.resolved.map(answer => answer.id), ...events.queue];
+  assert.deepEqual(order, order.length === 0 ? [] : EVENTS.map(event => event.id), `${where} the events are raised together and answered in order`);
+  assert.ok(events.resolved.every(answer => Object.hasOwn(eventOf(answer.id).choices, answer.choice)), `${where} each answer is a choice of its own event`);
+  assert.ok(order.length === 0 || state.turn >= EVENT_TURN, `${where} the events are not raised before their turn`);
   const faction = unitById(state, state.ai.unit);
   assert.ok(faction !== undefined && faction.owner === FACTION, `${where} the faction's Warrior`);
   assert.deepEqual([faction.x, faction.y], ROUTE[state.ai.step], `${where} the faction's Warrior stands on its route`);
@@ -632,7 +640,7 @@ export function verifyFrontierReport(report) {
   assert.equal(initial.turn, 1);
   assert.deepEqual(initial.units.map(unit => [unit.id, unit.owner, unit.kind, unit.x, unit.y, unit.moves, unit.fortified]),
     [[1, PLAYER, "settler", 6, 8, 2, 0], [2, PLAYER, "warrior", 6, 8, 3, 0], [3, FACTION, "warrior", 17, 8, 3, 0]]);
-  assert.deepEqual([initial.cities.length, initial.res, initial.event.pending, initial.event.resolved], [0, {food: 0, production: 0, science: 0}, 0, 0]);
+  assert.deepEqual([initial.cities.length, initial.res, initial.events.queue, initial.events.resolved], [0, {food: 0, production: 0, science: 0}, [], []]);
 
   const seen = new Set();
   const refusals = {};
@@ -688,7 +696,8 @@ export function verifyFrontierReport(report) {
   assert.deepEqual([...seen].sort(), [...CONTEXTS].sort(), "the replay covers all seven contexts");
   assert.equal(report.finalHash, report.steps.at(-1).hash, "the final hash is the last step's");
   assert.equal(report.finalHash, digest(report.steps.at(-1).serialization));
-  assert.equal(previous.event.resolved, 1, "the event was resolved once");
+  assert.deepEqual(previous.events.resolved.map(answer => answer.id), EVENTS.map(event => event.id), "the three events were resolved once each, in order");
+  assert.deepEqual(previous.events.queue, [], "no event is left waiting");
   assert.equal(previous.cities.length, 1, "one city was founded");
 
   // The turns the roteiro cannot play, because it never puts the player on the faction's route: states built so the

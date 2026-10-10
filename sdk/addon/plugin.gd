@@ -3,17 +3,24 @@ extends EditorPlugin
 
 const Builder = preload("build.gd")
 const IOSExport = preload("ios_export.gd")
+const MacOSExport = preload("macos_export.gd")
 var ios_export: EditorExportPlugin
+var macos_export: EditorExportPlugin
 
 func _enter_tree() -> void:
   ios_export = IOSExport.new()
   add_export_plugin(ios_export)
+  macos_export = MacOSExport.new()
+  add_export_plugin(macos_export)
   add_tool_menu_item("Godot Fabric: Build UI", _build_ui)
   if OS.get_cmdline_user_args().has("--godot-fabric-build-check"):
     call_deferred("_build_check")
 
 func _exit_tree() -> void:
-  remove_export_plugin(ios_export)
+  if ios_export != null:
+    remove_export_plugin(ios_export)
+  if macos_export != null:
+    remove_export_plugin(macos_export)
   remove_tool_menu_item("Godot Fabric: Build UI")
 
 func _build_ui() -> void:

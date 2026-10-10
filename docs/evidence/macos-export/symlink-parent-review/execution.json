@@ -1,0 +1,123 @@
+{
+  "format": "godot-fabric.macos-symlink-parent-review/v1",
+  "producerCommit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+  "producerUrl": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
+  "producerSourceDirty": false,
+  "host": "macOS arm64",
+  "versions": {
+    "godot": "4.7.2",
+    "react": "19.2.3",
+    "react-native": "0.87.1",
+    "node": "22.23.3",
+    "hermes": "250829098.0.17"
+  },
+  "setup": {
+    "status": "passed",
+    "nativeBuildLog": "gates/native-build.log",
+    "godotRebuilt": false
+  },
+  "export": {
+    "status": "passed",
+    "published": true,
+    "startedAt": "2026-10-09T13:23:50.007Z",
+    "completedAt": "2026-10-09T13:24:32.086Z",
+    "checkCounts": [
+      40,
+      43
+    ],
+    "hostSourceSha256": "1711a3dd12c21ee1b595e75f02f9dc694ba49dcbc6b2e9ed6bdf0d83a3b6f209",
+    "publishedAppSha256": "b59347f942ff5a2ef52e08563b14c93dd79048125ec73a6b28cd664bbb65b34c",
+    "pckSha256": "e1fa5063ccd3bdb994bacf04a10e179b86197fad7283561f5810449eede1ed36",
+    "templateArchiveSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+    "templateEngineSha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "nativeControls": 7,
+    "newControl": "symlink-parent-rpath-target-outside-app-rejected",
+    "captureHashesVerified": true,
+    "captures": [
+      {
+        "file": "initial.png",
+        "bytes": 24826,
+        "sha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+        "dimensions": {
+          "width": 540,
+          "height": 300
+        }
+      },
+      {
+        "file": "updated.png",
+        "bytes": 28929,
+        "sha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+        "dimensions": {
+          "width": 540,
+          "height": 300
+        }
+      },
+      {
+        "file": "resized.png",
+        "bytes": 31963,
+        "sha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+        "dimensions": {
+          "width": 540,
+          "height": 300
+        }
+      }
+    ]
+  },
+  "causalReview": {
+    "priorProducer": "0c03dd9c03cbbc8ec1c8a0bf5be54c330dae778d",
+    "fixedProducer": "daba1d57690babcc4d213541505b2ab7444facf4",
+    "cases": [
+      {
+        "value": "@loader_path/jump/../shadow.dylib",
+        "priorAccepted": true,
+        "currentRejected": true
+      },
+      {
+        "value": "@executable_path/jump/../shadow.dylib",
+        "priorAccepted": true,
+        "currentRejected": true
+      }
+    ]
+  },
+  "independentReview": {
+    "status": "passed",
+    "sdkPinsComparedToGitBlobs": 220,
+    "runtimeCounts": [
+      40,
+      43
+    ],
+    "physicalControl": {
+      "hostHashVerified": true,
+      "machoRpathVerified": true,
+      "hostSha256": "d56a151a3ac8a50f1757b3e170c0f146b12c4bb41f2141611bad8087141df104"
+    }
+  },
+  "limitations": [
+    "local ad-hoc signing only",
+    "not a distribution/notarization claim",
+    "no mobile or second-machine claim",
+    "local macOS arm64 result only",
+    "hosted CI, review and Pages deployment pending at curation time",
+    "same-machine export; no second machine or clean OS profile claim",
+    "no Frontier 12-turn app replay, iPhone behavior, Developer ID distribution or notarization claim"
+  ],
+  "gateLogs": {
+    "nativeExport": "gates/macos-export-native.log",
+    "contracts": "gates/contracts.log",
+    "static": "gates/static.log",
+    "publication": "gates/publication.log",
+    "setup": "gates/setup.log",
+    "nativeBuild": "gates/native-build.log"
+  },
+  "hostDetails": {
+    "os": "macOS 26.6.2",
+    "build": "25G83",
+    "architecture": "arm64"
+  },
+  "nativeExecution": {
+    "command": "MACOS_EXPORT_TEMPLATE={WORKTREE}/build/macos-arm64-template.zip npm run test:export:macos",
+    "commandBeforePathTokenSubstitution": "MACOS_EXPORT_TEMPLATE=$PWD/build/macos-arm64-template.zip npm run test:export:macos",
+    "log": "gates/macos-export-native.log",
+    "controlsReport": "controls/report.json"
+  }
+}

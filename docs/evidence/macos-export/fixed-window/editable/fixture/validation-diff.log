@@ -1,0 +1,14 @@
+--- {WORKTREE}/build/p2-native-export-producer/p2-editable-29969eb-aa21c104-971d-4a4e-adc1-bfac11c777b3/validation-original.gd	2026-10-08 19:40:51
++++ {WORKTREE}/build/p2-native-export-producer/p2-editable-29969eb-aa21c104-971d-4a4e-adc1-bfac11c777b3/validation-adapted.gd	2026-10-08 19:40:51
+@@ -73,6 +73,11 @@
+   await RenderingServer.frame_post_draw
+   check(get_viewport().get_texture().get_image().save_png("res://consumer-" + stage + ".png") == OK, "Consumer capture saved: " + stage)
+ 
++func _enter_tree() -> void:
++  super._enter_tree()
++  if DisplayServer.get_name() != "headless":
++    get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
++
+ func _ready() -> void:
+   if not OS.get_cmdline_user_args().has("--validate"):
+     return

@@ -1,0 +1,457 @@
+{
+  "format": "godot-fabric.p2-minimal-consumer-baseline/v1",
+  "status": "passed",
+  "startedAt": "2026-10-08T18:27:59.951Z",
+  "completedAt": "2026-10-08T18:28:34.488Z",
+  "harnessCreatedWithin": {
+    "startedAt": "2026-10-08T18:27:59.951Z",
+    "completedAt": "2026-10-08T18:28:00.161Z"
+  },
+  "retainedProject": "/var/folders/h2/6xxl56j97cnfzthk1mgmpz540000gn/T/godot-fabric-p2-minimal-pre-export-baseline-MFIVB7/project",
+  "retainedOutputDirectory": "{WORKTREE}/build/p2-minimal-pre-export-baseline",
+  "retainedOutsideControlDirectory": "/var/folders/h2/6xxl56j97cnfzthk1mgmpz540000gn/T/godot-fabric-p2-minimal-pre-export-baseline-output-control-xr7VP0",
+  "preparationManifest": {
+    "path": "build/scroll-view-root/p2-minimal-pre-export-baseline-preparation/preparation-manifest.json",
+    "sha256": "bdcd7531a1aaa395c78cf922eb0f82ac8a864bd1672c744ca0b020407fcc39fd"
+  },
+  "runner": {
+    "path": "build/scroll-view-root/p2-minimal-pre-export-baseline-preparation/run-minimal-baseline.mjs",
+    "sha256": "584419ad0349dc74847b9b2fa6587a4f2e501330591baf8caf5ec2bcd0160a4e"
+  },
+  "node": {
+    "path": "{WORKTREE}/.deps/node-v22.23.3-darwin-arm64/bin/node",
+    "version": "v22.23.3",
+    "sha256": "68f4d07ca49e0500cc135c7e0a445093e228e42e126ac22306d045f0a8c2636b"
+  },
+  "removedDyldEnvironmentKeys": [],
+  "engine": {
+    "path": "/Applications/Godot.app/Contents/MacOS/Godot",
+    "verifiedVersion": "4.7.2.stable.official.ed1daf0bf",
+    "expectedVersion": "4.7.2.stable",
+    "sha256": "c7cccbf8fb143e34e02fd6521e09be2c2b974f0d5db080b19071c9c570718ccf"
+  },
+  "stages": [
+    {
+      "name": "provision",
+      "passed": true
+    },
+    {
+      "name": "editor-cold",
+      "passed": true,
+      "startedAt": "2026-10-08T18:28:15.508Z",
+      "completedAt": "2026-10-08T18:28:30.059Z",
+      "log": "editor-cold.log",
+      "logSha256": "71b27e247cdf1e1f62b7cc840c2781667577264f960907277a29cfb5c1cce770"
+    },
+    {
+      "name": "headless",
+      "passed": true,
+      "startedAt": "2026-10-08T18:28:30.062Z",
+      "completedAt": "2026-10-08T18:28:31.670Z",
+      "report": "headless.json",
+      "checks": [
+        {
+          "name": "External TSX mounts native trees",
+          "passed": true
+        },
+        {
+          "name": "Resource config produces one shared application and one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "Consumer roots have distinct identities",
+          "passed": true
+        },
+        {
+          "name": "Scene props reach registered public components",
+          "passed": true
+        },
+        {
+          "name": "Consumer resolution selects project .godot.ts",
+          "passed": true
+        },
+        {
+          "name": "Addon fonts and host load without runtime errors",
+          "passed": true
+        },
+        {
+          "name": "Consumer has no laboratory asset directory",
+          "passed": true
+        },
+        {
+          "name": "Public TextInput commits a native editor",
+          "passed": true
+        },
+        {
+          "name": "SDK runtime_available hook binds GDScript services before consumer roots mount",
+          "passed": true
+        },
+        {
+          "name": "Public typed state and signal subscriptions initialize in the independent SDK consumer",
+          "passed": true
+        },
+        {
+          "name": "State snapshot retries a changed getter and exposes the current revision",
+          "passed": true
+        },
+        {
+          "name": "Initial snapshot race preserves its signal occurrence exactly once",
+          "passed": true
+        },
+        {
+          "name": "Game-owned state rerenders both independent native roots",
+          "passed": true
+        },
+        {
+          "name": "Native input updates only its own React root",
+          "passed": true
+        },
+        {
+          "name": "Project-owned store updates both roots",
+          "passed": true
+        },
+        {
+          "name": "Native editing rerenders the consumer component",
+          "passed": true
+        },
+        {
+          "name": "Godot prop updates preserve local React state",
+          "passed": true
+        },
+        {
+          "name": "Prop updates retain root identity",
+          "passed": true
+        },
+        {
+          "name": "Typed calls queue GDScript work outside the JavaScript render stack",
+          "passed": true
+        },
+        {
+          "name": "Typed consumer call settles through the native SDK transport",
+          "passed": true
+        },
+        {
+          "name": "Completion metadata and result correspond to the executed GDScript method",
+          "passed": true
+        },
+        {
+          "name": "Consecutive Godot signals preserve every occurrence and its argument order",
+          "passed": true
+        },
+        {
+          "name": "Typed state updates pair the same revision with both native trees",
+          "passed": true
+        },
+        {
+          "name": "Inventory-only resize changes its Yoga constraints while preserving HUD constraints",
+          "passed": true
+        },
+        {
+          "name": "Independent resize preserves root identity and local React state",
+          "passed": true
+        },
+        {
+          "name": "Surface constraints do not replace original RN window and screen metrics",
+          "passed": true
+        },
+        {
+          "name": "Original public View refs measure both resized consumer surfaces",
+          "passed": true
+        },
+        {
+          "name": "Public measureInWindow agrees with Godot global geometry after inventory-only resize",
+          "passed": true
+        },
+        {
+          "name": "Native editing after resize reaches only the inventory React root",
+          "passed": true
+        },
+        {
+          "name": "Restoring inventory constraints updates layout and the same public ref without remount",
+          "passed": true
+        },
+        {
+          "name": "Consumer unmount preserves the other native tree",
+          "passed": true
+        },
+        {
+          "name": "Closing one consumer root preserves application-owned game connections",
+          "passed": true
+        },
+        {
+          "name": "Consumer root mounts again",
+          "passed": true
+        },
+        {
+          "name": "Remount resets local state and preserves the project store",
+          "passed": true
+        },
+        {
+          "name": "Remount observes current GDScript state without installing duplicate game subscriptions",
+          "passed": true
+        },
+        {
+          "name": "Consumer lifecycle remains free of native errors",
+          "passed": true
+        },
+        {
+          "name": "Consumer shutdown releases native tags, roots and timers",
+          "passed": true
+        },
+        {
+          "name": "Final React cleanup removes shared SDK service listeners exactly once",
+          "passed": true
+        },
+        {
+          "name": "SDK shutdown disconnects GDScript sources and clears service queues and bindings",
+          "passed": true
+        },
+        {
+          "name": "Stopped consumer handlers cannot receive later game signals",
+          "passed": true
+        }
+      ],
+      "displayServer": "headless"
+    },
+    {
+      "name": "headed-capture",
+      "passed": true,
+      "startedAt": "2026-10-08T18:28:31.670Z",
+      "completedAt": "2026-10-08T18:28:34.478Z",
+      "report": "graphical.json",
+      "checks": [
+        {
+          "name": "External TSX mounts native trees",
+          "passed": true
+        },
+        {
+          "name": "Resource config produces one shared application and one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "Consumer roots have distinct identities",
+          "passed": true
+        },
+        {
+          "name": "Scene props reach registered public components",
+          "passed": true
+        },
+        {
+          "name": "Consumer resolution selects project .godot.ts",
+          "passed": true
+        },
+        {
+          "name": "Addon fonts and host load without runtime errors",
+          "passed": true
+        },
+        {
+          "name": "Consumer has no laboratory asset directory",
+          "passed": true
+        },
+        {
+          "name": "Public TextInput commits a native editor",
+          "passed": true
+        },
+        {
+          "name": "SDK runtime_available hook binds GDScript services before consumer roots mount",
+          "passed": true
+        },
+        {
+          "name": "Public typed state and signal subscriptions initialize in the independent SDK consumer",
+          "passed": true
+        },
+        {
+          "name": "State snapshot retries a changed getter and exposes the current revision",
+          "passed": true
+        },
+        {
+          "name": "Initial snapshot race preserves its signal occurrence exactly once",
+          "passed": true
+        },
+        {
+          "name": "Game-owned state rerenders both independent native roots",
+          "passed": true
+        },
+        {
+          "name": "Consumer capture saved: initial",
+          "passed": true
+        },
+        {
+          "name": "Native input updates only its own React root",
+          "passed": true
+        },
+        {
+          "name": "Project-owned store updates both roots",
+          "passed": true
+        },
+        {
+          "name": "Native editing rerenders the consumer component",
+          "passed": true
+        },
+        {
+          "name": "Godot prop updates preserve local React state",
+          "passed": true
+        },
+        {
+          "name": "Prop updates retain root identity",
+          "passed": true
+        },
+        {
+          "name": "Consumer capture saved: updated",
+          "passed": true
+        },
+        {
+          "name": "Typed calls queue GDScript work outside the JavaScript render stack",
+          "passed": true
+        },
+        {
+          "name": "Typed consumer call settles through the native SDK transport",
+          "passed": true
+        },
+        {
+          "name": "Completion metadata and result correspond to the executed GDScript method",
+          "passed": true
+        },
+        {
+          "name": "Consecutive Godot signals preserve every occurrence and its argument order",
+          "passed": true
+        },
+        {
+          "name": "Typed state updates pair the same revision with both native trees",
+          "passed": true
+        },
+        {
+          "name": "Inventory-only resize changes its Yoga constraints while preserving HUD constraints",
+          "passed": true
+        },
+        {
+          "name": "Independent resize preserves root identity and local React state",
+          "passed": true
+        },
+        {
+          "name": "Surface constraints do not replace original RN window and screen metrics",
+          "passed": true
+        },
+        {
+          "name": "Original public View refs measure both resized consumer surfaces",
+          "passed": true
+        },
+        {
+          "name": "Public measureInWindow agrees with Godot global geometry after inventory-only resize",
+          "passed": true
+        },
+        {
+          "name": "Native editing after resize reaches only the inventory React root",
+          "passed": true
+        },
+        {
+          "name": "Consumer capture saved: resized",
+          "passed": true
+        },
+        {
+          "name": "Restoring inventory constraints updates layout and the same public ref without remount",
+          "passed": true
+        },
+        {
+          "name": "Consumer unmount preserves the other native tree",
+          "passed": true
+        },
+        {
+          "name": "Closing one consumer root preserves application-owned game connections",
+          "passed": true
+        },
+        {
+          "name": "Consumer root mounts again",
+          "passed": true
+        },
+        {
+          "name": "Remount resets local state and preserves the project store",
+          "passed": true
+        },
+        {
+          "name": "Remount observes current GDScript state without installing duplicate game subscriptions",
+          "passed": true
+        },
+        {
+          "name": "Consumer lifecycle remains free of native errors",
+          "passed": true
+        },
+        {
+          "name": "Consumer shutdown releases native tags, roots and timers",
+          "passed": true
+        },
+        {
+          "name": "Final React cleanup removes shared SDK service listeners exactly once",
+          "passed": true
+        },
+        {
+          "name": "SDK shutdown disconnects GDScript sources and clears service queues and bindings",
+          "passed": true
+        },
+        {
+          "name": "Stopped consumer handlers cannot receive later game signals",
+          "passed": true
+        }
+      ],
+      "displayServer": "macOS"
+    },
+    {
+      "name": "capture-initial",
+      "path": "initial.png",
+      "sha256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "generatedDuring": "headed-capture",
+      "captureTimeBound": {
+        "startedAt": "2026-10-08T18:28:31.670Z",
+        "completedAt": "2026-10-08T18:28:34.478Z"
+      }
+    },
+    {
+      "name": "capture-updated",
+      "path": "updated.png",
+      "sha256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "generatedDuring": "headed-capture",
+      "captureTimeBound": {
+        "startedAt": "2026-10-08T18:28:31.670Z",
+        "completedAt": "2026-10-08T18:28:34.478Z"
+      }
+    },
+    {
+      "name": "capture-resized",
+      "path": "resized.png",
+      "sha256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "generatedDuring": "headed-capture",
+      "captureTimeBound": {
+        "startedAt": "2026-10-08T18:28:31.670Z",
+        "completedAt": "2026-10-08T18:28:34.478Z"
+      }
+    }
+  ],
+  "source": {
+    "head": "5148df64d7bbe2b44244c036fef7fe09ff8e82f9",
+    "fixture": {
+      "validationPath": "consumers/minimal/validation.gd",
+      "validationSha256": "17fbd9ff76ec51a31e1750d3918c8feaf2242c1a8c9669e640531b0c173f56bc",
+      "provisionedValidationSha256": "17fbd9ff76ec51a31e1750d3918c8feaf2242c1a8c9669e640531b0c173f56bc",
+      "projectSha256": "1127b6ff2a55610d6c72c7f23d0758a3a4dafb4dc30ad98d04bd306fb8a12dce",
+      "sceneSha256": "04418e13ef44f2fbd7575cf0f72d72ab27944dae737f7fd0069a1c31c7409d1f"
+    }
+  },
+  "sdk": {
+    "manifestPath": "sdk-manifest.json",
+    "manifestSha256": "474ad9688f5275bb66b837c04f54f155d548e4c53223071c3279718d4f3c91ee",
+    "sourceCommit": "5148df64d7bbe2b44244c036fef7fe09ff8e82f9",
+    "sourceDirty": false,
+    "nativePath": "addons/godot_fabric/native/fabric_godot.dylib",
+    "nativeSha256": "da3f9d4ff1d77917919bc711ea1d3289f8332cdc6b9258933de78b4328f07db2",
+    "recordedHostSha256": "da3f9d4ff1d77917919bc711ea1d3289f8332cdc6b9258933de78b4328f07db2"
+  },
+  "bundle": {
+    "path": "res://.godot_fabric/app.js",
+    "sha256": "98e00a8b45e7d39be34991a43d187b0d9a93cc0ab9d4b7949bf6132d36a5e11e",
+    "buildReportPath": "build-report.json",
+    "buildReportSha256": "cc89e105ca8b8db845d872c7f669b3b66b71f60482bb48280e3210ac278e4666",
+    "reportedBundle": "res://.godot_fabric/app.js",
+    "reportedSha256": "98e00a8b45e7d39be34991a43d187b0d9a93cc0ab9d4b7949bf6132d36a5e11e",
+    "inputCount": 400
+  }
+}

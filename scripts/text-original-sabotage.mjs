@@ -4,6 +4,7 @@ import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import {existsSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/text-original-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained controls of the text-original slice. Each runs tests/text-original-native.test.mjs, whose probe and
@@ -33,31 +34,6 @@ const host = path.join(root, "addons/fabric_godot.dylib");
 const previousHost = path.join(root, "build/text-original-previous-host/fabric_godot.dylib");
 const genuineCopy = path.join(root, "build/text-original-genuine-host/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "register", argument: "--sabotage=register", file: "src/text.jsx",
-    find: 'import OriginalText from "react-native/Libraries/Text/Text";',
-    replace: 'import { register } from "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry";\n' +
-      'import { controlViewConfig } from "./components";\n' +
-      'import OriginalText from "react-native/Libraries/Text/Text";\n' +
-      'const own = (name, extra) => register(name, () => ({ ...controlViewConfig, uiViewClassName: name, ...extra }));\n' +
-      'own("RCTText", {});\nown("RCTVirtualText", {});'},
-  {name: "style", argument: "--sabotage=style", file: "src/base-view-config.js",
-    find: "    style: platformStyle,\n", replace: ""},
-  {name: "ancestor", argument: "--sabotage=ancestor", file: "src/text.jsx",
-    find: 'import TextAncestorContext from "react-native/Libraries/Text/TextAncestorContext";',
-    replace: "const TextAncestorContext = React.createContext(false);"},
-  {name: "span-press", argument: "--sabotage=span-press", file: "src/text.jsx",
-    find: "    for (const name of Object.keys(props)) {\n      if (isSpanPressProp(name) && props[name] != null) {\n" +
-      "        throw new Error(`Godot Text does not implement ${name} on a nested Text: only the outer paragraph is pressable`);\n" +
-      "      }\n    }\n", replace: ""},
-  {name: "default", argument: "--sabotage=default", file: "src/text.jsx",
-    find: "const DEFAULT_FONT_SIZE = 18;", replace: "const DEFAULT_FONT_SIZE = 14;"},
-  {name: "guard", argument: "--sabotage=guard", file: "native/paragraph_layout.cpp", native: true,
-    find: "  if (props.ellipsizeMode == rn::EllipsizeMode::Head || props.ellipsizeMode == rn::EllipsizeMode::Middle)\n" +
-      '    throw std::runtime_error("Godot Text supports tail or clip ellipsizeMode");\n' +
-      "  if (props.adjustsFontSizeToFit)\n" +
-      '    throw std::runtime_error("Godot Text does not implement adjustsFontSizeToFit");\n', replace: ""},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));
 const files = [...new Set(variants.map(variant => variant.file))];

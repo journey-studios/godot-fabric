@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/device-services-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the device services slice: each breaks one behavior of the host on purpose, runs the
@@ -20,13 +21,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "duplicate-url", argument: "--sabotage=duplicate-url", hostDirectory: "build/device-services-sabotage-duplicate-url-host",
-    file: "native/device_services.cpp", find: "    state_->emit_url(url);\n", replace: "    state_->emit_url(url);\n    state_->emit_url(url);\n"},
-  {name: "stale-clipboard", argument: "--sabotage=stale-clipboard", hostDirectory: "build/device-services-sabotage-stale-clipboard-host",
-    file: "native/device_services.cpp", find: "    if (auto text = state_->core.clipboard_get()) {\n      promise.resolve(std::move(*text));\n",
-    replace: "    static std::optional<std::string> stale;\n    if (auto text = state_->core.clipboard_get()) {\n      if (!stale) {\n        stale = std::move(*text);\n      }\n      promise.resolve(*stale);\n"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

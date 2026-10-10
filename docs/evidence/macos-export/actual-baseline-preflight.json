@@ -1,0 +1,26 @@
+{
+  "format": "godot-fabric.actual-builder-report-preflight/v1",
+  "scope": "Copied bytes from the executed original minimal builder; no bundle rebuild, export or runtime",
+  "project": "{DISPOSABLE_PROJECT}",
+  "argv": [
+    "/Applications/Godot.app/Contents/MacOS/Godot",
+    "--headless",
+    "--path",
+    "{DISPOSABLE_PROJECT}",
+    "--script",
+    "res://addons/godot_fabric/export_preflight.gd"
+  ],
+  "startedAtUtc": "2026-10-08T19:16:13.635399+00:00",
+  "completedAtUtc": "2026-10-08T19:16:13.898827+00:00",
+  "exitCode": 0,
+  "helperSourcePins": {
+    "sdk/addon/application_resource.gd": "1c02b968903d490dcd51f21de2ebc9de9339f5b647f47e0a1bc791f0e586ad95",
+    "sdk/addon/export_payload.gd": "2ed5f11ef739c62c92a4abe8b91686e2c24dd79bdb56296bd446a83888fedca5",
+    "sdk/addon/export_preflight.gd": "348a5f2a691c4679824763fca9ba55b1943d7d4e3410e3dce8f30e20e689c253"
+  },
+  "bundleSha256": "98e00a8b45e7d39be34991a43d187b0d9a93cc0ab9d4b7949bf6132d36a5e11e",
+  "buildReportSha256": "cc89e105ca8b8db845d872c7f669b3b66b71f60482bb48280e3210ac278e4666",
+  "logSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+  "removedDyldKeys": [],
+  "passed": true
+}

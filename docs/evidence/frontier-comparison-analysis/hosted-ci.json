@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-analysis",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T07:55:19.054Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38030014224,
+    "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/110",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T06:10:27Z",
+    "updatedAt": "2026-10-10T06:17:19Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114148785168,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "startedAt": "2026-10-10T06:10:30Z",
+        "completedAt": "2026-10-10T06:14:06Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148785168"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114148785737,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148785737"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114148786326,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148786326"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114148786004,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148786004"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114148785967,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148785967"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114149960118,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114149960118"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114148785284,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "startedAt": "2026-10-10T06:10:30Z",
+        "completedAt": "2026-10-10T06:16:28Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148785284"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114148785275,
+        "runAttempt": 1,
+        "headSha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+        "startedAt": "2026-10-10T06:10:36Z",
+        "completedAt": "2026-10-10T06:17:18Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38030014224/job/114148785275"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+      "reference-android": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+      "reference-ios": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:10:51Z",
+          "completedAt": "2026-10-10T06:10:51Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against b23009d00f5f (--base b23009d00f5f2fe419f4016c1484f1e9039f40c6); X9 clean, X10 clean"
+          ],
+          "base": "b23009d00f5f2fe419f4016c1484f1e9039f40c6"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:10:51Z",
+          "completedAt": "2026-10-10T06:14:01Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 518,
+              "suites": 0,
+              "pass": 518,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:14:01Z",
+          "completedAt": "2026-10-10T06:14:02Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T06:14:02Z",
+          "completedAt": "2026-10-10T06:14:02Z",
+          "passed": true,
+          "files": 2005
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-analysis.test.mjs",
+          "tests": 19,
+          "passed": 19,
+          "topLevel": [
+            "the analysis reads the roles, the slots and the sentences of the protocol, and refuses a protocol it does not understand",
+            "the median is the protocol's (the mean of the two middle values), not the nearest rank of the oracle, and the idle reference is the median of the half-sums",
+            "the module reproduces the protocol's fixed interval and its known answer, with the parameters read from the protocol",
+            "the four categories, the non-inferior flag beside them, and H1 and H2 as estimates with no category",
+            "the margin is the larger of 10% of B's median and the floor of 0.5 ms: the same difference is a cost under the floor and neutral under 10%",
+            "a hand-checkable campaign: arms with no spread give point intervals and the differences of the medians",
+            "the report recomputes from its own per-run values: the intervals and the p-values are the bootstrap of the right arms in the right order",
+            "the Holm guard downgrades a category whose claim does not stand in the family of four windows, and shows the unadjusted one beside it",
+            "the axes: the verdict of C against B with the outcome's own margin, the deterministic package size and the single observation of the cost of change",
+            "FPS without a limit: higher is better, a gain excludes zero, and the axis is N/A when the vsync does not read DISABLED",
+            "the descriptive outcomes report medians, interquartile ranges and intervals with no category, and leave the warm-up out",
+            "the absolute budgets: met when at most the frozen value, exceeded otherwise, and N/A for the stress window the freeze left N/A",
+            "when arm B is not ready the report is A against C: H1 only, no category for H3 and no gain claimed",
+            "the parameters are read from the protocol when the script runs: a changed protocol changes the interval, the margin and the load limit",
+            "the report has the sections of the protocol in order, the frozen values and the hash of the protocol, and takes its words from the campaign",
+            "the same campaign gives the same report byte for byte, and the seed of the protocol is in it",
+            "the command line writes the report of a campaign file, checks its format and refuses a bad one",
+            "the example report of the evidence record is the exact output of the script for the synthetic campaign regenerated with the same seed, by the commands of its README",
+            "the protocol's test imports the functions from the modules, and the tests are part of the contracts"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-validity.test.mjs",
+          "tests": 7,
+          "passed": 7,
+          "topLevel": [
+            "a load above the limit is rejected with its reading and redone in the same slot, and the rejected attempt does not count",
+            "an execution that did not draw or was not paced in the presented lane is rejected with the reason, and the same data in the unlimited lane is not",
+            "an incomplete window or idle window, a wrong hash, a wrong seed or a Debug build, an error and a parity mismatch are each rejected with their rule",
+            "the fourth attempt, or three rejected ones, stop the campaign and no statistic is produced",
+            "a repeat of the other game in one arm stops the campaign, in either lane, and an instrument that did not pass counts nothing",
+            "the order of the executions: slots follow the protocol's sequence, the planned and accepted counts balance by position, and an arm with too few executions is incomplete",
+            "attempts that contradict one another, or data that are not in the format, are refused and not analysed"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-protocol.test.mjs",
+          "tests": 18,
+          "passed": 18,
+          "topLevel": [
+            "the protocol has every required field with its type, and the validator is not vacuous",
+            "the three arms, the three hypotheses and the four windows are the ones decided",
+            "the secondary outcomes are the ones decided, and each axis with a verdict carries its margin",
+            "only the thresholds can be frozen, each with a rule and a source, and both fields move together",
+            "the pin: the protocol without its freeze fields has the SHA-256 recorded here",
+            "an amendment says what changed, why, the text it replaces and that no comparative measurement came before it",
+            "arm B's time-box has its length, recorded before arm B starts, and the iPhone's open item follows the NO-GO",
+            "a change of the protocol after the pre-registration fails unless it comes with an amendment and a pin",
+            "while the comparative executions have not run, an amendment cannot count measurements before it",
+            "the categories are exactly gain, neutral, cost and inconclusive, and exclusive and exhaustive for any interval",
+            "the margin is the larger of 10% of B's median and 0.5 ms, and the examples land where the research note says",
+            "a gain is always better: the interval of an outcome where higher is better is negated, and a gain in FPS excludes zero",
+            "Holm over the four windows of H3 stands for the smallest p-values in order and only ever downgrades",
+            "the order of the executions is a Latin square repeated, balanced in count and position",
+            "the load limit is written and the redo of an execution is bounded",
+            "the percentiles, the median, the interquartile range and the bootstrap are defined and reproducible",
+            "the research note covers the protocol it reads and quotes its pin and its examples",
+            "this test is part of the contracts"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 110,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/110",
+    "title": "feat(perf): Analyze the final comparison by its pre-registered protocol",
+    "headSha": "6be05a3d728cde8aacdb1437593e9600d3c1ae54",
+    "baseSha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+    "squashMergeCommit": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+    "squashCommitSubject": "feat(perf): Analyze the final comparison by its pre-registered protocol (#110)",
+    "mergedAt": "2026-10-10T06:10:24Z",
+    "headTreeSha": "c446320502eeceba8e399479fe5990a55990c07c",
+    "mainTreeSha": "c446320502eeceba8e399479fe5990a55990c07c",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "commits": [
+      {
+        "sha": "8554c750936934f85173c8332dbec32237510f04",
+        "subject": "feat(perf): Analyze the final comparison by its pre-registered protocol"
+      },
+      {
+        "sha": "a01cdba04c4c3eac598b5d5ea082def4cc027118",
+        "subject": "docs(evidence): Record the comparison analysis on a synthetic campaign"
+      },
+      {
+        "sha": "9a1c2591309cbd073ce3ecf7e245f3da313cc071",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-analysis"
+      },
+      {
+        "sha": "009f93bd382a412cb7bb108d8f676a96820dfc7b",
+        "subject": "docs(dashboard): Register the comparison analysis script"
+      },
+      {
+        "sha": "4592dba920d8cc106ed97b96ad04322c842f7851",
+        "subject": "fix(evidence): Commit the example analysis under a name the ignore rule keeps"
+      },
+      {
+        "sha": "5fcd3d182f23b6d3db4504fdc840ae01f2384e24",
+        "subject": "docs(dashboard): Pin the comparison analysis record at its complete commit"
+      },
+      {
+        "sha": "29517df2671e0104e84b838b125813c47f08e554",
+        "subject": "docs(evidence): Say which slot stops the comparison campaign"
+      },
+      {
+        "sha": "6be05a3d728cde8aacdb1437593e9600d3c1ae54",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-analysis"
+      }
+    ],
+    "changedFiles": 22,
+    "additions": 7446,
+    "deletions": 87
+  },
+  "artifacts": {},
+  "findings": []
+}

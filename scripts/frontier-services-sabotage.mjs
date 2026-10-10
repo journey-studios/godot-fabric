@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/frontier-services-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of Frontier's services: each breaks one GDScript source of the services on purpose, runs
@@ -36,44 +37,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 // There is no host here and nothing to rebuild: the services are plain GDScript. Run with:
 //   node scripts/frontier-services-sabotage.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
-const services = "consumers/civ-lite/services";
-const variants = [
-  {name: "schema-drift", file: `${services}/schema.gd`,
-    find: "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR, \"reason_text\": STR}}\n",
-    replace: "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR}}\n"},
-  {name: "late-register", file: `${services}/game_services.gd`,
-    find: "func _enter_tree() -> void:\n  $Application.runtime_available.connect(_bind_services)\n",
-    replace: "var _late_runtime: Node\n\n\nfunc _enter_tree() -> void:\n  $Application.runtime_available.connect(func(runtime: Node) -> void: _late_runtime = runtime)\n\n\nfunc _ready() -> void:\n  _bind_services(_late_runtime)\n"},
-  {name: "silent-intent", file: `${services}/game_services.gd`,
-    find: "  return _intent(\"found_city\", game.found_city(unit_id))\n",
-    replace: "  _count(\"found_city\")\n  return _plain(game.found_city(unit_id))\n"},
-  {name: "frozen-epoch", file: `${services}/game_services.gd`,
-    find: "  epoch += 1\n  game = Game.new(Rules.SEED, epoch)\n",
-    replace: "  game = Game.new(Rules.SEED, epoch)\n"},
-  {name: "emit-on-refusal", file: `${services}/game_services.gd`,
-    find: "  if result.ok == 1:\n    snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n",
-    replace: "  snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n"},
-  {name: "action-args-drift", file: "consumers/civ-lite/game/snapshot.gd",
-    find: "    actions.append(action(\"found_city\", \"Found city\", [unit_id], Intents.check_found_city(state, unit_id)))\n",
-    replace: "    actions.append(action(\"found_city\", \"Found city\", [], Intents.check_found_city(state, unit_id)))\n"},
-  {name: "turn-ended-order", file: `${services}/game_services.gd`,
-    find: "  turn_ended.emit(summary)\n  snapshot_changed.emit(game.snapshot())\n",
-    replace: "  snapshot_changed.emit(game.snapshot())\n  turn_ended.emit(summary)\n"},
-  {name: "double-finish", file: `${services}/game_services.gd`,
-    find: "  turn_ended.emit(summary)\n",
-    replace: "  turn_ended.emit(summary)\n  turn_ended.emit(summary)\n"},
-  {name: "job-dies-with-screen", file: `${services}/game_services.gd`,
-    find: "func _process(_delta: float) -> void:\n  advance_job()\n",
-    replace: "func _process(_delta: float) -> void:\n  var runtime := get_node_or_null(\"Application/Runtime\")\n"
-      + "  if job != 0 and runtime != null and int(JSON.parse_string(runtime.call(\"snapshot\")).get(\"rootCount\", 0)) == 0:\n"
-      + "    _abandon_job()\n    return\n  advance_job()\n"},
-  {name: "sync-end-turn", file: `${services}/game_services.gd`,
-    find: "  snapshot_changed.emit(game.snapshot())\n  return _plain(started, job)\n",
-    replace: "  snapshot_changed.emit(game.snapshot())\n  var accepted := job\n  while job != 0:\n    advance_job()\n  return _plain(started, accepted)\n"},
-  {name: "stale-snapshot", file: `${services}/game_services.gd`,
-    find: "  if ran.done == 0:\n    snapshot_changed.emit(game.snapshot())\n    return\n",
-    replace: "  if ran.done == 0:\n    if ran.name != \"growth\":\n      snapshot_changed.emit(game.snapshot())\n    return\n"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
 const sources = guardSources(root, files);

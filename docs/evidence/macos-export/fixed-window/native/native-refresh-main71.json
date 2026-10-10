@@ -1,0 +1,14 @@
+{
+  "format": "godot-fabric.p2-native-refresh/v1",
+  "producer": "29969eb0d64201a1797e6e866a2ef650b1282fde",
+  "nativeSourceFiles": 146,
+  "nativeReceiptSha256": "45a1151e82aef194a63d6106b62ff621a790bfc796050668c37dc6f18221b50d",
+  "hostSha256": "1333055f5ce81a8625a1d3e25cd29adeafc18018260cef5a83882f281552c773",
+  "frameworkSha256": {
+    "host": "1333055f5ce81a8625a1d3e25cd29adeafc18018260cef5a83882f281552c773",
+    "hermes": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "dependencies": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+  },
+  "nativeRecorded": true,
+  "engineRebuilt": false
+}

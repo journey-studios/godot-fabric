@@ -4,6 +4,7 @@ import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import {existsSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/text-layout-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained controls of the text layout slice. Each runs tests/text-layout-native.test.mjs, whose
@@ -28,21 +29,10 @@ const host = path.join(root, "addons/fabric_godot.dylib");
 const previousHost = path.join(root, "build/text-layout-previous-host/fabric_godot.dylib");
 const genuineCopy = path.join(root, "build/text-layout-genuine-host/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const file = "native/paragraph_layout.cpp";
-const variants = [
-  {name: "all-lines", argument: "--sabotage=all-lines", hostDirectory: "build/text-layout-sabotage-all-lines-host", file,
-    find: "    return lines_of(prepare(text.getValue(), props, size.width));",
-    replace: "    auto unlimited = props;\n    unlimited.maximumNumberOfLines = 0;\n    return lines_of(prepare(text.getValue(), unlimited, size.width));"},
-  {name: "no-centering", argument: "--sabotage=no-centering", hostDirectory: "build/text-layout-sabotage-no-centering-host", file,
-    find: "    const float ascender = line.y - line.top;",
-    replace: "    const float ascender = line.ascent;"},
-  {name: "sentinel", argument: "--sabotage=sentinel", hostDirectory: "build/text-layout-sabotage-sentinel-host", file,
-    find: "lines.emplace_back(std::string(full.substr(line.start, line.end - line.start).utf8().get_data()),",
-    replace: "lines.emplace_back(std::string((full + String::chr(0x200B)).substr(line.start, line.end - line.start + (line.end == full.length() ? 1 : 0)).utf8().get_data()),"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));
-const sources = guardSources(root, [file]);
+const files = [...new Set(variants.map(variant => variant.file))];
+const sources = guardSources(root, files);
 
 async function build(name) {
   const result = await sources.run(cmake, ["--build", ".deps/build", "--parallel", "4", "--target", "fabric_godot"]);

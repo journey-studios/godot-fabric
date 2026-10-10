@@ -1,0 +1,20 @@
+--- {WORKTREE}/build/p2-native-export-producer/p2-editable-29969eb-aa21c104-971d-4a4e-adc1-bfac11c777b3/project-original.godot	2026-10-08 19:40:51
++++ {WORKTREE}/build/p2-native-export-producer/p2-editable-29969eb-aa21c104-971d-4a4e-adc1-bfac11c777b3/project-adapted.godot	2026-10-08 19:40:51
+@@ -1,12 +1,16 @@
+ config_version=5
+ 
+ [application]
+-config/name="Godot Fabric Consumer"
++config/name="Godot Fabric Editable 29969eb aa21c104-971d-4a4e-adc1-bfac11c777b3"
+ run/main_scene="res://main.tscn"
+ 
+ [display]
+ window/size/viewport_width=1080
+ window/size/viewport_height=600
++window/size/window_width_override=540
++window/size/window_height_override=300
++window/size/resizable=false
++window/stretch/aspect="keep"
+ 
+ [rendering]
+ renderer/rendering_method="gl_compatibility"

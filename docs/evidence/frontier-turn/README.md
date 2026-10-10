@@ -3,13 +3,16 @@
 > **Registro fixado.** Os números, os fontes e os hashes abaixo são os da execução sobre o commit de implementação `116a72f` (a fatia inteira, sobre a main `a49f851`) e o recibo
 > [`execution.json`](execution.json) os fixa. Os comandos rodaram nesta ordem e em sequência, com a árvore limpa (`git status` vazio antes do primeiro, depois das sabotagens e depois do último);
 > os arquivos desta pasta e os documentos que apontam para eles foram escritos depois e não são entrada de nenhum comando. A nota de pesquisa e este registro dizem os mesmos números.
+>
+> **A faixa janelada rodou de novo depois, e foi apresentada.** A seção [Faixa janelada: apresentada (2026-10-09)](#faixa-janelada-apresentada-2026-10-09) é de uma execução posterior, sobre a main `1adcdb3` (árvore idêntica à do commit onde rodou), com o usuário presente e a tela acesa;
+> o recibo a guarda em `windowedPresented`, sem mexer no que `116a72f` fixou. A tentativa de `116a72f` (tela apagada) fica na seção de histórico.
 
 Esta fatia mede o critério `turno` do V05-06 do marco 0.5 Frontier (pacote P6) **na parte que não depende de um display**: o jogo Frontier **como um consumidor o tem** (o template `consumers/civ-lite` provisionado em um projeto próprio,
 com o HUD e a cena intocados), clicado de verdade por 32 rodadas de 16 cliques que passam pelos sete contextos, e a pergunta tem quatro partes: quantos quadros e quantos milissegundos leva um clique até o painel
 do contexto em que ele leva o jogo; o que acontece quadro a quadro num turno com a IA fatiada (uma fase por quadro, um snapshot por quadro, o fim do turno uma vez); e o que cada transição deixa em nós nativos, no heap do Hermes e na memória
-residente. O **tempo de quadro de uma janela apresentada** (vsync ligado, 120 Hz), que também é parte do critério, está **PENDENTE**: nenhuma tentativa da faixa janelada foi apresentada pelo display (a tela estava apagada), e a faixa recusou
-todas e terminou sem estatística de quadro. O [recibo](execution.json) fixa fontes, hashes, contagens, proveniência e resultados; a [nota de pesquisa](../../research/frontier-turn.md) tem a cena, o percurso, as regras e a faixa janelada. O critério `turno` **não fecha**
-nesta fatia (seu registro é uma atividade), e a parte janelada do `baseline` e o `congelado` seguem abertos.
+residente. O **tempo de quadro de uma janela apresentada** (vsync ligado, 120 Hz), que também é parte do critério, não existiu na primeira execução (a tela estava apagada: a faixa recusou as três tentativas e terminou sem estatística de quadro) e **existe na segunda**, com a tela acesa:
+ver [Faixa janelada: apresentada](#faixa-janelada-apresentada-2026-10-09). O [recibo](execution.json) fixa fontes, hashes, contagens, proveniência e resultados; a [nota de pesquisa](../../research/frontier-turn.md) tem a cena, o percurso, as regras e a faixa janelada.
+Com as duas evidências, a headless e a janelada, o que o critério `turno` pede está medido; o registro que o fecha é uma atividade do dashboard, à parte desta página. A parte janelada do `baseline` e o `congelado` seguem abertos.
 
 Todo link de código abaixo está fixado no commit [`116a72f`](https://github.com/journey-studios/godot-fabric/commit/116a72fe608ab7a2bdecffe28a7d67358d439965) (árvore `557565aa`, SHA completo no recibo). Cada fonte executada, listada em `sourcePins` do recibo (36 arquivos),
 tem o mesmo SHA-256 que o blob desse commit, conferido ao gerar o recibo.
@@ -22,7 +25,8 @@ tem o mesmo SHA-256 que o blob desse commit, conferido ao gerar o recibo.
 | Sabotagem `leaky-transition` | rejeitada | 1 check do probe; oráculo, regra `rests`: "start, round 1: Godot counts no orphan node" |
 | Sabotagem `click-misses-panel` | rejeitada | 8 checks do probe; oráculo, regras `shape` e `clicks` (e as que precisam da execução inteira) |
 | Sabotagem `heap-leak` | rejeitada | 1 check do probe; oráculo, regra `heap`: "The live heap at rest rose 477536 bytes…" |
-| Faixa janelada, host atual, janela do macOS | **NÃO APRESENTADA, código de saída 3**: 0 de 5 execuções, 3 tentativas rejeitadas como `unpaced: the display is not presenting` | a janela desenhou e o vsync leu `enabled` a 120 Hz, mas nada deu ritmo ao laço (mediana ociosa 0,606 ms contra o mínimo de 4,167 ms); sem estatística de quadro |
+| Faixa janelada, 1ª execução (`116a72f`, tela apagada), janela do macOS | **NÃO APRESENTADA, código de saída 3**: 0 de 5 execuções, 3 tentativas rejeitadas como `unpaced: the display is not presenting` | a janela desenhou e o vsync leu `enabled` a 120 Hz, mas nada deu ritmo ao laço (mediana ociosa 0,606 ms contra o mínimo de 4,167 ms); sem estatística de quadro (histórico) |
+| Faixa janelada, 2ª execução (main `1adcdb3`, tela acesa), janela do macOS | **APRESENTADA**: 5 de 5 execuções aceitas em 8 tentativas (3 rejeitadas como `undrawn`, nenhuma como `unpaced`) | vsync `enabled`, 120 Hz; primeiro quadro de um clique, mediana entre as execuções: p50 11,53, p95 12,98, p99 13,76 e máx 16,22 ms, nenhum de 100 ms ou mais; quadros do turno, p95 por fase: 12,79 a 14,13 ms; recibo bruto não commitado, SHA-256 `db86eb08…` |
 | Capturas | 7 de 7 | uma imagem do quadro desenhado por contexto, 1080 × 600, do HUD real sobre o mapa real |
 | Host anterior | **N/A** | A fatia não muda C++: não há host a comparar; o controle são as quatro sabotagens |
 
@@ -58,8 +62,37 @@ npm run test:frontier-turn                                 # a suíte, 192 s; ro
 caffeinate -d node scripts/frontier-turn-graphics.mjs      # a faixa janelada, 90 s, saiu com 3: não apresentada
 ```
 
-> **CI hospedada pendente.** O passo `npm run test:frontier-turn` e o artefato `native-frontier-turn` do workflow `contracts.yml` ainda não rodaram na CI hospedada. Tudo o que esta página registra
-> é evidência local, em macOS arm64. As sabotagens e a faixa janelada nunca rodam na CI.
+## CI hospedada e Pages
+
+O push da `main` em `1adcdb3` (o squash do #86, run
+[37935936175](https://github.com/journey-studios/godot-fabric/actions/runs/37935936175) do workflow Contracts) passou nos cinco
+jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (9 min),
+`native-cold-start` (69 min) e `parity-comparison` (24 s). Foi um dos últimos pushes que rodou o job nativo: desde o #88 ele só roda
+sob demanda. O [recibo](hosted-ci.json), escrito por `scripts/hosted-receipts.mjs` a partir da API do GitHub, dos logs e do artefato
+baixado e conferido sem rede pelo `--check` do mesmo script, registra o run, o PR e o artefato:
+
+- **O checkout.** Todos os jobs usaram `1adcdb3`, e a árvore do head do PR (`669f2d8`, 6 commits) é a árvore do squash.
+- **O passo da fatia.** `npm run test:frontier-turn` (passo 60, 8 min) passou: `# tests 1`, `# pass 1`, `# fail 0`, o teste único da
+  suíte headless, que joga as 32 rodadas no projeto provisionado. O job `contracts` passou `npm run test:contracts` (7, 43 e 386 testes
+  de Node e 13 de Python), `check:static` e `check:publication`. Os 13 testes de `tests/frontier-turn-graphics.test.mjs`, que julgam
+  a regra da faixa janelada sem Godot e sem display, estão entre os de Node, e o recibo os confere pelo nome no log do job.
+- **O artefato.** `native-frontier-turn` (id 11621327149, 214.328 bytes, SHA-256 `c2bc690b…`, igual ao digest da API e ao do log de
+  upload) tem 6 arquivos, e o recibo fixa o SHA-256 de cada um. Os logs dele imprimem `FRONTIER_TURN_PASSED: 23`, os 23 checks do probe
+  desta página, e `CONSUMER_EDITOR_BUILD_PASSED`, o build do HUD pelo plugin do editor. O recibo guarda a duração do passo e nenhuma
+  medição do probe: os milissegundos, o heap e a memória residente desta página são os da máquina local, e o run hospedado só
+  confirma que os 23 checks passam num runner.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37935936238](https://github.com/journey-studios/godot-fabric/actions/runs/37935936238), 13:18:44 a 13:19:22Z, `build` e `deploy` em
+success, 43 testes do painel). O deployment 6961671149 está em success, o artefato `github-pages` (id 11618496919, SHA-256
+`61692b2a…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash (SHA-256 `957b53ef…`) e a entrada de atividade `milestone-0-5-v05-06-turno-headless-e2ee6d8`. Um
+push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**Continua só local** a faixa janelada, inclusive a execução apresentada de 2026-10-09: ela precisa de uma janela do macOS com o display
+aceso e nunca roda na CI, e é dela o tempo de quadro com o vsync ligado. Também seguem locais as capturas, as quatro sabotagens e o recibo
+de fonte em `116a72f`. O recibo hospedado é do squash `1adcdb3`; o que ele confirma é a suíte headless e a regra que julga a janela, não
+as medidas.
 
 ## O que a execução faz
 
@@ -216,7 +249,101 @@ O oráculo é ainda posto à prova sobre o relatório gravado e alterado, sem na
 uma segunda chamada; um mapa que não ouviu o clique; uma execução cortada; uma fase pulada; duas fases num quadro; um segundo fim de turno; um quadro sem snapshot; um heap lido sem coleta; um erro do host; um heap que cresce 3.000 bytes, 2.049 e 200 bytes por rodada sobre qualquer das duas séries hospedadas; um RSS que cresce o limite mais 1 KB e 4 MiB por rodada;
 uma rejeição não tratada; um rastreador cego) e 9 que ele tem de aceitar. A lista completa está em `turn.oracle.negatives` do recibo.
 
-## Faixa janelada: PENDENTE (não apresentada pelo display)
+## Faixa janelada: apresentada (2026-10-09)
+
+A faixa janelada rodou de novo depois do merge do PR #86, com o usuário presente e a tela acesa, e **foi apresentada**: `presented: true`, 5 de 5 execuções aceitas em 8 tentativas, vsync lido de volta como `enabled` a 120 Hz. É uma execução **posterior** à fixada em `116a72f`:
+a seção seguinte, da primeira tentativa (tela apagada), fica como histórico, e o bloco `windowedPresented` do [recibo](execution.json) guarda o que segue sem mexer no que lá estava fixado.
+
+**Onde rodou.** `caffeinate -d node scripts/frontier-turn-graphics.mjs` (`npm run bench:frontier-turn-graphics`) rodou sobre o commit `e6a271d364a27f73acf995ed846c78eed055dde0`, cuja árvore (`669f2d8f9739a1fc4189092828fad2bc1d24a386`) é **idêntica** à da main
+[`1adcdb3`](https://github.com/journey-studios/godot-fabric/commit/1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f), o merge do PR #86: o código medido é o de `1adcdb3`. O host nativo (`497e4f95…`), o bundle do HUD (`8f750693…`) e o probe, o runner e o sampler têm os mesmos SHA-256 do registro fixado.
+A faixa terminou com **código de saída 0**, em 851 s pelo relógio do shell (as oito tentativas levaram 811 s). O recibo bruto, `build/frontier-turn-graphics.json` (2.380.876 bytes, com os intervalos crus das cinco execuções aceitas e das três rejeitadas), **não é commitado**; o SHA-256 dele é **`db86eb0816f036add015022ffab74187c8debab0dc218e2bc81e4dad723cdbb5`**.
+`verifyGraphicsReceipt` (importado do baseline) aceita o recibo, e as estatísticas de ocioso, de quadro de clique e de fase do turno das cinco execuções, recalculadas dos intervalos crus pelo posto mais próximo, são as do recibo.
+
+**Display.** Servidor de display `macOS`, renderer `gl_compatibility` (driver `opengl3`, adaptador "Apple M3 Pro"), janela de 1080 × 600 na tela embutida "Color LCD" (1512 × 982 pontos, 3024 × 1964 pixels, escala 2), **vsync `enabled`** e **120 Hz** lidos de volta da janela (período de 8,333 ms);
+macOS 26.6.2 arm64, Apple M3 Pro (`Mac15,6`), Godot oficial 4.7.2, Hermes 250829098.0.17. O Mac não estava ocioso: o `loadavg` de 1 minuto ficou entre 4,27 e 14,44 em volta das tentativas, e o fim da faixa leu `{ 12.98 8.18 7.17 }`.
+
+**As tentativas.** A regra de validade é a do baseline, importada: uma execução só conta se a janela **desenhou** (um quadro depois de cada clique estável e em ao menos 9 de cada 10 quadros da janela ociosa) **e** se a mediana ociosa chega à metade do período de atualização (4,167 ms).
+Três tentativas foram **rejeitadas como `undrawn`** (a janela não desenhou durante todo o percurso) e nenhuma como `unpaced`; cada uma foi repetida e as cinco vagas fecharam. As rejeitadas são as tentativas 1, 2 e 7:
+
+| Execução | Tentativa | Veredito | Mediana ociosa (ms) | Mínimo exigido (ms) | Quadros desenhados | Dos 480 cliques estáveis, sem quadro desenhado | `loadavg` antes | depois |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
+| 1 | 1 | rejeitada: `undrawn` | 4,475 | 4,167 | 11.251 de 12.022 | 35 | `{ 9.78 7.41 6.49 }` | `{ 6.65 7.04 6.45 }` |
+| 1 | 2 | rejeitada: `undrawn` | 6,874 | 4,167 | 78 de 11.737 | 480 | `{ 6.65 7.04 6.45 }` | `{ 7.96 7.23 6.57 }` |
+| 1 | 3 | **aceita** | 13,177 | 4,167 | 11.970 de 11.988 | 0 | `{ 7.96 7.23 6.57 }` | `{ 8.31 7.86 6.90 }` |
+| 2 | 4 | **aceita** | 8,495 | 4,167 | 12.022 de 12.022 | 0 | `{ 8.31 7.86 6.90 }` | `{ 8.25 7.99 7.06 }` |
+| 3 | 5 | **aceita** | 4,421 | 4,167 | 11.871 de 11.871 | 0 | `{ 8.25 7.99 7.06 }` | `{ 5.27 7.05 6.80 }` |
+| 4 | 6 | **aceita** | 8,130 | 4,167 | 11.961 de 11.961 | 0 | `{ 5.27 7.05 6.80 }` | `{ 5.02 6.52 6.63 }` |
+| 5 | 7 | rejeitada: `undrawn` | 4,777 | 4,167 | 7.168 de 11.836 | 214 | `{ 5.02 6.52 6.63 }` | `{ 4.27 5.90 6.37 }` |
+| 5 | 8 | **aceita** | 12,678 | 4,167 | 11.922 de 11.930 | 0 | `{ 4.27 5.90 6.37 }` | `{ 14.44 8.28 7.20 }` |
+
+As oito tentativas levaram 811 s. Na tentativa 2 a janela ociosa não desenhou nenhum quadro (601 desenhos nas outras sete) e o intervalo ocioso médio foi de 6,900 ms, o do laço sem display (o piso de 6,7 a 7,4 ms da faixa headless); nas outras sete foi de 8,329 a 8,631 ms.
+Os intervalos crus das três rejeitadas estão no recibo bruto (`rejectedAttempts`) e **nenhuma estatística delas entra nas tabelas abaixo**.
+
+**Ocioso, por execução aceita** (600 intervalos cada; os três últimos campos contam os intervalos por tamanho):
+
+| Execução (tentativa) | p50 (ms) | média (ms) | p95 (ms) | p99 (ms) | máx (ms) | abaixo de 4,167 ms | de 4,167 a 12 ms | 12 ms ou mais |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 (3) | 13,177 | 8,356 | 14,419 | 14,677 | 18,382 | 299 | 0 | 301 |
+| 2 (4) | 8,495 | 8,601 | 16,089 | 20,215 | 52,903 | 285 | 25 | 290 |
+| 3 (5) | 4,421 | 8,341 | 15,006 | 15,202 | 16,703 | 298 | 2 | 300 |
+| 4 (6) | 8,130 | 8,339 | 15,083 | 15,381 | 17,630 | 292 | 14 | 294 |
+| 5 (8) | 12,678 | 8,631 | 15,617 | 16,729 | 16,985 | 289 | 1 | 310 |
+
+**Cliques, por execução aceita** (360 por execução: os cliques fora do End turn das 30 rodadas estáveis; o intervalo é o do primeiro quadro de processo depois da injeção, e "→ painéis" e "→ 1º quadro desenhado" contam da injeção):
+
+| Execução | 1º quadro p50 (ms) | p95 | p99 | máx | de 100 ms ou mais | acima de 16,67 ms | → painéis p50 | → 1º quadro desenhado p50 | p95 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 10,394 | 12,480 | 13,206 | 26,263 | 0 | 1 | 15,625 | 26,763 | 34,806 |
+| 2 | 11,530 | 12,984 | 13,797 | 16,221 | 0 | 0 | 15,467 | 23,731 | 29,836 |
+| 3 | 11,689 | 13,162 | 13,488 | 15,417 | 0 | 0 | 17,450 | 28,198 | 37,327 |
+| 4 | 11,585 | 13,483 | 13,755 | 14,047 | 0 | 0 | 16,346 | 28,156 | 37,210 |
+| 5 | 10,556 | 12,610 | 14,613 | 22,800 | 0 | 3 | 15,926 | 27,457 | 36,750 |
+
+**Entre as execuções** (a mediana, o intervalo interquartil pelo posto mais próximo e os extremos das cinco estatísticas por execução; a injeção levou 0,531 ms no p50, de 0,518 a 0,640):
+
+| Estatística | Mediana (ms) | Q1 a Q3 | Mín a máx |
+| --- | ---: | --- | --- |
+| 1º quadro do clique, p50 | 11,530 | 10,556 a 11,585 | 10,394 a 11,689 |
+| 1º quadro do clique, p95 | 12,984 | 12,610 a 13,162 | 12,480 a 13,483 |
+| 1º quadro do clique, p99 | 13,755 | 13,488 a 13,797 | 13,206 a 14,613 |
+| 1º quadro do clique, máx | 16,221 | 15,417 a 22,800 | 14,047 a 26,263 |
+| Clique → painéis, p50 | 15,926 | 15,625 a 16,346 | 15,467 a 17,450 |
+| Clique → 1º quadro desenhado, p50 | 27,457 | 26,763 a 28,156 | 23,731 a 28,198 |
+| Clique → 1º quadro desenhado, p95 | 36,750 | 34,806 a 37,210 | 29,836 a 37,327 |
+| Ocioso, p50 | 8,495 | 8,130 a 12,678 | 4,421 a 13,177 |
+| Ocioso, p95 | 15,083 | 15,006 a 15,617 | 14,419 a 16,089 |
+
+**Os quadros do turno, por fase** (120 turnos estáveis por execução, 8 quadros cada: os sete do trabalho, nas linhas abaixo, e um para o HUD alcançar; a fase é a em que o jogo estava no fim do quadro, como na tabela headless: o primeiro quadro é o que aceita o turno e o sétimo termina o job). A mediana, entre as execuções, da estatística de cada uma, com os extremos entre parênteses:
+
+| Fase | p50 (ms) | p95 (ms) | máx (ms) |
+| --- | --- | --- | --- |
+| `ai_plan` | 5,456 (2,224 a 6,144) | 12,791 (12,398 a 13,377) | 18,052 (13,566 a 94,111) |
+| `ai_move` | 7,908 (6,817 a 12,599) | 13,701 (13,263 a 14,650) | 23,710 (16,013 a 78,155) |
+| `production` | 7,144 (3,890 a 7,680) | 14,134 (13,569 a 14,705) | 19,170 (15,087 a 29,734) |
+| `growth` | 7,698 (6,386 a 12,800) | 13,785 (13,288 a 14,303) | 14,835 (14,382 a 15,720) |
+| `research` | 6,559 (4,046 a 7,785) | 13,718 (13,205 a 14,524) | 14,979 (14,418 a 35,620) |
+| `refresh` | 7,802 (6,956 a 12,754) | 13,904 (13,426 a 14,695) | 18,747 (15,129 a 86,548) |
+| `idle` | 6,133 (4,391 a 8,116) | 13,825 (13,172 a 14,609) | 15,031 (14,250 a 21,252) |
+
+Os sete quadros do trabalho de um turno, somados: p50 de **56,796 ms** (52,808 a 57,232), p95 de **67,843 ms** (66,582 a 73,303) e máximo de 136,085 ms (73,806 a 169,495). Sete períodos de atualização somam 58,333 ms; a faixa headless, sem display que freie o laço, levou 44,7 ms no p50 para os mesmos sete quadros.
+
+**O que se conta.** Dos 1.800 primeiros quadros de clique, 4 passaram de 16,67 ms (dois períodos), nenhum de 33,33 ms e nenhum chegou a 100 ms; dos 4.800 quadros de turno, 25 passaram de 16,67 ms, 7 de 33,33 ms e **nenhum chegou a 100 ms** (o maior, 94,111 ms, foi um `ai_plan` da execução 3).
+Os cliques mostraram os painéis do contexto em 2 quadros em 1.799 dos 1.800 (em 1 quadro num `answer-event`, execução 2, rodada 13) e os 600 End turn em 8; em todos os 600 turnos a ordem foi `ai_plan`, `ai_move`, `production`, `growth`, `research`, `refresh`, um snapshot em cada um dos sete quadros do trabalho e `turn_ended` uma vez.
+
+**A mediana ociosa, de 4,421 a 13,177 ms, e o que os números mostram.** O período de atualização é de 8,333 ms e a regra pede só que a mediana ociosa chegue à metade dele (4,167 ms). Os 600 intervalos de cada execução não são um valor central com ruído: formam **dois grupos**,
+285 a 299 intervalos abaixo de 4,167 ms (média de 2,1 a 2,7 ms) e 290 a 310 de 12 ms ou mais (média de 13,9 a 15,1 ms), com 0 a 25 entre eles, e os grupos **alternam**: um intervalo curto é seguido de um mais longo 284 a 298 vezes por execução, e dois curtos seguidos aparecem 0 a 1 vez.
+Dois intervalos vizinhos somam 16,66 a 16,68 ms na mediana, **dois períodos**, e a média dos 600 é de 8,34 a 8,63 ms, **um período**. Com quase metade dos intervalos em cada grupo, a mediana cai num grupo ou no outro por poucas amostras (299 de 600 abaixo do corte na execução 1, 298 na 3, 285 na 2)
+e por isso anda de 4,4 a 13,2 ms; o p95 (14,4 a 16,1 ms) e a média são os números estáveis da janela ociosa. É o padrão que `docs/research/frame-clock.md` mediu com o vsync ligado, dois aglomerados a uns 3 ms e a uns 13 ms, mas esta execução não isola a causa. A execução 3 passou na regra com 4,421 ms contra o mínimo de 4,167 ms
+(0,254 ms de folga), com a média de 8,341 ms. As outras estatísticas de quadro de clique e de fase de turno têm o mesmo desenho: o p50 de uma fase andou de 2,2 a 12,8 ms entre as execuções, e o p95, de 12,4 a 14,7 ms.
+
+**Capturas.** A execução de capturas da faixa gravou as mesmas sete imagens da seção Capturas, byte a byte (os sete SHA-256 são iguais aos do registro fixado), então nenhuma foi acrescentada.
+
+**O que isto não diz.** São intervalos entre quadros de **processo**, e não quadros que o display mostrou: com o vsync ligado eles vêm em aglomerados, então um quadro perdido não se lê deles (precisaria de timestamps de apresentação que o Godot não dá). Uma máquina, uma tela, um modo de vsync (o padrão do projeto); um Mac sob carga de 4 a 14;
+cliques sintéticos pelo viewport no dispositivo de validação, sem ponteiro de hardware, tela de toque ou iPhone; o HUD é o do V05-05 como estava na main `1adcdb3`. Nenhum limite de tempo de quadro nem linha de orçamento sai desta execução: o `congelado` é um ato posterior e único.
+
+## Faixa janelada, 1ª execução (`116a72f`): não apresentada pelo display (histórico)
+
+Esta é a primeira execução da faixa, fixada em `116a72f`, com a tela apagada, e fica como foi escrita; a [seção anterior](#faixa-janelada-apresentada-2026-10-09) é a execução com a tela acesa, e o protocolo e a regra de validade descritos abaixo são os mesmos nas duas.
 
 `caffeinate -d node scripts/frontier-turn-graphics.mjs` (`npm run bench:frontier-turn-graphics`) roda o mesmo probe, no mesmo projeto provisionado, com o `--windowed` do Godot no renderer `gl_compatibility`, o mesmo percurso e os mesmos cliques, e mede o que só uma janela apresentada tem: o intervalo entre quadros de processo consecutivos,
 numa janela **ociosa** (600 quadros), nos quadros que levaram um **clique** e em **todo quadro de um turno** (as fases da IA fatiada). O protocolo é o do baseline (5 execuções em processos separados, 2 rodadas de aquecimento descartadas, 30 rodadas estáveis de 16 cliques e 4 turnos, p50, p95 e p99 por execução pelo posto mais próximo, mediana e IQR
@@ -240,7 +367,8 @@ O recibo fixado em `116a72f` foi gravado com `scenario: "frontier-turn-captures"
 
 ## Capturas
 
-Uma imagem do quadro desenhado por contexto, a primeira vez em que cada um aparece, de uma execução que não mede nada (`--lane=captures`), do HUD real sobre o mapa real (1080 × 600, `gl_compatibility`), com os hashes no recibo:
+Uma imagem do quadro desenhado por contexto, a primeira vez em que cada um aparece, de uma execução que não mede nada (`--lane=captures`), do HUD real sobre o mapa real (1080 × 600, `gl_compatibility`), com os hashes no recibo. A execução de capturas da faixa janelada apresentada
+(2026-10-09, tela acesa) gravou as mesmas sete imagens, byte a byte: os sete SHA-256 são os da tabela, e por isso nenhuma foi acrescentada.
 
 | Contexto | Arquivo | SHA-256 | Bytes |
 | --- | --- | --- | ---: |
@@ -265,11 +393,13 @@ Na de `stack` o ponteiro está sobre o tile (6, 8), que tem o Settler e o Warrio
 
 ## Limitações e o que segue aberto
 
-- **O tempo de quadro de uma janela apresentada (vsync ligado, 120 Hz) está PENDENTE**: nenhuma tentativa da faixa janelada foi apresentada pelo display; a faixa rejeitou todas como `unpaced` e terminou com `presented: false`, código 3 e nenhuma estatística de quadro. Nenhum tempo de quadro de um clique, de uma fase do turno ou de um quadro ocioso é reivindicado,
-  e nenhuma linha de orçamento parte desta fatia. Os quadros perdidos com o vsync ligado também não se leem (precisam de timestamps de apresentação que o Godot não dá).
-- **`turno` e a parte janelada do `baseline` seguem abertos**, e o registro do `turno` é uma atividade, não `done: true`: ele fecha quando a faixa roda apresentada, com o recibo ao lado desta evidência. **`congelado`** é um ato posterior e único; esta fatia registra e não propõe nenhum limite.
-- **Headless e cliques sintéticos**: eventos empurrados pelo viewport no dispositivo de validação; não há ponteiro de hardware, tela de toque real, iPhone nem exportação móvel, e os tempos são o custo de CPU num laço que nada freia.
-- **Uma máquina sob carga**: um Apple M3 Pro dividido com outros agentes; o `loadavg` está registrado em torno de cada processo, e só valem como conclusão as diferenças que se mantiveram entre as rodadas.
+- **O tempo de quadro de uma janela apresentada (vsync ligado, 120 Hz) foi medido na segunda execução da faixa** (seção acima), e o que ele é: o intervalo entre quadros de **processo**, que com o vsync ligado vêm em aglomerados; não é o que o display mostrou, e os quadros perdidos não se leem dele
+  (precisariam de timestamps de apresentação que o Godot não dá). A mediana ociosa andou de 4,421 a 13,177 ms entre as execuções, por um desenho de dois grupos que os números mostram, e a regra de validade (importada do baseline, não tocada aqui) lê essa mediana; o p95 e a média são os estáveis.
+  Uma máquina, uma tela, um modo de vsync. Nenhuma linha de orçamento parte desta fatia.
+- **`turno` tem agora as duas evidências**, a headless (as contagens exatas) e a janelada apresentada; o registro que o fecha é uma atividade do dashboard, à parte desta página. **A parte janelada do `baseline` segue aberta**: duas tentativas janeladas do baseline em 2026-10-09 não foram
+  apresentadas (ver [a evidência do baseline](../frontier-baseline/README.md)). **`congelado`** é um ato posterior e único; esta fatia registra e não propõe nenhum limite.
+- **Cliques sintéticos**: eventos empurrados pelo viewport no dispositivo de validação; não há ponteiro de hardware, tela de toque real, iPhone nem exportação móvel. Os tempos da suíte headless são o custo de CPU num laço que nada freia.
+- **Uma máquina sob carga**: um Apple M3 Pro dividido com outros agentes; o `loadavg` está registrado em torno de cada processo (de 1,5 a 4,8 nos processos headless e de 4,3 a 14,4 na faixa janelada apresentada), e só valem como conclusão as diferenças que se mantiveram entre as rodadas.
 - **O HUD é o trabalho em andamento do V05-05** (barra, ações, tile, cidade, pesquisa e diálogo como painéis posicionados; sem Modal, pilha de overlays, imagens, rolagem, entrada de texto ou animação além do spinner), e o percurso é um caminho fixo pelos turnos 1 a 5 de um cenário: não é uma economia que cresce,
   uma sessão longa (o soak tem os seus 100 turnos) nem os orçamentos de 64 tarefas e 128 eventos (o caso de estresse dos serviços). Os números são os desse HUD e mudam quando ele muda; as regras exatas comparam cada contexto consigo mesmo.
 - Os 2 quadros do clique até o painel são uma observação e uma explicação que cabe na estrutura; os bombeamentos não foram rastreados dentro dos quadros. O host reporta o bombeamento e as fases de JS, montagem e layout como totais correntes e as últimas 128 amostras, **não por quadro**.
@@ -277,4 +407,4 @@ Na de `stack` o ponteiro está sobre o tile (6, 8), que tem o Settler e o Warrio
 - O rastreador de rejeições do Hermes reporta de um timer; o probe espera 2,3 s antes de ler a contagem e o controle é um `TypeError`. O probe instala os handlers depois que o bundle rodou: um erro lançado enquanto o bundle é avaliado só é visto pelo `errors` do host.
 - O sampler do GF-30 é **copiado** para o projeto provisionado (o lane copia `tests/performance-sampler.gd`) em vez de carregado de `res://tests/`, que um projeto provisionado não tem; são os mesmos bytes (o hash está no recibo).
 - O host anterior não se aplica (nenhum C++ mudou). Os documentos de compatibilidade (`docs/compatibility/react-native-0.87.1.json`, `BASELINE.md`), `docs/API.md`, `docs/NATIVE_MODULES.md` e `docs/PARITY.md` não se aplicam: a fatia não acrescenta nome RN, API pública nem módulo nativo.
-- **CI hospedada e publicação no Pages pendentes**: o passo da suíte está no job nativo do `contracts.yml` e leva uns 3 minutos localmente.
+- **A CI hospedada e o Pages rodaram sobre o squash `1adcdb3`** (seção "CI hospedada e Pages"): a suíte headless (23 checks) passou num runner em 8 minutos, contra uns 3 localmente, e a faixa janelada, as capturas e as sabotagens seguem só locais.

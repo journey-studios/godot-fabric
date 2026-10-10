@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "scenario": "idle-reference",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-09T17:06:39.280Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 37960884650,
+    "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/94",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-09T16:41:08Z",
+    "updatedAt": "2026-10-09T16:48:21Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113923115809,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "startedAt": "2026-10-09T16:41:12Z",
+        "completedAt": "2026-10-09T16:43:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923115809"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113923150954,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923150954"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113923114111,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923114111"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113923113432,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923113432"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113923151123,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923151123"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 113926025123,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113926025123"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113923112402,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "startedAt": "2026-10-09T16:41:11Z",
+        "completedAt": "2026-10-09T16:46:43Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923112402"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113923113652,
+        "runAttempt": 1,
+        "headSha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+        "startedAt": "2026-10-09T16:41:19Z",
+        "completedAt": "2026-10-09T16:48:21Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37960884650/job/113923113652"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+      "reference-android": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+      "reference-ios": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T16:41:29Z",
+          "completedAt": "2026-10-09T16:41:29Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against e108e9d31f43 (--base e108e9d31f43f24f0c049c3454a41efe417e797b); X9 clean, X10 clean"
+          ],
+          "base": "e108e9d31f43f24f0c049c3454a41efe417e797b"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T16:41:29Z",
+          "completedAt": "2026-10-09T16:43:43Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 435,
+              "suites": 0,
+              "pass": 435,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 13
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T16:43:43Z",
+          "completedAt": "2026-10-09T16:43:43Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-09T16:43:43Z",
+          "completedAt": "2026-10-09T16:43:44Z",
+          "passed": true,
+          "files": 1898
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-baseline-graphics.test.mjs",
+          "tests": 16,
+          "passed": 16,
+          "topLevel": [
+            "a window that draws and idles at the refresh period is a measurement",
+            "the idle reference is the median of the half-sums of consecutive pairs",
+            "a presented window at 120 Hz whose idle median falls in the low group is a measurement (attempt A8 of the baseline)",
+            "a window that draws but that no display paces is rejected as unpaced",
+            "a single large stall in a loop that nothing paces does not make it paced",
+            "the threshold is half of the refresh period that the window read back",
+            "a presented window at 60 Hz is a measurement, whichever way its intervals fall",
+            "a window that does not draw is rejected as undrawn, whatever its pace",
+            "the statistics across runs refuse an unpaced run, and say which value failed",
+            "the frames above twice the idle reference do not depend on the group the median falls in",
+            "a receipt with an unpaced accepted run is refused",
+            "a receipt written under the idle reference accepts a run whose median is in the low group",
+            "a receipt recorded before the idle reference is judged by the median it was judged by, and still verifies",
+            "a count above twice the idle reference that is not a count of the samples is refused",
+            "a lane that was not presented reports no frame-time statistic, and keeps what it rejected",
+            "a lane that claims to be presented has all its runs and their statistics"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-protocol.test.mjs",
+          "tests": 17,
+          "passed": 17,
+          "topLevel": [
+            "the protocol has every required field with its type, and the validator is not vacuous",
+            "the three arms, the three hypotheses and the four windows are the ones decided",
+            "the secondary outcomes are the ones decided, and each axis with a verdict carries its margin",
+            "only the thresholds can be frozen, each with a rule and a source, and both fields move together",
+            "the pin: the protocol without its freeze fields has the SHA-256 recorded here",
+            "an amendment says what changed, why, the text it replaces and that no comparative measurement came before it",
+            "a change of the protocol after the pre-registration fails unless it comes with an amendment and a pin",
+            "while the comparative executions have not run, an amendment cannot count measurements before it",
+            "the categories are exactly gain, neutral, cost and inconclusive, and exclusive and exhaustive for any interval",
+            "the margin is the larger of 10% of B's median and 0.5 ms, and the examples land where the research note says",
+            "a gain is always better: the interval of an outcome where higher is better is negated, and a gain in FPS excludes zero",
+            "Holm over the four windows of H3 stands for the smallest p-values in order and only ever downgrades",
+            "the order of the executions is a Latin square repeated, balanced in count and position",
+            "the load limit is written and the redo of an execution is bounded",
+            "the percentiles, the median, the interquartile range and the bootstrap are defined and reproducible",
+            "the research note covers the protocol it reads and quotes its pin and its examples",
+            "this test is part of the contracts"
+          ]
+        },
+        {
+          "file": "tests/frontier-baseline-heap.test.mjs",
+          "tests": 10,
+          "passed": 10,
+          "topLevel": [
+            "the hosted series are 32 readings that move in a band wider than the limit, with no trend",
+            "the hosted series pass with a growth of 0: the median of the last half is the median of the first",
+            "the floors judged the hosted run wrongly: five-round floors failed process 2 by 8 bytes, the floors of the halves are 320 apart in both",
+            "a first half that alone dips to the low level, with a last half that never does, is not a leak (it was the flake of the floors)",
+            "a leak on top of either hosted series is rejected",
+            "the leak the medians catch: 158 and 113 bytes a round on the hosted series, 137 on a heap with no noise",
+            "the limit is the GF-30 limit and it is inclusive",
+            "a transient in the last round is not growth",
+            "an odd number of steady rounds leaves the one between the halves out, and an even one takes the lower median",
+            "a run without two halves, or without a heap, is refused"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 94,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/94",
+    "title": "feat(perf): Pace the windowed lane by an idle reference that survives clusters",
+    "headSha": "fec18f52e46e52ff1c6362e656677237a3189160",
+    "baseSha": "d91df3b5647aa1294b506f10cf0cc6e4c5da426c",
+    "squashMergeCommit": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+    "squashCommitSubject": "feat(perf): Pace the windowed lane by an idle reference that survives clusters (#94)",
+    "mergedAt": "2026-10-09T16:41:05Z",
+    "headTreeSha": "be345408c0ba30846f00b0db89a054019b3ce837",
+    "mainTreeSha": "5408f188b8237e5a0e844608d08442c1de6f7e65",
+    "headTreeEqualsMainTree": false,
+    "treeDifference": {
+      "differingPaths": [
+        ".github/workflows/contracts.yml",
+        "ROADMAP.md",
+        "consumers/civ-lite/.gitignore",
+        "consumers/civ-lite/README.md",
+        "consumers/civ-lite/game/context.gd",
+        "consumers/civ-lite/game/intents.gd",
+        "consumers/civ-lite/game/replay.gd",
+        "consumers/civ-lite/game/rules.gd",
+        "consumers/civ-lite/game/snapshot.gd",
+        "consumers/civ-lite/game/turn.gd",
+        "consumers/civ-lite/game/world.gd",
+        "consumers/civ-lite/hud_probe.gd",
+        "consumers/civ-lite/hud_validation.gd",
+        "consumers/civ-lite/main.tscn",
+        "consumers/civ-lite/overlay_validation.gd",
+        "consumers/civ-lite/services/schema.gd",
+        "consumers/civ-lite/ui/frontier-types.ts",
+        "consumers/civ-lite/ui/hud/actions.tsx",
+        "consumers/civ-lite/ui/hud/city.tsx",
+        "consumers/civ-lite/ui/hud/dialog.tsx",
+        "consumers/civ-lite/ui/hud/hud.tsx",
+        "consumers/civ-lite/ui/hud/overlay.tsx",
+        "dashboard/agents.mjs",
+        "dashboard/migration.json",
+        "docs/evidence/README.md",
+        "docs/evidence/civ-lite-ui/README.md",
+        "docs/evidence/civ-lite-ui/city.png",
+        "docs/evidence/civ-lite-ui/dialog.png",
+        "docs/evidence/civ-lite-ui/hosted-ci.json",
+        "docs/evidence/civ-lite-ui/overlay-city.png",
+        "docs/evidence/civ-lite-ui/overlay-dialog-1.png",
+        "docs/evidence/civ-lite-ui/overlay-dialog-2-remounted.png",
+        "docs/evidence/civ-lite-ui/overlay-dialog-3.png",
+        "docs/evidence/civ-lite-ui/publication.json",
+        "docs/evidence/civ-lite-ui/report.json",
+        "docs/evidence/frontier-scope/README.md",
+        "docs/evidence/frontier-scope/hosted-ci.json",
+        "docs/evidence/frontier-scope/publication.json",
+        "docs/evidence/frontier-scope/report.json",
+        "docs/research/README.md",
+        "docs/research/frontier-game.md",
+        "docs/research/frontier-hud.md",
+        "docs/research/frontier-services.md",
+        "docs/research/frontier-soak.md",
+        "scripts/civ-lite-game-sabotage.mjs",
+        "scripts/civ-lite-ui-sabotage.mjs",
+        "scripts/consumer-civ-lite-check.mjs",
+        "scripts/frontier-turn-graphics.mjs",
+        "scripts/hosted-receipts-slices.mjs",
+        "scripts/hosted-receipts.mjs",
+        "tests/agents-board.test.mjs",
+        "tests/civ-lite-game-native.test.mjs",
+        "tests/civ-lite-game-oracle.mjs",
+        "tests/civ-lite-overlay-oracle.mjs",
+        "tests/civ-lite-ui-native.test.mjs",
+        "tests/civ-lite-ui-oracle.mjs",
+        "tests/frontier-services-native.test.mjs",
+        "tests/frontier-services-oracle.mjs",
+        "tests/frontier-services-parity.test.mjs",
+        "tests/frontier-soak-oracle.mjs",
+        "tests/frontier-turn-cases.mjs",
+        "tests/frontier-turn-graphics.test.mjs",
+        "tests/frontier-turn-native.test.mjs",
+        "tests/frontier-turn-oracle.mjs",
+        "tests/frontier-turn-probe.gd",
+        "tests/hosted-receipts.test.mjs"
+      ],
+      "pathsMainChangedAfterTheHeadForked": 66,
+      "comparisonComplete": true,
+      "explainedByMain": true
+    },
+    "commitCount": 7,
+    "commits": [
+      {
+        "sha": "fc2cfaff5f773c75e662ff27866133bf38fd804e",
+        "subject": "wip(idle-reference): Compare three idle statistics over the raw intervals"
+      },
+      {
+        "sha": "1cc245437b1f4be4695c83c0301671a1723a844a",
+        "subject": "Merge remote-tracking branch 'origin/main' into fix/idle-reference"
+      },
+      {
+        "sha": "237b171df846b7acf76da534730e47961a0a36e3",
+        "subject": "feat(perf): Pace the windowed lane by an idle reference that survives clusters"
+      },
+      {
+        "sha": "490ba8cac1e010d85b95dda938c91db3c9239bc3",
+        "subject": "docs(perf): Pin the idle reference's evidence to 237b171"
+      },
+      {
+        "sha": "eaf3f8e2dbce6d96bd48655a41ecbcc35aed09b6",
+        "subject": "docs(dashboard): Record the windowed lane's idle reference"
+      },
+      {
+        "sha": "838633bd823b72f33fa007e7180e34f630481ce9",
+        "subject": "Merge remote-tracking branch 'origin/main' into fix/idle-reference"
+      },
+      {
+        "sha": "fec18f52e46e52ff1c6362e656677237a3189160",
+        "subject": "fix(perf): Compute the idle reference in the quantity it is compared with"
+      }
+    ],
+    "changedFiles": 12,
+    "additions": 1462,
+    "deletions": 67
+  },
+  "artifacts": {},
+  "findings": []
+}

@@ -12,9 +12,14 @@ extends SceneTree
 # assumed. Nothing is judged on a duration; the script computes the percentiles of the raw intervals that the run writes.
 # Every exact count of the headless lane holds here too.
 #
+# The window is put in front of the others and above them before anything is measured, and the frames in which the engine could not draw it are counted
+# (tests/window-presence.gd, docs/research/windowed-presence.md): a run that did not draw then says what the engine said of the window. That count is recorded
+# and not judged here.
+#
 # --run=<n> names the run's file. --captures makes the run that saves one image per panel and measures nothing.
 const Sampler := preload("res://tests/performance-sampler.gd")
 const Swap := preload("res://tests/frontier-baseline-swap.gd")
+const Presence := preload("res://tests/window-presence.gd")
 const SCENE := "res://examples/frontier-baseline/scene.tscn"
 const SIZE := Vector2i(800, 600)
 const IDLE_FRAMES := 600
@@ -34,6 +39,8 @@ var scene: Node
 var application: Node
 var sampler: Sampler
 var session: Swap
+var presence: Presence
+var presence_report: Dictionary = {}
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -119,6 +126,8 @@ func run() -> void:
       run_index = int(argument.get_slice("=", 1))
     elif argument == "--captures":
       capturing = true
+  presence = Presence.new(self)
+  var opened: Dictionary = await presence.open()
   DisplayServer.window_set_size(SIZE)
   root.size = SIZE
   await settle()
@@ -133,6 +142,7 @@ func run() -> void:
   var surface: Control = scene.get_node("Hud/Surface")
   check(mounted, "scene/The HUD mounts over the world on the native renderer")
   check(DisplayServer.get_name() != "headless", "display/The display server is not headless: " + DisplayServer.get_name())
+  check(bool(opened.windowed) and bool(opened.alwaysOnTop), "presence/The window was put in front of the others and above them before the first measurement")
   check(surface.mouse_filter == Control.MOUSE_FILTER_IGNORE, "scene/The Surface takes no pointer (IGNORE)")
   var info := provenance()
   check(info.vsyncMode >= 0 and info.vsyncMode < VSYNC_NAMES.size() and float(info.refreshRate) > 0.0,
@@ -167,6 +177,7 @@ func run() -> void:
     check_swaps(swaps, session.base_nodes, Sampler.number(base_row.nativeTags))
     check(idle.size() == IDLE_FRAMES, "idle/The idle window took its frames")
   var heap_end := sampler.sample()
+  presence_report = presence.close()
   session.untrack_draws()
   application.call("stop")
   scene.queue_free()
@@ -182,7 +193,7 @@ func finish(info: Dictionary, base_row: Dictionary, swaps: Array, idle_window: A
       "tour": Swap.TOUR, "warmupRounds": Swap.WARMUP_ROUNDS, "rounds": Swap.ROUNDS, "stableFrames": Swap.STABLE_FRAMES, "idleFrames": IDLE_FRAMES},
     "baseNodes": session.base_nodes, "base": {"surface": base_row, "treeNodes": session.base_nodes}, "swaps": swaps,
     "idle": {"frames": IDLE_FRAMES, "intervalsUsec": idle_window[0], "draws": idle_window[1]},
-    "frames": {"processed": Engine.get_process_frames(), "drawn": session.draw_stamps.size()},
+    "frames": {"processed": Engine.get_process_frames(), "drawn": session.draw_stamps.size()}, "presence": presence_report,
     "aborted": aborted, "heap": {"start": heap_start, "end": heap_end},
     "checks": checks, "captures": captures}
   var output := FileAccess.open("res://build/frontier-baseline-graphics-run-%d.json" % run_index, FileAccess.WRITE)

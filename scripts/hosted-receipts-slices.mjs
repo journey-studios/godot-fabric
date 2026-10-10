@@ -6,9 +6,12 @@ export const REPOSITORY = "journey-studios/godot-fabric";
 export const REPOSITORY_URL = `https://github.com/${REPOSITORY}`;
 
 // One row per slice: the folder of its evidence page, the pull request and its squash commit on main,
-// the Contracts and Pages runs of the push, the npm steps of the native job that exercise the slice
+// the Contracts run of main at the squash (the push until the native suites became opt-in, a dispatch
+// since: a push no longer runs them) and the Pages run of the push, the npm steps of the native jobs that exercise the slice
 // (judged by the TAP summary or by a marker line), the artifacts those steps upload, the Node test
 // files of the `contracts` job that belong to the slice and the activity entry of the dashboard data.
+// A slice with no native step has `nativeSteps: []` and `artifacts: []`: its Contracts run proves its contract tests and, when
+// `guard` is true, the step "Milestone exit guards (X9 and X10)" that the `contracts` job has run since #87.
 export const SLICES = [
   {
     folder: "frontier-game",
@@ -103,5 +106,301 @@ export const SLICES = [
     artifacts: [{ key: "soak", name: "native-frontier-soak" }],
     contractTests: [],
     activity: "milestone-0-5-v05-06-soak-b77178a",
+  },
+  {
+    folder: "frontier-scope",
+    pr: 74,
+    squash: "b0e40aa",
+    contractsRun: 37842839329,
+    pagesRun: 37842839320,
+    nativeSteps: [
+      { script: "test:scope-0.5", expect: "tap" },
+      { script: "test:scroll-view", expect: "tap" },
+    ],
+    artifacts: [{ key: "scope", name: "native-scope-0.5" }],
+    contractTests: ["tests/scope-0.5.test.mjs"],
+    activity: "milestone-0-5-v05-04-scope-1b9f120",
+  },
+  {
+    folder: "civ-lite-ui",
+    pr: 82,
+    squash: "622102e",
+    contractsRun: 37891490943,
+    pagesRun: 37891490845,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-matriz-mapa-096a018",
+  },
+  {
+    folder: "frontier-turn",
+    pr: 86,
+    squash: "1adcdb3",
+    contractsRun: 37935936175,
+    pagesRun: 37935936238,
+    nativeSteps: [{ script: "test:frontier-turn", expect: "tap" }],
+    artifacts: [{ key: "turn", name: "native-frontier-turn" }],
+    contractTests: ["tests/frontier-turn-graphics.test.mjs"],
+    activity: "milestone-0-5-v05-06-turno-headless-e2ee6d8",
+  },
+  {
+    folder: "milestone-exit-guards",
+    pr: 87,
+    squash: "333181d",
+    contractsRun: 37945060216,
+    pagesRun: 37945060177,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/milestone-guards.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-exit-guards-b02e2a5",
+  },
+  {
+    folder: "idle-reference",
+    pr: 94,
+    squash: "9f55644",
+    contractsRun: 37960884650,
+    pagesRun: 37960884718,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-baseline-graphics.test.mjs",
+      "tests/frontier-comparison-protocol.test.mjs",
+      "tests/frontier-baseline-heap.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-idle-reference-490ba8c",
+  },
+  {
+    folder: "cpu-time-instrument",
+    pr: 97,
+    squash: "c57f9f6",
+    contractsRun: 37977034583,
+    pagesRun: 37977034484,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/cpu-time-instrument.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-cpu-instrument-dad0db1",
+  },
+  // The second slice of the HUD, in a folder of its own inside the first one's: a folder holds one pair of receipts. Its contractsRun is the
+  // Contracts run dispatched on main at the squash (a push skips the native suites), and its native steps ran in the job native-suites-runtime.
+  {
+    folder: "civ-lite-ui/overlays",
+    pr: 93,
+    squash: "e108e9d",
+    contractsRun: 37958818671,
+    pagesRun: 37958764277,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-overlays-67c3f16",
+  },
+  // The third slice of the HUD, criterion `estabilidade` (V05-05 is complete with it), in a folder of its own inside the first one's. Its
+  // contractsRun is the Contracts run dispatched on main at the squash (a push skips the native suites), and its native steps ran in the job native-suites-runtime.
+  {
+    folder: "civ-lite-ui/stability",
+    pr: 100,
+    squash: "916387e",
+    contractsRun: 37995325873,
+    pagesRun: 37995302878,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-05-estabilidade-4ffdb6e",
+  },
+  {
+    folder: "windowed-presence",
+    pr: 99,
+    squash: "ffeeb5c",
+    contractsRun: 37989027813,
+    pagesRun: 37989027744,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-baseline-graphics.test.mjs", "tests/frontier-turn-graphics.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-windowed-presence-59cd006",
+  },
+  // The density and SafeAreaView slice of GF-09 (#104): contractsRun is the Contracts run dispatched on main at the squash, and its
+  // native step ran in the job native-suites-runtime, beside the modal suite.
+  {
+    folder: "mobile-density",
+    pr: 104,
+    squash: "8cd2491",
+    contractsRun: 38018685996,
+    pagesRun: 38018671228,
+    nativeSteps: [{ script: "test:mobile-density", expect: "tap" }],
+    artifacts: [{ key: "density", name: "native-mobile-density" }],
+    contractTests: [],
+    activity: "mobile-density-slice-2026-10-09",
+  },
+  {
+    folder: "frontier-freeze",
+    pr: 107,
+    squash: "561251d",
+    contractsRun: 38025095171,
+    pagesRun: 38025095215,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-freeze.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-06-congelado-e1803a9",
+  },
+  // The frame-time correction of #100's HUD (#108), in a folder of its own inside the HUD's: the turn lane's probe and oracle changed,
+  // so its native step is the turn lane in the job native-suites-frontier, and its contract test is the windowed lane's verifier.
+  {
+    folder: "civ-lite-ui/frame-time",
+    pr: 108,
+    squash: "09ed8f7",
+    contractsRun: 38027051145,
+    pagesRun: 38027038484,
+    nativeSteps: [{ script: "test:frontier-turn", expect: "tap" }],
+    artifacts: [{ key: "turn", name: "native-frontier-turn" }],
+    contractTests: ["tests/frontier-turn-graphics.test.mjs"],
+    activity: "milestone-0-5-v05-05-frame-time",
+  },
+  // Arm B of V05-10 (#113): the native HUD runs in the HUD lane beside the React Native one, so the native steps are the lane's and the
+  // consumer's, in the job native-suites-runtime, and the lane's artifact carries the native HUD's reports.
+  {
+    folder: "frontier-arm-b",
+    pr: 113,
+    squash: "4c3abb7",
+    contractsRun: 38034333213,
+    pagesRun: 38034328997,
+    nativeSteps: [
+      { script: "test:civ-lite-ui", expect: "tap" },
+      { script: "test:consumer:civ-lite", expect: "marker", marker: "CONSUMER_CHECK_PASSED: civ-lite" },
+    ],
+    artifacts: [
+      { key: "ui", name: "civ-lite-ui" },
+      { key: "consumer", name: "independent-civ-lite-consumer" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-braco-b",
+  },
+  {
+    folder: "frontier-freeze/followup",
+    pr: 112,
+    squash: "b23009d",
+    contractsRun: 38029448318,
+    pagesRun: 38029448288,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-freeze.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-06-congelado-followup-3fb9487",
+  },
+  {
+    folder: "frontier-comparison-analysis",
+    pr: 110,
+    squash: "4a73a86",
+    contractsRun: 38030014224,
+    pagesRun: 38030014288,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-analysis.test.mjs",
+      "tests/frontier-comparison-validity.test.mjs",
+      "tests/frontier-comparison-protocol.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-analysis-4592dba",
+  },
+  // The stress window and the runner's HUD counters (#119): the node probe of the stress mode runs in its own step, and the HUD lane runs
+  // both HUDs with the stress stage, both in the native jobs of the dispatched run.
+  {
+    folder: "frontier-stress",
+    pr: 119,
+    squash: "151427e",
+    contractsRun: 38044068758,
+    pagesRun: 38044064101,
+    nativeSteps: [
+      { script: "test:frontier-stress", expect: "tap" },
+      { script: "test:civ-lite-ui", expect: "tap" },
+    ],
+    artifacts: [
+      { key: "stress", name: "native-frontier-stress" },
+      { key: "ui", name: "civ-lite-ui" },
+    ],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-stress-window",
+  },
+  {
+    folder: "frontier-comparison-execution",
+    pr: 120,
+    squash: "c3892ac",
+    contractsRun: 38050941623,
+    pagesRun: 38050941565,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-run.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-execution-1-f77d81d",
+  },
+  // Arm B's single optimization pass (#121), in a folder of its own inside arm B's: the native HUD changed, so its native step is the HUD lane
+  // with both arms in the job native-suites-runtime.
+  {
+    folder: "frontier-arm-b/optimization",
+    pr: 121,
+    squash: "e7fcf1c",
+    contractsRun: 38053834754,
+    pagesRun: 38053830063,
+    nativeSteps: [{ script: "test:civ-lite-ui", expect: "tap" }],
+    artifacts: [{ key: "ui", name: "civ-lite-ui" }],
+    contractTests: [],
+    activity: "milestone-0-5-v05-10-braco-b-otimizacao",
+  },
+  // The whole comparative campaign (#126, squash c6dea50): no native step, since its tests run only locally, and its three contract test files; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-campaign",
+    pr: 126,
+    squash: "c6dea50",
+    contractsRun: 38061346890,
+    pagesRun: 38061346857,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-campaign.test.mjs",
+      "tests/frontier-comparison-campaign-state.test.mjs",
+      "tests/frontier-comparison-campaign-guards.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-execution-2-f952152",
+  },
+  // The attempts that wrote no report (#129, squash 1ef98a4): no native step, its four contract test files, and both runs are on the push of main.
+  {
+    folder: "frontier-comparison-analysis/unreported",
+    pr: 129,
+    squash: "1ef98a4",
+    contractsRun: 38063973873,
+    pagesRun: 38063973837,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-analysis.test.mjs",
+      "tests/frontier-comparison-validity.test.mjs",
+      "tests/frontier-comparison-campaign.test.mjs",
+      "tests/frontier-comparison-campaign-state.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-unreported-8817938",
   },
 ];

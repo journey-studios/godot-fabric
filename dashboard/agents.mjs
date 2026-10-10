@@ -1,5 +1,5 @@
 // Pure agent-board rules shared by the browser and the Node CLI/server (no fs, no DOM).
-export const AGENT_SLOTS = 5;
+export const AGENT_SLOTS = 6;
 export const AGENT_STATES = { planning: "Planejando", implementing: "Implementando", testing: "Testando", ci: "Aguardando CI", review: "Em revisão", blocked: "Bloqueado" };
 // Wired by every delivery and merged sequentially by the orchestrator: never exclusive. They are cut out of every
 // area (reserving one is accepted, ignored and warned about) and only warn when 2+ agents change them.
@@ -16,6 +16,8 @@ export const SHARED_PATHS = [
   "src/react-native-platform.jsx", "src/platform-environment.js", "types/react-native.ts",
   // Scripts and tests every slice extends.
   "scripts/sabotage-sources.mjs", "tests/types/consumer.tsx", "tests/platform-seams.test.mjs",
+  "scripts/hosted-receipts-slices.mjs", "scripts/hosted-receipts.mjs", "tests/hosted-receipts.test.mjs",
+  "docs/compatibility/scope-0.5.json", "tests/scope-0.5.test.mjs",
 ];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;

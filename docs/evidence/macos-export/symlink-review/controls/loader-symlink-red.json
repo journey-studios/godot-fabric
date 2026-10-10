@@ -1,0 +1,14 @@
+{
+  "format": "private-macos-load-path-symlink-red/v1",
+  "status": "reproduced-red",
+  "baselineHead": "873bbc60ab58886e6b5471d68df84a600f36a747",
+  "temporaryRoot": "{DISPOSABLE_SYMLINK_FIXTURE}",
+  "app": "{DISPOSABLE_SYMLINK_FIXTURE}/Fixture.app",
+  "externalTarget": "{DISPOSABLE_SYMLINK_FIXTURE}/outside.dylib",
+  "externalTargetSha256": "a723ebfbb68e3f86021862e614308da6facc3af26a388e8737020d3016eab279",
+  "controls": [
+    {"load": "@loader_path/escape.dylib", "linkRelativeToApp": "Contents/Frameworks/escape.dylib", "linkTargetWasOutsideTempApp": true, "acceptedBeforeFix": true},
+    {"load": "@executable_path/escape.dylib", "linkRelativeToApp": "Contents/MacOS/escape.dylib", "linkTargetWasOutsideTempApp": true, "acceptedBeforeFix": true}
+  ],
+  "interpretation": "Both symlinks and targets were created in this temporary test directory and removed after the reproduction. The lexical path check accepted the in-app link names without resolving their targets."
+}

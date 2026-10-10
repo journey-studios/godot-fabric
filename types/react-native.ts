@@ -274,8 +274,10 @@ export type ModalProps = Pick<RN.ModalProps, "visible" | "transparent" | "onShow
 };
 /** RN's original Modal with the subset currently hosted by Godot. */
 export declare const Modal: React.ComponentType<ModalProps>;
-/** RN's original SafeAreaView maps to the View path on Godot; device safe-area
- * insets are not supplied by this desktop host. */
+/** RN's SafeAreaView on iOS: the native RCTSafeAreaView component, whose State carries the padding that the window's unsafe
+ * bands (the notch, the home indicator) leave of the view, as UIKit's safeAreaInsets does; Yoga applies it. Its props are the
+ * View's. The bands come from DisplayServer.get_display_safe_area on iOS and Android and are zero on every other display
+ * server, so on a desktop it pads nothing. */
 export declare const SafeAreaView: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 /** The instance of a ScrollView: the host instance with the methods of RN's ScrollView.js that the Godot host carries out. scrollTo,

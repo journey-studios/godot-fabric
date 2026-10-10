@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://services/game_services.gd" id="1"]
+[ext_resource type="PackedScene" path="res://world/world.tscn" id="2"]
+
+[node name="GameServices" type="Node"]
+script=ExtResource("1")
+world_scene=ExtResource("2")
+
+[node name="World" parent="." instance=ExtResource("2")]

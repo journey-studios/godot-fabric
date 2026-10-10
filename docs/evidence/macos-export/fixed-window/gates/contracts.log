@@ -1,0 +1,2450 @@
+
+> godot-fabric@0.1.0 test:contracts
+> npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs tests/codegen.test.mjs tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs tests/pack-addon-native.test.mjs tests/rn-pointer-overlay.test.mjs tests/rn-event-target-overlay.test.mjs tests/rn-pointer-interest-overlay.test.mjs tests/rn-renderer-tag-overlay.test.mjs tests/bundle-determinism.test.mjs tests/project-resolution.test.mjs tests/native-typecheck.test.mjs tests/typecheck-consumer.test.mjs tests/package-conditions.test.mjs tests/platform-seams.test.mjs tests/text-platform-manager.test.mjs tests/asset-plugin.test.mjs tests/image-contract.test.mjs tests/library-consumer.test.mjs tests/macos-export-native.test.mjs tests/scope-0.5.test.mjs && python3 -m unittest discover -s tests -p "*_test.py"
+
+
+> godot-fabric@0.1.0 bundle
+> node scripts/bundle.mjs
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+Bundled upstream ReactFabric-prod, React 19.2.3 and Godot platform components.
+
+> godot-fabric@0.1.0 type-check
+> tsc-rs -p tsconfig.godot.json
+
+
+> godot-fabric@0.1.0 test:parity
+> node scripts/parity-inventory.mjs --check && node --test tests/parity-inventory.test.mjs tests/parity-protocol.test.mjs tests/reference-cleanup.test.mjs
+
+PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values
+TAP version 13
+# Subtest: inventory resolves inherited contracts and retains overloads, without claiming coverage
+ok 1 - inventory resolves inherited contracts and retains overloads, without claiming coverage
+  ---
+  duration_ms: 2.81975
+  type: 'test'
+  ...
+# Subtest: the check rejects drift and preserves the reviewed inventory
+ok 2 - the check rejects drift and preserves the reviewed inventory
+  ---
+  duration_ms: 1010.223
+  type: 'test'
+  ...
+# Subtest: the status board counts every export form the facade can use
+ok 3 - the status board counts every export form the facade can use
+  ---
+  duration_ms: 229.1795
+  type: 'test'
+  ...
+# Subtest: a complete comparison requires two original references and only certifies a subset
+ok 4 - a complete comparison requires two original references and only certifies a subset
+  ---
+  duration_ms: 7.79625
+  type: 'test'
+  ...
+# Subtest: missing, stale, failed, duplicated and non-native references are rejected
+ok 5 - missing, stale, failed, duplicated and non-native references are rejected
+  ---
+  duration_ms: 7.834834
+  type: 'test'
+  ...
+# Subtest: cleanup attempts every resource and preserves the primary assertion error
+ok 6 - cleanup attempts every resource and preserves the primary assertion error
+  ---
+  duration_ms: 2.358625
+  type: 'test'
+  ...
+# Subtest: cleanup errors fail an otherwise successful run, and successful cleanup resolves
+ok 7 - cleanup errors fail an otherwise successful run, and successful cleanup resolves
+  ---
+  duration_ms: 0.185875
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1298.809583
+
+> godot-fabric@0.1.0 test:dashboard
+> node --test tests/migration-dashboard.test.mjs tests/agents-board.test.mjs
+
+TAP version 13
+# Subtest: overlapping areas conflict, and the narrower path names the subject
+ok 1 - overlapping areas conflict, and the narrower path names the subject
+  ---
+  duration_ms: 1.835541
+  type: 'test'
+  ...
+# Subtest: a file changed inside another agent's area is trespass, never a plain file conflict
+ok 2 - a file changed inside another agent's area is trespass, never a plain file conflict
+  ---
+  duration_ms: 0.384084
+  type: 'test'
+  ...
+# Subtest: the same file outside any area is a file conflict
+ok 3 - the same file outside any area is a file conflict
+  ---
+  duration_ms: 0.177125
+  type: 'test'
+  ...
+# Subtest: shared files only warn when 2+ agents change them
+ok 4 - shared files only warn when 2+ agents change them
+  ---
+  duration_ms: 0.287083
+  type: 'test'
+  ...
+# Subtest: shared files are cut out of every area: reserving one is allowed, never exclusive
+ok 5 - shared files are cut out of every area: reserving one is allowed, never exclusive
+  ---
+  duration_ms: 0.300333
+  type: 'test'
+  ...
+# Subtest: the same GF in two agents is a warning
+ok 6 - the same GF in two agents is a warning
+  ---
+  duration_ms: 0.068791
+  type: 'test'
+  ...
+# Subtest: stale records warn only after the threshold
+ok 7 - stale records warn only after the threshold
+  ---
+  duration_ms: 0.118958
+  type: 'test'
+  ...
+# Subtest: branch, resource, worktree and slot clashes are conflicts; missing worktrees and branch drift warn
+ok 8 - branch, resource, worktree and slot clashes are conflicts; missing worktrees and branch drift warn
+  ---
+  duration_ms: 0.13725
+  type: 'test'
+  ...
+# Subtest: an agent whose git state cannot be read gets a git-error warning instead of vanishing silently
+ok 9 - an agent whose git state cannot be read gets a git-error warning instead of vanishing silently
+  ---
+  duration_ms: 0.258375
+  type: 'test'
+  ...
+# Subtest: lanes always have five positions keyed by slot
+ok 10 - lanes always have five positions keyed by slot
+  ---
+  duration_ms: 0.273208
+  type: 'test'
+  ...
+# Subtest: issue order is deterministic: conflicts first, then slots and subject
+ok 11 - issue order is deterministic: conflicts first, then slots and subject
+  ---
+  duration_ms: 0.184792
+  type: 'test'
+  ...
+# Subtest: validateAgent accepts a complete record and rejects invalid ones with Portuguese messages
+ok 12 - validateAgent accepts a complete record and rejects invalid ones with Portuguese messages
+  ---
+  duration_ms: 0.799
+  type: 'test'
+  ...
+# Subtest: the message timeline merges every agent's messages, newest first, with the sender
+ok 13 - the message timeline merges every agent's messages, newest first, with the sender
+  ---
+  duration_ms: 0.103042
+  type: 'test'
+  ...
+# Subtest: home directories are shortened to ~ only on whole path segments
+ok 14 - home directories are shortened to ~ only on whole path segments
+  ---
+  duration_ms: 0.044875
+  type: 'test'
+  ...
+# Subtest: relative time reads as agora, minutes, hours and days
+ok 15 - relative time reads as agora, minutes, hours and days
+  ---
+  duration_ms: 0.057292
+  type: 'test'
+  ...
+# Subtest: the board view escapes registry text, shortens home, shows five lanes and the Pages notice
+ok 16 - the board view escapes registry text, shortens home, shows five lanes and the Pages notice
+  ---
+  duration_ms: 1.090875
+  type: 'test'
+  ...
+# Subtest: readBoard reads live git state and reports invalid files without throwing
+ok 17 - readBoard reads live git state and reports invalid files without throwing
+  ---
+  duration_ms: 514.676708
+  type: 'test'
+  ...
+# Subtest: polling a worktree never rewrites its index, so it cannot break that agent's git add or commit
+ok 18 - polling a worktree never rewrites its index, so it cannot break that agent's git add or commit
+  ---
+  duration_ms: 338.154417
+  type: 'test'
+  ...
+# Subtest: the registry defaults to the shared git directory and honors FABRIC_AGENTS_DIR
+ok 19 - the registry defaults to the shared git directory and honors FABRIC_AGENTS_DIR
+  ---
+  duration_ms: 322.036083
+  type: 'test'
+  ...
+# Subtest: agents coordinate through the CLI: claim, conflict, trespass, messages and release
+ok 20 - agents coordinate through the CLI: claim, conflict, trespass, messages and release
+  ---
+  duration_ms: 4018.251166
+  type: 'test'
+  ...
+# Subtest: claim honors --slot, keeps the slot on re-claim and refuses a sixth agent
+ok 21 - claim honors --slot, keeps the slot on re-claim and refuses a sixth agent
+  ---
+  duration_ms: 1196.676208
+  type: 'test'
+  ...
+# Subtest: concurrent claims are serialized: one winner for a contested area, no lost record otherwise
+ok 22 - concurrent claims are serialized: one winner for a contested area, no lost record otherwise
+  ---
+  duration_ms: 2182.306083
+  type: 'test'
+  ...
+# Subtest: an abandoned registry lock is recovered by its owner's liveness
+ok 23 - an abandoned registry lock is recovered by its owner's liveness
+  ---
+  duration_ms: 577.706042
+  type: 'test'
+  ...
+# Subtest: a lock held by a live process is never taken over, however old
+ok 24 - a lock held by a live process is never taken over, however old
+  ---
+  duration_ms: 1625.322042
+  type: 'test'
+  ...
+# Subtest: a held registry lock is waited for, and reads never wait
+ok 25 - a held registry lock is waited for, and reads never wait
+  ---
+  duration_ms: 1929.006292
+  type: 'test'
+  ...
+# Subtest: check still sees trespass when a git hook leaks its repository variables, and refuses when it cannot read git
+ok 26 - check still sees trespass when a git hook leaks its repository variables, and refuses when it cannot read git
+  ---
+  duration_ms: 822.69975
+  type: 'test'
+  ...
+# Subtest: check also fails when only ANOTHER agent's git cannot be read
+ok 27 - check also fails when only ANOTHER agent's git cannot be read
+  ---
+  duration_ms: 762.210125
+  type: 'test'
+  ...
+# Subtest: renaming a file out of another agent's area is trespass, staged and committed
+ok 28 - renaming a file out of another agent's area is trespass, staged and committed
+  ---
+  duration_ms: 1132.257834
+  type: 'test'
+  ...
+# Subtest: server publishes the live agent board and tolerates a missing registry
+ok 29 - server publishes the live agent board and tolerates a missing registry
+  ---
+  duration_ms: 416.809417
+  type: 'test'
+  ...
+# Subtest: Pages artifact works under a project subpath and contains only public assets
+ok 30 - Pages artifact works under a project subpath and contains only public assets
+  ---
+  duration_ms: 24.46625
+  type: 'test'
+  ...
+# Subtest: snapshot covers the complete canonical roadmap, sequences and release gates
+ok 31 - snapshot covers the complete canonical roadmap, sequences and release gates
+  ---
+  duration_ms: 2.837209
+  type: 'test'
+  ...
+# Subtest: progress weights verified checkpoints and excludes later scope
+ok 32 - progress weights verified checkpoints and excludes later scope
+  ---
+  duration_ms: 0.86775
+  type: 'test'
+  ...
+# Subtest: completion requires evidence, complete scope and completed dependencies
+ok 33 - completion requires evidence, complete scope and completed dependencies
+  ---
+  duration_ms: 1.653708
+  type: 'test'
+  ...
+# Subtest: invalid status, cycles, missing references and arbitrary URLs are rejected
+ok 34 - invalid status, cycles, missing references and arbitrary URLs are rejected
+  ---
+  duration_ms: 3.574875
+  type: 'test'
+  ...
+# Subtest: sync preserves recorded work and history but rejects removed IDs
+ok 35 - sync preserves recorded work and history but rejects removed IDs
+  ---
+  duration_ms: 6.176792
+  type: 'test'
+  ...
+# Subtest: server observes external JSON updates, rejects corruption and recovers
+ok 36 - server observes external JSON updates, rejects corruption and recovers
+  ---
+  duration_ms: 49.829417
+  type: 'test'
+  ...
+# Subtest: Manual publication pins only JSON and identifies data outside main
+ok 37 - Manual publication pins only JSON and identifies data outside main
+  ---
+  duration_ms: 4.364666
+  type: 'test'
+  ...
+# Subtest: the versioned JSON carries the 0.5 milestone: an agent that rebuilds the document with fixed keys would erase it
+ok 38 - the versioned JSON carries the 0.5 milestone: an agent that rebuilds the document with fixed keys would erase it
+  ---
+  duration_ms: 0.228875
+  type: 'test'
+  ...
+# Subtest: milestones never change the release numbers and are optional
+ok 39 - milestones never change the release numbers and are optional
+  ---
+  duration_ms: 2.403667
+  type: 'test'
+  ...
+# Subtest: milestone progress and status are derived from criteria
+ok 40 - milestone progress and status are derived from criteria
+  ---
+  duration_ms: 0.714333
+  type: 'test'
+  ...
+# Subtest: invalid milestones are rejected without touching the release data
+ok 41 - invalid milestones are rejected without touching the release data
+  ---
+  duration_ms: 14.219917
+  type: 'test'
+  ...
+# Subtest: sync preserves milestones and the 0.5 prose does not reconfigure the roadmap parser
+ok 42 - sync preserves milestones and the 0.5 prose does not reconfigure the roadmap parser
+  ---
+  duration_ms: 3.709917
+  type: 'test'
+  ...
+# Subtest: the milestone section ids used by the renderer exist in the page
+ok 43 - the milestone section ids used by the renderer exist in the page
+  ---
+  duration_ms: 1.055333
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15920.873709
+TAP version 13
+# Subtest: independent package validates original source/schema/artifacts without tools or dependencies in that package
+ok 1 - independent package validates original source/schema/artifacts without tools or dependencies in that package
+  ---
+  duration_ms: 501.645833
+  type: 'test'
+  ...
+# Subtest: dependency order is stable regardless of input order, with component-only and module-only adapters
+ok 2 - dependency order is stable regardless of input order, with component-only and module-only adapters
+  ---
+  duration_ms: 287.326833
+  type: 'test'
+  ...
+# Subtest: packaged Flow specs use original Hermes derivation and keep native claims false
+ok 3 - packaged Flow specs use original Hermes derivation and keep native claims false
+  ---
+  duration_ms: 103.114875
+  type: 'test'
+  ...
+# Subtest: envelope requires exact top-level and file-reference keys plus explicit identity/entry point
+ok 4 - envelope requires exact top-level and file-reference keys plus explicit identity/entry point
+  ---
+  duration_ms: 51.760959
+  type: 'test'
+  ...
+# Subtest: invalid JSON and UTF-8 cannot supply an adapter manifest
+ok 5 - invalid JSON and UTF-8 cannot supply an adapter manifest
+  ---
+  duration_ms: 60.542666
+  type: 'test'
+  ...
+# Subtest: absolute, traversal, Windows/URL, NUL and ambiguous paths are rejected before file lookup
+ok 6 - absolute, traversal, Windows/URL, NUL and ambiguous paths are rejected before file lookup
+  ---
+  duration_ms: 38.121666
+  type: 'test'
+  ...
+# Subtest: missing files and directory-valued libraries fail before the native loader
+ok 7 - missing files and directory-valued libraries fail before the native loader
+  ---
+  duration_ms: 39.7875
+  type: 'test'
+  ...
+# Subtest: library links may resolve inside the package but never outside, including ancestor links
+ok 8 - library links may resolve inside the package but never outside, including ancestor links
+  ---
+  duration_ms: 191.732333
+  type: 'test'
+  ...
+# Subtest: library and generated-manifest hash mismatches fail independently
+ok 9 - library and generated-manifest hash mismatches fail independently
+  ---
+  duration_ms: 38.305292
+  type: 'test'
+  ...
+# Subtest: current target, SDK/headers, dependency bytes and generated combination cannot be selected by the adapter
+ok 10 - current target, SDK/headers, dependency bytes and generated combination cannot be selected by the adapter
+  ---
+  duration_ms: 29.704667
+  type: 'test'
+  ...
+# Subtest: normalized component aliases exactly follow pinned RN without inventing generic Fabric-prefix stripping
+ok 11 - normalized component aliases exactly follow pinned RN without inventing generic Fabric-prefix stripping
+  ---
+  duration_ms: 0.14475
+  type: 'test'
+  ...
+# Subtest: adapter IDs, public declarations and normalized component names cannot collide
+ok 12 - adapter IDs, public declarations and normalized component names cannot collide
+  ---
+  duration_ms: 88.745292
+  type: 'test'
+  ...
+# Subtest: the first SPI rejects alias provider declarations before reading libraries, while canonical declarations remain valid
+ok 13 - the first SPI rejects alias provider declarations before reading libraries, while canonical declarations remain valid
+  ---
+  duration_ms: 170.576541
+  type: 'test'
+  ...
+# Subtest: core reservations include aliases and missing RN ports; caller may add but cannot remove reservations
+ok 14 - core reservations include aliases and missing RN ports; caller may add but cannot remove reservations
+  ---
+  duration_ms: 83.075458
+  type: 'test'
+  ...
+# Subtest: missing dependencies and cycles fail for the complete set before provenance checks
+ok 15 - missing dependencies and cycles fail for the complete set before provenance checks
+  ---
+  duration_ms: 229.074083
+  type: 'test'
+  ...
+# Subtest: an envelope cannot rename, omit or invent schema declarations even with correct hashes
+ok 16 - an envelope cannot rename, omit or invent schema declarations even with correct hashes
+  ---
+  duration_ms: 167.916542
+  type: 'test'
+  ...
+# Subtest: original schema profile and false native/runtime/ABI claims remain mandatory
+ok 17 - original schema profile and false native/runtime/ABI claims remain mandatory
+  ---
+  duration_ms: 97.353166
+  type: 'test'
+  ...
+# Subtest: changed specs/schema/artifacts and a changed generated file set are not valid provenance
+ok 18 - changed specs/schema/artifacts and a changed generated file set are not valid provenance
+  ---
+  duration_ms: 147.180291
+  type: 'test'
+  ...
+# Subtest: self-consistent artifact hashes cannot replace original generated bytes
+ok 19 - self-consistent artifact hashes cannot replace original generated bytes
+  ---
+  duration_ms: 66.646458
+  type: 'test'
+  ...
+# Subtest: Node, parser/package and SDK wrapper identities require the current SDK tools, without running package scripts
+ok 20 - Node, parser/package and SDK wrapper identities require the current SDK tools, without running package scripts
+  ---
+  duration_ms: 130.574667
+  type: 'test'
+  ...
+# Subtest: missing SDK parser/Codegen dependencies have a bounded explicit diagnostic without project installation
+ok 21 - missing SDK parser/Codegen dependencies have a bounded explicit diagnostic without project installation
+  ---
+  duration_ms: 74.219875
+  type: 'test'
+  ...
+# Subtest: generated and source references cannot traverse or follow escaped symlinks before original verification
+ok 22 - generated and source references cannot traverse or follow escaped symlinks before original verification
+  ---
+  duration_ms: 83.990083
+  type: 'test'
+  ...
+# (node:84146) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://{WORKTREE}/src/base-view-config.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to {WORKTREE}/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: selection is explicit and requires installed project-owned dependency identity
+ok 23 - selection is explicit and requires installed project-owned dependency identity
+  ---
+  duration_ms: 209.819333
+  type: 'test'
+  ...
+# Subtest: selection rejects a dependency symlink outside the project
+ok 24 - selection rejects a dependency symlink outside the project
+  ---
+  duration_ms: 1.720709
+  type: 'test'
+  ...
+# Subtest: original TS Codegen runs before type erasure, preserving named exports and generated Commands
+ok 25 - original TS Codegen runs before type erasure, preserving named exports and generated Commands
+  ---
+  duration_ms: 265.953541
+  type: 'test'
+  ...
+# Subtest: approved Flow module spec keeps original registry access and never executes package code
+ok 26 - approved Flow module spec keeps original registry access and never executes package code
+  ---
+  duration_ms: 189.312459
+  type: 'test'
+  ...
+# Subtest: public Codegen signatures and deep spec types resolve through the SDK identity
+ok 27 - public Codegen signatures and deep spec types resolve through the SDK identity
+  ---
+  duration_ms: 1993.077791
+  type: 'test'
+  ...
+# Subtest: static config uses the Godot base through the original ViewConfig composer
+ok 28 - static config uses the Godot base through the original ViewConfig composer
+  ---
+  duration_ms: 375.462875
+  type: 'test'
+  ...
+# Subtest: direct/bubbling collisions against core and other selected adapters fail before bundling
+ok 29 - direct/bubbling collisions against core and other selected adapters fail before bundling
+  ---
+  duration_ms: 427.573458
+  type: 'test'
+  ...
+# Subtest: identical global event signatures remain compatible across native components
+ok 30 - identical global event signatures remain compatible across native components
+  ---
+  duration_ms: 216.83975
+  type: 'test'
+  ...
+# Subtest: unselected typed specs and specs changed after preflight are rejected
+ok 31 - unselected typed specs and specs changed after preflight are rejected
+  ---
+  duration_ms: 151.208125
+  type: 'test'
+  ...
+# Subtest: selection packet links bundle to original package manifests and all transitively verified bytes
+ok 32 - selection packet links bundle to original package manifests and all transitively verified bytes
+  ---
+  duration_ms: 90.219334
+  type: 'test'
+  ...
+# Subtest: the asset module registers the descriptor Metro writes: same fields in the same order, hash included
+ok 33 - the asset module registers the descriptor Metro writes: same fields in the same order, hash included
+  ---
+  duration_ms: 165.786625
+  type: 'test'
+  ...
+# Subtest: an asset outside the project keeps Metro's un-normalized location, and its files land where RN's resolver looks
+ok 34 - an asset outside the project keeps Metro's un-normalized location, and its files land where RN's resolver looks
+  ---
+  duration_ms: 24.795583
+  type: 'test'
+  ...
+# Subtest: the manifest lists every file with its SHA-256 and the bundle's, and no staging file is left
+ok 35 - the manifest lists every file with its SHA-256 and the bundle's, and no staging file is left
+  ---
+  duration_ms: 20.679292
+  type: 'test'
+  ...
+# Subtest: a rebuild retires the files only its previous manifest named, and keeps the ones another bundle names
+ok 36 - a rebuild retires the files only its previous manifest named, and keeps the ones another bundle names
+  ---
+  duration_ms: 50.765042
+  type: 'test'
+  ...
+# Subtest: a reused pipeline starts every build from the files as they are: a changed variant and a dropped asset
+ok 37 - a reused pipeline starts every build from the files as they are: a changed variant and a dropped asset
+  ---
+  duration_ms: 44.413833
+  type: 'test'
+  ...
+# Subtest: the new asset files are put in place before the bundle and the manifest and retirement wait for it, so the old bundle never loses a file
+ok 38 - the new asset files are put in place before the bundle and the manifest and retirement wait for it, so the old bundle never loses a file
+  ---
+  duration_ms: 40.446708
+  type: 'test'
+  ...
+# Subtest: a publish that fails after the files were placed leaves the old bundle's files and manifest whole
+ok 39 - a publish that fails after the files were placed leaves the old bundle's files and manifest whole
+  ---
+  duration_ms: 53.71425
+  type: 'test'
+  ...
+# Subtest: the SDK builder places the asset files, publishes the bundle and only then finishes the manifest
+ok 40 - the SDK builder places the asset files, publishes the bundle and only then finishes the manifest
+  ---
+  duration_ms: 0.183334
+  type: 'test'
+  ...
+# Subtest: a file name's scale suffix, platform-less extension and sizes are read as Metro reads them
+ok 41 - a file name's scale suffix, platform-less extension and sizes are read as Metro reads them
+  ---
+  duration_ms: 1.725833
+  type: 'test'
+  ...
+# Subtest: an asset that is not a picture, or an empty one, fails the build where Metro fails it
+ok 42 - an asset that is not a picture, or an empty one, fails the build where Metro fails it
+  ---
+  duration_ms: 38.385916
+  type: 'test'
+  ...
+# Subtest: inferred TSConfig reproduces the relative-import versus native-alias fingerprint race
+ok 43 - inferred TSConfig reproduces the relative-import versus native-alias fingerprint race
+  ---
+  duration_ms: 94.094084
+  type: 'test'
+  ...
+# Subtest: the real SDK builder's explicit project TSConfig keeps both resolution orders byte-identical
+ok 44 - the real SDK builder's explicit project TSConfig keeps both resolution orders byte-identical
+  ---
+  duration_ms: 202.949333
+  type: 'test'
+  ...
+# Subtest: the SDK builder honors strict:false from the project instead of hardcoding strict mode
+ok 45 - the SDK builder honors strict:false from the project instead of hardcoding strict mode
+  ---
+  duration_ms: 94.493459
+  type: 'test'
+  ...
+# Subtest: the SDK builder honors project react-jsx configuration
+ok 46 - the SDK builder honors project react-jsx configuration
+  ---
+  duration_ms: 64.157667
+  type: 'test'
+  ...
+# Subtest: the SDK builder honors inherited project react-jsx configuration
+ok 47 - the SDK builder honors inherited project react-jsx configuration
+  ---
+  duration_ms: 55.22725
+  type: 'test'
+  ...
+# Subtest: effective inherited ES2019 preserves original class-field semantics
+ok 48 - effective inherited ES2019 preserves original class-field semantics
+  ---
+  duration_ms: 57.858375
+  type: 'test'
+  ...
+# Subtest: effective inherited ES2022 preserves original class-field semantics
+ok 49 - effective inherited ES2022 preserves original class-field semantics
+  ---
+  duration_ms: 48.501875
+  type: 'test'
+  ...
+# Subtest: effective inherited ESNext preserves original class-field semantics
+ok 50 - effective inherited ESNext preserves original class-field semantics
+  ---
+  duration_ms: 42.22875
+  type: 'test'
+  ...
+# Subtest: original parsers/generators derive the module and Badge contract reproducibly
+ok 51 - original parsers/generators derive the module and Badge contract reproducibly
+  ---
+  duration_ms: 542.914625
+  type: 'test'
+  ...
+# Subtest: both TurboModule-only and component-only generation use the original relevant generators
+ok 52 - both TurboModule-only and component-only generation use the original relevant generators
+  ---
+  duration_ms: 77.299458
+  type: 'test'
+  ...
+# Subtest: original Flow parser derives and verifies a separate native module without collisions
+ok 53 - original Flow parser derives and verifies a separate native module without collisions
+  ---
+  duration_ms: 321.284166
+  type: 'test'
+  ...
+# Subtest: resolved Babel, Hermes and runtime ESTree trees participate in tool identity
+ok 54 - resolved Babel, Hermes and runtime ESTree trees participate in tool identity
+  ---
+  duration_ms: 325.766167
+  type: 'test'
+  ...
+# Subtest: parser identities follow actual nested Codegen and Hermes resolution
+ok 55 - parser identities follow actual nested Codegen and Hermes resolution
+  ---
+  duration_ms: 823.236209
+  type: 'test'
+  ...
+# Subtest: changed spec bytes and changed source sets cannot validate old artifacts
+ok 56 - changed spec bytes and changed source sets cannot validate old artifacts
+  ---
+  duration_ms: 158.851
+  type: 'test'
+  ...
+# Subtest: changed derived schema, unsupported fields and unsupported annotations are explicit failures
+ok 57 - changed derived schema, unsupported fields and unsupported annotations are explicit failures
+  ---
+  duration_ms: 109.906375
+  type: 'test'
+  ...
+# Subtest: valid upstream ColorValue specs outside the profile do not silently lose fields
+ok 58 - valid upstream ColorValue specs outside the profile do not silently lose fields
+  ---
+  duration_ms: 40.726958
+  type: 'test'
+  ...
+# Subtest: duplicate paths, module keys, runtime names and member names are rejected before generation
+ok 59 - duplicate paths, module keys, runtime names and member names are rejected before generation
+  ---
+  duration_ms: 123.884541
+  type: 'test'
+  ...
+# Subtest: every declared native combination dimension participates in mismatch detection
+ok 60 - every declared native combination dimension participates in mismatch detection
+  ---
+  duration_ms: 41.248083
+  type: 'test'
+  ...
+# Subtest: original generated event symbols, wire conventions and implicit command names are guarded
+ok 61 - original generated event symbols, wire conventions and implicit command names are guarded
+  ---
+  duration_ms: 220.240584
+  type: 'test'
+  ...
+# Subtest: original aliases cannot emit duplicate C++ struct/bridging symbols across modules
+ok 62 - original aliases cannot emit duplicate C++ struct/bridging symbols across modules
+  ---
+  duration_ms: 54.355
+  type: 'test'
+  ...
+# Subtest: case-folded ViewConfig paths are rejected before writing on every platform
+ok 63 - case-folded ViewConfig paths are rejected before writing on every platform
+  ---
+  duration_ms: 36.791375
+  type: 'test'
+  ...
+# Subtest: string defaults which original CppHelpers cannot emit faithfully are diagnosed
+ok 64 - string defaults which original CppHelpers cannot emit faithfully are diagnosed
+  ---
+  duration_ms: 226.907625
+  type: 'test'
+  ...
+# Subtest: valid UTF-8 source bytes are required and generated bytes cannot be replaced by decoding equivalents
+ok 65 - valid UTF-8 source bytes are required and generated bytes cannot be replaced by decoding equivalents
+  ---
+  duration_ms: 102.822666
+  type: 'test'
+  ...
+# Subtest: a concurrent output reservation survives intact and failed publication leaves no generated directory
+ok 66 - a concurrent output reservation survives intact and failed publication leaves no generated directory
+  ---
+  duration_ms: 80.342292
+  type: 'test'
+  ...
+# Subtest: tool/wrapper provenance and false runtime claims cannot be changed in a manifest
+ok 67 - tool/wrapper provenance and false runtime claims cannot be changed in a manifest
+  ---
+  duration_ms: 449.970459
+  type: 'test'
+  ...
+# Subtest: modified, missing, extra and symlinked artifacts fail verification without rewriting
+ok 68 - modified, missing, extra and symlinked artifacts fail verification without rewriting
+  ---
+  duration_ms: 183.944958
+  type: 'test'
+  ...
+# Subtest: generation preserves existing outputs and rejects source traversal and empty specs
+ok 69 - generation preserves existing outputs and rejects source traversal and empty specs
+  ---
+  duration_ms: 79.173792
+  type: 'test'
+  ...
+# Subtest: public CLI generates/verifies and reports nonzero failures
+ok 70 - public CLI generates/verifies and reports nonzero failures
+  ---
+  duration_ms: 1077.561375
+  type: 'test'
+  ...
+# Subtest: public control contracts accept documented RN props
+ok 71 - public control contracts accept documented RN props
+  ---
+  duration_ms: 0.656958
+  type: 'test'
+  ...
+# Subtest: mobile, accessibility and legacy aliases fail visibly rather than disappear
+ok 72 - mobile, accessibility and legacy aliases fail visibly rather than disappear
+  ---
+  duration_ms: 6.356458
+  type: 'test'
+  ...
+# Subtest: wrong values and invalid UTF-16 selections are rejected
+ok 73 - wrong values and invalid UTF-16 selections are rejected
+  ---
+  duration_ms: 0.398166
+  type: 'test'
+  ...
+# Subtest: the SDK ScrollView drops exactly the list props that RN's ScrollViewProps lacks
+ok 74 - the SDK ScrollView drops exactly the list props that RN's ScrollViewProps lacks
+  ---
+  duration_ms: 38.657125
+  type: 'test'
+  ...
+# Subtest: bundled TSX consumer uses the original renderer and Godot public controls
+ok 75 - bundled TSX consumer uses the original renderer and Godot public controls
+  ---
+  duration_ms: 4.987875
+  type: 'test'
+  ...
+# Subtest: Godot/native/generic module precedence agrees in the bundler and strict types
+ok 76 - Godot/native/generic module precedence agrees in the bundler and strict types
+  ---
+  duration_ms: 2466.941291
+  type: 'test'
+  ...
+# Subtest: catalog routes every example to a real documented source and scene
+ok 77 - catalog routes every example to a real documented source and scene
+  ---
+  duration_ms: 7.753625
+  type: 'test'
+  ...
+# Subtest: interactive and bounded modes select the same scene
+ok 78 - interactive and bounded modes select the same scene
+  ---
+  duration_ms: 0.20125
+  type: 'test'
+  ...
+# Subtest: list and help need no native setup
+ok 79 - list and help need no native setup
+  ---
+  duration_ms: 2.237875
+  type: 'test'
+  ...
+# Subtest: typos, multiple scenes and invalid capture modes fail before launch
+ok 80 - typos, multiple scenes and invalid capture modes fail before launch
+  ---
+  duration_ms: 0.255542
+  type: 'test'
+  ...
+# Subtest: the extension minimum matches the tested engine pin
+ok 81 - the extension minimum matches the tested engine pin
+  ---
+  duration_ms: 11.336833
+  type: 'test'
+  ...
+# Subtest: the resolver accepts the stable baseline at a path containing spaces
+ok 82 - the resolver accepts the stable baseline at a path containing spaces
+  ---
+  duration_ms: 486.6505
+  type: 'test'
+  ...
+# Subtest: the resolver rejects other versions and malformed stable labels
+ok 83 - the resolver rejects other versions and malformed stable labels
+  ---
+  duration_ms: 2618.511625
+  type: 'test'
+  ...
+# Subtest: an explicit missing executable never falls back to another installed engine
+ok 84 - an explicit missing executable never falls back to another installed engine
+  ---
+  duration_ms: 0.730625
+  type: 'test'
+  ...
+# Subtest: runner preflight failures remove prior passing reports
+ok 85 - runner preflight failures remove prior passing reports
+  ---
+  duration_ms: 716.762166
+  type: 'test'
+  ...
+# Subtest: cold fixtures are removed when imports or runtime checks fail
+ok 86 - cold fixtures are removed when imports or runtime checks fail
+  ---
+  duration_ms: 1131.162709
+  type: 'test'
+  ...
+# Subtest: state connection installs listeners first, reads once and delivers only newer revisions in order
+ok 87 - state connection installs listeners first, reads once and delivers only newer revisions in order
+  ---
+  duration_ms: 30.12125
+  type: 'test'
+  ...
+# Subtest: signals preserve equal-revision occurrences, callback faults and reentrant buffering order
+ok 88 - signals preserve equal-revision occurrences, callback faults and reentrant buffering order
+  ---
+  duration_ms: 8.384458
+  type: 'test'
+  ...
+# Subtest: removal before readiness and from initial/buffered callbacks settles ready and cancels queued work
+ok 89 - removal before readiness and from initial/buffered callbacks settles ready and cancels queued work
+  ---
+  duration_ms: 9.691167
+  type: 'test'
+  ...
+# Subtest: closed bindings reject early readiness or close a live subscription, without calling its handler
+ok 90 - closed bindings reject early readiness or close a live subscription, without calling its handler
+  ---
+  duration_ms: 10.879542
+  type: 'test'
+  ...
+# Subtest: foreign origins and malformed events are diagnosed without interrupting other subscriptions
+ok 91 - foreign origins and malformed events are diagnosed without interrupting other subscriptions
+  ---
+  duration_ms: 10.976375
+  type: 'test'
+  ...
+# Subtest: native failures release reserved subscriptions and normalize stopped runtime errors
+ok 92 - native failures release reserved subscriptions and normalize stopped runtime errors
+  ---
+  duration_ms: 12.488958
+  type: 'test'
+  ...
+# Subtest: strict DTOs reject coercion, cycles, unsafe numbers, hidden properties and unsupported prototypes
+ok 93 - strict DTOs reject coercion, cycles, unsafe numbers, hidden properties and unsupported prototypes
+  ---
+  duration_ms: 56.7925
+  type: 'test'
+  ...
+# Subtest: strings reject NUL and lone surrogates in values, keys and addresses before native work
+ok 94 - strings reject NUL and lone surrogates in values, keys and addresses before native work
+  ---
+  duration_ms: 16.218959
+  type: 'test'
+  ...
+# Subtest: incoming invalid strings never reach handlers or silently change snapshots
+ok 95 - incoming invalid strings never reach handlers or silently change snapshots
+  ---
+  duration_ms: 31.042833
+  type: 'test'
+  ...
+# Subtest: addresses and native responses fail visibly instead of accepting an unrelated or malformed source
+ok 96 - addresses and native responses fail visibly instead of accepting an unrelated or malformed source
+  ---
+  duration_ms: 65.22075
+  type: 'test'
+  ...
+# Subtest: state snapshots and updates accept the same 10000-node and depth32 payload boundaries
+ok 97 - state snapshots and updates accept the same 10000-node and depth32 payload boundaries
+  ---
+  duration_ms: 45.304667
+  type: 'test'
+  ...
+# Subtest: protocol argument tuples retain strict shape and share their DTO budget across elements
+ok 98 - protocol argument tuples retain strict shape and share their DTO budget across elements
+  ---
+  duration_ms: 18.852916
+  type: 'test'
+  ...
+# Subtest: call args retain their integral DTO root budget independently of the service address
+ok 99 - call args retain their integral DTO root budget independently of the service address
+  ---
+  duration_ms: 24.717167
+  type: 'test'
+  ...
+# Subtest: the external SDK resolver owns the exact runtime import and preserves project ownership of subpaths
+ok 100 - the external SDK resolver owns the exact runtime import and preserves project ownership of subpaths
+  ---
+  duration_ms: 61.216834
+  type: 'test'
+  ...
+# Subtest: strict consumer types resolve the runtime import and preserve payload/result types
+ok 101 - strict consumer types resolve the runtime import and preserve payload/result types
+  ---
+  duration_ms: 915.983167
+  type: 'test'
+  ...
+# Subtest: the props the host implements pass, including sources it cannot load: a uri is data, not a mistake
+ok 102 - the props the host implements pass, including sources it cannot load: a uri is data, not a mistake
+  ---
+  duration_ms: 3.570333
+  type: 'test'
+  ...
+# Subtest: the props that draw and the props iOS ignores are taken: none is refused
+ok 103 - the props that draw and the props iOS ignores are taken: none is refused
+  ---
+  duration_ms: 0.607958
+  type: 'test'
+  ...
+# Subtest: a blur radius and cap insets that are not numbers are mistakes
+ok 104 - a blur radius and cap insets that are not numbers are mistakes
+  ---
+  duration_ms: 0.62325
+  type: 'test'
+  ...
+# Subtest: values the host cannot take are refused with its own words
+ok 105 - values the host cannot take are refused with its own words
+  ---
+  duration_ms: 0.267459
+  type: 'test'
+  ...
+# Subtest: godotFabric.tailwind is closed JSON, and adapters stay the only selection
+ok 106 - godotFabric.tailwind is closed JSON, and adapters stay the only selection
+  ---
+  duration_ms: 15.181959
+  type: 'test'
+  ...
+# Subtest: the SDK owns the content scan: braces expand inside the project and nothing outside it is read
+ok 107 - the SDK owns the content scan: braces expand inside the project and nothing outside it is read
+  ---
+  duration_ms: 39.218417
+  type: 'test'
+  ...
+# Subtest: the libraries consumer builds, type-checks and bundles through the relocated SDK alone
+    # Subtest: the bundle holds the original native interop and the SDK's SVG facade, and nothing of the laboratory
+    ok 1 - the bundle holds the original native interop and the SDK's SVG facade, and nothing of the laboratory
+      ---
+      duration_ms: 1.219708
+      type: 'test'
+      ...
+    # Subtest: the build report records the style step and the exact releases
+    ok 2 - the build report records the style step and the exact releases
+      ---
+      duration_ms: 0.340083
+      type: 'test'
+      ...
+    # Subtest: the compiled styles register with the one interop runtime and answer every class the consumer uses
+    ok 3 - the compiled styles register with the one interop runtime and answer every class the consumer uses
+      ---
+      duration_ms: 2.886334
+      type: 'test'
+      ...
+    # Subtest: the same inputs build the same bundle
+    ok 4 - the same inputs build the same bundle
+      ---
+      duration_ms: 6776.836459
+      type: 'test'
+      ...
+    # Subtest: a missing optional peer does not fail the build, and the SDK's facade is the control that proves it
+    ok 5 - a missing optional peer does not fail the build, and the SDK's facade is the control that proves it
+      ---
+      duration_ms: 5258.958542
+      type: 'test'
+      ...
+    # Subtest: a tailwind.config.js is refused and names the declarative field
+    ok 6 - a tailwind.config.js is refused and names the declarative field
+      ---
+      duration_ms: 349.148584
+      type: 'test'
+      ...
+    # Subtest: CSS other than the Tailwind entry is still refused
+    ok 7 - CSS other than the Tailwind entry is still refused
+      ---
+      duration_ms: 9035.63475
+      type: 'test'
+      ...
+    # Subtest: the Tailwind declaration must exist, stay inside its fields and name only project globs
+    ok 8 - the Tailwind declaration must exist, stay inside its fields and name only project globs
+      ---
+      duration_ms: 6148.057875
+      type: 'test'
+      ...
+    # Subtest: the content scan stays inside the project: braces cannot leave it, a link cannot lead out, and valid braces still build
+    ok 9 - the content scan stays inside the project: braces cannot leave it, a link cannot lead out, and valid braces still build
+      ---
+      duration_ms: 16964.491917
+      type: 'test'
+      ...
+    # Subtest: the installed interop must be the release the SDK compiles with
+    ok 10 - the installed interop must be the release the SDK compiles with
+      ---
+      duration_ms: 4161.243958
+      type: 'test'
+      ...
+    # Subtest: className is a type error until the project opts in, and only for the four certified components
+    ok 11 - className is a type error until the project opts in, and only for the four certified components
+      ---
+      duration_ms: 4998.204333
+      type: 'test'
+      ...
+    # Subtest: the consumer builds again after every rejected request
+    ok 12 - the consumer builds again after every rejected request
+      ---
+      duration_ms: 5565.885375
+      type: 'test'
+      ...
+    1..12
+ok 108 - the libraries consumer builds, type-checks and bundles through the relocated SDK alone
+  ---
+  duration_ms: 84779.124791
+  type: 'test'
+  ...
+# Subtest: macOS export documents its required new-output contract without starting a build
+ok 109 - macOS export documents its required new-output contract without starting a build
+  ---
+  duration_ms: 59.626917
+  type: 'test'
+  ...
+# Subtest: macOS export requires an explicit template before provisioning
+ok 110 - macOS export requires an explicit template before provisioning
+  ---
+  duration_ms: 95.999
+  type: 'test'
+  ...
+# Subtest: macOS export refuses existing and dangling-symlink destinations before provisioning
+ok 111 - macOS export refuses existing and dangling-symlink destinations before provisioning
+  ---
+  duration_ms: 119.031583
+  type: 'test'
+  ...
+# Subtest: committed consumer oracle preserves the exact 40/43 check names and capture order
+ok 112 - committed consumer oracle preserves the exact 40/43 check names and capture order
+  ---
+  duration_ms: 0.963334
+  type: 'test'
+  ...
+# Subtest: headed consumer capture requires the fixed physical image and matching logical RN metrics
+ok 113 - headed consumer capture requires the fixed physical image and matching logical RN metrics
+  ---
+  duration_ms: 5.300208
+  type: 'test'
+  ...
+# Subtest: load-path validation permits contained loader paths and rejects traversal
+ok 114 - load-path validation permits contained loader paths and rejects traversal
+  ---
+  duration_ms: 0.6235
+  type: 'test'
+  ...
+# Subtest: generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+ok 115 - generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+  ---
+  duration_ms: 572.396416
+  type: 'test'
+  ...
+# Subtest: failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+ok 116 - failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+  ---
+  duration_ms: 12.622958
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects symlinks before copying anything
+ok 117 - failed consumer output retention rejects symlinks before copying anything
+  ---
+  duration_ms: 22.195084
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects a symlinked user-data directory
+ok 118 - failed consumer output retention rejects a symlinked user-data directory
+  ---
+  duration_ms: 3.063542
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention refuses existing evidence destinations
+ok 119 - failed consumer output retention refuses existing evidence destinations
+  ---
+  duration_ms: 7.385458
+  type: 'test'
+  ...
+# Subtest: native macOS arm64 export and copied-app rejection controls
+ok 120 - native macOS arm64 export and copied-app rejection controls # SKIP MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template
+  ---
+  duration_ms: 0.090167
+  type: 'test'
+  ...
+# Subtest: dry package has original combination shape, SPI headers and shared imported targets
+ok 121 - dry package has original combination shape, SPI headers and shared imported targets
+  ---
+  duration_ms: 721.19575
+  type: 'test'
+  ...
+# Subtest: unchanged capture preserves its mtime so an incremental build need not relink
+ok 122 - unchanged capture preserves its mtime so an incremental build need not relink
+  ---
+  duration_ms: 406.654541
+  type: 'test'
+  ...
+# Subtest: changed native source during compilation refuses the completed host receipt
+ok 123 - changed native source during compilation refuses the completed host receipt
+  ---
+  duration_ms: 395.220709
+  type: 'test'
+  ...
+# Subtest: changed consumed headers or build flags reject stale SDK publication
+ok 124 - changed consumed headers or build flags reject stale SDK publication
+  ---
+  duration_ms: 5168.51675
+  type: 'test'
+  ...
+# Subtest: changed binary rejects publication even with unchanged headers and source
+ok 125 - changed binary rejects publication even with unchanged headers and source
+  ---
+  duration_ms: 414.6295
+  type: 'test'
+  ...
+# Subtest: hidden bindings, other architecture and missing SPI are explicit failures
+ok 126 - hidden bindings, other architecture and missing SPI are explicit failures
+  ---
+  duration_ms: 82.58125
+  type: 'test'
+  ...
+# Subtest: unsupported host generator gives an explicit SDK diagnostic
+ok 127 - unsupported host generator gives an explicit SDK diagnostic
+  ---
+  duration_ms: 34.409833
+  type: 'test'
+  ...
+# Subtest: existing, dangling and outside output paths preserve user files
+ok 128 - existing, dangling and outside output paths preserve user files
+  ---
+  duration_ms: 233.976459
+  type: 'test'
+  ...
+# Subtest: header symlink escaping the declared tree is rejected before capture
+ok 129 - header symlink escaping the declared tree is rejected before capture
+  ---
+  duration_ms: 45.124541
+  type: 'test'
+  ...
+# Subtest: an untransmitted ABI compiler option is rejected instead of producing a combination
+ok 130 - an untransmitted ABI compiler option is rejected instead of producing a combination
+  ---
+  duration_ms: 39.752875
+  type: 'test'
+  ...
+# Subtest: output ancestor symlinks cannot redirect the package outside build/
+ok 131 - output ancestor symlinks cannot redirect the package outside build/
+  ---
+  duration_ms: 375.099834
+  type: 'test'
+  ...
+# Subtest: verification catches changed, missing or extra SDK files
+ok 132 - verification catches changed, missing or extra SDK files
+  ---
+  duration_ms: 1227.892167
+  type: 'test'
+  ...
+# Subtest: verification rejects execution claims added to a build-only manifest
+ok 133 - verification rejects execution claims added to a build-only manifest
+  ---
+  duration_ms: 403.747709
+  type: 'test'
+  ...
+# Subtest: incomplete publication retains failure evidence without a completion manifest
+ok 134 - incomplete publication retains failure evidence without a completion manifest
+  ---
+  duration_ms: 309.576167
+  type: 'test'
+  ...
+# Subtest: native checker reports semantic diagnostics at UTF-16 source positions
+ok 135 - native checker reports semantic diagnostics at UTF-16 source positions
+  ---
+  duration_ms: 311.719209
+  type: 'test'
+  ...
+# Subtest: native checker reports parse failures without running TypeScript's JavaScript checker
+ok 136 - native checker reports parse failures without running TypeScript's JavaScript checker
+  ---
+  duration_ms: 193.039917
+  type: 'test'
+  ...
+# Subtest: native checker refuses effective compiler options outside its supported profile
+ok 137 - native checker refuses effective compiler options outside its supported profile
+  ---
+  duration_ms: 1.939541
+  type: 'test'
+  ...
+# Subtest: native checker only classifies missing compiler binaries as compiler unavailable
+ok 138 - native checker only classifies missing compiler binaries as compiler unavailable
+  ---
+  duration_ms: 267.479334
+  type: 'test'
+  ...
+# Subtest: native checker reports a removed TypeScript option instead of silently dropping it
+ok 139 - native checker reports a removed TypeScript option instead of silently dropping it
+  ---
+  duration_ms: 196.624125
+  type: 'test'
+  ...
+# Subtest: native binder diagnostics are deduplicated across diagnostic passes
+ok 140 - native binder diagnostics are deduplicated across diagnostic passes
+  ---
+  duration_ms: 224.951375
+  type: 'test'
+  ...
+# Subtest: native compiler resolution validates platform, pinned package versions, and executable
+ok 141 - native compiler resolution validates platform, pinned package versions, and executable
+  ---
+  duration_ms: 4.398166
+  type: 'test'
+  ...
+# Subtest: bundle contém JSX e interop nativos originais, sem GDSS
+ok 142 - bundle contém JSX e interop nativos originais, sem GDSS
+  ---
+  duration_ms: 0.979833
+  type: 'test'
+  ...
+# Subtest: guard reprova fallback para web e perda do interop nativo
+ok 143 - guard reprova fallback para web e perda do interop nativo
+  ---
+  duration_ms: 0.332917
+  type: 'test'
+  ...
+# Subtest: Tailwind e compilador original preservam variantes, variáveis e animação
+ok 144 - Tailwind e compilador original preservam variantes, variáveis e animação
+  ---
+  duration_ms: 0.148875
+  type: 'test'
+  ...
+# Subtest: fronteira ausente de Reanimated falha em todas as tentativas de render
+ok 145 - fronteira ausente de Reanimated falha em todas as tentativas de render
+  ---
+  duration_ms: 0.643917
+  type: 'test'
+  ...
+# Subtest: matching SDK and default native receipts both accept the exact host and dependency bytes
+ok 146 - matching SDK and default native receipts both accept the exact host and dependency bytes
+  ---
+  duration_ms: 24.222333
+  type: 'test'
+  ...
+# Subtest: JS, docs, package and bookkeeping changes do not require native receipt identity
+ok 147 - JS, docs, package and bookkeeping changes do not require native receipt identity
+  ---
+  duration_ms: 16.7275
+  type: 'test'
+  ...
+# Subtest: an intact older SDK or local host is rejected after native source, header, build profile or overlay changes
+ok 148 - an intact older SDK or local host is rejected after native source, header, build profile or overlay changes
+  ---
+  duration_ms: 62.611792
+  type: 'test'
+  ...
+# Subtest: added and removed native inputs reject a receipt with a different source set
+ok 149 - added and removed native inputs reject a receipt with a different source set
+  ---
+  duration_ms: 25.805917
+  type: 'test'
+  ...
+# Subtest: changed dependency build definitions reject the default receipt and the old SDK combination
+ok 150 - changed dependency build definitions reject the default receipt and the old SDK combination
+  ---
+  duration_ms: 12.046084
+  type: 'test'
+  ...
+# Subtest: the SDK also requires the exact recorded dependency build definition when native version labels match
+ok 151 - the SDK also requires the exact recorded dependency build definition when native version labels match
+  ---
+  duration_ms: 16.544541
+  type: 'test'
+  ...
+# Subtest: missing native source hashes reject otherwise intact receipts
+ok 152 - missing native source hashes reject otherwise intact receipts
+  ---
+  duration_ms: 17.412375
+  type: 'test'
+  ...
+# Subtest: corrupted SDK binaries and receipts still fail existing package integrity validation first
+ok 153 - corrupted SDK binaries and receipts still fail existing package integrity validation first
+  ---
+  duration_ms: 14.955583
+  type: 'test'
+  ...
+# Subtest: a coherently sealed SDK must still link its receipt to the declared host binary
+ok 154 - a coherently sealed SDK must still link its receipt to the declared host binary
+  ---
+  duration_ms: 12.3005
+  type: 'test'
+  ...
+# Subtest: default host and framework bytes must still match the recorded native build
+ok 155 - default host and framework bytes must still match the recorded native build
+  ---
+  duration_ms: 184.163375
+  type: 'test'
+  ...
+# Subtest: default provisioning without a build receipt gives a rebuild or matching SDK diagnostic
+ok 156 - default provisioning without a build receipt gives a rebuild or matching SDK diagnostic
+  ---
+  duration_ms: 8.266208
+  type: 'test'
+  ...
+# Subtest: default provisioning rejects fixture, wrong-target and incomplete binary receipts
+ok 157 - default provisioning rejects fixture, wrong-target and incomplete binary receipts
+  ---
+  duration_ms: 27.760166
+  type: 'test'
+  ...
+# Subtest: SDK fixture declarations and incompatible dependency combinations remain rejected
+ok 158 - SDK fixture declarations and incompatible dependency combinations remain rejected
+  ---
+  duration_ms: 77.332042
+  type: 'test'
+  ...
+# Subtest: the differential oracle uses the pinned original Metro and esbuild versions
+ok 159 - the differential oracle uses the pinned original Metro and esbuild versions
+  ---
+  duration_ms: 2.197458
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact exports target: import/[]
+ok 160 - original Metro and SDK choose the same exact exports target: import/[]
+  ---
+  duration_ms: 126.373042
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact exports target: import/["godot"]
+ok 161 - original Metro and SDK choose the same exact exports target: import/["godot"]
+  ---
+  duration_ms: 39.385542
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact exports target: require/[]
+ok 162 - original Metro and SDK choose the same exact exports target: require/[]
+  ---
+  duration_ms: 38.14275
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact exports target: require/["godot"]
+ok 163 - original Metro and SDK choose the same exact exports target: require/["godot"]
+  ---
+  duration_ms: 34.785667
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact imports target: import/[]
+ok 164 - original Metro and SDK choose the same exact imports target: import/[]
+  ---
+  duration_ms: 68.762625
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact imports target: import/["godot"]
+ok 165 - original Metro and SDK choose the same exact imports target: import/["godot"]
+  ---
+  duration_ms: 46.536667
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact imports target: require/[]
+ok 166 - original Metro and SDK choose the same exact imports target: require/[]
+  ---
+  duration_ms: 55.323833
+  type: 'test'
+  ...
+# Subtest: original Metro and SDK choose the same exact imports target: require/["godot"]
+ok 167 - original Metro and SDK choose the same exact imports target: require/["godot"]
+  ---
+  duration_ms: 49.081708
+  type: 'test'
+  ...
+# Subtest: original condition object key order wins over enabled conditions for exports
+ok 168 - original condition object key order wins over enabled conditions for exports
+  ---
+  duration_ms: 44.305875
+  type: 'test'
+  ...
+# Subtest: original condition object key order wins over enabled conditions for imports
+ok 169 - original condition object key order wins over enabled conditions for imports
+  ---
+  duration_ms: 62.540792
+  type: 'test'
+  ...
+# Subtest: declared incompatibility: Metro falls back from a missing exact export while the SDK fails
+ok 170 - declared incompatibility: Metro falls back from a missing exact export while the SDK fails
+  ---
+  duration_ms: 31.79725
+  type: 'test'
+  ...
+# Subtest: declared incompatibility: Metro rejects an external \#imports target that the SDK resolves
+ok 171 - declared incompatibility: Metro rejects an external \#imports target that the SDK resolves
+  ---
+  duration_ms: 58.452292
+  type: 'test'
+  ...
+# (node:84358) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://{WORKTREE}/src/base-view-config.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to {WORKTREE}/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: only RN's original lists resolve RN's unexported feature flags
+ok 172 - only RN's original lists resolve RN's unexported feature flags
+  ---
+  duration_ms: 7333.470458
+  type: 'test'
+  ...
+# Subtest: project modules named like RN native seams retain their own implementation
+ok 173 - project modules named like RN native seams retain their own implementation
+  ---
+  duration_ms: 23.795875
+  type: 'test'
+  ...
+# Subtest: RN's RCTNetworking resolves to its Android wrapper and a project's own module of that name stays
+ok 174 - RN's RCTNetworking resolves to its Android wrapper and a project's own module of that name stays
+  ---
+  duration_ms: 233.817875
+  type: 'test'
+  ...
+# Subtest: RN's legacySendAccessibilityEvent resolves to its iOS function, and without that seam AccessibilityInfo's focus call breaks
+ok 175 - RN's legacySendAccessibilityEvent resolves to its iOS function, and without that seam AccessibilityInfo's focus call breaks
+  ---
+  duration_ms: 1658.631584
+  type: 'test'
+  ...
+# Subtest: RN's Image resolves to the Godot wrapper for every importer, and a project's own Image stays
+ok 176 - RN's Image resolves to the Godot wrapper for every importer, and a project's own Image stays
+  ---
+  duration_ms: 1636.673333
+  type: 'test'
+  ...
+# Subtest: a project AppRegistryImpl and renderApplication do not become original RN hooks
+ok 177 - a project AppRegistryImpl and renderApplication do not become original RN hooks
+  ---
+  duration_ms: 10.983792
+  type: 'test'
+  ...
+# Subtest: an exact public RN Platform deep import still selects the Godot seam
+ok 178 - an exact public RN Platform deep import still selects the Godot seam
+  ---
+  duration_ms: 11.167625
+  type: 'test'
+  ...
+# Subtest: a project ViewConfig and PlatformBaseViewConfig keep their own implementation
+ok 179 - a project ViewConfig and PlatformBaseViewConfig keep their own implementation
+  ---
+  duration_ms: 9.697917
+  type: 'test'
+  ...
+# Subtest: an exact public RN PlatformBaseViewConfig import selects the Godot base config
+ok 180 - an exact public RN PlatformBaseViewConfig import selects the Godot base config
+  ---
+  duration_ms: 47.79025
+  type: 'test'
+  ...
+# Subtest: original RN ViewConfig composes the Godot base config without the adapter plugin
+ok 181 - original RN ViewConfig composes the Godot base config without the adapter plugin
+  ---
+  duration_ms: 89.011417
+  type: 'test'
+  ...
+# Subtest: original RN transform processors reach the composed ViewConfig without losing ordered array or origin syntax
+ok 182 - original RN transform processors reach the composed ViewConfig without losing ordered array or origin syntax
+  ---
+  duration_ms: 113.040167
+  type: 'test'
+  ...
+# Subtest: project-owned ViewConfig and similarly named transform processors keep their own behavior
+ok 183 - project-owned ViewConfig and similarly named transform processors keep their own behavior
+  ---
+  duration_ms: 10.11375
+  type: 'test'
+  ...
+# Subtest: the public style validator forwards transforms and still rejects unrelated unsupported styles
+ok 184 - the public style validator forwards transforms and still rejects unrelated unsupported styles
+  ---
+  duration_ms: 9.465542
+  type: 'test'
+  ...
+# Subtest: native IDs reach original attribute payloads and public View keeps the original ID mapping
+ok 185 - native IDs reach original attribute payloads and public View keeps the original ID mapping
+  ---
+  duration_ms: 2217.149958
+  type: 'test'
+  ...
+# Subtest: the Godot focus bridge retains original TextInputState guards and singleton
+ok 186 - the Godot focus bridge retains original TextInputState guards and singleton
+  ---
+  duration_ms: 1412.419958
+  type: 'test'
+  ...
+# Subtest: public Switch is RN's original Switch.js over the generated RCTSwitch ViewConfig and setValue command
+ok 187 - public Switch is RN's original Switch.js over the generated RCTSwitch ViewConfig and setValue command
+  ---
+  duration_ms: 5277.710417
+  type: 'test'
+  ...
+# Subtest: public ActivityIndicator is RN's original module over the generated RCTActivityIndicatorView ViewConfig
+ok 188 - public ActivityIndicator is RN's original module over the generated RCTActivityIndicatorView ViewConfig
+  ---
+  duration_ms: 3701.219625
+  type: 'test'
+  ...
+# Subtest: inherited local aliases match original TypeScript and select the Godot platform source
+ok 189 - inherited local aliases match original TypeScript and select the Godot platform source
+  ---
+  duration_ms: 177.391958
+  type: 'test'
+  ...
+# Subtest: declared project dependencies resolve their nested transitive dependency without hoisting
+ok 190 - declared project dependencies resolve their nested transitive dependency without hoisting
+  ---
+  duration_ms: 121.188875
+  type: 'test'
+  ...
+# Subtest: an installed but undeclared direct project package fails visibly
+ok 191 - an installed but undeclared direct project package fails visibly
+  ---
+  duration_ms: 32.524625
+  type: 'test'
+  ...
+# Subtest: a missing declared dependency retains the project package manager diagnostic
+ok 192 - a missing declared dependency retains the project package manager diagnostic
+  ---
+  duration_ms: 5.409834
+  type: 'test'
+  ...
+# Subtest: a transitive import cannot borrow an undeclared sibling package
+ok 193 - a transitive import cannot borrow an undeclared sibling package
+  ---
+  duration_ms: 35.936834
+  type: 'test'
+  ...
+# Subtest: an optional peer that only peerDependenciesMeta names is declared, and resolves to a facade when absent
+ok 194 - an optional peer that only peerDependenciesMeta names is declared, and resolves to a facade when absent
+  ---
+  duration_ms: 34.988583
+  type: 'test'
+  ...
+# Subtest: an installed optional peer without a facade is used, and an absent one fails at resolution
+ok 195 - an installed optional peer without a facade is used, and an absent one fails at resolution
+  ---
+  duration_ms: 99.989208
+  type: 'test'
+  ...
+# Subtest: a peer that neither the manifest nor peerDependenciesMeta declares is still rejected
+ok 196 - a peer that neither the manifest nor peerDependenciesMeta declares is still rejected
+  ---
+  duration_ms: 43.107417
+  type: 'test'
+  ...
+# Subtest: an alias targeting a physical file outside the project is rejected before publication
+ok 197 - an alias targeting a physical file outside the project is rejected before publication
+  ---
+  duration_ms: 8.743167
+  type: 'test'
+  ...
+# Subtest: a local alias cannot escape through an external symlink
+ok 198 - a local alias cannot escape through an external symlink
+  ---
+  duration_ms: 7.12875
+  type: 'test'
+  ...
+# Subtest: a dependency symlink outside the project cannot enter the bundle
+ok 199 - a dependency symlink outside the project cannot enter the bundle
+  ---
+  duration_ms: 7.076
+  type: 'test'
+  ...
+# Subtest: a project runtime alias cannot address SDK implementation
+ok 200 - a project runtime alias cannot address SDK implementation
+  ---
+  duration_ms: 5.245584
+  type: 'test'
+  ...
+# Subtest: a project runtime alias cannot address SDK type facade
+ok 201 - a project runtime alias cannot address SDK type facade
+  ---
+  duration_ms: 4.119291
+  type: 'test'
+  ...
+# Subtest: a project runtime alias cannot address declaration-only file
+ok 202 - a project runtime alias cannot address declaration-only file
+  ---
+  duration_ms: 3.918208
+  type: 'test'
+  ...
+# Subtest: a reserved react type mapping cannot spoof SDK identity
+ok 203 - a reserved react type mapping cannot spoof SDK identity
+  ---
+  duration_ms: 19.971
+  type: 'test'
+  ...
+# Subtest: a physical project react import cannot bypass SDK identity
+ok 204 - a physical project react import cannot bypass SDK identity
+  ---
+  duration_ms: 42.225667
+  type: 'test'
+  ...
+# Subtest: a reserved react-native type mapping cannot spoof SDK identity
+ok 205 - a reserved react-native type mapping cannot spoof SDK identity
+  ---
+  duration_ms: 31.223916
+  type: 'test'
+  ...
+# Subtest: a physical project react-native import cannot bypass SDK identity
+ok 206 - a physical project react-native import cannot bypass SDK identity
+  ---
+  duration_ms: 72.388083
+  type: 'test'
+  ...
+# Subtest: legitimate SDK type mappings retain original React and the SDK native facade
+ok 207 - legitimate SDK type mappings retain original React and the SDK native facade
+  ---
+  duration_ms: 114.903083
+  type: 'test'
+  ...
+# Subtest: a transitive library's false nested React never creates a second React identity
+ok 208 - a transitive library's false nested React never creates a second React identity
+  ---
+  duration_ms: 52.937
+  type: 'test'
+  ...
+# Subtest: unsupported moduleSuffixes fail with a clear diagnosis: undefined
+ok 209 - unsupported moduleSuffixes fail with a clear diagnosis: undefined
+  ---
+  duration_ms: 5.29075
+  type: 'test'
+  ...
+# Subtest: unsupported moduleSuffixes fail with a clear diagnosis: [".native",".godot",""]
+ok 210 - unsupported moduleSuffixes fail with a clear diagnosis: [".native",".godot",""]
+  ---
+  duration_ms: 3.140292
+  type: 'test'
+  ...
+# Subtest: unsupported moduleSuffixes fail with a clear diagnosis: [".godot",""]
+ok 211 - unsupported moduleSuffixes fail with a clear diagnosis: [".godot",""]
+  ---
+  duration_ms: 3.134625
+  type: 'test'
+  ...
+# Subtest: unsupported moduleSuffixes fail with a clear diagnosis: [".web",""]
+ok 212 - unsupported moduleSuffixes fail with a clear diagnosis: [".web",""]
+  ---
+  duration_ms: 2.865209
+  type: 'test'
+  ...
+# Subtest: a malformed project config exposes the original TypeScript parse failure
+ok 213 - a malformed project config exposes the original TypeScript parse failure
+  ---
+  duration_ms: 6.343125
+  type: 'test'
+  ...
+# Subtest: a malformed inherited config fails before bundling
+ok 214 - a malformed inherited config fails before bundling
+  ---
+  duration_ms: 4.818125
+  type: 'test'
+  ...
+# Subtest: the config snapshot stays valid after a build and rejects changed root config bytes
+ok 215 - the config snapshot stays valid after a build and rejects changed root config bytes
+  ---
+  duration_ms: 18.805333
+  type: 'test'
+  ...
+# Subtest: the config snapshot also guards inherited configuration
+ok 216 - the config snapshot also guards inherited configuration
+  ---
+  duration_ms: 5.392041
+  type: 'test'
+  ...
+# Subtest: a named react result cannot escape the physical SDK through a symlink
+ok 217 - a named react result cannot escape the physical SDK through a symlink
+  ---
+  duration_ms: 21.321
+  type: 'test'
+  ...
+# Subtest: a named react-native result cannot escape the physical SDK through a symlink
+ok 218 - a named react-native result cannot escape the physical SDK through a symlink
+  ---
+  duration_ms: 22.981292
+  type: 'test'
+  ...
+# Subtest: a relative import between packages cannot borrow the project's declaration
+ok 219 - a relative import between packages cannot borrow the project's declaration
+  ---
+  duration_ms: 34.940666
+  type: 'test'
+  ...
+# Subtest: a relative import between packages uses its owner's declaration
+ok 220 - a relative import between packages uses its owner's declaration
+  ---
+  duration_ms: 51.226875
+  type: 'test'
+  ...
+# Subtest: application and library aliases coexist with distinct original declaration ownership
+ok 221 - application and library aliases coexist with distinct original declaration ownership
+  ---
+  duration_ms: 3255.064209
+  type: 'test'
+  ...
+# Subtest: the scoped original checker rejects treating the library's type as the application's alias
+ok 222 - the scoped original checker rejects treating the library's type as the application's alias
+  ---
+  duration_ms: 1408.203833
+  type: 'test'
+  ...
+# Subtest: an application alias cannot satisfy a missing import in an installed library declaration
+ok 223 - an application alias cannot satisfy a missing import in an installed library declaration
+  ---
+  duration_ms: 1243.179667
+  type: 'test'
+  ...
+# Subtest: application aliases coexist with private SDK runtime and declaration imports
+ok 224 - application aliases coexist with private SDK runtime and declaration imports
+  ---
+  duration_ms: 175.828125
+  type: 'test'
+  ...
+# Subtest: a project can resolve its declared \#imports map without a TS alias
+ok 225 - a project can resolve its declared \#imports map without a TS alias
+  ---
+  duration_ms: 25.318583
+  type: 'test'
+  ...
+# Subtest: an installed library can resolve its own declared \#imports map
+ok 226 - an installed library can resolve its own declared \#imports map
+  ---
+  duration_ms: 34.901292
+  type: 'test'
+  ...
+# Subtest: an undeclared project \#import fails with an ownership diagnostic
+ok 227 - an undeclared project \#import fails with an ownership diagnostic
+  ---
+  duration_ms: 14.276
+  type: 'test'
+  ...
+# Subtest: an installed library cannot borrow the application's \#imports declaration
+ok 228 - an installed library cannot borrow the application's \#imports declaration
+  ---
+  duration_ms: 27.403042
+  type: 'test'
+  ...
+# Subtest: a package \#imports external destination requires its own dependency declaration
+ok 229 - a package \#imports external destination requires its own dependency declaration
+  ---
+  duration_ms: 40.688709
+  type: 'test'
+  ...
+# Subtest: a package \#imports external destination uses its declared dependency
+ok 230 - a package \#imports external destination uses its declared dependency
+  ---
+  duration_ms: 38.300916
+  type: 'test'
+  ...
+# Subtest: a received dependency manifest must match the package bytes captured at preflight
+ok 231 - a received dependency manifest must match the package bytes captured at preflight
+  ---
+  duration_ms: 4.07975
+  type: 'test'
+  ...
+# Subtest: received declarations cannot survive removal of the project's package.json
+ok 232 - received declarations cannot survive removal of the project's package.json
+  ---
+  duration_ms: 4.66675
+  type: 'test'
+  ...
+# Subtest: the preflight snapshot rejects later changes to the root dependency manifest
+ok 233 - the preflight snapshot rejects later changes to the root dependency manifest
+  ---
+  duration_ms: 18.485125
+  type: 'test'
+  ...
+# Subtest: the snapshot guards a nested dependency manifest actually used by the bundle
+ok 234 - the snapshot guards a nested dependency manifest actually used by the bundle
+  ---
+  duration_ms: 36.938167
+  type: 'test'
+  ...
+# Subtest: the snapshot records the exact config text delivered to TypeScript during a save
+ok 235 - the snapshot records the exact config text delivered to TypeScript during a save
+  ---
+  duration_ms: 3.407916
+  type: 'test'
+  ...
+# Subtest: the snapshot records the exact inherited config text delivered to TypeScript during a save
+ok 236 - the snapshot records the exact inherited config text delivered to TypeScript during a save
+  ---
+  duration_ms: 5.429958
+  type: 'test'
+  ...
+# Subtest: the original checker and runtime retain import and require condition modes
+ok 237 - the original checker and runtime retain import and require condition modes
+  ---
+  duration_ms: 169.124291
+  type: 'test'
+  ...
+# Subtest: scoped package types retain the reserved SDK React identity beside a false nested React
+ok 238 - scoped package types retain the reserved SDK React identity beside a false nested React
+  ---
+  duration_ms: 340.612125
+  type: 'test'
+  ...
+# Subtest: effective scoped config preserves inherited JSX and strict:false while exposing strict errors
+ok 239 - effective scoped config preserves inherited JSX and strict:false while exposing strict errors
+  ---
+  duration_ms: 499.949958
+  type: 'test'
+  ...
+# Subtest: an unvalidated module profile is rejected: NodeNext/NodeNext
+ok 240 - an unvalidated module profile is rejected: NodeNext/NodeNext
+  ---
+  duration_ms: 4.188792
+  type: 'test'
+  ...
+# Subtest: an unvalidated module profile is rejected: Node16/Node16
+ok 241 - an unvalidated module profile is rejected: Node16/Node16
+  ---
+  duration_ms: 4.0045
+  type: 'test'
+  ...
+# Subtest: an unvalidated module profile is rejected: CommonJS/Bundler
+ok 242 - an unvalidated module profile is rejected: CommonJS/Bundler
+  ---
+  duration_ms: 4.55
+  type: 'test'
+  ...
+# Subtest: runtime conditions cannot activate the declaration-only types condition
+ok 243 - runtime conditions cannot activate the declaration-only types condition
+  ---
+  duration_ms: 4.629625
+  type: 'test'
+  ...
+# Subtest: a package's default runtime export cannot point to a declaration-only file
+ok 244 - a package's default runtime export cannot point to a declaration-only file
+  ---
+  duration_ms: 47.026792
+  type: 'test'
+  ...
+# Subtest: the typecheck worker accepts the builder's captured config without emitting files
+ok 245 - the typecheck worker accepts the builder's captured config without emitting files
+  ---
+  duration_ms: 131.996542
+  type: 'test'
+  ...
+# Subtest: native typechecking preserves tsconfig identity for incremental projects without emitting
+ok 246 - native typechecking preserves tsconfig identity for incremental projects without emitting
+  ---
+  duration_ms: 144.326458
+  type: 'test'
+  ...
+# Subtest: the typecheck worker rejects configuration saved after the builder's preflight
+ok 247 - the typecheck worker rejects configuration saved after the builder's preflight
+  ---
+  duration_ms: 8.849125
+  type: 'test'
+  ...
+# Subtest: publication rejects private game references, local paths and credential-shaped fixtures
+ok 248 - publication rejects private game references, local paths and credential-shaped fixtures
+  ---
+  duration_ms: 8.70575
+  type: 'test'
+  ...
+# Subtest: worktree metadata and relative upstream declaration paths are not private OS paths
+ok 249 - worktree metadata and relative upstream declaration paths are not private OS paths
+  ---
+  duration_ms: 2.143542
+  type: 'test'
+  ...
+# Subtest: encoded file URLs cannot hide private paths while public paths remain valid
+ok 250 - encoded file URLs cannot hide private paths while public paths remain valid
+  ---
+  duration_ms: 6.582166
+  type: 'test'
+  ...
+# Subtest: original control returns the pinned input byte-for-byte
+ok 251 - original control returns the pinned input byte-for-byte
+  ---
+  duration_ms: 5.878875
+  type: 'test'
+  ...
+# Subtest: pin drift rejects both correction and original-control builds
+ok 252 - pin drift rejects both correction and original-control builds
+  ---
+  duration_ms: 0.839667
+  type: 'test'
+  ...
+# Subtest: applying correction twice fails rather than silently accepting generated input
+ok 253 - applying correction twice fails rather than silently accepting generated input
+  ---
+  duration_ms: 0.180166
+  type: 'test'
+  ...
+# Subtest: unsupported modes fail visibly at overlay and toolchain entry
+ok 254 - unsupported modes fail visibly at overlay and toolchain entry
+  ---
+  duration_ms: 0.28725
+  type: 'test'
+  ...
+# Subtest: a project's matching module name retains project-owned source
+ok 255 - a project's matching module name retains project-owned source
+  ---
+  duration_ms: 75.009333
+  type: 'test'
+  ...
+# Subtest: default and original controls retain the exact pinned EventTarget bytes
+ok 256 - default and original controls retain the exact pinned EventTarget bytes
+  ---
+  duration_ms: 5.362083
+  type: 'test'
+  ...
+# Subtest: current mode only appends shared Down/Up/Move queries and preserves every original method byte
+ok 257 - current mode only appends shared Down/Up/Move queries and preserves every original method byte
+  ---
+  duration_ms: 0.933833
+  type: 'test'
+  ...
+# Subtest: unsupported modes fail before source adaptation
+ok 258 - unsupported modes fail before source adaptation
+  ---
+  duration_ms: 1.962708
+  type: 'test'
+  ...
+# Subtest: unrelated whole-source pin drift is rejected in both modes
+ok 259 - unrelated whole-source pin drift is rejected in both modes
+  ---
+  duration_ms: 0.567292
+  type: 'test'
+  ...
+# Subtest: missing or repeated original storage spans fail in both modes
+ok 260 - missing or repeated original storage spans fail in both modes
+  ---
+  duration_ms: 0.244667
+  type: 'test'
+  ...
+# Subtest: generated input cannot be reapplied or accepted as an original control
+ok 261 - generated input cannot be reapplied or accepted as an original control
+  ---
+  duration_ms: 0.771541
+  type: 'test'
+  ...
+# Subtest: invalid source values fail with the overlay input diagnostic
+ok 262 - invalid source values fail with the overlay input diagnostic
+  ---
+  duration_ms: 0.649042
+  type: 'test'
+  ...
+# Subtest: the appended query distinguishes exact pointerdown storage and both phases
+ok 263 - the appended query distinguishes exact pointerdown storage and both phases
+  ---
+  duration_ms: 1.932833
+  type: 'test'
+  ...
+# Subtest: null targets and missing or empty registration maps have no interest
+ok 264 - null targets and missing or empty registration maps have no interest
+  ---
+  duration_ms: 2.840083
+  type: 'test'
+  ...
+# Subtest: live storage updates and removed registrations are observed without caching
+ok 265 - live storage updates and removed registrations are observed without caching
+  ---
+  duration_ms: 2.003334
+  type: 'test'
+  ...
+# Subtest: query reads removed only without invoking callbacks or inspecting user listener options
+ok 266 - query reads removed only without invoking callbacks or inspecting user listener options
+  ---
+  duration_ms: 0.862125
+  type: 'test'
+  ...
+# Subtest: the plugin rejects invalid interest modes and incompatible dispatch before resolving the SDK
+ok 267 - the plugin rejects invalid interest modes and incompatible dispatch before resolving the SDK
+  ---
+  duration_ms: 0.39225
+  type: 'test'
+  ...
+# Subtest: the default SDK helper bundles without an RN query or native installer
+ok 268 - the default SDK helper bundles without an RN query or native installer
+  ---
+  duration_ms: 112.614416
+  type: 'test'
+  ...
+# Subtest: the relocated opt-in helper uses exact SDK EventTarget and flags while preserving project dependency ownership
+ok 269 - the relocated opt-in helper uses exact SDK EventTarget and flags while preserving project dependency ownership
+  ---
+  duration_ms: 4155.355333
+  type: 'test'
+  ...
+# Subtest: a project's matching helper filename remains project-owned even in current mode
+ok 270 - a project's matching helper filename remains project-owned even in current mode
+  ---
+  duration_ms: 51.21175
+  type: 'test'
+  ...
+# Subtest: the pure Up query selects only pointerup registrations in the requested phase
+ok 271 - the pure Up query selects only pointerup registrations in the requested phase
+  ---
+  duration_ms: 1.179875
+  type: 'test'
+  ...
+# Subtest: Up interest is read-only and rejects missing storage without consuming once listeners
+ok 272 - Up interest is read-only and rejects missing storage without consuming once listeners
+  ---
+  duration_ms: 0.781042
+  type: 'test'
+  ...
+# Subtest: the pure Move query selects only pointermove registrations in the requested phase
+ok 273 - the pure Move query selects only pointermove registrations in the requested phase
+  ---
+  duration_ms: 0.801416
+  type: 'test'
+  ...
+# Subtest: each hover query selects only its own type in the requested phase
+ok 274 - each hover query selects only its own type in the requested phase
+  ---
+  duration_ms: 0.6455
+  type: 'test'
+  ...
+# Subtest: Move interest is read-only and rejects missing storage without consuming once listeners
+ok 275 - Move interest is read-only and rejects missing storage without consuming once listeners
+  ---
+  duration_ms: 1.008375
+  type: 'test'
+  ...
+# Subtest: the compiled SDK installer gates installation and maps exactly Down/Up/Move bubble/capture offsets
+ok 276 - the compiled SDK installer gates installation and maps exactly Down/Up/Move bubble/capture offsets
+  ---
+  duration_ms: 111.04225
+  type: 'test'
+  ...
+# Subtest: the compiled root callback reads only the chosen original-shaped element or owner maps
+ok 277 - the compiled root callback reads only the chosen original-shaped element or owner maps
+  ---
+  duration_ms: 75.253583
+  type: 'test'
+  ...
+# Subtest: native overlay leaves the pinned downloaded input bytes unchanged and retains its MIT notice
+ok 278 - native overlay leaves the pinned downloaded input bytes unchanged and retains its MIT notice
+  ---
+  duration_ms: 23.100792
+  type: 'test'
+  ...
+# Subtest: overlay receipt identifies both original inputs and exact generated outputs
+ok 279 - overlay receipt identifies both original inputs and exact generated outputs
+  ---
+  duration_ms: 12.587542
+  type: 'test'
+  ...
+# Subtest: unknown source or header versions fail before publishing any generated files
+ok 280 - unknown source or header versions fail before publishing any generated files
+  ---
+  duration_ms: 20.972917
+  type: 'test'
+  ...
+# Subtest: input drift preserves previously generated output byte-for-byte
+ok 281 - input drift preserves previously generated output byte-for-byte
+  ---
+  duration_ms: 9.970875
+  type: 'test'
+  ...
+# Subtest: deterministic regeneration preserves mtimes and repairs altered generated output
+ok 282 - deterministic regeneration preserves mtimes and repairs altered generated output
+  ---
+  duration_ms: 12.739208
+  type: 'test'
+  ...
+# Subtest: the overlay changes native lifetime boundaries without replacing upstream capture negotiation
+ok 283 - the overlay changes native lifetime boundaries without replacing upstream capture negotiation
+  ---
+  duration_ms: 2.731209
+  type: 'test'
+  ...
+# Subtest: the generated native path query extends exactly Down, Up, Move and hover with typed bubble/capture pairs
+ok 284 - the generated native path query extends exactly Down, Up, Move and hover with typed bubble/capture pairs
+  ---
+  duration_ms: 3.191875
+  type: 'test'
+  ...
+# Subtest: a root stays in the hover path as a resolved target but never receives an event
+ok 285 - a root stays in the hover path as a resolved target but never receives an event
+  ---
+  duration_ms: 1.626417
+  type: 'test'
+  ...
+# Subtest: the binding never dispatches an event to a root, whose EventTarget has no instance handle
+ok 286 - the binding never dispatches an event to a root, whose EventTarget has no instance handle
+  ---
+  duration_ms: 0.978583
+  type: 'test'
+  ...
+# Subtest: original tag-lookup control retains the pinned renderer byte-for-byte
+ok 287 - original tag-lookup control retains the pinned renderer byte-for-byte
+  ---
+  duration_ms: 2.400583
+  type: 'test'
+  ...
+# Subtest: correction changes only one numeric lookup before the unchanged canonical and Fiber paths
+ok 288 - correction changes only one numeric lookup before the unchanged canonical and Fiber paths
+  ---
+  duration_ms: 2.6975
+  type: 'test'
+  ...
+# Subtest: the generated function delegates numeric tags while retaining object lookup identities
+ok 289 - the generated function delegates numeric tags while retaining object lookup identities
+  ---
+  duration_ms: 2.014541
+  type: 'test'
+  ...
+# Subtest: unsupported overlay modes fail before source adaptation
+ok 290 - unsupported overlay modes fail before source adaptation
+  ---
+  duration_ms: 0.267292
+  type: 'test'
+  ...
+# Subtest: unrelated pin drift is rejected in both corrected and original-control modes
+ok 291 - unrelated pin drift is rejected in both corrected and original-control modes
+  ---
+  duration_ms: 2.012916
+  type: 'test'
+  ...
+# Subtest: missing or repeated lookup spans are rejected in both modes
+ok 292 - missing or repeated lookup spans are rejected in both modes
+  ---
+  duration_ms: 2.054208
+  type: 'test'
+  ...
+# Subtest: generated renderer input cannot be adapted twice or accepted as an original control
+ok 293 - generated renderer input cannot be adapted twice or accepted as an original control
+  ---
+  duration_ms: 1.378208
+  type: 'test'
+  ...
+# Subtest: invalid source values fail with the overlay input diagnostic
+ok 294 - invalid source values fail with the overlay input diagnostic
+  ---
+  duration_ms: 0.258458
+  type: 'test'
+  ...
+# Subtest: toolchain rejects an invalid renderer tag mode before loading RN
+ok 295 - toolchain rejects an invalid renderer tag mode before loading RN
+  ---
+  duration_ms: 193.997167
+  type: 'test'
+  ...
+# Subtest: a project module matching the renderer filename remains project-owned
+ok 296 - a project module matching the renderer filename remains project-owned
+  ---
+  duration_ms: 121.506333
+  type: 'test'
+  ...
+# Subtest: experimental relocated SDK facade resolves the exact original dispatcher and NativeDOM through the shared toolchain
+ok 297 - experimental relocated SDK facade resolves the exact original dispatcher and NativeDOM through the shared toolchain
+  ---
+  duration_ms: 4174.062833
+  type: 'test'
+  ...
+# Subtest: identical unexported dispatcher and NativeDOM relative imports stay owned by an arbitrary project caller
+ok 298 - identical unexported dispatcher and NativeDOM relative imports stay owned by an arbitrary project caller
+  ---
+  duration_ms: 47.535458
+  type: 'test'
+  ...
+# Subtest: default renderer output remains the delivered tag correction without a dispatcher selection
+ok 299 - default renderer output remains the delivered tag correction without a dispatcher selection
+  ---
+  duration_ms: 1.814042
+  type: 'test'
+  ...
+# Subtest: experimental dispatch and numeric lookup compose from the single original pin
+ok 300 - experimental dispatch and numeric lookup compose from the single original pin
+  ---
+  duration_ms: 1.915667
+  type: 'test'
+  ...
+# Subtest: dispatcher mode and span drift reject every control combination
+ok 301 - dispatcher mode and span drift reject every control combination
+  ---
+  duration_ms: 6.399708
+  type: 'test'
+  ...
+# Subtest: experimental routing captures the original flag once and emits both Raw channels before one exclusive batched dispatch
+ok 302 - experimental routing captures the original flag once and emits both Raw channels before one exclusive batched dispatch
+  ---
+  duration_ms: 1.948291
+  type: 'test'
+  ...
+# Subtest: missing and disabled original flags retain exclusive legacy routing for the lifetime of the renderer
+ok 303 - missing and disabled original flags retain exclusive legacy routing for the lifetime of the renderer
+  ---
+  duration_ms: 1.481625
+  type: 'test'
+  ...
+# Subtest: experimental routing never falls back to legacy for a null target or a thrown dispatcher
+ok 304 - experimental routing never falls back to legacy for a null target or a thrown dispatcher
+  ---
+  duration_ms: 2.612541
+  type: 'test'
+  ...
+# (node:84452) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://{WORKTREE}/src/base-view-config.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to {WORKTREE}/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the manifest decides exactly twelve names, each with its audit row as recorded and its evidence
+ok 305 - the manifest decides exactly twelve names, each with its audit row as recorded and its evidence
+  ---
+  duration_ms: 11.068167
+  type: 'test'
+  ...
+# Subtest: every prop that RN declares for the seven components is classified exactly once
+ok 306 - every prop that RN declares for the seven components is classified exactly once
+  ---
+  duration_ms: 5.787834
+  type: 'test'
+  ...
+# Subtest: every ignored and refused prop has a reason, a basis and sources that exist and say what they are cited for
+ok 307 - every ignored and refused prop has a reason, a basis and sources that exist and say what they are cited for
+  ---
+  duration_ms: 122.255834
+  type: 'test'
+  ...
+# Subtest: the supported props agree with the view configs the host is given, in both directions
+ok 308 - the supported props agree with the view configs the host is given, in both directions
+  ---
+  duration_ms: 4683.637916
+  type: 'test'
+  ...
+# Subtest: the Text and Image decisions in the tables are the decisions their documents publish
+ok 309 - the Text and Image decisions in the tables are the decisions their documents publish
+  ---
+  duration_ms: 3.51175
+  type: 'test'
+  ...
+# Subtest: the manifest carries the tables of the module and nothing else of them
+ok 310 - the manifest carries the tables of the module and nothing else of them
+  ---
+  duration_ms: 10.331667
+  type: 'test'
+  ...
+# Subtest: the checker refuses by the table, on any value that is not null, and lets everything else through
+ok 311 - the checker refuses by the table, on any value that is not null, and lets everything else through
+  ---
+  duration_ms: 11.268709
+  type: 'test'
+  ...
+# Subtest: the value RN gives every refused prop by default passes, with the source of the default cited and read
+ok 312 - the value RN gives every refused prop by default passes, with the source of the default cited and read
+  ---
+  duration_ms: 52.840417
+  type: 'test'
+  ...
+# Subtest: the Pressable drops the keys RN does not declare before the host's Control, and keeps ref
+ok 313 - the Pressable drops the keys RN does not declare before the host's Control, and keeps ref
+  ---
+  duration_ms: 0.778875
+  type: 'test'
+  ...
+# Subtest: every component facade runs the check, and only the one module owns the tables
+ok 314 - every component facade runs the check, and only the one module owns the tables
+  ---
+  duration_ms: 2.037667
+  type: 'test'
+  ...
+# Subtest: the Modal wrapper keeps what RN's Modal exposes
+ok 315 - the Modal wrapper keeps what RN's Modal exposes
+  ---
+  duration_ms: 3377.720166
+  type: 'test'
+  ...
+# Subtest: the types and the tables agree: a supported prop type-checks and a refused one does not
+ok 316 - the types and the tables agree: a supported prop type-checks and a refused one does not
+  ---
+  duration_ms: 181.377208
+  type: 'test'
+  ...
+# Subtest: Platform, Dimensions, useWindowDimensions and StyleSheet have the members the manifest says
+ok 317 - Platform, Dimensions, useWindowDimensions and StyleSheet have the members the manifest says
+  ---
+  duration_ms: 1217.868292
+  type: 'test'
+  ...
+# Subtest: SVG subset preserves path syntax, SVG casing, zero and text baseline
+ok 318 - SVG subset preserves path syntax, SVG casing, zero and text baseline
+  ---
+  duration_ms: 0.619459
+  type: 'test'
+  ...
+# Subtest: Unsupported native contracts fail instead of disappearing from a chart
+ok 319 - Unsupported native contracts fail instead of disappearing from a chart
+  ---
+  duration_ms: 1.305333
+  type: 'test'
+  ...
+# Subtest: the Godot platform TextLayoutManager.h is RN's portable one plus the documented measureLines additions
+ok 320 - the Godot platform TextLayoutManager.h is RN's portable one plus the documented measureLines additions
+  ---
+  duration_ms: 0.935333
+  type: 'test'
+  ...
+# Subtest: the Godot platform TextLayoutManager.cpp is RN's portable one plus the documented measureLines additions
+ok 321 - the Godot platform TextLayoutManager.cpp is RN's portable one plus the documented measureLines additions
+  ---
+  duration_ms: 0.376958
+  type: 'test'
+  ...
+# Subtest: any other difference from the pinned manager fails and says to update the copy
+ok 322 - any other difference from the pinned manager fails and says to update the copy
+  ---
+  duration_ms: 1.988958
+  type: 'test'
+  ...
+# Subtest: the declaration still matches what RN calls: supportsLineMeasurement, layout and baseline
+ok 323 - the declaration still matches what RN calls: supportsLineMeasurement, layout and baseline
+  ---
+  duration_ms: 1.88375
+  type: 'test'
+  ...
+# Subtest: a relocated consumer builds with its copied native checker and preserves its bundle on failures
+    # Subtest: the relocated public RN entry accepts the supported Modal and SafeAreaView contract
+    ok 1 - the relocated public RN entry accepts the supported Modal and SafeAreaView contract
+      ---
+      duration_ms: 0.584583
+      type: 'test'
+      ...
+    # Subtest: the relocated public RN entry rejects unsupported Modal props
+    ok 2 - the relocated public RN entry rejects unsupported Modal props
+      ---
+      duration_ms: 1143.555042
+      type: 'test'
+      ...
+    # Subtest: semantic errors retain native TS diagnostics and the valid bundle
+    ok 3 - semantic errors retain native TS diagnostics and the valid bundle
+      ---
+      duration_ms: 1104.773209
+      type: 'test'
+      ...
+    # Subtest: syntax errors block publication
+    ok 4 - syntax errors block publication
+      ---
+      duration_ms: 1217.562459
+      type: 'test'
+      ...
+    # Subtest: missing manifest identity cannot bypass compiler binding
+    ok 5 - missing manifest identity cannot bypass compiler binding
+      ---
+      duration_ms: 414.3125
+      type: 'test'
+      ...
+    # Subtest: mismatched compiler bytes cannot bypass manifest binding
+    ok 6 - mismatched compiler bytes cannot bypass manifest binding
+      ---
+      duration_ms: 433.131833
+      type: 'test'
+      ...
+    # Subtest: a missing copied executable fails without a global fallback
+    ok 7 - a missing copied executable fails without a global fallback
+      ---
+      duration_ms: 362.026167
+      type: 'test'
+      ...
+    # Subtest: the same inputs still produce the same bundle after recovery
+    ok 8 - the same inputs still produce the same bundle after recovery
+      ---
+      duration_ms: 5431.031958
+      type: 'test'
+      ...
+    1..8
+ok 324 - a relocated consumer builds with its copied native checker and preserves its bundle on failures
+  ---
+  duration_ms: 30259.896292
+  type: 'test'
+  ...
+# Subtest: compilador original emite família, peso, leading e alinhamento
+ok 325 - compilador original emite família, peso, leading e alinhamento
+  ---
+  duration_ms: 0.655917
+  type: 'test'
+  ...
+# Subtest: fontes variáveis e licenças correspondem aos assets oficiais fixados
+ok 326 - fontes variáveis e licenças correspondem aos assets oficiais fixados
+  ---
+  duration_ms: 3.877292
+  type: 'test'
+  ...
+1..326
+# tests 346
+# suites 0
+# pass 345
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 85189.120666
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 0.024s
+
+OK

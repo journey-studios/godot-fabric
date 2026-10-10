@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
-import {growthOfHalves, nearestRank, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
+import {growthOfHalves, nearestRank, quartiles, round, summary, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
 import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE_NODES, PANELS, REST_FRAMES, ROUNDS, SHAPES,
   STABLE_FRAMES, TAB, TOUR, WARMUP_ROUNDS} from "./frontier-baseline-cases.mjs";
 
@@ -20,8 +20,6 @@ import {BASE_NATIVE_NODES, GRAPHICS_RUNS, GRAPHICS_VIEWPORT, IDLE_FRAMES, NATIVE
 // they depend on the pace of the machine (docs/research/frontier-baseline.md).
 const EPSILON = 1e-9;
 const stats = values => ({...summary(values), p99: nearestRank(values, 99)});
-const quartiles = values => ({median: nearestRank(values, 50), q1: nearestRank(values, 25), q3: nearestRank(values, 75),
-  iqr: nearestRank(values, 75) - nearestRank(values, 25), min: Math.min(...values), max: Math.max(...values)});
 const heapOf = reading => reading.performance.hermes.heap.hermes_allocatedBytes;
 const sum = values => values.reduce((total, value) => total + value, 0);
 
@@ -270,30 +268,92 @@ export function verifyGraphicsRun(run) {
   assert.ok(run.idle.intervalsUsec.every(value => Number.isInteger(value) && value > 0), "and each was timed");
   assert.ok(run.checks.length > 0 && run.checks.every(check => check.passed), "Every check of the run passed");
   assert.equal(new Set(run.checks.map(check => check.name)).size, run.checks.length);
+  if (run.presence !== undefined) {
+    verifyPresence(run.presence, `run ${run.run}`);
+  }
+}
+
+// The record of the window's presence that a windowed run carries (tests/window-presence.gd): whether the engine could draw the window, frame by frame.
+// The runs recorded before it have none, and nothing here asks for it. What is judged is its structure and that it adds up; whether the window could draw
+// does not make a run valid or invalid (graphicsRunValidity judges that the window drew, as it always has).
+export function verifyPresence(presence, label) {
+  assert.equal(presence.windowed, true, `${label}: the presence record is of a window`);
+  assert.equal(typeof presence.opened.alwaysOnTop, "boolean", `${label}: the record says whether the window was put above the others`);
+  assert.equal(typeof presence.opened.canDraw, "boolean", `${label}: and whether the engine could draw it when the lane began`);
+  assert.equal(typeof presence.canDrawAtEnd, "boolean", `${label}: and whether it could when the lane ended`);
+  assert.ok(Number.isInteger(presence.sampledFrames) && presence.sampledFrames > 0, `${label}: the window was sampled`);
+  assert.ok(Number.isInteger(presence.undrawableFrames) && presence.undrawableFrames >= 0 && presence.undrawableFrames <= presence.sampledFrames,
+    `${label}: the frames the engine could not draw are a count of the sampled ones`);
+  assert.ok(Number.isInteger(presence.spanCount) && presence.spanCount <= presence.undrawableFrames && (presence.spanCount > 0) === (presence.undrawableFrames > 0),
+    `${label}: and they come in spans`);
+  assert.ok(Array.isArray(presence.spans) && presence.spans.length <= presence.spanCount, `${label}: of which the record keeps the first ones`);
+  for (const span of presence.spans) {
+    assert.ok(span.length === 4 && span.every(Number.isInteger) && span[1] > 0 && span[3] >= span[2], `${label}: a span is [first frame, frames, first microsecond, last microsecond]`);
+  }
+  const listed = presence.spans.reduce((total, span) => total + span[1], 0);
+  assert.ok(presence.spans.length < presence.spanCount ? listed < presence.undrawableFrames : listed === presence.undrawableFrames,
+    `${label}: the spans add up to the frames the engine could not draw`);
+}
+
+// The idle reference of the windowed lane: the median of the half-sums of consecutive pairs of the idle intervals x[0..n-1], that is the median
+// of (x[i] + x[i+1]) / 2 for i from 0 to n - 2, nearest rank. With the vsync on at 120 Hz the intervals of a presented window come in two groups
+// that alternate (about 300 under 4.17 ms and about 300 of 12 ms or more: docs/research/frame-clock.md), so the median of the intervals falls in one
+// group or the other by a few samples (a presented attempt had 4.136 ms, 0.031 ms under the threshold), while two neighbours add up to about one
+// refresh period and every pair's half-sum is about 8.33 ms. In a loop that nothing paces a half-sum is about 0.6 ms, and a single stall moves only
+// two of them, which the mean would not survive. Adopted on 2026-10-09 (docs/research/frontier-baseline.md, "The idle reference"); the receipts
+// recorded before it were judged by the median and are not judged again (see verifyGraphicsReceipt). Fewer than two intervals have no reference (0).
+export function idleReference(intervals) {
+  return nearestRank(intervals.slice(1).map((value, index) => (intervals[index] + value) / 2), 50);
 }
 
 // A window that the system does not present is not a measurement of a displayed application, in two ways, and a run has to survive both:
 //  - the window does not draw (covered by other windows, or the display asleep): a frame has to have been drawn after every click of the
 //    steady rounds and in at least nine of ten frames of the idle window;
 //  - the window draws but no display paces the loop (the display off or showing the lock screen: the vsync mode still reads back enabled
-//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the median interval of the idle window has to be at
-//    least half of the refresh period that the window read back. A presented window at 120 Hz idles at about 7.8 ms and an unpaced one at about
-//    0.5 ms, against a threshold of 4.17 ms.
+//    and frame_post_draw still fires, but a frame takes a fraction of the refresh period): the idle reference (the median of the half-sums of
+//    consecutive pairs of the idle intervals, see idleReference) has to be at least half of the refresh period that the window read back. A
+//    presented window at 120 Hz has a reference of about 8.3 ms and an unpaced one of about 0.6 ms, against a threshold of 4.17 ms.
+// The median of the idle intervals is still recorded (idleMedianMs), as a record and not as the judge; minimumIdleMedianMs is kept, with the value
+// of minimumIdleReferenceMs, for the receipts and the tests that already read it.
 // An invalid run is kept in the receipt, with its reason and its raw intervals, and repeated; no statistic of it is ever reported as a frame time.
+// The rule does not read the window's presence (tests/window-presence.gd): a run that did not draw is refused whatever the engine said of the window. The
+// count of the frames in which the engine could not draw it (undrawableFrames, of sampledFrames) is recorded with the validity, and the reason of an undrawn
+// refusal says what the engine said of the window (undrawnReason).
 export const UNPACED = "unpaced: the display is not presenting";
 const UNDRAWN = "undrawn: the window did not draw throughout";
+
+// What the engine said of the window in a run that did not draw: the frames in which it could not draw it (window_can_draw() was false, which on macOS is the
+// system saying the window is occluded: docs/research/windowed-presence.md), or that it never said so. The count is stated and no cause is: the engine does not
+// draw in the frames where the flag is false, but whether those frames are the ones that were not drawn is read from the spans, and a run in which the flag was
+// never false is left open, with nothing said of why it was not drawn. A run recorded before the presence has no such count and its reason is the plain one.
+// The reason explains the refusal and never decides it.
+export function undrawnReason(presence) {
+  if (presence === undefined || presence === null) {
+    return UNDRAWN;
+  }
+  if (presence.undrawableFrames > 0) {
+    const spans = `${presence.spanCount} span${presence.spanCount === 1 ? "" : "s"}`;
+    return `${UNDRAWN} (window_can_draw() was false in ${presence.undrawableFrames} of ${presence.sampledFrames} sampled frames, in ${spans}: the engine does not draw in those frames, `
+      + "and whether they account for the missing draws is read from the spans)";
+  }
+  return `${UNDRAWN} (window_can_draw() was never false in the ${presence.sampledFrames} sampled frames: the engine believed it could draw, and the cause is open)`;
+}
+
 export function graphicsRunValidity(run) {
   const undrawnSwaps = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS && swap.drawUsec === null).length;
   const drew = undrawnSwaps === 0 && run.idle.draws >= 0.9 * run.idle.frames;
   const idle = run.idle.intervalsUsec.map(value => value / 1000);
   const idleMedianMs = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
   const periodMs = run.provenance.refreshRate > 0 ? 1000 / run.provenance.refreshRate : null;
-  const minimumIdleMedianMs = periodMs === null ? null : periodMs / 2;
-  const paced = minimumIdleMedianMs !== null && idleMedianMs >= minimumIdleMedianMs;
-  return {valid: drew && paced, drew, paced, reason: !drew ? UNDRAWN : !paced ? UNPACED : null, undrawnSwaps, idleDraws: run.idle.draws,
-    idleFrames: run.idle.frames, processFrames: run.frames.processed, drawnFrames: run.frames.drawn, idleMedianMs: round(idleMedianMs, 3),
-    idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
-    minimumIdleMedianMs: minimumIdleMedianMs === null ? null : round(minimumIdleMedianMs, 3)};
+  const minimumIdleReferenceMs = periodMs === null ? null : periodMs / 2;
+  const paced = minimumIdleReferenceMs !== null && idleReferenceMs >= minimumIdleReferenceMs;
+  return {valid: drew && paced, drew, paced, reason: !drew ? undrawnReason(run.presence) : !paced ? UNPACED : null, undrawnSwaps, idleDraws: run.idle.draws,
+    idleFrames: run.idle.frames, processFrames: run.frames.processed, drawnFrames: run.frames.drawn,
+    undrawableFrames: run.presence?.undrawableFrames ?? null, sampledFrames: run.presence?.sampledFrames ?? null, idleMedianMs: round(idleMedianMs, 3),
+    idleReferenceMs: round(idleReferenceMs, 3), idleMeanMs: round(sum(idle) / idle.length, 3), refreshPeriodMs: periodMs === null ? null : round(periodMs, 3),
+    minimumIdleMedianMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3),
+    minimumIdleReferenceMs: minimumIdleReferenceMs === null ? null : round(minimumIdleReferenceMs, 3)};
 }
 
 // The receipt of the windowed lane (scripts/frontier-baseline-graphics.mjs), judged from what it carries: an accepted run that no display paced
@@ -302,19 +362,56 @@ export function verifyGraphicsReceipt(receipt) {
   assert.equal(typeof receipt.presented, "boolean", "The receipt says whether the lane was presented");
   const period = receipt.provenance.refreshRate > 0 ? 1000 / receipt.provenance.refreshRate : null;
   assert.ok(period !== null, "The receipt carries the refresh rate that the window read back");
+  // A receipt is judged by the rule it was written under. The attempts of one written since 2026-10-09 carry idleReferenceMs, and its accepted runs
+  // are judged by the idle reference; the ones recorded before (the pinned receipts, which are not regenerated) have none and were judged by the median
+  // of the idle intervals, so they are judged by it again and nothing already recorded is reclassified.
+  const byReference = receipt.attempts.some(attempt => attempt.idleReferenceMs !== undefined);
   for (const raw of receipt.raw) {
-    const idleMedian = nearestRank(raw.idleIntervalsUsec.map(value => value / 1000), 50);
-    assert.ok(idleMedian >= period / 2,
-      `Run ${raw.run} is accepted but unpaced: its idle frame median is ${round(idleMedian, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
+    const idle = raw.idleIntervalsUsec.map(value => value / 1000);
+    const [statistic, name] = byReference ? [idleReference(idle), "idle reference (the median of the half-sums of consecutive pairs)"] : [nearestRank(idle, 50), "idle frame median"];
+    assert.ok(statistic >= period / 2,
+      `Run ${raw.run} is accepted but unpaced: its ${name} is ${round(statistic, 3)} ms, under half of the refresh period (${round(period / 2, 3)} ms)`);
   }
   for (const attempt of receipt.rejectedAttempts) {
     assert.ok(typeof attempt.reason === "string" && attempt.reason.length > 0, "A rejected attempt says why");
     assert.ok(attempt.raw != null && attempt.raw.idleIntervalsUsec.length > 0, "and keeps its raw intervals");
   }
+  // The window's presence is newer than the receipts: the attempts and runs recorded before it have none, and are judged as they always were. When an attempt
+  // carries the count of the frames the engine could not draw, it is a count of the frames sampled, it is the count of the presence of its own raw run (the
+  // accepted run in `raw` or the rejected attempt's `raw`, by the attempt's number), and a refusal for not drawing says what the engine said.
+  const rawOfAttempt = attempt => receipt.rejectedAttempts.find(rejected => rejected.attempt === attempt.attempt)?.raw ?? receipt.raw.find(raw => raw.attempt === attempt.attempt);
+  for (const attempt of receipt.attempts) {
+    if (attempt.undrawableFrames === undefined || attempt.undrawableFrames === null) {
+      continue;
+    }
+    assert.ok(Number.isInteger(attempt.undrawableFrames) && attempt.undrawableFrames >= 0 && attempt.undrawableFrames <= attempt.sampledFrames,
+      `Attempt ${attempt.attempt}: the frames the engine could not draw are a count of the sampled ones`);
+    const presence = rawOfAttempt(attempt)?.presence;
+    assert.ok(presence !== undefined && presence !== null, `Attempt ${attempt.attempt} carries a count of the frames the engine could not draw and its raw run holds no presence`);
+    assert.equal(attempt.undrawableFrames, presence.undrawableFrames,
+      `Attempt ${attempt.attempt} says ${attempt.undrawableFrames} frames the engine could not draw and its raw run says ${presence.undrawableFrames}`);
+    assert.equal(attempt.sampledFrames, presence.sampledFrames,
+      `Attempt ${attempt.attempt} says ${attempt.sampledFrames} sampled frames and its raw run says ${presence.sampledFrames}`);
+    if (attempt.valid === false && typeof attempt.reason === "string" && attempt.reason.startsWith("undrawn")) {
+      assert.match(attempt.reason, /window_can_draw\(\)/, `Attempt ${attempt.attempt} was refused for not drawing and its reason says what the engine said of the window`);
+    }
+  }
+  for (const raw of [...receipt.raw, ...receipt.rejectedAttempts.map(attempt => attempt.raw)]) {
+    if (raw.presence !== undefined && raw.presence !== null) {
+      verifyPresence(raw.presence, `Run ${raw.run}, attempt ${raw.attempt}`);
+    }
+  }
   assert.equal(receipt.attempts.length, receipt.raw.length + receipt.rejectedAttempts.length, "Every attempt is accepted or rejected");
   if (receipt.presented) {
     assert.equal(receipt.raw.length, GRAPHICS_RUNS, "A presented lane has all its runs");
     assert.ok(receipt.summary != null && receipt.summary.runs.length === GRAPHICS_RUNS, "and their statistics");
+    // The count above twice the idle reference is newer than the receipts: when a run carries it, it is a count of the window's samples.
+    for (const run of receipt.summary.runs) {
+      for (const frames of [run.idleFrameMs, run.swapFrameMs]) {
+        assert.ok(frames.aboveTwiceIdleReference === undefined || (Number.isInteger(frames.aboveTwiceIdleReference) && frames.aboveTwiceIdleReference >= 0
+          && frames.aboveTwiceIdleReference <= frames.samples), `Run ${run.run}: the frames above twice the idle reference are a count of its samples`);
+      }
+    }
     assert.equal(receipt.status, "presented");
   } else {
     assert.equal(receipt.summary, null, "A lane that was not presented reports no frame-time statistic");
@@ -323,18 +420,24 @@ export function verifyGraphicsReceipt(receipt) {
 }
 
 // The statistics of one run, from its raw intervals: the idle window and the frames that took a click, with the frames above twice the idle
-// median and above 100 ms (the counts the final comparison V05-10 asks for). No "missed frame" is read from them: on a display with the vsync on
-// the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at 120 Hz), so an interval longer than the
-// refresh period is not an image the display showed twice.
+// median (aboveTwiceIdleMedian, as it has always been counted), the frames above twice the idle reference (aboveTwiceIdleReference: the count that
+// the amended protocol of the final comparison V05-10 uses) and the frames above 100 ms. The count by the median depends on the group the median
+// falls in (242 of the 360 clicks of a presented run of the turn were "above twice the idle median" only because the median was in the low group),
+// the count by the reference does not. scripts/frontier-baseline-graphics.mjs and scripts/frontier-turn-graphics.mjs both print the two counts, the one by the
+// median and the one by the reference. No "missed frame" is
+// read from them: on a display with the vsync on the process frames come in clusters (docs/research/frame-clock.md, about 3 ms and 13 ms apart at
+// 120 Hz), so an interval longer than the refresh period is not an image the display showed twice.
 function summarizeGraphicsRun(run) {
   const steady = run.swaps.filter(swap => swap.round >= WARMUP_ROUNDS);
   const toMs = values => values.map(value => value / 1000);
   const idle = toMs(run.idle.intervalsUsec);
   const swapFrames = toMs(steady.map(swap => swap.frameUsec[0]));
   const idleMedian = nearestRank(idle, 50);
+  const idleReferenceMs = idleReference(idle);
   const frame = values => ({samples: values.length, p50: round(nearestRank(values, 50), 3), p95: round(nearestRank(values, 95), 3),
     p99: round(nearestRank(values, 99), 3), max: round(Math.max(...values), 3),
-    aboveTwiceIdleMedian: values.filter(value => value > 2 * idleMedian).length, above100ms: values.filter(value => value > 100).length});
+    aboveTwiceIdleMedian: values.filter(value => value > 2 * idleMedian).length,
+    aboveTwiceIdleReference: values.filter(value => value > 2 * idleReferenceMs).length, above100ms: values.filter(value => value > 100).length});
   const byCreated = {};
   for (const swap of steady) {
     (byCreated[run.config.nativeNodes[swap.to]] ??= []).push(swap.frameUsec[0] / 1000);
@@ -357,11 +460,11 @@ export function summarizeGraphicsRuns(runs) {
   assert.equal(runs.length, GRAPHICS_RUNS, "The execution has its runs");
   for (const run of runs) {
     const validity = graphicsRunValidity(run);
-    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle median ${validity.idleMedianMs} ms, at least ${validity.minimumIdleMedianMs} ms wanted)`);
+    assert.ok(validity.valid, `and the display presented the window throughout every one: run ${run.run} is ${validity.reason} (idle reference ${validity.idleReferenceMs} ms, at least ${validity.minimumIdleReferenceMs} ms wanted; idle median ${validity.idleMedianMs} ms, recorded)`);
   }
   const summaries = runs.map(summarizeGraphicsRun);
   const across = pick => quartiles(summaries.map(pick));
-  const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "above100ms"].map(key => [key, across(summary => summary[name][key])]));
+  const frame = name => Object.fromEntries(["p50", "p95", "p99", "max", "aboveTwiceIdleMedian", "aboveTwiceIdleReference", "above100ms"].map(key => [key, across(summary => summary[name][key])]));
   return {runs: summaries, across: {idleFrameMs: frame("idleFrameMs"), swapFrameMs: frame("swapFrameMs"),
     injectionMsP50: across(summary => summary.injectionMs.p50), clickToNodesMsP50: across(summary => summary.clickToNodesMs.p50),
     clickToDrawMsP50: summaries.every(summary => summary.clickToDrawMs !== null) ? across(summary => summary.clickToDrawMs.p50) : null,

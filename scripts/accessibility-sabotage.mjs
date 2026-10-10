@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/accessibility-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the accessibility slice: each breaks one decision of the host on purpose, runs the
@@ -21,19 +22,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "name", argument: "--sabotage=name", hostDirectory: "build/accessibility-sabotage-name-host",
-    file: "native/accessible_view.cpp", find: '  set("accessibility_name", gd(descriptor_.name));',
-    replace: '  set("accessibility_name", gd(std::string()));'},
-  {name: "click", argument: "--sabotage=click", hostDirectory: "build/accessibility-sabotage-click-host",
-    file: "native/accessible_view.cpp", find: "  ++requests_;\n", replace: "  ++requests_;\n  return;\n"},
-  {name: "roles", argument: "--sabotage=roles", hostDirectory: "build/accessibility-sabotage-roles-host",
-    file: "native/accessibility_core.h", find: 'detail::supported("button", true, true, "ROLE_BUTTON", {}, Activatable | Expandable),',
-    replace: 'detail::supported("button", true, true, "ROLE_LINK", {}, Activatable | Expandable),'},
-  {name: "hidden", argument: "--sabotage=hidden", hostDirectory: "build/accessibility-sabotage-hidden-host",
-    file: "native/accessibility_core.h", find: "  descriptor.hidden = input.elements_hidden || input.important == Important::NoHideDescendants;",
-    replace: "  descriptor.hidden = false;"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];
