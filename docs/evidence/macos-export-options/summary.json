@@ -1,0 +1,110 @@
+{
+  "format": "godot-fabric.macos-export-options/v1",
+  "startedAt": "2026-10-10T19:16:33.440Z",
+  "templateSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+  "exportFilter": "scenes",
+  "exportFiles": [
+    "res://main_bare.tscn"
+  ],
+  "includeFilter": "game/*.gd, services/*.gd",
+  "sceneOnly": {
+    "fileCount": 11,
+    "pckSHA256": "9749053f043c8a1f1a7616da0c8496c614d02758f7810caffcce2a2729c8ef1f",
+    "paths": [
+      ".godot/exported/133200997/export-2e39bfcb78f48d24f065899919b8e4c4-main_bare.scn",
+      ".godot/exported/133200997/export-47749b605ed9c7a5a39a491f936b1e42-world.scn",
+      ".godot/global_script_class_cache.cfg",
+      ".godot/uid_cache.bin",
+      "main_bare.tscn.remap",
+      "project.binary",
+      "services/game_services.gd.remap",
+      "services/game_services.gdc",
+      "world/world.gd.remap",
+      "world/world.gdc",
+      "world/world.tscn.remap"
+    ]
+  },
+  "armA": {
+    "app": {
+      "sha256": "a8c8d34ab49b627c8caedf4bd9f2ccec3e7d3011dad868bc548688cec3d3594b"
+    },
+    "executable": {
+      "sha256": "e8f353a8e1f0cc796cd40272f8ed21c9a1669e8b7d8763655882a79516f1ec8c"
+    },
+    "pck": {
+      "sha256": "be199ac73ebd21a6c42d25970a6401a3233a4c5aa1ce115dcc9aa1d01610451b",
+      "fileCount": 37
+    },
+    "presetSha256": "5d94ea1c80def8d2983e5b96e281bf2018831bf3e561bf525cc3eb7e78dfd7bf",
+    "templateMemberSha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "engineVersion": "4.7.2.stable.official.ed1daf0bf",
+    "bundleIdentifier": "org.journeystudios.godotfabric.exportoptions",
+    "appEntries": [
+      "Contents",
+      "Contents/Frameworks",
+      "Contents/Info.plist",
+      "Contents/MacOS",
+      "Contents/MacOS/Frontier",
+      "Contents/PkgInfo",
+      "Contents/Resources",
+      "Contents/Resources/Frontier.pck",
+      "Contents/Resources/PrivacyInfo.xcprivacy",
+      "Contents/Resources/icon.icns",
+      "Contents/_CodeSignature",
+      "Contents/_CodeSignature/CodeResources"
+    ],
+    "paths": [
+      ".godot/exported/133200997/export-2e39bfcb78f48d24f065899919b8e4c4-main_bare.scn",
+      ".godot/exported/133200997/export-47749b605ed9c7a5a39a491f936b1e42-world.scn",
+      ".godot/global_script_class_cache.cfg",
+      ".godot/uid_cache.bin",
+      "game/canon.gd.remap",
+      "game/canon.gdc",
+      "game/context.gd.remap",
+      "game/context.gdc",
+      "game/economy.gd.remap",
+      "game/economy.gdc",
+      "game/game.gd.remap",
+      "game/game.gdc",
+      "game/intents.gd.remap",
+      "game/intents.gdc",
+      "game/prng.gd.remap",
+      "game/prng.gdc",
+      "game/replay.gd.remap",
+      "game/replay.gdc",
+      "game/rules.gd.remap",
+      "game/rules.gdc",
+      "game/snapshot.gd.remap",
+      "game/snapshot.gdc",
+      "game/turn.gd.remap",
+      "game/turn.gdc",
+      "game/world.gd.remap",
+      "game/world.gdc",
+      "main_bare.tscn.remap",
+      "project.binary",
+      "services/game_services.gd.remap",
+      "services/game_services.gdc",
+      "services/schema.gd.remap",
+      "services/schema.gdc",
+      "services/stress.gd.remap",
+      "services/stress.gdc",
+      "world/world.gd.remap",
+      "world/world.gdc",
+      "world/world.tscn.remap"
+    ],
+    "payloadCheck": {
+      "description": "without the Fabric extension (frameworks: false)",
+      "hosts": [],
+      "frameworks": [],
+      "bundle": null,
+      "pckAddonEntries": 0
+    },
+    "signature": "ad-hoc, codesign --verify --deep --strict"
+  },
+  "negativeControl": {
+    "project": "arm C: the product with the addon, built by the editor",
+    "refused": true,
+    "message": "the exported .app does not hold exactly its payload (without the Fabric extension (frameworks: false)): Contents/Frameworks holds [frameworks], not the payload's []; Contents/Frameworks/frameworks holds [ReactNativeDependencies.framework, hermesvm.framework], not the payload's []"
+  },
+  "completedAt": "2026-10-10T19:17:37.704Z"
+}
