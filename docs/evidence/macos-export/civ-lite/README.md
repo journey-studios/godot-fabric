@@ -27,6 +27,12 @@ Tudo foi executado na árvore limpa do commit `5da4e7729b71e427e4dfd80a612bf0d5a
 | `npm run test:export:macos` | 14 de 14 passam, 0 pulados: o lane do minimal (40/43 checks, três capturas, sete controles rejeitados) com o runner generalizado |
 | `node scripts/macos-export-civ-lite-sabotage.mjs` | `MACOS_EXPORT_CIVLITE_SABOTAGE_REJECTED: game-seed` |
 
+**O primeiro run hospedado.** O run de Contracts disparado na branch (38068936447) passou o export, as seis execuções do replay e a matriz da HUD, e falhou depois, na auditoria do app publicado:
+a varredura por caminhos da máquina de build deixava de excluir os dois binários dos frameworks, porque a lista de binários nomeava os links de topo de cada framework e a varredura percorre os arquivos
+reais em `Versions/`. No runner os frameworks são construídos no workspace e carregam o caminho dele; no Mac do desenvolvedor não carregam, e a auditoria passava por acaso. A execução deste registro, em
+`5da4e77`, continua valendo como evidência daquele commit e não foi alterada. A correção (a exclusão pelo caminho real de cada binário, com a conferência de que os quatro foram achados na varredura)
+está no commit seguinte, e os recibos da CI hospedada vêm depois do merge.
+
 ## Capturas
 
 Três quadros do replay tocando no `.app` Release, o `Frontier.app` cujo SHA-256 (`21c248a6…`) está em `report.json` e que foi conferido de novo, igual, depois da captura. Foram gravados

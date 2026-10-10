@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {spawnSync} from "node:child_process";
-import {mkdir, readFile, readdir, rm, stat, writeFile} from "node:fs/promises";
+import {mkdir, readFile, readdir, realpath, rm, stat, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
@@ -78,10 +78,16 @@ async function auditPublishedApp(app, receipt) {
     loads.push({binary: path.relative(app, binary), loads: listed, rpaths});
   }
   // No other file of the bundle (the PCK, the Info.plist, the resources) may name the checkout or the home directory it was built in. The four binaries are audited by their
-  // load commands above: the native host and the two frameworks are compiled here and carry the source paths of their own build as strings, which load nothing.
+  // load commands above: the native host and the two frameworks are compiled here and carry the source paths of their own build as strings, which load nothing. The walk
+  // yields real files, while a framework's top-level entry is a symlink to one under Versions/, so the binaries are excluded by the real path of each, and every one of them
+  // must be found in the walk: a layout that moved one would otherwise leave it in the scan, or out of it, without anyone noticing.
   const needles = [root, os.homedir()].map(value => Buffer.from(value));
+  const audited = new Set(await Promise.all(binaries.map(binary => realpath(binary))));
+  const walked = await Promise.all((await filesUnder(contents)).map(async filename => ({filename, real: await realpath(filename)})));
+  const walkedReal = new Set(walked.map(entry => entry.real));
+  assert.deepEqual([...audited].filter(real => !walkedReal.has(real)), [], "every audited binary was found, by its real path, in the walk of the bundle");
   const named = [];
-  for (const filename of (await filesUnder(contents)).filter(each => !binaries.includes(each))) {
+  for (const {filename} of walked.filter(entry => !audited.has(entry.real))) {
     const bytes = await readFile(filename);
     if (needles.some(needle => bytes.includes(needle))) {
       named.push(path.relative(app, filename));
