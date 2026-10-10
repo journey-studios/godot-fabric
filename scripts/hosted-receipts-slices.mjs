@@ -419,4 +419,30 @@ export const SLICES = [
     contractTests: [],
     activity: "milestone-0-5-p2-symlink-parent-6c2169a",
   },
+  // The comparative scenario as the measurement project's main loop (#133, squash 81eaa0a): no native step and its contract test file; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-entry",
+    pr: 133,
+    squash: "81eaa0a",
+    contractsRun: 38067297038,
+    pagesRun: 38067297023,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-run.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-entry-bb30d75",
+  },
+  // The comparison's report as a Markdown document (#132, squash 01118ad): no native step and its contract test file; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-analysis/report-markdown",
+    pr: 132,
+    squash: "01118ad",
+    contractsRun: 38068135735,
+    pagesRun: 38068135660,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-report-markdown.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-report-markdown-e53a05f",
+  },
 ];

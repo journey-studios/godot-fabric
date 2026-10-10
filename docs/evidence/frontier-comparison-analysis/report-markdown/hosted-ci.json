@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-analysis/report-markdown",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T16:41:07.081Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38068135735,
+    "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/132",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T16:33:18Z",
+    "updatedAt": "2026-10-10T16:39:46Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114259871742,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "startedAt": "2026-10-10T16:33:21Z",
+        "completedAt": "2026-10-10T16:36:53Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259871742"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114259872765,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259872765"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114259872811,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259872811"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114259872941,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259872941"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114259872856,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259872856"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114261126357,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114261126357"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114259871872,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "startedAt": "2026-10-10T16:33:21Z",
+        "completedAt": "2026-10-10T16:39:45Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259871872"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114259871879,
+        "runAttempt": 1,
+        "headSha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+        "startedAt": "2026-10-10T16:33:26Z",
+        "completedAt": "2026-10-10T16:39:07Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38068135735/job/114259871879"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+      "reference-android": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+      "reference-ios": "01118ad06f0813749d872aa5e609ace2ada80e7c"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:33:41Z",
+          "completedAt": "2026-10-10T16:33:41Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 81eaa0a17a12 (--base 81eaa0a17a126a561f0ec8bd50bacea5beefc012); X9 clean, X10 clean"
+          ],
+          "base": "81eaa0a17a126a561f0ec8bd50bacea5beefc012"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:33:41Z",
+          "completedAt": "2026-10-10T16:36:49Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 646,
+              "suites": 0,
+              "pass": 645,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:36:49Z",
+          "completedAt": "2026-10-10T16:36:49Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:36:49Z",
+          "completedAt": "2026-10-10T16:36:50Z",
+          "passed": true,
+          "files": 2344
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-report-markdown.test.mjs",
+          "tests": 17,
+          "passed": 17,
+          "topLevel": [
+            "the example renders byte for byte as the command line prints it and as the file of the evidence record, and its sections are the protocol's, in order",
+            "the same report gives the same bytes, and rendering changes nothing in it",
+            "the example shows what each section holds: the provenance, the validity of the redone slot, the verdicts of the four windows, the axes, the budgets and the words of the campaign",
+            "a partial report compares A and C, claims no gain and says why the sections that need B are not available",
+            "an incomplete report says which arm is short and leaves the statistical sections as one line with the reason",
+            "a stopped campaign lists why it stopped and every attempt of the slot that used its attempts up",
+            "an attempt that wrote no report is marked in the validity of the synthetic --unreported campaign, analysed and rendered by the commands",
+            "a JSON that is not a report of this format, or whose sections are not the protocol's in its order, is refused with the reason",
+            "a report is rendered only under the protocol it was made with: another hash is refused, and the ids and the order of the sections are the protocol's",
+            "the command line refuses a file that is not a report, a file that is not JSON, a missing file and wrong arguments, and writes nothing",
+            "the command line reads the protocol file (docs/research/frontier-comparison-protocol.json by default, or --protocol), hashes its bytes and refuses a report made under another",
+            "a | inside a table is escaped and a text enters as it is, quoted line by line, so that it can open no heading or list of the document",
+            "the numbers follow one rule: at most three decimals, no trailing zeros, integers as integers, no locale, and a non-zero number that rounds to 0 shows three significant digits, never exponential",
+            "every median and interquartile range of the primary tables is the JSON's, formatted by the rule, and no number of the document is one the JSON lacks",
+            "a field the renderer does not know is not dropped: it goes to an Other fields block at the end of its section, and the example has none",
+            "a command with a run of backticks stays inside its fence: the fence of the document is longer than the run",
+            "the README of the evidence record gives the command that regenerates the example and says the Markdown is not edited by hand, and the research note has the section"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 132,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/132",
+    "title": "feat(perf): Render the comparison's report as a Markdown document from report.json",
+    "headSha": "cb94fa7f3d6df36fe3258bad471c2913a966e296",
+    "baseSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+    "squashMergeCommit": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+    "squashCommitSubject": "feat(perf): Render the comparison's report as a Markdown document from report.json (#132)",
+    "mergedAt": "2026-10-10T16:33:15Z",
+    "headTreeSha": "c576e41876dd383aa3da408e98d9268ba0a96644",
+    "mainTreeSha": "c576e41876dd383aa3da408e98d9268ba0a96644",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 8,
+    "commits": [
+      {
+        "sha": "e53a05fc4a7240e23d357bd038c5a1123430fca7",
+        "subject": "feat(perf): Render the comparison's report as a Markdown document"
+      },
+      {
+        "sha": "19565e6b139bf7b8688066843b71c634fc6c6bba",
+        "subject": "docs(dashboard): Register the comparison's report as a Markdown document"
+      },
+      {
+        "sha": "9e47f43021d1b5d55752daa81f0378c2cf223b35",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-report-markdown"
+      },
+      {
+        "sha": "af2ff0f51c0963d581ddd9cb2f36af539b2cae26",
+        "subject": "build: Run the report renderer's test in test:contracts again"
+      },
+      {
+        "sha": "c173aa835b9f8885441070db8f561693afee93ff",
+        "subject": "fix(perf): Fence the report's commands safely and word the relatorio step right"
+      },
+      {
+        "sha": "971b5a4d988fbb1a4a3dcf5d8945e93ecbe72530",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-report-markdown"
+      },
+      {
+        "sha": "7ab017a7acae5156146b4ce5e5da98ccb18ce73e",
+        "subject": "docs(perf): Give the small-number example that rounds to 0.0001"
+      },
+      {
+        "sha": "cb94fa7f3d6df36fe3258bad471c2913a966e296",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-report-markdown"
+      }
+    ],
+    "changedFiles": 8,
+    "additions": 1661,
+    "deletions": 1
+  },
+  "artifacts": {},
+  "findings": []
+}

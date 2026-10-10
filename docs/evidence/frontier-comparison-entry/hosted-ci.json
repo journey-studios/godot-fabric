@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-entry",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T16:40:42.443Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38067297038,
+    "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/133",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T16:20:59Z",
+    "updatedAt": "2026-10-10T16:28:23Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114257426939,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "startedAt": "2026-10-10T16:21:03Z",
+        "completedAt": "2026-10-10T16:23:08Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257426939"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114257427859,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257427859"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114257427958,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257427958"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114257427943,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257427943"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114257428106,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257428106"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114258885371,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114258885371"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114257426888,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "startedAt": "2026-10-10T16:21:03Z",
+        "completedAt": "2026-10-10T16:26:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257426888"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114257426747,
+        "runAttempt": 1,
+        "headSha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+        "startedAt": "2026-10-10T16:21:07Z",
+        "completedAt": "2026-10-10T16:28:22Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38067297038/job/114257426747"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+      "reference-android": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+      "reference-ios": "81eaa0a17a126a561f0ec8bd50bacea5beefc012"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:21:16Z",
+          "completedAt": "2026-10-10T16:21:16Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 1810003a7603 (--base 1810003a7603a556b7101cbcfa09f4fa4830c64e); X9 clean, X10 clean"
+          ],
+          "base": "1810003a7603a556b7101cbcfa09f4fa4830c64e"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:21:16Z",
+          "completedAt": "2026-10-10T16:23:05Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 629,
+              "suites": 0,
+              "pass": 628,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:23:05Z",
+          "completedAt": "2026-10-10T16:23:05Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T16:23:05Z",
+          "completedAt": "2026-10-10T16:23:06Z",
+          "passed": true,
+          "files": 2341
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-run.test.mjs",
+          "tests": 22,
+          "passed": 22,
+          "topLevel": [
+            "the window rule reads the numbers the protocol states in words, and refuses an amendment that rewrites a sentence",
+            "the frames of each window, on a trace written by hand",
+            "on the trace of a whole execution the windows have the occurrences the protocol counts",
+            "the numbers the scenario waits with, in GDScript, are the protocol's",
+            "the amendments of the protocol that the scenario follows are in the protocol it is run against",
+            "the kinds of event the scenario traces are the ones the window rule reads",
+            "the player's constants are the soak's own",
+            "the arguments after the executable enter the scenario as the main loop: no -s, the user arguments after --, and an absolute --out",
+            "the entry is two lines that extend the scenario, the main scene is one empty node, and the settings name both",
+            "override.cfg is left out of the package's hash and the entry, the scene and the settings are in the scenario's",
+            "the Debug launcher says that the process was killed at its timeout, and only then",
+            "the Release launcher still refuses, and says that the entry is defined and what is missing",
+            "a CPU time becomes integer microseconds as Math.round(totalMs * 1000)",
+            "the load average, the exit and the log of a Godot process are read as the errors rule asks",
+            "the cost of reading stats() is taken from the record of the slice that delivered the hooks, with two digits",
+            "the replay's golden hash is read from the test that fixes it",
+            "the scenario's reports, assembled into a campaign, pass the format and the analysis rejects each execution as a Debug build",
+            "a window the scenario could not measure has no occurrence in the campaign, and the campaign says why apart",
+            "the FPS without a limit is the frames of the measured occurrences over the time they took, and only a vsync read back as DISABLED has one",
+            "the windows are derived from the trace and the samples, and a report that cannot be analysed says why",
+            "an event burst that never settles leaves the window one occurrence short, and the analysis calls the execution incomplete",
+            "the runner of this part runs only the rehearsal"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 133,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/133",
+    "title": "feat(perf): Enter the comparative scenario as the measurement project's main loop, as a Release export runs it",
+    "headSha": "21659736653ebdd596ad66a040d653039e35f7ad",
+    "baseSha": "d72dd93c94fe804014e1dc36673615c57cbcbe76",
+    "squashMergeCommit": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+    "squashCommitSubject": "feat(perf): Enter the comparative scenario as the measurement project's main loop, as a Release export runs it (#133)",
+    "mergedAt": "2026-10-10T16:20:56Z",
+    "headTreeSha": "2e0ffe4a961bc1ee7b6ab6daaab4c9a800707e24",
+    "mainTreeSha": "794b05d270a12e7eb8307b5b24a0aaf5f73bfb60",
+    "headTreeEqualsMainTree": false,
+    "treeDifference": {
+      "differingPaths": [
+        "dashboard/AGENT_PROMPT.md",
+        "dashboard/README.md",
+        "dashboard/agents.mjs",
+        "tests/agents-board.test.mjs"
+      ],
+      "pathsMainChangedAfterTheHeadForked": 4,
+      "comparisonComplete": true,
+      "explainedByMain": true
+    },
+    "commitCount": 5,
+    "commits": [
+      {
+        "sha": "da7eff5e483bfc87a17c9aa20bff489531348c49",
+        "subject": "feat(perf): Enter the comparative scenario as the measurement project's main loop"
+      },
+      {
+        "sha": "afe52f2234126113441dfeff5b1b3af099c72952",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-entry"
+      },
+      {
+        "sha": "bb30d75364f4edf50b05ef1710b70c662da9dbdd",
+        "subject": "docs(evidence): Record the scenario's main-loop entry against the -s control"
+      },
+      {
+        "sha": "26977e6ed684c104ba638b455af0f726d9a768f9",
+        "subject": "docs(dashboard): Register the scenario's main-loop entry"
+      },
+      {
+        "sha": "21659736653ebdd596ad66a040d653039e35f7ad",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-entry"
+      }
+    ],
+    "changedFiles": 17,
+    "additions": 1771,
+    "deletions": 40
+  },
+  "artifacts": {},
+  "findings": []
+}
