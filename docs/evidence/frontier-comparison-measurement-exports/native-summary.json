@@ -1,0 +1,316 @@
+{
+  "notAResult": "A rehearsal of the exports, headless, one execution per arm: no time in it is a measurement of an arm, and the sizes are those of one trial.",
+  "arms": {
+    "A": {
+      "sets": {
+        "includes": [
+          {
+            "pattern": "game/*.gd",
+            "why": "the game's rules: the scripts of the scene (game_services.gd, world.gd) preload them, and a scene file does not name a script's preloads"
+          },
+          {
+            "pattern": "services/*.gd",
+            "why": "schema.gd and stress.gd, which game_services.gd preloads"
+          }
+        ],
+        "measurementIncludes": [
+          {
+            "pattern": "hud_*.gd",
+            "why": "the scenario's HUD helper (frontier-comparison-hud.gd) preloads res://hud_probe.gd and, through it, the readers, in every arm"
+          }
+        ],
+        "product": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main_bare.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd",
+          "excludeFilter": "comparison/*, override.cfg, addons/godot_fabric/*",
+          "frameworks": false
+        },
+        "measurement": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main_bare.tscn",
+            "res://comparison/frontier-comparison-empty.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd, hud_*.gd, comparison/*, override.cfg",
+          "excludeFilter": "addons/godot_fabric/*",
+          "frameworks": false
+        }
+      },
+      "product": [
+        {
+          "appBytes": 82572095,
+          "pckBytes": 60020,
+          "pckFiles": 37,
+          "pckSha256": "8394f5a9ac33e79d6fd97e7dac34a9e4c71ffaa828303f04b32abd5346f66a84"
+        },
+        {
+          "appBytes": 82572095,
+          "pckBytes": 60020,
+          "pckFiles": 37,
+          "pckSha256": "8394f5a9ac33e79d6fd97e7dac34a9e4c71ffaa828303f04b32abd5346f66a84"
+        }
+      ],
+      "measurement": {
+        "appBytes": 82657715,
+        "pckBytes": 145640,
+        "pckFiles": 82
+      },
+      "proof": {
+        "seconds": 51.8,
+        "frames": 7449,
+        "againstRecord": []
+      },
+      "debugControl": {
+        "sceneNodes": 4,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "equalToRelease": true
+      }
+    },
+    "B": {
+      "sets": {
+        "includes": [
+          {
+            "pattern": "game/*.gd",
+            "why": "the game's rules: the scripts of the scene (game_services.gd, world.gd) preload them, and a scene file does not name a script's preloads"
+          },
+          {
+            "pattern": "services/*.gd",
+            "why": "schema.gd and stress.gd, which game_services.gd preloads"
+          },
+          {
+            "pattern": "native_hud/*",
+            "why": "the HUD: hud.gd preloads its bar, menu and panel scenes (.tscn) and the kit and icons scripts, and the HUD's scene file attaches only hud.gd"
+          },
+          {
+            "pattern": "hud_*.gd",
+            "why": "the scene attaches hud_validation.gd, which extends res://hud_probe.gd by path, and that one preloads the readers (hud_reader*.gd)"
+          },
+          {
+            "pattern": "ui/icons/*",
+            "why": "native_hud/icons.gd preloads the six PNG icons of the HUD"
+          }
+        ],
+        "measurementIncludes": [],
+        "product": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main_native.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd, native_hud/*, hud_*.gd, ui/icons/*",
+          "excludeFilter": "comparison/*, override.cfg, addons/godot_fabric/*",
+          "frameworks": false
+        },
+        "measurement": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main_native.tscn",
+            "res://comparison/frontier-comparison-empty.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd, native_hud/*, hud_*.gd, ui/icons/*, comparison/*, override.cfg",
+          "excludeFilter": "addons/godot_fabric/*",
+          "frameworks": false
+        }
+      },
+      "product": [
+        {
+          "appBytes": 82683063,
+          "pckBytes": 170988,
+          "pckFiles": 122,
+          "pckSha256": "ffe3ea19e78b5b06658a2ff6b2aa88c6fb9f96b8783680225596dc3b9fe2069f"
+        },
+        {
+          "appBytes": 82683063,
+          "pckBytes": 170988,
+          "pckFiles": 122,
+          "pckSha256": "ffe3ea19e78b5b06658a2ff6b2aa88c6fb9f96b8783680225596dc3b9fe2069f"
+        }
+      ],
+      "measurement": {
+        "appBytes": 82730835,
+        "pckBytes": 218760,
+        "pckFiles": 155
+      },
+      "proof": {
+        "seconds": 57.1,
+        "frames": 8042,
+        "againstRecord": []
+      },
+      "debugControl": {
+        "sceneNodes": 31,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "equalToRelease": true
+      }
+    },
+    "C": {
+      "sets": {
+        "includes": [
+          {
+            "pattern": "game/*.gd",
+            "why": "the game's rules: the scripts of the scene (game_services.gd, world.gd) preload them, and a scene file does not name a script's preloads"
+          },
+          {
+            "pattern": "services/*.gd",
+            "why": "schema.gd and stress.gd, which game_services.gd preloads"
+          },
+          {
+            "pattern": "hud_*.gd",
+            "why": "the scene attaches hud_validation.gd, which extends res://hud_probe.gd by path, and that one preloads the readers (hud_reader*.gd)"
+          },
+          {
+            "pattern": "stability_*.gd",
+            "why": "the scene attaches stability_validation.gd, which extends res://stability_judge.gd by path"
+          },
+          {
+            "pattern": "addons/godot_fabric/*.gdextension",
+            "why": "the extension's manifest, which no scene file references: the export copies the host into Contents/Frameworks only for a manifest it exports, and the engine loads no extension without it"
+          },
+          {
+            "pattern": "addons/godot_fabric/assets/fonts/*.ttf",
+            "why": "the fonts the host loads for text layout, by path, from res://addons/godot_fabric/assets/fonts: no scene file names them, and C's text has none without them"
+          }
+        ],
+        "measurementIncludes": [],
+        "product": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd, hud_*.gd, stability_*.gd, addons/godot_fabric/*.gdextension, addons/godot_fabric/assets/fonts/*.ttf",
+          "excludeFilter": "comparison/*, override.cfg",
+          "frameworks": true
+        },
+        "measurement": {
+          "exportFilter": "scenes",
+          "exportFiles": [
+            "res://main.tscn",
+            "res://comparison/frontier-comparison-empty.tscn"
+          ],
+          "includeFilter": "game/*.gd, services/*.gd, hud_*.gd, stability_*.gd, addons/godot_fabric/*.gdextension, addons/godot_fabric/assets/fonts/*.ttf, comparison/*, override.cfg",
+          "excludeFilter": "",
+          "frameworks": true
+        }
+      },
+      "product": [
+        {
+          "appBytes": 106682110,
+          "pckBytes": 2828488,
+          "pckFiles": 81,
+          "pckSha256": "bea7389ef7740502862405606ad0b8be590fb597cd9a6a80d91b8b2e715db3ad"
+        },
+        {
+          "appBytes": 106682110,
+          "pckBytes": 2828488,
+          "pckFiles": 81,
+          "pckSha256": "bea7389ef7740502862405606ad0b8be590fb597cd9a6a80d91b8b2e715db3ad"
+        }
+      ],
+      "measurement": {
+        "appBytes": 106729866,
+        "pckBytes": 2876244,
+        "pckFiles": 114
+      },
+      "proof": {
+        "seconds": 74.8,
+        "frames": 8168,
+        "againstRecord": [
+          {
+            "field": "sceneNodes",
+            "release": 31,
+            "record": 30
+          }
+        ]
+      },
+      "debugControl": {
+        "sceneNodes": 31,
+        "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+        "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+        "equalToRelease": true
+      }
+    }
+  },
+  "probe": {
+    "appBytes": 82533072,
+    "pckFiles": 12,
+    "directSelfCheck": {
+      "passed": true,
+      "seconds": 20.6,
+      "checks": 10
+    }
+  },
+  "templateSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+  "rehearsal": {
+    "command": "--campaign --lanes presented --build release --exports <dir> --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0",
+    "status": "done",
+    "analysis": "incomplete",
+    "selfCheck": {
+      "passed": true,
+      "entry": "release",
+      "lane": "headless",
+      "seconds": 20.3,
+      "probeChecks": 10
+    },
+    "attempts": [
+      {
+        "arm": "A",
+        "slot": 1,
+        "seconds": 52.1,
+        "load": {
+          "before": 5.77,
+          "after": 6.7
+        },
+        "reasons": [
+          "load:before",
+          "load:after",
+          "not-presented:intent-not-drawn",
+          "not-presented:idle-not-drawn",
+          "not-presented:not-paced"
+        ]
+      },
+      {
+        "arm": "B",
+        "slot": 2,
+        "seconds": 56.6,
+        "load": {
+          "before": 6.7,
+          "after": 5.87
+        },
+        "reasons": [
+          "load:before",
+          "load:after",
+          "not-presented:intent-not-drawn",
+          "not-presented:idle-not-drawn",
+          "not-presented:not-paced"
+        ]
+      },
+      {
+        "arm": "C",
+        "slot": 3,
+        "seconds": 74.6,
+        "load": {
+          "before": 5.87,
+          "after": 5.16
+        },
+        "reasons": [
+          "load:before",
+          "load:after",
+          "not-presented:intent-not-drawn",
+          "not-presented:idle-not-drawn",
+          "not-presented:not-paced"
+        ]
+      }
+    ],
+    "deviations": [
+      "REHEARSAL: not a comparative execution and not a campaign; no number of it is a result of any arm",
+      "the Release exports ran headless (--headless), a display server that draws and paces nothing, because this is a rehearsal: no window is presented and no vsync mode is read back; a campaign proper runs windowed",
+      "a rehearsal does not redo: each slot ran once, whatever the rules said of it, so that the rejections it shows (the Debug build, the headless display, the load of a busy machine) can be seen and counted",
+      "only the slots 1 to 3 of the 36 of each lane were run (--slots)",
+      "the refresh rate read back was not positive (a headless display has none) in 3 attempts and 60 Hz was assumed for the format",
+      "the instrument's self-check ran headless, because the launcher runs headless; a campaign proper runs in a window and its self-check runs in one (the engine and renderer the gate asks for), which this rehearsal did not repeat"
+    ]
+  }
+}
