@@ -540,22 +540,27 @@ export function resolveMode({local, env}) {
 }
 
 /** Every step of the clean run. Whatever was observed lands in the summary even when a step throws; the verdict is judgeCleanRun's. */
-async function cleanRun({archive, recordPath, out, env, local}) {
+export async function cleanRun({archive, recordPath, out, env, local}) {
   const {hosted} = resolveMode({local, env});
   const startedAt = new Date().toISOString();
   assert.ok(!(await exists(out)) || (await readdir(out)).length === 0, `refusing to write into a non-empty ${out}`);
   await mkdir(out, {recursive: true});
-  const recordBytes = await readFile(recordPath);
-  const record = JSON.parse(recordBytes.toString("utf8"));
-  await writeFile(path.join(out, RECORD_NAME), recordBytes);
   const expected = {goldenHash: GOLDEN_HASH, traceHash: TRACE_HASH};
-  const roteiro = parseRoteiro(await readFile(path.join(root, "consumers/civ-lite/game/replay.gd"), "utf8"));
   const home = os.homedir();
   const user = os.userInfo().username;
   const tmpdir = os.tmpdir();
-  const workRoot = await mkdtemp(path.join(tmpdir, "frontier-clean-run-"));
-  const observed = {hosted, expected, record, sourceCommit: sourceCommit(env), architecture: process.arch, negatives: {}, runs: [], outsideWorkspace: !isInside(root, workRoot)};
+  // Everything that can throw from here on is inside the try, the reading of the record first: a record that is not JSON still leaves a failed summary.
+  const observed = {hosted, expected, record: null, sourceCommit: null, architecture: process.arch, negatives: {}, runs: [], outsideWorkspace: false};
+  let workRoot = null;
   try {
+    const recordBytes = await readFile(recordPath);
+    const record = JSON.parse(recordBytes.toString("utf8"));
+    observed.record = record;
+    await writeFile(path.join(out, RECORD_NAME), recordBytes);
+    observed.sourceCommit = sourceCommit(env);
+    const roteiro = parseRoteiro(await readFile(path.join(root, "consumers/civ-lite/game/replay.gd"), "utf8"));
+    workRoot = await mkdtemp(path.join(tmpdir, "frontier-clean-run-"));
+    observed.outsideWorkspace = !isInside(root, workRoot);
     observed.machine = machineIdentity(env);
     observed.comparison = compareMachines(record.uploader ?? {}, observed.machine);
     observed.absences = await observeAbsences({env, workspace: root, home});
@@ -612,13 +617,15 @@ async function cleanRun({archive, recordPath, out, env, local}) {
   } catch (error) {
     observed.error = error.message;
   } finally {
-    await rm(workRoot, {recursive: true, force: true});
-    observed.workRootRemoved = !(await exists(workRoot));
+    if (workRoot !== null) {
+      await rm(workRoot, {recursive: true, force: true});
+      observed.workRootRemoved = !(await exists(workRoot));
+    }
   }
   const problems = judgeCleanRun(observed);
-  const {record: _record, ...observations} = observed;
+  const {record, ...observations} = observed;
   const summary = {format: SUMMARY_FORMAT, verdict: problems.length === 0 ? "passed" : "failed", claim: hosted ? "hosted-runner" : "local-rehearsal", limit: hosted ? HOSTED_LIMIT : LOCAL_LIMIT,
-    startedAt, completedAt: new Date().toISOString(), problems, recordFile: RECORD_NAME, uploader: record.uploader, archiveRecord: record.archive, appRecord: record.app, ...observations};
+    startedAt, completedAt: new Date().toISOString(), problems, recordFile: RECORD_NAME, uploader: record?.uploader ?? null, archiveRecord: record?.archive ?? null, appRecord: record?.app ?? null, ...observations};
   await writeFile(path.join(out, SUMMARY_NAME), JSON.stringify(summary, null, 2) + "\n");
   return summary;
 }

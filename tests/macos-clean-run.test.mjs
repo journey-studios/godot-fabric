@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
-import {chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile} from "node:fs/promises";
+import {chmod, mkdir, mkdtemp, readFile, readdir, realpath, rm, symlink, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {GOLDEN_HASH, TRACE_HASH} from "../scripts/macos-export-civ-lite.mjs";
-import {NEGATIVES, RECORD_FORMAT, RUNS, SCRUBBED_PATH, assertProfileAbsent, compareMachines, dirtyProfileControl, flipByte, flipHash, hashApp, isAdHoc, judgeArchiveListing,
+import {NEGATIVES, RECORD_FORMAT, RUNS, SCRUBBED_PATH, assertProfileAbsent, cleanRun, compareMachines, dirtyProfileControl, flipByte, flipHash, hashApp, isAdHoc, judgeArchiveListing,
   judgeCleanReplay, judgeCleanRun, judgeLoads, observeAbsences, observeReplay, parseArguments, parseDylibList, parseHardware, parseRpaths, profilePath, resolveMode,
   runRow, scrubbedEnvironment, usage, wrongPinControl} from "../scripts/macos-clean-run.mjs";
 import {parseRoteiro} from "./macos-export-civ-lite-oracle.mjs";
@@ -359,6 +359,43 @@ echo "CIVLITE_REPLAY_PASSED: 246"
     await assert.rejects(readFile(dump), {code: "ENOENT"}, "the app was started in a profile that was not clean");
   } finally {
     delete process.env.FRONTIER_CLEAN_RUN_SENTINEL;
+    await rm(directory, {recursive: true, force: true});
+  }
+});
+
+test("a record that cannot be read leaves a failed summary and no run, and a non-empty output directory is refused before anything is written", async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "macos-clean-run-summary-"));
+  try {
+    const archive = path.join(directory, "Frontier.app.tar.gz");
+    const broken = async (name, text) => {
+      const recordPath = path.join(directory, `${name}.json`);
+      if (text !== null) {
+        await writeFile(recordPath, text);
+      }
+      const out = path.join(directory, `out-${name}`);
+      // --local with no GITHUB_ACTIONS in the environment: the mode is the rehearsal's, whatever job runs this test.
+      const summary = await cleanRun({archive, recordPath, out, env: {}, local: true});
+      const written = JSON.parse(await readFile(path.join(out, "clean-run.json"), "utf8"));
+      assert.deepEqual(written.problems, summary.problems);
+      return {summary: written, out};
+    };
+    for (const [name, text, error] of [["not-json", "{ this is not json", /SyntaxError|JSON/], ["missing", null, /ENOENT/]]) {
+      const {summary, out} = await broken(name, text);
+      assert.equal(summary.verdict, "failed", name);
+      assert.equal(summary.claim, "local-rehearsal");
+      assert.match(summary.problems.join("\n"), error);
+      assert.match(summary.problems.join("\n"), /the record is not the uploader's/);
+      assert.deepEqual(summary.runs, []);
+      assert.equal(summary.uploader, null);
+      assert.deepEqual((await readdir(out)).filter(file => file.startsWith("replay-clean-")), []);
+    }
+    // The output directory is the one place a summary cannot go: a non-empty one stops the run first.
+    const occupied = path.join(directory, "occupied");
+    await mkdir(occupied);
+    await writeFile(path.join(occupied, "earlier.txt"), "kept");
+    await assert.rejects(cleanRun({archive, recordPath: path.join(directory, "not-json.json"), out: occupied, env: {}, local: true}), /refusing to write into a non-empty/);
+    assert.deepEqual(await readdir(occupied), ["earlier.txt"]);
+  } finally {
     await rm(directory, {recursive: true, force: true});
   }
 });
