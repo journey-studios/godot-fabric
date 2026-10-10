@@ -3,7 +3,7 @@ import {mkdir, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 
-// The six icons of Frontier's HUD (consumers/civ-lite/ui/icons/): original art, drawn here from shapes, with no third-party image. Each is
+// The seven icons of Frontier's icon set (consumers/civ-lite/ui/icons/): original art, drawn here from shapes, with no third-party image. Each is
 // 32x32 with a transparent background, drawn with coverage sampled 4x4 per pixel, and written as a PNG whose zlib stream holds stored
 // (uncompressed) blocks, so the bytes depend on nothing but this file: not on the zlib of the Node that runs it. The lane
 // (tests/civ-lite-ui-native.test.mjs) draws them again and requires the committed files to be these bytes.
@@ -51,6 +51,10 @@ const GREEN = [74, 163, 76];
 const RED = [220, 68, 68];
 const STEEL = [203, 213, 225];
 const CYAN = [34, 211, 238];
+const SOIL = [146, 94, 48];
+const SOIL_DARK = [96, 60, 30];
+const LEAF_DARK = [34, 110, 50];
+const DROP_LIGHT = [207, 235, 255];
 
 // Their names are the files'.
 const ICONS = {
@@ -112,6 +116,19 @@ const ICONS = {
     [disc(14, 22.5, 1.6), [207, 250, 254]],
     [disc(19, 21, 1.1), [207, 250, 254]],
     [without(disc(16, 9, 2.4), disc(16, 9, 1.2)), BLUE_DARK],
+  ],
+  // Irrigation: a drop of water over a furrowed bed, with a sprout on each side.
+  irrigation: [
+    [box(2, 23, 30, 30), SOIL_DARK],
+    [box(3, 24, 29, 29), SOIL],
+    [stroke(5, 26.5, 27, 26.5, 1.4), SOIL_DARK],
+    [stroke(5, 24, 5, 17, 1.6), LEAF_DARK],
+    [stroke(27, 24, 27, 17, 1.6), LEAF_DARK],
+    [polygon([[5, 19], [1.5, 13], [8.5, 15]]), GREEN],
+    [polygon([[27, 19], [30.5, 13], [23.5, 15]]), GREEN],
+    [either(polygon([[16, 1], [22.4, 12.5], [9.6, 12.5]]), disc(16, 14, 6.4)), BLUE_DARK],
+    [either(polygon([[16, 3.5], [21, 12.5], [11, 12.5]]), disc(16, 14, 4.9)), BLUE],
+    [disc(13.6, 14.4, 1.5), DROP_LIGHT],
   ],
 };
 
@@ -197,7 +214,7 @@ function pngOf(shapes) {
   return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk("IHDR", header), chunk("IDAT", stored(rows)), chunk("IEND", Buffer.alloc(0))]);
 }
 
-/** The six icons as the files the template holds: name -> bytes. */
+/** The seven icons as the files the template holds: name -> bytes. */
 export const renderIcons = () => Object.fromEntries(Object.entries(ICONS).map(([name, shapes]) => [`${name}.png`, pngOf(shapes)]));
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

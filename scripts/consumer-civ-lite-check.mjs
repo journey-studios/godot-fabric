@@ -62,7 +62,7 @@ try {
   const projectFile = await readFile(path.join(project, "project.godot"), "utf8");
   verify(["project.godot", "main.tscn", "validation.gd", "hud_validation.gd", "hud_probe.gd", "overlay_validation.gd", "stability_validation.gd", "stability_judge.gd", "package.json", "package-lock.json", "tsconfig.json", "ui/application.tres", "ui/index.tsx",
     "ui/frontier-types.ts", "ui/store.ts", "ui/telemetry.ts", "ui/assets.d.ts", "ui/hud/hud.tsx", "ui/hud/overlay.tsx", "ui/hud/bar.tsx", "ui/hud/actions.tsx", "ui/hud/tile.tsx", "ui/hud/city.tsx",
-    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "ui/hud/kit.tsx", "ui/hud/icons.ts", "ui/icons/settler.png", "ui/icons/warrior.png", "ui/icons/city.png", "ui/icons/food.png", "ui/icons/production.png", "ui/icons/science.png", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
+    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "ui/hud/kit.tsx", "ui/hud/icons.ts", "ui/icons/settler.png", "ui/icons/warrior.png", "ui/icons/city.png", "ui/icons/food.png", "ui/icons/production.png", "ui/icons/science.png", "ui/icons/irrigation.png", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
     && ["sdk", "tests", "build", "consumers", "examples", "src", "native"].every(directory => !existsSync(path.join(project, directory))),
   "The provisioned project is the template plus the addon, with no laboratory directory");
   verify(/application="res:\/\/ui\/application\.tres"/.test(projectFile) && /res:\/\/addons\/godot_fabric\/plugin\.cfg/.test(projectFile),

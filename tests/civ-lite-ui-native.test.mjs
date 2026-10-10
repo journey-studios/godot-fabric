@@ -77,6 +77,9 @@ const STABILITY_CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dial
 // The commit before this slice: its HUD has no icons and its manifest does not decide AppRegistry.
 const STABILITY_CONTROL_COMMIT = "e108e9d";
 const ICON_NAMES = ["settler", "warrior", "city", "food", "production", "science"];
+// The generator draws one more, which neither HUD has to import to load: the Irrigate action's and the irrigated tile's (the cost-of-change experiment's base).
+// What each arm does with it is measured by the lane's irrigation stage, which looks at the Images and Controls the HUD shows.
+const DRAWN_ICON_NAMES = [...ICON_NAMES, "irrigation"];
 // What each retained sabotage must make the probe and the oracle say. `failed` are patterns of the probe's failed checks and
 // `categories` the oracle's categories that must be among the findings (scripts/civ-lite-ui-sabotage.mjs says what each breaks).
 const SABOTAGES = {
@@ -391,9 +394,9 @@ if (sabotage === null) {
     const changesFound = SCAN_MUTATIONS.filter(mutation => mutation.clean !== true).length;
     verify(true, `The scan finds each of ${changesFound} changes of a copy of the HUD (an import out of scope or by a subpath, a refused or unknown or ignored prop, a member out of the subset, read by destructuring, by an alias or by a loose use) and lets ${SCAN_MUTATIONS.length - changesFound} others through (a type-only import, a member of the subset destructured)`);
 
-    // The icons: six PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, each imported by the HUD as an asset an Image draws.
+    // The icons: seven PNGs the template draws itself, byte for byte what scripts/civ-lite-icons.mjs makes, six of them imported by the HUD as assets an Image draws.
     const drawn = renderIcons();
-    assert.deepEqual(Object.keys(drawn).sort(), ICON_NAMES.map(name => `${name}.png`).sort());
+    assert.deepEqual(Object.keys(drawn).sort(), DRAWN_ICON_NAMES.map(name => `${name}.png`).sort());
     for (const [file, bytes] of Object.entries(drawn)) {
       const committed = await readFile(path.join(ui, "icons", file));
       assert.ok(committed.equals(bytes), `ui/icons/${file} is what the generator draws`);
@@ -410,7 +413,7 @@ if (sabotage === null) {
       ["hud/tile.tsx", /<Icon key=\{unit\.id\} id=\{`hud-tile-unit-\$\{unit\.id\}-icon`\}/], ["hud/city.tsx", /icon=\{itemIcon\(item\.id\)\}/]]) {
       assert.match(await source(file), pattern, `${file} shows its icons`);
     }
-    verify(true, "The six icons (settler, warrior, city, food, production, science) are 32x32 PNGs the generator draws, imported as assets and shown by Images in the bar, the actions, the tile card and the city screen");
+    verify(true, "The seven icons (settler, warrior, city, food, production, science, irrigation) are 32x32 PNGs the generator draws; the first six are imported as assets and shown by Images in the bar, the actions, the tile card and the city screen");
 
     // The genuine run, headless.
     const {log, report} = await probe(harness, "headless");
