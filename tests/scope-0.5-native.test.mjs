@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 import {bundleScopeProbe, scopeSources} from "../scripts/scope-bundle.mjs";
-import {oracleRejection, verifyScopeReport} from "./scope-0.5-oracle.mjs";
+import {hostRejected, oracleRejection, verifyScopeReport} from "./scope-0.5-oracle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 // --previous (or --allow-original-negative, the flag the other suites use) runs the same fixture over the SDK of main before this
@@ -77,8 +77,8 @@ test("the prop policy holds through the real host: refused props fail on mount a
   assert.equal(result.error, undefined, log);
   if (sabotage !== null && report == null) {
     // A sabotaged SDK that lets a refused prop reach the host can crash it before any report is written (the ScrollView handed
-    // RN's own JS a request it never meant to take): that is a rejection by the host itself.
-    assert.match(log, /Program crashed|SCRIPT ERROR/, log);
+    // RN's own JS a request it never meant to take): that is a rejection by the host itself, by a crash signal or by the probe's own error.
+    assert.ok(hostRejected(result, log), `no report, and the host neither died by a crash signal nor reported an error (status ${result.status}, signal ${result.signal})\n${log}`);
     return;
   }
   assert.equal(result.signal, null, log);
