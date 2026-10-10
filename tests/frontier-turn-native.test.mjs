@@ -139,6 +139,27 @@ const REJECTED = {
   "host-error": [stages => {
     stages.rounds[5].steps[4].rest.reading.host.errors = 1;
   }, ["readings"]],
+  // The timed frames measure the game and not the probe's looking: a read of the Surface's snapshot inside one (the application's whole status, among it the loader's log),
+  // a frame whose reads were not counted, and a cheap reading that does not say what the full one says.
+  "read-in-a-click-frame": [stages => {
+    stages.rounds[9].steps[2].frameReads[0] = 1;
+  }, ["observation"]],
+  "read-in-a-turn-frame": [stages => {
+    turnOf(stages).turn.frames[3].surfaceReads = 2;
+  }, ["observation"]],
+  "reads-uncounted": [stages => {
+    delete stages.rounds[9].steps[2].frameReads;
+  }, ["observation"]],
+  "frames-read-another-hud": [stages => {
+    stages.rounds[9].steps[indexOf("found-city")].fullAgrees = false;
+  }, ["observation"]],
+  "snapshot-weightless": [stages => {
+    stages.rounds[9].start.surface.bytes = 0;
+  }, ["observation"]],
+  "records-past-the-log": [stages => {
+    stages.rounds[9].start.surface.loaderRecords = 257;
+    stages.rounds[9].start.surface.loaderRequests = 300;
+  }, ["observation"]],
   "heap-grew": [stages => withHeap(stages, flatSeries(3000, lastHalf)), ["heap"]],
   "heap-leak-hosted-1": [stages => withHeap(stages, withLeak(HOSTED_HEAP_AT_REST["process 1"], LEAK_BYTES_PER_ROUND)), ["heap"]],
   "heap-leak-hosted-2": [stages => withHeap(stages, withLeak(HOSTED_HEAP_AT_REST["process 2"], LEAK_BYTES_PER_ROUND)), ["heap"]],

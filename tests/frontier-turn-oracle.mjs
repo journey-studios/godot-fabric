@@ -20,6 +20,11 @@ import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GAME_CONTEXTS, HUD_CONNECTIONS, IDLE_FRA
 // order of the service, publishes a snapshot in each and the end of the turn once. The live heap at rest does not grow past the GF-30 limit by the
 // baseline's rule over the medians of the halves, and the resident memory by the soak's loose one. No error is unhandled.
 //
+// What the timed frames measure is the game's and the HUD's, and nothing the probe adds by looking: no interval between two timed frames (the frames of a click and
+// of a turn) contains a read of the Surface's snapshot, and the cheap reading the frames make of the Controls says what a full reading says when the click arrives. The
+// snapshot carries the whole application's status, among it the loader's log of every image it loaded, so a read costs what the application has accumulated and not what
+// the HUD shows: two reads in each timed frame of the turn were 4.6 ms of its frames once the HUD had icons (docs/evidence/civ-lite-ui/README.md).
+//
 // Nothing here judges a duration, the frames a click takes (against the ceiling only), the host's phases or the resident memory's level: they are recorded
 // and summarized (docs/research/frontier-turn.md).
 const stats = values => ({samples: values.length, min: Math.min(...values), p50: nearestRank(values, 50), p95: nearestRank(values, 95), max: Math.max(...values)});
@@ -162,6 +167,35 @@ function verifyClicks(stages) {
   }
 }
 
+// What the loader's log (images.jobs in the snapshot) can hold: native/image_loader.cpp, `max_records`.
+const LOADER_RECORDS_LIMIT = 256;
+
+// A step's timed frames, judged on what the probe read inside them: the reads of the Surface's snapshot are counted in every interval between two stamps (the frames of the
+// click, and the frames of a turn again one by one) and none was made, and the full reading taken once the click arrived says what the Controls the frames read said.
+function verifyObserved(record, label) {
+  assert.ok(Array.isArray(record.frameReads) && record.frameReads.length === record.frameUsec.length && record.frameReads.every(reads => Number.isInteger(reads) && reads >= 0),
+    `${label}: the reads of the Surface's snapshot were counted in every timed frame`);
+  assert.ok(record.frameReads.every(reads => reads === 0), `${label}: and no timed frame contains one (${record.frameReads.join(", ")})`);
+  if (record.kind === "turn") {
+    assert.ok(record.turn.frames.every(frame => frame.surfaceReads === 0), `${label}: nor does any frame of the turn (${record.turn.frames.map(frame => frame.surfaceReads).join(", ")})`);
+  }
+  assert.equal(record.fullAgrees, true, `${label}: and the Controls the frames read and the full reading of the Surface say the same when the click arrives`);
+}
+
+function verifyObservation(stages) {
+  const records = recordsOf(stages);
+  records.forEach(record => verifyObserved(record, `round ${record.round} ${record.id}`));
+  // What a read of the snapshot weighs, recorded at every rest: its bytes, and the records of the loader's log it carries, which only grow with the Images mounted and are
+  // never more than the log keeps nor more than the loads asked for.
+  const rests = Object.values(seriesOf(stages)).flat();
+  for (const rest of rests) {
+    const {bytes, loaderRecords, loaderRequests} = rest.surface;
+    assert.ok(Number.isInteger(bytes) && bytes > 0 && Number.isInteger(loaderRecords) && loaderRecords >= 0 && loaderRecords <= Math.min(loaderRequests, LOADER_RECORDS_LIMIT),
+      `the snapshot read at rest weighs ${bytes} bytes and carries ${loaderRecords} records of the loader's log, of ${loaderRequests} loads asked for`);
+  }
+  return {timedFrames: records.reduce((total, record) => total + record.frameReads.length, 0), readsInTimedFrames: 0};
+}
+
 // At rest the HUD holds the panels of the context, and the same native views, nodes and orphans every time the context comes back.
 function verifyRests(stages) {
   const {base} = stages;
@@ -286,8 +320,8 @@ function verifyErrors(stages) {
 // ------------------------------------------------------------------------------------------------------ the judgement
 const RULES = [["config", verifyConfig, report => report], ["scene", verifyScene, report => report.stages], ["shape", verifyShape, report => report.stages],
   ["readings", verifyReadings, report => report.stages], ["clicks", verifyClicks, report => report.stages], ["rests", verifyRests, report => report.stages],
-  ["heap", verifyHeap, report => report.stages], ["rss", verifyRss, report => report.stages], ["turns", verifyTurns, report => report.stages],
-  ["errors", verifyErrors, report => report.stages]];
+  ["observation", verifyObservation, report => report.stages], ["heap", verifyHeap, report => report.stages], ["rss", verifyRss, report => report.stages],
+  ["turns", verifyTurns, report => report.stages], ["errors", verifyErrors, report => report.stages]];
 
 // Every rule is judged, whatever the others say, so that a report broken for one reason is shown to fail for that one: the failures are the rules
 // that did not hold and what they said. The results of the rules that did hold are kept for the summary.
@@ -339,6 +373,8 @@ function summarize(report, results) {
       pumpSampleMs: stats(turns.flatMap(record => record.turn.pumpWindowMs.map(value => round(value, 3)))),
       clickToPanelsMs: Object.fromEntries(turns.length === 0 ? [] : Object.entries(byKey(turns, record => record.id)).map(([id, group]) => [id, clickStats(group).latencyMs]))},
     nativeNodes: results.rests, heap: results.heap,
+    observation: {...results.observation, snapshotBytesAtRoundStart: stats(stages.rounds.map(row => row.start.surface.bytes)),
+      loaderRecordsAtRoundStart: stats(stages.rounds.map(row => row.start.surface.loaderRecords)), loadsAsked: stages.rounds.at(-1).start.surface.loaderRequests},
     rss: {bySeries: results.rss.bySeries, run: results.rss.all},
     memory: {staticBytesAtBase: stages.base.reading.godot.staticMemory, staticBytesAtEnd: stages.final.godot.staticMemory},
     errors: {faults: stages.faults, control: stages.control, hud: stages.hudFinal}};
@@ -383,6 +419,7 @@ export function verifyTurnGraphicsRun(report) {
       assert.ok(record.frameUsec.length >= 1 && record.frameUsec.every(value => Number.isInteger(value) && value > 0), `${label}: the frames were timed`);
       assert.ok(Number.isInteger(record.flushUsec) && record.flushUsec > 0, `${label}: and so was the injection`);
       assert.ok(record.drawUsec === null || (Number.isInteger(record.drawUsec) && record.drawUsec > 0), `${label}: the time to the first drawn frame, when one was seen`);
+      verifyObserved(record, label);
       if (record.kind === "turn") {
         verifyTurnRecord(record, label);
       }
