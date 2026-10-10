@@ -6,7 +6,7 @@ mesmos 6 painéis, 7 contextos e testIDs da HUD React Native do V05-05 (braço C
 (<https://github.com/journey-studios/godot-fabric/commit/d8bd678285efb13681e1a5d39fdec394069888b7>). O desenho e o que difere do braço C estão em [docs/research/frontier-arm-b.md](../../research/frontier-arm-b.md).
 
 **Este registro não afirma nenhum resultado comparativo.** Nenhuma execução comparativa rodou. A passada de otimização do braço B (no máximo 3,2 h, uma rodada) foi feita e
-mediu só o braço B, em headless e fora de qualquer execução comparativa ([Passe de otimização](#passe-de-otimização)); nada aqui diz que uma HUD é mais rápida, mais lenta ou mais barata que a outra. O esforço está registrado, não julgado. Fecham-se só o critério `braco-b` do V05-10
+mediu só o braço B, em headless e fora de qualquer execução comparativa ([Passe de otimização](#passe-de-otimização)); nada aqui diz que uma HUD é mais rápida, mais lenta ou mais barata que a outra. O esforço está registrado, não julgado. Fecha-se só o critério `braco-b` do V05-10
 (sem tarefa, fase, sequência, checklist nem decisão tocados) e nenhuma tarefa do GF.
 
 ## O que foi executado
