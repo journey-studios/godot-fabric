@@ -5,7 +5,7 @@ happened, and **this note states no result**. The rehearsal it describes ran the
 presented and in the unlimited lane); the object it produces is marked as a rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal
 must show. No number in this note is a measurement of an arm for the comparison. The three rehearsals, with their summaries, the machine's load and the user's absence, are recorded in
 [`docs/evidence/frontier-comparison-execution/`](../evidence/frontier-comparison-execution/README.md), pinned at `7e2e5b1`. The campaign needs the Release export of the game in the three arms (V05-07) and a quiet window that the user reserves ([What is missing](#what-is-missing-for-the-campaign)).
-Part 2, the orchestrator of the whole campaign (the sequence in both lanes, the attempts and the redo, the wait for the load, the instrument's self-check as the gate, the state that makes it resumable and a launcher that can be swapped), is [below](#the-campaign); it too closes nothing and states no result.
+Part 2, the orchestrator of the whole campaign (the sequence in both lanes, the attempts and the redo, the wait for the load, the instrument's self-check as the gate, the state that makes it resumable and a launcher that can be swapped), is [below](#the-campaign), with its rehearsal recorded in [`docs/evidence/frontier-comparison-campaign/`](../evidence/frontier-comparison-campaign/README.md), pinned at `f9aabb3`; it too closes nothing and states no result.
 This slice moves no checkpoint, grade, weight or denominator of the 1.0.
 
 ## The question
@@ -484,18 +484,22 @@ None changes a number of the protocol; each decides how a sentence meets the orc
 ### The short rehearsal
 
 `npm run test:frontier-comparison-run` runs it (`tests/frontier-comparison-campaign-native.test.mjs`): `--slots 1-3` of the presented lane, headless, in Debug, with the real self-check, the real load and the real
-clock, on the machine of the other lanes (the 1-minute load was 4.3 to 6.8). It is a rehearsal and **no number of it is a measurement of an arm**. On the run recorded here (this slice's working tree on top of
-`c3892ac`, before it was committed): the self-check (probe and oracle) passed in about 20 s (20.5 to 20.7 over the runs) and recorded the instrument's SHA-256 `4bdcda83…`, and the engine, display server, driver, method and adapter that the probe
-recorded were the scenario's, so the campaign did not stop on them; the three attempts (A, B, C, one slot each; about 52, 57 and 76 s) exited 0 with no anomaly and no problem; the campaign passed `campaignErrors` and the analysis read it (status `incomplete`: no attempt was accepted, so no arm has the 10 accepted executions the presented lane asks for). Each attempt was rejected for
+clock, on the machine of the other lanes (the 1-minute load was 4.3 to 6.8). It is a rehearsal and **no number of it is a measurement of an arm**. On the run kept in the
+[evidence record](../evidence/frontier-comparison-campaign/README.md) (the pinned `f9aabb3` merged with `origin/main`, working tree clean): the self-check (probe and oracle) passed in about 20 s (20.4 to 20.7 over the runs) and recorded the instrument's SHA-256 `4bdcda83…`, and the engine, display server, driver, method and adapter that the probe
+recorded were the scenario's, so the campaign did not stop on them; the three attempts (A, B, C, one slot each; about 52, 57 and 75 to 82 s over the runs) exited 0 with no anomaly and no problem; the campaign passed `campaignErrors` and the analysis read it (status `incomplete`: no attempt was accepted, so no arm has the 10 accepted executions the presented lane asks for). Each attempt was rejected for
 the reasons a rehearsal must show: `not-the-registered-build:build` (Debug), `not-presented` (a headless display draws nothing and paces nothing: `intent-not-drawn`, `idle-not-drawn`, `not-paced`) and `load` (before and
 after). Nothing else fired, and the waits (`--max-wait 0`) timed out on the busy machine, which is what they were given zero seconds to avoid.
 
 The same rehearsal through the command line gave the same three rejections, and the analysis' own command line (`scripts/frontier-comparison-analysis.mjs`) read the written `campaign.json` and produced a
-`report.json` of the same bytes. **A real interruption** was also tried once, by hand: the command line was killed with `SIGKILL` while the second attempt was running (the state on disk held the first), and
+`report.json` of the same bytes. **A real interruption** was tried twice, by hand: the command line was killed with `SIGKILL` while the second attempt was running (the state on disk held the first), and
 `--resume` provisioned the consumer again, found the protocol, script, binary and package with the registered hashes, did not repeat the self-check, started at slot 2 and ended with the three attempts, in the
-format. **And the refusal was seen for real**: a finished rehearsal resumed after `npm run check:static` had run refused with "arm A package: the state registered e658b3bb…, now b837c07d…". The Debug
-launcher's package is the provisioned copy, which holds a copy of the repository's `node_modules` (`scripts/pack-addon.mjs`), and the one file of the copied inputs that was newer than the rehearsal was
-`node_modules/@fallow-cli/darwin-arm64/.fallow-verified`, which `fallow` (`npm run check:static`) writes the first time it runs; two copies provisioned back to back hash the same. A rehearsal can therefore be resumed only if nothing writes to `node_modules` in between; a Release export is one file and has no such dependence.
+format. **And the refusal was seen for real, twice.** The Debug launcher's package is the provisioned copy, and `scripts/pack-addon.mjs` writes into it a `manifest.json` that holds the repository's `HEAD` and whether
+its working tree is dirty (`sourceCommit`, `sourceDirty`), and a copy of the repository's `node_modules`. So the package hash changes with a commit, with any change in the working tree (a new untracked folder is
+enough: the resume of the evidence record's interrupted rehearsal, with its folder in `docs/evidence/` untracked, was refused with "arm A package: the state registered 9a12994c…, now ea5dbecf…", and accepted once
+the tree was clean again) and with a write into `node_modules` (a finished rehearsal resumed after `npm run check:static` was refused with "e658b3bb…, now b837c07d…"; the one file of the copied inputs that was newer
+than the rehearsal was `node_modules/@fallow-cli/darwin-arm64/.fallow-verified`, which `fallow` writes the first time it runs). Two copies provisioned back to back, with nothing between them, hash the same. **A
+Debug rehearsal can therefore be resumed only if the commit, the working tree and `node_modules` are as they were when it began;** a Release export is one file and has no such dependence. The second interruption and the second
+refusal (the ones on the merged tree) are recorded in the [evidence record](../evidence/frontier-comparison-campaign/README.md).
 
 ## What is missing for the campaign
 
