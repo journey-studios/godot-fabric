@@ -5,11 +5,47 @@ import hashlib
 import json
 from pathlib import Path
 import struct
+from typing import Optional
+
+ADDON_PREFIX = "addons/godot_fabric/"
 
 
-def inspect_pack(pack: Path, bundle: Path) -> dict:
+def canonical_path(raw: str) -> str:
+    """The path Godot registers for a PCK entry (4.7.2, core/io/file_access_pack.cpp).
+
+    PackedData::add_path does `p_path.simplify_path().trim_prefix("res://")`, so an
+    entry such as `res://addons/other/../godot_fabric/x` is registered under
+    addons/godot_fabric/. String::simplify_path (core/string/ustring.cpp) turns
+    backslashes into slashes, collapses repeated slashes and drops empty and `.`
+    segments, and a `..` cancels the segment before it. For a res:// path it keeps a
+    `..` that climbs above the root (its source calls that a FIXME); such an entry
+    cannot be a resource of the project, so it is an error here, not a path.
+    """
+    path = raw[len("res://"):] if raw.startswith("res://") else raw
+    segments = []
+    for segment in path.replace("\\", "/").split("/"):
+        if segment in ("", "."):
+            continue
+        if segment == "..":
+            if not segments:
+                raise RuntimeError(f"PCK entry climbs above the project root: {raw}")
+            segments.pop()
+            continue
+        segments.append(segment)
+    if not segments:
+        raise RuntimeError(f"PCK entry path is empty: {raw}")
+    return "/".join(segments)
+
+
+def inspect_pack(pack: Path, bundle: Optional[Path] = None) -> dict:
     # Layout: upstream core/io/file_access_pack.cpp. Never execute the package
     # against another platform's GDExtension to inspect its contents.
+    # With `bundle`, the pack is a Fabric export: the JS bundle must be in it byte
+    # for byte and no build-only or editor-only SDK contents may have leaked.
+    # With `bundle=None` (--no-bundle), the pack is an export without the Fabric
+    # extension and there is no bundle to look for. Either way the result states
+    # whether anything is under addons/godot_fabric/ and lists the sorted paths,
+    # so the caller can compare the pack with what the export was meant to carry.
     if pack.stat().st_size > 512 * 1024 * 1024:
         raise RuntimeError("PCK exceeds the bounded inspection size")
     data = pack.read_bytes()
@@ -33,7 +69,7 @@ def inspect_pack(pack: Path, bundle: Path) -> dict:
         cursor += 4
         if size == 0 or cursor + size > len(data):
             raise RuntimeError("Truncated PCK entry path")
-        name = data[cursor:cursor + size].rstrip(b"\0").decode("utf8").removeprefix("res://")
+        name = canonical_path(data[cursor:cursor + size].rstrip(b"\0").decode("utf8"))
         cursor += size
         offset, length = unpack("<QQ", cursor)
         entry_flags, = unpack("<I", cursor + 32)
@@ -45,25 +81,37 @@ def inspect_pack(pack: Path, bundle: Path) -> dict:
             raise RuntimeError("Truncated PCK entry payload")
         entries[name] = data[file_base + offset:file_base + offset + length]
         cursor += 36
+    summary = {"format": version, "fileCount": count}
+    if bundle is not None:
+        check_bundle(entries, bundle)
+        summary.update({"bundleEmbeddedByteForByte": True, "buildToolchainExcluded": True, "editorScriptsExcluded": True})
+    summary.update({"fabricAddonExcluded": not any(name.startswith(ADDON_PREFIX) for name in entries),
+                    "paths": sorted(entries), "pckSHA256": hashlib.sha256(data).hexdigest()})
+    return summary
+
+
+def check_bundle(entries: dict, bundle: Path) -> None:
     if entries.get(".godot_fabric/app.js") != bundle.read_bytes():
         raise RuntimeError("Generated JS bundle is absent or modified in exported PCK")
     editor_scripts = {"plugin", "ios_export", "macos_export", "export_payload", "export_preflight", "build"}
     for name in entries:
-        if not name.startswith("addons/godot_fabric/"):
+        if not name.startswith(ADDON_PREFIX):
             continue
-        relative = name.removeprefix("addons/godot_fabric/")
+        relative = name.removeprefix(ADDON_PREFIX)
         if relative.startswith(("toolchain/", "src/", "types/")):
             raise RuntimeError(f"Build-only SDK contents leaked into PCK: {name}")
         if relative in {script + suffix for script in editor_scripts for suffix in (".gd", ".gdc", ".gd.remap")} or relative in {"plugin.cfg", "manifest.json", "native/ios/build-manifests.json"}:
             raise RuntimeError(f"Editor-only SDK contents leaked into PCK: {name}")
-    return {"format": version, "fileCount": count, "bundleEmbeddedByteForByte": True,
-            "buildToolchainExcluded": True, "editorScriptsExcluded": True,
-            "pckSHA256": hashlib.sha256(data).hexdigest()}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pack", type=Path)
-    parser.add_argument("bundle", type=Path)
+    parser.add_argument("bundle", type=Path, nargs="?",
+                        help="the JS bundle the PCK must hold byte for byte")
+    parser.add_argument("--no-bundle", action="store_true",
+                        help="inspect an export that has no bundle (an export without the Fabric extension): the bundle facts are not stated")
     args = parser.parse_args()
-    print(json.dumps(inspect_pack(args.pack, args.bundle), indent=2))
+    if args.no_bundle == (args.bundle is not None):
+        parser.error("pass either the bundle or --no-bundle")
+    print(json.dumps(inspect_pack(args.pack, None if args.no_bundle else args.bundle), indent=2))

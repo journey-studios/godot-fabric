@@ -1058,6 +1058,15 @@ is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or 
 
 **Progress.** The hosted CI and Pages receipts of Frontier's Release app (#135, V05-07 `replay`, exits X1, X2 and X7) are recorded from main at `02e7868`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/f1bdaae2f121c346b5362fd270af0eb1ea9b7db0/docs/evidence/macos-export/civ-lite/README.md#ci-hospedada-e-pages). The Contracts run was dispatched on main and passed its eight jobs on the first attempt; in `native-suites-runtime` the new step exported the signed app with the arm64 Release template derived in CI and passed `npm run test:export:civ-lite` (1 of 1, no skip): the six replays at the golden hash in clean profiles, the HUD matrix in the app and the audit of the published app. The template-free half of the lane passed 10 of 10 in the contracts job, and the Pages run of the push published the committed `migration.json` byte for byte with the criterion's activity entry. No criterion changes state; `limpa` stays open.
 
+**Progress.** V05-10, criterion `execucao`, the export without the Fabric extension (code at `a44d552`, record at `ecf637e`): `exportPreparedProject` and `presetText` take `exportFiles` (the scenes of the `scenes`
+export filter) and `frameworks: false` (a project without the extension, which is what arms A and B are). What an app carries of the extension is now data (`FABRIC_PAYLOAD`, `BARE_PAYLOAD`), the export flow iterates it, and one exact
+check holds for both: `Contents/Frameworks` and the PCK hold exactly the payload. The PCK inspector gained `--no-bundle` and lists the sorted `paths`. Frontier prepared as arm A (`shapeArmProject`) exports as a signed Release
+`.app` with no frameworks, no host and a 37-file PCK without `main.tscn`, `main_native.tscn`, `ui/` or `native_hud/`, and the same options are refused for the copy that has the addon. Godot's scenes mode follows the references
+of scene files, not the `preload()` calls of scripts, so a selection names its scripts through the include filter (the scene alone exports 11 files). The default export is unchanged: the preset is byte for byte the old one,
+`npm run test:export:macos` passed 14 of 14 and `npm run test:export:civ-lite` 1 of 1 at the commit. **A capacity of the export, and no number in it is a result:** the arm's `.app` was not run and nothing was compared.
+The [record](https://github.com/journey-studios/godot-fabric/blob/ecf637e2a05f6b07fa3920edd61c1b4a43700305/docs/evidence/macos-export-options/README.md) is local evidence. No criterion changes state, and no 1.0 checkpoint,
+weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
