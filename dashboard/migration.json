@@ -12,7 +12,7 @@
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
-    "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 149 checks com oráculo independente, controle sobre b0e40aa (90 falham), quatro sabotagens, a recusa de uma faixa inválida da semente e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em 05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). CI hospedada e Pages desta fatia pendentes.",
+    "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 149 checks com oráculo independente, controle sobre b0e40aa (90 falham), quatro sabotagens, a recusa de uma faixa inválida da semente e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em 05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). A CI hospedada (Contracts disparada 38018685996, oito jobs, MOBILE_DENSITY_PASSED: 149) e o Pages (38018671228) do squash 8cd2491 passaram, com recibos canônicos em docs/evidence/mobile-density/.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/104"
   },
   "phases": [
@@ -4727,6 +4727,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "mobile-density-receipts-8cd2491",
+      "at": "2026-10-10T03:35:00.000Z",
+      "taskIds": [
+        "GF-09"
+      ],
+      "message": "Recibos de CI hospedada e de Pages do #104, a fatia de densidade de tela e SafeAreaView do RN (GF-09, sem afirmar o V05-08), já na main como 8cd2491. A Contracts disparada na main sobre o squash (run 38018685996) passou nos oito jobs: no native-suites-runtime, npm run test:mobile-density passou com MOBILE_DENSITY_PASSED: 149 no log do artefato native-mobile-density; o native-cold-start, que roda o teste de C++ puro display_insets_core_test, passou; o job contracts passou 7, 43 e 467 testes de Node e 13 de Python. O Pages do push (run 38018671228) publicou o migration.json commitado byte a byte, com a entrada de atividade da fatia. Recibos gerados pelo gerador canônico (scripts/hosted-receipts.mjs), agora com 17 fatias e 34 recibos. A execução janelada, o controle causal e as sabotagens seguem só locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d191af9b8089f6b32fce107a03956079e69fede1/docs/evidence/mobile-density/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-armb-timebox",
       "at": "2026-10-10T01:58:00.000Z",
