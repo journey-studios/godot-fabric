@@ -324,4 +324,16 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-analysis-4592dba",
   },
+  {
+    folder: "frontier-comparison-execution",
+    pr: 120,
+    squash: "c3892ac",
+    contractsRun: 38050941623,
+    pagesRun: 38050941565,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-run.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-execution-1-f77d81d",
+  },
 ];
