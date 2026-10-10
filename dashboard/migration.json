@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T05:00:00.000Z",
+  "updatedAt": "2026-10-10T05:50:45.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4751,6 +4751,13 @@
       "taskIds": [],
       "message": "Recibos de CI hospedada e de Pages do #108, a correção da lane do turno (a regressão de tempo de quadro atribuída ao #100 era a sonda lendo o snapshot inteiro do Surface em cada quadro cronometrado), já na main como 09ed8f7. A Contracts disparada na main sobre o squash (run 38027051145) passou nos oito jobs: no native-suites-frontier, npm run test:frontier-turn passou com FRONTIER_TURN_PASSED: 27 no artefato native-frontier-turn, com a regra observation; o job contracts passou 7, 43 e 490 testes de Node, entre eles os 18 do verificador da lane janelada. O Pages do push (run 38027038484) publicou o migration.json commitado, com a entrada de atividade da correção. Gerador canônico com 20 fatias e 40 recibos. O A/B janelado e o diagnóstico seguem só locais.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/de618102dc5ed27b415ff2b059bccd8f60ead055/docs/evidence/civ-lite-ui/frame-time/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-06-congelado-followup-3fb9487",
+      "at": "2026-10-10T05:50:45.000Z",
+      "taskIds": [],
+      "message": "Depois do congelado (commit 3fb9487), a causa da faixa do turno acima dos limites congelados foi confirmada e corrigida no #108 (09ed8f7): a sonda da faixa lia o snapshot da Surface duas vezes em cada quadro cronometrado, e esse snapshot carrega o log do carregador de imagens, que os ícones do #100 encheram. Não era a HUD nem o host. Como corroboração, a faixa corrigida na main em 09ed8f7 dá, na mediana dos p95 por vaga (cinco vagas apresentadas, vsync a 120 Hz), 13,62 ms na fase da IA e 13,54 ms no fim do turno, contra os 15,5 ms congelados; a carga e a contaminação estão descritas no registro. Nenhum valor congelado muda, e a corroboração não vira limiar. O X6 (orçamento pré-registrado e cumprido) segue aberto, porque depende dos braços do comparativo e do tempo de CPU por quadro. Nenhum critério muda, e nenhum checkpoint, nota, peso ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3fb94871fd95fbfab40bc625fc03957d3bd4b963/docs/evidence/frontier-freeze/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-5-7099e2b",
