@@ -1,0 +1,25 @@
+config_version=5
+
+[application]
+config/name="Godot Fabric Export 33220-1791499097327-6e5eb0"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1080
+window/size/viewport_height=600
+window/size/window_width_override=540
+window/size/window_height_override=300
+window/size/resizable=false
+window/stretch/aspect="keep"
+
+[rendering]
+textures/vram_compression/import_s3tc_bptc=true
+textures/vram_compression/import_etc2_astc=true
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.035, 0.047, 0.075, 1)
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/godot_fabric/plugin.cfg")
+
+[godot_fabric]
+application="res://ui/application.tres"

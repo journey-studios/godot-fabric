@@ -1,0 +1,92 @@
+
+> godot-fabric@0.1.0 test:export:macos
+> node --test tests/macos-export.test.mjs tests/macos-export-native.test.mjs
+
+TAP version 13
+# Subtest: macOS export documents its required new-output contract without starting a build
+ok 1 - macOS export documents its required new-output contract without starting a build
+  ---
+  duration_ms: 34.836334
+  type: 'test'
+  ...
+# Subtest: macOS export requires an explicit template before provisioning
+ok 2 - macOS export requires an explicit template before provisioning
+  ---
+  duration_ms: 40.600042
+  type: 'test'
+  ...
+# Subtest: macOS export refuses existing and dangling-symlink destinations before provisioning
+ok 3 - macOS export refuses existing and dangling-symlink destinations before provisioning
+  ---
+  duration_ms: 83.560042
+  type: 'test'
+  ...
+# Subtest: committed consumer oracle preserves the exact 40/43 check names and capture order
+ok 4 - committed consumer oracle preserves the exact 40/43 check names and capture order
+  ---
+  duration_ms: 0.447208
+  type: 'test'
+  ...
+# Subtest: headed consumer capture requires the fixed physical image and matching logical RN metrics
+ok 5 - headed consumer capture requires the fixed physical image and matching logical RN metrics
+  ---
+  duration_ms: 1.793375
+  type: 'test'
+  ...
+# Subtest: load-path validation permits contained loader paths and rejects traversal
+ok 6 - load-path validation permits contained loader paths and rejects traversal
+  ---
+  duration_ms: 0.304
+  type: 'test'
+  ...
+# Subtest: generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+ok 7 - generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+  ---
+  duration_ms: 785.475125
+  type: 'test'
+  ...
+# Subtest: failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+ok 8 - failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+  ---
+  duration_ms: 10.417333
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects symlinks before copying anything
+ok 9 - failed consumer output retention rejects symlinks before copying anything
+  ---
+  duration_ms: 5.796125
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects a symlinked user-data directory
+ok 10 - failed consumer output retention rejects a symlinked user-data directory
+  ---
+  duration_ms: 2.518166
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention refuses existing evidence destinations
+ok 11 - failed consumer output retention refuses existing evidence destinations
+  ---
+  duration_ms: 4.278917
+  type: 'test'
+  ...
+# Subtest: native macOS arm64 export and copied-app rejection controls
+ok 12 - native macOS arm64 export and copied-app rejection controls
+  ---
+  duration_ms: 33373.803709
+  type: 'test'
+  ...
+# Subtest: Godot export payload and registered hooks validate in an isolated project
+ok 13 - Godot export payload and registered hooks validate in an isolated project
+  ---
+  duration_ms: 3354.838042
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34413.255417

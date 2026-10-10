@@ -12,9 +12,12 @@ The [public controls record](public-controls/README.md) adds the typed form,
 fresh ten-example reports and README gallery captures. Earlier records retain
 their historical provenance.
 
-The [independent consumer record](consumer/README.md) adds the 2B
-Resource/addon/editor prototype, fresh external TSX project, private/offline
-build and dependency checks, native roots/lifecycle and two actual captures.
+The [independent consumer record](consumer/README.md) covers the 2B Resource/addon/editor prototype,
+external TSX provisioning, offline checks and native roots/lifecycle. The [macOS export record](macos-export/README.md)
+adds a signed, relocated Release app. Its [current fixed-window proof](macos-export/fixed-window/README.md)
+records exact 40/43 assertions, three 540×300 captures byte-identical to an independently
+executed editable baseline, 220 SDK source pins and a 280-check local archive audit.
+This is local evidence; the preceding hosted failure remains recorded and new CI is pending. The later [symlink review](macos-export/symlink-review/README.md) records a physical `LC_RPATH` escape control and a 285-check local archive audit; it does not claim hosted acceptance. The [symlink-parent review](macos-export/symlink-parent-review/README.md) adds a fresh 14/14 native export lane, 40/43 runtime checks, seven controls, and a physical outside-app `LC_RPATH` symlink rejection. It supplements the earlier record without replacing its historical artifacts; hosted CI, final review and Pages publication remain separate.
 
 The later [project-resolution record](project-resolution/README.md) exercises
 inherited local aliases and non-hoisted dependencies through that normal addon.

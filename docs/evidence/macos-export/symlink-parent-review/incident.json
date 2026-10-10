@@ -1,0 +1,29 @@
+{
+  "format": "godot-fabric.worktree-recovery-incident/v1",
+  "observedDate": "2026-10-09",
+  "event": "External Codex app snapshot/checkout lifecycle removed the checkout and ignored artifacts during the continuation.",
+  "snapshot": {
+    "ref": "refs/codex/snapshots/961a516fd89667f3516e277e0925bdfcafd9e66f",
+    "commit": "481f91a6bb851fbcdc770914091a00370cae46e3"
+  },
+  "recovery": {
+    "restoredFromSnapshot": true,
+    "patchCompared": "{TEMP}/fabric-recovered-symlink-parent.patch",
+    "comparison": "cmp passed: recovered patch matched the two expected modified tracked files byte-for-byte.",
+    "trackedFiles": [
+      "scripts/macos-export.mjs",
+      "tests/macos-export-native.test.mjs"
+    ]
+  },
+  "lostIgnoredArtifacts": [
+    ".deps cache",
+    "build outputs and local ignored evidence",
+    "node_modules"
+  ],
+  "reconstructed": {
+    "dependenciesAndNativeHost": "setup passed from pinned sources; .deps/compile.log retained in this package",
+    "exportTemplate": "official archive verified and derived again",
+    "macOSExportAndControls": "rerun and retained in this package"
+  },
+  "history": "Committed historical evidence under docs/evidence/ was preserved; old ignored local artifacts were not recovered."
+}

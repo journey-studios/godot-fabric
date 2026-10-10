@@ -1,0 +1,50 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialização do Projeto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando estrutura de arquivos...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Carregando nomes de classe globais...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Criando scripts autoload...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneamento de arquivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mexport[22m | Started Exportando para macOS (3 steps)[39m[0m
+[   0% ] [90m[1mexport[22m | Criando pacote de aplicativo[39m[0m
+[  25% ] [90m[1mexport[22m | Criando PKG[39m[0m
+[   0% ] [90m[1msavepack[22m | Started Empacotando (102 steps)[39m[0m
+[   1% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot_fabric/app.js[39m[0m
+[   1% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/imported/JetBrainsMono.ttf-1daf51520cb9b4535620b7b6d601952e.fontdata[39m[0m
+[   1% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/assets/fonts/JetBrainsMono.ttf.import[39m[0m
+[   6% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/imported/NotoSans.ttf-0efb51cfb6a543363f27ad6a4e13247b.fontdata[39m[0m
+[   6% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/assets/fonts/NotoSans.ttf.import[39m[0m
+[  11% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/application_node.gdc[39m[0m
+[  16% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/application_resource.gdc[39m[0m
+[  35% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/fabric.gdextension[39m[0m
+[  40% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/godot_fabric.gdc[39m[0m
+[  65% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/exported/133200997/export-d94073373f5c4345dc163e1f846a8f2d-application.res[39m[0m
+[  69% ] [90m[1msavepack[22m | Armazenando Arquivo: res://game.gdc[39m[0m
+[  74% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn[39m[0m
+[  79% ] [90m[1msavepack[22m | Armazenando Arquivo: res://package-lock.json[39m[0m
+[  84% ] [90m[1msavepack[22m | Armazenando Arquivo: res://package.json[39m[0m
+[  89% ] [90m[1msavepack[22m | Armazenando Arquivo: res://tsconfig.json[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://validation.gdc[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/application_node.gd.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/application_resource.gd.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://addons/godot_fabric/godot_fabric.gd.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://ui/application.tres.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://game.gd.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://main.tscn.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://validation.gd.remap[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/global_script_class_cache.cfg[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/extension_list.cfg[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://.godot/uid_cache.bin[39m[0m
+[  94% ] [90m[1msavepack[22m | Armazenando Arquivo: res://project.binary[39m[0m
+[92m[ DONE ][39m [1msavepack[22m
+[0m
+[92m[ DONE ][39m [1mexport[22m
+[0m
+WARNING: Exportar: "hermesvm.framework": Info.plist inválida ou faltando, uma nova Info.plist foi gerada.
+     at: add_message (editor/export/editor_export_platform.h:267)
+WARNING: Project export for preset "macOS Arm64" completed with warnings.
+     at: _fs_changed (editor/editor_node.cpp:1422)

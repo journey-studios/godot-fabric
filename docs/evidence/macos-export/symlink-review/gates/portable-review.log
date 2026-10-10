@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: macOS export documents its required new-output contract without starting a build
+ok 1 - macOS export documents its required new-output contract without starting a build
+  ---
+  duration_ms: 35.36725
+  type: 'test'
+  ...
+# Subtest: macOS export requires an explicit template before provisioning
+ok 2 - macOS export requires an explicit template before provisioning
+  ---
+  duration_ms: 35.956917
+  type: 'test'
+  ...
+# Subtest: macOS export refuses existing and dangling-symlink destinations before provisioning
+ok 3 - macOS export refuses existing and dangling-symlink destinations before provisioning
+  ---
+  duration_ms: 64.841625
+  type: 'test'
+  ...
+# Subtest: committed consumer oracle preserves the exact 40/43 check names and capture order
+ok 4 - committed consumer oracle preserves the exact 40/43 check names and capture order
+  ---
+  duration_ms: 0.413667
+  type: 'test'
+  ...
+# Subtest: headed consumer capture requires the fixed physical image and matching logical RN metrics
+ok 5 - headed consumer capture requires the fixed physical image and matching logical RN metrics
+  ---
+  duration_ms: 1.651875
+  type: 'test'
+  ...
+# Subtest: load-path validation checks real targets behind app aliases and symlinks
+ok 6 - load-path validation checks real targets behind app aliases and symlinks
+  ---
+  duration_ms: 5.951791
+  type: 'test'
+  ...
+# Subtest: load-path audit awaits realpath containment for Mach-O aliases
+ok 7 - load-path audit awaits realpath containment for Mach-O aliases
+  ---
+  duration_ms: 7.9775
+  type: 'test'
+  ...
+# Subtest: generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+ok 8 - generic subprocesses allow diagnostic literals while Godot editor and runtime reject fatal output
+  ---
+  duration_ms: 439.793834
+  type: 'test'
+  ...
+# Subtest: failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+ok 9 - failed consumer outputs are retained byte-for-byte and missing outputs are allowed
+  ---
+  duration_ms: 7.246792
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects symlinks before copying anything
+ok 10 - failed consumer output retention rejects symlinks before copying anything
+  ---
+  duration_ms: 2.459292
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention rejects a symlinked user-data directory
+ok 11 - failed consumer output retention rejects a symlinked user-data directory
+  ---
+  duration_ms: 1.110083
+  type: 'test'
+  ...
+# Subtest: failed consumer output retention refuses existing evidence destinations
+ok 12 - failed consumer output retention refuses existing evidence destinations
+  ---
+  duration_ms: 1.743875
+  type: 'test'
+  ...
+# Subtest: native macOS arm64 export and copied-app rejection controls
+ok 13 - native macOS arm64 export and copied-app rejection controls # SKIP MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template
+  ---
+  duration_ms: 0.044791
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 699.917291

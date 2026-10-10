@@ -1,0 +1,3759 @@
+{
+  "format": "godot-fabric.local-archive-macos-export-audit/v1",
+  "status": "passed",
+  "producerCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+  "checks": [
+    {
+      "name": "artifact-directory",
+      "passed": true
+    },
+    {
+      "name": "final-producer-commit-configured",
+      "passed": true
+    },
+    {
+      "name": "producer-commit-is-pinned",
+      "passed": true
+    },
+    {
+      "name": "raw-output-paths-not-symlinks",
+      "passed": true
+    },
+    {
+      "name": "outputs-under-ignored-build",
+      "passed": true
+    },
+    {
+      "name": "new-output-paths",
+      "passed": true
+    },
+    {
+      "name": "outputs-separate-from-input",
+      "passed": true
+    },
+    {
+      "name": "report-separate-from-artifact-and-extraction",
+      "passed": true
+    },
+    {
+      "name": "expected-git-producer-present",
+      "passed": true,
+      "detail": "5596acb1cf975ff470acf531c0843fef19706e70"
+    },
+    {
+      "name": "checkout-is-producer",
+      "passed": true,
+      "detail": "5596acb1cf975ff470acf531c0843fef19706e70"
+    },
+    {
+      "name": "receipt-published",
+      "passed": true
+    },
+    {
+      "name": "receipt-sdk-clean",
+      "passed": true
+    },
+    {
+      "name": "receipt-harness-directory",
+      "passed": true
+    },
+    {
+      "name": "associated-sdk-manifest",
+      "passed": true,
+      "detail": "macos-export-Verified-37799-1791503052426-8966a9/sdk-manifest.json"
+    },
+    {
+      "name": "unique-sdk-manifest",
+      "passed": true
+    },
+    {
+      "name": "associated-build-report",
+      "passed": true,
+      "detail": "macos-export-Verified-37799-1791503052426-8966a9/build-report.json"
+    },
+    {
+      "name": "unique-build-report",
+      "passed": true
+    },
+    {
+      "name": "associated-app-js",
+      "passed": true,
+      "detail": "macos-export-Verified-37799-1791503052426-8966a9/app.js"
+    },
+    {
+      "name": "unique-app-js",
+      "passed": true
+    },
+    {
+      "name": "associated-runtime-headless",
+      "passed": true,
+      "detail": "macos-export-Verified-37799-1791503052426-8966a9/runtime-headless.json"
+    },
+    {
+      "name": "unique-runtime-headless",
+      "passed": true
+    },
+    {
+      "name": "associated-runtime-headed",
+      "passed": true,
+      "detail": "macos-export-Verified-37799-1791503052426-8966a9/runtime-headed.json"
+    },
+    {
+      "name": "unique-runtime-headed",
+      "passed": true
+    },
+    {
+      "name": "trusted-local-manifest-is-audited-producer",
+      "passed": true
+    },
+    {
+      "name": "sdk-manifest-binding",
+      "passed": true
+    },
+    {
+      "name": "source-pins-count",
+      "passed": true,
+      "detail": 220
+    },
+    {
+      "name": "sdk-source-map-matches",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:dependencies.json",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:fabric.gdextension",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/CMakeLists.txt",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_announcement_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_announcement_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_announcer.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_announcer.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_info.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_info.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_info_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessibility_info_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessible_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/accessible_view.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/activity_indicator_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/activity_indicator_view.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/adapter_loader.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/adapter_loader.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/adapter_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/adapter_registry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/affine_transform.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/affine_transform_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/app_lifecycle.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/appearance_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/appearance_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/application_runtime.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/application_runtime.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/blob_store.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/coordinate_transform.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/device_services.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/device_services.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/device_services_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/device_services_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/fabric_application.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/fabric_application.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/fabric_surface.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/fabric_surface.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/frame_clock.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/frame_clock_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/game_service_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/game_service_registry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot-profile.json",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_component.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_device_backend.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_device_backend.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_dom.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_dom.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_http_transport.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_http_transport.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_image_manager.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_image_manager.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_tls.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_websocket_connection.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_websocket_connection.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_websocket_transport.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/godot_websocket_transport.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/http_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/http_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/http_transport.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_cache.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_cache_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_effects.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_effects.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_effects_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_effects_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_geometry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_loader.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_loader.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_loader_module.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_loader_module.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_network.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_network.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_network_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_sources.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_sources.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/image_view.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/input_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/input_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/layout_animation.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/layout_animation.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/modal_host_view_component_descriptor.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/modal_presentation.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/modal_presentation.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/modal_window_stack.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/modal_window_stack.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/native_animated.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/native_animated.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/networking_modules.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/networking_modules.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/networking_state.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/paragraph_layout.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/paragraph_layout.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/paragraph_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/paragraph_view.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/performance_metrics.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/performance_metrics_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/physical_embedding.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/physical_embedding.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_event.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_geometry.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_geometry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_geometry_history.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_geometry_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_processor_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/pointer_projection_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/register.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_motion.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_motion_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_offset.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/scroll_throttle.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/smoke.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/stoppable_invoker.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/svg_node.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/svg_node.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/switch_view.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/switch_view.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/system_appearance.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/text_layout.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/text_layout.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/timer_registry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/timer_registry_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/transform_adapter.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/transform_adapter.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/turbo_module_registry.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/turbo_module_registry.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_core.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_core_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_handshake.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_handshake_test.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_module.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_module.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_transport.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/websocket_transport_test_fixture.cpp",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:native/window_metrics.h",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:package-lock.json",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:scripts/adapter-manifest.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:scripts/codegen-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:scripts/codegen.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:scripts/pack-addon.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/.gdignore",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/README.md",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/application_node.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/application_resource.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/build.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/export_payload.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/export_preflight.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/godot_fabric.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/ios_export.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/macos_export.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/plugin.cfg",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/addon/plugin.gd",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/adapter-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/asset-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/build.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/native-compiler.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/native-typecheck.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/nativewind-compile.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/platform-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/platform-resolution.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/project-config.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/project-resolution.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/project-typecheck.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/rn-event-target-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:sdk/toolchain/tailwind-plugin.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/accessibility-info.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/accessibility-view-config.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/animated-exports.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/app-registry.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/app-state.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/base-view-config.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/components.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/control-contracts.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/device-services.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/godot-fabric.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/image-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/image.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/initialize.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/list-props.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/lists.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/native-module-runtime.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/native-modules.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/nativewind.css",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/os-specific.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/platform-color-value-types.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/platform-environment.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/platform.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/pointer-listener-query.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/private-interface.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/prop-scope.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/public-input.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/react-native-platform.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/render-application.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/renderer-proxy.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/runtime.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/scroll-view-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/scroll-view-native-config.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/scroll-view.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/svg-contract.mjs",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/svg.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/text-input-state.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/text.jsx",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/ui-manager.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/unsupported-reanimated.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/unsupported-safe-area.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:src/window-dimensions.js",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:types/godot-fabric.ts",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:types/nativewind.ts",
+      "passed": true
+    },
+    {
+      "name": "git-source-pin:types/react-native.ts",
+      "passed": true
+    },
+    {
+      "name": "build-report-binding",
+      "passed": true
+    },
+    {
+      "name": "bundle-bindings",
+      "passed": true
+    },
+    {
+      "name": "host-source-binding",
+      "passed": true
+    },
+    {
+      "name": "controls-have-exact-six-names",
+      "passed": true
+    },
+    {
+      "name": "controls-native-source-binding",
+      "passed": true
+    },
+    {
+      "name": "controls-positive-links-export",
+      "passed": true
+    },
+    {
+      "name": "idempotent-normalization-preserves-host-frameworks",
+      "passed": true
+    },
+    {
+      "name": "missing-framework-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "signed-plist-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "absolute-rpath-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "symlink-rpath-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "stale-source-lock-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "archive-matches-receipt-output",
+      "passed": true,
+      "detail": "macos-export-native-positive-1c011807-b800-408b-8755-8e9ffb141e11/Verified.app.tar.gz"
+    },
+    {
+      "name": "published-app-tree-hash",
+      "passed": true,
+      "detail": {
+        "sha256": "46b8a323dda467ffb4c9b9fb98eba7971a9981603486bad6dde8893d533c8362",
+        "entries": 48
+      }
+    },
+    {
+      "name": "codesign-deep-strict",
+      "passed": true,
+      "detail": "--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/.\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/fabric_godot.dylib\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/fabric_godot.dylib\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_glog.bundle\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_boost.bundle\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_folly.bundle\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_SocketRocket.bundle\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_glog.bundle\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_folly.bundle\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_boost.bundle\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/ReactNativeDependencies_SocketRocket.bundle\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current/.\n--prepared:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/Current/.\n--validated:{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/Current/.\n{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app: valid on disk\n{WORKTREE}/build/p2-native-export-producer/audit-local-symlink-5596acb/extracted/Verified.app: satisfies its Designated Requirement\n"
+    },
+    {
+      "name": "one-exported-pck",
+      "passed": true
+    },
+    {
+      "name": "pck-receipt-path",
+      "passed": true
+    },
+    {
+      "name": "pck-inspector-pinned",
+      "passed": true
+    },
+    {
+      "name": "pck-contents",
+      "passed": true
+    },
+    {
+      "name": "runtime-headless-40",
+      "passed": true,
+      "detail": {
+        "count": 40,
+        "displayServer": "headless"
+      }
+    },
+    {
+      "name": "runtime-headed-43",
+      "passed": true,
+      "detail": {
+        "count": 43,
+        "displayServer": "macOS"
+      }
+    },
+    {
+      "name": "logical-window-and-uniform-scale",
+      "passed": true
+    },
+    {
+      "name": "geometry-window-matches-logical-window",
+      "passed": true
+    },
+    {
+      "name": "canonical-fixture-project-pinned",
+      "passed": true
+    },
+    {
+      "name": "canonical-fixture-validation-pinned",
+      "passed": true
+    },
+    {
+      "name": "canonical-check-inventory-pinned",
+      "passed": true
+    },
+    {
+      "name": "retained-validationDiff",
+      "passed": true
+    },
+    {
+      "name": "retained-projectDiff",
+      "passed": true
+    },
+    {
+      "name": "three-capture-receipts",
+      "passed": true
+    },
+    {
+      "name": "unique-capture-initial.png",
+      "passed": true
+    },
+    {
+      "name": "capture-initial.png",
+      "passed": true
+    },
+    {
+      "name": "current-editable-baseline-initial.png",
+      "passed": true
+    },
+    {
+      "name": "unique-capture-updated.png",
+      "passed": true
+    },
+    {
+      "name": "capture-updated.png",
+      "passed": true
+    },
+    {
+      "name": "current-editable-baseline-updated.png",
+      "passed": true
+    },
+    {
+      "name": "unique-capture-resized.png",
+      "passed": true
+    },
+    {
+      "name": "capture-resized.png",
+      "passed": true
+    },
+    {
+      "name": "current-editable-baseline-resized.png",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "This audits locally produced archive bytes; it does not certify hosted CI.",
+    "Ad-hoc signature verification does not establish Developer ID distribution or notarization."
+  ],
+  "trustedLocalManifest": {
+    "path": "build/macos-export-Verified-33220-1791499097327-6e5eb0/sdk-manifest.json",
+    "sha256": "4c7ce4d2b8a41cbe47e2d44076ee6ba297f20753dbb245acf0fd831722b1c2cc",
+    "sourceCommit": "29969eb0d64201a1797e6e866a2ef650b1282fde",
+    "sourceDirty": false
+  },
+  "sdk": {
+    "recordedSourceCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+    "receiptSourceCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+    "sourceDirty": false,
+    "sourceFileCount": 220,
+    "hostSha256": "1333055f5ce81a8625a1d3e25cd29adeafc18018260cef5a83882f281552c773",
+    "localHostByteEqualityClaimed": false
+  },
+  "archive": {
+    "path": "macos-export-native-positive-1c011807-b800-408b-8755-8e9ffb141e11/Verified.app.tar.gz",
+    "sha256": "086be9a2a9cd16e5d849e301a6aa80aaf47afc756f93920c06afeb114e7cae88",
+    "memberCount": 81,
+    "memberInventorySha256": "1d8e5b666aa4c6376a4d5f8ee3f090a4261f2f61f9739fb22b1ca8be7ef02219",
+    "members": [
+      {
+        "path": "Verified.app",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/MacOS",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1905,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/PkgInfo",
+        "type": "file",
+        "mode": 420,
+        "bytes": 9,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/fabric_godot.dylib",
+        "type": "file",
+        "mode": 420,
+        "bytes": 6695216,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/ReactNativeDependencies_folly.bundle"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Resources",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/Resources"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_SocketRocket.bundle",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/ReactNativeDependencies_SocketRocket.bundle"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/ReactNativeDependencies"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/ReactNativeDependencies_glog.bundle"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_boost.bundle",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/ReactNativeDependencies_boost.bundle"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "A"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2512032,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1138,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "type": "file",
+        "mode": 420,
+        "bytes": 776,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2464,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeDirectory",
+        "type": "file",
+        "mode": 420,
+        "bytes": 204,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeSignature",
+        "type": "file",
+        "mode": 420,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeRequirements",
+        "type": "file",
+        "mode": 420,
+        "bytes": 12,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1136,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "type": "file",
+        "mode": 420,
+        "bytes": 552,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2464,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeDirectory",
+        "type": "file",
+        "mode": 420,
+        "bytes": 203,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeSignature",
+        "type": "file",
+        "mode": 420,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeRequirements",
+        "type": "file",
+        "mode": 420,
+        "bytes": 12,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1152,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "type": "file",
+        "mode": 420,
+        "bytes": 326,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2464,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeDirectory",
+        "type": "file",
+        "mode": 420,
+        "bytes": 211,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeSignature",
+        "type": "file",
+        "mode": 420,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeRequirements",
+        "type": "file",
+        "mode": 420,
+        "bytes": 12,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1322,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 1138,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "type": "file",
+        "mode": 420,
+        "bytes": 552,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2464,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeDirectory",
+        "type": "file",
+        "mode": 420,
+        "bytes": 204,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeSignature",
+        "type": "file",
+        "mode": 420,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeRequirements",
+        "type": "file",
+        "mode": 420,
+        "bytes": 12,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 3408,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Resources",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/Resources"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "Versions/Current/hermesvm"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/Current",
+        "type": "symlink",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": "1"
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources",
+        "type": "directory",
+        "mode": 493,
+        "bytes": 0,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/hermesvm",
+        "type": "file",
+        "mode": 420,
+        "bytes": 12070224,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources/Info.plist",
+        "type": "file",
+        "mode": 420,
+        "bytes": 855,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2442,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Resources/icon.icns",
+        "type": "file",
+        "mode": 420,
+        "bytes": 67500,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Resources/Godot Fabric Export 37799-1791503052426-8966a9.pck",
+        "type": "file",
+        "mode": 420,
+        "bytes": 2642384,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/Resources/PrivacyInfo.xcprivacy",
+        "type": "file",
+        "mode": 420,
+        "bytes": 229,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/MacOS/Godot Fabric Export 37799-1791503052426-8966a9",
+        "type": "file",
+        "mode": 493,
+        "bytes": 82439632,
+        "linkTarget": null
+      },
+      {
+        "path": "Verified.app/Contents/_CodeSignature/CodeResources",
+        "type": "file",
+        "mode": 420,
+        "bytes": 3838,
+        "linkTarget": null
+      }
+    ],
+    "appleDoubleCount": 81,
+    "appleDoubleInventorySha256": "b0c15ba8ed4a2b40f8a5345217401521eb5143022f43e2502ea165f67b14552c",
+    "appleDoubleSidecars": [
+      {
+        "path": "._Verified.app",
+        "payloadPath": "Verified.app",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/._Contents",
+        "payloadPath": "Verified.app/Contents",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/._MacOS",
+        "payloadPath": "Verified.app/Contents/MacOS",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/._Resources",
+        "payloadPath": "Verified.app/Contents/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/._Frameworks",
+        "payloadPath": "Verified.app/Contents/Frameworks",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/._PkgInfo",
+        "payloadPath": "Verified.app/Contents/PkgInfo",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/._frameworks",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/._fabric_godot.dylib",
+        "payloadPath": "Verified.app/Contents/Frameworks/fabric_godot.dylib",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/._hermesvm.framework",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/._ReactNativeDependencies.framework",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._ReactNativeDependencies_folly.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_folly.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._Versions",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._ReactNativeDependencies_SocketRocket.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_SocketRocket.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._ReactNativeDependencies",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._ReactNativeDependencies_glog.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_glog.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/._ReactNativeDependencies_boost.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies_boost.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/._A",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/._Current",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/Current",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._ReactNativeDependencies_folly.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._ReactNativeDependencies_SocketRocket.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._ReactNativeDependencies",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._ReactNativeDependencies_glog.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/._ReactNativeDependencies_boost.bundle",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/._Contents",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources/._PrivacyInfo.xcprivacy",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/._CodeDirectory",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeDirectory",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/._CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeSignature",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/._CodeRequirements",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeRequirements",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/._Contents",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources/._PrivacyInfo.xcprivacy",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/._CodeDirectory",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeDirectory",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/._CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeSignature",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/._CodeRequirements",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeRequirements",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/._Contents",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources/._PrivacyInfo.xcprivacy",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/._CodeDirectory",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeDirectory",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/._CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeSignature",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/._CodeRequirements",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeRequirements",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/._Contents",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources/._PrivacyInfo.xcprivacy",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources/PrivacyInfo.xcprivacy",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/._CodeDirectory",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeDirectory",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/._CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeSignature",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/._CodeRequirements",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeRequirements",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/._Versions",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/._hermesvm",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/._1",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/._Current",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/Current",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/.__CodeSignature",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/._Resources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/._hermesvm",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/hermesvm",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources/._Info.plist",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources/Info.plist",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Resources/._icon.icns",
+        "payloadPath": "Verified.app/Contents/Resources/icon.icns",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Resources/._Godot Fabric Export 37799-1791503052426-8966a9.pck",
+        "payloadPath": "Verified.app/Contents/Resources/Godot Fabric Export 37799-1791503052426-8966a9.pck",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/Resources/._PrivacyInfo.xcprivacy",
+        "payloadPath": "Verified.app/Contents/Resources/PrivacyInfo.xcprivacy",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/MacOS/._Godot Fabric Export 37799-1791503052426-8966a9",
+        "payloadPath": "Verified.app/Contents/MacOS/Godot Fabric Export 37799-1791503052426-8966a9",
+        "mode": 493,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      },
+      {
+        "path": "Verified.app/Contents/_CodeSignature/._CodeResources",
+        "payloadPath": "Verified.app/Contents/_CodeSignature/CodeResources",
+        "mode": 420,
+        "bytes": 163,
+        "sha256": "01a4184717d3104a9db6f8556a1cb9329f8090cf397eb81d06dc456965d08e6b",
+        "header": {
+          "magic": "0x00051607",
+          "version": "0x00020000",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": 9,
+              "offset": 50,
+              "bytes": 113
+            },
+            {
+              "id": 2,
+              "offset": 163,
+              "bytes": 0
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "pck": {
+    "format": 4,
+    "fileCount": 27,
+    "bundleEmbeddedByteForByte": true,
+    "buildToolchainExcluded": true,
+    "editorScriptsExcluded": true,
+    "pckSHA256": "c9fbfd762869cbc366108b451d34d917c7dfcadcc4c155d23224a3af3d52a3b3"
+  },
+  "runtimes": [
+    {
+      "label": "headless",
+      "checkCount": 40,
+      "displayServer": "headless"
+    },
+    {
+      "label": "headed",
+      "checkCount": 43,
+      "displayServer": "macOS"
+    }
+  ],
+  "captures": [
+    {
+      "name": "initial.png",
+      "bytes": 24826,
+      "sha256": "767b8dfd4ce0de2902234f76c6b5fe0fd3d06e5a98be119db24833dc3372be7b",
+      "dimensions": [
+        540,
+        300
+      ]
+    },
+    {
+      "name": "updated.png",
+      "bytes": 28929,
+      "sha256": "07adc4379bbcfed38185ebf7d78e04c994a8509962d1dfc9c04af8fa3cdf815c",
+      "dimensions": [
+        540,
+        300
+      ]
+    },
+    {
+      "name": "resized.png",
+      "bytes": 31963,
+      "sha256": "40b46ca1d6a0e693ffd4ce6d78098238a16f12ca491d67d80a95275304260dee",
+      "dimensions": [
+        540,
+        300
+      ]
+    }
+  ]
+}

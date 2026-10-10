@@ -1,0 +1,105 @@
+{
+  "format": "godot-fabric.macos-export-local-failure-history/v1",
+  "items": [
+    {
+      "id": "hosted-7c6a4f8-window-clamp",
+      "scope": "hosted CI artifact from run 37844090577; not accepted as passing evidence",
+      "observation": "The headed PNG was 1024x600 while that runner expected 1080x600; the receipt failed at the capture-dimension gate after the app checks.",
+      "correction": "The current fixed-window fixture uses a 540x300 physical window with 1080x600 RN logical metrics at uniform scale 0.5.",
+      "files": [
+        {
+          "sourcePath": "build/p2-native-export-producer/hosted-macos-7c6a4f8-failed-3324464cda/files/macos-export-Verified-68771-1791496271299-1ba7de/receipt.json",
+          "publishedPath": "failure-history/7c6a4f8/receipt.json",
+          "sourceBytes": 45564,
+          "sourceSha256": "fc49f696af1304e862b10b7bd1133d6865f55829208932c0279fb964a7c0e674",
+          "publishedBytes": 44501,
+          "publishedSha256": "20f20f16f4c88930a5138bdf6af7dc5eab65375677fe4e8e1a8baf6e8a493178",
+          "pathRedacted": true
+        },
+        {
+          "sourcePath": "build/p2-native-export-producer/hosted-macos-7c6a4f8-failed-3324464cda/files/macos-export-Verified-68771-1791496271299-1ba7de/runtime-headed.json",
+          "publishedPath": "failure-history/7c6a4f8/runtime-headed.json",
+          "sourceBytes": 66713,
+          "sourceSha256": "cc19a5246c9c1700f98c42c22373ae80a331781aea0ec57cf98fd75f9e282aa9",
+          "publishedBytes": 66699,
+          "publishedSha256": "5170ba51d8afa924e9a15069a1c831b825e942fa0a240e7f3a9801e01307ecd2",
+          "pathRedacted": true
+        },
+        {
+          "sourcePath": "build/p2-native-export-producer/hosted-macos-7c6a4f8-failed-3324464cda/files/macos-export-Verified-68771-1791496271299-1ba7de/runtime-headed.log",
+          "publishedPath": "failure-history/7c6a4f8/runtime-headed.log",
+          "sourceBytes": 1089,
+          "sourceSha256": "41f7c526d1003a55d082db237be5f70a5f9298aa1440572c658dc200b6a18a9f",
+          "publishedBytes": 1082,
+          "publishedSha256": "b87553126b97fe5cfe6c127f994539f99c9fc6601a5f18a2c6a08232bec0f8bd",
+          "pathRedacted": true
+        }
+      ],
+      "status": "historical-diagnostic"
+    },
+    {
+      "id": "local-9fe64bb-remount-check",
+      "scope": "local rejected export; no current acceptance claim",
+      "observation": "The first headed run failed the remount check. The app had written report/captures before its failure markers, but the wrapper failed before collection and its finally cleanup removed the four owned outputs. Sequential replays passed 40/43 but did not explain the original failure.",
+      "correction": "The cause of that first failure remains unexplained; no expectation or timing was weakened.",
+      "files": [
+        {
+          "sourcePath": "build/macos-export-Verified-8526-1791497669931-4e8d9d/receipt.json",
+          "publishedPath": "failure-history/9fe64bb/receipt.json",
+          "sourceBytes": 47289,
+          "sourceSha256": "7aa3e521505b98efe38be3c838b7ba10670ec82c689c10000e36d1f4ffa282c7",
+          "publishedBytes": 45730,
+          "publishedSha256": "207f49cc35048e6acad1c11e6b63d3183c2a944d4f6eab881059a2828103f0da",
+          "pathRedacted": true
+        },
+        {
+          "sourcePath": "build/macos-export-Verified-8526-1791497669931-4e8d9d/runtime-headed.log",
+          "publishedPath": "failure-history/9fe64bb/runtime-headed.log",
+          "sourceBytes": 986,
+          "sourceSha256": "d8b2c37bd1ac6d11da5c3bb6ec6ddb5ec09fa7cf52a5889cba49601a0f1b416e",
+          "publishedBytes": 971,
+          "publishedSha256": "80ebee7c1fd0c706d04d0d212ae45fd774ff5a7052128d73236bad6690e6661f",
+          "pathRedacted": true
+        },
+        {
+          "sourcePath": "build/p2-native-export-producer/remount-diagnosis-9fe64bb/remount-diagnostic-summary.json",
+          "publishedPath": "failure-history/9fe64bb/diagnostic-summary.json",
+          "sourceBytes": 13119,
+          "sourceSha256": "3f94cc9a2e8c5b715f9259791d0ff6225e8278f1c0f6eacdafdf85b7e29c53d7",
+          "publishedBytes": 12880,
+          "publishedSha256": "d66f4a9c0ae419f2302a60d928af80e24f2877af55d9745f33a77aef611005b5",
+          "pathRedacted": true
+        }
+      ],
+      "status": "historical-diagnostic"
+    },
+    {
+      "id": "local-16804-diff-literal",
+      "scope": "local pre-Godot runner failure; not a product/runtime failure",
+      "observation": "Producer 609f93a failed before Godot because the generic subprocess-output scan matched a source literal printed by diff; no runtime execution or output collection occurred.",
+      "correction": "Commit 63dde9c moved fatal-output checks to Godot editor/runtime boundaries; generic commands now validate process status only.",
+      "files": [
+        {
+          "sourcePath": "build/macos-export-Verified-16804-1791498459322-c3c6d2/receipt.json",
+          "publishedPath": "failure-history/16804/receipt.json",
+          "sourceBytes": 27782,
+          "sourceSha256": "8e66cd25e272bd335aa84bec5a054b61ef572396c336930ace669f7b6153e7a9",
+          "publishedBytes": 27502,
+          "publishedSha256": "a889071b3f1b11f39141574514937f59d1fa802e8d863f2c9bb1f9248f8cde28",
+          "pathRedacted": true
+        },
+        {
+          "sourcePath": "build/macos-export-Verified-16804-1791498459322-c3c6d2/fixture-validation-diff.log",
+          "publishedPath": "failure-history/16804/fixture-validation-diff.log",
+          "sourceBytes": 2297,
+          "sourceSha256": "c1f1a7c202e13eff68a3ceac7655307bebf7c138ba2f72c8583a18f02b5ba42b",
+          "publishedBytes": 2185,
+          "publishedSha256": "cb9c66f56896cac9258ddfbef37c0933cdaaa1ffc6021a8130fd823595d81682",
+          "pathRedacted": true
+        }
+      ],
+      "status": "historical-diagnostic",
+      "producerCommit": "609f93a"
+    }
+  ]
+}

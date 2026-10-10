@@ -1,0 +1,160 @@
+{
+  "format": "godot-fabric.macos-export-native-controls/v1",
+  "status": "passed",
+  "startedAt": "2026-10-08T20:04:52.854Z",
+  "completedAt": "2026-10-08T20:05:31.093Z",
+  "positive": {
+    "app": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/Verified.app",
+    "sdkSourceCommit": "58f527193039222b19794960e7b662cb34c65e74",
+    "harnessDirectory": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea",
+    "receiptPath": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/receipt.json",
+    "hostSha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+    "checkCounts": [
+      40,
+      43
+    ],
+    "pckSha256": "18763559e2a22bf797ca9f373e9a62e3f9e87befabb0e0c3cf0c1e2e3642139f"
+  },
+  "controls": [
+    {
+      "name": "framework-normalization-is-idempotent-and-preserves-signatures",
+      "app": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/idempotent-framework-layout.app",
+      "logDirectory": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943-idempotent",
+      "normalization": {
+        "hostSha256Before": "bcc1a58c7e97e959e5a6f4a732355786975894c46f1c34d162f06e7543edf354",
+        "hostSha256After": "bcc1a58c7e97e959e5a6f4a732355786975894c46f1c34d162f06e7543edf354",
+        "frameworks": [
+          {
+            "name": "hermesvm.framework",
+            "version": "1",
+            "binaryName": "hermesvm",
+            "beforeTreeSha256": "4be881ab41e11fcb016cdbba5fa57e79161075171188cb23b00a4c8663e65c8e",
+            "afterTreeSha256": "4be881ab41e11fcb016cdbba5fa57e79161075171188cb23b00a4c8663e65c8e",
+            "binaryBeforeSha256": "ffc34452c10ab1697e1776b70979e597755c97d913ae1039d9b0e72312dd2d9b",
+            "binaryAfterSha256": "ffc34452c10ab1697e1776b70979e597755c97d913ae1039d9b0e72312dd2d9b",
+            "aliases": [
+              {
+                "alias": "Versions/Current",
+                "linkTarget": "1",
+                "action": "retained-symlink",
+                "previousLink": "1"
+              },
+              {
+                "alias": "Resources",
+                "linkTarget": "Versions/Current/Resources",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/Resources"
+              },
+              {
+                "alias": "hermesvm",
+                "linkTarget": "Versions/Current/hermesvm",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/hermesvm"
+              }
+            ],
+            "resourceBundles": []
+          },
+          {
+            "name": "ReactNativeDependencies.framework",
+            "version": "A",
+            "binaryName": "ReactNativeDependencies",
+            "beforeTreeSha256": "b72770cf2c0d1af7fad7a5c23a081427334291dd2541ec45d1be257075e2a5b3",
+            "afterTreeSha256": "b72770cf2c0d1af7fad7a5c23a081427334291dd2541ec45d1be257075e2a5b3",
+            "binaryBeforeSha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1",
+            "binaryAfterSha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1",
+            "aliases": [
+              {
+                "alias": "Versions/Current",
+                "linkTarget": "A",
+                "action": "retained-symlink",
+                "previousLink": "A"
+              },
+              {
+                "alias": "Resources",
+                "linkTarget": "Versions/Current/Resources",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/Resources"
+              },
+              {
+                "alias": "ReactNativeDependencies",
+                "linkTarget": "Versions/Current/ReactNativeDependencies",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/ReactNativeDependencies"
+              }
+            ],
+            "resourceBundles": [
+              {
+                "name": "ReactNativeDependencies_SocketRocket.bundle",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/ReactNativeDependencies_SocketRocket.bundle",
+                "sourceTreeSha256": "52fad2d32674d947518c174897018169400da42a3e7e307cca7d20ce012705e0"
+              },
+              {
+                "name": "ReactNativeDependencies_boost.bundle",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/ReactNativeDependencies_boost.bundle",
+                "sourceTreeSha256": "64a034b5d02a1ad6eca7439ae9a3d6723a01d6784b934c6dec460ddaef7da542"
+              },
+              {
+                "name": "ReactNativeDependencies_folly.bundle",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/ReactNativeDependencies_folly.bundle",
+                "sourceTreeSha256": "a1801ed384e5a069c18d23234847fe3407aace42b8c8acbf014aa778824469a5"
+              },
+              {
+                "name": "ReactNativeDependencies_glog.bundle",
+                "action": "retained-symlink",
+                "previousLink": "Versions/Current/ReactNativeDependencies_glog.bundle",
+                "sourceTreeSha256": "39a15c5cd026481da931a1a7d5e2af6a9fd2be4e68e232e5d52a78b7df6fad93"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "missing-rn-dependencies-framework",
+      "app": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/missing-rn-dependencies.app",
+      "logDirectory": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943-missing-framework",
+      "rejectedBy": "auditAppLoadPaths",
+      "removedBinarySha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1",
+      "reason": "ENOENT: no such file or directory, realpath '{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/missing-rn-dependencies.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies'"
+    },
+    {
+      "name": "xml-whitespace-invalidates-signed-info-plist",
+      "app": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/modified-info-plist.app",
+      "logDirectory": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943-signature",
+      "beforeSha256": "573caa7e65ebb882da348a1899a7ef6cf775e502e2773d6ac0e03e51b693358e",
+      "mutationSha256": "0c7d3b18855a4ca294efc83277e29008b816d3f757b6b33beaf110f6ce09ffcf",
+      "rejectedBy": "verifySignatures",
+      "reason": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/modified-info-plist.app/Contents/MacOS/Godot Fabric Export 66418-1791489892857-0c4aea: invalid Info.plist (plist or signature have been modified)\nIn architecture: arm64\n\n\n1 !== 0\n"
+    },
+    {
+      "name": "absolute-rpath-rejected",
+      "app": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/absolute-rpath.app",
+      "mutation": "/usr/bin/install_name_tool -add_rpath /fabric-export-negative",
+      "logDirectory": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943-rpath",
+      "mutationSha256": "c329ebcf679e8cf3cc5c9f27afcc0384cbef298fb198bb12e34ec191e281a535",
+      "rejectedBy": "auditAppLoadPaths",
+      "reason": "host rpath has an unexpected absolute path: /fabric-export-negative"
+    },
+    {
+      "name": "stale-native-source-lock-rejected",
+      "sourceCopy": "{WORKTREE}/build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/native-source-copy",
+      "rejectedBy": "verifyAddonNativeInputs",
+      "reason": "SDK_HOST_SOURCE_MISMATCH: dependencies.json differs from the native host receipt; rebuild and repack the matching native host",
+      "modifiedFile": "dependencies.json",
+      "beforeSha256": "5886eae13e153475bf7498f61c2ac0925b3d9c167410a397303483e065a8f82e",
+      "mutationSha256": "f955d3ef0831e0f5f8bc0b3f56e9466e49fffba8e41cff69cfdac740a2b64f1a"
+    }
+  ],
+  "nativeSourceControl": {
+    "matchingInputsAccepted": true,
+    "nativeHashes": {
+      "host": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+      "hermes": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+      "dependencies": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+    },
+    "staleDependenciesRejected": true
+  }
+}

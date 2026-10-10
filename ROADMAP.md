@@ -619,6 +619,30 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
+`29969eb0d64201a1797e6e866a2ef650b1282fde` exports and publishes a signed macOS arm64
+Release minimal consumer after relocation, exact 40/43 assertions and three 540×300 captures
+of the complete 1080×600 logical canvas at scale 0.5, identical to an independently executed
+editable baseline. Frameworks resolve inside the app; deep/strict signature verification,
+idempotent layout normalization and four real rejected mutations passed. The native lane
+passed 13/13 without skips. [Evidence](docs/evidence/macos-export/fixed-window/README.md)
+retains SDK/build/PCK bindings, all 220 producer source pins, a 280-check local archive audit
+and a 24-check independent baseline review. The earlier failed hosted run and unexplained
+local remount failure remain recorded; new hosted CI and delivery review are pending. The Frontier
+12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
+
+**Follow-up, V05-07 (local, symlink containment).** Clean producer `5596acb1cf975ff470acf531c0843fef19706e70` adds a copied-app `LC_RPATH` symlink escape control; the six native controls pass and the local archive audit passes 285 checks. The exact 40/43 consumer checks and 220 SDK source pins remain bound to this producer. [Evidence](docs/evidence/macos-export/symlink-review/README.md). Hosted CI/review and the remaining V05-07 scope stay separate; no 1.0 checkpoint changes.
+
+**Follow-up, V05-07 (local, symlink-parent review).** Clean producer
+`6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc` passes 14/14 native tests, the same
+40/43 consumer checks, and all seven copied-app controls. A physical `LC_RPATH`
+symlink resolving outside the app is rejected before its target is loaded; the
+independent review verifies the host hash and RPATH and all 220 SDK source pins.
+The [new record](docs/evidence/macos-export/symlink-parent-review/README.md)
+preserves this run and the continuation recovery incident. This remains local
+evidence: hosted CI, final review, Pages, the Frontier replay and clean-profile/
+second-machine scope remain pending. No 1.0 checkpoint, weight or denominator changes.
+
 **Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
 provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
 the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the

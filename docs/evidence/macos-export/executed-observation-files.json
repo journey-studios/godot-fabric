@@ -1,0 +1,115 @@
+{
+  "format": "godot-fabric.macos-export-observation-files/v1",
+  "producer": "58f527193039222b19794960e7b662cb34c65e74",
+  "observations": [
+    {
+      "file": "executed-export.json",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/receipt.json",
+      "originalSHA256": "63d1c9995fce14be0108762ba9bd90d18bcf6f1f3eb0871cafcb22b250ffaa74",
+      "originalBytes": 47253,
+      "sha256": "7e52f2699a7cba03b0d0858f5fcffb29a5eeebd8b58ea27784a0a9717d2c4ca5",
+      "bytes": 23098,
+      "curated": true
+    },
+    {
+      "file": "root-independent-review.json",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/root-independent-review.json",
+      "originalSHA256": "aa721a757ee22e5462041a4cef92481c022bf50b0b129550193adafbfffc26ab",
+      "originalBytes": 2798,
+      "sha256": "57916917592591f972b18ae30ddc6eed1e7635594183fefed76ee38064bbb3d8",
+      "bytes": 2742,
+      "curated": true
+    },
+    {
+      "file": "native-controls.json",
+      "originalObservation": "build/macos-export-native-controls-9d5dbc40-2521-47ba-8ae2-022711c3b943/report.json",
+      "originalSHA256": "eda031c52d5f528d984cc1f2f1048fe3e22e17bd67a754baa38d5b132b56d7dd",
+      "originalBytes": 9314,
+      "sha256": "eef579dca6c63c440d7702f20b53327df6be29831a2c08782f8e45acb8ebfe0f",
+      "bytes": 8530,
+      "curated": true
+    },
+    {
+      "file": "exported-initial.png",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/initial.png",
+      "originalSHA256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "originalBytes": 47765,
+      "sha256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "bytes": 47765,
+      "curated": false
+    },
+    {
+      "file": "exported-updated.png",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/updated.png",
+      "originalSHA256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "originalBytes": 55198,
+      "sha256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "bytes": 55198,
+      "curated": false
+    },
+    {
+      "file": "exported-resized.png",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/resized.png",
+      "originalSHA256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "originalBytes": 57698,
+      "sha256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "bytes": 57698,
+      "curated": false
+    },
+    {
+      "file": "executed-runtime-headless.log",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/runtime-headless.log",
+      "originalSHA256": "bd77f9b2e0ca8f0776ee5246232216d8811986a4e2ad03ebf8397a0c639a932c",
+      "originalBytes": 759,
+      "sha256": "553bbe8a8d7320f1135310d23ef58530a3eddb1265d1c4f5c84ec5a0e751f999",
+      "bytes": 744,
+      "curated": true
+    },
+    {
+      "file": "executed-runtime-headed.log",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/runtime-headed.log",
+      "originalSHA256": "9d25d59745a380aa963200d0e95fa5b0951038a3f99cdc35a69b26c8befeaf2e",
+      "originalBytes": 840,
+      "sha256": "6d91f693634374e6b78401dcd8d8f480f3d87ff4db0fd1f7cd05d5f8b82e0341",
+      "bytes": 825,
+      "curated": true
+    },
+    {
+      "file": "executed-macos-export-release.log",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/macos-export-release.log",
+      "originalSHA256": "ed89f87190d595181a06e36093b66e06e06826e62be2f44a0e7eb9327ea26be6",
+      "originalBytes": 4287,
+      "sha256": "ed89f87190d595181a06e36093b66e06e06826e62be2f44a0e7eb9327ea26be6",
+      "bytes": 4287,
+      "curated": false
+    },
+    {
+      "file": "executed-macos-export-preflight.log",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/macos-export-preflight.log",
+      "originalSHA256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "originalBytes": 138,
+      "sha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c",
+      "bytes": 138,
+      "curated": false
+    },
+    {
+      "file": "executed-root-final-signature.log",
+      "originalObservation": "build/macos-export-Verified-66418-1791489892857-0c4aea/root-final-signature.log",
+      "originalSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalBytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "curated": false
+    },
+    {
+      "file": "official-template-derivation.json",
+      "originalObservation": "build/p2-native-export-producer/official-template-derivation.json",
+      "originalSHA256": "f70e36295b3f619997d51192dc2e310acb8da776e49c9c01348412b2dd38ee51",
+      "originalBytes": 738,
+      "sha256": "f70e36295b3f619997d51192dc2e310acb8da776e49c9c01348412b2dd38ee51",
+      "bytes": 738,
+      "curated": false
+    }
+  ],
+  "curation": "Original observations stay under ignored build/. Public JSON/log copies redact local paths; source pins are summarized without changing the originals. PNG bytes are unchanged."
+}
