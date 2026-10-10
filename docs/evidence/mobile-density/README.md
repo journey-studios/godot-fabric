@@ -149,8 +149,35 @@ O passo de C++ puro `display_insets_core_test` roda no job `native-cold-start` d
 [`contracts.yml`](../../../.github/workflows/contracts.yml). O passo `npm run test:mobile-density` (e o upload do artefato
 `native-mobile-density`) roda no job `native-suites-runtime`, ao lado da suíte do Modal, a outra lane de métricas da
 janela, depois dos passos de restauração. Os dois jobs rodam só por `workflow_dispatch`. A execução janelada **não** roda
-na CI (precisa de uma janela de verdade e do renderizador nativo, que o runner não tem). **A CI hospedada e o Pages desta
-fatia seguem pendentes**; nenhum recibo hospedado é afirmado aqui.
+na CI (precisa de uma janela de verdade e do renderizador nativo, que o runner não tem). Os recibos hospedados estão na seção
+seguinte.
+
+## CI hospedada e Pages
+
+**O run.** Desde o #88 um push da `main` não roda as suítes nativas, então o recibo vem do workflow Contracts **disparado à mão** sobre a
+`main` em `8cd2491`, o squash do #104 (run [38018685996](https://github.com/journey-studios/godot-fabric/actions/runs/38018685996),
+evento `workflow_dispatch`, ramo `main`). O run passou nos **oito jobs**, todos com o checkout em `8cd2491`, e a árvore do head do PR é a
+árvore da `main` no squash.
+
+**O passo da fatia.** `npm run test:mobile-density` rodou no job `native-suites-runtime` (passo 56, 10 s) e passou o seu único teste (TAP
+1 de 1). O artefato `native-mobile-density` (id 11657841383, 64.549 bytes, SHA-256 `1159e08a…`, 5 arquivos) traz o log da lane, que
+imprime `MOBILE_DENSITY_PASSED: 149`, os mesmos 149 checks da lane local. O teste de C++ puro `display_insets_core_test` roda no job
+`native-cold-start`, que passou. O job `contracts` passou `npm run test:contracts` (7, 43 e 467 testes de Node, 13 de Python e
+`PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values`), `check:static` e `check:publication`, e a comparação de paridade com as
+referências imprimiu `PARITY_COMPARISON_PASSED: 13 subset cases, ios + android`. O [recibo](hosted-ci.json) guarda os jobs, os passos, os
+digests e os arquivos do artefato.
+
+**O Pages.** O push de `8cd2491` rodou o workflow do Pages (run [38018671228](https://github.com/journey-studios/godot-fabric/actions/runs/38018671228),
+`build` e `deploy` em success, 43 testes do painel passando). O [recibo](publication.json) registra o deployment 6975225058 em success, o
+artefato `github-pages` que ele usou (id 11657771431, SHA-256 `981b40e9…`) e que o `migration.json` publicado é, byte a byte, o
+commitado em `8cd2491`, com a entrada de atividade desta fatia.
+
+**O que continua só local:** a execução janelada e as três capturas, o controle causal sobre `b0e40aa` e as quatro sabotagens.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice mobile-density --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
 
 ## Como conferir os pins
 
