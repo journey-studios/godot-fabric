@@ -4841,6 +4841,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/ecf637e2a05f6b07fa3920edd61c1b4a43700305/docs/evidence/macos-export-options/README.md"
     },
     {
+      "id": "milestone-0-5-hosted-receipts-13-f1bdaae",
+      "at": "2026-10-10T18:50:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #135, o Frontier como .app Release (V05-07, critério replay, e as saídas X1, X2 e X7), já na main como 02e7868. A Contracts foi disparada sobre a main em 02e7868 (run 38076585188) e passou nos oito jobs na primeira tentativa. No job native-suites-runtime, o passo novo exportou o app assinado com o template arm64 de Release derivado na própria CI e passou npm run test:export:civ-lite (1 de 1, sem pulos): os seis replays no hash dourado em perfis limpos, a matriz da HUD no .app e a auditoria do app publicado. A metade do lane sem template passou 10 de 10 no job contracts. O Pages do push de 02e7868 (run 38076571354) publicou o migration.json commitado em 02e7868, com a entrada de atividade do critério (milestone-0-5-v05-07-replay-7207170); esta entrada vem depois e não está naquela publicação. Nenhum critério muda; limpa segue aberto. Gerador canônico com 35 fatias e 70 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f1bdaae2f121c346b5362fd270af0eb1ea9b7db0/docs/evidence/macos-export/civ-lite/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "milestone-0-5-hosted-receipts-12-97af2c2",
       "at": "2026-10-10T18:30:00.000Z",
       "taskIds": [],
