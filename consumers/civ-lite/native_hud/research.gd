@@ -1,7 +1,7 @@
 extends PanelContainer
 
 # The research panel: the technologies in the game's order, each with its state, its cost and, when the game refuses it, why. The list
-# is built again only when what it lists changes.
+# is touched only when what it lists changes, and then row by row.
 
 signal intent(method: StringName, args: Array)
 
@@ -25,13 +25,13 @@ func render(snapshot: Dictionary, _hover: Dictionary) -> void:
     Kit.set_text(_progress, "%d learned (+%d)" % [research.known, research.rate])
   else:
     Kit.set_text(_progress, "%d/%d (+%d) · %d learned" % [snapshot.resources.science.stock, research.needed, research.rate, research.known])
-  var rows: Array = research.techs.map(func(tech: Dictionary) -> Dictionary: return {"id": tech.id, "label": "%s (%d) · %s" % [tech.label, tech.cost, tech.state],
-    "enabled": int(tech.enabled) == 1, "reason": "" if int(tech.enabled) == 1 else tech.reason_text})
+  var rows: Array = research.techs.map(func(tech: Dictionary) -> Dictionary: return {"key": tech.id, "label": "%s (%d) · %s" % [tech.label, tech.cost, tech.state],
+    "enabled": int(tech.enabled) == 1, "reason": "" if int(tech.enabled) == 1 else tech.reason_text, "icon": ""})
   if rows == _rows:
     return
   _rows = rows
-  Kit.clear(_techs)
-  for row: Dictionary in rows:
-    var button := Kit.choice("hud-research-tech-" + row.id, row.label, row.enabled)
-    button.pressed.connect(intent.emit.bind(&"set_research", [row.id]))
-    _techs.add_child(Kit.row(button, "hud-research-tech-%s-reason" % row.id, row.reason))
+  Kit.sync_choices(_techs, "hud-research-tech-", rows, _on_tech_pressed)
+
+
+func _on_tech_pressed(tech_id: String) -> void:
+  intent.emit(&"set_research", [tech_id])

@@ -2,8 +2,8 @@ extends PanelContainer
 
 # The city screen: what the city is, what it builds and what it can be told to build. Each item carries the game's own `enabled` and
 # `reason_text`; pressing one puts it in the slot the snapshot's items were checked for, the first free one or the last. It is shown in
-# an overlay, so it has a Close of its own: the game's `clear_selection`, the same call as Escape. The queue and the items are built again
-# only when what they list changes.
+# an overlay, so it has a Close of its own: the game's `clear_selection`, the same call as Escape. The queue and the items are touched only
+# when what they list changes, and then row by row.
 
 signal intent(method: StringName, args: Array)
 
@@ -46,22 +46,16 @@ func _set_queue(queue: Array) -> void:
   if lines == _queue_lines:
     return
   _queue_lines = lines
-  Kit.clear(_queue)
-  for line: Array in lines:
-    _queue.add_child(Kit.line("hud-city-queue-%d" % line[0], line[1]))
+  Kit.sync_lines(_queue, "hud-city-queue-", lines)
 
 
 func _set_items(items: Array) -> void:
-  var rows: Array = items.map(func(item: Dictionary) -> Dictionary: return {"id": item.id, "label": "%s (%d)" % [item.label, item.cost],
+  var rows: Array = items.map(func(item: Dictionary) -> Dictionary: return {"key": item.id, "label": "%s (%d)" % [item.label, item.cost],
     "enabled": int(item.enabled) == 1, "reason": "" if int(item.enabled) == 1 else item.reason_text, "icon": Icons.item_icon(item.id)})
   if rows == _item_rows:
     return
   _item_rows = rows
-  Kit.clear(_items)
-  for row: Dictionary in rows:
-    var button := Kit.choice("hud-city-item-" + row.id, row.label, row.enabled, row.icon)
-    button.pressed.connect(_on_item_pressed.bind(row.id))
-    _items.add_child(Kit.row(button, "hud-city-item-%s-reason" % row.id, row.reason))
+  Kit.sync_choices(_items, "hud-city-item-", rows, _on_item_pressed)
 
 
 func _on_item_pressed(item_id: String) -> void:

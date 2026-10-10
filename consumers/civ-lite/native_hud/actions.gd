@@ -2,7 +2,7 @@ extends PanelContainer
 
 # The actions of the selection: exactly the `actions` of the snapshot, in the order the game gave them, each with its `enabled` and,
 # for a disabled one, the game's `reason_text`. End turn is one of them in the snapshot and lives on the bar, so it is not here. An action
-# about a unit shows the unit's icon, and founding a city the city's. The list is built again only when what it lists changes.
+# about a unit shows the unit's icon, and founding a city the city's. The list is touched only when what it lists changes, and then row by row.
 
 signal intent(method: StringName, args: Array)
 
@@ -19,11 +19,15 @@ func render(snapshot: Dictionary, _hover: Dictionary) -> void:
   if rows == _rows:
     return
   _rows = rows
-  Kit.clear(_list)
-  for row: Dictionary in rows:
-    var button := Kit.choice("hud-actions-" + row.key, row.label, row.enabled, row.icon)
-    button.pressed.connect(intent.emit.bind(StringName(row.id), row.args))
-    _list.add_child(Kit.row(button, "hud-actions-%s-reason" % row.key, row.reason))
+  Kit.sync_choices(_list, "hud-actions-", rows, _on_pressed)
+
+
+# The row's key names its action and its arguments, so a row that stays is the same intent.
+func _on_pressed(key: String) -> void:
+  for row: Dictionary in _rows:
+    if row.key == key:
+      intent.emit(StringName(row.id), row.args)
+      return
 
 
 func _describe(snapshot: Dictionary) -> Array:
