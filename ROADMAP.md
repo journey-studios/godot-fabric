@@ -1052,6 +1052,8 @@ report and fail; the times are not compared. **A check of the entry, and no numb
 sets, without the frameworks), no window was opened and no campaign ran. The [record](https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md)
 is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** The hosted CI and Pages receipts of the instrument's self-check through the main loop (#141, GF-30, criterion `execucao`) are recorded from the push of main at `9810100`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/97af2c2f2c99636bc9f7c896167019306dc283b1/docs/evidence/frontier-comparison-probe-entry/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (the five native jobs skipped, since the slice has no native step), the milestone guard passed against the squash's parent, the entry's two contract test files passed 26 of 26 in the log, and the Pages run published the committed `migration.json` byte for byte. The receipts now count 34 slices and 68 receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
