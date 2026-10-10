@@ -1,15 +1,16 @@
 import city from "../icons/city.png";
 import food from "../icons/food.png";
+import irrigation from "../icons/irrigation.png";
 import production from "../icons/production.png";
 import science from "../icons/science.png";
 import settler from "../icons/settler.png";
 import warrior from "../icons/warrior.png";
 
-// The HUD's six icons, 32x32 PNGs the template draws itself (scripts/civ-lite-icons.mjs). Each import becomes a registered asset the
+// The HUD's seven icons, 32x32 PNGs the template draws itself (scripts/civ-lite-icons.mjs). Each import becomes a registered asset the
 // builder copies beside the bundle, and an Image draws it: the resources of the bar, the units of the actions and the tile card, the
 // city, and the production items of the city screen, which is inside a Modal's window.
 
-export const ICONS = { settler, warrior, city, food, production, science };
+export const ICONS = { settler, warrior, city, food, production, science, irrigation };
 
 export type IconName = keyof typeof ICONS;
 

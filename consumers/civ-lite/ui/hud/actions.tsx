@@ -8,7 +8,7 @@ import { Choice, Heading, Panel, Reason } from "./kit";
 
 // The actions of the selection, exactly the `actions` of the snapshot in the order the game gave them, each with its `enabled` and,
 // for a disabled one, the game's `reason_text`. End turn is one of them in the snapshot and lives on the bar, so it is not here. An action
-// that is about a unit shows the unit's icon, and founding a city the city's: the unit is the one the action's argument names, among the
+// that is about a unit shows the unit's icon, founding a city the city's, and irrigating the irrigation's: the unit is the one the action's argument names, among the
 // units of the selected tile.
 
 /** The testID of an action's button: its id and its arguments, which tell two `select_unit` of a stack apart. */
@@ -17,6 +17,9 @@ const actionKey = (action: Action) => [action.id, ...action.args].join("-");
 function iconOf(action: Action, units: readonly UnitCard[]): IconName | undefined {
   if (action.id === "found_city") {
     return "city";
+  }
+  if (action.id === "irrigate") {
+    return "irrigation";
   }
   const unit = action.id === "select_unit" || action.id === "fortify" ? units.find(entry => entry.id === action.args[0]) : undefined;
   return unit === undefined ? undefined : (unitIcon(unit.kind) ?? undefined);

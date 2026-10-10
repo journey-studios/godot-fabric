@@ -3,7 +3,7 @@ import { GodotFabric } from "@godot-fabric/runtime";
 import type { ServiceCallResult, ServiceSubscription } from "@godot-fabric/runtime";
 import {
   callFrontier, FRONTIER_CLEAR_SELECTION, FRONTIER_END_TURN, FRONTIER_FORTIFY, FRONTIER_FOUND_CITY, FRONTIER_HOVER,
-  FRONTIER_NEW_GAME, FRONTIER_OPEN_MENU, FRONTIER_SELECT_UNIT, FRONTIER_SNAPSHOT,
+  FRONTIER_IRRIGATE, FRONTIER_NEW_GAME, FRONTIER_OPEN_MENU, FRONTIER_SELECT_UNIT, FRONTIER_SNAPSHOT,
 } from "./frontier-types";
 import type { Action, FrontierCall, FrontierResult, FrontierSnapshot, TileCard } from "./frontier-types";
 import { installFrontierHud, observe } from "./telemetry";
@@ -154,6 +154,8 @@ export function sendAction(action: Action): Promise<FrontierResult | null> {
       return send(FRONTIER_SELECT_UNIT, [unit]);
     case "found_city":
       return send(FRONTIER_FOUND_CITY, [unit]);
+    case "irrigate":
+      return send(FRONTIER_IRRIGATE, [unit]);
     case "fortify":
       return send(FRONTIER_FORTIFY, [unit]);
     case "clear_selection":
