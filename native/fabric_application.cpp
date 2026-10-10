@@ -134,6 +134,7 @@ FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("evaluate", "source"), &FabricApplication::evaluate);
   ClassDB::bind_method(D_METHOD("snapshot"), &FabricApplication::snapshot);
+  ClassDB::bind_method(D_METHOD("service_delivery", "name"), &FabricApplication::service_delivery);
   ClassDB::bind_method(D_METHOD("stop"), &FabricApplication::stop);
   ClassDB::bind_method(D_METHOD("deliver_url", "url"), &FabricApplication::deliver_url);
   ClassDB::bind_method(D_METHOD("validation_system_theme_callback"), &FabricApplication::validation_system_theme_callback);
@@ -379,6 +380,8 @@ void FabricApplication::invoke_callable(const String &name, const String &method
     report_error(error.what());
   }
 }
+
+Dictionary FabricApplication::service_delivery(const String &name) { return game_services->delivery(name); }
 
 Ref<GodotFabricBinding> FabricApplication::bind_signal(const String &name, const Signal &signal,
     const Array &arg_schema, const Dictionary &options) {

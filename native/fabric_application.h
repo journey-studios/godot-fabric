@@ -28,6 +28,9 @@ class FabricApplication : public godot::Node {
   static void release_system_theme_callback();
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
+  // What the game service with this name has ingested and handed to the JavaScript runtime ({bound, emitted, sent, delivered}): counters read
+  // in place, so a HUD's `stats()` costs no JavaScript and no JSON (the application's snapshot is the whole status, tens of kilobytes).
+  godot::Dictionary service_delivery(const godot::String &name);
   void stop();
   // The entry point of a deep link that reaches the running application: Linking's
   // "url" event, once, to every JS listener. False, and nothing emitted, for a string

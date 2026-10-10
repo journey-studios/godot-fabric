@@ -56,6 +56,11 @@ func stats() -> Dictionary:
   return value if value is Dictionary else {}
 
 
+# The execution runner's `stats()`: the node in the scene that reads the registry's counters (hud_stats.gd), with no JavaScript and no snapshot.
+func runner_stats() -> Dictionary:
+  return hud.get_node("../../HudStats").stats()
+
+
 # The Surface claims, among the events it is pushed, the ones of the validation device.
 func prepare(device: int) -> void:
   hud.set_meta("validation_input_device", device)

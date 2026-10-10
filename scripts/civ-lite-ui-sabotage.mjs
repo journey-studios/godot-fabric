@@ -49,6 +49,17 @@ import {guardSources} from "./sabotage-sources.mjs";
 //                     the World hears the clicks, the right clicks and the wheel under the city screen and the dialog.
 //  native-end-turn-by-phase  End turn is enabled by a rule of the HUD's own (the phase is idle) and not by the game's `end_turn` action.
 //
+// The five of the stress mode (docs/research/frontier-stress.md) and of the runner's `stats()` run the HUD and overlay probes like the rest; the
+// stress stage and its oracle rules reject each for the reason it was broken:
+//  stress-rows-rebuilt          the React Native stress panel keys each log row by its line and by the newest line, so every step gives every row a
+//                     new key: React mounts 200 rows again for one line (the row-identity check).
+//  native-stress-rows-rebuilt   the native stress panel frees every row on every render and makes it again (the same check).
+//  stress-end-keeps-overlay     `stress_end` publishes a snapshot and leaves the overlay in the node: the mode never ends, the panel stays and the
+//                     snapshot is not the one from before the mode (the byte-identity check).
+//  stats-miss-turn-ended        the React Native HUD's stats() does not count the ends of turn the registry ingested, and so its events fall short
+//                     of what the node emitted.
+//  native-stats-miss-turn-ended the native HUD handles `turn_ended` and does not count it (the same rule).
+//
 // A variant whose run leaves no observed.json (a crash, a failed assertion that came first) is recorded as nothing observed and is not
 // rejected. Run with:
 //   node scripts/civ-lite-ui-sabotage.mjs
@@ -61,7 +72,7 @@ const CITY_OVERLAY = `    {panels.includes("city") || panels.includes("research"
       </View>
     </Overlay> : null}
 `;
-const variants = [
+const catalogue = [
   {name: "city-by-data", file: `${template}/ui/hud/hud.tsx`,
     find: CITY_OVERLAY,
     replace: CITY_OVERLAY.replace("panels.includes(\"city\") || panels.includes(\"research\") ?", "snapshot.city.present === 1 ?")
@@ -99,6 +110,21 @@ const variants = [
   {name: "disabled-ignored", file: `${template}/ui/hud/kit.tsx`,
     find: "  return <Pressable testID={id} disabled={!enabled} onPress={onPress}\n",
     replace: "  return <Pressable testID={id} onPress={onPress}\n"},
+  {name: "stress-rows-rebuilt", file: `${template}/ui/hud/stress.tsx`,
+    find: "<Text key={keyOf(line)} testID={`hud-stress-log-${keyOf(line)}`}",
+    replace: "<Text key={`${keyOf(line)}-${keyOf(stress.log[stress.log.length - 1])}`} testID={`hud-stress-log-${keyOf(line)}`}"},
+  {name: "native-stress-rows-rebuilt", file: `${template}/native_hud/stress.gd`,
+    find: "    if not wanted.has(key):\n      var stale: Label = rows[key]\n",
+    replace: "    if true:\n      var stale: Label = rows[key]\n"},
+  {name: "stress-end-keeps-overlay", file: `${template}/services/game_services.gd`,
+    find: "    return _plain(_refusal(\"stress_off\"))\n  stress = null\n  _publish()\n",
+    replace: "    return _plain(_refusal(\"stress_off\"))\n  _publish()\n"},
+  {name: "stats-miss-turn-ended", file: `${template}/hud_stats.gd`,
+    find: "\"events\": int(snapshot.sent) + int(hover.sent) + int(ended.emitted)}",
+    replace: "\"events\": int(snapshot.sent) + int(hover.sent)}"},
+  {name: "native-stats-miss-turn-ended", file: `${template}/native_hud/hud.gd`,
+    find: "func _on_turn_ended(_summary: Dictionary) -> void:\n  _events += 1\n",
+    replace: "func _on_turn_ended(_summary: Dictionary) -> void:\n  pass\n"},
   {name: "native-city-shows-tile", file: `${template}/native_hud/hud.gd`,
     find: "  \"city\": [\"city\", \"research\"],\n",
     replace: "  \"city\": [\"city\", \"research\", \"tile\"],\n"},
@@ -126,6 +152,10 @@ const variants = [
     find: "import { Image, Pressable, Text, View } from \"react-native\";\n",
     replace: "import { Image, Pressable, Text, TextInput, View } from \"react-native\";\n"},
 ];
+// With names on the command line only those run, and neither the plain lane afterwards nor the receipt: a way to try one sabotage.
+const only = process.argv.slice(2);
+assert.ok(only.every(name => catalogue.some(variant => variant.name === name)), `Unknown sabotage in ${only.join(", ")}`);
+const variants = only.length === 0 ? catalogue : catalogue.filter(variant => only.includes(variant.name));
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];
 const sources = guardSources(root, files);
@@ -173,10 +203,14 @@ try {
 }
 assert.deepEqual(receipt.sourceSha256.restored, receipt.sourceSha256.genuine, "Every source is restored byte for byte");
 // The restored template passes the plain lane: the sabotages are the only difference.
-const control = await sources.run(process.execPath, ["tests/civ-lite-ui-native.test.mjs"]);
-await writeFile(path.join(root, "build/civ-lite-ui-sabotage-control.log"), control.stdout + control.stderr);
-receipt.controlStatus = control.status;
-await writeFile(path.join(root, "build/civ-lite-ui-sabotage.json"), JSON.stringify(receipt, null, 2) + "\n");
+if (only.length === 0) {
+  const control = await sources.run(process.execPath, ["tests/civ-lite-ui-native.test.mjs"]);
+  await writeFile(path.join(root, "build/civ-lite-ui-sabotage-control.log"), control.stdout + control.stderr);
+  receipt.controlStatus = control.status;
+  await writeFile(path.join(root, "build/civ-lite-ui-sabotage.json"), JSON.stringify(receipt, null, 2) + "\n");
+} else {
+  receipt.controlStatus = 0;
+}
 for (const entry of receipt.variants) {
   assert.ok(entry.rejected, `The lane must reject the ${entry.name} project, and its run must leave what it observed `
     + `(status ${entry.runStatus}, observed ${entry.observed}): build/civ-lite-ui-sabotage-${entry.name}.log`);

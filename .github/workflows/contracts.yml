@@ -652,6 +652,16 @@ jobs:
             build/frontier-services-summary.json
             build/frontier-services-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frontier-stress
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frontier-stress
+          path: |
+            build/frontier-stress-report.json
+            build/frontier-stress-summary.json
+            build/frontier-stress.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:frontier-soak
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

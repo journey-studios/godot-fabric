@@ -43,7 +43,7 @@ const TASK_LIMIT = 64;
 const EVENT_LIMIT = 128;
 const NODE_LIMIT = 10000;
 const DEPTH_LIMIT = 32;
-const BINDINGS = 15;
+const BINDINGS = 18;
 const NEW_GAMES = 3;
 const JOB_SNAPSHOTS = 7;
 const STRESS_SUBSCRIBERS = 150;
@@ -172,7 +172,7 @@ export function extractFrontierSchemas(text = readFileSync(new URL(`../${TYPES_F
       default:
         break;
     }
-    return unsupported(where, `${ts.SyntaxKind[node.kind]} is not in the schema language (no optional field, union, any, unknown or generic)`);
+    return unsupported(where, `${ts.SyntaxKind[node.kind]} is not in the schema language (no union, any, unknown or generic)`);
   }
 
   function objectOf(members, where, visiting) {
@@ -185,10 +185,9 @@ export function extractFrontierSchemas(text = readFileSync(new URL(`../${TYPES_F
         unsupported(where, "a computed property name has no schema");
       }
       const name = member.name.text;
-      if (member.questionToken !== undefined) {
-        unsupported(`${where}.${name}`, "an optional field has no schema: the objects are exact");
-      }
-      fields[name] = schemaOf(member.type, `${where}.${name}`, visiting);
+      const field = schemaOf(member.type, `${where}.${name}`, visiting);
+      // An optional field is `{optional: schema}`: the one place the registry's language has it (an object's field, never an element or an argument).
+      fields[name] = member.questionToken === undefined ? field : {optional: field};
     }
     return {object: fields};
   }
@@ -238,6 +237,12 @@ const show = schema => {
 export function diffSchema(typescript, godot, where) {
   if (typeof typescript === "string" || typeof godot === "string") {
     return typescript === godot ? [] : [`${where}: TypeScript declares ${show(typescript)}, Godot registers ${show(godot)}`];
+  }
+  if ("optional" in typescript || "optional" in godot) {
+    if ("optional" in typescript && "optional" in godot) {
+      return diffSchema(typescript.optional, godot.optional, where);
+    }
+    return [`${where}: TypeScript declares ${show(typescript)}, Godot registers ${show(godot)}`];
   }
   if ("array" in typescript || "array" in godot) {
     if ("array" in typescript && "array" in godot) {
@@ -311,9 +316,14 @@ export function conforms(value, schema, where) {
     value.forEach((item, position) => conforms(item, schema.array, `${where}[${position}]`));
   } else {
     assert.ok(value !== null && typeof value === "object" && !Array.isArray(value), `${where} must be an object`);
-    assert.deepEqual(Object.keys(value).sort(), Object.keys(schema.object).sort(), `${where} has exactly the declared fields`);
+    const required = Object.entries(schema.object).filter(([, inner]) => typeof inner === "string" || !("optional" in inner)).map(([field]) => field);
+    const declared = Object.keys(schema.object);
+    assert.ok(required.every(field => field in value) && Object.keys(value).every(field => declared.includes(field)),
+      `${where} has the required fields and no field the declaration does not name`);
     for (const [field, inner] of Object.entries(schema.object)) {
-      conforms(value[field], inner, `${where}.${field}`);
+      if (field in value) {
+        conforms(value[field], typeof inner !== "string" && "optional" in inner ? inner.optional : inner, `${where}.${field}`);
+      }
     }
   }
 }

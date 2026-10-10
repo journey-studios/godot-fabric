@@ -9,6 +9,7 @@ import { Dialog } from "./dialog";
 import { Choice, COLORS } from "./kit";
 import { Overlay } from "./overlay";
 import { Research } from "./research";
+import { StressPanel } from "./stress";
 import { Tile } from "./tile";
 
 // The HUD's context switch. Godot derives the context of the session (docs/research/frontier-game.md, `context.gd`); this file
@@ -22,6 +23,8 @@ import { Tile } from "./tile";
 //   stack               bar, actions (one select_unit per unit), tile
 //   city                bar, city, research
 //   dialog              bar, dialog
+//
+// The comparison's stress panel (stress.tsx) is not in the table: it is shown in every context, while the snapshot carries the mode, under the overlays.
 //
 // The city screen with the research list, and the event dialog, are overlays: blocking Modals (overlay.tsx), so under them nothing hears
 // the pointer. The bar, the actions and the tile card stay in the tree, as positioned boxes that claim their own pixels, and the root is
@@ -63,6 +66,7 @@ function GameScreen() {
   return <View testID="hud-root" pointerEvents="box-none" style={{ flex: 1 }}>
     {panels.includes("actions") ? <Actions actions={snapshot.actions} units={snapshot.tile.units} /> : null}
     {panels.includes("tile") ? <Tile selected={snapshot.tile} hover={hover} /> : null}
+    {snapshot.stress === undefined ? null : <StressPanel stress={snapshot.stress} />}
     <Bar snapshot={snapshot} answer={answer} />
     {panels.includes("city") || panels.includes("research") ? <Overlay id="hud-city-overlay" onRequestClose={closeSelection}>
       <View pointerEvents="box-none" style={{ position: "absolute", left: 616, top: 24, width: 440, gap: 8 }}>

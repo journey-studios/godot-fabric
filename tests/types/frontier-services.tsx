@@ -13,6 +13,9 @@ import {
   FRONTIER_SET_PRODUCTION,
   FRONTIER_SET_RESEARCH,
   FRONTIER_SNAPSHOT,
+  FRONTIER_STRESS_BEGIN,
+  FRONTIER_STRESS_END,
+  FRONTIER_STRESS_STEP,
   FRONTIER_TURN_ENDED,
   type FrontierCall,
   type FrontierMethods,
@@ -38,6 +41,12 @@ const snapshot = GodotFabric.connect<FrontierSnapshot>(FRONTIER_SNAPSHOT, ({ val
   const foodStock: number = value.resources.food.stock;
   const foodRate: number = value.resources.food.rate;
   const unitId: number = value.actions[0].args[0];
+  // The stress mode's lists are there only while it is on: the field is optional, and reading it without that in mind does not compile.
+  const stressed: number | undefined = value.stress?.log.length;
+  void stressed;
+  // @ts-expect-error `stress` may be absent
+  const carried: number = value.stress.log.length;
+  void carried;
   const reason: string = value.actions[0].reason;
   const terrain: string = value.tile.terrain_name;
   const queued: string = value.city.queue[0].item;
@@ -104,6 +113,10 @@ void callFrontier(FRONTIER_SET_RESEARCH, ["alphabet"]);
 void callFrontier(FRONTIER_RESOLVE_EVENT, ["welcome"]);
 void callFrontier(FRONTIER_END_TURN, []);
 void callFrontier(FRONTIER_NEW_GAME, []);
+// The comparison's stress mode: no arguments, and the snapshot carries `stress` only while it is on (an optional field, so it may be undefined).
+void callFrontier(FRONTIER_STRESS_BEGIN, []);
+void callFrontier(FRONTIER_STRESS_STEP, []);
+void callFrontier(FRONTIER_STRESS_END, []);
 const moveArgs: FrontierMethods["frontier.move_unit"] = [1, 7, 8];
 void moveArgs;
 const answered = callFrontier(FRONTIER_END_TURN, []).then(({ value }) => {

@@ -41,7 +41,7 @@ const REPORT := "res://build/frontier-services-report.json"
 const UNMOUNT_AFTER_TURNS := 3
 const NEW_GAMES := 3
 # What the registry must hold: the state, the signal and one method per intent, plus open_menu, which the scene answers.
-const BINDINGS := 15
+const BINDINGS := 18
 # An accepted end_turn publishes the snapshot of the first phase, and each of the six phases publishes the next one: the last
 # is the turn that begins, at rest.
 const JOB_SNAPSHOTS := 7
@@ -787,7 +787,7 @@ func run_probe() -> void:
   var initial_ok := check(int(started.snapshots) == 1 and first is Dictionary and canon(first.value) == canon(services.game.snapshot()) and int(first.value.epoch) == 1,
     "registration: the first connection received the initial snapshot of epoch 1")
   check(int(started.stepsReceived) == Replay.STEPS.size(), "registration: the roteiro reached the JavaScript side as a prop, from replay.gd")
-  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 15 bindings")
+  check(int(registry().get("bindings", -1)) == BINDINGS and registry().get("stopped") == false, "registration: the registry holds the 18 bindings")
   check(native().errors.is_empty(), "registration: the application reports no error")
   var registration := {"application": started.application, "snapshots": started.snapshots, "inTime": registered_in_time}
   if registered_in_time and connected and initial_ok and rule_lane_only:
@@ -837,7 +837,7 @@ func run_probe() -> void:
     and services.next_job == expected_jobs + 1, "jobs: the game finished each of its %d jobs exactly once, and none is left" % expected_jobs)
 
   var final_native := native()
-  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 15 bindings are still there")
+  check(final_native.errors.is_empty() and int(registry().get("bindings", -1)) == BINDINGS, "shutdown: no application error and the 18 bindings are still there")
   var report := {"scenario": "frontier-services", "reactNative": "0.87.1", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
     "checks": checks, "sabotage": sabotage, "allPassed": checks.all(func(row: Dictionary) -> bool: return row.passed),
     "registered": registered_before_mount, "registration": registration, "bindings": BINDINGS, "steps": steps_report, "roteiroSteps": Replay.STEPS.size(),

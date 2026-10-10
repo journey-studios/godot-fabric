@@ -32,7 +32,12 @@ func control_of(id: String) -> Control:
   return control if control != null and control.is_visible_in_tree() else null
 
 
+# What the validation counts of the HUD: the intents it sent. (The runner's `stats()` is the HUD node's own, and `runner_stats()` reads it.)
 func stats() -> Dictionary:
+  return {"calls": hud.intents_sent()}
+
+
+func runner_stats() -> Dictionary:
   return hud.stats()
 
 

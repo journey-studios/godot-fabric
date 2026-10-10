@@ -137,6 +137,9 @@ const REASONS := {
   "already_researching": "That technology is already being researched.",
   "no_event": "There is no event to resolve.",
   "unknown_choice": "That is not one of the choices.",
+  # The comparison's stress mode, which is not a rule of the game (services/stress.gd).
+  "stress_on": "The stress mode is already on.",
+  "stress_off": "The stress mode is not on.",
 }
 
 
