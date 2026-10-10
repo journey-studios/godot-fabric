@@ -16,6 +16,7 @@ import {checkProps, declaredProps, legacyProps, probeValue, propTable, refusalMe
 import {describeComponents, renderManifest} from "../scripts/scope-manifest.mjs";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {renderTypeFixture, writeTypeFixture} from "./scope-0.5-types.mjs";
+import {hostRejected} from "./scope-0.5-oracle.mjs";
 
 // The JS lane of the 0.5 scope (milestone 0.5, item V05-04): the manifest of the thirteen names, the prop policy of src/prop-scope.mjs
 // against the inventory, the view configs and RN's iOS sources, the generated type fixture, and the runtime members of the
@@ -550,4 +551,21 @@ test("Platform, Dimensions, useWindowDimensions and StyleSheet have the members 
   const appState = row("AppState");
   assert.deepEqual(appState.events, ["change", "focus", "blur", "memoryWarning"]);
   assert.ok(fs.existsSync(path.join(root, "tests/app-state-native.test.mjs")));
+});
+
+test("a sabotaged native run that wrote no report counts as rejected only when the host itself died or reported an error", () => {
+  // The scroll sabotage lets refused props reach RN's C++ conversion: the host dies by SIGABRT with Godot's crash text on most runs and by SIGBUS
+  // with no text on some, and both are the rejection. A run that neither crashed nor reported anything rejected nothing, its exit code aside.
+  const quiet = 'HERMES: Running "ScopeProbe"\nHERMES: Caught: Godot View does not implement onMagicTap\n';
+  assert.equal(hostRejected({signal: "SIGABRT", status: null}, quiet + "Program crashed with signal 6\n"), true);
+  for (const signal of ["SIGABRT", "SIGBUS", "SIGSEGV", "SIGILL", "SIGFPE", "SIGTRAP"]) {
+    assert.equal(hostRejected({signal, status: null}, quiet), true, `a death by ${signal} without the crash text`);
+  }
+  // A signal from outside (the out-of-memory killer, a person, CI cancelling the job) says nothing about the host.
+  for (const signal of ["SIGKILL", "SIGTERM"]) {
+    assert.equal(hostRejected({signal, status: null}, quiet), false, `${signal} without a text is no rejection`);
+  }
+  assert.equal(hostRejected({signal: null, status: 1}, quiet + "SCRIPT ERROR: Parse Error\n"), true);
+  assert.equal(hostRejected({signal: null, status: 0}, quiet), false, "a clean exit without a report");
+  assert.equal(hostRejected({signal: null, status: 1}, quiet), false, "a failing exit code without a report, a signal or a text");
 });

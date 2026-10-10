@@ -76,16 +76,43 @@ const decayAt = (config, milliseconds) => config.from + (config.velocity / (1 - 
   * (1 - Math.exp(-(1 - config.deceleration) * milliseconds));
 const timingAt = (config, milliseconds) => config.from + EASINGS[config.easing](Math.min(1, milliseconds / config.duration)) * (config.to - config.from);
 
-// The curve's extremes over a window of elapsed time: a value is accepted when
-// some elapsed time in the window produces it.
-function inWindow(curve, low, high, observed, tolerance = 1e-9) {
+// Where an under-damped spring turns around (its peaks and troughs), in the milliseconds inside [low, high]. Sampling cannot see a
+// turn: the curve is flat there, so a grid that misses the peak by 0.2 ms is 1.7e-7 under it, more than the tolerance, and a value
+// the spring really had (at 314 ms, 0.16 ms before its first peak) was refused on any window wider than about 31 ms, which is what
+// a slow runner's frames give. With no initial velocity RN's velocity is proportional to e^(-zeta w0 t) sin(w1 t), so the turns are
+// at n pi / w1. A critically or over damped spring, the eased timing curves and the decay never turn. A spring that starts with a
+// velocity (`velocity` in RN's config, which no case here sets) turns elsewhere: it gets no turns rather than wrong ones, and the
+// samples are its guard.
+function springTurns(config, low, high) {
+  const zeta = config.damping / (2 * Math.sqrt(config.stiffness * config.mass));
+  if (zeta >= 1 || (config.velocity ?? 0) !== 0) {
+    return [];
+  }
+  const omega1 = Math.sqrt(config.stiffness / config.mass) * Math.sqrt(1 - zeta * zeta);
+  const half = 1000 * Math.PI / omega1;
+  const turns = [];
+  for (let turn = Math.max(1, Math.ceil(low / half)); turn * half <= high; turn++) {
+    turns.push(turn * half);
+  }
+  return turns;
+}
+
+// The curve's extremes over a window of elapsed time: a value is accepted when some elapsed time in the window produces it. They
+// lie at the ends of the window or where the curve turns (`turns`, from the curve's own formula), and the samples between are a
+// guard for a curve whose turns are not known.
+function inWindow(curve, low, high, observed, turns = []) {
+  const tolerance = 1e-9;
   let min = Infinity;
   let max = -Infinity;
-  for (let step = 0; step <= 96; step++) {
-    const value = curve(Math.max(0, low + (high - low) * step / 96));
+  const extend = milliseconds => {
+    const value = curve(Math.max(0, milliseconds));
     min = Math.min(min, value);
     max = Math.max(max, value);
+  };
+  for (let step = 0; step <= 96; step++) {
+    extend(low + (high - low) * step / 96);
   }
+  turns.forEach(extend);
   return observed >= min - tolerance && observed <= max + tolerance;
 }
 
@@ -124,7 +151,7 @@ const FEWEST_JS_VALUES = 2;
 // RN's driver computes for the Date.now() it ran at (see stepWindow), its
 // interpolated outputs follow from the raw value, and the end is as RN's driver
 // ends.
-function verifyJsValue(name, stage) {
+export function verifyJsValue(name, stage) {
   const config = ANIMATIONS[name];
   const [start] = stage.events.filter(entry => entry.kind === "start" && entry.label === name);
   const values = valuesOf(stage.events, name);
@@ -151,7 +178,8 @@ function verifyJsValue(name, stage) {
       spring: milliseconds => springAt(config, milliseconds / 1000, config.from).position}[config.kind];
     const last = index === values.length - 1;
     const exact = last && config.kind !== "decay";
-    assert.ok(exact ? entry.value === config.to : inWindow(curve, low, high, entry.value), `${name} value ${index}: ${entry.value}`);
+    const turns = config.kind === "spring" ? springTurns(config, low, high) : [];
+    assert.ok(exact ? entry.value === config.to : inWindow(curve, low, high, entry.value, turns), `${name} value ${index}: ${entry.value}`);
     // The outputs are RN's interpolation of the raw value.
     assert.ok(Math.abs(entry.opacity - jsMix(entry.value, map.input, map.opacity)) < 1e-9, `${name} opacity ${index}`);
     assert.ok(Math.abs(entry.translateX - jsMix(entry.value, map.input, map.translateX)) < 1e-9, `${name} translateX ${index}`);
@@ -246,7 +274,7 @@ function verifyInterrupt(stage) {
   const after = replaced.filter(row => row.sequence > first.sequence);
   after.forEach((entry, index) => {
     const ran = stepWindow(index === 0 ? after[0].t : after[index - 1].t, entry.t, {before: first.t, after: after[0].t});
-    assert.ok(inWindow(curve, ran.low, ran.high, entry.value, 1e-9), `replaced ${entry.value}`);
+    assert.ok(inWindow(curve, ran.low, ran.high, entry.value), `replaced ${entry.value}`);
   });
 }
 

@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-probe-entry",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T18:27:39.285Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38075378211,
+    "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/141",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T18:20:26Z",
+    "updatedAt": "2026-10-10T18:26:56Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114281136540,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "startedAt": "2026-10-10T18:20:29Z",
+        "completedAt": "2026-10-10T18:23:36Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281136540"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114281137448,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281137448"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114281137685,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281137685"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114281137848,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281137848"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114281137751,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281137751"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114282402997,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114282402997"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114281136692,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "startedAt": "2026-10-10T18:20:29Z",
+        "completedAt": "2026-10-10T18:26:24Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281136692"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114281136589,
+        "runAttempt": 1,
+        "headSha": "9810100246c8c869abc778fee456ff56d2d44958",
+        "startedAt": "2026-10-10T18:20:35Z",
+        "completedAt": "2026-10-10T18:26:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38075378211/job/114281136589"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "9810100246c8c869abc778fee456ff56d2d44958",
+      "reference-android": "9810100246c8c869abc778fee456ff56d2d44958",
+      "reference-ios": "9810100246c8c869abc778fee456ff56d2d44958"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:20:49Z",
+          "completedAt": "2026-10-10T18:20:50Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 12ea6d6a73e8 (--base 12ea6d6a73e84216348b2cd998f3b008a76b73bd); X9 clean, X10 clean"
+          ],
+          "base": "12ea6d6a73e84216348b2cd998f3b008a76b73bd"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:20:50Z",
+          "completedAt": "2026-10-10T18:23:33Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 682,
+              "suites": 0,
+              "pass": 681,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:23:33Z",
+          "completedAt": "2026-10-10T18:23:33Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T18:23:33Z",
+          "completedAt": "2026-10-10T18:23:34Z",
+          "passed": true,
+          "files": 2371
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-probe-project.test.mjs",
+          "tests": 8,
+          "passed": 8,
+          "topLevel": [
+            "the probe project is the probe, the instrument and four small files, at the paths the probe preloads, with the repository's instrument and the hash of every file",
+            "the project's texts: a minimal project.godot on civ-lite's renderer, an entry class that extends the probe by name, an empty scene, and override.cfg naming both",
+            "a directory that is not new is refused, an absent or empty one is made, and a failed import is refused with its log",
+            "the arguments of each entry are pure: script keeps today's, main-loop and release have no --script, and a report that is not absolute is refused",
+            "the main-loop entry runs the editor over the probe project with no --script, and the release entry runs the exported .app from the check's own directory; both leave the report in the check's directory",
+            "the script entry is what it was: the report is a name under the checkout's build directory and is copied to the check's directory",
+            "the three entries judge the same way: the oracle, the log, the probe's own checks, the display of a window and the instrument's hash",
+            "the timeout of the process is the check's to set, and an entry that lacks what it runs is refused before anything starts"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-release.test.mjs",
+          "tests": 18,
+          "passed": 18,
+          "topLevel": [
+            "a good manifest has no problem, and each way of being wrong is named",
+            "the three manifests are read from <directory>/<arm>, with their paths resolved to absolute ones",
+            "prepare() registers what the manifests say, with the seed, the game's hashes and the instrument from the Debug launcher's sources",
+            "prepare() refuses, naming the arm and the file, when a manifest is missing, is wrong or does not match its file, and nothing runs",
+            "launch() runs the executable of the arm with the scenario's arguments, with no -s and an absolute --out, in a directory outside the .app and the exports",
+            "a real process of the fake .app: the report is read, the launch has the interface's shape, and the working directory is the launcher's own",
+            "a process that exits with an error, writes no report or writes a report of its own is passed on as it came",
+            "a process killed while it wrote its report leaves a file that is not JSON: no report, the file is kept, the log says where, and cleanup() leaves it",
+            "a file that changed between prepare() and launch() makes launch() throw, and the process is not started",
+            "a process that outlives the launcher's timeout is killed and is reported as timed out, and only then",
+            "cleanup() removes the launcher's own directory and nothing of the exports",
+            "the campaign reads and validates the exports, then refuses because the instrument's self-check cannot run in a template, before anything is launched or written",
+            "the command line: --build release needs --exports, which a Debug rehearsal does not take, and the campaign refuses with the self-check's reason and runs nothing",
+            "the probe's export is read like an arm's when the directory has it, and is none when it does not",
+            "prepare() with the probe's export makes the launcher's self-check the exported probe, and without it the self-check stays unsupported",
+            "prepare() refuses a probe export that is not the registered one, or that is not from the arms' template, and the self-check stays unsupported",
+            "the self-check through the release entry runs the probe's .app with --report, in a directory outside the .app and the exports, and judges it as the other entries do",
+            "the campaign with the probe's export runs the self-check through the release entry and goes on; with another template it refuses and runs nothing"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 141,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/141",
+    "title": "feat(perf): Run the instrument's self-check through a probe project's main loop, as a Release engine can",
+    "headSha": "21f3e75b7a4fdae5f69230ab773663efa4ef1909",
+    "baseSha": "12ea6d6a73e84216348b2cd998f3b008a76b73bd",
+    "squashMergeCommit": "9810100246c8c869abc778fee456ff56d2d44958",
+    "squashCommitSubject": "feat(perf): Run the instrument's self-check through a probe project's main loop, as a Release engine can (#141)",
+    "mergedAt": "2026-10-10T18:20:23Z",
+    "headTreeSha": "fab0827c77b7ec9828d4dd4efbc3966f89fc0d1f",
+    "mainTreeSha": "fab0827c77b7ec9828d4dd4efbc3966f89fc0d1f",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 6,
+    "commits": [
+      {
+        "sha": "c489a017eb0695de91e46dd83112cbf934a4ac63",
+        "subject": "feat(perf): Run the instrument's self-check through a probe project's main loop"
+      },
+      {
+        "sha": "ef18579a79275bf1376988dba5105053b885251a",
+        "subject": "docs(evidence): Record the instrument's self-check through the probe's main loop"
+      },
+      {
+        "sha": "46c7b69b19d8880434438d2b682ed2818ae62af8",
+        "subject": "docs(dashboard): Register the instrument's self-check through the probe's main loop"
+      },
+      {
+        "sha": "488c71206934e9ae07a70b0c299b4aa48194ef10",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-probe-entry"
+      },
+      {
+        "sha": "e733e5ff51c3ba0b2643afe48c7c38c7c84ddafb",
+        "subject": "fix(perf): Fail the self-check, not crash it, when the probe project lacks the instrument"
+      },
+      {
+        "sha": "21f3e75b7a4fdae5f69230ab773663efa4ef1909",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-probe-entry"
+      }
+    ],
+    "changedFiles": 18,
+    "additions": 1127,
+    "deletions": 66
+  },
+  "artifacts": {},
+  "findings": []
+}

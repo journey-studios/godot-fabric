@@ -99,7 +99,26 @@ Três mutações mostraram que os testes novos podem falhar: tirar a conferênci
 - **A sonda como `.app` Release.** O projeto de sonda não foi exportado. A entrada `release` rodou **só contra um `.app` falso** em Node (um executável que lê `--report=` e escreve um relatório mínimo), com um oráculo injetado. Que um template oficial aceite `--headless` e `--report=<caminho absoluto>` como o binário do editor aceita, e onde o `override.cfg` entra no `.app` (o pacote ou `Contents/MacOS/`), ficam para a fatia que exporta a sonda com `frameworks: false`, `exportFiles` e o manifesto `probe/frontier-comparison-export.json`.
 - **O autoteste numa janela.** Nada aqui abriu uma janela: o check do pulso de render e o `presented` só existem lá, e são da máquina da campanha.
 - **Uma campanha.** Nenhuma rodou, e nenhum número desta pasta é medida de um braço.
-- Os recibos hospedados (CI e Pages) desta entrega serão registrados depois da mescla.
+- Os recibos hospedados (CI e Pages) desta entrega estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages): provam o código e os testes da sonda e da entrada, não uma execução comparativa.
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `9810100` (o squash do #141; run [38075378211](https://github.com/journey-studios/godot-fabric/actions/runs/38075378211) do workflow Contracts, iniciado às 18:20:26 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 7 s), `reference-android` (5 min 55 s) e `reference-ios` (6 min 21 s), todos com checkout em `9810100`. Os cinco jobs nativos e de paridade (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a fatia não tem passo nativo nem artefato.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 12ea6d6a73e8 (--base 12ea6d6a73e84216348b2cd998f3b008a76b73bd); X9 clean, X10 clean`. A base é o pai do squash, `12ea6d6`.
+
+**Os testes.** `npm run test:contracts` rodou com 732 testes de Node (blocos de 7, 43 e 682): 731 passaram e 1 saiu como skipped pela allowlist do check (`ALLOWED_SKIPS`): "native macOS arm64 export and copied-app rejection controls", com o motivo "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template". O recibo confere, pelo nome e no log do job `contracts`, os 8 testes de `tests/frontier-comparison-probe-project.test.mjs` (8 de 8) e os 18 de `tests/frontier-comparison-release.test.mjs` (18 de 18). Os 23 testes de Python passaram. `check:static` e `check:publication` também passaram (2.371 arquivos). Os testes nativos (`test:frontier-comparison-probe` e `test:cpu-time-instrument`) rodam só localmente, e por isso não estão no recibo.
+
+**O Pages.** O push de `9810100` rodou também o workflow do Pages (run [38075378245](https://github.com/journey-studios/godot-fabric/actions/runs/38075378245), de 18:20:26 a 18:21:13 UTC, `build` e `deploy` em success, na primeira tentativa, 43 testes do painel). O [recibo](publication.json) registra o deployment 6984949343 em success e o artefato `github-pages` que ele usou (id 11678258864, SHA-256 `fc251291…`, igual ao digest da API e ao do log de upload). O `migration.json` publicado tem os mesmos bytes do commitado, e a entrada de atividade desta fatia, `milestone-0-5-v05-10-probe-entry-ef18579`, está nele. O mesmo arquivo, no commit `9810100`, também traz as entradas dos #138 (`milestone-0-5-v05-10-arm-projects-85d2c99`) e do #136 (`milestone-0-5-v05-10-release-launcher-29e379f`). Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** a sonda como `.app` Release e a campanha. Os recibos provam o código e os testes da entrada, não uma execução comparativa.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-probe-entry --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
 
 ## Reproduzindo
 
