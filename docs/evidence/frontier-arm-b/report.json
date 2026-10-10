@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-arm-b",
+  "status": "verified-local-headless-and-headed-causal-control-retained-sabotages-and-regressions",
+  "at": "2026-10-10T06:59:20Z",
+  "item": "V05-10",
+  "criteria": [
+    "braco-b"
+  ],
+  "criteriaNote": "braco-b is done by this record: the native HUD passes the context matrix (the invalidation rule parity) inside the time-box, with the effort recorded. The other criteria of V05-10 stay open.",
+  "executionBaseCommit": "09ed8f7",
+  "implementationCommit": "d8bd678285efb13681e1a5d39fdec394069888b7",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/d8bd678285efb13681e1a5d39fdec394069888b7",
+  "environment": {
+    "godot": "4.7.2.stable.official.ed1daf0bf",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": {
+      "lane": "headless",
+      "captures": "macOS window"
+    },
+    "nativeHostSha256": "84d6ab94ea0c79cfaf16f8e009ab682899c8c8b5953ac9eaa5d4ac3e938b2c43",
+    "nativeHostNote": "the host was rebuilt in this worktree before the first run (the preserved one predated #104); the slice has no C++"
+  },
+  "screenshots": {
+    "count": 12,
+    "files": {
+      "none": {
+        "file": "docs/evidence/frontier-arm-b/none.png",
+        "sha256": "51d4288ba5505cbf35094b7583d782e0efbe8249067f354160156a2d671e105e",
+        "bytes": 18765
+      },
+      "tile": {
+        "file": "docs/evidence/frontier-arm-b/tile.png",
+        "sha256": "81c9525d05294169c25c6bf6404200543cdd998592834773a173b18fe8c67772",
+        "bytes": 26823
+      },
+      "settler": {
+        "file": "docs/evidence/frontier-arm-b/settler.png",
+        "sha256": "79d335c6928cbcff3a9f1f0202552eb1d76f6844f023e9112e1e44d7f86fbb74",
+        "bytes": 40801
+      },
+      "warrior": {
+        "file": "docs/evidence/frontier-arm-b/warrior.png",
+        "sha256": "40507cb061c465aff61a38d29a5d4eccbe4a438c9ef8dc00a5eb41981e33a1ff",
+        "bytes": 33720
+      },
+      "stack": {
+        "file": "docs/evidence/frontier-arm-b/stack.png",
+        "sha256": "530f8f026745e62730eb3c38d7e2683879709167e45a314da65a6ddaad356249",
+        "bytes": 39087
+      },
+      "city": {
+        "file": "docs/evidence/frontier-arm-b/city.png",
+        "sha256": "e495274c837139ab6ceaa8234219afa6f8406826a82156a5ae389ca40f488ba3",
+        "bytes": 71871
+      },
+      "dialog": {
+        "file": "docs/evidence/frontier-arm-b/dialog.png",
+        "sha256": "48474122551b5c1faa56e85a8077021059d78ec8fb32bca51d77f055474a487a",
+        "bytes": 37182
+      },
+      "ai-phase": {
+        "file": "docs/evidence/frontier-arm-b/ai-phase.png",
+        "sha256": "722508bd49fde4a922539fc240a58589d0b5ba52283e4965a01952b4c28a2c8f",
+        "bytes": 21582
+      },
+      "overlay-city": {
+        "file": "docs/evidence/frontier-arm-b/overlay-city.png",
+        "sha256": "9b2c3dcdcf0279d344544079f143c36f028435e7c9a8e4dcec31ba5ead833e2f",
+        "bytes": 73358
+      },
+      "overlay-dialog-1": {
+        "file": "docs/evidence/frontier-arm-b/overlay-dialog-1.png",
+        "sha256": "48474122551b5c1faa56e85a8077021059d78ec8fb32bca51d77f055474a487a",
+        "bytes": 37182
+      },
+      "overlay-dialog-2-remounted": {
+        "file": "docs/evidence/frontier-arm-b/overlay-dialog-2-remounted.png",
+        "sha256": "fcfbfc21308d3739c4e824c24fd342841e498718fbfdd99dc6433f64f85fb2f8",
+        "bytes": 36492
+      },
+      "overlay-dialog-3": {
+        "file": "docs/evidence/frontier-arm-b/overlay-dialog-3.png",
+        "sha256": "3a829aff9cb1c9bf6987e492564531355ba0d5d901acbab521bfff947f47950f",
+        "bytes": 37499
+      }
+    }
+  },
+  "parity": {
+    "city": {
+      "step": 18,
+      "label": "cover-city",
+      "panels": [
+        "hud-bar",
+        "hud-city",
+        "hud-research"
+      ]
+    },
+    "dialog": {
+      "step": 45,
+      "label": "cover-dialog",
+      "panels": [
+        "hud-bar",
+        "hud-dialog"
+      ]
+    },
+    "none": {
+      "step": 33,
+      "label": "cover-none",
+      "panels": [
+        "hud-bar"
+      ]
+    },
+    "settler": {
+      "step": 3,
+      "label": "cover-settler",
+      "panels": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ]
+    },
+    "stack": {
+      "step": 2,
+      "label": "cover-stack",
+      "panels": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ]
+    },
+    "tile": {
+      "step": 32,
+      "label": "cover-tile",
+      "panels": [
+        "hud-bar",
+        "hud-tile"
+      ]
+    },
+    "warrior": {
+      "step": 9,
+      "label": "cover-warrior",
+      "panels": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ]
+    }
+  },
+  "lane": {
+    "probeChecksHeadless": 144,
+    "probeChecksOverlays": 28,
+    "stepsPlayed": 46,
+    "covering": {
+      "city": 18,
+      "dialog": 45,
+      "none": 33,
+      "settler": 3,
+      "stack": 2,
+      "tile": 32,
+      "warrior": 9
+    },
+    "oracleFindings": 0,
+    "framesObservedInTheJob": 13,
+    "publishedPhases": [
+      "ai_plan",
+      "ai_move",
+      "production",
+      "growth",
+      "research",
+      "refresh",
+      "idle"
+    ],
+    "arm": "native",
+    "scene": "res://main_native.tscn",
+    "oracleMutations": {
+      "hud": 27,
+      "overlays": 23
+    },
+    "notApplicable": [
+      "the application's error list after a remount (there is no Application node)"
+    ],
+    "escape": {
+      "city": {
+        "calls": 1,
+        "clearCalls": 1,
+        "contextAfter": "none",
+        "contextBefore": "city",
+        "panel": "hud-city",
+        "sameHead": true,
+        "shownAfter": false,
+        "shownBefore": true,
+        "unchanged": false
+      },
+      "dialog": {
+        "calls": 0,
+        "clearCalls": 0,
+        "contextAfter": "dialog",
+        "contextBefore": "dialog",
+        "panel": "hud-dialog",
+        "sameHead": true,
+        "shownAfter": true,
+        "shownBefore": true,
+        "unchanged": true
+      }
+    },
+    "remountFrames": 3
+  },
+  "causalControl": {
+    "broken": "a native HUD whose table mounts the actions and the tile card in all seven contexts",
+    "categories": [
+      "content",
+      "input",
+      "map",
+      "panels",
+      "phase"
+    ],
+    "findingCounts": {
+      "content": 72,
+      "input": 2,
+      "map": 14,
+      "panels": 188,
+      "phase": 2
+    },
+    "failedChecks": 25,
+    "panelsShownAtCovering": {
+      "none": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "tile": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "settler": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "warrior": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "stack": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "city": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ],
+      "dialog": [
+        "hud-bar",
+        "hud-actions",
+        "hud-tile"
+      ]
+    }
+  },
+  "reports": {
+    "native-headless": {
+      "file": "build/civ-lite-ui-native-hud/native-headless.json",
+      "sha256": "96b02dfb1837b314078f59e59b6f0eab50a5cb361f2451b9315dacf64ef7979a",
+      "bytes": 1042526
+    },
+    "native-overlays": {
+      "file": "build/civ-lite-ui-native-hud/native-overlays.json",
+      "sha256": "2a456b6357c69430b36d93216a5c37468d40dbe88d971fbb411cc481e6f10ee8",
+      "bytes": 87045
+    },
+    "native-graphical": {
+      "file": "build/civ-lite-ui-native-hud/native-graphical.json",
+      "sha256": "e84b31147936c401b6794251e05081fa00245205b163d095156384b71effb4d2",
+      "bytes": 1043208
+    },
+    "native-overlays-graphical": {
+      "file": "build/civ-lite-ui-native-hud/native-overlays-graphical.json",
+      "sha256": "d0c42750dc8cc885d36dc984623f16e84eb603231052af6b99be94bb507df099",
+      "bytes": 85354
+    },
+    "control-observed": {
+      "file": "build/civ-lite-ui-native-hud/control-observed.json",
+      "sha256": "a86a36d9a58dac362ba34dc12ac56d981c346b9af5d4645fde4e3e2743de01a7",
+      "bytes": 10774
+    },
+    "summary": {
+      "file": "build/civ-lite-ui-native-hud/summary.json",
+      "sha256": "2b4efa14e9a3bbd159592e3255c61cfac3aea08bc3c89a33194dd6c97b2d9964",
+      "bytes": 8290
+    }
+  },
+  "controlReport": {
+    "file": "build/civ-lite-ui-native-control/native-control.json",
+    "sha256": "ef2db53afd69f52243440beb2e40fb4ae5501972461012f06b2f83f837ad0021",
+    "bytes": 903489
+  },
+  "retainedSabotages": {
+    "format": "godot-fabric.civ-lite-ui-sabotage/v1",
+    "receipt": {
+      "file": "build/civ-lite-ui-sabotage.json",
+      "sha256": "d0fdfa07302ae235e23f04bed5ef85a967012d8e1a61b2fdfbe1988bc481c90b",
+      "bytes": 29972
+    },
+    "controlStatus": 0,
+    "native": [
+      {
+        "name": "native-city-shows-tile",
+        "file": "consumers/civ-lite/native_hud/hud.gd",
+        "rejected": true,
+        "failedChecks": 14,
+        "categories": [
+          "panels",
+          "remount"
+        ],
+        "firstFailedCheck": "The HUD caught up with the game after each of the 46 steps of the roteiro",
+        "sourceSha256": "9e76cb090f4b27147c6a8d3444589b9ff35bf6c450c967977f70b9546fa44714"
+      },
+      {
+        "name": "native-overlay-not-blocking",
+        "file": "consumers/civ-lite/native_hud/overlay.gd",
+        "rejected": true,
+        "failedChecks": 5,
+        "categories": [
+          "blocking",
+          "map"
+        ],
+        "firstFailedCheck": "The Modal covers the whole map in every step of the city and dialog contexts and in no step of the others: [\"step 18 (city)\", \"step 19 (city)\", \"step 20 (city)\", \"step 21 (city)\", \"step 22 (city)\", \"step 23 (city)\", \"step 24 (city)\", \"step 25 (city)\", \"step 26 (city)\", \"step 27 (city)\", \"step 28 (city)\", \"step 35 (city)\", \"step 44 (dialog)\", \"step 45 (dialog)\"]",
+        "sourceSha256": "30cde014c3170260a0bd96b77c61fa0b1e01ae514591bd1379bcc24c720ce0b0"
+      },
+      {
+        "name": "native-end-turn-by-phase",
+        "file": "consumers/civ-lite/native_hud/bar.gd",
+        "rejected": true,
+        "failedChecks": 2,
+        "categories": [
+          "bar"
+        ],
+        "firstFailedCheck": "Step 44 (end_turn): the bar's End turn is enabled exactly as the game's end_turn action says, with its reason, and the spinner shows exactly while the phase is not idle",
+        "sourceSha256": "db6806bf2d876f28f94b21c6032331e6cc434d124a056f34dad8e62efcf0c706"
+      }
+    ],
+    "allRejected": true,
+    "variants": 20,
+    "restoredEqualsGenuine": true
+  },
+  "gameAndRnHudUnchanged": "git diff 09ed8f7 on consumers/civ-lite/{game,world,ui,services/schema.gd}, hud_validation.gd and tests/civ-lite-ui-oracle.mjs is empty",
+  "extras": {
+    "note": "asked after the parity and counted apart from arm B's effort",
+    "bareScene": {
+      "file": "consumers/civ-lite/main_bare.tscn",
+      "nodes": [
+        "GameServices",
+        "World"
+      ],
+      "bootsHeadlessAndHeaded": "--quit-after 60, exit 0, no log line of error",
+      "replayThroughTheServices": {
+        "steps": 77,
+        "codeMismatches": 0,
+        "goldenHashAtTheEnd": true,
+        "canvasLayers": 0
+      },
+      "laneCheck": "tests/civ-lite-ui-native.test.mjs boots it in the arm B test"
+    },
+    "appliedSnapshot": {
+      "file": "consumers/civ-lite/native_hud/hud.gd",
+      "variable": "_applied",
+      "accessor": "applied_snapshot()",
+      "contract": "the runner's, to come"
+    }
+  },
+  "effort": {
+    "armB": {
+      "files": 22,
+      "lines": 1310,
+      "gdScriptLines": 736,
+      "sceneLines": 371,
+      "themeLines": 179,
+      "mainNativeLines": 24
+    },
+    "armC": {
+      "files": 13,
+      "lines": 698,
+      "linesWithoutIconsTs": 663,
+      "paths": [
+        "ui/hud/*",
+        "ui/store.ts",
+        "ui/telemetry.ts",
+        "ui/index.tsx"
+      ]
+    },
+    "probeSeam": {
+      "readerBaseLines": 57,
+      "readerNativeLines": 110,
+      "readerHostLines": 74,
+      "readerHostNote": "arm C's observe, control_of and stats moved",
+      "hudProbeDiff": "+32 -41",
+      "overlayValidationDiff": "+42 -8 (the Escape stage)",
+      "stabilityValidationDiff": "-10 (press_escape moved to hud_probe.gd)"
+    },
+    "changesToSharedCode": {
+      "consumers/civ-lite/services/game_services.gd": "+5 -2: get_node_or_null('Application') in _enter_tree"
+    },
+    "activeTimeHours": {
+      "measured": 1.71,
+      "includesExtras": true,
+      "extrasEstimatedByImplementer": 0.2,
+      "from": "2026-10-10T05:18:39Z",
+      "to": "2026-10-10T07:01:02Z",
+      "rule": "the amendment of 2026-10-09: the sum of the gaps under 30 minutes between consecutive timestamped events of the subagent's transcript (no gap exceeded 10 minutes)",
+      "timeBoxHours": 12.8
+    }
+  },
+  "findings": [
+    {
+      "id": "no-application-not-silent",
+      "meaning": "GameServices connected .runtime_available in _enter_tree: a scene with no Application raised Node not found and a script error; fixed with get_node_or_null"
+    },
+    {
+      "id": "expand-icon-collapses",
+      "meaning": "a Button's icon with expand_icon drew nothing in a Button the size of its text; the theme's icon_max_width draws it at 20 px"
+    },
+    {
+      "id": "wheel-passes-a-stop-control",
+      "meaning": "a tick of the wheel over a STOP Control is not marked handled by the GUI and reaches the World's _unhandled_input; the HUD root claims it while gui_get_hovered_control() is not null"
+    },
+    {
+      "id": "reader-must-not-ask-the-read-node-for-the-tree",
+      "meaning": "the host reader's first version used the unmounting Control's get_tree(), null; it uses the HUD's"
+    },
+    {
+      "id": "control-run-has-an-older-game",
+      "meaning": "the overlays control runs the new probe on the game of 622102e, whose dialog has no index: the Escape stage reads absent fields with get"
+    }
+  ],
+  "limits": [
+    "Local execution on macOS arm64: the headless lane and the captures in a macOS window; hosted CI and Pages receipts of the implementation commit come after the merge",
+    "The stability probe is the host's and does not run on arm B: no leak, focus or icon measurement of the native HUD yet",
+    "Pointer events are synthetic through the viewport, no physical mouse; no iOS, typed text, IME or network images",
+    "No frame-time, memory, start or package measurement of arm B, no optimization pass and no comparative execution"
+  ],
+  "openItems": [
+    {
+      "id": "otimizacao",
+      "owner": "V05-10",
+      "meaning": "the optimization pass of arm B, at most 3.2 h, one round, keeping the parity"
+    },
+    {
+      "id": "execucao-metricas-mudanca-relatorio",
+      "owner": "V05-10",
+      "meaning": "the comparative executions, their metrics, the cost of change and the report"
+    },
+    {
+      "id": "recibos-hospedados",
+      "owner": "after the merge",
+      "meaning": "hosted CI and Pages receipts of the implementation commit"
+    }
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the pin; to be run by whoever replaces d8bd678285efb13681e1a5d39fdec394069888b7",
+    "mismatches": null
+  },
+  "sourcePins": {
+    "consumers/civ-lite/native_hud/actions.gd": "9be5d37757d19f337d0a9402a7750dc8cfe7fdbfa3ad504977c33b735ad52fad",
+    "consumers/civ-lite/native_hud/actions.tscn": "abbae0b07125bec32e860c9e720c235d2a65d9fed4ac599403bdbbc7399b18ef",
+    "consumers/civ-lite/native_hud/bar.gd": "eb123f680581fa4461d74ee67e52a854d929fe6d6cca48ee7c14b1734f9c3bb9",
+    "consumers/civ-lite/native_hud/bar.tscn": "dcf83b09f700b5ea5c40774be068dbb4e8c03eb2a22f8b4340a703ff97129ad4",
+    "consumers/civ-lite/native_hud/city.gd": "85a339ec1eee436a14fa47de02c843039db7ec4cb15efa2345d3bc1ebcb6d69a",
+    "consumers/civ-lite/native_hud/city.tscn": "a7afdb709e64e169c8b54a74bf13b0ae7430b6c847326cf45dfd1f15565fb6f5",
+    "consumers/civ-lite/native_hud/dialog.gd": "3eb7b7e0755b39a203c1c90dd71a5333d4f4448a93fc28cfca955b8e133737f8",
+    "consumers/civ-lite/native_hud/dialog.tscn": "bbc6058d07755fe4a1699561040076d1534c13f52a98c95e90e028de25031fde",
+    "consumers/civ-lite/native_hud/hud.gd": "2bc32cdd08ac371bb57a13c902acba4ac66c4e4d81b9c6f7a50bafda41ca3452",
+    "consumers/civ-lite/native_hud/hud.tscn": "2e39171dd7f60b67be50e6db063c0a5366e7c38a14d9780d6f825bff1b2c09e6",
+    "consumers/civ-lite/native_hud/icons.gd": "5d6885ebb39496f2762b49b1e4c576dae5a0b0fa2c398eb3ba3fb65ece7075cb",
+    "consumers/civ-lite/native_hud/kit.gd": "4293d51a6faf36f63cd8cb1695247c0d662e41441911ab85859423f61667fdc1",
+    "consumers/civ-lite/native_hud/menu.gd": "62bc48c16ec6a77f826c862f0afe0ac4c52ebce5fdfdc43e4a4908db8a577529",
+    "consumers/civ-lite/native_hud/menu.tscn": "1b73e68ecbd954aecfc8c4a3b2e58e9efa10fa2480780c79a0a8e03dfdd44caf",
+    "consumers/civ-lite/native_hud/overlay.gd": "d1b79175421fb0639b50b880bec5e797a188bb965e939af1cb2908c0c901f885",
+    "consumers/civ-lite/native_hud/research.gd": "5f8c6b8100d9b457479254ff12d39b41c6247eaeeac1024016e0a01b229b856a",
+    "consumers/civ-lite/native_hud/research.tscn": "3c7d19062f28efed3504b40ed9e1777a141eca8a69cea37d372987392e50ebd6",
+    "consumers/civ-lite/native_hud/spinner.gd": "c8e0988ccd0a4879eabac31a224539aebf7529b7341747b6031104b10577e233",
+    "consumers/civ-lite/native_hud/theme.tres": "59c40bf62e03a75db5a76c108b4755a5566a1fa284d2163383c293af2a730754",
+    "consumers/civ-lite/native_hud/tile.gd": "5cd80ab183321bea0f8279db0dfb4796bef162640a1ac2d8c8c6430aa293ccd6",
+    "consumers/civ-lite/native_hud/tile.tscn": "c906e01ac74f67979c2d8b2925cbd2e9b7fdc102541053b73c9de1d0437c5ae5",
+    "consumers/civ-lite/main_native.tscn": "72dbc6c80c3c8616f8a2b139fd4dec3c849fc9b6915770ca454b699e9639711c",
+    "consumers/civ-lite/hud_reader.gd": "8b57673173cb37d8b8c5ce54c4ec91fe7c30332e1dd5c92a668134232589ff80",
+    "consumers/civ-lite/hud_reader_host.gd": "f86cefb332fb3df97c7c67fea6c6bbe12ac8bae1a1c972315125ee456bf2bcbc",
+    "consumers/civ-lite/hud_reader_native.gd": "80107f965de1d488421ec5d704026da6787980fed100e8a5453cfc415bd7b60d",
+    "consumers/civ-lite/hud_probe.gd": "53f83045d703413602b65e4ab35031ddb697134e37cce5e8315b7891c9ed6da5",
+    "consumers/civ-lite/hud_validation.gd": "f40e0558855c79a29e3dfcc57c7843c674cee8a951b036813d643e69a1d97ea5",
+    "consumers/civ-lite/overlay_validation.gd": "ad85acff6ecc3d24cbc7e65198fce91e058d0d708123418ab6509b5c69d13200",
+    "consumers/civ-lite/stability_validation.gd": "0a68971331166e62b92df5d933da518f4bb98b1483bec76490cc30a1bc77368e",
+    "consumers/civ-lite/services/game_services.gd": "a607db2645821d1ae7ac58406aa800f45db9d13dca156fa9e19dc183a97cddb7",
+    "consumers/civ-lite/README.md": "fac1bd6c67aa51a912bdfdee34b462669cd1ab74ace174566624e1b195595fbb",
+    "tests/civ-lite-ui-native.test.mjs": "b8ca9a14f1cd255758ad9c593d80e7cf9abd1616e2ec4e486e3a1b023267486d",
+    "tests/civ-lite-ui-oracle.mjs": "3c234d844906ccbb611777270c1cac061768009218bfac83dd1f388527f6d6bd",
+    "tests/civ-lite-overlay-oracle.mjs": "f1442346372d0fbd4c5640a826698265189324f248248d051ef722d6a3dbdd3f",
+    "scripts/civ-lite-ui-sabotage.mjs": "317f8b35bad039a59b20c200928b4a314e2342a4a9ae7687eaf855235c3af32e",
+    ".github/workflows/contracts.yml": "52b7e85de6d60b820d8ef28c64c98acf32edc2a79f68c053953348de8c81ac95",
+    "docs/research/frontier-arm-b.md": "bb546fae011b311e3cfa1e9a4a185dd86ca04553d118ab6ab7d04808d8f89b9a"
+  }
+}
