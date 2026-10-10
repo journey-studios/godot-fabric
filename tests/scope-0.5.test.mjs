@@ -28,8 +28,10 @@ const manifest = json("docs/compatibility/scope-0.5.json");
 const inventory = json("docs/compatibility/contracts-0.87.1.json");
 const audit = json("docs/compatibility/react-native-0.87.1.json");
 const rnRoot = path.join(root, "node_modules");
-const thirteen = ["View", "Text", "Pressable", "ScrollView", "Image", "Modal", "ActivityIndicator", "StyleSheet", "Platform", "Dimensions",
-  "useWindowDimensions", "AppState", "AppRegistry"];
+const thirteen = ["View", "Text", "Pressable", "ScrollView", "Image", "Modal", "ActivityIndicator", "SafeAreaView", "StyleSheet", "Platform",
+  "Dimensions", "useWindowDimensions", "AppState", "AppRegistry"];
+// SafeAreaView's props are ViewProps: it takes no table of its own and is judged by the View's.
+const sharedTable = {SafeAreaView: "View"};
 const decisions = ["supported", "ignored", "refused"];
 const declaredNames = owner => new Set(inventory.contracts.filter(row => row.owner === owner && (row.kind === "prop" || row.kind === "event"))
   .map(row => row.name));
@@ -58,17 +60,20 @@ test("the manifest decides exactly thirteen names, each with its audit row as re
     assert.ok(row.runtime.length > 0, row.name);
   }
   // The audit's rows that are stale in the way the brief records.
-  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppRegistry", "AppState", "Image", "Modal"]);
+  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppRegistry", "AppState", "Image", "Modal", "SafeAreaView"]);
   // PR #58 landed: the ScrollView is classified like the other six, and nothing in the manifest waits on another change.
   assert.deepEqual(manifest.names.filter(row => row.pendingOn !== undefined).map(row => row.name), []);
   assert.deepEqual(Object.keys(manifest.notInTheManifest).sort(), ["FlatList", "PixelRatio"]);
   assert.ok(manifest.outOfScope.some(text => /TextInput/.test(text)) && manifest.outOfScope.some(text => /hover/.test(text)));
   assert.match(manifest.rule, /neither/);
-  // The six components of the prop policy point at their tables.
+  // The seven components of the prop policy point at their tables, and the SafeAreaView at the View's.
   for (const row of manifest.names.filter(entry => entry.props !== null)) {
-    assert.ok(scopedComponents.includes(row.name) && row.props === `components.${row.name}`, row.name);
+    const table = sharedTable[row.name] ?? row.name;
+    assert.ok(scopedComponents.includes(table) && row.props === `components.${table}`, row.name);
   }
-  assert.deepEqual(manifest.names.filter(entry => entry.props !== null).map(entry => entry.name).sort(), [...scopedComponents].sort());
+  assert.deepEqual(manifest.names.filter(entry => entry.props !== null && sharedTable[entry.name] === undefined).map(entry => entry.name).sort(),
+    [...scopedComponents].sort());
+  assert.deepEqual(manifest.names.filter(entry => sharedTable[entry.name] !== undefined).map(entry => entry.name), ["SafeAreaView"]);
   assert.equal(scopedComponents.length, 7);
 });
 
@@ -433,6 +438,10 @@ test("every component facade runs the check, and only the one module owns the ta
   }
   assert.ok(!read("src/components.jsx").includes("onHoverIn || onHoverOut"));
   const facade = read("src/react-native-platform.jsx");
+  // RN's SafeAreaView takes the View's table: it renders through the same function as the View, with RN's iOS native component.
+  assert.match(facade, /export function SafeAreaView\(props\) \{\s*return renderHostView\(RCTSafeAreaViewNativeComponent, props\);/);
+  assert.match(facade, /export function View\(props\) \{\s*return renderHostView\(OriginalView, props\);/);
+  assert.match(facade, /function renderHostView\([^)]*\) \{[\s\S]*?checkProps\("View", props\);/);
   assert.match(facade, /export function Modal\(props\)/);
   assert.doesNotMatch(facade, /export const Modal = OriginalModal/);
 });

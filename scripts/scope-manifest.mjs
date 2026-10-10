@@ -2,7 +2,7 @@ import {readFileSync, writeFileSync} from "node:fs";
 import {fileURLToPath} from "node:url";
 import {legacyProps, scope, scopedComponents} from "../src/prop-scope.mjs";
 
-// docs/compatibility/scope-0.5.json decides, for the twelve React Native names the Frontier HUD imports, what the platform does
+// docs/compatibility/scope-0.5.json decides, for the thirteen React Native names the Frontier HUD imports, what the platform does
 // with each. Its `components` section is the per-prop classification of src/prop-scope.mjs, written by this script and judged
 // by tests/scope-0.5.test.mjs: it is never edited by hand, and a drift fails the test. Run
 //   node scripts/scope-manifest.mjs --write   after a change to the tables;

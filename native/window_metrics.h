@@ -1,5 +1,6 @@
 #pragma once
 
+#include "display_insets_core.h"
 #include "frame_clock.h"
 #include <godot_cpp/variant/vector2.hpp>
 #include <cstdint>
@@ -11,6 +12,8 @@ struct WindowMetrics {
   godot::Vector2 size;
   godot::Vector2 screen;
   double scale{1};
+  // The bands of the window's edges that the OS leaves out, in Fabric points (display_insets.h). Zero without a safe area.
+  display_insets::Edges unsafe;
   uint64_t window_instance_id{};
   double refresh_rate{};
   FrameClock::Pacing pacing{FrameClock::Pacing::Time};
