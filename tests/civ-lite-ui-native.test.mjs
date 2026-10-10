@@ -66,12 +66,12 @@ const CONTROL_COMMIT = "5e1f6a1";
 // The commit before the queue and the overlays: the game and the HUD of slice 1.
 const OVERLAY_CONTROL_COMMIT = "622102e";
 const CONTROL_SHA256 = "d477f51cfd3550c43087d92e552bf403a82abc329fdceaf2b581a885a9a09346";
-// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the overlay probe's last two are the Escape checks), and the captures a headed run adds (eight, and four).
-const EXPECTED_CHECKS = 144;
+// What hud_validation.gd and overlay_validation.gd count in a run with no capture (the HUD probe's last eight are the stress stage's, the overlay probe's last two are the Escape checks), and the captures a headed run adds (nine, and four).
+const EXPECTED_CHECKS = 152;
 const EXPECTED_OVERLAY_CHECKS = 28;
 // What stability_validation.gd counts: 41 in a run with no capture, and the seven pictures and the comparison of the last cycle's a headed run adds.
 const EXPECTED_STABILITY_CHECKS = 41;
-const CAPTURES = [...CONTEXTS, "ai-phase"];
+const CAPTURES = [...CONTEXTS, "ai-phase", "stress"];
 const OVERLAY_CAPTURES = ["city", "dialog-1", "dialog-2-remounted", "dialog-3"];
 const STABILITY_CAPTURES = ["bar", "actions", "city", "city-1", "city-20", "dialog-1", "dialog-20"];
 // The commit before this slice: its HUD has no icons and its manifest does not decide AppRegistry.
@@ -92,6 +92,12 @@ const SABOTAGES = {
   "position-in-js": {categories: ["queue"], failed: [/the HUD showed the position the game gave/]},
   "city-in-tree": {categories: ["panels", "map", "blocking"], failed: [/The Modal covers the whole map in every step of the city and dialog contexts/, /With the city screen open, 100 left clicks, 100 right clicks and 100 wheel ticks on the map reach the World 0 times/]},
   "dialog-unkeyed": {categories: ["queue"], failed: [/Each event of the queue was a subtree of its own/]},
+  // The sabotages of the stress mode and of the runner's stats(): the HUD probe's stress stage rejects each, the oracle by the rule it breaks.
+  "stress-rows-rebuilt": {categories: ["stress"], failed: [/Twenty steps, one a frame/]},
+  "stress-end-keeps-overlay": {categories: ["stress"], failed: [/Leaving the mode removes the panel/]},
+  "stats-miss-turn-ended": {categories: ["stats"], failed: [/Over a whole turn the runner's stats\(\)/]},
+  "native-stress-rows-rebuilt": {arm: "native", categories: ["stress"], failed: [/Twenty steps, one a frame/]},
+  "native-stats-miss-turn-ended": {arm: "native", categories: ["stats"], failed: [/Over a whole turn the runner's stats\(\)/]},
   // The sabotages of arm B break the native HUD (`arm: "native"`): the same two probes run on main_native.tscn.
   "native-city-shows-tile": {arm: "native", categories: ["panels"], failed: [/the HUD showed .* for the city context/]},
   "native-overlay-not-blocking": {arm: "native", categories: ["map", "blocking"], failed: [/The Modal covers the whole map in every step of the city and dialog contexts/,
@@ -190,6 +196,17 @@ const MUTATIONS = [
   {name: "a frame of the job shows the spinner at an idle phase", category: "phase", change: report => { report.phase.free.samples.push({phase: "idle", spinner: true, animating: true, endTurnDisabled: false, endTurnReason: "", turn: ""}); }},
   {name: "the disabled End turn asked the game", category: "phase", change: report => { report.phase.held.disabledPress.callbacksAfter += 1; }},
   {name: "no snapshot was published at an AI phase", category: "phase", change: report => { report.phase.published = report.phase.published.filter(entry => !["ai_plan", "ai_move"].includes(entry.phase)); }},
+  {name: "the stress panel is missing a log row", category: "stress", change: report => { report.stress.begun.log.pop(); }},
+  {name: "a step built a log row again", category: "stress", change: report => { report.stress.steps.view.log[0].instance += 1; }},
+  {name: "the last line the HUD shows is not the game's", category: "stress", change: report => { report.stress.steps.view.log.at(-1).text = "00220 · stale"; }},
+  {name: "the HUD shows a changed item as it was", category: "stress", change: report => { report.stress.steps.view.production[0].text = "Item 00 0/100"; }},
+  {name: "the snapshot after the mode differs from the one before", category: "stress", change: report => { report.stress.snapshots.after += " "; }},
+  {name: "begin while a turn runs was accepted", category: "stress", change: report => { report.stress.turn.refused.ok = 1; report.stress.turn.refused.code = "ok"; }},
+  {name: "the stress panel changed the panels of the context", category: "stress", change: report => { report.stress.begun.panels.push("hud-city"); }},
+  {name: "a second begin was accepted", category: "stress", change: report => { report.stress.again.ok = 1; }},
+  {name: "the runner's events differ from what the node emitted", category: "stats", change: report => { report.stress.final.stats.events -= 1; }},
+  {name: "over a turn stats() missed a snapshot", category: "stats", change: report => { report.stress.turn.statsAfter.snapshots -= 1; }},
+  {name: "stats() has a key the contract does not", category: "stats", change: report => { report.stress.turn.statsAfter.extra = 1; }},
   {name: "a click selected another tile than the one under it", category: "input", change: report => { inputStep(report, "click-tile-9-8").selection.x = 10; }},
   {name: "the hover is not the tile under the pointer", category: "input", change: report => { inputStep(report, "hover-tile-12-4").hover.x = 3; }},
   {name: "a click on a panel reached the World", category: "input", change: report => { inputStep(report, "click-on-panels").panelClicks[0].heardAfter.buttons += 2; }},
@@ -558,7 +575,8 @@ if (sabotage === null) {
       }
       await control.editor("editor");
       const controlRun = await probe(control, "control", {mode: "stability", expectFailures: true});
-      const controlFindings = judgeStabilityReport(controlRun.report);
+      // The tree of e108e9d registers 15 bindings: the three methods of the stress mode came after it.
+      const controlFindings = judgeStabilityReport(controlRun.report, {bindings: 15});
       const controlFailed = failedChecks(controlRun.report);
       assert.ok(controlFailed.length > 0 && controlFindings.length > 0, `the HUD and the game of ${STABILITY_CONTROL_COMMIT} must fail the stability lane`);
       assert.ok(controlFailed.every(name => name.startsWith("Icons: ")) && categoriesOf(controlFindings).join() === "icons",
@@ -581,7 +599,7 @@ if (sabotage === null) {
       const {log: headedLog, report: headed} = await probe(harness, "graphical", {headed: true});
       assert.match(headedLog, /CIVLITE_UI_PASSED/);
       assert.deepEqual(failedChecks(headed), [], "every check of the headed run passed");
-      assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed run adds the eight captures");
+      assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed run adds the nine captures");
       assertSameNamesAsHeadless("the HUD probe", headed, report);
       assertHudReport(headed);
       const captures = {};
@@ -592,9 +610,9 @@ if (sabotage === null) {
         assert.deepEqual([...bytes.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `${stage}.png is a PNG`);
         captures[stage] = {sha256: hash(bytes), bytes: bytes.length};
       }
-      assert.equal(new Set(Object.values(captures).map(entry => entry.sha256)).size, CAPTURES.length, "the eight captures are eight different pictures");
+      assert.equal(new Set(Object.values(captures).map(entry => entry.sha256)).size, CAPTURES.length, "the nine captures are nine different pictures");
       summary.captures = captures;
-      verify(true, `The headed run saved ${CAPTURES.length} captures: one per context and one in the AI phase`);
+      verify(true, `The headed run saved ${CAPTURES.length} captures: one per context, one in the AI phase and one with the stress panel full`);
       const {log: overlaysLog, report: overlaysHeaded} = await probe(harness, "overlays-graphical", {mode: "overlays", headed: true});
       assert.match(overlaysLog, /CIVLITE_OVERLAYS_PASSED/);
       assert.deepEqual(failedChecks(overlaysHeaded), [], "every check of the headed overlay run passed");
@@ -769,7 +787,7 @@ if (sabotage === null) {
       const {log: headedLog, report: headed} = await probe(harness, "native-graphical", {headed: true, scene: NATIVE_SCENE});
       assert.match(headedLog, /CIVLITE_UI_PASSED/);
       assert.deepEqual(failedChecks(headed), [], "every check of the headed native run passed");
-      assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed native run adds the eight captures");
+      assert.equal(headed.checks.length, report.checks.length + CAPTURES.length, "the headed native run adds the nine captures");
       assertSameNamesAsHeadless("the HUD probe on the native HUD", headed, report);
       assertHudReport(headed);
       summary.captures = {};
@@ -780,7 +798,7 @@ if (sabotage === null) {
         assert.deepEqual([...bytes.subarray(0, 8)], [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a], `${stage}.png is a PNG`);
         summary.captures[stage] = {sha256: hash(bytes), bytes: bytes.length};
       }
-      assert.equal(new Set(Object.values(summary.captures).map(entry => entry.sha256)).size, CAPTURES.length, "the eight captures are eight different pictures");
+      assert.equal(new Set(Object.values(summary.captures).map(entry => entry.sha256)).size, CAPTURES.length, "the nine captures are nine different pictures");
       const overlaysHeaded = await probe(harness, "native-overlays-graphical", {mode: "overlays", headed: true, scene: NATIVE_SCENE});
       assert.match(overlaysHeaded.log, /CIVLITE_OVERLAYS_PASSED/);
       assert.deepEqual(failedChecks(overlaysHeaded.report), [], "every check of the headed native overlay run passed");
@@ -796,7 +814,7 @@ if (sabotage === null) {
         summary.overlayCaptures[stage] = {sha256: hash(bytes), bytes: bytes.length};
       }
       assert.equal(new Set(Object.values(summary.overlayCaptures).map(entry => entry.sha256)).size, OVERLAY_CAPTURES.length, "the four overlay captures are four different pictures");
-      verify(true, `The headed native run saved ${CAPTURES.length} captures (one per context and one in the AI phase) and ${OVERLAY_CAPTURES.length} of the overlays`);
+      verify(true, `The headed native run saved ${CAPTURES.length} captures (one per context, one in the AI phase and one with the stress panel full) and ${OVERLAY_CAPTURES.length} of the overlays`);
     }
 
     await writeFile(path.join(directory, "summary.json"), JSON.stringify({...summary, checks: harness.checks}, null, 2) + "\n");

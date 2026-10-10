@@ -733,6 +733,8 @@ is local macOS arm64 evidence, headless, with synthetic clicks, on a machine sha
 publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0
 checkpoint, weight or denominator moves.
 
+**Progress.** V05-06, criterion `soak`, note: the soak note at `e0160f3` marks its hashes as the run before #93 (`e108e9d`), whose queue of three events gives the current final and trail hashes, and points to that run. No criterion changes.
+
 **Progress.** Exit criteria X3, X4 and X5 of the 0.5 are met on the macOS desktop, on local
 evidence. X3, input in the world against the HUD, rests on the
 [first](https://github.com/journey-studios/godot-fabric/blob/7ef63ed64a8994846dc29e1a4fff52134ded8469/docs/evidence/world-input/README.md)

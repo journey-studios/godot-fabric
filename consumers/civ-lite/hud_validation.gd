@@ -17,7 +17,12 @@ extends "res://hud_probe.gd"
 #            it, the pointer over a tile publishes the hover, a click on a panel does not reach the map, an action is pressed and a
 #            disabled one is not, and all of it again after a trip through the menu (the World comes back ahead of the HUD).
 #
-#   --capture    saves one PNG per context and one during the AI phase (a headed run)
+#   stress   the comparison's stress mode (docs/research/frontier-stress.md): refused during a turn, begun, the panel shown with 200 log rows and
+#            100 production rows, 20 steps one frame apart (each row that was there is the same Control, the last line and the changed
+#            items are the game's), ended (the panel gone, the contexts' panels back, the snapshot byte for byte as it was) and refused when
+#            the mode is off; and the runner's `stats()` against what the node emitted.
+#
+#   --capture    saves one PNG per context, one during the AI phase and one with the stress panel full (a headed run)
 
 const LAST_STEP := 45
 # The steps of the roteiro that cover each context (docs/research/frontier-game.md).
@@ -48,6 +53,7 @@ func _process(_delta: float) -> void:
 func run_probe() -> void:
   await run_matrix()
   await run_phase()
+  await run_stress()
   await run_input()
 
 
@@ -188,6 +194,152 @@ func run_phase() -> void:
     "A press on the disabled End turn asks nothing of the game: no call, no second job")
   check(held.finished and held.settledAfter and not held.idleAfter.spinner and not held.idleAfter.endTurnDisabled and held.turnAfter == turn_before + 2,
     "Released, the held job finished: the spinner is gone, End turn is enabled and the turn advanced")
+
+
+# --- Stress: the comparison's stress mode ----------------------------------------------------------------------------
+
+const STRESS_STEPS := 20
+const STRESS_LOG := "hud-stress-log-"
+const STRESS_PRODUCTION := "hud-stress-production-"
+
+
+# The snapshot as text, the keys sorted: two snapshots are the same if their texts are.
+func canonical(snapshot: Dictionary) -> String:
+  return JSON.stringify(snapshot, "", true)
+
+
+# The rows of a stress list as the HUD shows them, in the order they are drawn: key, text and the Control they are.
+func stress_rows(seen: Dictionary, prefix: String) -> Array:
+  var rows: Array = []
+  for entry: Dictionary in seen.nodes:
+    var id: String = entry.testID
+    if id.begins_with(prefix) and not id.ends_with("-title") and entry.visible:
+      rows.append({"key": id.trim_prefix(prefix), "text": entry.text, "instance": entry.instance, "y": entry.rect[1]})
+  rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.y < b.y or (a.y == b.y and a.key < b.key))
+  return rows.map(func(row: Dictionary) -> Dictionary: return {"key": row.key, "text": row.text, "instance": row.instance})
+
+
+# The HUD shows the stress lists the published snapshot carries: every line and every item, in order.
+func stress_matches(snapshot: Dictionary) -> bool:
+  if not snapshot.has("stress"):
+    return not shown(observe(), "hud-stress")
+  var seen := observe()
+  var log: Array = stress_rows(seen, STRESS_LOG).map(func(row: Dictionary) -> String: return row.text)
+  var production: Array = stress_rows(seen, STRESS_PRODUCTION).map(func(row: Dictionary) -> String: return row.text)
+  var items: Array = snapshot.stress.production.map(func(item: Dictionary) -> String: return "%s %d/%d" % [item.label, item.progress, item.cost])
+  return shown(seen, "hud-stress") and log == Array(snapshot.stress.log) and production == items
+
+
+func stress_settle() -> bool:
+  var reached := await wait_until(func() -> bool: return stress_matches(services.get_snapshot()))
+  await frames(3)
+  return reached and stress_matches(services.get_snapshot())
+
+
+func stress_view(label: String) -> Dictionary:
+  var seen := observe()
+  var snapshot: Dictionary = services.get_snapshot()
+  return {"label": label, "context": snapshot.context, "panels": panels_shown(seen), "panelShown": shown(seen, "hud-stress"), "log": stress_rows(seen, STRESS_LOG),
+    "production": stress_rows(seen, STRESS_PRODUCTION), "carried": snapshot.has("stress"),
+    "lines": Array(snapshot.stress.log) if snapshot.has("stress") else [], "items": snapshot.stress.production if snapshot.has("stress") else []}
+
+
+func run_stress() -> void:
+  services.new_game()
+  await settle()
+  var stress := {}
+  # A full turn through the HUD's eyes: the runner's stats() and the node's counters before and after, and the snapshots the node published meanwhile.
+  var published := [0]
+  var counter := func(_snapshot: Dictionary) -> void: published[0] += 1
+  services.snapshot_changed.connect(counter)
+  var stats_before: Dictionary = reader.runner_stats()
+  var emitted_before := int(services.notifications_emitted())
+  var accepted: Dictionary = services.end_turn()
+  # The mode is refused while that turn's job runs.
+  var during: Dictionary = services.stress_begin()
+  await wait_until(func() -> bool: return int(services.job) == 0)
+  await settle()
+  await frames(3)
+  services.snapshot_changed.disconnect(counter)
+  var stats_after: Dictionary = reader.runner_stats()
+  stress["turn"] = {"accepted": accepted.code, "refused": during, "carried": game_snapshot().has("stress"), "statsBefore": stats_before, "statsAfter": stats_after,
+    "emittedBefore": emitted_before, "emittedAfter": int(services.notifications_emitted()), "snapshotsPublished": int(published[0])}
+  # Outside the mode the intents of the mode are refused, and nothing changes.
+  var off_step: Dictionary = services.stress_step()
+  var off_end: Dictionary = services.stress_end()
+  stress["off"] = {"step": off_step, "end": off_end}
+  var before_text := canonical(services.get_snapshot())
+  var begun: Dictionary = services.stress_begin()
+  var begun_in_time := await stress_settle()
+  stress["begun"] = stress_view("begun")
+  stress["begun"]["result"] = begun
+  stress["begun"]["settled"] = begun_in_time
+  stress["again"] = services.stress_begin()
+  # Twenty updates, one a frame.
+  var results: Array = []
+  for _index in range(STRESS_STEPS):
+    await tree_frame()
+    results.append(services.stress_step())
+  var stepped_in_time := await stress_settle()
+  stress["steps"] = {"results": results, "view": stress_view("stepped"), "settled": stepped_in_time}
+  if capture:
+    check(await capture_to("civ-lite-ui-stress.png"), "Capture saved: the stress panel full")
+  var ended: Dictionary = services.stress_end()
+  var ended_in_time := await wait_until(func() -> bool: return stress_matches(services.get_snapshot()))
+  await settle()
+  var after_text := canonical(services.get_snapshot())
+  stress["ended"] = stress_view("ended")
+  stress["ended"]["result"] = ended
+  stress["ended"]["settled"] = ended_in_time
+  stress["snapshots"] = {"before": before_text, "after": after_text}
+  await frames(3)
+  stress["final"] = {"stats": reader.runner_stats(), "emitted": int(services.notifications_emitted())}
+  report["stress"] = stress
+  judge_stress(stress)
+
+
+func tree_frame() -> void:
+  await get_tree().process_frame
+
+
+func judge_stress(stress: Dictionary) -> void:
+  var turn: Dictionary = stress.turn
+  check(turn.accepted == "ok" and int(turn.refused.ok) == 0 and turn.refused.code == "turn_in_progress" and not turn.carried,
+    "The stress mode is refused with turn_in_progress while a turn runs, and the snapshot carries nothing of it")
+  check(int(turn.statsAfter.events) - int(turn.statsBefore.events) == int(turn.emittedAfter) - int(turn.emittedBefore)
+    and int(turn.statsAfter.snapshots) - int(turn.statsBefore.snapshots) == int(turn.snapshotsPublished) and int(turn.snapshotsPublished) > 0,
+    "Over a whole turn the runner's stats() counts the notifications the node emitted and the snapshots it published, and no others")
+  check(int(stress.off.step.ok) == 0 and stress.off.step.code == "stress_off" and int(stress.off.end.ok) == 0 and stress.off.end.code == "stress_off",
+    "With the mode off, a step and an end are refused with stress_off")
+  var begun: Dictionary = stress.begun
+  check(int(begun.result.ok) == 1 and begun.settled and begun.carried and begun.lines.size() == 200 and begun.items.size() == 100 and begun.panelShown
+    and begun.log.size() == 200 and begun.production.size() == 100 and begun.panels == TABLE.get(begun.context, []),
+    "The stress mode shows hud-stress with 200 log rows and 100 production rows in the context's own panels, which the table did not change")
+  check(int(stress.again.ok) == 0 and stress.again.code == "stress_on", "A second begin is refused with stress_on")
+  var steps: Dictionary = stress.steps
+  var kept_log := 0
+  var kept_production := 0
+  var before_log := {}
+  var before_production := {}
+  for row: Dictionary in begun.log:
+    before_log[row.key] = row.instance
+  for row: Dictionary in begun.production:
+    before_production[row.key] = row.instance
+  for row: Dictionary in steps.view.log:
+    if before_log.get(row.key, -1) == row.instance:
+      kept_log += 1
+  for row: Dictionary in steps.view.production:
+    if before_production.get(row.key, -1) == row.instance:
+      kept_production += 1
+  check(steps.results.all(func(result: Dictionary) -> bool: return int(result.ok) == 1) and steps.settled and steps.view.log.size() == 200 and steps.view.production.size() == 100
+    and kept_log == 200 - STRESS_STEPS and kept_production == 100,
+    "Twenty steps, one a frame, leave the HUD with the game's 200 lines and 100 items, and every row that was there is the same Control: one line mounted and one dropped for each step, no row built again")
+  var ended: Dictionary = stress.ended
+  check(int(ended.result.ok) == 1 and ended.settled and not ended.carried and not ended.panelShown and ended.panels == TABLE.get(ended.context, []) and ended.log.is_empty()
+    and ended.production.is_empty() and stress.snapshots.before == stress.snapshots.after,
+    "Leaving the mode removes the panel, the context's panels are shown again and the snapshot is byte for byte the one before the mode began")
+  var final: Dictionary = stress.final
+  check(int(final.stats.events) == int(final.emitted), "The runner's stats() has consumed every notification the node emitted")
 
 
 # --- Input: real pointer events -------------------------------------------------------------------------------------

@@ -172,6 +172,24 @@ export interface Dialog {
   readonly count: Int;
 }
 
+/** One item of the stress mode's production list: its `progress` is raised by one each time a step changes it. */
+export interface StressItem {
+  readonly id: Int;
+  readonly label: string;
+  readonly progress: Int;
+  readonly cost: Int;
+}
+
+/**
+ * The comparison's stress mode (docs/research/frontier-stress.md): a log of 200 lines, each beginning with its five-digit sequence number
+ * (the key of its row), and a production list of 100 items. It is the one optional field of a schema: the snapshot carries it only while
+ * the mode is on, and it is not part of the game.
+ */
+export interface Stress {
+  readonly log: readonly string[];
+  readonly production: readonly StressItem[];
+}
+
 export interface FrontierSnapshot {
   /** The DTO version, 1. */
   readonly version: Int;
@@ -194,6 +212,8 @@ export interface FrontierSnapshot {
   readonly city: CityScreen;
   readonly research: Research;
   readonly dialog: Dialog;
+  /** Present only while the stress mode is on. */
+  readonly stress?: Stress;
 }
 
 // --- The end of a turn ---------------------------------------------------------------------------------------------
@@ -244,6 +264,9 @@ export const FRONTIER_RESOLVE_EVENT = "frontier.resolve_event";
 export const FRONTIER_END_TURN = "frontier.end_turn";
 export const FRONTIER_NEW_GAME = "frontier.new_game";
 export const FRONTIER_OPEN_MENU = "frontier.open_menu";
+export const FRONTIER_STRESS_BEGIN = "frontier.stress_begin";
+export const FRONTIER_STRESS_STEP = "frontier.stress_step";
+export const FRONTIER_STRESS_END = "frontier.stress_end";
 
 /**
  * The states the node publishes: connect to `frontier.snapshot` for the snapshot now and after every accepted intent, and to
@@ -276,6 +299,12 @@ export interface FrontierMethods {
   readonly "frontier.new_game": [];
   /** Not a rule of the game: the scene drops its World. The HUD shows the menu; a `new_game` brings the World back. */
   readonly "frontier.open_menu": [];
+  /** The comparison's stress mode: begins it (the snapshot carries a log of 200 lines and a list of 100 items), refused while a turn runs or when it is on. */
+  readonly "frontier.stress_begin": [];
+  /** One update of the mode: a line appended and one item changed; a snapshot is published. Refused when the mode is off. */
+  readonly "frontier.stress_step": [];
+  /** Leaves the mode: the snapshot is the one it was before it began. Refused when the mode is off. */
+  readonly "frontier.stress_end": [];
 }
 
 /**

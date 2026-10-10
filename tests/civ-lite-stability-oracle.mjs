@@ -4,7 +4,7 @@ import {growthOfHalves} from "./performance-oracle.mjs";
 // The independent oracle of Frontier's stability lane: opening and closing each overlay twenty times. It judges the raw observations of
 // consumers/civ-lite/stability_validation.gd (a measure at rest after every close and open, the focus the host can say, the bursts at the
 // map, the Images the HUD mounts) and none of the probe's verdicts. What a screen at rest holds is written here, apart from the probe:
-// the registry's 15 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
+// the registry's 18 bindings and the HUD's two connections, no pending work, no orphan, no route of the pointer left, no Window beyond
 // the ones the game had before, and the first cycle's numbers for everything else, exactly. The icons each context must show are derived
 // from the game's own snapshot that the report carries, with this file's table of which asset each icon is.
 //
@@ -29,7 +29,9 @@ const CYCLES = 20;
 const BURST_CYCLES = [1, 20];
 const EVENTS = ["wanderers", "traders", "scholar"];
 const PICKS = ["welcome", "buy_tools", "send_on"];
-const BINDINGS = 15;
+// The registry holds one binding for each state, signal and method the node registers: 18 since the stress mode (15 before it, which a control run
+// on an older tree says with `{bindings: 15}`).
+const BINDINGS = 18;
 const HUD_CONNECTIONS = 2;
 const HEAP_LIMIT_BYTES = 2048;
 const OBJECTS_LIMIT = 1;
@@ -87,7 +89,7 @@ function expectedIcons(snapshot) {
 
 const heapReading = rows => rows.map(row => ({reading: {performance: {hermes: {heap: {hermes_allocatedBytes: row.heap}}}}}));
 
-export function judgeStabilityReport(report) {
+export function judgeStabilityReport(report, {bindings = BINDINGS} = {}) {
   const findings = [];
   const fail = (category, message) => findings.push({category, message});
   if (report.schemaVersion !== 1 || report.base === undefined || report.city === undefined || report.dialog === undefined || report.icons === undefined) {
@@ -107,7 +109,7 @@ export function judgeStabilityReport(report) {
     if (row.rested !== true || row.collected !== true) {
       fail("leak", `${label}: not at rest, or read before a collection (rested ${row.rested}, collected ${row.collected})`);
     }
-    const expected = {windows: base.windows + (open ? 1 : 0), modalNodes: open ? 1 : 0, modalMembers: 1, retiringTags: 0, orphans: 0, errors: 0, bindings: BINDINGS,
+    const expected = {windows: base.windows + (open ? 1 : 0), modalNodes: open ? 1 : 0, modalMembers: 1, retiringTags: 0, orphans: 0, errors: 0, bindings,
       subscriptions: HUD_CONNECTIONS, hudSubscriptions: HUD_CONNECTIONS, connections: 2, hoverConnections: 2, worlds: 1, pendingHostTasks: 0, pendingEvents: 0,
       pendingWork: 0, pendingTimers: 0, pendingAnimationFrames: 0, pointerSuppressed: 0, pointerActive: 0, liveRoots: 1};
     const wrong = Object.entries(expected).filter(([field, value]) => row[field] !== value).map(([field, value]) => `${field} ${row[field]}, expected ${value}`);

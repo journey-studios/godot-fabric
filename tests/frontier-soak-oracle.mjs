@@ -24,10 +24,10 @@ import {CLAIM_POINT, CONTEXTS, EXECUTIONS, GARRISON_CAP, PANEL_SHAPE, PANEL_TOGG
 const sha256 = text => createHash("sha256").update(text).digest("hex");
 const median = values => nearestRank(values, 50);
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
-// What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the twelve methods (one for each
-// intent, `new_game` and `open_menu`). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82); the soak asserts the count the node
+// What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the fifteen methods (one for each
+// intent, `new_game`, `open_menu` and the three of the stress mode). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82); the soak asserts the count the node
 // registers, it does not depend on what the services are.
-const BINDINGS = 15;
+const BINDINGS = 18;
 
 // The nodes of the heavy panel from its shape: a root, a header and two nodes a chip (the View and its Text).
 const PANEL_NODES = 2 + 2 * PANEL_SHAPE.chips;
