@@ -106,15 +106,19 @@ export function unavailableLanes(state, protocol) {
 
 const times = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
 
+// What a rehearsal shows that the rules reject, as it was: the Debug build when the launcher is the Debug one, the headless display when its processes ran headless (the self-check's lane is the launcher's),
+// and always the load of a busy machine. The Debug launcher's rehearsal reads as it always has.
+const rejectionsOf = (state) => [...(state.launcher.build === "debug" ? ["the Debug build"] : []), ...(state.selfCheck?.lane === "headless" ? ["the headless display"] : []), "the load of a busy machine"].join(", ");
+
 // What the campaign says it is not: each way in which it deviates from the protocol, as the format's `provenance.deviations` wants them (strings). The launcher's come first.
-function deviationsOf(state, protocol) {
+export function deviationsOf(state, protocol) {
   const lines = [];
   if (state.rehearsal) {
     lines.push("REHEARSAL: not a comparative execution and not a campaign; no number of it is a result of any arm");
   }
   lines.push(...state.launcher.deviations);
   if (state.rehearsal) {
-    lines.push("a rehearsal does not redo: each slot ran once, whatever the rules said of it, so that the rejections it shows (the Debug build, the headless display, the load of a busy machine) can be seen and counted");
+    lines.push(`a rehearsal does not redo: each slot ran once, whatever the rules said of it, so that the rejections it shows (${rejectionsOf(state)}) can be seen and counted`);
   }
   if (state.options.slots !== null) {
     lines.push(`only the slots ${state.options.slots[0]} to ${state.options.slots[1]} of the ${slotsOf(protocol).length} of each lane were run (--slots)`);

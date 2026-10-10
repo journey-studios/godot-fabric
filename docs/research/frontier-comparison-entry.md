@@ -100,10 +100,9 @@ That is the Release path of the entry, seen in a template. It is **not** the exp
 
 ## What is not shown
 
-- **The export of civ-lite as a Release `.app` in the three arms.** The entry is defined and tried in a template with a probe; the Release launcher still refuses until the game is exported ([What is missing](frontier-comparison-execution.md#what-is-missing-for-the-campaign)).
-- **Where the export puts `override.cfg`.** In the pack, it depends on what the export includes (not tried); beside the executable, it sits in `Contents/MacOS/` (the probe's case), and what that does to the bundle's signature was
-  not tried. The export slice decides it.
-- **The instrument's self-check in a template.** Its probe needs the same entry, and [has it now](#the-instruments-self-check-through-the-main-loop) in the editor's binary; as an exported `.app` it is not made yet.
+- **The export of civ-lite as a Release `.app` in the three arms** was not made when this was written; [it is now](#the-measurement-exports), as a trial.
+- **Where the export puts `override.cfg`.** In the pack, it depends on what the export includes; beside the executable, it sits in `Contents/MacOS/` (the probe's case). The measurement exports put it in the pack, through the include filter ([below](#the-measurement-exports)).
+- **The instrument's self-check in a template.** Its probe needs the same entry, and [has it now](#the-instruments-self-check-through-the-main-loop) in the editor's binary; as an exported `.app` it is [made and run](#the-measurement-exports).
 - The official templates are taken not to set `disable_overrides`; the probe is what shows it for the macOS release template of 4.7.2. The other platforms were not looked at.
 
 ## Reproducing
@@ -116,7 +115,7 @@ node scripts/frontier-comparison-run.mjs --rehearsal --arms A,B,C --lane present
 
 ## The projects of the arms
 
-Status: code (`scripts/frontier-comparison-arms.mjs`), its tests and a native check. It belongs to the criterion `execucao` of V05-10 and **closes nothing**: **no export was made, no campaign was run, and this section states no result.**
+Status: code (`scripts/frontier-comparison-arms.mjs`), its tests and a native check. It belongs to the criterion `execucao` of V05-10 and **closes nothing**: **no campaign was run, and this section states no result.** The export came after it ([below](#the-measurement-exports)).
 The check behind its counts is a Debug, headless, one-execution-per-arm check on one provisioned copy; no time of it is compared, and no number of it is a measurement of an arm.
 
 ### The decision
@@ -143,17 +142,10 @@ product's own main scene is not what a measured process runs. The package of the
 
 ### The filters
 
-`armProject(arm)` is a pure function that returns, for each arm, the main scene, whether it carries the extension, and the export filters of the product and of the measurement project. The filters are written the way `export_presets.cfg` writes `include_filter` and `exclude_filter`
-(the preset of `scripts/macos-export.mjs` writes both as empty strings today, with `export_filter="all_resources"`): globs relative to `res://`, separated by commas.
-
-| | `include_filter` | `exclude_filter` |
-| --- | --- | --- |
-| product, A and B | (empty) | `comparison/*, override.cfg, addons/godot_fabric/*` |
-| product, C | (empty) | `comparison/*, override.cfg` |
-| measurement, A and B | `comparison/*, override.cfg` | `addons/godot_fabric/*` |
-| measurement, C | `comparison/*, override.cfg` | (empty) |
-
-The patterns for the measurement files are read off `MEASUREMENT_FILES`, so a file added to it is in the filters. An unknown arm is refused with an error. The exclusion of the addon is a second guard in A and B: the directory that the function below prepares does not hold it.
+`armProject(arm)` is a pure function that returns, for each arm, the main scene, whether it carries the extension, and the options of `exportPreparedProject` for the product and for the measurement project (`exportFilter`, `exportFiles`, `includeFilter`, `excludeFilter`, `frameworks`), with the reason of each include pattern.
+The filters are written the way `export_presets.cfg` writes them: globs relative to `res://`, separated by commas. The first version of this section had `export_filter="all_resources"` and filters that only left things out; the arms are now exported with the `"scenes"` filter, and
+[the sets of files, with the proof of each](#the-measurement-exports) are below. The patterns for the measurement files are read off `MEASUREMENT_FILES`, so a file added to it is in the filters. An unknown arm is refused with an error. The exclusion of the addon is a second guard in A and B:
+the directory that the function below prepares does not hold it.
 
 ### What is done to a copy
 
@@ -196,10 +188,9 @@ It shows that the checks above can fail, and that A and B, which come out clean,
 
 ### Observed, and left to the export
 
-- **`all_resources` and the other arms' files.** With `export_filter="all_resources"` (the preset of #75), A and B would still be handed `main.tscn` and `ui/application.tres`, whose references to the removed addon the control shows failing to load, and each arm would carry the other HUD's resources (`ui/`, `native_hud/`). That an export of A or B
-  stays clean, and that C − A and B − A price only the HUD, depends on what the export selects; it was not tried here, and these filters do not exclude them.
-- **The export itself.** The function of the owner of V05-07 in `scripts/macos-export.mjs` takes a prepared project directory; its signature is not published, so nothing here calls it. Still to do: that function over the three directories, the manifest `frontier-comparison-export.json`, and the Release launcher
-  ([What is missing](frontier-comparison-execution.md#what-is-missing-for-the-campaign)).
+- **`all_resources` and the other arms' files.** With `export_filter="all_resources"` (the preset of #75), A and B would still be handed `main.tscn` and `ui/application.tres`, whose references to the removed addon the control shows failing to load, and each arm would carry the other HUD's resources (`ui/`, `native_hud/`).
+  That is why the arms are exported with the `"scenes"` filter ([below](#the-measurement-exports)).
+- **The export itself** came after: `exportPreparedProject` with `exportFiles` and `frameworks: false`, the manifest `frontier-comparison-export.json` and the Release launcher over them ([below](#the-measurement-exports)).
 
 ### Reproducing
 
@@ -211,7 +202,7 @@ npm run test:frontier-comparison-arms                    # native, headless: bot
 ## The instrument's self-check through the main loop
 
 Status: code (`scripts/frontier-comparison-probe-project.mjs`, the entries of `runSelfCheck` in `scripts/frontier-comparison-campaign-instrument.mjs`, the probe's manifest in `scripts/frontier-comparison-release.mjs` and the Release launcher), their tests and a native check. It belongs to the
-criterion `execucao` of V05-10 and **closes nothing**: **the probe project was not exported, no campaign was run, and this section states no result.** The native check is a Debug, headless one on the editor's binary; no time of it is compared.
+criterion `execucao` of V05-10 and **closes nothing**: **no campaign was run, and this section states no result.** (When it was written the probe project was not exported; [it is now](#the-measurement-exports).) The native check is a Debug, headless one on the editor's binary; no time of it is compared.
 
 ### The question
 
@@ -272,8 +263,7 @@ asks for ("the campaign's engine"). Then `selfCheck` is `{entry: "release", exec
 
 ### What is not shown
 
-- **The probe project as a Release `.app`.** It is not exported: the export of the arms' sets comes next, with `frameworks: false` (the probe has no host, and the React Native frameworks would only make the `.app` heavier), `exportFiles` and its manifest. Whether `Contents/MacOS/override.cfg` or the pack carries `override.cfg`, and
-  whether a template accepts `--report=<absolute>` and `--headless` the way the editor's binary does, are for that slice; the `release` entry was run against a fake `.app` only.
+- **The probe project as a Release `.app`.** It was not exported when this was written; the measurement exports [export it](#the-measurement-exports), with `frameworks: false` and `override.cfg` in the pack, and a template does accept `--report=<absolute>` and `--headless` the way the editor's binary does.
 - **The windowed self-check**, for real: nothing here opened a window.
 
 ### Reproducing
@@ -283,3 +273,93 @@ node --test tests/frontier-comparison-probe-project.test.mjs tests/frontier-comp
 npm run test:frontier-comparison-probe                                                                       # native, headless: main-loop and script judge the same checks; the controls
 npm run test:cpu-time-instrument                                                                             # native, headless: the probe as before
 ```
+
+## The measurement exports
+
+Status: code (`scripts/frontier-comparison-measurement-export.mjs`, the sets in `scripts/frontier-comparison-arms.mjs`, the headless mode of the Release launcher), their tests, and a native lane. It belongs to the criterion `execucao` of V05-10 and **closes nothing**: **no campaign was run, the sizes below
+are the sizes of one trial, and no time here is a measurement of an arm.** The exports were made on one Mac, signed ad hoc, from a working tree whose changes were not committed.
+
+### What one run does
+
+`node scripts/frontier-comparison-measurement-export.mjs --out <dir> --template <ZIP of the arm64 Release template>` (`--only A,B,C,probe` for part of it) makes, one copy of civ-lite at a time:
+
+1. **The measurement `.app` of each arm**, in `<dir>/<arm>/`: `prepareProject` (provisioned, the HUD built, the scenario in `comparison/`, imported), `shapeArmProject` (A and B lose the extension) and `exportPreparedProject` with the arm's *measurement* options. The manifest is written beside it.
+2. **The product of the arm, twice.** The measurement files leave the copy, the editor imports it again (and the cache of global classes stops naming the entry class: the script checks), and the product is exported with the arm's *product* options, measured and removed. The two must have the same size. The product therefore
+   never saw `comparison/`, `override.cfg` or their entries in the cache.
+3. **The probe project**, once, with `frameworks: false`, the include filter `override.cfg` (not a resource, so named; `all_resources` alone was not tried) and the two texture lines that every export of a project needs in `project.godot` (the hash of that file in the manifest follows the edit), and its manifest in `<dir>/probe/`.
+
+Then `readExports` and `readProbeExport`, which are the Release launcher's own, read the four back. An `--out` that already holds an app, a manifest or the summary of an earlier export is refused up front, naming what is there, before anything is provisioned (nothing is deleted: pass a new `--out`). One `.app` of a product exists at a time; an export that would start with under 600 MB free is refused (the disk of this Mac is small); a failed export removes its staging path.
+
+### The set of files of each arm
+
+The arms are exported with the `"scenes"` filter and `exportFiles` naming the arm's scene (the measurement project adds the empty one). Godot's scenes mode follows what **scene files** reference and not the `preload()` and `extends "res://…"` of scripts, so what a scene's scripts load by path is named by the
+`includeFilter`, as [the options slice](../evidence/macos-export-options/README.md) found. `frameworks` is `false` in A and B (an app with no host and no frameworks) and `true` in C. Every pattern is in `armProject(arm).includes` with its reason; the ones marked *failed* were found by running the arm without them.
+
+| arm | `includeFilter` of the product (the measurement project adds `comparison/*, override.cfg`) | why |
+| --- | --- | --- |
+| A | `game/*.gd, services/*.gd` | the rules and the services that `game_services.gd` and `world.gd` preload (37 files in the package) |
+| A, measurement only | `hud_*.gd` | *failed:* the scenario's HUD helper preloads `res://hud_probe.gd` in every arm and A's product has no HUD script (parse error, no report) |
+| B | `game/*.gd, services/*.gd, native_hud/*, hud_*.gd, ui/icons/*` | the HUD's panels and kit, which `hud.gd` preloads; the scene's `hud_validation.gd` extends `res://hud_probe.gd` by path; the six PNG that `icons.gd` preloads (122 files) |
+| C | `game/*.gd, services/*.gd, hud_*.gd, stability_*.gd, addons/godot_fabric/*.gdextension, addons/godot_fabric/assets/fonts/*.ttf` | the same game and lab scripts the scene attaches (`hud_validation.gd`, `stability_validation.gd` extend others by path); *failed:* the extension's manifest, without which the export copies no host (`Contents/Frameworks/fabric_godot.dylib` was never made) and the engine loads no extension; *failed:* the two fonts that the host loads by path (`Godot font asset is unavailable: NotoSans`, in every text, exit 0) (81 files) |
+
+C needs nothing else of `ui/` or the addon: `ui/application.tres` and the addon's three runtime scripts (`godot_fabric.gd`, `application_node.gd`, `application_resource.gd`) are scene references, and the export hook of the addon puts the bundle and its assets into the package whatever the filter. `hud_*.gd` also brings `hud_stats.gd` into B, which only C's
+scene attaches: the pattern is not narrower by choice (a few clear patterns rather than a list). The scenes of B and C attach the consumer's own validation scripts, so the product of those arms carries them; the package is the product's scene as it is.
+
+### The size the axis reads
+
+`package-size` reads `packages.<arm>.exportBytes`, which is the manifest's `exportBytes`: the bytes of **the whole `.app`** of the product (every regular file of the bundle, links counted for nothing), in an export and in its repeat. The `.pck` alone would not price the HUD: C's React Native frameworks are in `Contents/Frameworks`,
+not in the PCK, and `frameworks: false` in A and B would then change nothing in the axis. The size of the PCK is recorded beside it. **These are measures of a trial, not the axis of a report.**
+
+| arm | `.app` of the product, export 1 and 2 | `.pck` of the product | files in the PCK | measurement `.app` | measurement `.pck` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A | 82,572,095 and 82,572,095 | 60,020 | 37 | 82,657,715 | 145,640 (82 files) |
+| B | 82,683,063 and 82,683,063 | 170,988 | 122 | 82,730,835 | 218,760 (155 files) |
+| C | 106,682,110 and 106,682,110 | 2,828,488 | 81 | 106,729,866 | 2,876,244 (114 files) |
+| probe (once) | 82,533,072 | 20,908 | 12 | 82,533,072 | 20,908 (12 files) |
+
+B − A is 110,968 bytes (all of it package: the two have no frameworks) and C − A is 24,110,015 bytes (2,768,468 of package, the rest the host and both frameworks). The two exports of an arm have the same size and the same list of files; the SHA-256 of the PCK is the same in the two of a run and changes from a run to another with the same
+files, so no test fixes it.
+
+### The manifest
+
+`<dir>/<arm>/frontier-comparison-export.json` ([the launcher](frontier-comparison-execution.md#the-launcher)) is written by `manifestOf` and `writeManifest` after `manifestErrors` finds nothing wrong: the paths relative to the arm's folder; `binarySha256` and `packageSha256` from the export, after signing; `scriptFiles`, the hashes `prepareProject` gave the scenario's
+files, the support files and the entry (`tests/cpu-time-instrument.gd` among them, which `prepare()` compares with the repository's; the script checks that each is in the copy with that hash before it exports); `scriptSha256` as `scriptsOf` computes it; `godot` (the exported engine's `--version`, `4.7.2.stable.official.ed1daf0bf`); `templateSha256`; and `exportBytes`. The
+probe has no repeat and no axis reads it: its `exportBytes` is its size twice.
+
+### The proof of each set, headless
+
+Each measurement `.app` runs the whole script: `Contents/MacOS/Frontier --headless -- --arm=<arm> --lane=presented --out=<file>`, from a folder outside the `.app` (51.8 s, 57.1 s and 74.8 s; 7,449, 8,042 and 8,168 frames). Exit code 0, no script error, no line of the log with `ERROR`, no anomaly. Its counts are those of the Debug rehearsal of the entry
+([the record](../evidence/frontier-comparison-entry/README.md)) in every field the record has (the hashes of the replay and of the soak, the occurrences, measured occurrences and frames of the four windows, the trace by kind, the parity, the notifications, the idle frames, the switches, the stress rounds, the latency clicks, the nodes of the tree), **but one**:
+
+- **C's `scene-nodes` reads 31, and the record says 30.** `main.tscn` has had one more node since V05-07 (#135 added `ReplayValidation`), after that record was made. A Debug run of this tree, made in the same lane as a control, reads 31 in C too, and its counts (every turn's hash of the soak among them) are equal to the Release ones in all three arms. The record was not edited.
+
+### The rehearsal through the Release launcher
+
+`node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented --build release --exports <dir> --rehearsal --slots 1-3 --assume-refresh-hz 60 --max-wait 0 --out <directory>`. The launcher runs in its rehearsal mode (`windowed: false`: `--headless`, `rehearsalOnly`, a deviation that says so; `runCampaign` refuses it without `--rehearsal`).
+The gate ran the instrument's self-check through the exported probe, headless (`entry: "release"`, 20.3 s, the 10 checks and the oracle): it passed. The three attempts, one slot of each arm, were **rejected by the analysis as a rehearsal must be**: `load:before`, `load:after` (the load was 5.2 to 6.7), and
+`not-presented:intent-not-drawn`, `idle-not-drawn` and `not-paced` (a headless display draws and paces nothing); **no `not-the-registered-build`** (the build is Release and the hashes are the manifests'), no `errors`, and no problem of the analysis. The analysis ends `incomplete`, as for the Debug rehearsal. The campaign
+registered the manifests' hashes and the sizes of the trial; its raw reports count what the proof's counted.
+
+### What the work found
+
+- **A parse error is how a set is wrong.** Without `hud_*.gd` A's measurement app fails at `frontier-comparison-hud.gd` and the entry class does not compile: the process ends with exit 2 and no report. A set that lacks a file the arm uses by path fails; one that lacks a file only a different arm uses does not, which is why the sets are proven arm by arm.
+- **A missing asset does not fail the process.** C without the fonts ran to its end, exit 0, and the log was full of `FABRIC_ERROR` lines. The proof counts the errors of the log (`processOf`) for that reason, as the rehearsal does.
+- **The self-check through a Release probe passes, and is sensitive to the load.** Of four runs of it by hand, at a load of 5 to 6, one failed its check that the process term changes from frame to frame (18 values, a run of 12 equal frames, where the oracle accepts at most 10); the other three, and the ones inside the lane and the rehearsal, passed. That is the gate
+  working on a busy machine, as for the Debug one; the campaign's machine has to be quiet.
+- **The export requires the texture formats of the desktop in `project.godot`**, even for a project with no texture (the probe), and the hash of the probe's `project.godot` in its manifest is the exported file's.
+
+### What is not shown
+
+- **The quiet window.** Nothing here ran on a quiet machine or in a window: the load was 5 to 7, and no execution was presented.
+- **The windowed self-check** and the windowed lanes. The rehearsal is headless.
+- **The campaign.** No attempt here counts for anything; the campaign's own exports are made again, from the committed tree.
+
+### Reproducing
+
+```sh
+node --test tests/frontier-comparison-measurement-export.test.mjs tests/frontier-comparison-arms.test.mjs tests/frontier-comparison-release.test.mjs   # Node only: the sets, the script with a fake export, the manifests, the headless launcher
+MACOS_EXPORT_TEMPLATE="$PWD/build/macos-arm64-template.zip" npm run test:frontier-comparison-exports                                             # native, headless: the whole script, the proof, the probe's self-check, the rehearsal
+node scripts/frontier-comparison-measurement-export.mjs --out build/frontier-comparison-measurement-exports --template build/macos-arm64-template.zip
+```
+
+The native lane removes the four `.app` at its end and keeps the manifests, `export-summary.json` and `native-report.json` in `build/frontier-comparison-measurement-exports/`.

@@ -25,28 +25,71 @@ const FABRIC_ARTIFACT_FILES = [".godot/extension_list.cfg", ".godot_fabric/app.j
 const ENGINE_CACHE_FILES = [".godot/global_script_class_cache.cfg"];
 const FABRIC_FILES = ["addons/godot_fabric/plugin.cfg", "addons/godot_fabric/godot_fabric.gdextension", "addons/godot_fabric/bin/libgodot_fabric.dylib", "addons/godot_fabric/frameworks/hermes.framework/hermes"];
 
-test("each arm has its product's main scene, and only C carries the extension", () => {
-  assert.deepEqual(armProject("A"), {
-    arm: "A",
+// The options of exportPreparedProject that each arm describes: the "scenes" filter, the arm's scene (the measurement project adds the empty one), the scripts and files that the scene files do not
+// reach, and whether the app carries the extension. What each pattern is for is in `includes` (the reasons are checked below, and the sets are proven by running each arm: docs/research/frontier-comparison-entry.md,
+// "The measurement exports").
+const EMPTY_SCENE = "res://comparison/frontier-comparison-empty.tscn";
+const SETS = {
+  A: {
     mainScene: "res://main_bare.tscn",
     fabric: false,
-    product: { include: "", exclude: "comparison/*, override.cfg, addons/godot_fabric/*" },
-    measurement: { include: "comparison/*, override.cfg", exclude: "addons/godot_fabric/*" },
-  });
-  assert.deepEqual(armProject("B"), {
-    arm: "B",
+    includes: ["game/*.gd", "services/*.gd"],
+    measurementIncludes: ["hud_*.gd"],
+    productExclude: "comparison/*, override.cfg, addons/godot_fabric/*",
+    measurementExclude: "addons/godot_fabric/*",
+  },
+  B: {
     mainScene: "res://main_native.tscn",
     fabric: false,
-    product: { include: "", exclude: "comparison/*, override.cfg, addons/godot_fabric/*" },
-    measurement: { include: "comparison/*, override.cfg", exclude: "addons/godot_fabric/*" },
-  });
-  assert.deepEqual(armProject("C"), {
-    arm: "C",
+    includes: ["game/*.gd", "services/*.gd", "native_hud/*", "hud_*.gd", "ui/icons/*"],
+    measurementIncludes: [],
+    productExclude: "comparison/*, override.cfg, addons/godot_fabric/*",
+    measurementExclude: "addons/godot_fabric/*",
+  },
+  C: {
     mainScene: "res://main.tscn",
     fabric: true,
-    product: { include: "", exclude: "comparison/*, override.cfg" },
-    measurement: { include: "comparison/*, override.cfg", exclude: "" },
-  });
+    includes: ["game/*.gd", "services/*.gd", "hud_*.gd", "stability_*.gd", "addons/godot_fabric/*.gdextension", "addons/godot_fabric/assets/fonts/*.ttf"],
+    measurementIncludes: [],
+    productExclude: "comparison/*, override.cfg",
+    measurementExclude: "",
+  },
+};
+
+test("each arm has its product's main scene, its set of files for the product and for the measurement project, and only C carries the extension", () => {
+  for (const [arm, set] of Object.entries(SETS)) {
+    const project = armProject(arm);
+    assert.deepEqual(
+      { arm: project.arm, mainScene: project.mainScene, fabric: project.fabric, includes: project.includes.map((entry) => entry.pattern), measurementIncludes: project.measurementIncludes.map((entry) => entry.pattern) },
+      { arm, mainScene: set.mainScene, fabric: set.fabric, includes: set.includes, measurementIncludes: set.measurementIncludes },
+    );
+    assert.deepEqual(project.product, {
+      exportFilter: "scenes",
+      exportFiles: [set.mainScene],
+      includeFilter: set.includes.join(", "),
+      excludeFilter: set.productExclude,
+      frameworks: set.fabric,
+    });
+    assert.deepEqual(project.measurement, {
+      exportFilter: "scenes",
+      exportFiles: [set.mainScene, EMPTY_SCENE],
+      includeFilter: [...set.includes, ...set.measurementIncludes, "comparison/*", "override.cfg"].join(", "),
+      excludeFilter: set.measurementExclude,
+      frameworks: set.fabric,
+    });
+  }
+  assert.deepEqual(Object.values(SETS).map((set) => set.fabric), [false, false, true], "only C exports with the frameworks");
+});
+
+test("every pattern of a set says why it is there, and no pattern is repeated", () => {
+  for (const arm of ["A", "B", "C"]) {
+    const { includes, measurementIncludes } = armProject(arm);
+    const patterns = [...includes, ...measurementIncludes].map((entry) => entry.pattern);
+    assert.equal(new Set(patterns).size, patterns.length, `${arm}: a pattern is in the set twice`);
+    for (const entry of [...includes, ...measurementIncludes]) {
+      assert.match(entry.why, /^\S.{30,}\S$/, `${arm}: ${entry.pattern} has a reason`);
+    }
+  }
 });
 
 test("an unknown arm is refused, by the description and by the function that shapes a copy, before anything is touched", async () => {
@@ -70,21 +113,30 @@ test("the filters keep the measurement files out of the product, and the extensi
   for (const arm of ["A", "B", "C"]) {
     const { product, measurement } = armProject(arm);
     for (const file of measurementFiles) {
-      assert.equal(filtered(product.exclude, file), true, `${arm}: the product leaves out ${file}`);
-      assert.equal(filtered(product.include, file), false);
-      assert.equal(filtered(measurement.include, file), true, `${arm}: the measurement project includes ${file}`);
-      assert.equal(filtered(measurement.exclude, file), false, `${arm}: the measurement project keeps ${file}`);
+      assert.equal(filtered(product.excludeFilter, file), true, `${arm}: the product leaves out ${file}`);
+      assert.equal(filtered(product.includeFilter, file), false, `${arm}: the product does not ask for ${file}`);
+      assert.equal(filtered(measurement.includeFilter, file), true, `${arm}: the measurement project includes ${file}`);
+      assert.equal(filtered(measurement.excludeFilter, file), false, `${arm}: the measurement project keeps ${file}`);
+    }
+    // The files the scenario copies into comparison/ are the folder's, whatever their names.
+    for (const file of ["comparison/frontier-comparison-scenario.gd", "comparison/cpu-time-instrument.gd", "comparison/window-presence.gd"]) {
+      assert.equal(filtered(product.excludeFilter, file), true, `${arm}: the product leaves out ${file}`);
+      assert.equal(filtered(measurement.includeFilter, file), true, `${arm}: the measurement project includes ${file}`);
     }
     for (const file of ["project.godot", "main.tscn", "main_bare.tscn", "main_native.tscn", "game/rules.gd", "services/game_services.gd", "native_hud/hud.gd", "ui/application.tres"]) {
-      assert.equal(filtered(product.exclude, file), false, `${arm}: the product keeps ${file}`);
-      assert.equal(filtered(measurement.exclude, file), false, `${arm}: the measurement project keeps ${file}`);
+      assert.equal(filtered(product.excludeFilter, file), false, `${arm}: the product keeps ${file}`);
+      assert.equal(filtered(measurement.excludeFilter, file), false, `${arm}: the measurement project keeps ${file}`);
     }
     const carries = arm === "C";
     for (const file of FABRIC_FILES) {
-      assert.equal(filtered(product.exclude, file), !carries, `${arm}: the product ${carries ? "keeps" : "leaves out"} ${file}`);
-      assert.equal(filtered(measurement.exclude, file), !carries, `${arm}: the measurement project ${carries ? "keeps" : "leaves out"} ${file}`);
+      assert.equal(filtered(product.excludeFilter, file), !carries, `${arm}: the product ${carries ? "keeps" : "leaves out"} ${file}`);
+      assert.equal(filtered(measurement.excludeFilter, file), !carries, `${arm}: the measurement project ${carries ? "keeps" : "leaves out"} ${file}`);
     }
-    for (const filter of [product.include, product.exclude, measurement.include, measurement.exclude]) {
+    // The measurement project is the product's set plus the scenario's, never less.
+    for (const pattern of product.includeFilter.split(", ")) {
+      assert.ok(measurement.includeFilter.split(", ").includes(pattern), `${arm}: the measurement project has the product's pattern ${pattern}`);
+    }
+    for (const filter of [product.includeFilter, product.excludeFilter, measurement.includeFilter, measurement.excludeFilter]) {
       assert.ok(filter === "" || filter.split(", ").every((pattern) => pattern !== "" && !pattern.includes(",") && pattern === pattern.trim()), `a filter in the syntax of the preset: ${filter}`);
     }
   }

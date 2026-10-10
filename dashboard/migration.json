@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T20:00:00.000Z",
+  "updatedAt": "2026-10-10T20:52:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4833,6 +4833,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-measurement-exports-3cddd82",
+      "at": "2026-10-10T20:52:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit d88684c, registro no 3cddd82): os primeiros exports Release de medição dos três braços e da sonda do instrumento, e um ensaio headless da campanha sobre eles. scripts/frontier-comparison-measurement-export.mjs exporta, um braço por vez, o .app de medição de A, B e C (prepareProject, shapeArmProject e exportPreparedProject, com frameworks: false em A e B) com o manifesto que o lançador Release lê, e o produto de cada braço duas vezes, medido e apagado; a sonda sai uma vez, sem frameworks, com o override.cfg no PCK. Os conjuntos de arquivos estão em armProject (filtro scenes, a cena do braço e, pelo includeFilter, os scripts que as cenas carregam por caminho): os que a medição de A, a extensão de C e as fontes de C precisaram foram achados porque o braço falhou sem eles. O produto não vê os arquivos de medição: eles saem da cópia, que é importada de novo, antes dele. O eixo package-size lê o .app inteiro: A 82.572.095, B 82.683.063 e C 106.682.110 bytes, iguais nos dois exports de cada braço; são medidas de um ensaio, não o eixo do relatório. Cada .app de medição rodou o roteiro inteiro, headless, com as contagens do ensaio Debug da entrada e de um run Debug da mesma árvore (hashes do replay e do soak, janelas, paridade, notificações), menos o scene-nodes de C: 31, onde o registro antigo diz 30 (o main.tscn ganhou o nó ReplayValidation no #135; o controle Debug lê 31). O ensaio da campanha pelo lançador Release (--build release --exports <pasta> --rehearsal --slots 1-3; o lançador roda headless só em ensaio, e o runCampaign o recusa sem --rehearsal) rodou o autoteste do instrumento pela sonda exportada, que passou, e as três tentativas foram rejeitadas pela carga e por um display que não apresenta nada, sem not-the-registered-build e sem errors; o texto do desvio de ensaio passou a seguir o build e o display do ensaio. É um ensaio, não um resultado: os exports vieram de uma árvore com mudanças não commitadas, nada rodou numa máquina quieta nem numa janela, e o autoteste falhou uma vez em quatro runs à mão com a carga em 5 a 6. Nenhum critério muda: execucao segue aberto (falta a campanha real numa janela quieta), e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3cddd82cf690c189ac3e837b173221cbf59098b6/docs/evidence/frontier-comparison-measurement-exports/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-13-f390670",
       "at": "2026-10-10T20:00:00.000Z",

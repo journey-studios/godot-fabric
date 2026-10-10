@@ -27,7 +27,8 @@ import { machine } from "./frontier-turn-lane.mjs";
 //        [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]
 //
 // `--build debug` is a rehearsal: it needs `--rehearsal`, which marks the campaign as one (a rehearsal redoes nothing, and says in the campaign's deviations that it is not a result). `--build release`
-// needs `--exports <dir>`, the exports of the three arms with their manifests (scripts/frontier-comparison-release.mjs): the Release launcher reads and validates them, and the campaign then refuses to start
+// needs `--exports <dir>`, the exports of the three arms with their manifests (scripts/frontier-comparison-release.mjs), and with `--rehearsal` it runs them headless (a rehearsal of the Release exports; without it the processes
+// run in a window): the Release launcher reads and validates them, and the campaign then refuses to start
 // unless the directory also has the export of the instrument's probe project (probe/frontier-comparison-export.json), the only way to run the self-check in a template (`launcher.selfCheck` is "unsupported"
 // without it, and `{entry: "release", executable}` with it). The files in <out>: campaign-state.json (the state), raw/<lane>-<slot>-<attempt>.json and
 // .log (the scenario's report and the process's log of each attempt), self-check/ (the instrument's probe report and log), and at the end campaign.json (strictly the analysis' format),
@@ -162,7 +163,7 @@ async function finish({ state, protocol, protocolSha256, out, validity, status, 
       slots: state.options.slots,
       assumedRefreshHz: state.attempts.filter((attempt) => attempt.assumedRefreshHz !== null).map((attempt) => ({ lane: attempt.lane, slot: attempt.slot, arm: attempt.arm, ...attempt.assumedRefreshHz })),
       unavailableWindows: state.attempts.filter((attempt) => Object.keys(attempt.unavailable).length > 0).map((attempt) => ({ lane: attempt.lane, slot: attempt.slot, arm: attempt.arm, unavailable: attempt.unavailable })),
-      sizesAre: "the size of the provisioned copy, not of a Release export",
+      sizesAre: state.launcher.build === "release" ? "the size of the whole .app of each arm's product, from the manifests of a trial export, not a campaign's" : "the size of the provisioned copy, not of a Release export",
       provenance: { readCosts },
     };
     await writeAtomic(path.join(out, "rehearsal.json"), `${JSON.stringify(sidecar, null, 2)}\n`);
@@ -225,6 +226,10 @@ export async function runCampaign({
   const limit = protocol.runs?.load?.limit1MinuteAverage;
   if (!(Number.isFinite(limit) && limit > 0)) {
     problems.push(`runs.load.limit1MinuteAverage is not a finite positive number (${JSON.stringify(limit) ?? "missing"}): the wait for the load cannot tell a quiet machine`);
+  }
+  // A launcher that runs the exports headless (the Release launcher in its rehearsal mode) draws and paces nothing: it can play a rehearsal and nothing else.
+  if (launcher.rehearsalOnly === true && !rehearsal) {
+    problems.push(`the launcher runs headless (${launcher.name}), which only a rehearsal does: add --rehearsal, or use a windowed launcher`);
   }
   if (problems.length > 0) {
     throw new Error(`cannot run the campaign:\n${problems.join("\n")}`);
@@ -337,7 +342,8 @@ async function main(argv) {
   const bytes = await readFile(PROTOCOL_FILE);
   const protocol = JSON.parse(bytes);
   const options = parseArguments(argv, protocol);
-  const launcher = options.build === "release" ? createReleaseLauncher({ exportsDirectory: options.exports }) : createDebugLauncher();
+  // A rehearsal of the Release exports runs them headless, as the Debug one does; a campaign proper runs them in a window.
+  const launcher = options.build === "release" ? createReleaseLauncher({ exportsDirectory: options.exports, windowed: !options.rehearsal }) : createDebugLauncher();
   const result = await runCampaign({
     launcher, protocol, protocolSha256: sha256(bytes), out: options.out, lanes: options.lanes, slots: options.slots, rehearsal: options.rehearsal, resume: options.resume,
     maxWaitSeconds: options.maxWaitSeconds, assumeRefreshHz: options.assumeRefreshHz, log: (line) => console.log(line),

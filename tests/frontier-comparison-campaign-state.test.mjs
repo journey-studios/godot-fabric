@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { defaultClock, waitForLoad } from "../scripts/frontier-comparison-campaign-load.mjs";
 import {
-  campaignExecutions, engineDifferences, engineOf, nextStep, optionsErrors, parseSlots, planOf, resumeProblems, stopsOf, unavailableLanes, unreportedEntries,
+  campaignExecutions, deviationsOf, engineDifferences, engineOf, nextStep, optionsErrors, parseSlots, planOf, resumeProblems, stopsOf, unavailableLanes, unreportedEntries,
 } from "../scripts/frontier-comparison-campaign-state.mjs";
 import { fakeClock, registeredOf, scriptedLoad, sha } from "./frontier-comparison-campaign-fake.mjs";
 import { readProtocol } from "./frontier-comparison-synthetic.mjs";
@@ -124,4 +124,21 @@ test("the wait for the load stops at the first reading under the limit, gives up
   const none = await wait([8], 0);
   assert.deepEqual([none.result.timedOut, none.result.polls, none.clock.slept], [true, 1, 0]);
   assert.equal(typeof defaultClock.now(), "number");
+});
+
+test("the rehearsal's deviation names what that rehearsal shows: the Debug build only for the Debug launcher, the headless display only when its processes ran headless", () => {
+  const rejections = (launcherBuild, lane, rehearsal = true) => {
+    const state = { rehearsal, options: { slots: null }, attempts: [], selfCheck: lane === null ? null : { lane }, launcher: { build: launcherBuild, deviations: ["the launcher's own"] } };
+    return deviationsOf(state, protocol).filter((line) => line.startsWith("a rehearsal does not redo"));
+  };
+  const line = (shown) => `a rehearsal does not redo: each slot ran once, whatever the rules said of it, so that the rejections it shows (${shown}) can be seen and counted`;
+  // The Debug rehearsal, byte for byte as it always was (its committed evidence says it).
+  assert.deepEqual(rejections("debug", "headless"), [line("the Debug build, the headless display, the load of a busy machine")]);
+  // The Release rehearsal: headless, as the rehearsal mode of the Release launcher runs, it is the display and the load; in a window it is the load alone.
+  assert.deepEqual(rejections("release", "headless"), [line("the headless display, the load of a busy machine")]);
+  assert.deepEqual(rejections("release", "windowed"), [line("the load of a busy machine")]);
+  assert.deepEqual(rejections("release", null), [line("the load of a busy machine")], "no self-check yet, no claim about the display");
+  // Not a rehearsal: no such line, and the launcher's own deviations come first.
+  assert.deepEqual(rejections("release", "headless", false), []);
+  assert.equal(deviationsOf({ rehearsal: false, options: { slots: null }, attempts: [], selfCheck: null, launcher: { build: "release", deviations: ["the launcher's own"] } }, protocol)[0], "the launcher's own");
 });

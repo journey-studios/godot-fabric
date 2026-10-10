@@ -1,0 +1,30 @@
+{
+  "format": "godot-fabric.frontier-comparison-export/v1",
+  "arm": "C",
+  "app": "Frontier-C.app",
+  "executable": "Frontier-C.app/Contents/MacOS/Frontier",
+  "pck": "Frontier-C.app/Contents/Resources/Frontier.pck",
+  "binarySha256": "8c0c9996d275a89cce9611db7116aa9bf761944427cbfc0c99db9fae84a9ef2a",
+  "packageSha256": "385806d4901958135da9f13e2a9754643ed854011d0b2b0f853ca71bd689cd13",
+  "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768",
+  "scriptFiles": {
+    "tests/frontier-comparison-scenario.gd": "8e00815e8356ae055b619f813e5fc0e315e74afd57a3a9fc6d44903212fc9259",
+    "tests/frontier-comparison-player.gd": "d74499eda974e97a325e83318af72a3724d401dfab2839129f1e07612e926a79",
+    "tests/frontier-comparison-hud.gd": "464dff3237b14368f6a83382ca05502f4330e2de66f0ca32f254c08157330a6c",
+    "tests/frontier-comparison-readings.gd": "19d046222020b07daad52055fdee264a5634893d03785b051c108bf7cbd69b24",
+    "tests/frontier-comparison-cycle.gd": "340d7e66d306038eb2645f7cf3ef64ee83d0c6893e7e6a4c1a89290f6ac3e629",
+    "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/window-presence.gd": "e90c93e748768aab903152d74e8e33b1836e628af218342667f9830832cecbfa",
+    "tests/world-input-driver.gd": "ec07dd93a3a23b1a9d520fbc0aac7b21977dfb55e345748084568d1f29345574",
+    "comparison/frontier-comparison-entry.gd": "db3a43b4899cfb7aff3151dabadf20a1b022ba84684449c9972a549b4b2abc06",
+    "comparison/frontier-comparison-empty.tscn": "89caa232be3c3deebc55224b526538cad3d692f9828ba1ad47573400f354e204",
+    "override.cfg": "53405dd2d4a2fef3bebf622ae3d39316b74fd384bafaa5552f304e30734ba560"
+  },
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "templateSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+  "exportBytes": [
+    106682110,
+    106682110
+  ]
+}

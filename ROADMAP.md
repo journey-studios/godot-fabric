@@ -1069,6 +1069,15 @@ of scene files, not the `preload()` calls of scripts, so a selection names its s
 The [record](https://github.com/journey-studios/godot-fabric/blob/ecf637e2a05f6b07fa3920edd61c1b4a43700305/docs/evidence/macos-export-options/README.md) is local evidence. No criterion changes state, and no 1.0 checkpoint,
 weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `execucao`, the Release measurement exports and a headless rehearsal on them (code at `d88684c`, record at `3cddd82`): `scripts/frontier-comparison-measurement-export.mjs` exports the Release `.app` of arms A, B and C
+and of the instrument's probe project, each with the manifest the Release launcher reads, and the product of each arm twice (A 82,572,095, B 82,683,063, C 106,682,110 bytes of `.app`, equal in the two exports: measures of one trial, not the
+report's `package-size` axis). The sets of files are in `armProject` (the `scenes` filter, the arm's scene, and the scripts its scenes load by path through the include filter; the ones that failed without are marked in the record). Each
+measurement `.app` ran the whole script headless with the counts of the Debug rehearsal of the entry and of a Debug run of the same tree, but for arm C's `scene-nodes` (31, where the older record says 30; the Debug control reads 31 too).
+A headless rehearsal of the campaign through the Release launcher (`--build release --exports <dir> --rehearsal --slots 1-3`) ran the instrument's self-check through the exported probe, which passed, and rejected its three attempts for
+the load and for a display that presents nothing, with no `not-the-registered-build` and no `errors`. **A trial, and no number in it is a result:** the exports came from a working tree with uncommitted changes, nothing ran on a quiet
+machine or in a window, and the self-check failed once in four hand runs under load. The [record](https://github.com/journey-studios/godot-fabric/blob/3cddd82cf690c189ac3e837b173221cbf59098b6/docs/evidence/frontier-comparison-measurement-exports/README.md)
+is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open: it needs the real campaign in a quiet window.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
