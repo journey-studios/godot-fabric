@@ -4,6 +4,7 @@ import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import {existsSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/mobile-density-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained controls of the density slice. Each runs tests/mobile-density-native.test.mjs, whose probe and independent oracle judge
@@ -33,28 +34,10 @@ const host = path.join(root, "addons/fabric_godot.dylib");
 const previousHost = path.join(root, "build/mobile-density-previous-host/fabric_godot.dylib");
 const genuineCopy = path.join(root, "build/mobile-density-genuine-host/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const core = "native/display_insets_core.h";
-const application = "native/fabric_application.cpp";
-const variants = [
-  {name: "ignore-frame", argument: "--sabotage=ignore-frame", hostDirectory: "build/mobile-density-sabotage-ignore-frame-host", file: core,
-    find: `  return {std::max(0.0, unsafe.left - frame.x),
-      std::max(0.0, unsafe.top - frame.y),
-      std::max(0.0, unsafe.right - (window_width - (frame.x + frame.width))),
-      std::max(0.0, unsafe.bottom - (window_height - (frame.y + frame.height)))};`,
-    replace: "  return {unsafe.left, unsafe.top, unsafe.right, unsafe.bottom};"},
-  {name: "no-threshold", argument: "--sabotage=no-threshold", hostDirectory: "build/mobile-density-sabotage-no-threshold-host", file: core,
-    find: "  const double threshold = update_threshold(scale);\n",
-    replace: "  const double threshold = 0.0;\n"},
-  {name: "no-reapply", argument: "--sabotage=no-reapply", hostDirectory: "build/mobile-density-sabotage-no-reapply-host", file: application,
-    find: "  if (std::abs(window.get_content_scale_factor() - factor) > 1e-6) window.set_content_scale_factor(factor);",
-    replace: "  if (window.get_content_scale_factor() == 1.0) window.set_content_scale_factor(factor);"},
-  {name: "ignore-seam", argument: "--sabotage=ignore-seam", hostDirectory: "build/mobile-density-sabotage-ignore-seam-host", file: application,
-    find: "  if (!has_meta(validation_safe_area)) return fabric_godot::window_unsafe_edges(window, scale);",
-    replace: "  if (true) return fabric_godot::window_unsafe_edges(window, scale);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async target => digest(await readFile(target));
-const sources = guardSources(root, [core, application]);
+const files = [...new Set(variants.map(variant => variant.file))];
+const sources = guardSources(root, files);
 
 async function build(name) {
   const result = await sources.run(cmake, ["--build", ".deps/build", "--parallel", "4", "--target", "fabric_godot"]);

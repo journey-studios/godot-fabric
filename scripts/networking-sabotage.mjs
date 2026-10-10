@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/networking-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the networking slice: each breaks one behavior of the host's HTTP layer on purpose,
@@ -21,14 +22,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "redirects", argument: "--sabotage=redirects", hostDirectory: "build/networking-sabotage-redirects-host",
-    file: "native/godot_http_transport.cpp",
-    find: "if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers, x.request.drop_headers_on_redirect)) {",
-    replace: "if (auto redirect = std::optional<http::Redirect>()) {"},
-  {name: "headers", argument: "--sabotage=headers", hostDirectory: "build/networking-sabotage-headers-host",
-    file: "native/http_core.h", find: '    else existing->second += ", " + value;', replace: "    else joined.emplace_back(name, value);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

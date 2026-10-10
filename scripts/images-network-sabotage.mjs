@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/images-network-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the network Images work: each breaks one behavior of the host on purpose, runs the probe and the
@@ -22,20 +23,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "decoded-reload", argument: "--sabotage=decoded-reload", hostDirectory: "build/images-network-sabotage-decoded-reload-host",
-    file: "native/image_cache.h",
-    find: "  if (view && policy != CachePolicy::Reload) {",
-    replace: "  if (view) {"},
-  {name: "cancel-open", argument: "--sabotage=cancel-open", hostDirectory: "build/images-network-sabotage-cancel-open-host",
-    file: "native/image_network.cpp",
-    find: "      transport_->cancel(id);\n      active_.erase(id);\n      ++abandoned_;",
-    replace: "      active_.erase(id);\n      ++abandoned_;"},
-  {name: "texture-mutation", argument: "--sabotage=texture-mutation", hostDirectory: "build/images-network-sabotage-texture-mutation-host",
-    file: "native/image_view.cpp",
-    find: "  layer_.draw(get_canvas_item(), image_->texture->get_rid(), *painted);",
-    replace: "  if (painted->kind == img::PaintKind::Tile) image_->texture->set_size_override(Vector2i(std::max(1, static_cast<int>(std::lround(natural_size().width))), std::max(1, static_cast<int>(std::lround(natural_size().height)))));\n  layer_.draw(get_canvas_item(), image_->texture->get_rid(), *painted);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

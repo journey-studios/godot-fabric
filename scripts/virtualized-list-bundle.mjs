@@ -9,6 +9,7 @@ import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
+import {SABOTAGES} from "../tests/virtualized-list-sabotages.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
@@ -26,7 +27,7 @@ const sdkProducers = ["src/lists.js", "src/list-props.mjs", "src/scroll-view.jsx
   "src/scroll-view-contract.mjs", "src/scroll-view-native-config.js", "sdk/toolchain/platform-plugin.mjs"];
 const sources = ["tests/virtualized-list-fixture.jsx", "tests/virtualized-list-probe.gd",
   "tests/virtualized-list-native.test.mjs", "tests/virtualized-list-oracle.mjs", "tests/scroll-view-contract.test.mjs",
-  "scripts/virtualized-list-bundle.mjs",
+  "scripts/virtualized-list-bundle.mjs", "tests/virtualized-list-sabotages.mjs",
   ...sdkProducers, ...virtualizedListNativeProducers];
 // The original modules the current bundle runs.
 const bundledReactNative = ["Libraries/Lists/FlatList.js", "Libraries/Lists/SectionList.js",
@@ -47,10 +48,11 @@ const references = ["index.js", "Libraries/Components/ScrollView/ScrollView.js",
   "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp",
   "ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt",
   "React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm"];
-// The retained sabotage: the public wrapper stops forwarding onLayout, so a
-// list never learns its viewport length from RN's original ScrollView.
-const sabotage = {file: "scroll-view.jsx", find: "  return <OriginalScrollView ref={ref} {...forwarded} />;",
-  replace: "  delete forwarded.onLayout;\n  return <OriginalScrollView ref={ref} {...forwarded} />;"};
+// The retained sabotage (tests/virtualized-list-sabotages.mjs): the public wrapper stops
+// forwarding onLayout, so a list never learns its viewport length from RN's original
+// ScrollView. The lane breaks its copy of src/, so the file is named from there.
+const [sabotage] = SABOTAGES;
+const sabotageFile = path.relative("src", sabotage.file);
 export const lanes = ["current", "preceding-sdk", "sabotage"];
 
 async function platformFor(lane) {
@@ -69,7 +71,7 @@ async function platformFor(lane) {
     return {platformRoot: path.join(base, "src"), plugin: precedingPlugin};
   }
   await cp(path.join(root, "src"), path.join(base, "src"), {recursive: true});
-  const file = path.join(base, "src", sabotage.file);
+  const file = path.join(base, sabotage.file);
   const source = await readFile(file, "utf8");
   assert.equal(source.split(sabotage.find).length, 2, "The sabotage must replace exactly one ScrollView spread");
   await writeFile(file, source.replace(sabotage.find, sabotage.replace));
@@ -122,8 +124,8 @@ export async function bundleVirtualizedListProbe(lane = "current") {
       sources: await pin(platformRoot, ["react-native-platform.jsx", "scroll-view.jsx"])};
   }
   if (lane === "sabotage") {
-    receipt.sabotage = {file: path.join(sdk, sabotage.file), removed: "onLayout forwarded to RN's original ScrollView",
-      sha256: digest(await readFile(path.join(platformRoot, sabotage.file)))};
+    receipt.sabotage = {file: path.join(sdk, sabotageFile), removed: "onLayout forwarded to RN's original ScrollView",
+      sha256: digest(await readFile(path.join(platformRoot, sabotageFile)))};
   }
   await writeFile(path.join(output, "virtualized-list-" + lane + "-bundle.json"), JSON.stringify(receipt, null, 2) + "\n");
   return receipt;
