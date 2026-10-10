@@ -110,6 +110,7 @@
     "test:cpu-time-instrument": "node --test --test-concurrency=1 tests/cpu-time-instrument-native.test.mjs",
     "bench:cpu-time-instrument-graphics": "node scripts/cpu-time-instrument-graphics.mjs",
     "bench:frontier-turn-graphics": "node scripts/frontier-turn-graphics.mjs",
+    "bench:mobile-density-graphics": "node scripts/mobile-density-graphics.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {

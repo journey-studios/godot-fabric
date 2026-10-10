@@ -477,6 +477,21 @@ jobs:
             build/modal-discriminators-probe.js
             build/modal-discriminators-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      # The density policy and RN's SafeAreaView on the headless host (a GF-09 slice on the desktop; the simulator and device lanes went
+      # back to GF-35 with the iPhone NO-GO, see docs/evidence/mobile-density/README.md). It sits with the modal suite, the other
+      # window-metrics lane.
+      - run: npm run test:mobile-density
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-mobile-density
+          path: |
+            build/mobile-density-report.json
+            build/mobile-density-current-report.json
+            build/mobile-density-comparison.json
+            build/mobile-density-current.log
+            build/mobile-density-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
       - run: npm run test:consumer:libraries
       - run: npm run test:consumer:civ-lite
@@ -956,20 +971,6 @@ jobs:
             build/layout-animation-comparison.json
             build/layout-animation-current.log
             build/layout-animation-probe-bundle.json
-          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
-      # The density policy and RN's SafeAreaView on the headless host. The iOS simulator run of the same slice is recorded locally:
-      # this CI does not run Godot on iOS.
-      - run: npm run test:mobile-density
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: always()
-        with:
-          name: native-mobile-density
-          path: |
-            build/mobile-density-report.json
-            build/mobile-density-current-report.json
-            build/mobile-density-comparison.json
-            build/mobile-density-current.log
-            build/mobile-density-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:responders:shared-touches
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
