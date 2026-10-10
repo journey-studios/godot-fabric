@@ -201,4 +201,21 @@ As verificações do **repositório** (não as do código fixado, que estão no 
 | `npm run type-check` | limpo | a árvore corrigida (e dentro do `test:contracts` das outras rodadas) |
 | `node $BOARD check` (o quadro de agentes) | `Agente 3: sem conflitos` (os avisos de `package.json`, `docs/evidence/README.md` e `dashboard/migration.json` são de arquivos compartilhados, esperados) | `c6bebd0` e a árvore corrigida |
 
-Nada nativo foi rodado nesta rodada de verificação: o ensaio curto e o nativo (16 testes, 741 s, do líder) são os do commit fixado e estão no [começo](#o-que-há-nesta-pasta). A CI hospedada e o Pages vêm depois do merge.
+Nada nativo foi rodado nesta rodada de verificação: o ensaio curto e o nativo (16 testes, 741 s, do líder) são os do commit fixado e estão no [começo](#o-que-há-nesta-pasta). A CI hospedada e o Pages deste merge estão na [seção própria](#ci-hospedada-e-pages).
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `c6dea50` (o squash do #126; run [38061346890](https://github.com/journey-studios/godot-fabric/actions/runs/38061346890) do workflow Contracts, iniciado às 14:52:33 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda: `contracts` (2 min 56 s), `reference-android` (5 min 15 s) e `reference-ios` (8 min 54 s). Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a linha da fatia não tem passo nativo nem artefato.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 0cbee8448b96 (--base 0cbee8448b968034f589e98105c2cecf1905cae8); X9 clean, X10 clean`. A base é o pai do squash, o `0cbee84` do #127.
+
+**Os testes.** O recibo confere, pelo nome e no log do job `contracts`, os 35 testes de nível superior dos três arquivos de contrato da campanha: `tests/frontier-comparison-campaign.test.mjs` (18 de 18), `tests/frontier-comparison-campaign-state.test.mjs` (7 de 7) e `tests/frontier-comparison-campaign-guards.test.mjs` (10 de 10). Localmente, os mesmos três arquivos deram 35 de 35 em `node --test`.
+
+**O Pages.** O push de `c6dea50` rodou também o workflow do Pages (run [38061346857](https://github.com/journey-studios/godot-fabric/actions/runs/38061346857), 14:52:33 a 14:53:06 UTC, `build` e `deploy` em success, 43 testes do painel sem falha). O [recibo](publication.json) registra o deployment 6982486321 em success e o artefato `github-pages` (id 11673865137, SHA-256 `7e88eb72…`, igual ao digest da API e ao do log de upload). O `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash, e a entrada de atividade da fatia, `milestone-0-5-v05-10-execution-2-f952152`, está nele. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** nenhuma medição de braço entra nesta fatia. Os recibos hospedados provam o código e os testes da campanha, não um resultado: a execução comparativa de fato (a sequência de execuções nas duas faixas) e o lançador Release (V05-07) continuam fora deste registro.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-campaign --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
