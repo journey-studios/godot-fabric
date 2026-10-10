@@ -445,4 +445,34 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-report-markdown-e53a05f",
   },
+  // The Release launcher of the comparative campaign over the export manifests (#136, squash e4730cb): no native step and its three contract test files; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-release-launcher",
+    pr: 136,
+    squash: "e4730cb",
+    contractsRun: 38072053021,
+    pagesRun: 38072053016,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-release.test.mjs",
+      "tests/frontier-comparison-campaign.test.mjs",
+      "tests/frontier-comparison-run.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-release-launcher-29e379f",
+  },
+  // The arm projects of the comparison, A and B without the Fabric extension (#138, squash 2d2ba46): no native step, since its native test runs only locally, and its contract test file; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-arms",
+    pr: 138,
+    squash: "2d2ba46",
+    contractsRun: 38071259582,
+    pagesRun: 38071259623,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: ["tests/frontier-comparison-arms.test.mjs"],
+    guard: true,
+    activity: "milestone-0-5-v05-10-arm-projects-85d2c99",
+  },
 ];

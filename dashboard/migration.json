@@ -4813,6 +4813,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md"
     },
     {
+      "id": "milestone-0-5-hosted-receipts-11-ea5fcea",
+      "at": "2026-10-10T17:55:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages de duas fatias do V05-10, já na main: o lançador Release sobre os manifestos do export (#136, critério execucao, squash e4730cb, entrada milestone-0-5-v05-10-release-launcher-29e379f) e os projetos dos braços A e B sem a extensão Fabric (#138, critério execucao, squash 2d2ba46, entrada milestone-0-5-v05-10-arm-projects-85d2c99). A Contracts do push de cada squash passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque nenhuma das duas fatias tem passo nativo nem artefato (runs 38072053021 e 38071259582). A guarda de marco passou contra o pai de cada squash. O test:contracts deu 7, 43 e 669 testes no #136 e 7, 43 e 656 no #138, com um skipped cada, o export nativo do macOS, aceito pela allowlist. tests/frontier-comparison-release.test.mjs passou 13 de 13, tests/frontier-comparison-campaign.test.mjs 20 de 20, tests/frontier-comparison-run.test.mjs 22 de 22 e tests/frontier-comparison-arms.test.mjs 10 de 10. O Pages do push de e4730cb (run 38072053016) publicou o migration.json commitado com as duas entradas, a do #136 e a do #138, que entrou antes, em 2d2ba46; o do push de 2d2ba46 (run 38071259623) publicou só a entrada do #138, porque a do #136 ainda não existia. Gerador canônico com 33 fatias e 66 recibos. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ea5fceacdcd38d94d502325a8b26b44c0310fc3d/docs/evidence/frontier-comparison-release-launcher/README.md#ci-hospedada-e-pages"
+    },
+    {
       "id": "modal-teardown-on-exit-28edbbc",
       "at": "2026-10-10T17:10:00.000Z",
       "taskIds": [
