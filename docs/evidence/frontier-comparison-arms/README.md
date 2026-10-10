@@ -133,4 +133,23 @@ Não commitados: os logs de cada processo e os relatórios brutos do roteiro (ce
 - **Os conjuntos de arquivos por braço.** Os filtros acima são os da decisão e não tiram de A e B o `main.tscn`, o `ui/application.tres` (que referenciam o addon removido e falham ao carregar, como o controle mostra) nem os recursos do HUD do outro braço (`ui/`, `native_hud/`). Com `export_filter="all_resources"`, o que cada braço leva num export depende do que o export seleciona; não foi tentado aqui, e é o próximo passo.
 - **O tamanho do pacote** dos três braços, e portanto C−A e B−A: não foram medidos.
 - **Uma campanha.** Esta rodada é Debug, headless, uma cópia, uma execução por braço e por rodada. Os tempos não foram comparados e nenhum número é medida de um braço.
-- Os recibos hospedados (CI e Pages) desta entrega serão registrados depois da mescla.
+- Os recibos hospedados (CI e Pages) desta entrega estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages): provam o código e os testes dos projetos, não uma execução comparativa.
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `2d2ba46` (o squash do #138; run [38071259582](https://github.com/journey-studios/godot-fabric/actions/runs/38071259582) do workflow Contracts, iniciado às 17:19:29 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (3 min 21 s), `reference-android` (6 min 28 s) e `reference-ios` (6 min 55 s), todos com checkout em `2d2ba46`. Os cinco jobs nativos aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a fatia não tem passo nativo nem artefato. A cabeça da PR (`d9985f4`) tem outra árvore que o squash: a `main` mudou 9 caminhos entre a bifurcação e o squash, e o recibo lista esses caminhos e confere que a `main` os tocou depois da bifurcação.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 28edbbce7cb7 (--base 28edbbce7cb7e25af9e8163511943ab7556820ba); X9 clean, X10 clean`. A base é o pai do squash.
+
+**Os testes.** `npm run test:contracts` rodou com 7, 43 e 656 testes de Node: os blocos de 7 e 43 passaram todos; no de 656, 655 passaram e 1 saiu como skipped pela allowlist do check (`ALLOWED_SKIPS`): "native macOS arm64 export and copied-app rejection controls", o teste de export macOS do #75, com o motivo "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template". O recibo confere, pelo nome e no log do job `contracts`, os 10 testes de `tests/frontier-comparison-arms.test.mjs` (10 de 10). Os 23 testes de Python passaram. `check:static` e `check:publication` também passaram (2.353 arquivos). O teste nativo (`test:frontier-comparison-arms`) roda só localmente, e por isso não está no recibo.
+
+**O Pages.** O push de `2d2ba46` rodou também o workflow do Pages (run [38071259623](https://github.com/journey-studios/godot-fabric/actions/runs/38071259623), de 17:19:29 a 17:20:05 UTC, `build` e `deploy` em success, 43 testes do painel). O [recibo](publication.json) registra o deployment 6984221530 em success e o artefato `github-pages` que ele usou (id 11676434340, SHA-256 `2cd8c473…`, igual ao digest da API e ao do log de upload). O `migration.json` de dentro tem os mesmos bytes do commitado, e a entrada de atividade desta fatia, `milestone-0-5-v05-10-arm-projects-85d2c99`, está nele. Esse push não tem a entrada do #136 (`milestone-0-5-v05-10-release-launcher-29e379f`), que entrou depois, em `e4730cb`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** a fatia não mede nenhum braço, e os recibos provam os projetos e seus testes, não uma execução comparativa.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-arms --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```

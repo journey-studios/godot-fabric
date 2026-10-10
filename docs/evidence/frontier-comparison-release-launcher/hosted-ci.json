@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frontier-comparison-release-launcher",
+  "status": "verified-completed-hosted-workflow-and-slice-contract-tests",
+  "at": "2026-10-10T17:49:28.814Z",
+  "repository": "journey-studios/godot-fabric",
+  "run": {
+    "id": 38072053021,
+    "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/136",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "startedAt": "2026-10-10T17:30:56Z",
+    "updatedAt": "2026-10-10T17:37:11Z",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114271294364,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "startedAt": "2026-10-10T17:30:59Z",
+        "completedAt": "2026-10-10T17:34:23Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271294364"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114271295234,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271295234"
+      },
+      {
+        "name": "native-suites-frontier",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114271295482,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271295482"
+      },
+      {
+        "name": "native-suites-input",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114271295261,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271295261"
+      },
+      {
+        "name": "native-suites-runtime",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114271295353,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271295353"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "skipped",
+        "databaseId": 114272563989,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114272563989"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114271294439,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "startedAt": "2026-10-10T17:30:59Z",
+        "completedAt": "2026-10-10T17:37:10Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271294439"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 114271294463,
+        "runAttempt": 1,
+        "headSha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+        "startedAt": "2026-10-10T17:31:03Z",
+        "completedAt": "2026-10-10T17:37:00Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38072053021/job/114271294463"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+      "reference-android": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+      "reference-ios": "e4730cb4bc1b7e4a5e8601314df80279fe126c13"
+    },
+    "contractsJob": {
+      "steps": {
+        "milestone-guards": {
+          "step": "Milestone exit guards (X9 and X10)",
+          "number": 5,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T17:31:17Z",
+          "completedAt": "2026-10-10T17:31:17Z",
+          "markers": [
+            "MILESTONE_GUARDS_CHECK_PASSED: against 2d2ba461543f (--base 2d2ba461543f5c0dc6876e412c382c0223c0faf1); X9 clean, X10 clean"
+          ],
+          "base": "2d2ba461543f5c0dc6876e412c382c0223c0faf1"
+        },
+        "test:contracts": {
+          "step": "Run npm run test:contracts",
+          "number": 6,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T17:31:17Z",
+          "completedAt": "2026-10-10T17:34:19Z",
+          "tap": [
+            {
+              "tests": 7,
+              "suites": 0,
+              "pass": 7,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 43,
+              "suites": 0,
+              "pass": 43,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 0,
+              "todo": 0
+            },
+            {
+              "tests": 669,
+              "suites": 0,
+              "pass": 668,
+              "fail": 0,
+              "cancelled": 0,
+              "skipped": 1,
+              "todo": 0
+            }
+          ],
+          "skippedTests": [
+            {
+              "description": "native macOS arm64 export and copied-app rejection controls",
+              "reason": "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template"
+            }
+          ],
+          "failedTests": [],
+          "markers": [
+            "PARITY_INVENTORY_PASSED: 8113 contracts, 97 public values"
+          ],
+          "pythonContractTests": 23
+        },
+        "check:static": {
+          "step": "Run npm run check:static",
+          "number": 7,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T17:34:19Z",
+          "completedAt": "2026-10-10T17:34:20Z"
+        },
+        "check:publication": {
+          "step": "Run npm run check:publication",
+          "number": 8,
+          "conclusion": "success",
+          "startedAt": "2026-10-10T17:34:20Z",
+          "completedAt": "2026-10-10T17:34:21Z",
+          "passed": true,
+          "files": 2356
+        }
+      },
+      "sliceContractTests": [
+        {
+          "file": "tests/frontier-comparison-release.test.mjs",
+          "tests": 13,
+          "passed": 13,
+          "topLevel": [
+            "a good manifest has no problem, and each way of being wrong is named",
+            "the three manifests are read from <directory>/<arm>, with their paths resolved to absolute ones",
+            "prepare() registers what the manifests say, with the seed, the game's hashes and the instrument from the Debug launcher's sources",
+            "prepare() refuses, naming the arm and the file, when a manifest is missing, is wrong or does not match its file, and nothing runs",
+            "launch() runs the executable of the arm with the scenario's arguments, with no -s and an absolute --out, in a directory outside the .app and the exports",
+            "a real process of the fake .app: the report is read, the launch has the interface's shape, and the working directory is the launcher's own",
+            "a process that exits with an error, writes no report or writes a report of its own is passed on as it came",
+            "a process killed while it wrote its report leaves a file that is not JSON: no report, the file is kept, the log says where, and cleanup() leaves it",
+            "a file that changed between prepare() and launch() makes launch() throw, and the process is not started",
+            "a process that outlives the launcher's timeout is killed and is reported as timed out, and only then",
+            "cleanup() removes the launcher's own directory and nothing of the exports",
+            "the campaign reads and validates the exports, then refuses because the instrument's self-check cannot run in a template, before anything is launched or written",
+            "the command line: --build release needs --exports, which a Debug rehearsal does not take, and the campaign refuses with the self-check's reason and runs nothing"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-campaign.test.mjs",
+          "tests": 20,
+          "passed": 20,
+          "topLevel": [
+            "a campaign plays the protocol's sequence in both lanes, once per slot, one process at a time, balanced by position, and its campaign is in the format the analysis reads",
+            "a load above the limit, an undrawn presented window and an incomplete window are each rejected with their reason, kept in the raw data and redone in the same slot",
+            "an error and a process that wrote no report are rejected by the errors rule and redone; the one without a report is in the campaign's unreported, counts in its slot and in the report",
+            "a process that timed out and one that exited 0 without a report are unreported too, each with how it ended",
+            "a process killed while it wrote its report (a file that is not JSON) is unreported too, and its log says where the launcher kept the file",
+            "three attempts that wrote no report in a slot stop the campaign by the attempts rule of the analysis, as three rejected executions do",
+            "three rejected attempts in a slot stop the campaign: the later slots do not run, the stop is recorded and the analysis produces no statistic",
+            "the other game once is redone; the second time in the same arm stops the campaign",
+            "a scenario that waited with numbers other than the protocol's stops the campaign, chosen by the problem's code, and the analysis alone would not have seen it",
+            "a protocol whose load limit is not a finite positive number is refused before anything runs, because the wait could never tell a quiet machine",
+            "the wait for the load reads it every few seconds until it is under the limit, records the wait, and a wait that runs out lets the attempt run to be judged by the rule",
+            "a campaign interrupted after the k-th attempt, or twice, resumes from the first open slot and ends as a campaign that was never interrupted",
+            "a campaign is not resumed if the protocol, the script, the binary, the package or the instrument has another hash, or the options are not the same; nothing runs and the state stays as it was",
+            "the self-check is the gate: if it fails nothing runs, the stop is recorded, and a resume repeats it until it passes",
+            "an engine or a renderer other than the one the self-check ran on stops the campaign",
+            "the self-check runs in the lane the launcher runs in: a window for a launcher that opens one, headless for one that does not, and a check in the other lane is not the campaign's renderer",
+            "the unlimited lane whose vsync does not read back DISABLED is N/A and is not run further, and says so",
+            "a rehearsal redoes nothing, is marked as one and says in its deviations that it is not a result",
+            "the command line: --build debug and --slots are for a rehearsal, the numbers are checked, and a campaign needs its build and its directory",
+            "a file is written whole or not at all"
+          ]
+        },
+        {
+          "file": "tests/frontier-comparison-run.test.mjs",
+          "tests": 22,
+          "passed": 22,
+          "topLevel": [
+            "the window rule reads the numbers the protocol states in words, and refuses an amendment that rewrites a sentence",
+            "the frames of each window, on a trace written by hand",
+            "on the trace of a whole execution the windows have the occurrences the protocol counts",
+            "the numbers the scenario waits with, in GDScript, are the protocol's",
+            "the amendments of the protocol that the scenario follows are in the protocol it is run against",
+            "the kinds of event the scenario traces are the ones the window rule reads",
+            "the player's constants are the soak's own",
+            "the arguments after the executable enter the scenario as the main loop: no -s, the user arguments after --, and an absolute --out",
+            "the entry is two lines that extend the scenario, the main scene is one empty node, and the settings name both",
+            "override.cfg is left out of the package's hash and the entry, the scene and the settings are in the scenario's",
+            "the Debug launcher says that the process was killed at its timeout, and only then",
+            "the Debug launcher takes a report that is not JSON for no report, keeps the file beside itself and says where in the log",
+            "a CPU time becomes integer microseconds as Math.round(totalMs * 1000)",
+            "the load average, the exit and the log of a Godot process are read as the errors rule asks",
+            "the cost of reading stats() is taken from the record of the slice that delivered the hooks, with two digits",
+            "the replay's golden hash is read from the test that fixes it",
+            "the scenario's reports, assembled into a campaign, pass the format and the analysis rejects each execution as a Debug build",
+            "a window the scenario could not measure has no occurrence in the campaign, and the campaign says why apart",
+            "the FPS without a limit is the frames of the measured occurrences over the time they took, and only a vsync read back as DISABLED has one",
+            "the windows are derived from the trace and the samples, and a report that cannot be analysed says why",
+            "an event burst that never settles leaves the window one occurrence short, and the analysis calls the execution incomplete",
+            "the runner of this part runs only the rehearsal"
+          ]
+        }
+      ]
+    },
+    "referenceParity": {
+      "comparison": null
+    },
+    "nativeSteps": {}
+  },
+  "pullRequest": {
+    "number": 136,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/136",
+    "title": "feat(perf): Run the comparative campaign's Release launcher over the export manifests",
+    "headSha": "160928cf94cf4d227f960d7af84213f2ba337948",
+    "baseSha": "2d2ba461543f5c0dc6876e412c382c0223c0faf1",
+    "squashMergeCommit": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+    "squashCommitSubject": "feat(perf): Run the comparative campaign's Release launcher over the export manifests (#136)",
+    "mergedAt": "2026-10-10T17:30:53Z",
+    "headTreeSha": "b8735891ff6b30d7d1073fcf5a61f1f7b7db9649",
+    "mainTreeSha": "b8735891ff6b30d7d1073fcf5a61f1f7b7db9649",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 5,
+    "commits": [
+      {
+        "sha": "29e379f78652cbcfbb1e8184ca8f2158b9aa71c3",
+        "subject": "feat(perf): Run the comparative campaign's Release launcher over the export manifests"
+      },
+      {
+        "sha": "1ed14d8465142e1e242dac45b512a235df26e719",
+        "subject": "docs(dashboard): Register the Release launcher over the export manifests"
+      },
+      {
+        "sha": "cdb2d04c310c47ca7f9c9610ab9cc8a96e279d29",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-release-launcher"
+      },
+      {
+        "sha": "d688b8af37ec414756150ddc2b0e3cf1bca73076",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-release-launcher"
+      },
+      {
+        "sha": "160928cf94cf4d227f960d7af84213f2ba337948",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/frontier-comparison-release-launcher"
+      }
+    ],
+    "changedFiles": 13,
+    "additions": 908,
+    "deletions": 82
+  },
+  "artifacts": {},
+  "findings": []
+}

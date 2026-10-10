@@ -41,6 +41,8 @@ export const attempts = {
   crashed: { noReport: true, exitCode: -1, signal: "SIGSEGV", log: "Program crashed\n" },
   // A process that the launcher killed at its time limit (SIGTERM) and that wrote no report.
   timedOut: { noReport: true, timedOut: true, exitCode: -1, signal: "SIGTERM", log: "FRONTIER_COMPARISON_SCENARIO_STARTED\n" },
+  // A process that was killed while it wrote its report: the launcher found a file that is not JSON, returned no report and said in the log where it kept the file.
+  unreadableReport: { noReport: true, exitCode: -1, signal: "SIGKILL", log: "FRONTIER_COMPARISON_SCENARIO_STARTED\nFRONTIER_COMPARISON_REPORT_UNREADABLE: /tmp/run-B-presented.unreadable.json (Unexpected end of JSON input)\n" },
   // A process that exited 0 and wrote no report.
   silent: { noReport: true, log: "FRONTIER_COMPARISON_SCENARIO_STARTED\n" },
   // A scenario that waited with a number other than the protocol's: nothing in the analysis' rules sees it.

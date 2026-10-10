@@ -151,20 +151,26 @@ export function scenarioArguments({ arm, lane, windowed = false, out }) {
   return [windowed ? "--windowed" : "--headless", "--", `--arm=${arm}`, `--lane=${lane}`, `--out=${out}`];
 }
 
+// One timed process, the same for every launcher: the 1-minute load average read right before it starts and right after it ends, spawnSync's `result` (a process killed at `timeout` has the signal
+// SIGTERM and `error.code` ETIMEDOUT), the log (its stdout and then its stderr) and the seconds it took. `cwd` and `env` are spawnSync's; absent, the caller's.
+export function runTimed({ executable, args, cwd, env, timeout }) {
+  const before = loadNumber(loadAverage());
+  const started = Date.now();
+  const result = spawnSync(executable, args, { cwd, env, encoding: "utf8", timeout, maxBuffer: 256 * 1024 * 1024 });
+  const after = loadNumber(loadAverage());
+  return { result, log: (result.stdout ?? "") + (result.stderr ?? ""), load: { before, after }, seconds: Math.round((Date.now() - started) / 100) / 10 };
+}
+
 // One Godot process: the scenario in an arm. Returns where the scenario's report is (if it wrote one), the log, how the process ended and the load around it.
 export function launchScenario({ prepared, arm, lane, windowed = false, timeout = 1800000 }) {
   const { harness } = prepared;
   const label = `run-${arm}-${lane}${windowed ? "-windowed" : ""}`;
   const reportFile = path.join(harness.directory, `${label}.json`);
   rmSync(reportFile, { force: true });
-  const before = loadNumber(loadAverage());
-  const started = Date.now();
   const args = ["--path", harness.project, ...scenarioArguments({ arm, lane, windowed, out: reportFile })];
-  const result = spawnSync(harness.godot, args, { env: harness.env, encoding: "utf8", timeout, maxBuffer: 256 * 1024 * 1024 });
-  const after = loadNumber(loadAverage());
-  const log = (result.stdout ?? "") + (result.stderr ?? "");
+  const { result, log, load, seconds } = runTimed({ executable: harness.godot, args, env: harness.env, timeout });
   writeFileSync(path.join(harness.directory, `${label}.log`), log);
-  return { label, reportFile, args, log, result, process: processOf(result, log), load: { before, after }, seconds: Math.round((Date.now() - started) / 100) / 10, windowed };
+  return { label, reportFile, args, log, result, process: processOf(result, log), load, seconds, windowed };
 }
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
