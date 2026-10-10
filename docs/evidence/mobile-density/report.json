@@ -1,0 +1,544 @@
+{
+  "schemaVersion": 1,
+  "scenario": "mobile-density",
+  "status": "verified-local-headless-lane-windowed-captures-causal-control-and-retained-sabotages-no-simulator-no-device",
+  "at": "2026-10-10T02:00:27Z",
+  "slice": {
+    "delivers": "the density policy, RN's own SafeAreaView and the desktop lanes that prove them, as a slice of GF-09 (density, insets) and GF-18 (the pinned SafeAreaView), leaving the rest to GF-35 (mobile)",
+    "claimsV05_08": false,
+    "v05_08": "blocked in PR #102; the iPhone gate of the 0.5 is NO-GO (2026-10-09), so the 0.5 closes as a complete macOS milestone and mobile returns to GF-35",
+    "deviceRecord": "docs/evidence/frontier-device/README.md"
+  },
+  "executionBaseCommit": "fb622675a07036c29a7300c29ae2f887e05995e3",
+  "implementationCommit": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325",
+  "implementationPr": null,
+  "pinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals the pin in sourcePins; the pins were taken from the working tree that the lanes ran from and are re-verified against the commit once it exists",
+    "against": "working tree on top of executionBaseCommit, before the implementation commit",
+    "mismatches": []
+  },
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64 26.6.2",
+    "displayServerHeadlessLane": "headless",
+    "windowedLane": "macOS, gl_compatibility, Apple M3 Pro",
+    "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+  },
+  "screenshots": {
+    "count": 3,
+    "read": true,
+    "files": [
+      {
+        "path": "docs/evidence/mobile-density/insets-scale-2.png",
+        "sha256": "cf0b107057f2dee625ba697d7f10ddbf794ff5a579edecc5f79e694a451fc683",
+        "bytes": 5269
+      },
+      {
+        "path": "docs/evidence/mobile-density/insets-scale-2-bands.png",
+        "sha256": "bf2745a32ea935a635782a204788396dec16d8313a3330772fe95045cc686d4f",
+        "bytes": 5350
+      },
+      {
+        "path": "docs/evidence/mobile-density/no-insets-scale-2.png",
+        "sha256": "150fe0458dcf076b56093611737a610a6ec8ca813905fcec43083ddb3fb37a6c",
+        "bytes": 5205
+      }
+    ],
+    "display": "macOS 26.6.2, built-in Retina display (screen scale 2), window 1200x720 pixels (600x360 points)",
+    "what": {
+      "insets-scale-2.png": "the HUD under density_policy screen at scale 2 with the seam's bands (47, 20, 47.5, 21 points): the bars and panels start 94 and 40 pixels in, the Pressable (88 pixels, 44 points) sits in the bottom bar, the four bands show the root's colour",
+      "insets-scale-2-bands.png": "the same frame with the bands the probe states painted in translucent red and the safe rectangle outlined in yellow, for the reader (no pixel check runs on it)",
+      "no-insets-scale-2.png": "the same HUD with the seam removed: the bars and panels reach the window's edge"
+    },
+    "note": "the bands are the seam's numbers, not an iPhone's; the HUD's SafeAreaViews have no background of their own, so the frames show the bars they hold"
+  },
+  "commands": [
+    {
+      "command": ".deps/build/display_insets_core_test",
+      "result": "DISPLAY_INSETS_CORE_PASSED (31 assertions)"
+    },
+    {
+      "command": "npm run test:mobile-density",
+      "result": "passed: 132 checks"
+    },
+    {
+      "command": "node tests/mobile-density-native.test.mjs --previous",
+      "result": "passed: 74 of 132 checks fail on the host of b0e40aa, the normative ones"
+    },
+    {
+      "command": "node scripts/mobile-density-sabotage.mjs",
+      "result": "passed: the previous host and 4 sabotages, each rejected; sources restored byte for byte"
+    },
+    {
+      "command": "node scripts/mobile-density-graphics.mjs",
+      "result": "passed: 11 checks, 3 captures"
+    },
+    {
+      "command": "npm run type-check",
+      "result": "passed"
+    },
+    {
+      "command": "npm run check:static",
+      "result": "passed: no issues"
+    },
+    {
+      "command": "npm run check:publication",
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:scope-0.5",
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:world-input",
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:modal",
+      "result": "passed"
+    }
+  ],
+  "scope": {
+    "densityPolicy": "FabricApplication.density_policy: content (default) | screen",
+    "safeAreaView": "RN's RCTSafeAreaViewNativeComponent and SafeAreaViewComponentDescriptor over the host's View control",
+    "seams": {
+      "validation_screen_scale": "float, stands in for DisplayServer.screen_get_scale",
+      "validation_safe_area": "Dictionary left/top/right/bottom in points, honored on any OS"
+    },
+    "simulatorCertified": false,
+    "physicalDeviceCertified": false,
+    "androidCertified": false
+  },
+  "lanes": {
+    "cpp": {
+      "command": ".deps/build/display_insets_core_test",
+      "assertions": 31,
+      "covers": "unsafe_bands, view_insets, round_to_pixel, update_threshold, needs_update, padding_for"
+    },
+    "headless": {
+      "command": "npm run test:mobile-density",
+      "displayServer": "headless",
+      "checks": 132,
+      "passed": 132,
+      "failed": 0,
+      "normativeChecks": 74,
+      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
+      "groups": {
+        "cleanup": 2,
+        "cleared": 10,
+        "content": 7,
+        "mount": 11,
+        "moved": 10,
+        "platform-scale": 10,
+        "policy": 3,
+        "report": 1,
+        "scale-2": 10,
+        "scale-3": 10,
+        "sub-threshold": 10,
+        "world": 48
+      },
+      "stages": [
+        {
+          "name": "mount",
+          "scale": 2,
+          "seam": {
+            "bottom": 21,
+            "left": 47,
+            "right": 47.5,
+            "top": 20
+          }
+        },
+        {
+          "name": "scale-3",
+          "scale": 3,
+          "seam": {
+            "bottom": 21,
+            "left": 47,
+            "right": 47.5,
+            "top": 20
+          }
+        },
+        {
+          "name": "sub-threshold",
+          "scale": 3,
+          "seam": {
+            "bottom": 21,
+            "left": 47.3,
+            "right": 47.5,
+            "top": 20
+          }
+        },
+        {
+          "name": "moved",
+          "scale": 3,
+          "seam": {
+            "bottom": 30,
+            "left": 50,
+            "right": 44,
+            "top": 24
+          }
+        },
+        {
+          "name": "cleared",
+          "scale": 3,
+          "seam": null
+        },
+        {
+          "name": "scale-2",
+          "scale": 2,
+          "seam": {
+            "bottom": 21,
+            "left": 47,
+            "right": 47.5,
+            "top": 20
+          }
+        },
+        {
+          "name": "platform-scale",
+          "scale": 1,
+          "seam": {
+            "bottom": 21,
+            "left": 47,
+            "right": 47.5,
+            "top": 20
+          }
+        }
+      ],
+      "safeAreaViews": 6,
+      "oracle": {
+        "stages": 7,
+        "views": 6,
+        "unchangedStages": 3,
+        "changedViews": [
+          "bleed",
+          "edge-corner",
+          "edge-top",
+          "hud"
+        ],
+        "world": {
+          "cases": 8,
+          "points": 24
+        }
+      }
+    },
+    "world": {
+      "cases": 8,
+      "pointsPerCase": 3,
+      "clicksPerPoint": 20,
+      "checks": 48,
+      "scales": [
+        1,
+        2
+      ],
+      "roots": [
+        "SafeAreaView",
+        "View"
+      ],
+      "pointerEvents": [
+        "box-none",
+        "auto"
+      ],
+      "invariants": [
+        "box-none: N clicks on the empty HUD or in the padding band reach the world N times and the HUD none",
+        "box-none: N clicks on the Pressable press it N times and never reach the world",
+        "auto: the root takes every pointer, its padding band included, so the world hears none",
+        "a SafeAreaView root and a View root leave the same counts at every point",
+        "the SafeAreaView root shifts the bar by exactly the seam's insets; the View root does not"
+      ]
+    },
+    "windowed": {
+      "command": "node scripts/mobile-density-graphics.mjs",
+      "checks": 11,
+      "passed": 11,
+      "facts": {
+        "adapter": "Apple M3 Pro",
+        "contentScaleFactor": 2,
+        "contentScaleMode": 1,
+        "dimensions": {
+          "fontScale": 1,
+          "height": 360,
+          "scale": 2,
+          "width": 600
+        },
+        "displayServer": "macOS",
+        "insets": {
+          "bottom": 21,
+          "left": 47,
+          "right": 47.5,
+          "top": 20
+        },
+        "realScreenScale": 2,
+        "renderer": "gl_compatibility",
+        "scaleSource": "DisplayServer.screen_get_scale",
+        "windowPixels": [
+          1200,
+          720
+        ]
+      },
+      "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
+      "bundleSha256": "61e20326f5d197eb7e36896e8b6dc61ec5d7043746a0ba558acdbefaae6d5b64"
+    }
+  },
+  "reports": {
+    "current": {
+      "file": "build/mobile-density-current-report.json",
+      "sha256": "52fdaf7963e9650a9a8dd24845d3f5570c73287480ec25adfff9cb62deab99d5",
+      "bytes": 492098,
+      "checks": 132,
+      "passed": 132,
+      "failed": 0,
+      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
+      "nativeHostSha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+    },
+    "previous": {
+      "file": "build/mobile-density-previous-report.json",
+      "sha256": "ea47fa87154f4eebee7bbbb3ac88527b45d11126ce97f59e8bd455063b8f1d80",
+      "bytes": 475575,
+      "checks": 132,
+      "passed": 58,
+      "failed": 74,
+      "checkIdDigest": "7489bb10c9f380ee3250d5b313be3b0e5a51a725c68da0b226ae6923e287a96e",
+      "nativeHostSha256": "bec9ec4be7299461b03e0b51edf3e361a78b69f0220bf03ffc9e7cc530bc5fda",
+      "failedIds": [
+        "content/density_policy is content unless the project says otherwise",
+        "content/The SafeAreaViews follow the unsafe bands at the density of the window",
+        "policy/An unknown density policy is refused and the policy stays",
+        "policy/density_policy takes screen before the application initializes",
+        "mount/Dimensions.window.scale equals the screen's scale",
+        "mount/Dimensions.get and useWindowDimensions report the screen's scale",
+        "mount/The window stretches as canvas_items with no content size, at the screen's scale",
+        "mount/The window's size in points is its pixels over the scale",
+        "mount/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "mount/The layout shows the padding of the State",
+        "mount/The HUD's children all lie inside the safe rect",
+        "mount/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "scale-3/Dimensions.window.scale equals the screen's scale",
+        "scale-3/Dimensions.get and useWindowDimensions report the screen's scale",
+        "scale-3/The window stretches as canvas_items with no content size, at the screen's scale",
+        "scale-3/The window's size in points is its pixels over the scale",
+        "scale-3/didUpdateDimensions fires once for the change of scale",
+        "scale-3/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "scale-3/The layout shows the padding of the State",
+        "scale-3/The HUD's children all lie inside the safe rect",
+        "scale-3/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "sub-threshold/Dimensions.window.scale equals the screen's scale",
+        "sub-threshold/Dimensions.get and useWindowDimensions report the screen's scale",
+        "sub-threshold/The window stretches as canvas_items with no content size, at the screen's scale",
+        "sub-threshold/The window's size in points is its pixels over the scale",
+        "sub-threshold/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "sub-threshold/The layout shows the padding of the State",
+        "sub-threshold/The HUD's children all lie inside the safe rect",
+        "sub-threshold/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "moved/Dimensions.window.scale equals the screen's scale",
+        "moved/Dimensions.get and useWindowDimensions report the screen's scale",
+        "moved/The window stretches as canvas_items with no content size, at the screen's scale",
+        "moved/The window's size in points is its pixels over the scale",
+        "moved/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "moved/The layout shows the padding of the State",
+        "moved/The HUD's children all lie inside the safe rect",
+        "moved/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "cleared/Dimensions.window.scale equals the screen's scale",
+        "cleared/Dimensions.get and useWindowDimensions report the screen's scale",
+        "cleared/The window stretches as canvas_items with no content size, at the screen's scale",
+        "cleared/The window's size in points is its pixels over the scale",
+        "cleared/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "cleared/The layout shows the padding of the State",
+        "cleared/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "scale-2/Dimensions.window.scale equals the screen's scale",
+        "scale-2/Dimensions.get and useWindowDimensions report the screen's scale",
+        "scale-2/The window stretches as canvas_items with no content size, at the screen's scale",
+        "scale-2/The window's size in points is its pixels over the scale",
+        "scale-2/didUpdateDimensions fires once for the change of scale",
+        "scale-2/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "scale-2/The layout shows the padding of the State",
+        "scale-2/The HUD's children all lie inside the safe rect",
+        "scale-2/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "platform-scale/Dimensions.window.scale equals the screen's scale",
+        "platform-scale/The window stretches as canvas_items with no content size, at the screen's scale",
+        "platform-scale/didUpdateDimensions fires once for the change of scale",
+        "platform-scale/Every SafeAreaView holds the padding that UIKit's rules give its frame",
+        "platform-scale/The layout shows the padding of the State",
+        "platform-scale/The HUD's children all lie inside the safe rect",
+        "platform-scale/A State changes when a side moved by the threshold and nothing is requested otherwise",
+        "policy/density_policy cannot change after the application initializes",
+        "cleanup/The host forgets its SafeAreaViews once they unmount",
+        "world/scale 1/box-none/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not",
+        "world/scale 1/box-none/safe/void/A click on the empty HUD reaches the world 20 times and the HUD none",
+        "world/scale 1/box-none/safe/band/A click in the padding band reaches the world 20 times and the HUD none",
+        "world/scale 1/box-none/view/void/A click on the empty HUD reaches the world 20 times and the HUD none",
+        "world/scale 1/box-none/view/band/A click in the padding band reaches the world 20 times and the HUD none",
+        "world/scale 1/auto/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not",
+        "world/scale 2/box-none/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not",
+        "world/scale 2/box-none/safe/void/A click on the empty HUD reaches the world 20 times and the HUD none",
+        "world/scale 2/box-none/safe/band/A click in the padding band reaches the world 20 times and the HUD none",
+        "world/scale 2/box-none/view/void/A click on the empty HUD reaches the world 20 times and the HUD none",
+        "world/scale 2/box-none/view/band/A click in the padding band reaches the world 20 times and the HUD none",
+        "world/scale 2/auto/The SafeAreaView root pads the HUD by the insets of the seam and the View root does not"
+      ]
+    }
+  },
+  "causalControl": {
+    "previousHost": "build/mobile-density-previous-host/fabric_godot.dylib, the dylib main built at b0e40aa",
+    "previousHostSha256": "bec9ec4be7299461b03e0b51edf3e361a78b69f0220bf03ffc9e7cc530bc5fda",
+    "previousSdk": {
+      "commit": "b0e40aa",
+      "extractedBy": "git archive b0e40aa src into build/mobile-density-previous/src"
+    },
+    "checks": 132,
+    "failed": 74,
+    "expectedFailuresEqualObserved": true,
+    "failedOutsideTheWorldGroup": 62,
+    "failedInTheWorldGroup": 12,
+    "worldGroupMeaning": "8: the empty area and the padding band of a box-none root never reach the world (the Surface of b0e40aa predates the pointer spike and takes the pointer); 4: nothing pads the SafeAreaView root",
+    "observedWindowScaleOnEveryStage": [
+      1
+    ]
+  },
+  "retainedSabotages": {
+    "receipt": "build/mobile-density-sabotage.json",
+    "hostSha256": {
+      "genuine": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
+      "restored": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91"
+    },
+    "variants": [
+      {
+        "name": "ignore-frame",
+        "file": "native/display_insets_core.h",
+        "runStatus": 0,
+        "hostSha256": "703e127a3b8c34483c8c1517b2ff7e5b2b3de940c5188362993d964c314cce4a",
+        "failedChecks": 11,
+        "oracleRejection": "content: the layout of bleed shows (left 47, top 20, right 48, bottom 21), the rules give (left 20, top 0, right 0, bottom 0)"
+      },
+      {
+        "name": "no-threshold",
+        "file": "native/display_insets_core.h",
+        "runStatus": 0,
+        "hostSha256": "802dbbb27f8436ef199d35baaa4c37104e31a2e88e1d5fbe489a4dca895c1edf",
+        "failedChecks": 6,
+        "oracleRejection": "scale-3: the State of hud holds (left 47, top 20, right 47.6666679382324, bottom 21), the rules give (left 47, top 20, right 47.5, bottom 21)"
+      },
+      {
+        "name": "no-reapply",
+        "file": "native/fabric_application.cpp",
+        "runStatus": 0,
+        "hostSha256": "52eeb0dd40ddd6490bdccf99a4a82f37aca7e67bfe7de7cd908d4776636084ef",
+        "failedChecks": 23,
+        "oracleRejection": "scale-3: Dimensions.window.scale is 3, not 2"
+      },
+      {
+        "name": "ignore-seam",
+        "file": "native/fabric_application.cpp",
+        "runStatus": 0,
+        "hostSha256": "1ab18d1276ab3bc6bebefe1d0342633b1f752290c1dfd7a5f54a4386e1e7cf07",
+        "failedChecks": 28,
+        "oracleRejection": "content: the layout of hud shows (left 0, top 0, right 0, bottom 0), the rules give (left 47, top 20, right 48, bottom 21)"
+      }
+    ],
+    "sourcesRestoredByteForByte": true
+  },
+  "oracle": {
+    "file": "tests/mobile-density-oracle.mjs",
+    "independence": "written from RN and UIKit, not from the probe or the host: it recomputes the padding of every SafeAreaView from the frames measureInWindow gave and the seams, and the side of every click from the same frames",
+    "result": {
+      "stages": 7,
+      "views": 6,
+      "unchangedStages": 3,
+      "changedViews": [
+        "bleed",
+        "edge-corner",
+        "edge-top",
+        "hud"
+      ],
+      "world": {
+        "cases": 8,
+        "points": 24
+      }
+    }
+  },
+  "hostBinary": {
+    "file": "addons/fabric_godot.dylib",
+    "sha256": "ea59ef208a013e5ab7757f9b95fddfa36bbcc8f41fdad42589a1e505b8d64a91",
+    "note": "the same host ran the current lane, the sabotage restore and the windowed run; the sabotaged hosts and the previous host are the controls"
+  },
+  "bundle": {
+    "sha256": "61e20326f5d197eb7e36896e8b6dc61ec5d7043746a0ba558acdbefaae6d5b64",
+    "format": "godot-fabric.native-probe-bundle/v1",
+    "inputs": 398
+  },
+  "sourcePins": {
+    "native/display_insets_core.h": "60827fc555d7331831c7aa40247fd546cd733f560ab4525ba36235fcfa4c7e69",
+    "native/display_insets.h": "b605b1dcb12d10df2169c91ee4ac2bc61663cedd99917619819168f56f88da81",
+    "native/display_insets.cpp": "3f1babd6d8e682602f8841aba82cb413ad9d40e809a5e841386b6f16dc7eb2c3",
+    "native/display_insets_core_test.cpp": "cab13fad205d9b226c7e2715f6eb4c47940fe7f0d4b09daf318a85912d288968",
+    "native/window_metrics.h": "81206988264c18c59466be5a4083cf20945a9ed19ac4a62f5773235709f1c2fe",
+    "native/fabric_application.h": "5797f187cd92001cbdf96cc3f1cf8d066af11eef94eea157de62fdc51772802e",
+    "native/fabric_application.cpp": "49fd64c2a55a611d41df295c9f26bef7ef82a063f0edae44a06e87c2843bfd4f",
+    "native/application_runtime.cpp": "b310a5f676011201d94fb1d45002111c533d396c68b26b27be756be1980b31d9",
+    "native/CMakeLists.txt": "9cffa72fb40cc4f906c1f09c24ca6e2a9a41cae74f614154871f62646e9eb192",
+    "src/react-native-platform.jsx": "f371fc9c3d8d8f19325871592d4e9535fb8f775b6b44b7e19b94af0246f77d77",
+    "src/prop-scope.mjs": "2d74d121c742a7dea91afd00591065adfc1c7ed5f5282addd867905ca9a696c2",
+    "types/react-native.ts": "a53a82b757afbc67eba39a73a30220c91e0ba802af076b290f9c8aa03afc7a35",
+    "docs/compatibility/scope-0.5.json": "a4e29551ec5edc558669ad8229d6f79fec23e7e64f3307754230e4da990815bc",
+    "tests/mobile-density-fixture.jsx": "660df45a9f456fa4dcf0cb5c2593774795dd944b3c409e1b8361f88b05132aaf",
+    "tests/mobile-density-probe.gd": "23db06990878e46ba071ed65270ec80641633b43ead742023ac977e2917dc25e",
+    "tests/mobile-density-oracle.mjs": "dc8dd8fe4b13001ecf01fea344ba338fb18aa6c0835b05edcbdb1b251ba2ee2a",
+    "tests/mobile-density-native.test.mjs": "81f715704afa75f1f90a6617174953cf8661f7fa3d587393253905409758d8d0",
+    "tests/mobile-density-graphics-probe.gd": "3fbf9904d7dd2c919a12c41aa63a17a7b5cedc818594d2c84bdf3d5b6ac7d2d2",
+    "scripts/mobile-density-bundle.mjs": "156241394057907f30fa5bcbf0d0517b66afa9d2d872cb9eff01fc785cfb24eb",
+    "scripts/mobile-density-sabotage.mjs": "27c17dd2575f831e6780e834f55a5aabdc5529e0f6f23151dce27381f6c97c47",
+    "scripts/mobile-density-graphics.mjs": "5ea06d3fe1cd62c8d2e7859ded1acc1e5b139ed63f8a27b4148582b6ce1f14e8",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    ".github/workflows/contracts.yml": "b1a96c989a3ad35e7f7224566d4d26cefd859c829c3bf5020cb60b925d8670e5",
+    "package.json": "bd50c41a512ddc4c0a4cd6d0cd99d9b961dbbf3f8c5d21ce2f955bbb910c7003"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Components/SafeAreaView/RCTSafeAreaViewNativeComponent.js": "5fa8405c021aa451df3a3737dfaa1576ec9cc4651ec2679113282a2f8a52e96f",
+    "src/private/components/safeareaview/specs/RCTSafeAreaViewNativeComponent.js": "9ac4911dcba91435ab00c3a9adbb6fdef83ef6ac5ba32d58720ff99b98975a3e",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/Utilities/Dimensions.js": "d16ff1c10c16e6c1a4c82648306d52b9e9e96e55914a7a01df7777d04d4cef97",
+    "Libraries/Components/SafeAreaView/SafeAreaView.js": "4e673548079b02e4806c3e8ee8ea153da5abda17850b0dd498d25d925c7174dd",
+    "React/Fabric/Mounting/ComponentViews/SafeAreaView/RCTSafeAreaViewComponentView.mm": "3dba71f5345a39470b322cdb0db2c1f868731aeca6ca7debef8069e46cf815f3",
+    "ReactCommon/react/renderer/components/safeareaview/SafeAreaViewComponentDescriptor.h": "bf8b143497bff1cca8080a704d23bb9ad82aacac9b837b413dc399a6d80bc19c",
+    "ReactCommon/react/renderer/components/safeareaview/SafeAreaViewState.h": "9e2aae6927f8d6246069b4f55e895e67f6ffe8f9b6eaa5e09478759f2544bead",
+    "React/Base/RCTUtils.mm": "a68d629071a8ff77da22d99b75b8e14052be220f553db29e97449ea85fcb12a4",
+    "React/CoreModules/RCTDeviceInfo.mm": "b58d0bff28ed28d573ff357690da03c9ac72054fc8de3594ba4d18fe4840de83"
+  },
+  "departuresFromRN": [
+    "SafeAreaView's padding is refreshed on every pump, not on safeAreaInsetsDidChange and finalizeUpdates, because Godot has no change signal for the safe area or the frame",
+    "The padding is rounded to a pixel of the content scale, where RN rounds at the screen's scale; under density_policy screen they are the same number",
+    "Like RN's iOS SafeAreaView the component does not go through View.js, so the aria-*, id and tabIndex mappings of that file do not apply; the facade keeps the View's prop table, explicit roles and style check",
+    "UIKit's rule gives a view that hangs outside the window the part of it outside the safe rectangle, so a view 20 points past the window edge keeps a padding of 20 with no insets"
+  ],
+  "openItems": [
+    {
+      "id": "ios-safe-area-real",
+      "owner": "GF-35",
+      "meaning": "get_display_safe_area on an iPhone (pixels in screen coordinates, converted by the content scale) and the landscape lock were never exercised: no simulator, no device"
+    },
+    {
+      "id": "touch-and-background",
+      "owner": "GF-35",
+      "meaning": "the 20-touches and background criteria of V05-08 were not worked on"
+    },
+    {
+      "id": "modal-safe-area",
+      "meaning": "a SafeAreaView in a Modal shares the unsafe bands of the owner window and the frame measureInWindow gives; it has no case of its own in the lane"
+    },
+    {
+      "id": "android",
+      "owner": "GF-35",
+      "meaning": "the Android safe area is read through the same function and was not exercised"
+    }
+  ],
+  "limits": [
+    "The lanes are macOS arm64: headless for the counts, one windowed run on a Retina display for the pixels; the CI runs the headless lane in native-suites-runtime (dispatch) and the pure C++ test in native-cold-start, and has no windowed lane",
+    "There is no simulator and no device run: the iPhone gate of the 0.5 is a NO-GO (2026-10-09), V05-08 was blocked in PR #102 and mobile returns to GF-35",
+    "The unsafe bands are the seam's numbers; the iOS and Android reading of get_display_safe_area is not exercised, and macOS's usable rectangle is never read",
+    "No 1.0 checkpoint, weight or denominator moves and the dashboard's tasks are not edited"
+  ]
+}

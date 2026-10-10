@@ -84,7 +84,8 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   `density_policy` property changes (Godot's `canvas_items` stretch against RN's `UIScreen.scale`), RN's own
   `SafeAreaView` and the UIKit rule this host replicates, `get_display_safe_area` per platform (the macOS fallback is never
   read), the orientation setting, the x86_64-only simulator, and how a full-screen SafeAreaView lives with the world's
-  pointer policy. The desktop headless lane is executed; the simulator lane is not part of that note yet.
+  pointer policy. The desktop headless lane and one windowed run at scale 2 are executed; the simulator lane was not run
+  (the iPhone gate of the 0.5 is a NO-GO, 2026-10-09).
 - [Frontier's context-driven HUD](frontier-hud.md): the table of panels each of the seven contexts mounts, the one store at
   module scope that talks to the game, the `frontier.hover` state Godot publishes for the tile under the pointer, the map's
   click and hover in `_unhandled_input` and the order of the World against the HUD's layer, with the lane that judges them and

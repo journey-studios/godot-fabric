@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-09T20:56:00.000Z",
+  "updatedAt": "2026-10-10T01:32:30.000Z",
   "source": {
-    "commit": "4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/4ffdb6efb6dcc5945198d034f67cb3c7c75200c9",
-    "scope": "P8 V05-05 do marco 0.5, critério estabilidade (a fatia 2b, o último dos quatro, e com ele o item completo): 20 aberturas e fechamentos de cada overlay sem vazar nós, listeners nem Windows, foco restaurado, 0 de 100 cliques ao mundo sob o overlay, varredura da HUD contra o manifesto 0.5 e seis ícones por Image, com evidência local em 4ffdb6e (probe e oráculo independentes, controle sobre e108e9d, dezessete sabotagens e sete capturas), mais os recibos hospedados canônicos do #93 (a fatia 2a). CI hospedada e Pages desta fatia pendentes.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/100"
+    "commit": "cf565a81b7518f793d6f1f6bbac57241eb6db325",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325",
+    "scope": "Densidade de tela e SafeAreaView do RN no desktop (GF-09 e GF-18, com o que sobra para o GF-35), sem afirmar o V05-08: density_policy, o SafeAreaView original montado pelo host com o padding do UIKit, a lane headless de 132 checks com oráculo independente, controle sobre b0e40aa (74 falham), quatro sabotagens e o grupo do mundo, e uma execução janelada em tela Retina com três capturas, em cf565a81b7518f793d6f1f6bbac57241eb6db325. Sem simulador nem dispositivo (NO-GO do iPhone de 2026-10-09; o V05-08 voltou ao GF-35). CI hospedada e Pages desta fatia pendentes.",
+    "implementationPr": null
   },
   "phases": [
     {
@@ -4707,6 +4707,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "mobile-density-slice-2026-10-09",
+      "at": "2026-10-10T01:32:30.000Z",
+      "taskIds": [
+        "GF-09"
+      ],
+      "message": "Fatia de densidade de tela e SafeAreaView do RN (GF-09 e GF-18, com o que sobra para o GF-35), provada no desktop e SEM afirmar o V05-08. FabricApplication.density_policy (content, o padrão, ou screen: a janela vai para canvas_items com o fator da tela, reaplicado a cada bombeamento) e o SafeAreaView do próprio RN montado pelo host, com o padding do State calculado pela regra do UIKit (display_insets_core.h, 31 asserções em C++ puro) a partir da área segura que o Godot informa ou de uma semente. A lane headless tem 132 checks, um oráculo independente e um controle sobre b0e40aa em que 74 falham, exatamente os normativos; quatro sabotagens do host (11, 6, 23 e 28 checks) são rejeitadas pela sonda e pelo oráculo. O grupo do mundo (48 checks, 8 casos) mostra que, sob uma raiz box-none, 20 cliques na área vazia e 20 na faixa de padding chegam 20 vezes ao mundo e nenhum à HUD, e que 20 cliques no Pressable o apertam 20 vezes. Uma execução janelada numa tela Retina (escala 2, janela de 1200x720 pixels, 11 checks, três capturas vistas) mostra as barras da HUD dentro do retângulo seguro e, sem a semente, nas bordas da janela. NÃO há simulador nem dispositivo: o portão do iPhone do 0.5 é NO-GO (2026-10-09), o V05-08 voltou ao GF-35 e as faixas são os números da semente, não os de um iPhone. Só macOS arm64; a CI hospedada e o Pages desta fatia seguem pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/cf565a81b7518f793d6f1f6bbac57241eb6db325/docs/evidence/mobile-density/README.md"
+    },
     {
       "id": "milestone-0-5-v05-06-baseline-191533a",
       "at": "2026-10-09T20:56:00.000Z",

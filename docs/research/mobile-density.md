@@ -1,16 +1,19 @@
 # Density, safe-area insets and landscape for the Frontier HUD
 
-Status: source investigation against pinned RN 0.87.1 and official Godot 4.7.2 (`4.7.2-stable`), plus the executed
-desktop headless lane of V05-08 (`npm run test:mobile-density`, macOS arm64): 132 checks, an independent oracle, the
-control on main before the slice (74 checks fail, exactly the normative ones) and four retained host sabotages that
-the probe and the oracle both reject. The iOS simulator lane (x86_64/Rosetta, iPhone 16e, iOS 18.4) is not part of this
-note's evidence yet; "The simulator" says what it will exercise and why only that slice of it can run. Nothing here was
-run on a physical device or on Android.
+Status: source investigation against pinned RN 0.87.1 and official Godot 4.7.2 (`4.7.2-stable`), plus two executed lanes on
+the desktop: the headless lane (`npm run test:mobile-density`, macOS arm64: 132 checks, an independent oracle, the control on
+main before the slice with 74 checks failing, exactly the normative ones, and four retained host sabotages that the probe and
+the oracle both reject) and a local windowed run on a Retina display at scale 2 (11 checks with pixels read back from three
+captures). **The iOS simulator lane that was planned was not run, and will not be in the 0.5**: the user's decision of
+2026-10-09 is a NO-GO for the iPhone gate, the 0.5 closes as a complete macOS milestone, and mobile goes back to GF-35
+(the V05-08 preparation was blocked in PR #102; see [the device record](../evidence/frontier-device/README.md)). "The
+simulator" below keeps what that lane would have had to show and why only the x86_64 simulator could ever have run it.
+Nothing here was run on a simulator, a physical device or Android.
 
-The requirement (milestone 0.5, item V05-08): with `canvas_items` stretch, `Dimensions.scale` coincides with the
-screen's scale and a 44-point Pressable measures 44 ± 0.5 through `measureInWindow`; the whole HUD lies inside the
-insets; 20 automated touches are 20 `onPress`. This slice covers the density and the insets; the touch and
-background criteria are other work.
+The requirement that opened the slice (milestone 0.5, item V05-08): with `canvas_items` stretch, `Dimensions.scale`
+coincides with the screen's scale and a 44-point Pressable measures 44 ± 0.5 through `measureInWindow`; the whole HUD lies
+inside the insets; 20 automated touches are 20 `onPress`. The slice covers the density and the insets on the desktop and does
+not claim V05-08; the touch and background criteria are other work, and the real iOS reading of the safe area is GF-35's.
 
 References to Godot are files of the `4.7.2-stable` tag; references to RN are files of the pinned package
 (`node_modules/react-native`); the others are files of this repository.
@@ -161,15 +164,17 @@ The landscape lock is the project setting `display/window/handheld/orientation` 
 A landscape game sets the project setting explicitly rather than rely on the default; `docs/IOS_BUILD.md` and the SDK README
 are to say so when the evidence is recorded.
 
-## 5. The simulator
+## 5. The simulator (not run)
 
-Only the x86_64/Rosetta simulator runs a Godot Fabric iOS app today. The iOS 18.3 and 18.4 runtimes advertise both
+This lane was never executed: the iPhone gate of the 0.5 is a NO-GO (2026-10-09) and the V05-08 preparation was blocked
+(PR #102), so what follows records why it could only have been the x86_64 simulator and what it would have had to show,
+for GF-35 to pick up. Only the x86_64/Rosetta simulator runs a Godot Fabric iOS app today. The iOS 18.3 and 18.4 runtimes advertise both
 architectures and the existing evidence uses an iPhone 16e (`docs/evidence/ios-consumer/simulator-x86_64-final.json`).
 The official 4.7.2 template's simulator `libgodot.a` holds only x86_64 code, so the arm64 simulator cannot link
 (`docs/IOS_BUILD.md:211-227`; upstream issue godotengine/godot#122379), and the x86_64 build needs the XCFramework
 repackaged (`docs/IOS_BUILD.md:82-90`). The lane records its result locally: the CI does not run Godot on iOS.
 
-What the simulator lane has to show that the desktop lane cannot: `screen_get_scale()` is 3 and equals
+What a simulator lane would have to show that the desktop lanes cannot: `screen_get_scale()` is 3 and equals
 `Dimensions.scale`; a 44-point Pressable measures 44 ± 0.5; the real `get_display_safe_area()` converted to points puts
 the HUD's bars inside the notch and home-indicator bands, with a screenshot; `screen_get_orientation()` is landscape; and
 the exported Info.plist lists landscape only.
@@ -198,9 +203,21 @@ The control on main before the slice (b0e40aa, whose Surface still takes the poi
 12 of the group's checks: the empty area and the band of a `box-none` root never reach the world (8), and nothing pads the
 SafeAreaView root (4). The rest holds on both hosts.
 
+## A windowed run at scale 2
+
+`npm run bench:mobile-density-graphics` (local only: it needs a real window and the native renderer, which CI has not)
+mounts the HUD of the density fixture on a macOS window (`gl_compatibility`, Retina display) under `density_policy` `screen`
+with no scale seam: `DisplayServer.screen_get_scale()` is 2, so `Dimensions.scale` is 2, the content scale factor is 2 in
+`canvas_items` mode and the 1200x720-pixel window is 600x360 points. The unsafe bands of a landscape iPhone (47, 20, 47.5, 21
+points) are stated through `validation_safe_area`. The probe captures the frame as drawn and reads pixels back from it
+(`tests/mobile-density-graphics-probe.gd`): the four bands show the root's colour and the bars, the 44-point Pressable and
+the side panels show theirs at the frames `measureInWindow` gave, inside the safe rectangle; with the seam removed the same
+pixel of the left band is the side panel's. A second capture paints the bands the probe states over the frame, in
+translucent red, for the reader; no pixel check runs on it. The bands are the seam's numbers, not an iPhone's.
+
 ## Not certified
 
-- No simulator run is part of this note, no physical device, no Android, no arm64 simulator.
+- No simulator run (the lane was not executed: NO-GO of 2026-10-09), no physical device, no Android, no arm64 simulator.
 - The `get_display_safe_area` conversion from pixels runs only where the display server reports a safe area.
 - The multi-window case (a Modal) shares the unsafe bands of the owner window and the frame `measureInWindow` gives; it
   has no case of its own in the lane.

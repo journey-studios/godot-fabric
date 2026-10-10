@@ -4065,6 +4065,23 @@ Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
 gate (302 Node/13 Python), the type check, static analysis, the publication scan, the animated, frame clock and touchables
 suites, the platform-seams test and the 36 examples pass. No checkpoint, whole GF, weight or denominator closes.
 
+### Screen density and RN's SafeAreaView on the desktop (2026-10-09)
+
+`FabricApplication.density_policy` gives a window the scale of its display (`screen`: a `canvas_items` stretch with no
+content size at `DisplayServer.screen_get_scale`, followed when it changes; `content`, the default, leaves a project as it
+was), and RN's own `SafeAreaView` (its iOS native component and C++ descriptor over the host's View) holds the padding that
+the window's unsafe bands leave of its frame, with UIKit's rule, its pixel rounding and its update threshold. The bands come
+from `get_display_safe_area` only on iOS and Android and are zero elsewhere (macOS's usable rectangle is never read), so a
+test states them through a seam. The desktop headless lane (132 checks, an independent oracle, the control on main
+`b0e40aa` failing 74 of them and four retained sabotages rejected) also puts the HUD over a Godot world: a full-screen
+SafeAreaView with `pointerEvents="box-none"` leaves the empty area and its padding band to the world, as a View does. A
+windowed run on a Retina display at scale 2 captured three frames and read their pixels. This is the preparation V05-08
+asked for, delivered on the desktop with no simulator or device run, because the iPhone gate of the 0.5 is NO-GO
+(2026-10-09) and mobile goes back to GF-35: it moves GF-09 (density, insets) and GF-18 (SafeAreaView) only that far, closes
+no checkpoint and changes no weight or denominator. The [record](docs/evidence/mobile-density/README.md), the
+[research note](docs/research/mobile-density.md) and implementation
+[`cf565a81b7518f793d6f1f6bbac57241eb6db325`](https://github.com/journey-studios/godot-fabric/commit/cf565a81b7518f793d6f1f6bbac57241eb6db325) have the numbers.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
