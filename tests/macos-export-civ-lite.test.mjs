@@ -141,7 +141,11 @@ if (sabotageName === null) {
   });
 } else {
   const sabotage = SABOTAGES.find(entry => entry.name === sabotageName);
-  test(`the export of a project broken on purpose (${sabotageName}) is rejected for the replay hashes`, {skip: sabotage === undefined ? `${sabotageName} is not a retained sabotage` : skip}, async () => {
+  // A name that is no retained sabotage is an error before anything is registered: a skipped test would exit 0 and read as a rejection nobody observed.
+  if (sabotage === undefined) {
+    throw new Error(`--sabotage=${sabotageName} matches no retained sabotage; the known ones are: ${SABOTAGES.map(entry => entry.name).join(", ")}`);
+  }
+  test(`the export of a project broken on purpose (${sabotageName}) is rejected for the replay hashes`, {skip}, async () => {
     const outputDirectory = path.join(root, "build", `macos-export-civ-lite-sabotage-${sabotageName}`);
     await rm(outputDirectory, {recursive: true, force: true});
     await mkdir(outputDirectory, {recursive: true});

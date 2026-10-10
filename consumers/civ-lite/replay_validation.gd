@@ -7,8 +7,9 @@ extends Node
 # (tests/civ-lite-game-probe.gd) hashes it with. The hash after the last intent is the golden hash and the SHA-256 of the 77 hashes, one per
 # line, is the trace hash; both are pinned outside the game (tests/civ-lite-game-native.test.mjs), so this gate only reports them.
 #
-# An exported game cannot write to res://, so the report goes to the user's data directory. The gate prints the two hashes and exits 0 when
-# every step answered the code and left the context the replay says, and 1 otherwise.
+# An exported game cannot write to res://, so the report goes to the user's data directory. The gate prints the two hashes and exits 0 only when
+# every one of its checks passes, and 1 otherwise: each step answered the code and left the context the replay says, each end-of-turn job finished,
+# twelve turns were accepted and turn 13 begins, all seven contexts were observed, and the replay ends at rest with no job.
 #
 #   user://civ-lite-replay-report.json   the steps (intent, code, context, hash), the two hashes and the final canonical serialization
 #

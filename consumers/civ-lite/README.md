@@ -136,7 +136,7 @@ HUD would: each intent is a call of the node, and an accepted `end_turn` is a jo
 hashes the game's canonical serialization with `game/canon.gd`, the code the headless lane (`tests/civ-lite-game-probe.gd`) hashes it with, so the hash
 after the last intent is the golden hash and the SHA-256 of the 77 hashes, one per line, is the trace hash. The gate pins neither: it prints
 `CIVLITE_REPLAY_HASHES: golden=<hash> trace=<hash>`, writes its report to `user://` (the data directory of an exported game; `res://` is read-only
-there) and exits 0 when every step answered the code and left the context the replay says, 1 otherwise. A Release export template ignores `-s` and
+there) and exits 0 only when every one of its checks passes, 1 otherwise: each step answered the code and left the context the replay says, each end-of-turn job finished, twelve turns were accepted and turn 13 begins, all seven contexts were observed, and the replay ends at rest with no job. A Release export template ignores `-s` and
 `--main-loop` and aborts on `--path`, `--main-pack` and `--scene`, so the replay runs from the exported scene behind this user argument, as `--validate`
 does. In an exported game `--validate-hud` writes its report to `user://` too (`OS.has_feature("template")`); in the editor it still writes to `res://`.
 `node scripts/macos-export.mjs --consumer civ-lite` runs the gate three times in the provisioned project and three times in a copy of the signed

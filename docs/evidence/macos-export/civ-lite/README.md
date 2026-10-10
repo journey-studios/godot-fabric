@@ -64,7 +64,7 @@ A execução gravou 73 quadros de 1080×600 a 60 FPS; os outros 70 foram apagado
 como o `--validate`. `consumers/civ-lite/replay_validation.gd` é um nó inerte de `main.tscn` (o `ReplayValidation`): com `-- --validate-replay` toca os 77 intents de
 `game/replay.gd` pelo `GameServices` (cada `end_turn` é um job que ele espera terminar), calcula o hash da serialização canônica depois de cada intent com o `game/canon.gd`
 do jogo (o código com que a sonda headless calcula o seu), imprime `CIVLITE_REPLAY_HASHES: golden=… trace=…` e grava o relatório em `user://` (`res://` é somente leitura num export).
-Ele não fixa hash nenhum: os valores fixados ficam fora do jogo. Sai com 0 se cada passo respondeu o código e deixou o contexto que o replay diz, e com 1 se não.
+Ele não fixa hash nenhum: os valores fixados ficam fora do jogo. Sai com 0 só quando todos os seus checks passam, e com 1 se algum falha: cada passo respondeu o código e deixou o contexto que o replay diz, cada job de fim de turno terminou, os doze turnos foram aceitos e o turno 13 começa, os sete contextos foram observados e o replay termina em repouso, sem job.
 O jogo, a HUD, as outras validações e os hashes fixados não mudaram. A única mudança em outro arquivo do jogo: `hud_validation.gd` grava o relatório em `user://` quando exportado
 (`OS.has_feature("template")`) e continua em `res://` no editor.
 
