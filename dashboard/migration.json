@@ -4363,8 +4363,17 @@
             {
               "id": "mudanca",
               "label": "Custo de mudança: o mesmo pedido (uma ação nova para o Settler) implementado nos braços B e C, com arquivos, linhas, tempo e testes necessários",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência local (macOS arm64): o mesmo pedido pré-registrado (#124), Irrigar do Settler, implementado uma vez em cada braço por um subagente novo a partir de uma base comum que nenhum braço paga (a regra, o ícone e um estágio da lane vermelho nos dois braços). Braço B (nativo): 3 arquivos, 20 linhas, 2,9 min, 0 testes próprios; braço C (React Native): 4 arquivos, 24 linhas, 5,7 min, 0 testes próprios; as duas lanes passam nas suas branches. Pela regra de uma observação o eixo é inconclusivo (três medidas dizem custo para o C, testes dizem neutro); a maior parte da diferença de tempo é a duração da lane, e o arquivo a mais do C é o despacho tipado do store. O código fica nas branches exp/change-cost-*, fora da main",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/6f7bb36b6dc1b04970ac2edb61ffda24131e8409/docs/evidence/frontier-change-cost/README.md"
+                },
+                {
+                  "label": "Recibo: as quatro medidas por braço, a margem de 10% do valor de B, a categoria de cada medida e a do eixo, os tempos medidos nas transcrições, os patches com SHA-256 e os vieses",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/6f7bb36b6dc1b04970ac2edb61ffda24131e8409/docs/evidence/frontier-change-cost/report.json"
+                }
+              ]
             },
             {
               "id": "iphone",
@@ -4770,6 +4779,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-mudanca",
+      "at": "2026-10-10T14:40:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério mudanca, com evidência local: o pedido pré-registrado no #124 (Irrigar, uma ação nova do Settler) foi implementado uma vez em cada braço por um subagente novo, a partir de uma base comum que nenhum braço paga. Braço B (HUD nativa): 3 arquivos, 20 linhas, 2,9 min de tempo ativo, nenhum teste próprio. Braço C (HUD React Native): 4 arquivos, 24 linhas, 5,7 min, nenhum teste próprio (o arquivo a mais é o case do despacho tipado de ui/store.ts). As duas lanes passam nas suas branches. Pela regra de uma observação do protocolo, o eixo é inconclusivo: três medidas dizem custo para o C e a de testes diz neutro; a maior parte da diferença de tempo é a duração da lane, que roda os dois braços. O código fica nas branches exp/change-cost-*, fora da main, para não mudar o jogo que a campanha mede.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6f7bb36b6dc1b04970ac2edb61ffda24131e8409/docs/evidence/frontier-change-cost/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-braco-b-otimizacao-receipts",
       "at": "2026-10-10T13:45:00.000Z",
