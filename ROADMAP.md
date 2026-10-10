@@ -986,6 +986,8 @@ publication come after the merge. No criterion changes state, and no 1.0 checkpo
 
 **Progress.** The hosted CI and Pages receipts of the attempts that wrote no report (#129, GF-30) are recorded from the push of main at `1ef98a4`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/f832739b500cd4c9cb3bb4d3056d0f8822e348b8/docs/evidence/frontier-comparison-analysis/unreported/README.md#ci-hospedada-e-pages). The receipts now accept a skipped test only from an explicit allowlist, which holds #75's native export test: it needs the reviewed Release template that the contracts job does not have before `test:contracts`, so it skips there by design. No criterion changes state; `execucao` stays open.
 
+**Progress.** The hosted CI and Pages receipts of the signed macOS Release export (#75, V05-07, `plugin` and `assinatura`) are recorded from main at `19fbb7b`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/657694e039df725afc91263c5263ccd30d4794aa/docs/evidence/macos-export/README.md#ci-hospedada-e-pages). The Contracts run was dispatched on main, because the native suites are opt-in since #88, and passed its eight jobs on the first attempt. In `native-suites-runtime`, the step that derives the arm64 Release template and runs `npm run test:export:macos` passed 14 of 14 with no skip: the real export, ad-hoc signing verified, and the app copied elsewhere and run headless and headed, with the rejection controls. The contracts job skips that native test without the template, as the allowlist expects. The Pages run of the push published the committed `migration.json` byte for byte. No criterion changes state; V05-07's `replay` and `limpa` stay open.
+
 **Progress.** V05-10, criterion `execucao`, part 2: the orchestrator of the whole comparative campaign is written and tested (code at `f9aabb3`). It plays the protocol's sequence in both
 lanes, one fresh process per attempt, judges each attempt with the analysis' own `assessValidity`, redoes a rejected attempt in its slot (at most 3 attempts), waits for the 1-minute load to be
 at most 2.0, runs only if the instrument's self-check passes (headless for a headless launcher, in a window for a windowed one, the campaign's), writes its state atomically after every attempt so
@@ -1004,6 +1006,13 @@ synthetic example was regenerated (it only gained `reported: true`) and a new ex
 result.** The [record](https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10) has the section. No criterion changes state,
 and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `relatorio`, the report as a document (code at `e53a05f`): `scripts/frontier-comparison-report-markdown.mjs` renders the JSON of the analysis' report as a Markdown document that a person reads, so that the closing
+of the criterion becomes a mechanical step (analysis, `report.json`, document). `renderReport(report, {protocol, protocolSha256})` is pure and deterministic and computes nothing: the ids and order of the sections and the words of the partial report rule come from
+the protocol, a report made under another protocol (another SHA-256 in its provenance) or with its sections out of order is refused, the numbers follow one rule (at most three decimals, no trailing zeros, the JSON's units), and a field it does not
+know goes to an "Other fields" block instead of being dropped. The synthetic example of the evidence record gained `example-analysis.md`, checked byte for byte by a test, and the research note gained the section "The report as a document". Node
+only and synthetic data: **no number in it is a result.** The [record](https://github.com/journey-studios/godot-fabric/blob/e53a05fc4a7240e23d357bd038c5a1123430fca7/docs/evidence/frontier-comparison-analysis/README.md#o-relatório-como-documento-markdown)
+has the section. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `relatorio` stays open, because it needs the real campaign, the words of the decision and of the limitations, and the document generated from the campaign's `report.json`.
+
 **Progress.** V05-10, criterion `execucao`, the entry of the scenario (code at `da7eff5`, record at `bb30d75`): the scenario no longer runs with `-s`, which an export template discards, but as the main loop of the measurement
 project, so that the Debug run and a Release `.app` of the same project enter the same way. The runner writes three files into the provisioned copy of civ-lite (a two-line class that extends the scenario, an empty main scene and an
 `override.cfg` that names both), keeps the settings out of the package's hash and puts them into the scenario's; `override.cfg` is read with `--path` and, in an exported `.app`, from `Contents/MacOS/` or the pack, as the Godot 4.7.2
@@ -1011,6 +1020,15 @@ source says, and a scratch probe in the pinned release template saw it. The scen
 through the entry and through `-s`, and the same as the last rehearsal through `-s`; the times are not compared. **A rehearsal, and no number in it is a result.** The Release launcher still refuses, now saying that the entry is defined
 and that the export of civ-lite in the three arms is missing. The [record](https://github.com/journey-studios/godot-fabric/blob/bb30d75364f4edf50b05ef1710b70c662da9dbdd/docs/evidence/frontier-comparison-entry/README.md) is local evidence. No
 criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** V05-10, criterion `execucao`, the projects of the arms (code at `769145d`, record at `85d2c99`): arms A (no HUD) and B (the HUD in GDScript) are built without the Fabric extension, and only C carries it, so that
+the package-size axis reads the price of each HUD as C - A and B - A and the extension's load stays out of A's and B's execution measures. `armProject` describes each arm (the product's main scene, whether it carries the extension
+and the export filters of the product and of the measurement project) and `shapeArmProject` applies it to a provisioned copy of civ-lite: it takes out `addons/godot_fabric`, the extension's two sections of `project.godot` (the rest
+of the real file stays byte for byte), `.godot_fabric/` and `.godot/extension_list.cfg`. On one copy, Debug and headless, A and B ran the whole scenario through the measurement project's main loop with the extension and then
+without it, and everything the scenario counts is the same (`scene-nodes`, the replay and soak hashes, the occurrences and frames of the windows, the notifications, B's parity); the times are not compared. The import after the
+shape logs no line about the extension, and the control (arm C in the same copy) fails. **A check of the projects, and no number in it is a result.** Nothing was exported and no campaign ran: the export function of V05-07, the
+per-arm file sets and the manifest `frontier-comparison-export.json` come later. The [record](https://github.com/journey-studios/godot-fabric/blob/85d2c99a379f1aa2702d0b12bebc0a75ba94b542/docs/evidence/frontier-comparison-arms/README.md)
+is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.

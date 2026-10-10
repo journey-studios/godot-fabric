@@ -1,6 +1,7 @@
 #include "fabric_surface.h"
 #include "fabric_application.h"
 #include "application_runtime.h"
+#include "modal_window_stack.h"
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
@@ -119,6 +120,7 @@ void FabricSurface::native_unmounted(uint64_t expected_application_id, int expec
   surface_id = 0;
 }
 void FabricSurface::_exit_tree() {
+  fabric_godot::ModalWindowStack::TreeExitScope tree_exit;
   if (component_name.is_empty()) stop();
   else unmount();
   request_ready();

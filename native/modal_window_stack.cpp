@@ -235,12 +235,15 @@ void ModalWindowStack::destroy(Owner identity) {
     window->set_visible(false);
     auto *still_owned = godot::Object::cast_to<godot::Window>(godot::ObjectDB::get_instance(window_id));
     owner = godot::Object::cast_to<godot::Window>(godot::ObjectDB::get_instance(owner_window_id_));
-    if (still_owned && owner && still_owned->get_parent() == owner) {
+    if (still_owned && owner && still_owned->get_parent() == owner && !tree_exit_depth_) {
       owner->remove_child(still_owned);
     }
   }
   // A visibility or focus listener may retire the owner while Godot is still
   // dispatching the Window callback. Revoke/detach now; free after that stack.
+  // Within a TreeExitScope the owner may be busy removing children: the hidden
+  // Window stays attached until its queued free (or, on quit, the owner's own
+  // deletion) detaches it.
   if (auto *retired = godot::Object::cast_to<godot::Window>(godot::ObjectDB::get_instance(window_id)))
     retired->queue_free();
   update_exclusive();
