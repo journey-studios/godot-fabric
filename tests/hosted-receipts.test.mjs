@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { tapDescription } from "../scripts/hosted-receipts.mjs";
+import { matchContractTests, tapDescription } from "../scripts/hosted-receipts.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const script = path.join(root, "scripts", "hosted-receipts.mjs");
@@ -83,6 +83,21 @@ test("a TAP description reads back the name it escapes, one escape at a time", (
   assert.equal(tapDescription("a \\\\\\# b"), "a \\# b");
   // A description without escapes is the same text.
   assert.equal(tapDescription("the freeze is the one the inputs give by the rule"), "the freeze is the one the inputs give by the rule");
+});
+
+test("a test of a source is matched by the TAP description of its ok line, and a missing ok is refused", () => {
+  const file = "tests/turn.test.mjs";
+  const source = 'test("the turn before #100 reproduces the frozen one", () => {});\n';
+  assert.deepEqual(matchContractTests(file, source, ["ok 7 - the turn before \\#100 reproduces the frozen one"]), {
+    file,
+    tests: 1,
+    passed: 1,
+    topLevel: ["the turn before #100 reproduces the frozen one"],
+  });
+  const two = 'test("first", () => {});\ntest("second", () => {});\n';
+  assert.throws(() => matchContractTests(file, two, ["ok 1 - first"]), {
+    message: `${file}: 1 of its 2 top-level tests passed in the contracts job log`,
+  });
 });
 
 test("a receipt that carries the SHA of another slice is rejected", () => {

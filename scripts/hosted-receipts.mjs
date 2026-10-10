@@ -368,8 +368,8 @@ export function tapDescription(text) {
   return text.replace(/\\(.)/g, "$1");
 }
 
-function contractTestRecord(file, squash, lines) {
-  const source = ghBuffer(`repos/${REPOSITORY}/contents/${file}?ref=${squash}`, "application/vnd.github.raw").toString("utf8");
+// The top-level tests of a test file's source must each have an `ok` line in the job log, matched by its TAP-unescaped description.
+export function matchContractTests(file, source, lines) {
   const names = [...source.matchAll(/^test\((["'`])(.+?)\1,/gm)].map((match) => match[2]);
   const ok = new Set(lines.map((line) => /^ok \d+ - (.*)$/.exec(line)?.[1]).filter(Boolean).map((text) => tapDescription(text)));
   const passed = names.filter((name) => ok.has(name));
@@ -377,6 +377,11 @@ function contractTestRecord(file, squash, lines) {
     throw new Error(`${file}: ${passed.length} of its ${names.length} top-level tests passed in the contracts job log`);
   }
   return { file, tests: names.length, passed: passed.length, topLevel: names };
+}
+
+function contractTestRecord(file, squash, lines) {
+  const source = ghBuffer(`repos/${REPOSITORY}/contents/${file}?ref=${squash}`, "application/vnd.github.raw").toString("utf8");
+  return matchContractTests(file, source, lines);
 }
 
 // The step that runs the milestone exit guards compared the tree with its base, which on a push is the parent of the squash.
