@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T06:36:00.000Z",
+  "updatedAt": "2026-10-10T08:51:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4754,6 +4754,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-10-stress-window",
+      "at": "2026-10-10T08:51:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, a serviço de execucao e metricas (nenhum critério fecha): a janela stress do protocolo do comparativo final passou a existir, por decisão do usuário, e o executor ganhou o gancho stats(). O modo de estresse é uma sobreposição do nó GameServices fora do estado do jogo (stress_begin, stress_step e stress_end, com o código novo stress_on e stress_off e o turn_in_progress do jogo): o snapshot traz um log de 200 linhas e uma lista de produção de 100 itens só enquanto o modo está ligado e, depois de stress_end, é byte a byte o de antes; o estado, o hash dourado e o log do jogo não se movem. O esquema ganhou o primeiro campo opcional ({optional: schema}, só como campo de objeto), no registro nativo, no espelho TypeScript e no extrator da paridade. As duas HUDs têm o painel hud-stress em todos os contextos, fora da tabela de painéis (a matriz roda com o modo desligado e tem o mesmo veredito): a React Native com ScrollView e Text chaveados, a nativa com ScrollContainer e Labels reconciliados por chave; depois de 20 passos, um por quadro, as linhas que já estavam são os mesmos Controls nas duas. O stats() tem o mesmo formato nos dois braços (snapshots, context, events), sem avaliar JavaScript nem ler o snapshot da Surface: no B conta nos manipuladores de sinais do nó da HUD (0,9 µs por leitura) e no C lê os contadores que o registro nativo mantém por serviço, com FabricApplication.service_delivery (4,8 µs por leitura, contra 144 µs do evaluate e 579 µs do snapshot da Surface que o caminho evita); o custo do contador por notificação no C ficou dentro da dispersão entre execuções (mediana do ai-phase 3,22 ms antes e depois). A lane tem a etapa de estresse nos dois braços (152 verificações), 11 mutações do oráculo, uma sonda do nó e do registro sem JavaScript (17 verificações), cinco sabotagens retidas e o controle no host anterior (a HUD React Native falha 139 de 145 verificações). Sem medição, sem executor e sem a passada de otimização do braço B, que agora cobre quatro janelas.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/bec4d05f850569d5218d4d7289dada780cb5b368/docs/evidence/frontier-stress/README.md"
+    },
     {
       "id": "milestone-0-5-v05-10-braco-b",
       "at": "2026-10-10T06:36:00.000Z",
