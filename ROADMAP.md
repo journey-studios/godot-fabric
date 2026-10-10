@@ -1019,6 +1019,15 @@ through the entry and through `-s`, and the same as the last rehearsal through `
 and that the export of civ-lite in the three arms is missing. The [record](https://github.com/journey-studios/godot-fabric/blob/bb30d75364f4edf50b05ef1710b70c662da9dbdd/docs/evidence/frontier-comparison-entry/README.md) is local evidence. No
 criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `execucao`, the projects of the arms (code at `769145d`, record at `85d2c99`): arms A (no HUD) and B (the HUD in GDScript) are built without the Fabric extension, and only C carries it, so that
+the package-size axis reads the price of each HUD as C - A and B - A and the extension's load stays out of A's and B's execution measures. `armProject` describes each arm (the product's main scene, whether it carries the extension
+and the export filters of the product and of the measurement project) and `shapeArmProject` applies it to a provisioned copy of civ-lite: it takes out `addons/godot_fabric`, the extension's two sections of `project.godot` (the rest
+of the real file stays byte for byte), `.godot_fabric/` and `.godot/extension_list.cfg`. On one copy, Debug and headless, A and B ran the whole scenario through the measurement project's main loop with the extension and then
+without it, and everything the scenario counts is the same (`scene-nodes`, the replay and soak hashes, the occurrences and frames of the windows, the notifications, B's parity); the times are not compared. The import after the
+shape logs no line about the extension, and the control (arm C in the same copy) fails. **A check of the projects, and no number in it is a result.** Nothing was exported and no campaign ran: the export function of V05-07, the
+per-arm file sets and the manifest `frontier-comparison-export.json` come later. The [record](https://github.com/journey-studios/godot-fabric/blob/85d2c99a379f1aa2702d0b12bebc0a75ba94b542/docs/evidence/frontier-comparison-arms/README.md)
+is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to

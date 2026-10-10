@@ -1,0 +1,301 @@
+{
+  "notAResult": "A check that two projects run the script and count the same. No time of it is compared, and none is a measurement of an arm.",
+  "arms": {
+    "A": {
+      "mainScene": "res://main_bare.tscn",
+      "with": {
+        "process": {
+          "exitCode": 0,
+          "crashed": false,
+          "scriptErrors": 0,
+          "godotLogErrors": 0
+        },
+        "counts": {
+          "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+          "replaySteps": 77,
+          "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+          "soakTrailHash": "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b",
+          "soakDecisions": 429,
+          "soakRefusals": 0,
+          "soakTurns": 100,
+          "sceneNodes": 4,
+          "parity": {
+            "checked": 0,
+            "matches": false,
+            "contexts": []
+          },
+          "notifications": {
+            "consumed": -1,
+            "emitted": 2256
+          },
+          "switches": 74,
+          "stressRounds": 32,
+          "idleFrames": 600,
+          "trace": {
+            "context-switch": 74,
+            "end-turn-accepted": 100,
+            "events-settled": 100,
+            "stress-begin": 32,
+            "stress-step": 640,
+            "turn-ended": 100
+          },
+          "windows": {
+            "ai-phase": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "event-burst": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "context-switches": {
+              "available": true,
+              "occurrences": 74,
+              "measured": 50,
+              "frames": 222
+            },
+            "stress": {
+              "available": true,
+              "occurrences": 32,
+              "measured": 30,
+              "frames": 736
+            }
+          }
+        }
+      },
+      "without": {
+        "process": {
+          "exitCode": 0,
+          "crashed": false,
+          "scriptErrors": 0,
+          "godotLogErrors": 0
+        },
+        "counts": {
+          "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+          "replaySteps": 77,
+          "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+          "soakTrailHash": "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b",
+          "soakDecisions": 429,
+          "soakRefusals": 0,
+          "soakTurns": 100,
+          "sceneNodes": 4,
+          "parity": {
+            "checked": 0,
+            "matches": false,
+            "contexts": []
+          },
+          "notifications": {
+            "consumed": -1,
+            "emitted": 2256
+          },
+          "switches": 74,
+          "stressRounds": 32,
+          "idleFrames": 600,
+          "trace": {
+            "context-switch": 74,
+            "end-turn-accepted": 100,
+            "events-settled": 100,
+            "stress-begin": 32,
+            "stress-step": 640,
+            "turn-ended": 100
+          },
+          "windows": {
+            "ai-phase": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "event-burst": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "context-switches": {
+              "available": true,
+              "occurrences": 74,
+              "measured": 50,
+              "frames": 222
+            },
+            "stress": {
+              "available": true,
+              "occurrences": 32,
+              "measured": 30,
+              "frames": 736
+            }
+          }
+        }
+      },
+      "sameCounts": true
+    },
+    "B": {
+      "mainScene": "res://main_native.tscn",
+      "with": {
+        "process": {
+          "exitCode": 0,
+          "crashed": false,
+          "scriptErrors": 0,
+          "godotLogErrors": 0
+        },
+        "counts": {
+          "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+          "replaySteps": 77,
+          "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+          "soakTrailHash": "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b",
+          "soakDecisions": 429,
+          "soakRefusals": 0,
+          "soakTurns": 100,
+          "sceneNodes": 31,
+          "parity": {
+            "checked": 93,
+            "matches": true,
+            "contexts": [
+              "city",
+              "dialog",
+              "none",
+              "settler",
+              "stack",
+              "tile",
+              "warrior"
+            ]
+          },
+          "notifications": {
+            "consumed": 2306,
+            "emitted": 2306
+          },
+          "switches": 74,
+          "stressRounds": 32,
+          "idleFrames": 600,
+          "trace": {
+            "context-switch": 74,
+            "end-turn-accepted": 100,
+            "events-settled": 100,
+            "stress-begin": 32,
+            "stress-step": 640,
+            "turn-ended": 100
+          },
+          "windows": {
+            "ai-phase": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "event-burst": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "context-switches": {
+              "available": true,
+              "occurrences": 74,
+              "measured": 50,
+              "frames": 222
+            },
+            "stress": {
+              "available": true,
+              "occurrences": 32,
+              "measured": 30,
+              "frames": 736
+            }
+          }
+        }
+      },
+      "without": {
+        "process": {
+          "exitCode": 0,
+          "crashed": false,
+          "scriptErrors": 0,
+          "godotLogErrors": 0
+        },
+        "counts": {
+          "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+          "replaySteps": 77,
+          "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+          "soakTrailHash": "4d6d3c4c1078518f8971b76caef08a9b3ba6434c01fdc3658ce7787013d6371b",
+          "soakDecisions": 429,
+          "soakRefusals": 0,
+          "soakTurns": 100,
+          "sceneNodes": 31,
+          "parity": {
+            "checked": 93,
+            "matches": true,
+            "contexts": [
+              "city",
+              "dialog",
+              "none",
+              "settler",
+              "stack",
+              "tile",
+              "warrior"
+            ]
+          },
+          "notifications": {
+            "consumed": 2306,
+            "emitted": 2306
+          },
+          "switches": 74,
+          "stressRounds": 32,
+          "idleFrames": 600,
+          "trace": {
+            "context-switch": 74,
+            "end-turn-accepted": 100,
+            "events-settled": 100,
+            "stress-begin": 32,
+            "stress-step": 640,
+            "turn-ended": 100
+          },
+          "windows": {
+            "ai-phase": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "event-burst": {
+              "available": true,
+              "occurrences": 100,
+              "measured": 98,
+              "frames": 500
+            },
+            "context-switches": {
+              "available": true,
+              "occurrences": 74,
+              "measured": 50,
+              "frames": 222
+            },
+            "stress": {
+              "available": true,
+              "occurrences": 32,
+              "measured": 30,
+              "frames": 736
+            }
+          }
+        }
+      },
+      "sameCounts": true
+    }
+  },
+  "extensionListAfterImport": "absent",
+  "removedArtifacts": [
+    ".godot/extension_list.cfg",
+    ".godot_fabric"
+  ],
+  "importLinesThatNameTheExtension": 0,
+  "control": {
+    "arm": "C",
+    "process": {
+      "exitCode": 1,
+      "crashed": false,
+      "scriptErrors": 202,
+      "godotLogErrors": 14
+    },
+    "fabricLines": 12
+  }
+}
