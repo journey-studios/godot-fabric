@@ -120,7 +120,7 @@ Os frameworks vêm do hook de export do addon, que roda mesmo no modo `scenes`; 
 
 - O `.app` de A não foi executado: a medição precisa dos projetos de medição, que são a fatia seguinte, e nada aqui é um número do comparativo.
 - Assinatura ad hoc, no mesmo Mac; sem Developer ID, notarização nem segundo Mac.
-- A CI hospedada deste commit e a publicação das páginas vêm depois do merge.
+- A CI hospedada e a publicação das páginas deste commit estão na seção [CI hospedada e Pages](#ci-hospedada-e-pages); os testes nativos de export continuam só locais.
 
 ## Reprodução
 
@@ -129,3 +129,22 @@ MACOS_EXPORT_TEMPLATE="$PWD/build/macos-arm64-template.zip" npm run test:export:
 ```
 
 O teste grava o resumo em `build/macos-export-options-native/report.json`.
+
+## CI hospedada e Pages
+
+**O run.** O push da `main` em `5b60789` (o squash do #145, mesclado às 19:48:33 UTC; run [38081266792](https://github.com/journey-studios/godot-fabric/actions/runs/38081266792) do workflow Contracts, de 19:48:36 a 19:54:58 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda desde o #88: `contracts` (até 19:52:06 UTC), `reference-android` (até 19:53:55 UTC) e `reference-ios` (até 19:54:58 UTC), todos com checkout em `5b60789`. Os cinco jobs nativos aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a fatia não tem passo nativo nem artefato. A cabeça da PR (`e6f650e`) tem a mesma árvore que o squash, então a `main` não mudou caminho nenhum entre a bifurcação e o squash.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against a36824fc49e1 (--base a36824fc49e178956231323eea31de2095679a41); X9 clean, X10 clean`. A base é o pai do squash, `a36824f`.
+
+**Os testes.** `npm run test:contracts` rodou com 7, 43 e 711 testes de Node, em três blocos: os de 7 e 43 passaram todos; no de 711, 710 passaram e 1 saiu como skipped pela allowlist do check (`ALLOWED_SKIPS`): "native macOS arm64 export and copied-app rejection controls", o teste de export macOS do #75, com o motivo "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template". O recibo confere, pelo nome e no log do job `contracts`, os 14 testes de `tests/macos-export-options.test.mjs` (14 de 14). Os 37 testes de Python do step passaram. `check:static` e `check:publication` também passaram (2.393 arquivos). Os testes nativos (`test:export:options`, `test:export:macos` e `test:export:civ-lite`) rodam só localmente e não estão no recibo.
+
+**O Pages.** O push de `5b60789` rodou também o workflow do Pages (run [38081266834](https://github.com/journey-studios/godot-fabric/actions/runs/38081266834), de 19:48:36 a 19:49:11 UTC, `build` e `deploy` em success na primeira tentativa, com 43 testes do painel, todos passando). O [recibo](publication.json) registra o deployment 6986014338 em success e o artefato `github-pages` que ele usou (id 11680448194, SHA-256 `cdf98b0c…`, igual ao digest da API e ao do log de upload). O `migration.json` publicado tem os mesmos bytes do commitado (SHA-256 `46b64a7e…`) e 290 entradas de atividade. A mais recente é a desta fatia, `milestone-0-5-v05-10-export-options-ecf637e`, que o `publication.json` confirma presente no JSON publicado; as duas seguintes são `milestone-0-5-hosted-receipts-13-f1bdaae` e `milestone-0-5-hosted-receipts-12-97af2c2`. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** a fatia não executa o `.app` do braço A nem mede nenhum número. Os recibos provam os testes de contrato e a publicação, não uma execução nativa.
+
+O `--work-dir` abaixo é um exemplo: qualquer diretório fora do repositório serve.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice macos-export-options --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
