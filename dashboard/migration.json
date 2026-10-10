@@ -4728,6 +4728,13 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-v05-10-armb-timebox",
+      "at": "2026-10-10T01:58:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério braco-b, antes do braço B começar: uma emenda ao protocolo do comparativo fixa o time-box do braço B. O pré-registro dizia \"o mesmo do braço C mais um passe de otimização\", sem unidade nem medida. A unidade é o tempo ativo dos subagents que implementam e pesquisam o braço (a soma dos intervalos menores que 30 minutos entre eventos dos seus transcripts, um corte num platô: 12,78 h com 30 ou 60 minutos). O braço C, a HUD React Native do V05-05 (#82, #93 e #100), levou 12,8 h; o braço B tem 12,8 h para passar a matriz de contexto e um passe de otimização de até 3,2 h, 16,0 h no total. A mesma emenda registra o NO-GO do iPhone nos itens abertos (o comparativo cobre só o macOS). Pin PINS[2] no teste do protocolo; nenhuma medição comparativa veio antes. O protocolo segue aberto até o congelado do V05-06, e nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e95efa8b567042b1d7de57d9228809c50c33ee72/docs/research/frontier-comparison-protocol.md#amendments"
+    },
+    {
       "id": "mobile-density-slice-2026-10-09",
       "at": "2026-10-10T01:32:30.000Z",
       "taskIds": [
