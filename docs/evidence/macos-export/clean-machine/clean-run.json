@@ -1,0 +1,493 @@
+{
+  "format": "godot-fabric.macos-clean-run/v1",
+  "verdict": "passed",
+  "claim": "hosted-runner",
+  "limit": "another hosted macOS runner (a new VM, a clean user, no Godot, no .deps, no installed project dependencies): the runner image still ships Node and Xcode, and the app is shown not to use them (a scrubbed environment, load commands of its bundle and the system only); Node ran only as the judge",
+  "startedAt": "2026-10-10T21:32:08.615Z",
+  "completedAt": "2026-10-10T21:32:16.892Z",
+  "problems": [],
+  "recordFile": "frontier-release-app.json",
+  "uploader": {
+    "runnerName": "GitHub Actions 1000008063",
+    "runnerOs": "macOS",
+    "runnerArch": "ARM64",
+    "imageOs": "macos15",
+    "imageVersion": "20260907.0337.1",
+    "workflowRunId": "38085526897",
+    "workflowRunAttempt": "1",
+    "workflowJob": "native-suites-runtime",
+    "uname": "Darwin iad20-gt1019-5286744e-8bd0-4073-9caf-440b95d077d2-7E1795242394.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Jul 21 20:51:34 PDT 2026; root:xnu-11417.140.69.711.44~1/RELEASE_ARM64_VMAPPLE arm64",
+    "swVers": {
+      "ProductName": "macOS",
+      "ProductVersion": "15.7.9",
+      "BuildVersion": "24G830"
+    },
+    "bootTimeSec": 1791665892,
+    "hostnameSha256": "e712a8944114e286e881564ed197bec0fd2f49215e57357d6563b54225b27f09",
+    "user": "runner",
+    "hardware": {
+      "modelName": "Apple Virtual Machine 1",
+      "modelIdentifier": "VirtualMac2,1",
+      "chip": "Apple M1 (Virtual)",
+      "cores": "3",
+      "memory": "7 GB",
+      "serialSha256": "75a3a7e0dbb840829c3b73a6afd4efb2b708f4074a676f701f0126aebce52572",
+      "hardwareUuidSha256": "f241f0376b9f0f3c0d84bc5f1338771a44f59ea04508df5c88cb644b105ab230",
+      "provisioningUdidSha256": "fba4155b1cd2c23ba5e2f61a19b23f5e0d29e241660698700bbb95665f3e779f"
+    }
+  },
+  "archiveRecord": {
+    "name": "Frontier.app.tar.gz",
+    "bytes": 36667093,
+    "sha256": "b7ebb7ba361a17bc1ab54f29f3c347b168bc8cd095e8e35146fc5d4ce1f0f564",
+    "packer": "tar -czf Frontier.app.tar.gz -C <parent> Frontier.app"
+  },
+  "appRecord": {
+    "name": "Frontier.app",
+    "bundleSha256": "48f648b1a635168bb4fde237b1382ff6be3ae7b8b23236aa46d75a1d3f8d4339",
+    "executableName": "Frontier Export 48950-1791667829893-dfb748",
+    "projectName": "Frontier Export 48950-1791667829893-dfb748",
+    "bundleIdentifier": "org.journeystudios.godotfabric.frontier",
+    "pckSha256": "f59ca9ae311cad1417f09b5d46022e4692d2f0a73fe1284684daf134959d0111"
+  },
+  "hosted": true,
+  "expected": {
+    "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+    "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e"
+  },
+  "sourceCommit": "4767cd1f682dcbe540fa444b9af14f27790db6a1",
+  "architecture": "arm64",
+  "negatives": {
+    "wrongGoldenPin": {
+      "baselineProblems": 0,
+      "wrongPinProblems": 2,
+      "rejected": true,
+      "firstProblem": "replay-clean-1: its golden hash cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d differs from the pinned 0b7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d"
+    },
+    "tamperedCopy": {
+      "pckOffset": 1445954,
+      "pckBytes": 2891908,
+      "baselineCodesignStatus": 0,
+      "codesignStatus": 1,
+      "codesignMessage": "<TMPDIR>/frontier-clean-run-T8zJ0W/tampered/Frontier.app: a sealed resource is missing or invalid",
+      "bundleSha256": "81d39fd478ba0a5f2955164c636fc1e79fb353671cdd75b26ced36b3e8b6e534",
+      "differsFromRecord": true,
+      "rejected": true
+    },
+    "dirtyProfile": {
+      "refused": true,
+      "refusal": "dirty-profile-control: the user profile <HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748 exists before the run",
+      "removedAfter": true,
+      "rejected": true
+    }
+  },
+  "runs": [
+    {
+      "label": "replay-clean-1",
+      "lane": "app",
+      "status": 0,
+      "signal": null,
+      "passedMarker": true,
+      "fatalOutput": false,
+      "printedGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "printedTraceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "stepCount": 77,
+      "acceptedTurns": 12,
+      "checks": 246,
+      "allPassed": true,
+      "displayServer": "headless",
+      "features": {
+        "debug": false,
+        "editor": false,
+        "release": true,
+        "template": true
+      },
+      "executable": "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+      "userDataDir": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+      "userEntriesAtStart": [
+        "logs"
+      ],
+      "seed": 4242,
+      "logSha256": "83345ca672c8f2b1680ad55ace1ada7b07aec18078e27891a6e37f5c12766f7a",
+      "reportSha256": "69fd2dc7e28b45bf5708cecc0b5b793e2260917d4cb075b99b8741c8ec1eb01e",
+      "reportFile": "replay-clean-1.json",
+      "logFile": "replay-clean-1.log",
+      "profile": {
+        "path": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+        "existedBefore": false,
+        "entriesAfter": [
+          "civ-lite-replay-report.json",
+          "logs"
+        ],
+        "removedAfter": true
+      },
+      "project": "Frontier Export 48950-1791667829893-dfb748",
+      "statesSha256": "21c1c29f619b60d3cf3071017a2613adf7f94282192b40f54716f39dac9a7bf8",
+      "environment": {
+        "HOME": "<HOME>",
+        "USER": "runner",
+        "TMPDIR": "<TMPDIR>",
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "command": [
+        "/usr/bin/env",
+        "-i",
+        "HOME=<HOME>",
+        "USER=runner",
+        "TMPDIR=<TMPDIR>",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+        "--headless",
+        "--",
+        "--validate-replay"
+      ],
+      "problems": []
+    },
+    {
+      "label": "replay-clean-2",
+      "lane": "app",
+      "status": 0,
+      "signal": null,
+      "passedMarker": true,
+      "fatalOutput": false,
+      "printedGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "printedTraceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "stepCount": 77,
+      "acceptedTurns": 12,
+      "checks": 246,
+      "allPassed": true,
+      "displayServer": "headless",
+      "features": {
+        "debug": false,
+        "editor": false,
+        "release": true,
+        "template": true
+      },
+      "executable": "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+      "userDataDir": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+      "userEntriesAtStart": [
+        "logs"
+      ],
+      "seed": 4242,
+      "logSha256": "7743825039c6b27e1fbaa62522005602e88dadac3863def22a6979d0649f6cd2",
+      "reportSha256": "69fd2dc7e28b45bf5708cecc0b5b793e2260917d4cb075b99b8741c8ec1eb01e",
+      "reportFile": "replay-clean-2.json",
+      "logFile": "replay-clean-2.log",
+      "profile": {
+        "path": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+        "existedBefore": false,
+        "entriesAfter": [
+          "civ-lite-replay-report.json",
+          "logs"
+        ],
+        "removedAfter": true
+      },
+      "project": "Frontier Export 48950-1791667829893-dfb748",
+      "statesSha256": "21c1c29f619b60d3cf3071017a2613adf7f94282192b40f54716f39dac9a7bf8",
+      "environment": {
+        "HOME": "<HOME>",
+        "USER": "runner",
+        "TMPDIR": "<TMPDIR>",
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "command": [
+        "/usr/bin/env",
+        "-i",
+        "HOME=<HOME>",
+        "USER=runner",
+        "TMPDIR=<TMPDIR>",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+        "--headless",
+        "--",
+        "--validate-replay"
+      ],
+      "problems": []
+    },
+    {
+      "label": "replay-clean-3",
+      "lane": "app",
+      "status": 0,
+      "signal": null,
+      "passedMarker": true,
+      "fatalOutput": false,
+      "printedGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "printedTraceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "goldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "traceHash": "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e",
+      "stepCount": 77,
+      "acceptedTurns": 12,
+      "checks": 246,
+      "allPassed": true,
+      "displayServer": "headless",
+      "features": {
+        "debug": false,
+        "editor": false,
+        "release": true,
+        "template": true
+      },
+      "executable": "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+      "userDataDir": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+      "userEntriesAtStart": [
+        "logs"
+      ],
+      "seed": 4242,
+      "logSha256": "686425133895d2d1a9a6d17aacc723b80cbbb64c8813563c9095401833af49d4",
+      "reportSha256": "69fd2dc7e28b45bf5708cecc0b5b793e2260917d4cb075b99b8741c8ec1eb01e",
+      "reportFile": "replay-clean-3.json",
+      "logFile": "replay-clean-3.log",
+      "profile": {
+        "path": "<HOME>/Library/Application Support/Godot/app_userdata/Frontier Export 48950-1791667829893-dfb748",
+        "existedBefore": false,
+        "entriesAfter": [
+          "civ-lite-replay-report.json",
+          "logs"
+        ],
+        "removedAfter": true
+      },
+      "project": "Frontier Export 48950-1791667829893-dfb748",
+      "statesSha256": "21c1c29f619b60d3cf3071017a2613adf7f94282192b40f54716f39dac9a7bf8",
+      "environment": {
+        "HOME": "<HOME>",
+        "USER": "runner",
+        "TMPDIR": "<TMPDIR>",
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin"
+      },
+      "command": [
+        "/usr/bin/env",
+        "-i",
+        "HOME=<HOME>",
+        "USER=runner",
+        "TMPDIR=<TMPDIR>",
+        "PATH=/usr/bin:/bin:/usr/sbin:/sbin",
+        "<TMPDIR>/frontier-clean-run-T8zJ0W/unpacked/Frontier.app/Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+        "--headless",
+        "--",
+        "--validate-replay"
+      ],
+      "problems": []
+    }
+  ],
+  "outsideWorkspace": true,
+  "machine": {
+    "runnerName": "GitHub Actions 1000008097",
+    "runnerOs": "macOS",
+    "runnerArch": "ARM64",
+    "imageOs": "macos15",
+    "imageVersion": "20260907.0337.1",
+    "workflowRunId": "38085526897",
+    "workflowRunAttempt": "1",
+    "workflowJob": "macos-clean-run",
+    "uname": "Darwin sjc22-bm211-0bc3582a-b37d-4f5a-8075-8337f660f7db-020C807D2564.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Jul 21 20:51:34 PDT 2026; root:xnu-11417.140.69.711.44~1/RELEASE_ARM64_VMAPPLE arm64",
+    "swVers": {
+      "ProductName": "macOS",
+      "ProductVersion": "15.7.9",
+      "BuildVersion": "24G830"
+    },
+    "bootTimeSec": 1791667760,
+    "hostnameSha256": "0a551f8a466d79c1cb15ab2f304ae7e0e3f118f536f3eb42bbc52ab7e3592e62",
+    "user": "runner",
+    "hardware": {
+      "modelName": "Apple Virtual Machine 1",
+      "modelIdentifier": "VirtualMac2,1",
+      "chip": "Apple M1 (Virtual)",
+      "cores": "3",
+      "memory": "7 GB",
+      "serialSha256": "75a3a7e0dbb840829c3b73a6afd4efb2b708f4074a676f701f0126aebce52572",
+      "hardwareUuidSha256": "f241f0376b9f0f3c0d84bc5f1338771a44f59ea04508df5c88cb644b105ab230",
+      "provisioningUdidSha256": "253a472e8c9c5f23b81e709b49a1ead852d8e39d37f844096cba8a715dff11e7"
+    }
+  },
+  "comparison": {
+    "sameRunnerName": false,
+    "sameBootTime": false,
+    "sameHostname": false,
+    "sameHardwareUuid": true
+  },
+  "absences": {
+    "checked": [
+      "command -v godot",
+      "/Applications/Godot*.app",
+      "<HOME>/Applications/Godot*.app",
+      "<HOME>/Library/Application Support/Godot",
+      "<workspace>/.deps",
+      "<workspace>/node_modules",
+      "<workspace>/.godot"
+    ],
+    "found": []
+  },
+  "scrubbedPathFinds": [],
+  "tools": {
+    "judge": {
+      "node": "v22.23.2",
+      "execPath": "/opt/homebrew/Cellar/node@22/22.23.2_1/bin/node",
+      "role": "judge only: it reads files and starts the app with `env -i`; the app never sees it"
+    },
+    "xcodeSelect": "/Applications/Xcode_16.4.app/Contents/Developer"
+  },
+  "archive": {
+    "sha256": "b7ebb7ba361a17bc1ab54f29f3c347b168bc8cd095e8e35146fc5d4ce1f0f564",
+    "bytes": 36667093
+  },
+  "bundle": {
+    "sha256": "48f648b1a635168bb4fde237b1382ff6be3ae7b8b23236aa46d75a1d3f8d4339",
+    "executableName": "Frontier Export 48950-1791667829893-dfb748",
+    "bundleIdentifier": "org.journeystudios.godotfabric.frontier",
+    "pckSha256": "f59ca9ae311cad1417f09b5d46022e4692d2f0a73fe1284684daf134959d0111",
+    "projectNameInPck": true,
+    "architectures": [
+      "arm64"
+    ],
+    "afterRunsSha256": "48f648b1a635168bb4fde237b1382ff6be3ae7b8b23236aa46d75a1d3f8d4339"
+  },
+  "signature": {
+    "checks": [
+      {
+        "item": ".",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/fabric_godot.dylib",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/frameworks/hermesvm.framework",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "status": 0,
+        "message": ""
+      }
+    ],
+    "adhoc": true,
+    "details": [
+      "Identifier=org.journeystudios.godotfabric.frontier",
+      "Format=app bundle with Mach-O thin (arm64)",
+      "CodeDirectory v=20400 size=642912 flags=0x2(adhoc) hashes=20084+3 location=embedded",
+      "Signature=adhoc",
+      "TeamIdentifier=not set"
+    ],
+    "afterRunsChecks": [
+      {
+        "item": ".",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/fabric_godot.dylib",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/frameworks/hermesvm.framework",
+        "status": 0,
+        "message": ""
+      },
+      {
+        "item": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "status": 0,
+        "message": ""
+      }
+    ]
+  },
+  "loads": [
+    {
+      "binary": "Contents/MacOS/Frontier Export 48950-1791667829893-dfb748",
+      "loads": [
+        "/System/Library/Frameworks/ForceFeedback.framework/Versions/A/ForceFeedback",
+        "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa",
+        "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon",
+        "/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit",
+        "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+        "/System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI",
+        "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+        "/System/Library/Frameworks/GameController.framework/Versions/A/GameController",
+        "/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
+        "/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+        "/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation",
+        "/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+        "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+        "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+        "/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+        "/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+        "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+        "/System/Library/Frameworks/MetalFX.framework/Versions/A/MetalFX",
+        "/System/Library/Frameworks/MetalKit.framework/Versions/A/MetalKit",
+        "/usr/lib/libSystem.B.dylib",
+        "/usr/lib/libz.1.dylib",
+        "/usr/lib/libc++.1.dylib",
+        "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+        "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+        "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+        "/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+        "/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+        "/usr/lib/libobjc.A.dylib"
+      ],
+      "rpaths": [
+        "@executable_path/../Frameworks",
+        "@executable_path"
+      ]
+    },
+    {
+      "binary": "Contents/Frameworks/fabric_godot.dylib",
+      "loads": [
+        "@rpath/fabric_godot.dylib",
+        "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+        "@rpath/hermesvm.framework/Versions/1/hermesvm",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libSystem.B.dylib"
+      ],
+      "rpaths": [
+        "@loader_path/frameworks"
+      ]
+    },
+    {
+      "binary": "Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+      "loads": [
+        "@rpath/hermesvm.framework/Versions/1/hermesvm",
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/usr/lib/libobjc.A.dylib"
+      ],
+      "rpaths": []
+    },
+    {
+      "binary": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+      "loads": [
+        "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libc++abi.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+        "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+        "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+        "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+        "/usr/lib/libobjc.A.dylib"
+      ],
+      "rpaths": []
+    }
+  ],
+  "workRootRemoved": true
+}
