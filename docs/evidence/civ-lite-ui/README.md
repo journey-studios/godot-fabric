@@ -467,7 +467,7 @@ o mapa, um `Modal` aberto num contexto sem overlay, a tela da cidade fora do `Mo
 
 ### Limites da fatia 2a
 
-- **Só macOS arm64, local.** O run hospedado e o Pages desta fatia ainda não existem, porque ela ainda não está na `main`; nada foi comparado com um iPhone.
+- **Só macOS arm64, local.** O #93 levou a fatia para a `main` como `e108e9d`, e os recibos hospedados (o dispatch 37958818671, com 8 jobs verdes, e o Pages 37958764277) estão em [`overlays/`](overlays/README.md); as capturas, a execução janelada e as sabotagens seguem locais, e nada foi comparado com um iPhone.
 - **O Escape não foi pressionado.** `onRequestClose` (fechar a cidade, não fazer nada no diálogo) está no código e nos testes de fonte, mas a
   probe fecha a cidade pelo botão Close, por um toque real, e responde ao diálogo pelas escolhas; nenhuma tecla foi enviada.
 - **O bloqueio foi medido com eventos empurrados pelo viewport** (o dispositivo de validação da Surface), nos dois modos, não com um mouse
@@ -484,7 +484,7 @@ o mapa, um `Modal` aberto num contexto sem overlay, a tela da cidade fora do `Mo
 - A estabilidade: vinte aberturas e fechamentos sem vazar, a restauração do foco, as capturas por contexto na forma final, o escaneamento da
   API e os ícones por `Image`.
 - O erro do motor ao sair com um `Modal` aberto (do host), a tarefa à parte.
-- O run hospedado e o Pages da fatia 2a, depois do merge dela na `main`.
+- O run hospedado e o Pages da fatia 2a já estão na `main`: o dispatch 37958818671 (8 jobs verdes) e o Pages 37958764277, em [`overlays/`](overlays/README.md).
 
 ## Fatia 2b: a estabilidade, a varredura contra o manifesto e os ícones por `Image` (critério `estabilidade`)
 
@@ -704,8 +704,8 @@ rota do ponteiro, órfão e do que a rodada criou; o heap e os objetos; o foco; 
 
 ### Limites da fatia 2b
 
-- **Só macOS arm64, local.** O run hospedado desta fatia só existirá depois de ela estar na `main`; a CI hospedada roda a lane headless, sem controles (o clone é raso), sem capturas e sem sabotagens. O
-  recibo hospedado dos overlays (#93) está em [`overlays/`](overlays/README.md).
+- **Só macOS arm64, local.** O PR #100 entrou na `main` como `916387e`, e os recibos hospedados desta fatia estão em [`stability/`](stability/README.md): o dispatch do Contracts (run 37995325873, com os 8 jobs em success) e o Pages (run 37995302878). Capturas, execução janelada, sabotagens e controles causais seguem locais; a CI marca os controles como `not run`.
+  Os recibos hospedados dos overlays (#93) estão em [`overlays/`](overlays/README.md).
 - **O ruído do heap num runner hospedado não foi observado**: a regra é a do baseline, que já tolera a banda vista lá (2.376 bytes), e os objetos do motor têm limite de um.
 - **O Escape foi um evento de tecla pela viewport**, não um teclado físico; o bloqueio foi medido com eventos empurrados pela viewport, não com mouse físico nem toque; nada foi comparado com um iPhone.
 - **O foco é o que o host sabe dizer** (acima); o foco de React Native não existe no 0.5.
@@ -716,7 +716,7 @@ rota do ponteiro, órfão e do que a rodada criou; o heap e os objetos; o foco; 
 
 ### Em aberto depois da fatia 2b
 
-- O run hospedado e o Pages desta fatia, depois do merge dela na `main`.
+- O run hospedado e o Pages desta fatia já estão na `main`: o #100 entrou como `916387e`, com os recibos em [`stability/`](stability/README.md), o dispatch 37995325873 (os 8 jobs em success) e o Pages 37995302878.
 - O erro do motor ao sair com um `Modal` aberto (do host), a tarefa à parte.
 - As tabelas de `docs/research/frontier-turn.md`, regravadas pela lane do turno sobre a HUD com ícones.
 - O resto do marco 0.5 (V05-06 em diante e a comparação final).

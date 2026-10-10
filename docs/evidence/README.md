@@ -878,7 +878,7 @@ subscriptions, the HUD's connections and the signal's are the first cycle's, exa
 restored, the Modal's Window the one exclusive one while open, Escape closing the city and doing nothing on the dialog) and 0 of 100 clicks of each kind under the overlay in
 the first and the last cycle; a scan of the HUD against the 0.5 manifest, which now decides `AppRegistry`; and six original icons shown by `Image`, inside a Modal's Window too.
 A third probe of 41 checks, an oracle that rejects 38 mutated reports, a scan that finds 21 changes of a copy of the sources (a name, a prop or a member the manifest does not allow, a subpath of `react-native`, an alias or a destructuring of `AppRegistry`; 23 cases, 2 of them let through), a control (`e108e9d`) that fails only the icons,
-and 17 sabotages (5 new) rejected; seven captures were read. Local macOS arm64; this part is not on main yet, so it has no hosted run.
+and 17 sabotages (5 new) rejected; seven captures were read. Local macOS arm64; this part reached main as #100 (`916387e`), and its hosted receipts ([hosted receipt](civ-lite-ui/stability/hosted-ci.json), [publication](civ-lite-ui/stability/publication.json); [the page](civ-lite-ui/stability/README.md)) come from a Contracts run dispatched on main at that squash, which passed its eight jobs, and from the Pages publication of the push.
 
 The [Frontier scope record](frontier-scope/README.md) is V05-04 (criteria `manifesto`, `tipos` and `props`): the twelve names the HUD imports are decided in
 `docs/compatibility/scope-0.5.json`, and one policy module decides each of the 880 props RN 0.87.1 declares for its seven components (433 supported, 325 ignored
