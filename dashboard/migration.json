@@ -4770,6 +4770,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/40018493315bc0a322d062b27279f94a4cf758f8/docs/evidence/frontier-arm-b/README.md#passe-de-otimização"
     },
     {
+      "id": "milestone-0-5-v05-10-execution-1-f77d81d",
+      "at": "2026-10-10T11:23:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, parte 1 do critério execucao (código no commit 7e2e5b1, registro no f77d81d): está escrita e testada a parte do roteiro que roda uma execução da comparação em qualquer um dos três braços (A sem HUD, B com a HUD nativa do Godot, C com a HUD React Native). Ela traz o cenário dos oito passos do protocolo, o jogador do soak em GDScript equivalente ao de JavaScript (hash final 0b21c332…, hash de trilha 4d6d3c4c…, 429 decisões, com um controle que decide diferente e move os hashes), o ciclo dos contextos sob a emenda 4 (rodadas de 12 trocas, 74 ocorrências, o diálogo contado pelo último resolve_event) e as quatro janelas derivadas do traço por uma regra só, com a rajada de eventos e o estresse medidos pelos contadores das HUDs (stats() e notifications_emitted()), sem avaliar JavaScript nem ler o snapshot da Surface em quadro medido. Três ensaios rodaram nos três braços, um headless e dois janelados (a faixa apresentada, com o vsync em 120 Hz, e a sem limite, com o vsync lido de volta DISABLED), com as contagens do protocolo (100, 100, 74 e 32 ocorrências; 500, 500, 222 e 736 quadros), o replay (cb7ab974…) e o soak batendo nas nove execuções, as 93 conferências de paridade de B e C batendo e nenhuma rajada acima do mínimo de 5 quadros. Todas as execuções foram rejeitadas pela análise, como um ensaio deve mostrar: pelo build Debug (not-the-registered-build) e pela carga (média de 1 minuto de 4,9 a 6,0 contra o limite de 2,0), e as do headless também por não terem sido apresentadas. Nenhum número é resultado, e nenhum braço foi comparado com outro. Falta a parte 2 (a sequência de 36 execuções em cada faixa, as tentativas e o registro dos hashes), o export Release do V05-07 (como o roteiro roda num .app exportado está em aberto), o autoteste do instrumento e uma janela quieta, com a carga em 2,0 ou menos. Nenhum critério muda: execucao segue aberto, e nenhum peso, nota ou denominador do 1.0 se move. A CI hospedada e o Pages vêm depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f77d81d097f8dd552f70fc63c4d3050665ff6007/docs/evidence/frontier-comparison-execution/README.md"
+    },
+    {
       "id": "milestone-0-5-v05-06-soak-note-e0160f3",
       "at": "2026-10-10T09:06:02.000Z",
       "taskIds": [],
