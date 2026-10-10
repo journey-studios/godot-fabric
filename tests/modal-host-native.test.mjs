@@ -56,7 +56,7 @@ test("RN's original ModalHostView mounts in a host-sized embedded Window", async
     "geometry/An offset 0×0 View inside the Modal still projects through its physical Window",
     "geometry/display:none remains distinct from a connected zero-sized layout",
     "geometry/a retained public ref is disconnected after unmount and skips native measurement",
-    "children/The original SafeAreaView resolves to Godot's default View and mounts its RN content",
+    "children/RN's SafeAreaView mounts as Godot's View control and its RN content",
     "children/The public TextInput adapter is a live editable native LineEdit inside the Modal",
     "input/A native key event edits the controlled public TextInput adapter",
     "input/A pointer click activates the public Button adapter inside the Modal",
@@ -148,7 +148,8 @@ test("RN's original ModalHostView mounts in a host-sized embedded Window", async
     assert.match(bundle.sources[file], /^[0-9a-f]{64}$/, "Pin every executed producer: " + file);
   for (const file of ["Libraries/Modal/Modal.js", "Libraries/Modal/RCTModalHostViewNativeComponent.js",
     "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js",
-    "Libraries/Components/SafeAreaView/SafeAreaView.js", "Libraries/Components/View/View.js"])
+    "Libraries/Components/SafeAreaView/RCTSafeAreaViewNativeComponent.js",
+    "src/private/components/safeareaview/specs/RCTSafeAreaViewNativeComponent.js", "Libraries/Components/View/View.js"])
     assert.match(bundle.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
 });
 

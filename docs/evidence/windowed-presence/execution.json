@@ -1,0 +1,612 @@
+{
+  "format": "godot-fabric.windowed-presence-execution/v1",
+  "executedAt": "2026-10-09",
+  "implementationCommit": "1bc3a3cc7d5d1a160f2158a87a5f8c623b504130",
+  "executedTreeSha": "5837a44ac994f39b9023341b5c20d01602c38ea4",
+  "baseCommit": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d",
+  "sourceState": "the working tree was clean (git status empty) and HEAD was 1bc3a3c before the first lane, between the two lanes and after the second; every source in sourcePins is the blob of that commit",
+  "slice": "V05-06 (GF-30): the window of the windowed lanes is made drawable (in front of the others and above them) and the frames in which the engine could not draw it are recorded, so that an undrawn refusal says why",
+  "criterion": "No criterion changes. The validity rule of the windowed lanes (graphicsRunValidity: drew && paced) is the same; the baseline criterion stays open until a later delivery closes it with a presented lane, and this record is not that delivery.",
+  "environment": {
+    "platform": "macOS arm64",
+    "machine": {
+      "chip": "Apple M3 Pro",
+      "model": "Mac15,6",
+      "logicalCores": 11,
+      "memoryGb": 18,
+      "os": "macOS 26.6.2 (25G83)",
+      "architecture": "arm64",
+      "displays": [
+        {
+          "adapter": "Apple M3 Pro",
+          "display": "Color LCD",
+          "resolution": "1512 x 982 @ 120.00Hz",
+          "pixels": "3024 x 1964",
+          "main": true
+        }
+      ]
+    },
+    "godot": "4.7.2-stable (official)",
+    "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "node": "v22.23.3",
+    "hermes": "250829098.0.17",
+    "renderer": {
+      "driver": "opengl3",
+      "method": "gl_compatibility",
+      "adapter": "Apple M3 Pro"
+    },
+    "windows": {
+      "baseline": {
+        "size": [
+          800,
+          600
+        ]
+      },
+      "turn": {
+        "size": [
+          1080,
+          600
+        ]
+      },
+      "vsyncMode": "enabled",
+      "refreshRate": 120
+    },
+    "nativeHostSha256": "212d0f6e428f2cf2333bfb2d5be50c022e010aba906e3c582e05796340b7786e",
+    "baselineBundleSha256": "7895d35990a9c89e33b1fa0388c77b6554b24f69cd8a4c6aca5b86457b4e5e1a",
+    "turnBundleSha256": "fce50a0af3c77e2b803bc49d66c19262cbb00dfa5af9922612fc40c4e3c9a3d3"
+  },
+  "commands": {
+    "order": [
+      "caffeinate -d node scripts/frontier-baseline-graphics.mjs",
+      "caffeinate -d node scripts/frontier-turn-graphics.mjs"
+    ],
+    "note": "each once, in this order, on the clean commit; nothing else ran on the Godot binary meanwhile"
+  },
+  "userPresence": {
+    "method": "HIDIdleTime of IOHIDSystem (nanoseconds since the last keyboard, pointer or trackpad event) read before and after each lane. If it grew by as many seconds as passed, no such event happened in between.",
+    "baseline": {
+      "before": {
+        "at": "2026-10-09T19:56:43Z",
+        "loadavg": "{ 5.41 5.71 7.07 }",
+        "hidIdleSeconds": 6476.6
+      },
+      "after": {
+        "at": "2026-10-09T20:00:38Z",
+        "loadavg": "{ 6.79 6.05 6.87 }",
+        "hidIdleSeconds": 6711.1
+      },
+      "elapsedSeconds": 235,
+      "hidIdleGrewBySeconds": 234.5,
+      "userPresent": false
+    },
+    "betweenTheLanes": {
+      "elapsedSeconds": 21,
+      "hidIdleGrewBySeconds": 21.3,
+      "userPresent": false,
+      "from": "2026-10-09T20:00:38Z",
+      "to": "2026-10-09T20:00:59Z"
+    },
+    "turn": {
+      "before": {
+        "at": "2026-10-09T20:00:59Z",
+        "loadavg": "{ 5.70 5.85 6.78 }",
+        "hidIdleSeconds": 6732.4
+      },
+      "after": {
+        "at": "2026-10-09T20:11:37Z",
+        "loadavg": "{ 5.77 6.18 6.44 }",
+        "hidIdleSeconds": 7370.1
+      },
+      "elapsedSeconds": 638,
+      "hidIdleGrewBySeconds": 637.7,
+      "userPresent": false
+    },
+    "consoleLockedAfterTheLanes": false,
+    "note": "Nobody touched the keyboard or the pointer during the two lanes (about 15 minutes in all). That does not say nobody looked at the screen, and input through another device (Universal Control, screen sharing) may not move this counter."
+  },
+  "loadAverage": {
+    "baseline": {
+      "before": "{ 5.41 5.71 7.07 }",
+      "after": "{ 6.79 6.05 6.87 }"
+    },
+    "turn": {
+      "before": "{ 5.70 5.85 6.78 }",
+      "after": "{ 5.77 6.18 6.44 }"
+    },
+    "note": "vm.loadavg (1, 5 and 15 minutes) read around each lane; each attempt of the receipts also carries its own before and after. The Mac was loaded (other agents), with the one-minute average between 5.3 and 7.6 around the attempts."
+  },
+  "baselineLane": {
+    "presented": true,
+    "status": "presented",
+    "exitCode": 0,
+    "slots": 5,
+    "attemptsMade": 5,
+    "accepted": 5,
+    "rejected": 0,
+    "window": [
+      800,
+      600
+    ],
+    "vsync": "enabled",
+    "refreshRate": 120,
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 5120,
+        "processFrames": 5133,
+        "drawnFrames": 5117,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.339,
+        "idleMedianMs": 6.022,
+        "idleMeanMs": 8.433,
+        "seconds": 46.4,
+        "loadAverage": {
+          "before": "{ 5.70 5.76 7.08 }",
+          "after": "{ 5.38 5.66 6.97 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 96743
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 2,
+        "attempt": 2,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 5112,
+        "processFrames": 5125,
+        "drawnFrames": 5109,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.336,
+        "idleMedianMs": 7.928,
+        "idleMeanMs": 8.333,
+        "seconds": 45.7,
+        "loadAverage": {
+          "before": "{ 5.38 5.66 6.97 }",
+          "after": "{ 5.26 5.60 6.89 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 87756
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 3,
+        "attempt": 3,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 5082,
+        "processFrames": 5095,
+        "drawnFrames": 5079,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.334,
+        "idleMedianMs": 4.58,
+        "idleMeanMs": 8.333,
+        "seconds": 45.6,
+        "loadAverage": {
+          "before": "{ 5.26 5.60 6.89 }",
+          "after": "{ 5.79 5.69 6.85 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": false,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 51601
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 4,
+        "attempt": 4,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 5085,
+        "processFrames": 5098,
+        "drawnFrames": 5082,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.338,
+        "idleMedianMs": 4.367,
+        "idleMeanMs": 8.366,
+        "seconds": 45.3,
+        "loadAverage": {
+          "before": "{ 5.79 5.69 6.85 }",
+          "after": "{ 6.04 5.82 6.84 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 96059
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 5,
+        "attempt": 5,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 5070,
+        "processFrames": 5083,
+        "drawnFrames": 5067,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.339,
+        "idleMedianMs": 8.368,
+        "idleMeanMs": 8.451,
+        "seconds": 45.2,
+        "loadAverage": {
+          "before": "{ 6.04 5.82 6.84 }",
+          "after": "{ 6.16 5.92 6.82 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": false,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 33499
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      }
+    ],
+    "capturesRun": {
+      "undrawableFrames": 0,
+      "sampledFrames": 60,
+      "opened": {
+        "alwaysOnTop": true,
+        "canDraw": true,
+        "focused": false,
+        "mode": 0,
+        "stableFrames": 12,
+        "waitLimitUsec": 3000000,
+        "waitedFrames": 12,
+        "waitedUsec": 37245,
+        "windowed": true
+      }
+    },
+    "totals": {
+      "sampledFrames": 25469,
+      "undrawableFrames": 0
+    },
+    "captures": [
+      {
+        "file": "panel-empty.png",
+        "sha256": "98fff17bbe255c63b402a7b8281dd5c5e7cd77d68ce9d70319a6bd2e2f39b69c",
+        "bytes": 7493
+      },
+      {
+        "file": "panel-units.png",
+        "sha256": "f66f7fbbcda640821b70e610e30ef0e71e1050f40dddbd3c70476e50d32b871e",
+        "bytes": 17281
+      },
+      {
+        "file": "panel-city.png",
+        "sha256": "dfb7ab35063f59c60d73d215a4dc5985f176e8709b9d8bf994e063ea50b4a9b4",
+        "bytes": 27858
+      },
+      {
+        "file": "panel-research.png",
+        "sha256": "a8e204124ba1fb10751f55124fb4552b1a669e16b7b0e3cfd80c80eb4462f6e8",
+        "bytes": 30722
+      }
+    ]
+  },
+  "turnLane": {
+    "presented": true,
+    "status": "presented",
+    "exitCode": 0,
+    "slots": 5,
+    "attemptsMade": 5,
+    "accepted": 5,
+    "rejected": 0,
+    "window": [
+      1080,
+      600
+    ],
+    "vsync": "enabled",
+    "refreshRate": 120,
+    "attempts": [
+      {
+        "slot": 1,
+        "attempt": 1,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 13696,
+        "processFrames": 13707,
+        "drawnFrames": 13696,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.337,
+        "idleMedianMs": 6.475,
+        "idleMeanMs": 8.325,
+        "seconds": 119.8,
+        "loadAverage": {
+          "before": "{ 5.94 5.91 6.76 }",
+          "after": "{ 5.35 5.72 6.57 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 164263
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 2,
+        "attempt": 2,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 13689,
+        "processFrames": 13700,
+        "drawnFrames": 13689,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.336,
+        "idleMedianMs": 8.868,
+        "idleMeanMs": 8.361,
+        "seconds": 119.1,
+        "loadAverage": {
+          "before": "{ 5.35 5.72 6.57 }",
+          "after": "{ 5.61 5.76 6.48 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 139859
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 3,
+        "attempt": 3,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 13657,
+        "processFrames": 13668,
+        "drawnFrames": 13657,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.341,
+        "idleMedianMs": 4.302,
+        "idleMeanMs": 8.373,
+        "seconds": 119.5,
+        "loadAverage": {
+          "before": "{ 5.61 5.76 6.48 }",
+          "after": "{ 5.36 5.73 6.38 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 133947
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 4,
+        "attempt": 4,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 13643,
+        "processFrames": 13654,
+        "drawnFrames": 13643,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.339,
+        "idleMedianMs": 5.495,
+        "idleMeanMs": 8.342,
+        "seconds": 119.7,
+        "loadAverage": {
+          "before": "{ 5.36 5.73 6.38 }",
+          "after": "{ 7.55 6.28 6.50 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 125982
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      },
+      {
+        "slot": 5,
+        "attempt": 5,
+        "valid": true,
+        "reason": null,
+        "undrawableFrames": 0,
+        "sampledFrames": 13694,
+        "processFrames": 13705,
+        "drawnFrames": 13694,
+        "idleDraws": 601,
+        "idleFrames": 600,
+        "undrawnSwaps": 0,
+        "idleReferenceMs": 8.333,
+        "idleMedianMs": 10.623,
+        "idleMeanMs": 8.356,
+        "seconds": 119.1,
+        "loadAverage": {
+          "before": "{ 7.55 6.28 6.50 }",
+          "after": "{ 5.71 6.19 6.44 }"
+        },
+        "opened": {
+          "alwaysOnTop": true,
+          "focused": true,
+          "canDraw": true,
+          "waitedFrames": 12,
+          "waitedUsec": 140786
+        },
+        "spanCount": 0,
+        "canDrawAtEnd": true
+      }
+    ],
+    "capturesRun": {
+      "undrawableFrames": 0,
+      "sampledFrames": 421,
+      "opened": {
+        "alwaysOnTop": true,
+        "canDraw": true,
+        "focused": true,
+        "mode": 0,
+        "stableFrames": 12,
+        "waitLimitUsec": 3000000,
+        "waitedFrames": 12,
+        "waitedUsec": 114946,
+        "windowed": true
+      }
+    },
+    "totals": {
+      "sampledFrames": 68379,
+      "undrawableFrames": 0
+    },
+    "captures": [
+      {
+        "file": "context-city.png",
+        "sha256": "6845c9ca7b3888cc828701d391632c33889eb0b58a82a9643eb8548156d9c299",
+        "bytes": 68938
+      },
+      {
+        "file": "context-dialog.png",
+        "sha256": "fd14faaa08b5d6bde0ecb2aa91ffd09bdc1093c0912978197d5df8053ad1eede",
+        "bytes": 36195
+      },
+      {
+        "file": "context-none.png",
+        "sha256": "20d09cb50280d2eef25f7038b00748d6185cb5b0803612a05f20fd932c5e8b34",
+        "bytes": 16581
+      },
+      {
+        "file": "context-settler.png",
+        "sha256": "1f3a3d8d01550b2cbe8a4f8948288a89e631aca7c55de52d4d1562114f39ae62",
+        "bytes": 38191
+      },
+      {
+        "file": "context-stack.png",
+        "sha256": "765d6a18fc0a5b00eb4fa1ad46479458d16a2050a59cbebcb23cf4b7f9d8e583",
+        "bytes": 36120
+      },
+      {
+        "file": "context-tile.png",
+        "sha256": "ad60018e4b62a7b627f70a73492f9e87020c0bca6087ebdde82463c4d38140c2",
+        "bytes": 24544
+      },
+      {
+        "file": "context-warrior.png",
+        "sha256": "b115bee3c902fa8ffb41c882b59d0315d02df8c90823b882456f760816c7ccf1",
+        "bytes": 33800
+      }
+    ]
+  },
+  "exploratoryExecution": {
+    "note": "A first execution of the baseline's windowed lane, run before the commit, on the working tree, while a comment of tests/window-presence.gd was edited in the middle of it (the runs of that execution loaded two texts of the file, equal in code). It is NOT the evidence of this record: it ran on code that no commit holds. It is kept as an exploratory observation: presented, 5 of 5 slots accepted at the first attempt, 0 of 25,337 sampled frames undrawable, nobody at the Mac (the idle time of the keyboard and pointer was 5,470 s before and 5,743 s after).",
+    "receiptSha256": "6cf08c41ba6b9e5a5774b0ffd1318ab2bf6eff3518696dfe2f41c70f1066874a",
+    "receiptBytes": 438023,
+    "startedAt": "2026-10-09T19:40:20Z",
+    "windowPresenceSha256AtTheStart": "1df96e7f39760b9eed173473fb58fd1a5bcdad0e08672999d5ff36f4a14d9cad",
+    "windowPresenceSha256AtTheEnd": "0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15"
+  },
+  "artifactHashes": {
+    "baseline-receipt": {
+      "sha256": "36b32e0d6d1418af122260aa453bdd77bd9619811181731a88855a1e526e13b7",
+      "bytes": 437679
+    },
+    "baseline-log": {
+      "sha256": "d472f960e055f9d908428d67ee2d76fde4bc9c7420087014758f2ba12c74b751",
+      "bytes": 4377
+    },
+    "turn-receipt": {
+      "sha256": "8dd6ec9cf4776a8026c3056c337da9a9bb7c811b6b529f05c1ecee3ca111e90f",
+      "bytes": 1539885
+    },
+    "turn-log": {
+      "sha256": "7cd898aa722470a911f0be7943f0d2e5bbc1f09b7fcafc0290417d908f095d7f",
+      "bytes": 9672
+    },
+    "exploratory-baseline-receipt": {
+      "sha256": "6cf08c41ba6b9e5a5774b0ffd1318ab2bf6eff3518696dfe2f41c70f1066874a",
+      "bytes": 438023
+    }
+  },
+  "artifactNote": "The raw receipts are not committed (they are large, and docs/evidence/**/*-report.json is ignored); their SHA-256 are above, and the captures' are in baselineLane.captures and turnLane.captures. verifyGraphicsReceipt accepted both before they were written.",
+  "sourcePins": {
+    "tests/window-presence.gd": "0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15",
+    "tests/frontier-baseline-graphics-probe.gd": "dae47afe2e5c3656f9d018b4f631e045205d06f43c936d62250b2283fa521412",
+    "tests/frontier-baseline-swap.gd": "31c9e6ce27f7deceaaf3266566b719d315314af0c1f0129b9d8755a88d3aedff",
+    "tests/frontier-baseline-oracle.mjs": "a55e1d856b254e78e4f732fcff1e5cfc82934d1ccda82ca975ad011e82e8a4ed",
+    "scripts/frontier-baseline-graphics.mjs": "c974c68b37d39a8432d53302c1ba14e0b141ca0a6324225a7ddbda1112373b84",
+    "tests/frontier-turn-probe.gd": "b750a1e25024f6cf43b3d0e0693e350570b76efc896f1151e257e037d7be9645",
+    "tests/frontier-turn-runner.gd": "35f932444272ede0a00dde6fc6b0af3c145cd6c26696d1cde353a0d780a2b990",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/frontier-turn-oracle.mjs": "0cad0833cd142abc36445a1bc06dbcab65f9739aa6411edbdda9a499191dba6a",
+    "scripts/frontier-turn-graphics.mjs": "63e514f7ad1e29cc82ec5659f1cf3d2ed44311534fdfd1c3e89690646ceb1815",
+    "scripts/frontier-turn-lane.mjs": "e8dd315d51993a6fb35a71d7e8b451aead8e4a61db9c5cd142842ce3b3696305"
+  },
+  "probeSha256OfTheTurnLane": {
+    "tests/frontier-turn-runner.gd": "35f932444272ede0a00dde6fc6b0af3c145cd6c26696d1cde353a0d780a2b990",
+    "tests/frontier-turn-probe.gd": "b750a1e25024f6cf43b3d0e0693e350570b76efc896f1151e257e037d7be9645",
+    "tests/performance-sampler.gd": "1c0020bcf4022228bf65e503250ec4e5abc87a9eb64360efbe52e2550be7bd52",
+    "tests/window-presence.gd": "0ee6ce5f27db38f84994111266fc58cf0844494bcc7c63ceb1a6ca5320c38b15"
+  },
+  "findings": [
+    "Both windowed lanes were presented at the first attempt of each of their five slots: 10 of 10 runs accepted, none rejected, in the first live execution of the turn's path with the helper (the baseline's path had been exercised before the commit, in the exploratory execution).",
+    "The engine could draw the window in every sampled frame: 0 of 25,469 in the baseline's five runs and 0 of 68,379 in the turn's, and 0 of 60 and 0 of 421 in the two captures runs.",
+    "In every run the window opened drawable after the minimum 12 frames, with the floating level read back (alwaysOnTop true); window_move_to_foreground left the window focused in 8 of the 10 runs, and in the others the lack of focus did not keep it from drawing.",
+    "Nobody was at the Mac during either lane, so the counts show that the helper opens a window the engine can draw and that the record is written and verified, not that it keeps the window drawing against interference."
+  ],
+  "limitations": [
+    "Without the user present, this execution does not show that the helper beats interference (another window, a Space switch, a full-screen application): no moment of it put anything over the lane's window.",
+    "A locked or asleep display is not covered: caffeinate -d only keeps an awake display awake, and the helper makes the window one the system has no reason to hide, not one a display shows.",
+    "The captures run waits for frame_post_draw with no bound of its own: a window that cannot draw would hold it until the process timeout of the script.",
+    "The counts are of the engine's flag (DisplayServer.window_can_draw) read at the start of each process frame, not of what the display showed.",
+    "One machine, one display, one vsync mode; local only, the windowed lanes never run in hosted CI."
+  ]
+}

@@ -466,7 +466,8 @@ to mount. It stays in `consumers/minimal` as a regression and is not edited.
 
 **Ceiling of the game** (a cut enters only if it removes a distinct context):
 24x16 map from a fixed seed; two unit types (Settler, Warrior); one city with three
-to five production items; research as a list; one blocking event or dialog; a
+to five production items; research as a list; a queue of three blocking events, each
+a dialog answered in turn (decision of 2026-10-09: the queue is real in the game); a
 minimal scripted AI; a 12-turn replay with a golden state hash, plus a 100-turn
 soak. Seven contexts: none, tile, Settler, Warrior, stack of two units, city,
 dialog. Six HUD panels: turn and resources bar, unit actions, tile card, city
@@ -618,6 +619,30 @@ is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and
 publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
 no 1.0 checkpoint, weight or denominator moves.
 
+**Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
+`29969eb0d64201a1797e6e866a2ef650b1282fde` exports and publishes a signed macOS arm64
+Release minimal consumer after relocation, exact 40/43 assertions and three 540×300 captures
+of the complete 1080×600 logical canvas at scale 0.5, identical to an independently executed
+editable baseline. Frameworks resolve inside the app; deep/strict signature verification,
+idempotent layout normalization and four real rejected mutations passed. The native lane
+passed 13/13 without skips. [Evidence](docs/evidence/macos-export/fixed-window/README.md)
+retains SDK/build/PCK bindings, all 220 producer source pins, a 280-check local archive audit
+and a 24-check independent baseline review. The earlier failed hosted run and unexplained
+local remount failure remain recorded; new hosted CI and delivery review are pending. The Frontier
+12-turn exported replay, clean OS profile and second Mac/VM remain open; no 1.0 task moves.
+
+**Follow-up, V05-07 (local, symlink containment).** Clean producer `5596acb1cf975ff470acf531c0843fef19706e70` adds a copied-app `LC_RPATH` symlink escape control; the six native controls pass and the local archive audit passes 285 checks. The exact 40/43 consumer checks and 220 SDK source pins remain bound to this producer. [Evidence](docs/evidence/macos-export/symlink-review/README.md). Hosted CI/review and the remaining V05-07 scope stay separate; no 1.0 checkpoint changes.
+
+**Follow-up, V05-07 (local, symlink-parent review).** Clean producer
+`6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc` passes 14/14 native tests, the same
+40/43 consumer checks, and all seven copied-app controls. A physical `LC_RPATH`
+symlink resolving outside the app is rejected before its target is loaded; the
+independent review verifies the host hash and RPATH and all 220 SDK source pins.
+The [new record](docs/evidence/macos-export/symlink-parent-review/README.md)
+preserves this run and the continuation recovery incident. This remains local
+evidence: hosted CI, final review, Pages, the Frontier replay and clean-profile/
+second-machine scope remain pending. No 1.0 checkpoint, weight or denominator changes.
+
 **Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
 provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
 the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the
@@ -649,9 +674,13 @@ props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored wi
 case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
 fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
 [record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
-visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
-that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
-No 1.0 checkpoint, weight or denominator moves.
+visual output). The hosted CI run of main `b0e40aa` (the squash of #74, run 37842839329) passed its five jobs on the first
+attempt, with the 13 tests of the scope test, the 5 of `test:scroll-view` and the lane's `SCOPE_PASSED: 181`
+([receipt](docs/evidence/frontier-scope/hosted-ci.json)); the Pages run 37842839320 built and deployed that commit, but its
+artifact has expired, so the deployed `migration.json` was not compared
+([receipt](docs/evidence/frontier-scope/publication.json)). The causal control and the retained sabotages stay local. It lists two
+open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision) and the host crash that removing the check
+from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-05, criteria `matriz` and `mapa`: the HUD is now driven by the context Godot derives. One store at module scope
 is the only module that talks to the game; six panels (the turn and resources bar, the unit's actions, the tile card, the city
@@ -661,9 +690,43 @@ spinner while the turn is processed, with End turn enabled by the game's own act
 which Godot publishes as the state `frontier.hover` (the registry holds 15 bindings), and a click on the map selects through the
 World's `_unhandled_input`. An independent oracle judges the lane, the HUD of the previous commit fails it in actions, content,
 input, panels and phase, and eight retained sabotages are rejected; the lane also found a World that came back behind the HUD's layer
-after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures; the
-hosted CI run and the Pages publication are pending. The `overlays` and `estabilidade` criteria of V05-05 remain open (the dialog is
-a panel, not yet a blocking `Modal`), and no 1.0 checkpoint, weight or denominator moves.
+after the menu, now fixed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with eight captures. The
+hosted CI run of main `622102e` (the squash of #82, run 37891490943) passed its five jobs on the first attempt, with the HUD lane's 143 probe
+checks, the report byte for byte the local one, and the consumer's 165 native checks
+([receipt](docs/evidence/civ-lite-ui/hosted-ci.json)), and the Pages run 37891490845 deployed that commit's dashboard data with
+`matriz` and `mapa` closed ([receipt](docs/evidence/civ-lite-ui/publication.json)); the captures, the causal control and the retained
+sabotages stay local.
+
+**Progress.** V05-05, criterion `overlays` (slice 2a): by the user's decision of 2026-10-09 the game's event is a queue of three (the
+state, the rules and a 77-step replay with new golden and trace hashes, `cb7ab974…` and `ed43495…`, which the independent oracle
+recomputed at every step), and the city screen and the event dialog are blocking `Modal`s: with either open, 100 left clicks, 100
+right clicks and 100 wheel ticks on the map reach the World 0 times, and 100 of 100 once it is closed. The dialog shows the game's
+"n of 3" and mounts each event as a subtree of its own, a HUD remounted with the second event at the head shows "2 of 3" in its
+first frame, and a new session has no queue until its own turn 5. Two causal controls (the previous HUD and the previous game with its HUD)
+fail exactly their groups, twelve retained sabotages of the HUD (four new) and eight of the game (one new) are rejected, and four
+captures of the overlays were read, and no check name of the probes carries a count that depends on the pace (the lane refuses one that
+does). The merge of main brought in the soak of #83, whose oracle had written the one event as a fact; it now expects the three answers of
+turn 5, with nothing relaxed. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence. The slice reached main as `e108e9d` (the squash of
+#93), and the Contracts run dispatched on main at that commit (run 37958818671, the eight jobs on the first attempt) repeated the HUD lane's 144 and 26 probe
+checks and the consumer's 165 native checks, with both hosted reports judged again, outside the CI, by the independent oracles with no finding
+([receipt](docs/evidence/civ-lite-ui/overlays/hosted-ci.json)); the Pages run 37958764277 deployed that commit's dashboard data with `overlays` closed
+([receipt](docs/evidence/civ-lite-ui/overlays/publication.json)). The engine logs an error when the application quits with a `Modal` open (a task of its own),
+and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-05, criterion `estabilidade` (slice 2b), the last of its four, so the item is complete: each overlay is opened and closed twenty times by real
+input, the city screen 20 times by a click and Close and 20 by a click and Escape, and the event dialog 20 times from a new game played to turn 5 and answered by
+three real presses (60 answers), and after every close, at rest (no pending work, no tag retiring, every Image settled), the nodes, orphans and `Window`s of the tree,
+the native views, the pointer routes, the registry's subscriptions and pending work, the HUD's connections and the signal's connections are the first cycle's, exactly;
+the Hermes heap at rest follows the baseline's rule (-1,296, -1,296 and +128 bytes between the medians, against 2,048), and the engine's objects stay within one.
+Focus is what this host can measure: the root viewport's focus owner after a close is the one before the open, and while an overlay is open its Window is the one
+exclusive Modal Window and no Control under it has the focus; Escape closes the city screen through `clear_selection` and does nothing on the dialog. In the first
+and the last cycle of each screen, 100 left clicks, 100 right clicks and 100 wheel ticks reach the World 0 times. A scan of the HUD against the 0.5 manifest, written on
+the syntax tree and reading the manifest (which now decides `AppRegistry`), refuses a name, a prop or a member the manifest does not allow, and the icons are six original
+32x32 PNGs drawn by a generator and shown by `Image` in the bar, the actions, the tile card and the city screen, which is inside a Modal's Window: all of them drew, in
+every opening. The lane (a third probe with 41 checks, an oracle that rejects 38 mutated reports, 23 cases of the scan: 21 changes found and two let through) fails the previous HUD only on the icons, and
+five new sabotages join the twelve (17, all rejected). A first review found a real flake, a screen declared at rest while its Images were still loading, and the rest is
+now a state that includes them; the lane passed three runs in a row after it. The [record](docs/evidence/civ-lite-ui/README.md) is local macOS arm64 evidence with seven
+captures; this slice is not on main yet, so it has no hosted run, and no 1.0 checkpoint, weight or denominator moves.
 
 **Progress.** V05-06, criterion `baseline`, headless half only: the pointer spike's scene swaps a 50, 75 or 100 node
 panel on a real click, in two Godot processes, through the sampler shared with GF-30. The exact invariants hold in all 720
@@ -693,6 +756,8 @@ retained sabotages are rejected. The
 is local macOS arm64 evidence, headless, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
 publication are pending. `soak` is done, and `baseline` (the presented frame time), `turno` and `congelado` remain open. No 1.0
 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `soak`, note: the soak note at `e0160f3` marks its hashes as the run before #93 (`e108e9d`), whose queue of three events gives the current final and trail hashes, and points to that run. No criterion changes.
 
 **Progress.** Exit criteria X3, X4 and X5 of the 0.5 are met on the macOS desktop, on local
 evidence. X3, input in the world against the HUD, rests on the
@@ -749,6 +814,204 @@ display (it was off), so it ended with no frame-time statistic and exit code 3. 
 is local macOS arm64 evidence, with synthetic clicks, on a machine shared with other agents; the hosted CI run and the Pages
 publication are pending. `turno`, `baseline` (the presented frame time) and `congelado` remain open. No 1.0 checkpoint, weight or
 denominator moves.
+
+**Progress.** Exit criteria X9 and X10 of the 0.5 now have guards that run, and neither is closed. The PR guard
+(`scripts/milestone-guards.mjs --check`, a step of the Contracts workflow that compares the tree with the first parent of `HEAD`)
+fails a pull request that adds a `milestone-0-5-*` entry and also changes `tasks`, `phases`, `sequences`, the checklists or
+`decisions` (a changed note or evidence counts, not only `done`, weight or status), that opens a new `pointer-*`,
+EventTarget, Document or hover slice outside V05-02, or that touches GF-13. The audit of the history from `c0f3702` covers
+28 first-parent commits, 15 of them with a 0.5 entry: X10 is clean and GF-13 is equal in depth, and X9 has one known exception,
+#74, which changed the note and the evidence of GF-27 without moving a `done`, a weight or a status. The
+[evidence](https://github.com/journey-studios/godot-fabric/blob/b02e2a531ca548b95496a7e9fb3f04165ec78d97/docs/evidence/milestone-exit-guards/README.md)
+pins the audit, its receipt and the rules. The hosted CI of the guard step is pending, and X9 and X10 stay open until the 0.5
+ends, when the audit runs again. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `turno`, closed: the windowed lane of the turn was presented. On 2026-10-09, with the display on,
+the local lane (`caffeinate -d node scripts/frontier-turn-graphics.mjs`) ran on a tree identical to main `1adcdb3`, with the
+baseline's validity rule imported: five of five runs were accepted in eight attempts (three were rejected as `undrawn`, none as
+unpaced), with the vsync on at 120 Hz and exit code 0. The first frame of a click has a p95 of 12.98 ms (median across the runs)
+and the frames of a turn a p95 per phase of 12.8 to 14.1 ms, and none of the 1,800 first frames of a click or the 4,800 frames of a
+turn reached 100 ms. They are intervals between process frames, not frames the display showed, and the idle median is unstable
+(4.4 to 13.2 ms across the runs, from two alternating groups of intervals whose mean is one refresh period), so the p95 and the mean
+are what to read; no limit comes from them. With the headless half recorded earlier, the `turno` criterion has the two pieces of
+evidence it asks for. The baseline's own windowed lane was not presented in its two attempts of the same day, so `baseline` and
+`congelado` remain open, as do the hosted CI run and the Pages publication of the turn. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/cb50b974462aec64a1a5db6d8b0dfe6fcefc0f87/docs/evidence/frontier-turn/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is not committed. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** V05-06, the windowed lane's pacing rule: a run is now judged by an idle reference that does not swing with the display's
+clusters. With the vsync on at 120 Hz, the 600 idle intervals of a presented window come in two alternating groups (about 300 under
+4.17 ms and 300 of 12 ms or more), so the median fell in one group or the other: a presented attempt of the baseline was refused as
+`unpaced` for a median of 4.136 ms against the 4.167 ms required (mean 8.333 ms), and the accepted runs of the turn had medians of
+4.42 to 13.18 ms. The reference is the median of the half-sums of consecutive pairs of intervals, with the same threshold (half of
+the refresh period read back): 8.327 to 8.342 ms in the 16 attempts of 2026-10-09 whose intervals came in two groups, and about
+0.6 ms in the unpaced ones. Over the 24 raw attempts of the three receipts of that day and of 2026-10-08, the mean and the new
+reference agree on every verdict and only the refused attempt would change, to accepted. No recorded receipt is reclassified, and the
+rule applies from the next execution on, which has not run yet. The pre-registered protocol of the final comparison (V05-10, criterion
+`protocolo`) took the same reference by a dated amendment, with no comparative measurement before it. No criterion changes: the
+windowed part of `baseline`, `congelado` and `execucao` stay open, the turn's script and note still describe the median until
+after the P8 slice, and the hosted CI run is pending. The
+[record](https://github.com/journey-studios/godot-fabric/blob/490ba8cac1e010d85b95dda938c91db3c9239bc3/docs/evidence/idle-reference/README.md) is local macOS arm64
+evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of three more 0.5 slices already on main are recorded: the turn (#86, V05-06
+`turno`), the exit guards (#87) and the idle reference (#94). For each, the push of main at its squash commit passed the Contracts
+workflow on the first attempt and its Pages run built and deployed. The push of #86 still ran the native job, so its receipt holds
+`test:frontier-turn` and the digest of the artifact `native-frontier-turn`; #87 and #94 are slices of contracts only, so their
+receipts hold the guard step (`MILESTONE_GUARDS_CHECK_PASSED`, X9 and X10 clean) and the slice's contract tests. The push of #94
+came after the native suites became opt-in, so its five native jobs are recorded as skipped, accepted only because that slice has no
+native step. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/13f50b11f9c66de87621582db71b9dab6c060515/docs/evidence/README.md)
+links the two receipts of each. The windowed lane, the captures, the sabotages and the audit of X9 and X10 stay local, X9 and X10
+stay open, and no criterion changes state. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, preparation of criterion `execucao`: the CPU-time instrument of the final comparison is chosen and checked against a
+load of known duration, before any comparative measurement. Godot's `Performance.TIME_PROCESS` could not be the per-frame reading: at the
+source and in the binary it is a maximum assigned once a second, and with the vsync on it holds the wait for the display (about 15 ms for
+an idle 120 Hz window, where the instrument reads 0.08 ms). The instrument stamps `Time.get_ticks_usec` at the engine's hooks and adds the
+physics, process, frame-setup and render terms, all of which end before the frame is presented; the render reading of a draw arrives six
+draws later and is aligned by draw index. In a lab scene a busy loop of 2, 5, 10 and 20 ms is read to within 0.2% headless and to within 1.5%
+in a window that the display presented at 120 Hz, an independent oracle recomputes it from the raw stamps, and three retained sabotages are
+rejected. The threshold `cpu-time-instrument` stays unfrozen, no arm has run, and the `execucao`, `protocolo` and `braco-b` criteria stay
+open. The [record](https://github.com/journey-studios/godot-fabric/blob/dad0db177f52a5ac710f52e7486073b6e354f185/docs/evidence/cpu-time-instrument/README.md) is local macOS arm64 evidence on a Mac shared with
+other agents (load average 5.5 to 9.9), and the hosted CI run and the Pages publication are pending. No 1.0 checkpoint, weight or
+denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the window presence (#99, the drawable window of the windowed lanes, the finding of V05-06
+and GF-30) are recorded. The push of main at its squash commit `ffeeb5c` passed the Contracts workflow on the first attempt:
+`contracts`, `reference-android` and `reference-ios` succeeded, and the five native jobs are recorded as skipped, accepted because the
+slice has no native step. The milestone guard passed against the squash's parent, the 23 and 17 contract tests of the two files the PR
+changed passed, and its Pages run built and deployed. The native steps of that squash did not run in its hosted CI, so the windowed
+lane and the native suites stay local evidence. The presented baseline (#101) has no receipt pair: its push ran in two attempts, with
+`reference-android` rerun after a failed NDK download, and the generator records only one-attempt runs, so the receipts of its folder
+are still #77's. The
+[evidence index](https://github.com/journey-studios/godot-fabric/blob/2c4a822c4d3fcd59b99453325323bdd1746fd97e/docs/evidence/README.md)
+links the two receipts of the slice. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, the windowed lanes of the baseline and of the turn: the window they measure in is now put where the system has no
+reason to stop drawing it, and the frames in which the engine could not draw it are recorded. The finding: on macOS an occluded window
+makes the engine skip the draw (`window_can_draw()` reads the flag that the window delegate clears, `Main::iteration` does not call
+`RenderingServer::draw`, `frame_post_draw` never fires, and the loop sleeps 6.9 ms a frame), which is the signature of the `undrawn`
+refusals of 2026-10-09 (a mean idle interval of 6.900 ms where the idle window drew no frame). A small helper puts the window in front of
+the others and above them and counts, for every process frame, the frames the engine could not draw: each attempt of the receipts carries
+`undrawableFrames`, and the reason of an `undrawn` refusal says what the engine said of the window (a run in which it never said it could not draw
+stays open, with no cause concluded). The validity rule is unchanged and no
+recorded receipt changes its verdict. Both windowed lanes ran once each on the implementation commit and were presented at the first
+attempt of all five slots, with 0 of 25,469 sampled frames undrawable in the baseline and 0 of 68,379 in the turn, with nobody at the Mac:
+the runs show that the helper opens a window the engine can draw, not that it beats interference, and a locked or asleep display is not
+covered. The `baseline` criterion stays open; a later delivery closes it with the receipt of the baseline run. The
+[record](https://github.com/journey-studios/godot-fabric/blob/59cd006f80471cd8cb1a39184511b2649f45e045/docs/evidence/windowed-presence/README.md)
+is local macOS arm64 evidence from receipts that are not committed (their hashes are). No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `baseline`, closed: the windowed lane of the baseline was presented. On 2026-10-09, on commit
+`1bc3a3c` with a clean tree, the local lane (`caffeinate -d node scripts/frontier-baseline-graphics.mjs`) was presented by the
+display: five of five runs were accepted at the first attempt, with the vsync on at 120 Hz, exit code 0 and 0 of 25,469 sampled
+frames the engine could not draw. At the median across the runs, the frame of a swap that creates 0, 50, 75 or 100 nodes has a p50
+of 3.7, 8.4, 11.2 and 13.1 ms and a p95 of 13.7, 11.1, 14.1 and 16.6 ms, and none of the 1,800 swap frames or the 3,000 idle
+intervals reached 100 ms. The proposal, by the rule written beforehand (the median across the five runs plus three times the
+interquartile range, up to 0.5 ms), puts the swap frame's p95 at 14.0, 12.5, 20.0 and 17.0 ms by nodes created, and it is not
+frozen. The Mac was loaded by other agents (load average 5.4 to 6.8 on 11 logical cores) and nobody used it, so the numbers are
+pessimistic; `congelado` remains open and may ask for a run on a quiet machine, as do the hosted CI run and the Pages publication
+of this record. With the headless half recorded earlier, the `baseline` criterion has the two pieces of evidence it asks for. The
+[record of the presented lane](https://github.com/journey-studios/godot-fabric/blob/191533a44e93ab98f745c4adfbdb2b614e1a0656/docs/evidence/frontier-baseline/README.md#faixa-janelada-apresentada-2026-10-09)
+is local macOS arm64 evidence with synthetic clicks, and its raw receipt is committed byte for byte beside it, so that every statistic can be
+recomputed. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-06, criterion `congelado`, closed, and V05-10, criterion `protocolo`, closed: the performance budget and the five thresholds of the
+final comparison's protocol were frozen once, on 2026-10-10, before any comparative execution, by the rule that the proposal wrote beforehand (the median
+across the five runs plus three times the interquartile range, up to 0.5 ms), on the presented windowed baseline and turn of commit `1bc3a3c`, by the user's
+decision (five of five slots accepted at the first attempt in each lane). The swap frame's p95 over all swaps freezes at 16.0 ms
+(`budget-p95-context-switches`), the p95 of the AI phase and of the end of the turn at 15.5 ms each (the lane records two frames of the end of a turn, and the
+protocol's window has at least five), the stress window as N/A (V05-06 measured no log of 200 lines and no production list of 100 items), and the CPU-time
+instrument freezes the recommendation of its record. The proposal's rows of the p99 by size leave the budget (the p99 of 90 swaps is its maximum) and the other
+windowed rows give the proposal's bounds. Only `frozenValue` and `frozenAt` of the thresholds were filled, so the protocol's pin does not move, and
+`node scripts/frontier-freeze.mjs --check` recomputes every value from the committed extract of the receipts. With `baseline`, `turno` and `soak` already closed,
+V05-06 has its four criteria closed. Three executions of the night of 2026-10-09 on `916387e` corroborate and become no threshold: the turn lane with the HUD of
+#100 is over the frozen bounds of the turn (the seven frames of the job add up to 94.7 ms at the p50, against 54.2 ms frozen and 54.9 ms with the HUD of before
+#100), the cause is under diagnosis and is not stated, and the baseline is sensitive to load. The executions that froze ran at a 1-minute load average of 5.3 to
+7.6 on 11 logical cores, above the 2.0 that a comparative execution requires. **Exit X6 stays open**: "met" waits for the arms of the comparison and for that
+diagnosis, and arm B, `execucao` and the iPhone (a no-go) are open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/e1803a93e075996d1e38770113b095315f8b5ea2/docs/evidence/frontier-freeze/README.md) is local macOS arm64 evidence, and its hosted CI run and Pages
+publication come after the merge. No 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the freeze (#107, the `congelado` act of V05-06 and the `protocolo` of V05-10, GF-30) are
+recorded. The push of main at its squash commit `561251d` passed the Contracts workflow on the first attempt: `contracts`, `reference-android`
+and `reference-ios` succeeded, and the five native jobs are recorded as skipped, accepted because the slice has no native step. The milestone
+guard passed against the squash's parent, and `tests/frontier-freeze.test.mjs` passed 21 of 21 in the job's log. The generator now undoes TAP's
+escape of `#` in test descriptions, which had kept a test named with `#100` from being found by name. Its Pages run built and deployed the same
+squash. The [evidence index](https://github.com/journey-studios/godot-fabric/blob/7099e2b050e71ce57056cf529c56de10df3b8c79/docs/evidence/README.md)
+links the two receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The cause that the freeze's turn-lane observation left under diagnosis is confirmed and fixed in #108 (`09ed8f7`): the turn lane's probe read the Surface's snapshot twice in every timed frame, and that snapshot carries the image loader's log, which the icons of #100 filled. It was the probe, not the HUD or the host. On `09ed8f7`, the corrected lane gives, as corroboration, a median across five presented slots of the p95 of 13.62 ms for the AI phase and 13.54 ms for the end of the turn, against the 15.5 ms frozen on `1bc3a3c`. The [record](https://github.com/journey-studios/godot-fabric/blob/3fb94871fd95fbfab40bc625fc03957d3bd4b963/docs/evidence/frontier-freeze/README.md) has the load and the contamination of the slots. No frozen value moves, the corroboration becomes no threshold, and **exit X6 stays open**: it waits for the arms of the comparison and for the CPU time per frame, not for the turn lane. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, preparation of the criteria `execucao` and `relatorio`: the analysis script of the final comparison is written and tested before any
+comparative execution, as the protocol requires of it. `node scripts/frontier-comparison-analysis.mjs <campaign.json>` reads the raw data of a campaign (the
+format `godot-fabric.frontier-comparison-campaign/v1`, documented field by field in the research note) and the protocol's JSON when it runs, and produces every
+number of the final report as the protocol defines it: the validity of each slot (the rejections that can be computed from the data, the redo in the slot, the
+limit of three attempts, the campaign that stops), the p95 per run and window with the medians and interquartile ranges, the twelve 95% bootstrap intervals
+(`mulberry32`, seed 20261009, 10,000 resamples) and, for C against B, the margin, the category, the non-inferior flag and the Holm downgrade, the verdict on each
+axis, the descriptive outcomes, the frozen budgets and the partial report when arm B is not ready. It writes no sentence of the decision. It was checked on
+synthetic campaigns only, and no number in the record is a result: the arms B and A do not exist, no comparative execution has run, and a committed example
+report (125 KB, from a made-up campaign) is regenerated byte for byte by a test. Three readings of the protocol's sentences that could change a result
+(`other-game`, `rss` and `fps-unlimited`) were decided by the lead on review and are written in the note. The scenario script, the arms and a machine within the
+load limit of 2.0 are `execucao`'s, and the text of the decision is `relatorio`'s. The
+[record](https://github.com/journey-studios/godot-fabric/blob/4592dba920d8cc106ed97b96ad04322c842f7851/docs/evidence/frontier-comparison-analysis/README.md) is local evidence, and its hosted CI run
+and Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the freeze's follow-up (#112, the corrected turn lane, in `frontier-freeze/followup`) and of the comparison's analysis script (#110, GF-30) are recorded from the pushes of main at `b23009d` and `4a73a86`. Both Contracts runs passed on the first attempt, with `contracts`, `reference-android` and `reference-ios` in success and the five native jobs recorded as skipped, accepted because neither slice has a native step. The milestone guard passed against each squash's parent; `tests/frontier-freeze.test.mjs` passed 21 of 21, and the analysis, validity and protocol tests passed all of theirs (19, 7 and 18). Both Pages runs published the committed `migration.json` byte for byte. The [follow-up receipts](https://github.com/journey-studios/godot-fabric/blob/04060b260058d4a0adde2e31e325ea57ec099409/docs/evidence/frontier-freeze/followup/README.md) record that another agent's native work (an editor build and headless runs, about 05:24 to 05:40 UTC) ran through the whole corrected band, which the sampler saw only in part; contention can only raise frame time, so the measured p95s (13.6 and 13.5 ms) are an upper bound, and the corrected band still meets the 15.5 ms frozen limit with margin. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, the third amendment of the final comparison's protocol, committed as [`0a5f5b4`](https://github.com/journey-studios/godot-fabric/blob/0a5f5b41895b33f4eef09919974ffd4b5a46dd79/docs/research/frontier-comparison-protocol.json): the 12-turn replay the protocol names has 77 intents, not the 73 it had when it was pre-registered, because the queue of three events of #93 (`e108e9d`) changed the game and its roteiro after the pre-registration. The reference to the golden hash keeps its text, and the constant it names now holds the hash of the 77-step replay, which #93 updated. No comparative measurement came before the amendment, the test's pin moves to `PINS[3]`, and the frozen values do not move. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, the fourth amendment of the final comparison's protocol, committed as [`e78e38c`](https://github.com/journey-studios/godot-fabric/blob/e78e38c7982be9bd021c673939ce0ad0e8f7752e/docs/research/frontier-comparison-protocol.json): in the window of the context switches, the dialog's occurrence is its last `resolve_event`, the one that closes it (dialog -> none), because only an End Turn opens the dialog, its event is raised in the refresh phase outside a 3-frame window, and every selection is refused while it is open. The source lines are in the note. No comparative measurement came before the amendment, the test's pin moves to `PINS[4]`, and the frozen values do not move. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, criterion `execucao`, part 1: the script that plays one execution of the final comparison is written and tested (code at `7e2e5b1`). The scenario runs
+the eight steps of the protocol's script in any of the three arms (A with no HUD, B with the native Godot HUD, C with the React Native HUD); the soak's player is a GDScript port
+of the JavaScript one and reaches the same final hash `0b21c332…`, trail hash `4d6d3c4c…` and 429 decisions, with a control that decides otherwise and moves them; the cycle of
+the context switches follows the fourth amendment (rounds of 12 switches, 74 occurrences, the dialog counted by its last `resolve_event`); and the four windows come from the
+trace by a single rule, the event burst and the stress being read through the HUDs' counters (`stats()` and `notifications_emitted()`) with no JavaScript evaluated and no Surface
+snapshot in a measured frame. Three rehearsals ran in the three arms (headless, and windowed in the presented lane at 120 Hz and in the unlimited lane with the vsync read back
+`DISABLED`): the protocol's counts (100, 100, 74 and 32 occurrences), the replay and the soak match in all nine executions, the 93 parity checks of B and C match, and the analysis
+rejects every execution as it must, as a Debug build and by load (the 1-minute average was 4.9 to 6.0 against the limit of 2.0), the headless ones also as not presented. **A
+rehearsal, and no number in it is a result.** The second part (the sequence of 36 executions in each lane, the attempts and the registration of the hashes), the Release export of
+V05-07 (how the scenario runs in an exported `.app` is open) and a quiet window with the load at 2.0 or less are missing, and `execucao` stays open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/f77d81d097f8dd552f70fc63c4d3050665ff6007/docs/evidence/frontier-comparison-execution/README.md) is local evidence, and its hosted CI run and Pages
+publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** The hosted CI and Pages receipts of the comparative execution's part 1 (#120, GF-30) are recorded from the push of main at `c3892ac`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/12059499a3dd5c9135f8f8ded1b5586adacc87ec/docs/evidence/frontier-comparison-execution/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, `tests/frontier-comparison-run.test.mjs` passed 17 of 17 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** The hosted CI and Pages receipts of the whole comparative campaign (#126, GF-30) are recorded from the push of main at `c6dea50`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/40dd07d58eed6de68f9f008320fe472623b5f8e6/docs/evidence/frontier-comparison-campaign/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (`contracts`, `reference-android` and `reference-ios` in success, the five native jobs skipped because the slice has no native step), the milestone guard passed, the three contract test files of the campaign passed 35 of 35 in the log, and the Pages run published the committed `migration.json` byte for byte. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** The hosted CI and Pages receipts of the attempts that wrote no report (#129, GF-30) are recorded from the push of main at `1ef98a4`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/f832739b500cd4c9cb3bb4d3056d0f8822e348b8/docs/evidence/frontier-comparison-analysis/unreported/README.md#ci-hospedada-e-pages). The receipts now accept a skipped test only from an explicit allowlist, which holds #75's native export test: it needs the reviewed Release template that the contracts job does not have before `test:contracts`, so it skips there by design. No criterion changes state; `execucao` stays open.
+
+**Progress.** V05-10, criterion `execucao`, part 2: the orchestrator of the whole comparative campaign is written and tested (code at `f9aabb3`). It plays the protocol's sequence in both
+lanes, one fresh process per attempt, judges each attempt with the analysis' own `assessValidity`, redoes a rejected attempt in its slot (at most 3 attempts), waits for the 1-minute load to be
+at most 2.0, runs only if the instrument's self-check passes (headless for a headless launcher, in a window for a windowed one, the campaign's), writes its state atomically after every attempt so
+that `--resume` continues an interrupted campaign (refused if the protocol, script, binary or package hash changed), keeps a lock against a second campaign on the machine, and runs through a
+swappable launcher whose Release path refuses until V05-07 says how the scenario runs in an exported `.app`. A short rehearsal of 3 slots in Debug, headless, ran with the real self-check and
+the expected rejections (Debug build, window not presented, load); one killed with `SIGKILL` was resumed, and a resume with another package hash was refused. **A rehearsal, and no number in it
+is a result.** The Release launcher (V05-07), a quiet window with the load at 2.0 or less and the windowed self-check run for real are missing, and `execucao` stays open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/f952152793b4e33660655715779145d2f8154c95/docs/evidence/frontier-comparison-campaign/README.md) is local evidence, and its hosted CI run and
+Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
+**Progress.** V05-10, criterion `execucao`, the attempt that wrote no report (code at `8817938`): an attempt whose process crashed, hit its time limit or ended without a report is now part of the campaign's data in the analysis'
+format, instead of being left out of `executions`, renumbered around and listed only in the campaign's own state. The format stays `godot-fabric.frontier-comparison-campaign/v1` and gains the optional field `unreported`; this is a change of
+the data format, which is the analysis', and not an amendment of the protocol, whose rules `errors`, `runs.load.redo` and `report.sections` `validity` already cover the case. The analysis rejects the attempt by `errors` (clause `no-report`),
+counts it in the 3 attempts of its slot and in the stop on used-up attempts, and the report shows it with `reported: false`; the campaign keeps the real number of each attempt, and its own stop for that case was dropped as redundant. The
+synthetic example was regenerated (it only gained `reported: true`) and a new example of the `validity` section with an attempt that wrote no report is checked byte for byte by a test. Node only and synthetic data: **no number in it is a
+result.** The [record](https://github.com/journey-studios/godot-fabric/blob/8817938149e38b5434fbc2643262cb6eb0ad2f12/docs/evidence/frontier-comparison-analysis/README.md#a-tentativa-sem-relatório-2026-10-10) has the section. No criterion changes state,
+and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
+iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
+The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
+GF-35 without moving any 1.0 number. V05-09 closes only its `decisao` criterion; `g0`,
+`export`, `toque` and `turno` stay open under a blocker. V05-08 is handed back to GF-35
+under a blocker, and its density and safe-area work on `feat/mobile-density` will land as a
+GF-09 slice without claiming it. The `iphone` criteria of V05-02 and V05-10 do not apply, and
+the final comparison covers macOS only. Exit X8 is met by this record. No 1.0 number, task,
+checkpoint, weight or decision moves. The record is in
+[docs/evidence/frontier-device/README.md](docs/evidence/frontier-device/README.md).
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
@@ -3933,6 +4196,23 @@ Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
 [`092dd14`](https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9). On the implementation tree the contracts
 gate (302 Node/13 Python), the type check, static analysis, the publication scan, the animated, frame clock and touchables
 suites, the platform-seams test and the 36 examples pass. No checkpoint, whole GF, weight or denominator closes.
+
+### Screen density and RN's SafeAreaView on the desktop (2026-10-09)
+
+`FabricApplication.density_policy` gives a window the scale of its display (`screen`: a `canvas_items` stretch with no
+content size at `DisplayServer.screen_get_scale`, followed when it changes; `content`, the default, leaves a project as it
+was), and RN's own `SafeAreaView` (its iOS native component and C++ descriptor over the host's View) holds the padding that
+the window's unsafe bands leave of its frame, with UIKit's rule, its pixel rounding and its update threshold. The bands come
+from `get_display_safe_area` only on iOS and Android and are zero elsewhere (macOS's usable rectangle is never read), so a
+test states them through a seam (which refuses a band that is not a finite, non-negative number). The desktop headless lane (149 checks, an independent oracle, the control on main
+`b0e40aa` failing 90 of them and four retained sabotages rejected) also puts the HUD over a Godot world: a full-screen
+SafeAreaView with `pointerEvents="box-none"` leaves the empty area and its padding band to the world, as a View does. A
+windowed run on a Retina display at scale 2 captured three frames and read their pixels. This is the preparation V05-08
+asked for, delivered on the desktop with no simulator or device run, because the iPhone gate of the 0.5 is NO-GO
+(2026-10-09) and mobile goes back to GF-35: it moves GF-09 (density, insets) and GF-18 (SafeAreaView) only that far, closes
+no checkpoint and changes no weight or denominator. The [record](docs/evidence/mobile-density/README.md), the
+[research note](docs/research/mobile-density.md) and implementation
+[`05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6`](https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6) have the numbers.
 
 ## M1 — Complete the native UI tree
 

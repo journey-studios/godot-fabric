@@ -42,15 +42,15 @@ pointer spike). The world is there for the a2 measurement below, not for the gam
 A scripted player in the fixture plays the game through the services, one intent at a time, deciding from the snapshot it holds. Its rule is fixed and uses nothing the game does not show (no `Math.random`,
 no `Date`):
 
-1. If an event blocks the game, resolve it with its first choice.
+1. If an event blocks the game, resolve it with its first choice, and again for as long as the dialog stays open: since the queue of three events of 2026-10-09 the game raises three together when turn 5 begins, so turn 5 opens with three answers (wanderers with `welcome`, traders with `buy_grain`, the scholar with `host`).
 2. Turn 1 only, with no city: select the start tile (6, 8), which stacks the Settler and the Warrior (the one fact of the map the snapshot does not show until a tile is selected), select the action "Select Settler"
    and found the city, which the snapshot offers as enabled.
 3. Every turn, each step once and in order: set the research to the first enabled technology of the snapshot's list if it is empty; set the production to a building if one is enabled, else to a Warrior while fewer than
    6 units stand on the city tile, if the queue is empty; select the city tile; select the first unfortified unit on it and fortify it; select the empty tile west of the city; clear the selection; end the turn.
 4. It waits for each call to settle and for the snapshot it published to arrive before it decides again, and for the turn's job to finish (`last_job`) before the next turn.
 
-Every call is one the snapshot offers as enabled, so the game accepts all of them: 427 decisions in a run, 427 accepted (201 `select_tile`, 100 `clear_selection`, 100 `end_turn`, 8 `set_production`, 7 `select_unit`,
-6 `fortify`, 3 `set_research`, one `found_city` and one `resolve_event`). The cap of 6 units keeps the game's own state bounded: the last production decision is at turn 13 (three buildings and five Warriors in all), the army
+Every call is one the snapshot offers as enabled, so the game accepts all of them: 429 decisions in a run, 429 accepted (201 `select_tile`, 100 `clear_selection`, 100 `end_turn`, 8 `set_production`, 7 `select_unit`,
+6 `fortify`, 3 `set_research`, one `found_city` and three `resolve_event`; 427 and one `resolve_event` before the queue of three events). The cap of 6 units keeps the game's own state bounded: the last production decision is at turn 13 (three buildings and five Warriors in all), the army
 is at its 6 units from turn 13 and the last `fortify` is at turn 14, so from turn 14 the player does the same four things every turn (select the city, select the tile, clear, end the turn) and the state moves only by the turn,
 the scripted faction's walk and the log (capped at 32). That is deliberate: a heap that grows because the game does would be a verdict on the army and not on the runtime, and the heap rule is exact. The game has no ending, so it
 cannot end before turn 100 and no rule was invented to stop it.
@@ -69,7 +69,7 @@ two choices), 1 for the marker and, for the panel, 100 while it is mounted. The 
 | `settler`, `stack` | 22 | four actions: `found_city`, `fortify`, `clear_selection`, `end_turn` for the first; two `select_unit`, `clear_selection`, `end_turn` for the second |
 | `dialog` | 23 | the 16 of `none` plus the dialog's 7 |
 
-(All with the panel unmounted and the marker off; hiding keeps the panel's 100 on top of each.) The player visits the seven contexts of the game: `dialog` is the context of the rest at the end of turn 4, because the event is
+(All with the panel unmounted and the marker off; hiding keeps the panel's 100 on top of each.) The player visits the seven contexts of the game: `dialog` is the context of the rest at the end of turn 4, because the events are
 raised when turn 5 begins.
 
 ## What is judged, and the rules
@@ -99,6 +99,8 @@ The pinned run, in the three executions (the strategy the panel is closed with, 
 
 The trail hash (the SHA-256 of the 100 turn hashes, one per line) is `fe9d4f367b796b2743118aa37755c92541e88d5a7155ed0ac0d24eefd0b16e0f` in all three, and so is the hash of every turn. The game ends at turn 101 with the one city
 (size 3, the three buildings), six units of the player and the scripted faction's Warrior, 333 events logged.
+
+These are the numbers before #93 (`e108e9d`); since its queue of three events the soak gives other hashes, in [After the queue of three events](#after-the-queue-of-three-events-2026-10-09).
 
 **The resident memory** moves by tens of MB and falls as well as rises (GF-30 saw 90 to 188 MB across its soaks), so it cannot be an exact limit. Within one execution of the pinned run the resident memory of the steady turns spans a band
 of 136, 34 and 89 MB (104 to 240, 162 to 195 and 152 to 241 MB), and the medians of the two halves differ by **-96.5, -15.8 and -37.5 MB**: it fell in all three, as it did in the development runs where the OS compressed the process as it went.
@@ -221,7 +223,7 @@ reading, a rise of exactly the 2,048-byte limit, a resident memory that falls by
 ## Limitations and open
 
 - One machine (an Apple M3 Pro), the headless display server and the `opengl3` driver named; the Mac was loaded by other agents' suites, so the durations are not a best case. The durations are the CPU cost of work on a loop nothing
-  paces and are not frame times; the presented frame time is the baseline's windowed lane, still pending. Only the exact counts are asked of a hosted runner.
+  paces and are not frame times; the presented frame time is the baseline's windowed lane, which was pending when this note was written and was presented on 2026-10-09 (`1bc3a3c`; see [the windowed baseline: presented](frontier-baseline.md#the-windowed-baseline-presented-2026-10-09-1bc3a3c)). Only the exact counts are asked of a hosted runner.
 - Synthetic events through `Input.parse_input_event`; no hardware pointer, no touch screen, no iPhone, no mobile export. The pause is `SceneTree.paused`, not the application's lifecycle (the background of a phone).
 - The HUD is a fixture, not the Frontier HUD (V05-05 is open): one heavy panel of one shape (100 nodes of `View` and `Text`), no images, scroll views, text inputs or animations. The player is one fixed rule over a game that
   stops changing after turn 14: it exercises the turn's job, the services and a changing snapshot for 100 turns, not an economy that keeps growing, and not the 64-task and 128-event budgets (the services' stress case does).
@@ -244,3 +246,13 @@ node scripts/frontier-soak-sabotage.mjs          # the four retained sabotages a
 
 The first command bundles the HUD (`build/frontier-soak-probe.js`) and runs the probe in three Godot processes (`--strategy=unmount`, `hide`, `unmount`); it leaves the raw reports in
 `build/frontier-soak-current-<n>-report.json` and the comparison, with the decision's table, in `build/frontier-soak-comparison.json`.
+
+## After the queue of three events (2026-10-09)
+
+The game this lane plays changed after the record above: by the user's decision of 2026-10-09 the one event became a queue of three (`docs/research/frontier-game.md`, "Events"), raised together when turn 5 begins. The soak's
+player, probe and fixture did not change (the fixture already answered the head of the dialog while it was open), but the **oracle** wrote the one event as a fact: one `resolve_event` in turn 5, once and in the routine's order, and
+`state.event.resolved`, which no longer exists. On the merge of main into the branch of that change the lane failed there (`turn 5: resolve_event(buy_grain) is a step of the routine, once and in its order`), and
+`tests/frontier-soak-oracle.mjs` now says what the contract is: turn 5 opens with exactly three `resolve_event` calls made in the dialog context, answering `wanderers` with `welcome`, `traders` with `buy_grain` and `scholar` with `host` (the
+table is written again in the oracle, not read from the game); no other turn has one; the state that turn 5 begins from holds the three ids in the queue, and from turn 5 on the game records the three answers in that order with the
+queue empty. Nothing was relaxed: every other check of the oracle is untouched, and two exact ones replace the weaker ones. The lane then passed, with the game at its new hashes (final `0b21c332…`, trail `4d6d3c4c…`; they were
+`a35c55f2…` and `fe9d4f36…`), 429 decisions and 1,030 snapshots a run, and the lane's exact rules for nodes, heap and memory hold (the heap at rest is 2,117,992 bytes; it was 2,117,320). The record under `docs/evidence/frontier-soak/` keeps describing the run it was made from.

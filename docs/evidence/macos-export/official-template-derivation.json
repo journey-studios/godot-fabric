@@ -1,0 +1,15 @@
+{
+  "format": "godot-fabric.macos-template/v1",
+  "version": "4.7.2",
+  "officialArchiveSHA256": "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011",
+  "officialMacOSZipSHA256": "88df5e2e6fee99088699be66e6d42e4da4fb0c5619d054297d755a49558a4792",
+  "universalReleaseSHA256": "6135ad137facbb26cd73a5f7f7d541d334a84fc81650e870ef075cdd14a129cd",
+  "derivedMember": "macos_template.app/Contents/MacOS/godot_macos_release.arm64",
+  "derivedMemberSHA256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+  "derivedMemberBytes": 82920128,
+  "derivedArchiveSHA256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+  "architectures": [
+    "arm64"
+  ],
+  "installedTemplatesModified": false
+}

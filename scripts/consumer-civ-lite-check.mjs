@@ -17,7 +17,7 @@ const sabotage = sabotageArgument === undefined ? null : sabotageArgument.slice(
 // others, then 3 after them. The headed run adds the three of its captures.
 const CYCLES = 10;
 const NEW_GAMES_PER_CYCLE = 3;
-const BINDINGS = 15;
+const BINDINGS = 18;
 // The calls the HUD makes in a cycle: New game, three intents, the end of a turn, the menu, New game. The end of a turn is a job.
 const CALLS_PER_CYCLE = 7;
 const PHASES_SEEN = ["ai_plan", "ai_move", "production", "growth", "research", "refresh", "idle"];
@@ -28,7 +28,7 @@ const SABOTAGES = {
   "hud-leak": { failed: [/the connections the HUD holds are the first cycle's/, /the registry's subscriptions are the first cycle's/, /in the menu the HUD showed it/], grows: ["hudSubscriptions", "subscriptions"] },
   "orphan": { failed: [/the orphan nodes are the first cycle's/, /the two Worlds the cycle dropped .* are freed/], grows: ["orphans"] },
   "epoch-reset": { failed: [/the epoch rose by exactly the 3 new games of the cycle/, /The epoch only rose across the ten cycles/], grows: [] },
-  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 12 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
+  "no-facade": { failed: [/The scene injects the addon's facade/, /The node registered the two states, the signal and the 15 methods/], grows: [], log: /FABRIC_ERROR: GameServices has no fabric_api/ },
   "job-dies-with-menu": { failed: [/the end of the turn pressed in the same frame as the menu finished with the menu open/], grows: [] },
 };
 assert.ok(sabotage === null || sabotage in SABOTAGES, `Unknown sabotage: ${sabotage}`);
@@ -60,9 +60,9 @@ try {
   const services = await readFile(path.join(project, "services", "game_services.gd"), "utf8");
   const world = await readFile(path.join(project, "world", "world.gd"), "utf8");
   const projectFile = await readFile(path.join(project, "project.godot"), "utf8");
-  verify(["project.godot", "main.tscn", "validation.gd", "package.json", "package-lock.json", "tsconfig.json", "ui/application.tres", "ui/index.tsx",
-    "ui/frontier-types.ts", "ui/store.ts", "ui/telemetry.ts", "ui/hud/hud.tsx", "ui/hud/bar.tsx", "ui/hud/actions.tsx", "ui/hud/tile.tsx", "ui/hud/city.tsx",
-    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
+  verify(["project.godot", "main.tscn", "validation.gd", "hud_validation.gd", "hud_probe.gd", "overlay_validation.gd", "stability_validation.gd", "stability_judge.gd", "package.json", "package-lock.json", "tsconfig.json", "ui/application.tres", "ui/index.tsx",
+    "ui/frontier-types.ts", "ui/store.ts", "ui/telemetry.ts", "ui/assets.d.ts", "ui/hud/hud.tsx", "ui/hud/overlay.tsx", "ui/hud/bar.tsx", "ui/hud/actions.tsx", "ui/hud/tile.tsx", "ui/hud/city.tsx",
+    "ui/hud/research.tsx", "ui/hud/dialog.tsx", "ui/hud/kit.tsx", "ui/hud/icons.ts", "ui/icons/settler.png", "ui/icons/warrior.png", "ui/icons/city.png", "ui/icons/food.png", "ui/icons/production.png", "ui/icons/science.png", "game/game.gd", "services/game_services.gd", "services/schema.gd", "world/world.tscn", "world/world.gd"].every(file => existsSync(path.join(project, file)))
     && ["sdk", "tests", "build", "consumers", "examples", "src", "native"].every(directory => !existsSync(path.join(project, directory))),
   "The provisioned project is the template plus the addon, with no laboratory directory");
   verify(/application="res:\/\/ui\/application\.tres"/.test(projectFile) && /res:\/\/addons\/godot_fabric\/plugin\.cfg/.test(projectFile),
@@ -81,7 +81,8 @@ try {
     const types = await readFile(path.join(project, "ui", "frontier-types.ts"), "utf8");
     const inside = (file, name) => {
       const target = path.posix.join(path.posix.dirname(file), name);
-      return name.startsWith(".") && (hud.includes(`${target}.ts`) || hud.includes(`${target}.tsx`));
+      // An icon is an asset of ui/: a PNG the HUD imports.
+      return name.startsWith(".") && (hud.includes(`${target}.ts`) || hud.includes(`${target}.tsx`) || (target.endsWith(".png") && existsSync(path.join(project, "ui", target))));
     };
     const imported = await Promise.all(hud.map(async file => ({ file, names: importsOf(await readFile(path.join(project, "ui", file), "utf8")) })));
     verify(hud.includes("index.tsx") && imported.every(({ file, names }) => names.every(name => publicModules.includes(name) || inside(file, name)))

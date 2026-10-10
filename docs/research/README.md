@@ -80,10 +80,21 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   to the same value in three processes, the state and the snapshot (DTO) the HUD projects, and the seven contexts the game
   derives. No React and no native code; the services, the HUD and the export are the next packages.
 
+- [Density, safe-area insets and landscape](mobile-density.md): how `Dimensions.scale` was derived and what the
+  `density_policy` property changes (Godot's `canvas_items` stretch against RN's `UIScreen.scale`), RN's own
+  `SafeAreaView` and the UIKit rule this host replicates, `get_display_safe_area` per platform (the macOS fallback is never
+  read), the orientation setting, the x86_64-only simulator, and how a full-screen SafeAreaView lives with the world's
+  pointer policy. The desktop headless lane and one windowed run at scale 2 are executed; the simulator lane was not run
+  (the iPhone gate of the 0.5 is a NO-GO, 2026-10-09).
 - [Frontier's context-driven HUD](frontier-hud.md): the table of panels each of the seven contexts mounts, the one store at
   module scope that talks to the game, the `frontier.hover` state Godot publishes for the tile under the pointer, the map's
   click and hover in `_unhandled_input` and the order of the World against the HUD's layer, with the lane that judges them and
-  what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD).
+  what it found (a flattened spacer, a 64x64 headless window, a World that came back behind the HUD); then the blocking `Modal` overlays, the
+  queue of three events the HUD works through ("n of 3", a subtree for each event) and how the probe reads a Modal's nodes from the host snapshot; and the stability
+slice (20 openings and closings of each overlay measured at rest, what "at rest" and "focus restored" mean on this host, the scan of the HUD against the 0.5 manifest and the icons drawn by `Image`).
+- [The cost of change](frontier-change-cost.md): the V05-10 `mudanca` axis, pre-registered before any implementation: the request (a
+  Settler's Irrigate, with its button icon and the tile card's mark), the shared base that neither arm is charged for, what is counted for
+  each arm (files, lines, a new subagent's active time and its own tests) and why the experiment stays off `main`.
 
 ## Useful next experiments
 

@@ -4,6 +4,7 @@ import {createHash} from "node:crypto";
 import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES} from "../tests/os-contracts-sabotages.mjs";
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -43,7 +44,7 @@ const referencedOriginals = ["index.js", "Libraries/Components/DrawerAndroid/Dra
   "Libraries/StyleSheet/PlatformColorValueTypesIOS.ios.js", "Libraries/StyleSheet/PlatformColorValueTypes.js"];
 const sources = ["tests/os-contracts-fixture.jsx", "tests/os-contracts-probe.gd", "tests/os-contracts-native.test.mjs",
   "tests/os-contracts-oracle.mjs", "scripts/os-contracts-bundle.mjs", "scripts/os-contracts-sabotage.mjs",
-  "scripts/native-probe-bundle.mjs", "src/os-specific.js", "src/react-native-platform.jsx", "src/platform.js",
+  "tests/os-contracts-sabotages.mjs", "scripts/native-probe-bundle.mjs", "src/os-specific.js", "src/react-native-platform.jsx", "src/platform.js",
   "sdk/toolchain/platform-plugin.mjs"];
 const seams = ["src/os-specific.js", "src/react-native-platform.jsx", "src/platform.js"];
 
@@ -65,41 +66,21 @@ async function extractPreviousSdk() {
 }
 
 // Sabotages are overrides in memory: the plugin hands esbuild a changed text for
-// one SDK file and no source file is edited. Each replaces exactly one place.
-//
-//   platform-android  Platform.OS is "android": every module takes its Android
-//                     branch, so the modules that need a host module throw, and
-//                     TouchableNativeFeedback sends a native background to the host.
-//   silent-shim       ToastAndroid stays silent and PermissionsAndroid grants: the
-//                     shortcut that makes an Android-only API look supported.
-//   self-import       The facade uses RN's generic ToastAndroid path, which imports
-//                     itself and resolves to undefined.
-export const sabotageNames = ["platform-android", "silent-shim", "self-import"];
-const toastFallback = 'return require("react-native/Libraries/Components/ToastAndroid/ToastAndroidFallback").default;';
-const permissions = 'return require("react-native/Libraries/PermissionsAndroid/PermissionsAndroid").default;';
-const sabotages = {
-  "platform-android": {file: "platform.js", edits: [['OS: "godot"', 'OS: "android"'], ["values.godot ??", "values.android ??"]]},
-  "silent-shim": {file: "os-specific.js", edits: [
-    [toastFallback, 'return {SHORT: 0, LONG: 0, TOP: 0, BOTTOM: 0, CENTER: 0, show() {}, showWithGravity() {}, showWithGravityAndOffset() {}};'],
-    [permissions, `const real = require("react-native/Libraries/PermissionsAndroid/PermissionsAndroid").default;
-    const granted = async () => real.RESULTS.GRANTED;
-    return {PERMISSIONS: real.PERMISSIONS, RESULTS: real.RESULTS, check: async () => true, request: granted,
-      requestMultiple: async list => Object.fromEntries(list.map(permission => [permission, real.RESULTS.GRANTED]))};`]]},
-  "self-import": {file: "os-specific.js", edits: [[toastFallback,
-    'return require("react-native/Libraries/Components/ToastAndroid/ToastAndroid").default;']]},
-};
+// one SDK file and no source file is edited. Each replaces exactly one place. They are
+// written once, in tests/os-contracts-sabotages.mjs, where they are described.
+export const sabotageNames = SABOTAGES.map(entry => entry.name);
 
 function sabotagePlugin(name) {
-  const variant = sabotages[name];
+  const variant = SABOTAGES.find(entry => entry.name === name);
   assert.ok(variant, "Unknown sabotage: " + name);
-  const target = path.join(root, "src", variant.file);
+  const target = path.join(root, variant.file);
   return {name: "os-contracts-sabotage-" + name, setup(builder) {
     builder.onLoad({filter: /\.js$/}, async args => {
       if (args.path !== target) {
         return undefined;
       }
       let text = await readFile(target, "utf8");
-      for (const [find, replace] of variant.edits) {
+      for (const {find, replace} of variant.edits) {
         assert.equal(text.split(find).length, 2, `The ${name} sabotage must replace exactly one place in ${variant.file}: ${find}`);
         text = text.replace(find, () => replace);
       }

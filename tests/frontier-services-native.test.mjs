@@ -38,8 +38,8 @@ const lane = sabotage === null ? "current" : `sabotage-${sabotage}`;
 const EXECUTIONS = 2;
 // The golden and trace hashes of the game (tests/civ-lite-game-native.test.mjs). The services must leave the same state
 // the game's own replay leaves, and pass through the same states on the way; the test below proves these are the game's.
-const GOLDEN_HASH = "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29";
-const TRACE_HASH = "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8";
+const GOLDEN_HASH = "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d";
+const TRACE_HASH = "ed43495ec48d896c0eb0c4f9a7b97471be86f37082218d16a8411d0f3766275e";
 const digest = value => createHash("sha256").update(value).digest("hex");
 // A schema spelled out in the node itself would be a second source: the node registers from schema.gd and nowhere else.
 const INLINE_SCHEMA = /"(object|array|integer)"/;

@@ -21,8 +21,8 @@ project loads only `game/` and `services/` from it. The research note is
   node for the game's own `select_tile`, and the mouse over the map tells the node which tile is under it (`frontier.hover`). It listens
   in `_unhandled_input`, so it has to stay ahead of the HUD's layer in the tree (the node keeps it there).
 - `HUDLayer/HUD`: a full-screen `FabricSurface` rendering `ui/index.tsx`.
-- `Validation` and `HudValidation`: the project's own validations, inert unless the game runs with `-- --validate` or
-  `-- --validate-hud`.
+- `Validation`, `HudValidation`, `OverlayValidation` and `StabilityValidation`: the project's own validations, inert unless the game runs
+  with `-- --validate`, `-- --validate-hud`, `-- --validate-overlays` or `-- --validate-stability`.
 
 The application, the registry, the bindings and the epoch belong to the root, so going to the menu, starting a game or
 reloading the scenery never recreates them: the epoch only rises.
@@ -46,7 +46,12 @@ decides (`ui/hud/hud.tsx`):
 | `dialog` | bar, dialog |
 
 The panels are `ui/hud/{bar,actions,tile,city,research,dialog}.tsx`, with the testIDs `hud-bar`, `hud-actions`, `hud-tile`, `hud-city`,
-`hud-research` and `hud-dialog`. They are positioned boxes, so the map around them is the World's. The bar shows the turn, the phase,
+`hud-research` and `hud-dialog`. The bar, the actions and the tile card are positioned boxes in the tree, so the map around them is the
+World's. The city screen with the research list, and the event dialog, are blocking Modals (`ui/hud/overlay.tsx`): the host opens a Modal
+as a window of its own, exclusive while it is on top, so while one is open nothing under it, the map included, hears the pointer. Escape
+closes the city screen (the game's `clear_selection`, as its Close button does) and does nothing on the dialog, because the event has to be
+answered. The game holds a queue of three events, raised together on turn 5: the dialog shows the head, "1 of 3", and each answer brings the
+next, each in a subtree of its own. The bar shows the turn, the phase,
 the three resources, End turn (enabled by the game's `end_turn` action, with a spinner while the phase is not `idle`) and the way to
 the menu; the actions panel lists the snapshot's actions but End turn, each with the game's `reason_text` when disabled; the tile card
 shows the tile under the pointer while it is over the map and the selected tile otherwise.
@@ -59,6 +64,38 @@ calls `frontier.new_game`, which brings it back. End turn is accepted at once an
 phase per frame; closing the screen or going to the menu does not stop it. `ui/frontier-types.ts` is the hand-written TypeScript
 mirror of the registered schemas, which `tests/frontier-services-parity.test.mjs` compares with them in both directions.
 
+## The second scene: the native HUD
+
+`main_native.tscn` is the same game with a HUD written in GDScript, the second arm of the 0.5 milestone's final comparison
+([docs/research/frontier-arm-b.md](../../docs/research/frontier-arm-b.md)). It mirrors `main.tscn` without the `Application` and without the
+`FabricSurface`: the `GameServices` root, the `World` ahead of `HUDLayer`, `HUDLayer/HUD` (`native_hud/hud.tscn`) and the validations. With no
+`Application` the node registers no service and the HUD plays on the node's signals and methods (`snapshot_changed`, `hover_changed`, `select_unit`,
+`end_turn` and the rest), which are the game's, shared by both scenes.
+
+The HUD has the same six panels, seven contexts and testIDs as the React Native one, and the same table:
+`native_hud/hud.gd` mounts the panels of the context and unmounts the others, each panel is a scene with a script of its own
+(`bar`, `actions`, `tile`, `city`, `research`, `dialog`), and a Control is named by its testID. The city screen with the research list and the
+event dialog are overlays (`overlay.gd`): a full-screen Control that stops the pointer, above the map. The icons are the same PNGs, in
+`TextureRect`s and `Button.icon`.
+
+```sh
+godot --path . --headless res://main_native.tscn -- --validate-hud        # the same matrix, phase and input stages, on the native HUD
+godot --path . --headless res://main_native.tscn -- --validate-overlays   # the queue, the blocking overlays, Escape, a new game
+```
+
+**The stress mode.** For the comparison's `stress` window the node also owns a stress overlay (`services/stress.gd`) that is not the game's: `stress_begin`, `stress_step` and
+`stress_end` enter it, change it and leave it, and while it is on the snapshot carries a log of 200 lines and a production list of 100 items (`stress`, the one optional field of the
+schema). Both HUDs show it in `hud-stress` in every context, outside the table of panels, and the execution runner reads `stats()` on either, in the same shape: on the native HUD
+node, and on `HudStats` (`hud_stats.gd`) in `main.tscn`, which reads the registry's own counters and no JavaScript
+([docs/research/frontier-stress.md](../../docs/research/frontier-stress.md)).
+
+`main_bare.tscn` is the third scene, for the comparison's arm A: `GameServices` and the `World` and nothing else, so no `HUDLayer`, no
+`Application` and no `FabricSurface`. The validations are not in it; the game plays on the node's methods and publishes its snapshots as in the other two.
+
+The probes read the HUD through a reader (`hud_reader.gd`): `hud_reader_host.gd` takes the rows from the React Native host's snapshot,
+`hud_reader_native.gd` from the Controls, and the scene says which one it is. `npm run test:civ-lite-ui` runs both scenes, and its sabotage script
+has three for the native HUD. The stability probe is the React Native host's and does not run on this scene.
+
 ## Layout
 
 - `game/`: the rules and the scenario in plain GDScript, with no extension, no node and no React. `game/game.gd` is the entry
@@ -68,7 +105,14 @@ mirror of the registered schemas, which `tests/frontier-services-parity.test.mjs
 - `services/`: `game_services.gd` owns a session and its `epoch` and publishes the snapshot and the intents as typed services;
   `schema.gd` is the one GDScript source of every schema it registers. See
   [docs/research/frontier-services.md](../../docs/research/frontier-services.md).
-- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_validation.gd`: the scene, the HUD and the validations described above.
+- `world/`, `ui/`, `main.tscn`, `validation.gd`, `hud_probe.gd`, `hud_validation.gd`, `overlay_validation.gd`, `stability_validation.gd`,
+  `stability_judge.gd`: the scene, the HUD and the validations described above (`hud_probe.gd` is what the three HUD probes share).
+- `native_hud/`, `main_native.tscn`, `main_bare.tscn`, `hud_reader*.gd`: the native HUD, its scene, the scene with no HUD and the readers the probes look at either HUD through.
+- `services/stress.gd`, `hud_stats.gd`: the stress mode's overlay and the runner's `stats()` for the React Native HUD.
+- `ui/icons/`: the six icons of the HUD (settler, warrior, city, food, production, science), 32x32 PNGs drawn from shapes by
+  `scripts/civ-lite-icons.mjs` (original art, no third-party image). `ui/hud/icons.ts` imports each as an asset (`ui/assets.d.ts` declares
+  `*.png`) and `Icon` in `ui/hud/kit.tsx` draws it with an `Image`: the resources of the bar, the unit actions, the units and the city of the
+  tile card, and the city screen's title and production items, which are inside the Modal's window.
 
 ## Validation
 
@@ -82,12 +126,14 @@ first cycle's. In a provisioned project:
 godot --path . --headless --editor -- --godot-fabric-build-check     # builds ui/index.tsx with the addon's private toolchain
 godot --path . --headless -- --validate                               # the ten cycles; writes civ-lite-report.json
 godot --path . --headless -- --validate-hud                           # the panels of the seven contexts, the turn and the pointer; writes civ-lite-ui-report.json
+godot --path . --headless -- --validate-overlays                      # the queue of three events, the remount and the blocking Modals; writes civ-lite-overlay-report.json
+godot --path . --headless -- --validate-stability                     # twenty cycles of each overlay, what leaks, focus, the icons; writes civ-lite-stability-report.json
 ```
 
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global
 Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. `npm run test:civ-lite-ui` does the
-same for the HUD (`--validate-hud`, judged again by an independent oracle, with a control and
-`node scripts/civ-lite-ui-sabotage.mjs` for its sabotages). The runs, the receipt and two
+same for the HUD (`--validate-hud`, `--validate-overlays` and `--validate-stability`, each judged again by an independent oracle, a static scan of the
+HUD against the 0.5 manifest, controls, and `node scripts/civ-lite-ui-sabotage.mjs` for its sabotages). The runs, the receipt and two
 captures are in [docs/evidence/frontier-consumer/](../../docs/evidence/frontier-consumer/README.md); hosted CI is pending. The game and the services
 also run in the laboratory's root project:
 

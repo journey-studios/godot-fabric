@@ -1,0 +1,9 @@
+
+> godot-fabric@0.1.0 check:publication
+> node scripts/publication-scan.mjs
+
+{
+  "passed": true,
+  "files": 1796,
+  "failures": []
+}

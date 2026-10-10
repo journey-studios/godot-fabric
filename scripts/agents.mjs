@@ -8,12 +8,10 @@ import { fileURLToPath } from "node:url";
 import { parseArgs, promisify } from "node:util";
 import { AGENT_SLOTS, AGENT_STATES, MAX_MESSAGES, coordinate, messageTimeline, validateAgent } from "../dashboard/agents.mjs";
 import { ago, shortPath } from "../dashboard/format.mjs";
+import { withoutGitLocation } from "./git-environment.mjs";
 
 const run = promisify(execFile);
-// Git hooks (pre-commit...) export variables that locate the hook's own repository state. Inherited, they would
-// make `git -C <other worktree>` read the wrong place or fail, so every git call here runs without them.
-const GIT_LOCATION_VARIABLES = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_COMMON_DIR", "GIT_PREFIX"];
-const gitEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !GIT_LOCATION_VARIABLES.includes(name)));
+const gitEnv = withoutGitLocation();
 // The board polls other agents' worktrees: without --no-optional-locks, `git status` would refresh their index
 // and could make a concurrent `git add`/`git commit` of that agent fail on index.lock.
 const git = async (directory, ...args) => (await run("git", ["--no-optional-locks", "-C", directory, ...args], { env: gitEnv, maxBuffer: 64 * 1024 * 1024 })).stdout;

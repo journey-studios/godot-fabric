@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {copyFile, mkdir, readFile, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {SABOTAGES as variants} from "../tests/websocket-sabotages.mjs";
 import {guardSources} from "./sabotage-sources.mjs";
 
 // The retained sabotages of the WebSocket slice: each breaks one behavior of the host's WebSocket support on purpose,
@@ -20,16 +21,6 @@ import {guardSources} from "./sabotage-sources.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const host = path.join(root, "addons/fabric_godot.dylib");
 const cmake = path.join(root, ".deps/python/bin/cmake");
-const variants = [
-  {name: "origin", argument: "--sabotage=origin", hostDirectory: "build/websocket-sabotage-origin-host",
-    file: "native/websocket_module.cpp",
-    find: '    if (!has_origin) request.headers.emplace_back("origin", websocket::default_origin(url));',
-    replace: '    if (false) request.headers.emplace_back("origin", websocket::default_origin(url));'},
-  {name: "stop", argument: "--sabotage=stop", hostDirectory: "build/websocket-sabotage-stop-host",
-    file: "native/godot_websocket_connection.cpp",
-    find: "      wslay_event_queue_close(wslay_, 1001, nullptr, 0);",
-    replace: "      wslay_event_queue_close(wslay_, 1000, nullptr, 0);"},
-];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
 const files = [...new Set(variants.map(variant => variant.file))];

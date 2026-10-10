@@ -4,7 +4,7 @@ extends RefCounted
 # emits, the arguments of every method, their result and the options a registration carries (the end of a turn is an
 # accepted job). game_services.gd registers from here and nowhere else repeats a schema. The shapes are the DTO documented in docs/research/frontier-game.md, in the registry's schema language
 # (docs/GAME_SERVICES.md): scalars are "integer" and "string"; `{"array": schema}` and `{"object": {field: schema}}` are
-# exact, with no optional field and no union. The TypeScript mirror is consumers/civ-lite/ui/frontier-types.ts, and
+# exact, with no union, and a field of an object may be `{"optional": schema}`. The TypeScript mirror is consumers/civ-lite/ui/frontier-types.ts, and
 # tests/frontier-services-parity.test.mjs compares the two in both directions.
 
 const INT := "integer"
@@ -31,12 +31,17 @@ const CITY_SCREEN := {"object": {"present": INT, "name": STR, "x": INT, "y": INT
 const TECH := {"object": {"id": STR, "label": STR, "cost": INT, "state": STR, "enabled": INT, "reason": STR, "reason_text": STR}}
 const RESEARCH := {"object": {"current": STR, "known": INT, "needed": INT, "rate": INT, "techs": {"array": TECH}}}
 const CHOICE := {"object": {"id": STR, "label": STR, "detail": STR}}
-const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}}}
+# `index` and `count` place the dialog in the queue of events being answered: 1-based, "1 of 3"; both 0 while it is closed.
+const DIALOG := {"object": {"open": INT, "id": STR, "title": STR, "text": STR, "choices": {"array": CHOICE}, "index": INT, "count": INT}}
 # `last_job` is the id of the last end-of-turn job that finished, 0 for none: a HUD that connects late learns from it that the
 # job it was told about is over, without a replay of the signal.
+# The comparison's stress mode (services/stress.gd): the log (200 lines, each beginning with its five-digit sequence number) and the
+# production list (100 items), carried by the snapshot only while the mode is on. It is the one optional field of a schema here.
+const STRESS_ITEM := {"object": {"id": INT, "label": STR, "progress": INT, "cost": INT}}
+const STRESS := {"object": {"log": {"array": STR}, "production": {"array": STRESS_ITEM}}}
 const SNAPSHOT := {"object": {"version": INT, "epoch": INT, "last_job": INT, "turn": INT, "phase": STR, "context": STR,
   "selection": SELECTION, "resources": RESOURCES, "actions": {"array": ACTION}, "tile": TILE_CARD, "city": CITY_SCREEN,
-  "research": RESEARCH, "dialog": DIALOG}}
+  "research": RESEARCH, "dialog": DIALOG, "stress": {"optional": STRESS}}}
 
 # --- The pointer --------------------------------------------------------------------------------------------------
 
@@ -73,6 +78,10 @@ const METHOD_ARGS := {
   "new_game": [],
   # Not a rule of the game: the scene drops its World (game_services.gd). It is here so that HUD and scene share one list.
   "open_menu": [],
+  # Not a rule of the game either: the comparison's stress mode (services/stress.gd), begun, stepped and ended through the services.
+  "stress_begin": [],
+  "stress_step": [],
+  "stress_end": [],
 }
 
 # The registration options of the methods that have any. `end_turn` answers on acceptance (docs/GAME_SERVICES.md): the game

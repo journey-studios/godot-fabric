@@ -23,7 +23,9 @@ o ScrollView original do PR #58 e as regras do jogo do PR #70, a main `e1c7a39`)
 commit quando cada comando rodou; os arquivos deste registro, o `docs/API.md`, o `docs/PARITY.md`, o `ROADMAP.md` e o
 script `scripts/scope-scroll-crash.mjs` foram escritos depois e **não são entrada de nenhuma lane**. Ambiente: macOS
 arm64 (26.6.2), Godot oficial **4.7.2** (`ed1daf0bf`), React Native **0.87.1**, Node **v22.23.3**, modo headless. O recibo
-[`report.json`](report.json) fixa os SHA-256 das fontes, dos relatórios e do host, e as contagens abaixo.
+[`report.json`](report.json) fixa os SHA-256 das fontes, dos relatórios e do host, e as contagens abaixo. A CI hospedada e o Pages da `main` em
+`b0e40aa` (o squash do PR #74) têm recibos próprios, [`hosted-ci.json`](hosted-ci.json) e [`publication.json`](publication.json), descritos em "CI hospedada e
+Pages".
 
 ## O que o manifesto decide
 
@@ -201,6 +203,29 @@ Todos passaram, a partir do commit `e33817e`:
 
 O que a execução da fatia consertou no caminho está no `report.json` (`firstPassFailures`).
 
+## CI hospedada e Pages
+
+O push da `main` em `b0e40aa` (o squash do #74, run [37842839329](https://github.com/journey-studios/godot-fabric/actions/runs/37842839329) do workflow
+Contracts) passou nos cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (7 min),
+`native-cold-start` (56 min) e `parity-comparison` (21 s). O [recibo](hosted-ci.json), escrito por `scripts/hosted-receipts.mjs` a partir da API do GitHub, dos
+logs e dos artefatos baixados e conferido sem rede pelo `--check` do mesmo script, registra o run, o PR e o artefato:
+
+- **O checkout.** Todos os jobs usaram `b0e40aa`, e a árvore do head do PR (`ed2c69c`, 10 commits) é a árvore do squash.
+- **A lane de JS.** O job `contracts` passou `npm run test:contracts` (7, 43 e 334 testes de Node e 13 de Python), e dele os **13 testes** de
+  `tests/scope-0.5.test.mjs`, pelos nomes que o arquivo tem em `b0e40aa`; `check:static` e `check:publication` passaram. No job nativo, `npm run test:scroll-view`
+  (passo 28, 45 s) passou os seus 5 testes, entre eles os 3 de `tests/scroll-view-contract.test.mjs` que, com os 13, o `report.json` conta como a lane de JS.
+- **A lane nativa.** `npm run test:scope-0.5` (passo 118, 30 s) passou o seu teste, e o log do artefato imprime `SCOPE_PASSED: 181`.
+- **O artefato.** `native-scope-0.5` (id 11581397662, 600.687 bytes, SHA-256 `1b259af8…`, igual ao digest da API e ao do log de upload) tem 4 arquivos (o relatório
+  atual, o relatório completo, a comparação e o log), e o recibo fixa o SHA-256 de cada um.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run 37842839320, 20:53:45 a 20:54:36Z, `build` e `deploy` em success, 43 testes do painel). O deployment
+6946556335 está em success e o `dashboard/migration.json` do squash (SHA-256 `677123bb…`) tem a entrada de atividade `milestone-0-5-v05-04-scope-1b9f120`, mas o
+artefato `github-pages` (id 11577793612) **não existe mais**: o run não o lista. O recibo guarda só o digest do log de upload (`2d0056fa…`), e o `migration.json`
+implantado **não foi comparado** com o commitado. Um push seguinte da `main` substitui o deployment, então o site público também não foi comparado.
+
+Continua só local: o controle causal sobre `e1c7a39` (`--previous`, 22 de 177), as seis sabotagens e a reprodução da queda do ScrollView. O run não confere os
+IDs dos 181 checks com os do `report.json` nem roda o oráculo sobre o relatório hospedado: o recibo prova que o passo passou e que o artefato é o que o job enviou.
+
 ## Divergências registradas
 
 **Props que o próprio RN injeta numa View pública.** `TouchableWithoutFeedback` e `TouchableNativeFeedback` passam
@@ -300,5 +325,7 @@ terminou em `SIGBUS` sem a linha do manipulador: o sinal varia, a prop e a monta
   exige o mesmo SHA-256 e falha sem ele).
 - O manifesto não edita a auditoria de 2026-10-01 (`docs/compatibility/react-native-0.87.1.json`): onde ela está
   atrasada, o manifesto diz `auditStale`, e o PARITY.md ganhou só uma linha de ponteiro, sem mexer em contagens.
-- **Não há CI hospedado nem publicação no Pages** para este registro: ele é local, macOS arm64, headless. Nenhum
+- **A execução do registro é local** (macOS arm64, headless). A CI hospedada e o Pages da `main` em `b0e40aa` têm recibos
+  ([`hosted-ci.json`](hosted-ci.json), [`publication.json`](publication.json)), mas o run só roda as lanes de JS e a nativa corrente; o controle `--previous`, as
+  sabotagens e a reprodução da queda do ScrollView seguem locais, e o `migration.json` implantado não foi comparado (o artefato expirou). Nenhum
   hardware, nenhum iOS e nenhuma exportação foram exercitados. Nenhum checkpoint, peso ou denominador do 1.0 se move.

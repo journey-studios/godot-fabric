@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://native_hud/research.gd" id="1"]
+
+[node name="hud-research" type="PanelContainer"]
+custom_minimum_size = Vector2(440, 0)
+script = ExtResource("1")
+
+[node name="Rows" type="VBoxContainer" parent="."]
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="hud-research-title" type="Label" parent="Rows"]
+unique_name_in_owner = true
+mouse_filter = 2
+theme_type_variation = &"HeadingLabel"
+
+[node name="hud-research-progress" type="Label" parent="Rows"]
+unique_name_in_owner = true
+mouse_filter = 2
+theme_type_variation = &"ResourceLabel"
+
+[node name="Techs" type="VBoxContainer" parent="Rows"]
+unique_name_in_owner = true
+mouse_filter = 2
+theme_override_constants/separation = 4

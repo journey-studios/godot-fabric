@@ -1,0 +1,44 @@
+{
+  "format": "godot-fabric.local-dashboard-capture/v1",
+  "recordedAt": "2026-10-08T23:54:40.359527+00:00",
+  "urls": [
+    "http://127.0.0.1:4317/#milestones",
+    "http://127.0.0.1:4317/#activity"
+  ],
+  "sourceCommit": "5596acb1cf975ff470acf531c0843fef19706e70",
+  "dashboardDataSha256": "402128b2daead39b9a2d0fbe60241e8c3233429062a62cc05b4470fef95bcd2c",
+  "images": [
+    {
+      "path": "dashboard-symlink-local.jpg",
+      "bytes": 85704,
+      "sha256": "b2412d50285ee7b3920266762ab33526363858ee5a442f97792e342c09c15861"
+    },
+    {
+      "path": "dashboard-symlink-activity-local.jpg",
+      "bytes": 98981,
+      "sha256": "25c70ea090354ad56245576ef316724aebb8f320698db6e9e5854d26ae561c83"
+    }
+  ],
+  "observed": {
+    "p2Progress": "50%",
+    "p2Open": [
+      "Frontier game replay in clean OS profile",
+      "Second Mac or VM"
+    ],
+    "releaseProgress": "20.5%",
+    "releaseCheckpoints": "32/156",
+    "releaseDone": "0/39",
+    "latestActivityId": "macos-export-symlink-review-5596acb",
+    "latestActivityCounts": {
+      "nativeTests": "14/14",
+      "runtime": "40/43",
+      "controls": 6,
+      "localArchiveAudit": "285/285"
+    }
+  },
+  "limits": [
+    "Local browser captures; no public Pages deployment is claimed.",
+    "P2 criterion links retain their previous immutable fixed-window evidence.",
+    "The current local activity adds no done value."
+  ]
+}

@@ -1,0 +1,36 @@
+--- {WORKTREE}/build/macos-export-Verified-33220-1791499097327-6e5eb0/validation-original.gd	2026-10-08 19:38:29
++++ {WORKTREE}/build/macos-export-Verified-33220-1791499097327-6e5eb0/validation-adapted.gd	2026-10-08 19:38:29
+@@ -9,6 +9,7 @@
+   checks.append({"name": message, "passed": condition})
+   if not condition:
+     push_error("CONSUMER_CHECK_FAILED: " + message)
++    print("MACOS_EXPORT_FAILED_SNAPSHOT:" + JSON.stringify({"check": message, "hud": state(hud), "inventory": state(inventory)}))
+ 
+ func damage_events_equal(actual: Array, expected: Array) -> bool:
+   if actual.size() != expected.size():
+@@ -71,8 +72,13 @@
+   if not OS.get_cmdline_user_args().has("--capture"):
+     return
+   await RenderingServer.frame_post_draw
+-  check(get_viewport().get_texture().get_image().save_png("res://consumer-" + stage + ".png") == OK, "Consumer capture saved: " + stage)
++  check(get_viewport().get_texture().get_image().save_png("user://consumer-" + stage + ".png") == OK, "Consumer capture saved: " + stage)
+ 
++func _enter_tree() -> void:
++  super._enter_tree()
++  if DisplayServer.get_name() != "headless":
++    get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
++
+ func _ready() -> void:
+   if not OS.get_cmdline_user_args().has("--validate"):
+     return
+@@ -184,8 +190,9 @@
+   await frames()
+   check(services().damages == before_late_signal and services().errors.is_empty(), "Stopped consumer handlers cannot receive later game signals")
+   var report := {"schemaVersion": 1, "host": "independent-consumer", "displayServer": DisplayServer.get_name(), "checks": checks, "beforeStop": initial, "afterStop": state(hud), "geometry": geometry_observations}
+-  var output := FileAccess.open("res://consumer-report.json", FileAccess.WRITE)
++  var output := FileAccess.open("user://consumer-report.json", FileAccess.WRITE)
+   output.store_string(JSON.stringify(report, "  ") + "\n")
+   var success := checks.all(func(entry: Dictionary) -> bool: return entry.passed)
++  print("MACOS_EXPORT_USER_DATA_DIR:" + OS.get_user_data_dir())
+   print("CONSUMER_VALIDATION_PASSED" if success else "CONSUMER_VALIDATION_FAILED")
+   get_tree().quit(0 if success else 1)

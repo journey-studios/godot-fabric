@@ -1,0 +1,428 @@
+{
+  "format": "godot-fabric.macos-arm64-export/v1",
+  "status": "passed",
+  "startedAt": "2026-10-08T20:04:52.883Z",
+  "output": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/Verified.app",
+  "template": "{WORKTREE}/build/p2-native-export-producer/official-arm64-template.zip",
+  "limitations": [
+    "local ad-hoc signing only",
+    "not a distribution/notarization claim",
+    "no mobile or second-machine claim"
+  ],
+  "stages": [
+    {
+      "name": "provision",
+      "passed": true
+    },
+    {
+      "name": "editor-build",
+      "passed": true,
+      "logSha256": "46be7136721bab59f0d1446e5607cfcf1329c582e59f9eb2bbc4449207b9f677"
+    },
+    {
+      "name": "payload-preflight",
+      "passed": true,
+      "logSha256": "2e7a5d097de6598e446579931b2876c6ac817193efcfa595f4df7003264a6b2c"
+    },
+    {
+      "name": "arm64-release-export",
+      "passed": true,
+      "logSha256": "ed89f87190d595181a06e36093b66e06e06826e62be2f44a0e7eb9327ea26be6"
+    }
+  ],
+  "removedDyldEnvironmentKeys": [],
+  "templateMember": {
+    "member": "macos_template.app/Contents/MacOS/godot_macos_release.arm64",
+    "bytes": 82920128,
+    "sha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+    "mode": 493,
+    "architectures": [
+      "arm64"
+    ],
+    "archiveSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+    "extractedPath": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/template-engine/macos_template.app/Contents/MacOS/godot_macos_release.arm64"
+  },
+  "sdk": {
+    "manifestSha256": "a2cae81cd095b5915194f7dd3378dc0c08be2602911077329c3efffaa44dea2a",
+    "sourceCommit": "58f527193039222b19794960e7b662cb34c65e74",
+    "sourceDirty": false,
+    "hostSha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+    "frameworkSourceHashes": {
+      "hermesvm.framework": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+      "ReactNativeDependencies.framework": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+    },
+    "provisionLogSha256": "3397d238a30edab14b97efb9831a5cdf17037bb8b965f8257fadb1bd13d2e3cc",
+    "sourceFileCount": 219,
+    "sourceFilesMapSHA256": "0a732d5e4eefb27ef3b469d8800c5dd222015df8eda41f39e4fead9353df48be"
+  },
+  "fixture": {
+    "canonicalProjectSha256": "1127b6ff2a55610d6c72c7f23d0758a3a4dafb4dc30ad98d04bd306fb8a12dce",
+    "adaptedProjectSha256": "67b319ad0aa96e3b572b97676e36863455bee634cf5f0be52a0065f84b96b679",
+    "canonicalValidationSha256": "17fbd9ff76ec51a31e1750d3918c8feaf2242c1a8c9669e640531b0c173f56bc",
+    "adaptedValidationSha256": "e5182b3f3aaa99a3c11004024789c523e72c0ee01da2506585ca0eca021a14b6",
+    "validationDiff": "--- {WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/validation-original.gd\t2026-10-08 17:05:06\n+++ {WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/validation-adapted.gd\t2026-10-08 17:05:06\n@@ -71,7 +71,7 @@\n   if not OS.get_cmdline_user_args().has(\"--capture\"):\n     return\n   await RenderingServer.frame_post_draw\n-  check(get_viewport().get_texture().get_image().save_png(\"res://consumer-\" + stage + \".png\") == OK, \"Consumer capture saved: \" + stage)\n+  check(get_viewport().get_texture().get_image().save_png(\"user://consumer-\" + stage + \".png\") == OK, \"Consumer capture saved: \" + stage)\n \n func _ready() -> void:\n   if not OS.get_cmdline_user_args().has(\"--validate\"):\n@@ -184,8 +184,9 @@\n   await frames()\n   check(services().damages == before_late_signal and services().errors.is_empty(), \"Stopped consumer handlers cannot receive later game signals\")\n   var report := {\"schemaVersion\": 1, \"host\": \"independent-consumer\", \"displayServer\": DisplayServer.get_name(), \"checks\": checks, \"beforeStop\": initial, \"afterStop\": state(hud), \"geometry\": geometry_observations}\n-  var output := FileAccess.open(\"res://consumer-report.json\", FileAccess.WRITE)\n+  var output := FileAccess.open(\"user://consumer-report.json\", FileAccess.WRITE)\n   output.store_string(JSON.stringify(report, \"  \") + \"\\n\")\n   var success := checks.all(func(entry: Dictionary) -> bool: return entry.passed)\n+  print(\"MACOS_EXPORT_USER_DATA_DIR:\" + OS.get_user_data_dir())\n   print(\"CONSUMER_VALIDATION_PASSED\" if success else \"CONSUMER_VALIDATION_FAILED\")\n   get_tree().quit(0 if success else 1)\n",
+    "validationDiffSha256": "a9c0ebf72b318b133464394a7ba7ea37048eaee62a7c5c182a1f4eaca504fbaf",
+    "projectDiff": "--- {WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/project-original.godot\t2026-10-08 17:05:06\n+++ {WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/project-adapted.godot\t2026-10-08 17:05:06\n@@ -1,7 +1,7 @@\n config_version=5\n \n [application]\n-config/name=\"Godot Fabric Consumer\"\n+config/name=\"Godot Fabric Export 66418-1791489892857-0c4aea\"\n run/main_scene=\"res://main.tscn\"\n \n [display]\n@@ -9,6 +9,8 @@\n window/size/viewport_height=600\n \n [rendering]\n+textures/vram_compression/import_s3tc_bptc=true\n+textures/vram_compression/import_etc2_astc=true\n renderer/rendering_method=\"gl_compatibility\"\n environment/defaults/default_clear_color=Color(0.035, 0.047, 0.075, 1)\n \n",
+    "projectDiffSha256": "6b97196a90d49eb8d61dd6652d5db400abde8f21cf03b14cd098680b3268cca2",
+    "presetSha256": "0bf7fa418521d5640607fd2f5d3918bbabdcb88afd9c3656b66f3872574b8036",
+    "projectName": "Godot Fabric Export 66418-1791489892857-0c4aea",
+    "supportedChecks": "the unchanged 40/43 names/order are pinned in scripts/macos-export-checks.json",
+    "checkInventorySha256": "0a341a27628c86f55104ad03e74c6e6fa13d111d364fefbf985972ed4f3e2833"
+  },
+  "bundle": {
+    "path": "res://.godot_fabric/app.js",
+    "sha256": "e77990ec64160c4a1aef0291d373b6059a686263ade8a92647d0f496e1fb41e6",
+    "reportSha256": "b824df71f309588df733d985b8069f60475d2875534a465fd302ab3cafb5ab90",
+    "assets": null,
+    "adapterSelection": null,
+    "sdkSourceCommit": "58f527193039222b19794960e7b662cb34c65e74"
+  },
+  "pack": {
+    "path": "Contents/Resources/Godot Fabric Export 66418-1791489892857-0c4aea.pck",
+    "format": 4,
+    "fileCount": 27,
+    "bundleEmbeddedByteForByte": true,
+    "buildToolchainExcluded": true,
+    "editorScriptsExcluded": true,
+    "pckSHA256": "18763559e2a22bf797ca9f373e9a62e3f9e87befabb0e0c3cf0c1e2e3642139f",
+    "inspectorLogSha256": "f9cbd20bd2a311ab99f6b0717326135b87e6c8f07eae718171c3c9e46f384668"
+  },
+  "frameworkNormalization": {
+    "hostSha256Before": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+    "hostSha256After": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+    "frameworks": [
+      {
+        "name": "hermesvm.framework",
+        "version": "1",
+        "binaryName": "hermesvm",
+        "beforeTreeSha256": "bf8fccc81277f177c58c501343e884fd89f51cd95d79f68259954f7b8d6c637b",
+        "afterTreeSha256": "bf8fccc81277f177c58c501343e884fd89f51cd95d79f68259954f7b8d6c637b",
+        "binaryBeforeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+        "binaryAfterSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+        "aliases": [
+          {
+            "alias": "Versions/Current",
+            "linkTarget": "1",
+            "action": "retained-symlink",
+            "previousLink": "1"
+          },
+          {
+            "alias": "Resources",
+            "linkTarget": "Versions/Current/Resources",
+            "action": "retained-symlink",
+            "previousLink": "Versions/Current/Resources"
+          },
+          {
+            "alias": "hermesvm",
+            "linkTarget": "Versions/Current/hermesvm",
+            "action": "retained-symlink",
+            "previousLink": "Versions/Current/hermesvm"
+          }
+        ],
+        "resourceBundles": []
+      },
+      {
+        "name": "ReactNativeDependencies.framework",
+        "version": "A",
+        "binaryName": "ReactNativeDependencies",
+        "beforeTreeSha256": "29ff3daa56a4e140b93d99e514de1e6d346e06d41d5968a67794d5054038d430",
+        "afterTreeSha256": "0969bb0713103b632a9c406cf1598652c3d4e063a167db251d73f753bc244538",
+        "binaryBeforeSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+        "binaryAfterSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+        "aliases": [
+          {
+            "alias": "Versions/Current",
+            "linkTarget": "A",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "627e8f3c0941dfa26f306b98f75ec763d70fd8ec19a1b3f0d651b152d92148bc",
+            "canonicalSha256": "627e8f3c0941dfa26f306b98f75ec763d70fd8ec19a1b3f0d651b152d92148bc"
+          },
+          {
+            "alias": "Resources",
+            "linkTarget": "Versions/Current/Resources",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "5fd9d179d0d1169882486d2be228ed350b73268716b4cf058d54e9db06658ea1",
+            "canonicalSha256": "5fd9d179d0d1169882486d2be228ed350b73268716b4cf058d54e9db06658ea1"
+          },
+          {
+            "alias": "ReactNativeDependencies",
+            "linkTarget": "Versions/Current/ReactNativeDependencies",
+            "action": "replaced-verified-duplicate",
+            "duplicateSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+            "canonicalSha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+          }
+        ],
+        "resourceBundles": [
+          {
+            "name": "ReactNativeDependencies_SocketRocket.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "6e1c38198ed416f2f339d064ed66aa762c3b29b6b5fd6eeeec441669c521137c",
+            "target": "Versions/A/ReactNativeDependencies_SocketRocket.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_SocketRocket.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_boost.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "85b48cc62811b184c760f73f8babc5327092fab8ea39b1f0e779f7b75b2f2994",
+            "target": "Versions/A/ReactNativeDependencies_boost.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_boost.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_folly.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "e16557af696f6f4ea95c13f9f8a968cbf0a3cf78309e13f7c94018cf74aa6cd6",
+            "target": "Versions/A/ReactNativeDependencies_folly.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_folly.bundle"
+          },
+          {
+            "name": "ReactNativeDependencies_glog.bundle",
+            "action": "moved-verified-resource",
+            "sourceTreeSha256": "54b73b1a662eb52ea5b058bd877e3785ec339d6b776c5d302b914cd06020b54c",
+            "target": "Versions/A/ReactNativeDependencies_glog.bundle",
+            "linkTarget": "Versions/Current/ReactNativeDependencies_glog.bundle"
+          }
+        ]
+      }
+    ]
+  },
+  "app": {
+    "bundleIdentifier": "org.journeystudios.godotfabric.exportvalidation",
+    "executableName": "Godot Fabric Export 66418-1791489892857-0c4aea",
+    "executable": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/MacOS/Godot Fabric Export 66418-1791489892857-0c4aea",
+    "executableRecord": {
+      "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/MacOS/Godot Fabric Export 66418-1791489892857-0c4aea",
+      "bytes": 82920128,
+      "sha256": "e914bf38d2369aa0066dc3dbb825744fce98b10fed3a7fc66305875ded0e6b06",
+      "mode": 493
+    },
+    "host": {
+      "source": {
+        "path": "{DISPOSABLE_PROJECT}/addons/godot_fabric/native/fabric_godot.dylib",
+        "bytes": 6716112,
+        "sha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+        "mode": 493
+      },
+      "beforeSigning": {
+        "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/fabric_godot.dylib",
+        "bytes": 6716112,
+        "sha256": "c635d2e8ca0f56b4ed41376607cf839d1b9668372d5005e0950a7dfd360597f2",
+        "mode": 420
+      },
+      "afterSigning": {
+        "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/fabric_godot.dylib",
+        "bytes": 6695216,
+        "sha256": "bcc1a58c7e97e959e5a6f4a732355786975894c46f1c34d162f06e7543edf354",
+        "mode": 420
+      }
+    },
+    "hostLoads": [
+      "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+      "@rpath/hermesvm.framework/Versions/1/hermesvm",
+      "/usr/lib/libc++.1.dylib",
+      "/usr/lib/libSystem.B.dylib"
+    ],
+    "hostRpaths": [
+      "@loader_path/frameworks"
+    ],
+    "loadRecords": [
+      {
+        "label": "app-executable",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/MacOS/Godot Fabric Export 66418-1791489892857-0c4aea",
+        "libraries": [
+          "/System/Library/Frameworks/ForceFeedback.framework/Versions/A/ForceFeedback",
+          "/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa",
+          "/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon",
+          "/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit",
+          "/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio",
+          "/System/Library/Frameworks/CoreMIDI.framework/Versions/A/CoreMIDI",
+          "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+          "/System/Library/Frameworks/GameController.framework/Versions/A/GameController",
+          "/System/Library/Frameworks/CoreHaptics.framework/Versions/A/CoreHaptics",
+          "/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo",
+          "/System/Library/Frameworks/AVFoundation.framework/Versions/A/AVFoundation",
+          "/System/Library/Frameworks/CoreMedia.framework/Versions/A/CoreMedia",
+          "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore",
+          "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+          "/System/Library/Frameworks/UniformTypeIdentifiers.framework/Versions/A/UniformTypeIdentifiers",
+          "/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface",
+          "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+          "/System/Library/Frameworks/MetalFX.framework/Versions/A/MetalFX",
+          "/System/Library/Frameworks/MetalKit.framework/Versions/A/MetalKit",
+          "/usr/lib/libSystem.B.dylib",
+          "/usr/lib/libz.1.dylib",
+          "/usr/lib/libc++.1.dylib",
+          "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+          "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics",
+          "/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices",
+          "/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": [
+          "@executable_path/../Frameworks",
+          "@executable_path"
+        ]
+      },
+      {
+        "label": "host",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/fabric_godot.dylib",
+        "libraries": [
+          "@rpath/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies",
+          "@rpath/hermesvm.framework/Versions/1/hermesvm",
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libSystem.B.dylib"
+        ],
+        "rpaths": [
+          "@loader_path/frameworks"
+        ]
+      },
+      {
+        "label": "hermesvm-framework",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+        "libraries": [
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libSystem.B.dylib",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": []
+      },
+      {
+        "label": "ReactNativeDependencies-framework",
+        "binary": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+        "libraries": [
+          "/usr/lib/libc++.1.dylib",
+          "/usr/lib/libc++abi.dylib",
+          "/usr/lib/libSystem.B.dylib",
+          "/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork",
+          "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+          "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation",
+          "/System/Library/Frameworks/Security.framework/Versions/A/Security",
+          "/usr/lib/libobjc.A.dylib"
+        ],
+        "rpaths": []
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "hermesvm.framework",
+        "source": {
+          "path": "{DISPOSABLE_PROJECT}/addons/godot_fabric/native/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12004952,
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "mode": 493
+        },
+        "beforeSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12004952,
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "mode": 420
+        },
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "bundlePath": "Contents/Frameworks/frameworks/hermesvm.framework",
+        "afterSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/hermesvm.framework/hermesvm",
+          "bytes": 12070224,
+          "sha256": "ffc34452c10ab1697e1776b70979e597755c97d913ae1039d9b0e72312dd2d9b",
+          "mode": 420
+        }
+      },
+      {
+        "name": "ReactNativeDependencies.framework",
+        "source": {
+          "path": "{DISPOSABLE_PROJECT}/addons/godot_fabric/native/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2468408,
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "mode": 420
+        },
+        "beforeSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2468408,
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "mode": 420
+        },
+        "architectures": [
+          "arm64",
+          "x86_64"
+        ],
+        "bundlePath": "Contents/Frameworks/frameworks/ReactNativeDependencies.framework",
+        "afterSigning": {
+          "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/Frameworks/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies",
+          "bytes": 2512032,
+          "sha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1",
+          "mode": 420
+        }
+      }
+    ],
+    "signing": "ad-hoc local signing verified; no distribution or notarization claim",
+    "executableAfterSigning": {
+      "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.staging-66418-1791489892857-0c4aea.app/Contents/MacOS/Godot Fabric Export 66418-1791489892857-0c4aea",
+      "bytes": 82439632,
+      "sha256": "743528def69dc6921c0d18fa92057151ec4f1b0f9ce1b6d956931c55e1b8d078",
+      "mode": 493
+    },
+    "engineVersion": "4.7.2.stable.official.ed1daf0bf"
+  },
+  "relocation": {
+    "completedBeforeRuntime": true,
+    "path": "{WORKTREE}/build/macos-export-native-positive-9d5dbc40-2521-47ba-8ae2-022711c3b943/.Verified.runtime-66418-1791489892857-0c4aea.app"
+  },
+  "runtimes": [
+    {
+      "displayServer": "headless",
+      "checkCount": 40,
+      "logSha256": "bd77f9b2e0ca8f0776ee5246232216d8811986a4e2ad03ebf8397a0c639a932c"
+    },
+    {
+      "displayServer": "macOS",
+      "checkCount": 43,
+      "logSha256": "9d25d59745a380aa963200d0e95fa5b0951038a3f99cdc35a69b26c8befeaf2e"
+    }
+  ],
+  "captures": [
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/initial.png",
+      "bytes": 47765,
+      "sha256": "e0ec3423b36e794b11f0eb09dbc53b6a8f15a4d26c4587a01a07ee53c02bbcaf",
+      "mode": 420,
+      "dimensions": {
+        "width": 1080,
+        "height": 600
+      }
+    },
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/updated.png",
+      "bytes": 55198,
+      "sha256": "84665c00c88fc434fec02f4db25240c0de959125d1c7d285b5d564893c9a9412",
+      "mode": 420,
+      "dimensions": {
+        "width": 1080,
+        "height": 600
+      }
+    },
+    {
+      "path": "{WORKTREE}/build/macos-export-Verified-66418-1791489892857-0c4aea/resized.png",
+      "bytes": 57698,
+      "sha256": "bd88f4668db61cbe1d76cec5174f096a9e9e77c436bbc118e155bad275a2b2cd",
+      "mode": 420,
+      "dimensions": {
+        "width": 1080,
+        "height": 600
+      }
+    }
+  ],
+  "publishedAppSha256": "fbd414121f854737e2895787ab61dab32089cd5617e68666bead6498596c71d9",
+  "completedAt": "2026-10-08T20:05:27.433Z",
+  "published": true,
+  "publishedAt": "2026-10-08T20:05:27.434Z",
+  "curation": {
+    "originalReceiptSHA256": "63d1c9995fce14be0108762ba9bd90d18bcf6f1f3eb0871cafcb22b250ffaa74",
+    "sourcePinsSummary": "All 219 pins independently match the producer Git blobs; the exact original SDK manifest is retained locally and uploaded by CI."
+  }
+}

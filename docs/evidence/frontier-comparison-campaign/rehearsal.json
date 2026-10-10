@@ -1,0 +1,51 @@
+{
+  "rehearsal": true,
+  "notAResult": "This is a rehearsal of the campaign. No number in it is a measurement of an arm for the comparison, and no campaign was run.",
+  "campaign": "campaign.json",
+  "campaignSha256": "72c52c53e481ffbb6588efe7a4078c8f3c20cb78915352359a6c77af06c64de0",
+  "lanes": [
+    "presented"
+  ],
+  "slots": [
+    1,
+    3
+  ],
+  "assumedRefreshHz": [
+    {
+      "lane": "presented",
+      "slot": 1,
+      "arm": "A",
+      "read": -1,
+      "assumed": 60
+    },
+    {
+      "lane": "presented",
+      "slot": 2,
+      "arm": "B",
+      "read": -1,
+      "assumed": 60
+    },
+    {
+      "lane": "presented",
+      "slot": 3,
+      "arm": "C",
+      "read": -1,
+      "assumed": 60
+    }
+  ],
+  "unavailableWindows": [],
+  "sizesAre": "the size of the provisioned copy, not of a Release export",
+  "provenance": {
+    "readCosts": {
+      "source": "docs/evidence/frontier-stress/costs.json",
+      "statsUsec": {
+        "B": 0.86,
+        "C": 4.5
+      },
+      "notTaken": {
+        "evaluateUsec": 100,
+        "surfaceSnapshotUsec": 570
+      }
+    }
+  }
+}

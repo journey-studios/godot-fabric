@@ -1,0 +1,427 @@
+{
+ "format": "godot-fabric.civ-lite-ui-frame-time-diagnostic/v1",
+ "what": "Raw numbers of the diagnosis of the frame-time regression of #100, taken with throw-away instruments that were removed (a headless probe that played a new game, selected a tile and ended three turns through the services and read the host counters before and after each; and a temporary patch of the turn probe that timed its own reads of the Surface snapshot). The retained check is the observation rule of tests/frontier-turn-oracle.mjs.",
+ "hud": {
+  "main": "consumers/civ-lite/ui at 0b9fbbf (icons by Image)",
+  "previous": "consumers/civ-lite/ui at fb51c07 (no icons)"
+ },
+ "hostCountersPerStep": {
+  "note": "Headless, the host counters over one step (loader.*: the image loader; imageViews.*: the sum of the Image views the step left mounted, so a step that mounts the 4 Images of a tile card reads 4 and a step that mounts none reads 0). Two processes each, in step order select-tile-6-8 then end-turn-1..3.",
+  "main": [
+   {
+    "select-tile-6-8": {
+     "counters.commits": 1,
+     "counters.updates": 0,
+     "counters.creates": 16,
+     "counters.deletes": 0,
+     "loader.requested": 4,
+     "loader.loaded": 4,
+     "loader.uploads": 4,
+     "imageViews.loadStarts": 4,
+     "imageViews.loads": 4,
+     "imageViews.loadEnds": 4,
+     "imageViews.states": 4,
+     "imageViews.draws": 8,
+     "effects.itemsCreated": 4
+    },
+    "end-turn-1": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-2": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-3": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    }
+   },
+   {
+    "select-tile-6-8": {
+     "counters.commits": 1,
+     "counters.updates": 0,
+     "counters.creates": 16,
+     "counters.deletes": 0,
+     "loader.requested": 4,
+     "loader.loaded": 4,
+     "loader.uploads": 4,
+     "imageViews.loadStarts": 4,
+     "imageViews.loads": 4,
+     "imageViews.loadEnds": 4,
+     "imageViews.states": 4,
+     "imageViews.draws": 8,
+     "effects.itemsCreated": 4
+    },
+    "end-turn-1": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-2": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-3": {
+     "counters.commits": 6,
+     "counters.updates": 47,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 18,
+     "effects.itemsCreated": 0
+    }
+   }
+  ],
+  "previous": [
+   {
+    "select-tile-6-8": {
+     "counters.commits": 1,
+     "counters.updates": 0,
+     "counters.creates": 12,
+     "counters.deletes": 0,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-1": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-2": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-3": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    }
+   },
+   {
+    "select-tile-6-8": {
+     "counters.commits": 1,
+     "counters.updates": 0,
+     "counters.creates": 12,
+     "counters.deletes": 0,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-1": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-2": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    },
+    "end-turn-3": {
+     "counters.commits": 6,
+     "counters.updates": 29,
+     "counters.creates": 2,
+     "counters.deletes": 2,
+     "loader.requested": 0,
+     "loader.loaded": 0,
+     "loader.uploads": 0,
+     "imageViews.loadStarts": 0,
+     "imageViews.loads": 0,
+     "imageViews.loadEnds": 0,
+     "imageViews.states": 0,
+     "imageViews.draws": 0,
+     "effects.itemsCreated": 0
+    }
+   }
+  ]
+ },
+ "timedFrameReads": {
+  "note": "The turn probe patched to time its own reads: every call of mounted() (the full read of the Surface snapshot, as it was on main) was timed and, from the second patch on, split into the snapshot call and its parse. 6 rounds of the tour (2 warm-up) in one process; the 24 steady turns, each frame after the first of the seven. medianInterval is the interval between two timed frames; medianMountedInInterval the time inside it spent in mounted(); medianRest the difference. bytesPerCall, snapMsPerInterval and parseMsPerInterval are the second patch (two calls an interval). The loader log was still filling (3 to 138 records), so the 32-round lane reads more.",
+  "windowed": {
+   "main": {
+    "firstPatch": [
+     {
+      "mountedShare": {
+       "medianInterval": "11.88",
+       "medianMountedInInterval": "7.40",
+       "medianRest": "4.03"
+      },
+      "run": 1,
+      "turns": 24,
+      "medianSumOfSeven": "80.3",
+      "medianFrame": "11.55",
+      "medianIdle": "11.70",
+      "load": "{ 7.43 7.10 7.49 }",
+      "host": "pumpMs=14.8 jsMs=12.8 mountMs=1.2 layoutMs=0.6"
+     },
+     {
+      "mountedShare": {
+       "medianInterval": "11.55",
+       "medianMountedInInterval": "7.09",
+       "medianRest": "4.21"
+      },
+      "run": 2,
+      "turns": 24,
+      "medianSumOfSeven": "75.0",
+      "medianFrame": "11.15",
+      "medianIdle": "11.17",
+      "load": "{ 8.22 7.34 7.56 }",
+      "host": "pumpMs=15.4 jsMs=13.2 mountMs=1.3 layoutMs=0.7"
+     }
+    ],
+    "secondPatch": [
+     {
+      "mountedShare": {
+       "callsPerInterval": 2,
+       "snapMsPerInterval": 2.371,
+       "parseMsPerInterval": 4.229,
+       "bytesPerCall": 104924,
+       "medianInterval": "11.08",
+       "medianMountedInInterval": "6.91",
+       "medianRest": "3.92"
+      },
+      "run": 1,
+      "turns": 24,
+      "medianSumOfSeven": "72.3",
+      "medianFrame": "10.85",
+      "medianIdle": "11.69",
+      "load": "{ 6.98 6.97 7.34 }",
+      "host": "pumpMs=14.7 jsMs=12.7 mountMs=1.2 layoutMs=0.6"
+     }
+    ]
+   },
+   "previous": {
+    "firstPatch": [
+     {
+      "mountedShare": {
+       "medianInterval": "7.17",
+       "medianMountedInInterval": "2.56",
+       "medianRest": "4.57"
+      },
+      "run": 1,
+      "turns": 24,
+      "medianSumOfSeven": "53.4",
+      "medianFrame": "7.04",
+      "medianIdle": "7.28",
+      "load": "{ 6.59 7.02 7.43 }",
+      "host": "pumpMs=13.6 jsMs=11.6 mountMs=1.2 layoutMs=0.7"
+     },
+     {
+      "mountedShare": {
+       "medianInterval": "7.16",
+       "medianMountedInInterval": "2.61",
+       "medianRest": "4.42"
+      },
+      "run": 2,
+      "turns": 24,
+      "medianSumOfSeven": "53.3",
+      "medianFrame": "6.93",
+      "medianIdle": "12.25",
+      "load": "{ 6.31 6.91 7.37 }",
+      "host": "pumpMs=13.8 jsMs=11.6 mountMs=1.2 layoutMs=0.7"
+     }
+    ],
+    "secondPatch": [
+     {
+      "mountedShare": {
+       "callsPerInterval": 2,
+       "snapMsPerInterval": 1.404,
+       "parseMsPerInterval": 1.124,
+       "bytesPerCall": 25949,
+       "medianInterval": "7.52",
+       "medianMountedInInterval": "2.69",
+       "medianRest": "4.81"
+      },
+      "run": 1,
+      "turns": 24,
+      "medianSumOfSeven": "56.9",
+      "medianFrame": "7.41",
+      "medianIdle": "11.73",
+      "load": "{ 9.27 7.63 7.56 }",
+      "host": "pumpMs=15.0 jsMs=12.7 mountMs=1.4 layoutMs=0.8"
+     }
+    ]
+   }
+  },
+  "headless": {
+   "main": {
+    "secondPatch": [
+     {
+      "mountedShare": {
+       "callsPerInterval": 2,
+       "snapMsPerInterval": 2.652,
+       "parseMsPerInterval": 4.394,
+       "bytesPerCall": 104929,
+       "medianInterval": "10.46",
+       "medianMountedInInterval": "7.60",
+       "medianRest": "2.84"
+      },
+      "run": 1,
+      "turns": 24,
+      "medianSumOfSeven": "67.8",
+      "medianFrame": "10.14",
+      "medianIdle": null,
+      "load": "{ 4.51 6.53 7.13 }",
+      "host": "pumpMs=17.2 jsMs=14.6 mountMs=1.6 layoutMs=0.9"
+     }
+    ]
+   }
+  }
+ },
+ "unpatchedQuickRuns": {
+  "note": "The same 6 rounds with the probe as it was (main) and then with the fix, windowed, two processes each, the 24 steady turns: the median of the sum of the 7 frames of a turn. The fix on the previous HUD was also run, with the load average at 13 from another agent, and is not kept.",
+  "main": [
+   {
+    "run": 1,
+    "medianSumOfSevenMs": 72.9,
+    "medianFrameMs": 10.76,
+    "load": "{ 6.65 7.19 7.68 }"
+   },
+   {
+    "run": 2,
+    "medianSumOfSevenMs": 73.1,
+    "medianFrameMs": 10.87,
+    "load": "{ 6.84 7.18 7.65 }"
+   }
+  ],
+  "fix": [
+   {
+    "run": 1,
+    "medianSumOfSevenMs": 53.9,
+    "medianFrameMs": 5.84,
+    "load": "{ 6.08 6.80 7.07 }"
+   },
+   {
+    "run": 2,
+    "medianSumOfSevenMs": 53,
+    "medianFrameMs": 4.75,
+    "load": "{ 5.95 6.68 7.01 }"
+   }
+  ]
+ }
+}
