@@ -933,6 +933,8 @@ load limit of 2.0 are `execucao`'s, and the text of the decision is `relatorio`'
 [record](https://github.com/journey-studios/godot-fabric/blob/4592dba920d8cc106ed97b96ad04322c842f7851/docs/evidence/frontier-comparison-analysis/README.md) is local evidence, and its hosted CI run
 and Pages publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-10, the third amendment of the final comparison's protocol, committed as [`0a5f5b4`](https://github.com/journey-studios/godot-fabric/blob/0a5f5b41895b33f4eef09919974ffd4b5a46dd79/docs/research/frontier-comparison-protocol.json): the 12-turn replay the protocol names has 77 intents, not the 73 it had when it was pre-registered, because the queue of three events of #93 (`e108e9d`) changed the game and its roteiro after the pre-registration. The reference to the golden hash keeps its text, and the constant it names now holds the hash of the 77-step replay, which #93 updated. No comparative measurement came before the amendment, the test's pin moves to `PINS[3]`, and the frozen values do not move. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
