@@ -15,7 +15,7 @@ import {SABOTAGES} from "../tests/frontier-turn-sabotages.mjs";
 // main scene in the root and adds the probe to it. The addon's Application works under that script, so the project needs no autoload.
 const TEMPLATE = "civ-lite";
 const RUNNER = "res://turn_probe/frontier-turn-runner.gd";
-const PROBE_FILES = ["tests/frontier-turn-runner.gd", "tests/frontier-turn-probe.gd", "tests/performance-sampler.gd"];
+const PROBE_FILES = ["tests/frontier-turn-runner.gd", "tests/frontier-turn-probe.gd", "tests/performance-sampler.gd", "tests/window-presence.gd"];
 const REPORT = "frontier-turn-report.json";
 const CAPTURES = "frontier-turn-captures";
 

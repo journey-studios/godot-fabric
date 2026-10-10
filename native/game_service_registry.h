@@ -55,6 +55,10 @@ class GameServiceRegistry : public std::enable_shared_from_this<GameServiceRegis
   void pump_host(size_t task_budget = 64, size_t event_budget = 128);
   void stop();
   bool active() const;
+  // What the binding of the default origin with this name has ingested and handed to the JavaScript runtime: {bound, emitted, sent, delivered}. `sent`
+  // counts distinct revisions (one emission reaching several subscriptions is one) and `delivered` is the revision of the last value a subscription
+  // got. A read of counters, with no JSON and no JavaScript.
+  godot::Dictionary delivery(const godot::String &name) const;
   folly::dynamic snapshot() const;
  private:
   struct State;

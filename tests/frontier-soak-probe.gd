@@ -49,9 +49,9 @@ const CLAIM_POINT := Vector2(230.0, 300.0)
 const MAX_STEPS := 24
 const FRAME_LIMIT := 600
 const JOB_SNAPSHOTS := 7
-# What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the twelve methods (one for each
-# intent, `new_game` and `open_menu`). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82) and is a count, not a rule of this soak.
-const BINDINGS := 15
+# What the game node registers: two states (`frontier.snapshot` and `frontier.hover`), the signal `frontier.turn_ended` and the fifteen methods (one for each
+# intent, `new_game`, `open_menu` and the three of the stress mode). It was 14 before the pointer's state `frontier.hover` (P8 V05-05 slice 1, #82) and is a count, not a rule of this soak.
+const BINDINGS := 18
 # How long Hermes' tracker may take to report a promise rejected with no handler (2000 ms for an Error, as the `promise` library does; see the fixture's
 # control), and a little more.
 const TRACKER_DELAY_MS := 2300

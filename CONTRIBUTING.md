@@ -44,8 +44,8 @@ dispatched run adds five jobs:
   it runs its share of the suites in their original order:
   - `native-suites-runtime`: the examples, runtime, list, text, networking,
     image, modal and WebSocket suites, then the consumer lanes;
-  - `native-suites-frontier`: the Frontier baseline, game, services, soak and
-    turn;
+  - `native-suites-frontier`: the Frontier baseline, game, services, soak,
+    turn and the CPU-time instrument's self-check;
   - `native-suites-input`: the module, focus, pointer, event, responder and
     accessibility suites.
 
@@ -63,6 +63,9 @@ of 69. That run took 63 minutes in all, because the input job waited 31
 minutes for a macOS runner while other pull requests ran the old single job.
 
 Each suite still runs alone on its runner, and its artifact keeps its name. The
-hosted receipts of a slice (`scripts/hosted-receipts.mjs`) need a dispatched run
-of `main` at the slice's squash commit, because a push no longer runs the
+hosted receipts of a slice (`scripts/hosted-receipts.mjs`) need a run of the
+Contracts workflow on `main` while `main` is at the slice's squash commit. A
+slice with no native step can use the push of `main` at that squash, whose
+native jobs are skipped. A slice with a native step needs a dispatched run of
+`main` while it is still at the squash, because a push no longer runs the
 native suites.

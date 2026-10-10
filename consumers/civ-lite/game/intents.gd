@@ -11,12 +11,12 @@ const World := preload("world.gd")
 const Economy := preload("economy.gd")
 
 
-# The refusal every intent shares: a turn being processed, or an event waiting. resolve_event is the only intent
-# that goes past the event, and nothing goes past a turn in progress.
+# The refusal every intent shares: a turn being processed, or an event waiting in the queue. resolve_event is the only
+# intent that goes past the events, and nothing goes past a turn in progress.
 static func check_guard(state: Dictionary, allow_event: bool = false) -> String:
   if state.phase != "idle":
     return "turn_in_progress"
-  if int(state.event.pending) == 1 and not allow_event:
+  if not state.events.queue.is_empty() and not allow_event:
     return "event_pending"
   return ""
 
@@ -189,30 +189,31 @@ static func check_resolve_event(state: Dictionary, choice_id: String) -> String:
   var guard := check_guard(state, true)
   if guard != "":
     return guard
-  if int(state.event.pending) != 1:
+  if state.events.queue.is_empty():
     return "no_event"
-  for choice: Dictionary in Rules.EVENT_CHOICES:
+  # Only the head of the queue can be answered, and only with its own choices.
+  for choice: Dictionary in Rules.EVENTS[Rules.event_index(state.events.queue[0])].choices:
     if choice.id == choice_id:
       return ""
   return "unknown_choice"
 
 
-# Welcoming the wanderers draws their gift from the game's PRNG; turning them away is a fixed trade.
+# Answers the head of the queue: its choice adds its amount to its stock, plus a draw from the game's PRNG when it has a spread
+# (welcoming the wanderers is the only one), and the next event becomes the head.
 static func apply_resolve_event(state: Dictionary, choice_id: String) -> void:
-  var gift := 0
-  if choice_id == "welcome":
-    gift = Rules.WELCOME_BASE + Prng.next_below(state.rng, Rules.WELCOME_SPREAD)
-    state.res.food = int(state.res.food) + gift
-  else:
-    gift = Rules.TURN_AWAY_PRODUCTION
-    state.res.production = int(state.res.production) + gift
-  state.event.pending = 0
-  state.event.resolved = 1
-  state.event.choice = choice_id
+  var event_id: String = state.events.queue[0]
+  var choices: Array = Rules.EVENTS[Rules.event_index(event_id)].choices
   var choice_index := 0
-  for index in Rules.EVENT_CHOICES.size():
-    if Rules.EVENT_CHOICES[index].id == choice_id:
+  for index in choices.size():
+    if choices[index].id == choice_id:
       choice_index = index
+  var chosen: Dictionary = choices[choice_index]
+  var gift := int(chosen.amount)
+  if int(chosen.spread) > 0:
+    gift += Prng.next_below(state.rng, int(chosen.spread))
+  state.res[chosen.resource] = int(state.res[chosen.resource]) + gift
+  state.events.queue.remove_at(0)
+  state.events.resolved.append({"id": event_id, "choice": choice_id})
   World.emit(state, "event_resolved", choice_index, gift)
 
 

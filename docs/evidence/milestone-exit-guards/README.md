@@ -49,11 +49,39 @@ node --test tests/milestone-guards.test.mjs
 npm run type-check && npm run check:static && npm run check:publication && npm run test:dashboard
 ```
 
-> **CI hospedada pendente.** O passo "Milestone exit guards (X9 and X10)" do job `contracts` de `contracts.yml` e o teste `tests/milestone-guards.test.mjs`,
-> dentro de `test:contracts`, ainda não rodaram na CI hospedada. Tudo o que esta página registra é evidência local, em macOS arm64. O passo foi reproduzido
-> localmente, na forma corrigida (primeiro pai), em clones rasos (profundidade 1): num `pull_request` sobre um merge criado com `git merge --no-ff` cujo primeiro pai não é o `base.sha` do payload
-> (a guarda passa com `X9 clean, X10 clean`, e o passo antigo, com o `base.sha`, reprovaria o PR por uma nota que a main mudou), num `push` e num evento sem base (o passo falha com mensagem), mas isso não é a CI. Esta
-> entrega não fecha checkpoint, GF, peso, denominador nem as saídas X9 e X10.
+## CI hospedada e Pages
+
+O push da `main` em `333181d` (o squash do #87, run
+[37945060216](https://github.com/journey-studios/godot-fabric/actions/runs/37945060216) do workflow Contracts) passou nos cinco
+jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios` (8 min),
+`native-cold-start` (70 min) e `parity-comparison` (20 s). Esta entrega é só Node e git e não depende do job nativo, então o
+[recibo](hosted-ci.json), escrito por `scripts/hosted-receipts.mjs` a partir da API do GitHub e dos logs e conferido sem rede pelo
+`--check` do mesmo script, não registra passo nativo nem artefato: prova o passo da guarda e o teste de contrato da fatia.
+
+- **O checkout.** Todos os jobs usaram `333181d`, e a árvore do head do PR (`422226b`, 5 commits) é a árvore do squash.
+- **O passo da guarda.** "Milestone exit guards (X9 and X10)" (passo 5 do job `contracts`, menos de 1 s) passou num `push` e imprimiu
+  `MILESTONE_GUARDS_CHECK_PASSED: against 1adcdb3c89b9 (--base 1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f); X9 clean, X10 clean`. A base é
+  o pai do squash (o #86), que o recibo confere com a API: a guarda comparou a árvore do squash com o commit anterior da `main`, e o X9
+  (o PR acrescenta `milestone-0-5-exit-guards-b02e2a5`) e o X10 saíram limpos.
+- **O teste.** `tests/milestone-guards.test.mjs` rodou dentro de `npm run test:contracts` (7, 43 e 422 testes de Node e 13 de Python,
+  `# fail 0`): os 36 testes de nível superior do arquivo, que o recibo confere pelo nome no log do job, passaram. São 36 e não os 35 da
+  tabela acima porque o caso do `id` repetido veio com a revisão do PR, depois de `bf00341`. `check:static` e `check:publication` também
+  passaram.
+
+O [Pages](publication.json) rodou sobre o mesmo squash (run
+[37945060177](https://github.com/journey-studios/godot-fabric/actions/runs/37945060177), 14:33:27 a 14:34:26Z, `build` e `deploy` em
+success, 43 testes do painel). O deployment 6963301397 está em success, o artefato `github-pages` (id 11622514512, SHA-256
+`2170ddf6…`, igual ao digest da API e ao do log de upload) tem 15 arquivos, e o `migration.json` de dentro tem os mesmos bytes do
+`dashboard/migration.json` do squash (SHA-256 `0316a425…`) e a entrada de atividade `milestone-0-5-exit-guards-b02e2a5`. Um push
+seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**Continua só local** o que a CI não exerceu: o passo rodou só no ramo `push` (`EVENT_NAME: push`). O ramo `pull_request` (num merge
+criado com `git merge --no-ff` cujo primeiro pai não é o `base.sha` do payload, onde a guarda passa com `X9 clean, X10 clean` e o passo
+antigo reprovaria o PR por uma nota que a main mudou), o evento sem base (o passo falha com mensagem) e o ramo `workflow_dispatch`
+(acrescentado depois, no #92, e descrito na nota "Depois do registro: execução manual") foram reproduzidos em clones rasos de profundidade 1,
+e isso não é a CI. A auditoria
+(`--audit` sobre os 28 commits e `--audit --verify`) também é local. Esta entrega não fecha checkpoint, GF, peso, denominador nem as
+saídas X9 e X10.
 
 ## As regras
 
@@ -100,7 +128,7 @@ muda a 1.0. O X10 é limpo nos 28.
 
 O #74 acrescentou `milestone-0-5-v05-04-scope-1b9f120` e, no mesmo pull request, mudou dois campos do GF-27:
 
-- `tasks[GF-27].note`: o fecho "CI hospedada ... pendente" virou o resultado da CI hospedada do #69 (2.805 para 3.030 caracteres);
+- `tasks[GF-27].note`: o fecho que deixava a CI hospedada do #69 em aberto virou o resultado dela (2.805 para 3.030 caracteres);
 - `tasks[GF-27].checkpoints[slice].evidence`: duas entradas a mais, de 7 para 9, o recibo da CI hospedada e o do Pages do #69.
 
 As duas são da classe `text-or-evidence`. **Nenhum `done`, peso, status, checkpoint ou item mudou**: 0 mudanças da classe `moves-1.0`, e os números da 1.0 não se moveram. São os recibos do #69 (GF-27,

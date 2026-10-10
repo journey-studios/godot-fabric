@@ -1,23 +1,29 @@
 import assert from "node:assert/strict";
 import {HEAP_STEADY_GROWTH_LIMIT_BYTES} from "./performance-cases.mjs";
 import {nearestRank, round, verifyGrowth, verifyReading} from "./performance-oracle.mjs";
-import {heapAtRest} from "./frontier-baseline-oracle.mjs";
+import {heapAtRest, verifyPresence} from "./frontier-baseline-oracle.mjs";
 import {RSS_GROWTH_LIMIT_KB} from "./frontier-soak-cases.mjs";
 import {rssGrowthAtRest} from "./frontier-soak-oracle.mjs";
-import {CLICK_FRAME_LIMIT, GAME_CONTEXTS, HUD_CONNECTIONS, IDLE_FRAMES, MARKERS, HUD_PANELS, PHASES, REST_FRAMES, STEADY_ROUNDS, STABLE_FRAMES, STEPS,
+import {CLICK_FRAME_LIMIT, EVENT_QUEUE, GAME_CONTEXTS, HUD_CONNECTIONS, IDLE_FRAMES, MARKERS, HUD_PANELS, MODAL_CONTEXTS, PHASES, REST_FRAMES, STEADY_ROUNDS, STABLE_FRAMES, STEPS,
   CONTEXT_PANELS, TURNS_PER_ROUND, TURN_FRAME_LIMIT, WARMUP_ROUNDS} from "./frontier-turn-cases.mjs";
 
 // Independent oracle for the turn measured on the Frontier game as a consumer has it (V05-06, criterion `turno`), written from the contract of the
 // experiment and from what the game and the engine themselves count, not from the probe: it takes the raw report of the headless lane and judges, rule
 // by rule, what must hold at any pace of the machine.
 //
-// The contract. A round is a tour of 16 real clicks over a new game: a tile of the map, the buttons of the actions panel, the End turn of the bar four
-// times and the answer to the event. Every click makes exactly one call to the game, the intent of its step, and the map hears a click on the map and
-// no other. The HUD shows the panels of the context the click leads to (the table of consumers/civ-lite/hud_validation.gd) within a ceiling of frames
+// The contract. A round is a tour of 19 real clicks over a new game: a tile of the map, the buttons of the actions panel, the Close of the city screen, the End turn of
+// the bar four times and the answers to the three events of the queue, in order. The city screen and the dialog are blocking Modals, so no click of the map or of the bar
+// is made while one is open. Every click makes exactly one call to the game, the intent of its step, and the map hears a click on the map and no other. The dialog shows,
+// at each arrival, the position the game gives it ("1 of 3" to "3 of 3") and the two choices of the event at the head of the queue, which this file writes again. The HUD shows the panels of the context the click leads to (the table of consumers/civ-lite/hud_validation.gd) within a ceiling of frames
 // that catches a stall: how many frames it really takes is recorded and never fixed. At rest, after REST_FRAMES idle frames, the HUD holds the same
 // native views, the SceneTree the same nodes and Godot no orphan every time a context comes back. The end of a turn runs one phase in each frame, in the
 // order of the service, publishes a snapshot in each and the end of the turn once. The live heap at rest does not grow past the GF-30 limit by the
 // baseline's rule over the medians of the halves, and the resident memory by the soak's loose one. No error is unhandled.
+//
+// What the timed frames measure is the game's and the HUD's, and nothing the probe adds by looking: no interval between two timed frames (the frames of a click and
+// of a turn) contains a read of the Surface's snapshot, and the cheap reading the frames make of the Controls says what a full reading says when the click arrives. The
+// snapshot carries the whole application's status, among it the loader's log of every image it loaded, so a read costs what the application has accumulated and not what
+// the HUD shows: two reads in each timed frame of the turn were 4.6 ms of its frames once the HUD had icons (docs/evidence/civ-lite-ui/README.md).
 //
 // Nothing here judges a duration, the frames a click takes (against the ceiling only), the host's phases or the resident memory's level: they are recorded
 // and summarized (docs/research/frontier-turn.md).
@@ -62,10 +68,30 @@ function verifyConfig(report) {
   assert.deepEqual([...config.panels].sort(), [...HUD_PANELS].sort());
   assert.deepEqual([config.heapGrowthLimitBytes, config.rssGrowthLimitKb], [HEAP_STEADY_GROWTH_LIMIT_BYTES, RSS_GROWTH_LIMIT_KB],
     "with the GF-30 heap limit and the soak's resident-memory rule");
-  assert.ok(STEPS.length === 16 && STEPS.filter(step => step.kind === "turn").length === TURNS_PER_ROUND, "The tour presses End turn four times a round");
+  assert.ok(STEPS.length === 19 && STEPS.filter(step => step.kind === "turn").length === TURNS_PER_ROUND, "The tour is 19 clicks and presses End turn four times a round");
   assert.deepEqual(unique(STEPS.map(step => step.to)).sort(), [...GAME_CONTEXTS].sort(), "and visits all seven contexts of the game");
   STEPS.forEach((step, index) => assert.equal(step.from, index === 0 ? "none" : STEPS[index - 1].to, `step ${step.id} starts where the previous one ended`));
   assert.ok(STEADY_ROUNDS >= 30 && STEPS.filter(step => step.kind === "turn").length * STEADY_ROUNDS >= 30, "At least 30 steady rounds and 30 steady turns");
+  verifyTourOfTheQueue(config.steps);
+}
+
+// The tour against the contract of the Modals and of the queue, with nothing read from the probe: the dialog's steps are the three events answered in the order of the
+// table, each with the first choice of its head, and each leads to the head that follows (the End turn of the fourth turn to the first); no click of the map or of the bar is
+// made in a context that holds a Modal open, and each time the city screen opens the next click is its Close.
+export function verifyTourOfTheQueue(steps) {
+  const answers = steps.filter(step => step.kind === "dialog");
+  assert.deepEqual(answers.map(step => step.target), EVENT_QUEUE.map(event => `hud-dialog-choice-${event.choices[0]}`), "The tour answers the three events in the order of the queue, each with its first choice");
+  const heads = steps.filter(step => step.head !== undefined);
+  assert.deepEqual(heads.map(step => step.head), EVENT_QUEUE.map(event => event.choices[0]), "and each step that opens an event names the first choice of the head it leads to");
+  assert.deepEqual(heads.map(step => step.id), [steps.find(step => step.to === "dialog" && step.kind === "turn").id, ...answers.slice(0, -1).map(step => step.id)],
+    "the End turn that raises the events opens the first, and every answer but the last opens the next");
+  assert.deepEqual(answers.map(step => step.to), ["dialog", "dialog", "none"], "and the last answer closes the dialog");
+  steps.forEach((step, index) => {
+    assert.ok(!(step.from in MODAL_CONTEXTS) || !["map", "turn"].includes(step.kind), `step ${step.id}: no click of the map or of the bar while a Modal is open (${step.from})`);
+    if (step.to === "city") {
+      assert.deepEqual([steps[index + 1]?.kind, steps[index + 1]?.target, steps[index + 1]?.from], ["overlay", "hud-city-close", "city"], `step ${step.id}: the city screen opens and the next click is its Close`);
+    }
+  });
 }
 
 function verifyScene(stages) {
@@ -114,6 +140,14 @@ function verifyReadings(stages) {
   return chain.length;
 }
 
+// The dialog as the HUD showed it when the step arrived: the position and the two choices of the head of the queue the step leads to (the table of the cases, written again
+// there), and nothing when the click leads to no dialog.
+function verifyDialog(record, label) {
+  const head = EVENT_QUEUE.findIndex(event => event.choices[0] === STEPS[record.step].head);
+  assert.deepEqual(record.dialog, record.to === "dialog" ? {choices: EVENT_QUEUE[head].choices.map(choice => `hud-dialog-choice-${choice}`).sort(), position: `${head + 1} of ${EVENT_QUEUE.length}`}
+    : {choices: [], position: ""}, `${label}: the dialog showed ${record.to === "dialog" ? `the event ${head + 1} of the queue, with its own choices` : "nothing"}`);
+}
+
 function verifyClicks(stages) {
   for (const record of recordsOf(stages)) {
     const label = `round ${record.round} ${record.id}`;
@@ -126,10 +160,43 @@ function verifyClicks(stages) {
     assert.equal(record.worldClicks, record.kind === "map" ? 2 : 0, `${label}: the press and release ${record.kind === "map" ? "reached" : "did not reach"} the World`);
     assert.equal(record.hudCalls, record.kind === "map" ? 0 : 1, `${label}: the HUD made ${record.kind === "map" ? "no call" : "one call"}`);
     assert.equal(record.hudProblems, 0, `${label}: the HUD had no rejected call`);
+    verifyDialog(record, label);
     assert.ok(Number.isInteger(record.flushUsec) && record.flushUsec > 0 && Number.isInteger(record.latencyUsec) && record.latencyUsec >= record.flushUsec,
       `${label}: the injection and the time to the panels were timed`);
     assert.ok(record.frameUsec.length >= 1 && record.frameUsec.every(value => Number.isInteger(value) && value > 0), `${label}: and so were the frames in between`);
   }
+}
+
+// What the loader's log (images.jobs in the snapshot) can hold: native/image_loader.cpp, `max_records`.
+const LOADER_RECORDS_LIMIT = 256;
+
+// A step's timed frames, judged on what the probe read inside them: the reads of the Surface's snapshot are counted in every interval between two stamps (the frames of the
+// click, and the frames of a turn again one by one) and none was made, and the full reading taken once the click arrived says what the Controls the frames read said.
+function verifyObserved(record, label) {
+  assert.ok(Array.isArray(record.frameReads) && record.frameReads.length === record.frameUsec.length && record.frameReads.every(reads => Number.isInteger(reads) && reads >= 0),
+    `${label}: the reads of the Surface's snapshot were counted in every timed frame`);
+  assert.ok(record.frameReads.every(reads => reads === 0), `${label}: and no timed frame contains one (${record.frameReads.join(", ")})`);
+  if (record.kind === "turn") {
+    assert.ok(record.turn.frames.every(frame => frame.surfaceReads === 0), `${label}: nor does any frame of the turn (${record.turn.frames.map(frame => frame.surfaceReads).join(", ")})`);
+  }
+  assert.equal(record.fullAgrees, true, `${label}: and the Controls the frames read and the full reading of the Surface say the same when the click arrives`);
+}
+
+// What a read of the snapshot weighs, recorded at every rest of both lanes: its bytes, and the records of the loader's log it carries, which only grow with the Images mounted
+// and are never more than the log keeps nor more than the loads asked for.
+function verifySnapshotWeight(rest, label) {
+  const {bytes, loaderRecords, loaderRequests} = rest.surface;
+  assert.ok(Number.isInteger(bytes) && bytes > 0 && Number.isInteger(loaderRecords) && loaderRecords >= 0 && loaderRecords <= Math.min(loaderRequests, LOADER_RECORDS_LIMIT),
+    `${label}: the snapshot read at rest weighs ${bytes} bytes and carries ${loaderRecords} records of the loader's log, of ${loaderRequests} loads asked for`);
+}
+
+function verifyObservation(stages) {
+  const records = recordsOf(stages);
+  records.forEach(record => verifyObserved(record, `round ${record.round} ${record.id}`));
+  for (const [name, rests] of Object.entries(seriesOf(stages))) {
+    rests.forEach((rest, round) => verifySnapshotWeight(rest, `${name}, round ${round}`));
+  }
+  return {timedFrames: records.reduce((total, record) => total + record.frameReads.length, 0), readsInTimedFrames: 0};
 }
 
 // At rest the HUD holds the panels of the context, and the same native views, nodes and orphans every time the context comes back.
@@ -148,7 +215,9 @@ function verifyRests(stages) {
       assert.deepEqual(rest.markers, rest.context in MARKERS ? [rest.context] : [], `${label}: and the marker of no other context`);
       assert.equal(rest.surface.state, "mounted", `${label}: the Surface stays mounted`);
       assert.equal(rest.surface.nativeTags, counters.nativeViews, `${label}: the Surface and the host agree on the native views`);
-      assert.equal(rest.reading.godot.nodes, counters.nativeViews + constant, `${label}: the SceneTree holds the host's native views plus the ${constant} of the base`);
+      const windows = MODAL_CONTEXTS[rest.context] ?? 0;
+      assert.equal(rest.reading.godot.nodes, counters.nativeViews + constant + windows,
+        `${label}: the SceneTree holds the host's native views plus the ${constant} of the base${windows > 0 ? ` and the ${windows} Window of the Modal the ${rest.context} context holds open` : ""}`);
       assert.equal(rest.reading.godot.nodeMonitor, rest.reading.godot.nodes, `${label}: and Godot's node monitor counts the same nodes`);
       assert.equal(rest.reading.godot.orphans, 0, `${label}: Godot counts no orphan node`);
       assert.equal(rest.hud.subscriptions, HUD_CONNECTIONS, `${label}: the HUD holds its ${HUD_CONNECTIONS} connections`);
@@ -233,6 +302,10 @@ function verifyTurns(stages) {
   assert.equal(stages.published.turnEnded, turns.length, "The node published the end of the turn once for every turn pressed");
   assert.equal(stages.published.callbacks.end_turn, turns.length, "and was asked for it once for every press");
   assert.equal(stages.published.callbacks.new_game, WARMUP_ROUNDS + STEADY_ROUNDS, "A new game started every round");
+  const rounds = WARMUP_ROUNDS + STEADY_ROUNDS;
+  for (const intent of unique(STEPS.map(step => step.intent))) {
+    assert.equal(stages.published.callbacks[intent], rounds * STEPS.filter(step => step.intent === intent).length, `The game was asked for ${intent} once for every click of that intent, in every round`);
+  }
   return turns;
 }
 
@@ -250,8 +323,8 @@ function verifyErrors(stages) {
 // ------------------------------------------------------------------------------------------------------ the judgement
 const RULES = [["config", verifyConfig, report => report], ["scene", verifyScene, report => report.stages], ["shape", verifyShape, report => report.stages],
   ["readings", verifyReadings, report => report.stages], ["clicks", verifyClicks, report => report.stages], ["rests", verifyRests, report => report.stages],
-  ["heap", verifyHeap, report => report.stages], ["rss", verifyRss, report => report.stages], ["turns", verifyTurns, report => report.stages],
-  ["errors", verifyErrors, report => report.stages]];
+  ["observation", verifyObservation, report => report.stages], ["heap", verifyHeap, report => report.stages], ["rss", verifyRss, report => report.stages],
+  ["turns", verifyTurns, report => report.stages], ["errors", verifyErrors, report => report.stages]];
 
 // Every rule is judged, whatever the others say, so that a report broken for one reason is shown to fail for that one: the failures are the rules
 // that did not hold and what they said. The results of the rules that did hold are kept for the summary.
@@ -303,6 +376,8 @@ function summarize(report, results) {
       pumpSampleMs: stats(turns.flatMap(record => record.turn.pumpWindowMs.map(value => round(value, 3)))),
       clickToPanelsMs: Object.fromEntries(turns.length === 0 ? [] : Object.entries(byKey(turns, record => record.id)).map(([id, group]) => [id, clickStats(group).latencyMs]))},
     nativeNodes: results.rests, heap: results.heap,
+    observation: {...results.observation, snapshotBytesAtRoundStart: stats(stages.rounds.map(row => row.start.surface.bytes)),
+      loaderRecordsAtRoundStart: stats(stages.rounds.map(row => row.start.surface.loaderRecords)), loadsAsked: stages.rounds.at(-1).start.surface.loaderRequests},
     rss: {bySeries: results.rss.bySeries, run: results.rss.all},
     memory: {staticBytesAtBase: stages.base.reading.godot.staticMemory, staticBytesAtEnd: stages.final.godot.staticMemory},
     errors: {faults: stages.faults, control: stages.control, hud: stages.hudFinal}};
@@ -334,6 +409,7 @@ export function verifyTurnGraphicsRun(report) {
   assert.equal(stages.scene.mounted, true);
   for (const row of stages.rounds) {
     assert.equal(row.steps.length, STEPS.length, `round ${row.round}: every step`);
+    verifySnapshotWeight(row.start, `run ${report.run} round ${row.round} start`);
     row.steps.forEach((record, index) => {
       const label = `run ${report.run} round ${row.round} ${record.id}`;
       assert.deepEqual([record.id, record.kind, record.from, record.to, record.intent], [STEPS[index].id, STEPS[index].kind, STEPS[index].from, STEPS[index].to, STEPS[index].intent],
@@ -343,9 +419,12 @@ export function verifyTurnGraphicsRun(report) {
       assert.equal(record.contextAtArrival, record.to, `${label}: in the context the click leads to`);
       assert.deepEqual(record.rest.panels, CONTEXT_PANELS[record.to], `${label}: with the panels of the context`);
       assert.deepEqual(record.callbacks, {[record.intent]: 1}, `${label}: one call to the game`);
+      verifyDialog(record, label);
       assert.ok(record.frameUsec.length >= 1 && record.frameUsec.every(value => Number.isInteger(value) && value > 0), `${label}: the frames were timed`);
       assert.ok(Number.isInteger(record.flushUsec) && record.flushUsec > 0, `${label}: and so was the injection`);
       assert.ok(record.drawUsec === null || (Number.isInteger(record.drawUsec) && record.drawUsec > 0), `${label}: the time to the first drawn frame, when one was seen`);
+      verifyObserved(record, label);
+      verifySnapshotWeight(record.rest, label);
       if (record.kind === "turn") {
         verifyTurnRecord(record, label);
       }
@@ -355,6 +434,11 @@ export function verifyTurnGraphicsRun(report) {
   assert.ok(stages.idle.intervalsUsec.every(value => Number.isInteger(value) && value > 0), "and each was timed");
   assert.ok(report.checks.length > 0 && report.checks.every(check => check.passed), "Every check of the run passed");
   assert.equal(new Set(report.checks.map(check => check.name)).size, report.checks.length);
+  // The window's presence (tests/window-presence.gd) is newer than the receipts: a run recorded before it has none. Its structure is the baseline's; whether the
+  // engine could draw the window does not decide the run's validity.
+  if (stages.presence !== undefined) {
+    verifyPresence(stages.presence, `run ${report.run}`);
+  }
 }
 
 // The run in the shape the baseline's validity and statistics read (scripts/frontier-baseline-graphics.mjs): the clicks as `swaps`, the transitions of the
@@ -368,7 +452,8 @@ export function graphicsRunOf(report, {withTurns = true} = {}) {
     nativeNodes[record.to] = record.rest.surface.nativeTags;
   }
   return {scenario: report.scenario, run: report.run, godot: report.godot, provenance: stages.provenance, viewport: stages.scene.viewport,
-    config: {...stages.config, nativeNodes}, swaps: records, idle: stages.idle, frames: stages.frames, aborted: stages.aborted, checks: report.checks};
+    config: {...stages.config, nativeNodes}, swaps: records, idle: stages.idle, frames: stages.frames, aborted: stages.aborted, checks: report.checks,
+    ...(stages.presence === undefined ? {} : {presence: stages.presence})};
 }
 
 // The run whose build, window and viewport the receipt of the windowed lane carries as its own: the first accepted run; when no run was accepted, the last

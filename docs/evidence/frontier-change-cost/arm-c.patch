@@ -1,0 +1,101 @@
+diff --git a/consumers/civ-lite/ui/hud/actions.tsx b/consumers/civ-lite/ui/hud/actions.tsx
+index d63f991..16077de 100644
+--- a/consumers/civ-lite/ui/hud/actions.tsx
++++ b/consumers/civ-lite/ui/hud/actions.tsx
+@@ -8,7 +8,7 @@ import { Choice, Heading, Panel, Reason } from "./kit";
+ 
+ // The actions of the selection, exactly the `actions` of the snapshot in the order the game gave them, each with its `enabled` and,
+ // for a disabled one, the game's `reason_text`. End turn is one of them in the snapshot and lives on the bar, so it is not here. An action
+-// that is about a unit shows the unit's icon, and founding a city the city's: the unit is the one the action's argument names, among the
++// that is about a unit shows the unit's icon, founding a city the city's, and irrigating the irrigation's: the unit is the one the action's argument names, among the
+ // units of the selected tile.
+ 
+ /** The testID of an action's button: its id and its arguments, which tell two `select_unit` of a stack apart. */
+@@ -18,6 +18,9 @@ function iconOf(action: Action, units: readonly UnitCard[]): IconName | undefine
+   if (action.id === "found_city") {
+     return "city";
+   }
++  if (action.id === "irrigate") {
++    return "irrigation";
++  }
+   const unit = action.id === "select_unit" || action.id === "fortify" ? units.find(entry => entry.id === action.args[0]) : undefined;
+   return unit === undefined ? undefined : (unitIcon(unit.kind) ?? undefined);
+ }
+diff --git a/consumers/civ-lite/ui/hud/icons.ts b/consumers/civ-lite/ui/hud/icons.ts
+index 33f00e2..b39725c 100644
+--- a/consumers/civ-lite/ui/hud/icons.ts
++++ b/consumers/civ-lite/ui/hud/icons.ts
+@@ -1,15 +1,16 @@
+ import city from "../icons/city.png";
+ import food from "../icons/food.png";
++import irrigation from "../icons/irrigation.png";
+ import production from "../icons/production.png";
+ import science from "../icons/science.png";
+ import settler from "../icons/settler.png";
+ import warrior from "../icons/warrior.png";
+ 
+-// The HUD's six icons, 32x32 PNGs the template draws itself (scripts/civ-lite-icons.mjs). Each import becomes a registered asset the
++// The HUD's seven icons, 32x32 PNGs the template draws itself (scripts/civ-lite-icons.mjs). Each import becomes a registered asset the
+ // builder copies beside the bundle, and an Image draws it: the resources of the bar, the units of the actions and the tile card, the
+ // city, and the production items of the city screen, which is inside a Modal's window.
+ 
+-export const ICONS = { settler, warrior, city, food, production, science };
++export const ICONS = { settler, warrior, city, food, production, science, irrigation };
+ 
+ export type IconName = keyof typeof ICONS;
+ 
+diff --git a/consumers/civ-lite/ui/hud/tile.tsx b/consumers/civ-lite/ui/hud/tile.tsx
+index 0c8b68b..009475a 100644
+--- a/consumers/civ-lite/ui/hud/tile.tsx
++++ b/consumers/civ-lite/ui/hud/tile.tsx
+@@ -6,7 +6,7 @@ import { COLORS, Heading, Icon, Line, Panel } from "./kit";
+ 
+ // The tile card: the tile under the pointer while the pointer is over the map (Godot hears it and publishes `frontier.hover`),
+ // otherwise the selected tile of the snapshot. Both are the same card. The units on the tile show their icon beside the text, and a tile with
+-// the city shows the city's.
++// the city shows the city's. An irrigated tile shows the irrigation icon, and says Irrigated on its units line.
+ 
+ export function Tile({ selected, hover }: { selected: TileCard; hover: TileCard | null }) {
+   const hovered = hover !== null && hover.present === 1;
+@@ -21,13 +21,17 @@ export function Tile({ selected, hover }: { selected: TileCard; hover: TileCard
+       </Line>
+       <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+         {card.city === 1 ? <Icon id="hud-tile-city-icon" name="city" /> : null}
++        {card.irrigated === 1 ? <Icon id="hud-tile-irrigated" name="irrigation" /> : null}
+         {card.units.map(unit => {
+           const icon = unitIcon(unit.kind);
+           return icon === null ? null : <Icon key={unit.id} id={`hud-tile-unit-${unit.id}-icon`} name={icon} />;
+         })}
+         <Line id="hud-tile-units" color={COLORS.muted}>
+-          {card.units.length === 0 ? "No units" : card.units.map(unit =>
+-            `${unit.name} (${unit.owner === 1 ? "yours" : "foreign"}) ${unit.moves}/${unit.max_moves}${unit.fortified === 1 ? " fortified" : ""}`).join(" · ")}
++          {[
++            ...(card.units.length === 0 ? ["No units"] : card.units.map(unit =>
++              `${unit.name} (${unit.owner === 1 ? "yours" : "foreign"}) ${unit.moves}/${unit.max_moves}${unit.fortified === 1 ? " fortified" : ""}`)),
++            ...(card.irrigated === 1 ? ["Irrigated"] : []),
++          ].join(" · ")}
+         </Line>
+       </View>
+     </> : null}
+diff --git a/consumers/civ-lite/ui/store.ts b/consumers/civ-lite/ui/store.ts
+index 3713569..8ea88a6 100644
+--- a/consumers/civ-lite/ui/store.ts
++++ b/consumers/civ-lite/ui/store.ts
+@@ -3,7 +3,7 @@ import { GodotFabric } from "@godot-fabric/runtime";
+ import type { ServiceCallResult, ServiceSubscription } from "@godot-fabric/runtime";
+ import {
+   callFrontier, FRONTIER_CLEAR_SELECTION, FRONTIER_END_TURN, FRONTIER_FORTIFY, FRONTIER_FOUND_CITY, FRONTIER_HOVER,
+-  FRONTIER_NEW_GAME, FRONTIER_OPEN_MENU, FRONTIER_SELECT_UNIT, FRONTIER_SNAPSHOT,
++  FRONTIER_IRRIGATE, FRONTIER_NEW_GAME, FRONTIER_OPEN_MENU, FRONTIER_SELECT_UNIT, FRONTIER_SNAPSHOT,
+ } from "./frontier-types";
+ import type { Action, FrontierCall, FrontierResult, FrontierSnapshot, TileCard } from "./frontier-types";
+ import { installFrontierHud, observe } from "./telemetry";
+@@ -154,6 +154,8 @@ export function sendAction(action: Action): Promise<FrontierResult | null> {
+       return send(FRONTIER_SELECT_UNIT, [unit]);
+     case "found_city":
+       return send(FRONTIER_FOUND_CITY, [unit]);
++    case "irrigate":
++      return send(FRONTIER_IRRIGATE, [unit]);
+     case "fortify":
+       return send(FRONTIER_FORTIFY, [unit]);
+     case "clear_selection":

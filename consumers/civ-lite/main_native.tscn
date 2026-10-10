@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://services/game_services.gd" id="1"]
+[ext_resource type="PackedScene" path="res://world/world.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://native_hud/hud.tscn" id="3"]
+[ext_resource type="Script" path="res://hud_validation.gd" id="4"]
+[ext_resource type="Script" path="res://overlay_validation.gd" id="5"]
+
+[node name="GameServices" type="Node"]
+script=ExtResource("1")
+world_scene=ExtResource("2")
+
+[node name="World" parent="." instance=ExtResource("2")]
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="HUDLayer" instance=ExtResource("3")]
+services_path=NodePath("../..")
+
+[node name="HudValidation" type="Node" parent="."]
+script=ExtResource("4")
+
+[node name="OverlayValidation" type="Node" parent="."]
+script=ExtResource("5")

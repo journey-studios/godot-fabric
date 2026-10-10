@@ -187,6 +187,12 @@ Variant variant(const folly::dynamic &value) {
   for (const auto &item : value.items()) dictionary[gd(item.first.asString())] = variant(item.second);
   return dictionary;
 }
+// A field of an object schema may be declared {optional: schema}: it may be absent from the value, and when it is there it must match
+// the schema. Nothing else may be optional (an array element, a method's argument, the root), and a value may carry no field the
+// declaration does not name.
+const folly::dynamic *optional_of(const folly::dynamic &schema) {
+  return schema.isObject() && schema.size() == 1 ? schema.get_ptr("optional") : nullptr;
+}
 void check_schema(const folly::dynamic &schema, size_t depth = 0) {
   if (depth > dto_depth) error("E_SERVICE_SCHEMA", "Schema depth exceeds limit");
   if (schema.isString()) {
@@ -195,7 +201,7 @@ void check_schema(const folly::dynamic &schema, size_t depth = 0) {
   } else if (schema.isObject() && schema.size() == 1) {
     if (auto element = schema.get_ptr("array")) { check_schema(*element, depth + 1); return; }
     if (auto fields = schema.get_ptr("object"); fields && fields->isObject()) {
-      for (const auto &field : fields->items()) check_schema(field.second, depth + 1);
+      for (const auto &field : fields->items()) check_schema(optional_of(field.second) ? *optional_of(field.second) : field.second, depth + 1);
       return;
     }
   }
@@ -213,12 +219,20 @@ void validate(const folly::dynamic &value, const folly::dynamic &schema) {
     if (valid) for (const auto &item : value) validate(item, *element);
   } else {
     const auto &fields = schema.at("object");
-    valid = value.isObject() && value.size() == fields.size();
+    valid = value.isObject();
+    size_t present = 0;
     if (valid) for (const auto &field : fields.items()) {
+      const auto optional = optional_of(field.second);
       const auto item = value.get_ptr(field.first);
-      if (!item) { valid = false; break; }
-      validate(*item, field.second);
+      if (!item) {
+        if (optional) continue;
+        valid = false;
+        break;
+      }
+      ++present;
+      validate(*item, optional ? *optional : field.second);
     }
+    valid = valid && present == value.size();
   }
   if (!valid) error("E_SERVICE_SCHEMA", "DTO does not match the exact declared schema");
 }
@@ -242,13 +256,15 @@ bool owner_live(uint64_t id) {
   const auto *object = id ? ObjectDB::get_instance(ObjectID(id)) : nullptr;
   return object && !object->is_queued_for_deletion();
 }
+// The origin a registration has when its options name none: the one the facade and the Godot-side registrations use.
+constexpr const char *default_origin = "default";
 struct Registration {
   Key key;
   std::string response{"completion"};
 };
 Registration options(const String &name, const Dictionary &values, bool method) {
   const auto data = VariantDTO{}.copy(values);
-  Registration result{{"default", utf8(name)}};
+  Registration result{{default_origin, utf8(name)}};
   if (result.key.second.empty()) error("E_SERVICE_ADDRESS", "Service name must not be empty");
   for (const auto &item : data.items()) {
     if (item.first == "origin" && item.second.isString() && !item.second.asString().empty()) result.key.first = item.second.asString();
@@ -329,7 +345,11 @@ struct GameServiceRegistry::State : public std::enable_shared_from_this<GameServ
   struct Binding {
     Registration registration;
     Kind kind;
-    uint64_t generation{}, revision{}, signal_owner{}, callable_owner{};
+    // `revision` counts what the binding ingested (every emission of its signal). `sent` counts the distinct revisions of it that the pump handed to
+    // the JavaScript runtime for any subscription (an emission that reaches three subscriptions is one), and `counted` is the highest of them: the
+    // counters a HUD's `stats()` reads without evaluating anything in JS. `delivered` is the revision of the last value a subscription received, as
+    // the initial read or as an event; an initial read is not an emission, so it moves `delivered` and not `sent`.
+    uint64_t generation{}, revision{}, sent{}, counted{}, delivered{}, signal_owner{}, callable_owner{};
     Signal signal;
     Callable receiver, callable;
     folly::dynamic args = folly::dynamic::array(), result = nullptr;
@@ -626,6 +646,7 @@ void GameServiceRegistry::connect(uint64_t id, folly::dynamic target, bool initi
           ("generation", std::to_string(binding->generation))("revision", revision);
       if (initial) acknowledgement["value"] = std::move(value);
       resolve(std::move(acknowledgement));
+      if (initial) binding->delivered = std::max(binding->delivered, revision);
       for (auto &payload : current->second.pending) {
         if (initial && payload["revision"].asInt() <= static_cast<int64_t>(revision)) continue;
         state->events.emplace_back(Permit{id, generation, false}, std::move(payload));
@@ -683,10 +704,26 @@ void GameServiceRegistry::pump_host(size_t task_budget, size_t event_budget) {
     auto [permit, payload] = std::move(state->events.front());
     state->events.pop_front();
     if (!state->gate->allowed(permit)) continue;
+    // A close notice is not a delivery of the binding's value.
+    std::optional<Key> delivered;
+    uint64_t delivered_revision = 0;
+    if (!permit.closed && payload.isObject() && payload["origin"].isString() && payload["name"].isString()) {
+      delivered = Key{payload["origin"].asString(), payload["name"].asString()};
+      if (payload["revision"].isInt()) delivered_revision = static_cast<uint64_t>(payload["revision"].asInt());
+    }
     state->gate->emitting = permit;
     state->emitter->emit(std::move(payload));
     state->gate->emitting.reset();
     ++state->events_sent;
+    if (delivered) if (auto found = state->bindings.find(*delivered); found != state->bindings.end()) {
+      auto &binding = *found->second;
+      // Each subscription of a binding gets the same revision, in order: the first to be handed it counts it.
+      if (delivered_revision > binding.counted) {
+        ++binding.sent;
+        binding.counted = delivered_revision;
+      }
+      binding.delivered = std::max(binding.delivered, delivered_revision);
+    }
   }
   state->pumping = false;
 }
@@ -711,6 +748,23 @@ void GameServiceRegistry::stop() {
   }
 }
 bool GameServiceRegistry::active() const { return !state->stopped; }
+Dictionary GameServiceRegistry::delivery(const String &name) const {
+  Dictionary result;
+  result["bound"] = false;
+  result["emitted"] = static_cast<int64_t>(0);
+  result["sent"] = static_cast<int64_t>(0);
+  result["delivered"] = static_cast<int64_t>(0);
+  // The binding of the default origin: the one the game's services register under. A binding of the same name under another origin is another
+  // service and is not read here.
+  if (const auto found = state->bindings.find({default_origin, utf8(name)}); found != state->bindings.end()) {
+    const auto &binding = *found->second;
+    result["bound"] = true;
+    result["emitted"] = static_cast<int64_t>(binding.revision);
+    result["sent"] = static_cast<int64_t>(binding.sent);
+    result["delivered"] = static_cast<int64_t>(binding.delivered);
+  }
+  return result;
+}
 folly::dynamic GameServiceRegistry::snapshot() const {
   auto errors = folly::dynamic::array();
   for (const auto &message : state->errors) errors.push_back(message);

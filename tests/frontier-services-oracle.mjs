@@ -36,14 +36,14 @@ import ts from "typescript";
 
 export const TYPES_FILE = "consumers/civ-lite/ui/frontier-types.ts";
 
-const ROTEIRO_STEPS = 73;
+const ROTEIRO_STEPS = 77;
 const UNMOUNT_AFTER_TURNS = 3;
 const PHASES = ["ai_plan", "ai_move", "production", "growth", "research", "refresh"];
 const TASK_LIMIT = 64;
 const EVENT_LIMIT = 128;
 const NODE_LIMIT = 10000;
 const DEPTH_LIMIT = 32;
-const BINDINGS = 15;
+const BINDINGS = 18;
 const NEW_GAMES = 3;
 const JOB_SNAPSHOTS = 7;
 const STRESS_SUBSCRIBERS = 150;
@@ -172,7 +172,7 @@ export function extractFrontierSchemas(text = readFileSync(new URL(`../${TYPES_F
       default:
         break;
     }
-    return unsupported(where, `${ts.SyntaxKind[node.kind]} is not in the schema language (no optional field, union, any, unknown or generic)`);
+    return unsupported(where, `${ts.SyntaxKind[node.kind]} is not in the schema language (no union, any, unknown or generic)`);
   }
 
   function objectOf(members, where, visiting) {
@@ -185,10 +185,9 @@ export function extractFrontierSchemas(text = readFileSync(new URL(`../${TYPES_F
         unsupported(where, "a computed property name has no schema");
       }
       const name = member.name.text;
-      if (member.questionToken !== undefined) {
-        unsupported(`${where}.${name}`, "an optional field has no schema: the objects are exact");
-      }
-      fields[name] = schemaOf(member.type, `${where}.${name}`, visiting);
+      const field = schemaOf(member.type, `${where}.${name}`, visiting);
+      // An optional field is `{optional: schema}`: the one place the registry's language has it (an object's field, never an element or an argument).
+      fields[name] = member.questionToken === undefined ? field : {optional: field};
     }
     return {object: fields};
   }
@@ -238,6 +237,12 @@ const show = schema => {
 export function diffSchema(typescript, godot, where) {
   if (typeof typescript === "string" || typeof godot === "string") {
     return typescript === godot ? [] : [`${where}: TypeScript declares ${show(typescript)}, Godot registers ${show(godot)}`];
+  }
+  if ("optional" in typescript || "optional" in godot) {
+    if ("optional" in typescript && "optional" in godot) {
+      return diffSchema(typescript.optional, godot.optional, where);
+    }
+    return [`${where}: TypeScript declares ${show(typescript)}, Godot registers ${show(godot)}`];
   }
   if ("array" in typescript || "array" in godot) {
     if ("array" in typescript && "array" in godot) {
@@ -311,9 +316,14 @@ export function conforms(value, schema, where) {
     value.forEach((item, position) => conforms(item, schema.array, `${where}[${position}]`));
   } else {
     assert.ok(value !== null && typeof value === "object" && !Array.isArray(value), `${where} must be an object`);
-    assert.deepEqual(Object.keys(value).sort(), Object.keys(schema.object).sort(), `${where} has exactly the declared fields`);
+    const required = Object.entries(schema.object).filter(([, inner]) => typeof inner === "string" || !("optional" in inner)).map(([field]) => field);
+    const declared = Object.keys(schema.object);
+    assert.ok(required.every(field => field in value) && Object.keys(value).every(field => declared.includes(field)),
+      `${where} has the required fields and no field the declaration does not name`);
     for (const [field, inner] of Object.entries(schema.object)) {
-      conforms(value[field], inner, `${where}.${field}`);
+      if (field in value) {
+        conforms(value[field], typeof inner !== "string" && "optional" in inner ? inner.optional : inner, `${where}.${field}`);
+      }
     }
   }
 }
@@ -446,6 +456,14 @@ function verifyStress(stress, {firstJob}) {
   assert.equal(sum(free.pumps), total, "stress: the pumps sent every event");
   assert.ok(free.pumps.every(sent => sent <= EVENT_LIMIT), "stress: no pump sent more than 128");
   assert.equal(free.pumps.length, Math.ceil(total / EVENT_LIMIT), `stress: a job that outran the pump drained in ceil(${total} / 128) pumps`);
+  // The host's own count of the snapshots it handed to JavaScript (`service_delivery`) counts distinct revisions: a publication that reaches
+  // 150 more subscriptions moves it by one, and it follows the revisions the registry numbered.
+  const {before, isolated: afterIsolated, free: afterFree} = stress.delivery;
+  assert.equal(afterIsolated.sent - before.sent, JOB_SNAPSHOTS, "stress: the seven publications of the isolated job are seven snapshots handed to JavaScript, whatever the subscribers");
+  assert.equal(afterFree.sent - afterIsolated.sent, JOB_SNAPSHOTS, "stress: and the seven of the node's own driver are seven more");
+  assert.equal(afterFree.emitted - before.emitted, 2 * JOB_SNAPSHOTS, "stress: the registry ingested the fourteen");
+  assert.equal(afterFree.delivered, afterFree.emitted, "stress: the last revision a subscription got is the last the registry numbered");
+  assert.ok(free.eventsSent > JOB_SNAPSHOTS * STRESS_SUBSCRIBERS, "stress: while the events sent to subscriptions were many times as many");
   assert.equal(free.pending[0], perPublication, "stress: the acceptance left one publication waiting");
   assert.ok(Math.max(...free.pending) > EVENT_LIMIT && free.pending.at(-1) === 0, "stress: the backlog grew beyond one pump while the job ran, and drained completely");
   free.received.forEach((entries, subscriber) => {
@@ -564,7 +582,7 @@ export function verifyFrontierServicesReport(report, {goldenHash, traceHash, typ
   assert.equal(report.native.gameServices.bindings, BINDINGS, "registration: the registry holds every binding");
   assert.deepEqual(report.native.errors, [], "the application reports no error");
 
-  assert.equal(report.roteiroSteps, ROTEIRO_STEPS, "the roteiro has its 73 steps");
+  assert.equal(report.roteiroSteps, ROTEIRO_STEPS, "the roteiro has its 77 steps");
   assert.equal(report.steps.length, ROTEIRO_STEPS, "every step of the roteiro was played through the services");
 
   const refusals = {};

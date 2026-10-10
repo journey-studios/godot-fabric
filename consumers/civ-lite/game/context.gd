@@ -2,7 +2,7 @@ extends RefCounted
 
 # The context the HUD shows, derived from the state and the selection by this one pure function. React never
 # decides it. In precedence order:
-#   dialog   an event is pending; it outranks everything and blocks every intent but resolve_event
+#   dialog   an event is waiting in the queue; it outranks everything and blocks every intent but resolve_event
 #   settler  the selected unit is a Settler
 #   warrior  the selected unit is a Warrior
 #   none     nothing is selected
@@ -15,7 +15,7 @@ const World := preload("world.gd")
 
 
 static func derive(state: Dictionary) -> String:
-  if int(state.event.pending) == 1:
+  if not state.events.queue.is_empty():
     return "dialog"
   var sel: Dictionary = state.sel
   if int(sel.unit) != 0:

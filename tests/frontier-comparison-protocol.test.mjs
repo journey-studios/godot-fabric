@@ -4,20 +4,45 @@ import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {decisionRuleOf} from "../scripts/frontier-comparison-decision.mjs";
+import {ascending, bootstrapDifferences, claimPValue, guarded, holmStands, intervalOf, iqr, median, mulberry32, nearestRank} from "../scripts/frontier-comparison-statistics.mjs";
 
 // The pre-registered protocol of the final comparison of the 0.5 (V05-10, criterion `protocolo`): the game without a HUD (A), with a native Godot HUD (B) and
 // with the React Native HUD (C). The protocol is docs/research/frontier-comparison-protocol.json, read by machines, and
 // docs/research/frontier-comparison-protocol.md, read by people. This test runs no game and measures nothing. It holds the protocol to its own text:
 // the schema, the decision rule (evaluated from the JSON, not recoded here), the balance of the order of the executions, the bootstrap that the
-// intervals will use, and a pin of the whole file, so that changing the protocol after the pre-registration takes changing this file on purpose.
+// intervals will use, and a pin of the whole file, so that changing the protocol after the pre-registration takes changing this file on purpose,
+// together with a new entry in the protocol's own list of `amendments`.
 const root = fileURLToPath(new URL("../", import.meta.url));
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const protocol = JSON.parse(read("docs/research/frontier-comparison-protocol.json"));
 const doc = read("docs/research/frontier-comparison-protocol.md");
+const migration = JSON.parse(read("dashboard/migration.json"));
 
 // The SHA-256 of the protocol in canonical form (keys sorted at every depth) without the `frozenValue` and `frozenAt` fields, which are the only ones
-// the later freeze may fill. Changing anything else in the JSON is an amendment: it is listed in the research note, and this value changes in the same commit.
-const PRE_REGISTERED_SHA256 = "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c";
+// the later freeze may fill. Changing anything else in the JSON is an amendment: it is listed in the research note and as an entry of the `amendments`
+// of the JSON, and a pin is added here in the same commit. PINS[n] is the hash of the protocol that carries n amendments:
+//  - PINS[0]: the pre-registration (commit 82f5f43, #84), made before any comparative measurement. That file had no `amendments` list.
+//  - PINS[1]: the amendment of 2026-10-09, `amendments[0]`: the idle reference is the median of the half-sums of consecutive pairs of the per-frame values of the
+//    600 idle frames, in the same quantity as the frames it is compared with: the CPU time per frame for the secondary outcome, the elapsed intervals between
+//    process frames for the pacing clause of `not-presented` (docs/research/frontier-comparison-protocol.md, "Amendments"). No comparative measurement had run
+//    (`measurementsBefore: 0`). The entry was reworded twice on review before it reached main, so it is one amendment with one pin: its first wording (commit 237b171,
+//    pin 6e58144ece9d1c291c818d8079f883c14bd232b7154b0274c93fa683548cb2b0) called the values "CPU times" for both uses, and the second (pin
+//    b43c5e9a0e560879c5c67a40c92a755175a74d9bc54f96938222d986e1b3319f) called them the intervals for both.
+//  - PINS[2]: the amendment of 2026-10-09, `amendments[1]`: arm B's time-box gets its length (arm C's 12.8 h of subagent active time plus an optimization pass of at
+//    most 3.2 h, 16.0 h in all), and the open item of the iPhone records the NO-GO of V05-09. No comparative measurement had run (`measurementsBefore: 0`).
+//  - PINS[3]: the amendment of 2026-10-10, `amendments[2]`: the count of the 12-turn replay written in `runs.fixed.replay` is 77 intents, the replay that the queue of
+//    three events of #93 (e108e9d) fixed, where the pre-registration had 73. The reference to the golden hash keeps its text. No comparative measurement had run (`measurementsBefore: 0`).
+//  - PINS[4]: the amendment of 2026-10-10, `amendments[3]`: the window `context-switches` starts at the intent that changes the game's context, a selection intent for the six
+//    first contexts; for the dialog, whose End Turn raises it in the refresh phase, 5 to 6 frames before it is seen, outside a window of 3 frames, the occurrence is the last `resolve_event`, which closes it (dialog -> none). The step of the same window in `runs.script` says so too. No comparative measurement had run (`measurementsBefore: 0`).
+const PINS = [
+  "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
+  "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb",
+  "0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6",
+  "c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222",
+  "6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f"
+];
+const PINNED_SHA256 = PINS[protocol.amendments.length];
 const FREEZE_KEYS = ["frozenValue", "frozenAt"];
 
 const withoutFreeze = value => {
@@ -91,6 +116,7 @@ const schema = {
   results: "string",
   baseline: {item: "string", research: "string", evidence: "string", pinnedCommit: "string", headless: "string", windowed: "string", freezeCriterion: "string"},
   preRegistration: {measurementsBeforeThisFile: "string", pin: "string", freeze: "string", amendments: "string"},
+  amendments: [{date: "string", what: "string", why: "string", before: "string", measurementsBefore: "number"}],
   arms: [{id: "string", label: "string", role: "string", hud: "string"}],
   hypotheses: [{id: "string", label: "string", contrast: {minuend: "string", subtrahend: "string"}, outcome: "string", nature: "string", expectation: "string"}],
   windows: [{id: "string", label: "string", scenario: "string", starts: "string", ends: "string", occurrences: "string", warmupOccurrences: "number", measuredOccurrences: "number",
@@ -138,30 +164,8 @@ const schema = {
 };
 
 // ---- the decision rule, evaluated from the JSON ----
-const compare = {"<": (a, b) => a < b, "<=": (a, b) => a <= b, ">": (a, b) => a > b, ">=": (a, b) => a >= b};
-const holds = (condition, interval, margin) => {
-  if (Object.hasOwn(condition, "all")) {
-    return condition.all.every(inner => holds(inner, interval, margin));
-  }
-  if (Object.hasOwn(condition, "any")) {
-    return condition.any.some(inner => holds(inner, interval, margin));
-  }
-  const endpoint = {lower: interval[0], upper: interval[1]}[condition.endpoint];
-  const bound = {margin, "-margin": -margin}[condition.bound];
-  assert.ok(endpoint !== undefined && bound !== undefined && Object.hasOwn(compare, condition.op), `a well-formed leaf: ${JSON.stringify(condition)}`);
-  return compare[condition.op](endpoint, bound);
-};
-const orient = (interval, orientation) => (orientation === "higherIsBetter" ? [-interval[1], -interval[0]] : interval);
-const categoriesOf = (interval, margin, orientation = "lowerIsBetter", categories = protocol.decisionRule.categories) => {
-  const oriented = orient(interval, orientation);
-  return categories.filter(category => holds(category.when, oriented, margin)).map(category => category.id);
-};
-const classify = (interval, margin, orientation) => {
-  const held = categoriesOf(interval, margin, orientation);
-  assert.equal(held.length, 1, `exactly one category for [${interval}] with margin ${margin}: ${held}`);
-  return held[0];
-};
-const nonInferior = (interval, margin, orientation = "lowerIsBetter") => holds(protocol.decisionRule.nonInferior.when, orient(interval, orientation), margin);
+// The functions live in scripts/frontier-comparison-decision.mjs, bound to the protocol under test.
+const {categoriesOf, classify, nonInferior, marginOf} = decisionRuleOf(protocol);
 // The same four categories coded by hand, to be compared with the JSON's.
 const reference = (lower, upper, margin) => {
   if (upper < -margin) {
@@ -175,7 +179,6 @@ const reference = (lower, upper, margin) => {
   }
   return "inconclusive";
 };
-const marginOf = (medianOfB, rule = protocol.decisionRule.margin) => Math.max(rule.relative * medianOfB, rule.floor.value);
 const close = (actual, expected) => Math.abs(actual - expected) < 1e-12;
 const signed = value => (value > 0 ? `+${value}` : String(value));
 const shown = interval => `[${signed(interval[0])}, ${signed(interval[1])}]`;
@@ -191,66 +194,6 @@ const EXAMPLES = [
   {medianOfB: 3, margin: 0.5, interval: [-0.4, 0.4], category: "neutral", nonInferior: true},
   {medianOfB: 3, margin: 0.5, interval: [0.6, 1.1], category: "cost", nonInferior: false}
 ];
-
-// ---- the Holm guard ----
-const holmStands = (pValues, alpha) => {
-  const order = pValues.map((p, index) => [p, index]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const stands = pValues.map(() => false);
-  for (let rank = 0; rank < order.length; ++rank) {
-    if (order[rank][0] > alpha / (order.length - rank)) {
-      break;
-    }
-    stands[order[rank][1]] = true;
-  }
-  return stands;
-};
-const guarded = (categories, stands) => categories.map((category, index) => (stands[index] ? category : "inconclusive"));
-const claimPValue = (differences, margin) => {
-  const count = predicate => differences.filter(predicate).length;
-  const total = differences.length + 1;
-  const gain = (1 + count(d => d >= -margin)) / total;
-  const cost = (1 + count(d => d <= margin)) / total;
-  const neutral = Math.max((1 + count(d => d <= -margin)) / total, (1 + count(d => d >= margin)) / total);
-  return Math.min(gain, cost, neutral);
-};
-
-// ---- the statistics ----
-const mulberry32 = seed => {
-  let a = seed | 0;
-  return () => {
-    a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-};
-const ascending = values => [...values].sort((a, b) => a - b);
-const nearestRank = (values, percent) => ascending(values)[Math.ceil(percent * values.length / 100) - 1];
-const median = values => {
-  const sorted = ascending(values);
-  const middle = sorted.length / 2;
-  return sorted.length % 2 === 1 ? sorted[Math.floor(middle)] : (sorted[middle - 1] + sorted[middle]) / 2;
-};
-const iqr = values => {
-  const sorted = ascending(values);
-  return sorted[Math.ceil(3 * sorted.length / 4) - 1] - sorted[Math.ceil(sorted.length / 4) - 1];
-};
-const bootstrapDifferences = (minuend, subtrahend, {seed, resamples}) => {
-  const next = mulberry32(seed);
-  const resample = values => values.map(() => values[Math.floor(next() * values.length)]);
-  const differences = [];
-  for (let index = 0; index < resamples; ++index) {
-    const drawnMinuend = resample(minuend);
-    const drawnSubtrahend = resample(subtrahend);
-    differences.push(median(drawnMinuend) - median(drawnSubtrahend));
-  }
-  return differences;
-};
-const intervalOf = (differences, level) => {
-  const sorted = ascending(differences);
-  const lowerRank = Math.round(sorted.length * (1 - level) / 2);
-  return [sorted[lowerRank - 1], sorted[sorted.length - lowerRank - 1]];
-};
 
 const positionsOf = sequence => {
   const positions = [{A: 0, B: 0, C: 0}, {A: 0, B: 0, C: 0}, {A: 0, B: 0, C: 0}];
@@ -304,7 +247,7 @@ test("the three arms, the three hypotheses and the four windows are the ones dec
 
 test("the secondary outcomes are the ones decided, and each axis with a verdict carries its margin", () => {
   const ids = protocol.secondaryOutcomes.map(outcome => outcome.id);
-  assert.deepEqual(ids, ["cpu-time-p50", "cpu-time-p99", "frames-above-twice-idle-median", "frames-above-100-ms", "click-to-panel", "rss", "hermes-heap", "scene-nodes",
+  assert.deepEqual(ids, ["cpu-time-p50", "cpu-time-p99", "frames-above-twice-idle-reference", "frames-above-100-ms", "click-to-panel", "rss", "hermes-heap", "scene-nodes",
     "time-to-interactive-hud", "fps-unlimited", "package-size", "change-cost"]);
   assert.equal(new Set(ids).size, ids.length);
   for (const outcome of protocol.secondaryOutcomes) {
@@ -352,15 +295,16 @@ test("only the thresholds can be frozen, each with a rule and a source, and both
 });
 
 test("the pin: the protocol without its freeze fields has the SHA-256 recorded here", () => {
-  assert.equal(pinOf(protocol), PRE_REGISTERED_SHA256,
-    "the protocol changed after its pre-registration: this is an amendment, so list it in the research note and change the pin on purpose");
+  assert.equal(PINS.length, protocol.amendments.length + 1, "every amendment has its pin, and every pin after the pre-registration has its amendment");
+  assert.equal(pinOf(protocol), PINNED_SHA256,
+    "the protocol changed after its pre-registration: this is an amendment, so add an entry to `amendments`, list it in the research note and add its pin on purpose");
   // The freeze moves nothing of the pin.
   const frozen = structuredClone(protocol);
   frozen.thresholds.forEach(threshold => {
     threshold.frozenValue = 4.5;
     threshold.frozenAt = "2026-10-20";
   });
-  assert.equal(pinOf(frozen), PRE_REGISTERED_SHA256);
+  assert.equal(pinOf(frozen), PINNED_SHA256);
   // Any other change moves it, in the text, in a number, in the order of a list and in a key.
   const edits = [
     clone => {
@@ -385,10 +329,125 @@ test("the pin: the protocol without its freeze fields has the SHA-256 recorded h
   for (const edit of edits) {
     const edited = structuredClone(protocol);
     edit(edited);
-    assert.notEqual(pinOf(edited), PRE_REGISTERED_SHA256, edit.toString());
+    assert.notEqual(pinOf(edited), PINNED_SHA256, edit.toString());
   }
   // The canonical form does not depend on the order of the keys or the formatting of the file.
   assert.equal(canonical({b: 1, a: [2, {d: 4, c: 3}]}), canonical(JSON.parse('{ "a": [2, {"c": 3, "d": 4}], "b": 1 }')));
+});
+
+// ---- the amendments: what a change after the pre-registration has to carry ----
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const executionCriterion = migration.milestones.find(milestone => milestone.id === "0.5").items.find(item => item.id === "V05-10").criteria.find(criterion => criterion.id === "execucao");
+// What is wrong with the amendments of a protocol, given whether the criterion `execucao` (the comparative measurements) has run: each entry has a date, what changed,
+// why, the text it replaces and the number of comparative measurements made before it, which is 0 while nothing has run; the dates do not go back; and the state of the
+// protocol is the pinned one for the number of entries it carries.
+const amendmentErrors = (candidate, executionDone) => {
+  const errors = [];
+  candidate.amendments.forEach((amendment, index) => {
+    const where = `amendments[${index}]`;
+    if (!ISO_DATE.test(amendment.date)) {
+      errors.push(`${where}: its date is not YYYY-MM-DD`);
+    }
+    for (const key of ["what", "why", "before"]) {
+      if (amendment[key].trim().length === 0) {
+        errors.push(`${where}: ${key} is empty`);
+      }
+    }
+    if (!Number.isInteger(amendment.measurementsBefore) || amendment.measurementsBefore < 0) {
+      errors.push(`${where}: measurementsBefore is not a count`);
+    } else if (!executionDone && amendment.measurementsBefore !== 0) {
+      errors.push(`${where}: measurementsBefore is ${amendment.measurementsBefore} but no comparative execution has run`);
+    }
+    if (index > 0 && amendment.date < candidate.amendments[index - 1].date) {
+      errors.push(`${where}: its date goes back`);
+    }
+  });
+  if (PINS.length !== candidate.amendments.length + 1 || pinOf(candidate) !== PINS[candidate.amendments.length]) {
+    errors.push("the protocol is not the one pinned for its number of amendments");
+  }
+  return errors;
+};
+
+test("an amendment says what changed, why, the text it replaces and that no comparative measurement came before it", () => {
+  assert.equal(protocol.amendments.length, 4);
+  assert.equal(executionCriterion.done, false, "the comparative executions have not run: when they do, the amendments after them count measurements");
+  assert.deepEqual(amendmentErrors(protocol, executionCriterion.done), []);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09", "2026-10-10", "2026-10-10"]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0, 0, 0]);
+  assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
+  assert.doesNotMatch(JSON.stringify(protocol.idleReference), /idle median/, "and the protocol no longer says it");
+  assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs of the per-frame values/);
+  // The reference is of the same quantity as what it is compared with, each in its use: the CPU time per frame for the secondary outcome (the instrument of the
+  // primary outcome) and the elapsed intervals between process frames for the pacing clause of `not-presented`.
+  assert.match(protocol.idleReference.rule, /secondary outcome 'frames above twice the idle reference' the values are the CPU time per frame, read by the instrument of the primary outcome \(thresholds\.cpu-time-instrument\)/);
+  assert.match(protocol.idleReference.rule, /pacing clause of the not-presented rule the values are the elapsed intervals between process frames/);
+  const secondary = protocol.secondaryOutcomes.find(outcome => outcome.id === "frames-above-twice-idle-reference");
+  assert.match(secondary.label, /^Frames of a window whose CPU time is above twice the run's idle reference \(the median of the half-sums of consecutive pairs of the CPU time per frame of the idle window\)$/);
+  assert.match(protocol.invalidation.find(rule => rule.id === "not-presented").rule, /half-sums of consecutive pairs of the elapsed intervals between process frames of the idle window/);
+  assert.match(protocol.primaryOutcome.quantity, /CPU time of the main thread/, "and the primary outcome does not change");
+  for (const [index, amendment] of protocol.amendments.entries()) {
+    const section = doc.slice(doc.indexOf("\n## Amendments\n"), doc.indexOf("\n## Reproducing\n"));
+    assert.ok(section.includes(amendment.date) && section.includes(PINS[index + 1]), `the research note lists the amendment of ${amendment.date} with its pin`);
+  }
+});
+
+test("arm B's time-box has its length, recorded before arm B starts, and the iPhone's open item follows the NO-GO", () => {
+  const [, timeBox] = protocol.amendments;
+  assert.match(timeBox.before, /its length is set and recorded before arm B starts/, "it keeps the text it replaced");
+  assert.match(timeBox.before, /its time-box has no length yet/);
+  assert.match(timeBox.before, /the iPhone depends on the GO or NO-GO of V05-09/);
+  const box = protocol.decisionRule.partialReport.timeBox;
+  assert.match(box, /^the same as arm C's plus one optimization pass, counted as the active time of the subagents/, "the rule of the pre-registration stays its first words");
+  assert.match(box, /gaps shorter than 30 minutes between consecutive timestamped events/);
+  // The three numbers agree with one another: the pass is a quarter of C's time and the box is their sum.
+  const hours = pattern => Number.parseFloat(box.match(pattern)[1]);
+  const armC = hours(/took (\d+\.\d) h by that count/);
+  const pass = hours(/one optimization pass of at most (\d+\.\d) h \(a quarter of C's\)/);
+  const total = hours(/In all (\d+\.\d) h/);
+  assert.deepEqual([armC, pass, total], [12.8, 3.2, 16]);
+  assert.equal(pass.toFixed(1), (armC / 4).toFixed(1));
+  assert.equal(total.toFixed(1), (armC + pass).toFixed(1));
+  assert.match(box, /`parity`/, "arm B is ready when the parity rule passes");
+  const open = Object.fromEntries(protocol.open.map(item => [item.id, item.text]));
+  assert.doesNotMatch(open["arm-b"], /no length yet/);
+  assert.match(open["arm-b"], /decisionRule\.partialReport\.timeBox/);
+  assert.match(open.iphone, /NO-GO/);
+  assert.equal(protocol.iphone.noGo, "the comparison covers macOS only", "the NO-GO branch of the iPhone block is the one that applies, and it does not change");
+});
+
+test("a change of the protocol after the pre-registration fails unless it comes with an amendment and a pin", () => {
+  // Changing the idle reference back, or any other text, without an entry in `amendments`.
+  const silent = structuredClone(protocol);
+  silent.idleReference.rule = "after the boot, 600 consecutive frames; the median CPU time of those frames is the run's idle median";
+  assert.deepEqual(amendmentErrors(silent, false), ["the protocol is not the one pinned for its number of amendments"]);
+  const silentOutcome = structuredClone(protocol);
+  silentOutcome.secondaryOutcomes[2].label = "Frames of a window above twice the idle median";
+  assert.deepEqual(amendmentErrors(silentOutcome, false), ["the protocol is not the one pinned for its number of amendments"]);
+  // Removing the list of amendments, or an entry, leaves the changes without their record.
+  const erased = structuredClone(protocol);
+  erased.amendments = [];
+  assert.deepEqual(amendmentErrors(erased, false), ["the protocol is not the one pinned for its number of amendments"]);
+  // An entry without a pin: the number of pins and the number of amendments move together.
+  const unpinned = structuredClone(protocol);
+  unpinned.amendments.push({...protocol.amendments[0], date: "2026-10-10"});
+  assert.deepEqual(amendmentErrors(unpinned, false), ["the protocol is not the one pinned for its number of amendments"]);
+  // The record is part of the pin: rewriting what it says is also a change.
+  const rewritten = structuredClone(protocol);
+  rewritten.amendments[0].why = "another reason";
+  assert.deepEqual(amendmentErrors(rewritten, false), ["the protocol is not the one pinned for its number of amendments"]);
+});
+
+test("while the comparative executions have not run, an amendment cannot count measurements before it", () => {
+  const counted = structuredClone(protocol);
+  counted.amendments[0].measurementsBefore = 2;
+  assert.ok(amendmentErrors(counted, false).includes("amendments[0]: measurementsBefore is 2 but no comparative execution has run"));
+  assert.ok(!amendmentErrors(counted, true).some(error => /measurementsBefore/.test(error)), "once the criterion has run, the count is a count");
+  const incomplete = structuredClone(protocol);
+  incomplete.amendments[0].why = " ";
+  incomplete.amendments[0].date = "yesterday";
+  assert.ok(amendmentErrors(incomplete, false).includes("amendments[0]: why is empty"));
+  assert.ok(amendmentErrors(incomplete, false).includes("amendments[0]: its date is not YYYY-MM-DD"));
+  assert.deepEqual(errorsOf(Object.fromEntries(Object.entries(protocol).filter(([key]) => key !== "amendments"))), ["$.amendments: missing"]);
 });
 
 test("the categories are exactly gain, neutral, cost and inconclusive, and exclusive and exhaustive for any interval", () => {
@@ -575,7 +634,7 @@ test("the research note covers the protocol it reads and quotes its pin and its 
     assert.ok(doc.includes(`\`${id}\``), `the research note names \`${id}\``);
   }
   for (const text of [String(protocol.statistics.interval.seed), String(protocol.statistics.interval.resamples).replace(/(\d)(?=(\d{3})$)/, "$1,"), ...protocol.runs.blocks,
-    "frozenValue", "frozenAt", "mulberry32", PRE_REGISTERED_SHA256, protocol.baseline.evidence.replace(/^docs\//, "")]) {
+    "frozenValue", "frozenAt", "mulberry32", ...PINS, protocol.baseline.evidence.replace(/^docs\//, "")]) {
     assert.ok(doc.includes(text), `the research note has ${text}`);
   }
   assert.match(doc, /claims no result|states no result/);
