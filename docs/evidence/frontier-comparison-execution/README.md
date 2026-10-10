@@ -248,4 +248,17 @@ Rodadas na árvore que acrescenta esta pasta, o índice e a nota ao commit fixad
 
 ## CI hospedada e Pages
 
-Os recibos de CI hospedada e de Pages entram depois do merge, como nos outros registros (`scripts/hosted-receipts.mjs`); este registro ainda não os tem.
+**O run.** O push da `main` em `c3892ac` (o squash do #120; run [38050941623](https://github.com/journey-studios/godot-fabric/actions/runs/38050941623) do workflow Contracts, iniciado às 12:09:34 UTC) passou na primeira tentativa, sem reexecução, nos três jobs que um push roda: `contracts` (3 min 26 s), `reference-android` (6 min 35 s) e `reference-ios` (9 min 52 s). Os outros cinco (`native-cold-start`, `native-suites-frontier`, `native-suites-input`, `native-suites-runtime` e `parity-comparison`) aparecem como **skipped**; o [recibo](hosted-ci.json) os registra assim e só os aceita porque a linha da fatia não tem passo nativo nem artefato.
+
+**O passo da guarda.** "Milestone exit guards (X9 and X10)" passou num push e imprimiu `MILESTONE_GUARDS_CHECK_PASSED: against 151427e5c788 (--base 151427e5c788ab5704ace25fd64d6c38958e4963); X9 clean, X10 clean`. A base é o pai do squash.
+
+**Os testes.** `npm run test:contracts` passou com 7, 43 e 535 testes de Node, todos em `pass`, sem falha, e 13 de Python. O recibo confere, pelo nome e no log do job `contracts`, os 17 testes de nível superior de `tests/frontier-comparison-run.test.mjs` (17 de 17), o arquivo que o #120 criou.
+
+**O Pages.** O push de `c3892ac` rodou também o workflow do Pages (run [38050941565](https://github.com/journey-studios/godot-fabric/actions/runs/38050941565), 12:09:34 a 12:10:09 UTC, `build` e `deploy` em success, 43 testes do painel). O [recibo](publication.json) registra o deployment 6980511769 em success e o artefato `github-pages` (id 11668844677, SHA-256 `3757e770…`, igual ao digest da API e ao do log de upload). O `migration.json` de dentro tem os mesmos bytes do `dashboard/migration.json` do squash, e a entrada de atividade da fatia, `milestone-0-5-v05-10-execution-1-f77d81d`, está nele. Um push seguinte da `main` substitui o deployment, então o site público não foi comparado.
+
+**O que continua só local:** nenhuma medição de braço entra nesta fatia. Os recibos hospedados provam o código e os testes do runner, não um resultado; a execução comparativa de fato (a sequência de execuções em cada faixa) continua fora deste registro.
+
+```sh
+node scripts/hosted-receipts.mjs --write --slice frontier-comparison-execution --work-dir <diretório fora do repositório>
+node scripts/hosted-receipts.mjs --check
+```
