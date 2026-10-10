@@ -1010,6 +1010,16 @@ through the entry and through `-s`, and the same as the last rehearsal through `
 and that the export of civ-lite in the three arms is missing. The [record](https://github.com/journey-studios/godot-fabric/blob/bb30d75364f4edf50b05ef1710b70c662da9dbdd/docs/evidence/frontier-comparison-entry/README.md) is local evidence. No
 criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
+**Progress.** V05-10, criterion `execucao`, the Release launcher (code at `29e379f`): the launcher that only refused now runs the three exported `.app` of a directory (`--exports <dir>`) through a manifest,
+`frontier-comparison-export.json`, that the script that measures the export writes beside each one: the arm, the paths of the `.app`, the executable and the `.pck`, the SHA-256 of the binary, the package, the script and the
+template, the script's files, the engine's version and the size of the product's package in an export and in its repeat. `prepare()` validates the three manifests, recomputes the hashes of every executable and package and
+refuses, naming each problem and starting nothing, when one does not match; `launch()` hashes them again, so a file swapped after the registration stops the campaign, and runs `Contents/MacOS/<executable>` with the same
+`scenarioArguments` as the Debug launcher, in a directory outside the `.app`. A report file that is not JSON (a process killed while writing it) is now no report in both launchers, and the attempt is one of the campaign's
+`unreported`. **The campaign still does not run through the Release launcher:** the instrument's self-check runs the probe with `-s`, which a template discards, so the launcher says `selfCheck: "unsupported"` and the campaign
+reads and validates the exports and then refuses, before any process. Tested in Node with a fake `.app` only: **no number in it is a result**, and the export of civ-lite in the three arms, the package size in arms A and B and the
+self-check in a template are still missing. The [note](https://github.com/journey-studios/godot-fabric/blob/29e379f78652cbcfbb1e8184ca8f2158b9aa71c3/docs/research/frontier-comparison-execution.md#the-launcher) has the launcher. No
+criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
