@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T14:40:00.000Z",
+  "updatedAt": "2026-10-10T15:06:00.000Z",
   "source": {
     "commit": "05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
     "url": "https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6",
@@ -4779,6 +4779,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-hosted-receipts-8-40dd07d",
+      "at": "2026-10-10T15:06:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages do #126, a campanha comparativa inteira (a parte 2 do critério execucao), já na main como c6dea50. A Contracts do push da main em c6dea50 (run 38061346890) passou na primeira tentativa: os jobs contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque a linha da fatia não tem passo nativo nem artefato. A guarda de marco passou, e o job contracts rodou os três arquivos de contrato da campanha com 35 de 35 testes no log. O Pages do push (run 38061346857) publicou o migration.json commitado, com a entrada de atividade da fatia. Nenhum critério muda; a execução comparativa segue aberta. Gerador canônico com 27 fatias e 54 recibos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/40dd07d58eed6de68f9f008320fe472623b5f8e6/docs/evidence/frontier-comparison-campaign/README.md#ci-hospedada-e-pages"
+    },
     {
       "id": "milestone-0-5-v05-10-mudanca",
       "at": "2026-10-10T14:40:00.000Z",
