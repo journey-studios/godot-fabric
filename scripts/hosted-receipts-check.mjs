@@ -35,15 +35,43 @@ const isSha256 = (value) => typeof value === "string" && /^[0-9a-f]{64}$/.test(v
 const isCount = (value) => Number.isInteger(value) && value >= 0;
 const isTime = (value) => typeof value === "string" && !Number.isNaN(Date.parse(value));
 
-function checkTap(label, summaries, problems) {
+// The skips a receipt may carry, each by the description and the reason the reporter wrote for it. Any other skip is a problem: a test that
+// skips for another reason, or that the summaries count but the receipt does not name, is not all-pass.
+const ALLOWED_SKIPS = [
+  {
+    file: "tests/macos-export-native.test.mjs",
+    description: "native macOS arm64 export and copied-app rejection controls",
+    reasonPrefix: "MACOS_EXPORT_TEMPLATE is unset",
+    why: "the native export test of #75 runs only with the reviewed Godot arm64 Release template, which the hosted contracts job does not have before test:contracts, so it skips there by design",
+  },
+];
+
+// A TAP summary is all-pass when each of its tests passed or was skipped by ALLOWED_SKIPS: pass + skipped equals tests, and the skips the
+// summaries count of the step are exactly the skipped tests the receipt records (a receipt with no `skippedTests` records none).
+function checkTap(label, summaries, skippedTests, problems) {
   if (!Array.isArray(summaries) || summaries.length === 0) {
     problems.push(`${label}: no TAP summary was recorded`);
     return;
   }
   for (const summary of summaries) {
-    const clean = summary.tests > 0 && summary.pass === summary.tests && summary.fail === 0 && summary.cancelled === 0 && summary.skipped === 0 && summary.todo === 0;
+    const clean = summary.tests > 0 && summary.pass + summary.skipped === summary.tests && summary.fail === 0 && summary.cancelled === 0 && summary.todo === 0;
     if (!clean) {
       problems.push(`${label}: a TAP summary is not all-pass (${JSON.stringify(summary)})`);
+    }
+  }
+  const wellFormed = Array.isArray(skippedTests) && skippedTests.every((test) => typeof test?.description === "string" && typeof test?.reason === "string");
+  if (!wellFormed) {
+    problems.push(`${label}: the skipped tests are not recorded as descriptions and reasons`);
+    return;
+  }
+  const counted = summaries.reduce((total, summary) => total + summary.skipped, 0);
+  if (counted !== skippedTests.length) {
+    problems.push(`${label}: the TAP summaries count ${counted} skipped test(s), and the receipt records ${skippedTests.length}`);
+  }
+  for (const test of skippedTests) {
+    const allowed = ALLOWED_SKIPS.some((entry) => entry.description === test.description && test.reason.startsWith(entry.reasonPrefix));
+    if (!allowed) {
+      problems.push(`${label}: skipped test "${test.description}" is not in ALLOWED_SKIPS (reason: "${test.reason}")`);
     }
   }
 }
@@ -65,7 +93,7 @@ function checkNativeStep(slice, wanted, ci, problems) {
     problems.push(`${label} recorded failed tests`);
   }
   if (wanted.expect === "tap") {
-    checkTap(label, step.result?.tap, problems);
+    checkTap(label, step.result?.tap, step.result?.skippedTests ?? [], problems);
     if (!(step.result?.tests?.length > 0)) {
       problems.push(`${label} recorded no test names`);
     }
@@ -218,7 +246,7 @@ function checkHostedCi(slice, ci, problems) {
       problems.push(`${label}: contracts step ${name} did not succeed`);
     }
   }
-  checkTap(`${label}: test:contracts`, contracts.steps?.["test:contracts"]?.tap, problems);
+  checkTap(`${label}: test:contracts`, contracts.steps?.["test:contracts"]?.tap, contracts.steps?.["test:contracts"]?.skippedTests ?? [], problems);
   if (contracts.steps?.["check:publication"]?.passed !== true) {
     problems.push(`${label}: check:publication did not report passed`);
   }
