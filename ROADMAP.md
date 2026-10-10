@@ -941,6 +941,19 @@ and Pages publication come after the merge. No criterion changes state, and no 1
 
 **Progress.** V05-10, the fourth amendment of the final comparison's protocol, committed as [`e78e38c`](https://github.com/journey-studios/godot-fabric/blob/e78e38c7982be9bd021c673939ce0ad0e8f7752e/docs/research/frontier-comparison-protocol.json): in the window of the context switches, the dialog's occurrence is its last `resolve_event`, the one that closes it (dialog -> none), because only an End Turn opens the dialog, its event is raised in the refresh phase outside a 3-frame window, and every selection is refused while it is open. The source lines are in the note. No comparative measurement came before the amendment, the test's pin moves to `PINS[4]`, and the frozen values do not move. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
 
+**Progress.** V05-10, criterion `execucao`, part 1: the script that plays one execution of the final comparison is written and tested (code at `7e2e5b1`). The scenario runs
+the eight steps of the protocol's script in any of the three arms (A with no HUD, B with the native Godot HUD, C with the React Native HUD); the soak's player is a GDScript port
+of the JavaScript one and reaches the same final hash `0b21c332…`, trail hash `4d6d3c4c…` and 429 decisions, with a control that decides otherwise and moves them; the cycle of
+the context switches follows the fourth amendment (rounds of 12 switches, 74 occurrences, the dialog counted by its last `resolve_event`); and the four windows come from the
+trace by a single rule, the event burst and the stress being read through the HUDs' counters (`stats()` and `notifications_emitted()`) with no JavaScript evaluated and no Surface
+snapshot in a measured frame. Three rehearsals ran in the three arms (headless, and windowed in the presented lane at 120 Hz and in the unlimited lane with the vsync read back
+`DISABLED`): the protocol's counts (100, 100, 74 and 32 occurrences), the replay and the soak match in all nine executions, the 93 parity checks of B and C match, and the analysis
+rejects every execution as it must, as a Debug build and by load (the 1-minute average was 4.9 to 6.0 against the limit of 2.0), the headless ones also as not presented. **A
+rehearsal, and no number in it is a result.** The second part (the sequence of 36 executions in each lane, the attempts and the registration of the hashes), the Release export of
+V05-07 (how the scenario runs in an exported `.app` is open) and a quiet window with the load at 2.0 or less are missing, and `execucao` stays open. The
+[record](https://github.com/journey-studios/godot-fabric/blob/f77d81d097f8dd552f70fc63c4d3050665ff6007/docs/evidence/frontier-comparison-execution/README.md) is local evidence, and its hosted CI run and Pages
+publication come after the merge. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves.
+
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.
 The go/no-go rule above applies: the 0.5 closes as macOS-complete and mobile goes back to
