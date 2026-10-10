@@ -1,5 +1,5 @@
 import { CAMPAIGN_FORMAT } from "./frontier-comparison-format.mjs";
-import { UNLIMITED, proseRulesOf, slotsOf } from "./frontier-comparison-protocol.mjs";
+import { UNLIMITED, slotsOf } from "./frontier-comparison-protocol.mjs";
 import { campaignOf } from "./frontier-comparison-run-campaign.mjs";
 import { assessValidity } from "./frontier-comparison-validity.mjs";
 
@@ -72,25 +72,26 @@ export function initialState({ protocolSha256, options, launcher, provenance, en
 
 // ---- the campaign that a state makes ----
 
-// The executions the analysis sees: the attempts that have an execution object, in the order they ran, numbered 1, 2, ... in each slot. An attempt without one (the process wrote no report the
-// scenario's format reads) is in the state, in the raw data and in the count against the 3 attempts of its slot, but the format has no execution to hold it, so it is not here.
-export function campaignExecutions(state) {
-  const counts = new Map();
-  const executions = [];
-  for (const attempt of state.attempts) {
-    if (attempt.execution !== null) {
-      const key = `${attempt.lane}/${attempt.slot}`;
-      counts.set(key, (counts.get(key) ?? 0) + 1);
-      executions.push({ ...attempt.execution, attempt: counts.get(key) });
-    }
-  }
-  return executions;
-}
+// The executions the analysis sees: the attempts that have an execution object, in the order they ran, each with the number of its attempt in the slot. The attempts without one (the process
+// wrote no report the scenario's format reads) are the campaign's `unreported` (unreportedEntries), and the numbering 1, 2, ... of a slot is over both lists.
+export const campaignExecutions = (state) => state.attempts.filter((attempt) => attempt.execution !== null).map((attempt) => attempt.execution);
 
 const omittedOf = (state) => state.attempts.filter((attempt) => attempt.execution === null);
 
-// The attempts that wrote no report the format can hold, listed one by one for whoever reads the state or the summary: the slot, the attempt, why it was rejected (the `errors` rule), the exit
-// code and signal of the process and the log that was kept. They are the attempts that `executions` of the campaign does not carry.
+// The attempts that wrote no report the format can hold, as the campaign's `unreported` has them (scripts/frontier-comparison-format.mjs): the slot, the attempt, the load around the process, how
+// the process ended (a process killed by a signal has no exit code, one that exited has no signal) and the SHA-256 of the log kept under `raw/`.
+export const unreportedEntries = (state) => omittedOf(state).map((attempt) => ({
+  arm: attempt.arm,
+  lane: attempt.lane,
+  slot: attempt.slot,
+  attempt: attempt.attempt,
+  load: attempt.load,
+  errors: { crashed: attempt.crashed, timedOut: attempt.timedOut, ...(attempt.signal === null ? { exitCode: attempt.exitCode } : { signal: attempt.signal }) },
+  logSha256: attempt.logSha256,
+}));
+
+// The same attempts for whoever reads the state or the summary, one by one: the slot, the attempt, why it was rejected (the reasons the analysis gives it, which are those of the campaign's
+// report), the exit code and signal of the process as the launcher read them and the log that was kept.
 export const unreportedOf = (state) => omittedOf(state).map((attempt) => ({
   lane: attempt.lane, slot: attempt.slot, arm: attempt.arm, attempt: attempt.attempt, reasons: attempt.verdict.reasons, exitCode: attempt.exitCode, signal: attempt.signal, log: attempt.log,
 }));
@@ -125,37 +126,34 @@ function deviationsOf(state, protocol) {
   for (const [lane, off] of Object.entries(unavailableLanes(state, protocol))) {
     lines.push(`lane ${lane} is N/A and was not run further: the vsync mode read back ${off.mode}, not ${off.required} (lane ${lane}, slot ${off.slot}, attempt ${off.attempt}; runs.lanes)`);
   }
-  const omitted = omittedOf(state);
-  if (omitted.length > 0) {
-    lines.push(`${times(omitted.length, "attempt")} wrote no report the format can hold (${omitted.map((attempt) => `${attempt.lane} slot ${attempt.slot} attempt ${attempt.attempt}`).join("; ")}): they are in the campaign's state and raw data and count against the 3 attempts of their slots, but are not in executions, whose attempt numbers are consecutive among the others`);
-  }
   if (state.selfCheck?.lane === "headless") {
     lines.push("the instrument's self-check ran headless, because the launcher runs headless; a campaign proper runs in a window and its self-check runs in one (the engine and renderer the gate asks for), which this rehearsal did not repeat");
   }
   return lines;
 }
 
-// The campaign object in the format of the analysis (scripts/frontier-comparison-format.mjs) that this state makes.
+// The campaign object in the format of the analysis (scripts/frontier-comparison-format.mjs) that this state makes: every attempt is in it, the ones that wrote a report in `executions` and the
+// ones that did not in `unreported`, each with its own number.
 export function campaignFor(state, protocol) {
   const { registered } = state.launcher;
-  return campaignOf({
+  const campaign = campaignOf({
     executions: campaignExecutions(state),
     registered,
     instrument: { selfCheckPassed: state.selfCheck?.passed === true, sha256: state.selfCheck?.sha256 ?? registered.instrumentSha256 },
     provenance: { ...state.provenance, ...state.environment, deviations: deviationsOf(state, protocol) },
     packages: state.launcher.packages,
   });
+  return { ...campaign, unreported: unreportedEntries(state) };
 }
 
 // ---- judging, stopping, going on ----
 
 export const assess = (state, protocol) => assessValidity(campaignFor(state, protocol), protocol, state.protocolSha256);
 
-// How the analysis judged the attempt, by its place in the campaign it makes: accepted or not, and the reasons ({rule, clause, ...values}).
-export function verdictOf(validity, state, attempt) {
-  const number = state.attempts.filter((other) => other.lane === attempt.lane && other.slot === attempt.slot && other.execution !== null && other.attempt <= attempt.attempt).length;
+// How the analysis judged the attempt, by its place in the campaign it makes: accepted or not, and the reasons ({rule, clause, ...values}). The attempt keeps its own number in the campaign.
+export function verdictOf(validity, attempt) {
   const slot = validity.slots.find((candidate) => candidate.lane === attempt.lane && candidate.slot === attempt.slot);
-  const judged = slot.attempts.find((candidate) => candidate.attempt === number);
+  const judged = slot.attempts.find((candidate) => candidate.attempt === attempt.attempt);
   return { accepted: judged.status === "accepted", reasons: judged.reasons };
 }
 
@@ -166,18 +164,10 @@ const SAME_ENGINE = ["godot", "godotHash", "architecture", "displayServer", "ren
 export const engineOf = (provenance) => Object.fromEntries(SAME_ENGINE.map((key) => [key, provenance?.[key] ?? null]));
 export const engineDifferences = (selfCheck, scenario) => SAME_ENGINE.filter((key) => selfCheck?.[key] !== scenario?.[key]);
 
-// Why the campaign cannot go on, if it cannot: the analysis' stops, a slot whose attempts are used up counting the ones that wrote no report, the scenario that waited with other numbers
-// than the protocol's (which the analysis cannot see) and an engine that is not the one the self-check ran on. A rehearsal has no slot to use up: it redoes nothing.
+// Why the campaign cannot go on, if it cannot: the analysis' stops (which count the attempts that wrote no report, as they are in the campaign), the scenario that waited with other numbers than
+// the protocol's (which the analysis cannot see) and an engine that is not the one the self-check ran on. A rehearsal redoes nothing, so it has no slot whose attempts are used up.
 export function stopsOf(state, protocol, validity) {
   const stops = [...validity.stopped];
-  const limit = proseRulesOf(protocol).maxAttempts;
-  const listed = new Set(stops.filter((stop) => stop.rule === "attempts").map((stop) => `${stop.lane}/${stop.slot}`));
-  for (const entry of planOf(protocol, state.options)) {
-    const attempts = attemptsOf(state, entry);
-    if (!state.rehearsal && attempts.length >= limit && !attempts.some((attempt) => attempt.verdict.accepted) && !listed.has(`${entry.lane}/${entry.slot}`)) {
-      stops.push({ rule: "attempts", lane: entry.lane, slot: entry.slot, arm: entry.arm, attempts: attempts.length, limit });
-    }
-  }
   for (const attempt of state.attempts.filter((candidate) => candidate.configProblems.length > 0)) {
     stops.push({ rule: "scenario-config", lane: attempt.lane, slot: attempt.slot, attempt: attempt.attempt, problems: attempt.configProblems });
   }

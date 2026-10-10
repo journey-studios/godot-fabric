@@ -1,10 +1,11 @@
-import { measuredOf, plannedArms } from "./frontier-comparison-format.mjs";
+import { measuredOf, plannedArms, unreportedAttempts } from "./frontier-comparison-format.mjs";
 import { PRESENTED, UNLIMITED, proseRulesOf, slotsOf } from "./frontier-comparison-protocol.mjs";
 import { idleReference } from "./frontier-comparison-statistics.mjs";
 
 // Which executions of a campaign count: the invalidation rules of docs/research/frontier-comparison-protocol.json (`invalidation`) that can be computed from the raw data, the redo of a
 // rejected execution in its slot, the limit of attempts per slot and the campaign that stops. An attempt is accepted when no rule rejects it. A reason is {rule, clause, ...values}: the
-// rule is the protocol's id, the clause says which part of the rule, and the values are the numbers that decided it. No text is written here.
+// rule is the protocol's id, the clause says which part of the rule, and the values are the numbers that decided it. No text is written here. An attempt that wrote no report (the campaign's
+// `unreported`) is an attempt of its slot like the others: it is rejected by `errors`, counts against the attempts of the slot and, when they are used up, stops the campaign.
 
 // ---- the rules that reject an attempt, in the order of the protocol's list; the context is {protocol, registered, protocolSha256, prose} ----
 
@@ -123,6 +124,14 @@ function attemptReasons(execution, context) {
   return Object.entries(CHECKS).flatMap(([rule, check]) => check(execution, context).map((reason) => ({ rule, ...reason })));
 }
 
+// An attempt that wrote no report (`unreported` of the campaign) is rejected by `errors`, clause `no-report`, whatever its other readings: the rule lists a crash and an exit code that is not 0,
+// and a process that wrote no report did not complete the scenario even when it exited 0 (the scenario writes its report before it exits 0; reading 15 of the analysis note). The values are the
+// entry's own: whether the process crashed or timed out, and its exit code or its signal, as the entry has them.
+function unreportedReasons({ errors }) {
+  const own = ["exitCode", "signal"].filter((name) => Object.hasOwn(errors, name)).map((name) => [name, errors[name]]);
+  return [{ rule: "errors", clause: "no-report", crashed: errors.crashed, timedOut: errors.timedOut, ...Object.fromEntries(own) }];
+}
+
 // `instrument`: the instrument's self-check was not passed, or the reading changed after it (the instrument's file is not the one the self-check passed): no comparative execution counts.
 function instrumentOf(campaign) {
   const matches = campaign.instrument.sha256 === campaign.registered.instrumentSha256;
@@ -133,28 +142,46 @@ function instrumentOf(campaign) {
 
 const byAttempt = (a, b) => a.attempt - b.attempt;
 
+// The attempts of one slot of one lane, the executions and the attempts that wrote no report together, in the order of `attempt`: {attempt, execution} or {attempt, entry}.
+function attemptsOfSlot(campaign, lane, slot) {
+  const here = (attempt) => attempt.lane === lane && attempt.slot === slot;
+  return [
+    ...campaign.executions.filter(here).map((execution) => ({ attempt: execution.attempt, execution })),
+    ...unreportedAttempts(campaign).filter(here).map((entry) => ({ attempt: entry.attempt, entry })),
+  ].sort(byAttempt);
+}
+
 // One slot of one lane, from its attempts. runs.load.redo: the redone execution takes the place of the rejected one in the sequence, the rejected attempt stays in the raw data with its
-// load readings and its reason, and there are at most `maxAttempts` attempts per slot; when they are used up the campaign stops. The state is `accepted`, `open` (rejected and waiting for its
-// redo), `exhausted` (all the attempts rejected), `missing` (no attempt yet) or `not-planned` (the arm is not ready).
+// load readings and its reason, and there are at most `maxAttempts` attempts per slot; when they are used up the campaign stops. The numbering 1, 2, ... without gaps is over the executions
+// and the attempts without a report together. The record of an attempt says whether it `reported`: one that wrote no report has its load readings and no vsync. The state is `accepted`,
+// `open` (rejected and waiting for its redo), `exhausted` (all the attempts rejected), `missing` (no attempt yet) or `not-planned` (the arm is not ready).
 function slotOf(entry, lane, attempts, context, problems) {
   const limit = context.prose.maxAttempts;
   const record = { lane, ...entry, state: "missing", accepted: null, rejected: 0, attempts: [] };
-  attempts.sort(byAttempt).forEach((execution, index) => {
+  attempts.forEach((item, index) => {
     const where = `lane ${lane}, slot ${entry.slot}`;
-    if (execution.attempt !== index + 1) {
+    const reported = item.execution !== undefined;
+    if (index > 0 && item.attempt === attempts[index - 1].attempt) {
+      problems.push(`${where}: attempt ${item.attempt} appears twice`);
+    }
+    if (item.attempt !== index + 1) {
       problems.push(`${where}: the attempts are not numbered 1, 2, ... without gaps`);
     }
     if (record.accepted !== null) {
-      problems.push(`${where}: attempt ${execution.attempt} comes after the accepted attempt ${record.accepted}`);
+      problems.push(`${where}: attempt ${item.attempt} comes after the accepted attempt ${record.accepted}`);
     }
-    const reasons = attemptReasons(execution, context);
-    if (execution.attempt > limit) {
+    const reasons = reported ? attemptReasons(item.execution, context) : unreportedReasons(item.entry);
+    if (item.attempt > limit) {
       reasons.push({ rule: "attempts", clause: "beyond-the-limit", limit });
     }
     const status = reasons.length === 0 && record.accepted === null ? "accepted" : "rejected";
-    record.attempts.push({ attempt: execution.attempt, load: execution.load, vsync: execution.vsync, status, reasons });
+    record.attempts.push(
+      reported
+        ? { attempt: item.attempt, reported, load: item.execution.load, vsync: item.execution.vsync, status, reasons }
+        : { attempt: item.attempt, reported, load: item.entry.load, status, reasons },
+    );
     if (status === "accepted") {
-      record.accepted = execution.attempt;
+      record.accepted = item.attempt;
     } else if (record.accepted === null) {
       record.rejected += 1;
     }
@@ -194,7 +221,7 @@ export function assessValidity(campaign, protocol, protocolSha256) {
   const slots = [];
   for (const lane of protocol.runs.lanes.map((candidate) => candidate.id)) {
     for (const entry of slotsOf(protocol)) {
-      const attempts = campaign.executions.filter((execution) => execution.lane === lane && execution.slot === entry.slot);
+      const attempts = attemptsOfSlot(campaign, lane, entry.slot);
       slots.push(planned.has(entry.arm) ? slotOf(entry, lane, attempts, context, problems) : { lane, ...entry, state: "not-planned", accepted: null, rejected: 0, attempts: [] });
     }
   }

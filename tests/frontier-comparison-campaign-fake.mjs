@@ -3,7 +3,8 @@ import { syntheticReport } from "./frontier-comparison-run-synthetic.mjs";
 
 // The fake launcher of the campaign's tests (V05-10, `execucao`, part 2), and the other injected parts of a campaign: a self-check that passes or fails, a clock that only moves when the
 // campaign sleeps, and a load average that follows a script. The fake plays SYNTHETIC executions (tests/frontier-comparison-run-synthetic.mjs): nothing here was measured, nothing runs and no
-// number says anything about an arm. A plan programs what a given attempt is, by its key `<lane>/<slot>/<attempt>`; an attempt that is not in the plan is a good one.
+// number says anything about an arm. A plan programs what a given attempt is, by its key `<lane>/<slot>/<attempt>`; an attempt that is not in the plan is a good one. The launch says
+// whether the launcher killed the process at its time limit (`timedOut`), which a launcher is free to leave out: the campaign reads it as false.
 
 export const sha = (text) => createHash("sha256").update(text).digest("hex");
 // The game's hashes of the synthetic report, and the engine its provenance names.
@@ -38,6 +39,10 @@ export const attempts = {
   failing: { exitCode: 1, log: "SCRIPT ERROR: fake\n" },
   // A process that was killed and wrote no report.
   crashed: { noReport: true, exitCode: -1, signal: "SIGSEGV", log: "Program crashed\n" },
+  // A process that the launcher killed at its time limit (SIGTERM) and that wrote no report.
+  timedOut: { noReport: true, timedOut: true, exitCode: -1, signal: "SIGTERM", log: "FRONTIER_COMPARISON_SCENARIO_STARTED\n" },
+  // A process that exited 0 and wrote no report.
+  silent: { noReport: true, log: "FRONTIER_COMPARISON_SCENARIO_STARTED\n" },
   // A scenario that waited with a number other than the protocol's: nothing in the analysis' rules sees it.
   otherWaits: { change: (report) => (report.config.waits.burstMinimumFrames = 4) },
   // The vsync reads back as ENABLED where DISABLED was asked for.
@@ -82,6 +87,7 @@ export function fakeLauncher({ protocol, plan = {}, interruptBefore = null, regi
           report: directive.noReport ? null : reportOf(protocol, request, directive, windowed),
           exitCode: directive.exitCode ?? 0,
           signal: directive.signal ?? null,
+          timedOut: directive.timedOut ?? false,
           log: directive.log ?? "FRONTIER_COMPARISON_SCENARIO_DONE\n",
           load: directive.load ?? { before: 0.9, after: 1 },
           hashes: { binary: arm.binarySha256, package: arm.packageSha256, script: arm.scriptSha256 },
