@@ -38,6 +38,18 @@ const parsedJson = async (file) => {
   }
 };
 
+// The SHA-256 of a file, or null when it is not there; any other error is the caller's.
+async function sha256Of(file) {
+  try {
+    return sha256(await readFile(file));
+  } catch (error) {
+    if (error.code === "ENOENT") {
+      return null;
+    }
+    throw error;
+  }
+}
+
 // The arguments after the executable of the probe's process for an entry, pure. "script" gives `--report=<name>` (the probe writes it under res://build); the other two give an absolute `report`
 // and no `--script`: "main-loop" has `--path` at the probe project, and "release" has no `--path` either.
 export function selfCheckArguments({ entry = "script", windowed = false, project = root, probeProject, report }) {
@@ -124,8 +136,13 @@ export async function runSelfCheck({
   }
   const instrumentSha256 = sha256(await readFile(path.join(project, INSTRUMENT_FILE)));
   // The sha256 below is the repository's. The main-loop entry runs the copy in the probe project, which has to be the same file; the release entry's export is checked against it by the Release launcher.
-  if (entry === "main-loop" && sha256(await readFile(path.join(probeProject, INSTRUMENT_FILE))) !== instrumentSha256) {
-    why.push(`the probe project carries another ${INSTRUMENT_FILE} than the repository's (${instrumentSha256})`);
+  if (entry === "main-loop") {
+    const copy = await sha256Of(path.join(probeProject, INSTRUMENT_FILE));
+    if (copy === null) {
+      why.push(`the probe project has no ${INSTRUMENT_FILE}`);
+    } else if (copy !== instrumentSha256) {
+      why.push(`the probe project carries another ${INSTRUMENT_FILE} than the repository's (${instrumentSha256})`);
+    }
   }
   return {
     passed: why.length === 0,

@@ -249,6 +249,15 @@ test("the three entries judge the same way: the oracle, the log, the probe's own
   assert.equal(other.result.passed, false);
   assert.match(other.result.why.join("\n"), new RegExp(`the probe project carries another tests/cpu-time-instrument\\.gd than the repository's \\(${sha256("extends Node # the instrument\n")}\\)`));
   assert.equal(other.result.sha256, sha256("extends Node # the instrument\n"), "the hash that is recorded is the repository's");
+  // A probe project whose copy of the instrument is gone is a failed check, with the reason, and nothing throws: the report and the log that the probe already wrote are kept and judged.
+  const missing = await checkout("missing-copy", "extends Node # the instrument\n");
+  await rm(path.join(missing, INSTRUMENT_FILE));
+  const absent = await through("main-loop", { project, probeProject: missing });
+  assert.equal(absent.result.passed, false);
+  assert.deepEqual(absent.result.why, [`the probe project has no ${INSTRUMENT_FILE}`]);
+  assert.equal(absent.result.sha256, sha256("extends Node # the instrument\n"), "the hash that is recorded is the repository's");
+  assert.deepEqual(absent.result.probe.failed, [], "the probe's report was read and judged");
+  assert.ok(await exists(path.join(absent.outDirectory, "probe-report.json")) && (await exists(path.join(absent.outDirectory, "probe.log"))));
 });
 
 test("the timeout of the process is the check's to set, and an entry that lacks what it runs is refused before anything starts", async () => {
