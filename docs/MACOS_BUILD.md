@@ -34,7 +34,33 @@ For the bounded export fixture, the copied project fixes the physical headed win
 
 CI retains the verified app as `Verified.app.tar.gz`; extract it with `tar -xzf Verified.app.tar.gz` so bundle permissions and framework symlinks are preserved. Verify the extracted bundle with `codesign --verify --deep --strict --verbose=2 Verified.app`.
 
-Ad-hoc signing is for local validation only. This slice does not establish Developer ID distribution, notarization, an iOS export, mobile-device behavior, or a second-machine replay. The observed environment is the same Mac with fresh per-application user data, rather than a clean OS user profile. The Frontier twelve-turn game replay, clean profile, second Mac/VM and physical-device criteria remain open.
+Ad-hoc signing is for local validation only. This slice does not establish Developer ID distribution, notarization, an iOS export, mobile-device behavior, or a second-machine replay. The observed environment is the same Mac with fresh per-application user data, rather than a clean OS user profile. The Frontier game and its twelve-turn replay are exported and run by the next section; a clean OS profile, a second Mac or VM and the physical-device criteria remain open.
+
+## Export Frontier, the game, and replay it
+
+`--consumer civ-lite` exports `consumers/civ-lite` (Frontier, the Civilization-2-style game with a React Native HUD) instead of the minimal fixture. The default consumer is `minimal`, and its path, evidence and 40/43-check lane are the ones above, unchanged.
+
+```sh
+node scripts/macos-export.mjs --consumer civ-lite \
+  --template "$PWD/build/macos-arm64-template.zip" \
+  --out "$PWD/build/macos-export-civ-lite/Frontier.app"
+```
+
+The runner provisions the template as `scripts/consumer-civ-lite-check.mjs` does, then, in the disposable copy only, gives the project a name of its own (`Frontier Export <token>`, so that its user-data directory belongs to the export), turns on the texture import formats an export needs and writes the export preset. It exports the Release `.app` with the Hermes and React Native frameworks, signs it ad hoc, verifies it (`codesign --verify --deep --strict`), audits the load commands of the executable, the host and both frameworks, and requires the exported engine to be the template's arm64 Release member. The game's build report declares its HUD icons as assets, which the payload validator checks like the minimal fixture's empty record.
+
+**The replay gate.** Godot's official Release template is built with `disable_path_overrides`: `-s` and `--main-loop` are accepted and dropped, `--path`, `--main-pack` and `--scene` abort, and `--headless`, `--rendering-driver` and the user arguments after `--` work. The replay therefore runs from the exported scene behind a user argument, as `--validate` does. `consumers/civ-lite/replay_validation.gd` is an inert node of `main.tscn` that, with `-- --validate-replay`, plays the 77 intents of `game/replay.gd` through `GameServices` (the twelve turns, each end-of-turn job awaited), hashes the canonical serialization after every intent with the game's `canon.gd`, prints the golden state hash and the trace hash, and writes its report to `user://` because `res://` is read-only in an export. It pins no hash. The pins are the ones the headless lane holds (`tests/civ-lite-game-native.test.mjs`), and the runner requires each run to reach both.
+
+**The runs.** After signing, the runner plays the replay three times in the provisioned project (the editor binary, headless) and three times in a copy of the `.app` made in another directory (a clone of the bundle, checked byte for byte against the original and verified again after the runs), then runs the HUD's matrix once in that copy (`-- --validate-hud`: the 46 steps of the context matrix, the six panels and the seven contexts; its report goes to `user://` only when exported). Each run starts in a clean profile: the project's user-data directory, `~/Library/Application Support/Godot/app_userdata/Frontier Export <token>`, must not exist when the run starts, its path is recorded, and it is removed before the next run. A run that does not reach the pinned hashes, prints an engine or script error, or finds a profile that was not clean fails the export, and nothing is published; the receipt keeps the records of every run before it judges them.
+
+**The limit.** The profile is the application's user-data directory on the Mac that built the app. It is not a clean macOS user, a second Mac or a virtual machine, and the receipt says so (`same Mac, fresh application user-data directory per run`): the milestone's clean-machine criterion stays open. Developer ID signing and notarization are out of scope here as well.
+
+Run the lane with `MACOS_EXPORT_TEMPLATE` set to the derived ZIP, from a committed, clean source tree (the provisioned SDK carries its commit, and the export refuses a dirty one):
+
+```sh
+MACOS_EXPORT_TEMPLATE="$PWD/build/macos-arm64-template.zip" npm run test:export:civ-lite
+```
+
+`tests/macos-export-civ-lite.test.mjs` exports, then judges the result again with `tests/macos-export-civ-lite-oracle.mjs`, which reads the roteiro from `replay.gd`, recomputes the golden hash from the final canonical state and the trace hash from the step hashes, and checks the six profiles, the copy, the HUD report (with the HUD lane's own oracle), `codesign`, `otool` and the strings of the non-binary files of the bundle. Without the variable the lane is skipped explicitly. It is not part of `npm run test:contracts`, whose template-free half is `tests/macos-export-civ-lite-oracle.test.mjs`. The retained sabotage, `node scripts/macos-export-civ-lite-sabotage.mjs`, alters the game's seed in the disposable copy and requires all six runs to be rejected for the pinned hashes with nothing published; the template tree is hashed before and after. CI runs the lane in the `native-suites-runtime` job after the minimal export. The lane's record, with the six hashes, the HUD matrix, the sabotage and three frames of the replay in the Release app, is [docs/evidence/macos-export/civ-lite](evidence/macos-export/civ-lite/README.md).
 
 ## Evidence status
 

@@ -643,6 +643,8 @@ preserves this run and the continuation recovery incident. This remains local
 evidence: hosted CI, final review, Pages, the Frontier replay and clean-profile/
 second-machine scope remain pending. No 1.0 checkpoint, weight or denominator changes.
 
+**Progress, V05-07 (`replay`) and exits X1, X2 and X7.** Frontier is exported as a signed arm64 Release `.app` (`node scripts/macos-export.mjs --consumer civ-lite`, code at `5da4e77`) and plays the 12-turn replay to the golden hash: an inert gate of the game (`-- --validate-replay`) plays the 77 intents through `GameServices` and hashes the state with the headless lane's own code, and the lane ran it three times in the provisioned project and three times in a copy of the app in another directory, each in a fresh user-data directory, all six reaching the golden and trace hashes that `tests/civ-lite-game-native.test.mjs` pins. The HUD's context matrix passes in the app (152 of 152, six panels, seven contexts), a retained sabotage of the seed is rejected in all six runs, and three frames of the replay in the Release app are captured. The [record](https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md) holds the clean-tree run. Within the limit "same Mac, clean profile", `replay`, X1, X2 and X7 are done; `limpa` (a second Mac or VM) stays open, and the hosted CI of the new step and Pages come after the merge. No 1.0 checkpoint, weight or denominator moves.
+
 **Progress.** V05-03, criterion `consumidor`: `consumers/civ-lite/` is now a consumer project
 provisioned by the addon, with no global Node, built offline by the editor plugin and opened by
 the editor. Its scene is rooted at the persistent `GameServices` node, which no longer names the
@@ -1041,6 +1043,18 @@ without it, and everything the scenario counts is the same (`scene-nodes`, the r
 shape logs no line about the extension, and the control (arm C in the same copy) fails. **A check of the projects, and no number in it is a result.** Nothing was exported and no campaign ran: the export function of V05-07, the
 per-arm file sets and the manifest `frontier-comparison-export.json` come later. The [record](https://github.com/journey-studios/godot-fabric/blob/85d2c99a379f1aa2702d0b12bebc0a75ba94b542/docs/evidence/frontier-comparison-arms/README.md)
 is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** V05-10, criterion `execucao`, the instrument's self-check through the main loop (code at `c489a01`, record at `ef18579`): the self-check that gates every campaign (the CPU-time instrument's probe and its oracle)
+no longer needs `-s`, which an export template discards. The probe, a `SceneTree`, is now the main loop of a small probe project (`prepareProbeProject`: the probe and the unchanged instrument copied at their own paths, an entry
+class, an empty scene and an `override.cfg`), and `runSelfCheck` takes an `entry`: `script` as before, `main-loop` (the editor's binary over the probe project, no `--script`) or `release` (the executable of an exported `.app`),
+all judged the same way. The probe's only change is that `--report=<absolute path>` writes there. When the exports directory has `probe/frontier-comparison-export.json`, the Release launcher checks the probe `.app`'s hashes, the
+repository's instrument in its files and that its template is the three arms', and declares `selfCheck: { entry: "release", executable }` instead of `"unsupported"`; without it the campaign refuses as before. On the editor's binary,
+Debug and headless, the self-check through the main loop and through `--script` passes with the same ten checks by name, and two negative controls (no `override.cfg`; an `override.cfg` that names only the empty scene) write no
+report and fail; the times are not compared. **A check of the entry, and no number in it is a result.** The `release` entry ran only against a fake `.app`: the probe project is not exported yet (that comes with the per-arm
+sets, without the frameworks), no window was opened and no campaign ran. The [record](https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md)
+is local evidence. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
+
+**Progress.** The hosted CI and Pages receipts of the instrument's self-check through the main loop (#141, GF-30, criterion `execucao`) are recorded from the push of main at `9810100`, in the [record's hosted section](https://github.com/journey-studios/godot-fabric/blob/97af2c2f2c99636bc9f7c896167019306dc283b1/docs/evidence/frontier-comparison-probe-entry/README.md#ci-hospedada-e-pages): the Contracts run passed on the first attempt (the five native jobs skipped, since the slice has no native step), the milestone guard passed against the squash's parent, the entry's two contract test files passed 26 of 26 in the log, and the Pages run published the committed `migration.json` byte for byte. The receipts now count 34 slices and 68 receipts. No criterion changes state, and no 1.0 checkpoint, weight or denominator moves; `execucao` stays open.
 
 **Decision.** On 2026-10-09 the user decided that the physical iPhone gate is a no-go: no
 iPhone, Apple Team ID or Developer Mode will be provided, so V05-09 (package P7) is not run.

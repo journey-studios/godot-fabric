@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07: revisão local de symlink-parent no export macOS; CI hospedada, revisão final e Pages pendentes."
   },
-  "updatedAt": "2026-10-10T17:55:00.000Z",
+  "updatedAt": "2026-10-10T18:30:00.000Z",
   "source": {
     "commit": "6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
     "url": "https://github.com/journey-studios/godot-fabric/commit/6c2169abbe2e6f6da79f6b51d50dfa76bac1cddc",
@@ -4196,8 +4196,17 @@
             {
               "id": "replay",
               "label": "O .app do jogo executa o replay de 12 turnos com o hash dourado do editor, copiado para outro diretório e em perfil de usuário limpo",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Replay de 12 turnos no hash dourado cb7ab974… e no de trilha ed43495e… em 6 de 6 execuções: 3 no projeto provisionado e 3 numa cópia do .app Release em outro diretório, cada uma em perfil de dados limpo (mesmo Mac; o critério limpa não é reivindicado)",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+                },
+                {
+                  "label": "Recibo: SHA-256 das fontes, dos relatórios e dos logs de cada execução, do app, do PCK e do template; sabotagem da semente rejeitada 6 de 6, sem publicação",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/report.json"
+                }
+              ]
             },
             {
               "id": "limpa",
@@ -4420,14 +4429,24 @@
         {
           "id": "X1",
           "label": "Vertical slice: cenário fixo com 6 painéis e 7 contextos exercitado pelo replay no editor e no .app",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Matriz da HUD (46 passos, 6 painéis, 7 contextos) passa no .app Release: 152 de 152 checks, julgados pelo oráculo do lane da HUD; o replay toca o mesmo cenário no editor e no .app",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            }
+          ]
         },
         {
           "id": "X2",
           "label": "Turno determinístico: replay de 12 turnos com hash dourado idêntico em 3 de 3 execuções (editor e .app macOS; iPhone se houver GO)",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Hash dourado cb7ab974… idêntico em 6 de 6 execuções (3 no editor, 3 no .app Release), também o de trilha; o iPhone é NO-GO (X8)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            }
+          ]
         },
         {
           "id": "X3",
@@ -4487,8 +4506,17 @@
         {
           "id": "X7",
           "label": "macOS: .app Release exportado executa o replay em perfil limpo; codesign ad hoc verificado",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": ".app Release com Hermes e RN embutidos, assinado ad hoc (codesign --verify --deep --strict) e sem caminho de desenvolvimento nos load commands, executa o replay em perfil limpo (mesmo Mac)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
+            },
+            {
+              "label": "Recibo e SHA-256 do app, do PCK e do template",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/report.json"
+            }
+          ]
         },
         {
           "id": "X8",
@@ -4806,6 +4834,20 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-hosted-receipts-12-97af2c2",
+      "at": "2026-10-10T18:30:00.000Z",
+      "taskIds": [],
+      "message": "Recibos de CI hospedada e de Pages da entrada da sonda do autoteste do instrumento (#141, critério execucao, squash 9810100, entrada milestone-0-5-v05-10-probe-entry-ef18579). A Contracts do push de 9810100 (run 38075378211) passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos e de paridade ficaram skipped, porque a fatia não tem passo nativo nem artefato. A guarda de marco passou contra o pai do squash. O test:contracts deu 7, 43 e 682 testes, com um skipped (o export nativo do macOS, pela allowlist). tests/frontier-comparison-probe-project.test.mjs passou 8 de 8 e tests/frontier-comparison-release.test.mjs 18 de 18. O Pages do mesmo push (run 38075378245) publicou o migration.json commitado, byte a byte, com a entrada desta fatia. Gerador canônico com 34 fatias e 68 recibos. Nenhum critério muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/97af2c2f2c99636bc9f7c896167019306dc283b1/docs/evidence/frontier-comparison-probe-entry/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-10-probe-entry-ef18579",
+      "at": "2026-10-10T17:59:00.000Z",
+      "taskIds": [],
+      "message": "V05-10 do marco 0.5, critério execucao (código no commit c489a01, registro no ef18579): o autoteste do instrumento passa a entrar pelo main loop de um projeto de sonda, para poder rodar num template Release. O autoteste (a sonda tests/cpu-time-instrument-probe.gd e o oráculo) é o portão de toda campanha, e o congelado pede que ele rode de novo no motor da campanha; num template oficial o -s/--script é descartado e o --path aborta, então a sonda, que é um SceneTree, passa a ser o main loop de um projeto pequeno, como o roteiro. scripts/frontier-comparison-probe-project.mjs (prepareProbeProject) faz um diretório novo com um project.godot mínimo (gl_compatibility, o renderizador do civ-lite), a sonda e o instrumento copiados nos mesmos caminhos, um invólucro CpuTimeInstrumentProbeEntry que estende a sonda, uma cena vazia e um override.cfg com run/main_scene e run/main_loop_type, e roda o --import; devolve os caminhos e os SHA-256 dos arquivos, e o do instrumento é o do repositório (4bdcda83…), que não foi tocado. A única mudança na sonda: --report=<caminho absoluto> grava nesse caminho, e --report=<nome> segue gravando em res://build/<nome>. O runSelfCheck ganha a entrada (script, o padrão de antes; main-loop, o binário do editor com --path no projeto de sonda e sem --script; release, o executável de um .app exportado, com o diretório de trabalho fora do .app), e as três passam pelo mesmo julgamento: o oráculo, o log, presented na janela e o SHA-256 do instrumento. O lançador Release, quando o diretório de exports tem probe/frontier-comparison-export.json (arm probe), confere os hashes do .app da sonda, o instrumento do repositório nos arquivos dela e que o template é o dos três braços, e passa a declarar selfCheck {entry: release, executable} em vez de unsupported; sem esse arquivo a recusa é a de antes, e a campanha só passa o selfCheck do lançador ao runSelfCheck. É uma verificação da entrada, Debug e headless, no binário do editor, e nenhum número dela é resultado: o autoteste pelo main loop e pelo --script passa com os mesmos 10 checks pelos nomes, o oráculo os julga sem violações e os tempos não se comparam. Dois controles negativos (o projeto sem o override.cfg, em que o motor diz que não há cena principal e fica parado, e com um override.cfg que só nomeia a cena vazia) não escrevem relatório e falham com the probe wrote no report. A entrada release rodou só contra um .app falso, em Node: a sonda não foi exportada (isso vem com os conjuntos por braço, sem os frameworks), nenhuma janela abriu e nenhuma campanha rodou. Nenhum critério muda: execucao segue aberto, sem evidência, e nenhum peso, nota ou denominador do 1.0 se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ef18579a79275bf1376988dba5105053b885251a/docs/evidence/frontier-comparison-probe-entry/README.md"
+    },
+    {
       "id": "milestone-0-5-hosted-receipts-11-ea5fcea",
       "at": "2026-10-10T17:55:00.000Z",
       "taskIds": [],
@@ -4841,6 +4883,13 @@
       "taskIds": [],
       "message": "Recibos de CI hospedada e de Pages de duas fatias do V05-10, já na main: a entrada do roteiro como main loop do projeto de medição (#133, critério execucao, squash 81eaa0a) e o relatório da comparação como documento Markdown (#132, critério relatorio, squash 01118ad). A Contracts do push de cada squash passou na primeira tentativa: contracts, reference-android e reference-ios passaram, e os cinco jobs nativos ficaram skipped, porque nenhuma das duas fatias tem passo nativo nem artefato (runs 38067297038 e 38068135735). A guarda de marco passou contra o pai de cada squash. O test:contracts deu 7, 43 e 629 testes no #133 e 7, 43 e 646 no #132, com um skipped cada, o export nativo do macOS, aceito pela allowlist. tests/frontier-comparison-run.test.mjs passou 22 de 22 e tests/frontier-comparison-report-markdown.test.mjs passou 17 de 17. O Pages do push de 81eaa0a (run 38067297023) publicou o migration.json commitado com a entrada de atividade do #133; o do push de 01118ad (run 38068135660) publicou-o com as duas entradas, a do #133 e a do #132 (no push de 81eaa0a, a do #132 ainda não existia). Gerador canônico com 31 fatias e 62 recibos (com o #75, que entrou antes pelo #134). Nenhum critério muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ddb887f7e618362294018641b6904d609b15af70/docs/evidence/frontier-comparison-entry/README.md#ci-hospedada-e-pages"
+    },
+    {
+      "id": "milestone-0-5-v05-07-replay-7207170",
+      "at": "2026-10-10T16:40:00.000Z",
+      "taskIds": [],
+      "message": "V05-07 do marco 0.5, critério replay (código no commit 5da4e77, registro no 7207170): o Frontier (consumers/civ-lite) é exportado como .app Release assinado ad hoc e toca o replay de 77 intents (12 turnos) pelo GameServices, com o hash dourado cb7ab974… e o de trilha ed43495e… nas 6 execuções: 3 no projeto provisionado e 3 numa cópia do .app em outro diretório, cada uma em um perfil de dados limpo (o diretório não existia antes e foi removido depois). Um nó inerte de main.tscn (replay_validation.gd, -- --validate-replay) joga o replay a partir da cena exportada, porque o Release template ignora -s e --main-loop e aborta com --path; ele usa o canon.gd do jogo, não fixa hash e grava o relatório em user://. A matriz da HUD (46 passos, 6 painéis, 7 contextos) também passa no .app: 152 de 152 checks, julgados de novo pelo oráculo do lane da HUD. O runner de export ganha --consumer civ-lite e a função exportPreparedProject, que exporta um projeto já preparado; o lane minimal segue 14/14 em test:export:macos, com 40/43 checks. Uma sabotagem retida, a semente do jogo trocada na cópia do projeto, é rejeitada 6 de 6 pelos hashes fixados e nada é publicado. É mesmo Mac, perfil limpo: o critério limpa (segundo Mac ou VM) continua aberto, e os braços A e B exportam sem addons/godot_fabric e sem os frameworks, como o protocolo os define, pelo script de medição do slot 3 (exportPreparedProject), ainda por construir. Nenhum peso, nota ou denominador do 1.0 se move. Tudo rodou na árvore limpa do commit (npm run test:export:civ-lite 1/1, test:export:macos 14/14 e a sabotagem rejeitada), e três quadros do replay no .app Release, capturados com o Movie Maker do Godot, estão no registro. A CI hospedada e o Pages vêm depois do merge.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7207170514091919aeb074525e92842f0ad928fe/docs/evidence/macos-export/civ-lite/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-10-657694e",

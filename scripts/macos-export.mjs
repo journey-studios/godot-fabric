@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {createHarness} from "./consumer-harness.mjs";
+import {CIV_LITE_BUNDLE_IDENTIFIER, GOLDEN_HASH, LIMIT as CIV_LITE_LIMIT, TRACE_HASH, civLiteProjectName, removeCivLiteUserData, runCivLiteRuntime} from "./macos-export-civ-lite.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const fixtureChecksPath = fileURLToPath(new URL("./macos-export-checks.json", import.meta.url));
@@ -206,12 +207,12 @@ async function filesWithExtension(directory, extension, matches = []) {
   return matches;
 }
 
-async function inspectApp(harness, app, sdkPath) {
+async function inspectApp(harness, app, sdkPath, expectedIdentifier = expectedBundleIdentifier) {
   const directory = harness.directory;
   const contents = path.join(app, "Contents");
   const executableName = await plistValue(harness, path.join(contents, "Info.plist"), "CFBundleExecutable", directory, "inspect-plist-executable");
   const bundleIdentifier = await plistValue(harness, path.join(contents, "Info.plist"), "CFBundleIdentifier", directory, "inspect-plist-bundle-id");
-  assert.equal(bundleIdentifier, expectedBundleIdentifier, "exported app bundle identifier does not match this isolated fixture");
+  assert.equal(bundleIdentifier, expectedIdentifier, "exported app bundle identifier does not match this isolated fixture");
   const executable = path.join(contents, "MacOS", executableName);
   const executableRecord = await fileRecord(executable);
   assert.notEqual(executableRecord.mode & 0o111, 0, "the exported executable is not executable");
@@ -311,7 +312,13 @@ ${ready}`);
   return result;
 }
 
-async function prepareProject(harness, template, projectName) {
+export function presetText(template, bundleIdentifier, {exportFilter = "all_resources", includeFilter = "", excludeFilter = ""} = {}) {
+  for (const value of [exportFilter, includeFilter, excludeFilter])
+    assert.match(value, /^[^"\\\r\n]*$/, "export filters must be plain text without quotes, backslashes or line breaks");
+  return `[preset.0]\nname="macOS Arm64"\nplatform="macOS"\nrunnable=true\ndedicated_server=false\ncustom_features=""\nexport_filter="${exportFilter}"\ninclude_filter="${includeFilter}"\nexclude_filter="${excludeFilter}"\n\n[preset.0.options]\napplication/bundle_identifier="${bundleIdentifier}"\napplication/short_version="1.0"\napplication/version="1.0"\nbinary_format/architecture="arm64"\ncustom_template/release="${template.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"\ncodesign/codesign=0\n`;
+}
+
+async function prepareProject(harness, projectName) {
   const sourceValidation = await readFile(path.join(harness.project, "validation.gd"), "utf8");
   const adaptedValidation = patchValidation(sourceValidation);
   await writeFile(path.join(harness.project, "validation.gd"), adaptedValidation);
@@ -332,8 +339,6 @@ async function prepareProject(harness, template, projectName) {
   assert.ok(adaptedProject.includes("window/size/resizable=false"));
   assert.ok(adaptedProject.includes('window/stretch/aspect="keep"'));
   await writeFile(projectPath, adaptedProject);
-  const preset = `[preset.0]\nname="macOS Arm64"\nplatform="macOS"\nrunnable=true\ndedicated_server=false\ncustom_features=""\nexport_filter="all_resources"\ninclude_filter=""\nexclude_filter=""\n\n[preset.0.options]\napplication/bundle_identifier="${expectedBundleIdentifier}"\napplication/short_version="1.0"\napplication/version="1.0"\nbinary_format/architecture="arm64"\ncustom_template/release="${template.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"\ncodesign/codesign=0\n`;
-  await writeFile(path.join(harness.project, "export_presets.cfg"), preset);
   const originalCopy = path.join(harness.directory, "validation-original.gd");
   const adaptedCopy = path.join(harness.directory, "validation-adapted.gd");
   const originalProjectCopy = path.join(harness.directory, "project-original.godot");
@@ -349,7 +354,40 @@ async function prepareProject(harness, template, projectName) {
     adaptedValidationSha256: sha256(Buffer.from(adaptedValidation)), validationDiff: patch,
     validationDiffSha256: sha256(Buffer.from(patch)), projectDiff: projectPatch,
     projectDiffSha256: sha256(Buffer.from(projectPatch)),
-    presetSha256: sha256(Buffer.from(preset)), projectName, supportedChecks: "the unchanged 40/43 names/order are pinned in scripts/macos-export-checks.json"};
+    projectName, supportedChecks: "the unchanged 40/43 names/order are pinned in scripts/macos-export-checks.json"};
+}
+
+// Frontier's disposable copy: the project gets a name of its own (so its user-data directory is the export's own), the texture formats an
+// export needs. `edits` are the sabotage's one-place replacements of the copy's files; the template is never touched.
+async function prepareCivLiteProject(harness, projectName, edits) {
+  const projectPath = path.join(harness.project, "project.godot");
+  const sourceProject = await readFile(projectPath, "utf8");
+  assert.equal(sourceProject.split('config/name="Frontier"').length - 1, 1, "Frontier project name changed unexpectedly");
+  assert.equal(sourceProject.split("[rendering]\n").length - 1, 1, "Frontier rendering section changed unexpectedly");
+  let adaptedProject = sourceProject.replace('config/name="Frontier"', `config/name="${projectName}"`);
+  adaptedProject = adaptedProject.replace("[rendering]\n", "[rendering]\ntextures/vram_compression/import_s3tc_bptc=true\ntextures/vram_compression/import_etc2_astc=true\n");
+  assert.ok(adaptedProject.includes(`config/name="${projectName}"`));
+  assert.ok(adaptedProject.includes("textures/vram_compression/import_s3tc_bptc=true"));
+  assert.ok(adaptedProject.includes("textures/vram_compression/import_etc2_astc=true"));
+  await writeFile(projectPath, adaptedProject);
+  const originalCopy = path.join(harness.directory, "project-original.godot");
+  const adaptedCopy = path.join(harness.directory, "project-adapted.godot");
+  await writeFile(originalCopy, sourceProject);
+  await writeFile(adaptedCopy, adaptedProject);
+  const projectPatch = await harness.run("fixture-project-diff", "/usr/bin/diff", ["-u", originalCopy, adaptedCopy], 1, harness.env, {cwd: harness.directory});
+  const edited = [];
+  for (const {file, find, replace} of edits) {
+    const target = path.join(harness.project, file);
+    assert.ok(isPathInside(harness.project, target), `edit target escapes the disposable project: ${file}`);
+    const text = await readFile(target, "utf8");
+    assert.equal(text.split(find).length - 1, 1, `the edit must replace exactly one place in the disposable ${file}`);
+    const changed = text.replace(find, () => replace);
+    await writeFile(target, changed);
+    edited.push({file, find, replace, beforeSha256: sha256(Buffer.from(text)), afterSha256: sha256(Buffer.from(changed))});
+  }
+  return {canonicalProjectSha256: sha256(await readFile(path.join(root, "consumers/civ-lite/project.godot"))),
+    adaptedProjectSha256: sha256(Buffer.from(adaptedProject)), projectDiff: projectPatch, projectDiffSha256: sha256(Buffer.from(projectPatch)),
+    projectName, edits: edited};
 }
 
 async function clearConsumerOutputs(userDataPath, expectedUserDataPath) {
@@ -583,7 +621,141 @@ export async function normalizeFrameworkPackaging(app) {
   }))};
 }
 
-export async function runMacOSExport({template, output}) {
+// The export of an already-prepared Godot project, which is `harness.project`: the caller provisioned it (the addon and its SDK, the project's own files), built its HUD
+// with the editor plugin and checked its payload; this function owns what turns it into a signed Release application and knows nothing of which consumer it is. It writes the
+// export preset (`bundleIdentifier`, and `exportFilter`, `includeFilter` and `excludeFilter` as Godot's preset fields), exports with the arm64 Release template into `staging`
+// (a new path of the caller's, which the caller removes if this throws), has the export hook embed the Hermes and React Native frameworks, checks that the exported engine is
+// the template's arm64 member and that the PCK holds `bundle` byte for byte (default: the project's `.godot_fabric/app.js`), audits the load commands of the executable, the
+// host and both frameworks, normalizes the framework layout, signs ad hoc, verifies every signature and asks the exported engine for its version.
+// `templateMember` is the result of verifyTemplateMember when the caller already inspected the template. `receipt`, when given, receives the stages and facts as they are
+// established (stages, pack, frameworkNormalization, app), so a rejected export keeps what it learned; without one the same record is returned as `receipt`.
+// Returns {app, executable, pck: {path, sha256}, templateSha256, templateMemberSha256, presetSha256, ...}: the app, its executable and its PCK with their SHA-256 after signing,
+// and the SHA-256 of the template ZIP.
+export async function exportPreparedProject({harness, template, staging, bundleIdentifier = expectedBundleIdentifier, bundle = path.join(harness.project, ".godot_fabric", "app.js"),
+  exportFilter, includeFilter, excludeFilter, templateMember = null, receipt = {stages: []}}) {
+  assert.ok(path.isAbsolute(staging) && staging.endsWith(".app"), "the staging path must be a new absolute .app path");
+  assert.equal(await existsIncludingDangling(staging), false, "the staging path already exists");
+  receipt.templateMember ??= templateMember ?? await verifyTemplateMember(harness, template);
+  const preset = presetText(template, bundleIdentifier, {exportFilter, includeFilter, excludeFilter});
+  await writeFile(path.join(harness.project, "export_presets.cfg"), preset);
+  const exportLog = await harness.run("macos-export-release", harness.godot,
+    ["--headless", "--path", harness.project, "--export-release", "macOS Arm64", staging], 0, harness.env);
+  assert.doesNotMatch(exportLog, fatalOutput);
+  assert.ok(await existsIncludingDangling(staging), "Godot export returned success without creating the staged application");
+  receipt.stages.push({name: "arm64-release-export", passed: true, logSha256: sha256(Buffer.from(exportLog))});
+  const unsignedInspection = await inspectApp(harness, staging, harness.sdk, bundleIdentifier);
+  assert.equal(unsignedInspection.executableRecord.sha256, receipt.templateMember.sha256,
+    "exported unsigned engine differs from the inspected template member");
+  const resources = path.join(staging, "Contents", "Resources");
+  const pckPaths = await filesWithExtension(resources, ".pck");
+  assert.equal(pckPaths.length, 1, "export must contain exactly one PCK in Contents/Resources");
+  const pckPath = pckPaths[0];
+  const packLog = await harness.run("macos-export-pck", "/usr/bin/python3",
+    [path.join(root, "scripts/godot_pack.py"), pckPath, bundle], 0, harness.env, {cwd: root});
+  assert.doesNotMatch(packLog, fatalOutput);
+  const pack = JSON.parse(packLog);
+  assert.equal(pack.format, 4, "exported PCK has an unsupported format");
+  assert.ok(Number.isInteger(pack.fileCount) && pack.fileCount > 0, "PCK inspection omitted its file count");
+  assert.equal(pack.bundleEmbeddedByteForByte, true, "PCK does not contain the selected bundle unchanged");
+  assert.equal(pack.buildToolchainExcluded, true, "PCK contains build-only SDK contents");
+  assert.equal(pack.editorScriptsExcluded, true, "PCK contains editor-only SDK scripts");
+  assert.equal(pack.pckSHA256, sha256(await readFile(pckPath)), "PCK hash differs from the inspector result");
+  receipt.pack = {path: path.relative(staging, pckPath).split(path.sep).join("/"), ...pack,
+    inspectorLogSha256: sha256(Buffer.from(packLog))};
+  receipt.frameworkNormalization = await normalizeFrameworkPackaging(staging);
+  const appInspection = await signAndVerifyApp(harness, staging, unsignedInspection);
+  const versionOutput = await tool(harness, "exported-engine-version", appInspection.executable, ["--version"], harness.outside);
+  assert.match(versionOutput, /^4\.7\.2\.stable(?:\.official\.[^\s]+)?$/);
+  receipt.app = {...appInspection, engineVersion: versionOutput};
+  return {app: {path: staging, sha256: await hashApp(staging)}, executable: {path: appInspection.executable, sha256: appInspection.executableAfterSigning.sha256},
+    pck: {path: pckPath, sha256: pack.pckSHA256}, templateSha256: receipt.templateMember.archiveSha256, templateMemberSha256: receipt.templateMember.sha256,
+    presetSha256: sha256(Buffer.from(preset)), engineVersion: versionOutput, receipt};
+}
+
+const ownedDataPathOf = projectName => path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
+
+// The consumer templates the runner exports, and what differs between them; runMacOSExport holds no consumer name of its own.
+//   bundleIdentifier  the identifier the exported app must carry
+//   projectName(token)  the disposable project's name, unique to the export, so that its user-data directory is the export's own
+//   limitations / receiptFields  what the consumer adds to the receipt's limitations and top-level fields
+//   acceptsEdits  whether `edits` ({file, find, replace} in the disposable project, for a retained sabotage) are accepted
+//   loadInventory()  what is loaded and checked before anything is provisioned (null when the consumer has none)
+//   prepare({harness, projectName, edits, inventory})  adapts the provisioned copy and returns the receipt's `fixture`
+//   assertAssets(report)  what the build report must say about the declared assets
+//   runtime({harness, receipt, relocated, executableName, projectName, inventory, expected})  the stage that runs the relocated, signed app
+//   retainFailure / cleanup({harness, receipt, projectName, ownedDataPath})  what happens to the user-data directory when the export fails, and at the end
+const CONSUMERS = {
+  // The first slice's baseline: the 40/43 checks of consumers/minimal in a headless and a headed run.
+  minimal: {
+    bundleIdentifier: expectedBundleIdentifier,
+    projectName: token => `Godot Fabric Export ${token}`,
+    limitations: [],
+    receiptFields: {},
+    acceptsEdits: false,
+    async loadInventory() {
+      const bytes = await readFile(fixtureChecksPath);
+      const checks = JSON.parse(bytes);
+      assert.equal(checks.format, "godot-fabric.macos-export-consumer-checks/v1");
+      assert.equal(checks.sourceFixture, "consumers/minimal/validation.gd");
+      assert.equal(checks.headless.length, 40);
+      assert.equal(checks.headed.length, 43);
+      assert.equal(new Set(checks.headless).size, 40);
+      assert.equal(new Set(checks.headed).size, 43);
+      return {bytes, checks};
+    },
+    async prepare({harness, projectName, inventory}) {
+      const fixture = await prepareProject(harness, projectName);
+      fixture.checkInventorySha256 = sha256(inventory.bytes);
+      return fixture;
+    },
+    assertAssets(report) { assert.equal(report.assets, null, "the canonical minimal export baseline is intentionally asset-free"); },
+    async runtime({harness, receipt, relocated, projectName, inventory}) {
+      const headless = await runExportedConsumer(harness, relocated, "headless", false, inventory.checks.headless, projectName);
+      const headed = await runExportedConsumer(harness, relocated, "headed", true, inventory.checks.headed, projectName, headless.userDataPath);
+      receipt.runtimes = [{displayServer: "headless", checkCount: headless.checks, logSha256: headless.logSha256},
+        {displayServer: "macOS", checkCount: headed.checks, logSha256: headed.logSha256}];
+      receipt.captures = headed.captures;
+    },
+    async retainFailure({harness, receipt, ownedDataPath}) {
+      try {
+        const failedConsumerOutputs = await retainFailedConsumerOutputs(ownedDataPath, harness.directory);
+        if (failedConsumerOutputs.length) receipt.failedConsumerOutputs = failedConsumerOutputs;
+      } catch (retentionError) {
+        receipt.failedConsumerOutputRetentionError = retentionError.message;
+      }
+    },
+    async cleanup({receipt, ownedDataPath}) {
+      if (!Object.hasOwn(receipt, "failedConsumerOutputRetentionError")) await clearConsumerOutputs(ownedDataPath, ownedDataPath);
+    },
+  },
+  // Frontier, the game: its replay three times in the project and three in a copy of the app, and its HUD matrix in the copy, each in a clean profile.
+  "civ-lite": {
+    bundleIdentifier: CIV_LITE_BUNDLE_IDENTIFIER,
+    projectName: civLiteProjectName,
+    limitations: [CIV_LITE_LIMIT],
+    receiptFields: {consumer: "civ-lite"},
+    acceptsEdits: true,
+    async loadInventory() { return null; },
+    prepare: ({harness, projectName, edits}) => prepareCivLiteProject(harness, projectName, edits),
+    // The game declares its HUD icons; the payload validator checks the manifest and the content hashes.
+    assertAssets(report) { assert.ok(report.assets !== null && report.assets.files > 0, "the game's build report must declare its HUD assets"); },
+    // hashApp and verifySignatures are handed over because scripts/macos-export-civ-lite.mjs cannot import this module (it would be a cycle).
+    runtime: ({harness, receipt, relocated, executableName, projectName, expected}) =>
+      runCivLiteRuntime({harness, receipt, app: relocated, executableName, projectName, expected, ops: {hashApp, verifySignatures}}),
+    // Every run of the stage keeps its own report and removes its own profile; nothing is left to retain, and this is the last sweep.
+    async retainFailure() {},
+    cleanup: ({projectName}) => removeCivLiteUserData(projectName),
+  },
+};
+const EXPORT_CONSUMERS = Object.keys(CONSUMERS);
+
+// `consumer` names the template that is exported (EXPORT_CONSUMERS). `minimal` is the first slice's baseline, unchanged. `civ-lite` is the game: its
+// runtime stage is the replay and the HUD matrix of scripts/macos-export-civ-lite.mjs, judged against `expected` (the hashes the headless lane pins).
+// `edits` ({file, find, replace} in the disposable project) exist for the retained sabotage and are refused for `minimal`.
+export async function runMacOSExport({template, output, consumer = "minimal", edits = [], expected = {goldenHash: GOLDEN_HASH, traceHash: TRACE_HASH}}) {
+  assert.ok(EXPORT_CONSUMERS.includes(consumer), `--consumer must be one of ${EXPORT_CONSUMERS.join(", ")}`);
+  const descriptor = CONSUMERS[consumer];
+  assert.ok(descriptor.acceptsEdits || edits.length === 0, `project edits are not supported for the ${consumer} export`);
   assert.ok(path.isAbsolute(output) && output.endsWith(".app"), "--out must resolve to a new absolute .app destination");
   if (await existsIncludingDangling(output)) throw new Error("Refusing to overwrite an existing output path");
   assert.equal(process.platform, "darwin", "macOS export validation requires macOS");
@@ -599,24 +771,18 @@ export async function runMacOSExport({template, output}) {
   const staging = path.join(parent, `.${appBase}.staging-${token}.app`);
   const relocated = path.join(parent, `.${appBase}.runtime-${token}.app`);
   if (await existsIncludingDangling(staging) || await existsIncludingDangling(relocated)) throw new Error("Refusing to reuse an existing temporary app path");
-  const harness = await createHarness({template: "minimal", name: `macos-export-${appBase}-${token}`});
+  const harness = await createHarness({template: consumer, name: `macos-export-${appBase}-${token}`});
   const environment = harness.env;
   const receiptPath = path.join(harness.directory, "receipt.json");
   const receipt = {format: "godot-fabric.macos-arm64-export/v1", status: "running", startedAt: new Date().toISOString(),
-    output, template, limitations: ["local ad-hoc signing only", "not a distribution/notarization claim", "no mobile or second-machine claim"], stages: [],
+    output, template, ...descriptor.receiptFields, limitations: ["local ad-hoc signing only", "not a distribution/notarization claim", "no mobile or second-machine claim",
+      ...descriptor.limitations], stages: [],
     removedDyldEnvironmentKeys: harness.removedDyldEnvironmentKeys};
   let stagingOwned = false, relocatedOwned = false, published = false, projectName = null;
   try {
     await writeJson(receiptPath, receipt);
     receipt.templateMember = await verifyTemplateMember(harness, template);
-    const checksBytes = await readFile(fixtureChecksPath);
-    const checks = JSON.parse(checksBytes);
-    assert.equal(checks.format, "godot-fabric.macos-export-consumer-checks/v1");
-    assert.equal(checks.sourceFixture, "consumers/minimal/validation.gd");
-    assert.equal(checks.headless.length, 40);
-    assert.equal(checks.headed.length, 43);
-    assert.equal(new Set(checks.headless).size, 40);
-    assert.equal(new Set(checks.headed).size, 43);
+    const inventory = await descriptor.loadInventory();
     const provisionOutput = await harness.provision();
     const sdkManifestPath = path.join(harness.sdk, "manifest.json");
     const sdkManifestBytes = await readFile(sdkManifestPath);
@@ -637,11 +803,10 @@ export async function runMacOSExport({template, output}) {
       provisionLogSha256: sha256(Buffer.from(provisionOutput))};
     receipt.stages.push({name: "provision", passed: true});
 
-    projectName = `Godot Fabric Export ${token}`;
-    receipt.fixture = await prepareProject(harness, template, projectName);
+    projectName = descriptor.projectName(token);
+    receipt.fixture = await descriptor.prepare({harness, projectName, edits, inventory});
     const editorLog = await harness.editor("macos-export-editor");
     receipt.stages.push({name: "editor-build", passed: true, logSha256: sha256(Buffer.from(editorLog))});
-    receipt.fixture.checkInventorySha256 = sha256(checksBytes);
     const preflightLog = await harness.run("macos-export-preflight", harness.godot,
       ["--headless", "--path", harness.project, "--script", "res://addons/godot_fabric/export_preflight.gd"], 0, environment);
     assert.doesNotMatch(preflightLog, fatalOutput);
@@ -665,51 +830,22 @@ export async function runMacOSExport({template, output}) {
     assert.equal(path.resolve(harness.project, report.bundle.slice("res://".length)), bundle, "build report bundle path differs from the selected bundle");
     assert.equal(report.sha256, sha256(bundleBytes));
     assert.equal(report.sdkSourceCommit, sdkManifest.sourceCommit, "build report was produced from a different SDK source commit");
-    assert.equal(report.assets, null, "the canonical minimal export baseline is intentionally asset-free");
+    descriptor.assertAssets(report);
     assert.equal(report.adapterSelection, null, "the first macOS slice does not support external Codegen adapters");
     receipt.bundle = {path: report.bundle, sha256: sha256(bundleBytes), reportSha256: sha256(reportBytes), assets: report.assets,
       adapterSelection: report.adapterSelection, sdkSourceCommit: report.sdkSourceCommit};
 
     stagingOwned = true;
-    const exportLog = await harness.run("macos-export-release", harness.godot,
-      ["--headless", "--path", harness.project, "--export-release", "macOS Arm64", staging], 0, environment);
-    assert.doesNotMatch(exportLog, fatalOutput);
-    assert.ok(await existsIncludingDangling(staging), "Godot export returned success without creating the staged application");
-    receipt.stages.push({name: "arm64-release-export", passed: true, logSha256: sha256(Buffer.from(exportLog))});
-    const unsignedInspection = await inspectApp(harness, staging, harness.sdk);
-    assert.equal(unsignedInspection.executableRecord.sha256, receipt.templateMember.sha256,
-      "exported unsigned engine differs from the inspected template member");
-    const resources = path.join(staging, "Contents", "Resources");
-    const pckPaths = await filesWithExtension(resources, ".pck");
-    assert.equal(pckPaths.length, 1, "export must contain exactly one PCK in Contents/Resources");
-    const pckPath = pckPaths[0];
-    const packLog = await harness.run("macos-export-pck", "/usr/bin/python3",
-      [path.join(root, "scripts/godot_pack.py"), pckPath, bundle], 0, environment, {cwd: root});
-    assert.doesNotMatch(packLog, fatalOutput);
-    const pack = JSON.parse(packLog);
-    assert.equal(pack.format, 4, "exported PCK has an unsupported format");
-    assert.ok(Number.isInteger(pack.fileCount) && pack.fileCount > 0, "PCK inspection omitted its file count");
-    assert.equal(pack.bundleEmbeddedByteForByte, true, "PCK does not contain the selected bundle unchanged");
-    assert.equal(pack.buildToolchainExcluded, true, "PCK contains build-only SDK contents");
-    assert.equal(pack.editorScriptsExcluded, true, "PCK contains editor-only SDK scripts");
-    assert.equal(pack.pckSHA256, sha256(await readFile(pckPath)), "PCK hash differs from the inspector result");
-    receipt.pack = {path: path.relative(staging, pckPath).split(path.sep).join("/"), ...pack,
-      inspectorLogSha256: sha256(Buffer.from(packLog))};
-    receipt.frameworkNormalization = await normalizeFrameworkPackaging(staging);
-    const appInspection = await signAndVerifyApp(harness, staging, unsignedInspection);
-    const versionOutput = await tool(harness, "exported-engine-version", appInspection.executable, ["--version"], harness.outside);
-    assert.match(versionOutput, /^4\.7\.2\.stable(?:\.official\.[^\s]+)?$/);
-    receipt.app = {...appInspection, engineVersion: versionOutput};
+    const exported = await exportPreparedProject({harness, template, staging, bundle, templateMember: receipt.templateMember, receipt,
+      bundleIdentifier: descriptor.bundleIdentifier});
+    receipt.fixture.presetSha256 = exported.presetSha256;
+    const appInspection = receipt.app;
 
     await rename(staging, relocated);
     stagingOwned = false;
     relocatedOwned = true;
     receipt.relocation = {completedBeforeRuntime: true, path: relocated};
-    const headless = await runExportedConsumer(harness, relocated, "headless", false, checks.headless, projectName);
-    const headed = await runExportedConsumer(harness, relocated, "headed", true, checks.headed, projectName, headless.userDataPath);
-    receipt.runtimes = [{displayServer: "headless", checkCount: headless.checks, logSha256: headless.logSha256},
-      {displayServer: "macOS", checkCount: headed.checks, logSha256: headed.logSha256}];
-    receipt.captures = headed.captures;
+    await descriptor.runtime({harness, receipt, relocated, executableName: appInspection.executableName, projectName, inventory, expected});
     receipt.publishedAppSha256 = await hashApp(relocated);
     receipt.status = "validated";
     receipt.completedAt = new Date().toISOString();
@@ -725,15 +861,7 @@ export async function runMacOSExport({template, output}) {
     await writeJson(receiptPath, receipt);
     return {output, directory: harness.directory, receipt};
   } catch (error) {
-    if (projectName) {
-      const ownedDataPath = path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
-      try {
-        const failedConsumerOutputs = await retainFailedConsumerOutputs(ownedDataPath, harness.directory);
-        if (failedConsumerOutputs.length) receipt.failedConsumerOutputs = failedConsumerOutputs;
-      } catch (retentionError) {
-        receipt.failedConsumerOutputRetentionError = retentionError.message;
-      }
-    }
+    if (projectName) await descriptor.retainFailure({harness, receipt, projectName, ownedDataPath: ownedDataPathOf(projectName)});
     if (published) {
       const diagnostic = {status: "app-published-report-update-failed", output, receiptPath, error: error.message,
         failedConsumerOutputs: receipt.failedConsumerOutputs, failedConsumerOutputRetentionError: receipt.failedConsumerOutputRetentionError};
@@ -768,9 +896,9 @@ export async function runMacOSExport({template, output}) {
       try { await rm(filename, {recursive: true, force: true}); }
       catch (error) { cleanupErrors.push({path: filename, error: error.message}); }
     }
-    if (projectName && !Object.hasOwn(receipt, "failedConsumerOutputRetentionError")) {
-      const ownedDataPath = path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
-      try { await clearConsumerOutputs(ownedDataPath, ownedDataPath); }
+    if (projectName) {
+      const ownedDataPath = ownedDataPathOf(projectName);
+      try { await descriptor.cleanup({harness, receipt, projectName, ownedDataPath}); }
       catch (error) { cleanupErrors.push({path: ownedDataPath, error: error.message}); }
     }
     try { await harness.cleanup(); }
@@ -787,8 +915,9 @@ export async function runMacOSExport({template, output}) {
 }
 
 function usage() {
-  return "Usage: node scripts/macos-export.mjs --template REVIEWED-GODOT-4.7.2-ARM64.zip --out NEW.app\n"
-    + "The supplied ZIP is inspected for its exact arm64 Release member; its observed archive and member hashes are recorded.";
+  return "Usage: node scripts/macos-export.mjs --template REVIEWED-GODOT-4.7.2-ARM64.zip --out NEW.app [--consumer minimal|civ-lite]\n"
+    + "The supplied ZIP is inspected for its exact arm64 Release member; its observed archive and member hashes are recorded.\n"
+    + "The default consumer is minimal. civ-lite exports Frontier and plays its 12-turn replay in the project and in a copy of the app.";
 }
 
 async function main() {
@@ -797,14 +926,15 @@ async function main() {
   if (argv.includes("--help") || argv.includes("-h")) { console.log(usage()); return; }
   for (let index = 0; index < argv.length; index++) {
     const option = argv[index];
-    if (!["--out", "--template"].includes(option) || values.has(option) || !argv[index + 1] || argv[index + 1].startsWith("--")) {
+    if (!["--out", "--template", "--consumer"].includes(option) || values.has(option) || !argv[index + 1] || argv[index + 1].startsWith("--")) {
       console.error(usage()); process.exitCode = 2; return;
     }
     values.set(option, argv[++index]);
   }
   if (!values.has("--out") || !values.has("--template")) { console.error(usage()); process.exitCode = 2; return; }
+  if (values.has("--consumer") && !EXPORT_CONSUMERS.includes(values.get("--consumer"))) { console.error(usage()); process.exitCode = 2; return; }
   try {
-    const result = await runMacOSExport({output: path.resolve(values.get("--out")), template: path.resolve(values.get("--template"))});
+    const result = await runMacOSExport({output: path.resolve(values.get("--out")), template: path.resolve(values.get("--template")), consumer: values.get("--consumer") ?? "minimal"});
     console.log("MACOS_EXPORT_PASSED: " + result.output);
     console.log("MACOS_EXPORT_RECEIPT: " + path.join(result.directory, "receipt.json"));
   } catch (error) {

@@ -475,4 +475,20 @@ export const SLICES = [
     guard: true,
     activity: "milestone-0-5-v05-10-arm-projects-85d2c99",
   },
+  // The instrument's self-check through a probe project's main loop (#141, squash 9810100): no native step, since its native tests run only locally, and its two contract test files; both runs are on the push of main.
+  {
+    folder: "frontier-comparison-probe-entry",
+    pr: 141,
+    squash: "9810100",
+    contractsRun: 38075378211,
+    pagesRun: 38075378245,
+    nativeSteps: [],
+    artifacts: [],
+    contractTests: [
+      "tests/frontier-comparison-probe-project.test.mjs",
+      "tests/frontier-comparison-release.test.mjs",
+    ],
+    guard: true,
+    activity: "milestone-0-5-v05-10-probe-entry-ef18579",
+  },
 ];
