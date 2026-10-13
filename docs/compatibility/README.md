@@ -97,14 +97,15 @@ counts by kind, scope and applicability), and `node scripts/parity-map.mjs --che
 `1_0`) and `applicability`, and a `why`. `applicability` is a profile name from `applicabilityProfiles` or an object with
 `ios`, `android` and `godot` entries, each a status or `{status, reason}`; a status other than `applies` needs a reason. A
 `match` is an AND of these keys, each a string, a list of strings (any of), `{"pattern": "<regular expression>"}` or
-`{"absent": true}`:
+`{"absent": true}`, except `kind`, `installedBy` and `conditions`, which are tested against a closed vocabulary and so take only a
+string or a list of strings (a pattern or `{"absent": true}` there fails the check as `E_SHAPE`):
 
 | Key | Matches |
 | --- | --- |
-| `kind` | the inventory kind; `@api`, `@members` and `@declared-globals` name groups of kinds (`kindGroups`) |
+| `kind` | the inventory kind, or a list of kinds; `@api`, `@members` and `@declared-globals` name groups of kinds (`kindGroups`) and may appear in the list |
 | `subject` | the API a row is about: the `name` of a `value`, `type`, `global-value`, `global-type`, `runtime-global` or `host-global` row, the `owner` of any other row |
 | `owner`, `name`, `id`, `source` | the field of the row; `source` is the declaring file, so a prop inherited from `ViewAccessibility.d.ts` can be told from one a component declares |
-| `installedBy`, `conditions` | derived from the gates of a `runtime-global` row (and, for `installedBy`, its `global-value` namesake): `host` or `rn`, and the gate states of the sites that can run |
+| `installedBy`, `conditions` | derived from the gates of a `runtime-global` row (and, for `installedBy`, its `global-value` namesake): `host` or `rn` (or a list of them), and the gate states of the sites that can run (one gate state, or a list of them) |
 
 Each field (`owner`, `scope`, `ios`, `android`, `godot`) is resolved separately: among the rules that match a row and assign the
 field, the highest precedence wins, and two rules at the highest precedence are an ambiguity (even if they agree). The bands in

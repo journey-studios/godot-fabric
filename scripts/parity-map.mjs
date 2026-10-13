@@ -13,6 +13,9 @@ const SCOPES = ["1_0", "post_1_0", "out"];
 const STATUSES = ["applies", "not-applicable", "host-provides"];
 const GATE_STATES = ["live", "dead", "dev", "module", "no-module", "flag", "engine", "environment"];
 const MATCH_KEYS = ["kind", "subject", "owner", "name", "id", "source", "installedBy", "conditions"];
+// The keys of a match that are tested against a closed vocabulary (kinds and their groups, installers, gate states).
+const NAMED_KEYS = ["kind", "installedBy", "conditions"];
+const INSTALLERS = ["host", "rn"];
 const FIELDS = ["owner", "scope", ...PLATFORMS];
 // The owner of a row that is about the named thing itself, not about a member of something else.
 const NAMESPACES = new Set(["react-native", "global"]);
@@ -109,7 +112,8 @@ function validMatcher(spec) {
   }
 }
 
-// In `kind`, an entry such as "@api" stands for the kinds that map.kindGroups.api lists.
+// In `kind` (a string or a list of strings, which checkMatch has verified), an entry such as "@api" stands for the kinds that
+// map.kindGroups.api lists.
 function expandKinds(map, spec) {
   return [spec].flat().flatMap((entry) => (entry.startsWith("@") ? map.kindGroups?.[entry.slice(1)] ?? [entry] : [entry]));
 }
@@ -277,17 +281,23 @@ function checkAssignments({ map, taskIds, add }, label, item, fallbackReason) {
   }
 }
 
-// The `match` of a rule: known keys, well-formed matchers, groups that exist, derived attributes with valid values.
+// The `match` of a rule: known keys, well-formed matchers, groups that exist, derived attributes with valid values. The keys of
+// NAMED_KEYS are tested against a closed vocabulary, so they take only the string and list forms of a matcher; the checks of
+// their values read them as lists of strings, which is why the form check comes first.
 function checkMatch({ map, add }, label, match) {
+  const names = (key) => [match[key]].flat();
+  const unnamed = NAMED_KEYS.find((key) => match?.[key] !== undefined && typeof match[key] !== "string" && !Array.isArray(match[key]));
   if (match === null || typeof match !== "object" || Object.keys(match).length === 0 || Object.keys(match).some((key) => !MATCH_KEYS.includes(key))) {
     add("E_SHAPE", `${label}: match needs at least one of ${MATCH_KEYS.join(", ")}`);
   } else if (Object.values(match).some((spec) => !validMatcher(spec))) {
     add("E_SHAPE", `${label}: a matcher is a string, a list of strings, {"pattern": ...} or {"absent": true}`);
-  } else if (match.kind !== undefined && [match.kind].flat().some((entry) => entry.startsWith("@") && !Array.isArray(map.kindGroups[entry.slice(1)]))) {
+  } else if (unnamed !== undefined) {
+    add("E_SHAPE", `${label}: ${unnamed} is a string or a list of strings, not {"pattern": ...} or {"absent": true}`);
+  } else if (match.kind !== undefined && names("kind").some((entry) => entry.startsWith("@") && !Array.isArray(map.kindGroups[entry.slice(1)]))) {
     add("E_SHAPE", `${label}: kind names a group that kindGroups does not define`);
-  } else if (match.installedBy !== undefined && !["host", "rn"].includes(match.installedBy)) {
-    add("E_SHAPE", `${label}: installedBy is host or rn`);
-  } else if (match.conditions !== undefined && [match.conditions].flat().some((state) => !GATE_STATES.includes(state))) {
+  } else if (match.installedBy !== undefined && names("installedBy").some((installer) => !INSTALLERS.includes(installer))) {
+    add("E_SHAPE", `${label}: installedBy is host or rn, or a list of them`);
+  } else if (match.conditions !== undefined && names("conditions").some((state) => !GATE_STATES.includes(state))) {
     add("E_SHAPE", `${label}: conditions are gate states (${GATE_STATES.join(", ")})`);
   }
 }

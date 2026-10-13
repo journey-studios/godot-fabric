@@ -164,6 +164,43 @@ test("a malformed map is rejected before it is resolved", () => {
   assert.ok(codes(bad((copy) => { delete copy.gateModel; })).includes("E_SHAPE"));
 });
 
+test("kind, installedBy and conditions take a name or a list of names; a pattern or an absence is a shape problem, not a crash", () => {
+  const matching = (id, match) => mutated(({ map: copy }) => {
+    copy.rules.find((rule) => rule.id === id).match = match;
+  });
+  const hostInstalled = (match) => matching("runtime-host-installed", match);
+  // The three keys are tested against closed vocabularies (kinds and their groups, installers, gate states), so a pattern or an
+  // absence means nothing for them. Each call below would throw a TypeError out of the gate if the shape check let it through.
+  const kindPattern = hostInstalled({ kind: { pattern: "^prop$" }, installedBy: "host" });
+  assert.deepEqual(codes(kindPattern), ["E_SHAPE"]);
+  assert.match(messages(kindPattern, "E_SHAPE"), /runtime-host-installed: kind is a string or a list of strings/);
+  assert.deepEqual(codes(hostInstalled({ kind: { absent: true }, installedBy: "host" })), ["E_SHAPE"]);
+  assert.deepEqual(codes(hostInstalled({ kind: [], installedBy: "host" })), ["E_SHAPE"]);
+  assert.deepEqual(codes(hostInstalled({ kind: "runtime-global", installedBy: { pattern: "^host$" } })), ["E_SHAPE"]);
+  assert.deepEqual(codes(hostInstalled({ kind: "runtime-global", installedBy: { absent: true } })), ["E_SHAPE"]);
+  const conditionsPattern = matching("runtime-dev-gated", { kind: "runtime-global", conditions: { pattern: "x" } });
+  assert.deepEqual(codes(conditionsPattern), ["E_SHAPE"]);
+  assert.match(messages(conditionsPattern, "E_SHAPE"), /runtime-dev-gated: conditions is a string or a list of strings/);
+  assert.deepEqual(codes(matching("runtime-dev-gated", { kind: "runtime-global", conditions: { absent: true } })), ["E_SHAPE"]);
+  // The list form is accepted for installedBy and conditions, and matches the rows the plain string matches.
+  const listedInstaller = hostInstalled({ kind: ["runtime-global", "global-value"], installedBy: ["host"] });
+  assert.deepEqual(listedInstaller.problems, []);
+  assert.deepEqual(listedInstaller.resolved, outcome.resolved);
+  const listedCondition = matching("runtime-dev-gated", { kind: "runtime-global", conditions: ["dev"] });
+  assert.deepEqual(listedCondition.problems, []);
+  assert.deepEqual(listedCondition.resolved, outcome.resolved);
+  // The values are still checked: an installer is host or rn, a condition is a gate state.
+  const unknownInstaller = hostInstalled({ kind: "runtime-global", installedBy: ["x"] });
+  assert.deepEqual(codes(unknownInstaller), ["E_SHAPE"]);
+  assert.match(messages(unknownInstaller, "E_SHAPE"), /installedBy is host or rn/);
+  assert.deepEqual(codes(hostInstalled({ kind: "runtime-global", installedBy: ["host", "x"] })), ["E_SHAPE"]);
+  assert.deepEqual(codes(hostInstalled({ kind: "runtime-global", installedBy: "x" })), ["E_SHAPE"]);
+  assert.match(messages(matching("runtime-dev-gated", { kind: "runtime-global", conditions: ["dev", "x"] }), "E_SHAPE"), /conditions are gate states/);
+  // The other keys keep every form.
+  assert.ok(!codes(hostInstalled({ kind: "runtime-global", name: { pattern: "^set(Timeout|Interval)$" } })).includes("E_SHAPE"));
+  assert.ok(!codes(hostInstalled({ kind: "runtime-global", source: { absent: true } })).includes("E_SHAPE"));
+});
+
 test("the gates of runtime-global sites are classified, and a new or unused gate fails the gate", () => {
   const result = mutated(({ inventory: copy }) => {
     copy.contracts.find((row) => row.id === "runtime-global:global.setImmediate").sites.push({
