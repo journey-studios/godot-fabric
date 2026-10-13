@@ -17,6 +17,8 @@ For the negative control, run `node scripts/cold-start.mjs --without-startup`.
 It must fail on the affected official 4.7.2 executable. This option does not
 turn a crash into a passing test. No retry or cache recovered from a failed run
 is used by the positive lane.
+The `native-cold-start` job also runs the engine boundary control described in
+[Executable engine boundary](#executable-engine-boundary).
 
 ## Investigation
 
@@ -85,10 +87,123 @@ current PR's hosted CI result.
 Run `node --test tests/godot-binary.test.mjs` and
 `python3 -m unittest discover -s tests -p '*_test.py'` for the engine admission
 and recovery regressions. `npm run test:cold` remains the native acceptance
-command. GF-02 stays **In progress** until the remaining direct-editor boundary
-and the full clean-install acceptance are resolved without hiding failures.
+command. The remaining direct-editor boundary is now an executable control, set
+out in the next section. GF-02 stays **In progress** until its other
+checkpoints (comparison cases and applicable targets) are accepted.
 
 Deleting `.godot` and invoking Godot directly with `--editor --import` bypasses
 this preparation and can still reproduce the engine boundary. Run setup or
 `npm run check` after deleting that directory. This is not cross-platform build
 certification or proof that every editor loading path is safe.
+
+## Executable engine boundary
+
+**Decision (2026-10-13).** The crash is a defect of the Godot editor, not of
+Fabric: `EditorHelp::_gen_extensions_docs` runs a deferred callback after the
+editor has cleaned up. It is tracked upstream in
+[godotengine/godot#111645](https://github.com/godotengine/godot/issues/111645),
+still open on 2026-10-13, whose fix,
+[godotengine/godot#123658](https://github.com/godotengine/godot/pull/123658), was
+not merged that day; 4.7.2 is the latest stable release. This project runs the unmodified official engine and does not patch or
+rebuild it, so the GF-02 clause "fix the root cause" is revised to: **root cause
+identified upstream and contained, with an executable control.** The control
+makes the claim falsifiable in both directions, in native CI:
+
+- the official 4.7.2 must crash on an empty-cache import **without** the
+  startup preparation, and import cleanly **with** it;
+- if a future Godot fixes the bug, the control flips and fails with a message
+  that says the containment can be retired and the engine requalified.
+
+**How it works.** `npm run test:cold:boundary` runs
+[`scripts/cold-start-boundary.mjs`](../../scripts/cold-start-boundary.mjs) in the
+`native-cold-start` job, right after `npm run test:cold`, and the job uploads its
+report as the `native-cold-start-boundary` artifact. Every attempt builds a new
+disposable project: the smallest reproduction recorded above, the Fabric
+extension alone (a `project.godot` with no main scene, `fabric.gdextension` and
+`addons/`), with no resource cache. The editor runs as
+`--headless --editor --import`, and each lane makes five attempts
+(`--attempts`, never fewer than five).
+
+- **Unprepared:** the project is imported as it is, with no `.godot` directory
+  and no startup list, so the engine discovers the extension during its first
+  filesystem scan.
+- **Prepared:** the same project after `scripts/extension_startup.py`, which must
+  leave exactly one cache file, `extension_list.cfg`.
+
+An attempt is classified from what the process did, never from how long it took.
+A hang guard of 180 seconds only turns a stuck import into a failure.
+
+| Outcome | Rule |
+| --- | --- |
+| `crashed` | The process died by SIGSEGV or SIGBUS, or its log has Godot's `Program crashed with signal 11` |
+| `clean` | Exit status 0, no signal, no crash text and no `ERROR:` or `SCRIPT ERROR` line |
+| `failed` | Anything else: another signal or crash, a non-zero exit, an error line, the hang guard |
+
+Godot's crash handler prints its backtrace and then aborts, so the parent sees
+`SIGABRT` together with the crash text; the crash text is what identifies the
+bug. The stripped official executable prints no symbols, so a backtrace frame
+that names `EditorHelp` or `_gen_extensions_docs` is recorded when present and
+never required. A `failed` attempt is never read as the bug or as its absence.
+
+| Verdict | Condition | Exit |
+| --- | --- | --- |
+| `boundary-holds` | Every unprepared attempt `crashed` and every prepared attempt `clean` | 0 |
+| `engine-fixed` | Every prepared attempt `clean`, and every unprepared attempt `clean` too: none crashed | 1 |
+| `prepared-failed` | A prepared attempt was not `clean`, whatever the unprepared lane did | 1 |
+| `mixed` | Anything else: some but not all unprepared attempts crashed, or none crashed and some failed another way | 1 |
+
+`engine-fixed` fails with `the upstream editor bug no longer reproduces on
+<version>: requalify the engine and retire the startup containment (GF-02)`,
+naming the detected engine version. A `mixed` result is reported as measured, with its rate, and stops for
+a decision; no threshold is assumed. The report,
+`build/cold-start-boundary.json`, holds the engine version and the SHA-256 of the
+executable and of the Fabric library, every attempt's outcome, exit status,
+signal, crash-text flag, recorded frames and the SHA-256 and size of its log
+(`build/cold-start-boundary-<lane>-<n>.log`), the summary per lane and the
+verdict. A report of an earlier run is removed before anything else, so none
+stands for a run that was refused. The classification and the verdict are pure
+functions covered by `tests/cold-start-boundary.test.mjs` in `test:contracts`,
+with no Godot; the same file drives the runner against a simulated executable for
+each verdict.
+
+**Local result.** Official `4.7.2.stable.official.ed1daf0bf` on macOS arm64
+(executable SHA-256 `c7cccbf8…18ccf`). The unprepared crash was measured first, to
+see whether it is deterministic:
+
+| Run | Unprepared | Prepared |
+| --- | --- | --- |
+| `npm run test:cold:boundary` (5 per lane) | 5 of 5 crashed | 5 of 5 clean |
+| `npm run test:cold:boundary -- --attempts 20` | 20 of 20 crashed | 20 of 20 clean |
+| Direct shell loop, same project, new cache each time | 12 of 12 crashed | not run |
+| The same loop with an empty `HOME` (no editor settings) | 3 of 3 crashed | not run |
+
+The crash is deterministic here, so the control requires it on every attempt.
+In all 20 crashes of the larger run the log has `Program crashed with signal 11`,
+the parent saw `SIGABRT`, and the ten backtrace frames are identical in module
+offsets (only the load address changes); none names `EditorHelp`.
+
+**Hosted result.** The Contracts run [38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586), dispatched on the branch of
+#154, ran the control in the `native-cold-start` job ([job 115318656893](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893))
+on the hosted macOS 15 arm64 runner: verdict `boundary-holds`, 5 of 5 unprepared imports crashed and 5 of 5 prepared
+imports were clean, on `4.7.2.stable.official.ed1daf0bf` with the same executable SHA-256 as the local runs
+(`c7cccbf8…718ccf`). The artifact `native-cold-start-boundary` (id 11817282299, digest `sha256:53617478…5e5e`) holds the
+report and the ten logs. The run's `native-suites-frontier` job failed once in `test:cpu-time-instrument` (its
+frame-to-frame check of the process term, a known instability of that suite on a busy runner, unrelated to this
+control) and passed on its rerun; the `native-cold-start` job passed on both attempts.
+
+**When it flips.** If a hosted or local run reports `engine-fixed`, retire the
+containment in one change: requalify the new engine (the pin and checksum in
+`dependencies.json`, `compatibility_minimum`, the `native-cold-start` suites),
+then remove the startup preparation (`scripts/extension_startup.py` and its
+callers in setup, `check`, `cold-start` and `parity:godot`), the
+`--without-startup` option of `scripts/cold-start.mjs` and this control, and
+update this record and the GF-02 text. A `prepared-failed` or `mixed` verdict is
+not that flip: it means the containment or the control is broken, or the bug
+changed shape, and needs investigation.
+
+**Limits.** This is macOS arm64 only and uses the official executable, never a
+rebuilt one. It judges the import-only editor with the Fabric extension alone; it
+does not prove that every editor loading path is safe, and the root cause is the
+upstream explanation above, not a symbolicated trace. The `contract` checkpoint
+of GF-02 closes on this control once a hosted run shows the verdict
+`boundary-holds`; `parity` and `targets` stay open.
