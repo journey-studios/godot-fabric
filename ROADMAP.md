@@ -1109,6 +1109,13 @@ attempts, nine accepted per arm of twelve required, and slot 28 exhausted its th
 attempts. The [raw archive and stopped report](docs/evidence/frontier-comparison-final/README.md)
 are reproducible and supply no performance statistic. V05-10's execution, metrics
 and final report and exits X6/X11 remain open until a new complete campaign passes.
+The corrected collector now defers a busy launch without spending an attempt,
+verifies retained raw data before resume and requires each registered balanced
+plan before producing its statistics. The new cohort passed the graphical
+self-check but its first A attempt was rejected (load 5.65 before, 6.62 after).
+After a further 30-minute wait it returned `waiting`, retaining attempt 2 unspent;
+its separate [audit snapshot](docs/evidence/frontier-comparison-final/waiting-load-6/interim-report.md)
+is incomplete, with zero accepted executions and no performance verdict.
 No task, checkpoint, weight or denominator of the 1.0 changes in this slice.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus

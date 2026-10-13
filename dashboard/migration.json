@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "0.5 macOS: coletor e integridade corrigidos; nova coorte Release aguarda carga estável. Comparativo final e orçamentos continuam abertos."
+    "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-13T16:18:13.347Z",
+  "updatedAt": "2026-10-13T17:16:58.407Z",
   "source": {
-    "commit": "de310cf5f461dfd5ee5883c47d8517dc337b48b5",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/de310cf5f461dfd5ee5883c47d8517dc337b48b5",
-    "scope": "0.5 macOS: timeout de carga não consome tentativas, retomada verifica brutos e análise exige os 12 slots balanceados. Validação local e exports reconferidos; nova coorte separada. V05-10 execução/métricas/relatório e X6/X11 abertos; aceitação da 1.0 preservada.",
+    "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "scope": "0.5 macOS: coletor e guardas de integridade validados; planos balanceados exigidos no primário e FPS. A nova coorte retornou waiting: A1 rejeitada com carga 5,65 → 6,62; após 30 min, tentativa 2 preservada e zero aceitas. Dados auditados e retidos separadamente. V05-10 execução, métricas, relatório e X6/X11 abertos; aceitação da 1.0 preservada.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/156"
   },
   "phases": [
@@ -4626,7 +4626,7 @@
           "evidence": []
         }
       ],
-      "blocker": "A coorte anterior parou por carga com 41 tentativas e 9 aceitas por braço. O coletor foi corrigido e uma coorte nova passou no autoteste gráfico, aguardando carga ≤6,0 estável por 60 s. Não há comparativo completo nem veredito de orçamento: execução, métricas, relatório, X6 e X11 continuam abertos."
+      "blocker": "Comparativo final pendente. A coorte antiga parou por carga com 41 tentativas e 9 aceitas por braço. A nova coorte passou no autoteste gráfico, mas A1 foi rejeitada por carga 5,65 → 6,62; após 30 min retornou waiting, tentativa 2 preservada e zero aceitas. É necessária uma janela estável de carga ≤6,0. V05-10 execução, métricas, relatório e X6/X11 permanecem abertos."
     }
   ],
   "releaseChecklist": [
@@ -4912,6 +4912,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "frontier-05-waiting-cohort-20261013",
+      "at": "2026-10-13T17:16:58.407Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: nova coorte Release encerrou o ciclo em waiting (exit 2), com A1 rejeitada por carga 5,65 → 6,62 e tentativa 2 preservada após espera de 30 min. Brutos e vereditos rederivados; arquivo com 13 membros validado e relatório intermediário incompleto reproduzido byte a byte. Sem estatística ou veredito de orçamento; Mac liberado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/156"
+    },
     {
       "id": "frontier-05-collector-integrity-20261013",
       "at": "2026-10-13T16:18:13.347Z",
