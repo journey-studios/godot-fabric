@@ -941,6 +941,7 @@ npm run test:cpu-time-instrument      # the CPU-time instrument against a busy l
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
+npm run test:cold:boundary               # GF-02: the official Godot still crashes without the containment, imports with it
 npm run parity:status                    # API gaps and current native evidence
 npm run parity:godot                     # shared core UI fixture in Godot
 npm run check -- --typography --headless

@@ -124,6 +124,18 @@ jobs:
             build/cold-start.json
             build/cold-*.log
           if-no-files-found: warn
+      # The engine boundary of GF-02 (docs/evidence/cold-start.md): the official Godot must still crash on an empty-cache
+      # import without the startup preparation and import cleanly with it. If a Godot release fixes the editor bug, this
+      # step fails on purpose, with a message saying so: requalify the engine and retire the containment.
+      - run: npm run test:cold:boundary
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-cold-start-boundary
+          path: |
+            build/cold-start-boundary.json
+            build/cold-start-boundary-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run parity:godot
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
