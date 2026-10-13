@@ -166,7 +166,7 @@ export function redoSlot(campaign, lane, slot, rejections) {
 
 // The load of an attempt above the limit, before the execution.
 export const overLoaded = (execution) => {
-  execution.load.before = 5.3;
+  execution.load.before = 9.3;
 };
 
 // How the process of an attempt that wrote no report ended, as the entry of `unreported` says it: killed by a signal, killed at the launcher's time limit, or exited 0 with no report.

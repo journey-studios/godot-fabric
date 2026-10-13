@@ -1,0 +1,3563 @@
+{
+  "schema": 1,
+  "rules": {
+    "x9": "A change that adds a milestone-0-5-* activity entry leaves tasks, phases, sequences, releaseChecklist, integrationChecklist and decisions equal in depth to its parent's. Both classes of change count: moves-1.0 (done, status, weight, a checkpoint or item added or removed, any other field) and text-or-evidence (note, label, evidence).",
+    "x10": "No new evidence folder directly under docs/evidence, no new note directly under docs/research and no new file under tests or scripts whose name matches the tail pattern, unless it is world-input*; no activity entry with GF-13 in taskIds; no change to the GF-13 task unless the change delivers V05-02. A file added inside an evidence folder that is not itself a slice is not one: it is only listed.",
+    "tailPattern": "(^|[-_/])(pointer|event[-_]?target|document|hover) (flags i)",
+    "allowed": "a path segment that matches ^world-input (flags i)"
+  },
+  "range": {
+    "from": {
+      "requested": "c0f3702",
+      "sha": "c0f3702d69d4da4bc518ea32586320f8e01aed2c"
+    },
+    "to": {
+      "requested": "HEAD",
+      "sha": "9ba77d6bce1a65e1f81823ba5110ee1ca0c049b4"
+    },
+    "comparedWith": "the first parent of each commit"
+  },
+  "summary": {
+    "commits": 98,
+    "withMilestoneEntries": 75,
+    "x9": {
+      "clean": 74,
+      "notApplicable": 23,
+      "violations": [
+        "b0e40aa"
+      ]
+    },
+    "x10": {
+      "clean": 98,
+      "violations": []
+    },
+    "tailSlices": {
+      "allowed": 0,
+      "disallowed": 0
+    },
+    "insideFolders": 6,
+    "gf13ChangedIn": []
+  },
+  "known": [
+    {
+      "sha": "b0e40aa",
+      "pr": 74,
+      "rule": "X9",
+      "items": [
+        "tasks[GF-27].checkpoints[slice].evidence",
+        "tasks[GF-27].note"
+      ],
+      "classes": [
+        "text-or-evidence"
+      ],
+      "what": "The note of GF-27 and the evidence of its `slice` checkpoint gained the hosted CI and Pages receipts of #69. No done, weight or status changed.",
+      "why": "#74 (P5 V05-04, another agent) merged those receipts into the same pull request as its own 0.5 entry. Both classes of change count against X9 because the criterion says the diff is empty; the lead judges this one."
+    }
+  ],
+  "result": {
+    "passed": true,
+    "accepted": [
+      {
+        "sha": "b0e40aa",
+        "rule": "X9",
+        "pr": 74
+      }
+    ],
+    "unexpected": [],
+    "missing": []
+  },
+  "commits": [
+    {
+      "sha": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+      "short": "c0f3702",
+      "parent": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+      "subject": "feat(dashboard): Add the 0.5 Frontier milestone as an additive priority cut (#60)",
+      "pr": 60,
+      "addedMilestoneActivity": [
+        "milestone-0-5-frontier-20261008"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+      "short": "dd05760",
+      "parent": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+      "subject": "feat(os-contracts): Reproduce RN's upstream unavailability of iOS and Android APIs (#61)",
+      "pr": 61,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 2,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-24",
+            "path": "tasks[GF-24].checkpoints[slice].done",
+            "field": "done",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": false,
+            "after": true
+          },
+          {
+            "section": "tasks",
+            "id": "GF-24",
+            "path": "tasks[GF-24].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(0)",
+            "after": "array(2)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-24",
+            "path": "tasks[GF-24].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "",
+            "after": "string(2727)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-24",
+            "path": "tasks[GF-24].status",
+            "field": "status",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": "planned",
+            "after": "in_progress"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+      "short": "c858263",
+      "parent": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+      "subject": "feat(accessibility): Report the OS accessibility settings through RN's AccessibilityInfo (#63)",
+      "pr": 63,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 1,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-20",
+            "path": "tasks[GF-20].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(1153)",
+            "after": "string(2104)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "fb50a325fe0e4961f434b21382d2c4a5885ee14e",
+      "short": "fb50a32",
+      "parent": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+      "subject": "feat(images): Load network images with RN's caches and failures (#64)",
+      "pr": 64,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(5)",
+            "after": "array(12)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(2056)",
+            "after": "string(4700)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "0f2cc7e7b87af4826c76bf7490637c282cab77cd",
+      "short": "0f2cc7e",
+      "parent": "fb50a325fe0e4961f434b21382d2c4a5885ee14e",
+      "subject": "feat(text): Run RN's original Text.js with presses on the paragraph (#62)",
+      "pr": 62,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 1,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-11",
+            "path": "tasks[GF-11].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(2278)",
+            "after": "string(4551)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "bf1e9e98434e6f0e12a68b5488f19f37f184f77a",
+      "short": "bf1e9e9",
+      "parent": "0f2cc7e7b87af4826c76bf7490637c282cab77cd",
+      "subject": "feat(performance): Measure nodes, heap and pump phases in a soak (#59)",
+      "pr": 59,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 2,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-30",
+            "path": "tasks[GF-30].checkpoints[slice].done",
+            "field": "done",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": false,
+            "after": true
+          },
+          {
+            "section": "tasks",
+            "id": "GF-30",
+            "path": "tasks[GF-30].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(0)",
+            "after": "array(2)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-30",
+            "path": "tasks[GF-30].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "",
+            "after": "string(4283)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-30",
+            "path": "tasks[GF-30].status",
+            "field": "status",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": "planned",
+            "after": "in_progress"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "short": "9c5d0eb",
+      "parent": "bf1e9e98434e6f0e12a68b5488f19f37f184f77a",
+      "subject": "feat(images): Tint, blur, cap insets and rounded clipping for Image (#66)",
+      "pr": 66,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(12)",
+            "after": "array(18)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(4700)",
+            "after": "string(7952)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "b82fbddf1e08fdd13c6b137204c1af9ed5af5df0",
+      "short": "b82fbdd",
+      "parent": "9c5d0eba274df1ad47376946270b044209a9243d",
+      "subject": "feat(text): Paint italic and decorated text in the native paragraph (#67)",
+      "pr": 67,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 1,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-11",
+            "path": "tasks[GF-11].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(4551)",
+            "after": "string(6484)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "41fbe22bc49e21fb10aa61620e59c3d0d1da96d2",
+      "short": "41fbe22",
+      "parent": "b82fbddf1e08fdd13c6b137204c1af9ed5af5df0",
+      "subject": "feat(accessibility): Announce to the screen reader through AccessKit (#68)",
+      "pr": 68,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 1,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-20",
+            "path": "tasks[GF-20].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(2104)",
+            "after": "string(3323)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "short": "57e41f2",
+      "parent": "41fbe22bc49e21fb10aa61620e59c3d0d1da96d2",
+      "subject": "feat(sdk): Build NativeWind and Chart Kit consumers through the public SDK (#69)",
+      "pr": 69,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 2,
+        "text": 4,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(18)",
+            "after": "array(20)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-16",
+            "path": "tasks[GF-16].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(7952)",
+            "after": "string(8085)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].checkpoints[slice].done",
+            "field": "done",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": false,
+            "after": true
+          },
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(0)",
+            "after": "array(7)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "",
+            "after": "string(2805)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].status",
+            "field": "status",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": "planned",
+            "after": "in_progress"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "66c948bc21fd88c2bb279f198849a5843519f741",
+      "short": "66c948b",
+      "parent": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+      "subject": "feat(scroll): Run original RN ScrollView with native motion (#58)",
+      "pr": 58,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 2,
+        "text": 3,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-14",
+            "path": "tasks[GF-14].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "",
+            "after": "string(518)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-14",
+            "path": "tasks[GF-14].status",
+            "field": "status",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": "planned",
+            "after": "in_progress"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-18",
+            "path": "tasks[GF-18].checkpoints[slice].done",
+            "field": "done",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": false,
+            "after": true
+          },
+          {
+            "section": "tasks",
+            "id": "GF-18",
+            "path": "tasks[GF-18].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(0)",
+            "after": "array(2)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-18",
+            "path": "tasks[GF-18].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(875)",
+            "after": "string(548)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": [
+          {
+            "path": "docs/evidence/scroll-view/metafiles-3bf129c/pointerClick-disabled.json",
+            "folder": "new"
+          },
+          {
+            "path": "docs/evidence/scroll-view/metafiles-3bf129c/pointerClick-enabled.json",
+            "folder": "new"
+          },
+          {
+            "path": "docs/evidence/scroll-view/metafiles-3bf129c/pointerClick-imperative-only.json",
+            "folder": "new"
+          },
+          {
+            "path": "docs/evidence/scroll-view/metafiles-3bf129c/pointerClick-internal-only.json",
+            "folder": "new"
+          },
+          {
+            "path": "docs/evidence/scroll-view/pointer-route-capture-retirement.json",
+            "folder": "new"
+          },
+          {
+            "path": "docs/evidence/scroll-view/source-pins-18d3478-pointer-click-group.json",
+            "folder": "new"
+          }
+        ]
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "short": "e1c7a39",
+      "parent": "66c948bc21fd88c2bb279f198849a5843519f741",
+      "subject": "feat(frontier): Play the 0.5 Frontier game's rules in pure GDScript (#70)",
+      "pr": 70,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-03-replay-c2e4501"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e0f0a9d2958a12b92fee0706162fe7f9e9eeac2a",
+      "short": "e0f0a9d",
+      "parent": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+      "subject": "docs: Record reviewed ScrollView slice and Frontier checkpoints (#72)",
+      "pr": 72,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 1,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-14",
+            "path": "tasks[GF-14].checkpoints[slice].done",
+            "field": "done",
+            "change": "changed",
+            "class": "moves-1.0",
+            "before": false,
+            "after": true
+          },
+          {
+            "section": "tasks",
+            "id": "GF-14",
+            "path": "tasks[GF-14].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(0)",
+            "after": "array(1)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-14",
+            "path": "tasks[GF-14].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(518)",
+            "after": "string(698)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "ec831ac1c124c4f49c66c870d1f3ec133115fc3a",
+      "short": "ec831ac",
+      "parent": "e0f0a9d2958a12b92fee0706162fe7f9e9eeac2a",
+      "subject": "feat(layout-animation): Run RN's LayoutAnimation on the Godot frame clock (#65)",
+      "pr": 65,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 1,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-19",
+            "path": "tasks[GF-19].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(1720)",
+            "after": "string(3377)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "short": "75a85ad",
+      "parent": "ec831ac1c124c4f49c66c870d1f3ec133115fc3a",
+      "subject": "feat(frontier): Publish the Frontier game over typed GameServices (#73)",
+      "pr": 73,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-03-servicos-f199dd0"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "short": "b0e40aa",
+      "parent": "75a85ad6ea877eae85d1a55214097eac416f6680",
+      "subject": "feat(frontier): Decide every prop RN declares for the HUD's components (P5 V05-04) (#74)",
+      "pr": 74,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-04-scope-1b9f120"
+      ],
+      "onePointZero": {
+        "sections": [
+          "tasks"
+        ],
+        "moves": 0,
+        "text": 2,
+        "changes": [
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].checkpoints[slice].evidence",
+            "field": "evidence",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "array(7)",
+            "after": "array(9)"
+          },
+          {
+            "section": "tasks",
+            "id": "GF-27",
+            "path": "tasks[GF-27].note",
+            "field": "note",
+            "change": "changed",
+            "class": "text-or-evidence",
+            "before": "string(2805)",
+            "after": "string(3030)"
+          }
+        ]
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "violation",
+        "items": [
+          "tasks[GF-27].checkpoints[slice].evidence",
+          "tasks[GF-27].note"
+        ]
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "short": "7ef63ed",
+      "parent": "b0e40aa21fcab67cfa01b77e27117c895a30c886",
+      "subject": "feat(world-input): Let the HUD's empty area pass the pointer to the Godot world (#71)",
+      "pr": 71,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-02-pointer-03f039a"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "short": "c8de44b",
+      "parent": "7ef63ed64a8994846dc29e1a4fff52134ded8469",
+      "subject": "feat(frontier): Provision civ-lite as an addon consumer with a leak-free lifecycle (#76)",
+      "pr": 76,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-03-consumidor-b9a40cb"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "short": "2a3f4b0",
+      "parent": "c8de44b3caa12a82009e55a059e2ce3da68f9485",
+      "subject": "feat(world-input): Keep the pointer the HUD's hit test finds from the Godot world (#78)",
+      "pr": 78,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-02-pointer-a2-af941dd"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "short": "5e1f6a1",
+      "parent": "2a3f4b0df7ff2267a0ab5a8e7b43aa8de40c4a0f",
+      "subject": "feat(frontier): Run the end of the turn as an accepted job delivered once (#79)",
+      "pr": 79,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-03-autoridade-5ee0127"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "short": "3bb51d6",
+      "parent": "5e1f6a16f41e810fd530125fb23d925e5e3f00d8",
+      "subject": "feat(perf): Measure the 0.5 HUD's panel swaps on the pointer spike's scene (#77)",
+      "pr": 77,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-baseline-headless-ebfe8a0"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "3d531a6cf576576a6f3790fb742b5a0e8b4643cf",
+      "short": "3d531a6",
+      "parent": "3bb51d6ed440e2f2c0df9af604269d81ed895ba8",
+      "subject": "docs(world-input): Decide the pointer spike: GO on the macOS desktop (#80)",
+      "pr": 80,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-02-decision-09ec1e0"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "622102e210a8136af6add7d8007a435b41f3c242",
+      "short": "622102e",
+      "parent": "3d531a6cf576576a6f3790fb742b5a0e8b4643cf",
+      "subject": "feat(frontier): Show the HUD's panels by the context Godot chooses (P8 V05-05 slice 1) (#82)",
+      "pr": 82,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-05-matriz-mapa-096a018"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "818d2f16e400149e04d5fd87a0c3b31fbeaa83cd",
+      "short": "818d2f1",
+      "parent": "622102e210a8136af6add7d8007a435b41f3c242",
+      "subject": "docs(roadmap): Record the 0.5 exit criteria X3, X4 and X5 (#81)",
+      "pr": 81,
+      "addedMilestoneActivity": [
+        "milestone-0-5-exit-x3-x4-x5"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "short": "a49f851",
+      "parent": "818d2f16e400149e04d5fd87a0c3b31fbeaa83cd",
+      "subject": "feat(perf): Soak the Frontier game for 100 turns with the HUD alive under pause (V05-06 soak) (#83)",
+      "pr": 83,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-soak-b77178a"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "82f5f43ee7defdd0a8bf61d18368ae0070f5414a",
+      "short": "82f5f43",
+      "parent": "a49f8515a34c04a806ed022eb154cd5531941134",
+      "subject": "docs(perf): Pre-register the protocol of the 0.5 final comparison (V05-10) (#84)",
+      "pr": 84,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-protocol-draft"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+      "short": "8b7a5e6",
+      "parent": "82f5f43ee7defdd0a8bf61d18368ae0070f5414a",
+      "subject": "docs(evidence): Record the hosted CI and Pages receipts of the 0.5 slices (#85)",
+      "pr": 85,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-70cf43b"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "short": "1adcdb3",
+      "parent": "8b7a5e676cb3472a377eff08d71efc17548101ae",
+      "subject": "feat(perf): Measure the Frontier turn on the provisioned consumer (V05-06 turno, headless) (#86)",
+      "pr": 86,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-turno-headless-e2ee6d8"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "333181d4a0687b01c046c351759182136409b7f8",
+      "short": "333181d",
+      "parent": "1adcdb3c89b9eeb7c86744f7bced5e6d1cb1f37f",
+      "subject": "feat(dashboard): Guard the 0.5 exit criteria X9 and X10 in CI (#87)",
+      "pr": 87,
+      "addedMilestoneActivity": [
+        "milestone-0-5-exit-guards-b02e2a5"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c5441430bc57ac7e13ba41a70c097b0f49f7cf5c",
+      "short": "c544143",
+      "parent": "333181d4a0687b01c046c351759182136409b7f8",
+      "subject": "ci(native): Run the native suites on request, split across three jobs (#88)",
+      "pr": 88,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "539882320a52f382a8f02d211491dfd586295cda",
+      "short": "5398823",
+      "parent": "c5441430bc57ac7e13ba41a70c097b0f49f7cf5c",
+      "subject": "docs(perf): Close V05-06 turno with the presented windowed lane (#91)",
+      "pr": 91,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-turno-cb50b97"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "d91df3b5647aa1294b506f10cf0cc6e4c5da426c",
+      "short": "d91df3b",
+      "parent": "539882320a52f382a8f02d211491dfd586295cda",
+      "subject": "fix(ci): Run the X9/X10 guard on a manual dispatch too (#92)",
+      "pr": 92,
+      "addedMilestoneActivity": [
+        "milestone-0-5-exit-guards-dispatch-6e556f6"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e108e9d31f43f24f0c049c3454a41efe417e797b",
+      "short": "e108e9d",
+      "parent": "d91df3b5647aa1294b506f10cf0cc6e4c5da426c",
+      "subject": "feat(frontier): Queue three events in the game and block the map under overlays (P8 V05-05 slice 2a) (#93)",
+      "pr": 93,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-05-overlays-67c3f16",
+        "milestone-0-5-hosted-receipts-74-82"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+      "short": "9f55644",
+      "parent": "e108e9d31f43f24f0c049c3454a41efe417e797b",
+      "subject": "feat(perf): Pace the windowed lane by an idle reference that survives clusters (#94)",
+      "pr": 94,
+      "addedMilestoneActivity": [
+        "milestone-0-5-idle-reference-490ba8c"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "cc8f006687276ff953d3577b1143a0959ede24be",
+      "short": "cc8f006",
+      "parent": "9f55644fbfd5b72d5a8884afc54e91d175fa7aa6",
+      "subject": "docs(perf): Print and describe the turn's windowed lane by the idle reference (#95)",
+      "pr": 95,
+      "addedMilestoneActivity": [
+        "milestone-0-5-turn-idle-reference-01d6351"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "7fb27e12a4730869a7a4acac915908648f94d9ab",
+      "short": "7fb27e1",
+      "parent": "cc8f006687276ff953d3577b1143a0959ede24be",
+      "subject": "docs(evidence): Record the hosted receipts of the turn, the guards and the idle reference (#96)",
+      "pr": 96,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-2-13f50b1"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+      "short": "c57f9f6",
+      "parent": "7fb27e12a4730869a7a4acac915908648f94d9ab",
+      "subject": "feat(perf): Measure the main thread's CPU time per frame for the final comparison (#97)",
+      "pr": 97,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-cpu-instrument-dad0db1"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d",
+      "short": "decc2ad",
+      "parent": "c57f9f62c26ea33e639e45a8499c215f5bb68f23",
+      "subject": "docs(evidence): Record the hosted receipts of the CPU-time instrument (#98)",
+      "pr": 98,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-3-93323aa"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+      "short": "ffeeb5c",
+      "parent": "decc2ad0eec6bda6b6158e7c701f6a7d38dc2f6d",
+      "subject": "feat(perf): Keep the windowed lanes' window drawable and record why it was not (#99)",
+      "pr": 99,
+      "addedMilestoneActivity": [
+        "milestone-0-5-windowed-presence-59cd006"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "fb51c07162bb52eb418f3a3c5c4a19798b148eab",
+      "short": "fb51c07",
+      "parent": "ffeeb5c56a2c849ad83bf103f499ed9e83ee9f53",
+      "subject": "docs(perf): Close V05-06 baseline with its presented windowed lane (#101)",
+      "pr": 101,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-baseline-191533a"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "916387e349d3933e2ecfb417f9be8e332358a803",
+      "short": "916387e",
+      "parent": "fb51c07162bb52eb418f3a3c5c4a19798b148eab",
+      "subject": "feat(frontier): Keep the HUD stable over 20 cycles and draw its icons with Image (P8 V05-05 slice 2b) (#100)",
+      "pr": 100,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-05-estabilidade-4ffdb6e",
+        "milestone-0-5-hosted-receipts-93-4ffdb6e"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "0b9fbbf1f85dec5046eb14d26de49d7f613c43c3",
+      "short": "0b9fbbf",
+      "parent": "916387e349d3933e2ecfb417f9be8e332358a803",
+      "subject": "docs(frontier): Record the iPhone NO-GO and the hosted receipts of #100 (#102)",
+      "pr": 102,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-09-nogo"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "807f426e78a80bb829d678285ad4359a2f6c8cca",
+      "short": "807f426",
+      "parent": "0b9fbbf1f85dec5046eb14d26de49d7f613c43c3",
+      "subject": "docs(perf): Record arm B's time-box before arm B starts (V05-10) (#103)",
+      "pr": 103,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-armb-timebox"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "short": "8cd2491",
+      "parent": "807f426e78a80bb829d678285ad4359a2f6c8cca",
+      "subject": "feat(density): Follow the screen's density and RN's SafeAreaView insets on the desktop (GF-09) (#104)",
+      "pr": 104,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "d927e34a07508a9f49976daedbdf686ea2cb08e0",
+      "short": "d927e34",
+      "parent": "8cd2491a1f48444baacdb7b71df431cdbeff4bdb",
+      "subject": "docs(evidence): Record the hosted receipts of the window presence (#99) (#105)",
+      "pr": 105,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-4-2c4a822"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "2b2972607f9f5372530d151cedf4a1c0ceee5034",
+      "short": "2b29726",
+      "parent": "d927e34a07508a9f49976daedbdf686ea2cb08e0",
+      "subject": "docs(density): Record the hosted CI and Pages receipts of #104 (GF-09) (#106)",
+      "pr": 106,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+      "short": "561251d",
+      "parent": "2b2972607f9f5372530d151cedf4a1c0ceee5034",
+      "subject": "feat(perf): Freeze the Frontier budget and the comparison's thresholds once (#107)",
+      "pr": 107,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-congelado-e1803a9"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "09ed8f76ade66e6631811060f7b3719902a65105",
+      "short": "09ed8f7",
+      "parent": "561251df1ddcf22e2e55d22c292330be43c5d87d",
+      "subject": "fix(frontier): Keep the turn lane's snapshot reads out of the frames it times (#108)",
+      "pr": 108,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-05-frame-time"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c4cab408af06d2042921a723323970c7f088d5de",
+      "short": "c4cab40",
+      "parent": "09ed8f76ade66e6631811060f7b3719902a65105",
+      "subject": "docs(evidence): Record the hosted receipts of the freeze (#107) (#109)",
+      "pr": 109,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-5-7099e2b"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+      "short": "b23009d",
+      "parent": "c4cab408af06d2042921a723323970c7f088d5de",
+      "subject": "docs(perf): Record the confirmed cause and the corrected turn lane after the freeze (#112)",
+      "pr": 112,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-congelado-followup-3fb9487"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+      "short": "4a73a86",
+      "parent": "b23009d00f5f2fe419f4016c1484f1e9039f40c6",
+      "subject": "feat(perf): Analyze the final comparison by its pre-registered protocol (#110)",
+      "pr": 110,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-analysis-4592dba"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "8f33064b9b20593ebbbf72102e015c5786d903ea",
+      "short": "8f33064",
+      "parent": "4a73a861cd49312fe9b5a5752f05fed60d1cbd1a",
+      "subject": "docs(frontier): Record the hosted CI and Pages receipts of #108 (#111)",
+      "pr": 111,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-05-frame-time-receipts"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "4c3abb77bc13efb90f395aa2d45c714e06643620",
+      "short": "4c3abb7",
+      "parent": "8f33064b9b20593ebbbf72102e015c5786d903ea",
+      "subject": "feat(frontier): Add a native Godot HUD as arm B of the final comparison (V05-10) (#113)",
+      "pr": 113,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-braco-b"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "43036a8b8d4a5b6efcd716d58ff2eb88ce42e432",
+      "short": "43036a8",
+      "parent": "4c3abb77bc13efb90f395aa2d45c714e06643620",
+      "subject": "docs(frontier): Record the hosted CI and Pages receipts of #113 (arm B) (#114)",
+      "pr": 114,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-braco-b-receipts"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "5e8df83b886af352d2453f8e7883e814201983fc",
+      "short": "5e8df83",
+      "parent": "43036a8b8d4a5b6efcd716d58ff2eb88ce42e432",
+      "subject": "docs(evidence): Record the hosted receipts of #112 and #110 (#115)",
+      "pr": 115,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-6-04060b2"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "562f54b970310579c566fc19a243cc322465efe9",
+      "short": "562f54b",
+      "parent": "5e8df83b886af352d2453f8e7883e814201983fc",
+      "subject": "docs(perf): Amend the comparison protocol: the replay has 77 intents since #93 (#116)",
+      "pr": 116,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-amendment-3-0a5f5b4"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "63a9413534bb531a0e58638e117cb726869003c4",
+      "short": "63a9413",
+      "parent": "562f54b970310579c566fc19a243cc322465efe9",
+      "subject": "docs(perf): Amend the protocol: the dialog's context switch is its last resolve_event (#117)",
+      "pr": 117,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-amendment-4-e78e38c"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "b03c18e32a8b85b9941df5ad0b826dbb3b449216",
+      "short": "b03c18e",
+      "parent": "63a9413534bb531a0e58638e117cb726869003c4",
+      "subject": "docs(perf): Point the soak note's old hashes to the run after #93 (#118)",
+      "pr": 118,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-06-soak-note-e0160f3"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "short": "151427e",
+      "parent": "b03c18e32a8b85b9941df5ad0b826dbb3b449216",
+      "subject": "feat(frontier): Add the comparison's stress window and the runner's HUD counters (V05-10) (#119)",
+      "pr": 119,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-stress-window"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c3892acf2050f53b6a9cd7817cb46d47e3aeff7e",
+      "short": "c3892ac",
+      "parent": "151427e5c788ab5704ace25fd64d6c38958e4963",
+      "subject": "feat(perf): Run one comparative execution of the final comparison in any arm (#120)",
+      "pr": 120,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-execution-1-f77d81d"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "5c06669733a0bcb4b8e498a03ddb0afba8bed611",
+      "short": "5c06669",
+      "parent": "c3892acf2050f53b6a9cd7817cb46d47e3aeff7e",
+      "subject": "docs(frontier): Record the hosted CI and Pages receipts of #119 (stress) (#122)",
+      "pr": 122,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-stress-receipts"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "bbbbe6433f391dc5f59c8abf63be41d800bb91ad",
+      "short": "bbbbe64",
+      "parent": "5c06669733a0bcb4b8e498a03ddb0afba8bed611",
+      "subject": "docs(evidence): Record the hosted receipts of the comparative execution (#120) (#123)",
+      "pr": 123,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-7-1205949"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e7fcf1c788c1d439b397930754a35c45fe0bcb91",
+      "short": "e7fcf1c",
+      "parent": "bbbbe6433f391dc5f59c8abf63be41d800bb91ad",
+      "subject": "perf(frontier): Optimize arm B's native HUD in its single pass (V05-10) (#121)",
+      "pr": 121,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-braco-b-otimizacao"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "6c7e8ba9a89cde60e3507178acab613408829960",
+      "short": "6c7e8ba",
+      "parent": "e7fcf1c788c1d439b397930754a35c45fe0bcb91",
+      "subject": "docs(perf): Pre-register the cost-of-change request for arms B and C (V05-10) (#124)",
+      "pr": 124,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-mudanca-preregistration"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "5683a5b26cba649f8e3f4da49205e6aa470cee4f",
+      "short": "5683a5b",
+      "parent": "6c7e8ba9a89cde60e3507178acab613408829960",
+      "subject": "docs(frontier): Record the hosted CI and Pages receipts of #121 (arm B's pass) (#125)",
+      "pr": 125,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-braco-b-otimizacao-receipts"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "0cbee8448b968034f589e98105c2cecf1905cae8",
+      "short": "0cbee84",
+      "parent": "5683a5b26cba649f8e3f4da49205e6aa470cee4f",
+      "subject": "docs(perf): Record the cost of change in arms B and C (V05-10) (#127)",
+      "pr": 127,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-mudanca"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+      "short": "c6dea50",
+      "parent": "0cbee8448b968034f589e98105c2cecf1905cae8",
+      "subject": "feat(perf): Run the whole comparative campaign, resumable, behind the instrument's self-check (#126)",
+      "pr": 126,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-execution-2-f952152"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "cd9ee9c982c5a8ef3c27b839103bde5e6e6ca273",
+      "short": "cd9ee9c",
+      "parent": "c6dea50486a57ece9843266298f5a70ad0134b2b",
+      "subject": "docs(evidence): Record the hosted receipts of the comparative campaign (#126) (#128)",
+      "pr": 128,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-8-40dd07d"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "short": "19fbb7b",
+      "parent": "cd9ee9c982c5a8ef3c27b839103bde5e6e6ca273",
+      "subject": "feat(export): Run and verify a signed macOS Release consumer (#75)",
+      "pr": 75,
+      "addedMilestoneActivity": [
+        "milestone-0-5-p2-symlink-parent-6c2169a",
+        "milestone-0-5-p2-containment-review-881a711",
+        "milestone-0-5-p2-fixed-window-29969eb"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "1ef98a4c2a76a54d92a0ad0683cbdef11b46af6c",
+      "short": "1ef98a4",
+      "parent": "19fbb7b755b56516d66a69706b54e780b309a3e8",
+      "subject": "feat(perf): Keep the comparative attempts that wrote no report in the campaign's data (#129)",
+      "pr": 129,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-unreported-8817938"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "1873b0b3872d0c4b3c05d38124229f42b9d12e42",
+      "short": "1873b0b",
+      "parent": "1ef98a4c2a76a54d92a0ad0683cbdef11b46af6c",
+      "subject": "test(sabotage): Re-anchor the drifted sabotages and check every anchor in contracts (#130)",
+      "pr": 130,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "d72dd93c94fe804014e1dc36673615c57cbcbe76",
+      "short": "d72dd93",
+      "parent": "1873b0b3872d0c4b3c05d38124229f42b9d12e42",
+      "subject": "docs(evidence): Record the hosted receipts of #129, accepting #75's skip by an explicit allowlist (#131)",
+      "pr": 131,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-9-f832739"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "1810003a7603a556b7101cbcfa09f4fa4830c64e",
+      "short": "1810003",
+      "parent": "d72dd93c94fe804014e1dc36673615c57cbcbe76",
+      "subject": "feat(dashboard): Let six agents share the coordination board (#89)",
+      "pr": 89,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+      "short": "81eaa0a",
+      "parent": "1810003a7603a556b7101cbcfa09f4fa4830c64e",
+      "subject": "feat(perf): Enter the comparative scenario as the measurement project's main loop, as a Release export runs it (#133)",
+      "pr": 133,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-entry-bb30d75"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+      "short": "01118ad",
+      "parent": "81eaa0a17a126a561f0ec8bd50bacea5beefc012",
+      "subject": "feat(perf): Render the comparison's report as a Markdown document from report.json (#132)",
+      "pr": 132,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-report-markdown-e53a05f"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e233bb71d2e4cc597ee34bbd64082032855d6760",
+      "short": "e233bb7",
+      "parent": "01118ad06f0813749d872aa5e609ace2ada80e7c",
+      "subject": "docs(evidence): Record the hosted receipts of the macOS export (#75) (#134)",
+      "pr": 134,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-10-657694e"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "28edbbce7cb7e25af9e8163511943ab7556820ba",
+      "short": "28edbbc",
+      "parent": "e233bb71d2e4cc597ee34bbd64082032855d6760",
+      "subject": "fix(modal): Retire an open Modal without a busy-parent error on exit (#90)",
+      "pr": 90,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "2d2ba461543f5c0dc6876e412c382c0223c0faf1",
+      "short": "2d2ba46",
+      "parent": "28edbbce7cb7e25af9e8163511943ab7556820ba",
+      "subject": "feat(perf): Shape the comparison's arm projects, A and B without the Fabric extension (#138)",
+      "pr": 138,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-arm-projects-85d2c99"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+      "short": "e4730cb",
+      "parent": "2d2ba461543f5c0dc6876e412c382c0223c0faf1",
+      "subject": "feat(perf): Run the comparative campaign's Release launcher over the export manifests (#136)",
+      "pr": 136,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-release-launcher-29e379f"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "17f233882e28a58703ffa05a848fb6aa3775ecd2",
+      "short": "17f2338",
+      "parent": "e4730cb4bc1b7e4a5e8601314df80279fe126c13",
+      "subject": "docs(dashboard): Register the GF-18 Modal teardown fix (#90) (#139)",
+      "pr": 139,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "805929fe329dec042fa1bbccfd1a1140222f59d5",
+      "short": "805929f",
+      "parent": "17f233882e28a58703ffa05a848fb6aa3775ecd2",
+      "subject": "docs(evidence): Record the hosted receipts of #133 and #132 (#137)",
+      "pr": 137,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-10-ddb887f"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "12ea6d6a73e84216348b2cd998f3b008a76b73bd",
+      "short": "12ea6d6",
+      "parent": "805929fe329dec042fa1bbccfd1a1140222f59d5",
+      "subject": "docs(evidence): Record the hosted receipts of #136 and #138 (#140)",
+      "pr": 140,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-11-ea5fcea"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "9810100246c8c869abc778fee456ff56d2d44958",
+      "short": "9810100",
+      "parent": "12ea6d6a73e84216348b2cd998f3b008a76b73bd",
+      "subject": "feat(perf): Run the instrument's self-check through a probe project's main loop, as a Release engine can (#141)",
+      "pr": 141,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-probe-entry-ef18579"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "short": "02e7868",
+      "parent": "9810100246c8c869abc778fee456ff56d2d44958",
+      "subject": "feat(export): Export Frontier as a Release app that replays to the golden hash (V05-07) (#135)",
+      "pr": 135,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-07-replay-7207170"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "2bf8244bae24134a3d024309bc8daf8f6436502d",
+      "short": "2bf8244",
+      "parent": "02e7868ca68cd31b33ba249076c0fe07909d256e",
+      "subject": "docs(evidence): Record the hosted receipts of #141 (#143)",
+      "pr": 143,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-12-97af2c2"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "959376ac76d87f9d00a48f4ecb67909f9891e147",
+      "short": "959376a",
+      "parent": "2bf8244bae24134a3d024309bc8daf8f6436502d",
+      "subject": "fix(test): Judge two unstable checks by what they test (#142)",
+      "pr": 142,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "a36824fc49e178956231323eea31de2095679a41",
+      "short": "a36824f",
+      "parent": "959376ac76d87f9d00a48f4ecb67909f9891e147",
+      "subject": "docs(evidence): Record the hosted receipts of Frontier's Release app (#135) (#144)",
+      "pr": 144,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-13-f1bdaae"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "5b607891137cfedb365eaf2b79faf4e0276687ee",
+      "short": "5b60789",
+      "parent": "a36824fc49e178956231323eea31de2095679a41",
+      "subject": "feat(export): Export a macOS app without the Fabric extension, with only its own scenes (#145)",
+      "pr": 145,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-export-options-ecf637e"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "a8d31f726f5816de38a38348d1ce265655fa5a8f",
+      "short": "a8d31f7",
+      "parent": "5b607891137cfedb365eaf2b79faf4e0276687ee",
+      "subject": "docs(evidence): Record the hosted receipts of #145 (#146)",
+      "pr": 146,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-13-f390670"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "4767cd1f682dcbe540fa444b9af14f27790db6a1",
+      "short": "4767cd1",
+      "parent": "a8d31f726f5816de38a38348d1ce265655fa5a8f",
+      "subject": "feat(export): Replay Frontier's Release app on another hosted runner (V05-07 limpa) (#147)",
+      "pr": 147,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "86703c5b419eca4791ff05d537c3234298391535",
+      "short": "86703c5",
+      "parent": "4767cd1f682dcbe540fa444b9af14f27790db6a1",
+      "subject": "feat(perf): Export the comparison's arms and probe as Release apps and rehearse the campaign on them (#148)",
+      "pr": 148,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-10-measurement-exports-3cddd82"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "a1d3d780394b0a01804b83a1a43ebb8456e4b88a",
+      "short": "a1d3d78",
+      "parent": "86703c5b419eca4791ff05d537c3234298391535",
+      "subject": "docs(evidence): Record the hosted receipts of #148 (#149)",
+      "pr": 149,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-14-7a47bbc"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+      "short": "7e6f0b1",
+      "parent": "a1d3d780394b0a01804b83a1a43ebb8456e4b88a",
+      "subject": "docs(evidence): Close V05-07's limpa on another hosted runner (#150)",
+      "pr": 150,
+      "addedMilestoneActivity": [
+        "milestone-0-5-v05-07-limpa-813e9b3"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "500aac3f874d4f6f0d2e72d4e253817e9bed2811",
+      "short": "500aac3",
+      "parent": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
+      "subject": "docs(evidence): Record the hosted receipts of the clean-machine record (#150) (#151)",
+      "pr": 151,
+      "addedMilestoneActivity": [
+        "milestone-0-5-hosted-receipts-15-9e95bc6"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "f984f37ec360e55a9d3f1671e1fec75613a880a7",
+      "short": "f984f37",
+      "parent": "500aac3f874d4f6f0d2e72d4e253817e9bed2811",
+      "subject": "feat(frontier): Register the final macOS campaign scope and load cap",
+      "pr": null,
+      "addedMilestoneActivity": [
+        "milestone-0-5-protocol-amendment-5-load-20261013",
+        "milestone-0-5-macos-no-go-accounting-20261013"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "da03da8395083576a09bf0d19fc4696dc93f7609",
+      "short": "da03da8",
+      "parent": "f984f37ec360e55a9d3f1671e1fec75613a880a7",
+      "subject": "fix(dashboard): Count only applicable milestone items",
+      "pr": null,
+      "addedMilestoneActivity": [
+        "milestone-0-5-no-go-item-scope-20261013"
+      ],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "clean",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "e262456af70ee87222cc19c33e68b4f73cc00943",
+      "short": "e262456",
+      "parent": "da03da8395083576a09bf0d19fc4696dc93f7609",
+      "subject": "docs(frontier): Retain the load-stopped Release campaign",
+      "pr": null,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    },
+    {
+      "sha": "9ba77d6bce1a65e1f81823ba5110ee1ca0c049b4",
+      "short": "9ba77d6",
+      "parent": "e262456af70ee87222cc19c33e68b4f73cc00943",
+      "subject": "chore: Integrate the contract inventory from main",
+      "pr": null,
+      "addedMilestoneActivity": [],
+      "onePointZero": {
+        "sections": [],
+        "moves": 0,
+        "text": 0,
+        "changes": []
+      },
+      "tail": {
+        "slices": [],
+        "insideFolders": []
+      },
+      "gf13": {
+        "changed": false,
+        "addedActivity": []
+      },
+      "x9": {
+        "verdict": "not-applicable",
+        "items": []
+      },
+      "x10": {
+        "verdict": "clean",
+        "items": []
+      }
+    }
+  ]
+}

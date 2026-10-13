@@ -4,6 +4,7 @@
     "dashboard/app.mjs",
     "dashboard/style.css",
     "dashboard/agents.css",
+    "docs/evidence/frontier-comparison-final/verify-raw.mjs",
     "examples/entry.jsx",
     "src/initialize.js",
     "src/private-interface.js",

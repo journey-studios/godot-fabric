@@ -27,8 +27,13 @@ export function pendingDependencies(task, tasks) {
 
 // Optional milestones (e.g. 0.5) are a separate scope with their own criteria. They never feed summarize()/progress(),
 // so the release percentage is identical with and without the `milestones` key.
+export function applicableCriteria(criteria) {
+  return criteria.filter(step => !step.notApplicable);
+}
+
 export function criteriaProgress(criteria) {
-  return criteria.length ? criteria.filter(step => step.done).length / criteria.length * 100 : 0;
+  const applicable = applicableCriteria(criteria);
+  return applicable.length ? applicable.filter(step => step.done).length / applicable.length * 100 : 0;
 }
 
 export function milestoneCriteria(milestone) {
@@ -37,9 +42,11 @@ export function milestoneCriteria(milestone) {
 
 // Status is derived from the criteria, so agents never have to keep a stored status consistent with them.
 export function criteriaStatus(criteria, blocker) {
+  const applicable = applicableCriteria(criteria);
+  if (criteria.length && !applicable.length) { return "not_applicable"; }
   if (blocker) { return "blocked"; }
-  const done = criteria.filter(step => step.done).length;
-  return done === 0 ? "planned" : done === criteria.length ? "complete" : "in_progress";
+  const done = applicable.filter(step => step.done).length;
+  return done === 0 ? "planned" : done === applicable.length ? "complete" : "in_progress";
 }
 
 export function validate(data) {
@@ -131,6 +138,11 @@ export function validate(data) {
         if (typeof step.done !== "boolean") { fail(`${field}.${step.id}: done deve ser booleano`); }
         evidence(step.evidence, `${field}.${step.id}.evidence`);
         if (step.done && !step.evidence.length) { fail(`${field}.${step.id}: conclusão sem evidência`); }
+        if (step.notApplicable !== undefined) {
+          string(step.notApplicable, `${field}.${step.id}.notApplicable`);
+          if (step.done) { fail(`${field}.${step.id}: não aplicável não pode estar concluído`); }
+          if (!step.evidence.length) { fail(`${field}.${step.id}: não aplicável sem evidência da decisão`); }
+        }
       });
     };
     const list = (value, field) => { if (value !== undefined && (!Array.isArray(value) || value.some(item => typeof item !== "string"))) { fail(`${field}: lista de textos`); } };
