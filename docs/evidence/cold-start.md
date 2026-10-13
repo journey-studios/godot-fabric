@@ -182,6 +182,15 @@ In all 20 crashes of the larger run the log has `Program crashed with signal 11`
 the parent saw `SIGABRT`, and the ten backtrace frames are identical in module
 offsets (only the load address changes); none names `EditorHelp`.
 
+**Hosted result.** The Contracts run [38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586), dispatched on the branch of
+#154, ran the control in the `native-cold-start` job ([job 115318656893](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893))
+on the hosted macOS 15 arm64 runner: verdict `boundary-holds`, 5 of 5 unprepared imports crashed and 5 of 5 prepared
+imports were clean, on `4.7.2.stable.official.ed1daf0bf` with the same executable SHA-256 as the local runs
+(`c7cccbf8…718ccf`). The artifact `native-cold-start-boundary` (id 11817282299, digest `sha256:53617478…5e5e`) holds the
+report and the ten logs. The run's `native-suites-frontier` job failed once in `test:cpu-time-instrument` (its
+frame-to-frame check of the process term, a known instability of that suite on a busy runner, unrelated to this
+control) and passed on its rerun; the `native-cold-start` job passed on both attempts.
+
 **When it flips.** If a hosted or local run reports `engine-fixed`, retire the
 containment in one change: requalify the new engine (the pin and checksum in
 `dependencies.json`, `compatibility_minimum`, the `native-cold-start` suites),
