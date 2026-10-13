@@ -36,6 +36,16 @@ Two operational pauses affected only the idle orchestrator, with no game process
 
 The previously accepted [change-cost experiment](../frontier-change-cost/README.md) remains a separate, single observation per HUD. It supports a description, not a general productivity claim, and does not supply missing executions for this comparison. Earlier clean-profile and hosted clean-machine macOS export proofs remain separate from this local campaign.
 
+## Collector corrections before the next cohort
+
+The collector now defers a launch when `--max-wait` expires above the registered load cap, returns `waiting` (CLI exit 2), and retains the deferred slot/attempt in `campaign-state.json` and `summary.json`. It writes no final campaign or statistics in that state. `--resume` continues the same unspent attempt. Previously the timeout launched anyway and consumed an attempt; the stopped cohort above retains that original behavior and every observation.
+
+`--load-stable <seconds>` optionally requires consecutive polled readings at or below the same cap before each launch; a higher reading resets the quiet interval. This schedules a quieter start and changes no validity threshold. The next cohort uses 60 seconds of stability, a 1,800-second maximum wait, the existing 6.0 before/after acceptance cap and all 12 balanced slots per arm per applicable lane. Deferred waits remain in the state's history and the final summary.
+
+Resume verifies retained log hashes, raw-derived executions and the protocol's judgments before launching again. The next-slot decision also uses the recalculated judgment. The raw verifier independently checks every retained verdict. The analysis no longer treats the 10-per-arm minimum as permission to stop before completing the 12-per-arm balanced plan; a truncated presented lane is incomplete and produces no performance statistics.
+
+These corrections do not amend the protocol or merge observations from distinct cohorts. The protocol's five historical amendments still preceded the first measurement. An open acceptance criterion is not proof that no measurements exist: the stopped cohort contains 41 actual attempts.
+
 ## Raw data and reproduction
 
 [campaign-data.tar.gz](stopped-load-6/campaign-data.tar.gz) retains 96 files, including every raw scenario JSON and log, the original campaign, operational state, graphical self-check and analysis. [archive-index.json](stopped-load-6/archive-index.json) lists every member's bytes and SHA-256; the archive was read back and every member verified before publication. No AppleDouble members or symlinks are included.

@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test, { after, before } from "node:test";
 import { parseArguments, runCampaign, writeAtomic } from "../scripts/frontier-comparison-campaign.mjs";
+import { waitForLoad } from "../scripts/frontier-comparison-campaign-load.mjs";
 import { campaignErrors } from "../scripts/frontier-comparison-format.mjs";
 import { HEADLESS_ENGINE, INSTRUMENT_SHA256, attempts, fakeClock, fakeLauncher, registeredOf, scriptedLoad, selfCheck, sha, where } from "./frontier-comparison-campaign-fake.mjs";
 import { readProtocol, withResamples } from "./frontier-comparison-synthetic.mjs";
@@ -247,21 +248,83 @@ test("a protocol whose load limit is not a finite positive number is refused bef
   }
 });
 
-test("the wait for the load reads it every few seconds until it is under the limit, records the wait, and a wait that runs out lets the attempt run to be judged by the rule", async () => {
+test("the wait records quiet readings and defers a busy launch without consuming a slot; resume keeps its attempt number", async () => {
   const quiet = await play({ lanes: ["presented"], slots: [1, 2], load: scriptedLoad([7, 6.5, 1.5]), maxWaitSeconds: 600 });
   const [first, second] = (await read(quiet.out, "campaign-state.json")).attempts;
   assert.deepEqual(first.waited, { limit: 6, maxWaitSeconds: 600, intervalSeconds: 5, first: 7, last: 1.5, polls: 3, seconds: 10, timedOut: false });
   assert.deepEqual([second.waited.polls, second.waited.seconds], [1, 0], "the next attempt finds the machine quiet at once");
   assert.equal(quiet.clock.slept, 10000);
-  // The machine stays busy: the wait gives up after the time it was given and the attempt runs anyway; its own readings (before and after the process) are what the rule judges.
+  // A busy machine consumes waiting time, never an attempt. No final campaign or statistics exist yet.
   const busy = await play({ lanes: ["presented"], slots: [1, 1], load: scriptedLoad([9]), maxWaitSeconds: 12, plan: { "presented/1/1": attempts.highLoad } });
   const state = await read(busy.out, "campaign-state.json");
-  assert.deepEqual(state.attempts.map((attempt) => [attempt.waited.timedOut, attempt.waited.polls, attempt.waited.seconds, attempt.verdict.accepted]), [[true, 4, 12, false], [true, 4, 12, true]]);
-  assert.equal(busy.clock.slept, 24000);
-  assert.deepEqual(reasonsOf(slotRecord(busy.result, "presented", 1).attempts[0]), ["load:before"]);
-  // No time to wait at all: one reading, and go on.
+  assert.equal(busy.result.status, "waiting");
+  assert.deepEqual(state.attempts, []);
+  assert.deepEqual([busy.launcher.calls.length, busy.launcher.cleanups, busy.clock.slept], [0, 1, 12000]);
+  assert.deepEqual([state.waitingForLoad.slot, state.waitingForLoad.attempt, state.waitingForLoad.waited.polls, state.waitingForLoad.waited.timedOut], [1, 1, 4, true]);
+  assert.equal((await read(busy.out, "summary.json")).status, "waiting");
+  assert.ok(!(await exists(path.join(busy.out, "campaign.json"))));
+  assert.ok(!(await exists(path.join(busy.out, "report.json"))));
+  assert.ok(!(await exists(lock())));
+  const resumed = await play({ out: busy.out, resume: true, lanes: ["presented"], slots: [1, 1], plan: { "presented/1/1": attempts.highLoad } });
+  assert.equal(resumed.result.status, "done");
+  assert.deepEqual(resumed.launcher.calls.map(({ slot, attempt }) => [slot, attempt]), [[1, 1], [1, 2]]);
+  assert.equal(resumed.result.state.waitingForLoad, null);
+  assert.equal(resumed.result.state.deferredLoads.length, 1);
+  assert.equal(resumed.check.runs.length, 0);
+  assert.deepEqual(reasonsOf(slotRecord(resumed.result, "presented", 1).attempts[0]), ["load:before"], "the launcher readings still judge the attempt");
+  // No time to wait: one reading and defer immediately if busy.
   const none = await play({ lanes: ["presented"], slots: [1, 1], load: scriptedLoad([9]), maxWaitSeconds: 0 });
   assert.deepEqual([none.clock.slept, none.load.count()], [0, 1]);
+  assert.equal(none.result.status, "waiting");
+  assert.equal(none.launcher.calls.length, 0);
+});
+
+test("a quiet interval resets when load rises, accepts the cap itself and can finish exactly at the deadline", async () => {
+  const clock = fakeClock();
+  const waited = await waitForLoad({ read: scriptedLoad([6, 5, 7, 6, 5, 6]), clock, limit: 6, maxWaitSeconds: 25, intervalSeconds: 5, stableSeconds: 10 });
+  assert.deepEqual([waited.seconds, waited.polls, waited.quietSeconds, waited.timedOut], [25, 6, 10, false]);
+  const short = await waitForLoad({ read: scriptedLoad([7, 6, 6]), clock: fakeClock(), limit: 6, maxWaitSeconds: 12, intervalSeconds: 5, stableSeconds: 10 });
+  assert.deepEqual([short.seconds, short.quietSeconds, short.timedOut], [12, 7, true]);
+  const stable = await play({ lanes: ["presented"], slots: [1, 1], loadStableSeconds: 10, maxWaitSeconds: 15, load: scriptedLoad([6, 6, 6]) });
+  assert.equal(stable.result.state.options.loadStableSeconds, 10);
+  assert.equal(stable.result.state.attempts[0].waited.quietSeconds, 10);
+  assert.equal(stable.launcher.calls.length, 1);
+});
+
+test("resume refuses a modified cached verdict, derived execution, raw observation or log before launching", async () => {
+  for (const changed of ["verdict", "execution", "raw", "log"]) {
+    const out = path.join(scratch, `tampered-${changed}`);
+    await assert.rejects(play({ out, launcher: fakeLauncher({ protocol, interruptBefore: 1 }) }), /simulated interruption/);
+    const state = await read(out, "campaign-state.json");
+    const attempt = state.attempts[0];
+    if (changed === "verdict") attempt.verdict.accepted = false;
+    if (changed === "execution") attempt.execution.readings.rssMb.end += 1;
+    if (changed === "raw") {
+      const raw = await read(out, attempt.raw);
+      raw.readings.rssMb.end += 1;
+      await writeAtomic(path.join(out, attempt.raw), JSON.stringify(raw));
+    }
+    if (changed === "log") await writeAtomic(path.join(out, attempt.log), "SCRIPT ERROR: changed\n");
+    await writeAtomic(path.join(out, "campaign-state.json"), JSON.stringify(state));
+    const launcher = fakeLauncher({ protocol });
+    await assert.rejects(play({ out, launcher, resume: true }), /cannot resume.*(verdict|raw report|log hash)/);
+    assert.equal(launcher.calls.length, 0, changed);
+    assert.equal(launcher.cleanups, 1, changed);
+    assert.ok(!(await exists(lock())));
+  }
+});
+
+test("resume refuses erasing a raw-derived configuration stop", async () => {
+  const plan = { "presented/1/1": attempts.otherWaits };
+  const { result, out } = await play({ plan });
+  assert.equal(result.status, "stopped");
+  const state = await read(out, "campaign-state.json");
+  assert.ok(state.attempts[0].configProblems.length > 0);
+  state.attempts[0].configProblems = [];
+  await writeAtomic(path.join(out, "campaign-state.json"), JSON.stringify(state));
+  const launcher = fakeLauncher({ protocol });
+  await assert.rejects(play({ out, launcher, resume: true }), /configuration stop differ/);
+  assert.equal(launcher.calls.length, 0);
 });
 
 test("a campaign interrupted after the k-th attempt, or twice, resumes from the first open slot and ends as a campaign that was never interrupted", async () => {
@@ -431,6 +494,11 @@ test("the command line: --build debug and --slots are for a rehearsal, the numbe
   assert.throws(() => ok("--build", "debug", "--rehearsal", "--out", "x", "--slots", "1-37"), /the slots of a lane are 1 to 36/);
   assert.throws(() => ok("--build", "debug", "--rehearsal", "--out", "x", "--slots", "all"), /takes a slot or a range/);
   assert.throws(() => ok("--build", "release", "--out", "x", "--max-wait", "-1"), /seconds, 0 or more/);
+  for (const flag of ["--max-wait", "--load-stable"]) {
+    assert.throws(() => ok("--build", "release", "--out", "x", flag, "Infinity"), /finite seconds/);
+  }
+  assert.throws(() => ok("--build", "release", "--out", "x", "--max-wait", "5", "--load-stable", "10"), /cannot exceed/);
+  assert.equal(ok("--build", "release", "--out", "x", "--exports", "/tmp/exports", "--load-stable", "60").loadStableSeconds, 60);
   assert.throws(() => ok("--build", "release"), /use --out/);
   assert.throws(() => ok("--out", "x"), /use --build release\|debug/);
   assert.throws(() => ok("--build", "release", "--out", "x", "--windowed"), /unknown argument --windowed/);

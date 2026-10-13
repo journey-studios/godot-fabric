@@ -1,0 +1,66 @@
+{
+  "format": "godot-fabric.frontier-comparison-collector-validation/v1",
+  "validatedAt": "2026-10-13T16:15:26.432Z",
+  "baseCommit": "f6b4274264de790403f4cbe8fa08a51bb64ddac4",
+  "checks": [
+    {
+      "command": "npm run test:contracts",
+      "nodePassed": 807,
+      "pythonPassed": 37,
+      "declaredSkipped": 1,
+      "passed": true
+    },
+    {
+      "command": "node --test tests/frontier-comparison-protocol.test.mjs tests/frontier-comparison-analysis.test.mjs tests/frontier-comparison-validity.test.mjs tests/frontier-comparison-report-markdown.test.mjs tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-campaign-state.test.mjs tests/frontier-comparison-campaign-guards.test.mjs tests/frontier-comparison-release.test.mjs",
+      "passed": 126
+    },
+    {
+      "command": "node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-raw-verification.test.mjs",
+      "passed": 36,
+      "note": "After the final configuration-stop and path-verification changes."
+    },
+    {
+      "command": "npm run check:static",
+      "passed": true
+    },
+    {
+      "command": "node scripts/frontier-freeze.mjs --check",
+      "passed": true,
+      "thresholds": 5,
+      "budgetRows": 16,
+      "derivations": 20
+    },
+    {
+      "command": "node scripts/milestone-guards.mjs --check --base origin/main",
+      "passed": true
+    },
+    {
+      "command": "verify-raw.mjs on the original stopped cohort, then cmp with raw-verification-original.json",
+      "passed": true,
+      "attempts": 41,
+      "rawAndSelfCheckFiles": 84,
+      "byteIdentical": true
+    }
+  ],
+  "logDigests": {
+    "godot-fabric-05-quiet-contracts.log": {
+      "sha256": "0113c3ee71d05c1dc0f07d1e6c92f8efe041e222fb680b6ce748d92ccac81e45",
+      "bytes": 210414
+    },
+    "godot-fabric-05-comparison-regressions.log": {
+      "sha256": "8503b6512442fbb64d1e0db80aaa049e0edda944dbe116e6e8550a1122b9b88c",
+      "bytes": 40495
+    },
+    "godot-fabric-05-quiet-final-causal.log": {
+      "sha256": "a159da65c84e7e50075caa32ca9814a96e878c7ed00a822f76094dd40e814a9f",
+      "bytes": 10813
+    },
+    "godot-fabric-05-quiet-static.log": {
+      "sha256": "f8b3676160846e129177ba1e3f6c40124a5c0c97580af9a05f7ac7646a728110",
+      "bytes": 223
+    }
+  },
+  "measurementSourceChanged": false,
+  "protocolChanged": false,
+  "comparisonComplete": false
+}

@@ -5,12 +5,13 @@ import {
   campaignExecutions, deviationsOf, engineDifferences, engineOf, nextStep, optionsErrors, parseSlots, planOf, resumeProblems, stopsOf, unavailableLanes, unreportedEntries,
 } from "../scripts/frontier-comparison-campaign-state.mjs";
 import { fakeClock, registeredOf, scriptedLoad, sha } from "./frontier-comparison-campaign-fake.mjs";
-import { readProtocol } from "./frontier-comparison-synthetic.mjs";
+import { assessValidity } from "../scripts/frontier-comparison-validity.mjs";
+import { readProtocol, syntheticCampaign } from "./frontier-comparison-synthetic.mjs";
 
 // The pure parts of the comparative campaign (V05-10, `execucao`, part 2): the plan, the next step of the state machine on states written by hand, what a state makes of its attempts, the
 // resume's checks and the wait for the load, with a clock and a load average that the test controls. Nothing runs and nothing is read from a file but the protocol. The whole campaign
 // against a fake launcher is tests/frontier-comparison-campaign.test.mjs.
-const { protocol } = readProtocol();
+const { protocol, protocolSha256 } = readProtocol();
 
 // A state with the attempts written by hand: `[lane, slot, attempt, accepted, extra]`. The execution is a stub with the one field the state machine reads (the vsync mode).
 function stateOf(entries, { rehearsal = false, lanes = ["presented", "unlimited"], slots = null } = {}) {
@@ -25,6 +26,17 @@ function stateOf(entries, { rehearsal = false, lanes = ["presented", "unlimited"
   };
 }
 const noStops = { stopped: [] };
+// The scheduling fixtures provide the analysis' slot judgments separately from
+// the attempt records. The regression below uses the actual validity analysis.
+function validityOf(state) {
+  return {
+    stopped: [],
+    slots: planOf(protocol, state.options).map((entry) => ({
+      ...entry,
+      state: state.attempts.some((attempt) => attempt.lane === entry.lane && attempt.slot === entry.slot && attempt.verdict.accepted) ? "accepted" : "missing",
+    })),
+  };
+}
 
 test("the plan is the protocol's sequence in each lane in turn, limited to the slots asked for", () => {
   const plan = planOf(protocol, { lanes: ["presented", "unlimited"], slots: null });
@@ -37,7 +49,7 @@ test("the plan is the protocol's sequence in each lane in turn, limited to the s
 });
 
 test("the next step is the first slot without an accepted attempt: its redo before the next slot, no redo in a rehearsal", () => {
-  const next = (state, validity = noStops) => nextStep(state, protocol, validity);
+  const next = (state, validity = validityOf(state)) => nextStep(state, protocol, validity);
   assert.deepEqual(next(stateOf([])), { kind: "launch", lane: "presented", slot: 1, arm: "A", block: 0, position: 0, attempt: 1 });
   assert.deepEqual(next(stateOf([["presented", 1, 1, true]])), { kind: "launch", lane: "presented", slot: 2, arm: "B", block: 0, position: 1, attempt: 1 });
   const redo = next(stateOf([["presented", 1, 1, true], ["presented", 2, 1, false]]));
@@ -48,6 +60,23 @@ test("the next step is the first slot without an accepted attempt: its redo befo
   // The lane after the first one begins when the first one is whole.
   const whole = Array.from({ length: 36 }, (_, index) => ["presented", index + 1, 1, true]);
   assert.deepEqual(next(stateOf(whole)), { kind: "launch", lane: "unlimited", slot: 1, arm: "A", block: 0, position: 0, attempt: 1 });
+});
+
+test("the next step follows the recomputed validity even when a resumed attempt's cached verdict disagrees", () => {
+  const campaign = syntheticCampaign(protocol, protocolSha256, { lanes: ["presented"] });
+  campaign.executions = campaign.executions.filter((execution) => execution.slot === 1);
+  const execution = campaign.executions[0];
+  const state = stateOf([["presented", 1, 1, true, { execution }]], { lanes: ["presented"] });
+  execution.load.after = protocol.runs.load.limit1MinuteAverage + 1;
+  const rejected = assessValidity(campaign, protocol, protocolSha256);
+  assert.equal(rejected.slots[0].state, "open");
+  assert.deepEqual(nextStep(state, protocol, rejected), { kind: "launch", lane: "presented", slot: 1, arm: "A", block: 0, position: 0, attempt: 2 });
+
+  execution.load.after = protocol.runs.load.limit1MinuteAverage;
+  state.attempts[0].verdict.accepted = false;
+  const accepted = assessValidity(campaign, protocol, protocolSha256);
+  assert.equal(accepted.slots[0].state, "accepted");
+  assert.deepEqual(nextStep(state, protocol, accepted), { kind: "launch", lane: "presented", slot: 2, arm: "B", block: 0, position: 1, attempt: 1 });
 });
 
 test("the analysis' stops stop it, a slot whose attempts are used up is the analysis' stop alone, and what the analysis cannot see stops it too", () => {
@@ -74,10 +103,10 @@ test("the analysis' stops stop it, a slot whose attempts are used up is the anal
 test("the unlimited lane is N/A from the first attempt whose vsync did not read back DISABLED, and its slots do not run", () => {
   const state = stateOf([["presented", 1, 1, true, { execution: { vsync: { mode: "ENABLED" } } }], ["unlimited", 1, 1, false, { execution: { vsync: { mode: "ENABLED" } } }]], { slots: [1, 2] });
   assert.deepEqual(unavailableLanes(state, protocol), { unlimited: { slot: 1, attempt: 1, mode: "ENABLED", required: "DISABLED" } });
-  const next = nextStep(state, protocol, noStops);
+  const next = nextStep(state, protocol, validityOf(state));
   assert.deepEqual([next.kind, next.lane, next.slot], ["launch", "presented", 2], "the presented lane goes on");
   const done = stateOf([...state.attempts.map((attempt) => [attempt.lane, attempt.slot, attempt.attempt, attempt.verdict.accepted, { execution: attempt.execution }]), ["presented", 2, 1, true]], { slots: [1, 2] });
-  assert.deepEqual(nextStep(done, protocol, noStops), { kind: "done" });
+  assert.deepEqual(nextStep(done, protocol, validityOf(done)), { kind: "done" });
   assert.deepEqual(unavailableLanes(stateOf([["unlimited", 1, 1, true, { execution: { vsync: { mode: "DISABLED" } } }]]), protocol), {});
 });
 
