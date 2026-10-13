@@ -1,6 +1,7 @@
 import { rm, mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 import { root } from "./consumer-harness.mjs";
 import { runSelfCheck } from "./frontier-comparison-campaign-instrument.mjs";
 import { RELEASE_SELF_CHECK_REFUSAL, createDebugLauncher, createReleaseLauncher } from "./frontier-comparison-campaign-launchers.mjs";
@@ -23,7 +24,7 @@ import { machine } from "./frontier-turn-lane.mjs";
 // interrupted campaign continues with --resume. The campaign in the analysis' format and its report are written at the end. The state machine is in
 // scripts/frontier-comparison-campaign-state.mjs, the wait in -load.mjs and the instrument's self-check, the gate that runs first, in -instrument.mjs.
 //
-//   node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release|debug --out <dir> [--exports <dir>] [--resume] [--max-wait <s>]
+//   node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release|debug --out <dir> [--exports <dir>] [--resume] [--max-wait <s>] [--load-stable <s>]
 //        [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]
 //
 // `--build debug` is a rehearsal: it needs `--rehearsal`, which marks the campaign as one (a rehearsal redoes nothing, and says in the campaign's deviations that it is not a result). `--build release`
@@ -148,6 +149,7 @@ async function finish({ state, protocol, protocolSha256, out, validity, status, 
   }
   const summary = {
     ...summaryOf(state, protocol, validity, status),
+    ...(state.deferredLoads?.length ? { deferredLoads: state.deferredLoads } : {}),
     formatErrors,
     analysis: analysis === null ? { error: analysisError } : { status: analysis.status, why: analysis.why },
     provenance: { ...state.provenance, ...state.environment, engine: state.scenarioEngine, readCosts },
@@ -173,10 +175,10 @@ async function finish({ state, protocol, protocolSha256, out, validity, status, 
 
 // The state to go on with: the one on disk, if `resume` and it is the same experiment (the protocol, the script, the binary and the package have the hashes it was registered with, and the options are
 // the same), or a new one that registers what the launcher said.
-async function openState({ launcher, prepared, protocolSha256, out, statePath, options, maxWaitSeconds, resume, clock, where, log }) {
+async function openState({ launcher, prepared, protocol, protocolSha256, out, statePath, options, maxWaitSeconds, loadStableSeconds, resume, clock, where, log }) {
   if (!resume) {
     await mkdir(out, { recursive: true });
-    return initialState({
+    const state = initialState({
       protocolSha256,
       options: { ...options, maxWaitSeconds },
       launcher: { name: launcher.name, build: launcher.build, ...prepared },
@@ -184,22 +186,71 @@ async function openState({ launcher, prepared, protocolSha256, out, statePath, o
       environment: environmentOf(undefined),
       now: isoOf(clock),
     });
+    state.options.loadStableSeconds = loadStableSeconds;
+    return state;
   }
   const state = await readState(statePath);
   const mismatches = resumeProblems(state, { protocolSha256, launcher: { build: launcher.build, registered: prepared.registered }, options });
   if (mismatches.length > 0) {
     throw new Error(`cannot resume ${out}, which is not the campaign that was interrupted:\n${mismatches.join("\n")}`);
   }
+  // Resume only the same retained observations, not a cached execution/verdict edited independently of its raw report.
+  const validity = assess(state, protocol);
+  for (const attempt of state.attempts) {
+    const key = `${attempt.lane}-${attempt.slot}-${attempt.attempt}`;
+    const refused = (reason) => { throw new Error(`cannot resume ${out}: ${key} ${reason}`); };
+    if (!isDeepStrictEqual(attempt.verdict, verdictOf(validity, attempt))) {
+      refused("cached verdict differs from the protocol's judgment");
+    }
+    if (attempt.log !== `raw/${key}.log` || (attempt.raw !== null && attempt.raw !== `raw/${key}.json`)) {
+      refused("raw/log paths differ from its slot and attempt");
+    }
+    const retainedLog = await readFile(path.join(out, attempt.log), "utf8");
+    if (sha256(retainedLog) !== attempt.logSha256) {
+      refused("retained log hash differs");
+    }
+    const ended = processOf({ status: attempt.exitCode, signal: attempt.signal }, retainedLog);
+    if (ended.crashed !== attempt.crashed) refused("crash status differs from the retained log and process");
+    if (attempt.raw === null) {
+      if (attempt.execution !== null) refused("has an execution without a raw report");
+    } else {
+      const report = JSON.parse(await readFile(path.join(out, attempt.raw), "utf8"));
+      const analysed = analyse(report, protocol);
+      const configProblems = analysed.problems.filter((problem) => CONFIGURATION_PROBLEMS.includes(problem.code));
+      if (!isDeepStrictEqual(analysed.problems, attempt.problems) || !isDeepStrictEqual(configProblems, attempt.configProblems)) {
+        refused("problems/configuration stop differ from the retained raw report");
+      }
+      if (analysed.derived === null) {
+        if (attempt.execution !== null) refused("has an execution from an unreadable raw report");
+        continue;
+      }
+      const execution = executionOf({ report, derived: analysed.derived, protocol, slot: attempt.slot, attempt: attempt.attempt,
+        build: state.launcher.build, load: attempt.load, hashes: attempt.hashes,
+        ended });
+      if (attempt.assumedRefreshHz !== null) execution.vsync.refreshHz = attempt.assumedRefreshHz.assumed;
+      if (!isDeepStrictEqual(execution, attempt.execution)) {
+        refused("execution/problems differ from the retained raw report and log");
+      }
+    }
+  }
   state.options.maxWaitSeconds = maxWaitSeconds;
-  state.resumes.push({ at: isoOf(clock), attempts: state.attempts.length });
+  state.options.loadStableSeconds = loadStableSeconds;
+  state.resumes.push({ at: isoOf(clock), attempts: state.attempts.length, wait: { maxWaitSeconds, loadStableSeconds } });
+  state.waitingForLoad = null;
   log(`resuming after ${state.attempts.length} attempt(s)`);
   return state;
 }
 
 // One attempt of the next step: the wait for a quiet machine, a fresh process, what it came to, and the analysis' verdict on the campaign with it in. Returns that validity.
-async function playAttempt({ launcher, step, state, protocol, protocolSha256, out, read, clock, maxWaitSeconds, assumeRefreshHz, log }) {
-  const waited = await waitForLoad({ read, clock, limit: protocol.runs.load.limit1MinuteAverage, maxWaitSeconds, intervalSeconds: LOAD_POLL_SECONDS });
-  log(`${step.lane} slot ${step.slot} (${step.arm}) attempt ${step.attempt}: ${waited.timedOut ? `the load stayed at ${waited.last} after ${waited.seconds} s, going on` : `load ${waited.last} after ${waited.seconds} s`}`);
+async function playAttempt({ launcher, step, state, protocol, protocolSha256, out, read, clock, maxWaitSeconds, loadStableSeconds, assumeRefreshHz, log }) {
+  const waited = await waitForLoad({ read, clock, limit: protocol.runs.load.limit1MinuteAverage, maxWaitSeconds, intervalSeconds: LOAD_POLL_SECONDS, stableSeconds: loadStableSeconds });
+  log(`${step.lane} slot ${step.slot} (${step.arm}) attempt ${step.attempt}: ${waited.timedOut ? `load ${waited.last} after ${waited.seconds} s; ${state.rehearsal ? "rehearsal only, recording the rejection" : "launch deferred, use --resume"}` : `load ${waited.last} after ${waited.seconds} s`}`);
+  // Headless rehearsals intentionally show the busy-machine rejection; they are never comparative results.
+  if (waited.timedOut && !state.rehearsal) {
+    state.waitingForLoad = { at: isoOf(clock), lane: step.lane, slot: step.slot, arm: step.arm, attempt: step.attempt, waited };
+    (state.deferredLoads ??= []).push(state.waitingForLoad);
+    return null;
+  }
   const startedAt = isoOf(clock);
   const launched = await launcher.launch({ arm: step.arm, lane: step.lane, slot: step.slot, attempt: step.attempt });
   const attempt = await attemptOf({ step, launched, waited, startedAt, endedAt: isoOf(clock), out, protocol, protocolSha256, build: launcher.build, assumeRefreshHz });
@@ -218,7 +269,7 @@ async function playAttempt({ launcher, step, state, protocol, protocolSha256, ou
 // in the order they run; `slots` ([from, to]) limits the slots of each lane (a rehearsal's short run); the injected `runCheck` (the instrument's self-check), `read` (the load average),
 // `clock`, `where` (the commit, machine and system of the record) and `lockFile` (the lock against another campaign on the machine) are the real ones unless a test supplies its own.
 export async function runCampaign({
-  launcher, protocol, protocolSha256, out, lanes, slots = null, rehearsal = false, resume = false, maxWaitSeconds = DEFAULT_MAX_WAIT_SECONDS, assumeRefreshHz = null,
+  launcher, protocol, protocolSha256, out, lanes, slots = null, rehearsal = false, resume = false, maxWaitSeconds = DEFAULT_MAX_WAIT_SECONDS, loadStableSeconds = 0, assumeRefreshHz = null,
   runCheck = runSelfCheck, read = readLoad, clock = defaultClock, where = currentMachine, lockFile = undefined, log = () => undefined,
 }) {
   const problems = [...protocolErrors(protocol), ...optionsErrors(protocol, { lanes, slots })];
@@ -226,6 +277,9 @@ export async function runCampaign({
   const limit = protocol.runs?.load?.limit1MinuteAverage;
   if (!(Number.isFinite(limit) && limit > 0)) {
     problems.push(`runs.load.limit1MinuteAverage is not a finite positive number (${JSON.stringify(limit) ?? "missing"}): the wait for the load cannot tell a quiet machine`);
+  }
+  if (!Number.isFinite(maxWaitSeconds) || maxWaitSeconds < 0 || !Number.isFinite(loadStableSeconds) || loadStableSeconds < 0 || loadStableSeconds > maxWaitSeconds) {
+    problems.push("--max-wait and --load-stable take finite seconds, 0 or more; --load-stable cannot exceed --max-wait");
   }
   // A launcher that runs the exports headless (the Release launcher in its rehearsal mode) draws and paces nothing: it can play a rehearsal and nothing else.
   if (launcher.rehearsalOnly === true && !rehearsal) {
@@ -245,7 +299,7 @@ export async function runCampaign({
     if (launcher.selfCheck === "unsupported") {
       throw new Error(RELEASE_SELF_CHECK_REFUSAL);
     }
-    const state = await openState({ launcher, prepared, protocolSha256, out, statePath, options: { lanes, slots, rehearsal, assumeRefreshHz }, maxWaitSeconds, resume, clock, where, log });
+    const state = await openState({ launcher, prepared, protocol, protocolSha256, out, statePath, options: { lanes, slots, rehearsal, assumeRefreshHz }, maxWaitSeconds, loadStableSeconds, resume, clock, where, log });
     const save = async () => {
       state.updated = isoOf(clock);
       state.unreported = unreportedOf(state);
@@ -262,7 +316,14 @@ export async function runCampaign({
     let validity = assess(state, protocol);
     let step = nextStep(state, protocol, validity);
     while (step.kind === "launch") {
-      validity = await playAttempt({ launcher, step, state, protocol, protocolSha256, out, read, clock, maxWaitSeconds, assumeRefreshHz, log });
+      const judged = await playAttempt({ launcher, step, state, protocol, protocolSha256, out, read, clock, maxWaitSeconds, loadStableSeconds, assumeRefreshHz, log });
+      if (judged === null) {
+        await save();
+        const summary = { ...summaryOf(state, protocol, validity, "waiting"), waitingForLoad: state.waitingForLoad, deferredLoads: state.deferredLoads };
+        await writeAtomic(path.join(out, "summary.json"), `${JSON.stringify(summary, null, 2)}\n`);
+        return { status: "waiting", state, campaign: null, formatErrors: [], analysis: null, analysisError: "load wait timed out; no attempt launched, use --resume", summary };
+      }
+      validity = judged;
       step = nextStep(state, protocol, validity);
       await save();
     }
@@ -280,13 +341,13 @@ export async function runCampaign({
 const FLAGS = new Set(["--campaign", "--resume", "--rehearsal"]);
 
 export function parseArguments(argv, protocol) {
-  const options = { campaign: false, lanes: DEFAULT_LANES, build: null, out: null, exports: null, resume: false, rehearsal: false, slots: null, maxWaitSeconds: DEFAULT_MAX_WAIT_SECONDS, assumeRefreshHz: null };
+  const options = { campaign: false, lanes: DEFAULT_LANES, build: null, out: null, exports: null, resume: false, rehearsal: false, slots: null, maxWaitSeconds: DEFAULT_MAX_WAIT_SECONDS, loadStableSeconds: 0, assumeRefreshHz: null };
   const text = {};
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (FLAGS.has(argument)) {
       options[argument.slice(2)] = true;
-    } else if (["--lanes", "--build", "--out", "--exports", "--slots", "--max-wait", "--assume-refresh-hz"].includes(argument)) {
+    } else if (["--lanes", "--build", "--out", "--exports", "--slots", "--max-wait", "--load-stable", "--assume-refresh-hz"].includes(argument)) {
       if (index + 1 >= argv.length || argv[index + 1].startsWith("--")) {
         throw new Error(`${argument} takes a value`);
       }
@@ -296,7 +357,7 @@ export function parseArguments(argv, protocol) {
     }
   }
   if (!options.campaign) {
-    throw new Error("use --campaign --lanes presented,unlimited --build release|debug --out <directory> [--exports <directory>] [--resume] [--max-wait <seconds>] [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]");
+    throw new Error("use --campaign --lanes presented,unlimited --build release|debug --out <directory> [--exports <directory>] [--resume] [--max-wait <seconds>] [--load-stable <seconds>] [--rehearsal [--slots <a-b>] [--assume-refresh-hz <n>]]");
   }
   options.lanes = text["--lanes"] === undefined ? DEFAULT_LANES : text["--lanes"].split(",");
   options.build = text["--build"] ?? null;
@@ -323,11 +384,16 @@ export function parseArguments(argv, protocol) {
       throw new Error("--assume-refresh-hz <n> is a positive number and only for a rehearsal: a campaign reads the refresh rate back and never assumes it");
     }
   }
-  if (text["--max-wait"] !== undefined) {
-    options.maxWaitSeconds = Number(text["--max-wait"]);
-    if (!(options.maxWaitSeconds >= 0)) {
-      throw new Error("--max-wait takes a number of seconds, 0 or more");
+  for (const [flag, key] of [["--max-wait", "maxWaitSeconds"], ["--load-stable", "loadStableSeconds"]]) {
+    if (text[flag] !== undefined) {
+      options[key] = Number(text[flag]);
+      if (!Number.isFinite(options[key]) || options[key] < 0) {
+        throw new Error(`${flag} takes finite seconds, 0 or more`);
+      }
     }
+  }
+  if (options.loadStableSeconds > options.maxWaitSeconds) {
+    throw new Error("--load-stable cannot exceed --max-wait");
   }
   if (options.build === "release" && options.exports === null) {
     throw new Error("--build release needs --exports <directory>: the exports of the three arms, <A|B|C>/frontier-comparison-export.json beside the .app of each");
@@ -346,7 +412,7 @@ async function main(argv) {
   const launcher = options.build === "release" ? createReleaseLauncher({ exportsDirectory: options.exports, windowed: !options.rehearsal }) : createDebugLauncher();
   const result = await runCampaign({
     launcher, protocol, protocolSha256: sha256(bytes), out: options.out, lanes: options.lanes, slots: options.slots, rehearsal: options.rehearsal, resume: options.resume,
-    maxWaitSeconds: options.maxWaitSeconds, assumeRefreshHz: options.assumeRefreshHz, log: (line) => console.log(line),
+    maxWaitSeconds: options.maxWaitSeconds, loadStableSeconds: options.loadStableSeconds, assumeRefreshHz: options.assumeRefreshHz, log: (line) => console.log(line),
   });
   for (const stop of result.state.stopped) {
     console.error(`STOPPED ${JSON.stringify(stop)}`);
@@ -356,7 +422,7 @@ async function main(argv) {
   }
   const off = Object.keys(unavailableLanes(result.state, protocol));
   console.log(`FRONTIER_COMPARISON_CAMPAIGN_${result.status.toUpperCase()}: ${options.out}, ${result.state.attempts.length} attempt(s), analysis ${result.analysis === null ? `refused (${result.analysisError})` : result.analysis.status}${off.length > 0 ? `, lane(s) N/A: ${off}` : ""}`);
-  process.exitCode = result.status === "done" && result.formatErrors.length === 0 ? 0 : 1;
+  process.exitCode = result.status === "waiting" ? 2 : result.status === "done" && result.formatErrors.length === 0 ? 0 : 1;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
