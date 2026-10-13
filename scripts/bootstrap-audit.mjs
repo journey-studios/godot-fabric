@@ -9,6 +9,8 @@ export const STATUSES = ["runs", "replaced", "host", "pending", "not-applicable"
 export const REQUIRED_DECISIONS = ["encoding", "performance", "performance-classes", "starvation"];
 const SCOPES = ["1_0", "post_1_0"];
 const HOST_ENTRY = "src/initialize.js";
+// The toolchain's list of the Metro polyfills every host build injects ahead of the first module.
+const POLYFILL_LIST = "sdk/toolchain/metro-polyfills.mjs";
 const OWN_TASK = "GF-05";
 
 const NODE_KEYS = ["status", "reason", "evidence", "slice", "owner", "decision", "verifyIn"];
@@ -46,6 +48,31 @@ function importsOf(ts, source) {
     }
   }
   return { imports, calls };
+}
+
+// The specifier of an RN module that RN's package exports does not reach (src/private/...) is spelled the way src/private-interface.js
+// spells such seams: a path into node_modules, which the platform plugin resolves for the importing file alone.
+const importSpellings = (module) => [module, `../node_modules/${module}`];
+
+// The Metro polyfills the toolchain injects: the strings of `export const METRO_POLYFILLS = [...]`, in order, or undefined when
+// the file is missing or no longer has that shape.
+function injectedPolyfills(ts, source) {
+  if (source === undefined) {
+    return undefined;
+  }
+  const sf = parse(ts, POLYFILL_LIST, source);
+  for (const statement of sf.statements) {
+    if (!ts.isVariableStatement(statement) || !statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+      continue;
+    }
+    for (const declaration of statement.declarationList.declarations) {
+      if (ts.isIdentifier(declaration.name) && declaration.name.text === "METRO_POLYFILLS" && declaration.initializer &&
+        ts.isArrayLiteralExpression(declaration.initializer) && declaration.initializer.elements.every((element) => ts.isStringLiteral(element))) {
+        return declaration.initializer.elements.map((element) => element.text);
+      }
+    }
+  }
+  return undefined;
 }
 
 // Setup modules such as setUpDOM export a function that must be called; importing them installs nothing.
@@ -87,6 +114,7 @@ function createContext({ audit, scan, polyfills, version, tasks, ts, readSource 
     // Everything the pinned chain installs, for the decisions that name globals.
     chainGlobals: new Set(scan.steps.flatMap((step) => step.globals)),
     hostImports: hostEntry === undefined ? undefined : importsOf(ts, hostEntry),
+    injected: injectedPolyfills(ts, readSource(POLYFILL_LIST)),
     ids: new Set(),
   };
 }
@@ -256,19 +284,21 @@ function checkRuns(ctx, where, { module, upstreamPath }) {
   if (!hostImports) {
     return;
   }
-  if (!hostImports.imports.has(module)) {
+  const spelled = importSpellings(module).find((specifier) => hostImports.imports.has(specifier));
+  if (spelled === undefined) {
     issue(where, `claims runs but ${HOST_ENTRY} does not import ${module}`);
     return;
   }
   const upstream = readSource(upstreamPath);
-  const binding = hostImports.imports.get(module);
+  const binding = hostImports.imports.get(spelled);
   if (upstream !== undefined && exportsSetupFunction(ts, upstream) && (!binding || !hostImports.calls.has(binding))) {
     issue(where, `${upstreamPath} exports a setup function, and ${HOST_ENTRY} must import and call it for the step to run`);
   }
 }
 
 // The checks every status-bearing node shares, a step without parts or one part. `target` names the specifier that src/initialize.js
-// must import for `runs` and the repository path of that module.
+// must import for `runs` and the repository path of that module; a Metro polyfill has none, because the toolchain injects it
+// (checkInjected).
 function checkNode(ctx, where, node, target) {
   const { issue } = ctx;
   if (!STATUSES.includes(node.status)) {
@@ -285,7 +315,7 @@ function checkNode(ctx, where, node, target) {
     issue(where, `a ${node.status} entry needs evidence: the file and symbol that do the job`);
   }
   checkReferences(ctx, where, node);
-  if (node.status === "runs") {
+  if (node.status === "runs" && target !== undefined) {
     checkRuns(ctx, where, target);
   }
 }
@@ -335,7 +365,34 @@ function checkPolyfills(ctx) {
     if (!strings(entry.globals)) {
       issue(where, "globals must list the names it installs");
     }
-    checkNode(ctx, where, entry, { module: withoutExtension(entry.file), upstreamPath: `node_modules/${entry.file}` });
+    checkNode(ctx, where, entry, undefined);
+  }
+  checkInjected(ctx, byFile);
+}
+
+// A Metro polyfill runs when the toolchain injects it ahead of the first module of every bundle: the audit marks exactly the polyfills
+// that sdk/toolchain/metro-polyfills.mjs lists as `runs`, and the list follows the order in which RN hands them to Metro. Whether each
+// builder passes the list to esbuild is certified by the probe that reads the console before and after any module body.
+function checkInjected(ctx, byFile) {
+  const { polyfills, injected, issue } = ctx;
+  if (injected === undefined) {
+    issue("polyfills", `${POLYFILL_LIST} does not export METRO_POLYFILLS as a list of strings`);
+    return;
+  }
+  for (const file of injected) {
+    if (!polyfills.includes(file)) {
+      issue(`polyfill ${file}`, `${POLYFILL_LIST} injects it and @react-native/js-polyfills does not hand it to Metro`);
+    } else if (byFile.get(file)?.status !== "runs") {
+      issue(`polyfill ${file}`, `${POLYFILL_LIST} injects it and the audit does not mark it runs`);
+    }
+  }
+  for (const [file, entry] of byFile) {
+    if (entry.status === "runs" && !injected.includes(file)) {
+      issue(`polyfill ${file}`, `claims runs but ${POLYFILL_LIST} does not inject it`);
+    }
+  }
+  if (!same(injected.filter((file) => polyfills.includes(file)), polyfills.filter((file) => injected.includes(file)))) {
+    issue("polyfills", `${POLYFILL_LIST} injects them in an order other than the one RN hands them to Metro`);
   }
 }
 

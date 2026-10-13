@@ -7,6 +7,7 @@ import {fileURLToPath} from "node:url";
 import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
+import {metroPolyfills} from "../sdk/toolchain/metro-polyfills.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {createAssetPipeline, publishAssets} from "../sdk/toolchain/asset-plugin.mjs";
 
@@ -22,8 +23,9 @@ const digest = content => createHash("sha256").update(content).digest("hex");
 // and its siblings (default src/), and plugins are esbuild plugins that go
 // before the platform plugin, such as an in-memory override of one SDK file. A
 // control names its bundle and receipt through name, and its seams and sources
-// are the paths of the SDK it bundles.
-export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references, platformRoot = path.join(root, "src"), plugins = []}) {
+// are the paths of the SDK it bundles. Every bundle starts with the Metro polyfills, as a consumer's does; inject names files
+// that run before even those (a probe that records what the host defines before any JS of the bundle), given as project paths.
+export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references, platformRoot = path.join(root, "src"), plugins = [], inject = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundlePath = path.join(output, name + "-probe.js");
@@ -31,6 +33,7 @@ export async function bundleNativeProbe({name, entryPoint, sources, seams, bundl
   const result = await build({absWorkingDir: root, entryPoints: [entryPoint],
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
+    inject: [...inject.map(file => path.join(root, file)), ...metroPolyfills(id => requireSdk.resolve(id))],
     mainFields: ["main"], resolveExtensions: godotExtensions,
     plugins: [assets.plugin, ...plugins, platformPlugin(platformRoot, id => requireSdk.resolve(id))]});
   const inputs = Object.keys(result.metafile.inputs);

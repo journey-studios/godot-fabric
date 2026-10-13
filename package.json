@@ -88,6 +88,7 @@
     "test:animated": "node --test tests/native-animated-native.test.mjs",
     "test:frame-clock": "node --test tests/frame-clock-native.test.mjs",
     "test:performance": "node --test tests/performance-native.test.mjs",
+    "test:js-globals": "node --test tests/js-globals-native.test.mjs",
     "test:frontier-baseline": "node --test tests/frontier-baseline-native.test.mjs",
     "test:layout-animation": "node --test tests/layout-animation-native.test.mjs",
     "test:mobile-density": "node --test tests/mobile-density-native.test.mjs",
@@ -123,6 +124,7 @@
     "test:export:options": "node --test tests/macos-export-options-native.test.mjs"
   },
   "dependencies": {
+    "@react-native/js-polyfills": "0.87.1",
     "nativewind": "4.2.7",
     "react": "19.2.3",
     "react-native": "0.87.1",

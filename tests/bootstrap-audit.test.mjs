@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { REQUIRED_DECISIONS, STATUSES, checkBootstrapAudit, metroPolyfills } from "../scripts/bootstrap-audit.mjs";
 import { scanBootstrap } from "../scripts/parity-upstream-scan.mjs";
+import { METRO_POLYFILLS, metroPolyfills as injectInputs } from "../sdk/toolchain/metro-polyfills.mjs";
 
 // GF-05 slice A. docs/compatibility/bootstrap-audit-0.87.1.json says, step by step, what replaces each module of RN's InitializeCore
 // chain. This gate fails when the pinned chain and the audit disagree, when the evidence the audit cites is stale, and when a step
@@ -47,6 +48,13 @@ const XHR = "Libraries/Core/setUpXHR.js";
 const GLOBALS = "Libraries/Core/setUpGlobals.js";
 const NAVIGATOR = "Libraries/Core/setUpNavigator.js";
 const DOM = "src/private/setup/setUpDOM.js";
+const ERROR_HANDLING = "Libraries/Core/setUpErrorHandling.js";
+const POLYFILL_LIST = "sdk/toolchain/metro-polyfills.mjs";
+const CONSOLE = "@react-native/js-polyfills/console.js";
+const ERROR_GUARD = "@react-native/js-polyfills/error-guard.js";
+const polyfill = (copy, file) => copy.audit.polyfills.find((entry) => entry.file === file);
+// A copy of the toolchain's polyfill list with another list of polyfills in it.
+const listing = (files) => `export const METRO_POLYFILLS = [${files.map((file) => JSON.stringify(file)).join(", ")}];\n`;
 
 test("the committed audit matches RN's pinned chain and every piece of evidence it cites", () => {
   const issues = checkBootstrapAudit(inputs);
@@ -72,6 +80,15 @@ test("the audit covers the whole pinned chain, the Metro polyfills and the user'
   assert.equal(byId.get("starvation").slice, "F");
   assert.equal(step({ audit }, "Libraries/Core/setUpPerformance.js").decision, "performance");
   assert.equal(step({ audit }, "src/private/setup/setUpPerformanceModern.js").decision, "performance-classes");
+});
+
+test("the polyfills the toolchain injects are the ones the audit marks runs, resolved to RN's own files", () => {
+  assert.deepEqual(METRO_POLYFILLS, inputs.audit.polyfills.filter((entry) => entry.status === "runs").map((entry) => entry.file));
+  const resolve = (specifier) => path.join(root, "node_modules", specifier);
+  assert.deepEqual(injectInputs(resolve), METRO_POLYFILLS.map(resolve));
+  for (const file of injectInputs(resolve)) {
+    assert.ok(existsSync(file), file);
+  }
 });
 
 test("fails when RN's chain gains a step the audit does not list", () => {
@@ -276,7 +293,7 @@ test("fails when a step has no status or an unknown one", () => {
 });
 
 test("fails when a step has no reason where one is required", () => {
-  for (const [file, status] of [[NAVIGATOR, "pending"], ["Libraries/ReactNative/AppRegistry.js", "replaced"], ["Libraries/Core/setUpRegeneratorRuntime.js", "host"], ["Libraries/Core/checkNativeVersion.js", "not-applicable"]]) {
+  for (const [file, status] of [[ERROR_HANDLING, "pending"], ["Libraries/ReactNative/AppRegistry.js", "replaced"], ["Libraries/Core/setUpRegeneratorRuntime.js", "host"], ["Libraries/Core/checkNativeVersion.js", "not-applicable"]]) {
     const missing = mutate((copy) => {
       delete step(copy, file).reason;
     });
@@ -298,9 +315,9 @@ test("fails when a step has no reason where one is required", () => {
 
 test("fails when a pending step names a slice that is not in the plan", () => {
   const unknown = mutate((copy) => {
-    step(copy, NAVIGATOR).slice = "Z";
+    step(copy, ERROR_HANDLING).slice = "Z";
   });
-  assert.ok(mentions(unknown, NAVIGATOR, "names a slice of the plan"), explain(unknown));
+  assert.ok(mentions(unknown, ERROR_HANDLING, "names a slice of the plan"), explain(unknown));
   const none = mutate((copy) => {
     delete part(copy, TIMERS, "react-microtasks").slice;
   });
@@ -336,10 +353,10 @@ test("fails when a runs step is not imported by src/initialize.js", () => {
   });
   assert.ok(mentions(dropped, XHR, "claims runs", "does not import react-native/Libraries/Core/setUpXHR"), explain(dropped));
   const claimed = mutate((copy) => {
-    Object.assign(step(copy, NAVIGATOR), { status: "runs" });
-    delete step(copy, NAVIGATOR).slice;
+    Object.assign(step(copy, ERROR_HANDLING), { status: "runs" });
+    delete step(copy, ERROR_HANDLING).slice;
   });
-  assert.ok(mentions(claimed, NAVIGATOR, "claims runs"), explain(claimed));
+  assert.ok(mentions(claimed, ERROR_HANDLING, "claims runs"), explain(claimed));
 });
 
 test("fails when a runs step imports a setup function without calling it", () => {
@@ -360,6 +377,60 @@ test("fails when a runs step imports a setup function without calling it", () =>
     copy.readSource = (file) => file === "src/initialize.js" ? `${read(file)}\nimport setUpDOM from "react-native/src/private/setup/setUpDOM";\nsetUpDOM();\n` : read(file);
   });
   assert.deepEqual(called, [], "an imported and called setup function runs");
+});
+
+test("the real bootstrap imports and calls setUpDOM, and the gate notices when it does neither", () => {
+  assert.deepEqual(checkBootstrapAudit(inputs), []);
+  const uncalled = mutate((copy) => {
+    copy.readSource = (file) => file === "src/initialize.js" ? read(file).replace("\nsetUpDOM();\n", "\n") : read(file);
+  });
+  assert.ok(mentions(uncalled, DOM, "must import and call it"), explain(uncalled));
+  const unimported = mutate((copy) => {
+    copy.readSource = (file) => file === "src/initialize.js" ? read(file).replace(/import setUpDOM from "[^"]+";\n/, "").replace("\nsetUpDOM();\n", "\n") : read(file);
+  });
+  assert.ok(mentions(unimported, DOM, "claims runs", "does not import react-native/src/private/setup/setUpDOM"), explain(unimported));
+});
+
+test("fails when a polyfill the audit marks runs is not injected by the toolchain", () => {
+  assert.equal(polyfill(inputs, CONSOLE)?.status, "runs");
+  const dropped = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing([]) : read(file);
+  });
+  assert.ok(mentions(dropped, `polyfill ${CONSOLE}`, "claims runs", `${POLYFILL_LIST} does not inject it`), explain(dropped));
+  const missing = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? undefined : read(file);
+  });
+  assert.ok(mentions(missing, "polyfills", "does not export METRO_POLYFILLS as a list of strings"), explain(missing));
+  const reshaped = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? "export const METRO_POLYFILLS = polyfillsOf();\n" : read(file);
+  });
+  assert.ok(mentions(reshaped, "does not export METRO_POLYFILLS as a list of strings"), explain(reshaped));
+});
+
+test("fails when the toolchain injects a polyfill the audit does not mark runs, or one RN does not hand Metro", () => {
+  const pending = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE, ERROR_GUARD]) : read(file);
+  });
+  assert.ok(mentions(pending, `polyfill ${ERROR_GUARD}`, "does not mark it runs"), explain(pending));
+  const foreign = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing(["@react-native/js-polyfills/object-es8.js", CONSOLE]) : read(file);
+  });
+  assert.ok(mentions(foreign, "object-es8.js", "does not hand it to Metro"), explain(foreign));
+});
+
+test("fails when the toolchain injects the polyfills in another order than RN hands them to Metro", () => {
+  const swapped = mutate((copy) => {
+    Object.assign(polyfill(copy, ERROR_GUARD), { status: "runs" });
+    delete polyfill(copy, ERROR_GUARD).slice;
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing([ERROR_GUARD, CONSOLE]) : read(file);
+  });
+  assert.ok(mentions(swapped, "injects them in an order other than the one RN hands them to Metro"), explain(swapped));
+  const inOrder = mutate((copy) => {
+    Object.assign(polyfill(copy, ERROR_GUARD), { status: "runs" });
+    delete polyfill(copy, ERROR_GUARD).slice;
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE, ERROR_GUARD]) : read(file);
+  });
+  assert.deepEqual(inOrder, [], explain(inOrder));
 });
 
 test("fails when a step has both a status and parts, or too few parts", () => {

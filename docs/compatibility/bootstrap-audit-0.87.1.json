@@ -6,17 +6,17 @@
     "wrapper": "Libraries/Core/InitializeCore.js",
     "entry": "src/private/setup/setUpDefaultReactNativeEnvironment.js",
     "host": "src/initialize.js",
-    "note": "src/initialize.js replaces InitializeCore: sdk/toolchain/platform-plugin.mjs resolves ReactNativePrivateInitializeCore to it. runs is proven statically by its import of the upstream module; replaced and host by a file and a symbol that must still occur there (an anchor says which occurrence when it occurs more than once)."
+    "note": "src/initialize.js replaces InitializeCore: sdk/toolchain/platform-plugin.mjs resolves ReactNativePrivateInitializeCore to it. runs is proven statically by its import of the upstream module (and its call, for a setup function), or, for a Metro polyfill, by sdk/toolchain/metro-polyfills.mjs, which lists what every host build injects ahead of the first module; replaced and host by a file and a symbol that must still occur there (an anchor says which occurrence when it occurs more than once)."
   },
   "statuses": {
-    "runs": "The upstream module is imported unchanged by src/initialize.js.",
+    "runs": "The upstream module runs unchanged: src/initialize.js imports it (and calls it, for a default-exported setup function), or, for a Metro polyfill, the build injects it ahead of the first module (sdk/toolchain/metro-polyfills.mjs).",
     "replaced": "Our code does the step's job; evidence names the file and symbol, and the reason says why.",
     "host": "The C++ host, or the engine it links, provides it; evidence names the file and symbol.",
     "pending": "Not done yet; slice names the GF-05 slice that does it.",
     "not-applicable": "RN's step does not apply to this host; the reason says why, and owner names the GF task that owns the gap when another one does."
   },
   "slices": {
-    "B": "JS-installed globals. src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, RN's console polyfill replaces the host's console stub, and the host's performance and console stubs are removed (native build and headless probe).",
+    "B": "JS-installed globals (done). src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, the build injects RN's console polyfill ahead of every module, and the host no longer defines performance or console, only nativePerformanceNow and nativeLoggingHook (native build; headless probe tests/js-globals-native.test.mjs).",
     "C": "The error path. The error-guard polyfill's ErrorUtils, RN's setUpErrorHandling and the host's RN$handleException (JsErrorHandler) replace the host's bare failure recording.",
     "D1": "RN$enableMicrotasksInReact. React's microtask path switches on as in RN bridgeless; high regression risk, so it runs behind a full suite sweep.",
     "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build).",
@@ -70,11 +70,10 @@
       "file": "@react-native/js-polyfills/console.js",
       "summary": "Metro polyfill that replaces global.console with RN's over nativeLoggingHook: log, info, warn, error, trace, debug, table, group, groupEnd, groupCollapsed, assert and stubs for time, timeEnd, timeStamp, count, countReset and createTask.",
       "globals": ["console"],
-      "status": "pending",
-      "slice": "B",
-      "reason": "The host evaluates a console with only log, warn and error, so info, debug, trace, table, group and the rest do not exist. Slice B runs RN's polyfill over the host's nativeLoggingHook.",
+      "status": "runs",
+      "reason": "Metro evaluates the polyfills before the module system, so before any module body; an esbuild bundle has no such phase, and its `inject` option is the equivalent (esbuild puts an injected file ahead of the entry's imports). Every host build passes the list in sdk/toolchain/metro-polyfills.mjs, which the gate reads and the probe confirms: the first module of the bundle already finds RN's console. The host defines no console of its own, only the nativeLoggingHook the polyfill calls, which prints the message as a HERMES: line.",
       "evidence": [
-        { "file": "native/application_runtime.cpp", "symbol": "globalThis.console={log" },
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
         { "file": "native/application_runtime.cpp", "symbol": "bind(\"nativeLoggingHook\"" }
       ]
     },
@@ -125,7 +124,7 @@
       "summary": "The entry function: a once-only guard, then the chain below, with developer tools behind __DEV__ and enableDeveloperTools.",
       "globals": [],
       "status": "replaced",
-      "reason": "src/initialize.js does the entry's job. It imports the host runtime and every upstream setup module this audit lists as runs, and the bundle's module cache is the once-only guard. enableDeveloperTools is moot because __DEV__ is false.",
+      "reason": "src/initialize.js does the entry's job. It imports the upstream setup modules this audit lists as runs in RN's order, with the host runtime where RN installs promises and timers, and the bundle's module cache is the once-only guard. The Metro polyfills RN's bundler runs first are not imported there: the build injects them. enableDeveloperTools is moot because __DEV__ is false.",
       "evidence": [
         { "file": "src/initialize.js", "symbol": "import \"./native-module-runtime\"" },
         { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
@@ -139,11 +138,10 @@
       "gates": [],
       "summary": "Defines window and self as the global object, and process, process.env and process.env.NODE_ENV.",
       "globals": ["process", "process.env", "process.env.NODE_ENV", "self", "window"],
-      "status": "pending",
-      "slice": "B",
-      "reason": "None of window, self, process or process.env exists at run time: the host's bootstrap script defines global, __DEV__, performance and console, and the bundler only substitutes the literal process.env.NODE_ENV at build time.",
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js, so window and self are the global object, and process.env.NODE_ENV is 'production' at run time as well as in the literal the bundler substitutes at build time. The host's bootstrap script defines only global and __DEV__.",
       "evidence": [
-        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" },
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
         { "file": "sdk/toolchain/build.mjs", "symbol": "\"process.env.NODE_ENV\"" }
       ]
     },
@@ -155,9 +153,8 @@
       "gates": [],
       "summary": "Registers lazy getters for DOMRect, DOMRectReadOnly, DOMRectList, HTMLCollection, NodeList, Node, Document, CharacterData, Text, Element, HTMLElement, Event, EventTarget and CustomEvent, and defines RN$isNativeEventTargetEventDispatchingEnabled.",
       "globals": ["CharacterData", "CustomEvent", "DOMRect", "DOMRectList", "DOMRectReadOnly", "Document", "Element", "Event", "EventTarget", "HTMLCollection", "HTMLElement", "Node", "NodeList", "RN$isNativeEventTargetEventDispatchingEnabled", "Text"],
-      "status": "pending",
-      "slice": "B",
-      "reason": "src/initialize.js does not import setUpDOM, so none of the 14 DOM globals nor RN$isNativeEventTargetEventDispatchingEnabled exists. The module only registers lazy getters over RN's own DOM modules, some of which the event-target code already imports directly."
+      "status": "runs",
+      "reason": "Imported and called unchanged by src/initialize.js, so the 14 DOM globals resolve (lazily, over RN's own DOM modules, some of which the event-target code already imports directly) and RN$isNativeEventTargetEventDispatchingEnabled exists. RN's package exports do not reach the module, so src/initialize.js spells the import as a path into node_modules, as src/private-interface.js does for its seams, and the platform plugin resolves it for that file alone."
     },
     {
       "id": "setUpPerformance",
@@ -167,12 +164,11 @@
       "gates": [],
       "summary": "Installs the fallback performance object (now, mark, measure, clearMarks, clearMeasures) when there is no NativePerformance module and no global.performance, otherwise runs setUpPerformanceModern.",
       "globals": ["performance"],
-      "status": "pending",
-      "slice": "B",
-      "reason": "The host installs a performance stub with only now before any JS runs, and RN's fallback installs only when global.performance is missing, so mark, measure, clearMarks and clearMeasures do not exist. Slice B removes the stub; the fallback then reads the host's nativePerformanceNow.",
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js. RN's fallback installs only when global.performance is missing, so the host no longer defines a performance stub (it had only now); the fallback's now() reads the host's nativePerformanceNow, and mark, measure, clearMarks and clearMeasures exist and return nothing, as on RN without NativePerformance.",
       "decision": "performance",
       "evidence": [
-        { "file": "native/application_runtime.cpp", "symbol": "globalThis.performance={now:nativePerformanceNow}" },
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
         { "file": "native/application_runtime.cpp", "symbol": "bind(\"nativePerformanceNow\"" }
       ]
     },
@@ -372,9 +368,8 @@
       "gates": [],
       "summary": "Defines global.navigator, or sets navigator.product, to 'ReactNative'.",
       "globals": ["navigator", "navigator.product"],
-      "status": "pending",
-      "slice": "B",
-      "reason": "global.navigator is not defined, so navigator.product is undefined where RN reports 'ReactNative'."
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js, so navigator.product is 'ReactNative' as on RN iOS and Android."
     },
     {
       "id": "setUpBatchedBridge",

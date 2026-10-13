@@ -59,6 +59,12 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         if (importer !== path.join(platformRoot, "private-interface.js")) return;
         return { path: path.join(rnRoot, "src/private/renderer/events/dispatchNativeEvent.js") };
       });
+      builder.onResolve({ filter: /^\.\.\/node_modules\/react-native\/src\/private\/setup\/setUpDOM$/ }, ({ importer }) => {
+        // RN does not export its DOM setup module. Only the bootstrap file (the Godot counterpart of
+        // setUpDefaultReactNativeEnvironment) resolves it, against the SDK's RN.
+        if (importer !== path.join(platformRoot, "initialize.js")) return;
+        return { path: path.join(rnRoot, "src/private/setup/setUpDOM.js") };
+      });
       builder.onResolve({ filter: /^react-native\/src\/private\/featureflags\/ReactNativeFeatureFlags$/ }, ({ importer }) => {
         // The original virtualized lists import this unexported RN module. Only
         // that package resolves it; other code keeps RN's package exports.

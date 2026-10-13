@@ -1160,10 +1160,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       }
       return jsi::Value::undefined();
     });
-    evaluate("globalThis.global=globalThis; globalThis.__DEV__=false;"
-        "globalThis.performance={now:nativePerformanceNow};"
-        "globalThis.console={log:(...a)=>nativeLoggingHook(a.join(' '),0),"
-        "warn:(...a)=>nativeLoggingHook(a.join(' '),1),error:(...a)=>nativeLoggingHook(a.join(' '),2)};");
+    // Only what RN's own JS expects to find: neither performance nor console is defined here. The bundle starts with RN's console
+    // polyfill (Metro runs it before any module) over nativeLoggingHook, and RN's setUpPerformance installs the fallback performance
+    // over nativePerformanceNow.
+    evaluate("globalThis.global=globalThis; globalThis.__DEV__=false;");
   }
   jsi::Value evaluate(const std::string &source) {
     ExecutionScope execution(*this);
