@@ -4,7 +4,7 @@
 
 The merged candidate preserves `tasks`, `phases`, `sequences`, `releaseChecklist`, `integrationChecklist` and `decisions` exactly from main `38caaea22a891fceb2f1195b9b39c1e5b6af7413`. This includes GF-01 S1 from #153. `summarize()` is identical with and without the milestone: 32/156 checkpoints, 20.5128%, 0/39 required items complete. The milestone's documented mobile exclusions affect its own denominator only.
 
-[validation.json](validation.json) records the full local contracts, targeted merge checks, current-base guards, publication scan and byte-for-byte raw/analysis reproduction. Native jobs skipped by the contracts are separate from the actual local Release campaign; the stopped campaign supplies no performance conclusion.
+[validation.json](validation.json) records the full local contracts, targeted merge checks, current-base guards, publication scan and byte-for-byte raw/analysis reproduction. The native-export test skipped by the contracts is separate from the actual local Release exports; the stopped campaign supplies no performance conclusion.
 
 ```sh
 node scripts/milestone-guards.mjs --check --base 38caaea22a891fceb2f1195b9b39c1e5b6af7413
