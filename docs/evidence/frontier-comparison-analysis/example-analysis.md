@@ -18,8 +18,8 @@ Generated from a report in the format `godot-fabric.frontier-comparison-report/v
 ### Protocol
 
 - Protocol: `frontier-comparison-protocol`, item V05-10
-- SHA-256: `2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93`
-- Amendments: 4
+- SHA-256: `153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e`
+- Amendments: 5
 
 **Frozen values**
 
@@ -69,8 +69,8 @@ Generated from a report in the format `godot-fabric.frontier-comparison-report/v
 **Load**
 
 - Command: `sysctl vm.loadavg`
-- Limit of the 1-minute average: 2
-- Highest before an attempt: 5.3; after: 1.28
+- Limit of the 1-minute average: 6
+- Highest before an attempt: 9.3; after: 1.28
 
 ### Deviations from the protocol
 
@@ -123,7 +123,7 @@ The campaign did not stop.
 
 | Lane | Slot | Arm | Slot state | Accepted attempt | Attempt | Report | Vsync | Load before | Load after | Reasons |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| presented | 4 | C | accepted | 2 | 1 | written | ENABLED at 120 Hz | 5.3 | 0.53 | load / before (value 5.3, limit 2) |
+| presented | 4 | C | accepted | 2 | 1 | written | ENABLED at 120 Hz | 9.3 | 0.53 | load / before (value 9.3, limit 6) |
 
 ## Primary outcome
 
@@ -546,8 +546,8 @@ Partial report rule applies: false.
 ## Reproduction
 
 - Raw data: synthetic: no raw data
-- Campaign SHA-256: `62eccb0534b33f16192da2d06eed2e474289c14377f7da893bd293725e129eed`
-- Protocol SHA-256: `2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93`
+- Campaign SHA-256: `1b48e6c775da6126625541df62b6dbcb69399f73b9c0030b9111e493f7263dd2`
+- Protocol SHA-256: `153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e`
 - Seed: 20261009
 - Resamples: 10000
 

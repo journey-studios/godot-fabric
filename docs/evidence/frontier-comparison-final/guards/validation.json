@@ -1,0 +1,82 @@
+{
+  "tree": "9ba77d6",
+  "base": "38caaea22a891fceb2f1195b9b39c1e5b6af7413",
+  "commands": [
+    {
+      "command": "npm run test:contracts",
+      "exitCode": 0,
+      "nodeCounts": [
+        {
+          "field": "tests",
+          "count": 13
+        },
+        {
+          "field": "pass",
+          "count": 13
+        },
+        {
+          "field": "fail",
+          "count": 0
+        },
+        {
+          "field": "skipped",
+          "count": 0
+        },
+        {
+          "field": "tests",
+          "count": 44
+        },
+        {
+          "field": "pass",
+          "count": 44
+        },
+        {
+          "field": "fail",
+          "count": 0
+        },
+        {
+          "field": "skipped",
+          "count": 0
+        },
+        {
+          "field": "tests",
+          "count": 737
+        },
+        {
+          "field": "pass",
+          "count": 736
+        },
+        {
+          "field": "fail",
+          "count": 0
+        },
+        {
+          "field": "skipped",
+          "count": 1
+        }
+      ],
+      "pythonTests": 37
+    },
+    {
+      "command": "node --test tests/migration-dashboard.test.mjs tests/parity-inventory.test.mjs",
+      "exitCode": 0,
+      "passed": 24
+    },
+    {
+      "command": "node scripts/milestone-guards.mjs --check --base origin/main",
+      "exitCode": 0,
+      "x9": "clean",
+      "x10": "clean"
+    },
+    {
+      "command": "node scripts/publication-scan.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "archived raw verification and analysis/Markdown byte comparison",
+      "exitCode": 0,
+      "attempts": 41,
+      "rawFiles": 84
+    }
+  ]
+}

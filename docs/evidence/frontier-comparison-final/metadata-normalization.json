@@ -1,0 +1,20 @@
+{
+  "rule": "Replace the absolute checkout prefix with <checkout> in operational metadata only. Raw scenario reports, scenario logs, campaign.json and report.json are byte-identical to the originals.",
+  "files": [
+    {
+      "file": "before-amendment/campaign-state.json",
+      "originalSha256": "b1b80ec11009558fc2783223f3fdb56b1aaeb820679a941551dddc00b143f3ac",
+      "publishedSha256": "29fc92e1e95cdc7a46672c21823d9130d7bac134f8a23a9bff97e93fe024420d"
+    },
+    {
+      "file": "stopped-load-6/campaign-state.json",
+      "originalSha256": "9bc8daeb03a5131ca01a45c4faf93aa04523f248e3fed07c41551e064fd56240",
+      "publishedSha256": "a5fbaaf5eb5701c91c6e795bd8d11cc4d25d5911be0a6479e4ad2b05b4e1a96d"
+    },
+    {
+      "file": "stopped-load-6/summary.json",
+      "originalSha256": "24053ffd1637fd9ae58d0f2e7b2df2de79522fb122f17456e4d261093ba0f430",
+      "publishedSha256": "027fe592f030aa7dac0f21874bfd0bb7e6d072c7b2193fa5cc4bbd753a9145e5"
+    }
+  ]
+}

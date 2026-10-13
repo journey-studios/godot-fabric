@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "P2 V05-07 concluído: export macOS Release assinado, replay do Frontier no hash dourado com perfil limpo e segunda máquina limpa num runner hospedado, com CI hospedada e Pages; o 0.5 segue no comparativo final (V05-10)."
+    "focusTitle": "0.5 macOS: implementação e export entregues; comparativo final aguardando campanha válida. Dados da campanha interrompida e auditorias X9/X10 preservados; iPhone fora do recorte pelo NO-GO."
   },
   "updatedAt": "2026-10-13T18:00:00.000Z",
   "source": {
-    "commit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/7e6f0b1252326cf26cc1bccca039a6aff93716b8",
-    "scope": "V05-07 do marco 0.5 completo: plugin e assinatura (#75), o replay de 12 turnos no hash dourado no .app Release com perfil limpo (#135) e a segunda máquina limpa num runner hospedado (#147, registro em #150), todos com CI hospedada e Pages. Limites registrados: a imagem do runner traz Node e Xcode, que o app é mostrado sem usar; Developer ID e notarização ficam fora.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/147"
+    "commit": "afb81c96406927f3c9912a1c3dba0f32291ec6a8",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/afb81c96406927f3c9912a1c3dba0f32291ec6a8",
+    "scope": "0.5 macOS: recorte do NO-GO refletido sem reivindicar critérios físicos; auditorias X9/X10 documentadas e aprovadas. Campanha Release interrompida pelo limite de carga, com 41 tentativas retidas e 9 aceitas por braço; execução, métricas, relatório final, X6 e X11 seguem abertos. GF-01 S1 da main preservado; nenhuma aceitação da 1.0 muda nesta PR.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/152"
   },
   "phases": [
     {
@@ -3391,7 +3391,7 @@
     {
       "id": "0.5",
       "title": "0.5 · Frontier: HUD em React Native guiada por um jogo",
-      "summary": "Recorte de prioridade sobre a 1.0, não uma versão paralela. Prova um app real usável: um mini-jogo estilo Civilization 2 em Godot (mapa, regras e turnos) com toda a HUD em React Native, cujos painéis mudam conforme o contexto do jogo. Fecha no macOS exportado e, depois, em um iPhone físico. Termina com um comparativo do jogo sem HUD, com HUD nativa do Godot e com HUD React Native. A 1.0 não muda: IDs, pesos, prioridades e aceite dos GF-xx continuam valendo; o 0.5 só diz o que pegar primeiro.",
+      "summary": "Recorte de prioridade sobre a 1.0. Frontier tem mapa, regras e turnos em Godot e HUD contextual em React Native, com export macOS Release validado. O NO-GO do iPhone devolve o mobile ao GF-35. O fechamento macOS ainda depende do comparativo completo: a campanha de carga 6,0 parou antes do mínimo. IDs, pesos, prioridades e aceite dos GF-xx continuam valendo.",
       "validations": [
         {
           "id": "app-driven-hud",
@@ -3522,7 +3522,13 @@
               "id": "iphone",
               "label": "Mesma prova com toque real no iPhone, incluindo arrastar o mapa com um dedo enquanto outro dedo está num botão da HUD (liga a V05-09)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             }
           ]
         },
@@ -4247,25 +4253,49 @@
               "id": "densidade",
               "label": "Densidade por canvas_items: Dimensions.scale coincide com a escala da tela e Pressable de 44 pt mede 44 ± 0,5 pt (simulador)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "insets",
               "label": "Provedor de insets a partir de get_display_safe_area e orientação paisagem travada; HUD dentro dos insets",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "toque",
               "label": "Política de toque sem duplicação: 20 toques são 20 onPress, toque na HUD gera 0 eventos no mundo; arrastar o mapa com um dedo com outro dedo na HUD",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "segundo-plano",
               "label": "AppState em segundo plano e retorno preserva timers, lista e estado do jogo",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             }
           ]
         },
@@ -4287,31 +4317,54 @@
             "V05-08"
           ],
           "acceptance": "O consumidor do jogo, exportado em Release e assinado com o time Apple do usuário, passa os estágios do gate em um iPhone arm64 físico em paisagem (modelo, iOS e taxa de atualização registrados), com recibo manual nomeado. Um NO-GO fecha o 0.5 como macOS completo. Hoje o script ios-consumer-export.py recusa execução em aparelho e usa CODE_SIGNING_ALLOWED=NO; o estágio G0 (o fixture de fumaça iOS, não o jogo) começa no dia 0.",
-          "blocker": "NO-GO do usuário em 2026-10-09: sem iPhone, Apple Team nem Developer Mode; o 0.5 fecha como macOS completo e o mobile volta ao GF-35, sem alterar a 1.0.",
           "criteria": [
             {
               "id": "g0",
               "label": "G0: boot assinado do fixture de fumaça iOS (FabricIOSSmoke, gerado por scripts/ios-consumer-export.py a partir do consumers/minimal) no aparelho (physicalDeviceExecuted=true): 22/22 checks do fixture e mediana de 5 cold launches até o primeiro commit React (limiar proposto de 3,0 s)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "export",
               "label": "Export iOS com --device e --team (assinatura local, nenhuma credencial no repo) e coleta de contadores por devicectl em user://device-gate.json",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "toque",
               "label": "G1 e G2: métricas, safe area e toque real (mundo contra HUD; 20 toques são 20 onPress; arrastar o mapa com um dedo na HUD)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "turno",
               "label": "G3: turno completo do jogo com IA no aparelho, medido contra o controle do macOS; 30 s em segundo plano e retorno; recibo manual nomeado",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "decisao",
@@ -4423,7 +4476,13 @@
               "id": "iphone",
               "label": "Mesmas medições no iPhone, se o V05-09 for GO, com a taxa de atualização efetiva registrada; se o vsync não puder ser desligado lá, valem o tempo de CPU por quadro e a folga com vsync ligado",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "relatorio",
@@ -4541,14 +4600,24 @@
         {
           "id": "X9",
           "label": "A 1.0 não se move: diff de tasks, phases, sequences, checklists e decisions vazio; summarize() idêntico com e sem milestones",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Auditoria de isolamento da 0.5: dados da 1.0 idênticos à main; exceção histórica #74 mantida explicitamente, sem alteração em peso ou checkpoint",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/guards/README.md"
+            }
+          ]
         },
         {
           "id": "X10",
           "label": "Cauda congelada: 0 fatias novas de pointer-*, EventTarget, Document ou hover durante o 0.5",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Auditoria da cauda congelada: nenhuma fatia nova de pointer-*, EventTarget, Document ou hover",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/guards/README.md"
+            }
+          ]
         },
         {
           "id": "X11",
@@ -4556,7 +4625,8 @@
           "done": false,
           "evidence": []
         }
-      ]
+      ],
+      "blocker": "A campanha Release parou pela regra de carga: 41 tentativas, 9 aceitas por braço de 12 exigidas; vaga 28 esgotou 3 tentativas. Sem estatísticas ou veredito de desempenho; é necessária uma nova campanha completa em janela estável."
     }
   ],
   "releaseChecklist": [
@@ -4852,6 +4922,27 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/d7ad486aa9a268317ef6da0e71f61a7670e99275/docs/compatibility/README.md"
     },
     {
+      "id": "milestone-0-5-load-stopped-campaign-and-audits-20261013",
+      "at": "2026-10-13T14:57:13.478Z",
+      "taskIds": [],
+      "message": "Campanha comparativa Release real, gráfica, com o protocolo e emenda 5 pré-registrados: 41 tentativas, 27 aceitas (9 A, 9 B, 9 C) e 14 rejeitadas por carga; a vaga 28 do A esgotou 3 tentativas, e a análise recusou produzir estatísticas. Arquivo com 96 membros conferidos por SHA-256, 41 derivações brutas e 84 arquivos de cenário/log/autoteste verificados; análise e Markdown reproduzidos byte a byte. Os critérios execução, métricas e relatório e as saídas X6/X11 permanecem abertos. X9/X10 fecham por auditoria, com a exceção histórica #74 explícita e a cauda sem novas fatias. GF-01 S1 preservado no merge; nenhum dado protegido da 1.0 mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/README.md"
+    },
+    {
+      "id": "milestone-0-5-no-go-item-scope-20261013",
+      "at": "2026-10-13T13:23:00.797Z",
+      "taskIds": [],
+      "message": "A contagem de itens da 0.5 exclui o item integralmente fora do recorte. V05-09 tem a decisão NO-GO concluída: seus quatro critérios físicos continuam done=false e não aplicáveis; o bloqueio do aparelho pertence ao GF-35 e não bloqueia o fechamento macOS já decidido. Nenhum critério físico foi executado, e nenhuma task, peso ou checkpoint da 1.0 muda. O comparativo final segue em execução.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+    },
+    {
+      "id": "milestone-0-5-protocol-amendment-5-load-20261013",
+      "at": "2026-10-13T12:05:28.092Z",
+      "taskIds": [],
+      "message": "Emenda 5 autorizada pelo usuário antes de qualquer tentativa comparativa: limite operacional de carga da campanha macOS passa de 2,0 a 6,0, com leituras antes/depois e rejeição acima do limite. A campanha anterior tem zero tentativas e autoteste gráfico aprovado. Orçamentos congelados, margem de não-inferioridade, braços, ordem, mínimo de execuções, regras de apresentação/paridade e estatística não mudam. Nenhum dado histórico ou número da 1.0 muda; execução, métricas e relatório seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f984f37ec360e55a9d3f1671e1fec75613a880a7/docs/research/frontier-comparison-protocol.md"
+    },
+    {
       "id": "gf-01-contract-inventory-s1-b2dd6c1",
       "at": "2026-10-13T12:00:00.000Z",
       "taskIds": [
@@ -4859,6 +4950,13 @@
       ],
       "message": "GF-01, fatia S1 do contrato (só Node e dados, sem execução nativa): o inventário de contratos do RN 0.87.1 passou de 8.113 para 8.254 linhas (formato 2) e passou a cobrir o que as declarações geradas não dizem, lido com o parser do TypeScript sobre o JS do RN. runtime-global (72): as propriedades que a cadeia do InitializeCore instala no objeto global (performance, navigator.product, os timers, fetch, URL, Blob, WebSocket, regeneratorRuntime, __fetchSegment, RN$AppRegistry e as demais), cada uma com o arquivo instalador e as condições de cada instalação (__DEV__, RN$Bridgeless, flags de funcionalidade), sem descartar os arquivos condicionados. host-global (42): os nomes que o JS do RN lê e que o host precisa fornecer (nativeFabricUIManager, nativeModuleProxy, __turboModuleProxy, RN$Bridgeless, HermesInternal e outros), por uma varredura documentada de Libraries/ e src/ com regra de nome, lista de permissão pequena e exclusões com motivo no próprio arquivo. native-command (27): os supportedCommands das 12 chamadas de codegenNativeCommands, com a assinatura de cada comando. Valores públicos e membros de API cujo módulo tem implementação .ios.js ou .android.js, ou cujo nome termina em IOS ou Android, ganharam um marcador mecânico de plataforma (13 valores e 61 membros) que não decide aplicabilidade. As 8.113 linhas anteriores seguem iguais byte a byte, exceto pelo marcador; duas regenerações dão os mesmos bytes e um teste confere. O checkpoint contract do GF-01 segue aberto até o mapa de dono, escopo e aplicabilidade (S2) e o catálogo de polaridade das fixtures com o gate (S3). Nenhum checkpoint, peso ou denominador muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/b2dd6c19b712bd75f5341a5eb4c85f5b6431d710/docs/compatibility/README.md"
+    },
+    {
+      "id": "milestone-0-5-macos-no-go-accounting-20261013",
+      "at": "2026-10-13T11:38:12.227Z",
+      "taskIds": [],
+      "message": "O progresso da 0.5 passa a contar somente critérios aplicáveis ao fechamento macOS. Os 10 critérios mobile retirados pelo NO-GO continuam done=false, com motivo e evidência da decisão; nenhuma task, checkpoint, peso ou número da 1.0 muda. Execução, métricas, relatório e saídas do comparativo seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
     },
     {
       "id": "milestone-0-5-hosted-receipts-15-9e95bc6",

@@ -372,7 +372,7 @@ test("the parameters are read from the protocol when the script runs: a changed 
   changed.statistics.interval.resamples = 1000;
   changed.statistics.interval.level = 0.9;
   changed.decisionRule.margin.relative = 0.5;
-  changed.runs.load.limit1MinuteAverage = 6;
+  changed.runs.load.limit1MinuteAverage = 12;
   const changedSha256 = sha256(JSON.stringify(changed));
   const campaign = syntheticCampaign(changed, changedSha256, {lanes: ["presented"]});
   overLoaded(campaign.executions.find(execution => execution.slot === 4));
@@ -384,7 +384,7 @@ test("the parameters are read from the protocol when the script runs: a changed 
   const expected = intervalOf(bootstrapDifferences(entry.arms.C.perRun, entry.arms.B.perRun, {seed: 7, resamples: 1000}), 0.9);
   assert.deepEqual(entry.pairs.find(pair => pair.id === "C-B").interval, expected);
   assert.ok(close(entry.pairs.find(pair => pair.id === "C-B").margin.value, 0.5 * entry.arms.B.median), "the relative margin is the protocol's");
-  assert.deepEqual([slotOf(report, "presented", 4).state, slotOf(report, "presented", 4).accepted, slotOf(report, "presented", 4).rejected], ["accepted", 1, 0], "a load of 5.3 is within a limit of 6");
+  assert.deepEqual([slotOf(report, "presented", 4).state, slotOf(report, "presented", 4).accepted, slotOf(report, "presented", 4).rejected], ["accepted", 1, 0], "a load of 9.3 is within a limit of 12");
   assert.equal(report.sections.provenance.protocol.sha256, changedSha256);
   // The floor and the categories are the protocol's as well: a floor of 0 leaves 10% of B's median as the margin.
   const noFloor = structuredClone(protocol);
@@ -406,7 +406,7 @@ test("the report has the sections of the protocol in order, the frozen values an
   assert.ok(provenance.protocol.frozen.every(threshold => threshold.frozenAt === "2026-10-10"));
   assert.deepEqual([provenance.commit, provenance.deviations], ["synthetic-commit", []]);
   assert.deepEqual(provenance.vsync, [{lane: "presented", mode: "ENABLED", refreshHz: 120, executions: 36}, {lane: "unlimited", mode: "DISABLED", refreshHz: 120, executions: 36}]);
-  assert.deepEqual([provenance.load.limit1MinuteAverage, provenance.load.highestBefore < 2, provenance.load.highestAfter < 2], [2, true, true]);
+  assert.deepEqual([provenance.load.limit1MinuteAverage, provenance.load.highestBefore < 2, provenance.load.highestAfter < 2], [6, true, true]);
   assert.deepEqual([report.sections.decision.text, report.sections.limitations.text, report.sections["cost-of-change"].text], ["A decision.", "The limits.", "The change."]);
   const bare = analyze(build());
   assert.deepEqual([bare.sections.decision.text, bare.sections.limitations.text, bare.sections["cost-of-change"].text], [null, null, null], "the script writes no text of its own");
