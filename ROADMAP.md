@@ -1098,10 +1098,18 @@ checkpoint, weight or decision moves. The record is in
 **Progress.** The dashboard now accounts for that NO-GO in the macOS scope: the ten
 unexecuted mobile criteria retain `done: false` and gain a `notApplicable` reason
 with the decision's evidence. They are shown as outside the cut and excluded only
-from its progress denominator. V05-08 and V05-09's device work remain handed back
-to GF-35. This records the existing decision, not a device run or the milestone's
-closure: V05-10's execution, metrics and report and exits X6, X9, X10 and X11 remain
-open. No task, checkpoint, weight or denominator of the 1.0 changes.
+from its progress denominator. The entirely excluded item is also outside the item
+denominator. V05-09's applicable decision is complete; its device work and V05-08
+remain handed back to GF-35. This records the existing decision, not a device run.
+
+The [X9/X10 isolation audit](docs/evidence/frontier-comparison-final/guards/README.md)
+closes those exits, retaining the historical #74 exception explicitly. The first
+actual windowed Release campaign under amendment 5 stopped by the load rule: 41
+attempts, nine accepted per arm of twelve required, and slot 28 exhausted its three
+attempts. The [raw archive and stopped report](docs/evidence/frontier-comparison-final/README.md)
+are reproducible and supply no performance statistic. V05-10's execution, metrics
+and final report and exits X6/X11 remain open until a new complete campaign passes.
+No task, checkpoint, weight or denominator of the 1.0 changes in this slice.
 
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does

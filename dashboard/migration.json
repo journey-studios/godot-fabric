@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "P2 V05-07 concluído: export macOS Release assinado, replay do Frontier no hash dourado com perfil limpo e segunda máquina limpa num runner hospedado, com CI hospedada e Pages; o 0.5 segue no comparativo final (V05-10)."
+    "focusTitle": "0.5 macOS: implementação e export entregues; comparativo final aguardando campanha válida. Dados da campanha interrompida e auditorias X9/X10 preservados; iPhone fora do recorte pelo NO-GO."
   },
-  "updatedAt": "2026-10-13T13:23:00.797Z",
+  "updatedAt": "2026-10-13T14:57:13.478Z",
   "source": {
-    "commit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/7e6f0b1252326cf26cc1bccca039a6aff93716b8",
-    "scope": "V05-07 do marco 0.5 completo: plugin e assinatura (#75), o replay de 12 turnos no hash dourado no .app Release com perfil limpo (#135) e a segunda máquina limpa num runner hospedado (#147, registro em #150), todos com CI hospedada e Pages. Limites registrados: a imagem do runner traz Node e Xcode, que o app é mostrado sem usar; Developer ID e notarização ficam fora.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/147"
+    "commit": "afb81c96406927f3c9912a1c3dba0f32291ec6a8",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/afb81c96406927f3c9912a1c3dba0f32291ec6a8",
+    "scope": "0.5 macOS: recorte do NO-GO refletido sem reivindicar critérios físicos; auditorias X9/X10 documentadas e aprovadas. Campanha Release interrompida pelo limite de carga, com 41 tentativas retidas e 9 aceitas por braço; execução, métricas, relatório final, X6 e X11 seguem abertos. GF-01 S1 da main preservado; nenhuma aceitação da 1.0 muda nesta PR.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/152"
   },
   "phases": [
     {
@@ -3391,7 +3391,7 @@
     {
       "id": "0.5",
       "title": "0.5 · Frontier: HUD em React Native guiada por um jogo",
-      "summary": "Recorte de prioridade sobre a 1.0, não uma versão paralela. Prova um app real usável: um mini-jogo estilo Civilization 2 em Godot (mapa, regras e turnos) com toda a HUD em React Native, cujos painéis mudam conforme o contexto do jogo. Fecha no macOS exportado e, depois, em um iPhone físico. Termina com um comparativo do jogo sem HUD, com HUD nativa do Godot e com HUD React Native. A 1.0 não muda: IDs, pesos, prioridades e aceite dos GF-xx continuam valendo; o 0.5 só diz o que pegar primeiro.",
+      "summary": "Recorte de prioridade sobre a 1.0. Frontier tem mapa, regras e turnos em Godot e HUD contextual em React Native, com export macOS Release validado. O NO-GO do iPhone devolve o mobile ao GF-35. O fechamento macOS ainda depende do comparativo completo: a campanha de carga 6,0 parou antes do mínimo. IDs, pesos, prioridades e aceite dos GF-xx continuam valendo.",
       "validations": [
         {
           "id": "app-driven-hud",
@@ -4600,14 +4600,24 @@
         {
           "id": "X9",
           "label": "A 1.0 não se move: diff de tasks, phases, sequences, checklists e decisions vazio; summarize() idêntico com e sem milestones",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Auditoria de isolamento da 0.5: dados da 1.0 idênticos à main; exceção histórica #74 mantida explicitamente, sem alteração em peso ou checkpoint",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/guards/README.md"
+            }
+          ]
         },
         {
           "id": "X10",
           "label": "Cauda congelada: 0 fatias novas de pointer-*, EventTarget, Document ou hover durante o 0.5",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Auditoria da cauda congelada: nenhuma fatia nova de pointer-*, EventTarget, Document ou hover",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/guards/README.md"
+            }
+          ]
         },
         {
           "id": "X11",
@@ -4615,7 +4625,8 @@
           "done": false,
           "evidence": []
         }
-      ]
+      ],
+      "blocker": "A campanha Release parou pela regra de carga: 41 tentativas, 9 aceitas por braço de 12 exigidas; vaga 28 esgotou 3 tentativas. Sem estatísticas ou veredito de desempenho; é necessária uma nova campanha completa em janela estável."
     }
   ],
   "releaseChecklist": [
@@ -4901,6 +4912,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-load-stopped-campaign-and-audits-20261013",
+      "at": "2026-10-13T14:57:13.478Z",
+      "taskIds": [],
+      "message": "Campanha comparativa Release real, gráfica, com o protocolo e emenda 5 pré-registrados: 41 tentativas, 27 aceitas (9 A, 9 B, 9 C) e 14 rejeitadas por carga; a vaga 28 do A esgotou 3 tentativas, e a análise recusou produzir estatísticas. Arquivo com 96 membros conferidos por SHA-256, 41 derivações brutas e 84 arquivos de cenário/log/autoteste verificados; análise e Markdown reproduzidos byte a byte. Os critérios execução, métricas e relatório e as saídas X6/X11 permanecem abertos. X9/X10 fecham por auditoria, com a exceção histórica #74 explícita e a cauda sem novas fatias. GF-01 S1 preservado no merge; nenhum dado protegido da 1.0 mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/README.md"
+    },
     {
       "id": "milestone-0-5-no-go-item-scope-20261013",
       "at": "2026-10-13T13:23:00.797Z",

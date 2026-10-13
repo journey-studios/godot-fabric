@@ -1,5 +1,7 @@
 # The execution of the final comparison, part 1: the scenario, the player and the rehearsal in the three arms
 
+**Update, 2026-10-13:** the actual windowed Release campaign ran under amendment 5 and stopped at slot 28 after three load-only rejections. It retains 41 attempts, nine accepted per arm (twelve required), and produces no performance statistics. The [runtime record, raw archive and reproducible stopped report](../evidence/frontier-comparison-final/README.md) supersede the earlier statement that no comparative process had run. The rehearsals below remain historical records; execution, metrics and the final report criteria remain open.
+
 Status: documentation, a scenario in GDScript, a scripted player, a runner in Node and their tests. It is the first part of the criterion `execucao` of V05-10 and **closes nothing**: no comparative execution has
 happened, and **this note states no result**. The rehearsal it describes ran the scenario once in each arm, in a Debug build, on a provisioned copy of the consumer, three times (headless, and windowed in the
 presented and in the unlimited lane); the object it produces is marked as a rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal
