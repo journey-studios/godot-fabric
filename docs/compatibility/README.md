@@ -42,7 +42,7 @@ the kind-specific fields below, sorted by id; regenerating gives identical bytes
 
 | Kind | Derived from | Notes |
 | --- | --- | --- |
-| `value`, `type`, `prop`, `event`, `style`, `ref-member`, `api-member`, `type-member` | `types_generated/index.d.ts`, resolved by the TypeScript checker | `value` and `api-member` rows also carry `platformImplementation` and `platformEvidence` |
+| `value`, `type`, `prop`, `event`, `style`, `ref-member`, `api-member`, `type-member` | `types_generated/index.d.ts`, resolved by the TypeScript checker | `value` and `api-member` rows also carry `platformImplementation` and `platformEvidence`; a member is a row only when RN declares it (`react-native` or `@react-native/*`), not when the checker reaches it through `String`, `Object.prototype` or React's classes |
 | `global-value`, `global-type`, `global-member` | `src/types/globals.d.ts` | the globals RN declares |
 | `runtime-global` | the syntax trees of the modules `InitializeCore` runs (`setUp*`, `polyfill*`, `AppRegistry`) | `owner` is the object the property sits on, `installer` the module the entry function requires, `sites` the installs with their conditions |
 | `host-global` | reads of `global.<name>` (and four free identifiers) in `Libraries/` and `src/` that no RN file installs | host naming rule plus a checked-in allow-list; every other read is excluded with a reason |
@@ -73,9 +73,10 @@ counts by kind, scope and applicability), and `node scripts/parity-map.mjs --che
   are GF-13's. Platform-specific props of a cross-platform component (ScrollView's iOS bounce props, TextInput's Android props) stay
   with that component's task, whose acceptance says "where applicable"; GF-24 owns the OS-only components and APIs it names.
 - **scope**: `1_0` (a target of the 1.0), `post_1_0` (a target later; the 13 unstable exports of GF-40, the default-off
-  observers, lazy bundles) or `out` (never a target, with a reason: members of ECMAScript built-ins that the inventory read through
-  a string-literal type, the members every class instance inherits from `Object.prototype` and `React.Component`, and the
-  globals only the legacy bridge reads).
+  observers, lazy bundles) or `out` (never a target, with a reason: the React.Component lifecycle and state members and the two
+  statics that `VirtualizedList` re-declares, which React calls and an app does not, and the globals only the legacy bridge reads).
+  The members of ECMAScript built-ins and of `Object.prototype` and `React.Component` that the inventory used to read through a
+  string-literal type or a class instance are no longer rows, so no rule sweeps them.
 - **applicability**, per platform. `ios` and `android` are the pinned original React Native apps the differential runs compare
   against; `godot` is this host (`Platform.OS` is `"godot"`). Each is one of:
   - `applies`: the contract exists on that platform and its owner must make it behave as upstream does.
