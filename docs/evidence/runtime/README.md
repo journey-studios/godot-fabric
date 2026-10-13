@@ -148,3 +148,91 @@ Surface stop suppresses the portable microtask/immediate callbacks owned by
 this bootstrap. Ordinary Promises have no general cancellation mechanism.
 Hardware input, DPI/font scale, OS app lifecycle and mobile Godot builds are
 separate milestones. GF-09 real system metrics remain Planned.
+
+## Bootstrap audit (slice A, 2026-10-13)
+
+The host does not run RN's `InitializeCore`. `sdk/toolchain/platform-plugin.mjs` resolves
+`ReactNativePrivateInitializeCore`, the import through which the renderer reaches it, to
+`src/initialize.js`, which loads the host runtime, `RCTDeviceEventEmitter` and `setUpXHR` and nothing
+else. "Integrate upstream core initialization or an audited equivalent" was therefore not true: no
+document said, step by step, what replaces each module of RN's chain. Slice A writes that document
+and a gate that keeps it true. It changes no behaviour: `src/initialize.js`, the host and the runtime
+are untouched, and slices B to F are the ones that change them.
+
+**The audit** is `docs/compatibility/bootstrap-audit-0.87.1.json`. It has one entry per module of the
+chain, in RN's order: the two wrapper files (`InitializeCore.js`, `src/setup-env.js`), the entry
+function, the 19 modules the entry function requires and the 3 modules those load
+(`setUpPerformanceModern`, `setUpFuseboxReactDevToolsDispatcher`, `setUpReactRefresh`), plus the two
+Metro polyfills RN hands its bundler (`@react-native/js-polyfills`: `console.js` and
+`error-guard.js`), which run before the chain and define `console` and `ErrorUtils`. The step list is
+not typed by hand: `scanBootstrap` in `scripts/parity-upstream-scan.mjs` derives it from the pinned
+sources with the scan behind the contract inventory (the inventory's output is unchanged). Each entry
+carries the conditions around the step (`__DEV__`, feature flags, `RN$Bridgeless`) and the globals it
+installs, both copied from the scan. A step that does several separable things (`setUpTimers`) is
+split into parts, and the parts must cover its globals exactly once.
+
+| Status | Means | Evidence the gate checks |
+| --- | --- | --- |
+| `runs` | RN's module runs unchanged in `src/initialize.js` | `src/initialize.js` imports it (and calls it, for a default-exported setup function) |
+| `replaced` | our code does the step's job | the file still contains the symbol; a reason says why |
+| `host` | the C++ host, or the Hermes it links, provides it | the file still contains the symbol; a reason says why |
+| `pending` | not done yet | the GF-05 slice (`B`, `C`, `D1`, `D2`, `E` or `F`) that does it, and a reason |
+| `not-applicable` | RN's step does not apply to this host | a reason, and `owner` when another GF task owns the gap |
+
+Where things stand at slice A, counting a split step by its parts: 1 `runs` (`setUpXHR`), 6 `replaced`
+(the three upstream entry files, `AppRegistry`, and `queueMicrotask` and `setImmediate` out of
+`setUpTimers`), 4 `host` (`polyfillPromise`, `setUpRegeneratorRuntime`, and the timers and the
+animation frame out of `setUpTimers`), 9 `pending` and 12 `not-applicable` (the `__DEV__` developer
+tools for GF-29, `setUpAlert` for GF-23, `setUpBatchedBridge` for GF-25, the segment fetcher, the two
+flag-gated observers and the modern performance classes for GF-40). The JSON is the record; this
+paragraph is a snapshot.
+
+**The gate** is `tests/bootstrap-audit.test.mjs` (rules in `scripts/bootstrap-audit.mjs`), part of
+`test:parity` and so of `test:contracts`. It fails when:
+
+- RN's chain gains, loses, renames or reorders a step, or a step's role or conditions change, or a
+  step installs a global the audit does not list (an RN upgrade has to be audited first);
+- evidence is stale: a `runs` module that `src/initialize.js` no longer imports, a `replaced` or
+  `host` file that no longer contains its symbol (or an anchor that is no longer unique), or a
+  `pending` slice, `owner`, `decision` or `verifyIn` that does not resolve;
+- an entry has no status, or no reason where one is required, or a `replaced` or `host` entry cites
+  no evidence;
+- one of the recorded decisions (`encoding`, `performance`, `performance-classes`, `starvation`) is dropped.
+
+Each failure mode has a mutation test on a copy of the real inputs (an extra upstream step, a stale
+symbol, a missing reason, and the rest), so the gate is shown to reject what it claims to.
+
+**The user's decisions for GF-05 (2026-10-13)** are recorded in the audit and enforced by the gate:
+
+- *Encoding*: parity with Hermes. `TextEncoder`, `atob` and `btoa` are present and tested;
+  `TextDecoder` is absent, with a negative fixture, as on RN iOS and Android. Slice E probes it.
+- *Performance*: `performance.now`, `mark`, `measure`, `clearMarks` and `clearMeasures` are in 1.0,
+  through RN's `setUpPerformance` fallback, and slice B removes the host's `{now}` stub. The 11 Web
+  Performance classes that RN installs from `NativePerformance` move to `post_1_0` (GF-40) and are a
+  recorded parity gap, because RN iOS and Android have them.
+- *Starvation*: parity with RN bridgeless. What RN does under a Promise storm is measured, and the
+  host must behave the same; there is no deliberate deviation. Slice F measures it.
+
+**The plan for the pending entries.**
+
+| Slice | Does | Audit entries |
+| --- | --- | --- |
+| B | JS-installed globals; the host's `performance` and `console` stubs go | `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator`, the `console` polyfill |
+| C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` | `setUpErrorHandling`, the `error-guard` polyfill |
+| D1 | `RN$enableMicrotasksInReact` (high regression risk, full sweep) | `setUpTimers` part `react-microtasks` |
+| D2 | idle callbacks over `NativeIdleCallbacks` | `setUpTimers` part `idle-callbacks` |
+| E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision | `setUpXHR` (`verifyIn`), decision `encoding` |
+| F | callback exceptions and starvation against RN | `verifyIn` on the timers, animation frame, `queueMicrotask`, `setImmediate` and `polyfillPromise` entries |
+
+The audit found two things the slice list did not name. `setUpDOM` (14 DOM globals and
+`RN$isNativeEventTargetEventDispatchingEnabled`) is not imported, and no slice owned it; it is
+assigned to B with the other `polyfillGlobal` installers. The `__DEV__` steps, `setUpAlert` and
+`setUpBatchedBridge` are real gaps against RN's chain that belong to other tasks, and the audit names
+them as `not-applicable` with that owner instead of leaving them silent.
+
+**Limits.** Evidence is a file and a symbol, never a line number: the hub files (`application_runtime.cpp`,
+`src/runtime.js`) are edited by most slices, and an unrelated edit must not fail someone else's change.
+When a symbol occurs more than once in its file, the entry carries an `anchor`, a short text around it
+that occurs exactly once; a symbol that is renamed or removed, or an anchor that is stale or ambiguous,
+fails the gate. `runs` is a static claim (an import); the behaviour of each step is certified by the
+slice that owns it, with its own fixture.
