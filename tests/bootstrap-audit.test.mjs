@@ -419,3 +419,68 @@ test("fails when a step is listed twice or two entries share an id", () => {
   });
   assert.ok(mentions(shared, NAVIGATOR, "id that no other entry uses"), explain(shared));
 });
+
+// A hand-edited audit can hold anything where an entry belongs. The gate reports each such entry, by its index, and carries on with the rest:
+// it never reads a field of one, so it never throws.
+const MALFORMED = [null, 42, "console", [], {}, { file: 7 }, { file: "  " }];
+
+test("reports a malformed step or polyfill entry by its index instead of throwing", () => {
+  for (const value of MALFORMED) {
+    const label = JSON.stringify(value);
+    const asStep = mutate((copy) => {
+      copy.audit.steps[3] = value;
+    });
+    assert.ok(mentions(asStep, "step #3", "must be an object with a string file"), `${label}: ${explain(asStep)}`);
+    const asPolyfill = mutate((copy) => {
+      copy.audit.polyfills[0] = value;
+    });
+    assert.ok(mentions(asPolyfill, "polyfill #0", "must be an object with a string file"), `${label}: ${explain(asPolyfill)}`);
+  }
+  // The entry it replaced is a step RN has and the audit no longer lists, and the other entries are still judged.
+  const issues = mutate((copy) => {
+    copy.audit.steps[3] = null;
+    copy.audit.steps.find((entry) => entry?.file === NAVIGATOR).status = "done";
+  });
+  assert.ok(mentions(issues, "does not list it"), explain(issues));
+  assert.ok(mentions(issues, NAVIGATOR, "status must be one of"), explain(issues));
+});
+
+test("reports a malformed part of a split step instead of throwing", () => {
+  for (const value of [null, 7, "queue-microtask", [], undefined]) {
+    const issues = mutate((copy) => {
+      step(copy, TIMERS).parts[1] = value;
+    });
+    assert.ok(mentions(issues, TIMERS, "part #1", "must be an object"), `${JSON.stringify(value)}: ${explain(issues)}`);
+    assert.ok(mentions(issues, TIMERS, "the parts must cover exactly what the step installs"), explain(issues));
+  }
+});
+
+test("reports a malformed decision or list instead of throwing", () => {
+  for (const value of [null, 7, "encoding", []]) {
+    const issues = mutate((copy) => {
+      copy.audit.decisions[1] = value;
+    });
+    assert.ok(mentions(issues, "decision #1", "must be an object"), `${JSON.stringify(value)}: ${explain(issues)}`);
+  }
+  const notLists = mutate((copy) => {
+    copy.audit.decisions = "none";
+    copy.audit.steps = null;
+    copy.audit.polyfills = { file: "console.js" };
+  });
+  assert.ok(mentions(notLists, "step", "must be a list"), explain(notLists));
+  assert.ok(mentions(notLists, "polyfill", "must be a list"), explain(notLists));
+  assert.ok(mentions(notLists, "audit.decisions", "must be a list"), explain(notLists));
+  for (const audit of [null, "audit", 3, []]) {
+    assert.deepEqual(mutate((copy) => {
+      copy.audit = audit;
+    }), ["audit: must be an object"]);
+  }
+  const entries = mutate((copy) => {
+    step(copy, GLOBALS).evidence = [null, 3, "text", []];
+    step(copy, GLOBALS).verifyIn = 5;
+    copy.audit.decisions.find((decision) => decision.id === "performance-classes").globals = 5;
+  });
+  assert.ok(mentions(entries, GLOBALS, "must be {file, symbol}"), explain(entries));
+  assert.ok(mentions(entries, GLOBALS, "verifyIn must be a list"), explain(entries));
+  assert.ok(mentions(entries, "decision performance-classes", "globals must be a list"), explain(entries));
+});

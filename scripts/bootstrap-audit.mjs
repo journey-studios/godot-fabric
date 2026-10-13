@@ -19,6 +19,8 @@ const DECISION_KEYS = ["id", "date", "topic", "decision", "scope", "slice", "roa
 const EVIDENCE_KEYS = ["file", "symbol", "anchor"];
 
 const text = (value) => typeof value === "string" && value.trim() !== "";
+// What an entry of a list must be before anything reads a field of it: a hand-edited audit can hold null, a number, a string or a list there.
+const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const strings = (value) => Array.isArray(value) && value.every((item) => typeof item === "string" && item !== "");
 const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
 const withoutExtension = (file) => file.replace(/\.js$/, "");
@@ -83,7 +85,7 @@ function createContext({ audit, scan, polyfills, version, tasks, ts, readSource 
     audit, scan, polyfills, version, tasks, ts, readSource, issues,
     issue: (where, message) => issues.push(`${where}: ${message}`),
     slices: new Set(Object.keys(audit.slices ?? {})),
-    decisionIds: new Set((audit.decisions ?? []).map((decision) => decision.id)),
+    decisionIds: new Set((Array.isArray(audit.decisions) ? audit.decisions : []).filter(isObject).map((decision) => decision.id)),
     // Everything the pinned chain installs, for the decisions that name globals.
     chainGlobals: new Set(scan.steps.flatMap((step) => step.globals)),
     hostImports: hostEntry === undefined ? undefined : importsOf(ts, hostEntry),
@@ -91,6 +93,7 @@ function createContext({ audit, scan, polyfills, version, tasks, ts, readSource 
   };
 }
 
+// `value` is an object: every caller has checked it and reported the entries that are not.
 function onlyKeys({ issue }, where, value, allowed) {
   for (const key of Object.keys(value)) {
     if (!allowed.includes(key)) {
@@ -138,7 +141,14 @@ function checkHeader(ctx) {
 function checkDecisions(ctx) {
   const { audit, slices, tasks, chainGlobals, decisionIds, issue } = ctx;
   const seen = new Set();
-  for (const decision of audit.decisions ?? []) {
+  if (audit.decisions !== undefined && !Array.isArray(audit.decisions)) {
+    issue("audit.decisions", "must be a list");
+  }
+  (Array.isArray(audit.decisions) ? audit.decisions : []).forEach((decision, index) => {
+    if (!isObject(decision)) {
+      issue(`decision #${index}`, "must be an object");
+      return;
+    }
     const where = `decision ${decision.id}`;
     onlyKeys(ctx, where, decision, DECISION_KEYS);
     if (!text(decision.id) || seen.has(decision.id)) {
@@ -165,12 +175,15 @@ function checkDecisions(ctx) {
     if (decision.scope === "post_1_0" && decision.roadmap === undefined) {
       issue(where, "a post_1_0 decision names the roadmap task that owns it");
     }
-    for (const name of decision.globals ?? []) {
+    if (decision.globals !== undefined && !strings(decision.globals)) {
+      issue(where, "globals must be a list of names");
+    }
+    for (const name of strings(decision.globals) ? decision.globals : []) {
       if (!chainGlobals.has(name)) {
         issue(where, `${name} is not installed by the pinned chain`);
       }
     }
-  }
+  });
   for (const id of REQUIRED_DECISIONS) {
     if (!decisionIds.has(id)) {
       issue("audit.decisions", `the user's decision ${id} of 2026-10-13 is missing`);
@@ -207,7 +220,7 @@ function checkEvidence(ctx, where, evidence) {
   }
   evidence.forEach((item, index) => {
     const at = `${where}.evidence[${index}]`;
-    if (!item || typeof item !== "object") {
+    if (!isObject(item)) {
       issue(at, "must be {file, symbol} with an optional anchor");
       return;
     }
@@ -243,7 +256,10 @@ function checkReferences(ctx, where, node) {
   if (node.decision !== undefined && !decisionIds.has(node.decision)) {
     issue(where, `decision ${node.decision} is not recorded`);
   }
-  for (const slice of node.verifyIn ?? []) {
+  if (node.verifyIn !== undefined && !strings(node.verifyIn)) {
+    issue(where, "verifyIn must be a list of slices");
+  }
+  for (const slice of strings(node.verifyIn) ? node.verifyIn : []) {
     if (!slices.has(slice)) {
       issue(where, `verifyIn names ${slice}, which is not in the plan`);
     }
@@ -296,13 +312,19 @@ function compareFiles({ issue }, kind, listed, upstream, label) {
   if (!Array.isArray(listed)) {
     issue(kind, "must be a list");
   }
-  const audited = Array.isArray(listed) ? listed : [];
-  for (const entry of audited) {
+  // An entry that is not an object with a file is reported by its place in the list and left out of everything below, which reads its file.
+  const audited = [];
+  (Array.isArray(listed) ? listed : []).forEach((entry, index) => {
+    if (!isObject(entry) || !text(entry.file)) {
+      issue(`${kind} #${index}`, "must be an object with a string file");
+      return;
+    }
+    audited.push(entry);
     if (byFile.has(entry.file)) {
       issue(`${kind} ${entry.file}`, "listed twice");
     }
     byFile.set(entry.file, entry);
-  }
+  });
   const upstreamFiles = new Set(upstream);
   for (const file of upstream) {
     if (!byFile.has(file)) {
@@ -354,6 +376,10 @@ function checkParts(ctx, where, entry, upstream, target) {
   const covered = new Map();
   const names = new Set();
   entry.parts.forEach((part, index) => {
+    if (!isObject(part)) {
+      issue(`${where} part #${index}`, "must be an object");
+      return;
+    }
     const at = `${where} part ${part.name ?? index}`;
     onlyKeys(ctx, at, part, PART_KEYS);
     if (!text(part.name) || names.has(part.name)) {
@@ -427,6 +453,9 @@ function checkChain(ctx) {
 }
 
 export function checkBootstrapAudit(inputs) {
+  if (!isObject(inputs.audit)) {
+    return ["audit: must be an object"];
+  }
   const ctx = createContext(inputs);
   checkHeader(ctx);
   checkDecisions(ctx);
