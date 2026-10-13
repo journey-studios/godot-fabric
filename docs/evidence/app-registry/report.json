@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-app-registry",
+  "status": "verified-local-headless-retained-sabotages-and-regressions",
+  "executedAt": "2026-10-13",
+  "executionBaseCommit": "68bee92a72a91c504a48fefefad210bc5659d2a5",
+  "implementationCommit": "baa1c4cf1f12296996c390e4e17c99e1f33df568",
+  "sourceState": "every executed source and screenshot pin below verified against git show baa1c4cf1f12296996c390e4e17c99e1f33df568:<path>",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless"
+  },
+  "nativeHostSha256": "290c4a778a4b65132d5e2a1a5b7f4f97841146bb2bd94beaa5a7ab24d3837542",
+  "hostSource": "rebuilt in this worktree from the sources of main (68bee92): the slice changes no native code, so its control is the retained sabotages and not a previous host",
+  "commands": [
+    "npm run test:app-registry",
+    "node scripts/app-registry-sabotage.mjs",
+    "npm run example -- app-registry --headless",
+    "npm run example -- app-registry --capture",
+    "npm run test:application",
+    "npm run test:responders:shared-touches",
+    "npm run test:app-state",
+    "npm run test:scope-0.5",
+    "npm run test:contracts",
+    "npm run type-check",
+    "npm run check:static",
+    "npm run check:publication",
+    "npm run test:dashboard",
+    "node scripts/milestone-guards.mjs --check --base origin/main"
+  ],
+  "bundle": {
+    "path": "build/app-registry-probe.js",
+    "sha256": "192ffc1bf1945ccf2cdaa0b2531394bb3cc9589921ce2f5b12ea52c576fdfe8f"
+  },
+  "executedSources": {
+    "tests/app-registry-fixture.jsx": "1b04ecb5096d08f5c8e07ea21c90f3c4a7f484231f95140ad019a2a07ec20700",
+    "tests/app-registry-probe.gd": "c4677df3a7c4fdc1a04d849c26a51df83cc212fb2d434cad51a3e65d75566f2c",
+    "tests/app-registry-native.test.mjs": "ac4c0d2ac68e280dc30a062113cd692baf23c4ca7925aa08016491c59e78cdf3",
+    "tests/app-registry-oracle.mjs": "8ffe944a5f994029a67a307bf07cd2a007c50f0c97dd8027d7e0431d1af5a9fb",
+    "tests/app-registry-sabotages.mjs": "ad2d3a20000aef003bf4a1b86e93173a729ed0bf4e4e078bf75e85f3db4ccdb9",
+    "scripts/app-registry-bundle.mjs": "e5edcc11b234210f275df138497991e38c41f1af467db7d367eb4116cae59fd3",
+    "scripts/app-registry-sabotage.mjs": "977cef6fc84e15e16aa51c718e10aa9333a5347728335adc719a6d17bb7bc61c",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "native/application_runtime.cpp": "b310a5f676011201d94fb1d45002111c533d396c68b26b27be756be1980b31d9",
+    "src/app-registry.js": "ccda584965514c4ccdfc3e413927ef514fc227742824f1183a5710c0efb974c8",
+    "src/render-application.jsx": "cc57317644bf2a2254b4e3bbb464dfefe682a0fdd34c5afb104cab8b1490db0e",
+    "src/react-native-platform.jsx": "f371fc9c3d8d8f19325871592d4e9535fb8f775b6b44b7e19b94af0246f77d77"
+  },
+  "originalReactNativeSources": {
+    "Libraries/ReactNative/AppRegistryImpl.js": "9f58cfbd0c060422203c10080ed1b520b333a02207125fc5d9b7b315429942a4",
+    "Libraries/ReactNative/RootTag.js": "4410d95aec445b54e9fa482c612833c9df3f32c88242357a1bfda438b62aaba4",
+    "Libraries/ReactNative/DisplayMode.js": "0415fa406147301dfe8013ae9217fd6a22e35ee3b78f7f83307d72f781e34138",
+    "Libraries/ReactNative/DeprecatedPerformanceLoggerStub.js": "951d0ab5a8b365c7c158f18d42273a77005d6f6f7c1a97503af0760b15f0436e",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/ReactNative/AppRegistry.js": "e17e38d218820f8916c8bb7a7ad8297dc8496ce7edf3abea2954c3f476c8cb47",
+    "Libraries/ReactNative/AppContainer-prod.js": "903202935c83a515ec3c70de813fbc65ba0891262a532c0faf63e5866a47700e",
+    "Libraries/ReactNative/renderApplication.js": "3d13a9004ebc75032aa3b694fe463d7c69c3a28b6817f1ead68f7e150b810814",
+    "Libraries/ReactNative/HeadlessJsTaskError.js": "256fd4d0e32d4135cb368e13b868dfcfc916312d8e2dbab713b9dbf12bb4f408",
+    "Libraries/ReactNative/NativeHeadlessJsTaskSupport.js": "4a9531f013bf8e220758885cb3916282089250747e222c7a9268722ee8eb79d7",
+    "ReactCommon/react/renderer/uimanager/AppRegistryBinding.cpp": "79247bb78ce5935db2f4abfa517e80dadd0b1c31fca232ea7d8796fa796876f5",
+    "types_generated/Libraries/ReactNative/AppRegistryImpl.d.ts": "d2323620f9ceedf153dc51c8921a9ad294d15e5f575bff13dd7fae8d63653b8e",
+    "types_generated/Libraries/ReactNative/AppRegistry.flow.d.ts": "7cd52bcb726e2028b42533d40624ccd3f71690eb9b1b8e958adb6cead981d579"
+  },
+  "probe": {
+    "checks": 41,
+    "passed": 41,
+    "failed": 0,
+    "allCurrentAssertionsPassed": true,
+    "checkNames": [
+      "facade/The facade is frozen and exposes exactly RN's nineteen AppRegistry members as functions",
+      "facade/Nothing is registered when the bundle loads: the facade imports AppRegistryImpl, which registers no LogBox",
+      "registry/registerComponent and registerRunnable return the key, registerSection and registerConfig return nothing",
+      "registry/getAppKeys lists every registered key in registration order, the first entry of the failed config included",
+      "registry/A config with neither run nor component fails with RN's own invariant after the entry before it",
+      "registry/A section is registerSection, a true section flag or a config's section; a false flag is not",
+      "registry/getSections answers the sections with the very runnables getRunnable answers",
+      "registry/getRegistry answers the section keys and every runnable, the same functions getRunnable answers",
+      "registry/getRunnable answers a function for a registered key and undefined for an unknown or an inherited name",
+      "registry/The answers of the getters are copies: changing them changes nothing",
+      "diagnostics/A key registered once is refused again through component, section, runnable and config, and twice in one config",
+      "diagnostics/The reserved keys __proto__, constructor and prototype are refused through every route",
+      "diagnostics/An empty, blank or non-string key, a missing provider or run function and a malformed config fail with a TypeError",
+      "diagnostics/The refusals register nothing: a refused config leaves none of its entries behind",
+      "headless/The four headless-task members fail with E_APP_REGISTRY_HEADLESS_TASK, an Error that names the member",
+      "headless/A headless call registers nothing, starts nothing and logs nothing: RN's own warning for a repeated task never appears",
+      "mount-A/The root's component gets its props and the root tag, and RootTagContext carries the same tag",
+      "mount-A/Without providers the root View is RN's default (it fills the surface, no background) and nothing wraps the content",
+      "providers/Setting the providers calls none of them: they apply when a runnable runs",
+      "mount-B/The root view style provider's style is on the root's native Control: background, corner radius and full size",
+      "mount-B/The wrapper provider's component wraps the content inside the root's padding, and the content sits inside the wrapper's",
+      "mount-B/The wrapper provider gets the appParameters and the key, the style provider the appParameters, the wrapper the initialProps",
+      "mount-B/The instrumentation hook gets the provider and RN's logger, and the component it returns renders the root's component",
+      "set-props/setSurfaceProps updates the running root's props and keeps its component state: no remount, no cleanup",
+      "set-props/RN logs the update, and the providers and the hook run again for the new run",
+      "run-application/runApplication on a running surface runs its component again with the new props, state kept",
+      "host-update/FabricSurface.update_props reaches the same root through RN's own binding, and the providers apply to it too",
+      "rerun-A/A root that was running takes the providers at its next run: the style and the wrapper appear, and the hook's component remounts the content",
+      "runnables/A runnable registered by registerRunnable or by a config's run gets the host's appParameters and display mode",
+      "runnables/A runnable that draws through a registered component, and a section, mount as roots like any component",
+      "runnables/A component registered after the roots exist mounts at once",
+      "unknown-root/runApplication and setSurfaceProps for a tag no surface owns fail with E_APP_REGISTRY_UNKNOWN_ROOT and render nothing",
+      "unknown-root/An unregistered key on a running surface fails with RN's own invariant",
+      "display-mode/A suspended display mode is refused (the pause and resume slice owns it) and leaves the root unchanged",
+      "unmount-api/unmountApplicationComponentAtRootTag logs RN's error and unmounts nothing: the root stays until the host stops it",
+      "stop-A/FabricSurface.unmount stops the root: React's cleanup runs once for its content and the root count drops",
+      "stop-A/The stopped root's tag is no surface any more: running it again fails and renders nothing",
+      "stop-A/The other roots keep running and keep updating",
+      "stop/Stopping the application releases every root without a diagnostic",
+      "stop/Every root's native Controls are created and deleted in balance",
+      "report/The AppRegistry report is saved with any failure visible"
+    ],
+    "reportSha256": "5cada21a53c29374d5e8cdf614dc336f3c9e38be26f8c77739a164d278848f24",
+    "logSha256": "3217030136d52bc7ae8ee008d8bc9160fdf3e5e6495b431e13f0fc034a087c55"
+  },
+  "oracle": {
+    "file": "tests/app-registry-oracle.mjs",
+    "independentOfProbe": true,
+    "sections": [
+      "members",
+      "script",
+      "mount",
+      "runs",
+      "surfaces",
+      "stop"
+    ],
+    "scriptRows": 39,
+    "declaredMembersReadFrom": "node_modules/react-native/types_generated/Libraries/ReactNative/AppRegistryImpl.d.ts",
+    "rnStringsReadFrom": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js"
+  },
+  "members": [
+    {
+      "name": "registerComponent",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:92-120",
+      "godot": "src/app-registry.js:79-85: RN's, with V2-D01; the section flag is no longer refused"
+    },
+    {
+      "name": "registerSection",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:133-138",
+      "godot": "src/app-registry.js:93-99: RN's, with V2-D01"
+    },
+    {
+      "name": "registerRunnable",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:125-128",
+      "godot": "src/app-registry.js:86-92: RN's, with V2-D01"
+    },
+    {
+      "name": "registerConfig",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:65-83",
+      "godot": "src/app-registry.js:60-78: RN's, V2-D01 checked for every entry before RN registers any"
+    },
+    {
+      "name": "getAppKeys",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:143-145",
+      "godot": "src/app-registry.js:100: RN's; native/application_runtime.cpp:778-789 mounts by it"
+    },
+    {
+      "name": "getSectionKeys",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:150-152",
+      "godot": "src/app-registry.js:101: RN's"
+    },
+    {
+      "name": "getSections",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:157-161",
+      "godot": "src/app-registry.js:102: RN's"
+    },
+    {
+      "name": "getRunnable",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:166-168",
+      "godot": "src/app-registry.js:104-106: RN's, undefined for an unregistered or inherited name"
+    },
+    {
+      "name": "getRegistry",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:173-178",
+      "godot": "src/app-registry.js:107: RN's"
+    },
+    {
+      "name": "setWrapperComponentProvider",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:47-51,106-108",
+      "godot": "src/app-registry.js:58: RN's; src/render-application.jsx:25-27 wraps the content"
+    },
+    {
+      "name": "setRootViewStyleProvider",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:57-59,109-110",
+      "godot": "src/app-registry.js:59: RN's; src/render-application.jsx:30 puts the style on the root View"
+    },
+    {
+      "name": "setComponentProviderInstrumentationHook",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:184-188,100-103",
+      "godot": "src/app-registry.js:108: RN's"
+    },
+    {
+      "name": "runApplication",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:197-216",
+      "godot": "src/app-registry.js:109-112: RN's for a running surface, E_APP_REGISTRY_UNKNOWN_ROOT otherwise; the host calls RN's own (native/application_runtime.cpp:744)"
+    },
+    {
+      "name": "setSurfaceProps",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:221-243",
+      "godot": "src/app-registry.js:113-116: RN's for a running surface, E_APP_REGISTRY_UNKNOWN_ROOT otherwise; FabricSurface.update_props takes RN's binding (native/application_runtime.cpp:865)"
+    },
+    {
+      "name": "unmountApplicationComponentAtRootTag",
+      "status": "exposed",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:251-255",
+      "godot": "src/app-registry.js:118: RN's, which only logs an error; the unmount is FabricSurface.unmount (native/application_runtime.cpp:1371)"
+    },
+    {
+      "name": "registerHeadlessTask",
+      "status": "typed error",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:263-271",
+      "godot": "src/app-registry.js:41-46,119: E_APP_REGISTRY_HEADLESS_TASK"
+    },
+    {
+      "name": "registerCancellableHeadlessTask",
+      "status": "typed error",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:280-292",
+      "godot": "src/app-registry.js:120: E_APP_REGISTRY_HEADLESS_TASK"
+    },
+    {
+      "name": "startHeadlessTask",
+      "status": "typed error",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:300-339",
+      "godot": "src/app-registry.js:121: E_APP_REGISTRY_HEADLESS_TASK"
+    },
+    {
+      "name": "cancelHeadlessTask",
+      "status": "typed error",
+      "rn": "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js:347-353",
+      "godot": "src/app-registry.js:122: E_APP_REGISTRY_HEADLESS_TASK"
+    }
+  ],
+  "controls": {
+    "kind": "retained sabotages of the SDK (no native change in this slice)",
+    "sabotages": {
+      "section-dropped": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "a0e95a88a5e81603035d5506433743d860b6215043ec05cf532e7cb6930178ef",
+        "runStatus": 0,
+        "probeFailures": 3,
+        "failedChecks": [
+          "registry/A section is registerSection, a true section flag or a config's section; a false flag is not",
+          "registry/getSections answers the sections with the very runnables getRunnable answers",
+          "registry/getRegistry answers the section keys and every runnable, the same functions getRunnable answers"
+        ],
+        "oracleRejectedSections": [
+          "script"
+        ]
+      },
+      "duplicate-accepted": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "434054c36e8dba3b7ff7e9ecf8492056646aa46f8554a3b2b8f951d2a049b423",
+        "runStatus": 0,
+        "probeFailures": 1,
+        "failedChecks": [
+          "diagnostics/A key registered once is refused again through component, section, runnable and config, and twice in one config"
+        ],
+        "oracleRejectedSections": [
+          "script"
+        ]
+      },
+      "headless-silent": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "6099e86a1eeca89a0cb5a581f911b080ead86f6a61f7a9a902194e9f2bd80015",
+        "runStatus": 0,
+        "probeFailures": 1,
+        "failedChecks": [
+          "headless/The four headless-task members fail with E_APP_REGISTRY_HEADLESS_TASK, an Error that names the member"
+        ],
+        "oracleRejectedSections": [
+          "script"
+        ]
+      },
+      "wrapper-ignored": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "500ebbde12a55d3d11c246f7e5ea59783e91d9069bbfe7c88966a2c41c5e524a",
+        "runStatus": 0,
+        "probeFailures": 5,
+        "failedChecks": [
+          "mount-B/The wrapper provider's component wraps the content inside the root's padding, and the content sits inside the wrapper's",
+          "mount-B/The wrapper provider gets the appParameters and the key, the style provider the appParameters, the wrapper the initialProps",
+          "set-props/RN logs the update, and the providers and the hook run again for the new run",
+          "host-update/FabricSurface.update_props reaches the same root through RN's own binding, and the providers apply to it too",
+          "rerun-A/A root that was running takes the providers at its next run: the style and the wrapper appear, and the hook's component remounts the content"
+        ],
+        "oracleRejectedSections": [
+          "mount",
+          "runs"
+        ]
+      },
+      "props-dropped": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "facb94f55c64e225b02ac2d8f19d93e617a8cb8903db5d929c90af7556c3d166",
+        "runStatus": 0,
+        "probeFailures": 8,
+        "failedChecks": [
+          "set-props/setSurfaceProps updates the running root's props and keeps its component state: no remount, no cleanup",
+          "set-props/RN logs the update, and the providers and the hook run again for the new run",
+          "host-update/FabricSurface.update_props reaches the same root through RN's own binding, and the providers apply to it too",
+          "rerun-A/A root that was running takes the providers at its next run: the style and the wrapper appear, and the hook's component remounts the content",
+          "unknown-root/An unregistered key on a running surface fails with RN's own invariant",
+          "display-mode/A suspended display mode is refused (the pause and resume slice owns it) and leaves the root unchanged",
+          "stop-A/FabricSurface.unmount stops the root: React's cleanup runs once for its content and the root count drops",
+          "stop-A/The other roots keep running and keep updating"
+        ],
+        "oracleRejectedSections": [
+          "mount",
+          "runs",
+          "stop"
+        ]
+      },
+      "inherited-runnable": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "932c76789d079189ded157d1fbe1307d6f1e7fa3b133488dd2df873b382155cc",
+        "runStatus": 0,
+        "probeFailures": 1,
+        "failedChecks": [
+          "registry/getRunnable answers a function for a registered key and undefined for an unknown or an inherited name"
+        ],
+        "oracleRejectedSections": [
+          "script"
+        ]
+      },
+      "root-not-tracked": {
+        "file": "src/render-application.jsx",
+        "sourceSha256": "82dcbfd40971fa5c6696add950d1bbf1edcefd575c48a55cc30929453445c5af",
+        "runStatus": 0,
+        "probeFailures": 9,
+        "failedChecks": [
+          "set-props/setSurfaceProps updates the running root's props and keeps its component state: no remount, no cleanup",
+          "set-props/RN logs the update, and the providers and the hook run again for the new run",
+          "run-application/runApplication on a running surface runs its component again with the new props, state kept",
+          "host-update/FabricSurface.update_props reaches the same root through RN's own binding, and the providers apply to it too",
+          "rerun-A/A root that was running takes the providers at its next run: the style and the wrapper appear, and the hook's component remounts the content",
+          "unknown-root/An unregistered key on a running surface fails with RN's own invariant",
+          "display-mode/A suspended display mode is refused (the pause and resume slice owns it) and leaves the root unchanged",
+          "stop-A/FabricSurface.unmount stops the root: React's cleanup runs once for its content and the root count drops",
+          "stop-A/The other roots keep running and keep updating"
+        ],
+        "oracleRejectedSections": [
+          "mount",
+          "runs",
+          "stop"
+        ]
+      },
+      "stop-not-forgotten": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "84cde64587eb1c12545151576061c49030724e808ece465e5a0ec82967fb0e10",
+        "runStatus": 0,
+        "probeFailures": 1,
+        "failedChecks": [
+          "stop-A/The stopped root's tag is no surface any more: running it again fails and renders nothing"
+        ],
+        "oracleRejectedSections": [
+          "surfaces"
+        ]
+      },
+      "unknown-root-unchecked": {
+        "file": "src/app-registry.js",
+        "sourceSha256": "c7fbbfe7dbe31b06dd059ea89eee33199ba2b7f8353995e5cafd5c3a33242497",
+        "runStatus": 0,
+        "probeFailures": 2,
+        "failedChecks": [
+          "unknown-root/runApplication and setSurfaceProps for a tag no surface owns fail with E_APP_REGISTRY_UNKNOWN_ROOT and render nothing",
+          "stop-A/The stopped root's tag is no surface any more: running it again fails and renders nothing"
+        ],
+        "oracleRejectedSections": [
+          "runs",
+          "surfaces"
+        ]
+      }
+    },
+    "sourcesRestoredByteForByte": true,
+    "genuineSourceSha256": {
+      "src/app-registry.js": "ccda584965514c4ccdfc3e413927ef514fc227742824f1183a5710c0efb974c8",
+      "src/render-application.jsx": "cc57317644bf2a2254b4e3bbb464dfefe682a0fdd34c5afb104cab8b1490db0e"
+    },
+    "genuineLaneLast": true,
+    "table": "tests/app-registry-sabotages.mjs",
+    "runner": "scripts/app-registry-sabotage.mjs"
+  },
+  "screenshots": {
+    "docs/evidence/app-registry/app-registry-before.png": {
+      "sha256": "13e2c72328be9e6a352ab94d19a1fe44ba1d4e2ef195949cdff178723d6eea71",
+      "width": 900,
+      "height": 680,
+      "caption": "Surface with RN's default root: no wrapper, no root view style",
+      "capturedBy": "npm run example -- app-registry --capture (native renderer, macOS arm64)"
+    },
+    "docs/evidence/app-registry/app-registry-providers.png": {
+      "sha256": "f587d203c93c9134e7c4e0ac0671e2af86b72c67f7425b3d3fe2be206fae8761",
+      "width": 900,
+      "height": 680,
+      "caption": "The same Surface after the wrapper and root view style providers and setSurfaceProps",
+      "capturedBy": "npm run example -- app-registry --capture (native renderer, macOS arm64)"
+    }
+  },
+  "example": {
+    "id": "app-registry",
+    "headlessChecks": 12,
+    "nativeRendererChecks": 17,
+    "capture": "npm run example -- app-registry --capture"
+  },
+  "regressions": {
+    "npm run test:application": "4/4 (shared validation 35 checks, legacy 8, failures 19)",
+    "npm run test:responders:shared-touches": "1/1 with the stale 2026-10-05 build/shared-touches-original-report.json set aside and restored byte for byte; with it in place the final comparison with that old control fails (its bundle hash predates the SDK of main)",
+    "npm run test:app-state": "1/1",
+    "npm run test:scope-0.5": "1/1",
+    "npm run test:contracts": "776 node tests (775 pass, 1 skipped for the unset macOS export template) and 37 Python tests, 0 failures",
+    "npm run type-check": "passes with the consumer type test of the 19 members",
+    "npm run check:static": "no issues",
+    "npm run check:publication": "passed",
+    "npm run test:dashboard": "44/44",
+    "node scripts/milestone-guards.mjs --check --base origin/main": "passed (X9 not-applicable, X10 clean)"
+  },
+  "scope": {
+    "actualFabricSurfaces": true,
+    "errorCleanupCertified": false,
+    "headlessTasksTypedError": true,
+    "mobileExportsCertified": false,
+    "oneApplication": true,
+    "originalAppRegistryImpl": true,
+    "pauseResumeCertified": false,
+    "publicReactNativeImport": true,
+    "rootReplacementCertified": false
+  },
+  "limits": [
+    "root replacement over many cycles, pause and resume, scene change and error cleanup belong to later GF-07 slices",
+    "suspended and hidden display modes stay refused by render-application.jsx; the display-mode check of the probe changes with the pause and resume slice",
+    "hosted CI is not run for this slice yet",
+    "overlays and portals are not part of this slice"
+  ]
+}
