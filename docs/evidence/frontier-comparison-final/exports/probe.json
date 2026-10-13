@@ -1,0 +1,24 @@
+{
+  "format": "godot-fabric.frontier-comparison-export/v1",
+  "arm": "probe",
+  "app": "FrontierProbe.app",
+  "executable": "FrontierProbe.app/Contents/MacOS/Frontier instrument probe",
+  "pck": "FrontierProbe.app/Contents/Resources/Frontier instrument probe.pck",
+  "binarySha256": "764b3c0fa7775acebb98821d9d2d060953669cea20e542cdbe96526696b3764c",
+  "packageSha256": "ab73a96aa5350e87fa4fb8235f858210dc87bc02cf16646a5908c5954f993c81",
+  "scriptSha256": "28abaf06d96325b28be950aeeb87d538d23a0c6158b25f9a88f437561219d97b",
+  "scriptFiles": {
+    "tests/cpu-time-instrument-probe.gd": "c75adee594e3ef21c422b9a772732c56c15df9922f4477ed68d4bf903df31b0a",
+    "tests/cpu-time-instrument.gd": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "project.godot": "e2b826d227e3d470dac2dd7372b53c9e35af6c6db75b9cc43f13bc64f288abed",
+    "tests/cpu-time-instrument-probe-entry.gd": "08ed68565aa10f0fc17ddfe5a8d685747d4d098ebd59213ea9eee14e6ace8a33",
+    "tests/cpu-time-instrument-probe-empty.tscn": "a0da99637da1296c67f0ec75e39c195c2ba894b735af04a80a76cec5bf18aac7",
+    "override.cfg": "19be22c94492776bd6fb574d4001207c1cde0c841b69a78af3a847b3511cdb10"
+  },
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "templateSha256": "ec98b2803f5243ea4bc62d61429c12c43b9bec59f855040f713d74307b4c17e6",
+  "exportBytes": [
+    82533072,
+    82533072
+  ]
+}

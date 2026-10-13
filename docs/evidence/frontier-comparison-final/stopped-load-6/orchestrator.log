@@ -1,0 +1,86 @@
+the instrument's self-check (probe and oracle), in a window
+the instrument's self-check passed
+presented slot 1 (A) attempt 1: load 5.85 after 65.1 s
+  rejected (load:after), 64.6 s
+presented slot 1 (A) attempt 2: load 5.85 after 10 s
+  accepted, 65.1 s
+presented slot 2 (B) attempt 1: load 5.55 after 0 s
+  accepted, 71.7 s
+presented slot 3 (C) attempt 1: load 4.55 after 0 s
+  rejected (load:after), 97.3 s
+presented slot 3 (C) attempt 2: load 5.84 after 60.1 s
+  rejected (load:after), 99.2 s
+presented slot 3 (C) attempt 3: load 5.89 after 40.1 s
+  accepted, 95.9 s
+presented slot 4 (C) attempt 1: load 5.1 after 0 s
+  accepted, 94.1 s
+presented slot 5 (A) attempt 1: load 4.66 after 0 s
+  accepted, 64.4 s
+presented slot 6 (B) attempt 1: load 5.68 after 0 s
+  accepted, 70.6 s
+presented slot 7 (B) attempt 1: load 5.78 after 0 s
+  accepted, 69.9 s
+presented slot 8 (C) attempt 1: load 4.6 after 0 s
+  rejected (load:after), 98.9 s
+presented slot 8 (C) attempt 2: load 5.65 after 913.1 s
+  accepted, 92.7 s
+presented slot 9 (A) attempt 1: load 4.78 after 0 s
+  accepted, 64.1 s
+presented slot 10 (A) attempt 1: load 4.2 after 0 s
+  accepted, 64.2 s
+presented slot 11 (B) attempt 1: load 3.96 after 0 s
+  accepted, 69.1 s
+presented slot 12 (C) attempt 1: load 5.55 after 0 s
+  accepted, 92.9 s
+presented slot 13 (C) attempt 1: load 5.09 after 0 s
+  rejected (load:after), 93.4 s
+presented slot 13 (C) attempt 2: load 5.8 after 25 s
+  accepted, 95.2 s
+presented slot 14 (A) attempt 1: load 4.96 after 0 s
+  accepted, 64.3 s
+presented slot 15 (B) attempt 1: load 5.65 after 0 s
+  accepted, 69.2 s
+presented slot 16 (B) attempt 1: load 4.86 after 0 s
+  accepted, 69.9 s
+presented slot 17 (C) attempt 1: load 5.67 after 0 s
+  rejected (load:after), 96.6 s
+presented slot 17 (C) attempt 2: load 5.65 after 1222.9 s
+  accepted, 95.8 s
+presented slot 18 (A) attempt 1: load 5.19 after 0 s
+  accepted, 63.7 s
+presented slot 19 (A) attempt 1: load 3.97 after 0 s
+  accepted, 64.5 s
+presented slot 20 (B) attempt 1: load 4.77 after 0 s
+  accepted, 69.3 s
+presented slot 21 (C) attempt 1: load 4.42 after 0 s
+  accepted, 96 s
+presented slot 22 (C) attempt 1: load 5.66 after 0 s
+  rejected (load:after), 101.9 s
+presented slot 22 (C) attempt 2: load 5.77 after 160.2 s
+  rejected (load:after), 97.5 s
+presented slot 22 (C) attempt 3: load 5.98 after 110.1 s
+  accepted, 95.6 s
+presented slot 23 (A) attempt 1: load 5.3 after 0 s
+  rejected (load:after), 69.9 s
+presented slot 23 (A) attempt 2: load 5.91 after 285.3 s
+  accepted, 67 s
+presented slot 24 (B) attempt 1: load 5.96 after 0 s
+  rejected (load:after), 71.1 s
+presented slot 24 (B) attempt 2: load 5.89 after 25 s
+  accepted, 70.7 s
+presented slot 25 (B) attempt 1: load 5.88 after 0 s
+  accepted, 69.4 s
+presented slot 26 (C) attempt 1: load 4.5 after 0 s
+  accepted, 96.8 s
+presented slot 27 (A) attempt 1: load 5.45 after 0 s
+  rejected (load:after), 66.3 s
+presented slot 27 (A) attempt 2: load 5.78 after 180.2 s
+  accepted, 65.3 s
+presented slot 28 (A) attempt 1: load 4.63 after 0 s
+  rejected (load:after), 65.4 s
+presented slot 28 (A) attempt 2: load 5.92 after 50.1 s
+  rejected (load:after), 65.1 s
+presented slot 28 (A) attempt 3: load 4.98 after 247.5 s
+  rejected (load:after), 65.4 s
+STOPPED {"rule":"attempts","lane":"presented","slot":28,"arm":"A","attempts":3,"limit":3}
+FRONTIER_COMPARISON_CAMPAIGN_STOPPED: <checkout>/build/frontier-05-final/campaign-amended, 41 attempt(s), analysis stopped

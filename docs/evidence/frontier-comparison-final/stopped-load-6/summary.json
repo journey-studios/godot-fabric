@@ -1,0 +1,261 @@
+{
+  "rehearsal": false,
+  "format": "godot-fabric.frontier-comparison-campaign/v1",
+  "status": "stopped",
+  "stopped": [
+    {
+      "rule": "attempts",
+      "lane": "presented",
+      "slot": 28,
+      "arm": "A",
+      "attempts": 3,
+      "limit": 3
+    }
+  ],
+  "options": {
+    "lanes": [
+      "presented",
+      "unlimited"
+    ],
+    "slots": null,
+    "build": "release",
+    "maxWaitSeconds": 1800,
+    "assumeRefreshHz": null
+  },
+  "protocolSha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
+  "launcher": {
+    "name": "release: the exports in <checkout>/build/frontier-05-final/exports (A/, B/ and C/, each .app run through Contents/MacOS/<executable>)",
+    "build": "release",
+    "registered": {
+      "seed": 4242,
+      "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+      "instrumentSha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+      "arms": {
+        "A": {
+          "binarySha256": "a9825bfa9754ac9ef27aea54ca0e7587e94ca07bbd2210ef52727705b343696f",
+          "packageSha256": "6e0bcb203f3ad0198a5be4e52cfdded7397192adbb5959abb513dac897b85ca3",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        },
+        "B": {
+          "binarySha256": "5ce2fb5e8b24c87f79ebc7d8c1a0fb01a994440f8d98b827a855714cbbcfe89d",
+          "packageSha256": "83bff7bcbf282e79a5f5d079cb9be2c46fe94092011e02d60e1bbc6859cc3ffb",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        },
+        "C": {
+          "binarySha256": "3f3f8b5b018dd53e86ce3379fe4e3b932cc7b047a9e160585410e0a9f33f203d",
+          "packageSha256": "bbdb7b12cbea1fde3f764ecbf7a25a1faa250531518056bedb70850165c5a145",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        }
+      }
+    }
+  },
+  "selfCheck": {
+    "passed": true,
+    "why": [],
+    "sha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "lane": "windowed",
+    "seconds": 27.8
+  },
+  "unavailableLanes": {},
+  "unreported": [],
+  "lanes": {
+    "presented": {
+      "A": {
+        "slots": 12,
+        "started": 10,
+        "accepted": 9,
+        "attempts": 15,
+        "rejected": [
+          {
+            "slot": 1,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 23,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 27,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 28,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 28,
+            "attempt": 2,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 28,
+            "attempt": 3,
+            "reasons": [
+              "load:after"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "slots": 12,
+        "started": 9,
+        "accepted": 9,
+        "attempts": 10,
+        "rejected": [
+          {
+            "slot": 24,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          }
+        ]
+      },
+      "C": {
+        "slots": 12,
+        "started": 9,
+        "accepted": 9,
+        "attempts": 16,
+        "rejected": [
+          {
+            "slot": 3,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 3,
+            "attempt": 2,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 8,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 13,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 17,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 22,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          },
+          {
+            "slot": 22,
+            "attempt": 2,
+            "reasons": [
+              "load:after"
+            ]
+          }
+        ]
+      }
+    },
+    "unlimited": {
+      "A": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      },
+      "B": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      },
+      "C": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      }
+    }
+  },
+  "waits": {
+    "attempts": 41,
+    "seconds": 3394.7,
+    "timedOut": 0
+  },
+  "anomalies": 0,
+  "resumes": 0,
+  "formatErrors": [],
+  "analysis": {
+    "status": "stopped",
+    "why": [
+      {
+        "rule": "attempts",
+        "lane": "presented",
+        "slot": 28,
+        "arm": "A",
+        "attempts": 3,
+        "limit": 3
+      }
+    ]
+  },
+  "provenance": {
+    "commit": "f984f37ec360e55a9d3f1671e1fec75613a880a7",
+    "machine": "Apple M3 Pro, 11 cores, 18 GB",
+    "system": "macOS 26.6.2 (25G83)",
+    "rawData": "build/frontier-05-final/campaign-amended",
+    "display": "macOS, 3024x1964 at scale 2, window 1080x600",
+    "renderer": "opengl3 (gl_compatibility)",
+    "adapter": "Apple M3 Pro",
+    "engine": {
+      "godot": "4.7.2-stable (official)",
+      "godotHash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "architecture": "arm64",
+      "displayServer": "macOS",
+      "renderingDriver": "opengl3",
+      "renderingMethod": "gl_compatibility",
+      "adapter": "Apple M3 Pro"
+    },
+    "readCosts": {
+      "source": "docs/evidence/frontier-stress/costs.json",
+      "statsUsec": {
+        "B": 0.86,
+        "C": 4.5
+      },
+      "notTaken": {
+        "evaluateUsec": 100,
+        "surfaceSnapshotUsec": 570
+      }
+    }
+  }
+}
