@@ -121,8 +121,17 @@
         {
           "id": "contract",
           "label": "Contrato completo descrito no aceite implementado",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Fronteira do motor como controle executável (decisão do usuário de 2026-10-13): sem a preparação o Godot 4.7.2 oficial trava em todo import com cache vazio, e com ela importa limpo; 42/42 e 20/20 locais",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5435050e35398c16c408c690cfeeae83204cd362/docs/evidence/cold-start.md#executable-engine-boundary"
+            },
+            {
+              "label": "Run hospedado 38403991586: native-cold-start com veredito boundary-holds, 5 de 5 travados sem a preparação e 5 de 5 limpos com ela, no mesmo executável oficial",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893"
+            }
+          ]
         },
         {
           "id": "parity",
@@ -4848,7 +4857,7 @@
       "taskIds": [
         "GF-02"
       ],
-      "message": "GF-02, a fronteira do motor como controle executável (decisão do usuário de 2026-10-13; o checkpoint contract segue aberto até o run hospedado). O crash do import com cache vazio é um defeito do editor do Godot: EditorHelp::_gen_extensions_docs executa um callback adiado depois da limpeza (issue godotengine/godot#111645 aberta, correção #123658 não mesclada, 4.7.2 é a última estável), e o projeto usa o motor oficial sem patch. O aceite passou de corrigir a causa raiz para causa raiz identificada upstream e contida, com um controle executável. O script scripts/cold-start-boundary.mjs (npm run test:cold:boundary, no job native-cold-start depois do test:cold) importa um projeto descartável só com a extensão do Fabric, num cache vazio, cinco vezes sem a preparação de startup e cinco com ela: sem a preparação todas precisam travar (morte por SIGSEGV ou SIGBUS, ou Program crashed with signal 11 no log) e com ela todas precisam passar limpas (veredito boundary-holds). Se nenhuma travar, o controle falha com a mensagem de que o bug upstream não reproduz mais, de que o motor deve ser requalificado e a contenção aposentada (engine-fixed); qualquer outra mistura falha e é reportada como medida, sem limiar assumido. Local, no 4.7.2.stable.official.ed1daf0bf: 5 de 5 e 20 de 20 imports sem a preparação travaram e 5 de 5 e 20 de 20 com ela passaram limpos; a lógica do veredito tem teste puro de Node em test:contracts. Limites: só macOS arm64, o editor em modo import e a extensão sozinha; o resultado hospedado ainda não está registrado. Nenhum checkpoint, peso ou denominador se move.",
+      "message": "GF-02, a fronteira do motor como controle executável (decisão do usuário de 2026-10-13; o checkpoint contract segue aberto até o run hospedado). O crash do import com cache vazio é um defeito do editor do Godot: EditorHelp::_gen_extensions_docs executa um callback adiado depois da limpeza (issue godotengine/godot#111645 aberta, correção #123658 não mesclada, 4.7.2 é a última estável), e o projeto usa o motor oficial sem patch. O aceite passou de corrigir a causa raiz para causa raiz identificada upstream e contida, com um controle executável. O script scripts/cold-start-boundary.mjs (npm run test:cold:boundary, no job native-cold-start depois do test:cold) importa um projeto descartável só com a extensão do Fabric, num cache vazio, cinco vezes sem a preparação de startup e cinco com ela: sem a preparação todas precisam travar (morte por SIGSEGV ou SIGBUS, ou Program crashed with signal 11 no log) e com ela todas precisam passar limpas (veredito boundary-holds). Se nenhuma travar, o controle falha com a mensagem de que o bug upstream não reproduz mais, de que o motor deve ser requalificado e a contenção aposentada (engine-fixed); qualquer outra mistura falha e é reportada como medida, sem limiar assumido. Local, no 4.7.2.stable.official.ed1daf0bf: 5 de 5 e 20 de 20 imports sem a preparação travaram e 5 de 5 e 20 de 20 com ela passaram limpos; a lógica do veredito tem teste puro de Node em test:contracts. Limites: só macOS arm64, o editor em modo import e a extensão sozinha; o resultado hospedado ainda não está registrado. Nenhum checkpoint, peso ou denominador se move. O run hospedado 38403991586 mostrou o veredito boundary-holds no runner macOS 15 arm64 (5 de 5 travados sem a preparação e 5 de 5 limpos com ela, no mesmo executável oficial), e o checkpoint contract do GF-02 fecha com essa evidência; parity e targets seguem abertos.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/79842134734ef0482a08f446f06b72d56d4dc516/docs/evidence/cold-start.md#executable-engine-boundary"
     },
     {
