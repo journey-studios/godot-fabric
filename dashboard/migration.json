@@ -98,13 +98,13 @@
       "priority": "P0",
       "title": "Clean startup and engine contract",
       "status": "in_progress",
-      "acceptance": "Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes",
+      "acceptance": "Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and identify the root cause upstream (the Godot editor's deferred extension-documentation callback, godotengine/godot#111645), contain it, and keep an executable control: in native CI the official 4.7.2 crashes on an empty-cache import without the containment and passes with it, and the control fails with a clear message if a future Godot fixes the bug (decision of 2026-10-13). Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes",
       "dependencies": [
         "GF-01"
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Import direto com cache vazio ainda reproduz o crash upstream. Contenção não fecha o item.",
+      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle passa local (5 de 5 e 20 de 20) e no run hospedado 38403991586 (boundary-holds, 5 de 5 e 5 de 5), que fecha o checkpoint contract. Parity e targets seguem abertos, e a contenção sozinha não fecha o item.",
       "blocker": "",
       "checkpoints": [
         {
@@ -121,8 +121,17 @@
         {
           "id": "contract",
           "label": "Contrato completo descrito no aceite implementado",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Fronteira do motor como controle executável (decisão do usuário de 2026-10-13): sem a preparação o Godot 4.7.2 oficial trava em todo import com cache vazio, e com ela importa limpo; 42/42 e 20/20 locais",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5435050e35398c16c408c690cfeeae83204cd362/docs/evidence/cold-start.md#executable-engine-boundary"
+            },
+            {
+              "label": "Run hospedado 38403991586: native-cold-start com veredito boundary-holds, 5 de 5 travados sem a preparação e 5 de 5 limpos com ela, no mesmo executável oficial",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893"
+            }
+          ]
         },
         {
           "id": "parity",
@@ -3294,7 +3303,7 @@
         "GF-01",
         "GF-02"
       ],
-      "acceptance": "Reproduce and fix cold-start/root-cause and minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable"
+      "acceptance": "Reproduce the cold-start root cause and fix it, or contain it with an executable control when it lies in the engine (GF-02, 2026-10-13), and close the minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable"
     },
     {
       "id": "2A",
@@ -4927,6 +4936,15 @@
       "taskIds": [],
       "message": "Campanha comparativa Release real, gráfica, com o protocolo e emenda 5 pré-registrados: 41 tentativas, 27 aceitas (9 A, 9 B, 9 C) e 14 rejeitadas por carga; a vaga 28 do A esgotou 3 tentativas, e a análise recusou produzir estatísticas. Arquivo com 96 membros conferidos por SHA-256, 41 derivações brutas e 84 arquivos de cenário/log/autoteste verificados; análise e Markdown reproduzidos byte a byte. Os critérios execução, métricas e relatório e as saídas X6/X11 permanecem abertos. X9/X10 fecham por auditoria, com a exceção histórica #74 explícita e a cauda sem novas fatias. GF-01 S1 preservado no merge; nenhum dado protegido da 1.0 mudou.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/afb81c96406927f3c9912a1c3dba0f32291ec6a8/docs/evidence/frontier-comparison-final/README.md"
+    },
+    {
+      "id": "gf-02-engine-boundary-control-7984213",
+      "at": "2026-10-13T13:30:00.000Z",
+      "taskIds": [
+        "GF-02"
+      ],
+      "message": "GF-02, a fronteira do motor como controle executável (decisão do usuário de 2026-10-13; antes do run hospedado, o checkpoint contract seguia aberto). O crash do import com cache vazio é um defeito do editor do Godot: EditorHelp::_gen_extensions_docs executa um callback adiado depois da limpeza (issue godotengine/godot#111645 aberta, correção #123658 não mesclada, 4.7.2 é a última estável), e o projeto usa o motor oficial sem patch. O aceite passou de corrigir a causa raiz para causa raiz identificada upstream e contida, com um controle executável. O script scripts/cold-start-boundary.mjs (npm run test:cold:boundary, no job native-cold-start depois do test:cold) importa um projeto descartável só com a extensão do Fabric, num cache vazio, cinco vezes sem a preparação de startup e cinco com ela: sem a preparação todas precisam travar (morte por SIGSEGV ou SIGBUS, ou Program crashed with signal 11 no log) e com ela todas precisam passar limpas (veredito boundary-holds). Se nenhuma travar, o controle falha com a mensagem de que o bug upstream não reproduz mais, de que o motor deve ser requalificado e a contenção aposentada (engine-fixed); qualquer outra mistura falha e é reportada como medida, sem limiar assumido. Local, no 4.7.2.stable.official.ed1daf0bf: 5 de 5 e 20 de 20 imports sem a preparação travaram e 5 de 5 e 20 de 20 com ela passaram limpos; a lógica do veredito tem teste puro de Node em test:contracts. Limites: só macOS arm64, o editor em modo import e a extensão sozinha; até aqui, o estado antes do run hospedado. Nenhum checkpoint, peso ou denominador se move. O run hospedado 38403991586 mostrou o veredito boundary-holds no runner macOS 15 arm64 (5 de 5 travados sem a preparação e 5 de 5 limpos com ela, no mesmo executável oficial), e o checkpoint contract do GF-02 fecha com essa evidência; parity e targets seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/79842134734ef0482a08f446f06b72d56d4dc516/docs/evidence/cold-start.md#executable-engine-boundary"
     },
     {
       "id": "milestone-0-5-no-go-item-scope-20261013",

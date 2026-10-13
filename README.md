@@ -941,6 +941,7 @@ npm run test:cpu-time-instrument      # the CPU-time instrument against a busy l
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
+npm run test:cold:boundary               # GF-02: the official Godot still crashes without the containment, imports with it
 npm run parity:status                    # API gaps and current native evidence
 npm run parity:godot                     # shared core UI fixture in Godot
 npm run check -- --typography --headless
@@ -952,7 +953,9 @@ npm run test:recovery
 
 Run native checks sequentially: they share generated report files. Each check
 imports through the editor and rejects native errors, script errors, crashes,
-timeouts and exit without the acceptance marker. Headless proves native
+timeouts and exit without the acceptance marker. The one exception is
+`test:cold:boundary`, whose unprepared imports must crash (the engine bug GF-02 contains);
+it passes only when they all crash and every prepared import is clean. Headless proves native
 contracts; captures independently exercise rendering and logical Viewport input.
 
 [Architecture](docs/ARCHITECTURE.md) · [Architecture 2.0 direction](docs/ARCHITECTURE_V2.md) ·
