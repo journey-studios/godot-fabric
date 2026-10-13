@@ -1339,8 +1339,10 @@ containment can be retired and the engine requalified (`engine-fixed`), and any
 other mix fails and is reported as measured. Locally the unprepared crash was
 deterministic (5 of 5 and 20 of 20) and every prepared import was clean. The
 verdict logic is a pure Node test in `test:contracts`; the native control runs in
-the `native-cold-start` job after `test:cold`. Its hosted result is not recorded
-yet: the `contract` checkpoint closes when a hosted run reports `boundary-holds`.
+the `native-cold-start` job after `test:cold`. The hosted run
+[38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893) reported
+`boundary-holds` (5 of 5 unprepared imports crashed, 5 of 5 prepared ones were clean, on the same official
+executable), and the `contract` checkpoint is closed on it.
 GF-02 remains In progress (comparison cases and applicable targets); see the
 [evidence record](docs/evidence/cold-start.md#executable-engine-boundary).
 
