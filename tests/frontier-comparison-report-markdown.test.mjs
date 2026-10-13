@@ -199,6 +199,16 @@ test("a partial report compares A and C, claims no gain and says why the section
   assertSound(report, markdown);
 });
 
+test("a ten-per-arm truncated plan prints incomplete and its missing planned executions without statistics", () => {
+  const campaign = build({text: TEXT});
+  campaign.executions = campaign.executions.filter(execution => execution.lane !== "presented" || execution.slot <= 30);
+  const report = analyze(campaign);
+  assert.equal(report.status, "incomplete");
+  const markdown = renderSynthetic(report);
+  assert.match(markdown, /planned-per-arm \(arm A, accepted 10, required 12\)/);
+  assert.match(markdown, /Not available: incomplete/);
+});
+
 test("an incomplete report says which arm is short and leaves the statistical sections as one line with the reason", () => {
   const campaign = build({text: TEXT});
   let dropped = 0;

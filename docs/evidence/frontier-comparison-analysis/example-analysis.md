@@ -1,6 +1,6 @@
 # Frontier comparison: final report
 
-Status: `complete`. Every arm has the minimum number of accepted executions of the presented lane and the campaign did not stop: the statistics below are the protocol's.
+Status: `complete`. Every arm has completed the registered balanced plan of accepted executions of the presented lane and the campaign did not stop: the statistics below are the protocol's.
 
 Generated from a report in the format `godot-fabric.frontier-comparison-report/v1` by `scripts/frontier-comparison-report-markdown.mjs`: it formats the numbers of the report and computes none (at most three decimals, trailing zeros dropped). The per-run values and the oriented intervals stay in the report JSON.
 

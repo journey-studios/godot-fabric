@@ -140,7 +140,7 @@ arm the report gives the planned, accepted, rejected, open, missing and exhauste
 
 **The campaign that stops** produces no statistic: a slot that used its attempts (or has a fourth one) with none accepted (`runs.load.redo`; the attempts that wrote no report count, so three of them in a slot stop the campaign by this rule); a repeat of `other-game` in one arm (`invalidation` `other-game`); an
 instrument whose self-check did not pass or whose file is not the one it passed (`invalidation` `instrument`, "no comparative execution counts"). The status is `stopped` and `why` says which. An arm with fewer accepted
-presented-lane executions than `runs.minimumPerArm` leaves the status `incomplete`. Otherwise the status is `complete`, or `partial` when `armB.ready` is false.
+presented-lane executions than `runs.minimumPerArm` leaves the status `incomplete`. Every presented slot planned for the comparison must also be accepted with the registered positional balance (`runs.perArm`: twelve per arm). Only then is the status `complete`, or `partial` when `armB.ready` is false. Missing slots above the minimum prevent statistics too.
 
 **The primary outcome** (`primaryOutcome`, `windows`, `statistics`). For each window and each arm, the p95 by nearest rank of the CPU time of the frames of the measured occurrences of each accepted presented
 execution, in ms (`primaryOutcome.perRun`); the median across the executions and the interquartile range (`statistics.acrossRuns`; the median of an even number is the mean of the two middle values). For each pair of
@@ -223,7 +223,7 @@ stand as the implementer documented them.
    it in one arm" speaks of the arm and not of the slot.
 3. **The campaign that stops.** A slot with three rejected attempts stops it, and so does a fourth attempt, which the protocol does not allow (and does not count, even if its data are fine).
 4. **`runs.minimumPerArm`** ("at least 10 executions per arm are required") is read as the gate of the statistics: with fewer accepted executions of the presented lane in an arm that the comparison uses, the status is
-   `incomplete` and there is no statistic. Slots missing above the minimum are reported (`missing`, `balanced: false`) and the statistics are produced with the executions there are.
+   `incomplete` and there is no statistic. The minimum is a floor; `runs.perArm` rounds it to the complete balanced sequence of twelve per arm. Slots missing above the minimum remain `incomplete` (`planned-per-arm` or `presented-balance`) and produce no statistic. The collector and analysis both enforce that registered plan.
 5. **`rss`.** The observation has two values, "the reading at the end of the run, and the maximum of the readings kept". The verdict is taken on the reading at the end of the run, which is named first; the maximum is a
    descriptive series with its interval and no category. *This reading can change a result.* **Decided by the lead:** it stays.
 6. **`fps-unlimited`.** The outcome is "per window", so there is one verdict for each of the four windows, and the axis is N/A without enough executions that read back `DISABLED`. *This reading can change the number of verdicts, not their rule.* **Decided by the lead:** it stays.

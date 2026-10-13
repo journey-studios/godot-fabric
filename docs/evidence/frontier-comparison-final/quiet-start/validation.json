@@ -45,6 +45,16 @@
       "command": "node --test --test-name-pattern=\"the wait records|a quiet interval|a busy headless rehearsal|resume refuses|the command line\" tests/frontier-comparison-campaign.test.mjs",
       "passed": 6,
       "note": "After preserving intentional busy-machine rejection in explicitly marked headless rehearsals; production timeout still defers."
+    },
+    {
+      "command": "node --test tests/frontier-comparison-analysis.test.mjs tests/frontier-comparison-report-markdown.test.mjs",
+      "passed": 39,
+      "note": "Registered balanced unlimited plan required for FPS; Markdown and research contracts updated."
+    },
+    {
+      "command": "Regenerate stopped report JSON and Markdown with current analysis, then cmp against retained originals",
+      "passed": true,
+      "byteIdentical": true
     }
   ],
   "logDigests": {
@@ -67,6 +77,10 @@
     "godot-fabric-05-quiet-rehearsal-compat.log": {
       "sha256": "30fe9ff5d5e3d0d5af2ff82cd7f09db27f7bae8fe542f7ba28c726dc2746d6fc",
       "bytes": 1744
+    },
+    "godot-fabric-05-quiet-fps-plan-tests.log": {
+      "sha256": "2b2381c1d5deeaf81aac9a80ecdee299b3e895e9127f1a4d3421ecc922a45803",
+      "bytes": 13006
     }
   },
   "measurementSourceChanged": false,
