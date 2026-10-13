@@ -1,0 +1,1580 @@
+{
+  "schemaVersion": 1,
+  "scenario": "js-errors",
+  "status": "verified-local-headless-previous-host-control-seven-sabotages",
+  "at": "2026-10-13T23:01:18.485Z",
+  "executionBaseCommit": "13a2ef1d0f5986ee6dc9855bea7b496563c2ce72",
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "13a2ef1d0f5986ee6dc9855bea7b496563c2ce72",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
+    "previousHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+    "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-js-globals), with the host's bare failure recording; kept in build/gf05-errors-previous-host/ (local, not in Git)"
+  },
+  "commands": [
+    "npm run test:js-errors",
+    "node tests/js-errors-native.test.mjs --allow-original-negative (previous host in addons/)",
+    "node scripts/js-errors-sabotage.mjs",
+    "node scripts/js-errors-evidence.mjs"
+  ],
+  "currentLane": {
+    "checks": 23,
+    "failedChecks": [],
+    "oracleVerdict": null,
+    "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+    "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
+    "logSha256": "71bb3511c46af9116c8ef875dd0d91f1815f6a30eb903707fde2d4c1e2e6e4d6",
+    "result": "JS_ERRORS_PASSED: 23",
+    "checkVerdicts": [
+      {
+        "name": "mount/The ready lane mounts a root through the original AppRegistry without a diagnostic",
+        "passed": true
+      },
+      {
+        "name": "host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
+        "passed": true
+      },
+      {
+        "name": "first/RN's error-guard polyfill has run when the first module of the bundle starts, and setUpErrorHandling has not",
+        "passed": true
+      },
+      {
+        "name": "errorutils/ErrorUtils has the members of RN's error-guard polyfill and is the module RN reads through Libraries/vendor/core/ErrorUtils",
+        "passed": true
+      },
+      {
+        "name": "handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
+        "passed": true
+      },
+      {
+        "name": "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+        "passed": true
+      },
+      {
+        "name": "soft/A console.error whose message starts with \"Warning: \" is logged at the warning level and reported to nothing",
+        "passed": true
+      },
+      {
+        "name": "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+        "passed": true
+      },
+      {
+        "name": "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+        "passed": true
+      },
+      {
+        "name": "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+        "passed": true
+      },
+      {
+        "name": "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+        "passed": true
+      },
+      {
+        "name": "module/The deprecated reportSoftException, a direct reportException and dismissRedbox answer as RN's iOS and Android modules do: a soft exception is logged and never a failure",
+        "passed": true
+      },
+      {
+        "name": "ready/Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and nothing is in the middle of reporting",
+        "passed": true
+      },
+      {
+        "name": "ready/RN$handleException and RN$registerExceptionListener refuse the calls ReactInstance refuses, with its messages",
+        "passed": true
+      },
+      {
+        "name": "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/Stop releases the root without a further diagnostic, and all native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "early-mount/The early lane mounts a root: an error handled while the bundle evaluates does not stop the application",
+        "passed": true
+      },
+      {
+        "name": "early/A listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++, with RN's data and RN$inExceptionHandler true, and RN$handleException answers true",
+        "passed": true
+      },
+      {
+        "name": "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+        "passed": true
+      },
+      {
+        "name": "early/A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so, and RN$handleException keeps taking errors into C++",
+        "passed": true
+      },
+      {
+        "name": "early-lifecycle/Stop releases the early lane's root without a further diagnostic",
+        "passed": true
+      },
+      {
+        "name": "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts",
+        "passed": true
+      },
+      {
+        "name": "report/The JS errors report is saved with any normative failure visible",
+        "passed": true
+      }
+    ],
+    "bundleInputs": {
+      "count": 424,
+      "injectedFirst": [
+        "tests/js-errors-host.js",
+        "node_modules/@react-native/js-polyfills/console.js",
+        "node_modules/@react-native/js-polyfills/error-guard.js"
+      ],
+      "bootstrapPositions": {
+        "src/initialize.js": 174,
+        "node_modules/react-native/Libraries/Core/setUpErrorHandling.js": 138,
+        "node_modules/react-native/Libraries/Core/ExceptionsManager.js": 136,
+        "node_modules/react-native/Libraries/Core/NativeExceptionsManager.js": 135,
+        "node_modules/react-native/Libraries/vendor/core/ErrorUtils.js": 26
+      }
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpErrorHandling.js": "5153398b8a8db5e8575e77fc0ed8fe8f7d9ee58fb6772065818ca690eb13050d",
+      "Libraries/Core/ExceptionsManager.js": "83dc6599335fbe34b8cd26ae38603a0fb65fe84d035392a06d666f0231a31e41",
+      "Libraries/Core/NativeExceptionsManager.js": "a664d86868de980fe98f3b0ddaefdf75db363fdc3a10d75ff1151740a4acdc44",
+      "src/private/specs_DEPRECATED/modules/NativeExceptionsManager.js": "000e06c4e23e53b1b35168883021bc2518b0fcc2c204eb3e3dc437b9ecdf45f8",
+      "Libraries/vendor/core/ErrorUtils.js": "925d143e1936ac29703b5dfba137fc6b8c0977205659f4f0929c4ade771e7c87",
+      "Libraries/Core/Devtools/parseErrorStack.js": "133731594a9b3a34b0c4eedbc4da975651939e38d2c88a708b9e5c3c222ded68",
+      "src/private/utilities/toError.js": "e8880acb908af2d79dd88ef467965e0b5246992f894749dd6f06616f0a77b592",
+      "../@react-native/js-polyfills/error-guard.js": "00fbe5213cdec2aac894cc090dd20c5057a0fba4bd035a27c86c0ccf727b9d05",
+      "../@react-native/js-polyfills/index.js": "da03cd1a85b6e7018fabba50ed243292947e041a56b44bfe56cc07e1e6fd7944",
+      "src/private/setup/setUpDefaultReactNativeEnvironment.js": "ada7fdd487db30821082e115756be85e92cc1f095155355d06067422e2df0603",
+      "ReactCommon/react/runtime/ReactInstance.cpp": "30e5eaa1d8a8d2b1b78b35aed32ef6eb9b49d2718d8ca3059cdeada0c1b6aad4",
+      "ReactCommon/jserrorhandler/JsErrorHandler.cpp": "d8f734cfe13a87a093bea944a4f3705e7d3bbebb73b2b3e5c1f7bec02c5b0ab6",
+      "ReactCommon/jserrorhandler/ErrorUtils.cpp": "5278f77cd6a13debd7e31046e79bda63803b228c2e78042a85e0e8417b436e7a",
+      "ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29",
+      "React/CoreModules/RCTExceptionsManager.mm": "4e529384b9452971f1ae34dca5be39682fe0857fb6ab2d6ffec4b54655720508",
+      "ReactCommon/react/runtime/platform/ios/ReactCommon/RCTInstance.mm": "a9325cbf2e2575cab5f4cbca4e6d26f696993c0f437d7d89592f1ed7332461c0",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp": "d758cdc07c674bb49df067c9bb0e29a364f4173e30cd291ef06c047cd6e72fce",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/core/ExceptionsManagerModule.kt": "3b8caa7760d4679288474db6a7bf87968f4ba87f24c7c85e99ea9146bd7e60e6",
+      "ReactAndroid/src/main/java/com/facebook/react/util/JSStackTrace.kt": "8768e6b921ef83940862b06f25774369b57963a0b751f93022a67862b3765d59"
+    },
+    "hostGlobals": {
+      "RN$handleException": {
+        "descriptor": {
+          "configurable": false,
+          "enumerable": false,
+          "writable": false
+        },
+        "length": 3,
+        "type": "function",
+        "value": null
+      },
+      "RN$hasHandledFatalException": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$inExceptionHandler": {
+        "descriptor": {
+          "configurable": false,
+          "enumerable": false,
+          "writable": false
+        },
+        "length": 0,
+        "type": "function",
+        "value": null
+      },
+      "RN$isRuntimeReady": {
+        "descriptor": {
+          "configurable": false,
+          "enumerable": false,
+          "writable": false
+        },
+        "length": 0,
+        "type": "function",
+        "value": null
+      },
+      "RN$notifyOfFatalException": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$registerExceptionListener": {
+        "descriptor": {
+          "configurable": false,
+          "enumerable": false,
+          "writable": false
+        },
+        "length": 1,
+        "type": "function",
+        "value": null
+      },
+      "RN$useAlwaysAvailableJSErrorHandling": {
+        "descriptor": {
+          "configurable": false,
+          "enumerable": false,
+          "writable": false
+        },
+        "length": null,
+        "type": "boolean",
+        "value": false
+      }
+    },
+    "errorUtils": {
+      "members": [
+        "applyWithGuard",
+        "applyWithGuardIfNeeded",
+        "getGlobalHandler",
+        "guard",
+        "inGuard",
+        "reportError",
+        "reportFatalError",
+        "setGlobalHandler"
+      ],
+      "handler": {
+        "isTheOneSet": true,
+        "isThePolyfillDefault": false,
+        "length": 2,
+        "name": "handleError",
+        "setCalls": 1,
+        "type": "function"
+      },
+      "console": {
+        "errorIsOriginal": false,
+        "errorName": "reactConsoleErrorHandler",
+        "errorOriginal": "function",
+        "errorOriginalDescriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "writable": true
+        }
+      }
+    },
+    "readyLane": {
+      "console-string": {
+        "steps": [
+          {
+            "call": "console.error",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "console.error: js-errors console string",
+            "name": "console.error",
+            "isFatal": false,
+            "frames": 7
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "js-errors console string"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "console-error": {
+        "steps": [
+          {
+            "call": "console.error",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "Error: js-errors console error object",
+            "name": "Error",
+            "isFatal": false,
+            "frames": 8
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "[Error: js-errors console error object]"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "console-multi": {
+        "steps": [
+          {
+            "call": "console.error",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "console.error: js-errors 7 {\"a\":1}",
+            "name": "console.error",
+            "isFatal": false,
+            "frames": 7
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "'js-errors', 7, { a: 1 }"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "console-warning": {
+        "steps": [
+          {
+            "call": "console.error",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 2,
+            "message": "Warning: js-errors react warning"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 0,
+          "moduleFatal": 0
+        }
+      },
+      "report-error": {
+        "steps": [
+          {
+            "call": "ErrorUtils.reportError",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "Error: js-errors ErrorUtils.reportError",
+            "name": "Error",
+            "isFatal": false,
+            "frames": 8
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "[Error: js-errors ErrorUtils.reportError]"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "report-error-string": {
+        "steps": [
+          {
+            "call": "ErrorUtils.reportError",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "js-errors ErrorUtils.reportError string",
+            "name": null,
+            "isFatal": false,
+            "frames": 9
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "{ [js-errors ErrorUtils.reportError string] name: '' }"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "guard": {
+        "steps": [
+          {
+            "call": "ErrorUtils.inGuard",
+            "threw": false,
+            "value": false
+          },
+          {
+            "call": "ErrorUtils.applyWithGuard",
+            "threw": false,
+            "value": null
+          },
+          {
+            "call": "ErrorUtils.inGuard",
+            "threw": false,
+            "value": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "Error: js-errors applyWithGuard",
+            "name": "Error",
+            "isFatal": false,
+            "frames": 8
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "[Error: js-errors applyWithGuard]"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "fatal-error": {
+        "steps": [
+          {
+            "call": "ErrorUtils.reportFatalError",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "Error: js-errors reportFatalError",
+            "name": "Error",
+            "isFatal": true,
+            "frames": 8
+          }
+        ],
+        "hostFailures": [
+          "Error: js-errors reportFatalError, stack:"
+        ],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "[Error: js-errors reportFatalError]"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 0,
+          "moduleFatal": 1
+        }
+      },
+      "fatal-string": {
+        "steps": [
+          {
+            "call": "ErrorUtils.reportFatalError",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "js-errors thrown string",
+            "name": null,
+            "isFatal": true,
+            "frames": 9
+          }
+        ],
+        "hostFailures": [
+          "js-errors thrown string, stack:"
+        ],
+        "consoleLines": [
+          {
+            "level": 3,
+            "message": "{ [js-errors thrown string] name: '' }"
+          }
+        ],
+        "nativeDelta": {
+          "moduleSoft": 0,
+          "moduleFatal": 1
+        }
+      },
+      "deprecated-soft": {
+        "steps": [
+          {
+            "call": "native.reportSoftException",
+            "threw": false
+          }
+        ],
+        "wrapperReports": [],
+        "hostFailures": [],
+        "consoleLines": [],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      },
+      "direct": {
+        "steps": [
+          {
+            "call": "native.reportException",
+            "threw": false
+          },
+          {
+            "call": "native.dismissRedbox",
+            "threw": false,
+            "value": null
+          }
+        ],
+        "wrapperReports": [
+          {
+            "message": "js-errors direct reportException",
+            "name": null,
+            "isFatal": false,
+            "frames": 1
+          }
+        ],
+        "hostFailures": [],
+        "consoleLines": [],
+        "nativeDelta": {
+          "moduleSoft": 1,
+          "moduleFatal": 0
+        }
+      }
+    },
+    "schedulerTask": {
+      "wrapperReports": [
+        {
+          "message": "Error: Non-js exception: js-errors scheduler task\n\nError: js-errors scheduler task\n    at anonymous (res://build/js-errors-probe.js:8:86522)",
+          "isFatal": true,
+          "frames": 1
+        }
+      ],
+      "hostFailures": [
+        "Error: Non-js exception: js-errors scheduler task"
+      ]
+    },
+    "hostCounters": {
+      "ready": {
+        "handledFatalError": false,
+        "handler": {
+          "fatal": 0,
+          "soft": 0
+        },
+        "inHandler": false,
+        "listeners": 0,
+        "module": {
+          "fatal": 3,
+          "soft": 8
+        },
+        "reports": [
+          {
+            "fatal": false,
+            "frames": 7,
+            "id": 1,
+            "message": "console.error: js-errors console string",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 8,
+            "id": 2,
+            "message": "Error: js-errors console error object",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 7,
+            "id": 3,
+            "message": "console.error: js-errors 7 {\"a\":1}",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 8,
+            "id": 4,
+            "message": "Error: js-errors ErrorUtils.reportError",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 9,
+            "id": 5,
+            "message": "js-errors ErrorUtils.reportError string",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 8,
+            "id": 6,
+            "message": "Error: js-errors applyWithGuard",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 8,
+            "id": 7,
+            "message": "Error: js-errors reportFatalError",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 9,
+            "id": 8,
+            "message": "js-errors thrown string",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 1,
+            "id": 42,
+            "message": "js-errors deprecated reportSoftException",
+            "origin": "module"
+          },
+          {
+            "fatal": false,
+            "frames": 1,
+            "id": 43,
+            "message": "js-errors direct reportException",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 1,
+            "id": 9,
+            "message": "Error: Non-js exception: js-errors scheduler task\n\nError: js-errors scheduler task\n    at anonymous (res://build/js-errors-probe.js:8:86522)",
+            "origin": "module"
+          }
+        ],
+        "runtimeReady": true
+      },
+      "early": {
+        "handledFatalError": true,
+        "handler": {
+          "fatal": 1,
+          "soft": 3
+        },
+        "inHandler": false,
+        "listeners": 1,
+        "module": {
+          "fatal": 0,
+          "soft": 0
+        },
+        "reports": [
+          {
+            "fatal": false,
+            "frames": 9,
+            "id": 0,
+            "message": "[runtime not ready]: Error: js-errors early soft",
+            "origin": "handler"
+          },
+          {
+            "fatal": false,
+            "frames": 9,
+            "id": 3,
+            "message": "[runtime not ready]: Error: js-errors early direct",
+            "origin": "handler"
+          },
+          {
+            "fatal": true,
+            "frames": 9,
+            "id": 4,
+            "message": "[runtime not ready]: Error: js-errors early fatal",
+            "origin": "handler"
+          },
+          {
+            "fatal": false,
+            "frames": 8,
+            "id": 6,
+            "message": "[runtime not ready]: Error: js-errors ready direct",
+            "origin": "handler"
+          }
+        ],
+        "runtimeReady": false
+      },
+      "escape": {
+        "handledFatalError": true,
+        "handler": {
+          "fatal": 1,
+          "soft": 0
+        },
+        "inHandler": false,
+        "listeners": 0,
+        "module": {
+          "fatal": 0,
+          "soft": 0
+        },
+        "reports": [
+          {
+            "fatal": true,
+            "frames": 2,
+            "id": 7,
+            "message": "[runtime not ready]: Error: js-errors escaped the bundle",
+            "origin": "handler"
+          }
+        ],
+        "runtimeReady": false
+      }
+    },
+    "hostFailureLines": [
+      "Error: js-errors reportFatalError, stack:",
+      "js-errors thrown string, stack:",
+      "Error: Non-js exception: js-errors scheduler task",
+      "[runtime not ready]: Error: js-errors early fatal, stack:",
+      "[runtime not ready]: Error: js-errors escaped the bundle, stack:"
+    ],
+    "earlyLane": {
+      "listenerSaw": [
+        {
+          "name": "soft",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 0,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": false,
+              "message": "[runtime not ready]: Error: js-errors early soft",
+              "name": "Error",
+              "originalMessage": "js-errors early soft",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": [
+            {
+              "level": 3,
+              "message": "[runtime not ready]: Error: js-errors early soft"
+            }
+          ]
+        },
+        {
+          "name": "prevented",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 1,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": false,
+              "message": "[runtime not ready]: Error: js-errors early prevented",
+              "name": "Error",
+              "originalMessage": "js-errors early prevented",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": [
+            {
+              "level": 3,
+              "message": "[runtime not ready]: Error: js-errors early prevented"
+            }
+          ]
+        },
+        {
+          "name": "warn",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 2,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": false,
+              "message": "[runtime not ready]: Error: js-errors early warn",
+              "name": "Error",
+              "originalMessage": "js-errors early warn",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": [
+            {
+              "level": 3,
+              "message": "[runtime not ready]: Error: js-errors early warn"
+            }
+          ]
+        },
+        {
+          "name": "direct",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 3,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": false,
+              "message": "[runtime not ready]: Error: js-errors early direct",
+              "name": "Error",
+              "originalMessage": "js-errors early direct",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": []
+        },
+        {
+          "name": "fatal",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 4,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": true,
+              "message": "[runtime not ready]: Error: js-errors early fatal",
+              "name": "Error",
+              "originalMessage": "js-errors early fatal",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": [
+            {
+              "level": 3,
+              "message": "[runtime not ready]: Error: js-errors early fatal"
+            }
+          ]
+        },
+        {
+          "name": "fatal-again",
+          "seen": [
+            {
+              "extraData": [
+                "__DEV__",
+                "bundleMetadata",
+                "jsEngine",
+                "rawStack"
+              ],
+              "id": 5,
+              "inHandler": true,
+              "isComponentError": false,
+              "isFatal": true,
+              "message": "[runtime not ready]: Error: js-errors early fatal again",
+              "name": "Error",
+              "originalMessage": "js-errors early fatal again",
+              "preventDefault": "function",
+              "stack": 9
+            }
+          ],
+          "consoleLines": [
+            {
+              "level": 3,
+              "message": "[runtime not ready]: Error: js-errors early fatal again"
+            }
+          ]
+        }
+      ],
+      "lateCall": [
+        {
+          "call": "RN$handleException",
+          "threw": false,
+          "value": true
+        },
+        {
+          "call": "RN$inExceptionHandler",
+          "threw": false,
+          "value": false
+        },
+        {
+          "call": "RN$isRuntimeReady",
+          "threw": false,
+          "value": false
+        }
+      ]
+    },
+    "escapeLane": {
+      "surfaceId": 0,
+      "bundleEvaluations": 0,
+      "stopped": true
+    }
+  },
+  "previousHostControl": {
+    "checks": 23,
+    "failedChecks": [
+      "host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
+      "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+      "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+      "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+      "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+      "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+      "module/The deprecated reportSoftException, a direct reportException and dismissRedbox answer as RN's iOS and Android modules do: a soft exception is logged and never a failure",
+      "ready/Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and nothing is in the middle of reporting",
+      "ready/RN$handleException and RN$registerExceptionListener refuse the calls ReactInstance refuses, with its messages",
+      "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+      "early/A listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++, with RN's data and RN$inExceptionHandler true, and RN$handleException answers true",
+      "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+      "early/A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so, and RN$handleException keeps taking errors into C++",
+      "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts"
+    ],
+    "oracleVerdict": "The oracle fails 14 check(s), the first of them host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
+    "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+    "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+    "logSha256": "ff0e2018148f5986f86cf2e248c996c6da5c69d1dee1805b967a7b80070283dd",
+    "sameBundleAsCurrent": true,
+    "result": "JS_ERRORS_ORIGINAL_NEGATIVE: 14",
+    "expectedOriginalFailures": [
+      "host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
+      "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+      "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+      "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+      "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+      "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+      "module/The deprecated reportSoftException, a direct reportException and dismissRedbox answer as RN's iOS and Android modules do: a soft exception is logged and never a failure",
+      "ready/Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and nothing is in the middle of reporting",
+      "ready/RN$handleException and RN$registerExceptionListener refuse the calls ReactInstance refuses, with its messages",
+      "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+      "early/A listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++, with RN's data and RN$inExceptionHandler true, and RN$handleException answers true",
+      "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+      "early/A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so, and RN$handleException keeps taking errors into C++",
+      "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts"
+    ],
+    "hostGlobals": {
+      "RN$handleException": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$hasHandledFatalException": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$inExceptionHandler": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$isRuntimeReady": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$notifyOfFatalException": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$registerExceptionListener": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      },
+      "RN$useAlwaysAvailableJSErrorHandling": {
+        "descriptor": null,
+        "length": null,
+        "type": "undefined",
+        "value": null
+      }
+    },
+    "nativeModuleLoaded": false,
+    "note": "The same bundle runs on the host that recorded an error where it caught it and had no ErrorUtils path: it fails exactly the checks that need the new host, and holds the nine that need only the JS RN runs. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
+  },
+  "retainedSabotage": {
+    "script": "scripts/js-errors-sabotage.mjs",
+    "table": "tests/js-errors-sabotages.mjs",
+    "mechanism": "no-error-guard and no-setup are in-memory esbuild overrides (scripts/js-errors-bundle.mjs), no file is edited; the five sabotages of the host break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
+    "variants": [
+      {
+        "name": "no-error-guard",
+        "host": false,
+        "file": "sdk/toolchain/metro-polyfills.mjs",
+        "find": "\"@react-native/js-polyfills/console.js\", \"@react-native/js-polyfills/error-guard.js\"]",
+        "replace": "\"@react-native/js-polyfills/console.js\"]",
+        "checks": 23,
+        "failedChecks": [
+          "mount/The ready lane mounts a root through the original AppRegistry without a diagnostic",
+          "host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
+          "first/RN's error-guard polyfill has run when the first module of the bundle starts, and setUpErrorHandling has not",
+          "errorutils/ErrorUtils has the members of RN's error-guard polyfill and is the module RN reads through Libraries/vendor/core/ErrorUtils",
+          "handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
+          "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+          "soft/A console.error whose message starts with \"Warning: \" is logged at the warning level and reported to nothing",
+          "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+          "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+          "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+          "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+          "module/The deprecated reportSoftException, a direct reportException and dismissRedbox answer as RN's iOS and Android modules do: a soft exception is logged and never a failure",
+          "ready/Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and nothing is in the middle of reporting",
+          "ready/RN$handleException and RN$registerExceptionListener refuse the calls ReactInstance refuses, with its messages",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+          "lifecycle/Stop releases the root without a further diagnostic, and all native Controls of the root are balanced",
+          "early-mount/The early lane mounts a root: an error handled while the bundle evaluates does not stop the application",
+          "early/A listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++, with RN's data and RN$inExceptionHandler true, and RN$handleException answers true",
+          "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+          "early/A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so, and RN$handleException keeps taking errors into C++",
+          "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts"
+        ],
+        "oracleVerdict": "The oracle fails 21 check(s), the first of them mount/The ready lane mounts a root through the original AppRegistry without a diagnostic",
+        "bundleSha256": "d2e5aefdbe4eb2b4fb999615c175f994dbd65ed20827afa788f653ebd7616caa",
+        "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
+        "logSha256": "beb9b077351ded343c9bc475d9d3283bf908acf813663128e9e94bd6395d5b71"
+      },
+      {
+        "name": "no-setup",
+        "host": false,
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpErrorHandling\";\n",
+        "replace": "",
+        "checks": 23,
+        "failedChecks": [
+          "handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
+          "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+          "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+          "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+          "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+          "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+          "early/A listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++, with RN's data and RN$inExceptionHandler true, and RN$handleException answers true",
+          "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+          "early/A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so, and RN$handleException keeps taking errors into C++"
+        ],
+        "oracleVerdict": "The oracle fails 10 check(s), the first of them handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
+        "bundleSha256": "03ca0ad28d7e99066a31f1c5fdd16f43664e696f833ae680e4bded0ba42e1e70",
+        "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
+        "logSha256": "f06d1c79503651a99790e1ef069faac8f670414d6bc20079541136f0220ded21"
+      },
+      {
+        "name": "soft-fails",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "    if (report.fatal) {",
+        "replace": "    if (true) {",
+        "checks": 23,
+        "failedChecks": [
+          "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+          "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+          "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+          "module/The deprecated reportSoftException, a direct reportException and dismissRedbox answer as RN's iOS and Android modules do: a soft exception is logged and never a failure",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+          "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second"
+        ],
+        "oracleVerdict": "The oracle fails 6 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+        "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+        "nativeHostSha256": "beb4f855521eaff0fe830ebb036b90e588c1d39a0faf57bc2126561bd6252707",
+        "logSha256": "795b38f6311211c39271112434fa51efe91fa19d6ce0c96068c7282de162d842"
+      },
+      {
+        "name": "fatal-swallowed",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "      fail(fabric_godot::format_exception(report));",
+        "replace": "      UtilityFunctions::print(String(\"HERMES: swallowed \") + gd(fabric_godot::format_exception(report)));",
+        "checks": 23,
+        "failedChecks": [
+          "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+          "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only",
+          "early/JsErrorHandler's pipeline logs the soft errors no listener prevented, skips the warn, and records the first fatal error as a failure, with the runtime-not-ready prefix, and not the second",
+          "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts"
+        ],
+        "oracleVerdict": "The oracle fails 5 check(s), the first of them fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+        "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+        "nativeHostSha256": "c009089ca658cab1a00d41e9a437d07f9fe431d5a6f75e7240ea724b877f6754",
+        "logSha256": "06417753275f172d6cbfac031ead7d06f9a5c55cab65809cc15b40d454b1d812"
+      },
+      {
+        "name": "scheduler-site",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "[this](jsi::Runtime &rt, jsi::JSError &error) { js_errors->handle_fatal(rt, error); });",
+        "replace": "[this](jsi::Runtime &, jsi::JSError &error) { fail(error.what()); });",
+        "checks": 23,
+        "failedChecks": [
+          "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+        "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+        "nativeHostSha256": "99b32c9985170643d4756857f3d6da2829e05200d66e835da22ab2ea6ebd3a4c",
+        "logSha256": "f85f32e9885e74890b3f2fde69e1ef6020800c3b2ddcf5ef3985f6d2fbeba061"
+      },
+      {
+        "name": "bundle-site",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); return false; }",
+        "replace": "catch (const std::exception &error) { fail(error.what()); return false; }",
+        "checks": 23,
+        "failedChecks": [
+          "escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts",
+        "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+        "nativeHostSha256": "039b72daac1ea1d9e355f96a378040706c7e5132c63ed31c4fb28d93a587bd96",
+        "logSha256": "44c07b7298b71172581b4dc629993e2c4b437e062c36541e1333faa29b1a33bf"
+      },
+      {
+        "name": "never-ready",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "    js_errors->bundle_evaluated();\n",
+        "replace": "",
+        "checks": 23,
+        "failedChecks": [
+          "soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+          "soft/ErrorUtils.reportError reports a soft exception once, for an Error and for a thrown string, logs the error once and records no failure",
+          "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only",
+          "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
+          "fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
+          "ready/Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and nothing is in the middle of reporting",
+          "native/The host counted what reached it by route: eight soft and three fatal reports from ExceptionsManager, none from the C++ pipeline, and a failure for each fatal one only"
+        ],
+        "oracleVerdict": "The oracle fails 7 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
+        "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
+        "nativeHostSha256": "1d1cddeecbe9bb0145842c2a4cfbe05e10f73adb92fd45833c869866f272eca7",
+        "logSha256": "d8e3678ba8b43ebcb2c579683a7e5cb6d83ce7a8f99b5d9b4df2f7e4677770cd"
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/js-errors-oracle.mjs",
+    "independence": "Written from RN's pinned sources, not from the probe: the members of ErrorUtils, the handler setUpErrorHandling registers, the error family ReactInstance defines with its arities and refusals, the flag default and the not-ready prefix are read from the files; RN's own error-guard, setUpErrorHandling, ExceptionsManager and NativeExceptionsManager are bundled by the same toolchain and run in V8 against a native module that records its calls, and what Hermes did with the same cases must be what V8 did; JsErrorHandler's pipeline before the runtime is ready is a model written from JsErrorHandler.cpp, whose anchors it finds in the source; every verdict of the probe is derived again from the report's raw observations.",
+    "fromRn": {
+      "errorUtilsMembers": [
+        "applyWithGuard",
+        "applyWithGuardIfNeeded",
+        "getGlobalHandler",
+        "guard",
+        "inGuard",
+        "reportError",
+        "reportFatalError",
+        "setGlobalHandler"
+      ],
+      "handlerName": "handleError",
+      "handlerArity": 2,
+      "reporter": "reactConsoleErrorHandler",
+      "consoleOriginal": "_errorOriginal",
+      "errorFamily": [
+        "RN$useAlwaysAvailableJSErrorHandling",
+        "RN$isRuntimeReady",
+        "RN$hasHandledFatalException",
+        "RN$notifyOfFatalException",
+        "RN$inExceptionHandler",
+        "RN$handleException",
+        "RN$registerExceptionListener"
+      ],
+      "installedArities": [
+        {
+          "name": "RN$useAlwaysAvailableJSErrorHandling",
+          "flag": true
+        },
+        {
+          "name": "RN$isRuntimeReady",
+          "arity": 0
+        },
+        {
+          "name": "RN$inExceptionHandler",
+          "arity": 0
+        },
+        {
+          "name": "RN$handleException",
+          "arity": 3
+        },
+        {
+          "name": "RN$registerExceptionListener",
+          "arity": 1
+        }
+      ],
+      "refusals": {
+        "handleException": "handleException requires 3 arguments: error, isFatal, logToConsole (optional)",
+        "listenerMissing": "registerExceptionListener: requires 1 argument: fn",
+        "listenerType": "registerExceptionListener: The first argument must be a function"
+      },
+      "flagDefault": false,
+      "notReadyPrefix": "[runtime not ready]: ",
+      "schedulerWrap": "Non-js exception: ",
+      "earlyModel": [
+        {
+          "name": "soft",
+          "message": "[runtime not ready]: Error: js-errors early soft",
+          "fatal": false,
+          "forwarded": true,
+          "loggedToConsole": true
+        },
+        {
+          "name": "prevented",
+          "message": "[runtime not ready]: Error: js-errors early prevented",
+          "fatal": false,
+          "forwarded": false,
+          "loggedToConsole": true
+        },
+        {
+          "name": "warn",
+          "message": "[runtime not ready]: Error: js-errors early warn",
+          "fatal": false,
+          "forwarded": false,
+          "loggedToConsole": true
+        },
+        {
+          "name": "direct",
+          "message": "[runtime not ready]: Error: js-errors early direct",
+          "fatal": false,
+          "forwarded": true,
+          "loggedToConsole": false
+        },
+        {
+          "name": "fatal",
+          "message": "[runtime not ready]: Error: js-errors early fatal",
+          "fatal": true,
+          "forwarded": true,
+          "loggedToConsole": true
+        },
+        {
+          "name": "fatal-again",
+          "message": "[runtime not ready]: Error: js-errors early fatal again",
+          "fatal": true,
+          "forwarded": false,
+          "loggedToConsole": true
+        }
+      ]
+    },
+    "referenceRun": {
+      "console-string": {
+        "reports": [
+          {
+            "message": "console.error: js-errors console string",
+            "originalMessage": "js-errors console string",
+            "name": "console.error",
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "js-errors console string",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "console-error": {
+        "reports": [
+          {
+            "message": "Error: js-errors console error object",
+            "originalMessage": "js-errors console error object",
+            "name": "Error",
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "[Error: js-errors console error object]",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "console-multi": {
+        "reports": [
+          {
+            "message": "console.error: js-errors 7 {\"a\":1}",
+            "originalMessage": "js-errors 7 {\"a\":1}",
+            "name": "console.error",
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "'js-errors', 7, { a: 1 }",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "console-warning": {
+        "reports": [],
+        "console": [
+          {
+            "message": "Warning: js-errors react warning",
+            "level": 2
+          }
+        ],
+        "softReports": 0,
+        "fatalReports": 0
+      },
+      "report-error": {
+        "reports": [
+          {
+            "message": "Error: js-errors ErrorUtils.reportError",
+            "originalMessage": "js-errors ErrorUtils.reportError",
+            "name": "Error",
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "[Error: js-errors ErrorUtils.reportError]",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "report-error-string": {
+        "reports": [
+          {
+            "message": "js-errors ErrorUtils.reportError string",
+            "originalMessage": null,
+            "name": null,
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "{ [js-errors ErrorUtils.reportError string] name: '' }",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "guard": {
+        "reports": [
+          {
+            "message": "Error: js-errors applyWithGuard",
+            "originalMessage": "js-errors applyWithGuard",
+            "name": "Error",
+            "componentStack": null,
+            "isFatal": false,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "[Error: js-errors applyWithGuard]",
+            "level": 3
+          }
+        ],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "fatal-error": {
+        "reports": [
+          {
+            "message": "Error: js-errors reportFatalError",
+            "originalMessage": "js-errors reportFatalError",
+            "name": "Error",
+            "componentStack": null,
+            "isFatal": true,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "[Error: js-errors reportFatalError]",
+            "level": 3
+          }
+        ],
+        "softReports": 0,
+        "fatalReports": 1
+      },
+      "fatal-string": {
+        "reports": [
+          {
+            "message": "js-errors thrown string",
+            "originalMessage": null,
+            "name": null,
+            "componentStack": null,
+            "isFatal": true,
+            "extra": [
+              "jsEngine",
+              "rawStack"
+            ]
+          }
+        ],
+        "console": [
+          {
+            "message": "{ [js-errors thrown string] name: '' }",
+            "level": 3
+          }
+        ],
+        "softReports": 0,
+        "fatalReports": 1
+      },
+      "deprecated-soft": {
+        "reports": [],
+        "console": [],
+        "softReports": 1,
+        "fatalReports": 0
+      },
+      "direct": {
+        "reports": [
+          {
+            "message": "js-errors direct reportException",
+            "originalMessage": null,
+            "name": null,
+            "componentStack": null,
+            "isFatal": false,
+            "extra": []
+          }
+        ],
+        "console": [],
+        "softReports": 1,
+        "fatalReports": 0
+      }
+    }
+  },
+  "catchSites": [
+    {
+      "site": "RuntimeScheduler task error handler",
+      "reactInstance": "ReactInstance.cpp:128-131 (handleError(runtime, error, true))",
+      "before": "fail(error.what())",
+      "now": "JsErrorPath::handle_fatal -> JsErrorHandler::handleError, fatal. RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>'.",
+      "certifiedBy": "fatal/An exception that escapes a task of RN's RuntimeScheduler ..."
+    },
+    {
+      "site": "pump(): the work queue (the host's runtime executor)",
+      "reactInstance": "ReactInstance.cpp:92-109 (the runtime executor's catch)",
+      "before": "fail(error.what())",
+      "now": "JsErrorPath::handle_fatal; a Hermes JSError is recognised by its type name and reported as the JS error it is",
+      "certifiedBy": "none by a case of its own: native errors thrown by a work item are not reachable from JS; the scheduler site above is the one a JS error takes"
+    },
+    {
+      "site": "ApplicationRuntime::load_bundle / FabricApplication::mount",
+      "reactInstance": "ReactInstance::loadScript, then the runtime executor's catch; setRuntimeReady after the evaluation (ReactInstance.cpp:287-299)",
+      "before": "mount's catch: report_error(error.what()), then stop",
+      "now": "load_bundle: handle_fatal while the runtime is not ready, bundle_evaluated() after a clean evaluation; mount stops the application without reporting twice",
+      "certifiedBy": "escape/ and early/ checks"
+    },
+    {
+      "site": "TimerManager's runtime executor (timers, immediates)",
+      "reactInstance": "the runtime executor's catch (ReactInstance.cpp:92-109)",
+      "before": "fail(error.what())",
+      "now": "unchanged: slice F certifies callback exceptions against RN",
+      "certifiedBy": "test:runtime (callback failures), unchanged"
+    },
+    {
+      "site": "requestAnimationFrame callbacks, native animated and layout animation frames",
+      "reactInstance": "none: ReactInstance has no frame loop",
+      "before": "fail(error.what())",
+      "now": "unchanged",
+      "certifiedBy": "test:runtime, test:animated, test:layout-animation, unchanged"
+    },
+    {
+      "site": "FabricApplication.evaluate (the validation seam)",
+      "reactInstance": "none",
+      "before": "fail(error.what())",
+      "now": "unchanged",
+      "certifiedBy": "not RN's"
+    }
+  ],
+  "sourcePins": {
+    "tests/js-errors-fixture.jsx": "5573b57555f47370c296239b1dd8c97163d2042f53be705d867aea3399a7fa59",
+    "tests/js-errors-early.js": "35e31d4aa66884e87fe63531b4a5e91878fd52cd663582bee7df7264627f54d6",
+    "tests/js-errors-host.js": "98a6c17c18c5eebe9669baa080cb08b017b768173dfac8348ced49ff4caca0ab",
+    "tests/js-errors-cases.mjs": "c0cecbd5a91a9feb4fbf8c6cea76b63f4c913d3146398bb87518a007bdbeeff1",
+    "tests/js-errors-probe.gd": "c0435dd23885bc23dc7d61b8dc038a617f2f57c2599fe634c981cebc7250e8b9",
+    "tests/js-errors-native.test.mjs": "8da971f210f4c356bbe0d388a541001d1a5899b1a3fea489f21b7e83fc5d7555",
+    "tests/js-errors-oracle.mjs": "e8e478eb35d1b7c486c8c25e3430d71ea6197a2978fe78d39e2aca2350ea8833",
+    "tests/js-errors-sabotages.mjs": "2bea30d05a0577be7c28314af17dadc03352463ee658c6d1f63eb40c6db3aff4",
+    "scripts/js-errors-bundle.mjs": "d521bc07d92f8ac032cbe7562ed35b274b27e8abe2f5d3146b983355261d42de",
+    "scripts/js-errors-sabotage.mjs": "038a0da12df4809cae8d0cf6bb7d2c96c7d8b23b43d1b6a068fc4636aeba5a84",
+    "scripts/native-probe-bundle.mjs": "f1326732fcc4d9c57d8c9905ef124101e2a54126507ad22e36b3aa8e7b086198",
+    "src/initialize.js": "e19e51dd51da964c193d6e1763a6fb2b6e57aaf204797087fa3052f04fc64b64",
+    "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
+    "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
+    "native/application_runtime.cpp": "26f92d8639eced736c73bda596b2632fc0b95f206b271c881e6915512562fab2",
+    "native/application_runtime.h": "ed3ace3e5d23cf3ba17755b744e601efaa48b9a46fd9eaf9fa35ab0696fd6d63",
+    "native/fabric_application.cpp": "174b616f74471afbe9dfa9993a3116ee5b54abf691a5b21733bab92da2732323",
+    "native/js_error_path.cpp": "a35dcf7ffcec029da5e8a7d8dd2560561fef4f5de3f413fa0063e6a73cfa1547",
+    "native/js_error_path.h": "62ab11e16c443b260403d4fa4c749af96cc271ee7f2b241b37e214c603c6844f"
+  },
+  "scope": {
+    "actualHermesRuntime": true,
+    "actualFabricApplication": true,
+    "headless": true,
+    "lanes": [
+      "ready",
+      "early",
+      "escape"
+    ],
+    "rnModules": [
+      "error-guard",
+      "setUpErrorHandling",
+      "ExceptionsManager",
+      "NativeExceptionsManager"
+    ],
+    "jsErrorHandler": true
+  },
+  "limits": [
+    "The timer, immediate, microtask and animation-frame catch sites keep the host's direct failure record; slice F measures callback exceptions against RN.",
+    "RN$hasHandledFatalException and RN$notifyOfFatalException are not installed: excluded by V2-D26 (the runtime keeps running after an uncaught error, with root-scoped recovery); with them ExceptionsManager.js reports only the first fatal exception. GF-07's error-cleanup slice owns any change.",
+    "Hermes' JSError and the host's have different type_info, so RN's own catch (jsi::JSError &) in JsErrorHandler and RuntimeScheduler does not match what Hermes throws: the scheduler reports 'Non-js exception: <what>', and an error raised while JsErrorHandler reports (a listener that throws) reaches the host's safety net instead of the next listener.",
+    "A soft exception is a log line, as on Android; iOS drops it without a redbox or a delegate. A fatal exception is a recorded failure and the application keeps running, where RN's release builds crash.",
+    "V2-D26's root-scoped unmount on an uncaught error belongs to GF-07's error-cleanup slice.",
+    "The headless desktop host only; no mobile export has run this bundle.",
+    "Hosted CI is pending: the record is of the local run."
+  ]
+}
