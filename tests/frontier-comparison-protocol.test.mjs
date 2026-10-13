@@ -35,12 +35,14 @@ const migration = JSON.parse(read("dashboard/migration.json"));
 //    three events of #93 (e108e9d) fixed, where the pre-registration had 73. The reference to the golden hash keeps its text. No comparative measurement had run (`measurementsBefore: 0`).
 //  - PINS[4]: the amendment of 2026-10-10, `amendments[3]`: the window `context-switches` starts at the intent that changes the game's context, a selection intent for the six
 //    first contexts; for the dialog, whose End Turn raises it in the refresh phase, 5 to 6 frames before it is seen, outside a window of 3 frames, the occurrence is the last `resolve_event`, which closes it (dialog -> none). The step of the same window in `runs.script` says so too. No comparative measurement had run (`measurementsBefore: 0`).
+//  - PINS[5]: user-approved load-cap amendment of 2026-10-13, 2.0 to 6.0, with zero comparative attempts; the frozen performance budgets and decision margins stay identical.
 const PINS = [
   "8dd7779dd9f21386cf2e272845339c9031ceebd16cf01aa7dbec3a9d6f00353c",
   "8833e54e54718694486f626644faa4eef4adef1915f80f973d9827aa44098efb",
   "0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6",
   "c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222",
-  "6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f"
+  "6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f",
+  "0a3d703807f548d717df2ee635749ea7b4bd261cd79bed1ed6649a96acc17972"
 ];
 const PINNED_SHA256 = PINS[protocol.amendments.length];
 const FREEZE_KEYS = ["frozenValue", "frozenAt"];
@@ -369,11 +371,11 @@ const amendmentErrors = (candidate, executionDone) => {
 };
 
 test("an amendment says what changed, why, the text it replaces and that no comparative measurement came before it", () => {
-  assert.equal(protocol.amendments.length, 4);
+  assert.equal(protocol.amendments.length, 5);
   assert.equal(executionCriterion.done, false, "the comparative executions have not run: when they do, the amendments after them count measurements");
   assert.deepEqual(amendmentErrors(protocol, executionCriterion.done), []);
-  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09", "2026-10-10", "2026-10-10"]);
-  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0, 0, 0]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09", "2026-10-10", "2026-10-10", "2026-10-13"]);
+  assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0, 0, 0, 0]);
   assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
   assert.doesNotMatch(JSON.stringify(protocol.idleReference), /idle median/, "and the protocol no longer says it");
   assert.match(protocol.idleReference.rule, /half-sums of the consecutive pairs of the per-frame values/);
@@ -429,7 +431,7 @@ test("a change of the protocol after the pre-registration fails unless it comes 
   assert.deepEqual(amendmentErrors(erased, false), ["the protocol is not the one pinned for its number of amendments"]);
   // An entry without a pin: the number of pins and the number of amendments move together.
   const unpinned = structuredClone(protocol);
-  unpinned.amendments.push({...protocol.amendments[0], date: "2026-10-10"});
+  unpinned.amendments.push({...protocol.amendments[0], date: "2026-10-14"});
   assert.deepEqual(amendmentErrors(unpinned, false), ["the protocol is not the one pinned for its number of amendments"]);
   // The record is part of the pin: rewriting what it says is also a change.
   const rewritten = structuredClone(protocol);
@@ -579,7 +581,7 @@ test("the order of the executions is a Latin square repeated, balanced in count 
 test("the load limit is written and the redo of an execution is bounded", () => {
   const {load} = protocol.runs;
   assert.equal(load.command, "sysctl vm.loadavg");
-  assert.equal(load.limit1MinuteAverage, 2);
+  assert.equal(load.limit1MinuteAverage, 6);
   assert.match(load.read, /before .* after/);
   assert.match(load.redo, /at most 3 attempts per slot/);
   assert.deepEqual(protocol.invalidation.map(rule => rule.id), ["load", "not-presented", "not-the-registered-build", "other-game", "errors", "parity", "vsync-reading",

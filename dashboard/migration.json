@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07 concluído: export macOS Release assinado, replay do Frontier no hash dourado com perfil limpo e segunda máquina limpa num runner hospedado, com CI hospedada e Pages; o 0.5 segue no comparativo final (V05-10)."
   },
-  "updatedAt": "2026-10-10T22:10:00.000Z",
+  "updatedAt": "2026-10-13T12:05:28.092Z",
   "source": {
     "commit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
     "url": "https://github.com/journey-studios/godot-fabric/commit/7e6f0b1252326cf26cc1bccca039a6aff93716b8",
@@ -3522,7 +3522,13 @@
               "id": "iphone",
               "label": "Mesma prova com toque real no iPhone, incluindo arrastar o mapa com um dedo enquanto outro dedo está num botão da HUD (liga a V05-09)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             }
           ]
         },
@@ -4247,25 +4253,49 @@
               "id": "densidade",
               "label": "Densidade por canvas_items: Dimensions.scale coincide com a escala da tela e Pressable de 44 pt mede 44 ± 0,5 pt (simulador)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "insets",
               "label": "Provedor de insets a partir de get_display_safe_area e orientação paisagem travada; HUD dentro dos insets",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "toque",
               "label": "Política de toque sem duplicação: 20 toques são 20 onPress, toque na HUD gera 0 eventos no mundo; arrastar o mapa com um dedo com outro dedo na HUD",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "segundo-plano",
               "label": "AppState em segundo plano e retorno preserva timers, lista e estado do jogo",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             }
           ]
         },
@@ -4293,25 +4323,49 @@
               "id": "g0",
               "label": "G0: boot assinado do fixture de fumaça iOS (FabricIOSSmoke, gerado por scripts/ios-consumer-export.py a partir do consumers/minimal) no aparelho (physicalDeviceExecuted=true): 22/22 checks do fixture e mediana de 5 cold launches até o primeiro commit React (limiar proposto de 3,0 s)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "export",
               "label": "Export iOS com --device e --team (assinatura local, nenhuma credencial no repo) e coleta de contadores por devicectl em user://device-gate.json",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "toque",
               "label": "G1 e G2: métricas, safe area e toque real (mundo contra HUD; 20 toques são 20 onPress; arrastar o mapa com um dedo na HUD)",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "turno",
               "label": "G3: turno completo do jogo com IA no aparelho, medido contra o controle do macOS; 30 s em segundo plano e retorno; recibo manual nomeado",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "decisao",
@@ -4423,7 +4477,13 @@
               "id": "iphone",
               "label": "Mesmas medições no iPhone, se o V05-09 for GO, com a taxa de atualização efetiva registrada; se o vsync não puder ser desligado lá, valem o tempo de CPU por quadro e a folga com vsync ligado",
               "done": false,
-              "evidence": []
+              "evidence": [
+                {
+                  "label": "NO-GO do iPhone em 2026-10-09: fechamento macOS; mobile devolvido ao GF-35",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+                }
+              ],
+              "notApplicable": "NO-GO do iPhone registrado em 2026-10-09; fora do fechamento macOS da 0.5, devolvido ao GF-35."
             },
             {
               "id": "relatorio",
@@ -4842,6 +4902,20 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-protocol-amendment-5-load-20261013",
+      "at": "2026-10-13T12:05:28.092Z",
+      "taskIds": [],
+      "message": "Emenda 5 autorizada pelo usuário antes de qualquer tentativa comparativa: limite operacional de carga da campanha macOS passa de 2,0 a 6,0, com leituras antes/depois e rejeição acima do limite. A campanha anterior tem zero tentativas e autoteste gráfico aprovado. Orçamentos congelados, margem de não-inferioridade, braços, ordem, mínimo de execuções, regras de apresentação/paridade e estatística não mudam. Nenhum dado histórico ou número da 1.0 muda; execução, métricas e relatório seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-05-final-comparison/docs/research/frontier-comparison-protocol.md"
+    },
+    {
+      "id": "milestone-0-5-macos-no-go-accounting-20261013",
+      "at": "2026-10-13T11:38:12.227Z",
+      "taskIds": [],
+      "message": "O progresso da 0.5 passa a contar somente critérios aplicáveis ao fechamento macOS. Os 10 critérios mobile retirados pelo NO-GO continuam done=false, com motivo e evidência da decisão; nenhuma task, checkpoint, peso ou número da 1.0 muda. Execução, métricas, relatório e saídas do comparativo seguem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-15-9e95bc6",
       "at": "2026-10-10T22:10:00.000Z",

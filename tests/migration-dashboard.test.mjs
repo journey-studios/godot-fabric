@@ -152,12 +152,12 @@ test("Manual publication pins only JSON and identifies data outside main", async
 });
 
 // Optional milestones (the 0.5 cut). They must stay invisible to the 1.0 numbers and to the roadmap parser.
-const { criteriaProgress, criteriaStatus, milestoneCriteria } = await import("../dashboard/model.mjs");
+const { applicableCriteria, criteriaProgress, criteriaStatus, milestoneCriteria } = await import("../dashboard/model.mjs");
 const milestoneOf = copy => copy.milestones.find(item => item.id === "0.5");
 // A copy with every 0.5 criterion reset: the versioned JSON records live progress, so these tests must not depend on it.
 const fresh = () => {
   const copy = clone();
-  [...milestoneCriteria(milestoneOf(copy)), ...milestoneOf(copy).exit].forEach(step => { step.done = false; step.evidence = []; });
+  [...milestoneCriteria(milestoneOf(copy)), ...milestoneOf(copy).exit].forEach(step => { step.done = false; step.evidence = []; delete step.notApplicable; });
   return copy;
 };
 
@@ -176,7 +176,7 @@ test("milestones never change the release numbers and are optional", () => {
   validate(without);
   assert.deepEqual(summarize(without), summarize(data));
   const finished = clone();
-  milestoneCriteria(milestoneOf(finished)).forEach(step => { step.done = true; step.evidence = [{ label: "x", url: "https://example.com/x" }]; });
+  milestoneCriteria(milestoneOf(finished)).forEach(step => { step.done = true; step.evidence = [{ label: "x", url: "https://example.com/x" }]; delete step.notApplicable; });
   validate(finished);
   assert.deepEqual(summarize(finished), summarize(data));
   assert.equal(criteriaProgress(milestoneCriteria(milestoneOf(finished))), 100);
@@ -192,6 +192,37 @@ test("milestone progress and status are derived from criteria", () => {
   assert.equal(criteriaStatus([{ done: true }], "sem aparelho"), "blocked");
   assert.equal(criteriaProgress(milestoneCriteria(milestoneOf(fresh()))), 0);
   assert.ok(milestoneCriteria(milestoneOf(data)).every(step => !step.done || step.evidence.length), "critério do 0.5 concluído sem evidência executada");
+});
+
+test("a documented NO-GO removes unexecuted criteria from milestone progress only", () => {
+  const copy = fresh(), milestone = milestoneOf(copy);
+  const steps = milestoneCriteria(milestone);
+  steps.forEach(step => { step.done = true; step.evidence = [{ label: "prova", url: "https://example.com/proof" }]; });
+  const mobile = steps.at(-1);
+  mobile.done = false;
+  mobile.notApplicable = "NO-GO registrado: mobile devolvido ao GF-35";
+  validate(copy);
+  assert.equal(applicableCriteria(steps).length, steps.length - 1);
+  assert.equal(criteriaProgress(steps), 100);
+  assert.equal(criteriaStatus(steps), "complete");
+  assert.equal(mobile.done, false);
+  assert.deepEqual(summarize(copy), summarize(data));
+  assert.deepEqual(syncRoadmap(copy, roadmap).milestones, copy.milestones);
+  assert.equal(criteriaProgress([mobile]), 0);
+  assert.equal(criteriaStatus([mobile], "sem aparelho"), "not_applicable");
+  mobile.evidence = [];
+  assert.throws(() => validate(copy), /não aplicável sem evidência/);
+  mobile.evidence = [{ label: "decisão", url: "https://example.com/no-go" }];
+  mobile.done = true;
+  assert.throws(() => validate(copy), /não aplicável não pode estar concluído/);
+  mobile.done = false;
+  for (const invalid of [true, "", null]) {
+    mobile.notApplicable = invalid;
+    assert.throws(() => validate(copy), /notApplicable: texto obrigatório/);
+  }
+  const task = clone();
+  task.tasks[0].status = "not_applicable";
+  assert.throws(() => validate(task), /status/);
 });
 
 test("invalid milestones are rejected without touching the release data", () => {

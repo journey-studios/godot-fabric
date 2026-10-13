@@ -129,3 +129,8 @@ e o teste prova que o exemplo desta pasta não cai nesse bloco. O teste confere 
 node scripts/hosted-receipts.mjs --write --slice frontier-comparison-analysis --work-dir <diretório fora do repositório>
 node scripts/hosted-receipts.mjs --check
 ```
+
+
+## Regeneração dos exemplos sintéticos após a emenda 5 (2026-10-13)
+
+Os três arquivos de exemplo (`example-analysis.json`, `example-analysis.md` e `example-unreported-validity.json`) foram regerados pelos comandos acima sob o protocolo com cinco emendas, após autorização do usuário para o limite operacional de carga 6,0 e antes de qualquer tentativa comparativa. São fixtures sintéticas, não resultados. O caso negativo de carga passa de 5,3 para 9,3 para continuar acima do limite; os testes continuam exigindo a rejeição e a retomada. Os registros anteriores permanecem nos commits pinados. Nenhum dado real do congelamento ou dos ensaios históricos foi reescrito, e esta regeneração não reivindica CI hospedada nem fecha critério do marco.
