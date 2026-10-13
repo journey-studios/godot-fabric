@@ -118,7 +118,7 @@ Each arm runs 12 times and 4 times in each position of a block. Position is bala
 7. `stress`: 2 warm-up and 30 measured rounds.
 8. `end`: reads the resident memory, the SceneTree's nodes and, in C, the Hermes heap after a forced collection and the native views; records the exit code.
 
-**The load of the system** (`sysctl vm.loadavg`) is recorded before an execution starts and after it ends. The limit is written here: a 1-minute load average above **2.0** in either reading
+**The load of the system** (`sysctl vm.loadavg`) is recorded before an execution starts and after it ends. The limit is written here: a 1-minute load average above **6.0** in either reading
 and the execution is redone. The rejected attempt stays in the raw data with its readings and its reason, the redone one takes its place in the sequence, there are at most 3 attempts per slot, and
 when they are used up the campaign stops with that recorded and produces no statistic. Provenance recorded for every execution: the commit, the machine, the system, the display, the renderer and
 the adapter, the vsync mode and the refresh rate read back, the load, and the hashes. All the raw data (every frame of every execution, the warm-up flagged, every rejected attempt) are kept under
@@ -236,6 +236,7 @@ The test holds the **SHA-256 of the JSON in canonical form** (keys sorted at eve
 0b0644716fb5e4bf85ef7556347e56fa5ea12d3be3f19a0576498370ddc618b6   two amendments: 2026-10-09, arm B's time-box and the iPhone's NO-GO
 c03fc265c41e1343c50122888f9a9033ad77d831632b66a2a28fc29592663222   three amendments: 2026-10-10, the replay's 77 intents since #93
 6b61e4bc8244d259b765126ec2e6ab8007b95311d6538fb242a246addcf6169f   four amendments: 2026-10-10, the dialog's context switch ends at its last resolve_event
+0a3d703807f548d717df2ee635749ea7b4bd261cd79bed1ed6649a96acc17972   five amendments: 2026-10-13, user-approved operational load cap of 6.0
 ```
 
 The freeze may fill those two fields of the entries of `thresholds` and nothing else, and the test requires it: no other object may carry them (a freeze field elsewhere would escape the hash), the value and the date are filled together, all the thresholds are frozen
@@ -352,6 +353,16 @@ one after the freeze, which is this section, [the freeze note](frontier-freeze.m
 
 **Two things the freeze notes and does not change.** The `absoluteBudget` compares the p95 of the *CPU time* per frame of an arm with a bound derived from the *frame time* of a presented window, which includes the wait for the display, so the bound is wide for the CPU time by construction and the relative rule (C against B) is what decides.
 And the comparative executions need a 1-minute load average of 2.0 or less (`runs.load.limit1MinuteAverage`), while the executions the freeze read ran at 5.3 to 7.6: the `execucao` criterion needs a machine within that limit ([the freeze note](frontier-freeze.md#four-observations-that-change-no-rule)).
+
+
+### Amendment 5: operational load cap, 2026-10-13
+
+Before any comparative attempt, the user authorized proceeding even though the machine did not reach the original 2.0 load limit. The original campaign is retained with zero attempts and its passed windowed instrument self-check. The final campaign starts again under a separately pinned protocol, with the operational load cap set to 6.0 before collecting any arm measurement. The preflight reached 2.42 but did not sustain 2.0; background readings around 3 to 5 motivated finite headroom. Load average is not CPU utilization.
+
+Only `runs.load.limit1MinuteAverage` changes. Before/after readings, rejection above the cap, three attempts per slot, presentation, parity and instrument gates, execution counts/order, all five frozen thresholds, the non-inferiority margin and the statistical rules remain unchanged. The report must disclose the cap and background-load limitation. The freeze of 2026-10-10 remains historical evidence under its original 2.0 cap; its inputs, results and budgets are not rewritten. No old-protocol attempt enters the amended campaign.
+
+Canonical pin: `0a3d703807f548d717df2ee635749ea7b4bd261cd79bed1ed6649a96acc17972`.
+
 
 ## Reproducing
 

@@ -1,0 +1,13 @@
+{
+  "phase": "load wait after presented slot 27 attempt 1",
+  "pausedAt": "2026-10-13T13:51:20.109Z",
+  "load": 9.15,
+  "targets": [
+    "build/macos-arm64-template.zip",
+    ".deps/node-v22.23.3-darwin-arm64.tar.gz",
+    "node_modules"
+  ],
+  "reason": "free task-owned disposable inputs; exported apps and raw data retained",
+  "completed": true,
+  "resumedAt": "2026-10-13T13:51:21.965Z"
+}

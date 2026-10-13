@@ -92,7 +92,7 @@ test("a load above the limit, an undrawn presented window and an incomplete wind
   ]);
   const presented = (slot) => slotRecord(result, "presented", slot);
   assert.deepEqual(reasonsOf(presented(2).attempts[0]), ["load:before"]);
-  assert.equal(presented(2).attempts[0].load.before, 5.3, "the rejected attempt stays with its load reading");
+  assert.equal(presented(2).attempts[0].load.before, 9.3, "the rejected attempt stays with its load reading");
   assert.deepEqual([presented(2).state, presented(2).accepted, presented(2).rejected], ["accepted", 2, 1]);
   assert.deepEqual(reasonsOf(presented(3).attempts[0]), ["not-presented:intent-not-drawn", "not-presented:idle-not-drawn"]);
   assert.deepEqual(reasonsOf(presented(3).attempts[1]), ["incomplete:stress"]);
@@ -248,9 +248,9 @@ test("a protocol whose load limit is not a finite positive number is refused bef
 });
 
 test("the wait for the load reads it every few seconds until it is under the limit, records the wait, and a wait that runs out lets the attempt run to be judged by the rule", async () => {
-  const quiet = await play({ lanes: ["presented"], slots: [1, 2], load: scriptedLoad([3, 2.5, 1.5]), maxWaitSeconds: 600 });
+  const quiet = await play({ lanes: ["presented"], slots: [1, 2], load: scriptedLoad([7, 6.5, 1.5]), maxWaitSeconds: 600 });
   const [first, second] = (await read(quiet.out, "campaign-state.json")).attempts;
-  assert.deepEqual(first.waited, { limit: 2, maxWaitSeconds: 600, intervalSeconds: 5, first: 3, last: 1.5, polls: 3, seconds: 10, timedOut: false });
+  assert.deepEqual(first.waited, { limit: 6, maxWaitSeconds: 600, intervalSeconds: 5, first: 7, last: 1.5, polls: 3, seconds: 10, timedOut: false });
   assert.deepEqual([second.waited.polls, second.waited.seconds], [1, 0], "the next attempt finds the machine quiet at once");
   assert.equal(quiet.clock.slept, 10000);
   // The machine stays busy: the wait gives up after the time it was given and the attempt runs anyway; its own readings (before and after the process) are what the rule judges.

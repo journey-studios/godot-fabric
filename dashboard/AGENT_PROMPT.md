@@ -121,6 +121,11 @@ React Native. É um recorte de prioridade, não uma segunda versão.
   com `{label, url}`). O status do item e do marco é derivado dos critérios:
   não grave status. Não crie tasks `V05-xx`, fase, sequência ou tag `milestone`
   nos GF: o `sync` os descarta ou rejeita.
+- Um critério retirado do recorte por uma decisão registrada pode ter
+  `notApplicable` com o motivo e `evidence` da decisão. Ele permanece
+  `done: false`, aparece como não aplicável e sai apenas do denominador do
+  marco. Isso não altera a 1.0 nem prova execução. No NO-GO do iPhone, os
+  critérios mobile continuam devolvidos ao GF-35; não os marque concluídos.
 - Ao reescrever o JSON, **preserve as chaves que você não conhece**, em especial
   `milestones`. Um documento remontado com chaves fixas apaga o marco; o teste
   `milestones[0.5]` do dashboard falha se isso acontecer.

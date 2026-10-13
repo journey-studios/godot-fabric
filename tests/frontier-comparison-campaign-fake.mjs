@@ -27,8 +27,8 @@ export const registeredOf = () => ({
 
 // What an attempt can be, to put in a plan.
 export const attempts = {
-  // The 1-minute load above the limit (2.0) before the process.
-  highLoad: { load: { before: 5.3, after: 1 } },
+  // The 1-minute load above the limit (6.0) before the process.
+  highLoad: { load: { before: 9.3, after: 1 } },
   // A display that drew nothing: the presented lane rejects it as not presented.
   notPresented: { change: (report) => report.frames.drawn.fill(0) },
   // The stress window unavailable (a missing hook): the execution has fewer measured occurrences than the protocol counts.

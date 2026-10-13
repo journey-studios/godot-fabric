@@ -1,5 +1,7 @@
 # The execution of the final comparison, part 1: the scenario, the player and the rehearsal in the three arms
 
+**Update, 2026-10-13:** the actual windowed Release campaign ran under amendment 5 and stopped at slot 28 after three load-only rejections. It retains 41 attempts, nine accepted per arm (twelve required), and produces no performance statistics. The [runtime record, raw archive and reproducible stopped report](../evidence/frontier-comparison-final/README.md) supersede the earlier statement that no comparative process had run. The rehearsals below remain historical records; execution, metrics and the final report criteria remain open.
+
 Status: documentation, a scenario in GDScript, a scripted player, a runner in Node and their tests. It is the first part of the criterion `execucao` of V05-10 and **closes nothing**: no comparative execution has
 happened, and **this note states no result**. The rehearsal it describes ran the scenario once in each arm, in a Debug build, on a provisioned copy of the consumer, three times (headless, and windowed in the
 presented and in the unlimited lane); the object it produces is marked as a rehearsal, lives apart from any campaign, and every execution in it is rejected by the analysis as a Debug build, which is what a rehearsal
@@ -422,7 +424,7 @@ did**, so a headless check cannot vouch for a window. The windowed check has bee
 
 ### The load
 
-Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (2.0, read from the protocol; the rule rejects what is
+Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (6.0 since amendment 5 of 2026-10-13, read from the protocol; the rule rejects what is
 above the limit) or `--max-wait` seconds have passed. The wait goes into the state (`waited`: the first and last reading, the number of readings, the seconds, whether it timed out). If it runs out the attempt runs anyway:
 the readings that the rule judges are the launcher's, taken right before the process starts and right after it ends, and they are recorded exactly as read (`load.before`, `load.after`). The wait is a courtesy to
 the attempts of a slot, not a guarantee. The clock and the reading are injectable, which is how the tests drive it. A protocol whose `runs.load.limit1MinuteAverage` is missing, a string or not above zero is
@@ -512,7 +514,7 @@ None changes a number of the protocol; each decides how a sentence meets the orc
 
 1. **The lanes run one after the other**, the presented lane's 36 slots and then the unlimited lane's (the protocol says only that the unlimited lane "keeps the same sequence"). The presented lane carries the decision, so
    it comes first and a stop there spares the second lane.
-2. **"Above the limit" is the limit of 2.0 itself being quiet**, in the wait as in the rule (`tests/frontier-comparison-validity.test.mjs` pins the rule).
+2. **"Above the limit" is the registered limit itself being allowed (6.0 since amendment 5)**, in the wait as in the rule (`tests/frontier-comparison-validity.test.mjs` pins the rule).
 3. **The unlimited lane is N/A for the lane, not only for the execution**, when the vsync does not read back `DISABLED` ("the lane is N/A and is not run further"); `vsync-reading` still does not reject the attempt.
 4. **An attempt whose process wrote no report** (a crash, a timeout, a clean exit without one) is a rejection by `errors` that the campaign counts against the 3 attempts and redoes. The format has no execution object for it
    and the campaign does not invent one (a refresh rate cannot be made up), so since 2026-10-10 it is in the campaign's `unreported` ([above](#the-attempt-that-wrote-no-report)) with its own number, and the analysis counts it
@@ -550,7 +552,7 @@ The exports, the manifests, the probe's `.app`, the choice of leaving the extens
 
 - **The exports of the campaign itself.** The trial ones were made from a working tree with changes that were not committed, and the package sizes they gave are those of one trial. The campaign's are made again, by the same script, from the committed tree on the campaign's machine, and
   their manifests are what the launcher registers in `prepare()`.
-- **A quiet machine and the user away**: a 1-minute load average of 2.0 or less before and after every execution, and a presented window for the 36 executions of the presented lane; the repository's other lanes
+- **A quiet machine and the user away**: a 1-minute load average of 6.0 or less before and after every execution (user-approved amendment 5, 2026-10-13; original cap 2.0), and a presented window for the 36 executions of the presented lane; the repository's other lanes
   run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one, 5.2 to 6.7 in the Release one). The campaign waits for the load but cannot make the machine quiet.
 - **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
   it does not pass or no display presented the window; the code is there and tested with the probe replaced, and was never run. The headless one runs through the exported probe in the Release rehearsal and says so in its deviations; on a busy machine it failed once in four runs

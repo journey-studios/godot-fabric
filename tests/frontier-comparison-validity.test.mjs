@@ -19,21 +19,21 @@ test("a load above the limit is rejected with its reading and redone in the same
   const slot = slotOf(report, "presented", 4);
   assert.deepEqual([slot.arm, slot.state, slot.accepted, slot.rejected], ["C", "accepted", 2, 1]);
   assert.deepEqual(slot.attempts.map(attempt => [attempt.attempt, attempt.status]), [[1, "rejected"], [2, "accepted"]]);
-  assert.deepEqual(slot.attempts[0].reasons, [{rule: "load", clause: "before", value: 5.3, limit: 2}]);
-  assert.equal(slot.attempts[0].load.before, 5.3, "the rejected attempt stays with its load readings");
+  assert.deepEqual(slot.attempts[0].reasons, [{rule: "load", clause: "before", value: 9.3, limit: 6}]);
+  assert.equal(slot.attempts[0].load.before, 9.3, "the rejected attempt stays with its load readings");
   assert.deepEqual([report.sections.validity.totals.presented.C.planned, report.sections.validity.totals.presented.C.accepted, report.sections.validity.totals.presented.C.rejected], [12, 12, 1]);
   assert.deepEqual(report.sections.primary, clean.sections.primary, "the accepted attempt is the same measurement: nothing of the rejected one reached the statistics");
   assert.equal(report.status, "complete");
   // After the execution counts as well, and the limit itself is allowed ("above the limit").
   const after = redoSlot(build(), "presented", 5, [execution => {
-    execution.load.after = 2.5;
+    execution.load.after = 6.5;
   }, execution => {
-    execution.load.before = 2;
-    execution.load.after = 2;
+    execution.load.before = 6;
+    execution.load.after = 6;
     execution.errors.exitCode = 1;
   }]);
   const redone = slotOf(analyze(after), "presented", 5);
-  assert.deepEqual(redone.attempts[0].reasons, [{rule: "load", clause: "after", value: 2.5, limit: 2}]);
+  assert.deepEqual(redone.attempts[0].reasons, [{rule: "load", clause: "after", value: 6.5, limit: 6}]);
   assert.deepEqual(redone.attempts[1].reasons, [{rule: "errors", clause: "exitCode", value: 1}], "a load of exactly 2.0 is not over the limit");
 });
 
@@ -184,7 +184,7 @@ test("the order of the executions: slots follow the protocol's sequence, the pla
 test("attempts that contradict one another, or data that are not in the format, are refused and not analysed", () => {
   const gap = redoSlot(build(), "presented", 4, [overLoaded]);
   gap.executions.find(execution => execution.slot === 4 && execution.attempt === 1).attempt = 2;
-  gap.executions.find(execution => execution.slot === 4 && execution.attempt === 2 && execution.load.before !== 5.3).attempt = 3;
+  gap.executions.find(execution => execution.slot === 4 && execution.attempt === 2 && execution.load.before !== 9.3).attempt = 3;
   assert.throws(() => analyze(gap), /not numbered 1, 2, \.\.\. without gaps/);
   const afterAccepted = build();
   const copy = structuredClone(afterAccepted.executions[0]);

@@ -7,8 +7,8 @@
       "protocol": {
         "id": "frontier-comparison-protocol",
         "item": "V05-10",
-        "sha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
-        "amendments": 4,
+        "sha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
+        "amendments": 5,
         "frozen": [
           {
             "id": "cpu-time-instrument",
@@ -100,8 +100,8 @@
       ],
       "load": {
         "command": "sysctl vm.loadavg",
-        "limit1MinuteAverage": 2,
-        "highestBefore": 5.3,
+        "limit1MinuteAverage": 6,
+        "highestBefore": 9.3,
         "highestAfter": 1.28
       },
       "deviations": []
@@ -333,7 +333,7 @@
               "attempt": 1,
               "reported": true,
               "load": {
-                "before": 5.3,
+                "before": 9.3,
                 "after": 0.53
               },
               "vsync": {
@@ -345,8 +345,8 @@
                 {
                   "rule": "load",
                   "clause": "before",
-                  "value": 5.3,
-                  "limit": 2
+                  "value": 9.3,
+                  "limit": 6
                 }
               ]
             },
@@ -4787,8 +4787,8 @@
     },
     "reproduction": {
       "rawData": "synthetic: no raw data",
-      "campaignSha256": "62eccb0534b33f16192da2d06eed2e474289c14377f7da893bd293725e129eed",
-      "protocolSha256": "2319c9b6fbe39262c932c439a5642525818ea4d3e0c66f278f8039d491526f93",
+      "campaignSha256": "1b48e6c775da6126625541df62b6dbcb69399f73b9c0030b9111e493f7263dd2",
+      "protocolSha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
       "seed": 20261009,
       "resamples": 10000,
       "commands": [

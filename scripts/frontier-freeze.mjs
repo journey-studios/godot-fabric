@@ -371,7 +371,13 @@ export function checkFreeze({ inputs, freeze, protocol }) {
   for (const difference of differences(rebuilt, freeze)) {
     problems.push(`freeze.json is not what inputs.json gives by the rule, at ${difference}`);
   }
-  if (protocol.runs.load.limit1MinuteAverage !== LOAD_LIMIT_1_MINUTE) {
+  // The historical freeze retains its original load cap. The user-approved fifth
+  // amendment changes only the later campaign's operational cap, before any run;
+  // the protocol pin protects its full wording and all frozen budgets stay exact.
+  const loadAmendment = protocol.amendments?.some(amendment => amendment.date === "2026-10-13"
+    && amendment.before === "runs.load.limit1MinuteAverage: 2.0" && amendment.measurementsBefore === 0);
+  const amendedLoad = protocol.runs.load.limit1MinuteAverage === 6 && loadAmendment;
+  if (protocol.runs.load.limit1MinuteAverage !== LOAD_LIMIT_1_MINUTE && !amendedLoad) {
     problems.push(`the protocol's load limit is ${protocol.runs.load.limit1MinuteAverage}, not the ${LOAD_LIMIT_1_MINUTE} the freeze compares the loads with`);
   }
   const expected = rebuilt.protocolThresholds;

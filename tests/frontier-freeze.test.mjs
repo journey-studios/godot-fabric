@@ -319,7 +319,7 @@ test("the protocol has its five thresholds frozen on one date, the stress as N/A
   assert.match(protocol.status, /^pre-registered/);
   assert.match(protocol.baseline.windowed, /^pending/);
   assert.equal(protocol.open[0].id, "windowed-baseline");
-  assert.equal(protocol.amendments.length, 4);
+  assert.equal(protocol.amendments.length, 5);
 });
 
 // ---- the corroboration: what the other executions of the same night show, and no threshold ----
@@ -345,8 +345,19 @@ test("the corroboration shows what the notes say of it: the turn before #100 rep
   assert.deepEqual(freeze.corroboration.roles["baseline-main"].framesAtLeast100ms, [0, 0, 0, 0, 1], "one frame of 100 ms or more in the last run of the corroboration, none in the others");
 });
 
-test("every execution of the freeze ran above the protocol's load limit, and the freeze says so", () => {
-  assert.equal(freeze.loads.limit1MinuteAverage, protocol.runs.load.limit1MinuteAverage);
+test("the later load-cap amendment does not rewrite the historical freeze", () => {
+  const protocolWith = change => { const clone = structuredClone(protocol); change(clone); return clone; };
+  assert.deepEqual(check(), []);
+  const unrecorded = protocolWith(clone => { clone.amendments.pop(); });
+  assert.ok(check({changedProtocol: unrecorded}).some(problem => /the protocol's load limit/.test(problem)));
+  const afterMeasurement = protocolWith(clone => { clone.amendments.at(-1).measurementsBefore = 1; });
+  assert.ok(check({changedProtocol: afterMeasurement}).some(problem => /the protocol's load limit/.test(problem)));
+  assert.deepEqual(check({changedProtocol: protocolWith(clone => { clone.runs.load.limit1MinuteAverage = 2; })}), []);
+});
+
+test("every execution of the freeze ran above its original load limit, and the freeze says so", () => {
+  assert.equal(freeze.loads.limit1MinuteAverage, 2, "historical freeze retains its original load cap");
+  assert.equal(protocol.runs.load.limit1MinuteAverage, 6, "current campaign uses the approved post-freeze amendment");
   assert.equal(freeze.loads.everyFrozenReadingAboveTheLimit, true);
   assert.deepEqual(freeze.loads.frozen.baseline, {min: 5.26, max: 6.16, lane: {before: "{ 5.41 5.71 7.07 }", after: "{ 6.79 6.05 6.87 }"}});
   assert.deepEqual([freeze.loads.frozen.turn.min, freeze.loads.frozen.turn.max], [5.35, 7.55]);

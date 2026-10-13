@@ -1,0 +1,5 @@
+{
+  "originalSha256": "a54384a9f8ec7ffd0f141b74224aead48d16e5659ea5861edceacecb12e88a69",
+  "publishedSha256": "1e4b387dc6dbc0d046c95dbb5b0b53776178f79f8aeb08affb9451dd23bf56ce",
+  "normalization": "replace the absolute checkout prefix with <checkout>; scenario logs and reports are unchanged"
+}

@@ -147,7 +147,7 @@ test("the example shows what each section holds: the provenance, the validity of
   assert.match(provenance, /Deviations from the protocol\n\nNone\./);
   const validity = sectionOf(markdown, "Validity");
   assert.match(validity, /\| C \| 12 \| 12 \| 1 \| 0 \| 0 \| 0 \|/);
-  assert.match(validity, /\| presented \| 4 \| C \| accepted \| 2 \| 1 \| written \| ENABLED at 120 Hz \| 5\.3 \| 0\.53 \| load \/ before \(value 5\.3, limit 2\) \|/);
+  assert.match(validity, /\| presented \| 4 \| C \| accepted \| 2 \| 1 \| written \| ENABLED at 120 Hz \| 9\.3 \| 0\.53 \| load \/ before \(value 9\.3, limit 6\) \|/);
   const primary = sectionOf(markdown, "Primary outcome");
   assert.match(primary, /Interval: percentile bootstrap of the difference of the medians, level 0\.95, 10000 resamples, seed 20261009, PRNG mulberry32/);
   assert.deepEqual([...primary.matchAll(/- Category: (\w+) \(unadjusted: (\w+); downgraded by the Holm guard: (\w+)\)/g)].map(match => match.slice(1)), [
