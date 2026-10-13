@@ -9,9 +9,14 @@ comparison; they do not certify Godot Fabric builds on those operating systems.
 
 `npm run parity:inventory` resolves the upstream strict generated declarations
 with TypeScript 6.0.3, ESNext and React types, without browser DOM or Node global
-merging. The [generated inventory](contracts-0.87.1.json) contains
-stable IDs, signatures, owning types and hashes of the resolved RN source files.
-`npm run parity:inventory -- --check` rejects drift without rewriting that file.
+merging, and reads three more kinds of contract from RN's JavaScript with the same
+TypeScript parser. The [generated inventory](contracts-0.87.1.json) (format 2)
+contains stable IDs, signatures, owning types, a `derivation` block that records
+how the JavaScript-derived rows were found and what they leave out, and hashes of
+every RN source file it read (the declarations and the 636 JavaScript files under
+`Libraries/` and `src/`).
+`npm run parity:inventory -- --check` rejects drift without rewriting that file,
+and a test regenerates it twice and compares the bytes with the checked-in file.
 This check runs in the normal contract gate.
 
 | Declaration category | Rows |
@@ -25,14 +30,61 @@ This check runs in the normal contract gate.
 | API members | 342 |
 | Other type members | 2,556 |
 | Explicit RN global values / types / members | 32 / 54 / 265 |
-| Total | 8,113 |
+| Runtime globals RN's `InitializeCore` chain installs | 72 |
+| Host globals RN's JS reads and the host must provide | 42 |
+| Native commands (`codegenNativeCommands`) | 27 |
+| Total | 8,254 |
+
+The last three kinds are not in the generated declarations:
+
+- **`runtime-global`** (72): one row per property the chain `InitializeCore.js` ->
+  `setup-env.js` -> `setUpDefaultReactNativeEnvironment` installs on the global
+  object: the `setUp*`/`polyfill*` modules the entry function requires, the other
+  modules it requires as statements (`AppRegistry` installs `RN$AppRegistry`) and the
+  `setUp*`/`polyfill*` modules those load. Found in the syntax tree as
+  `polyfillGlobal`, `polyfillObjectProperty`, `Object.defineProperty` and assignment
+  on `global`/`globalThis`, with names taken from literals, from the calls of a local
+  helper (`setUpTimers.js`'s `defineLazyTimer`) and from Metro's
+  `__METRO_GLOBAL_PREFIX__` prefix. `owner` is the object the property sits on
+  (`global`, `navigator`, `process`, `process.env`); `installer` is the module the entry
+  function requires and `source` the file with the statement; `sites` lists every
+  install with its form and the conditions around it (`__DEV__ && enableDeveloperTools`,
+  `global.RN$Bridgeless === true`, a feature flag), outermost first, so a gated setup
+  file is recorded instead of dropped. Installs that other modules make when
+  they first load (`__fbBatchedBridge`, `RN$stopSurface`, `__SYSTRACE`) are listed in
+  `derivation.runtimeGlobals.outsideChain`, not as rows.
+- **`host-global`** (42): names RN's JS reads as `global.<name>`, `globalThis.<name>`
+  or `global["<name>"]` (plus four free identifiers, among them `nativeFabricUIManager`
+  and `__DEV__`, that React's renderer builds and RN's modules read bare) that no file under
+  `Libraries/` or `src/` installs. A name is a row when it starts with
+  `native<Upper>`, `RN$` or `__`, or is in a short checked-in allow-list (`ErrorUtils`,
+  `HermesInternal`, `globalEvalWithSourceUrl`, each with its reason). Every other read
+  is listed under `derivation.hostGlobals.excluded` with a reason (installed by RN,
+  or an ECMAScript built-in), and the generator fails on a read it has no rule
+  for. `source` is the first file that reads the name and `readers` counts the files.
+- **`native-command`** (27): the `supportedCommands` of every
+  `codegenNativeCommands<Commands>({...})` call under `Libraries/` and `src/`
+  (12 call sites). `owner` is the file's name (`ViewNativeComponent`,
+  `ScrollViewCommands`, `SwitchNativeComponent`), `name` the command and `type` its
+  member of the `Commands` interface, with the generic TextInput interface's
+  parameter replaced by each component's own native type.
+
+Public values and their API members also carry a **mechanical platform marker**,
+`platformImplementation` (`["ios"]`, `["android"]` or `["android","ios"]`) with
+`platformEvidence`: the value's module has a `<module>.ios.js` or `<module>.android.js`
+next to it, or the value's name ends in `IOS` or `Android`. A member inherits its
+value's marker. 13 values and 61 API members are marked. The marker is evidence,
+not an applicability decision: `TouchableNativeFeedback` and `InputAccessoryView` have
+no such file and are not marked.
 
 Rows count declarations in their owning contexts. An inherited property can
-occur in several components; these are not 8,113 independent behaviors.
+occur in several components; these are not 8,254 independent behaviors.
 Signatures retain nested types and overloads, but member expansion is immediate,
-not recursive. Private deep imports, undocumented globals, every possible
-value/combination and RN's entire transitive dependency API are outside this
-inventory. Its presence is not a compatibility score.
+not recursive. Private deep imports, every possible value/combination and RN's
+entire transitive dependency API are outside this inventory, and so are the
+callable modules `setUpBatchedBridge` registers for the host to call. Rows
+carry no owner, applicability or fixture assignment yet. Its presence is not a
+compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
 current facade has **57 exported names awaiting differential certification, 3
