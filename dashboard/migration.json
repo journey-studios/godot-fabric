@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07 concluído: export macOS Release assinado, replay do Frontier no hash dourado com perfil limpo e segunda máquina limpa num runner hospedado, com CI hospedada e Pages; o 0.5 segue no comparativo final (V05-10)."
   },
-  "updatedAt": "2026-10-13T12:05:28.092Z",
+  "updatedAt": "2026-10-13T13:23:00.797Z",
   "source": {
     "commit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
     "url": "https://github.com/journey-studios/godot-fabric/commit/7e6f0b1252326cf26cc1bccca039a6aff93716b8",
@@ -4317,7 +4317,6 @@
             "V05-08"
           ],
           "acceptance": "O consumidor do jogo, exportado em Release e assinado com o time Apple do usuário, passa os estágios do gate em um iPhone arm64 físico em paisagem (modelo, iOS e taxa de atualização registrados), com recibo manual nomeado. Um NO-GO fecha o 0.5 como macOS completo. Hoje o script ios-consumer-export.py recusa execução em aparelho e usa CODE_SIGNING_ALLOWED=NO; o estágio G0 (o fixture de fumaça iOS, não o jogo) começa no dia 0.",
-          "blocker": "NO-GO do usuário em 2026-10-09: sem iPhone, Apple Team nem Developer Mode; o 0.5 fecha como macOS completo e o mobile volta ao GF-35, sem alterar a 1.0.",
           "criteria": [
             {
               "id": "g0",
@@ -4903,11 +4902,18 @@
   ],
   "activity": [
     {
+      "id": "milestone-0-5-no-go-item-scope-20261013",
+      "at": "2026-10-13T13:23:00.797Z",
+      "taskIds": [],
+      "message": "A contagem de itens da 0.5 exclui o item integralmente fora do recorte. V05-09 tem a decisão NO-GO concluída: seus quatro critérios físicos continuam done=false e não aplicáveis; o bloqueio do aparelho pertence ao GF-35 e não bloqueia o fechamento macOS já decidido. Nenhum critério físico foi executado, e nenhuma task, peso ou checkpoint da 1.0 muda. O comparativo final segue em execução.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4ff7547cde3053998b37f0c0cd4e1e116acbbed1/docs/evidence/frontier-device/README.md"
+    },
+    {
       "id": "milestone-0-5-protocol-amendment-5-load-20261013",
       "at": "2026-10-13T12:05:28.092Z",
       "taskIds": [],
       "message": "Emenda 5 autorizada pelo usuário antes de qualquer tentativa comparativa: limite operacional de carga da campanha macOS passa de 2,0 a 6,0, com leituras antes/depois e rejeição acima do limite. A campanha anterior tem zero tentativas e autoteste gráfico aprovado. Orçamentos congelados, margem de não-inferioridade, braços, ordem, mínimo de execuções, regras de apresentação/paridade e estatística não mudam. Nenhum dado histórico ou número da 1.0 muda; execução, métricas e relatório seguem abertos.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/frontier-05-final-comparison/docs/research/frontier-comparison-protocol.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f984f37ec360e55a9d3f1671e1fec75613a880a7/docs/research/frontier-comparison-protocol.md"
     },
     {
       "id": "milestone-0-5-macos-no-go-accounting-20261013",
