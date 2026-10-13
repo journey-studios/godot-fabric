@@ -4922,13 +4922,13 @@
   ],
   "activity": [
     {
-      "id": "gf-05-bootstrap-audit-slice-a",
+      "id": "gf-05-bootstrap-audit-slice-a-f2036ea",
       "at": "2026-10-13T17:53:00.000Z",
       "taskIds": [
         "GF-05"
       ],
       "message": "GF-05, fatia A: a auditoria do bootstrap do RN (só Node e dados, sem execução nativa). O host não executa o InitializeCore do RN: o plugin de plataforma resolve ReactNativePrivateInitializeCore para src/initialize.js, que carrega só o runtime, o RCTDeviceEventEmitter e o setUpXHR; \"equivalente auditado\" não tinha documento que dissesse, passo a passo, o que substitui cada módulo. docs/compatibility/bootstrap-audit-0.87.1.json passa a registrar uma entrada por módulo da cadeia do RN (3 arquivos de entrada, 19 instaladores e 3 aninhados, mais os 2 polyfills do Metro, console e error-guard), com um status entre runs (o módulo do RN roda sem mudança no src/initialize.js), replaced (o código do SDK ou do host faz o trabalho), host (o host C++ ou o Hermes fornece), pending (falta, com a fatia B a F que entrega) e not-applicable (com a razão e, quando outra tarefa é dona, o GF), e arquivo e símbolo como evidência (sem número de linha, para que edição alheia nos arquivos centrais não quebre o gate). A lista de passos sai do scan de scripts/parity-upstream-scan.mjs, não de texto escrito à mão. tests/bootstrap-audit.test.mjs, dentro do test:parity e portanto do test:contracts, falha quando a cadeia do RN ganha, perde, renomeia ou reordena um passo, quando uma condição ou um global instalado muda, quando um runs deixa de ser importado, quando um símbolo de evidência some ou é renomeado ou uma âncora fica velha ou ambígua, ou quando falta status ou razão; cada modo tem uma mutação sobre cópia dos insumos reais. Hoje: 1 runs, 6 replaced, 4 host, 9 pending e 12 not-applicable. As decisões do usuário de 2026-10-13 ficam gravadas e exigidas pelo gate: encoding com paridade ao Hermes (TextEncoder, atob e btoa presentes; TextDecoder ausente, com fixture negativa), performance (now, mark, measure, clearMarks e clearMeasures no 1.0 pelo fallback do RN, com o stub {now} do host saindo na fatia B; as 11 classes Web Performance em post_1_0, GF-40, como lacuna de paridade registrada) e starvation com paridade ao RN bridgeless, sem desvio deliberado. A auditoria achou o setUpDOM sem dono entre as fatias e o atribuiu à B. Nenhum comportamento muda; o plano das fatias B a F está no README. Nenhum checkpoint, peso ou denominador se move.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/PINXR/docs/evidence/runtime/README.md#bootstrap-audit-slice-a-2026-10-13"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f2036ea14ac90595beb4dba9a56ec48683154f44/docs/evidence/runtime/README.md#bootstrap-audit-slice-a-2026-10-13"
     },
     {
       "id": "frontier-05-waiting-cohort-20261013",
