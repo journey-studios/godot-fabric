@@ -1148,7 +1148,7 @@ entire group before beginning another.
 
 | Sequence | Delivery slice | Existing work owners | Prerequisite and observable result |
 | --- | --- | --- | --- |
-| 1 | Reliable startup and comparison fixtures | GF-01, GF-02 | Reproduce and fix cold-start/root-cause and minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable |
+| 1 | Reliable startup and comparison fixtures | GF-01, GF-02 | Reproduce the cold-start root cause and fix it, or contain it with an executable control when it lies in the engine (GF-02, 2026-10-13), and close the minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable |
 | 2A | Shared application, bootstrap and roots | GF-05, GF-06, GF-07 | Start from the reliable baseline; register/mount two distinct roots in one runtime, update props and unmount one without restarting the other; extend the semantic suite with each behavior |
 | 2B | Minimal independent consumer and authoring flow | GF-03, GF-04; initial slices of GF-28/GF-29 | Advance alongside 2A; a separate TSX project uses public imports/types and project-owned dependencies, with visible build/unsupported-contract errors and no hidden demo aliases |
 | 3 | Geometry, refs and Godot-to-React communication | GF-08, GF-09, GF-25; View foundation in GF-10 | Integrate 2A/2B; window/surface metrics, drawing, measures and input agree; typed calls/events respect lifetime, initial-state revisions and stale-reference rejection |
@@ -1313,7 +1313,7 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-01 · P0 · Full contract inventory and oracle | In progress | Expand the versioned root inventory to types, component props/styles, events, ref commands, globals and applicable OS APIs. Every target contract has an owner and positive/negative fixture. Run shared fixtures against an original pinned RN iOS/Android app and Godot; record semantic traces, layout tolerances and platform applicability before implementation | None |
-| GF-02 · P0 · Clean startup and engine contract | In progress | Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes | GF-01 |
+| GF-02 · P0 · Clean startup and engine contract | In progress | Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and identify the root cause upstream (the Godot editor's deferred extension-documentation callback, godotengine/godot#111645), contain it, and keep an executable control: in native CI the official 4.7.2 crashes on an empty-cache import without the containment and passes with it, and the control fails with a clear message if a future Godot fixes the bug (decision of 2026-10-13). Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes | GF-01 |
 | GF-03 · P0 · Public API and typed platform resolution | In progress | Export actual public TextInput/Button contracts, use the original wrapper where viable, and provide strict RN-compatible public types. Resolve `.godot`, `.native`, JS/JSX/TS/TSX, assets and package conditions through a documented consumer bundler. An independent TSX app imports every in-scope root name; implemented APIs run, unfinished contracts still fail visibly | GF-01 |
 | GF-04 · P0 · Eliminate silently accepted behavior | In progress | Audit facade destructuring, validAttributes, values and event registration. Implement or explicitly reject each unsupported prop/value, including accessibility metadata and userSelect/collapsable semantics; verify updates/removal as well as initial mount. Before 1.0 all applicable target contracts must be implemented, not merely guarded | GF-01, GF-03 |
 | GF-05 · P0 · RN bootstrap and JS globals | In progress | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |
@@ -1331,6 +1331,27 @@ checks pass locally. Direct empty-cache import still reproduces the engine
 crash, consistent with [upstream issue #111645](https://github.com/godotengine/godot/issues/111645).
 GF-02 remains In progress; the [evidence record](docs/evidence/cold-start.md)
 distinguishes containment, local verification and the remaining engine boundary.
+
+**GF-02 checkpoint (2026-10-13):** the engine boundary is now an executable
+control. The crash is a defect of the Godot editor ([upstream issue #111645](https://github.com/godotengine/godot/issues/111645),
+still open, with its fix godotengine/godot#123658 not merged), and this project
+runs the unmodified official engine, so by decision of 2026-10-13 the acceptance
+reads "root cause identified upstream and contained, with an executable
+control" instead of "fix the root cause". `npm run test:cold:boundary` imports a
+Fabric-only project on an empty cache five times without the startup preparation
+and five times with it. The verdict is `boundary-holds` only if every
+unprepared import crashes with signal 11 and every prepared import is clean; if
+no unprepared import crashes, the control fails with a message that says the
+containment can be retired and the engine requalified (`engine-fixed`), and any
+other mix fails and is reported as measured. Locally the unprepared crash was
+deterministic (5 of 5 and 20 of 20) and every prepared import was clean. The
+verdict logic is a pure Node test in `test:contracts`; the native control runs in
+the `native-cold-start` job after `test:cold`. The hosted run
+[38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586/job/115318656893) reported
+`boundary-holds` (5 of 5 unprepared imports crashed, 5 of 5 prepared ones were clean, on the same official
+executable), and the `contract` checkpoint is closed on it.
+GF-02 remains In progress (comparison cases and applicable targets); see the
+[evidence record](docs/evidence/cold-start.md#executable-engine-boundary).
 
 ### Focus command boundary complement (2026-10-04)
 
