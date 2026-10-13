@@ -4916,6 +4916,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/f984f37ec360e55a9d3f1671e1fec75613a880a7/docs/research/frontier-comparison-protocol.md"
     },
     {
+      "id": "gf-01-contract-inventory-s1-b2dd6c1",
+      "at": "2026-10-13T12:00:00.000Z",
+      "taskIds": [
+        "GF-01"
+      ],
+      "message": "GF-01, fatia S1 do contrato (só Node e dados, sem execução nativa): o inventário de contratos do RN 0.87.1 passou de 8.113 para 8.254 linhas (formato 2) e passou a cobrir o que as declarações geradas não dizem, lido com o parser do TypeScript sobre o JS do RN. runtime-global (72): as propriedades que a cadeia do InitializeCore instala no objeto global (performance, navigator.product, os timers, fetch, URL, Blob, WebSocket, regeneratorRuntime, __fetchSegment, RN$AppRegistry e as demais), cada uma com o arquivo instalador e as condições de cada instalação (__DEV__, RN$Bridgeless, flags de funcionalidade), sem descartar os arquivos condicionados. host-global (42): os nomes que o JS do RN lê e que o host precisa fornecer (nativeFabricUIManager, nativeModuleProxy, __turboModuleProxy, RN$Bridgeless, HermesInternal e outros), por uma varredura documentada de Libraries/ e src/ com regra de nome, lista de permissão pequena e exclusões com motivo no próprio arquivo. native-command (27): os supportedCommands das 12 chamadas de codegenNativeCommands, com a assinatura de cada comando. Valores públicos e membros de API cujo módulo tem implementação .ios.js ou .android.js, ou cujo nome termina em IOS ou Android, ganharam um marcador mecânico de plataforma (13 valores e 61 membros) que não decide aplicabilidade. As 8.113 linhas anteriores seguem iguais byte a byte, exceto pelo marcador; duas regenerações dão os mesmos bytes e um teste confere. O checkpoint contract do GF-01 segue aberto até o mapa de dono, escopo e aplicabilidade (S2) e o catálogo de polaridade das fixtures com o gate (S3). Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b2dd6c19b712bd75f5341a5eb4c85f5b6431d710/docs/compatibility/README.md"
+    },
+    {
       "id": "milestone-0-5-macos-no-go-accounting-20261013",
       "at": "2026-10-13T11:38:12.227Z",
       "taskIds": [],
