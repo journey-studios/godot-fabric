@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "0.5 macOS: implementação e export entregues; comparativo final aguardando campanha válida. Dados da campanha interrompida e auditorias X9/X10 preservados; iPhone fora do recorte pelo NO-GO."
+    "focusTitle": "0.5 macOS: coletor e integridade corrigidos; nova coorte Release aguarda carga estável. Comparativo final e orçamentos continuam abertos."
   },
-  "updatedAt": "2026-10-13T14:57:13.478Z",
+  "updatedAt": "2026-10-13T16:18:13.347Z",
   "source": {
-    "commit": "afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "scope": "0.5 macOS: recorte do NO-GO refletido sem reivindicar critérios físicos; auditorias X9/X10 documentadas e aprovadas. Campanha Release interrompida pelo limite de carga, com 41 tentativas retidas e 9 aceitas por braço; execução, métricas, relatório final, X6 e X11 seguem abertos. GF-01 S1 da main preservado; nenhuma aceitação da 1.0 muda nesta PR.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/152"
+    "commit": "de310cf5f461dfd5ee5883c47d8517dc337b48b5",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/de310cf5f461dfd5ee5883c47d8517dc337b48b5",
+    "scope": "0.5 macOS: timeout de carga não consome tentativas, retomada verifica brutos e análise exige os 12 slots balanceados. Validação local e exports reconferidos; nova coorte separada. V05-10 execução/métricas/relatório e X6/X11 abertos; aceitação da 1.0 preservada.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/156"
   },
   "phases": [
     {
@@ -4626,7 +4626,7 @@
           "evidence": []
         }
       ],
-      "blocker": "A campanha Release parou pela regra de carga: 41 tentativas, 9 aceitas por braço de 12 exigidas; vaga 28 esgotou 3 tentativas. Sem estatísticas ou veredito de desempenho; é necessária uma nova campanha completa em janela estável."
+      "blocker": "A coorte anterior parou por carga com 41 tentativas e 9 aceitas por braço. O coletor foi corrigido e uma coorte nova passou no autoteste gráfico, aguardando carga ≤6,0 estável por 60 s. Não há comparativo completo nem veredito de orçamento: execução, métricas, relatório, X6 e X11 continuam abertos."
     }
   ],
   "releaseChecklist": [
@@ -4912,6 +4912,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "frontier-05-collector-integrity-20261013",
+      "at": "2026-10-13T16:18:13.347Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: coletor aguarda sem gastar tentativas; retomada e vereditos brutos rederivados; relatório exige 12 execuções por braço em plano balanceado. Contratos: 807 Node + 37 Python; regressões: 126; últimas correções: 36, todos verdes. Exports reconferidos; nova coorte separada, aceite final permanece aberto.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/de310cf5f461dfd5ee5883c47d8517dc337b48b5/docs/evidence/frontier-comparison-final/README.md"
+    },
     {
       "id": "milestone-0-5-load-stopped-campaign-and-audits-20261013",
       "at": "2026-10-13T14:57:13.478Z",
