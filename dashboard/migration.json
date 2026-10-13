@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "0.5 macOS: implementação e export entregues; comparativo final aguardando campanha válida. Dados da campanha interrompida e auditorias X9/X10 preservados; iPhone fora do recorte pelo NO-GO."
+    "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
   "updatedAt": "2026-10-13T18:00:00.000Z",
   "source": {
-    "commit": "afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "scope": "0.5 macOS: recorte do NO-GO refletido sem reivindicar critérios físicos; auditorias X9/X10 documentadas e aprovadas. Campanha Release interrompida pelo limite de carga, com 41 tentativas retidas e 9 aceitas por braço; execução, métricas, relatório final, X6 e X11 seguem abertos. GF-01 S1 da main preservado; nenhuma aceitação da 1.0 muda nesta PR.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/152"
+    "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "scope": "0.5 macOS: coletor e guardas de integridade validados; planos balanceados exigidos no primário e FPS. A nova coorte retornou waiting: A1 rejeitada com carga 5,65 → 6,62; após 30 min, tentativa 2 preservada e zero aceitas. Dados auditados e retidos separadamente. V05-10 execução, métricas, relatório e X6/X11 abertos; aceitação da 1.0 preservada.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/156"
   },
   "phases": [
     {
@@ -4635,7 +4635,7 @@
           "evidence": []
         }
       ],
-      "blocker": "A campanha Release parou pela regra de carga: 41 tentativas, 9 aceitas por braço de 12 exigidas; vaga 28 esgotou 3 tentativas. Sem estatísticas ou veredito de desempenho; é necessária uma nova campanha completa em janela estável."
+      "blocker": "Comparativo final pendente. A coorte antiga parou por carga com 41 tentativas e 9 aceitas por braço. A nova coorte passou no autoteste gráfico, mas A1 foi rejeitada por carga 5,65 → 6,62; após 30 min retornou waiting, tentativa 2 preservada e zero aceitas. É necessária uma janela estável de carga ≤6,0. V05-10 execução, métricas, relatório e X6/X11 permanecem abertos."
     }
   ],
   "releaseChecklist": [
@@ -4929,6 +4929,24 @@
       ],
       "message": "GF-01, fatia S2 do contrato (só Node e dados, sem execução nativa): o mapa de dono, escopo e aplicabilidade das 8.254 linhas do inventário de contratos do RN 0.87.1 (docs/compatibility/contract-map-0.87.1.json). Não há uma entrada por linha: 133 regras com precedência explícita (a família de cada API, os donos que cruzam componentes como acessibilidade, eventos de entrada e a API de nós DOM, as anotações @platform das declarações, os gates dos globals, os componentes só de iOS ou de Android e os artefatos do inventário) e 7 exceções por linha, cada uma com motivo. Cada linha recebe um dono (uma tarefa GF do painel), um escopo (1_0: 6.314, post_1_0: 125, out: 1.815, esse último com motivo) e a aplicabilidade em iOS, Android e Godot (applies, not-applicable ou host-provides, os dois últimos com motivo). Nos runtime-global a decisão sai dos gates de cada instalação sob o modo bridgeless que o host Godot declara: os timers e as funções de quadro, que o JS do RN só instala sem bridgeless, são host-provides, e o Godot soma 67 linhas host-provides (6 runtime-global e 6 global-value de timer e de quadro, as 11 classes da Web Performance que dependem do módulo NativePerformance, os 38 globals que o JS do RN só lê e 6 globals declarados que nenhum arquivo do RN instala). O gate scripts/parity-map.mjs --check entrou no test:parity e reprova linha sem dono, escopo ou aplicabilidade, dono fora do painel, duas regras de mesma precedência na mesma linha, exceção de linha que não existe mais, regra morta e motivo ausente; os testes mutam uma cópia do mapa para cada modo de falha e conferem os 97 valores raiz com a auditoria de 2026-10-01, o marcador de plataforma do S1, as anotações @platform das declarações e a classificação de props do 0.5. O checkpoint contract do GF-01 segue aberto até o catálogo de polaridade das fixtures (S3). Nenhum checkpoint, peso ou denominador muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/d7ad486aa9a268317ef6da0e71f61a7670e99275/docs/compatibility/README.md"
+    },
+    {
+      "id": "frontier-05-waiting-cohort-20261013",
+      "at": "2026-10-13T17:16:58.407Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: nova coorte Release encerrou o ciclo em waiting (exit 2), com A1 rejeitada por carga 5,65 → 6,62 e tentativa 2 preservada após espera de 30 min. Brutos e vereditos rederivados; arquivo com 13 membros validado e relatório intermediário incompleto reproduzido byte a byte. Sem estatística ou veredito de orçamento; Mac liberado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/156"
+    },
+    {
+      "id": "frontier-05-collector-integrity-20261013",
+      "at": "2026-10-13T16:18:13.347Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: coletor aguarda sem gastar tentativas; retomada e vereditos brutos rederivados; relatório exige 12 execuções por braço em plano balanceado. Contratos: 807 Node + 37 Python; regressões: 126; últimas correções: 36, todos verdes. Exports reconferidos; nova coorte separada, aceite final permanece aberto.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/de310cf5f461dfd5ee5883c47d8517dc337b48b5/docs/evidence/frontier-comparison-final/README.md"
     },
     {
       "id": "milestone-0-5-load-stopped-campaign-and-audits-20261013",

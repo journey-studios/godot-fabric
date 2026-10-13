@@ -271,8 +271,9 @@ test("FPS without a limit: higher is better, a gain excludes zero, and the axis 
     readings: {A: {accepted: 12, withFps: 0, modes: {ENABLED: 12}}, B: {accepted: 12, withFps: 0, modes: {ENABLED: 12}}, C: {accepted: 12, withFps: 0, modes: {ENABLED: 12}}}});
   assert.equal(na.sections.validity.totals.unlimited.C.rejected, 0);
   // A lane that was not run at all is N/A for that reason.
-  assert.equal(axisOf(analyze(build({lanes: ["presented"]})), "fps-unlimited").reason, "unlimited-lane-not-run");
-  // A single execution that reads another mode leaves 11 of 12 with a reading, which is still at least the 10 the protocol requires.
+  const notRun = axisOf(analyze(build({lanes: ["presented"]})), "fps-unlimited");
+  assert.deepEqual([notRun.applicable, notRun.reason, Object.hasOwn(notRun, "windows")], [false, "unlimited-lane-not-run", false]);
+  // A single execution that reads another mode makes the lane N/A, even when the other 11 exceed the minimum.
   const one = build();
   const odd = executionsOf(one, "C", "unlimited")[0];
   odd.vsync.mode = "ADAPTIVE";
@@ -281,7 +282,7 @@ test("FPS without a limit: higher is better, a gain excludes zero, and the axis 
   }
   const kept = axisOf(analyze(one), "fps-unlimited");
   assert.deepEqual([kept.readings.C.accepted, kept.readings.C.withFps, kept.readings.C.modes], [12, 11, {ADAPTIVE: 1, DISABLED: 11}]);
-  assert.equal(kept.windows[0].arms.C.executions, 11);
+  assert.deepEqual([kept.applicable, kept.reason, Object.hasOwn(kept, "windows")], [false, "vsync-not-disabled", false]);
   // The gain by the rule excludes zero for every interval of a grid, so the flag adds nothing the rule did not say.
   for (let lower = -400; lower <= 400; lower += 25) {
     for (let upper = lower; upper <= 400; upper += 25) {
@@ -291,6 +292,48 @@ test("FPS without a limit: higher is better, a gain excludes zero, and the axis 
       }
     }
   }
+});
+
+test("FPS without a limit requires every slot of the registered balanced lane, while the presented primary remains valid", () => {
+  for (const [name, keep] of [
+    ["ten per arm", execution => execution.slot <= 30],
+    ["eleven per arm", execution => execution.slot <= 33],
+    ["a missing control slot", execution => !(execution.arm === "A" && execution.slot === 1)],
+    ["a missing middle slot", execution => execution.slot !== 4],
+  ]) {
+    const campaign = build();
+    campaign.executions = campaign.executions.filter(execution => execution.lane !== "unlimited" || keep(execution));
+    const report = analyze(campaign);
+    const fps = axisOf(report, "fps-unlimited");
+    assert.equal(report.status, "complete", name);
+    assert.equal(report.sections.primary.available, true, name);
+    assert.equal(report.sections.validity.balance.unlimited.balanced, false, name);
+    assert.deepEqual([fps.applicable, fps.reason], [false, "unlimited-plan-incomplete"], name);
+    assert.ok(!Object.hasOwn(fps, "windows") && !Object.hasOwn(fps, "category") && !Object.hasOwn(fps, "interval"), name);
+    if (name === "ten per arm") {
+      assert.deepEqual(Object.values(fps.readings).map(reading => reading.withFps), [10, 10, 10]);
+    }
+  }
+
+  // A launcher that cannot disable vsync stops this lane at its first readback.
+  const unavailable = build();
+  unavailable.executions = unavailable.executions.filter(execution => execution.lane !== "unlimited" || execution.slot === 1);
+  const first = unavailable.executions.find(execution => execution.lane === "unlimited");
+  first.vsync.mode = "ENABLED";
+  for (const window of protocol.windows) delete first.windows[window.id].fps;
+  const report = analyze(unavailable);
+  const fps = axisOf(report, "fps-unlimited");
+  assert.deepEqual([report.status, report.sections.primary.available, fps.applicable, fps.reason], ["complete", true, false, "vsync-not-disabled"]);
+  assert.deepEqual(fps.readings.A, {accepted: 1, withFps: 0, modes: {ENABLED: 1}});
+  assert.equal(Object.hasOwn(fps, "windows"), false);
+
+  // The readback makes the lane N/A even when the load also rejects that attempt.
+  overLoaded(first);
+  const rejected = analyze(unavailable);
+  const rejectedFps = axisOf(rejected, "fps-unlimited");
+  assert.deepEqual([rejected.status, rejected.sections.primary.available, rejectedFps.applicable, rejectedFps.reason], ["complete", true, false, "vsync-not-disabled"]);
+  assert.ok(rejected.sections.provenance.vsync.some(reading => reading.lane === "unlimited" && reading.mode === "ENABLED"));
+  assert.equal(Object.hasOwn(rejectedFps, "windows"), false);
 });
 
 test("the descriptive outcomes report medians, interquartile ranges and intervals with no category, and leave the warm-up out", () => {

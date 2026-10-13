@@ -1,0 +1,103 @@
+{
+  "format": "godot-fabric.frontier-comparison-collector-validation/v1",
+  "validatedAt": "2026-10-13T16:15:26.432Z",
+  "baseCommit": "f6b4274264de790403f4cbe8fa08a51bb64ddac4",
+  "checks": [
+    {
+      "command": "npm run test:contracts",
+      "nodePassed": 807,
+      "pythonPassed": 37,
+      "declaredSkipped": 1,
+      "passed": true
+    },
+    {
+      "command": "node --test tests/frontier-comparison-protocol.test.mjs tests/frontier-comparison-analysis.test.mjs tests/frontier-comparison-validity.test.mjs tests/frontier-comparison-report-markdown.test.mjs tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-campaign-state.test.mjs tests/frontier-comparison-campaign-guards.test.mjs tests/frontier-comparison-release.test.mjs",
+      "passed": 126
+    },
+    {
+      "command": "node --test tests/frontier-comparison-campaign.test.mjs tests/frontier-comparison-raw-verification.test.mjs",
+      "passed": 36,
+      "note": "After the final configuration-stop and path-verification changes."
+    },
+    {
+      "command": "npm run check:static",
+      "passed": true
+    },
+    {
+      "command": "node scripts/frontier-freeze.mjs --check",
+      "passed": true,
+      "thresholds": 5,
+      "budgetRows": 16,
+      "derivations": 20
+    },
+    {
+      "command": "node scripts/milestone-guards.mjs --check --base origin/main",
+      "passed": true
+    },
+    {
+      "command": "verify-raw.mjs on the original stopped cohort, then cmp with raw-verification-original.json",
+      "passed": true,
+      "attempts": 41,
+      "rawAndSelfCheckFiles": 84,
+      "byteIdentical": true
+    },
+    {
+      "command": "node --test --test-name-pattern=\"the wait records|a quiet interval|a busy headless rehearsal|resume refuses|the command line\" tests/frontier-comparison-campaign.test.mjs",
+      "passed": 6,
+      "note": "After preserving intentional busy-machine rejection in explicitly marked headless rehearsals; production timeout still defers."
+    },
+    {
+      "command": "node --test tests/frontier-comparison-analysis.test.mjs tests/frontier-comparison-report-markdown.test.mjs",
+      "passed": 39,
+      "note": "Registered balanced unlimited plan required for FPS; Markdown and research contracts updated."
+    },
+    {
+      "command": "Regenerate stopped report JSON and Markdown with current analysis, then cmp against retained originals",
+      "passed": true,
+      "byteIdentical": true
+    },
+    {
+      "command": "npm run test:contracts after merging main GF-02 boundary",
+      "nodePassed": 831,
+      "pythonPassed": 37,
+      "declaredSkipped": 1,
+      "passed": true,
+      "mergeSourceCommit": "2359e2dc3d0f9e00e5167c760956fab5c8568173",
+      "mainBaseCommit": "a2ccecda15328906d0b1c0a8071605e7ad9725ae",
+      "nativeInputsUnchanged": 150
+    }
+  ],
+  "logDigests": {
+    "godot-fabric-05-quiet-contracts.log": {
+      "sha256": "0113c3ee71d05c1dc0f07d1e6c92f8efe041e222fb680b6ce748d92ccac81e45",
+      "bytes": 210414
+    },
+    "godot-fabric-05-comparison-regressions.log": {
+      "sha256": "8503b6512442fbb64d1e0db80aaa049e0edda944dbe116e6e8550a1122b9b88c",
+      "bytes": 40495
+    },
+    "godot-fabric-05-quiet-final-causal.log": {
+      "sha256": "a159da65c84e7e50075caa32ca9814a96e878c7ed00a822f76094dd40e814a9f",
+      "bytes": 10813
+    },
+    "godot-fabric-05-quiet-static.log": {
+      "sha256": "f8b3676160846e129177ba1e3f6c40124a5c0c97580af9a05f7ac7646a728110",
+      "bytes": 223
+    },
+    "godot-fabric-05-quiet-rehearsal-compat.log": {
+      "sha256": "30fe9ff5d5e3d0d5af2ff82cd7f09db27f7bae8fe542f7ba28c726dc2746d6fc",
+      "bytes": 1744
+    },
+    "godot-fabric-05-quiet-fps-plan-tests.log": {
+      "sha256": "2b2381c1d5deeaf81aac9a80ecdee299b3e895e9127f1a4d3421ecc922a45803",
+      "bytes": 13006
+    },
+    "godot-fabric-05-merge-final-contracts.log": {
+      "sha256": "b04556f7faa1a723c70cc169871709b2cce9e3e86e39e268be15a1e093cf56ec",
+      "bytes": 215896
+    }
+  },
+  "measurementSourceChanged": false,
+  "protocolChanged": false,
+  "comparisonComplete": false
+}

@@ -15,7 +15,8 @@ export const REPORT_FORMAT = "godot-fabric.frontier-comparison-report/v1";
 const COMMAND = "node scripts/frontier-comparison-analysis.mjs <campaign.json> --out <report.json>";
 
 // Whether the statistics can be produced, and why not. `stopped`: the campaign stopped (a slot used up its attempts, a repeat of the other game in one arm, an instrument that did not
-// pass) and produces no statistic; `incomplete`: an arm has fewer accepted executions of the presented lane than runs.minimumPerArm; `partial`: arm B was not ready in its time-box,
+// pass) and produces no statistic; `incomplete`: the presented lane has too few
+// accepted executions or has not completed its registered balanced plan; `partial`: arm B was not ready in its time-box,
 // so the comparison is A against C (decisionRule.partialReport); `complete` otherwise.
 function statusOf(validity, campaign, arms) {
   if (validity.stopped.length > 0) {
@@ -26,6 +27,17 @@ function statusOf(validity, campaign, arms) {
     .map((arm) => ({ rule: "minimum-per-arm", arm, accepted: validity.accepted[PRESENTED][arm].length, required: validity.minimumPerArm }));
   if (short.length > 0) {
     return { status: "incomplete", why: short };
+  }
+  // minimumPerArm is the floor, not permission to truncate the Latin square:
+  // runs.perArm rounds that floor up to a complete, balanced sequence.
+  const unfinished = arms
+    .filter((arm) => validity.totals[PRESENTED][arm].accepted < validity.totals[PRESENTED][arm].planned)
+    .map((arm) => ({ rule: "planned-per-arm", arm, accepted: validity.totals[PRESENTED][arm].accepted, required: validity.totals[PRESENTED][arm].planned }));
+  if (unfinished.length > 0) {
+    return { status: "incomplete", why: unfinished };
+  }
+  if (!validity.balance[PRESENTED].balanced) {
+    return { status: "incomplete", why: [{ rule: "presented-balance" }] };
   }
   return { status: campaign.armB.ready ? "complete" : "partial", why: [] };
 }

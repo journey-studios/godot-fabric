@@ -1,0 +1,75 @@
+{
+  "format": "godot-fabric.frontier-comparison-waiting-archive/v1",
+  "archive": {
+    "file": "campaign-data.tar.gz",
+    "bytes": 227483,
+    "sha256": "92281603971aa725abbbe4e20ac78ccf58421db1ac705e39327b8c429b4ccae3"
+  },
+  "members": [
+    {
+      "path": "campaign-state.json",
+      "bytes": 29657,
+      "sha256": "3b38481bebceea876ffa3c1dd8753f1e29b72f75d17ea3756f6bde22bc417bf3"
+    },
+    {
+      "path": "campaign.json",
+      "bytes": 25851,
+      "sha256": "0e8731def8cdc6eb6293ac4f0902591fd935c3979b86a05b04af6fcb8e1ea440"
+    },
+    {
+      "path": "derivation.json",
+      "bytes": 1340,
+      "sha256": "f48d1363d1e40b3c7aa835cf2fbbdaaed81fd1f535fd9b69b8507c76154d15ab"
+    },
+    {
+      "path": "interim-report.json",
+      "bytes": 28387,
+      "sha256": "0f388144d3f3e3ceadefd6d6ca151b58ea7e227b34b357b37595f0a173367677"
+    },
+    {
+      "path": "interim-report.md",
+      "bytes": 7488,
+      "sha256": "dcfb564301b14139a2f30b98bc13c964b586021c3c20f0c15804a4d684192e45"
+    },
+    {
+      "path": "orchestrator.log",
+      "bytes": 454,
+      "sha256": "f058eed89eec86a3a6f0ebdbd2b9596f8a5e42eb116e05bc650b4fe84e6fbe7e"
+    },
+    {
+      "path": "protocol.json",
+      "bytes": 47090,
+      "sha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e"
+    },
+    {
+      "path": "raw/presented-1-1.json",
+      "bytes": 366510,
+      "sha256": "2f315bdd629a2481f2fdac7bbfdfef9785dd31622fc5ff2c8e900b6fe73df0c1"
+    },
+    {
+      "path": "raw/presented-1-1.log",
+      "bytes": 224,
+      "sha256": "1abd262037bff2a9bc888ca067a6de54b259f77608b496f80f114a97ec046e86"
+    },
+    {
+      "path": "raw-verification.json",
+      "bytes": 1401,
+      "sha256": "7a14d4ea8eccb07680879fee7f5a4a0ecf008eaccc6c98e347c205902bd1354a"
+    },
+    {
+      "path": "self-check/probe-report.json",
+      "bytes": 377088,
+      "sha256": "3950d8bcc04bf3c070087533561053822d67a893976117c44ab4331a9897a5c1"
+    },
+    {
+      "path": "self-check/probe.log",
+      "bytes": 185,
+      "sha256": "3efee777975c1147ef5b01b3c65893ed9b7988252902187ee50a49296aa0a9dd"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 4079,
+      "sha256": "b849ac8411271f06c5dee68e940dafd93573bc740a1829a1d29c02db85bbc02c"
+    }
+  ]
+}

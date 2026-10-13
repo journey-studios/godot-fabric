@@ -1,0 +1,271 @@
+{
+  "format": "godot-fabric.frontier-comparison-export-reuse/v1",
+  "verifiedAt": "2026-10-13T16:12:06.492Z",
+  "exportSourceCommit": "500aac3f874d4f6f0d2e72d4e253817e9bed2811",
+  "runnerBaseCommit": "f6b4274264de790403f4cbe8fa08a51bb64ddac4",
+  "protocolSha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
+  "nativeInputsVerified": 150,
+  "nativeReceiptSha256": "dccdc08b026603a02f7643621b428d1461eb8567db6cbbcbb9a52541199e2852",
+  "arms": {
+    "A": {
+      "manifestSha256": "73aee29845fd2bb030e47d3afc7db3593b969dcdd4f4b86e5846cfe57f225730",
+      "signatureVerified": true,
+      "files": {
+        "Contents/Info.plist": {
+          "bytes": 1787,
+          "sha256": "a25c2685c168ed1a62305488b99615a692f7cf9a1de51eb9264e312298d0cace"
+        },
+        "Contents/MacOS/Frontier": {
+          "bytes": 82439632,
+          "sha256": "a9825bfa9754ac9ef27aea54ca0e7587e94ca07bbd2210ef52727705b343696f"
+        },
+        "Contents/PkgInfo": {
+          "bytes": 9,
+          "sha256": "7e50a30efad50208a173203ced60818d693bb61266b75aa10927d1a2adce80cb"
+        },
+        "Contents/Resources/Frontier.pck": {
+          "bytes": 145640,
+          "sha256": "6e0bcb203f3ad0198a5be4e52cfdded7397192adbb5959abb513dac897b85ca3"
+        },
+        "Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 229,
+          "sha256": "0535353bb08c25b8ce5ed9ac7e442a5994f402e0f6cbc4bed668cfc63c2ceac3"
+        },
+        "Contents/Resources/icon.icns": {
+          "bytes": 67500,
+          "sha256": "779ff524928785811d6d4c61f47a26491160b1092db9b610e85fcdfd9b2d2b2a"
+        },
+        "Contents/_CodeSignature/CodeResources": {
+          "bytes": 2918,
+          "sha256": "f365f82d3c023f2339075752048195760517f4267f1853571bbf89ad44012a90"
+        }
+      }
+    },
+    "B": {
+      "manifestSha256": "cde71e2a203d032dba7a31c453e7cbc787fcb4a44250e9847f60c8180c4e31e8",
+      "signatureVerified": true,
+      "files": {
+        "Contents/Info.plist": {
+          "bytes": 1787,
+          "sha256": "c268f0f298ffe052116e71c0157034c93f90dc278662ccdfa6e6bb3ba40e131a"
+        },
+        "Contents/MacOS/Frontier": {
+          "bytes": 82439632,
+          "sha256": "5ce2fb5e8b24c87f79ebc7d8c1a0fb01a994440f8d98b827a855714cbbcfe89d"
+        },
+        "Contents/PkgInfo": {
+          "bytes": 9,
+          "sha256": "7e50a30efad50208a173203ced60818d693bb61266b75aa10927d1a2adce80cb"
+        },
+        "Contents/Resources/Frontier.pck": {
+          "bytes": 218760,
+          "sha256": "83bff7bcbf282e79a5f5d079cb9be2c46fe94092011e02d60e1bbc6859cc3ffb"
+        },
+        "Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 229,
+          "sha256": "0535353bb08c25b8ce5ed9ac7e442a5994f402e0f6cbc4bed668cfc63c2ceac3"
+        },
+        "Contents/Resources/icon.icns": {
+          "bytes": 67500,
+          "sha256": "779ff524928785811d6d4c61f47a26491160b1092db9b610e85fcdfd9b2d2b2a"
+        },
+        "Contents/_CodeSignature/CodeResources": {
+          "bytes": 2918,
+          "sha256": "ea4cc4e1de00bc002c9bbb7307bf5aa726f846f58df5ed815425d244f0a69e7f"
+        }
+      }
+    },
+    "C": {
+      "manifestSha256": "fe1fb98ae31955d8fc775e6713f080e056913079066bd3b55d3b34bef3f8baac",
+      "signatureVerified": true,
+      "files": {
+        "Contents/Frameworks/fabric_godot.dylib": {
+          "bytes": 6732944,
+          "sha256": "3c16d6386dd0d038e3160abd0a582d4cf7b66316a5be6b85b3fa5baa0f41adbc"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies": {
+          "bytes": 2512032,
+          "sha256": "da6f65c2d08df279806147454e68db06ad5f4caa23da9fee00c398baceabcbe1"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Info.plist": {
+          "bytes": 1152,
+          "sha256": "6113b55a99f61521dd8686658dc2ea3411deecc6b0a00cd295471838f70be82d"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 326,
+          "sha256": "97e32f473284df703a5fc921076956ef84a765ca9e7ba2e7ba61350652d12727"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeDirectory": {
+          "bytes": 211,
+          "sha256": "90629085d8c44c898fd62340a3faf781c5c38a0078db9a4928f836b1141c904b"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeRequirements": {
+          "bytes": 12,
+          "sha256": "987920904eab650e75788c054aa0b0524e6a80bfc71aa32df8d237a61743f986"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeResources": {
+          "bytes": 2464,
+          "sha256": "b7a25f1e285732669b6999bf17a679fcbaf22345a2e47e92ba3c4f9bb6fc412a"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_SocketRocket.bundle/Contents/_CodeSignature/CodeSignature": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Info.plist": {
+          "bytes": 1138,
+          "sha256": "3ab31cddf070c17e56c236a430bfe9021eb516d150d6e2aad53c1f843947d7aa"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 776,
+          "sha256": "d3559c988dff940d4f758f37a0ba1863208304e33ab0b97c0e3dd5d3762f5f1d"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeDirectory": {
+          "bytes": 204,
+          "sha256": "ddf841ef8e1ce9af4b62cc7cc1e551a6363da588eefafe9c61d4170fdb3b77b9"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeRequirements": {
+          "bytes": 12,
+          "sha256": "987920904eab650e75788c054aa0b0524e6a80bfc71aa32df8d237a61743f986"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeResources": {
+          "bytes": 2464,
+          "sha256": "3f3bf51b1459dcc108eee581c8b8612364ccda09d26a1036eb6e6a84526e48b4"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_boost.bundle/Contents/_CodeSignature/CodeSignature": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Info.plist": {
+          "bytes": 1138,
+          "sha256": "ffa96886d59ea3ce5e0956aedcd34e27f095addc41766f789f568296373eb27c"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 552,
+          "sha256": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeDirectory": {
+          "bytes": 204,
+          "sha256": "ffcd22e5e702dbdb68cbc09422aff90260a6be53fa367fe7274b0c261fefaf8b"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeRequirements": {
+          "bytes": 12,
+          "sha256": "987920904eab650e75788c054aa0b0524e6a80bfc71aa32df8d237a61743f986"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeResources": {
+          "bytes": 2464,
+          "sha256": "f2782822a46e0261d7943d0c92d21484fb07db68ed1085c798c50548981d5496"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_folly.bundle/Contents/_CodeSignature/CodeSignature": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Info.plist": {
+          "bytes": 1136,
+          "sha256": "bef9c1acf6b69457a101740e882edefcb1ae77f6f9747d4ed007a6f5f1450935"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 552,
+          "sha256": "0587d155c56a6f4f0647ebc6b6a0bd026615cd610ee8f209a9786b79a96ad335"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeDirectory": {
+          "bytes": 203,
+          "sha256": "242acf1054bf5e494bc2611c4d99eb5104f10a0b432aa06d2de887a1c79a0ed9"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeRequirements": {
+          "bytes": 12,
+          "sha256": "987920904eab650e75788c054aa0b0524e6a80bfc71aa32df8d237a61743f986"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeResources": {
+          "bytes": 2464,
+          "sha256": "f2782822a46e0261d7943d0c92d21484fb07db68ed1085c798c50548981d5496"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/ReactNativeDependencies_glog.bundle/Contents/_CodeSignature/CodeSignature": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/Resources/Info.plist": {
+          "bytes": 1322,
+          "sha256": "fe5083c8446d81f43cd2eea32df15608ced8c63a8d0f1724b5426cb66c618439"
+        },
+        "Contents/Frameworks/frameworks/ReactNativeDependencies.framework/Versions/A/_CodeSignature/CodeResources": {
+          "bytes": 3408,
+          "sha256": "633f41a3d8abf71cfb523637008f3ae8f053b5fa94bebe2b7436d9c2b9b6664b"
+        },
+        "Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/Resources/Info.plist": {
+          "bytes": 851,
+          "sha256": "03f4fa49f0e32d9174b74e672a7996a509ac627353ab0bca67b3406365c89f8e"
+        },
+        "Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/_CodeSignature/CodeResources": {
+          "bytes": 2442,
+          "sha256": "f471285a3b9aacd0eeded261bd8218b36f1bafe84bdef78d06b9e76447deed72"
+        },
+        "Contents/Frameworks/frameworks/hermesvm.framework/Versions/1/hermesvm": {
+          "bytes": 12070208,
+          "sha256": "3d896c9464e7dd1246d69a05e2939cd39d81dd554f00048d77ec85bba166f6b0"
+        },
+        "Contents/Info.plist": {
+          "bytes": 1787,
+          "sha256": "ad9287bcc209735cf578d7f70ffa27350ce6fcbaeb81a3d6328157efea5caf13"
+        },
+        "Contents/MacOS/Frontier": {
+          "bytes": 82439632,
+          "sha256": "3f3f8b5b018dd53e86ce3379fe4e3b932cc7b047a9e160585410e0a9f33f203d"
+        },
+        "Contents/PkgInfo": {
+          "bytes": 9,
+          "sha256": "7e50a30efad50208a173203ced60818d693bb61266b75aa10927d1a2adce80cb"
+        },
+        "Contents/Resources/Frontier.pck": {
+          "bytes": 2876244,
+          "sha256": "bbdb7b12cbea1fde3f764ecbf7a25a1faa250531518056bedb70850165c5a145"
+        },
+        "Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 229,
+          "sha256": "0535353bb08c25b8ce5ed9ac7e442a5994f402e0f6cbc4bed668cfc63c2ceac3"
+        },
+        "Contents/Resources/icon.icns": {
+          "bytes": 67500,
+          "sha256": "779ff524928785811d6d4c61f47a26491160b1092db9b610e85fcdfd9b2d2b2a"
+        },
+        "Contents/_CodeSignature/CodeResources": {
+          "bytes": 3762,
+          "sha256": "522dde0aa8a9d75a0de78fc88ac08d08345ae94283170e3e29a4e402fe266598"
+        }
+      }
+    },
+    "probe": {
+      "manifestSha256": "11b53717262f9e0c7105fb7f2b8bc068b61c2dd7092f0800703f337304c25486",
+      "signatureVerified": true,
+      "files": {
+        "Contents/Info.plist": {
+          "bytes": 1842,
+          "sha256": "5db0cd2fd6c74bc4631d99b61b634b3767b4fe426fbd09707344543dacd70878"
+        },
+        "Contents/MacOS/Frontier instrument probe": {
+          "bytes": 82439632,
+          "sha256": "764b3c0fa7775acebb98821d9d2d060953669cea20e542cdbe96526696b3764c"
+        },
+        "Contents/PkgInfo": {
+          "bytes": 9,
+          "sha256": "7e50a30efad50208a173203ced60818d693bb61266b75aa10927d1a2adce80cb"
+        },
+        "Contents/Resources/Frontier instrument probe.pck": {
+          "bytes": 20908,
+          "sha256": "ab73a96aa5350e87fa4fb8235f858210dc87bc02cf16646a5908c5954f993c81"
+        },
+        "Contents/Resources/PrivacyInfo.xcprivacy": {
+          "bytes": 229,
+          "sha256": "0535353bb08c25b8ce5ed9ac7e442a5994f402e0f6cbc4bed668cfc63c2ceac3"
+        },
+        "Contents/Resources/icon.icns": {
+          "bytes": 67500,
+          "sha256": "779ff524928785811d6d4c61f47a26491160b1092db9b610e85fcdfd9b2d2b2a"
+        },
+        "Contents/_CodeSignature/CodeResources": {
+          "bytes": 2952,
+          "sha256": "084408fcd1b1b51eccf3d2c9a29d6b6c7404cee7abfefc3c5cb2e56ee2e0617e"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+the instrument's self-check (probe and oracle), in a window
+the instrument's self-check passed
+presented slot 1 (A) attempt 1: load 5.65 after 1067.3 s
+  rejected (load:after), 64.6 s
+presented slot 1 (A) attempt 2: load 10 after 1800 s; launch deferred, use --resume
+FRONTIER_COMPARISON_CAMPAIGN_WAITING: <checkout>/build/frontier-05-final/campaign-quiet-20261013, 1 attempt(s), analysis refused (load wait timed out; no attempt launched, use --resume)

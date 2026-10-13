@@ -1,0 +1,157 @@
+{
+  "rehearsal": false,
+  "format": "godot-fabric.frontier-comparison-campaign/v1",
+  "status": "waiting",
+  "stopped": [],
+  "options": {
+    "lanes": [
+      "presented",
+      "unlimited"
+    ],
+    "slots": null,
+    "build": "release",
+    "maxWaitSeconds": 1800,
+    "assumeRefreshHz": null,
+    "loadStableSeconds": 60
+  },
+  "protocolSha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
+  "launcher": {
+    "name": "release: the exports in <checkout>/build/frontier-05-final/exports (A/, B/ and C/, each .app run through Contents/MacOS/<executable>)",
+    "build": "release",
+    "registered": {
+      "seed": 4242,
+      "replayGoldenHash": "cb7ab974f47f18c37ae96bda57ffd1b87f8c3733e251a386040dc17ccb540e8d",
+      "soakFinalHash": "0b21c332c1f86fb41522cdbed0144f168831f6ab51bc427769a68a146aa6afd0",
+      "instrumentSha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+      "arms": {
+        "A": {
+          "binarySha256": "a9825bfa9754ac9ef27aea54ca0e7587e94ca07bbd2210ef52727705b343696f",
+          "packageSha256": "6e0bcb203f3ad0198a5be4e52cfdded7397192adbb5959abb513dac897b85ca3",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        },
+        "B": {
+          "binarySha256": "5ce2fb5e8b24c87f79ebc7d8c1a0fb01a994440f8d98b827a855714cbbcfe89d",
+          "packageSha256": "83bff7bcbf282e79a5f5d079cb9be2c46fe94092011e02d60e1bbc6859cc3ffb",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        },
+        "C": {
+          "binarySha256": "3f3f8b5b018dd53e86ce3379fe4e3b932cc7b047a9e160585410e0a9f33f203d",
+          "packageSha256": "bbdb7b12cbea1fde3f764ecbf7a25a1faa250531518056bedb70850165c5a145",
+          "scriptSha256": "40b56bf258435e3bbcd2277181e9696e9a053d45054fff3612e3252aae6d9768"
+        }
+      }
+    }
+  },
+  "selfCheck": {
+    "passed": true,
+    "why": [],
+    "sha256": "4bdcda83771c38221b3e9da47bdca2622ac4bda119d0b41809e83bceabf28c9d",
+    "lane": "windowed",
+    "seconds": 29.5
+  },
+  "unavailableLanes": {},
+  "unreported": [],
+  "lanes": {
+    "presented": {
+      "A": {
+        "slots": 12,
+        "started": 1,
+        "accepted": 0,
+        "attempts": 1,
+        "rejected": [
+          {
+            "slot": 1,
+            "attempt": 1,
+            "reasons": [
+              "load:after"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      },
+      "C": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      }
+    },
+    "unlimited": {
+      "A": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      },
+      "B": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      },
+      "C": {
+        "slots": 12,
+        "started": 0,
+        "accepted": 0,
+        "attempts": 0,
+        "rejected": []
+      }
+    }
+  },
+  "waits": {
+    "attempts": 1,
+    "seconds": 1067.3,
+    "timedOut": 0
+  },
+  "anomalies": 0,
+  "resumes": 0,
+  "waitingForLoad": {
+    "at": "2026-10-13T17:06:07.872Z",
+    "lane": "presented",
+    "slot": 1,
+    "arm": "A",
+    "attempt": 2,
+    "waited": {
+      "limit": 6,
+      "maxWaitSeconds": 1800,
+      "intervalSeconds": 5,
+      "first": 6.62,
+      "last": 10,
+      "polls": 361,
+      "seconds": 1800,
+      "timedOut": true,
+      "stableSeconds": 60,
+      "quietSeconds": 0
+    }
+  },
+  "deferredLoads": [
+    {
+      "at": "2026-10-13T17:06:07.872Z",
+      "lane": "presented",
+      "slot": 1,
+      "arm": "A",
+      "attempt": 2,
+      "waited": {
+        "limit": 6,
+        "maxWaitSeconds": 1800,
+        "intervalSeconds": 5,
+        "first": 6.62,
+        "last": 10,
+        "polls": 361,
+        "seconds": 1800,
+        "timedOut": true,
+        "stableSeconds": 60,
+        "quietSeconds": 0
+      }
+    }
+  ]
+}

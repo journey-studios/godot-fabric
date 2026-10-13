@@ -424,10 +424,8 @@ did**, so a headless check cannot vouch for a window. The windowed check has bee
 
 ### The load
 
-Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (6.0 since amendment 5 of 2026-10-13, read from the protocol; the rule rejects what is
-above the limit) or `--max-wait` seconds have passed. The wait goes into the state (`waited`: the first and last reading, the number of readings, the seconds, whether it timed out). If it runs out the attempt runs anyway:
-the readings that the rule judges are the launcher's, taken right before the process starts and right after it ends, and they are recorded exactly as read (`load.before`, `load.after`). The wait is a courtesy to
-the attempts of a slot, not a guarantee. The clock and the reading are injectable, which is how the tests drive it. A protocol whose `runs.load.limit1MinuteAverage` is missing, a string or not above zero is
+Before each execution the campaign reads `sysctl -n vm.loadavg` (the 1-minute average) every 5 seconds until it is **not above** `runs.load.limit1MinuteAverage` (6.0 since amendment 5 of 2026-10-13, read from the protocol) or `--max-wait` seconds have passed. `--load-stable <seconds>` optionally requires consecutive quiet readings; a reading above the same cap resets the interval. The wait goes into the state (`waited`: first/last reading, polls, elapsed seconds and timeout). If it runs out, a comparative campaign returns `waiting` (CLI exit 2), records `waitingForLoad`/`deferredLoads`, releases its lock and launches nothing. `--resume` keeps the same unspent attempt. Explicit headless rehearsals still launch after timeout to exercise and retain the load rejection, and are never comparative results.
+The readings that the rule judges remain the launcher's, taken right before the process starts and right after it ends, recorded exactly as read (`load.before`, `load.after`). A quiet start does not guarantee a quiet ending. A protocol whose `runs.load.limit1MinuteAverage` is missing, a string or not above zero is
 refused before anything runs: `load <= limit` would be false for every reading, and every attempt would wait the whole `--max-wait`.
 
 ### The lock

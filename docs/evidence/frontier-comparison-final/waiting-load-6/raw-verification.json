@@ -1,0 +1,42 @@
+{
+  "format": "godot-fabric.frontier-comparison-raw-verification/v1",
+  "protocolSha256": "153442795dea2cb70901278782c2bd5b7668cf2d9a686d313cb2f0e8819e852e",
+  "stateSha256": "3b38481bebceea876ffa3c1dd8753f1e29b72f75d17ea3756f6bde22bc417bf3",
+  "campaignSha256": "0e8731def8cdc6eb6293ac4f0902591fd935c3979b86a05b04af6fcb8e1ea440",
+  "rehearsal": false,
+  "build": "release",
+  "selfCheckPassed": true,
+  "rawDerivationsVerified": 1,
+  "reported": 1,
+  "unreported": 0,
+  "attempts": [
+    {
+      "lane": "presented",
+      "slot": 1,
+      "arm": "A",
+      "attempt": 1,
+      "reported": true,
+      "accepted": false,
+      "rawSha256": "2f315bdd629a2481f2fdac7bbfdfef9785dd31622fc5ff2c8e900b6fe73df0c1",
+      "logSha256": "1abd262037bff2a9bc888ca067a6de54b259f77608b496f80f114a97ec046e86"
+    }
+  ],
+  "files": {
+    "raw/presented-1-1.json": {
+      "bytes": 366510,
+      "sha256": "2f315bdd629a2481f2fdac7bbfdfef9785dd31622fc5ff2c8e900b6fe73df0c1"
+    },
+    "raw/presented-1-1.log": {
+      "bytes": 224,
+      "sha256": "1abd262037bff2a9bc888ca067a6de54b259f77608b496f80f114a97ec046e86"
+    },
+    "self-check/probe-report.json": {
+      "bytes": 377088,
+      "sha256": "3950d8bcc04bf3c070087533561053822d67a893976117c44ab4331a9897a5c1"
+    },
+    "self-check/probe.log": {
+      "bytes": 185,
+      "sha256": "3efee777975c1147ef5b01b3c65893ed9b7988252902187ee50a49296aa0a9dd"
+    }
+  }
+}
