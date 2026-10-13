@@ -55,6 +55,16 @@
       "command": "Regenerate stopped report JSON and Markdown with current analysis, then cmp against retained originals",
       "passed": true,
       "byteIdentical": true
+    },
+    {
+      "command": "npm run test:contracts after merging main GF-02 boundary",
+      "nodePassed": 831,
+      "pythonPassed": 37,
+      "declaredSkipped": 1,
+      "passed": true,
+      "mergeSourceCommit": "2359e2dc3d0f9e00e5167c760956fab5c8568173",
+      "mainBaseCommit": "a2ccecda15328906d0b1c0a8071605e7ad9725ae",
+      "nativeInputsUnchanged": 150
     }
   ],
   "logDigests": {
@@ -81,6 +91,10 @@
     "godot-fabric-05-quiet-fps-plan-tests.log": {
       "sha256": "2b2381c1d5deeaf81aac9a80ecdee299b3e895e9127f1a4d3421ecc922a45803",
       "bytes": 13006
+    },
+    "godot-fabric-05-merge-final-contracts.log": {
+      "sha256": "b04556f7faa1a723c70cc169871709b2cce9e3e86e39e268be15a1e093cf56ec",
+      "bytes": 215896
     }
   },
   "measurementSourceChanged": false,
