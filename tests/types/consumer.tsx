@@ -7,6 +7,7 @@ import { Pressable, useWindowDimensions, type PressableProps } from "react-nativ
 import { Dimensions, Platform, StyleSheet, type EmitterSubscription, type ScaledSize } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
+import type { AppConfig, ComponentProvider, ComponentProviderInstrumentationHook, Registry, RootTag, RootViewStyleProvider, Runnable, Runnables, TaskProvider, WrapperComponentProvider } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -114,12 +115,50 @@ void Lists; void VirtualizedSectionList;
 void Consumer;
 AppRegistry.registerComponent("Consumer", () => Consumer);
 const keys: readonly string[] = AppRegistry.getAppKeys();
-const rootTag = React.useContext(RootTagContext);
+const rootTag: RootTag = React.useContext(RootTagContext);
 void keys; void rootTag;
-// @ts-expect-error sections are outside the implemented registry subset
-AppRegistry.registerComponent("Section", () => Consumer, true);
-// @ts-expect-error native application owns mounting; this is not the full registry
-AppRegistry.runApplication("Consumer", { rootTag: 1 });
+
+// Every member of RN's AppRegistry, with RN's own types (the headless-task members throw at run time).
+const provider: ComponentProvider = () => Consumer;
+const sectionKey: string = AppRegistry.registerComponent("Section", provider, true);
+const run: Runnable = (appParameters, displayMode) => { void appParameters.initialProps; void appParameters.rootTag; void displayMode; };
+const runKey: string = AppRegistry.registerRunnable("Custom", run);
+const configs: AppConfig[] = [{ appKey: "ConfigComponent", component: provider }, { appKey: "ConfigRun", run },
+  { appKey: "ConfigSection", component: provider, section: true }];
+AppRegistry.registerConfig(configs);
+AppRegistry.registerSection("Menu", provider);
+const sectionKeys: readonly string[] = AppRegistry.getSectionKeys();
+const sections: Runnables = AppRegistry.getSections();
+const found: Runnable | null | undefined = AppRegistry.getRunnable("Consumer");
+const registry: Registry = AppRegistry.getRegistry();
+const wrapper: WrapperComponentProvider = (appParameters, appKey) => {
+  void appParameters; void appKey;
+  return ({ children }: { children?: React.ReactNode }) => <View>{children}</View>;
+};
+AppRegistry.setWrapperComponentProvider(wrapper);
+const rootStyle: RootViewStyleProvider = () => ({ flex: 1 });
+AppRegistry.setRootViewStyleProvider(rootStyle);
+const hook: ComponentProviderInstrumentationHook = (component, logger) => { void logger; return component(); };
+AppRegistry.setComponentProviderInstrumentationHook(hook);
+AppRegistry.runApplication("Consumer", { rootTag, initialProps: {} }, 1);
+AppRegistry.setSurfaceProps("Consumer", { rootTag, initialProps: { title: "next" } });
+AppRegistry.unmountApplicationComponentAtRootTag(rootTag);
+const task: TaskProvider = () => async () => {};
+AppRegistry.registerHeadlessTask("Task", task);
+AppRegistry.registerCancellableHeadlessTask("Cancellable", task, () => () => {});
+AppRegistry.startHeadlessTask(1, "Task", {});
+AppRegistry.cancelHeadlessTask(1, "Task");
+void sectionKey; void runKey; void sectionKeys; void sections; void found; void registry;
+// @ts-expect-error a key is a string
+AppRegistry.registerComponent(1, provider);
+// @ts-expect-error a provider is a function that gives the component, not the component
+AppRegistry.registerComponent("Wrong", Consumer());
+// @ts-expect-error a section flag is a boolean
+AppRegistry.registerComponent("Flag", provider, "yes");
+// @ts-expect-error the root tag is RN's opaque RootTag, not a number
+AppRegistry.runApplication("Consumer", { rootTag: 1, initialProps: {} });
+// @ts-expect-error a config names its appKey
+AppRegistry.registerConfig([{ component: provider }]);
 
 interface NativeSpec extends TurboModule { add(a: number, b: number): number; }
 const nativeModule = TurboModuleRegistry.get<NativeSpec>("GodotFabricNativeFixture");

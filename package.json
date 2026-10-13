@@ -74,6 +74,7 @@
     "test:pointers:click": "node --test tests/pointer-click-native.test.mjs",
     "test:responders:pan": "node --test tests/pan-responder-native.test.mjs",
     "test:app-state": "node --test tests/app-state-native.test.mjs",
+    "test:app-registry": "node --test tests/app-registry-native.test.mjs",
     "test:lists": "node --test tests/virtualized-list-native.test.mjs",
     "test:switch": "node --test tests/switch-native.test.mjs",
     "test:accessibility": "node --test tests/accessibility-native.test.mjs",

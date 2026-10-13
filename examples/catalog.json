@@ -252,6 +252,13 @@
     "scene": "examples/layout-animation/scene.tscn"
   },
   {
+    "id": "app-registry",
+    "title": "Original RN AppRegistry over the Godot host: a registered component and section, the wrapper and root view style providers, and setSurfaceProps that runs the surface again with state kept",
+    "api": "public",
+    "source": "examples/app-registry/App.jsx",
+    "scene": "examples/app-registry/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",
