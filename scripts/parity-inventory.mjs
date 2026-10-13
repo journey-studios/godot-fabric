@@ -53,7 +53,8 @@ function record(kind, owner, name, type, declaration) {
 // What RN declares lives in the react-native package and in the packages it splits off under @react-native/ (the
 // virtualized lists FlatList and SectionList build on). Everything else the checker reaches is a language or React
 // declaration that RN does not own.
-const ownedDirectories = [upstream, path.join(root, "node_modules/@react-native")].map((directory) => directory + path.sep);
+const nodeModules = path.join(root, "node_modules");
+const ownedDirectories = [upstream, path.join(nodeModules, "@react-native")].map((directory) => directory + path.sep);
 const declaredByRN = (declaration) => ownedDirectories.some((directory) => declaration.getSourceFile().fileName.startsWith(directory));
 const PRIMITIVE_FLAGS = ts.TypeFlags.StringLike | ts.TypeFlags.NumberLike | ts.TypeFlags.BigIntLike | ts.TypeFlags.BooleanLike |
   ts.TypeFlags.ESSymbolLike | ts.TypeFlags.Null | ts.TypeFlags.Undefined | ts.TypeFlags.Void;
@@ -158,9 +159,13 @@ const duplicates = records.filter((row, index) => index > 0 && records[index - 1
 if (duplicates.length) {
   throw new Error(`Duplicate contract ids: ${duplicates.join(", ")}`);
 }
+// The compiler files of react-native keep their path inside the package; those of the packages it splits off are qualified
+// with the package (`@react-native/virtualized-lists/...`), so a change to a sibling declaration shows up as drift too.
 const sourceFiles = [...new Map([
   ...program.getSourceFiles().filter((file) => file.fileName.startsWith(upstream + path.sep))
     .map((file) => [path.relative(upstream, file.fileName), hash(file.text)]),
+  ...program.getSourceFiles().filter((file) => file.fileName.startsWith(ownedDirectories[1]))
+    .map((file) => [path.relative(nodeModules, file.fileName), hash(file.text)]),
   ...scan.files.map(({ file, sha256 }) => [file, sha256]),
 ]).entries()].map(([file, sha256]) => ({ file, sha256 })).sort((left, right) => left.file < right.file ? -1 : left.file > right.file ? 1 : 0);
 const counts = {};

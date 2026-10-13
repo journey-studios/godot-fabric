@@ -131,6 +131,17 @@
     }
   },
   "upstreamFiles": [
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/CellRenderMask.d.ts","sha256":"85ea3abebbe3fb793f7bc5e96074d3250668e653659bada911ab18ace8cbbd93"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/FillRateHelper.d.ts","sha256":"2c82dc79579b71a60b94b7089f54c76d3ff17c3700630efd13ff1a6eceeb41a5"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/ListMetricsAggregator.d.ts","sha256":"d830a6ee4f608a1695b540dc5f0c3b3258eea6b6998276644cc41789d51d018e"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/StateSafePureComponent.d.ts","sha256":"d5a4d2fbd83bf5159aaa251f0f1afedce9c7bc1468203475bec42d170a6644b8"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/ViewabilityHelper.d.ts","sha256":"400bf5bba475098747caabc948e837046b51906d82aec5ebfb7d152c883b3d4b"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/VirtualizeUtils.d.ts","sha256":"c1a48514f354495db2ce149e282e61616989306d29008b3c9bbbc1d4fa0e617c"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/VirtualizedList.d.ts","sha256":"bf9b4709527c5556b54c045b860b4b2ff75c44684b75fc6610e0728214d6dc8b"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/VirtualizedListContext.d.ts","sha256":"4eef69c53c092f64a6ebd4c5dc6df3dc722012d9ffe227924a1b47809ecaebef"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/VirtualizedListProps.d.ts","sha256":"ae89c69b16ca86288efb35d4b0fb0293a3892aad7ad77d10c24c7bb5969e777e"},
+    {"file":"@react-native/virtualized-lists/types_generated/Lists/VirtualizedSectionList.d.ts","sha256":"283f45d15efd7739f4cdbbd378ba4d497007832792a124584750034054371a4a"},
+    {"file":"@react-native/virtualized-lists/types_generated/index.d.ts","sha256":"ee18d6837fffc81f15fce3c11857627508806ba6b63ae57be29856e68ad77ba7"},
     {"file":"Libraries/ActionSheetIOS/ActionSheetIOS.js","sha256":"a6cfdbf12630d538338bd98eb45695e5bc51830aa3cd23241899d03908a4ad69"},
     {"file":"Libraries/ActionSheetIOS/NativeActionSheetManager.js","sha256":"77939300797b945a8ab14c98b8572cd56596afbf5273631cf5b2bf3995993dfe"},
     {"file":"Libraries/Alert/Alert.js","sha256":"c1398741bde1e2ad4092c31c2677513f999249b6cdbc347236ae7be083806392"},

@@ -13,8 +13,10 @@ merging, and reads three more kinds of contract from RN's JavaScript with the sa
 TypeScript parser. The [generated inventory](contracts-0.87.1.json) (format 2)
 contains stable IDs, signatures, owning types, a `derivation` block that records
 how the JavaScript-derived rows were found and what they leave out, and hashes of
-every RN source file it read (the declarations and the 636 JavaScript files under
-`Libraries/` and `src/`).
+every RN source file it read: the declarations of `react-native` (paths inside the package) and of the
+`@react-native/*` packages it uses (package-qualified, such as
+`@react-native/virtualized-lists/types_generated/index.d.ts`, 11 files), and the 636 JavaScript files under
+`Libraries/` and `src/`.
 `npm run parity:inventory -- --check` rejects drift without rewriting that file,
 and a test regenerates it twice and compares the bytes with the checked-in file.
 This check runs in the normal contract gate.
