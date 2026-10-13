@@ -50,7 +50,8 @@ the kind-specific fields below, sorted by id; regenerating gives identical bytes
 
 `platformImplementation` (`["ios"]`, `["android"]`, `["android","ios"]`) is mechanical:
 the value's module has a `.ios.js` or `.android.js` file next to it, or its name ends
-in `IOS`/`Android`. It marks where an OS-specific implementation exists and decides
+in `IOS`/`Android`; an API member inherits its value's marker and is also marked when its
+own name ends in `IOS`/`Android`. It marks where an OS-specific implementation exists and decides
 nothing about Godot. The `derivation` block of the file records the scan rules, the
 setup chain with the conditions on each module, the globals RN installs outside that
 chain, and the reads left out of `host-global` with their reasons.

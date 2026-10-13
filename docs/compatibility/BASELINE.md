@@ -73,7 +73,7 @@ Public values and their API members also carry a **mechanical platform marker**,
 `platformImplementation` (`["ios"]`, `["android"]` or `["android","ios"]`) with
 `platformEvidence`: the value's module has a `<module>.ios.js` or `<module>.android.js`
 next to it, or the value's name ends in `IOS` or `Android`. A member inherits its
-value's marker. 13 values and 61 API members are marked. The marker is evidence,
+value's marker, and is also marked when its own name ends in `IOS` or `Android`. 13 values and 61 API members are marked. The marker is evidence,
 not an applicability decision: `TouchableNativeFeedback` and `InputAccessoryView` have
 no such file and are not marked.
 
