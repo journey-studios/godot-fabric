@@ -1,0 +1,1900 @@
+{
+  "schemaVersion": 1,
+  "reactNative": "0.87.1",
+  "scope": "An owner (a GF task of dashboard/migration.json), a scope (1_0, post_1_0 or out) and an applicability (applies, not-applicable or host-provides on ios, android and godot) for every row of contracts-0.87.1.json, by rules plus per-row overrides. The README of docs/compatibility explains the format, the precedence and how to add a row.",
+  "gateModel": {
+    "bridgeless": true,
+    "evidence": "native/turbo_module_registry.cpp:570 sets RN$Bridgeless to true for the Godot host, and ReactCommon/react/runtime/ReactInstance.cpp:409 does the same for the iOS and Android hosts of the pinned RN. The gates of runtime-global sites are classified here, so a site is live, dead or conditional by data and a new gate fails the check until someone classifies it.",
+    "gates": {
+      "global.RN$Bridgeless === true": {
+        "state": "live",
+        "reason": "RN$Bridgeless is true on the three hosts: ReactCommon/react/runtime/ReactInstance.cpp:409 on iOS and Android, native/turbo_module_registry.cpp:570 on Godot"
+      },
+      "!(global.RN$Bridgeless === true)": {
+        "state": "dead",
+        "reason": "false in bridgeless mode: the host installs those functions from C++ (setUpTimers.js comment; TimerManager.cpp on iOS and Android)"
+      },
+      "__DEV__": {"state": "dev", "reason": "true only in development bundles"},
+      "__DEV__ && enableDeveloperTools": {"state": "dev", "reason": "true only in development bundles with developer tools"},
+      "NativePerformance": {"state": "module", "reason": "true when the host registers the NativePerformance TurboModule"},
+      "!(NativePerformance)": {
+        "state": "no-module",
+        "reason": "RN's fallback, taken when the host does not register NativePerformance"
+      },
+      "!global.performance": {
+        "state": "environment",
+        "reason": "decided by RN's JS at install time: only when no performance object exists yet"
+      },
+      "require('../../../src/private/featureflags/ReactNativeFeatureFlags').enableIntersectionObserverByDefault()": {"state": "flag", "reason": "feature flag, default false"},
+      "require('../../../src/private/featureflags/ReactNativeFeatureFlags').enableMutationObserverByDefault()": {"state": "flag", "reason": "feature flag, default false"},
+      "!(global?.HermesInternal?.hasPromise?.())": {"state": "engine", "reason": "the engine's own Promise decides whether RN polyfills it"},
+      "!hasNativeGenerator": {
+        "state": "engine",
+        "reason": "the engine's generator support decides whether RN installs regeneratorRuntime"
+      },
+      "!global.alert": {"state": "environment", "reason": "decided by RN's JS at install time: only when no alert exists yet"},
+      "navigator === undefined": {"state": "environment", "reason": "decided by RN's JS at install time"},
+      "!(navigator === undefined)": {"state": "environment", "reason": "decided by RN's JS at install time"},
+      "globalThis.self === undefined": {"state": "environment", "reason": "decided by RN's JS at install time"},
+      "globalThis.window === undefined": {"state": "environment", "reason": "decided by RN's JS at install time"},
+      "!global.process.env.NODE_ENV": {"state": "environment", "reason": "decided by RN's JS at install time"}
+    }
+  },
+  "kindGroups": {
+    "api": ["value", "type", "prop", "event", "style", "ref-member", "api-member", "type-member"],
+    "members": ["prop", "event", "style", "api-member", "ref-member", "type-member"],
+    "declared-globals": ["global-value", "global-type", "global-member"]
+  },
+  "nativeComponents": {
+    "AndroidDrawerLayoutNativeComponent": {"component": "DrawerLayoutAndroid", "reason": "the Android drawer's openDrawer and closeDrawer"},
+    "AndroidSwipeRefreshLayoutNativeComponent": {
+      "component": "RefreshControl",
+      "reason": "RefreshControl.js renders it for every Platform.OS other than ios"
+    },
+    "AndroidSwitchNativeComponent": {"component": "Switch", "reason": "Switch.js renders it when Platform.OS is android"},
+    "AndroidTextInputNativeComponent": {"component": "TextInput", "reason": "TextInput.js renders it when Platform.OS is android"},
+    "DebuggingOverlayNativeComponent": {"component": null, "reason": "an internal DevTools overlay that backs no public component"},
+    "ImageViewNativeComponent": {"component": "Image", "reason": "the host component of Image"},
+    "PullToRefreshViewNativeComponent": {"component": "RefreshControl", "reason": "RefreshControl.js renders it when Platform.OS is ios"},
+    "RCTMultilineTextInputNativeComponent": {"component": "TextInput", "reason": "TextInput.js renders it for a multiline TextInput on iOS"},
+    "RCTSingelineTextInputNativeComponent": {"component": "TextInput", "reason": "TextInput.js renders it for a single-line TextInput on iOS"},
+    "ScrollViewCommands": {"component": "ScrollView", "reason": "the commands of ScrollView's host component"},
+    "SwitchNativeComponent": {"component": "Switch", "reason": "Switch.js renders it for every Platform.OS other than android"},
+    "ViewNativeComponent": {"component": "View", "reason": "the host component of View"}
+  },
+  "applicabilityProfiles": {
+    "all": {"ios": "applies", "android": "applies", "godot": "applies"},
+    "ios-only-tagged": {
+      "ios": "applies",
+      "android": {"status": "not-applicable", "reason": "the declarations annotate it @platform ios"},
+      "godot": {
+        "status": "not-applicable",
+        "reason": "annotated @platform ios; Platform.OS is godot, so RN's iOS-only behavior is not part of the target until the owning GF implements it and flips this row"
+      }
+    },
+    "android-only-tagged": {
+      "ios": {"status": "not-applicable", "reason": "the declarations annotate it @platform android"},
+      "android": "applies",
+      "godot": {
+        "status": "not-applicable",
+        "reason": "annotated @platform android; Platform.OS is godot, so RN's Android-only behavior is not part of the target until the owning GF implements it and flips this row"
+      }
+    },
+    "desktop-only-tagged": {
+      "ios": {
+        "status": "not-applicable",
+        "reason": "the declarations annotate it @platform macos windows (out-of-tree desktop platforms)"
+      },
+      "android": {
+        "status": "not-applicable",
+        "reason": "the declarations annotate it @platform macos windows (out-of-tree desktop platforms)"
+      },
+      "godot": "applies"
+    },
+    "android-only-by-name": {
+      "ios": {"status": "not-applicable", "reason": "the name says Android only"},
+      "android": "applies",
+      "godot": {
+        "status": "not-applicable",
+        "reason": "the name says Android only; Platform.OS is godot, so it is not part of the target until the owning GF implements it and flips this row"
+      }
+    },
+    "no-ios-view-config": {
+      "ios": {
+        "status": "not-applicable",
+        "reason": "BaseViewConfig.ios.js does not list it, so the iOS view drops it"
+      },
+      "android": "applies",
+      "godot": "applies"
+    },
+    "desktop-only-view-config": {
+      "ios": {"status": "not-applicable", "reason": "neither view config lists it (desktop React Native only)"},
+      "android": {"status": "not-applicable", "reason": "neither view config lists it (desktop React Native only)"},
+      "godot": "applies"
+    },
+    "ios-only-component": {
+      "ios": "applies",
+      "android": {
+        "status": "not-applicable",
+        "reason": "iOS-only component or API (its name or RN's .ios.js says so); RN's own non-iOS branch runs on Android"
+      },
+      "godot": {
+        "status": "not-applicable",
+        "reason": "iOS-only; Platform.OS is godot, so the upstream non-iOS behavior (unavailability, GF-24) is the contract"
+      }
+    },
+    "android-only-component": {
+      "ios": {
+        "status": "not-applicable",
+        "reason": "Android-only component or API (its name or RN's .android.js says so); RN's own non-Android branch runs on iOS"
+      },
+      "android": "applies",
+      "godot": {
+        "status": "not-applicable",
+        "reason": "Android-only; Platform.OS is godot, so the upstream non-Android behavior (unavailability, GF-24) is the contract"
+      }
+    },
+    "host-provides-everywhere": {
+      "ios": {
+        "status": "host-provides",
+        "reason": "RN's JS does not install it on iOS: the host, its engine or its bundler provides it"
+      },
+      "android": {
+        "status": "host-provides",
+        "reason": "RN's JS does not install it on Android: the host, its engine or its bundler provides it"
+      },
+      "godot": {
+        "status": "host-provides",
+        "reason": "RN's JS does not install it for the Godot host (bridgeless, native/turbo_module_registry.cpp): the host, its engine or its bundler must provide it"
+      }
+    },
+    "not-a-contract": {
+      "ios": {"status": "not-applicable", "reason": "not a React Native contract (see the rule's scopeReason)"},
+      "android": {"status": "not-applicable", "reason": "not a React Native contract (see the rule's scopeReason)"},
+      "godot": {"status": "not-applicable", "reason": "not a React Native contract (see the rule's scopeReason)"}
+    },
+    "legacy-bridge-only": {
+      "ios": {"status": "not-applicable", "reason": "only the legacy bridge reads it; RN 0.87 runs bridgeless"},
+      "android": {"status": "not-applicable", "reason": "only the legacy bridge reads it; RN 0.87 runs bridgeless"},
+      "godot": {"status": "not-applicable", "reason": "only the legacy bridge reads it; the Godot host is bridgeless"}
+    }
+  },
+  "rules": [
+    {
+      "id": "api-gf03-root-names",
+      "precedence": 10,
+      "match": {"kind": "@api", "subject": ["ReactNativeVersion"]},
+      "owner": "GF-03",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-03: an independent TSX app imports every in-scope root name; ReactNativeVersion is a root constant (seed: GF-03)"
+    },
+    {
+      "id": "api-gf05-errors",
+      "precedence": 10,
+      "match": {"kind": "@api", "subject": ["ErrorUtils"]},
+      "owner": "GF-05",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-05 certifies the error path ('errors'); ErrorUtils is the global error handler type"
+    },
+    {
+      "id": "api-gf06-batching",
+      "precedence": 10,
+      "match": {"kind": "@api", "subject": ["unstable_batchedUpdates"]},
+      "owner": "GF-06",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-06: batching in the pinned React renderer; the seed keeps unstable_batchedUpdates in the 1.0 contract (GF-06)"
+    },
+    {
+      "id": "api-gf07-roots",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "AppRegistry", "AppConfig", "ComponentProvider", "ComponentProviderInstrumentationHook", "Registry",
+          "Runnable", "Runnables", "RootTag", "RootTagContext", "RootViewStyleProvider", "TaskProvider",
+          "WrapperComponentProvider"
+        ]
+      },
+      "owner": "GF-07",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-07: 'AppRegistry/RootTagContext and supported mount/update/unmount APIs'; the types are AppRegistry's and the root tag's"
+    },
+    {
+      "id": "api-gf08-refs",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "UIManager", "findNodeHandle", "HostInstance", "PublicRootInstance", "PublicTextInstance",
+          "MeasureInWindowOnSuccessCallback", "MeasureLayoutOnSuccessCallback", "MeasureOnSuccessCallback"
+        ]
+      },
+      "owner": "GF-08",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-08: 'HostInstance/React Native node APIs, root/text instances, measure*, public UIManager/findNodeHandle'"
+    },
+    {
+      "id": "api-gf09-metrics",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "DeviceInfo", "Dimensions", "PixelRatio", "Platform", "useWindowDimensions", "PlatformOSType",
+          "PlatformSelectSpec", "ScaledSize", "DimensionsPayload", "DeviceInfoConstants", "DisplayMetrics",
+          "DisplayMetricsAndroid"
+        ]
+      },
+      "owner": "GF-09",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-09: 'window and screen dimensions, density/font scale' and 'Platform.OS = godot' with platform selection"
+    },
+    {
+      "id": "api-gf10-view-styles",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "View", "ViewProps", "ViewInstance", "ViewStyle", "TransformsStyle", "StyleSheet", "StyleProp", "ColorValue",
+          "DimensionValue", "PlatformColor", "processColor", "I18nManager", "BoxShadowValue", "DropShadowValue",
+          "FilterFunction", "CursorValue", "OpaqueColorValue", "NativeColorValue", "ProcessedColorValue", "PointValue",
+          "EdgeInsetsProp", "EdgeInsetsValue", "LayoutRectangle", "LayoutChangeEvent", "ViewPropsAndroid",
+          "ViewPropsIOS", "TVViewPropsIOS"
+        ]
+      },
+      "owner": "GF-10",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-10: 'shared View props/styles and StyleSheet/color utilities', RTL, shadows/filters, fractional layout (onLayout)"
+    },
+    {
+      "id": "api-gf11-text",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Text", "TextProps", "TextInstance", "TextStyle", "TextLayoutEvent", "FontVariant", "UTFSequence"
+        ]
+      },
+      "owner": "GF-11",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-11: Text props/events/refs, fonts and layout; UTFSequence is the text-constants export (seed: GF-11)"
+    },
+    {
+      "id": "api-gf12-text-input",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "TextInput", "TextInputProps", "TextInputInstance", "TextInputIOSProps", "TextInputAndroidProps",
+          "TextInputBlurEvent", "TextInputChangeEvent", "TextInputContentSizeChangeEvent", "TextInputEndEditingEvent",
+          "TextInputFocusEvent", "TextInputKeyPressEvent", "TextInputSelectionChangeEvent",
+          "TextInputSubmitEditingEvent", "AutoCapitalize", "EnterKeyHintTypeOptions", "InputModeOptions",
+          "KeyboardTypeOptions", "ReturnKeyTypeOptions", "SubmitBehavior", "TextContentType", "Keyboard",
+          "KeyboardEvent", "KeyboardEventEasing", "KeyboardEventName", "KeyboardMetrics", "AndroidKeyboardEvent",
+          "IOSKeyboardEvent", "KeyboardAvoidingView", "KeyboardAvoidingViewProps", "KeyboardAvoidingViewInstance"
+        ]
+      },
+      "owner": "GF-12",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-12: TextInput and keyboard types/actions/autofill, 'Deliver Keyboard/KeyboardAvoidingView' and the keyboard events"
+    },
+    {
+      "id": "api-gf13-input",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Pressable", "PressableProps", "PressableInstance", "PressableStateCallbackType", "PressabilityConfig",
+          "PressabilityEventHandlers", "PressableAndroidRippleConfig", "usePressability", "PanResponder",
+          "PanResponderCallbacks", "PanResponderGestureState", "PanResponderInstance", "TouchableHighlight",
+          "TouchableHighlightProps", "TouchableHighlightInstance", "TouchableOpacity", "TouchableOpacityProps",
+          "TouchableOpacityInstance", "TouchableWithoutFeedback", "TouchableWithoutFeedbackProps",
+          "GestureResponderEvent", "GestureResponderHandlers", "ResponderSyntheticEvent", "NativeSyntheticEvent",
+          "NativeTouchEvent", "NativeUIEvent", "NativeMouseEvent", "MouseEvent", "NativePointerEvent", "PointerEvent",
+          "KeyEvent", "KeyDownEvent", "KeyUpEvent", "BlurEvent", "FocusEvent", "TargetedEvent", "Insets"
+        ]
+      },
+      "owner": "GF-13",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-13: 'pointer/touch/responder and PanResponder contracts, hitSlop/retention, hover, keyboard/focus traversal and touchables'"
+    },
+    {
+      "id": "api-gf14-scroll",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "ScrollView", "ScrollViewProps", "ScrollViewInstance", "ScrollViewImperativeMethods",
+          "ScrollViewScrollToOptions", "ScrollViewPropsIOS", "ScrollViewPropsAndroid", "ScrollResponderType",
+          "NativeScrollEvent", "ScrollEvent", "RefreshControl", "RefreshControlProps", "RefreshControlInstance",
+          "RefreshControlPropsAndroid", "RefreshControlPropsIOS"
+        ]
+      },
+      "owner": "GF-14",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-14: 'Scroll and refresh': ScrollView props/events/commands, platform bounce/zoom where applicable, refresh"
+    },
+    {
+      "id": "api-gf15-lists",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "FlatList", "FlatListProps", "FlatListInstance", "SectionList", "SectionListProps", "SectionListInstance",
+          "VirtualizedList", "VirtualizedListProps", "VirtualizedListInstance", "VirtualizedSectionList",
+          "VirtualizedSectionListProps", "VirtualizedSectionListInstance", "ListRenderItem", "ListRenderItemInfo",
+          "ListViewToken", "ScrollToLocationParamsType", "SectionBase", "SectionListData", "SectionListRenderItem",
+          "SectionListRenderItemInfo", "Separators"
+        ]
+      },
+      "owner": "GF-15",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-15: 'upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList'; the item and section types belong to them"
+    },
+    {
+      "id": "api-gf16-images",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Image", "ImageProps", "ImageInstance", "ImageStyle", "ImageBackground", "ImageBackgroundProps",
+          "ImageBackgroundInstance", "ImageErrorEvent", "ImageLoadEvent", "ImageProgressEventIOS", "ImagePropsBase",
+          "ImagePropsAndroid", "ImagePropsIOS", "ImageRequireSource", "ImageResizeMode", "ImageResolvedAssetSource",
+          "ImageSize", "ImageSource", "ImageSourcePropType", "ImageURISource", "AssetRegistry", "PackagerAsset",
+          "AssetDestPathResolver"
+        ]
+      },
+      "owner": "GF-16",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-16: 'Image/ImageBackground/AssetRegistry with bundled/URI/data assets, resize/tint, loading/error/progress'"
+    },
+    {
+      "id": "api-gf17-widgets",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "ActivityIndicator", "ActivityIndicatorProps", "ActivityIndicatorInstance", "Button", "ButtonProps",
+          "ButtonInstance", "Switch", "SwitchProps", "SwitchInstance", "SwitchChangeEvent"
+        ]
+      },
+      "owner": "GF-17",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-17: 'Button, Switch and ActivityIndicator plus their stable props/events/accessibility'"
+    },
+    {
+      "id": "api-gf18-modals",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Modal", "ModalProps", "ModalBaseProps", "ModalInstance", "ModalPropsAndroid", "ModalPropsIOS",
+          "SafeAreaView", "SafeAreaViewInstance"
+        ]
+      },
+      "owner": "GF-18",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-18: 'Modal presentation/dismiss/requestClose ... and the pinned SafeAreaView behavior'"
+    },
+    {
+      "id": "api-gf19-animated",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Animated", "Easing", "EasingFunction", "LayoutAnimation", "LayoutAnimationAnim", "LayoutAnimationConfig",
+          "LayoutAnimationProperties", "LayoutAnimationProperty", "LayoutAnimationType", "LayoutAnimationTypes",
+          "useAnimatedColor", "useAnimatedValue", "useAnimatedValueXY"
+        ]
+      },
+      "owner": "GF-19",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-19: 'upstream Animated/Easing/hooks and LayoutAnimation'"
+    },
+    {
+      "id": "api-gf20-accessibility",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "AccessibilityInfo", "AccessibilityProps", "AccessibilityActionEvent", "AccessibilityActionInfo",
+          "AccessibilityRole", "AccessibilityState", "AccessibilityValue", "Role"
+        ]
+      },
+      "owner": "GF-20",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-20: 'roles/labels/state/actions, focus, live announcements ... and AccessibilityInfo settings/events'"
+    },
+    {
+      "id": "api-gf21-system",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Appearance", "useColorScheme", "ColorSchemeName", "AppState", "AppStateEvent", "AppStateStatus"
+        ]
+      },
+      "owner": "GF-21",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-21: 'real Appearance/useColorScheme, AppState, device configuration and subscription behavior'"
+    },
+    {
+      "id": "api-gf22-networking",
+      "precedence": 10,
+      "match": {"kind": "@api", "subject": ["Networking"]},
+      "owner": "GF-22",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-22: 'fetch/XHR/WebSocket ... backed by real native networking'; Networking is the XHR transport"
+    },
+    {
+      "id": "api-gf23-services",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "Alert", "AlertButton", "AlertButtonStyle", "AlertOptions", "AlertType", "BackHandler", "BackPressEventName",
+          "Linking", "Share", "ShareAction", "ShareContent", "ShareOptions", "Vibration", "Settings", "Clipboard"
+        ]
+      },
+      "owner": "GF-23",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-23: 'applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior'"
+    },
+    {
+      "id": "api-gf24-os-specific",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "ActionSheetIOS", "ActionSheetIOSOptions", "ShareActionSheetIOSOptions", "ShareActionSheetError",
+          "DrawerLayoutAndroid", "DrawerLayoutAndroidProps", "DrawerLayoutAndroidInstance", "DrawerSlideEvent",
+          "DynamicColorIOS", "DynamicColorIOSTuple", "InputAccessoryView", "InputAccessoryViewProps",
+          "PermissionsAndroid", "Permission", "PermissionStatus", "Rationale", "ProgressBarAndroid",
+          "ProgressBarAndroidProps", "ProgressBarAndroidInstance", "PushNotificationIOS", "PushNotificationEventName",
+          "PushNotificationPermissions", "StatusBar", "StatusBarProps", "StatusBarInstance", "StatusBarAnimation",
+          "StatusBarStyle", "ToastAndroid", "TouchableNativeFeedback", "TouchableNativeFeedbackProps",
+          "TouchableNativeFeedbackInstance"
+        ]
+      },
+      "owner": "GF-24",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-24 names InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and the legacy notification/drawer/progress/touchable contracts"
+    },
+    {
+      "id": "api-gf25-infrastructure",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "NativeModules", "TurboModuleRegistry", "TurboModule", "NativeEventEmitter", "NativeAppEventEmitter",
+          "DeviceEventEmitter", "EventEmitter", "EventSubscription", "EmitterSubscription", "NativeEventSubscription",
+          "IEventEmitter", "registerCallableModule"
+        ]
+      },
+      "owner": "GF-25",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-25: 'TurboModule registration, NativeModules compatibility, callable modules and native event-emitter contracts'"
+    },
+    {
+      "id": "api-gf26-codegen",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "codegenNativeComponent", "codegenNativeCommands", "requireNativeComponent", "NativeComponentRegistry",
+          "CodegenTypes", "HostComponent"
+        ]
+      },
+      "owner": "GF-26",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-26: 'public codegenNativeComponent/Commands, registry/requireNativeComponent'; HostComponent is their return type"
+    },
+    {
+      "id": "api-gf29-dev",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "DevMenu", "DevSettings", "LogBox", "Systrace", "ExtendedExceptionData", "IgnorePattern", "LogData"
+        ]
+      },
+      "owner": "GF-29",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-29: 'LogBox/dev settings, profiler visibility'; the log types are LogBox's"
+    },
+    {
+      "id": "api-gf40-experimental",
+      "precedence": 10,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "VirtualViewMode", "experimental_LayoutConformance", "unstable_DEFAULT_INITIAL_NUM_TO_RENDER",
+          "unstable_NativeText", "unstable_NativeView", "unstable_TextAncestorContext", "unstable_VirtualArray",
+          "unstable_VirtualColumn", "unstable_VirtualColumnGenerator", "unstable_VirtualRow", "unstable_VirtualView",
+          "unstable_createVirtualCollectionView", "unstable_getScrollParent", "LayoutConformanceProps",
+          "unstable_NativeTextProps", "unstable_VirtualCollection", "unstable_VirtualCollectionGenerator",
+          "unstable_VirtualCollectionLayoutComponent", "unstable_VirtualCollectionViewComponent",
+          "unstable_VirtualItem", "ModeChangeEvent"
+        ]
+      },
+      "owner": "GF-40",
+      "scope": "post_1_0",
+      "applicability": "all",
+      "scopeReason": "the 13 unstable/experimental exports are GF-40 'Explicitly later scope' (the seed marks them post_1_0); their types and members follow",
+      "why": "GF-40: 'Evaluate the 13 unstable/experimental exports'; the seed's target is post_1_0 for all of them"
+    },
+    {
+      "id": "xcut-accessibility-props",
+      "precedence": 20,
+      "match": {
+        "kind": ["prop", "event"],
+        "source": "types_generated/Libraries/Components/View/ViewAccessibility.d.ts"
+      },
+      "owner": "GF-20",
+      "why": "GF-20 owns the accessibility metadata (roles/labels/state/actions) wherever it is declared, on every component"
+    },
+    {
+      "id": "xcut-accessibility-events",
+      "precedence": 20,
+      "match": {"kind": ["event", "prop"], "name": {"pattern": "^(onAccessibility|onMagicTap)"}},
+      "owner": "GF-20",
+      "why": "GF-20: accessibility actions and gestures (onAccessibilityAction/Escape/Tap, onMagicTap)"
+    },
+    {
+      "id": "xcut-view-input",
+      "precedence": 20,
+      "match": {
+        "kind": ["event", "prop"],
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": {
+          "pattern": "^(on(Pointer|GotPointer|LostPointer|Touch|Click|Responder|StartShouldSet|MoveShouldSet|Key|Mouse|Focus|Blur)|hitSlop$|pointerEvents$|focusable$|tabIndex$|nextFocus|hasTVPreferredFocus$)"
+        }
+      },
+      "owner": "GF-13",
+      "why": "GF-13: pointer/touch/responder events, hitSlop, hit routing (pointerEvents) and keyboard/focus traversal, declared once on View and inherited"
+    },
+    {
+      "id": "xcut-dom-instance-members",
+      "precedence": 20,
+      "match": {
+        "kind": "ref-member",
+        "source": {
+          "pattern": "^types_generated/(src/private/webapis/dom/nodes/|Libraries/ReactNative/ReactFabricPublicInstance/)"
+        }
+      },
+      "owner": "GF-08",
+      "why": "GF-08 owns the HostInstance/DOM node API (measure*, focus/blur, nodes) that every instance type inherits from ReadOnlyNode/Element"
+    },
+    {
+      "id": "out-ecmascript-members",
+      "precedence": 50,
+      "match": {
+        "kind": "type-member",
+        "source": {"absent": true},
+        "name": [
+          "__@iterator@1079", "anchor", "at", "big", "blink", "bold", "charAt", "charCodeAt", "codePointAt", "concat",
+          "endsWith", "fixed", "fontcolor", "fontsize", "includes", "indexOf", "isWellFormed", "italics", "lastIndexOf",
+          "length", "link", "localeCompare", "match", "matchAll", "normalize", "padEnd", "padStart", "repeat",
+          "replace", "replaceAll", "search", "slice", "small", "split", "startsWith", "strike", "sub", "substr",
+          "substring", "sup", "toLocaleLowerCase", "toLocaleUpperCase", "toLowerCase", "toString", "toUpperCase",
+          "toWellFormed", "trim", "trimEnd", "trimLeft", "trimRight", "trimStart", "valueOf", "toExponential",
+          "toFixed", "toLocaleString", "toPrecision", "__@toPrimitive@379", "__@toStringTag@381", "description"
+        ]
+      },
+      "scope": "out",
+      "applicability": "not-a-contract",
+      "scopeReason": "ECMAScript String/Number/Symbol members that the inventory read through a string-literal, numeric or symbol type; the contract is the type's values, not the engine's built-ins",
+      "why": "Source-less type members with a built-in name: 29 string-literal union types list the 52 String.prototype members (1,508 rows at 0.87.1), and numeric and symbol types a few more"
+    },
+    {
+      "id": "out-class-instance-members",
+      "precedence": 50,
+      "match": {
+        "kind": "ref-member",
+        "source": {"absent": true},
+        "name": [
+          "constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString",
+          "valueOf", "__@toPrimitive@379", "__@toStringTag@381", "description", "UNSAFE_componentWillMount",
+          "UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillUpdate", "componentDidCatch", "componentDidMount",
+          "componentDidUpdate", "componentWillMount", "componentWillReceiveProps", "componentWillUnmount",
+          "componentWillUpdate", "context", "forceUpdate", "getSnapshotBeforeUpdate", "props", "refs", "render",
+          "setState", "shouldComponentUpdate", "state"
+        ]
+      },
+      "scope": "out",
+      "applicability": "not-a-contract",
+      "scopeReason": "Object.prototype and React.Component members that an instance type inherits; the engine and React own those contracts, not React Native",
+      "why": "Source-less instance members: Object.prototype, Symbol and React.Component class members"
+    },
+    {
+      "id": "out-react-class-statics",
+      "precedence": 50,
+      "match": {
+        "kind": "api-member",
+        "source": {"absent": true},
+        "name": [
+          "propTypes", "contextType", "displayName", "$$typeof", "getDerivedStateFromProps", "toExponential", "toFixed",
+          "toLocaleString", "toPrecision", "toString", "valueOf"
+        ]
+      },
+      "scope": "out",
+      "applicability": "not-a-contract",
+      "scopeReason": "React class statics (propTypes, contextType, displayName, getDerivedStateFromProps), element internals ($$typeof) and Number built-ins; React and the engine own them",
+      "why": "Source-less API members that are React statics or Number built-ins"
+    },
+    {
+      "id": "os-ios-only-components",
+      "precedence": 40,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "ActionSheetIOS", "ActionSheetIOSOptions", "ShareActionSheetIOSOptions", "ShareActionSheetError",
+          "DynamicColorIOS", "DynamicColorIOSTuple", "InputAccessoryView", "InputAccessoryViewProps",
+          "PushNotificationIOS", "PushNotificationEventName", "PushNotificationPermissions"
+        ]
+      },
+      "applicability": "ios-only-component",
+      "why": "iOS-only components and APIs (the name or RN's .ios.js says so); GF-24 reproduces the upstream unavailability on Godot"
+    },
+    {
+      "id": "os-android-only-components",
+      "precedence": 40,
+      "match": {
+        "kind": "@api",
+        "subject": [
+          "DrawerLayoutAndroid", "DrawerLayoutAndroidProps", "DrawerLayoutAndroidInstance", "DrawerSlideEvent",
+          "PermissionsAndroid", "Permission", "PermissionStatus", "Rationale", "ProgressBarAndroid",
+          "ProgressBarAndroidProps", "ProgressBarAndroidInstance", "ToastAndroid", "AndroidKeyboardEvent",
+          "DisplayMetricsAndroid"
+        ]
+      },
+      "applicability": "android-only-component",
+      "why": "Android-only components and APIs (the name or RN's .android.js says so); GF-24 reproduces the upstream unavailability on Godot"
+    },
+    {
+      "id": "os-ios-keyboard-event",
+      "precedence": 40,
+      "match": {"kind": "@api", "subject": ["IOSKeyboardEvent", "ImageProgressEventIOS"]},
+      "applicability": "ios-only-component",
+      "why": "iOS-only event shapes (IOSKeyboardEvent carries iOS keyboard metrics; ImageProgressEventIOS backs the iOS-only Image onProgress)"
+    },
+    {
+      "id": "os-status-bar",
+      "precedence": 40,
+      "match": {
+        "kind": "@api",
+        "subject": ["StatusBar", "StatusBarProps", "StatusBarInstance", "StatusBarAnimation", "StatusBarStyle"]
+      },
+      "applicability": {
+        "godot": {
+          "status": "not-applicable",
+          "reason": "StatusBar needs the StatusBarManager native module of iOS and Android; GF-24 reproduces what upstream does on a host without it"
+        }
+      },
+      "why": "StatusBar is an iOS and Android API (GF-24 names it); both reference apps apply it, Godot does not"
+    },
+    {
+      "id": "os-safe-area-view",
+      "precedence": 40,
+      "match": {"kind": "@api", "subject": ["SafeAreaView"]},
+      "applicability": {
+        "android": {
+          "status": "not-applicable",
+          "reason": "SafeAreaView.js selects the iOS native component only for ios; every other platform, Android included, renders a plain View"
+        }
+      },
+      "why": "SafeAreaView is annotated @platform ios upstream, and GF-18 delivers its pinned behavior on Godot (insets)"
+    },
+    {
+      "id": "os-settings",
+      "precedence": 40,
+      "match": {"kind": "@api", "subject": ["Settings"]},
+      "applicability": {
+        "android": {
+          "status": "not-applicable",
+          "reason": "Settings.js loads SettingsFallback.js off iOS, which only warns that Settings is not supported"
+        }
+      },
+      "why": "Settings is implemented only by RN's iOS module, and GF-23 lists it among the services to implement for Godot, so Godot applies although the S1 marker says ios"
+    },
+    {
+      "id": "os-tv-view-props",
+      "precedence": 40,
+      "match": {"kind": "@api", "subject": ["TVViewPropsIOS"]},
+      "applicability": "ios-only-component",
+      "why": "tvOS props of View (TVViewPropsIOS); annotated @platform ios upstream"
+    },
+    {
+      "id": "tag-Alert-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Alert/Alert.d.ts",
+        "name": ["cancelable", "onDismiss"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Alert.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-Alert-ios",
+      "precedence": 30,
+      "match": {"kind": "@members", "source": "types_generated/Libraries/Alert/Alert.d.ts", "name": ["prompt"]},
+      "applicability": "ios-only-tagged",
+      "why": "Alert.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-AccessibilityInfo-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/AccessibilityInfo/AccessibilityInfo.d.ts",
+        "name": [
+          "getRecommendedTimeoutMillis", "isAccessibilityServiceEnabled", "isHighTextContrastEnabled"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "AccessibilityInfo.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-AccessibilityInfo-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/AccessibilityInfo/AccessibilityInfo.d.ts",
+        "name": [
+          "isBoldTextEnabled", "isDarkerSystemColorsEnabled", "isGrayscaleEnabled", "isInvertColorsEnabled",
+          "isReduceTransparencyEnabled", "prefersCrossFadeTransitions"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "AccessibilityInfo.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-ActivityIndicator-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/ActivityIndicator/ActivityIndicator.d.ts",
+        "name": ["hidesWhenStopped"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "ActivityIndicator.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Button-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Button.d.ts",
+        "name": ["touchSoundDisabled"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Button.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-Button-android-tv",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Button.d.ts",
+        "name": ["nextFocusDown", "nextFocusForward", "nextFocusLeft", "nextFocusRight", "nextFocusUp"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Button.d.ts annotates these members @platform android, tv"
+    },
+    {
+      "id": "tag-Button-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Button.d.ts",
+        "name": ["accessibilityLanguage"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "Button.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Pressable-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Pressable/Pressable.d.ts",
+        "name": ["android_disableSound", "android_ripple"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Pressable.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-Pressable-macos-windows",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Pressable/Pressable.d.ts",
+        "name": ["delayHoverIn", "delayHoverOut"]
+      },
+      "applicability": "desktop-only-tagged",
+      "why": "Pressable.d.ts annotates these members @platform macos windows"
+    },
+    {
+      "id": "tag-RefreshControl-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/RefreshControl/RefreshControl.d.ts",
+        "name": ["colors", "enabled", "progressBackgroundColor"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "RefreshControl.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-RefreshControl-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/RefreshControl/RefreshControl.d.ts",
+        "name": ["tintColor", "title", "titleColor"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "RefreshControl.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-ScrollView-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/ScrollView/ScrollView.d.ts",
+        "name": [
+          "endFillColor", "fadingEdgeLength", "nestedScrollEnabled", "overScrollMode", "persistentScrollbar",
+          "scrollPerfTag", "scrollsChildToFocus"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "ScrollView.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-ScrollView-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/ScrollView/ScrollView.d.ts",
+        "name": [
+          "alwaysBounceHorizontal", "alwaysBounceVertical", "automaticallyAdjustContentInsets",
+          "automaticallyAdjustKeyboardInsets", "automaticallyAdjustsScrollIndicatorInsets", "bounces", "bouncesZoom",
+          "canCancelContentTouches", "centerContent", "contentInset", "contentInsetAdjustmentBehavior",
+          "directionalLockEnabled", "indicatorStyle", "maximumZoomScale", "minimumZoomScale", "onScrollToTop",
+          "pinchGestureEnabled", "scrollIndicatorInsets", "scrollToOverflowEnabled", "scrollsToTop", "zoomScale"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "ScrollView.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-StatusBar-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/StatusBar/StatusBar.d.ts",
+        "name": ["currentHeight"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "StatusBar.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-StatusBar-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/StatusBar/StatusBar.d.ts",
+        "name": ["showHideTransition"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "StatusBar.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Switch-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Switch/Switch.d.ts",
+        "name": ["ios_backgroundColor"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "Switch.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-TextInput-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/TextInput/TextInput.flow.d.ts",
+        "name": [
+          "cursorColor", "disableFullscreenUI", "inlineImageLeft", "inlineImagePadding", "numberOfLines",
+          "returnKeyLabel", "rows", "selectionHandleColor", "textAlignVertical", "textBreakStrategy",
+          "underlineColorAndroid"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "TextInput.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-TextInput-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/TextInput/TextInput.flow.d.ts",
+        "name": [
+          "clearButtonMode", "clearTextOnFocus", "dataDetectorTypes", "disableKeyboardShortcuts",
+          "enablesReturnKeyAutomatically", "inputAccessoryViewButtonLabel", "inputAccessoryViewID",
+          "keyboardAppearance", "lineBreakModeIOS", "lineBreakStrategyIOS", "passwordRules", "scrollEnabled",
+          "smartInsertDelete", "spellCheck", "textContentType"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "TextInput.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-TouchableNativeFeedback-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Touchable/TouchableNativeFeedback.d.ts",
+        "name": ["nextFocusDown", "nextFocusForward", "nextFocusLeft", "nextFocusRight", "nextFocusUp"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "TouchableNativeFeedback.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-TouchableOpacity-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Touchable/TouchableOpacity.d.ts",
+        "name": ["nextFocusDown", "nextFocusForward", "nextFocusLeft", "nextFocusRight", "nextFocusUp"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "TouchableOpacity.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-TouchableWithoutFeedback-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/Touchable/TouchableWithoutFeedback.d.ts",
+        "name": ["touchSoundDisabled"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "TouchableWithoutFeedback.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-ViewAccessibility-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewAccessibility.d.ts",
+        "name": [
+          "accessibilityLabelledBy", "accessibilityLiveRegion", "aria-labelledby", "aria-live",
+          "importantForAccessibility", "screenReaderFocusable"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "ViewAccessibility.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-ViewAccessibility-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewAccessibility.d.ts",
+        "name": [
+          "accessibilityElementsHidden", "accessibilityIgnoresInvertColors", "accessibilityLanguage",
+          "accessibilityLargeContentTitle", "accessibilityRespondsToUserInteraction",
+          "accessibilityShowsLargeContentViewer", "accessibilityViewIsModal", "aria-modal"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "ViewAccessibility.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-ViewPropTypes-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": [
+          "focusable", "nextFocusDown", "nextFocusForward", "nextFocusLeft", "nextFocusRight", "nextFocusUp", "onClick",
+          "renderToHardwareTextureAndroid", "tabIndex"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "ViewPropTypes.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-ViewPropTypes-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": [
+          "isTVSelectable", "shouldRasterizeIOS", "tvParallaxMagnification", "tvParallaxShiftDistanceX",
+          "tvParallaxShiftDistanceY", "tvParallaxTiltAngle"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "ViewPropTypes.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-ImageProps-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Image/ImageProps.d.ts",
+        "name": [
+          "aria-labelledby", "fadeDuration", "loadingIndicatorSource", "progressiveRenderingEnabled", "resizeMethod",
+          "resizeMultiplier"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "ImageProps.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-ImageProps-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Image/ImageProps.d.ts",
+        "name": ["capInsets", "defaultSource", "onPartialLoad", "onProgress"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "ImageProps.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-ImageSource-ios",
+      "precedence": 30,
+      "match": {"kind": "@members", "source": "types_generated/Libraries/Image/ImageSource.d.ts", "name": ["bundle"]},
+      "applicability": "ios-only-tagged",
+      "why": "ImageSource.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Linking-android",
+      "precedence": 30,
+      "match": {"kind": "@members", "source": "types_generated/Libraries/Linking/Linking.d.ts", "name": ["sendIntent"]},
+      "applicability": "android-only-tagged",
+      "why": "Linking.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-FlatList-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Lists/FlatList.d.ts",
+        "name": ["flashScrollIndicators"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "FlatList.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-SectionList-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Lists/SectionList.d.ts",
+        "name": ["flashScrollIndicators"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "SectionList.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Modal-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Modal/Modal.d.ts",
+        "name": ["hardwareAccelerated", "navigationBarTranslucent", "statusBarTranslucent"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Modal.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-Modal-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Modal/Modal.d.ts",
+        "name": [
+          "allowSwipeDismissal", "onDismiss", "onOrientationChange", "presentationStyle", "supportedOrientations"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "Modal.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-Share-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Share/Share.d.ts",
+        "name": ["dismissedAction"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "Share.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-StyleSheetTypes-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/StyleSheet/StyleSheetTypes.d.ts",
+        "name": ["elevation"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "StyleSheetTypes.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-StyleSheetTypes-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/StyleSheet/StyleSheetTypes.d.ts",
+        "name": ["borderCurve", "direction", "shadowColor", "shadowOffset", "shadowOpacity", "shadowRadius"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "StyleSheetTypes.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-TextProps-android",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Text/TextProps.d.ts",
+        "name": [
+          "android_hyphenationFrequency", "dataDetectorType", "disabled", "selectionColor", "textBreakStrategy"
+        ]
+      },
+      "applicability": "android-only-tagged",
+      "why": "TextProps.d.ts annotates these members @platform android"
+    },
+    {
+      "id": "tag-TextProps-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Text/TextProps.d.ts",
+        "name": [
+          "adjustsFontSizeToFit", "dynamicTypeRamp", "lineBreakStrategyIOS", "minimumFontScale", "suppressHighlighting"
+        ]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "TextProps.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "tag-CoreEventTypes-ios",
+      "precedence": 30,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Types/CoreEventTypes.d.ts",
+        "name": ["force", "targetContentOffset"]
+      },
+      "applicability": "ios-only-tagged",
+      "why": "CoreEventTypes.d.ts annotates these members @platform ios"
+    },
+    {
+      "id": "name-android-only",
+      "precedence": 25,
+      "match": {"kind": "@members", "name": {"pattern": "^android_|Android$"}},
+      "applicability": "android-only-by-name",
+      "why": "The name says Android only and no @platform tag does (nativeBackgroundAndroid, nativeForegroundAndroid)"
+    },
+    {
+      "id": "view-config-android-only",
+      "precedence": 30,
+      "match": {
+        "kind": ["prop"],
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": ["needsOffscreenAlphaCompositing", "hasTVPreferredFocus"]
+      },
+      "applicability": "android-only-tagged",
+      "why": "Only RN's Android host props read needsOffscreenAlphaCompositing (HostPlatformViewProps.cpp), and hasTVPreferredFocus is annotated @platform android on ViewProps (src/prop-scope.mjs classifies both android-native)"
+    },
+    {
+      "id": "view-config-no-ios",
+      "precedence": 30,
+      "match": {
+        "kind": ["event"],
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": ["onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture"]
+      },
+      "applicability": "no-ios-view-config",
+      "why": "BaseViewConfig.android.js lists onKeyDown/onKeyUp and their capture variants and BaseViewConfig.ios.js does not; GF-13 'keyboard/focus traversal' puts them on Godot"
+    },
+    {
+      "id": "view-config-desktop-only",
+      "precedence": 30,
+      "match": {
+        "kind": ["event"],
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": ["onMouseEnter", "onMouseLeave"]
+      },
+      "applicability": "desktop-only-view-config",
+      "why": "Neither BaseViewConfig.ios.js nor BaseViewConfig.android.js lists onMouseEnter/onMouseLeave (desktop React Native only); GF-13 'hover' puts them on Godot"
+    },
+    {
+      "id": "godot-accessibility-semantics",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewAccessibility.d.ts",
+        "name": [
+          "accessibilityLiveRegion", "aria-live", "importantForAccessibility", "accessibilityElementsHidden",
+          "accessibilityViewIsModal", "aria-modal", "accessibilityLabelledBy", "aria-labelledby",
+          "screenReaderFocusable"
+        ]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-20 maps live announcements, hidden/grouped content, focus and labels to the OS bridge, and the supported 0.5 subset already maps liveRegion, hidden and importantForAccessibility; the modal and labelled-by props follow (GF-18 background focus)"
+    },
+    {
+      "id": "godot-view-input",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/View/ViewPropTypes.d.ts",
+        "name": ["onClick", "focusable", "tabIndex"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-13 'keyboard/focus traversal' and pointer clicks: the 0.5 subset supports onClick, and focusable and tabIndex are how a Control takes keyboard focus"
+    },
+    {
+      "id": "godot-text",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Text/TextProps.d.ts",
+        "name": ["disabled", "selectionColor"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-11 'pressable/selectable spans': disabled gates onPress and selectionColor paints the selection; the 0.5 subset supports disabled"
+    },
+    {
+      "id": "godot-image-loading",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Image/ImageProps.d.ts",
+        "name": ["onProgress", "onPartialLoad", "capInsets"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-16 'loading/error/progress' and nine-patch resize; the supported 0.5 subset already accepts them"
+    },
+    {
+      "id": "godot-activity-indicator",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/ActivityIndicator/ActivityIndicator.d.ts",
+        "name": ["hidesWhenStopped"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-17 ActivityIndicator animating/hidesWhenStopped; the supported 0.5 subset already honors it"
+    },
+    {
+      "id": "godot-style-direction-shadows",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/StyleSheet/StyleSheetTypes.d.ts",
+        "name": ["direction", "shadowColor", "shadowOffset", "shadowOpacity", "shadowRadius"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-10 'RTL' (direction) and 'supported shadows'; Godot draws both, so the iOS annotation does not limit them"
+    },
+    {
+      "id": "godot-text-input-multiline",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/TextInput/TextInput.flow.d.ts",
+        "name": ["rows", "numberOfLines", "textAlignVertical"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-12 'multiline': the number of lines and the vertical alignment size a multiline editor on any platform"
+    },
+    {
+      "id": "godot-scroll-insets",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/ScrollView/ScrollView.d.ts",
+        "name": ["nestedScrollEnabled", "contentInset", "scrollIndicatorInsets"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-14 'nested scrolling' and 'offsets/content/insets'"
+    },
+    {
+      "id": "godot-modal-orientation",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Modal/Modal.d.ts",
+        "name": ["onDismiss", "supportedOrientations", "onOrientationChange"]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "GF-18 'Modal presentation/dismiss ... orientation/insets'"
+    },
+    {
+      "id": "godot-accessibility-info",
+      "precedence": 35,
+      "match": {
+        "kind": "@members",
+        "source": "types_generated/Libraries/Components/AccessibilityInfo/AccessibilityInfo.d.ts",
+        "name": [
+          "isBoldTextEnabled", "isGrayscaleEnabled", "isInvertColorsEnabled", "isDarkerSystemColorsEnabled",
+          "prefersCrossFadeTransitions", "isReduceTransparencyEnabled"
+        ]
+      },
+      "applicability": {"godot": "applies"},
+      "why": "AccessibilityInfo.js branches on Platform.OS === 'android' alone, so Platform.OS godot takes the iOS branch that implements these getters (docs/research/accessibility-info.md)"
+    },
+    {
+      "id": "global-gf05-core",
+      "precedence": 10,
+      "match": {
+        "kind": "@declared-globals",
+        "subject": [
+          "cancelAnimationFrame", "clearImmediate", "clearInterval", "clearTimeout", "requestAnimationFrame",
+          "setImmediate", "setInterval", "setTimeout", "console", "Console", "HermesInternal", "ErrorUtils",
+          "AbortController", "AbortEvent", "AbortSignal", "URL", "URLSearchParams"
+        ]
+      },
+      "owner": "GF-05",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-05: 'timers, microtasks, immediate/idle callbacks, RAF, errors and required URL/encoding/abort globals'; console and the engine's globals are the bootstrap's"
+    },
+    {
+      "id": "global-gf08-dom-rect",
+      "precedence": 10,
+      "match": {"kind": "@declared-globals", "subject": ["DOMRect", "DOMRectInit", "DOMRectReadOnly"]},
+      "owner": "GF-08",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-08: DOMRect is the result type of the node API's getBoundingClientRect"
+    },
+    {
+      "id": "global-gf03-modules",
+      "precedence": 10,
+      "match": {"kind": "@declared-globals", "subject": ["require", "NodeRequire", "__BUNDLE_START_TIME__"]},
+      "owner": "GF-03",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-03: package and module resolution through the consumer bundler (require, the bundle start time)"
+    },
+    {
+      "id": "global-gf28-bundles",
+      "precedence": 10,
+      "match": {"kind": "@declared-globals", "subject": ["fetchBundle"]},
+      "owner": "GF-28",
+      "scope": "post_1_0",
+      "applicability": "all",
+      "scopeReason": "lazy-bundle loading is not part of the single-bundle SDK flow; reconsider with split bundles",
+      "why": "fetchBundle loads a lazy bundle by id; the SDK ships one bundle (GF-28), so lazy bundles are not in the 1.0 acceptance"
+    },
+    {
+      "id": "global-gf29-dev",
+      "precedence": 10,
+      "match": {"kind": "@declared-globals", "subject": ["__DEV__"]},
+      "owner": "GF-29",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-29: production removal of dev-only paths; __DEV__ is the bundler's define"
+    },
+    {
+      "id": "global-gf22-web",
+      "precedence": 10,
+      "match": {
+        "kind": "@declared-globals",
+        "subject": [
+          "Blob", "BlobOptions", "BlobPart", "BlobPropertyBag", "Body", "BodyInit_", "BufferSource", "EndingType",
+          "File", "FilePropertyBag", "FileReader", "FileReaderEventMap", "FormData", "FormDataPart", "FormDataValue",
+          "GlobalFetch", "Headers", "HeadersInit_", "ProgressEvent", "Request", "RequestCredentials_", "RequestInfo",
+          "RequestInit", "RequestMode_", "Response", "ResponseInit", "ResponseType_", "WebSocket",
+          "WebSocketCloseEvent", "WebSocketErrorEvent", "WebSocketMessageEvent", "WebsocketCloseEventListener",
+          "WebsocketErrorEventListener", "WebsocketEventListener", "WebsocketMessageEventListener",
+          "WebsocketOpenEventListener", "WindowOrWorkerGlobalScope", "XMLHttpRequest", "XMLHttpRequestEventMap",
+          "XMLHttpRequestEventTarget", "XMLHttpRequestEventTargetEventMap", "XMLHttpRequestResponseType",
+          "XMLHttpRequestUpload", "_SourceUri", "fetch", "originalXMLHttpRequest"
+        ]
+      },
+      "owner": "GF-22",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-22: 'fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior' and the web-standard types they use"
+    },
+    {
+      "id": "runtime-gf05-core",
+      "precedence": 10,
+      "match": {
+        "kind": "runtime-global",
+        "subject": [
+          "Promise", "RN$enableMicrotasksInReact", "URL", "URLSearchParams", "AbortController", "AbortSignal",
+          "cancelAnimationFrame", "cancelIdleCallback", "clearImmediate", "clearInterval", "clearTimeout",
+          "performance", "Performance", "EventCounts", "PerformanceEntry", "PerformanceEventTiming",
+          "PerformanceLongTaskTiming", "PerformanceMark", "PerformanceMeasure", "PerformanceObserver",
+          "PerformanceObserverEntryList", "PerformanceResourceTiming", "TaskAttributionTiming", "queueMicrotask",
+          "regeneratorRuntime", "requestAnimationFrame", "requestIdleCallback", "setImmediate", "setInterval",
+          "setTimeout", "navigator", "process", "process.env", "self", "window"
+        ]
+      },
+      "owner": "GF-05",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-05: integrate upstream core initialization; timers, microtasks, immediate/idle callbacks, RAF, performance, URL/abort globals"
+    },
+    {
+      "id": "runtime-gf22-web",
+      "precedence": 10,
+      "match": {
+        "kind": "runtime-global",
+        "subject": [
+          "Blob", "File", "FileReader", "FormData", "Headers", "Request", "Response", "WebSocket", "XMLHttpRequest",
+          "fetch"
+        ]
+      },
+      "owner": "GF-22",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-22: fetch/XHR/WebSocket, headers/body/form data/blob (RN's setUpXHR installs them)"
+    },
+    {
+      "id": "runtime-gf08-dom",
+      "precedence": 10,
+      "match": {
+        "kind": "runtime-global",
+        "subject": [
+          "CharacterData", "DOMRect", "DOMRectList", "DOMRectReadOnly", "Document", "Element", "HTMLCollection",
+          "HTMLElement", "Node", "NodeList", "Text"
+        ]
+      },
+      "owner": "GF-08",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-08: HostInstance/React Native node APIs; setUpDOM installs the DOM classes their instances extend"
+    },
+    {
+      "id": "runtime-gf13-events",
+      "precedence": 10,
+      "match": {
+        "kind": "runtime-global",
+        "subject": ["CustomEvent", "Event", "EventTarget", "RN$isNativeEventTargetEventDispatchingEnabled"]
+      },
+      "owner": "GF-13",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-13: pointer events dispatch through the EventTarget model (the roadmap's EventTarget slices are GF-13's)"
+    },
+    {
+      "id": "runtime-gf07-app-registry",
+      "precedence": 10,
+      "match": {"kind": "runtime-global", "subject": ["RN$AppRegistry"]},
+      "owner": "GF-07",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-07: AppRegistry; RN$AppRegistry is how the host reaches it"
+    },
+    {
+      "id": "runtime-gf23-alert",
+      "precedence": 10,
+      "match": {"kind": "runtime-global", "subject": ["alert"]},
+      "owner": "GF-23",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-23: Alert; setUpAlert installs global.alert on top of it"
+    },
+    {
+      "id": "runtime-gf28-segments",
+      "precedence": 10,
+      "match": {"kind": "runtime-global", "subject": ["__fetchSegment"]},
+      "owner": "GF-28",
+      "scope": "post_1_0",
+      "applicability": "all",
+      "scopeReason": "segment loading is not part of the single-bundle SDK flow; reconsider with split bundles",
+      "why": "__fetchSegment loads Metro segments; the SDK ships one bundle (GF-28)"
+    },
+    {
+      "id": "runtime-dev-gated",
+      "precedence": 10,
+      "match": {"kind": "runtime-global", "conditions": "dev"},
+      "owner": "GF-29",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "Sites gated by __DEV__ install the Fast Refresh, bundle-loading and DevTools hooks: GF-29 (reload/Fast Refresh, DevTools), present in development builds only"
+    },
+    {
+      "id": "runtime-flag-gated",
+      "precedence": 10,
+      "match": {"kind": "runtime-global", "conditions": "flag"},
+      "owner": "GF-40",
+      "scope": "post_1_0",
+      "applicability": "all",
+      "scopeReason": "installed only when a feature flag that defaults to false is on (enableIntersectionObserverByDefault, enableMutationObserverByDefault); the observers are not in RN's default environment",
+      "why": "IntersectionObserver and MutationObserver are experimental web APIs behind default-off flags: GF-40 evaluates them"
+    },
+    {
+      "id": "runtime-host-installed",
+      "precedence": 30,
+      "match": {"kind": ["runtime-global", "global-value"], "installedBy": "host"},
+      "applicability": "host-provides-everywhere",
+      "why": "Every RN site that would install it runs only without bridgeless (RN$Bridgeless is reported true on all three platforms), so the host installs it: the timers and the animation-frame functions"
+    },
+    {
+      "id": "runtime-module-gated",
+      "precedence": 30,
+      "match": {"kind": "runtime-global", "conditions": "module"},
+      "applicability": {
+        "godot": {
+          "status": "host-provides",
+          "reason": "RN installs the class only when the NativePerformance module exists; the Godot host does not register it yet"
+        }
+      },
+      "why": "The Web Performance classes are installed by setUpPerformanceModern only when the host provides NativePerformance (GF-05 'performance')"
+    },
+    {
+      "id": "runtime-performance-fallback",
+      "precedence": 40,
+      "match": {"kind": "runtime-global", "name": "performance", "owner": "global"},
+      "applicability": {"godot": "applies"},
+      "why": "global.performance exists either way: RN installs the NativePerformance-backed object or its own fallback (now, mark and measure) when the module is absent"
+    },
+    {
+      "id": "global-host-provided-values",
+      "precedence": 30,
+      "match": {"kind": "global-value", "name": ["console", "require", "__BUNDLE_START_TIME__"]},
+      "applicability": "host-provides-everywhere",
+      "why": "No RN file installs them: the host installs console (native/application_runtime.cpp on Godot), and the bundler's runtime defines require and the bundle start time"
+    },
+    {
+      "id": "host-gf25-modules",
+      "precedence": 10,
+      "match": {
+        "kind": "host-global",
+        "subject": ["RN$Bridgeless", "RN$registerCallableModule", "__turboModuleProxy", "nativeModuleProxy"]
+      },
+      "owner": "GF-25",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-25: TurboModule lookup, NativeModules compatibility and callable modules; native/turbo_module_registry.cpp installs RN$Bridgeless and RN$registerCallableModule"
+    },
+    {
+      "id": "host-gf06-fabric",
+      "precedence": 10,
+      "match": {"kind": "host-global", "subject": ["nativeFabricUIManager"]},
+      "owner": "GF-06",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-06: the Fabric UIManager binding the renderer talks to"
+    },
+    {
+      "id": "host-gf08-ui-manager",
+      "precedence": 10,
+      "match": {
+        "kind": "host-global",
+        "subject": [
+          "RN$LegacyInterop_UIManager_getConstants", "RN$LegacyInterop_UIManager_getConstantsForViewManager",
+          "RN$LegacyInterop_UIManager_getDefaultEventTypes"
+        ]
+      },
+      "owner": "GF-08",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-08: the public UIManager in bridgeless mode reads its constants through these host functions"
+    },
+    {
+      "id": "host-gf05-errors-logging",
+      "precedence": 10,
+      "match": {
+        "kind": "host-global",
+        "subject": [
+          "ErrorUtils", "HermesInternal", "RN$handleException", "RN$hasHandledFatalException", "RN$inExceptionHandler",
+          "RN$isRuntimeReady", "RN$notifyOfFatalException", "RN$registerExceptionListener",
+          "RN$useAlwaysAvailableJSErrorHandling", "__fbDisableExceptionsManager", "nativeLoggingHook",
+          "nativePerformanceNow"
+        ]
+      },
+      "owner": "GF-05",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-05: errors, the engine's globals, console logging and the monotonic clock; RN guards most of these reads, so each one's absence is a behavior to certify"
+    },
+    {
+      "id": "host-gf29-dev-profiling",
+      "precedence": 10,
+      "match": {
+        "kind": "host-global",
+        "subject": [
+          "__DEV__", "__METRO_GLOBAL_PREFIX__", "__BUNDLE_LOADER_REPORTER__", "__NETWORK_REPORTER__",
+          "__FUSEBOX_HAS_FULL_CONSOLE_SUPPORT__", "__RCTProfileIsProfiling", "globalEvalWithSourceUrl",
+          "__notifyFastRefreshComplete", "RN$DiagnosticFlags", "nativeTraceBeginAsyncFlow",
+          "nativeTraceBeginAsyncSection", "nativeTraceBeginSection", "nativeTraceCounter", "nativeTraceEndAsyncSection",
+          "nativeTraceEndSection", "nativeTraceIsTracing"
+        ]
+      },
+      "owner": "GF-29",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-29: dev renderer hooks, Fast Refresh, reporters and profiler visibility (Systrace); each read is guarded, so they matter in development builds"
+    },
+    {
+      "id": "host-gf22-blob",
+      "precedence": 10,
+      "match": {"kind": "host-global", "subject": ["__blobCollectorProvider"]},
+      "owner": "GF-22",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-22: Blob lifetime; BlobManager reads the collector when the host provides it"
+    },
+    {
+      "id": "host-gf26-registry",
+      "precedence": 10,
+      "match": {"kind": "host-global", "subject": ["__nativeComponentRegistry__hasComponent"]},
+      "owner": "GF-26",
+      "scope": "1_0",
+      "applicability": "host-provides-everywhere",
+      "why": "GF-26: the native component registry lookup that requireNativeComponent consults"
+    },
+    {
+      "id": "host-legacy-bridge",
+      "precedence": 10,
+      "match": {
+        "kind": "host-global",
+        "subject": [
+          "__fbBatchedBridgeConfig", "nativeRequireModuleConfig", "nativeFlushQueueImmediate", "nativeCallSyncHook"
+        ]
+      },
+      "owner": "GF-25",
+      "scope": "out",
+      "applicability": "legacy-bridge-only",
+      "scopeReason": "read only on the legacy bridge path (no nativeModuleProxy, MessageQueue); RN 0.87 runs bridgeless on every platform",
+      "why": "NativeModules.js reads them only when global.nativeModuleProxy is absent, and MessageQueue only serves the legacy bridge"
+    },
+    {
+      "id": "command-view",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "ViewNativeComponent"},
+      "owner": "GF-08",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-08: 'Public refs and native commands'; View's focus and blur commands back the ref API"
+    },
+    {
+      "id": "command-view-android-feedback",
+      "precedence": 20,
+      "match": {"kind": "native-command", "owner": "ViewNativeComponent", "name": ["hotspotUpdate", "setPressed"]},
+      "owner": "GF-24",
+      "applicability": "android-only-component",
+      "why": "hotspotUpdate and setPressed are TouchableNativeFeedback's Android ripple commands (GF-24 'legacy ... touchable contracts')"
+    },
+    {
+      "id": "command-scroll",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "ScrollViewCommands"},
+      "owner": "GF-14",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-14: 'ScrollView props/events/commands: animated scroll'"
+    },
+    {
+      "id": "command-scroll-zoom",
+      "precedence": 20,
+      "match": {"kind": "native-command", "owner": "ScrollViewCommands", "name": "zoomToRect"},
+      "applicability": "ios-only-tagged",
+      "why": "zoomToRect drives the zoom scale props that the declarations annotate @platform ios (zoomScale, minimumZoomScale, maximumZoomScale)"
+    },
+    {
+      "id": "command-text-input-ios",
+      "precedence": 10,
+      "match": {
+        "kind": "native-command",
+        "owner": ["RCTSingelineTextInputNativeComponent", "RCTMultilineTextInputNativeComponent"]
+      },
+      "owner": "GF-12",
+      "scope": "1_0",
+      "applicability": {
+        "ios": "applies",
+        "android": {"status": "not-applicable", "reason": "Android uses AndroidTextInputNativeComponent"},
+        "godot": "applies"
+      },
+      "why": "GF-12: 'native controlled/uncontrolled editing ... commands'; Platform.OS godot is neither android nor ios in TextInput.js, so the Godot host serves the same focus, blur and setTextAndSelection contract as the iOS component"
+    },
+    {
+      "id": "command-text-input-android",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "AndroidTextInputNativeComponent"},
+      "owner": "GF-12",
+      "scope": "1_0",
+      "applicability": {
+        "ios": {"status": "not-applicable", "reason": "iOS uses RCTSingelineTextInput and RCTMultilineTextInput"},
+        "android": "applies",
+        "godot": {
+          "status": "not-applicable",
+          "reason": "TextInput.js selects it only when Platform.OS is android; Godot serves the iOS-shaped command set"
+        }
+      },
+      "why": "GF-12: the Android TextInput component's commands (focus, blur, setTextAndSelection)"
+    },
+    {
+      "id": "command-image",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "ImageViewNativeComponent"},
+      "owner": "GF-16",
+      "scope": "post_1_0",
+      "applicability": "all",
+      "scopeReason": "experimental command (the name says so); GF-16's acceptance does not ask for it",
+      "why": "GF-16: Image's host component; setIsVisible_EXPERIMENTAL is its only command"
+    },
+    {
+      "id": "command-switch-ios",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "SwitchNativeComponent"},
+      "owner": "GF-17",
+      "scope": "1_0",
+      "applicability": {
+        "ios": "applies",
+        "android": {"status": "not-applicable", "reason": "Android uses AndroidSwitchNativeComponent"},
+        "godot": "applies"
+      },
+      "why": "GF-17: Switch; Switch.js uses SwitchCommands.setValue for every Platform.OS other than android, Godot included"
+    },
+    {
+      "id": "command-switch-android",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "AndroidSwitchNativeComponent"},
+      "owner": "GF-17",
+      "scope": "1_0",
+      "applicability": {
+        "ios": {"status": "not-applicable", "reason": "iOS uses SwitchNativeComponent"},
+        "android": "applies",
+        "godot": {"status": "not-applicable", "reason": "Switch.js selects it only when Platform.OS is android"}
+      },
+      "why": "GF-17: the Android Switch component's setNativeValue command"
+    },
+    {
+      "id": "command-refresh-ios",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "PullToRefreshViewNativeComponent"},
+      "owner": "GF-14",
+      "scope": "1_0",
+      "applicability": {
+        "ios": "applies",
+        "android": {"status": "not-applicable", "reason": "Android uses AndroidSwipeRefreshLayoutNativeComponent"},
+        "godot": {"status": "not-applicable", "reason": "RefreshControl.js selects it only when Platform.OS is ios"}
+      },
+      "why": "GF-14: 'Scroll and refresh'; the iOS pull-to-refresh component's setNativeRefreshing command"
+    },
+    {
+      "id": "command-refresh-android",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "AndroidSwipeRefreshLayoutNativeComponent"},
+      "owner": "GF-14",
+      "scope": "1_0",
+      "applicability": {
+        "ios": {"status": "not-applicable", "reason": "iOS uses PullToRefreshViewNativeComponent"},
+        "android": "applies",
+        "godot": "applies"
+      },
+      "why": "GF-14: RefreshControl.js renders the Android swipe-refresh component for every Platform.OS other than ios, Godot included"
+    },
+    {
+      "id": "command-drawer",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "AndroidDrawerLayoutNativeComponent"},
+      "owner": "GF-24",
+      "scope": "1_0",
+      "applicability": "android-only-component",
+      "why": "GF-24 names the drawer among the legacy OS-specific contracts; the commands belong to DrawerLayoutAndroid"
+    },
+    {
+      "id": "command-debugging-overlay",
+      "precedence": 10,
+      "match": {"kind": "native-command", "owner": "DebuggingOverlayNativeComponent"},
+      "owner": "GF-29",
+      "scope": "1_0",
+      "applicability": "all",
+      "why": "GF-29: DevTools element highlights are drawn by this native overlay, present in development builds"
+    }
+  ],
+  "overrides": [
+    {
+      "id": "api-member:AppRegistry.cancelHeadlessTask",
+      "applicability": {
+        "ios": {
+          "status": "not-applicable",
+          "reason": "NativeHeadlessJsTaskSupport exists only in ReactAndroid (HeadlessJsTaskSupportModule.kt); AppRegistryImpl.js tolerates its absence"
+        },
+        "godot": {
+          "status": "not-applicable",
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
+        }
+      },
+      "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
+    },
+    {
+      "id": "api-member:AppRegistry.registerCancellableHeadlessTask",
+      "applicability": {
+        "ios": {
+          "status": "not-applicable",
+          "reason": "NativeHeadlessJsTaskSupport exists only in ReactAndroid (HeadlessJsTaskSupportModule.kt); AppRegistryImpl.js tolerates its absence"
+        },
+        "godot": {
+          "status": "not-applicable",
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
+        }
+      },
+      "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
+    },
+    {
+      "id": "api-member:AppRegistry.registerHeadlessTask",
+      "applicability": {
+        "ios": {
+          "status": "not-applicable",
+          "reason": "NativeHeadlessJsTaskSupport exists only in ReactAndroid (HeadlessJsTaskSupportModule.kt); AppRegistryImpl.js tolerates its absence"
+        },
+        "godot": {
+          "status": "not-applicable",
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
+        }
+      },
+      "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
+    },
+    {
+      "id": "api-member:AppRegistry.startHeadlessTask",
+      "applicability": {
+        "ios": {
+          "status": "not-applicable",
+          "reason": "NativeHeadlessJsTaskSupport exists only in ReactAndroid (HeadlessJsTaskSupportModule.kt); AppRegistryImpl.js tolerates its absence"
+        },
+        "godot": {
+          "status": "not-applicable",
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
+        }
+      },
+      "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
+    },
+    {
+      "id": "api-member:Image.prefetch",
+      "owner": "GF-22",
+      "reason": "GF-16's acceptance ends 'Network image behavior uses GF-22': these three download over the network, while getSize, queryCache and resolveAssetSource stay with the asset pipeline"
+    },
+    {
+      "id": "api-member:Image.prefetchWithMetadata",
+      "owner": "GF-22",
+      "reason": "GF-16's acceptance ends 'Network image behavior uses GF-22': these three download over the network, while getSize, queryCache and resolveAssetSource stay with the asset pipeline"
+    },
+    {
+      "id": "api-member:Image.getSizeWithHeaders",
+      "owner": "GF-22",
+      "reason": "GF-16's acceptance ends 'Network image behavior uses GF-22': these three download over the network, while getSize, queryCache and resolveAssetSource stay with the asset pipeline"
+    }
+  ]
+}
