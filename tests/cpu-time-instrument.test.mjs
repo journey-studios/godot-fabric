@@ -53,8 +53,9 @@ function terms(frames, readings) {
 
 // A report. `scale` multiplies the busy loop as the instrument reads it, per target; `reads` is what the instrument takes for the process term
 // (the clock, the interval between frames, the engine's monitor, or nothing of the load because it ran outside the measured frame); `pace` is the
-// loop's idle gap in microseconds when something other than the defaults paces it; `lag` is the draws the engine really takes to report a render time.
-function report({windowed = false, seed = 7, scale = {}, reads = "clock", pace = null, lag = LAG} = {}) {
+// loop's idle gap in microseconds when something other than the defaults paces it; `lag` is the draws the engine really takes to report a render time;
+// `quiet` is a runner with no noise: the loop is exactly its target and the clock reads exactly one microsecond past it in every load frame.
+function report({windowed = false, seed = 7, scale = {}, reads = "clock", pace = null, lag = LAG, quiet = false} = {}) {
   const blocks = expectedBlocks(windowed);
   const total = blocks.at(-1).end;
   const random = mulberry32(seed);
@@ -71,11 +72,11 @@ function report({windowed = false, seed = 7, scale = {}, reads = "clock", pace =
     const {kind, targetMs, first, settle} = blocks[block];
     const offset = step - first - settle;
     const pulse = kind === "render-pulse" && offset >= 0 && offset % 11 === 0 ? 1 : 0;
-    const burn = kind === "load" ? targetMs * 1000 + jitter(0, 4) : 0;
+    const burn = kind === "load" ? targetMs * 1000 + (quiet ? 0 : jitter(0, 4)) : 0;
     const busy = jitter(6, 14) + burn + (pulse === 1 ? 3300 + jitter(0, 200) : 0);
     const paced = windowed ? (step % 2 === 0 ? 3300 : 13367) + jitter(-150, 150) : 6900 + jitter(-40, 40);
     const gap = Math.max(pace === null ? paced : pace + jitter(-20, 20), busy + jitter(100, 600));
-    const taken = {clock: jitter(6, 14) + Math.round(burn * (scale[targetMs] ?? 1)) + (pulse === 1 ? 3300 : 0), interval: gap,
+    const taken = {clock: (quiet && kind === "load" ? 1 : jitter(6, 14)) + Math.round(burn * (scale[targetMs] ?? 1)) + (pulse === 1 ? 3300 : 0), interval: gap,
       monitor: Math.round(monitor * 1000), outside: jitter(6, 14)}[reads];
     frames.frame.push(1000 + step);
     frames.block.push(block);
@@ -180,15 +181,25 @@ test("The oracle accepts the report of a window that a display presented, and th
 });
 
 test("Each load is judged to within 10% of its target, the boundary belonging to the accepted side", () => {
-  // The instrument reads 9% over and 9% under: inside the rule.
+  // The instrument reads 9% over: inside the rule.
   verifyCpuTimeInstrumentReport(report({scale: {10: 1.09}}));
-  verifyCpuTimeInstrumentReport(report({scale: {2: 0.91, 20: 0.91}}));
   for (const target of TARGETS_MS) {
     const over = judgeCpuTimeInstrumentReport(report({scale: {[target]: 1.15}}));
     assert.match(over.violations[0], new RegExp(`within 10% of the ${target} ms load`), `${target} ms read 15% over`);
     assert.equal(over.violations.length, 1, "and only that rule accuses");
     const under = judgeCpuTimeInstrumentReport(report({scale: {[target]: 0.85}}));
     assert.match(under.violations[0], new RegExp(`within 10% of the ${target} ms load`), `${target} ms read 15% under`);
+  }
+});
+
+test("A process term shorter than the busy loop it spans is refused whatever the 10% rule says: the step contains the loop", () => {
+  // 9% under is inside the 10% rule, and a clock cannot read it: the step from the stamp that opens it to the one that closes it holds the whole loop.
+  for (const target of TARGETS_MS) {
+    const verdict = judgeCpuTimeInstrumentReport(report({scale: {[target]: 0.91}}));
+    assert.equal(verdict.violations.some(violation => /within 10%/.test(violation)), false, `${target} ms read 9% under is inside the 10% rule`);
+    assert.equal(verdict.violations.length, 1, "and only the inclusion rule accuses");
+    assert.match(verdict.violations[0], new RegExp(`process term of every frame of the ${target} ms block contains the load that frame ran`));
+    assert.equal(verdict.inclusion[target].shorterThanTheLoad, verdict.inclusion[target].frames, "every frame of the block is shorter than its loop");
   }
 });
 
@@ -200,15 +211,38 @@ test("An instrument that reads the interval between frames and not the CPU time 
   }
 });
 
-test("An instrument that reads the engine's once-a-second monitor as the frame's process time is refused: it repeats and it disagrees with its own stamps", () => {
+test("An instrument that reads the engine's once-a-second monitor as the frame's process time is refused: its term does not contain the load of the frame", () => {
   const verdict = judgeCpuTimeInstrumentReport(report({reads: "monitor"}));
-  assert.ok(verdict.violations.some(violation => /changes from frame to frame as a clock does/.test(violation)), verdict.violations.join("\n"));
+  for (const target of TARGETS_MS) {
+    assert.ok(verdict.violations.some(violation => new RegExp(`process term of every frame of the ${target} ms block contains the load that frame ran`).test(violation)),
+      `${target} ms: ${verdict.violations.join("\n")}`);
+    assert.ok(verdict.inclusion[target].shorterThanTheLoad > 0, "the block starts with the second before");
+  }
+});
+
+test("A clock on a runner with no noise reads one value for a whole block and is accepted; the monitor on that runner is still refused", () => {
+  const quiet = report({quiet: true});
+  for (const target of TARGETS_MS) {
+    const block = expectedBlocks(false).find(each => each.targetMs === target);
+    const terms = new Set(quiet.frames.processMs.slice(block.first + block.settle, block.end));
+    assert.equal(terms.size, 1, `${target} ms: the term is one value in all ${block.measured} measured frames`);
+  }
+  const verdict = verifyCpuTimeInstrumentReport(quiet);
+  assert.equal(verdict.variation[10].distinct, 1);
+  assert.equal(verdict.variation[10].longestRun, 200);
+  for (const target of TARGETS_MS) {
+    assert.equal(verdict.inclusion[target].shortestMarginUs, 1);
+    assert.equal(verdict.inclusion[target].shorterThanTheLoad, 0);
+  }
+  // The same runner read through the monitor is still refused.
+  assert.ok(judgeCpuTimeInstrumentReport(report({quiet: true, reads: "monitor"})).violations.some(violation => /contains the load that frame ran/.test(violation)));
 });
 
 test("A busy loop that ran outside the measured frame is not seen, and the 10% rule says so", () => {
   const verdict = judgeCpuTimeInstrumentReport(report({reads: "outside"}));
   assert.match(verdict.violations[0], /within 10% of the 2 ms load/);
   assert.equal(verdict.violations.filter(violation => /within 10%/.test(violation)).length, 4, "all four loads are missing");
+  assert.equal(verdict.violations.filter(violation => /contains the load that frame ran/.test(violation)).length, 4, "and the term is shorter than its own loop in all four");
   assert.equal(verdict.violations.some(violation => /busy loop/.test(violation)), false, "while the field truth, measured by the engine's clock, says the loop ran");
 });
 

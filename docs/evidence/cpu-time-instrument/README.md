@@ -4,6 +4,8 @@
 > [`e38615d`](https://github.com/journey-studios/godot-fabric/commit/e38615da6ad7f9ca774e2ef8c46de33707c1b427) (árvore `825a3f4b`, sobre a main `7fb27e1`), e o recibo
 > [`execution.json`](execution.json) os fixa. Os comandos rodaram nesta ordem e em sequência, com a árvore limpa (`git status` vazio antes do primeiro, depois das sabotagens e depois do último);
 > os arquivos desta pasta e os documentos que apontam para eles foram escritos depois e não são entrada de nenhum comando. A [nota de pesquisa](../../research/cpu-time-instrument.md) e esta página dizem os mesmos números.
+>
+> **Correção posterior (2026-10-13).** A regra do probe e do oráculo que exigia que o termo de processo de um bloco de carga tivesse pelo menos 8 valores e não repetisse mais de 10 quadros seguidos foi **substituída** pela regra de inclusão (o termo de cada quadro contém o laço desse quadro), porque reprovava, de forma intermitente, o relógio genuíno de runners hospedados quietos. O que a tabela de sabotagens e o restante desta página dizem da "regra de variação" é o registro da execução fixada; a regra em vigor, os dados hospedados que a motivaram e as sabotagens rodadas de novo estão em [A regra do termo de processo, corrigida](#a-regra-do-termo-de-processo-corrigida-2026-10-13). O instrumento (`tests/cpu-time-instrument.gd`) não mudou.
 
 Esta fatia é a **preparação do critério `execucao` do V05-10** do marco 0.5 Frontier: escolher, implementar e verificar, **antes de qualquer medição comparativa**, o instrumento que lê o tempo de CPU da thread principal por quadro de processo (o nome que o protocolo dá à grandeza) nos
 três braços do comparativo (A sem HUD, B com o HUD nativo do Godot, C com o HUD React Native). O que ele mede é o **tempo decorrido monotônico entre ganchos do engine, na thread principal**, e não o relógio de CPU da thread no sistema operacional:
@@ -145,6 +147,80 @@ O arquivo de veredito de cada variante é apagado antes de rodá-la e um arquivo
 
 O oráculo nomeia, de cada variante, toda regra que ela quebra (6 a 11 violações); o recibo guarda o texto de todas. Os hashes dos fontes sabotados estão em `sabotages[].sourceSha256`.
 
+## A regra do termo de processo, corrigida (2026-10-13)
+
+### O que falhou
+
+Desde o #97, o `npm run test:cpu-time-instrument` do job `native-suites-frontier` (sob demanda, `workflow_dispatch`) reprovava de vez em quando **um** check do probe, `cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not` (`tests/cpu-time-instrument-probe.gd`; a mesma regra no oráculo, `tests/cpu-time-instrument-oracle.mjs`): em cada bloco de carga o termo de processo tinha de tomar pelo menos 8 valores e não podia repetir mais de 10 quadros seguidos. A regra existia para recusar a sabotagem `reads-monitor` (o termo lido do `Performance.TIME_PROCESS`, que o engine atualiza uma vez por segundo). Duas execuções hospedadas reprovaram só esse check, e a nova tentativa, com o mesmo código, passou:
+
+| Run (tentativa) | Job / artefato | Código | Bloco que reprovou | Valores distintos | Maior repetição | Valor mais comum |
+| --- | --- | --- | --- | ---: | ---: | --- |
+| [38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586) (1), 13:50Z | job 115322659613 / artefato 11819951214 | `9ad524b` | 10 ms | 27 | **12** | 10,001 ms em 63 de 200 quadros (32%) |
+| [38473856206](https://github.com/journey-studios/godot-fabric/actions/runs/38473856206) (1), 22:26Z | job 115564192080 / artefato 11856345204 | `9cdae80` | 10 ms | 23 | **12** | 10,001 ms em 118 de 200 quadros (59%) |
+
+Nenhuma das duas mexia no instrumento, e nos dois relatórios as quatro cargas foram lidas dentro de 0,4% (+0,10%, −0,38%, −0,21% e −0,08% no primeiro; +0,05%, −0,36%, −0,21% e −0,10% no segundo). A nova tentativa do primeiro (14:23Z, job 115338275328) e a do segundo (23:01Z, job 115577319014) passaram. O [registro da entrada do Frontier](../../research/frontier-comparison-entry.md) já anotava a mesma reprovação numa execução manual do probe Release (18 valores, 12 quadros iguais) e a atribuiu à carga da máquina; os dados hospedados mostram que a regra reprova também num runner quieto.
+
+### Por que um relógio genuíno repete o valor
+
+Num bloco de carga o laço de `burn_for` sai no primeiro carimbo de `Time.get_ticks_usec` que alcança o início mais T, e o relógio anda em microssegundos: o laço mede **exatamente T µs** em 94,6% a 99,5% dos quadros dos 20 relatórios (`burnUsec`). O termo de processo é o laço mais o resto do passo (do carimbo de `process_frame` até o laço, e do laço até o carimbo que fecha o passo), que são poucos microssegundos, quantizados em 1 µs. Em bloco de runner quieto o resto é 1 µs em quase todo quadro (a mediana foi de 1 µs no bloco de 10 ms da run 38473856206, tentativa 1), então o termo é **um valor só**, 10,001 ms, por longas sequências. Contar valores e repetições mede o ruído e o ritmo do runner, e não a propriedade que a regra queria garantir; as 18 execuções que passaram tiveram, no pior bloco, 16 valores distintos e uma repetição de até 6 quadros, a 4 quadros do limite, e as duas que reprovaram, 12.
+
+### A regra em vigor: inclusão
+
+Em **todo** quadro de um bloco de carga (os de assentamento também, o laço roda neles), o termo de processo é, no mínimo, o laço que **esse quadro** rodou, como o relógio do engine o mediu: `round(processMs · 1000) ≥ burnUsec` (os carimbos são inteiros em µs). O laço roda entre o carimbo que abre o passo (`process_frame`) e o que o fecha (`frame_pre_draw` ou o último `_process`), então uma leitura desse passo o contém, ao microssegundo, em qualquer runner e em qualquer ritmo. Um monitor que o engine atualiza uma vez por segundo não o contém: todo bloco começa com o valor do segundo anterior, tomado antes de a carga existir, e os alvos crescem de bloco em bloco depois de um bloco ocioso.
+
+A regra **não conta quadros**: compara cada quadro com a carga que ele mesmo rodou, tirada do relatório, e por isso não depende de ritmo, segmentação, ruído nem resolução do relógio. A repetição e o número de valores distintos seguem no relatório (`summary.processTermVariation` no probe e `variation` no veredito do oráculo), como observação e não como juízo. A regra dos 10%, a do CPU, a do monitor do engine e a aritmética não mudaram. Probe e oráculo aplicam a mesma regra, cada um do seu lado; o oráculo a expõe como `loadInclusion`.
+
+### O que os relatórios hospedados mostram
+
+Os 20 artefatos `native-cpu-time-instrument` que o GitHub ainda servia em 2026-10-13 (18 que passaram e os 2 que reprovaram), baixados cada um para um diretório novo e lidos como dado, sem executar nada deles. Para cada relatório: a regra retirada (a maior repetição e o menor número de valores distintos entre os quatro blocos), a regra nova (a menor margem entre o termo e o laço, em µs, entre os 840 quadros de carga) e a sabotagem `reads-monitor` refeita sobre o mesmo relatório (o termo trocado pela coluna `monitorMs`, que é o `TIME_PROCESS` lido no início de cada quadro): o menor número de quadros mais curtos que o próprio laço em um bloco.
+
+| Run (tentativa) | Artefato criado (UTC) | Job | Maior repetição | Menos valores | Menor margem | Quadros curtos com o monitor (mínimo por bloco) |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| [37995325873](https://github.com/journey-studios/godot-fabric/actions/runs/37995325873) | 2026-10-09 22:14:42 | passou | 3 | 41 | 2 µs | 12 |
+| [38018685996](https://github.com/journey-studios/godot-fabric/actions/runs/38018685996) | 2026-10-10 03:25:10 | passou | 3 | 40 | 1 µs | 15 |
+| [38027051145](https://github.com/journey-studios/godot-fabric/actions/runs/38027051145) | 2026-10-10 05:49:04 | passou | 2 | 51 | 6 µs | 7 |
+| [38034333213](https://github.com/journey-studios/godot-fabric/actions/runs/38034333213) | 2026-10-10 07:53:05 | passou | 5 | 32 | 0 µs | 12 |
+| [38044068758](https://github.com/journey-studios/godot-fabric/actions/runs/38044068758) | 2026-10-10 10:44:05 | passou | 3 | 49 | 1 µs | 10 |
+| [38053834754](https://github.com/journey-studios/godot-fabric/actions/runs/38053834754) | 2026-10-10 13:25:18 | passou | 6 | 16 | 1 µs | 17 |
+| [38061098705](https://github.com/journey-studios/godot-fabric/actions/runs/38061098705) | 2026-10-10 15:18:39 | passou | 4 | 48 | 0 µs | 7 |
+| [38063477166](https://github.com/journey-studios/godot-fabric/actions/runs/38063477166) | 2026-10-10 15:52:33 | passou | 3 | 48 | 2 µs | 1 |
+| [38067347088](https://github.com/journey-studios/godot-fabric/actions/runs/38067347088) | 2026-10-10 16:52:40 | passou | 5 | 19 | 0 µs | 7 |
+| [38068936447](https://github.com/journey-studios/godot-fabric/actions/runs/38068936447) | 2026-10-10 17:19:06 | passou | 3 | 52 | 6 µs | 7 |
+| [38071954457](https://github.com/journey-studios/godot-fabric/actions/runs/38071954457) | 2026-10-10 18:02:09 | passou | 3 | 49 | 3 µs | 7 |
+| [38074493966](https://github.com/journey-studios/godot-fabric/actions/runs/38074493966) | 2026-10-10 19:04:34 | passou | 4 | 31 | 1 µs | 1 |
+| [38076585188](https://github.com/journey-studios/godot-fabric/actions/runs/38076585188) | 2026-10-10 19:08:33 | passou | 4 | 38 | 1 µs | 18 |
+| [38082593709](https://github.com/journey-studios/godot-fabric/actions/runs/38082593709) | 2026-10-10 20:39:17 | passou | 3 | 55 | 1 µs | 35 |
+| [38085526897](https://github.com/journey-studios/godot-fabric/actions/runs/38085526897) | 2026-10-10 21:23:52 | passou | 4 | 45 | 2 µs | 5 |
+| [38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586) (1) | 2026-10-13 13:50:50 | **reprovou** | **12** | 27 | 1 µs | 45 |
+| [38403991586](https://github.com/journey-studios/godot-fabric/actions/runs/38403991586) (2) | 2026-10-13 14:23:25 | passou | 3 | 49 | 1 µs | 1 |
+| [38459689769](https://github.com/journey-studios/godot-fabric/actions/runs/38459689769) | 2026-10-13 20:35:49 | passou | 4 | 37 | 2 µs | 5 |
+| [38473856206](https://github.com/journey-studios/godot-fabric/actions/runs/38473856206) (1) | 2026-10-13 22:26:38 | **reprovou** | **12** | 23 | 0 µs | 36 |
+| [38473856206](https://github.com/journey-studios/godot-fabric/actions/runs/38473856206) (2) | 2026-10-13 23:01:19 | passou | 4 | 37 | 0 µs | 4 |
+
+- **A regra nova aceita os 20 relatórios**, os dois que a regra retirada recusou entre eles, inteiros: o oráculo completo (estrutura, aritmética, monitor do engine, as quatro cargas) não dá nenhuma violação em nenhum. Em nenhum dos 16.800 quadros de carga (20 relatórios × 4 blocos × 210 quadros) o termo ficou abaixo do laço; a margem mínima é **0 µs** (em 5 dos 20), por isso a regra é `≥` e não `>`.
+- **A sabotagem do monitor é recusada nos quatro blocos de carga de cada um dos 20 relatórios.** O primeiro quadro de todo bloco (80 de 80) lê o monitor do segundo anterior, mais curto que o laço desse quadro, e nenhum ponto de atualização do monitor esconde isso, porque o valor que o primeiro quadro lê foi fixado antes de a carga começar. Entre 1 e 126 quadros por bloco ficam abaixo do laço.
+- O probe e o oráculo usam a coluna do termo que o instrumento **reporta**, e não os carimbos: a sabotagem `reads-monitor` troca só o termo, e é ele que a regra julga (a aritmética do oráculo, que compara o termo com os carimbos, fica como segunda barreira).
+
+### Os dados no repositório e o teste
+
+Os relatórios brutos não estão no repositório (ver "Reproduzindo"). O que a regra lê deles, só as colunas necessárias dos quatro blocos de carga, está em [`tests/fixtures/cpu-time-instrument-hosted/load-blocks.json`](../../../tests/fixtures/cpu-time-instrument-hosted/load-blocks.json) (67 KB): por quadro o laço (`burnUsec`), o termo em µs acima do laço e o `monitorMs` em µs, e por relatório o run, a tentativa, o artefato, o commit e o SHA-256 do relatório original, para conferir uma nova baixada. O teste [`tests/cpu-time-instrument-hosted.test.mjs`](../../../tests/cpu-time-instrument-hosted.test.mjs) (no `test:contracts`) refaz a regra retirada sobre eles e confere que ela recusa exatamente os dois que a CI recusou; roda `loadInclusion` do oráculo e exige que aceite os 20 e recuse a leitura do monitor em todos os blocos de todos; e exige que uma série atualizada uma vez por segundo, em períodos de 37, 100 e 150 quadros e com a atualização caindo em qualquer quadro do bloco, seja recusada. `tests/cpu-time-instrument.test.mjs` ganhou o relatório sintético de um runner sem ruído (o termo é um valor só nos 200 quadros de cada bloco e o oráculo o aceita) e a recusa de um termo mais curto que o próprio laço mesmo dentro dos 10%.
+
+### As sabotagens depois da correção
+
+`node scripts/cpu-time-instrument-sabotage.mjs` rodou de novo sobre o probe e o oráculo novos (os fontes voltaram byte a byte; a rodada genuína no fim passou, código de saída 0). As três continuam recusadas pelo probe e pelo oráculo, e a de motivação desta regra, `reads-monitor`, é recusada **por esta regra** além das outras:
+
+| Variante | Probe | Primeira razão do oráculo | Regra de inclusão |
+| --- | --- | --- | --- |
+| `reads-interval` | 6 checks (as quatro de acurácia, a do CPU e a de inclusão) | a regra do CPU (mediana 6,86 ms e p95 9,594 ms contra 6,911 ms) | recusa 1 quadro de 210 nos blocos de 10 e 20 ms (o intervalo foi menor que o laço) |
+| `load-outside-frame` | 5 checks (as quatro de acurácia e a de inclusão) | a regra dos 10% (leu −0,014 ms, −100,7%) | recusa os 210 quadros dos quatro blocos: o laço rodou antes do carimbo que abre o passo |
+| `reads-monitor` | 6 checks (as quatro de acurácia, a do CPU e a de inclusão) | a regra do CPU (mediana 5,03 ms e p95 20,028 ms contra 6,928 ms) | recusa 2, 135, 3 e 25 quadros de 210 nos blocos de 2, 5, 10 e 20 ms |
+
+O oráculo nomeia 9, 9 e 11 violações, respectivamente. Um negativo a mais, sobre o relatório gravado (`reportLevelNegatives` do `build/cpu-time-instrument-comparison.json`), faz o primeiro quadro de cada bloco de carga ler o segundo anterior e deixa os outros como estão: só a regra de inclusão o acusa (a mediana, o total ocioso e a regra dos 10% não o veem). Localmente, em macOS arm64 com o Godot 4.7.2, o `npm run test:cpu-time-instrument` passou 8 vezes seguidas, fora a rodada genuína do script de sabotagens; nas 6 em que o relatório foi lido, a menor margem do termo sobre o laço ficou entre 0 e 3 µs por bloco e a maior repetição entre 2 e 5 quadros.
+
+### O que isto não muda
+
+O instrumento é o mesmo `.gd`; a regra dos 10% e a verdade de campo (o laço, a 1%) são as mesmas; o limiar `cpu-time-instrument` segue sem congelar; o critério `execucao` e o resto do V05-10 seguem abertos; nenhum checkpoint, peso ou denominador do 1.0 muda. A faixa janelada usa a mesma regra de inclusão (o termo de um quadro que desenha vai até `frame_pre_draw`, depois do último `_process`). Uma rodada local dela (`caffeinate -d npm run bench:cpu-time-instrument-graphics`, 120 Hz, vsync `enabled`) foi **apresentada** e passou: a menor margem foi de 3 a 5 µs por bloco, sem nenhum quadro mais curto que o laço; o resultado não entra nas tabelas fixadas acima.
+
 ## O que a fatia recomenda congelar
 
 A recomendação completa está na [nota de pesquisa](../../research/cpu-time-instrument.md#what-cpu-time-instrument-should-freeze); o resumo: a quantidade (o total acima), a leitura (os carimbos e as duas APIs de render, **não** `TIME_PROCESS`), o alinhamento (6 draws, juntados por índice de draw), o erro observado
@@ -181,6 +257,7 @@ O recibo hospedado confirma que os 19 testes de contrato do oráculo e do instru
 ```sh
 npm run test:cpu-time-instrument                                  # o probe headless, o oráculo e os negativos sobre o relatório gravado
 node --test tests/cpu-time-instrument.test.mjs                    # o contrato em Node (parte do test:contracts)
+node --test tests/cpu-time-instrument-hosted.test.mjs             # a regra de inclusão sobre os 20 relatórios hospedados extraídos (parte do test:contracts)
 node scripts/cpu-time-instrument-sabotage.mjs                     # as três sabotagens, fontes restaurados byte a byte; não rode outra suíte enquanto isso
 node tests/cpu-time-instrument-native.test.mjs --replay=build/cpu-time-instrument-current-report.json   # julga um relatório headless gravado só com o oráculo
 caffeinate -d npm run bench:cpu-time-instrument-graphics          # só local, precisa de um display acordado; sai com 3 se a janela não for apresentada
