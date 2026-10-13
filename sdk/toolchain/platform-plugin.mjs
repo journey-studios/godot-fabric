@@ -44,6 +44,22 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
     }
     return listsRoot !== null && filename.startsWith(listsRoot + path.sep);
   };
+  // The Metro polyfills (sdk/toolchain/metro-polyfills.mjs) are Flow source too (error-guard.js declares its types inline), and Metro
+  // runs them through the same Babel transform as RN's modules. A missing package is metroPolyfills' error, not this one's.
+  let polyfillsRoot;
+  const inPolyfillsPackage = filename => {
+    if (polyfillsRoot === undefined) {
+      try {
+        polyfillsRoot = path.dirname(resolveSdk("@react-native/js-polyfills/package.json"));
+      } catch (error) {
+        if (error.code !== "MODULE_NOT_FOUND") {
+          throw error;
+        }
+        polyfillsRoot = null;
+      }
+    }
+    return polyfillsRoot !== null && filename.startsWith(polyfillsRoot + path.sep);
+  };
   return {
     name: "godot-platform",
     setup(builder) {
@@ -193,7 +209,7 @@ export function installPointerListenerQuery() {
         (element != null && (bubbling || capture) && query(getOwnerDocument(element), capture));
     });
 }`};
-        if (!filename.startsWith(rnRoot + path.sep) && !inListsPackage(filename)) return;
+        if (!filename.startsWith(rnRoot + path.sep) && !inListsPackage(filename) && !inPolyfillsPackage(filename)) return;
         let source = await readFile(filename, "utf8");
         if (filename === path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))
           source = renderPointerInterestOverlay(source, pointerInterestMode);

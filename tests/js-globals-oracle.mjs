@@ -89,6 +89,10 @@ export function rnExpectations(root) {
   const performance = parse("setUpPerformance.js", read("Libraries/Core/setUpPerformance.js"));
   const polyfillSource = readFileSync(path.join(root, "node_modules/@react-native/js-polyfills/console.js"), "utf8");
   const polyfill = parse("console.js", polyfillSource);
+  // Slice C: setUpErrorHandling runs ExceptionsManager.installConsoleErrorReporter, which keeps the polyfill's console.error under a
+  // hidden name (console._errorOriginal) and puts its own in its place. The members it adds are the underscore-named ones it assigns.
+  const reporterMembers = [...read("Libraries/Core/ExceptionsManager.js").matchAll(/^ {2}console\.(_\w+) = /gm)].map(match => match[1]);
+  assert.deepEqual(reporterMembers, ["_errorOriginal"], "ExceptionsManager adds one hidden member to console");
 
   let nodeEnv;
   visit(globals, node => {
@@ -118,8 +122,10 @@ export function rnExpectations(root) {
     // setUpDOM.js: lazy getters for every name but the dispatch function, which it defines directly.
     domGlobals: sorted(dom.filter(name => !name.startsWith("RN$"))),
     dispatchName: dom.find(name => name.startsWith("RN$")),
-    // console.js: the members of global.console that the polyfill defines, and the hidden marker it adds.
-    consoleMembers: sorted([...consoleObject.properties.filter(property => !ts.isSpreadAssignment(property)).map(nameOf), "_isPolyfilled"]),
+    // console.js: the members of global.console that the polyfill defines, and the hidden marker it adds; and, since slice C, what
+    // setUpErrorHandling adds.
+    consoleMembers: sorted([...consoleObject.properties.filter(property => !ts.isSpreadAssignment(property)).map(nameOf), "_isPolyfilled",
+      ...reporterMembers]),
     marker: definedProperty(polyfill, "console", "_isPolyfilled"),
     // What the polyfill logs for the scenario, and for the call the bundle's first module makes.
     scenario: runPolyfill(polyfillSource, consoleCalls),

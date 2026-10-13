@@ -17,7 +17,7 @@
   },
   "slices": {
     "B": "JS-installed globals (done). src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, the build injects RN's console polyfill ahead of every module, and the host no longer defines performance or console, only nativePerformanceNow and nativeLoggingHook (native build; headless probe tests/js-globals-native.test.mjs).",
-    "C": "The error path. The error-guard polyfill's ErrorUtils, RN's setUpErrorHandling and the host's RN$handleException (JsErrorHandler) replace the host's bare failure recording.",
+    "C": "The error path (done). The build injects RN's error-guard polyfill, src/initialize.js imports RN's setUpErrorHandling, and the host answers with RN's JsErrorHandler (ReactCommon/jserrorhandler, compiled unchanged), five of the seven globals ReactInstance installs for the error family over it (RN$handleException, RN$inExceptionHandler, RN$registerExceptionListener, RN$isRuntimeReady and RN$useAlwaysAvailableJSErrorHandling, the flag's pinned value; not RN$hasHandledFatalException and RN$notifyOfFatalException, which V2-D26 excludes because they make RN's JS report only the first fatal exception) and an ExceptionsManager module: a fatal exception is the host's failure, a soft one is a log line (native build; headless probe tests/js-errors-native.test.mjs).",
     "D1": "RN$enableMicrotasksInReact. React's microtask path switches on as in RN bridgeless; high regression risk, so it runs behind a full suite sweep.",
     "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build).",
     "E": "The web-globals probe. URL, URLSearchParams, AbortController and AbortSignal members, and the encoding globals per the decision: TextEncoder, atob and btoa present and tested, TextDecoder absent with a negative fixture.",
@@ -80,11 +80,13 @@
     {
       "id": "error-guard",
       "file": "@react-native/js-polyfills/error-guard.js",
-      "summary": "Metro polyfill that defines global.ErrorUtils (setGlobalHandler, reportError, reportFatalError, applyWithGuard, inGuard, guard).",
+      "summary": "Metro polyfill that defines global.ErrorUtils (setGlobalHandler, getGlobalHandler, reportError, reportFatalError, applyWithGuard, applyWithGuardIfNeeded, inGuard, guard).",
       "globals": ["ErrorUtils"],
-      "status": "pending",
-      "slice": "C",
-      "reason": "ErrorUtils does not exist, so RN modules that read it through Libraries/vendor/core/ErrorUtils get undefined and no global error handler can be set."
+      "status": "runs",
+      "reason": "Injected after the console polyfill, in the order of @react-native/js-polyfills/index.js, by every host build (sdk/toolchain/metro-polyfills.mjs, which the gate reads), so ErrorUtils exists before any module body, as under Metro, and the RN modules that read it through Libraries/vendor/core/ErrorUtils get the polyfill's object. The polyfill is Flow source: the platform plugin runs it through the Babel transform that Metro applies. The probe confirms the claim from inside the bundle: the first module already finds ErrorUtils, with the polyfill's handler, which throws what it is handed until setUpErrorHandling registers RN's.",
+      "evidence": [
+        { "file": "native/js_error_path.cpp", "symbol": "\"RN$handleException\"" }
+      ]
     }
   ],
   "steps": [
@@ -315,12 +317,13 @@
       "gates": [],
       "summary": "Installs ExceptionsManager's console.error reporter and registers its handler with ErrorUtils.setGlobalHandler, unless the C++ error path (RN$useAlwaysAvailableJSErrorHandling) is on.",
       "globals": [],
-      "status": "pending",
-      "slice": "C",
-      "reason": "Not imported, and the error-guard polyfill is absent too, so ErrorUtils does not exist and no RN exception path is installed. The host only records the failures it catches around its own callbacks. Slice C installs RN's path and the host's RN$handleException.",
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js, in RN's position (after the timers, before setUpXHR). The host defines RN$useAlwaysAvailableJSErrorHandling as the flag's pinned default (false), as ReactInstance does, so RN's JS path runs: ExceptionsManager asks RN$handleException, which the host answers false once the bundle has evaluated, and reports to the host's ExceptionsManager module, where a fatal exception becomes the host's failure and a soft one a log line, as RN's release builds on Android (a thrown exception and an FLog.e) and iOS (RCTFatal and the delegate) end it. Before the bundle has evaluated, or when an exception escapes a JS task, JsErrorHandler's C++ pipeline reports the same way. Exceptions that escape a timer callback keep the host's direct failure record until slice F.",
       "evidence": [
-        { "file": "native/application_runtime.cpp", "symbol": "void fail(const std::string &error)" }
-      ]
+        { "file": "native/application_runtime.cpp", "symbol": "void report_exception(" },
+        { "file": "native/js_error_path.cpp", "symbol": "void JsErrorPath::install(" }
+      ],
+      "verifyIn": ["F"]
     },
     {
       "id": "setUpRegeneratorRuntime",

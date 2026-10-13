@@ -24,8 +24,10 @@ const digest = content => createHash("sha256").update(content).digest("hex");
 // before the platform plugin, such as an in-memory override of one SDK file. A
 // control names its bundle and receipt through name, and its seams and sources
 // are the paths of the SDK it bundles. Every bundle starts with the Metro polyfills, as a consumer's does; inject names files
-// that run before even those (a probe that records what the host defines before any JS of the bundle), given as project paths.
-export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references, platformRoot = path.join(root, "src"), plugins = [], inject = []}) {
+// that run before even those (a probe that records what the host defines before any JS of the bundle), given as project paths, and
+// polyfills the files to inject as the Metro polyfills (the list of sdk/toolchain/metro-polyfills.mjs unless a control builds another).
+export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references, platformRoot = path.join(root, "src"), plugins = [], inject = [],
+  polyfills = metroPolyfills(id => requireSdk.resolve(id))}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundlePath = path.join(output, name + "-probe.js");
@@ -33,7 +35,7 @@ export async function bundleNativeProbe({name, entryPoint, sources, seams, bundl
   const result = await build({absWorkingDir: root, entryPoints: [entryPoint],
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
-    inject: [...inject.map(file => path.join(root, file)), ...metroPolyfills(id => requireSdk.resolve(id))],
+    inject: [...inject.map(file => path.join(root, file)), ...polyfills],
     mainFields: ["main"], resolveExtensions: godotExtensions,
     plugins: [assets.plugin, ...plugins, platformPlugin(platformRoot, id => requireSdk.resolve(id))]});
   const inputs = Object.keys(result.metafile.inputs);

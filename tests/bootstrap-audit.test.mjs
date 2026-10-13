@@ -49,6 +49,13 @@ const GLOBALS = "Libraries/Core/setUpGlobals.js";
 const NAVIGATOR = "Libraries/Core/setUpNavigator.js";
 const DOM = "src/private/setup/setUpDOM.js";
 const ERROR_HANDLING = "Libraries/Core/setUpErrorHandling.js";
+// Slice C made the last two pending steps run. The mutations below that need a pending entry make one of a not-applicable step.
+const ALERT = "Libraries/Core/setUpAlert.js";
+const toPending = (copy, file, slice = "D2") => {
+  const entry = step(copy, file);
+  delete entry.owner;
+  Object.assign(entry, { status: "pending", slice });
+};
 const POLYFILL_LIST = "sdk/toolchain/metro-polyfills.mjs";
 const CONSOLE = "@react-native/js-polyfills/console.js";
 const ERROR_GUARD = "@react-native/js-polyfills/error-guard.js";
@@ -293,12 +300,19 @@ test("fails when a step has no status or an unknown one", () => {
 });
 
 test("fails when a step has no reason where one is required", () => {
-  for (const [file, status] of [[ERROR_HANDLING, "pending"], ["Libraries/ReactNative/AppRegistry.js", "replaced"], ["Libraries/Core/setUpRegeneratorRuntime.js", "host"], ["Libraries/Core/checkNativeVersion.js", "not-applicable"]]) {
+  for (const [file, status] of [[ALERT, "pending"], ["Libraries/ReactNative/AppRegistry.js", "replaced"], ["Libraries/Core/setUpRegeneratorRuntime.js", "host"], ["Libraries/Core/checkNativeVersion.js", "not-applicable"]]) {
+    const prepare = (copy) => {
+      if (status === "pending") {
+        toPending(copy, file);
+      }
+    };
     const missing = mutate((copy) => {
+      prepare(copy);
       delete step(copy, file).reason;
     });
     assert.ok(mentions(missing, file, `a ${status} entry needs a reason`), explain(missing));
     const blank = mutate((copy) => {
+      prepare(copy);
       step(copy, file).reason = "   ";
     });
     assert.ok(mentions(blank, file, `a ${status} entry needs a reason`), explain(blank));
@@ -315,9 +329,10 @@ test("fails when a step has no reason where one is required", () => {
 
 test("fails when a pending step names a slice that is not in the plan", () => {
   const unknown = mutate((copy) => {
-    step(copy, ERROR_HANDLING).slice = "Z";
+    toPending(copy, ALERT);
+    step(copy, ALERT).slice = "Z";
   });
-  assert.ok(mentions(unknown, ERROR_HANDLING, "names a slice of the plan"), explain(unknown));
+  assert.ok(mentions(unknown, ALERT, "names a slice of the plan"), explain(unknown));
   const none = mutate((copy) => {
     delete part(copy, TIMERS, "react-microtasks").slice;
   });
@@ -353,10 +368,23 @@ test("fails when a runs step is not imported by src/initialize.js", () => {
   });
   assert.ok(mentions(dropped, XHR, "claims runs", "does not import react-native/Libraries/Core/setUpXHR"), explain(dropped));
   const claimed = mutate((copy) => {
-    Object.assign(step(copy, ERROR_HANDLING), { status: "runs" });
-    delete step(copy, ERROR_HANDLING).slice;
+    delete step(copy, ALERT).owner;
+    Object.assign(step(copy, ALERT), { status: "runs" });
   });
-  assert.ok(mentions(claimed, ERROR_HANDLING, "claims runs"), explain(claimed));
+  assert.ok(mentions(claimed, ALERT, "claims runs"), explain(claimed));
+});
+
+test("the error path runs since slice C: the gate notices when setUpErrorHandling is not imported or error-guard is not injected", () => {
+  assert.equal(step(inputs, ERROR_HANDLING)?.status, "runs");
+  assert.equal(polyfill(inputs, ERROR_GUARD)?.status, "runs");
+  const dropped = mutate((copy) => {
+    copy.readSource = (file) => file === "src/initialize.js" ? read(file).replace('import "react-native/Libraries/Core/setUpErrorHandling";', "") : read(file);
+  });
+  assert.ok(mentions(dropped, ERROR_HANDLING, "claims runs", "does not import react-native/Libraries/Core/setUpErrorHandling"), explain(dropped));
+  const uninjected = mutate((copy) => {
+    copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE]) : read(file);
+  });
+  assert.ok(mentions(uninjected, `polyfill ${ERROR_GUARD}`, "claims runs", `${POLYFILL_LIST} does not inject it`), explain(uninjected));
 });
 
 test("fails when a runs step imports a setup function without calling it", () => {
@@ -409,6 +437,8 @@ test("fails when a polyfill the audit marks runs is not injected by the toolchai
 
 test("fails when the toolchain injects a polyfill the audit does not mark runs, or one RN does not hand Metro", () => {
   const pending = mutate((copy) => {
+    Object.assign(polyfill(copy, ERROR_GUARD), { status: "pending", slice: "C" });
+    delete polyfill(copy, ERROR_GUARD).evidence;
     copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE, ERROR_GUARD]) : read(file);
   });
   assert.ok(mentions(pending, `polyfill ${ERROR_GUARD}`, "does not mark it runs"), explain(pending));
@@ -420,14 +450,10 @@ test("fails when the toolchain injects a polyfill the audit does not mark runs, 
 
 test("fails when the toolchain injects the polyfills in another order than RN hands them to Metro", () => {
   const swapped = mutate((copy) => {
-    Object.assign(polyfill(copy, ERROR_GUARD), { status: "runs" });
-    delete polyfill(copy, ERROR_GUARD).slice;
     copy.readSource = (file) => file === POLYFILL_LIST ? listing([ERROR_GUARD, CONSOLE]) : read(file);
   });
   assert.ok(mentions(swapped, "injects them in an order other than the one RN hands them to Metro"), explain(swapped));
   const inOrder = mutate((copy) => {
-    Object.assign(polyfill(copy, ERROR_GUARD), { status: "runs" });
-    delete polyfill(copy, ERROR_GUARD).slice;
     copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE, ERROR_GUARD]) : read(file);
   });
   assert.deepEqual(inOrder, [], explain(inOrder));
