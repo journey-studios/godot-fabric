@@ -244,8 +244,9 @@ async function openState({ launcher, prepared, protocol, protocolSha256, out, st
 // One attempt of the next step: the wait for a quiet machine, a fresh process, what it came to, and the analysis' verdict on the campaign with it in. Returns that validity.
 async function playAttempt({ launcher, step, state, protocol, protocolSha256, out, read, clock, maxWaitSeconds, loadStableSeconds, assumeRefreshHz, log }) {
   const waited = await waitForLoad({ read, clock, limit: protocol.runs.load.limit1MinuteAverage, maxWaitSeconds, intervalSeconds: LOAD_POLL_SECONDS, stableSeconds: loadStableSeconds });
-  log(`${step.lane} slot ${step.slot} (${step.arm}) attempt ${step.attempt}: ${waited.timedOut ? `load ${waited.last} after ${waited.seconds} s; launch deferred, use --resume` : `load ${waited.last} after ${waited.seconds} s`}`);
-  if (waited.timedOut) {
+  log(`${step.lane} slot ${step.slot} (${step.arm}) attempt ${step.attempt}: ${waited.timedOut ? `load ${waited.last} after ${waited.seconds} s; ${state.rehearsal ? "rehearsal only, recording the rejection" : "launch deferred, use --resume"}` : `load ${waited.last} after ${waited.seconds} s`}`);
+  // Headless rehearsals intentionally show the busy-machine rejection; they are never comparative results.
+  if (waited.timedOut && !state.rehearsal) {
     state.waitingForLoad = { at: isoOf(clock), lane: step.lane, slot: step.slot, arm: step.arm, attempt: step.attempt, waited };
     (state.deferredLoads ??= []).push(state.waitingForLoad);
     return null;

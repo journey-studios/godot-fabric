@@ -40,6 +40,11 @@
       "attempts": 41,
       "rawAndSelfCheckFiles": 84,
       "byteIdentical": true
+    },
+    {
+      "command": "node --test --test-name-pattern=\"the wait records|a quiet interval|a busy headless rehearsal|resume refuses|the command line\" tests/frontier-comparison-campaign.test.mjs",
+      "passed": 6,
+      "note": "After preserving intentional busy-machine rejection in explicitly marked headless rehearsals; production timeout still defers."
     }
   ],
   "logDigests": {
@@ -58,6 +63,10 @@
     "godot-fabric-05-quiet-static.log": {
       "sha256": "f8b3676160846e129177ba1e3f6c40124a5c0c97580af9a05f7ac7646a728110",
       "bytes": 223
+    },
+    "godot-fabric-05-quiet-rehearsal-compat.log": {
+      "sha256": "30fe9ff5d5e3d0d5af2ff82cd7f09db27f7bae8fe542f7ba28c726dc2746d6fc",
+      "bytes": 1744
     }
   },
   "measurementSourceChanged": false,

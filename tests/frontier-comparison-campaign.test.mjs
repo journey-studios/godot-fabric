@@ -291,6 +291,17 @@ test("a quiet interval resets when load rises, accepts the cap itself and can fi
   assert.equal(stable.launcher.calls.length, 1);
 });
 
+test("a busy headless rehearsal still records the load rejection and is marked as not a result", async () => {
+  const { result, launcher } = await play({ rehearsal: true, lanes: ["presented"], slots: [1, 1], load: scriptedLoad([9]), maxWaitSeconds: 0, plan: { "presented/1/1": attempts.highLoad } });
+  assert.equal(result.status, "done");
+  assert.equal(launcher.calls.length, 1);
+  assert.equal(result.state.attempts[0].waited.timedOut, true);
+  assert.equal(result.state.attempts[0].verdict.accepted, false);
+  assert.equal(result.summary.rehearsal, true);
+  assert.match(result.summary.notAResult, /No number.*measurement/);
+  assert.match(result.campaign.provenance.deviations[0], /^REHEARSAL/);
+});
+
 test("resume refuses a modified cached verdict, derived execution, raw observation or log before launching", async () => {
   for (const changed of ["verdict", "execution", "raw", "log"]) {
     const out = path.join(scratch, `tampered-${changed}`);
