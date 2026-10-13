@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "P2 V05-07 concluído: export macOS Release assinado, replay do Frontier no hash dourado com perfil limpo e segunda máquina limpa num runner hospedado, com CI hospedada e Pages; o 0.5 segue no comparativo final (V05-10)."
   },
-  "updatedAt": "2026-10-10T22:10:00.000Z",
+  "updatedAt": "2026-10-13T13:30:00.000Z",
   "source": {
     "commit": "7e6f0b1252326cf26cc1bccca039a6aff93716b8",
     "url": "https://github.com/journey-studios/godot-fabric/commit/7e6f0b1252326cf26cc1bccca039a6aff93716b8",
@@ -98,13 +98,13 @@
       "priority": "P0",
       "title": "Clean startup and engine contract",
       "status": "in_progress",
-      "acceptance": "Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes",
+      "acceptance": "Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and identify the root cause upstream (the Godot editor's deferred extension-documentation callback, godotengine/godot#111645), contain it, and keep an executable control: in native CI the official 4.7.2 crashes on an empty-cache import without the containment and passes with it, and the control fails with a clear message if a future Godot fixes the bug (decision of 2026-10-13). Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes",
       "dependencies": [
         "GF-01"
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Import direto com cache vazio ainda reproduz o crash upstream. Contenção não fecha o item.",
+      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle local passa (5 de 5 e 20 de 20); falta o run hospedado para o checkpoint contract. Parity e targets seguem abertos, e a contenção sozinha não fecha o item.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3294,7 +3294,7 @@
         "GF-01",
         "GF-02"
       ],
-      "acceptance": "Reproduce and fix cold-start/root-cause and minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable"
+      "acceptance": "Reproduce the cold-start root cause and fix it, or contain it with an executable control when it lies in the engine (GF-02, 2026-10-13), and close the minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable"
     },
     {
       "id": "2A",
@@ -4842,6 +4842,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-02-engine-boundary-control-7984213",
+      "at": "2026-10-13T13:30:00.000Z",
+      "taskIds": [
+        "GF-02"
+      ],
+      "message": "GF-02, a fronteira do motor como controle executável (decisão do usuário de 2026-10-13; o checkpoint contract segue aberto até o run hospedado). O crash do import com cache vazio é um defeito do editor do Godot: EditorHelp::_gen_extensions_docs executa um callback adiado depois da limpeza (issue godotengine/godot#111645 aberta, correção #123658 não mesclada, 4.7.2 é a última estável), e o projeto usa o motor oficial sem patch. O aceite passou de corrigir a causa raiz para causa raiz identificada upstream e contida, com um controle executável. O script scripts/cold-start-boundary.mjs (npm run test:cold:boundary, no job native-cold-start depois do test:cold) importa um projeto descartável só com a extensão do Fabric, num cache vazio, cinco vezes sem a preparação de startup e cinco com ela: sem a preparação todas precisam travar (morte por SIGSEGV ou SIGBUS, ou Program crashed with signal 11 no log) e com ela todas precisam passar limpas (veredito boundary-holds). Se nenhuma travar, o controle falha com a mensagem de que o bug upstream não reproduz mais, de que o motor deve ser requalificado e a contenção aposentada (engine-fixed); qualquer outra mistura falha e é reportada como medida, sem limiar assumido. Local, no 4.7.2.stable.official.ed1daf0bf: 5 de 5 e 20 de 20 imports sem a preparação travaram e 5 de 5 e 20 de 20 com ela passaram limpos; a lógica do veredito tem teste puro de Node em test:contracts. Limites: só macOS arm64, o editor em modo import e a extensão sozinha; o resultado hospedado ainda não está registrado. Nenhum checkpoint, peso ou denominador se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/79842134734ef0482a08f446f06b72d56d4dc516/docs/evidence/cold-start.md#executable-engine-boundary"
+    },
     {
       "id": "milestone-0-5-hosted-receipts-15-9e95bc6",
       "at": "2026-10-10T22:10:00.000Z",
