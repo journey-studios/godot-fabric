@@ -1,6 +1,20 @@
-# Frontier 0.5: the Release campaign stopped by the load rule
+# Frontier 0.5: verified collector, comparison still awaiting a quiet host
 
-**The final comparison remains open.** This is an actual windowed Release campaign, not a rehearsal. Its 41 attempts include 27 accepted executions and 14 load-only rejections. Slot 28 (arm A) exhausted its three attempts, so the registered rule stopped the campaign. The analysis produces **no performance statistics, budget verdict or decision about the React Native HUD** from these data.
+**The final comparison remains open.** The new cohort passed its graphical Release self-check, but its first A execution was rejected: load 5.65 before and 6.62 after, above the unchanged cap of 6.0. The following 1,800-second wait ended at load 10.0. The collector returned `waiting` (exit 2) at 17:06:07 UTC on 2026-10-13, preserved the data and released its lock without launching attempt 2. There are zero accepted executions in this cohort; B/C and the unlimited lane have not run.
+
+The [waiting summary](waiting-load-6/summary.json), [verified archive](waiting-load-6/archive-index.json) and [raw-verification receipt](waiting-load-6/raw-verification.json) retain this separate cohort. [Derivation and normalization](waiting-load-6/derivation.json) explicitly records that `campaign.json` was materialized from the retained state **for auditing**, because the waiting CLI produced no final campaign or report. The [interim report](waiting-load-6/interim-report.md) is `incomplete` and supplies no statistics, budget verdict or RN decision. All 13 archived files were read back and checked by SHA-256. No observation was merged with the earlier stopped cohort. The temporary app hiding and Downloads minimization were undone; no measured app remains running.
+
+Resume the original local build directory after reserving a stable window. The normalized public archive is for reproduction, not a replacement for the original local state or exported apps:
+
+```sh
+caffeinate -d -i node scripts/frontier-comparison-campaign.mjs --campaign --lanes presented,unlimited --build release --exports build/frontier-05-final/exports --out build/frontier-05-final/campaign-quiet-20261013 --load-stable 60 --max-wait 1800 --resume
+```
+
+The remaining attempt number is 2 in presented slot 1. The acceptance requirement remains twelve valid balanced executions per arm per applicable lane. All five historical protocol amendments still precede the first observations; the 41 older attempts and this one newer attempt remain separate records. V05-10 execution, metrics and final report, X6 and X11 remain open.
+
+## Earlier cohort stopped by load
+
+This is an actual windowed Release campaign, not a rehearsal. Its 41 attempts include 27 accepted executions and 14 load-only rejections. Slot 28 (arm A) exhausted its three attempts, so the registered rule stopped the campaign. The analysis produces **no performance statistics, budget verdict or decision about the React Native HUD** from these data.
 
 | Presented lane | Accepted | Rejected | Required accepted |
 | --- | ---: | ---: | ---: |
@@ -36,6 +50,18 @@ Two operational pauses affected only the idle orchestrator, with no game process
 
 The previously accepted [change-cost experiment](../frontier-change-cost/README.md) remains a separate, single observation per HUD. It supports a description, not a general productivity claim, and does not supply missing executions for this comparison. Earlier clean-profile and hosted clean-machine macOS export proofs remain separate from this local campaign.
 
+## Collector corrections before the next cohort
+
+The collector now defers a launch when `--max-wait` expires above the registered load cap, returns `waiting` (CLI exit 2), and retains the deferred slot/attempt in `campaign-state.json` and `summary.json`. It writes no final campaign or statistics in that state. `--resume` continues the same unspent attempt. Previously the timeout launched anyway and consumed an attempt; the stopped cohort above retains that original behavior and every observation.
+
+Headless `--rehearsal` runs still launch after the wait expires so their native tests can exercise and retain busy-machine rejections. They remain explicitly marked as rehearsals and supply no comparative acceptance or result.
+
+`--load-stable <seconds>` optionally requires consecutive polled readings at or below the same cap before each launch; a higher reading resets the quiet interval. This schedules a quieter start and changes no validity threshold. The next cohort uses 60 seconds of stability, a 1,800-second maximum wait, the existing 6.0 before/after acceptance cap and all 12 balanced slots per arm per applicable lane. Deferred waits remain in the state's history and the final summary.
+
+Resume verifies retained log hashes, raw-derived executions and the protocol's judgments before launching again. The next-slot decision also uses the recalculated judgment. The raw verifier independently checks every retained verdict. The analysis no longer treats the 10-per-arm minimum as permission to stop before completing the 12-per-arm balanced plan; a truncated presented lane is incomplete and produces no performance statistics.
+
+These corrections do not amend the protocol or merge observations from distinct cohorts. The protocol's five historical amendments still preceded the first measurement. An open acceptance criterion is not proof that no measurements exist: the stopped cohort contains 41 actual attempts.
+
 ## Raw data and reproduction
 
 [campaign-data.tar.gz](stopped-load-6/campaign-data.tar.gz) retains 96 files, including every raw scenario JSON and log, the original campaign, operational state, graphical self-check and analysis. [archive-index.json](stopped-load-6/archive-index.json) lists every member's bytes and SHA-256; the archive was read back and every member verified before publication. No AppleDouble members or symlinks are included.
@@ -56,3 +82,16 @@ cmp /tmp/frontier-report.md docs/evidence/frontier-comparison-final/stopped-load
 ```
 
 The source that produced the exports and the runner's commit are pinned above. A future change to the analysis or window-derivation code requires using its matching source revision to reproduce these bytes. No result is inferred from exit code alone: the raw verifier rederives all reported attempts and checks their logs, and the analysis applies the registered validity rules.
+
+The waiting cohort can be reproduced independently. Its derived campaign is an audit snapshot, not a completed CLI campaign:
+
+```sh
+mkdir -p /tmp/frontier-waiting-load-6
+tar -xzf docs/evidence/frontier-comparison-final/waiting-load-6/campaign-data.tar.gz -C /tmp/frontier-waiting-load-6
+node docs/evidence/frontier-comparison-final/verify-raw.mjs . /tmp/frontier-waiting-load-6 /tmp/frontier-waiting-raw.json /tmp/frontier-waiting-load-6/protocol.json
+cmp /tmp/frontier-waiting-raw.json docs/evidence/frontier-comparison-final/waiting-load-6/raw-verification.json
+node scripts/frontier-comparison-analysis.mjs /tmp/frontier-waiting-load-6/campaign.json --protocol /tmp/frontier-waiting-load-6/protocol.json --out /tmp/frontier-waiting-report.json
+cmp /tmp/frontier-waiting-report.json docs/evidence/frontier-comparison-final/waiting-load-6/interim-report.json
+node scripts/frontier-comparison-report-markdown.mjs /tmp/frontier-waiting-report.json --protocol /tmp/frontier-waiting-load-6/protocol.json --out /tmp/frontier-waiting-report.md
+cmp /tmp/frontier-waiting-report.md docs/evidence/frontier-comparison-final/waiting-load-6/interim-report.md
+```

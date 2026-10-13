@@ -17,7 +17,6 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const protocol = JSON.parse(read("docs/research/frontier-comparison-protocol.json"));
 const doc = read("docs/research/frontier-comparison-protocol.md");
-const migration = JSON.parse(read("dashboard/migration.json"));
 
 // The SHA-256 of the protocol in canonical form (keys sorted at every depth) without the `frozenValue` and `frozenAt` fields, which are the only ones
 // the later freeze may fill. Changing anything else in the JSON is an amendment: it is listed in the research note and as an entry of the `amendments`
@@ -339,11 +338,10 @@ test("the pin: the protocol without its freeze fields has the SHA-256 recorded h
 
 // ---- the amendments: what a change after the pre-registration has to carry ----
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
-const executionCriterion = migration.milestones.find(milestone => milestone.id === "0.5").items.find(item => item.id === "V05-10").criteria.find(criterion => criterion.id === "execucao");
-// What is wrong with the amendments of a protocol, given whether the criterion `execucao` (the comparative measurements) has run: each entry has a date, what changed,
+// What is wrong with the amendments of a protocol, given whether comparative measurements exist (independent of whether the milestone's acceptance is complete): each entry has a date, what changed,
 // why, the text it replaces and the number of comparative measurements made before it, which is 0 while nothing has run; the dates do not go back; and the state of the
 // protocol is the pinned one for the number of entries it carries.
-const amendmentErrors = (candidate, executionDone) => {
+const amendmentErrors = (candidate, measurementsHaveStarted) => {
   const errors = [];
   candidate.amendments.forEach((amendment, index) => {
     const where = `amendments[${index}]`;
@@ -357,7 +355,7 @@ const amendmentErrors = (candidate, executionDone) => {
     }
     if (!Number.isInteger(amendment.measurementsBefore) || amendment.measurementsBefore < 0) {
       errors.push(`${where}: measurementsBefore is not a count`);
-    } else if (!executionDone && amendment.measurementsBefore !== 0) {
+    } else if (!measurementsHaveStarted && amendment.measurementsBefore !== 0) {
       errors.push(`${where}: measurementsBefore is ${amendment.measurementsBefore} but no comparative execution has run`);
     }
     if (index > 0 && amendment.date < candidate.amendments[index - 1].date) {
@@ -370,10 +368,11 @@ const amendmentErrors = (candidate, executionDone) => {
   return errors;
 };
 
-test("an amendment says what changed, why, the text it replaces and that no comparative measurement came before it", () => {
+test("the five pinned amendments preceded the first observations, even while comparative acceptance is incomplete", () => {
   assert.equal(protocol.amendments.length, 5);
-  assert.equal(executionCriterion.done, false, "the comparative executions have not run: when they do, the amendments after them count measurements");
-  assert.deepEqual(amendmentErrors(protocol, executionCriterion.done), []);
+  const observed = JSON.parse(read("docs/evidence/frontier-comparison-final/stopped-load-6/raw-verification.json"));
+  assert.equal(observed.attempts.length, 41, "the incomplete campaign still contains real observations");
+  assert.deepEqual(amendmentErrors(protocol, observed.attempts.length > 0), []);
   assert.deepEqual(protocol.amendments.map(amendment => amendment.date), ["2026-10-09", "2026-10-09", "2026-10-10", "2026-10-10", "2026-10-13"]);
   assert.deepEqual(protocol.amendments.map(amendment => amendment.measurementsBefore), [0, 0, 0, 0, 0]);
   assert.match(protocol.amendments[0].before, /the median CPU time of those frames is the run's idle median/, "it keeps the text it replaced");
@@ -443,7 +442,7 @@ test("while the comparative executions have not run, an amendment cannot count m
   const counted = structuredClone(protocol);
   counted.amendments[0].measurementsBefore = 2;
   assert.ok(amendmentErrors(counted, false).includes("amendments[0]: measurementsBefore is 2 but no comparative execution has run"));
-  assert.ok(!amendmentErrors(counted, true).some(error => /measurementsBefore/.test(error)), "once the criterion has run, the count is a count");
+  assert.ok(!amendmentErrors(counted, true).some(error => /measurementsBefore/.test(error)), "once observations exist, their count does not depend on completed milestone acceptance");
   const incomplete = structuredClone(protocol);
   incomplete.amendments[0].why = " ";
   incomplete.amendments[0].date = "yesterday";

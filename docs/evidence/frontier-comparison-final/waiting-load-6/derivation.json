@@ -1,0 +1,25 @@
+{
+  "format": "godot-fabric.frontier-comparison-waiting-derivation/v1",
+  "status": "waiting",
+  "notAFinalComparison": true,
+  "collectorCommit": "de310cf5f461dfd5ee5883c47d8517dc337b48b5",
+  "derivationSourceCommit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+  "derivedCampaign": "campaign.json was materialized with campaignFor(state, archivedProtocol) after the collector returned waiting; the CLI intentionally produced no final campaign or report",
+  "normalization": {
+    "campaign-state.json": {
+      "originalSha256": "d318ca1681d353df655c797647d26e3c987a5b4f88dd96d281f8227e54723c66",
+      "publishedSha256": "3b38481bebceea876ffa3c1dd8753f1e29b72f75d17ea3756f6bde22bc417bf3",
+      "change": "absolute checkout prefix replaced with <checkout>"
+    },
+    "summary.json": {
+      "originalSha256": "bc7c96c5e53415d694e51e02bf9f25c904fb5e1ac00a1c2fafbee1c01fc0ef8d",
+      "publishedSha256": "b849ac8411271f06c5dee68e940dafd93573bc740a1829a1d29c02db85bbc02c",
+      "change": "absolute checkout prefix replaced with <checkout>"
+    },
+    "orchestrator.log": {
+      "originalSha256": "cb242b9d4785e020f1ac5cb5ebb5612199f28267974fa18a9649f7804c64a2bf",
+      "publishedSha256": "f058eed89eec86a3a6f0ebdbd2b9596f8a5e42eb116e05bc650b4fe84e6fbe7e",
+      "change": "absolute checkout prefix replaced with <checkout>"
+    }
+  }
+}

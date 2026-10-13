@@ -162,12 +162,14 @@ test("the order of the executions: slots follow the protocol's sequence, the pla
     assert.deepEqual(totals[lane].A, {planned: 12, accepted: 12, rejected: 0, open: 0, missing: 0, exhausted: 0});
   }
   assert.deepEqual(report.sections.validity.slots.filter(slot => slot.lane === "presented").map(slot => slot.arm).join(""), protocol.runs.sequence.join(""));
-  // Two slots of an arm never run: 10 accepted is the minimum, the statistics are produced, and the balance says the order was not completed.
+  // Ten accepted meet the minimum, but do not complete the registered balanced
+  // sequence of twelve: the missing slots must not produce final statistics.
   const missing = build();
   missing.executions = missing.executions.filter(execution => !(execution.lane === "presented" && execution.arm === "C" && [3, 4].includes(execution.slot)));
   const ten = analyze(missing);
-  assert.deepEqual([ten.status, ten.sections.validity.totals.presented.C.accepted, ten.sections.validity.totals.presented.C.missing, ten.sections.validity.balance.presented.balanced], ["complete", 10, 2, false]);
-  assert.equal(ten.sections.primary.windows[0].arms.C.executions, 10);
+  assert.deepEqual([ten.status, ten.sections.validity.totals.presented.C.accepted, ten.sections.validity.totals.presented.C.missing, ten.sections.validity.balance.presented.balanced], ["incomplete", 10, 2, false]);
+  assert.deepEqual(ten.why, [{rule: "planned-per-arm", arm: "C", accepted: 10, required: 12}]);
+  assert.deepEqual(ten.sections.primary, {available: false, reason: "incomplete"});
   assert.equal(slotOf(ten, "presented", 3).state, "missing");
   // A third missing one leaves 9: below the minimum, so no statistic.
   const nine = build();
@@ -179,6 +181,21 @@ test("the order of the executions: slots follow the protocol's sequence, the pla
   const index = open.executions.findIndex(execution => execution.lane === "presented" && execution.slot === 3);
   overLoaded(open.executions[index]);
   assert.deepEqual([slotOf(analyze(open), "presented", 3).state, analyze(open).sections.validity.totals.presented.C.open], ["open", 1]);
+});
+
+test("a truncated Latin square cannot become complete or partial merely by reaching the minimum in each planned arm", () => {
+  for (const armBReady of [true, false]) {
+    const campaign = build({armBReady});
+    campaign.executions = campaign.executions.filter(execution => execution.lane !== "presented" || execution.slot <= 30);
+    const report = analyze(campaign);
+    const arms = armBReady ? ["A", "B", "C"] : ["A", "C"];
+    assert.equal(report.status, "incomplete");
+    assert.deepEqual(report.why, arms.map(arm => ({rule: "planned-per-arm", arm, accepted: 10, required: 12})));
+    assert.equal(report.sections.validity.balance.presented.balanced, false);
+    for (const section of ["primary", "axes", "cost-of-change", "budgets"]) {
+      assert.deepEqual(report.sections[section], {available: false, reason: "incomplete"}, section);
+    }
+  }
 });
 
 test("attempts that contradict one another, or data that are not in the format, are refused and not analysed", () => {
@@ -391,9 +408,9 @@ test("three attempts that wrote no report use up the slot and stop the campaign 
   assert.deepEqual([slot.state, slot.accepted, slot.rejected, slot.attempts.length], ["exhausted", null, 3, 3]);
   assert.equal(stopped.sections.validity.totals.presented.C.exhausted, 1);
   assert.deepEqual(stopped.sections.primary, {available: false, reason: "stopped"});
-  // Two are not enough to stop it: the slot waits for its redo.
+  // Two are not enough to stop it: the incomplete plan waits for its redo.
   const two = analyze(noReportSlot(build(), "presented", 4, [ENDINGS.crash, ENDINGS.timeout], {redone: false}));
-  assert.deepEqual([two.status, slotOf(two, "presented", 4).state, two.sections.validity.totals.presented.C.open], ["complete", "open", 1]);
+  assert.deepEqual([two.status, slotOf(two, "presented", 4).state, two.sections.validity.totals.presented.C.open], ["incomplete", "open", 1]);
   // Rejected executions and an attempt that wrote no report count together.
   const mixed = redoSlot(build(), "presented", 5, [overLoaded, overLoaded]);
   const [redo] = mixed.executions.splice(mixed.executions.findIndex(execution => execution.lane === "presented" && execution.slot === 5 && execution.attempt === 3), 1);
@@ -404,4 +421,3 @@ test("three attempts that wrote no report use up the slot and stop the campaign 
   assert.deepEqual(slotOf(fourth, "presented", 4).attempts[3].reasons, [{rule: "attempts", clause: "beyond-the-limit", limit: 3}]);
   assert.deepEqual(fourth.why, [{...stop, attempts: 4}]);
 });
-

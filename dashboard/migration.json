@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "6",
-    "focusTitle": "0.5 macOS: implementação e export entregues; comparativo final aguardando campanha válida. Dados da campanha interrompida e auditorias X9/X10 preservados; iPhone fora do recorte pelo NO-GO."
+    "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-13T14:57:13.478Z",
+  "updatedAt": "2026-10-13T17:16:58.407Z",
   "source": {
-    "commit": "afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/afb81c96406927f3c9912a1c3dba0f32291ec6a8",
-    "scope": "0.5 macOS: recorte do NO-GO refletido sem reivindicar critérios físicos; auditorias X9/X10 documentadas e aprovadas. Campanha Release interrompida pelo limite de carga, com 41 tentativas retidas e 9 aceitas por braço; execução, métricas, relatório final, X6 e X11 seguem abertos. GF-01 S1 da main preservado; nenhuma aceitação da 1.0 muda nesta PR.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/152"
+    "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
+    "scope": "0.5 macOS: coletor e guardas de integridade validados; planos balanceados exigidos no primário e FPS. A nova coorte retornou waiting: A1 rejeitada com carga 5,65 → 6,62; após 30 min, tentativa 2 preservada e zero aceitas. Dados auditados e retidos separadamente. V05-10 execução, métricas, relatório e X6/X11 abertos; aceitação da 1.0 preservada.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/156"
   },
   "phases": [
     {
@@ -4635,7 +4635,7 @@
           "evidence": []
         }
       ],
-      "blocker": "A campanha Release parou pela regra de carga: 41 tentativas, 9 aceitas por braço de 12 exigidas; vaga 28 esgotou 3 tentativas. Sem estatísticas ou veredito de desempenho; é necessária uma nova campanha completa em janela estável."
+      "blocker": "Comparativo final pendente. A coorte antiga parou por carga com 41 tentativas e 9 aceitas por braço. A nova coorte passou no autoteste gráfico, mas A1 foi rejeitada por carga 5,65 → 6,62; após 30 min retornou waiting, tentativa 2 preservada e zero aceitas. É necessária uma janela estável de carga ≤6,0. V05-10 execução, métricas, relatório e X6/X11 permanecem abertos."
     }
   ],
   "releaseChecklist": [
@@ -4929,6 +4929,24 @@
       ],
       "message": "GF-05, fatia A: a auditoria do bootstrap do RN (só Node e dados, sem execução nativa). O host não executa o InitializeCore do RN: o plugin de plataforma resolve ReactNativePrivateInitializeCore para src/initialize.js, que carrega só o runtime, o RCTDeviceEventEmitter e o setUpXHR; \"equivalente auditado\" não tinha documento que dissesse, passo a passo, o que substitui cada módulo. docs/compatibility/bootstrap-audit-0.87.1.json passa a registrar uma entrada por módulo da cadeia do RN (3 arquivos de entrada, 19 instaladores e 3 aninhados, mais os 2 polyfills do Metro, console e error-guard), com um status entre runs (o módulo do RN roda sem mudança no src/initialize.js), replaced (o código do SDK ou do host faz o trabalho), host (o host C++ ou o Hermes fornece), pending (falta, com a fatia B a F que entrega) e not-applicable (com a razão e, quando outra tarefa é dona, o GF), e arquivo e símbolo como evidência (sem número de linha, para que edição alheia nos arquivos centrais não quebre o gate). A lista de passos sai do scan de scripts/parity-upstream-scan.mjs, não de texto escrito à mão. tests/bootstrap-audit.test.mjs, dentro do test:parity e portanto do test:contracts, falha quando a cadeia do RN ganha, perde, renomeia ou reordena um passo, quando uma condição ou um global instalado muda, quando um runs deixa de ser importado, quando um símbolo de evidência some ou é renomeado ou uma âncora fica velha ou ambígua, ou quando falta status ou razão; cada modo tem uma mutação sobre cópia dos insumos reais. Hoje: 1 runs, 6 replaced, 4 host, 9 pending e 12 not-applicable. As decisões do usuário de 2026-10-13 ficam gravadas e exigidas pelo gate: encoding com paridade ao Hermes (TextEncoder, atob e btoa presentes; TextDecoder ausente, com fixture negativa), performance (now, mark, measure, clearMarks e clearMeasures no 1.0 pelo fallback do RN, com o stub {now} do host saindo na fatia B; as 11 classes Web Performance em post_1_0, GF-40, como lacuna de paridade registrada) e starvation com paridade ao RN bridgeless, sem desvio deliberado. A auditoria achou o setUpDOM sem dono entre as fatias e o atribuiu à B. Nenhum comportamento muda; o plano das fatias B a F está no README. Nenhum checkpoint, peso ou denominador se move.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/PINXR/docs/evidence/runtime/README.md#bootstrap-audit-slice-a-2026-10-13"
+    },
+    {
+      "id": "frontier-05-waiting-cohort-20261013",
+      "at": "2026-10-13T17:16:58.407Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: nova coorte Release encerrou o ciclo em waiting (exit 2), com A1 rejeitada por carga 5,65 → 6,62 e tentativa 2 preservada após espera de 30 min. Brutos e vereditos rederivados; arquivo com 13 membros validado e relatório intermediário incompleto reproduzido byte a byte. Sem estatística ou veredito de orçamento; Mac liberado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/156"
+    },
+    {
+      "id": "frontier-05-collector-integrity-20261013",
+      "at": "2026-10-13T16:18:13.347Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5: coletor aguarda sem gastar tentativas; retomada e vereditos brutos rederivados; relatório exige 12 execuções por braço em plano balanceado. Contratos: 807 Node + 37 Python; regressões: 126; últimas correções: 36, todos verdes. Exports reconferidos; nova coorte separada, aceite final permanece aberto.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/de310cf5f461dfd5ee5883c47d8517dc337b48b5/docs/evidence/frontier-comparison-final/README.md"
     },
     {
       "id": "milestone-0-5-load-stopped-campaign-and-audits-20261013",

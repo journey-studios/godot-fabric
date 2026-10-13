@@ -20,7 +20,7 @@ const DEFAULT_PROTOCOL = path.join(REPO_ROOT, "docs", "research", "frontier-comp
 
 // What the renderer says of a status in its own words; the words of the partial report rule are the protocol's (see partialRuleText).
 const STATUS_WORDS = {
-  complete: "Every arm has the minimum number of accepted executions of the presented lane and the campaign did not stop: the statistics below are the protocol's.",
+  complete: "Every arm has completed the registered balanced plan of accepted executions of the presented lane and the campaign did not stop: the statistics below are the protocol's.",
   incomplete: "An arm has fewer accepted executions of the presented lane than the protocol requires: no statistic is produced.",
   stopped: "The campaign stopped: no statistic is produced.",
 };

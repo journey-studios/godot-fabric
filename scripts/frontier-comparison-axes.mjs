@@ -31,8 +31,8 @@ function readingAxis(ctx, outcome) {
 }
 
 // `fps-unlimited`: read in the unlimited lane only, per window, and only when the vsync mode reads back DISABLED (vsync.unlimitedFpsRequires). An execution whose reading is another mode has
-// no FPS (invalidation vsync-reading: not invalid, the band is N/A for that execution), and the axis needs `minimumPerArm` executions with a reading in the subject and the reference to
-// say anything; otherwise it is N/A, with the readings recorded.
+// no FPS (invalidation vsync-reading: not invalid, the lane is N/A). When DISABLED is available, the axis needs the whole registered balanced plan, with an FPS reading in every accepted
+// slot of every planned arm; the minimum is not permission to truncate the sequence. Otherwise it is N/A, with the readings recorded, without affecting the presented primary outcome.
 function fpsAxis(ctx, outcome) {
   const unlimited = ctx.validity.accepted[UNLIMITED];
   const [first] = ctx.protocol.windows;
@@ -46,11 +46,14 @@ function fpsAxis(ctx, outcome) {
       return [arm, { accepted: unlimited[arm].length, withFps: withFps[arm].length, modes }];
     }),
   );
-  const { subject, reference } = ctx.roles;
-  const enough = [subject, reference].every((arm) => withFps[arm].length >= ctx.protocol.runs.minimumPerArm);
-  if (!enough) {
-    const none = [subject, reference].every((arm) => unlimited[arm].length === 0);
-    return notApplicable(outcome, none ? "unlimited-lane-not-run" : "vsync-not-disabled", { readings });
+  if (ctx.campaign.executions.some((execution) => execution.lane === UNLIMITED && execution.vsync.mode !== ctx.protocol.vsync.unlimitedFpsRequires)) {
+    return notApplicable(outcome, "vsync-not-disabled", { readings });
+  }
+  const complete = ctx.validity.balance[UNLIMITED].balanced
+    && ctx.arms.every((arm) => withFps[arm].length === ctx.validity.totals[UNLIMITED][arm].planned);
+  if (!complete) {
+    const none = ctx.validity.slots.every((slot) => slot.lane !== UNLIMITED || slot.attempts.length === 0);
+    return notApplicable(outcome, none ? "unlimited-lane-not-run" : "unlimited-plan-incomplete", { readings });
   }
   return {
     ...headOf(outcome, "interval-per-window"),

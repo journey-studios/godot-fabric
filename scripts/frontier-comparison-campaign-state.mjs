@@ -191,7 +191,10 @@ export function nextStep(state, protocol, validity) {
   const off = unavailableLanes(state, protocol);
   for (const entry of planOf(protocol, state.options)) {
     const attempts = attemptsOf(state, entry);
-    const settled = attempts.some((attempt) => attempt.verdict.accepted) || (state.rehearsal && attempts.length > 0);
+    // A resumed state's cached verdict is a record, not authority: use the
+    // analysis just computed from its executions to decide which slot is open.
+    const judged = validity.slots.find((slot) => slot.lane === entry.lane && slot.slot === entry.slot);
+    const settled = judged?.state === "accepted" || (state.rehearsal && attempts.length > 0);
     if (!settled && !Object.hasOwn(off, entry.lane)) {
       return { kind: "launch", ...entry, attempt: attempts.length + 1 };
     }
