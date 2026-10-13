@@ -1834,7 +1834,7 @@
         },
         "godot": {
           "status": "not-applicable",
-          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services. Godot's outcome is the contract: the member exists and throws E_APP_REGISTRY_HEADLESS_TASK (docs/API.md), which tests/app-registry-native.test.mjs covers as the negative fixture"
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
         }
       },
       "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
@@ -1848,7 +1848,7 @@
         },
         "godot": {
           "status": "not-applicable",
-          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services. Godot's outcome is the contract: the member exists and throws E_APP_REGISTRY_HEADLESS_TASK (docs/API.md), which tests/app-registry-native.test.mjs covers as the negative fixture"
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
         }
       },
       "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
@@ -1862,7 +1862,7 @@
         },
         "godot": {
           "status": "not-applicable",
-          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services. Godot's outcome is the contract: the member exists and throws E_APP_REGISTRY_HEADLESS_TASK (docs/API.md), which tests/app-registry-native.test.mjs covers as the negative fixture"
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
         }
       },
       "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"
@@ -1876,7 +1876,7 @@
         },
         "godot": {
           "status": "not-applicable",
-          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services. Godot's outcome is the contract: the member exists and throws E_APP_REGISTRY_HEADLESS_TASK (docs/API.md), which tests/app-registry-native.test.mjs covers as the negative fixture"
+          "reason": "headless JS tasks are an Android service feature (HeadlessJsTaskService); GF-07 asks for scene changes and pause/resume, not background services"
         }
       },
       "reason": "Headless JS tasks run without a UI inside an Android service; AppRegistry's other members are cross-platform"

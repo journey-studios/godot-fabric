@@ -42,8 +42,9 @@ container `src/render-application.jsx`.
 
 Uma tarefa headless é um serviço Android (`HeadlessJsTaskService`, `NativeHeadlessJsTaskSupport` só existe no
 ReactAndroid) que roda JS sem UI; o Godot não tem serviço de fundo para iniciá-la. O mapa de contratos já marcava os
-quatro membros como `not-applicable` no Godot; o motivo deles agora também diz que o resultado no Godot é o erro tipado,
-com esta suíte como fixture negativa. Nada é registrado nem iniciado.
+quatro membros como `not-applicable` no Godot, e esta fatia não muda o motivo deles. O erro tipado é o resultado deles no
+Godot, e `E_APP_REGISTRY_HEADLESS_TASK` é a fixture negativa que o catálogo de fixtures do GF-01 (S3) vai referenciar. Nada é
+registrado nem iniciado.
 
 Os erros seguem a convenção `E_*` do SDK (`src/godot-fabric.js`, `failure`): o código abre a mensagem
 (`<código>: <o quê e por quê>`) e também é `error.code`. [docs/API.md](../../API.md#appregistry-members) lista os dois:
@@ -165,9 +166,11 @@ wrapper em 16,16) antes da captura.
 ## Mapa de contratos e auditoria
 
 O mapa (`docs/compatibility/contract-map-0.87.1.json`) já dava aos 19 membros o dono GF-07, escopo `1_0` e `applies` no
-Godot, exceto os quatro headless (`not-applicable`, com motivo): bate com os achados. O que mudou foi o motivo dos quatro,
-que agora cita o erro tipado como o resultado do Godot. `unmountApplicationComponentAtRootTag` segue `applies`: o membro
-existe e faz o que o RN faz (loga um erro); a desmontagem em si é do host nas três plataformas, o que o mapa não separa.
+Godot, exceto os quatro headless (`not-applicable`, com motivo): bate com os achados, e esta fatia não altera o mapa. O
+motivo dos quatro não muda: a referência a uma fixture pertence ao catálogo de fixtures do GF-01 (S3), que vai referenciar
+`E_APP_REGISTRY_HEADLESS_TASK` como a fixture negativa deles. `unmountApplicationComponentAtRootTag` segue `applies`: o
+membro existe e faz o que o RN faz (loga um erro); a desmontagem em si é do host nas três plataformas, o que o mapa não
+separa.
 
 A auditoria de 2026-10-01 (`docs/compatibility/react-native-0.87.1.json`) marcava `AppRegistry` e `RootTagContext` como
 `missing_public_export`, e estava velha: a fachada exporta os dois desde a fatia das raízes compartilhadas. As duas linhas
