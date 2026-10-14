@@ -8,6 +8,7 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
+import {metroPolyfills} from "../sdk/toolchain/metro-polyfills.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {SABOTAGES} from "../tests/virtualized-list-sabotages.mjs";
 
@@ -88,6 +89,7 @@ export async function bundleVirtualizedListProbe(lane = "current") {
   const result = await build({absWorkingDir: root, entryPoints: ["tests/virtualized-list-fixture.jsx"],
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true, logLevel: "silent",
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
+    inject: metroPolyfills(id => requireSdk.resolve(id)),
     mainFields: ["main"], resolveExtensions: godotExtensions,
     plugins: [plugin(platformRoot, id => requireSdk.resolve(id))]});
   const inputs = Object.keys(result.metafile.inputs);

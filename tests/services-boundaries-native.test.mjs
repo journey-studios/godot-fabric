@@ -22,7 +22,11 @@ test("real Godot/Hermes services preserve valid DTOs, reject accessors/lossy str
   assert.match(log, /SERVICES_BOUNDARIES_PASSED/);
   // These terminal diagnostics are intentional lifecycle cases. All expected
   // negative DTO/queued-call cases are handled Promise rejections, not ERRORs.
-  const diagnostics = [...log.matchAll(/^HERMES: GodotFabric Error: (E_[A-Z0-9_]+):/gm)].map(match => match[1]);
+  // The SDK's console.error("GodotFabric", error) reaches the host as RN's console writes it: the arguments inspected and joined, here
+  // 'GodotFabric', { [Error: E_...: message] code: 'E_...' }. The code in the message and the code property must be the same.
+  const lines = [...log.matchAll(/^HERMES: 'GodotFabric', \{ \[Error: (E_[A-Z0-9_]+):[^\n]*\] code: '(E_[A-Z0-9_]+)' \}$/gm)];
+  assert.deepEqual(lines.map(match => match[1]), lines.map(match => match[2]), log);
+  const diagnostics = lines.map(match => match[2]);
   assert.deepEqual(diagnostics, ["E_SERVICE_BINDING_REMOVED", "E_SERVICE_OWNER"], log);
   const report = JSON.parse(readFileSync(reportPath, "utf8"));
   assert.equal(report.scenario, "service-boundaries");

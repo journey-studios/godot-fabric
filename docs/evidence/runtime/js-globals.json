@@ -1,0 +1,713 @@
+{
+  "schemaVersion": 1,
+  "scenario": "js-globals",
+  "status": "verified-local-headless-previous-host-control-five-sabotages",
+  "at": "2026-10-13T19:39:09.563Z",
+  "executionBaseCommit": "c7e1b9c74e3735389daf90c9c17595c6fdddc853",
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "c7e1b9c74e3735389daf90c9c17595c6fdddc853",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+    "previousHostSha256": "99e35342fd22959fb0f645eac96a3941057c52d54077a93907b34e908768def3",
+    "previousHost": "built from executionBaseCommit, with the host's performance and console stubs; kept in build/gf05-globals-previous-host/ (local, not in Git)"
+  },
+  "commands": [
+    "npm run test:js-globals",
+    "node tests/js-globals-native.test.mjs --allow-original-negative (previous host in addons/)",
+    "node scripts/js-globals-sabotage.mjs",
+    "node scripts/js-globals-evidence.mjs"
+  ],
+  "currentLane": {
+    "checks": 24,
+    "failedChecks": [],
+    "oracleVerdict": null,
+    "bundleSha256": "ec0186e58b0df33e9e0adf0ba9a1b5706e07769859a27848c4c5c78f61127d06",
+    "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+    "logSha256": "da1ff4fd01ce7d8a64a48e3ea29e8f7e78d448f075a54de0b133451b9fbcfb7e",
+    "result": "JS_GLOBALS_PASSED: 24",
+    "checkVerdicts": [
+      {
+        "name": "mount/A root mounts through the original AppRegistry in the Hermes application the bundle ran in",
+        "passed": true
+      },
+      {
+        "name": "host/The host defines neither performance nor console before the first line of the bundle",
+        "passed": true
+      },
+      {
+        "name": "host/The host binds nativeLoggingHook and nativePerformanceNow and sets global and __DEV__",
+        "passed": true
+      },
+      {
+        "name": "first/RN's console polyfill has run when the first module of the bundle starts, and no setup module of RN has",
+        "passed": true
+      },
+      {
+        "name": "first/The first line the bundle logs reaches the host's hook in RN's format at the info level",
+        "passed": true
+      },
+      {
+        "name": "globals/window and self are the global object, and window is RN's fixed property",
+        "passed": true
+      },
+      {
+        "name": "globals/process.env.NODE_ENV is production at run time",
+        "passed": true
+      },
+      {
+        "name": "globals/navigator.product is ReactNative, on the property RN defines",
+        "passed": true
+      },
+      {
+        "name": "performance/performance has RN's five members and no other",
+        "passed": true
+      },
+      {
+        "name": "performance/mark, measure, clearMarks and clearMeasures return without throwing",
+        "passed": true
+      },
+      {
+        "name": "performance/now() reads the host clock: it falls between two nativePerformanceNow() reads in every sample",
+        "passed": true
+      },
+      {
+        "name": "performance/now() never goes backward from one sample to the next, and moves forward",
+        "passed": true
+      },
+      {
+        "name": "performance/now() advances as much as Godot's own clock did between two reads",
+        "passed": true
+      },
+      {
+        "name": "dom/RN's 14 DOM globals are lazy getters until first used, and classes after",
+        "passed": true
+      },
+      {
+        "name": "dom/RN$isNativeEventTargetEventDispatchingEnabled is a function that answers a boolean",
+        "passed": true
+      },
+      {
+        "name": "console/console has the members of RN's polyfill, and createTask runs its callback",
+        "passed": true
+      },
+      {
+        "name": "console/Every call of the scenario runs without throwing",
+        "passed": true
+      },
+      {
+        "name": "console/A lone string is logged as it is, and log(\"A\", \"B\") as 'A', 'B', at the info level",
+        "passed": true
+      },
+      {
+        "name": "console/info, debug, trace, warn and error carry RN's levels, and an error that starts with \"Warning: \" is a warning",
+        "passed": true
+      },
+      {
+        "name": "console/assert(false, \"boom\") logs \"Assertion failed: boom\" at the error level, and assert(true) logs nothing",
+        "passed": true
+      },
+      {
+        "name": "console/time, timeEnd, timeStamp, count and countReset are RN's silent stubs",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/Stop releases the root without a diagnostic",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/All native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "report/The JS globals report is saved with any normative failure visible",
+        "passed": true
+      }
+    ],
+    "bundleInputs": {
+      "count": 421,
+      "injectedFirst": [
+        "tests/js-globals-host.js",
+        "node_modules/@react-native/js-polyfills/console.js"
+      ],
+      "bootstrapPositions": {
+        "src/initialize.js": 166,
+        "node_modules/react-native/Libraries/Core/setUpGlobals.js": 82,
+        "node_modules/react-native/src/private/setup/setUpDOM.js": 109,
+        "node_modules/react-native/Libraries/Core/setUpPerformance.js": 127,
+        "node_modules/react-native/Libraries/Core/setUpNavigator.js": 165
+      }
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpGlobals.js": "40a11a9e5d604ca67518e82922f5f6a06896194bc033cdbc8c9a170352f38cfc",
+      "src/private/setup/setUpDOM.js": "0c333614ef39f6f41b68ebb17569ffba34264ab664008ccc0a9b6360919c75d3",
+      "Libraries/Core/setUpPerformance.js": "fafaa470214c52cc32b657c2c5c36d66132186c89c4f9d5dd03daf2426ef8d97",
+      "Libraries/Core/setUpNavigator.js": "603e3ac0cdf806324e8e467a1dc7d146791d83f642fafa3885b9cdc3ce897652",
+      "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+      "Libraries/Utilities/defineLazyObjectProperty.js": "14518a34db201d7545b9b2fd72a668d8d42e766d1bbd5a7889910069700e7fa8",
+      "src/private/setup/setUpDefaultReactNativeEnvironment.js": "ada7fdd487db30821082e115756be85e92cc1f095155355d06067422e2df0603",
+      "Libraries/Core/InitializeCore.js": "8f2dd190065a412e8a30ee49c3db050b8797cfb780ecbc1a8f5e2c75a2fc9701",
+      "../@react-native/js-polyfills/console.js": "772bc8bd7568cda8765244ecc2b895acf691e1f69ddd0bb1c88e94167413b7d6",
+      "../@react-native/js-polyfills/index.js": "da03cd1a85b6e7018fabba50ed243292947e041a56b44bfe56cc07e1e6fd7944",
+      "ReactCommon/jsitooling/react/runtime/JSRuntimeBindings.cpp": "d88b1047024bc7ca9c7b3574b2ee04deeab4cb2e24ecfdee8af8aa40c396d6e5",
+      "Libraries/Utilities/RCTLog.js": "33bc7a7a1e0019f9e2970f7223c9d45da9e6113899cf29b07ed3c3ef45087927"
+    },
+    "hostPrintedMessages": 21,
+    "consoleScenario": [
+      {
+        "method": "log",
+        "args": [
+          "one string"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "one string"
+          }
+        ]
+      },
+      {
+        "method": "log",
+        "args": [
+          "A",
+          "B"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "'A', 'B'"
+          }
+        ]
+      },
+      {
+        "method": "info",
+        "args": [
+          "count",
+          3,
+          true,
+          null
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "'count', 3, true, null"
+          }
+        ]
+      },
+      {
+        "method": "log",
+        "args": [
+          {
+            "a": 1,
+            "b": [
+              "x",
+              2
+            ]
+          }
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "{ a: 1, b: [ 'x', 2 ] }"
+          }
+        ]
+      },
+      {
+        "method": "debug",
+        "args": [
+          "debug"
+        ],
+        "logged": [
+          {
+            "level": 0,
+            "message": "debug"
+          }
+        ]
+      },
+      {
+        "method": "trace",
+        "args": [
+          "trace",
+          0
+        ],
+        "logged": [
+          {
+            "level": 0,
+            "message": "'trace', 0"
+          }
+        ]
+      },
+      {
+        "method": "warn",
+        "args": [
+          "warn",
+          2
+        ],
+        "logged": [
+          {
+            "level": 2,
+            "message": "'warn', 2"
+          }
+        ]
+      },
+      {
+        "method": "error",
+        "args": [
+          "error",
+          3
+        ],
+        "logged": [
+          {
+            "level": 3,
+            "message": "'error', 3"
+          }
+        ]
+      },
+      {
+        "method": "error",
+        "args": [
+          "Warning: reported as a warning",
+          1
+        ],
+        "logged": [
+          {
+            "level": 2,
+            "message": "'Warning: reported as a warning', 1"
+          }
+        ]
+      },
+      {
+        "method": "error",
+        "args": [
+          {
+            "$error": "boom"
+          }
+        ],
+        "logged": [
+          {
+            "level": 3,
+            "message": "[Error: boom]"
+          }
+        ]
+      },
+      {
+        "method": "assert",
+        "args": [
+          true,
+          "not logged"
+        ],
+        "logged": []
+      },
+      {
+        "method": "assert",
+        "args": [
+          false,
+          "boom"
+        ],
+        "logged": [
+          {
+            "level": 3,
+            "message": "Assertion failed: boom"
+          }
+        ]
+      },
+      {
+        "method": "group",
+        "args": [
+          "outer"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "┐ outer"
+          }
+        ]
+      },
+      {
+        "method": "log",
+        "args": [
+          "inside"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "│ inside"
+          }
+        ]
+      },
+      {
+        "method": "groupCollapsed",
+        "args": [
+          "inner"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "│┘ inner"
+          }
+        ]
+      },
+      {
+        "method": "log",
+        "args": [
+          "deeper"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "││ deeper"
+          }
+        ]
+      },
+      {
+        "method": "groupEnd",
+        "args": [],
+        "logged": [
+          {
+            "level": 1,
+            "message": "│┘ "
+          }
+        ]
+      },
+      {
+        "method": "groupEnd",
+        "args": [],
+        "logged": [
+          {
+            "level": 1,
+            "message": "┘ "
+          }
+        ]
+      },
+      {
+        "method": "log",
+        "args": [
+          "after the groups"
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "after the groups"
+          }
+        ]
+      },
+      {
+        "method": "table",
+        "args": [
+          [
+            {
+              "n": 1,
+              "name": "a"
+            },
+            {
+              "n": 2,
+              "name": "b"
+            }
+          ]
+        ],
+        "logged": [
+          {
+            "level": 1,
+            "message": "\n| (index) | name | n |\n| ------- | ---- | - |\n| 0       | 'a'  | 1 |\n| 1       | 'b'  | 2 |"
+          }
+        ]
+      },
+      {
+        "method": "time",
+        "args": [
+          "t"
+        ],
+        "logged": []
+      },
+      {
+        "method": "timeEnd",
+        "args": [
+          "t"
+        ],
+        "logged": []
+      },
+      {
+        "method": "timeStamp",
+        "args": [
+          "t"
+        ],
+        "logged": []
+      },
+      {
+        "method": "count",
+        "args": [
+          "c"
+        ],
+        "logged": []
+      },
+      {
+        "method": "countReset",
+        "args": [
+          "c"
+        ],
+        "logged": []
+      }
+    ],
+    "firstModule": {
+      "atFirstModule": {
+        "console": "object",
+        "navigator": "undefined",
+        "performance": "undefined",
+        "polyfilled": true,
+        "process": "undefined",
+        "window": "undefined"
+      },
+      "hostBeforeBundle": {
+        "console": "undefined",
+        "dev": false,
+        "globalIsGlobalThis": true,
+        "nativeLoggingHook": "function",
+        "nativePerformanceNow": "function",
+        "navigator": "undefined",
+        "performance": "undefined",
+        "process": "undefined",
+        "window": "undefined"
+      }
+    },
+    "clock": {
+      "frames": 12,
+      "godotBracket": {
+        "aAfter": 544702,
+        "aBefore": 544522,
+        "bAfter": 769713,
+        "bBefore": 769599
+      }
+    }
+  },
+  "previousHostControl": {
+    "checks": 24,
+    "failedChecks": [
+      "host/The host defines neither performance nor console before the first line of the bundle",
+      "performance/performance has RN's five members and no other",
+      "performance/mark, measure, clearMarks and clearMeasures return without throwing"
+    ],
+    "oracleVerdict": "The oracle fails 3 check(s), the first of them host/The host defines neither performance nor console before the first line of the bundle",
+    "bundleSha256": "ec0186e58b0df33e9e0adf0ba9a1b5706e07769859a27848c4c5c78f61127d06",
+    "nativeHostSha256": "99e35342fd22959fb0f645eac96a3941057c52d54077a93907b34e908768def3",
+    "logSha256": "78be53a815ea91f0452200b55cb6fdaaf07f856c2672ffaae70dc91ede14c743",
+    "sameBundleAsCurrent": true,
+    "result": "JS_GLOBALS_ORIGINAL_NEGATIVE: 3",
+    "expectedOriginalFailures": [
+      "host/The host defines neither performance nor console before the first line of the bundle",
+      "performance/performance has RN's five members and no other",
+      "performance/mark, measure, clearMarks and clearMeasures return without throwing"
+    ],
+    "hostBeforeBundle": {
+      "console": "object",
+      "dev": false,
+      "globalIsGlobalThis": true,
+      "nativeLoggingHook": "function",
+      "nativePerformanceNow": "function",
+      "navigator": "undefined",
+      "performance": "object",
+      "process": "undefined",
+      "window": "undefined"
+    },
+    "performanceMembers": [
+      "now"
+    ],
+    "note": "The same bundle runs on the host that defined a performance with only now and a console of three functions before any JS: it fails exactly the three checks that need the new host. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
+  },
+  "retainedSabotage": {
+    "script": "scripts/js-globals-sabotage.mjs",
+    "table": "tests/js-globals-sabotages.mjs",
+    "mechanism": "in-memory esbuild overrides of one file each (scripts/js-globals-bundle.mjs); no file is edited",
+    "variants": [
+      {
+        "name": "stub-console",
+        "file": "node_modules/@react-native/js-polyfills/console.js",
+        "find": "if (global.nativeLoggingHook) {",
+        "replace": "if (global.nativeLoggingHook) {\n  global.console = {log: (...a) => global.nativeLoggingHook(a.join(' '), 0),\n    warn: (...a) => global.nativeLoggingHook(a.join(' '), 1),\n    error: (...a) => global.nativeLoggingHook(a.join(' '), 2)};\n} else if (false) {",
+        "checks": 24,
+        "failedChecks": [
+          "first/RN's console polyfill has run when the first module of the bundle starts, and no setup module of RN has",
+          "first/The first line the bundle logs reaches the host's hook in RN's format at the info level",
+          "console/console has the members of RN's polyfill, and createTask runs its callback",
+          "console/Every call of the scenario runs without throwing",
+          "console/A lone string is logged as it is, and log(\"A\", \"B\") as 'A', 'B', at the info level",
+          "console/info, debug, trace, warn and error carry RN's levels, and an error that starts with \"Warning: \" is a warning",
+          "console/assert(false, \"boom\") logs \"Assertion failed: boom\" at the error level, and assert(true) logs nothing",
+          "console/time, timeEnd, timeStamp, count and countReset are RN's silent stubs"
+        ],
+        "oracleVerdict": "The oracle fails 8 check(s), the first of them first/RN's console polyfill has run when the first module of the bundle starts, and no setup module of RN has",
+        "bundleSha256": "dfe6e61a13540dfd16d4109e74e6eadd738fc295bddb96bbe9c112eb9317bb5f",
+        "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+        "logSha256": "a0173f6542cd2fafb0df972ae94f2902507de7eafd3808e97d23cc47587f64ca"
+      },
+      {
+        "name": "no-globals",
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpGlobals\";\n",
+        "replace": "",
+        "checks": 24,
+        "failedChecks": [
+          "globals/window and self are the global object, and window is RN's fixed property",
+          "globals/process.env.NODE_ENV is production at run time"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them globals/window and self are the global object, and window is RN's fixed property",
+        "bundleSha256": "27acdd8b94dda2dcf9ef38953d4862399f0af4ffe17852f1938bc44fa76c5b0e",
+        "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+        "logSha256": "622dc5d79908e5a667de87cdcf7193da2d27ca2727b1a1f4bc591e630b510d65"
+      },
+      {
+        "name": "no-dom",
+        "file": "src/initialize.js",
+        "find": "\nsetUpDOM();\n",
+        "replace": "\n",
+        "checks": 24,
+        "failedChecks": [
+          "dom/RN's 14 DOM globals are lazy getters until first used, and classes after",
+          "dom/RN$isNativeEventTargetEventDispatchingEnabled is a function that answers a boolean"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them dom/RN's 14 DOM globals are lazy getters until first used, and classes after",
+        "bundleSha256": "df5841e7b65fe435d31385b9383aef15d453b8aa1709c3b1751b5dd933ff52ab",
+        "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+        "logSha256": "3486d1ea60f2b2ad0a9c6d1a6106d0247970aaef69a053ff96839fc554c52595"
+      },
+      {
+        "name": "no-performance",
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpPerformance\";\n",
+        "replace": "",
+        "checks": 24,
+        "failedChecks": [
+          "performance/performance has RN's five members and no other",
+          "performance/mark, measure, clearMarks and clearMeasures return without throwing",
+          "performance/now() reads the host clock: it falls between two nativePerformanceNow() reads in every sample",
+          "performance/now() never goes backward from one sample to the next, and moves forward",
+          "performance/now() advances as much as Godot's own clock did between two reads"
+        ],
+        "oracleVerdict": "The oracle fails 5 check(s), the first of them performance/performance has RN's five members and no other",
+        "bundleSha256": "b409304f3060ec517d52dc3ca817a06ddccc9a9cd9d3802bf53dcec84cf0a6c5",
+        "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+        "logSha256": "1a38b49e03ce5d753321d780560886e6a81ab37e75f2143ff8fb52ba24fe2e83"
+      },
+      {
+        "name": "no-navigator",
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpNavigator\";\n",
+        "replace": "",
+        "checks": 24,
+        "failedChecks": [
+          "globals/navigator.product is ReactNative, on the property RN defines"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them globals/navigator.product is ReactNative, on the property RN defines",
+        "bundleSha256": "70e05507482315eae68b150c982247b6e4921de988d22f8f6d46eb2a8f4b3100",
+        "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+        "logSha256": "3704f5f8aa8920566932bc1b38cf19e5a24cbc689e254519cd7b9e16a8c2f592"
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/js-globals-oracle.mjs",
+    "independence": "Written from RN's pinned sources, not from the probe: the globals each setup module installs are read with the TypeScript parser and the bootstrap audit's scan, RN's own console.js runs in Node (V8) against a recording hook for the whole scenario, and every verdict of the probe is derived again from the report's raw observations.",
+    "fromRn": {
+      "window": {
+        "configurable": false,
+        "enumerable": true,
+        "writable": false
+      },
+      "navigator": {
+        "configurable": true,
+        "enumerable": true,
+        "writable": false
+      },
+      "nodeEnv": "production",
+      "product": "ReactNative",
+      "performanceMembers": [
+        "clearMarks",
+        "clearMeasures",
+        "mark",
+        "measure",
+        "now"
+      ],
+      "domGlobals": [
+        "CharacterData",
+        "CustomEvent",
+        "DOMRect",
+        "DOMRectList",
+        "DOMRectReadOnly",
+        "Document",
+        "Element",
+        "Event",
+        "EventTarget",
+        "HTMLCollection",
+        "HTMLElement",
+        "Node",
+        "NodeList",
+        "Text"
+      ],
+      "dispatchName": "RN$isNativeEventTargetEventDispatchingEnabled",
+      "consoleMembers": [
+        "_isPolyfilled",
+        "assert",
+        "count",
+        "countReset",
+        "createTask",
+        "debug",
+        "error",
+        "group",
+        "groupCollapsed",
+        "groupEnd",
+        "info",
+        "log",
+        "table",
+        "time",
+        "timeEnd",
+        "timeStamp",
+        "trace",
+        "warn"
+      ],
+      "consoleMarker": {
+        "enumerable": false
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/js-globals-fixture.jsx": "4b0cde0bd962e80c9e9ed91944e1b82045c8850d6eb7a3927e23157788d27b0d",
+    "tests/js-globals-early.js": "67dec17374b38ac0855a1117074506c08c2296d7d29bd4b134bcf5e2ac3c3807",
+    "tests/js-globals-host.js": "6742988f59d6724c1f4ee81e127c73471843c5c7ed32e171053c52105a069a4f",
+    "tests/js-globals-cases.mjs": "87ab12b4c99436a8f26f78a8fd6aa41a34ac35e9ade7a909730cfa2f0babd51e",
+    "tests/js-globals-probe.gd": "c61e7912a861723c28453efddc8971b1b4b9d7d096676d4e1c6f2029cf9e528c",
+    "tests/js-globals-native.test.mjs": "6900cd8d8c5a7027b0aebf59f645720b4b1eccdbb586e1ae2a68a24eb98d05e4",
+    "tests/js-globals-oracle.mjs": "069d089eeea62c111f15b30b7e52fa031fc4d8d78d422b0f04e76835fa691474",
+    "tests/js-globals-sabotages.mjs": "0faa88093cd69c80bab4aec0a3480d38490d901b7ac98255b30a563820ad7143",
+    "scripts/js-globals-bundle.mjs": "c98a044692ec78a4609ef439b3cb2b57838fc212c95d6b939d63d37a235bb6a5",
+    "scripts/js-globals-sabotage.mjs": "99158267dbb7e871bef7a9d2593fe220c8a03ad0540e3ba1d423526d07009804",
+    "scripts/native-probe-bundle.mjs": "b79ce15d06d912bf085fe5f71cb97e7e1c760230d2e6e0e375cf1fed293a8e20",
+    "src/initialize.js": "45ea0a87515f9436c29ac8763639ba1f0571749c1f8604e25a5253b01adb4804",
+    "sdk/toolchain/platform-plugin.mjs": "682e37c41f8616bb586838718cf555edf5712abf9d2c5a91c6bb805da7fd4fb6",
+    "sdk/toolchain/metro-polyfills.mjs": "df4b7f779594677ebd1f9f4485eb4cc854fd4967e28cc56c5edec822b82f28bc",
+    "native/application_runtime.cpp": "3e91ea3d8510d99217e7b9527bd79288a4822c9a1ce1e9957b39ba8182d46665",
+    "native/application_runtime.h": "d88303dc5563f3f2f4d8a8d38d022d32cb846cb7aea0a10d85f56f793b5878f2"
+  },
+  "scope": {
+    "actualHermesRuntime": true,
+    "actualFabricApplication": true,
+    "headless": true,
+    "rnSetupModules": [
+      "setUpGlobals",
+      "setUpDOM",
+      "setUpPerformance",
+      "setUpNavigator"
+    ],
+    "metroConsolePolyfill": true
+  },
+  "limits": [
+    "The error path (ErrorUtils, RN$handleException) is slice C's and is not certified here.",
+    "The 11 Web Performance classes (setUpPerformanceModern) stay not-applicable and owned by GF-40; mark and measure are RN's no-ops.",
+    "The level a console call carries reaches the host's hook, which prints every message as a HERMES: line and does not map the level to a Godot log.",
+    "The headless desktop host only; no mobile export has run this bundle.",
+    "Hosted CI is pending: the record is of the local run."
+  ]
+}

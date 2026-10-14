@@ -174,7 +174,7 @@ globalThis.ServiceBoundaryFixture = {
   queueStop() { expectRejection("stopped", GodotFabric.call("boundary.generation", []), "E_SERVICE_STOPPED"); },
   destroyApplication() {
     GodotFabric.call("lifetime.destroy", []).then(() => console.error("LIFETIME_UNEXPECTED_SUCCESS"),
-      error => console.log("LIFETIME_CANCELLED", errorCode(error)));
+      error => console.log("LIFETIME_CANCELLED " + errorCode(error)));
   },
   dispose() {
     if (disposed) return;

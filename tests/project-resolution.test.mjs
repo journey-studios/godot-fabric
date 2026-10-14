@@ -10,6 +10,7 @@ import ts from "typescript";
 import {prepareProjectResolution} from "../sdk/toolchain/project-resolution.mjs";
 import {checkProjectTypes} from "../sdk/toolchain/project-typecheck.mjs";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
+import {metroPolyfills} from "../sdk/toolchain/metro-polyfills.mjs";
 
 const requireOriginal = createRequire(import.meta.url);
 const suffixes = [".godot", ".native", ""];
@@ -665,4 +666,23 @@ test("the typecheck worker rejects configuration saved after the builder's prefl
   assert.throws(() => checkProjectTypes({project: f.project, sdk: f.sdk,
     expectedConfigFingerprint: resolution.configFingerprint}), diagnostic("E_PROJECT_CONFIG_CHANGED"));
   assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);
+});
+
+// The build injects the Metro polyfills ahead of the first module. esbuild resolves each as an entry point with no importer, in the SDK's
+// own packages, which no project import may name; only those exact files pass, and the bundle runs them before the project's entry.
+test("the Metro polyfills the build injects pass project ownership, and no other SDK file does as an entry point", async t => {
+  const f = fixture(t);
+  f.write("addons/godot_fabric/toolchain/node_modules/@react-native/js-polyfills/console.js", "globalThis.order = ['polyfill'];");
+  f.write("ui/index.ts", "// @ts-nocheck\nglobalThis.order.push('entry');");
+  f.write("addons/godot_fabric/src/internal.js", "globalThis.order = ['internal'];");
+  const resolution = await prepare(f);
+  const run = inject => build({absWorkingDir: f.project, entryPoints: ["ui/index.ts"], write: false, inject,
+    tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions, bundle: true, format: "iife", platform: "neutral",
+    mainFields: ["main"], resolveExtensions: resolution.resolveExtensions, metafile: true, logLevel: "silent",
+    plugins: [resolution.plugin, platformPlugin(path.join(f.sdk, "src"), f.resolveSdk)]});
+  const result = await run(metroPolyfills(f.resolveSdk));
+  const context = {};
+  vm.runInNewContext(result.outputFiles[0].text, context);
+  assert.deepEqual([...context.order], ["polyfill", "entry"]);
+  await assert.rejects(run([path.join(f.sdk, "src/internal.js")]), diagnostic("E_PROJECT_SDK_IDENTITY"));
 });
