@@ -20,7 +20,7 @@
     "C": "The error path (done). The build injects RN's error-guard polyfill, src/initialize.js imports RN's setUpErrorHandling, and the host answers with RN's JsErrorHandler (ReactCommon/jserrorhandler, compiled unchanged), five of the seven globals ReactInstance installs for the error family over it (RN$handleException, RN$inExceptionHandler, RN$registerExceptionListener, RN$isRuntimeReady and RN$useAlwaysAvailableJSErrorHandling, the flag's pinned value; not RN$hasHandledFatalException and RN$notifyOfFatalException, which V2-D26 excludes because they make RN's JS report only the first fatal exception) and an ExceptionsManager module: a fatal exception is the host's failure, a soft one is a log line (native build; headless probe tests/js-errors-native.test.mjs).",
     "D1": "RN$enableMicrotasksInReact (done). The host sets the flag before the renderer evaluates and registers RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, compiled unchanged, as NativeMicrotasksCxx), so that React's sync work commits in a microtask as in RN bridgeless; the host's lifecycle gate stays open until stop() begins, which completes in one microtask checkpoint what was queued before it, and is open again only while stop() unmounts the roots (native build; headless probe tests/react-microtasks-native.test.mjs). Slice D2 handed the flag and the installation to RN's own setUpTimers.",
     "D2": "Idle callbacks and setUpTimers unchanged (done). The host registers RN's NativeIdleCallbacks module (ReactCommon/react/nativemodule/idlecallbacks, compiled unchanged, as NativeIdleCallbacksCxx), src/initialize.js imports setUpTimers unchanged at RN's place in the chain, and src/runtime.js keeps only the host's lifecycle gate, a lazy getter over each function setUpTimers installs, and the gate over the timers and the animation frame; it no longer sets the flag or installs queueMicrotask, setImmediate or clearImmediate (native build; headless probe tests/idle-callbacks-native.test.mjs).",
-    "E": "The web-globals probe. URL, URLSearchParams, AbortController and AbortSignal members, and the encoding globals per the decision: TextEncoder, atob and btoa present and tested, TextDecoder absent with a negative fixture.",
+    "E": "The web-globals probe (done). Headless probe tests/web-globals-native.test.mjs, in the real host: URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names and answer every case as RN's own files do in V8 (members read from the source, fetch and XMLHttpRequest observing the signal), and the encoding globals follow the decision: TextEncoder, atob and btoa are the engine's own, tested against Node and the documented Hermes deviations, and TextDecoder is absent with a negative fixture, checked in the pinned hermesvm binaries. No native code changed.",
     "F": "Exceptions and starvation parity. Callback exceptions (timers, setImmediate, queueMicrotask) and a Promise storm are measured against RN bridgeless and the host behaves the same."
   },
   "decisions": [
@@ -31,7 +31,7 @@
       "decision": "Parity with Hermes: TextEncoder, atob and btoa are present and tested; TextDecoder is absent, with a negative fixture, as on RN iOS and Android.",
       "scope": "1_0",
       "slice": "E",
-      "reason": "RN's InitializeCore chain installs none of them. They come from the engine, and Hermes on RN iOS and Android has no TextDecoder, so adding one would diverge from RN on both mobile platforms. Slice E probes the real host and reports what it finds."
+      "reason": "RN's InitializeCore chain installs none of them. They come from the engine, and Hermes on RN iOS and Android has no TextDecoder, so adding one would diverge from RN on both mobile platforms. Slice E probes the real host (tests/web-globals-native.test.mjs): the three present globals against Node and the documented Hermes deviations, and the absence of TextDecoder in the host and in the pinned hermesvm binaries."
     },
     {
       "id": "performance",
@@ -352,7 +352,10 @@
       "summary": "Registers lazy getters for XMLHttpRequest, FormData, fetch, Headers, Request, Response, WebSocket, Blob, File, FileReader, URL, URLSearchParams, AbortController and AbortSignal.",
       "globals": ["AbortController", "AbortSignal", "Blob", "File", "FileReader", "FormData", "Headers", "Request", "Response", "URL", "URLSearchParams", "WebSocket", "XMLHttpRequest", "fetch"],
       "status": "runs",
-      "reason": "Imported unchanged by src/initialize.js. The members of URL, URLSearchParams, AbortController and AbortSignal are probed by slice E.",
+      "reason": "Imported unchanged by src/initialize.js. The members of URL, URLSearchParams, AbortController and AbortSignal are probed by slice E (tests/web-globals-native.test.mjs), which runs the same cases in the real host and in V8 over RN's own files.",
+      "evidence": [
+        { "file": "tests/web-globals-native.test.mjs", "symbol": "WEB_GLOBALS_PASSED" }
+      ],
       "verifyIn": ["E"]
     },
     {

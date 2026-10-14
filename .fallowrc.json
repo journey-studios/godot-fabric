@@ -71,6 +71,8 @@
     "tests/react-microtasks-fixture.jsx",
     "tests/react-microtasks-host.js",
     "tests/idle-callbacks-fixture.jsx",
+    "tests/web-globals-fixture.jsx",
+    "tests/web-globals-host.js",
     "tests/frontier-baseline-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",

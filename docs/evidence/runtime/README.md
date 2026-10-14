@@ -155,6 +155,10 @@ does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 > Later note: since the [idle callbacks slice](#idle-callbacks-and-setuptimers-unchanged-slice-d2-2026-10-13), RN's `setUpTimers` is imported unchanged and installs
 > `queueMicrotask`, `setImmediate`, `clearImmediate`, `requestIdleCallback` and `cancelIdleCallback` and sets the flag, so the idle callbacks are no longer open;
 > `src/runtime.js` keeps only the host's lifecycle gate. The encoding globals and the callback exceptions (slice F) stay open.
+>
+> Later note: since the [web globals slice](#web-globals-slice-e-2026-10-14), `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are certified member by member against
+> RN's own files, `fetch` and `XMLHttpRequest` are shown to observe the signal, `TextEncoder`, `atob` and `btoa` are tested against Node with their Hermes deviations documented, and
+> `TextDecoder` is absent with a negative fixture, so the encoding globals are no longer open; the callback exceptions (slice F) are.
 
 RAF uses real Godot process frames rather than upstream TimerManager's
 zero-delay fallback. The oracle certifies cancellation and monotonicity; it
@@ -243,7 +247,7 @@ symbol, a missing reason, and the rest), so the gate is shown to reject what it 
 | C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` (done, below) | `setUpErrorHandling`, the `error-guard` polyfill |
 | D1 | `RN$enableMicrotasksInReact` and `queueMicrotask` over `NativeMicrotasks` (high regression risk, full sweep; done, below) | `setUpTimers` parts `react-microtasks` and `queue-microtask` |
 | D2 | idle callbacks over `NativeIdleCallbacks`, then `setUpTimers` imported unchanged (done, below) | `setUpTimers` part `idle-callbacks`, and the parts D1 left `replaced` (`queue-microtask`, `immediate`, `react-microtasks`), now `runs` |
-| E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision | `setUpXHR` (`verifyIn`), decision `encoding` |
+| E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision (done, below) | `setUpXHR` (`verifyIn`), decision `encoding` |
 | F | callback exceptions and starvation against RN | `verifyIn` on the timers, animation frame, `queueMicrotask`, `setImmediate` and `polyfillPromise` entries |
 
 The audit found two things the slice list did not name. `setUpDOM` (14 DOM globals and
@@ -1000,3 +1004,206 @@ suite reuses) logs the flag's write and every read. F measures callback exceptio
 GF-06 gains nothing visible.
 
 **D1's reentrant-stop fix, merged here.** D1's hosted sweep failed the adapter acceptance's `--reentrant-stop` (`resize` mode) because the gate closed at the stop request, so React's own `queueMicrotask` of a commit in flight was refused; its fix keeps the plain gate open until the teardown begins and completes the pending microtasks first, in one checkpoint. This slice keeps that rule for the plain gate and puts the idle callbacks on the strict one, closed from the request (above); `tests/idle-callbacks-probe.gd` runs the same scenario with an idle callback queued by the commit in flight. The adapter runtime check passes in all its 13 modes on the merged tree.
+
+## Web globals (slice E, 2026-10-14)
+
+Slice A marked `setUpXHR` `runs` with `verifyIn: ["E"]` and recorded the user's decision of 2026-10-13 on encoding: parity with Hermes, so `TextEncoder`, `atob` and `btoa` are
+present and tested, and `TextDecoder` is absent, with a negative fixture, as on RN iOS and Android. Until this slice only the [networking record](../networking/README.md) looked at
+these globals, and only as far as it needed them (an `AbortController` aborts its signal once, `URLSearchParams` decodes, `fetch` honors a signal). Nothing certified what the four
+classes RN installs do member by member, and nothing looked at the encoding globals at all. Slice E changes no native code and no SDK file: it adds a probe, and the probe found the
+host right. The record of what it found is below.
+
+### Where each global comes from
+
+Every row is read out of the pinned files and checked against the running host (`rnFacts` in `tests/web-globals-oracle.mjs` parses `setUpXHR.js` with the TypeScript parser; the
+fixture compares the global with the export of the module by identity).
+
+| Global | Comes from | Certified by |
+| --- | --- | --- |
+| `URL` | `polyfillGlobal('URL', ...)` in RN's `Libraries/Core/setUpXHR.js`, which requires the `URL` export of `Libraries/Blob/URL.js` | identity with the module's export |
+| `URLSearchParams` | the `URLSearchParams` export of the same module, which re-exports `Libraries/Blob/URLSearchParams.js` | identity, and `URL.js` reads it as a *global* (the class has no import of it) |
+| `AbortController` | `src/private/webapis/dom/abort-api/AbortController.js` | identity |
+| `AbortSignal` | the `AbortSignal_public` export of `.../AbortSignal.js`: a function that throws `Illegal constructor` and copies the statics and the prototype of the class | identity; every signal is an instance of the class and of the wrapper |
+| `TextEncoder`, `atob`, `btoa` | the engine: builtins of `hermesvm` 250829098.0.17 (`textEncoderConstructor`, `textEncoderPrototypeEncode`, `textEncoderPrototypeEncodeInto`, `textEncoderPrototypeEncoding`, `atob`, `btoa` are strings of the binary) | the host's own function, a non-enumerable data property, still the same function after the bundle ran |
+| `TextDecoder` | nobody: RN's `Libraries` and `src` do not mention it, and none of the nine `hermesvm` binaries of the pinned release (the host's, and the iOS, Mac Catalyst, tvOS and visionOS slices of the xcframework) holds the name, while all nine hold `TextEncoder`, `encodeInto`, `atob` and `btoa` | the negative fixture |
+
+**Nothing shadows them.** Three independent views agree. A scan of `src/`, `sdk/toolchain/` and `native/` finds no assignment, `defineProperty`, `polyfillGlobal` or native
+`setProperty` of any of the eight names (and the runner shows the scan bites on a synthetic file for each way). A module injected before the whole bundle records what the host and the
+engine define: none of `URL`, `URLSearchParams`, `AbortController`, `AbortSignal`, `TextDecoder` and `DOMException`, and the three encoders. The first module of the fixture finds the
+same, with RN's console and error-guard polyfills already run. And after the bundle and the renderer ran, the three encoders are the same functions and the four RN globals are RN's
+exports.
+
+### What the pinned sources say
+
+These are findings, each shown by a case or a check below, and none is a defect of the host.
+
+- **`URL` has no member that throws `not implemented`.** The brief of this slice expected some. RN 0.87.1's `Libraries/Blob/URL.js` is complete in the sense that every accessor is a
+  regular expression over the string the constructor kept. `search` is the only member with a setter; every other member is getter-only, so a write is ignored (and throws in strict
+  code). `canParse` and `parse` do not exist. The oracle fails if a later RN adds a `not implemented` throw, because the cases would then have to cover it.
+- **`URL` reads `URLSearchParams` as a global.** `searchParams` does `new URLSearchParams(this.search)` with no import. The host gets it from `setUpXHR`, which installs the same
+  class; a host that installed `URL` without `URLSearchParams` would break `searchParams`. The reference run in V8 installs it the same way.
+- **`URLSearchParams` does not iterate.** The constructor takes a string, an array (destructured as pairs) or "an object" (`Object.entries`). A `Map`, a generator or another
+  `URLSearchParams` is read as an object: the first two give an empty list, the third a single key `_searchParams`. A key with no `=` has the value `undefined`, and `toString` writes it
+  as the text `undefined`. `delete(name, value)` and `has(name, value)` ignore the value. `sort` is `localeCompare`.
+- **The renderer reads `AbortController` while it evaluates** (`ReactFabric-prod.js`, `"undefined" !== typeof AbortController ? AbortController : ...`), which resolves RN's lazy
+  accessor before the application's first module runs. `URL`, `URLSearchParams` and `AbortSignal` are still accessors that nothing had read when the fixture looked.
+- **`fetch` is `whatwg-fetch` 3.6.20 over RN's `XMLHttpRequest`.** It listens to the signal, calls `xhr.abort()`, and rejects with its own `AbortError` whose message is `Aborted`,
+  whatever reason `abort()` was given. This host defines no `DOMException`, so `whatwg-fetch` builds its own: `name: 'AbortError'`, `message: 'Aborted'`, an `Error` by its prototype.
+  RN's `XMLHttpRequest` takes no `signal`; the XMLHttpRequest case wires the signal's `abort` event to `xhr.abort()`, as an application does. `xhr.abort()` resets the request to
+  `UNSENT` at its end, so the end of an aborted request is its `loadend` event and not a `readyState` of 4.
+- **The default reason is RN's `DOMException`** (`src/private/webapis/errors/DOMException.js`): `AbortError`, code 20, `signal is aborted without reason`; `AbortSignal.timeout` uses
+  `TimeoutError`, code 23, `signal timed out`. `AbortSignal.any` and `throwIfAborted` exist in 0.87.1.
+
+### Member tables
+
+"Implemented" is what the declaration in RN's source has; "verified" is the check group of the probe that covers it (the full wording is in the evidence file).
+
+| `URL` (`Libraries/Blob/URL.js`) | Kind | Behaviour certified |
+| --- | --- | --- |
+| `constructor(url, base)` | construct | joins a base by string concatenation (`/x` on a base with a path appends, `../up` is not resolved, a base that already ends with the path is not repeated); a bare host gets a trailing slash unless a query or a hash follows; throws RN's `TypeError: Invalid base URL: <base>` for an invalid base and the engine's `TypeError` where RN does not guard (`undefined`, a number, an object, `abc#x`, a call without `new`). Groups: absolute, bare host, other schemes, base, throws |
+| `hash`, `host`, `hostname`, `href`, `origin`, `password`, `pathname`, `port`, `protocol`, `username` | getter only | regular expressions over the kept string: only `http:` and `https:` have a host, an origin and a pathname other than `/`; `ftp:`, `myapp:`, upper-case `HTTPS:` and bare paths answer `''`. Groups: absolute, other schemes, read-only |
+| `search` | getter and setter | the setter rewrites the string (with or without `?`, empty removes it) and drops the cached `searchParams`. Group: setter |
+| `searchParams` | getter only | one instance per URL, live: `toString` and `href` fold its entries back, `search` still reads the text the URL kept. Group: live |
+| `toString`, `toJSON` | method | the same text, `JSON.stringify` and template strings included. Groups: absolute, live |
+| `createObjectURL(blob)`, `revokeObjectURL(url)` | static | `blob:<id>?offset=<n>&size=<n>` from the BlobModule's constants (`BLOB_URI_SCHEME` is `blob`, no host in this host); `revokeObjectURL` does nothing. Group: object URLs, and a real `Blob` |
+| not there | | `canParse`, `parse`, setters for `hash`, `host`, `hostname`, `href`, `pathname`, `port`, `protocol`, `username`, `password`; no member throws `not implemented` |
+
+| `URLSearchParams` (`Libraries/Blob/URLSearchParams.js`) | Kind | Behaviour certified |
+| --- | --- | --- |
+| `constructor(init)` | construct | string (leading `?` dropped, `+` and percent decoding, empty pairs skipped, a bad percent sequence throws the engine's `URIError`), array of pairs, object; `null`, nothing and a number give an empty list; a `Map`, an iterator or another instance is read as an object |
+| `size` | getter only | the number of distinct keys, not of pairs |
+| `append`, `set`, `delete` | method | `append` keeps duplicates in key order, `set` replaces all, `delete` removes all and ignores a second argument |
+| `get`, `getAll`, `has` | method | first value or `null`, all values or `[]`, existence (a second argument is ignored) |
+| `keys`, `values`, `entries`, `forEach`, `[Symbol.iterator]` | method | in key order; `keys` is live, the symbol iterator is a snapshot, and it is not `entries` |
+| `sort` | method | `localeCompare` on the keys, equal keys keep their order |
+| `toString` | method | `encodeURIComponent` with `%20` written `+`; `!'()*~` stay; a lone surrogate throws the engine's `URIError` |
+| not there | | `toJSON`, construction from any iterable but an array |
+
+| `AbortController` and `AbortSignal` | Kind | Behaviour certified |
+| --- | --- | --- |
+| `new AbortController()` | construct | an open signal: `aborted` false, `reason` `undefined`, `onabort` `null`, tags `[object AbortController]` and `[object AbortSignal]` |
+| `abort(reason)` | method | sets `aborted` and `reason` once and dispatches one trusted `abort` event, not bubbling, not cancelable, at target; a second call changes nothing; any reason is kept (`0`, `false`, `null`, a string, an object, an `Error`) except `undefined`, which is the default `DOMException` |
+| `signal` | getter only | the same signal each time; the accessors refuse another `this` with RN's `TypeError` |
+| `aborted`, `reason` | getter only | as above |
+| `onabort` | getter and setter | listeners and the handler run in the order added; a handler keeps the place of its first assignment; a non-function becomes `null`; an object with `handleEvent` is kept |
+| `throwIfAborted()` | method | throws the reason itself |
+| `AbortSignal.abort(reason)` | static | an aborted signal, no event for a later listener |
+| `AbortSignal.timeout(ms)` | static | `TimeoutError` after the timer; a negative, `NaN` or missing time throws RN's `TypeError` with its text |
+| `AbortSignal.any(signals)` | static | follows the first signal to abort, with its reason; an already aborted one makes an aborted signal at once; an empty list never aborts; a non-array or a non-signal throws RN's `TypeError` |
+| `new AbortSignal()` | construct | throws `Failed to construct 'AbortSignal': Illegal constructor` |
+| `addEventListener` and its options | EventTarget | `once`, removal, a duplicate listener, a capture listener and a `handleEvent` object, and a listener added during the dispatch not running (RN's `EventTarget`, with the platform plugin's overlays) |
+
+### Encoding
+
+`TextEncoder` is the engine's class with `encode`, `encodeInto` and an `encoding` getter (`utf-8`); `atob` and `btoa` are one-argument functions. The same cases run in Node (whose encoders
+are written against the standard) and in the host, and `Buffer` checks the bytes once more.
+
+- **Identical to Node, 64 of 78 cases.** The UTF-8 bytes of the empty string, ASCII, BMP text, astral characters, a lone high or low surrogate (`EF BF BD`), a trailing high surrogate,
+  a swapped pair, NUL, the BOM and the boundaries 7F/80/7FF/800/D7FF/E000; the 21 `encodeInto` combinations of five texts and four destination sizes with what each `read` and
+  `written` (a character that does not fit is not written, a lone surrogate is read as one unit and written as three bytes), and a destination that is a view; `btoa` and `atob` of
+  ASCII, padding, Latin-1, all 256 byte values and 4,099 pattern bytes, ASCII whitespace skipped by `atob`, trailing bits discarded, and the round trips of every byte, of the long
+  string and of UTF-8 text.
+- **The pinned Hermes deviates in 14 cases**, each listed with its reason in `HERMES_DEVIATIONS` and in the evidence file, and each required to differ from Node's answer on the day
+  the suite runs (so a deviation that closes is noticed):
+
+  | Call | Hermes | Node (V8) |
+  | --- | --- | --- |
+  | `encode()`, `encode(undefined)` | the bytes of the text `undefined` (the argument is converted to a string, with no default) | no bytes |
+  | `btoa()` | `dW5kZWZpbmVk`, the base64 of `undefined` | `TypeError` (`ERR_MISSING_ARGS`) |
+  | `atob()` | `Error`: nine characters are not a base64 length | `TypeError` |
+  | `btoa` of a character above U+00FF, astral characters included | `Error: Found invalid character when converting to base64` | `DOMException` `InvalidCharacterError` |
+  | `atob` of `YW$j`, the URL alphabet, non-ASCII, `YQ=`, `YQ==YQ==` | `Error: Found invalid character when decoding base64 string` | `DOMException` `InvalidCharacterError` |
+  | `atob` of one or five characters, `YQ===` | `Error: Not a valid base64 encoded string length` | `DOMException` `InvalidCharacterError` |
+
+  Both engines throw in every invalid case; only the class differs. The messages of the other engine-authored throws (a `Symbol` argument, `TextEncoder` called without `new`, a method on
+  another object, `encodeInto` of what is not a `Uint8Array`) are the engine's, the cases judge them by name, and the oracle requires every message the host recorded to be a string of
+  the pinned `hermesvm`. The pinned release ships no Hermes source, only the binaries and the headers, so the citation is the binary: its builtins and these messages.
+- **`TextDecoder` is absent.** `typeof TextDecoder` is `undefined`, it is not in the global object (`in`, own property names and descriptor), reading or constructing it throws
+  `ReferenceError: Property 'TextDecoder' doesn't exist` (the engine's message for any missing global), and `TextEncoder`, `atob` and `btoa` are functions beside it. This matches the
+  decision, and the oracle shows the host does not have to be trusted for it: the name is in none of the nine binaries.
+
+### The probe
+
+`npm run test:web-globals` runs `tests/web-globals-native.test.mjs`: one bundle (`tests/web-globals-fixture.jsx`, with `web-globals-host.js` injected before everything and
+`web-globals-early.js` as the first module) in an actual Hermes application, headless, with one mounted root, and the networking suite's local server as a child process.
+`tests/web-globals-probe.gd` makes **59 checks**:
+
+- *host and first module*: what the host and the engine define before the bundle and at the first module;
+- *globals*: the four RN globals are lazy accessors that nothing had read (`AbortController` the data property the renderer's read made), are data properties after, and are the exports
+  of the modules `setUpXHR` names; `AbortSignal` is the public wrapper over the class; the three encoders are the engine's own functions and `TextDecoder` is not a property;
+- *41 groups of cases* (177 cases): 38 `URL`, 34 `URLSearchParams`, 17 synchronous `AbortController` and `AbortSignal`, 3 that end on a timer (the probe waits for their settling and for no number
+  of frames), 78 encoding and 7 negative-fixture cases. A group passes when every case came out as `tests/web-globals-expected.json` says;
+- *network, six checks*: `fetch` with a signal that aborts while the server holds the request rejects with `AbortError`/`Aborted` and the server sees the connection closed by the client;
+  `fetch` ignores the caller's reason and the signal keeps it; a signal that was aborted before `fetch` rejects with the same error and the server never saw the request; a `fetch` that
+  completed is unchanged by an abort afterwards; an `XMLHttpRequest` wired to a signal ends with `readystatechange`, `abort` and `loadend` and never `load` or `error`, and its
+  connection closes; and once the server lets go nothing more reaches JS. Every wait is for an event (the server holding or closing a request, a request settling), never for a count of frames;
+- *lifecycle*: stop releases the root with balanced native Controls.
+
+**`tests/web-globals-expected.json` is the probe's expectation, and the oracle owns it.** For the classes RN writes, an expectation is what RN's code did in V8; for the encoders, what
+Node did, or the documented Hermes deviation; for the decoder, absence. The runner requires the file to equal what the oracle derives, so a change in RN, in Node or in the Hermes pin
+that moves an answer fails there and the file is rewritten with `node tests/web-globals-oracle.mjs --write-expected`. An expected error without a message is judged by its name: nine
+cases of RN's classes and sixteen of the encoders (the eleven throws of the deviations among them) throw an error whose text the engine wrote.
+
+### The oracle
+
+`tests/web-globals-oracle.mjs` is written from RN, Node and the pinned Hermes, not from the probe:
+
+- RN's `Libraries/Blob/URL.js`, `Libraries/Blob/URLSearchParams.js` and the two files of `src/private/webapis/dom/abort-api` are bundled **with nothing of the SDK's** (no platform plugin,
+  so none of its overlays on `EventTarget`) and run in a V8 context with the same cases the fixture runs in Hermes; what Hermes did must be what V8 does with RN's code, call by call;
+- the members of the four classes are read out of RN's source with the TypeScript parser and set against both runs (prototype names, statics, symbols, which accessors have a setter);
+- Node's `TextEncoder`, `atob` and `btoa` answer the encoding cases and `Buffer` checks the bytes; the table of deviations is checked against Node on every run;
+- the nine `hermesvm` binaries are scanned, and the host's `hermesvm` is required to be the pinned one;
+- the sources of `whatwg-fetch` and RN's `XMLHttpRequest` state the `AbortError` and the event order the network checks expect;
+- every verdict of the probe is derived again from the report's raw observations and must agree.
+
+### Controls
+
+**No previous-host control: this slice changes no native code.** The host in `addons/` is built from the sources of the base commit; a control on a previous host would run the same
+bundle on the same behaviour. (The copy that came with the worktree predated the merge of D1 and D2 and did not register `NativeMicrotasksCxx`, so it was rebuilt from the tree's sources
+before any run; no native file was touched.) The causal controls are four retained sabotages (`scripts/web-globals-sabotage.mjs`, the table in `tests/web-globals-sabotages.mjs`), in-memory
+overrides of one file each, none touches the host. Each is rejected by the probe and by the oracle:
+
+| Sabotage | Breaks | Checks it fails |
+| --- | --- | --- |
+| `url-reimplemented` | `setUpXHR` installs a minimal `URL` of its own: a global that is not the module's export | 11 (identity, the wrapper check, nine groups) |
+| `text-decoder-polyfilled` | `src/initialize.js` defines a `TextDecoder` | 3 (the property check and the two negative-fixture groups) |
+| `abort-controller-silent` | an `AbortController` whose `abort()` flips `aborted` and dispatches nothing | 17 (identity, eight groups of `abort`, the timer group and all six network checks) |
+| `search-params-delete-ignored` | `URLSearchParams.delete` does nothing | 2 (the live-instance group of `URL` and the mutation group) |
+
+### Audit
+
+`docs/compatibility/bootstrap-audit-0.87.1.json`: the `setUpXHR` entry keeps its status (`runs`) and its `verifyIn`, and now cites `tests/web-globals-native.test.mjs` as evidence and in its
+reason; the `encoding` decision's reason and the plan entry for slice E point at the suite. No status changed, and the gate (`tests/bootstrap-audit.test.mjs`) passes.
+
+### Regressions
+
+No source of the SDK or the host changed, so no earlier oracle changed. These ran on the host built from the tree's sources, and all passed: `test:networking` (the server and the
+`AbortController` case this suite builds on), `test:js-globals` and `test:application`; `type-check`; `check:static`, which found no issue once the helpers that only this
+suite uses stopped being exported; `tests/sabotage-anchors.test.mjs` (39 tests, the four sabotages of this slice included); the audit gate `tests/bootstrap-audit.test.mjs`
+(42 tests); the milestone guards (`tests/milestone-guards.test.mjs`, 36 tests, and `scripts/milestone-guards.mjs --check`: X9 not applicable, X10 clean for the new file names); and
+`npm run test:contracts` once at the end (parity 82 tests, dashboard 44, the contract list 788 tests with 787 passing and one skipped because `MACOS_EXPORT_TEMPLATE` is unset,
+and 37 Python tests). The suite itself ran three times in a row on the final tree with no difference, in about five seconds each, and the four sabotages and the current lane
+ran once more together. It is in the `native-suites-runtime` job of `contracts.yml`, with the artifact `native-web-globals`.
+
+**Evidence.** [`web-globals.json`](web-globals.json) is the committed record of the lanes above: the 59 verdicts of the current lane with the host, Hermes, expectation-file and bundle
+SHA-256, the identity and descriptor records, the network outcomes and the server's holds and requests, the member tables, the 14 deviations with what Hermes and Node each answered, the
+scan of the nine binaries, each sabotage's failing checks and the oracle's verdict, and the RN sources and repository files it pinned. `scripts/web-globals-evidence.mjs` writes it from the
+reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk, ran on the host and the Hermes in `addons/` and judged
+against the expectation file on disk; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+
+**Limits.**
+
+- The integration is the signal's: that an abort reaches the request and ends it as RN's code says. The transport, redirects, TLS and bodies are the networking suite's.
+- `URLSearchParams.sort` orders with `localeCompare`, which is the engine's. The cases use ASCII keys, and the order is the one ICU gives V8 and the Apple Hermes gives in the default
+  locale; another locale could order them otherwise.
+- Android's `libhermes` is not part of this repository's pins. The claim that its Hermes has no `TextDecoder` rests on the decision and on the iOS, tvOS and visionOS slices of the same release.
+- The cases run in one headless root on the desktop host; the mobile exports have not run this bundle.
+
+**Fixture catalog.** The catalog of #164 is not merged, so nothing here touches it. Once it lands, this suite provides the positives for `URL`, `URLSearchParams`, `AbortController` and
+`AbortSignal` (the identity checks and the 92 cases of RN's classes, each with a V8 answer from RN's own file) and the negative `decided:TextDecoder` (the seven decoder cases and the
+scan of the nine binaries). It also holds checks for `TextEncoder`, `atob` and `btoa`, should the catalog want positives for them.
+
+**For slices F and G.** Nothing in this slice moves a global or a timer. Three of its cases end on `AbortSignal.timeout`, whose callback only aborts a signal, so slice F's routing of a
+throwing timer or microtask callback does not touch them; a listener that throws on `abort` would reach the event dispatch of RN's `EventTarget`, which no case here exercises.
+The sabotage lanes are bundle overrides: a later slice that edits `src/initialize.js` must keep the text the `text-decoder-polyfilled` sabotage anchors on (the anchor test fails
+otherwise). The expectation file is the one thing a change to RN, Node or the Hermes pin must regenerate.
